@@ -1,5 +1,5 @@
 .\"
-.\" $Id: root-config.1,v 1.1 2001/08/15 13:30:48 rdm Exp $
+.\" $Id: memprobe.1,v 1.1 2002/01/20 14:23:52 rdm Exp $
 .\"
 .TH MEMPROBE 1 "Version 3" "ROOT"
 .\" NAME should be all caps, SECTION should be 1-8, maybe w/ subsection
@@ -13,7 +13,7 @@ memprobe \- ROOT utility to examine memory usage
 To activate the memory checker you have to set in the \fB.rootrc\fR
 file the resource \fBRoot.MemCheck\fR to 1 (e.g.: \fBRoot.MemCheck:
 1\fR) and you  have to link with \fBlibNew.so\fR (e.g. use
-\fBroot-config --new --libs\fR) or use \fBrootn.exe\fR. 
+\fBroot-config \-\-new \-\-libs\fR) or use \fBrootn.exe\fR. 
 .PP
 When all this is the case you will find at the end of the program
 execution a file \fBmemcheck.out\fR in the directory where you started
@@ -67,7 +67,17 @@ This manual page was written by Christian Holm Christensen
 <cholm@nbi.dk>, for the Debian GNU/Linux system (but may be used by
 others). 
 .\"
-.\" $Log: root-config.1,v $
+.\" $Log: memprobe.1,v $
+.\" Revision 1.1  2002/01/20 14:23:52  rdm
+.\" Mega patch by Christian Holm concerning the configure, build and
+.\" Debian and RedHat packaging scripts. The configure script has been
+.\" rationalized (introduction of two shell functions to find package
+.\" headers and libraries). Extensive update of the INSTALL writeup,
+.\" including description of all new packages (SapDB, PgSql, etc.).
+.\" More options to the root-config script. Man page for memprobe.
+.\" Big overhaul of the Debian and RedHat packaging scripts, supporting
+.\" the new libraries.
+.\"
 .\" Revision 1.1  2001/08/15 13:30:48  rdm
 .\" move man files to new subdir man1. This makes it possible to add
 .\" $ROOTSYS/man to MANPATH and have "man root" work.
