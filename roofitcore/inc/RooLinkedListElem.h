@@ -1,7 +1,7 @@
 /*****************************************************************************
  * Project: RooFit                                                           *
  * Package: RooFitCore                                                       *
- *    File: $Id: RooLinkedListElem.rdl,v 1.7 2003/05/14 02:58:40 wverkerke Exp $
+ *    File: $Id: RooLinkedListElem.rdl,v 1.8 2004/04/05 22:44:12 wverkerke Exp $
  * Authors:                                                                  *
  *   WV, Wouter Verkerke, UC Santa Barbara, verkerke@slac.stanford.edu       *
  *   DK, David Kirkby,    UC Irvine,         dkirkby@uci.edu                 *
@@ -51,6 +51,7 @@ public:
   Int_t decRefCount() { return --_refCount ; }
 
 protected:
+  friend class RooHashTable ;
   friend class RooLinkedList ;
   friend class RooLinkedListIter ;
   RooLinkedListElem* _prev ; // Link to previous element in list

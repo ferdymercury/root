@@ -1,7 +1,7 @@
 /*****************************************************************************
  * Project: RooFit                                                           *
  * Package: RooFitCore                                                       *
- *    File: $Id: RooRefCountList.rdl,v 1.3 2002/09/17 06:39:34 verkerke Exp $
+ *    File: $Id: RooRefCountList.rdl,v 1.4 2004/04/05 22:44:12 wverkerke Exp $
  * Authors:                                                                  *
  *   WV, Wouter Verkerke, UC Santa Barbara, verkerke@slac.stanford.edu       *
  *   DK, David Kirkby,    UC Irvine,         dkirkby@uci.edu                 *
@@ -20,7 +20,7 @@
 
 class RooRefCountList : public RooLinkedList {
 public:
-  inline RooRefCountList() : RooLinkedList() { }
+  RooRefCountList() ; 
   virtual ~RooRefCountList() {} ;
 
   virtual void Add(TObject* arg) { Add(arg,1) ; }
