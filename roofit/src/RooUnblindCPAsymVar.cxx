@@ -1,7 +1,7 @@
 /*****************************************************************************
  * Project: BaBar detector at the SLAC PEP-II B-factory
  * Package: RooFitCore
- *    File: $Id: RooUnblindCPAsymVar.cc,v 1.4 2001/08/02 21:40:04 verkerke Exp $
+ *    File: $Id: RooUnblindCPAsymVar.cc,v 1.5 2001/08/23 01:23:35 verkerke Exp $
  * Authors:
  *   DK, David Kirkby, Stanford University, kirkby@hep.stanford.edu
  *   WV, Wouter Verkerke, UC Santa Barbara, verkerke@slac.stanford.edu
@@ -10,6 +10,19 @@
  *
  * Copyright (C) 2001 University of California
  *****************************************************************************/
+
+// -- CLASS DESCRIPTION [REAL] --
+//
+// Implementation of BlindTools' CP asymmetry blinding method
+// A RooUnblindCPAsymVar object is a real valued function
+// object, constructed from a blind value holder and a 
+// set of unblinding parameters. When supplied to a PDF
+// in lieu of a regular parameter, the blind value holder
+// supplied to the unblinder objects will in a fit be minimized 
+// to blind value corresponding to the actual minimum of the
+// parameter. The transformation is chosen such that the
+// the error on the blind parameters is indentical to that
+// of the unblind parameter
 
 #include "RooFitCore/RooArgSet.hh"
 #include "RooFitModels/RooUnblindCPAsymVar.hh"
@@ -21,67 +34,38 @@ ClassImp(RooUnblindCPAsymVar)
 
 RooUnblindCPAsymVar::RooUnblindCPAsymVar() : _blindEngine("") 
 {
+  // Default constructor
 }
 
 
 RooUnblindCPAsymVar::RooUnblindCPAsymVar(const char *name, const char *title,
 					     const char *blindString, RooAbsReal& cpasym)
-  : RooAbsReal(name,title), _blindEngine(blindString), _asym("asym","CP Asymmetry",this,cpasym) 
+  : RooAbsHiddenReal(name,title), _blindEngine(blindString), _asym("asym","CP Asymmetry",this,cpasym) 
 {  
+  // Constructor from a given RooAbsReal (to hold the blind value) and a set of blinding parameters
 }
 
 
 RooUnblindCPAsymVar::RooUnblindCPAsymVar(const RooUnblindCPAsymVar& other, const char* name) : 
-  RooAbsReal(other, name), _blindEngine(other._blindEngine), _asym("asym",this,other._asym)
+  RooAbsHiddenReal(other, name), _blindEngine(other._blindEngine), _asym("asym",this,other._asym)
 {
+  // Copy constructor
 }
 
 
 RooUnblindCPAsymVar::~RooUnblindCPAsymVar() 
 {
+  // Copy constructor
 }
 
 
 Double_t RooUnblindCPAsymVar::evaluate() const
 {
+  // Evaluate RooBlindTools unhide-asymmetry method on blind value
   return _blindEngine.UnHideAsym(_asym);
 }
 
 
-Bool_t RooUnblindCPAsymVar::isValid() const
-{
-  return isValid(getVal()) ;
-}
-
-
-Bool_t RooUnblindCPAsymVar::isValid(Double_t value, Bool_t verbose) const
-{
-  return kTRUE ;
-}
-
-
-void RooUnblindCPAsymVar::printToStream(ostream& os, PrintOption opt, TString indent) const
-{
-  // Print current value and definition of formula
-  os << indent << "RooUnblindCPAsymVar: " << GetName() << " : (value hidden) asym=" 
-     << _asym.arg().GetName() ;
-  if(!_unit.IsNull()) os << ' ' << _unit;
-  printAttribList(os) ;
-  os << endl ;
-} 
-
-
-Bool_t RooUnblindCPAsymVar::readFromStream(istream& is, Bool_t compact, Bool_t verbose)
-{
-  cout << "RooUnblindCPAsymVar::readFromStream(" << GetName() << "): not allowed" << endl ;
-  return kTRUE ;
-}
-
-
-void RooUnblindCPAsymVar::writeToStream(ostream& os, Bool_t compact) const
-{
-  cout << "RooUnblindCPAsymVar::writeToStream(" << GetName() << "): not allowed" << endl ;
-}
 
 
 
