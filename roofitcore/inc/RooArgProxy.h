@@ -1,7 +1,7 @@
 /*****************************************************************************
  * Project: BaBar detector at the SLAC PEP-II B-factory
  * Package: RooFitCore
- *    File: $Id: RooArgProxy.rdl,v 1.2 2001/05/03 02:15:54 verkerke Exp $
+ *    File: $Id: RooArgProxy.rdl,v 1.3 2001/05/10 18:58:47 verkerke Exp $
  * Authors:
  *   DK, David Kirkby, Stanford University, kirkby@hep.stanford.edu
  *   WV, Wouter Verkerke, UC Santa Barbara, verkerke@slac.stanford.edu
@@ -14,14 +14,16 @@
 #define ROO_ARG_PROXY
 
 #include "TObject.h"
+#include "RooFitCore/RooAbsProxy.hh"
 #include "RooFitCore/RooAbsArg.hh"
 
-class RooArgProxy : public TNamed {
+class RooArgProxy : public RooAbsProxy {
 public:
 
   // Constructors, assignment etc.
   RooArgProxy() {} ;
-  RooArgProxy(const char* name, const char* desc, RooAbsArg* owner, RooAbsArg& arg) ;
+  RooArgProxy(const char* name, const char* desc, RooAbsArg* owner, RooAbsArg& arg, 
+	      Bool_t valueServer, Bool_t shapeServer) ;
   RooArgProxy(const char* name, RooAbsArg* owner, const RooArgProxy& other) ;
   virtual ~RooArgProxy() {} ;
   inline RooAbsArg* absArg() const { return _arg ; }
@@ -29,12 +31,9 @@ public:
 protected:
 
   RooAbsArg* _arg ;
-  RooDataSet* _dset ;
   friend class RooAbsArg ;
   friend class RooAbsPdf ;
-  void changePointer(const RooAbsArg* newArg) ;
-  Bool_t changePointer(const RooArgSet& newServerSet) ;
-  void changeDataSet(const RooDataSet* newDataSet) ;
+  virtual Bool_t changePointer(const RooArgSet& newServerSet) ;
 
   ClassDef(RooArgProxy,0) // not persistable 
 };
