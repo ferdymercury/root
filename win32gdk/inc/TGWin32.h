@@ -1,4 +1,4 @@
-// @(#)root/win32gdk:$Name:  $:$Id: TGWin32.h,v 1.14 2003/08/20 14:14:21 brun Exp $
+// @(#)root/win32gdk:$Name:  $:$Id: TGWin32.h,v 1.15 2003/08/23 14:51:25 brun Exp $
 // Author: Rene Brun, Olivier Couet, Fons Rademakers, Bertrand Bellenot   27/11/01
 
 /*************************************************************************
@@ -117,7 +117,6 @@ private:
    Bool_t NeedSplash();
 
 protected:
-   static TGWin32 *fgRealObject;    // singleton
 
    GdkVisual   *fVisual;            //
    GdkColormap *fColormap;          // Default colormap, 0 if b/w
@@ -429,8 +428,6 @@ public:
    void         glShadeModel(UInt_t mode);
    void         glNormal3fv(const Float_t *norm);
 
-   static inline TVirtualX *Instance() { return fgRealObject; }
-   static TVirtualX *Proxy();
    static void Lock();
    static void Unlock();
 
