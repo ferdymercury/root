@@ -1,5 +1,3 @@
-//*CMZ :  2.24/05 16/05/2000  12.03.52  by  Masaharu Goto
-//*-- Author :    Masaharu Goto   16/05/2000
 /* /% C++ %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -9,10 +7,10 @@
  * Description:
  *  Extended Run Time Type Identification API
  ************************************************************************
- * Author                  Masaharu Goto
+ * Author                  Masaharu Goto 
  * Copyright(c) 1995~1999  Masaharu Goto (MXJ02154@niftyserve.or.jp)
  *
- * Permission to use, copy, modify and distribute this software and its
+ * Permission to use, copy, modify and distribute this software and its 
  * documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies and
  * that both that copyright notice and this permission notice appear
@@ -27,7 +25,7 @@
 /*********************************************************************
 * class G__MethodArgInfo
 *
-*
+* 
 *********************************************************************/
 ///////////////////////////////////////////////////////////////////////////
 void G__MethodArgInfo::Init(class G__MethodInfo &a)
@@ -47,7 +45,7 @@ const char* G__MethodArgInfo::Name()
     struct G__ifunc_table *ifunc;
     /* long property=0; */
     ifunc = (struct G__ifunc_table*)belongingmethod->handle;
-    return(ifunc->para_name[belongingmethod->index][argn]);
+    return(ifunc->para_name[belongingmethod->index][argn]); 
   }
   else {
     return((char*)NULL);
@@ -60,16 +58,16 @@ long G__MethodArgInfo::Property()
     struct G__ifunc_table *ifunc;
     long property=0;
     ifunc = (struct G__ifunc_table*)belongingmethod->handle;
-    if(isupper(ifunc->para_type[belongingmethod->index][argn]))
+    if(isupper(ifunc->para_type[belongingmethod->index][argn])) 
       property|=G__BIT_ISPOINTER;
-    if(ifunc->para_default[belongingmethod->index][argn])
+    if(ifunc->para_default[belongingmethod->index][argn]) 
       property|=G__BIT_ISDEFAULT;
-    if(ifunc->para_reftype[belongingmethod->index][argn])
+    if(ifunc->para_reftype[belongingmethod->index][argn]) 
       property|=G__BIT_ISREFERENCE;
 #ifndef G__OLDIMPLEMENTATION401
-    if(ifunc->para_isconst[belongingmethod->index][argn]&G__CONSTVAR)
+    if(ifunc->para_isconst[belongingmethod->index][argn]&G__CONSTVAR) 
       property|=G__BIT_ISCONSTANT;
-    if(ifunc->para_isconst[belongingmethod->index][argn]&G__PCONSTVAR)
+    if(ifunc->para_isconst[belongingmethod->index][argn]&G__PCONSTVAR) 
       property|=G__BIT_ISPCONSTANT;
 #endif
     return(property);
@@ -85,7 +83,7 @@ char* G__MethodArgInfo::DefaultValue()
     struct G__ifunc_table *ifunc;
     /* long property=0; */
     ifunc = (struct G__ifunc_table*)belongingmethod->handle;
-    return(ifunc->para_def[belongingmethod->index][argn]);
+    return(ifunc->para_def[belongingmethod->index][argn]); 
   }
   else {
     return((char*)NULL);

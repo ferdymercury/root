@@ -1,11 +1,19 @@
-//*CMZ :  0.80/01 16/08/96  17.29.40  by  Rene Brun
-//*-- Author :    Valery Fine(fine@vxcern.cern.ch)   16/08/96
+// @(#)root/win32:$Name$:$Id$
+// Author: Valery Fine   27/01/96
+
+/*************************************************************************
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
+ *                                                                       *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
+ *************************************************************************/
 #ifndef ROOT_TGWin32Marker
 #define ROOT_TGWin32Marker
 
-#include "GTYPES.h"
-#include "TPOINT.h"
-#include "WINDOWS4ROOT.h"
+#include "Gtypes.h"
+#include "TPoint.h"
+#include "Windows4Root.h"
 
 class TGWin32Marker {
 

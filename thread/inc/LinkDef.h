@@ -1,7 +1,13 @@
-*CMZ :  2.24/01 02/02/2000  12.45.29  by  Fons Rademakers
-*CMZ :  2.23/12 06/01/2000  11.22.37  by  Fons Rademakers
-*CMZ :  2.22/06 17/06/99  15.03.23  by  Rene Brun
-*-- Author :    Rene Brun   17/06/99
+/* @(#)root/thread:$Name$:$Id$ */
+
+/*************************************************************************
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
+ *                                                                       *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
+ *************************************************************************/
+
 #ifdef __CINT__
 
 #pragma link off all globals;

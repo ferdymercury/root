@@ -1,5 +1,3 @@
-/*CMZ :  2.24/05 16/05/2000  12.03.47  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   16/05/2000*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -11,7 +9,7 @@
  ************************************************************************
  * Copyright(c) 1995~1999  Masaharu Goto (MXJ02154@niftyserve.or.jp)
  *
- * Permission to use, copy, modify and distribute this software and its
+ * Permission to use, copy, modify and distribute this software and its 
  * documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies and
  * that both that copyright notice and this permission notice appear
@@ -904,13 +902,13 @@ char *argv[] ;
     case 'g': /* whole function compile off */
       G__asm_loopcompile = 3;
 #ifndef G__OLDIMPLEMENTATION1155
-      G__asm_loopcompile_mode = G__asm_loopcompile;
+      G__asm_loopcompile_mode = G__asm_loopcompile; 
 #endif
       break;
     case 'O': /* loop compiler on */
       G__asm_loopcompile = atoi(optarg);
 #ifndef G__OLDIMPLEMENTATION1155
-      G__asm_loopcompile_mode = G__asm_loopcompile;
+      G__asm_loopcompile_mode = G__asm_loopcompile; 
 #endif
       break;
     case 'v': /* loop compiler debug mode */
@@ -967,7 +965,7 @@ char *argv[] ;
       linkflag=1;
       if(!linkfilename) {
         switch(G__globalcomp) {
-        case G__CPPLINK:
+        case G__CPPLINK: 
 	  linkfilename = "G__cpplink.C";
 #ifndef G__OLDIMPLEMENTATION772
 	  G__iscpp=1;
@@ -1089,9 +1087,9 @@ char *argv[] ;
       G__more(G__sout,"  -X [readlinedumpfile] : Execute readline dumpfile\n");
       G__more(G__sout,"  -x 'main() {...}' : Execute argument as source code\n");
 #ifndef G__OLDIMPLEMENTATION1285
-      G__more(G__sout,"  -Y [0|1] : ignore(1) not ignore(0) std namespace (only experimental)\n");
+      G__more(G__sout,"  -Y [0|1] : ignore(1) not ignore(0) std namespace (only experimental)\n"); 
 #endif
-      G__more(G__sout,"  -Z [0|1]: auto loading of std hdr files with DLL\n");
+      G__more(G__sout,"  -Z [0|1]: auto loading of std hdr files with DLL\n"); 
       G__more(G__sout,"suboptions\n");
       G__more(G__sout,"  +V : turn on class title comment mode for following source fies\n");
       G__more(G__sout,"  -V : turn off class title comment mode for following source fies\n");
@@ -1510,7 +1508,7 @@ int G__init_globals()
   G__asm_loopcompile=4;
 #endif
 #ifndef G__OLDIMPLEMENTATION1155
-  G__asm_loopcompile_mode = G__asm_loopcompile;
+  G__asm_loopcompile_mode = G__asm_loopcompile; 
 #endif
 #ifdef G__ASM_WHOLEFUNC
   G__asm_wholefunction = G__ASM_FUNC_NOP;
@@ -1876,7 +1874,7 @@ int G__init_globals()
   G__GetSpecialObject = G__getreserved;
 #endif
 
-#if defined(G__ROOT)
+#if defined(G__ROOT) 
   G__is_operator_newdelete = G__MASK_OPERATOR_NEW |
                              G__MASK_OPERATOR_DELETE |
                              G__NOT_USING_2ARG_NEW ;
@@ -1905,7 +1903,7 @@ int G__init_globals()
 /******************************************************************
 * G__platformMacro
 ******************************************************************/
-void G__platformMacro()
+void G__platformMacro() 
 {
   char temp[G__ONELINE];
 #ifdef G__CINTVERSION
@@ -1971,7 +1969,7 @@ void G__platformMacro()
 #ifdef _AIX
   sprintf(temp,"G__AIX=%ld",(long)_AIX); G__getexpr(temp);
 #endif
-#ifdef __KCC
+#ifdef __KCC 
   sprintf(temp,"G__KCC=%ld",(long)__KCC); G__getexpr(temp);
 #endif
 #ifdef G__CONSTNESSFLAG

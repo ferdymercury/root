@@ -1,5 +1,3 @@
-/*CMZ :  2.24/05 16/05/2000  12.03.50  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   16/05/2000*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -11,7 +9,7 @@
  ************************************************************************
  * Copyright(c) 1995~1999  Masaharu Goto (MXJ02154@niftyserve.or.jp)
  *
- * Permission to use, copy, modify and distribute this software and its
+ * Permission to use, copy, modify and distribute this software and its 
  * documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies and
  * that both that copyright notice and this permission notice appear
@@ -28,7 +26,7 @@
 /******************************************************************
 * G__check_semicolumn_after_classdef
 ******************************************************************/
-static int G__check_semicolumn_after_classdef(isclassdef)
+static int G__check_semicolumn_after_classdef(isclassdef) 
 int isclassdef;
 {
   char checkbuf[G__ONELINE];
@@ -38,7 +36,7 @@ int isclassdef;
   fpos_t store_pos;
   fgetpos(G__ifile.fp,&store_pos);
   G__disp_mask=1000;
-
+  
   store_c = G__fgetname(checkbuf,";,(");
 #ifndef G__OLDIMPLEMENTATION1187
   if(isspace(store_c) && '*'!=checkbuf[0] && 0==strchr(checkbuf,'[')) {
@@ -49,7 +47,7 @@ int isclassdef;
     store_c = G__fgetname(checkbuf2,";,(");
     if(isalnum(checkbuf2[0])) errflag=1;
   }
-
+  
   G__disp_mask=0;
   fsetpos(G__ifile.fp,&store_pos);
   G__ifile.line_number = store_linenum;
@@ -116,7 +114,7 @@ int G__using_namespace()
       }
     }
     else {
-      /* using directive in global scope, to be implemented
+      /* using directive in global scope, to be implemented 
        * 1. global scope has baseclass information
        * 2. G__searchvariable() looks for global scope baseclass
        */
@@ -299,9 +297,9 @@ char* name;
         return p;
     }
 
-    if('\''==c && 0==double_quote)
+    if('\''==c && 0==double_quote) 
       single_quote = single_quote ^ 1 ;
-    else if('"'==c && 0==single_quote)
+    else if('"'==c && 0==single_quote) 
       double_quote = double_quote ^ 1 ;
 
     ++p;
@@ -337,9 +335,9 @@ char* name;
         return p-1;
     }
 
-    if('\''==c && 0==double_quote)
+    if('\''==c && 0==double_quote) 
       single_quote = single_quote ^ 1 ;
-    else if('"'==c && 0==single_quote)
+    else if('"'==c && 0==single_quote) 
       double_quote = double_quote ^ 1 ;
 
     --p;
@@ -354,8 +352,8 @@ char* name;
 *
 * Description:
 *   Scan tagname table and return tagnum. If not match, error message
-*  is shown and -1 will be returned.
-*  If non zero value is given to second argument 'noerror', error
+*  is shown and -1 will be returned. 
+*  If non zero value is given to second argument 'noerror', error 
 *  message will be suppressed.
 *
 *  noerror = 0   if not found try to instantiate template class
@@ -465,9 +463,9 @@ int noerror;
   /* if tagname not found, try instantiating class template */
 #ifndef G__OLDIMPLEMENTATION848
   len=strlen(tagname);
-  if('>'==tagname[len-1] && noerror<2 && (len<2||'-'!=tagname[len-2])) {
+  if('>'==tagname[len-1] && noerror<2 && (len<2||'-'!=tagname[len-2])) { 
 #else
-  if('>'==tagname[strlen(tagname)-1] && noerror<2) {
+  if('>'==tagname[strlen(tagname)-1] && noerror<2) { 
      /* (0==G__struct.name[G__struct.alltag] ||
       strcmp(tagname,G__struct.name[G__struct.alltag]))) { */
 #endif
@@ -477,7 +475,7 @@ int noerror;
   }
   else if(noerror<2) {
     struct G__Definedtemplateclass *deftmplt=G__defined_templateclass(tagname);
-    if(deftmplt
+    if(deftmplt 
 #ifndef G__OLDIMPLEMENTATION1046
        && deftmplt->def_para
 #endif
@@ -568,7 +566,7 @@ int type;
   /* Search for old tagname */
   i = G__defined_tagname(tagname,2);
 
-
+  
   /* if new tagname, initialize tag table */
   if(-1==i
 #ifndef G__OLDIMPLEMENTATION1206
@@ -577,7 +575,7 @@ int type;
      ) {
 
     i=G__struct.alltag;
-
+    
     if(i==G__MAXSTRUCT) {
       fprintf(G__serr
 	      ,"Limitation: Number of struct/union tag exceed %d FILE:%s LINE:%d\nFatal error, exit program. Increase G__MAXSTRUCT in G__ci.h and recompile %s\n"
@@ -585,7 +583,7 @@ int type;
 	      ,G__ifile.name
 	      ,G__ifile.line_number
 	      ,G__nam);
-
+      
       G__eof=1;
       return(-1);
     }
@@ -622,16 +620,16 @@ int type;
     else {
       len=strlen(atom_tagname);
     }
-
+    
     G__struct.name[i]=malloc((size_t)(len+1));
     strcpy(G__struct.name[i],atom_tagname);
     G__struct.hash[i]=len;
-
+    
     G__struct.size[i]=0;
     G__struct.type[i]=type; /* 's' struct ,'u' union ,'e' enum , 'c' class */
-
+    
     /***********************************************************
-     * Allocate and initialize member variable table
+     * Allocate and initialize member variable table 
      ************************************************************/
     G__struct.memvar[i] = (struct G__var_array *)malloc(sizeof(struct G__var_array));
     G__struct.memvar[i]->varlabel[0][0]=0;
@@ -639,7 +637,7 @@ int type;
     G__struct.memvar[i]->allvar=0;
     G__struct.memvar[i]->next = NULL;
     G__struct.memvar[i]->tagnum = i;
-
+    
     /***********************************************************
      * Allocate and initialize member function table list
      ***********************************************************/
@@ -656,14 +654,14 @@ int type;
      ***********************************************************/
     G__struct.baseclass[i] = (struct G__inheritance *)malloc(sizeof(struct G__inheritance));
     G__struct.baseclass[i]->basen=0;
-
+    
     /***********************************************************
      * Initialize iden information for virtual function
      ***********************************************************/
     G__struct.virtual_offset[i] = -1; /* -1 means no virtual function */
-
+    
     G__struct.isabstract[i]=0;
-
+    
     G__struct.globalcomp[i] = G__globalcomp;
     G__struct.iscpplink[i] = 0;
 
@@ -703,7 +701,7 @@ int type;
     G__struct.alltag++;
   }
   else if(0==G__struct.type[i]) {
-    G__struct.type[i]=type;
+    G__struct.type[i]=type; 
   }
 
   /* return tag table number */
@@ -749,7 +747,7 @@ int statictype;
   envvar->p[envig15]=offset;
   strcpy(envvar->varnamebuf[envig15],var->varnamebuf[ig15]);
   envvar->hash[envig15]=var->hash[ig15];
-  for(i=0;i<G__MAXVARDIM;i++)
+  for(i=0;i<G__MAXVARDIM;i++) 
     envvar->varlabel[envig15][i]=var->varlabel[ig15][i];
   envvar->paran[envig15]=var->paran[ig15];
   envvar->bitfield[envig15]=var->bitfield[ig15];
@@ -852,7 +850,7 @@ char type;
   struct G__var_array *store_local;
   /* char store_tagname[G__LONGLINE]; */
   G__value enumval;
-
+  
   int tagdefining;
   int store_access;
   char basename[G__LONGLINE];
@@ -870,7 +868,7 @@ char type;
 #ifndef G__OLDIMPLEMENTATION1087
   int isclassdef=0;
 #endif
-
+  
 #ifdef G__ASM
 #ifdef G__ASM_DBG
   if(G__asm_dbg&&G__asm_noverflow)
@@ -880,14 +878,14 @@ char type;
 #endif
   G__abortbytecode();
 #endif
-
+  
   /*
    * [struct|union|enum]   tagname  { member }  item ;
    *                    ^
    * read tagname
    */
   /* fgetpos(G__ifile.fp,&rewind_fpos); */
-
+  
 #ifndef G__OLDIMPLEMENTATION730
   c=G__fgetname_template(tagname,"{:;=&");
 #else
@@ -901,20 +899,20 @@ char type;
     G__genericerror((char*)NULL);
   }
 #endif
-
+  
   /*
    * [struct|union|enum]   tagname{ member }  item ;
    *                               ^
    *                     OR
    * [struct|union|enum]          { member }  item ;
    *                               ^
-   * push back before '{' and fgetpos
+   * push back before '{' and fgetpos 
    */
   if(c=='{') {
     fseek(G__ifile.fp,-1,SEEK_CUR);
     if(G__dispsource) G__disp_mask=1;
   }
-
+  
   /*
    * [struct|union|enum]   tagname   { member }  item ;
    *                               ^
@@ -970,7 +968,7 @@ char type;
   else {
     G__genericerror("Syntax error in class/struct definition");
   }
-
+  
   /*
    * set default tagname if tagname is omitted
    */
@@ -980,8 +978,8 @@ char type;
     }
 #ifndef G__OLDIMPLEMENTATION612
     else if('n'==type) {
-      /* unnamed namespace, treat as global scope, namespace has no effect.
-       * This implementation may be wrong.
+      /* unnamed namespace, treat as global scope, namespace has no effect. 
+       * This implementation may be wrong. 
        * Should fix later with using directive in global scope */
       G__var_type='p';
       G__exec_statement();
@@ -1004,7 +1002,7 @@ char type;
     return;
   }
 #endif
-
+  
   /* BUG FIX, 17 Nov 1992
    *  tagnum wasn't saved
    */
@@ -1045,7 +1043,7 @@ char type;
     return;
   }
   G__def_tagnum = G__tagnum;
-
+  
   /*
    * judge if new declaration by size
    */
@@ -1055,10 +1053,10 @@ char type;
   else {
     newdecl=0;
   }
-
+  
   /* typenum is -1 for struct,union,enum without typedef */
   G__typenum = -1;
-
+  
   /* Now came to
    * [struct|union|enum]   tagname   { member }  item ;
    *                                 ^
@@ -1070,20 +1068,20 @@ char type;
    *                                   ^
    * member declaration if exist
    */
-
+  
   /**************************************************************
    * base class declaration
    **************************************************************/
   if(c==':') c=',';
   while(c==',') {
-    /* [struct|class] <tagname> : <private|public> base_class {
+    /* [struct|class] <tagname> : <private|public> base_class { 
      *                           ^                                */
 
 #ifndef G__OLDIMPLEMENTATION605
     /* reset virtualbase flag */
     isvirtualbase = 0;
 #endif
-
+    
     /* read base class name */
 #ifdef G__TEMPLATECLASS
     c=G__fgetname_template(basename,"{,"); /* case 2) */
@@ -1098,8 +1096,8 @@ char type;
       G__genericerror((char*)NULL);
     }
 #endif
-
-    /* [struct|class] <tagname> : <private|public> base1 , base2 {
+    
+    /* [struct|class] <tagname> : <private|public> base1 , base2 { 
      *                                            ^  or ^         */
 
     if(strcmp(basename,"virtual")==0) {
@@ -1117,7 +1115,7 @@ char type;
       }
 #endif
     }
-
+    
     if('c'==type) baseaccess=G__PRIVATE;
     else          baseaccess=G__PUBLIC;
     if(strcmp(basename,"public")==0) {
@@ -1203,9 +1201,9 @@ char type;
       baseclass = G__struct.baseclass[G__tagnum];
       pbasen= &(baseclass->basen);
 #endif /* ON693 */
-
-      /*
-       * set base class information to tag info table
+      
+      /* 
+       * set base class information to tag info table 
        */
       baseclass->property[*pbasen]=G__ISDIRECTINHERIT + isvirtualbase;
       baseclass->basetagnum[*pbasen]=G__defined_tagname(basename,0);
@@ -1233,42 +1231,42 @@ char type;
       }
       else {
 	if(isvirtualbase)
-	  G__struct.size[G__tagnum]
+	  G__struct.size[G__tagnum] 
 	    += (G__struct.size[baseclass->basetagnum[*pbasen]]+G__DOUBLEALLOC);
 	else
-	  G__struct.size[G__tagnum]
+	  G__struct.size[G__tagnum] 
 	    += G__struct.size[baseclass->basetagnum[*pbasen]];
       }
 #else
       if(isvirtualbase)
-	G__struct.size[G__tagnum]
+	G__struct.size[G__tagnum] 
 	  += (G__struct.size[baseclass->basetagnum[*pbasen]]+G__DOUBLEALLOC);
       else
-	G__struct.size[G__tagnum]
+	G__struct.size[G__tagnum] 
 	  += G__struct.size[baseclass->basetagnum[*pbasen]];
 #endif
-
-      /*
-       * inherit base class info, variable member, function member
+      
+      /* 
+       * inherit base class info, variable member, function member 
        */
       G__inheritclass(G__tagnum,baseclass->basetagnum[*pbasen],baseaccess);
 
       /* ++(*pbasen); */
     }
-
-    /*
-     * reading remaining space
+    
+    /* 
+     * reading remaining space 
      */
     if(isspace(c)) {
       c=G__fignorestream("{,");
     }
-
+    
     /* rewind 1 char if '{' */
     if(c=='{') {
       fseek(G__ifile.fp,-1,SEEK_CUR);
       if(G__dispsource) G__disp_mask=1;
     }
-
+    
   } /* end of base class declaration */
 
 
@@ -1282,7 +1280,7 @@ char type;
      make us fail because the rest of the code is not going to be run.
      Anyway we already checked once. */
   if (newdecl) {
-#else
+#else 
   {
 #endif
     int purecount= 0;
@@ -1375,29 +1373,29 @@ char type;
     /* Scan virtual base class table and subtract duplication */
     for(uvb=0;uvb<nunique;uvb++) {
       if(vbcount[uvb]>1) {
-	G__struct.isabstract[G__tagnum]
+	G__struct.isabstract[G__tagnum] 
 	  -= G__struct.isabstract[basetags[uvb]]*(vbcount[uvb]-1);
       }
     }
   }
 #endif /* ON943 */
-
+  
   /* fsetpos(G__ifile.fp,&rewind_fpos); */
   if(c=='{') { /* member declarations */
 
 #ifndef G__OLDIMPLEMENTATION1087
     isclassdef=1;
 #endif
-
+    
 #ifndef G__OLDIMPLEMENTATION612
     if(newdecl || 'n'==type) {
 #else
     if(newdecl) {
 #endif
-
+      
       G__struct.line_number[G__tagnum] = G__ifile.line_number;
       G__struct.filenum[G__tagnum] = G__ifile.filenum;
-
+      
       store_access=G__access;
       G__access = G__PUBLIC;
       switch(type) {
@@ -1483,7 +1481,7 @@ char type;
 	G__enumdef=0;
 	G__access=store_access;
       }
-
+      
       else { /* class, struct or union */
 	/********************************************
 	 * Parsing member declaration
@@ -1537,8 +1535,8 @@ char type;
       c=G__fignorestream("}");
     }
   }
-
-
+  
+  
   /*
    * Now came to
    * [struct|union|enum]   tagname   { member }  item ;
@@ -1551,22 +1549,22 @@ char type;
    *                                   ^
    * item declaration
    */
-
+  
   G__var_type = 'u';
-
+  
   /* Need to think about this */
   if(type=='e') G__var_type='i';
 
   if(ispointer) G__var_type=toupper(G__var_type);
 
   if(G__return>G__RETURN_NORMAL) return;
-
+  
   if('u'==type) {
     fpos_t pos;
     int linenum;
     fgetpos(G__ifile.fp,&pos);
     linenum=G__ifile.line_number;
-
+    
     c = G__fgetstream(basename,";");
     if(basename[0]) {
       fsetpos(G__ifile.fp,&pos);
@@ -1601,7 +1599,7 @@ char type;
 #endif
     G__define_var(G__tagnum,-1);
   }
-
+  
   G__tagnum=store_tagnum;
   G__def_tagnum = store_def_tagnum;
 

@@ -1,12 +1,13 @@
-//*CMZ :  2.24/03 29/04/2000  23.42.00  by  Rene Brun
-//*CMZ :  2.24/01 02/03/2000  13.25.21  by  Valery Fine(fine@bnl.gov)
-//*CMZ :  2.23/09 18/11/99  19.36.58  by  Valery Fine(fine@mail.cern.ch)
-//*CMZ :  2.23/07 24/10/99  18.22.52  by  Valery Fine(fine@mail.cern.ch)
-//*CMZ :  2.23/02 02/09/99  15.39.27  by  Rene Brun
-//*CMZ :  2.22/01 11/04/99  21.23.33  by  Valery Fine(fine@mail.cern.ch)
-//*CMZ :  2.21/06 12/02/99  17.18.10  by  Valery Fine(fine@vxcern.cern.ch)
-//*CMZ :  1.03/09 16/12/97  11.11.14  by  Valery Fine(fine@mail.cern.ch)
-//*-- Author :    Valery Fine(fine@vxcern.cern.ch)   16/08/96
+// @(#)root/win32:$Name$:$Id$
+// Author: Valery Fine   11/03/96
+
+/*************************************************************************
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
+ *                                                                       *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
+ *************************************************************************/
 #ifndef ROOT_TGWin32WindowsObject
 #define ROOT_TGWin32WindowsObject
 

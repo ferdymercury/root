@@ -1,5 +1,3 @@
-/*CMZ :  2.24/05 16/05/2000  12.03.44  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   16/05/2000*/
 /* /% C++ %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -11,7 +9,7 @@
  ************************************************************************
  * Copyright(c) 1995~1999  Masaharu Goto (MXJ02154@niftyserve.or.jp)
  *
- * Permission to use, copy, modify and distribute this software and its
+ * Permission to use, copy, modify and distribute this software and its 
  * documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies and
  * that both that copyright notice and this permission notice appear
@@ -22,14 +20,14 @@
 
 
 #ifndef G__TYPEINFO_H
-#define G__TYPEINFO_H
+#define G__TYPEINFO_H 
 
 
 #include "Api.h"
 
 /*********************************************************************
 * class G__TypeInfo
-*
+* 
 *********************************************************************/
 class G__TypeInfo : public G__ClassInfo  {
   friend class G__DataMemberInfo;
@@ -42,9 +40,9 @@ class G__TypeInfo : public G__ClassInfo  {
   void Init(const char *typenamein);
 #ifndef __MAKECINT__
   G__TypeInfo(G__value buf) : G__ClassInfo() { Init(buf); }
-  void Init(G__value buf) {
-    type    = buf.type;
-    typenum = buf.typenum;
+  void Init(G__value buf) { 
+    type    = buf.type; 
+    typenum = buf.typenum; 
     tagnum  = buf.tagnum;
     if(isupper((int)type)) reftype=buf.obj.reftype.reftype;
     else              reftype=0;
@@ -55,7 +53,7 @@ class G__TypeInfo : public G__ClassInfo  {
   int operator!=(const G__TypeInfo& a);
   const char *Name();
   const char *TrueName();
-  int Size();
+  int Size(); 
   long Property();
   int IsValid();
   void *New();

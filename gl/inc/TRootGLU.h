@@ -1,6 +1,12 @@
-//*CMZ :  2.00/00 04/03/98  17.22.17  by  Fons Rademakers
-//*CMZ :  1.01/05 03/06/97  20.39.50  by  Fons Rademakers
-//*-- Author :    Maarten Ballintijn   27/04/96
+/* @(#)root/gl:$Name$:$Id$ */
+
+/*************************************************************************
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
+ *                                                                       *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
+ *************************************************************************/
 
 #ifndef GL_RootGLU
 #define GL_RootGLU

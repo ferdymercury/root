@@ -1,5 +1,3 @@
-/*CMZ :  2.24/05 16/05/2000  12.03.47  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   16/05/2000*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -11,7 +9,7 @@
  ************************************************************************
  * Copyright(c) 1995~1999  Masaharu Goto (MXJ02154@niftyserve.or.jp)
  *
- * Permission to use, copy, modify and distribute this software and its
+ * Permission to use, copy, modify and distribute this software and its 
  * documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies and
  * that both that copyright notice and this permission notice appear
@@ -120,7 +118,7 @@ struct G__reflist *reflist;
 {
   struct G__reflist *freed;
   static struct G__reflist temp;
-
+  
   if(reflist->prev) {
     freed=reflist;
     reflist->prev->next = reflist->next;
@@ -135,7 +133,7 @@ struct G__reflist *reflist;
     reflist = &temp;
   }
   free((void*)freed);
-
+  
   return(reflist);
 }
 
@@ -151,7 +149,7 @@ struct G__alloclist *alloc;
   struct G__alloclist *freed;
   static struct G__alloclist temp;
 
-  if(!alloc->next) {
+  if(!alloc->next) { 
     G__p_alloc = alloc->prev;
   }
 

@@ -1,5 +1,3 @@
-/*CMZ :  2.24/05 16/05/2000  12.04.02  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   16/05/2000*/
 /*
  *
  * Copyright (c) 1994
@@ -16,7 +14,7 @@
  */
 
 // vector<bool> is replaced by bit_vector at present because bool is not
-// implemented.
+// implemented.  
 
 #ifndef BVECTOR_H
 #define BVECTOR_H
@@ -38,7 +36,7 @@ public:
     typedef Allocator<unsigned int> vector_allocator;
     typedef bool value_type;
     typedef vector_allocator::size_type size_type;
-    typedef vector_allocator::difference_type difference_type;
+    typedef vector_allocator::difference_type difference_type; 
 
     class iterator;
     class const_iterator;
@@ -54,9 +52,9 @@ public:
 	reference() : p(0), mask(0) {}
 	operator bool() const { return !(!(*p & mask)); }
 	reference& operator=(bool x) {
-	    if (x)
+	    if (x)      
 		*p |= mask;
-	    else
+	    else 
 		*p &= ~mask;
 	    return *this;
 	}
@@ -145,7 +143,7 @@ public:
 	}
     };
 
-    class const_iterator
+    class const_iterator 
 	: public random_access_iterator<bool, difference_type> {
     friend class bit_vector;
     protected:
@@ -214,8 +212,8 @@ public:
 	difference_type operator-(const_iterator x) const {
 	    return __WORD_BIT * (p - x.p) + offset - x.offset;
 	}
-	const_reference operator[](difference_type i) {
-	    return *(*this + i);
+	const_reference operator[](difference_type i) { 
+	    return *(*this + i); 
 	}
 	bool operator==(const const_iterator& x) const {
 	    return p == x.p && offset == x.offset;
@@ -225,7 +223,7 @@ public:
 	}
     };
 
-    typedef reverse_iterator<const_iterator, value_type, const_reference,
+    typedef reverse_iterator<const_iterator, value_type, const_reference, 
                              difference_type> const_reverse_iterator;
     typedef reverse_iterator<iterator, value_type, reference, difference_type>
         reverse_iterator;
@@ -253,12 +251,12 @@ public:
     const_iterator end() const { return finish; }
 
     reverse_iterator rbegin() { return reverse_iterator(end()); }
-    const_reverse_iterator rbegin() const {
-        return const_reverse_iterator(end());
+    const_reverse_iterator rbegin() const { 
+        return const_reverse_iterator(end()); 
     }
     reverse_iterator rend() { return reverse_iterator(begin()); }
-    const_reverse_iterator rend() const {
-        return const_reverse_iterator(begin());
+    const_reverse_iterator rend() const { 
+        return const_reverse_iterator(begin()); 
     }
 
     size_type size() const { return size_type(end() - begin()); }
@@ -288,7 +286,7 @@ public:
     self& operator=(const self& x) {
 	if (&x == this) return *this;
 	if (x.size() > capacity()) {
-	    static_allocator.deallocate(start.p);
+	    static_allocator.deallocate(start.p); 
 	    initialize(x.size());
 	}
 	copy(x.begin(), x.end(), begin());
@@ -327,7 +325,7 @@ public:
 	    insert_aux(position, x);
 	return begin() + n;
     }
-    void insert(iterator position, const_iterator first,
+    void insert(iterator position, const_iterator first, 
 		const_iterator last);
     void insert(iterator position, size_type n, bool x);
     void pop_back() { --finish; }
@@ -392,7 +390,7 @@ void bit_vector::insert(iterator position, size_type n, bool x) {
     }
 }
 
-void bit_vector::insert(iterator position, const_iterator first,
+void bit_vector::insert(iterator position, const_iterator first, 
 			const_iterator last) {
     if (first == last) return;
     size_type n = 0;
@@ -418,4 +416,4 @@ void bit_vector::insert(iterator position, const_iterator first,
 
 #endif
 
-
+ 

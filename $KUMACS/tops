@@ -1,9 +1,0 @@
-*CMZ :  0.03/01 09/02/95  14.36.44  by  Rene Brun
-*-- Author :    Rene Brun   01/02/95
-macro tops
-* to convert a CMZ source C++ deck into paw_kumac/PostScript
-car /tmp/tops.car [1]
-shell c2kumac  [1]
-shell paw -b /tmp/tops
-message Postscript file [1].ps has been generated
-return

@@ -1,5 +1,3 @@
-/*CMZ :  2.24/05 16/05/2000  12.03.51  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   16/05/2000*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -11,7 +9,7 @@
  ************************************************************************
  * Copyright(c) 1995~1999  Masaharu Goto (MXJ02154@niftyserve.or.jp)
  *
- * Permission to use, copy, modify and distribute this software and its
+ * Permission to use, copy, modify and distribute this software and its 
  * documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies and
  * that both that copyright notice and this permission notice appear
@@ -77,7 +75,7 @@ default :                                                                 \
 	break;                                                            \
 }                                                                         \
 G__var_type = 'p';                                                        \
-return(result);
+return(result);                                                           
 
 /**************************************************************************
 * G__ASSIGN_PVAR()
@@ -272,7 +270,7 @@ else { /* type *var; pointer */                                  \
 /**************************************************************************
 * G__GET_VAR()
 *
-*  get variable
+*  get variable 
 **************************************************************************/
 #define G__GET_VAR(SIZE,CASTTYPE,CONVFUNC,TYPE,PTYPE)                        \
 switch(G__var_type) {                                                        \
@@ -298,12 +296,12 @@ default :                                                                    \
   break;                                                                     \
 }                                                                            \
 G__var_type='p';                                                             \
-return(result);
+return(result);               
 
 /**************************************************************************
 * G__GET_STRUCTVAR()
 *
-*  get variable
+*  get variable 
 **************************************************************************/
 #define G__GET_STRUCTVAR                                                     \
 switch(G__var_type) {                                                        \
@@ -359,7 +357,7 @@ switch(G__var_type) {                                                        \
 /**************************************************************************
 * G__GET_PVAR()
 *
-*  get variable
+*  get variable 
 **************************************************************************/
 
 #ifndef G__OLDIMPLEMENTATION634
@@ -470,7 +468,7 @@ default : /* 'p' */                                                           \
 	  ,(G__struct_offset+var->p[ig15]+p_inc*G__LONGALLOC));               \
    }                                                                          \
    break;                                                                     \
-}
+}                                                                             
 
 #else
 
@@ -551,7 +549,7 @@ default : /* 'p' */                                                           \
 	  ,(G__struct_offset+var->p[ig15]+p_inc*G__LONGALLOC));               \
    }                                                                          \
    break;                                                                     \
-}
+}                                                                             
 
 
 #endif
@@ -560,7 +558,7 @@ default : /* 'p' */                                                           \
 /**************************************************************************
 * G__GET_STRUCTPVAR()
 *
-*  get variable
+*  get variable 
 **************************************************************************/
 
 #ifndef G__OLDIMPLEMENTATION1291
@@ -679,7 +677,7 @@ default : /* 'p' */                                                           \
 	  ,(G__struct_offset+var->p[ig15]+p_inc*G__LONGALLOC));               \
    }                                                                          \
    break;                                                                     \
-}
+}                                                                             
 
 #else
 
@@ -762,7 +760,7 @@ default : /* 'p' */                                                           \
 	  ,(G__struct_offset+var->p[ig15]+p_inc*G__LONGALLOC));               \
    }                                                                          \
    break;                                                                     \
-}
+}                                                                             
 
 
 #endif
@@ -1035,11 +1033,11 @@ int var_type;
 	      ,G__asm_cp,item,ig15,paran);
 #endif
 #ifdef G__ASM_WHOLEFUNC
-    if(G__asm_wholefunction && G__ASM_VARLOCAL==store_struct_offset
+    if(G__asm_wholefunction && G__ASM_VARLOCAL==store_struct_offset 
 #ifndef G__OLDIMPLEMENTATION776
        && G__LOCALSTATIC!=var->statictype[ig15]
 #endif
-       )
+       ) 
       G__asm_inst[G__asm_cp]=G__ST_LVAR;
     else
       G__asm_inst[G__asm_cp]=G__ST_VAR;
@@ -1098,7 +1096,7 @@ G__value result;
   }
 
   if(result.type=='u') {
-    if(result.obj.i<0)
+    if(result.obj.i<0) 
       sprintf(ttt,"(%s)(%ld)" ,G__struct.name[result.tagnum] ,result.obj.i);
     else
       sprintf(ttt,"(%s)%ld" ,G__struct.name[result.tagnum] ,result.obj.i);
@@ -1160,7 +1158,7 @@ G__value result;
   G__tagnum = tagnum;
   store_struct_offset = G__store_struct_offset;
   G__store_struct_offset=pdest;
-
+  
   ig2=0;
   para=G__getfunction(result7,&ig2 ,G__TRYMEMFUNC);
 
@@ -1191,7 +1189,7 @@ G__value result;
   if(ig2==0) {
 #ifdef G__ASM
     if(G__asm_noverflow) {
-      G__inc_cp_asm(-2,0);
+      G__inc_cp_asm(-2,0); 
 #ifdef G__ASM_DBG
       if(G__asm_dbg) {
 	fprintf(G__serr,"PUSHSTROS,SETSTROS cancelled");
@@ -1200,7 +1198,7 @@ G__value result;
 #endif
     }
 #endif
-    if(pdest<0)
+    if(pdest<0) 
       sprintf(result7,"operator=((%s)(%ld),%s)"
 	      ,G__struct.name[tagnum],pdest,ttt);
     else
@@ -1212,7 +1210,7 @@ G__value result;
       G__asm_inst[G__asm_cp]=G__ADDSTROS;
       G__asm_inst[G__asm_cp+1]=addstros_value;
 #ifdef G__ASM_DBG
-      if(G__asm_dbg)
+      if(G__asm_dbg) 
 	fprintf(G__serr,"ADDSTROS %d recovered\n",addstros_value);
 #endif
       G__inc_cp_asm(2,0);
@@ -1226,12 +1224,12 @@ G__value result;
       if(G__asm_dbg) fprintf(G__serr,"%3x: POPSTROS\n",G__asm_cp);
 #endif
       G__asm_inst[G__asm_cp] = G__POPSTROS;
-      G__inc_cp_asm(1,0);
+      G__inc_cp_asm(1,0); 
     }
   }
   G__oprovld = 0;
 #endif
-
+  
   if(ig2) { /* in case overloaded = or constructor is found */
     return(para);
   }
@@ -1255,7 +1253,7 @@ G__value result;
 	G__asm_inst[G__asm_cp]=G__ADDSTROS;
 	G__asm_inst[G__asm_cp+1]=addstros_value;
 #ifdef G__ASM_DBG
-	if(G__asm_dbg)
+	if(G__asm_dbg) 
 	  fprintf(G__serr,"ADDSTROS %d recovered\n",addstros_value);
 #endif
 	G__inc_cp_asm(2,0);
@@ -1286,7 +1284,7 @@ G__value result;
     memcpy((void *)(pdest)
 	   ,(void *)(G__int(result)+addstros_value)
 	   ,(size_t)G__struct.size[tagnum]);
-    if(-1!=G__struct.virtual_offset[tagnum])
+    if(-1!=G__struct.virtual_offset[tagnum]) 
       *(long*)(pdest+G__struct.virtual_offset[tagnum]) = tagnum;
   }
 #endif
@@ -1341,7 +1339,7 @@ int isdecl;
 
 #ifdef G__ROOT
 #ifndef G__OLDIMPLEMENTATION481
-  if('$'==varname[0] &&
+  if('$'==varname[0] && 
      G__GetSpecialObject && G__GetSpecialObject!=G__getreserved) {
     char temp[G__MAXNAME];
     strcpy(temp,varname+1);
@@ -1351,17 +1349,17 @@ int isdecl;
 #endif
 #endif
 
-
+  
   ilg=G__LOCAL; /* start from local variable */
   /* done=0; */
-
+  
   /*
    *
    */
   scope_struct_offset=G__store_struct_offset;
   G__ASSERT(0==G__decl || 1==G__decl);
   if(G__def_struct_member) scope_tagnum=G__get_envtagnum();
-  else if(G__decl&&G__exec_memberfunc && -1!=G__memberfunc_tagnum)
+  else if(G__decl&&G__exec_memberfunc && -1!=G__memberfunc_tagnum) 
     scope_tagnum=G__memberfunc_tagnum;
   else                     scope_tagnum=G__tagnum;
   switch(G__scopeoperator(varname,&varhash
@@ -1377,9 +1375,9 @@ int isdecl;
 #ifndef G__OLDIMPLEMENTATION1059
   save_scope_tagnum = scope_tagnum;
 #endif
-
+  
   while(ilg<=G__GLOBAL+1) {
-
+    
 #ifndef G__OLDIMPLEMENTATION1059
     scope_tagnum = save_scope_tagnum;
 #endif
@@ -1426,7 +1424,7 @@ int isdecl;
       var = G__struct.memvar[scope_tagnum] ;
       ilg = G__GLOBAL;
       break;
-
+      
     case G__GLOBAL:
       /******************************************
        * global entry
@@ -1440,9 +1438,9 @@ int isdecl;
       ilg=G__NOTHING;
       break;
     }
-
+    
     /*************************************************
-     * Searching for hash and variable name
+     * Searching for hash and variable name 
      *************************************************/
     /* If searching for class member, check access rule */
     if(in_memfunc ||(struct G__var_array*)NULL==varglobal) {
@@ -1476,7 +1474,7 @@ int isdecl;
       while(var) {
 	ig15=0;
 	while(ig15<var->allvar) {
-	  if(varhash==var->hash[ig15] &&
+	  if(varhash==var->hash[ig15] && 
 	     strcmp(varname,var->varnamebuf[ig15])==0 &&
 	     (var->statictype[ig15]<0||
 #ifndef G__OLDIMPLEMENTATION1135
@@ -1504,7 +1502,7 @@ int isdecl;
 	      var = G__struct.memvar[baseclass->basetagnum[basen]];
 #ifdef G__VIRTUALBASE
 	      if(baseclass->property[basen]&G__ISVIRTUALBASE) {
-		*pG__struct_offset = *pstore_struct_offset
+		*pG__struct_offset = *pstore_struct_offset 
 		  + G__getvirtualbaseoffset(*pstore_struct_offset,scope_tagnum
 					    ,baseclass,basen);
 	      }
@@ -1527,7 +1525,7 @@ int isdecl;
 	      var = G__struct.memvar[baseclass->basetagnum[basen]];
 #ifdef G__VIRTUALBASE
 	      if(baseclass->property[basen]&G__ISVIRTUALBASE) {
-		*pG__struct_offset = *pstore_struct_offset
+		*pG__struct_offset = *pstore_struct_offset 
 		  + G__getvirtualbaseoffset(*pstore_struct_offset,scope_tagnum
 					    ,baseclass,basen);
 	      }
@@ -1604,7 +1602,7 @@ char *ttt;
   int i=0;
   if(isupper(G__var_type)) ++pointlevel;
   while('*'==item[i++]) ++pointlevel;
-  if(G__funcheader
+  if(G__funcheader 
 #ifndef G__OLDIMPLEMENTATION877
      && G__ASM_FUNC_NOP==G__asm_wholefunction
 #endif
@@ -1797,7 +1795,7 @@ int ig15;
   G__asm_inst[G__asm_cp+3]='p';
   G__asm_inst[G__asm_cp+4]=(long)var;
   G__inc_cp_asm(5,0);
-
+  
   G__asm_inst[G__asm_cp] = G__PUSHSTROS;
   G__asm_inst[G__asm_cp+1] = G__SETSTROS;
   G__inc_cp_asm(2,0);
@@ -1809,7 +1807,7 @@ int ig15;
 #endif
 
   sprintf(temp,"~%s()",G__struct.name[G__tagnum]);
-
+ 
   if(var->varlabel[ig15][1]) { /* array */
     size = G__struct.size[G__tagnum];
     pinc=var->varlabel[ig15][1]+1;
@@ -1872,7 +1870,7 @@ int ig15;
   G__asm_inst[G__asm_cp+3]='p';
   G__asm_inst[G__asm_cp+4]=(long)var;
   G__inc_cp_asm(5,0);
-
+  
   G__asm_inst[G__asm_cp] = G__PUSHSTROS;
   G__asm_inst[G__asm_cp+1] = G__SETSTROS;
   G__inc_cp_asm(2,0);
@@ -1884,7 +1882,7 @@ int ig15;
 #endif
 
   sprintf(temp,"~%s()",G__struct.name[G__tagnum]);
-
+ 
   G__getfunction(temp,&known,G__TRYDESTRUCTOR);
 
 #ifdef G__OLDIMPLEMENTATION907
@@ -1958,14 +1956,14 @@ struct G__var_array *varglobal,*varlocal;
   if(G__asm_exec) {
     ig15=G__asm_index;
     paran = G__asm_param->paran;
-
+    
     for(ig35=0;ig35<paran;ig35++) {
       para[ig35] = G__asm_param->para[ig35];
     }
-
+    
     para[paran]=G__null;
     var=varglobal;
-    if(varlocal==NULL)
+    if(varlocal==NULL) 
       G__struct_offset =0;
     else
       G__struct_offset=G__store_struct_offset;
@@ -1983,7 +1981,7 @@ struct G__var_array *varglobal,*varlocal;
   switch(item[0]) {
   case '*': /* value of pointer */
 #ifndef G__OLDIMPLEMENTATION576
-    if(item[1]=='(' ||
+    if(item[1]=='(' || 
        '+'==item[1] || '-'==item[1] ||
        '+'==item[lenitem-1] || '-'==item[lenitem-1]) {
 #else
@@ -2026,10 +2024,10 @@ struct G__var_array *varglobal,*varlocal;
     break;
 #endif
   }
-
+  
   store_var_type=G__var_type;
   G__var_type='p';
-
+  
   /* struct , union member */
   lenitem=strlen(item);
   /* strcpy(ttt,item); */
@@ -2100,7 +2098,7 @@ struct G__var_array *varglobal,*varlocal;
     ig2++;
   }
   single_quote=0;double_quote=0;paren=0;
-
+  
 #ifndef G__OLDIMPLEMENTATION1013
   if(flag) {
     result = G__letstructmem(store_var_type
@@ -2127,13 +2125,13 @@ struct G__var_array *varglobal,*varlocal;
 #endif
   /************************************************************
    * end of struct/union member handling.
-   * If variable is struct,union member like 'tag.mem', it should
+   * If variable is struct,union member like 'tag.mem', it should 
    * return value upto this point.
    ************************************************************/
-
+  
   /************************************************************
    * varglobal==NULL means, G__letvariable() is called from
-   * G__getvariable() or G__letvariable() and G__store_struct_offset
+   * G__getvariable() or G__letvariable() and G__store_struct_offset 
    * is set by parent G__getvariable().
    *  This is done in different manner in case of loop
    * compilation execution.
@@ -2144,9 +2142,9 @@ struct G__var_array *varglobal,*varlocal;
   else {
     G__struct_offset =0;
   }
-
+  
   result=expression;
-
+  
   /* Separate variable name */
   ig15=0;
   varhash=0;
@@ -2166,9 +2164,9 @@ struct G__var_array *varglobal,*varlocal;
     }
     else return(G__null);
   }
-
+  
   varname[ig15++]='\0';
-
+  
   /* Get Parenthesis */
   paran=0;
   if(ig15<lenitem) {
@@ -2196,7 +2194,7 @@ struct G__var_array *varglobal,*varlocal;
 	case '[':
 	case '{':
 	  if((double_quote==0)&&
-	     (single_quote==0)) {
+	     (single_quote==0)) { 
 	    nest++;
 	  }
 	  break;
@@ -2204,7 +2202,7 @@ struct G__var_array *varglobal,*varlocal;
 	case ']':
 	case '}':
 	  if((double_quote==0)&&
-	     (single_quote==0)) {
+	     (single_quote==0)) { 
 	    nest--;
 	  }
 	  break;
@@ -2217,7 +2215,7 @@ struct G__var_array *varglobal,*varlocal;
       parameter[paran][0]='\0';
     }
   }
-
+  
   /************************************************************
    * evaluate parameter if any
    ************************************************************/
@@ -2251,7 +2249,7 @@ struct G__var_array *varglobal,*varlocal;
 
 #ifndef G__OLDIMPLEMENTATION1119
   store_asm_wholefunction = G__asm_wholefunction;
-  store_no_exec_compile = G__no_exec_compile;
+  store_no_exec_compile = G__no_exec_compile;  
   store_no_exec = G__no_exec;
   store_getarraydim = G__getarraydim;
   store_asm_noverflow = G__asm_noverflow;
@@ -2273,7 +2271,7 @@ struct G__var_array *varglobal,*varlocal;
 
 #ifndef G__OLDIMPLEMENTATION1119
   G__asm_wholefunction = store_asm_wholefunction;
-  G__no_exec_compile = store_no_exec_compile;
+  G__no_exec_compile = store_no_exec_compile;  
   G__no_exec = store_no_exec;
   G__getarraydim = store_getarraydim;
   G__asm_noverflow = store_asm_noverflow;
@@ -2295,26 +2293,26 @@ struct G__var_array *varglobal,*varlocal;
   G__exec_memberfunc=store_exec_memberfunc;
   G__def_struct_member=store_def_struct_member;
   G__var_type = store_vartype;
-
+  
 
 
   G__var_type=store_var_type;
-
+  
   /***********************************************************
    * Search old local and global variables.
    *
    * Start from local, local->next , local->next->next ,,,
    *            global,global->next, global->next->next ,,,
    ***********************************************************/
-
+  
 #ifndef G__OLDIMPLEMENTATION1119
-  /* avoid searching global variable when allocating in function (static)
+  /* avoid searching global variable when allocating in function (static) 
    * const in prerun */
   if(G__func_now<0||!G__decl||!G__static_alloc||!G__constvar||!G__prerun)
     var=G__searchvariable(varname,varhash,varlocal,varglobal,&G__struct_offset
 			  ,&store_struct_offset,&ig15
 			  ,G__decl||G__def_struct_member);
-  else
+  else 
     var = (struct G__var_array*)NULL;
 #else
   G__ASSERT(0==G__decl || 1==G__decl);
@@ -2324,16 +2322,16 @@ struct G__var_array *varglobal,*varlocal;
 #endif
 
 
-
+    
     /* assign value */
   if(var) {
 
 #ifndef G__OLDIMPLEMENTATION536
     /*******************************************************
      * Experimental code to block duplicate declaration
-     *******************************************************/
+     *******************************************************/ 
     G__ASSERT(0==G__decl || 1==G__decl);
-    if((G__decl||G__cppconstruct) && 'p'!=G__var_type &&
+    if((G__decl||G__cppconstruct) && 'p'!=G__var_type && 
        G__AUTO==var->statictype[ig15] &&
        (var->type[ig15]!=G__var_type||var->p_tagtable[ig15]!=G__tagnum)) {
       fprintf(G__serr,"Error: %s already declared as different type",item);
@@ -2375,7 +2373,7 @@ struct G__var_array *varglobal,*varlocal;
 					 ,&result,ttt);
     }
 #endif /* ON672 */
-
+      
 #ifdef G__ASM
     /*******************************************************
      * bytecode generation for G__letvariable()
@@ -2404,7 +2402,7 @@ struct G__var_array *varglobal,*varlocal;
 #endif
       return(result);
     }
-
+    
   G__exec_asm_letvar:
 #endif
 
@@ -2413,13 +2411,13 @@ struct G__var_array *varglobal,*varlocal;
      *******************************************************/
     if(G__struct_offset && G__LOCALSTATIC==var->statictype[ig15])
       G__struct_offset=0;
-
-
+    
+      
     /*******************************************************
      * Assign G__null to existing variable is ingored.
      * This is in most cases duplicate declaration.
      *******************************************************/
-    if(result.type=='\0') {
+    if(result.type=='\0') { 
       G__var_type = 'p';
 #ifndef G__OLDIMPLEMENTATION798
       if(G__reftype && G__PVOID!=G__globalvarpointer) {
@@ -2428,7 +2426,7 @@ struct G__var_array *varglobal,*varlocal;
 #endif
       return(result);
     }
-
+    
       /* ON199 */
       /********************************************************
       * In case of duplicate declaration, make it normal assignment
@@ -2446,7 +2444,7 @@ struct G__var_array *varglobal,*varlocal;
 	G__var_type='p';
 	break;
       }
-
+      
       /* check const variable */
       if((var->constvar[ig15])&&(G__funcheader==0)&&
 	 (tolower(var->type[ig15])!='p')) {
@@ -2457,7 +2455,7 @@ struct G__var_array *varglobal,*varlocal;
 	  return(result);
 	}
 #endif
-	if((0==G__prerun || G__COMPILEDGLOBAL==var->statictype[ig15])&&
+	if((0==G__prerun || G__COMPILEDGLOBAL==var->statictype[ig15])&& 
 #ifndef G__OLDIMPLEMENTATION946
 	   !G__decl &&
 #endif
@@ -2469,12 +2467,12 @@ struct G__var_array *varglobal,*varlocal;
 	  return(result);
 	}
       }
-
+      
       /*************************************************
        * Variable found, set done flags
        *************************************************/
       done++;
-
+      
       /*************************************************
        * type array[A][B][C][D]
        *
@@ -2482,12 +2480,12 @@ struct G__var_array *varglobal,*varlocal;
        * var->varlabel[var_identity][0]
        *************************************************/
       ary=var->varlabel[ig15][0];
-
+      
       /*************************************************
        *  array[i][j][k][l]
        *
        *  p_inc = B*C*D*i + C*D*j + D*k + l
-       *  pp_inc =
+       *  pp_inc = 
        *************************************************/
       p_inc=0;
       for(ig25=0;ig25<paran&&ig25<var->paran[ig15];ig25++) {
@@ -2540,14 +2538,14 @@ struct G__var_array *varglobal,*varlocal;
 	return(result);
       }
 #endif
-
+      
       /*************************************************
        *  check p_inc doesn't violate segmentation
        *
        *  0 <= p_inc < A*B*C*D = var->varlabel[iden][1]
        *************************************************/
       if((p_inc<0||p_inc>var->varlabel[ig15][1]||
-	 (ig25<paran&&tolower(var->type[ig15])!='u'))
+	 (ig25<paran&&tolower(var->type[ig15])!='u')) 
 	 && var->reftype[ig15]==G__PARANORMAL) {
 	G__arrayindexerror(ig15,var,item,p_inc);
 	return(expression);
@@ -2564,8 +2562,8 @@ struct G__var_array *varglobal,*varlocal;
       }
 #endif
 #ifndef G__OLDIMPLEMENTATION575
-      if(G__security&G__SECURE_POINTER_TYPE && !G__definemacro &&
-	 isupper(var->type[ig15]) && 'p'==G__var_type && 0==paran &&
+      if(G__security&G__SECURE_POINTER_TYPE && !G__definemacro && 
+	 isupper(var->type[ig15]) && 'p'==G__var_type && 0==paran && 
 	 'Q'!=var->type[ig15] &&
 	 (('Y'!=var->type[ig15] && 'Y'!=result.type && result.obj.i)||
 	  G__security&G__SECURE_CAST2P) ) {
@@ -2580,7 +2578,7 @@ struct G__var_array *varglobal,*varlocal;
 	}
       }
 #else
-      if(G__security&G__SECURE_CAST2P && !G__definemacro &&
+      if(G__security&G__SECURE_CAST2P && !G__definemacro && 
 	 isupper(var->type[ig15])) {
 	if(var->type[ig15]!=result.type ||
 	   ('U'==result.type &&
@@ -2593,7 +2591,7 @@ struct G__var_array *varglobal,*varlocal;
 	}
       }
 #endif
-      G__CHECK(G__SECURE_POINTER_AS_ARRAY
+      G__CHECK(G__SECURE_POINTER_AS_ARRAY 
 	       ,(var->paran[ig15]<paran&&isupper(var->type[ig15]))
 	       ,return(G__null));
       G__CHECK(G__SECURE_POINTER_ASSIGN
@@ -2604,13 +2602,13 @@ struct G__var_array *varglobal,*varlocal;
 #ifndef G__OLDIMPLEMENTATION545
 	 (!G__no_exec_compile) &&
 #endif
-	 isupper(var->type[ig15]) && 'v'!=G__var_type && 'P'!=G__var_type
+	 isupper(var->type[ig15]) && 'v'!=G__var_type && 'P'!=G__var_type 
 #ifndef G__OLDIMPLEMENTATION575
 	 && ((0==paran&&0==var->varlabel[ig15][1]) ||
 	     (1==paran&&1==var->varlabel[ig15][2]&&0==var->varlabel[ig15][3]))
 #endif
 	 ) {
-	address = G__struct_offset+var->p[ig15]+p_inc*G__LONGALLOC;	
+	address = G__struct_offset+var->p[ig15]+p_inc*G__LONGALLOC;	 
 	if(address && *(long*)address) {
 	  G__del_refcount((void*)(*(long*)address),(void**)address);
 	}
@@ -2619,7 +2617,7 @@ struct G__var_array *varglobal,*varlocal;
 	}
       }
 #endif
-
+      
 #ifndef G__OLDIMPLEMENTATION448
       /********************************************************
       * assign bit-field value
@@ -2638,18 +2636,18 @@ struct G__var_array *varglobal,*varlocal;
 #endif
 
       /**************************************************/
-
+      
       switch(var->type[ig15]) {
 	
       case 'i': /* int */
 	G__ASSIGN_VAR(G__INTALLOC,int,G__int)
-	
+	  
       case 'd': /* double */
 	G__ASSIGN_VAR(G__DOUBLEALLOC,double,G__double)
-	
+	    
       case 'c': /* char */
 	G__ASSIGN_VAR(G__CHARALLOC,char,G__int)
-	
+	      
       case 'b': /* unsigned char */
 	G__ASSIGN_VAR(G__CHARALLOC,unsigned char ,G__int)
 
@@ -2724,7 +2722,7 @@ struct G__var_array *varglobal,*varlocal;
 	if(ig25<paran) {
 	  result.tagnum=var->p_tagtable[ig15];
 	  result.typenum=var->p_typetable[ig15];
-	  result.ref=(long)(G__struct_offset+(var->p[ig15])
+	  result.ref=(long)(G__struct_offset+(var->p[ig15])  
 			    +p_inc*G__struct.size[var->p_tagtable[ig15]]);
 	  G__letint(&result,'u',(result.ref));
 	  G__tryindexopr(&result,para,paran,ig25);
@@ -2785,7 +2783,7 @@ struct G__var_array *varglobal,*varlocal;
 	break;
       }
     }
-
+    
     /********************************************************
      * If this is a variable declaration and the variable name
      * is not found in the local variable table, stop searching
@@ -2793,7 +2791,7 @@ struct G__var_array *varglobal,*varlocal;
      *  Duplicate declaration is just ignored and the initilize
      * value is stored into the old variable.
      *********************************************************/
-
+  
   if(done==0) { /* new variable allocation */
     /***********************************************************
      * If no old variable, allocate new variable.
@@ -2809,7 +2807,7 @@ struct G__var_array *varglobal,*varlocal;
   if(G__decl||G__cppconstruct) result.ref = (long)(&var->p[ig15]);
 /* #endif G__ROOT */
 #endif
-
+  
   G__var_type = 'p';
   return(result);
 }
@@ -2942,7 +2940,7 @@ struct G__var_array *varglobal,*varlocal;
   long store_struct_offset;
   int store_tagnum;
 
-
+  
 #ifdef G__ASM
   /************************************************************
    * If G__asm_exec is set by 'for(', 'while(' or 'do{}while('
@@ -2952,11 +2950,11 @@ struct G__var_array *varglobal,*varlocal;
   if(G__asm_exec) {
     ig15=G__asm_index;
     paran = G__asm_param->paran;
-
+    
     for(ig35=0;ig35<paran;ig35++) {
       para[ig35] = G__asm_param->para[ig35];
     }
-
+    
     para[paran]=G__null;
     var=varglobal;
     if(varlocal==NULL)
@@ -2966,14 +2964,14 @@ struct G__var_array *varglobal,*varlocal;
     goto G__exec_asm_getvar;
   }
 #endif
-
-
+  
+  
   /************************************************************
    * get length of expression.
    ************************************************************/
   lenitem=strlen(item);
-
-
+  
+  
   /************************************************************
    * check '*varname'  or '*(pointer expression)'
    *
@@ -2996,19 +2994,19 @@ struct G__var_array *varglobal,*varlocal;
       return(para[0]);
     }
     /**************************************************
-     * if '*varname'
+     * if '*varname' 
      *  not sure what to do with G__var_type
      **************************************************/
     if(G__var_type=='p') {
       /* set variable type flag */
-      G__var_type = 'v';
+      G__var_type = 'v'; 
     }
     else {
       /* set variable type flag */
-      G__var_type = toupper(G__var_type);
+      G__var_type = toupper(G__var_type); 
     }
     /**************************************************
-     * remove '*' from expression.
+     * remove '*' from expression. 
      * char *item is modified.
      **************************************************/
     for(ig2=0;ig2<lenitem;ig2++) item[ig2]=item[ig2+1];
@@ -3031,26 +3029,26 @@ struct G__var_array *varglobal,*varlocal;
     /* casting or deeper parenthesis */
     return(G__null);
   }
-
+  
   /************************************************************
    * store G__var_type.  G__var_type is changed when evaluating
    * array index and struct offset. To avoid unexpected change,
-   * G__var_type is stored and reset to 'p'. This will be
+   * G__var_type is stored and reset to 'p'. This will be 
    * restored later in this function.
    ************************************************************/
   store_var_type=G__var_type;
   G__var_type='p';
-
-
+  
+  
   /************************************************************
    * sinse expression string might be modifed by removing '*'
    * from char *item, * get length of expression again.
    ************************************************************/
   lenitem=strlen(item);
-
-
+  
+  
   /************************************************************
-   * Following while loop checks if the variable is struct or
+   * Following while loop checks if the variable is struct or 
    * union member. If unsurrounded '.' or '->' found set flag=1
    * and split tagname and membername.
    *
@@ -3061,8 +3059,8 @@ struct G__var_array *varglobal,*varlocal;
    *
    *  'varname[tag.member]'  or 'varname[func(tag->member,"ab.")]'
    *              ^                              ^          ^
-   *   These '.' and '->' doesn't count because they are surrounded
-   *  by parenthesis or quotation.  paren, double_quote and
+   *   These '.' and '->' doesn't count because they are surrounded 
+   *  by parenthesis or quotation.  paren, double_quote and 
    *  single_quote are used to identify if they are surreunded by
    *  (){}[] or ""'' and not set flag=1.
    *
@@ -3079,9 +3077,9 @@ struct G__var_array *varglobal,*varlocal;
   /* strcpy(ttt,item); */
   ig2=0;
   while((ig2<lenitem)&&(flag==0)) {
-
+    
     switch(item[ig2]) {
-
+      
     case '.':
       /*************************************************
        * set flag=1 which means, this is a member of
@@ -3099,7 +3097,7 @@ struct G__var_array *varglobal,*varlocal;
 	flag=1;
       }
       break;
-
+      
     case '-':
       /*************************************************
        * set flag=1 which means, this is a member of
@@ -3123,7 +3121,7 @@ struct G__var_array *varglobal,*varlocal;
 #endif
       }
       break;
-
+      
     case '\\':
       /*************************************************
        * if backslash, don't check next char
@@ -3132,7 +3130,7 @@ struct G__var_array *varglobal,*varlocal;
        *************************************************/
       ig2++;
       break;
-
+      
       /*************************************************
        * set flag for quotation
        *************************************************/
@@ -3146,16 +3144,16 @@ struct G__var_array *varglobal,*varlocal;
 	double_quote ^= 1;
       }
       break;
-
+      
     case '[':
-
+      
     case '{':  /* this shouldn't appear */
     case '(':
       if((single_quote==0)&&(double_quote==0)) {
 	paren++;
       }
       break;
-
+      
       /*************************************************
        * decrement paren for close parenthesis
        *************************************************/
@@ -3169,7 +3167,7 @@ struct G__var_array *varglobal,*varlocal;
     }
     ig2++;
   }
-
+  
   /************************************************************
    * reset single_quote, double_quote and paren,
    * This part can probably be omitted. paran is not used in
@@ -3177,9 +3175,9 @@ struct G__var_array *varglobal,*varlocal;
    * initialized when getting parameters.
    ************************************************************/
   single_quote=0;double_quote=0;paren=0;
-
-
-
+  
+  
+  
   /************************************************************
    * if struct member, do following.
    *
@@ -3211,14 +3209,14 @@ struct G__var_array *varglobal,*varlocal;
 #endif
   /************************************************************
    * end of struct/union member handling.
-   * If variable is struct,union member like 'tag.mem', it should
+   * If variable is struct,union member like 'tag.mem', it should 
    * return value upto this point.
    ************************************************************/
-
-
+  
+  
   /************************************************************
    * varglobal==NULL means, G__getvariable() is called from
-   * G__getvariable() or G__letvariable() and G__store_struct_offset
+   * G__getvariable() or G__letvariable() and G__store_struct_offset 
    * is set by parent G__getvariable().
    *  This is done in different manner in case of loop
    * compilation execution.
@@ -3229,8 +3227,8 @@ struct G__var_array *varglobal,*varlocal;
   else {
     G__struct_offset = 0;
   }
-
-
+  
+  
   /************************************************************
    * Separate variable name scaning char *item upto "[("
    *
@@ -3243,7 +3241,7 @@ struct G__var_array *varglobal,*varlocal;
     varname[ig15]=item[ig15];
     varhash+=item[ig15++];
   }
-
+  
   /************************************************************
    * if 'funcname()'
    *            ^
@@ -3258,13 +3256,13 @@ struct G__var_array *varglobal,*varlocal;
     /* if 'func(xxxx)' return */
     return(G__null);
   }
-
+  
   /************************************************************
    * set null char to varname. Should be move above.
    ************************************************************/
   varname[ig15++]='\0';
-
-
+  
+  
   /************************************************************
    * if '[expression]' , means no variable name but only array
    * index.  Syntax error. return null.
@@ -3275,7 +3273,7 @@ struct G__var_array *varglobal,*varlocal;
     *known2=1;
     return(G__null);
   }
-
+  
   /************************************************************
    * scan inside parenthesis '[]' to get array index if any
    *
@@ -3306,7 +3304,7 @@ struct G__var_array *varglobal,*varlocal;
 	case '[':
 	case '{':
 	  if((double_quote==0)&&
-	     (single_quote==0)) {
+	     (single_quote==0)) { 
 	    nest++;
 	  }
 	  break;
@@ -3314,7 +3312,7 @@ struct G__var_array *varglobal,*varlocal;
 	case ']':
 	case '}':
 	  if((double_quote==0)&&
-	     (single_quote==0)) {
+	     (single_quote==0)) { 
 	    nest--;
 	  }
 	  break;
@@ -3327,7 +3325,7 @@ struct G__var_array *varglobal,*varlocal;
       parameter[paran][0]='\0';
     }
   }
-
+  
   /************************************************************
    * evaluate parameter if any
    ************************************************************/
@@ -3364,8 +3362,8 @@ struct G__var_array *varglobal,*varlocal;
   G__store_struct_offset=store_struct_offset;
   G__tagnum=store_tagnum;
   G__var_type = store_vartype;
-
-
+  
+  
   /************************************************************
    * G__var_type was stored in store_var_type right after
    * checking pointer access operators.
@@ -3374,9 +3372,9 @@ struct G__var_array *varglobal,*varlocal;
    * this point.
    ************************************************************/
   G__var_type=store_var_type;
-
-
-
+  
+  
+  
   /***********************************************************
    * search old local and global variables.
    *
@@ -3413,7 +3411,7 @@ struct G__var_array *varglobal,*varlocal;
 #endif
   }
 #endif
-
+    
     /*************************************************
      * Get value if variable name matchs
      *
@@ -3426,7 +3424,7 @@ struct G__var_array *varglobal,*varlocal;
 #endif
 
 #ifndef G__OLDIMPLEMENTATION1119
-      if(G__getarraydim && !G__IsInMacro() &&
+      if(G__getarraydim && !G__IsInMacro() && 
 	 'm'!=var->type[ig15]&&'p'!=var->type[ig15]&&
 	 (0==(G__CONSTVAR&var->constvar[ig15])||
 	  (G__DYNCONST&var->constvar[ig15]))) {
@@ -3476,7 +3474,7 @@ struct G__var_array *varglobal,*varlocal;
 #endif
       }
 #endif
-
+      
 #ifdef G__ASM
       if(G__asm_noverflow) {
 	/************************************
@@ -3486,7 +3484,7 @@ struct G__var_array *varglobal,*varlocal;
 #ifdef G__NEWINHERIT
 	  if(G__struct_offset!=store_struct_offset) {
 #ifdef G__ASM_DBG
-	    if(G__asm_dbg)
+	    if(G__asm_dbg) 
 	      fprintf(G__serr,"%3x: ADDSTROS %d\n"
 		      ,G__asm_cp,G__struct_offset-store_struct_offset);
 #endif
@@ -3496,7 +3494,7 @@ struct G__var_array *varglobal,*varlocal;
 	  }
 #endif
 #ifdef G__ASM_DBG
-	  if(G__asm_dbg)
+	  if(G__asm_dbg) 
 	    fprintf(G__serr
 		    ,"%3x: LD_MSTR  %s index=%d paran=%d\n"
 		    ,G__asm_cp,item,ig15,paran);
@@ -3510,7 +3508,7 @@ struct G__var_array *varglobal,*varlocal;
 #ifdef G__NEWINHERIT
 	  if(G__struct_offset!=store_struct_offset) {
 #ifdef G__ASM_DBG
-	    if(G__asm_dbg)
+	    if(G__asm_dbg) 
 	      fprintf(G__serr,"%3x: ADDSTROS %d\n"
 		      ,G__asm_cp,-G__struct_offset+store_struct_offset);
 #endif
@@ -3523,11 +3521,11 @@ struct G__var_array *varglobal,*varlocal;
 	else {
 #ifdef G__ASM_DBG
 	  if(G__asm_dbg) {
-	    if(G__asm_wholefunction && G__ASM_VARLOCAL==store_struct_offset)
+	    if(G__asm_wholefunction && G__ASM_VARLOCAL==store_struct_offset) 
 	      fprintf(G__serr
 		      ,"%3x: LD_LVAR  %s index=%d paran=%d\n"
 		      ,G__asm_cp,item,ig15,paran);
-	    else
+	    else 
 	      fprintf(G__serr
 		      ,"%3x: LD_VAR  %s index=%d paran=%d\n"
 		      ,G__asm_cp,item,ig15,paran);
@@ -3538,7 +3536,7 @@ struct G__var_array *varglobal,*varlocal;
 #ifndef G__OLDIMPLEMENTATION776
 	     && G__LOCALSTATIC!=var->statictype[ig15]
 #endif
-	     )
+	     ) 
 	    G__asm_inst[G__asm_cp]=G__LD_LVAR;
 	  else
 	    G__asm_inst[G__asm_cp]=G__LD_VAR;
@@ -3554,7 +3552,7 @@ struct G__var_array *varglobal,*varlocal;
       }
 
 #ifndef G__OLDIMPLEMENTATION776
-      if(G__no_exec_compile &&
+      if(G__no_exec_compile && 
 	 (G__CONSTVAR!=var->constvar[ig15] || isupper(var->type[ig15]) ||
 	  G__PARAREFERENCE==var->reftype[ig15] || var->varlabel[ig15][1] ||
 	  var->p[ig15]<0x1000) &&
@@ -3607,7 +3605,7 @@ struct G__var_array *varglobal,*varlocal;
 	}
 	return(result);
       }
-
+      
     G__exec_asm_getvar:
 #endif
 
@@ -3616,13 +3614,13 @@ struct G__var_array *varglobal,*varlocal;
       *******************************************************/
       if(G__struct_offset && G__LOCALSTATIC==var->statictype[ig15])
 	G__struct_offset=0;
-
+      
       done++;
-
+      
       /* Get start pointer of the variable */
       /* ig35= var->varlabel[ig15][0]; */
-
-
+      
+      
       /*************************************************
        * type array[A][B][C][D]
        *
@@ -3630,12 +3628,12 @@ struct G__var_array *varglobal,*varlocal;
        * var->varlabel[var_identity][0]
        *************************************************/
       ary=var->varlabel[ig15][0];
-
+      
       /*************************************************
        *  array[i][j][k][l]
        *
        *  p_inc = B*C*D*i + C*D*j + D*k + l
-       *  pp_inc =
+       *  pp_inc = 
        *************************************************/
       p_inc=0;
       for(ig25=0;ig25<paran&&ig25<var->paran[ig15];ig25++) {
@@ -3649,7 +3647,7 @@ struct G__var_array *varglobal,*varlocal;
 	ary /= var->varlabel[ig15][ig25+4];
 	++ig25;
       }
-
+      
       /*************************************************
        *  check p_inc doesn't violate segmentation
        *
@@ -3666,29 +3664,29 @@ struct G__var_array *varglobal,*varlocal;
 	*known2=1;
 	return(G__null);
       }
-
-
+      
+      
       /**************************************************/
 
       /* ON199 */
-
-
-
+      
+      
+      
       /**************************************************
-       * return struct and typedef information
+       * return struct and typedef information 
        **************************************************/
       result.tagnum=var->p_tagtable[ig15];
       result.typenum=var->p_typetable[ig15];
-
+      
       result.ref = 0;
-
-
+      
+      
       /**************************************************/
-
+      
       *known2=1;
-
+      
       /**************************************************/
-
+      
 #ifdef G__SECURITY
       if(0==G__no_exec_compile&&'v'==G__var_type&&isupper(var->type[ig15])&&
 #ifndef G__OLDIMPLEMENTATION475
@@ -3699,7 +3697,7 @@ struct G__var_array *varglobal,*varlocal;
 	return(G__null);
       }
 #endif
-      G__CHECK(G__SECURE_POINTER_AS_ARRAY
+      G__CHECK(G__SECURE_POINTER_AS_ARRAY 
 	       ,(var->paran[ig15]<paran&&isupper(var->type[ig15]))
 	       ,return(G__null));
       G__CHECK(G__SECURE_POINTER_REFERENCE
@@ -3721,7 +3719,7 @@ struct G__var_array *varglobal,*varlocal;
 	return(result);
       }
 #endif
-
+      
       switch(var->type[ig15]) {
 	
       case 'i': /* int */
@@ -3926,8 +3924,8 @@ struct G__var_array *varglobal,*varlocal;
    * end of variable name search 'while()' loop.
    *   searched all old local and global variables.
    ***********************************************************/
-
-
+  
+  
   if(done==0) { /* undefined variable */
 
     /*******************************************
@@ -3947,7 +3945,7 @@ struct G__var_array *varglobal,*varlocal;
      *******************************************/
     G__var_type='p';
     /*
-     *  Maybe type is 'Q' instead of 'C'
+     *  Maybe type is 'Q' instead of 'C' 
      * but type 'Q'(pointer to function) is not implemented.
      */
     G__search_func(varname,&result);
@@ -3990,7 +3988,7 @@ struct G__var_array *varglobal,*varlocal;
     G__var_type='p';
     return(result);
   }
-
+  
 }
 
 #ifndef G__OLDIMPLEMENTATION1013
@@ -4038,7 +4036,7 @@ int objptr;  /* 1 : object , 2 : pointer */
 #ifndef G__OLDIMPLEMENTATION1259
   G__SIGNEDCHAR_T store_isconst;
 #endif
-
+  
   /****************************************************
    * pointer access operators are removed at the
    * beginning of this function. Add it again to membername
@@ -4052,7 +4050,7 @@ int objptr;  /* 1 : object , 2 : pointer */
     sprintf(varname,"*%s",membername);
     strcpy(membername,varname);
   }
-
+  
   /****************************************************
    * store G__tagnum and G__store_struct_offset to
    * local variable.
@@ -4063,10 +4061,10 @@ int objptr;  /* 1 : object , 2 : pointer */
 #ifndef G__OLDIMPLEMENTATION1259
   store_isconst = G__isconst;
 #endif
-
+  
 #ifdef G__ASM
   /****************************************************
-   * loop compilation to store
+   * loop compilation to store 
    * G__store_struct_offset.
    ****************************************************/
   if(G__asm_noverflow) {
@@ -4081,9 +4079,9 @@ int objptr;  /* 1 : object , 2 : pointer */
     G__inc_cp_asm(1,0);
   }
 #endif
-
+  
   flag = 0;
-
+  
 #ifndef G__OLDIMPLEMENTATION1065
   if(strchr(tagname,'.') && (strchr(tagname,'+')|| strchr(tagname,'-')||
 			     strchr(tagname,'*')|| strchr(tagname,'/')||
@@ -4093,9 +4091,9 @@ int objptr;  /* 1 : object , 2 : pointer */
     result = G__getexpr(tagname);
     if(result.type) flag=1;
   }
-  if(flag) {
-  }
-  else
+  if(flag) { 
+  } 
+  else 
 #endif
   /****************************************************
    * Get entry pointer for the struct,union and
@@ -4130,10 +4128,10 @@ int objptr;  /* 1 : object , 2 : pointer */
 			    ,(struct G__var_array*)NULL
 			    ,G__struct.memvar[G__tagnum]);
   }
-
+  
   if(flag==0) {
     /***************************************************
-     * object not found as variable,
+     * object not found as variable, 
      * try function which returns struct.
      * Referencing to freed memory area. So, this
      * implementation is bad.
@@ -4160,9 +4158,9 @@ int objptr;  /* 1 : object , 2 : pointer */
       if(result.type) flag=1;
     }
 #endif
-
+    
     /*************************************************
-     * if no function like that then return. error
+     * if no function like that then return. error 
      * message will be displayed by G__getitem().
      **************************************************/
     if(flag==0) {
@@ -4178,15 +4176,15 @@ int objptr;  /* 1 : object , 2 : pointer */
     }
 #endif
   }
-
+  
   G__store_struct_offset = result.obj.i;
   G__tagnum = result.tagnum;
 #ifndef G__OLDIMPLEMENTATION1259
   G__isconst = result.isconst;
 #endif
-
+  
 #ifndef G__OLDIMPLEMENTATION925
-  if(G__tagnum<0
+  if(G__tagnum<0 
 #ifndef G__OLDIMPLEMENTATION1212
      || (isupper(result.type)&&result.obj.reftype.reftype>=G__PARAP2P)
 #else
@@ -4381,14 +4379,14 @@ int objptr;  /* 1 : object , 2 : pointer */
 #ifndef G__OLDIMPLEMENTATION1151
   if(2==objptr && G__initval_eval) G__dynconst = G__DYNCONST;
 #endif
-
+  
   /*******************************************************************
    * end of getting struct offset
    *  G__tagnum and G__store_struct_offset should be
    * ready by now.
    ********************************************************************/
-
-
+  
+  
   /****************************************************
    * get variable value.
    *  If membername includes another hierchy of struct
@@ -4400,7 +4398,7 @@ int objptr;  /* 1 : object , 2 : pointer */
   result=G__getvariable(membername,known2
 			,(struct G__var_array*)NULL
 			,G__struct.memvar[G__tagnum]);
-
+  
   /****************************************************
    * C++:
    *  if *known2==0                  'tag.func()'
@@ -4431,10 +4429,10 @@ int objptr;  /* 1 : object , 2 : pointer */
 #endif
     }
   }
-
-
+  
+  
   /****************************************************
-   * restore G__tagnum and G__store_struct_offset
+   * restore G__tagnum and G__store_struct_offset 
    * because evaluation is finished.
    ****************************************************/
   G__tagnum=store_tagnum;
@@ -4442,7 +4440,7 @@ int objptr;  /* 1 : object , 2 : pointer */
 #ifndef G__OLDIMPLEMENTATION1259
   G__isconst = store_isconst;
 #endif
-
+  
 #ifdef G__ASM
   /****************************************************
    * pop struct offset for inner loop compilation.
@@ -4459,13 +4457,13 @@ int objptr;  /* 1 : object , 2 : pointer */
     G__inc_cp_asm(1,0);
   }
 #endif
-
+  
   /****************************************************
    * return result
    ****************************************************/
   return(result);
 }
-
+  
 /******************************************************************
 * G__value G__letstructmem()
 *
@@ -4500,7 +4498,7 @@ int objptr;  /* 1 : object , 2 : pointer */
 #ifndef G__OLDIMPLEMENTATION1259
   G__SIGNEDCHAR_T store_isconst;
 #endif
-
+  
   /* add pointer operater if necessary */
   if(store_var_type=='P') {
     sprintf(varname,"&%s",membername);
@@ -4510,13 +4508,13 @@ int objptr;  /* 1 : object , 2 : pointer */
     sprintf(varname,"*%s",membername);
     strcpy(membername,varname);
   }
-
+  
   store_tagnum=G__tagnum;
   store_struct_offset = G__store_struct_offset;
 #ifndef G__OLDIMPLEMENTATION1259
   store_isconst = G__isconst;
 #endif
-
+  
 #ifdef G__ASM
   if(G__asm_noverflow) {
     /*************************************
@@ -4529,9 +4527,9 @@ int objptr;  /* 1 : object , 2 : pointer */
     G__inc_cp_asm(1,0);
   }
 #endif
-
+  
   flag = 0;
-
+  
   /****************************************************
    * Get entry pointer for the struct,union and
    * store it to a global variable G__store_struct_offset.
@@ -4569,7 +4567,7 @@ int objptr;  /* 1 : object , 2 : pointer */
 #ifndef G__OLDIMPLEMENTATION1259
   G__isconst = result.isconst;
 #endif
-
+  
 #ifndef G__OLDIMPLEMENTATION965
   if(flag==0) {
     G__warnundefined(tagname);
@@ -4581,7 +4579,7 @@ int objptr;  /* 1 : object , 2 : pointer */
     return(G__null);
   }
 #endif
-
+  
   if(G__tagnum<0) {
 #ifndef G__OLDIMPLEMENTATION1259
     G__tagnum=store_tagnum;
@@ -4608,9 +4606,9 @@ int objptr;  /* 1 : object , 2 : pointer */
 #endif
     return(expression);
   }
-
+    
   /*************************************
-   * object not found, return
+   * object not found, return 
    * G__getitem() will display error
    * message
    *************************************/
@@ -4663,7 +4661,7 @@ int objptr;  /* 1 : object , 2 : pointer */
     }
   }
 #endif
-
+  
 #ifndef G__OLDIMPLEMENTATION1013
   /****************************************************
    * check if . or -> matches
@@ -4723,8 +4721,8 @@ int objptr;  /* 1 : object , 2 : pointer */
 #endif
 #endif
 #endif
-
-
+  
+  
   /****************************************************
    * assign variable value.
    *  If membername includes another hierchy of struct
@@ -4736,9 +4734,9 @@ int objptr;  /* 1 : object , 2 : pointer */
   result=G__letvariable(membername,expression
 			,(struct G__var_array*)NULL
 			,G__struct.memvar[G__tagnum]);
-
+  
   /****************************************************
-   * restore G__tagnum and G__store_struct_offset
+   * restore G__tagnum and G__store_struct_offset 
    * because evaluation is finished.
    ****************************************************/
   G__tagnum=store_tagnum;
@@ -4746,7 +4744,7 @@ int objptr;  /* 1 : object , 2 : pointer */
 #ifndef G__OLDIMPLEMENTATION1259
   G__isconst = store_isconst;
 #endif
-
+  
 #ifdef G__ASM
   if(G__asm_noverflow) {
     /*************************************
@@ -4759,7 +4757,7 @@ int objptr;  /* 1 : object , 2 : pointer */
     G__inc_cp_asm(1,0);
   }
 #endif
-
+  
   /****************************************************
    * return result
    ****************************************************/
@@ -4778,11 +4776,11 @@ int objptr;  /* 1 : object , 2 : pointer */
 *  G__letstruct and G__classassign in struct.c have special handling
 * of operator=(). When interpretation, overloaded assignment operator
 * is recognized in G__letstruct and G__classassign functions. They
-* set appropreate environment (G__store_struct_offset, G__tagnum)
+* set appropreate environment (G__store_struct_offset, G__tagnum) 
 * and try to call operator=(). It may not be required to search for
 * non member operator=() function, so, some part of these functions
 * could be omitted.
-*
+*  
 ******************************************************************/
 void G__letstruct(result
 	     ,p_inc
@@ -4817,12 +4815,12 @@ long G__struct_offset; /* used to be int */
 	   ,(size_t)G__struct.size[var->p_tagtable[ig15]]);
     return;
   }
-
+  
   switch(G__var_type) {
   case 'p': /* return value */
     if(var->paran[ig15]<=paran) {
       /* value , struct,union */
-
+      
       /* store flags */
       store_prerun = G__prerun;
       G__prerun = 0;
@@ -4844,11 +4842,11 @@ long G__struct_offset; /* used to be int */
 	      largestep=1;
 	    }
 	  }
-	  if(G__return>G__RETURN_NORMAL)
+	  if(G__return>G__RETURN_NORMAL) 
 	    return;
 	}
       }
-
+      
 #ifndef G__OLDIMPLEMENTATION738
       if(-1!=result->tagnum&&('u'==result->type||'i'==result->type)) {
 #else
@@ -4864,7 +4862,7 @@ long G__struct_offset; /* used to be int */
       else {
 	G__valuemonitor(*result,ttt);
       }
-
+      
       G__ASSERT(0==G__decl || 1==G__decl);
       if(G__decl) {
 	/**************************************
@@ -4965,7 +4963,7 @@ long G__struct_offset; /* used to be int */
 	if(ig2==0) {
 #ifdef G__ASM
 	  if(G__asm_noverflow) {
-	    G__inc_cp_asm(-2,0);
+	    G__inc_cp_asm(-2,0); 
 #ifdef G__ASM_DBG
 	    if(G__asm_dbg) {
 	      fprintf(G__serr,"PUSHSTROS,SETSTROS cancelled");
@@ -5000,13 +4998,13 @@ long G__struct_offset; /* used to be int */
 	    if(G__asm_dbg) fprintf(G__serr,"%3x: POPSTROS\n",G__asm_cp);
 #endif
 	    G__asm_inst[G__asm_cp] = G__POPSTROS;
-	    G__inc_cp_asm(1,0);
+	    G__inc_cp_asm(1,0); 
 	  }
 	}
 	G__oprovld = 0;
 #endif
       }
-
+      
       /* restore flags */
       if(store_prerun) {
 	G__debug = store_debug;
@@ -5021,7 +5019,7 @@ long G__struct_offset; /* used to be int */
 	}
       }
       G__prerun = store_prerun;
-
+      
       if(ig2) { /* in case overloaded = or constructor is found */
 	*result = para;
       }
@@ -5066,7 +5064,7 @@ long G__struct_offset; /* used to be int */
           long pdest=G__struct_offset+var->p[ig15]+p_inc*G__struct.size[tagnum];
 	  memcpy((void *)(pdest) ,(void *)(G__int(*result)+addr)
 		 ,(size_t)G__struct.size[tagnum]);
-	  if(-1!=G__struct.virtual_offset[tagnum])
+	  if(-1!=G__struct.virtual_offset[tagnum]) 
 	    *(long*)(pdest+G__struct.virtual_offset[tagnum]) = tagnum;
 	}
 #endif
@@ -5081,7 +5079,7 @@ long G__struct_offset; /* used to be int */
       /* K&$ style 'type a[]' initialization */
       if(var->p[ig15]!=G__PINVALID&&G__COMPILEDGLOBAL!=var->statictype[ig15])
 	free((void*)var->p[ig15]);
-      var->p[ig15] = result->obj.i;
+      var->p[ig15] = result->obj.i; 
       var->statictype[ig15]=G__COMPILEDGLOBAL;
       break;
     }
@@ -5098,7 +5096,7 @@ long G__struct_offset; /* used to be int */
       long store_struct_offsetX = G__store_struct_offset;
       int store_tagnumX = G__tagnum;
       int done=0;
-      G__store_struct_offset
+      G__store_struct_offset 
 	= (long)(G__struct_offset+(var->p[ig15])
 		 +p_inc*G__struct.size[var->p_tagtable[ig15]]);
       G__tagnum = var->p_tagtable[ig15];
@@ -5151,15 +5149,15 @@ int pp_inc;
   long address;
   /* int ig25; */
   int baseoffset;
-
+  
   switch(G__var_type) {
-  case 'v':
+  case 'v': 
 #ifndef G__OLDIMPLEMENTATION634
     switch(var->reftype[ig15]) {
-    case G__PARANORMAL:
-      if(G__no_exec_compile)
+    case G__PARANORMAL: 
+      if(G__no_exec_compile) 
 	G__classassign(G__PVOID ,var->p_tagtable[ig15] ,result);
-      else
+      else 
 	G__classassign((*(long*)(G__struct_offset+var->p[ig15]+p_inc*G__LONGALLOC))
 		     ,var->p_tagtable[ig15] ,result);
       break;
@@ -5187,9 +5185,9 @@ int pp_inc;
       break;
     }
 #else
-    if(G__no_exec_compile)
+    if(G__no_exec_compile) 
       G__classassign(G__PVOID ,var->p_tagtable[ig15] ,result);
-    else
+    else 
       G__classassign((*(long*)(G__struct_offset+var->p[ig15]+p_inc*G__LONGALLOC))
 		     ,var->p_tagtable[ig15] ,result);
 #endif
@@ -5251,7 +5249,7 @@ int pp_inc;
 		 ((*(((long*)(*(long *)address))+para[0].obj.i))+para[1].obj.i)
 		 ,var->p_tagtable[ig15],result);
 	}
-	
+	  
 #else
 	/* class X *a[10]; a[1][2]=b; */
 	/* class X *a;     a[1]=b;    */
@@ -5267,9 +5265,9 @@ int pp_inc;
 #endif
       }
       else {
-	/* check if tagnum matches.
+	/* check if tagnum matches. 
 	 * If unmatch, check for class inheritance.
-	 * If derived class pointer is assigned to
+	 * If derived class pointer is assigned to 
 	 * base class pointer, add offset and assign.
 	 */
 	if(G__no_exec_compile) return;
@@ -5280,7 +5278,7 @@ int pp_inc;
 	  return;
 	}
 #endif
-	if(var->p_tagtable[ig15] == result.tagnum
+	if(var->p_tagtable[ig15] == result.tagnum 
 	   || 0==result.obj.i || 'Y'==result.type) { /* checked */
 	  *(long *)(G__struct_offset+var->p[ig15]+p_inc*G__LONGALLOC)
 	    = G__int(result);
@@ -5301,8 +5299,8 @@ int pp_inc;
 	}
       }
     }
-    else {
-      /* K&R pointer to pointer 'type **a,type *a[]'
+    else { 
+      /* K&R pointer to pointer 'type **a,type *a[]' 
        * initialization */
 #ifndef G__OLDIMPLEMENTATION457
       if(var->p[ig15]!=G__PINVALID&&G__COMPILEDGLOBAL!=var->statictype[ig15])
@@ -5469,9 +5467,9 @@ int parameter00;
 #ifndef G__OLDIMPLEMENTATION448
   int bitlocation=0;
 #endif
-
+  
   /***************************************************
-   * New variable
+   * New variable 
    *
    * global or local
    ***************************************************/
@@ -5543,7 +5541,7 @@ int parameter00;
   if(0==G__definemacro&&G__NOLINK==G__globalcomp&&'p'==G__var_type&&
      -1!=result.tagnum) {
 #endif
-     /* undeclared variable assignment of class/struct will create
+     /* undeclared variable assignment of class/struct will create 
       * a global object of pointer or reference */
     autoobjectflag=1;
     if(G__p_local) {
@@ -5577,10 +5575,10 @@ int parameter00;
 	G__pop_tempobject();
       }
       else {
-	/* T b;
+	/* T b; 
 	 * a = b; a is a reference type */
 	G__reftype = G__PARAREFERENCE;
-	if(G__ASM_FUNC_NOP==G__asm_wholefunction)
+	if(G__ASM_FUNC_NOP==G__asm_wholefunction) 
 	  fprintf(G__serr
 		  ,"Error: Illegal Assignment to an undeclared symbol %s"
 		  ,item);
@@ -5625,11 +5623,11 @@ int parameter00;
 #endif
 
   /***************************************************
-   * New variable
+   * New variable 
    *
    * Assign index or allocate new variable array
    ***************************************************/
-
+  
   if(var->allvar<G__MEMDEPTH) {
     /****************************************
      * If no overflow just assign index
@@ -5640,9 +5638,9 @@ int parameter00;
     /****************************************
      * If overflow allocate another vararray
      ****************************************/
-    var->next =
+    var->next = 
       (struct G__var_array *)malloc(sizeof(struct G__var_array)) ;
-
+    
     /***************************************
      * assign local variable var to new array
      * This will be confusing, be careful
@@ -5651,7 +5649,7 @@ int parameter00;
     var->next->tagnum = var->tagnum;
 #endif
     var = var->next;
-
+    
     /***************************************
      * Initialize the new varaible array
      ***************************************/
@@ -5661,14 +5659,14 @@ int parameter00;
     var->allvar=0;
     ig15=0;
   }
-
-
+  
+  
   /***************************************************
    * Class of the variable
    *
    *  auto, file scope static, function scope static
    ***************************************************/
-
+  
   var->statictype[var->allvar] = G__AUTO; /* auto */
 
 #ifndef G__OLDIMPLEMENTATION612
@@ -5676,28 +5674,28 @@ int parameter00;
   * if namespace, set G__static_alloc, it should be
   * reset in G__define_var()
   ***************************************************/
-  if(G__def_struct_member && -1!=G__tagdefining &&
+  if(G__def_struct_member && -1!=G__tagdefining && 
      'n'==G__struct.type[G__tagdefining]
 #ifndef G__OLDIMPLEMENTATION689
      && 'p'!=tolower(G__var_type) /* macro is global */
 #endif
      ) {
 #ifndef G__OLDIMPLEMENTATION1284
-      if(G__PVOID!=G__globalvarpointer)
+      if(G__PVOID!=G__globalvarpointer) 
 	var->statictype[var->allvar] = G__COMPILEDGLOBAL;
-      else
+      else 
 	var->statictype[var->allvar] = G__LOCALSTATIC;
 #else
       G__static_alloc=G__LOCALSTATIC;
 #endif
   }
 #endif
-
+  
   if(G__static_alloc) {
     if(G__p_local!=NULL) { /* equal to G__prerun==0 */
       G__varname_now=varname;
       /**************************************
-       * Function scope static variable
+       * Function scope static variable 
        * No real malloc(), get pointer from
        * global variable array which is suffixed
        * as varname\funcname.
@@ -5705,9 +5703,9 @@ int parameter00;
        ***************************************/
       var->statictype[var->allvar] = G__LOCALSTATIC;
     }
-
+    
     else { /* equal to G__prerun==1 */
-
+      
       if(G__func_now != -1) {
 	/***************************************
 	 * Function scope static variable
@@ -5752,7 +5750,7 @@ int parameter00;
       }
     }
   }
-
+  
   /***************************************************
    * member access control
    *
@@ -5770,10 +5768,10 @@ int parameter00;
 #endif
 
   var->globalcomp[var->allvar] = G__globalcomp;
-
+  
   /***************************************************
    * store maximum array parameters into var->varlabel[][]
-   *
+   * 
    * typedef xxx type[a][b];
    * type array[A][B][C][D]
    *
@@ -5794,17 +5792,17 @@ int parameter00;
 	 var->varlabel[var->allvar][++ig25]=G__int(para[i]);
   }
   paran=ig25;
-
+  
   /***************************************************
    * fill zero to rest of the var->varlabel[][]
-   *
+   * 
    *   var->varlabel[var_identity][5]=0;
    *   var->varlabel[var_identity][6]=0;
    *                 .
    *   var->varlabel[var_identity][G__MAXVARDIM-1]=0;
    ***************************************************/
   while(ig25<G__MAXVARDIM-1) var->varlabel[var->allvar][++ig25]=0;
-
+  
   /**************************************************
    * if we have an array like
    *
@@ -5818,19 +5816,19 @@ int parameter00;
    *                                                      ^
    * if array[x][0][0] is accessed                    (B*C)*x
    *
-   * this number ary should be stored into
+   * this number ary should be stored into 
    *  var->varlabel[var_identity][0]
    *************************************************/
   ig25=2;
   ary=1;
   while(var->varlabel[ig15][ig25]!=0) ary *= var->varlabel[ig15][ig25++] ;
   var->varlabel[ig15][0] = ary;
-
+  
   /* Get p_inc */
   /************************************************************
    *  type array[A][B][C];
    *
-   * assign var->varlabel[var_identity][1] to
+   * assign var->varlabel[var_identity][1] to 
    * maximum address increment which is A*B*C = A*ary
    ************************************************************/
   p_inc= ary*var->varlabel[ig15][1];
@@ -5843,7 +5841,7 @@ int parameter00;
   var->varlabel[ig15][ig25] = 1;
   var->paran[ig15]=paran;
   ig25=paran+4;
-
+  
   if(isupper(G__var_type)) {
     i=0;
     ary=1;
@@ -5857,7 +5855,7 @@ int parameter00;
   }
   G__p2arylabel[0]=0;
 
-
+  
   /************************************************************
    * Finally
    * type array[A][B][C][D]
@@ -5877,11 +5875,11 @@ int parameter00;
    *   var->varlabel[var_identity][11]=0;
    *
    ***********************************************************/
-
-
+  
+  
   if(paran>0) {
     /************************************************************
-     * In case of 'func(type a[][B][C][D],type b[A][B][C])'
+     * In case of 'func(type a[][B][C][D],type b[A][B][C])' 
      * and ANSI style function parameter and runtime
      * When prerun, result.type is null.
      *    formal argument of function runtime ANSI
@@ -5926,7 +5924,7 @@ int parameter00;
 	  }
 	}
 	else G__var_type = toupper(G__var_type);
-      }
+      } 
       else {
 	if(G__PVOID==G__globalvarpointer) {
 	  if('\0'!=result.type) {
@@ -5935,7 +5933,7 @@ int parameter00;
 	    result.type='\0';
 	  }
 	  else {
-	    /* formal argument prerun or auto sized
+	    /* formal argument prerun or auto sized 
 	     * array. Prevent allocating huge memory */
 	    /* bug fix in local static automatic array */
 	    if(0==G__static_alloc||1==G__prerun) G__globalvarpointer=G__PINVALID;
@@ -5945,7 +5943,7 @@ int parameter00;
       }
     }
   } /* end of paran>0 */
-
+  
   /************************************************************
    * If G__globalvarpointer is set, set statictype as COMPILEGLOBAL
    * so that this memory area won't be freed when destruction.
@@ -5989,7 +5987,7 @@ int parameter00;
   var->filenum[var->allvar] = G__ifile.filenum;
   var->linenum[var->allvar] = G__ifile.line_number;
 #endif
-
+  
   /*****************************************************************
    * set variable information to the table
    *****************************************************************/
@@ -6011,10 +6009,10 @@ int parameter00;
   ig15 = var->allvar;
   var->type[ig15]=G__var_type;
 
-  /* if var->p_tagtable[ig15]==-1,
+  /* if var->p_tagtable[ig15]==-1, 
      it is not a struct,union */
   /* var->p_tagtable[ig15] = -1; */
-
+  
   /* store tag identity */
   var->p_tagtable[ig15] = G__tagnum;
   /* store typedef identity */
@@ -6026,19 +6024,19 @@ int parameter00;
 #else
   var->reftype[var->allvar] = G__reftype;
 #endif
-
+  
   /* set const flag if it is a constant */
 #ifndef G__OLDIMPLEMENTATION1119
   G__constvar |= G__dynconst;
   G__dynconst=0;
 #endif
   var->constvar[ig15] = G__constvar ;
-
+  
   /* allocate variable and pointer */
   var->allvar++;
   var->varlabel[var->allvar][0] =var->varlabel[var->allvar-1][0]+1;
 
-  if('p'==G__var_type &&
+  if('p'==G__var_type && 
      (G__static_alloc || G__constvar || G__prerun || G__def_struct_member)&&
      !G__macro_defining) { /* in case of enumerater */
     G__var_type='i';
@@ -6064,13 +6062,13 @@ int parameter00;
    * variable */
   if(G__asm_wholefunction) {
     if(
-       /* G__funcheader case must be implemented, the following line is
+       /* G__funcheader case must be implemented, the following line is 
 	* deleted */
-       ('u'==G__var_type && G__PARAREFERENCE!=G__reftype
+       ('u'==G__var_type && G__PARAREFERENCE!=G__reftype 
 #ifndef G__OLDIMPLEMENTATION1073
 	&& G__funcheader
 #endif
-	) ||
+	) || 
        (1==paran && '\0'==parameter00)) {
 #ifndef G__OLDIMPLEMENTATION1164
       if(0==G__xrefflag) {
@@ -6130,7 +6128,7 @@ int parameter00;
 	/* Move LD_FUNC instruction */
 	int ix;
 	G__inc_cp_asm(-5,0);
-	for(ix=4;ix>=0;ix--)
+	for(ix=4;ix>=0;ix--) 
 	  G__asm_inst[G__asm_cp+ix+3] = G__asm_inst[G__asm_cp+ix];
 #ifdef G__ASM_DBG
 	if(G__asm_dbg) fprintf(G__serr ,"%3x: LD_CTOR_SETGVP %s index=%d paran=%d\n"
@@ -6195,13 +6193,13 @@ int parameter00;
 #ifndef G__OLDIMPLEMENTATION575
   G__CHECK(G__SECURE_POINTER_TYPE
 	   ,isupper(G__var_type)&&result.obj.i&&G__var_type!=result.type
-	   && !G__funcheader &&
+	   && !G__funcheader && 
 	   (('Y'!=G__var_type&&result.obj.i)||G__security&G__SECURE_CAST2P)
 	   ,return(result));
 #else
   G__CHECK(G__SECURE_CAST2P
 	   ,isupper(G__var_type)&&result.obj.i&&G__var_type!=result.type
-	   && !G__funcheader
+	   && !G__funcheader 
 	   ,return(result));
 #endif
   G__CHECK(G__SECURE_FILE_POINTER,'E'==G__var_type,return(result));
@@ -6225,12 +6223,12 @@ int parameter00;
     return(result);
   }
 #endif
-
+  
   /*****************************************************************
    * actual variable allocation
    *****************************************************************/
   switch(G__var_type) {
-
+    
     /*********************************************************
      * THIS PART MUST CORRESPOND TO G__ALLOC_VAR_REF
      *********************************************************/
@@ -6246,11 +6244,11 @@ int parameter00;
     /*******************************************
      * bug fix  7 Jan 1992
      * old: 'if(G__ansiheader!=0)'
-     * When pre-RUN with ANSI style header,
-     * G__int(result)==NULL and
+     * When pre-RUN with ANSI style header, 
+     * G__int(result)==NULL and 
      * memcpy tried to copy data from address 0.
      * This caused error on BSD.
-     * When G__CPLUSPLUS or G__IFUNCPARA are not
+     * When G__CPLUSPLUS or G__IFUNCPARA are not 
      * specified, there are no problems.
      *******************************************/
     if(G__ansiheader!=0&&result.type!='\0'&& G__globalvarpointer==G__PVOID)
@@ -6286,8 +6284,8 @@ int parameter00;
     result.obj.i = 0;
 #endif
     break;
-
-
+    
+    
     /***************************************
      * G__letvariable(), new variable
      * file and void pointers are same as
@@ -6307,11 +6305,11 @@ int parameter00;
   case 'Q': /* void */
   case 'Y': /* void pointer */
   case 'E': /* FILE pointer */
-
+    
   case 'c': /* char */
   case 'C': /* char pointer */
     G__ALLOC_VAR_REF(G__CHARALLOC,char,G__int)
-
+      
       /*******************************************************
        * initialization of string
        *******************************************************/
@@ -6326,12 +6324,12 @@ int parameter00;
 	}
       }
     break;
-
+    
   case 'b': /* unsigned char */
   case 'B': /* unsigned char pointer */
     G__ALLOC_VAR_REF(G__CHARALLOC,unsigned char,G__int)
     break;
-
+    
   case 's': /* short int */
   case 'S': /* short int pointer */
     G__ALLOC_VAR_REF(G__SHORTALLOC,short,G__int)
@@ -6366,12 +6364,12 @@ int parameter00;
   case 'F': /* float pointer */
     G__ALLOC_VAR_REF(G__FLOATALLOC,float,G__double)
     break;
-
+    
   case 'd': /* double */
   case 'D': /* double pointer */
     G__ALLOC_VAR_REF(G__DOUBLEALLOC,double,G__double)
     break;
-
+    
     /****************************************************
      * FILE and void are ignored
      ****************************************************/
@@ -6379,12 +6377,12 @@ int parameter00;
     G__genericerror("Limitation: FILE type variable can not be declared unless type FILE is explicitly defined");
     var->hash[ig15] = 0;
     break;
-
+    
   case 'y': /* void */
     G__genericerror("Error: void type variable can not be declared");
     var->hash[ig15] = 0;
     break;
-
+    
   case 'm': /* macro file position */
     var->p[ig15] = G__malloc(1,sizeof(fpos_t),item);
     *(fpos_t *)var->p[ig15] = *(fpos_t *)result.obj.i;
@@ -6396,7 +6394,7 @@ int parameter00;
        ((!G__static_alloc)||(G__prerun))&& result.obj.i &&
        (G__globalvarpointer==G__PVOID||result.type!='\0')) {
 #ifdef G__PTR2MEMFUNC
-      if('C'==result.type)
+      if('C'==result.type) 
 	*(long*)var->p[ig15] = result.obj.i;
       else
 	memcpy((void*)var->p[ig15], (void*)result.obj.i,G__P2MFALLOC);
@@ -6405,9 +6403,9 @@ int parameter00;
 #endif
     }
     break;
+    
 
-
-
+    
     /****************************************************
      * Automatic variable and macro
      *   p : macro int
@@ -6416,7 +6414,7 @@ int parameter00;
      *   O : auto double
      ****************************************************/
   default: /* case 'p' macro or 'o' automatic variable */
-
+    
     /*************************************************
      * if not macro definition, print out warning
      *************************************************/
@@ -6438,25 +6436,25 @@ int parameter00;
 #endif
       var->type[ig15]='o';
     }
-
+    
     /*************************************************
      * re-allocate array index information
      *************************************************/
     for(ig25=0;ig25<paran;ig25++) {
       var->varlabel[ig15][ig25+1]=G__int(para[ig25])+1;
     }
-
+    
     ary=1;
     for(ig25=2;ig25<paran+1;ig25++) {
       ary *= var->varlabel[ig15][ig25++] ;
     }
     var->varlabel[ig15][0] = ary;
-
+    
     p_inc= ary*var->varlabel[ig15][1];
     if(p_inc==0) p_inc=1; /* this is special for this case */
     var->varlabel[ig15][1] = p_inc-1;
-
-
+    
+    
     /*************************************************
      * allocate double macro or not
      *************************************************/
@@ -6468,7 +6466,7 @@ int parameter00;
 #ifdef G__OLDIMPLEMENTATION689
 	  G__def_struct_member==0&&
 #endif
-	  G__ASM_FUNC_NOP==G__asm_wholefunction)&&
+	  G__ASM_FUNC_NOP==G__asm_wholefunction)&& 
 	 ((!G__static_alloc)||(G__prerun))&&
 	 (G__globalvarpointer==G__PVOID|| result.type!='\0'))
 	*((double *)var->p[ig15]+(p_inc-1)) = G__double(result);
@@ -6487,7 +6485,7 @@ int parameter00;
 #ifdef G__OLDIMPLEMENTATION689
 	  G__def_struct_member==0&&
 #endif
-	  G__ASM_FUNC_NOP==G__asm_wholefunction)&&
+	  G__ASM_FUNC_NOP==G__asm_wholefunction)&& 
 	 ((!G__static_alloc)||(G__prerun))&&
 	 (G__globalvarpointer==G__PVOID|| result.type!='\0'))
 	*((long *)var->p[ig15]+(p_inc-1)) = G__int(result);
@@ -6529,10 +6527,10 @@ int parameter00;
 /******************************************************************
 * G__getvarentry()
 *
-* Used in
+* Used in 
 *   debug.c    G__lock_variable   : Unimportant
 *   debug.c    G__unlock_variable : Unimportant
-*   decl.c     G__initary         : no data member
+*   decl.c     G__initary         : no data member 
 *   decl.c     G__initstruct      : no data member
 * * func.c     G__getfunction  : To get pointer to function,
 * * sizeof.c   G__Lsizeof  : Only this one has to deal with the access rule
@@ -6557,15 +6555,15 @@ struct G__var_array *varglobal,*varlocal;
   int memfunc_or_friend=0;
   struct G__inheritance *baseclass=NULL;
 #endif
-
+  
   /***********************************************************
    * search old local and global variables.
    *
    ***********************************************************/
   ilg=G__LOCAL; /* start from local variable */
-
+  
   while(ilg<=G__GLOBAL+1) {
-
+    
     /***********************************************
      * switch local and global for getvariable
      ************************************************/
@@ -6594,7 +6592,7 @@ struct G__var_array *varglobal,*varlocal;
 	ilg=G__NOTHING;
       }
       break;
-
+      
     case G__MEMBER:
       in_memfunc=1;
 #ifdef G__OLDIMPLEMENTATION589_YET /* not activated due to bug */
@@ -6607,7 +6605,7 @@ struct G__var_array *varglobal,*varlocal;
 #endif
       ilg = G__GLOBAL;
       break;
-
+      
     case G__GLOBAL:
       /******************************************
        * global entry
@@ -6618,10 +6616,10 @@ struct G__var_array *varglobal,*varlocal;
       ilg=G__NOTHING;
       break;
     }
-
-
+    
+    
     /*************************************************
-     * Searching for variable name
+     * Searching for variable name 
      *
      *************************************************/
 #ifdef G__NEWINHERIT
@@ -6655,7 +6653,7 @@ struct G__var_array *varglobal,*varlocal;
       while(var) {
 	ig15=0;
 	while(ig15<var->allvar) {
-	  if(varhash==var->hash[ig15] &&
+	  if(varhash==var->hash[ig15] && 
 	     strcmp(varname,var->varnamebuf[ig15])==0 &&
 	     (var->statictype[ig15]<0||
 #ifndef G__OLDIMPLEMENTATION1135
@@ -6703,7 +6701,7 @@ struct G__var_array *varglobal,*varlocal;
     while(var) {
       ig15=0;
       while(ig15<var->allvar) {
-	if(varhash==var->hash[ig15] &&
+	if(varhash==var->hash[ig15] && 
 	   strcmp(varname,var->varnamebuf[ig15])==0 &&
 	   (var->statictype[ig15]<0||
 #ifndef G__OLDIMPLEMENTATION1135
@@ -6727,7 +6725,7 @@ struct G__var_array *varglobal,*varlocal;
    * end of variable name search 'while()' loop.
    *   searched all old local and global variables.
    ***********************************************************/
-
+  
   return((struct G__var_array *)NULL);
 }
 
@@ -6796,7 +6794,7 @@ long G__struct_offset;
   case 'p': /* var = expr; assign to value */
     if(var->paran[ig15]<=paran) { /*assign to type element*/
 #ifdef G__PTR2MEMFUNC
-      if('C'==presult->type)
+      if('C'==presult->type) 
 	*(long*)(G__struct_offset+var->p[ig15]+p_inc*G__P2MFALLOC)
 	  = presult->obj.i;
       else
@@ -6826,11 +6824,11 @@ int p_inc;
 G__value result;
 {
   if(isupper(var->type[ig15])) {
-    *(double *)(G__struct_offset+var->p[ig15]+p_inc*G__DOUBLEALLOC)
+    *(double *)(G__struct_offset+var->p[ig15]+p_inc*G__DOUBLEALLOC) 
       = G__double(result);
   }
   else {
-    *(long *)(G__struct_offset+var->p[ig15]+p_inc*G__LONGALLOC)
+    *(long *)(G__struct_offset+var->p[ig15]+p_inc*G__LONGALLOC) 
       = G__int(result);
   }
 }
@@ -6930,15 +6928,15 @@ int mparen;
     G__genericerror("Error: friend keyword appears outside class definition");
   }
 #endif
-
-
+  
+  
 #ifdef G__FRIEND
   store_tagnum = G__tagnum;
   store_def_tagnum = G__def_tagnum;
   store_def_struct_member = G__def_struct_member;
   store_tagdefining = G__tagdefining;
   store_access = G__access;
-
+  
   G__friendtagnum=envtagnum;
 
   if(-1!=G__tagnum) G__tagnum = G__struct.parent_tagnum[G__tagnum];
@@ -7012,16 +7010,16 @@ int mparen;
     G__access = G__PUBLIC;
     G__var_type='p';
 #ifndef G__OLDIMPLEMENTATION1297
-     /* friend function belongs to the inner-most namespace
+     /* friend function belongs to the inner-most namespace 
       * not the parent class! */
     while((G__def_tagnum!=-1)&&(G__struct.type[G__def_tagnum]!='n')) {
       G__def_tagnum = G__struct.parent_tagnum[G__def_tagnum];
     }
 #endif
 #endif
-
+    
     G__exec_statement();
-
+    
 #ifndef G__FRIEND
     G__tagnum = store_tagnum;
     G__def_tagnum = store_def_tagnum;
@@ -7030,7 +7028,7 @@ int mparen;
     G__access = store_access;
 #endif
   }
-
+    
 #ifdef G__FRIEND
   G__tagnum = store_tagnum;
   G__def_tagnum = store_def_tagnum;
@@ -7039,7 +7037,7 @@ int mparen;
   G__access = store_access;
   G__friendtagnum = -1;
 #endif
-
+    
   *pspaceflag = -1;
   *piout=0;
   return(!mparen);
@@ -7083,12 +7081,12 @@ char *varname;
       G__tagnum = var->p_tagtable[ig15];
       sprintf(temp,"~%s()",var->varnamebuf[ig15]);
       /********************************************************
-       * destruction of array
+       * destruction of array 
        ********************************************************/
       if(G__CPPLINK==G__struct.iscpplink[G__tagnum]) {
 	G__store_struct_offset = var->p[ig15];
 	if((i=var->varlabel[ig15][1])>0) G__cpp_aryconstruct=i+1;
-	G__getfunction(temp,&done,G__TRYDESTRUCTOR);
+	G__getfunction(temp,&done,G__TRYDESTRUCTOR); 
 	G__cpp_aryconstruct=0;
 	cpplink = G__CPPLINK;
       }
@@ -7100,7 +7098,7 @@ char *varname;
 	    fprintf(G__serr,"\n0x%lx.%s",G__store_struct_offset,temp);
 	  }
 	  done=0;
-	  G__getfunction(temp,&done,G__TRYDESTRUCTOR);
+	  G__getfunction(temp,&done,G__TRYDESTRUCTOR); 
 	  if(0==done) break;
 	}
 	G__tagnum=store_tagnum;
@@ -7109,7 +7107,7 @@ char *varname;
       break;
     default:
 #ifdef G__SECURITY
-      if(G__security&G__SECURE_GARBAGECOLLECTION &&
+      if(G__security&G__SECURE_GARBAGECOLLECTION && 
 #ifndef G__OLDIMPLEMENTATION545
 	 (!G__no_exec_compile) &&
 #endif
@@ -7146,7 +7144,7 @@ char *varname;
 * delete variable from global varaible table. return 1 if successful.
 *
 **************************************************************************/
-int G__deleteglobal(pin)
+int G__deleteglobal(pin) 
 void* pin;
 {
   long p=(long)pin;
@@ -7161,7 +7159,7 @@ void* pin;
 
   while(var) {
     for(ig15=0;ig15<var->allvar;ig15++) {
-      if(p==var->p[ig15]) {
+      if(p==var->p[ig15]) { 
         var->p[ig15] = 0;
         var->varnamebuf[ig15][0] = '\0';
         var->hash[ig15]=0;

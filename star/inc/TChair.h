@@ -1,5 +1,13 @@
-//*CMZ :  2.24/01 26/03/2000  19.49.20  by  Valery Fine(fine@bnl.gov)
-//*-- Author :    Valery Fine(fine@bnl.gov)   13/03/2000
+// @(#)root/star:$Name$:$Id$
+// Author: Valery Fine(fine@bnl.gov)   13/03/2000
+
+/*************************************************************************
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
+ *                                                                       *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
+ *************************************************************************/
 
 // $Id: TChair.h,v 1.1 2000/03/09 21:57:03 fine Exp $
 #ifndef ROOT_TChair

@@ -1,19 +1,6 @@
-//*CMZ :  2.24/05 15/05/2000  11.42.25  by  Rene Brun
-//*CMZ :  2.24/01 17/02/2000  18.37.15  by  Fons Rademakers
-//*CMZ :  2.23/12 29/01/2000  02.57.20  by  Fons Rademakers
-//*CMZ :  2.23/09 19/11/99  14.38.09  by  Fons Rademakers
-//*CMZ :  2.21/08 18/03/99  15.14.28  by  Fons Rademakers
-//*CMZ :  2.21/05 09/02/99  11.36.48  by  Fons Rademakers
-//*CMZ :  2.21/04 04/02/99  16.25.45  by  Fons Rademakers
-//*CMZ :  2.21/02 14/01/99  17.49.58  by  Fons Rademakers
-//*-- Author :    Fons Rademakers   11/08/97
+// @(#)root/rootd:$Name$:$Id$
+// Author: Fons Rademakers   11/08/97
 
-/*CMZ :  2.24/01 24/02/2000  11.49.40  by  Fons Rademakers*/
-/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
-/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
-/*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
-/*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
-/*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
  * All rights reserved.                                                  *
@@ -1322,3 +1309,4 @@ int main(int argc, char **argv)
 
    // not reached
    return 0;
+}

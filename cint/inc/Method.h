@@ -1,5 +1,3 @@
-/*CMZ :  2.24/05 16/05/2000  12.03.44  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   16/05/2000*/
 /* /% C++ %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -11,7 +9,7 @@
  ************************************************************************
  * Copyright(c) 1995~1999  Masaharu Goto (MXJ02154@niftyserve.or.jp)
  *
- * Permission to use, copy, modify and distribute this software and its
+ * Permission to use, copy, modify and distribute this software and its 
  * documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies and
  * that both that copyright notice and this permission notice appear
@@ -29,14 +27,14 @@
 /*********************************************************************
 * class G__MethodInfo
 *
-*
+* 
 *********************************************************************/
 class G__MethodInfo {
   friend class G__MethodArgInfo;
  public:
   ~G__MethodInfo() {}
   G__MethodInfo() : type() { Init(); }
-  G__MethodInfo(G__ClassInfo &a) : type() { Init(a); }
+  G__MethodInfo(G__ClassInfo &a) : type() { Init(a); } 
   void Init();
   void Init(G__ClassInfo &a);
   void Init(long handlein,long indexin,G__ClassInfo *belongingclassin);
@@ -65,7 +63,7 @@ class G__MethodInfo {
 #endif
   G__ClassInfo* MemberOf() { return(belongingclass); }
 #ifndef G__OLDIMPLEMENTATION1020
-  struct G__friendtag* GetFriendInfo() {
+  struct G__friendtag* GetFriendInfo() { 
     if(IsValid()) {
       struct G__ifunc_table *ifunc=(struct G__ifunc_table*)handle;
       return(ifunc->friendtag[index]);

@@ -1,5 +1,3 @@
-/*CMZ :  2.24/05 16/05/2000  12.03.50  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   16/05/2000*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -165,7 +163,7 @@ G__DLLINIT G__initpermanentsl ;
 /**************************************************************************
 * G__loadsystemfile
 **************************************************************************/
-int G__loadsystemfile(filename)
+int G__loadsystemfile(filename) 
 char *filename;
 {
   int result;
@@ -763,7 +761,7 @@ char *shlfile;
   sharedlib_func=
     (int (*)())G__shl_findsym(&G__sl_handle[allsl],dllid,TYPE_PROCEDURE);
 #ifndef G__OLDIMPLEMENTATION1169
-  if(sharedlib_func && (*sharedlib_func)()>G__ACCEPTDLLREV_UPTO
+  if(sharedlib_func && (*sharedlib_func)()>G__ACCEPTDLLREV_UPTO 
      && (*sharedlib_func)()<G__ACCEPTDLLREV_FROM) {
 #else
   if(sharedlib_func && (*sharedlib_func)()!=G__DLLREV) {
@@ -881,13 +879,13 @@ char *shlfile;
 #ifndef G__OLDIMPLEMENTATION1207
   if(G__ispermanentsl) {
     if(!G__initpermanentsl)
-      G__initpermanentsl =
+      G__initpermanentsl = 
 	(void (*)())G__shl_findsym(&G__sl_handle[allsl],"G__cpp_setup"
-				   ,TYPE_PROCEDURE);
+				   ,TYPE_PROCEDURE); 
     if(!G__initpermanentsl) {
       sprintf(dllid,"G__cpp_setup%s",dllidheader);
       G__initpermanentsl =
-	(void (*)())G__shl_findsym(&G__sl_handle[allsl],dllid,TYPE_PROCEDURE);
+	(void (*)())G__shl_findsym(&G__sl_handle[allsl],dllid,TYPE_PROCEDURE); 
     }
     --G__allsl;
   }

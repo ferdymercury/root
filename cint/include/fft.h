@@ -1,5 +1,3 @@
-/*CMZ :  2.24/05 16/05/2000  12.03.57  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   16/05/2000*/
 /**************************************************************************
 * fft.h
 *
@@ -24,7 +22,7 @@
 #  endif
 # else
 #include <fft.c>
-# endif
+# endif 
 #endif // G__FFTSL
 
 
@@ -51,7 +49,7 @@ class G__FFT {
 	int iden_yout;
 
       public:
-	G__FFT(int identity);
+	G__FFT(int identity); 
 	G__FFT& operator <<(array& x);
 	G__FFT& operator <<(carray& x);
 	G__FFT& operator >>(array& x);
@@ -70,8 +68,8 @@ class G__FFT {
 };
 
 G__FFT::G__FFT(int identity)
-{
-	iden=identity;
+{ 
+	iden=identity; 
 	sub_init();
 }
 

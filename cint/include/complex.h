@@ -1,5 +1,3 @@
-/*CMZ :  2.24/05 16/05/2000  12.03.57  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   16/05/2000*/
 /**************************************************************************
 * complex.h
 *
@@ -15,9 +13,9 @@ class complex {
       public:
 	double re,im;
 	complex(double a=0,double b=0) { re=a; im=b; }
-	complex& operator =(complex& a) {
+	complex& operator =(complex& a) { 
 		this->re=a.re;
-		this->im=a.im;
+		this->im=a.im; 
 		return(*this);
 	}
 };
@@ -111,7 +109,7 @@ istream& operator >>(istream& ios,complex& a)
 
 istrstream& operator >>(istrstream& ios,complex& a)
 {
-	ios >> a.re >> b.reÃ®;
+	ios >> a.re >> b.reî;
 	return(ios);
 }
 

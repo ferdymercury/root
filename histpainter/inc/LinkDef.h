@@ -1,8 +1,13 @@
-*CMZ :  2.23/03 09/09/99  08.49.09  by  Rene Brun
-*CMZ :  2.23/00 18/08/99  09.20.10  by  Rene Brun
-*CMZ :  2.20/04 09/12/98  21.21.08  by  Rene Brun
-*CMZ :  2.20/01 01/12/98  19.11.10  by  Rene Brun
-*-- Author :    Fons Rademakers   25/06/98
+/* @(#)root/histpainter:$Name$:$Id$ */
+
+/*************************************************************************
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
+ *                                                                       *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
+ *************************************************************************/
+
 #ifdef __CINT__
 
 #pragma link off all globals;

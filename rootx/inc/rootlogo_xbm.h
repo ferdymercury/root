@@ -1,7 +1,12 @@
-//*CMZ :  2.23/05 15/10/99  15.47.39  by  Fons Rademakers
-//*CMZ :  2.21/00 17/12/98  17.55.59  by  Fons Rademakers
-//*CMZ :  2.00/00 19/02/98  23.33.38  by  Fons Rademakers
-//*-- Author :    Fons Rademakers   19/02/98
+/* @(#)root/rootx:$Name$:$Id$ */
+
+/*************************************************************************
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
+ *                                                                       *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
+ *************************************************************************/
 #define rootlogo_width 360
 #define rootlogo_height 240
 static char rootlogo_bits[] = {

@@ -1,8 +1,13 @@
-//*CMZ :  2.24/05 11/05/2000  13.49.28  by  Valery Fine(fine@bnl.gov)
-//*CMZ :  2.24/03 10/04/2000  12.23.27  by  Valery Fine(fine@bnl.gov)
-//*CMZ :  2.24/01 31/03/2000  08.46.15  by  Rene Brun
-//*CMZ :  2.23/12 26/01/2000  12.20.09  by  Valery Fine(fine@bnl.gov)
-//*-- Author :    Valery Fine   10/05/99  (E-mail: fine@bnl.gov)
+// @(#)root/star:$Name$:$Id$
+// Author: Valery Fine   09/08/99  (E-mail: fine@bnl.gov)
+
+/*************************************************************************
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
+ *                                                                       *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
+ *************************************************************************/
 #ifndef ROOT_TTableDescriptor
 #define ROOT_TTableDescriptor
 

@@ -1,7 +1,13 @@
-*CMZ :  2.24/03 29/04/2000  19.50.23  by  Fons Rademakers
-*CMZ :  2.24/01 26/03/2000  20.17.38  by  Valery Fine(fine@bnl.gov)
-*CMZ :  2.23/12 26/01/2000  13.18.30  by  Valery Fine(fine@bnl.gov)
-*-- Author :
+/* @(#)root/star:$Name$:$Id$ */
+
+/*************************************************************************
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
+ *                                                                       *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
+ *************************************************************************/
+
 #ifdef __CINT__
 
 #pragma link off all globals;

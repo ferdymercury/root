@@ -1,6 +1,5 @@
-//*CMZ :  2.24/01 31/03/2000  08.27.26  by  Rene Brun
-//*CMZ :  2.23/12 26/01/2000  12.18.16  by  Valery Fine(fine@bnl.gov)
-//*-- Author :  Valery Fine(fine@bnl.gov)   03/12/99
+// @(#)root/star:$Name$:$Id$
+// Author: Valery Fine(fine@bnl.gov)   03/12/99
 // Copyright(c) 1997~1999  [BNL] Brookhaven National Laboratory, STAR, All rights reserved
 // Author                  Valerie Fine  (fine@bnl.gov)
 // Copyright(c) 1997~1999  Valerie Fine  (fine@bnl.gov)

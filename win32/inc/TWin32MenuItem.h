@@ -1,15 +1,6 @@
-//*CMZ :  2.24/03 29/04/2000  23.42.00  by  Rene Brun
-//*CMZ :  1.00/05 20/03/97  15.34.59  by  Rene Brun
-//*-- Author :    Valery Fine(fine@vxcern.cern.ch)   16/08/96
-#ifndef ROOT_TWin32MenuItem
-#define ROOT_TWin32MenuItem
+// @(#)root/win32:$Name$:$Id$
+// Author: Valery Fine   03/03/96
 
-/*CMZ :  2.24/01 24/02/2000  11.49.40  by  Fons Rademakers*/
-/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
-/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
-/*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
-/*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
-/*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
  * All rights reserved.                                                  *
@@ -17,6 +8,9 @@
  * For the licensing terms see $ROOTSYS/LICENSE.                         *
  * For the list of contributors see $ROOTSYS/README/CREDITS.             *
  *************************************************************************/
+#ifndef ROOT_TWin32MenuItem
+#define ROOT_TWin32MenuItem
+
 
 //////////////////////////////////////////////////////////////////////////
 //                                                                      //
@@ -27,10 +21,10 @@
 //////////////////////////////////////////////////////////////////////////
 
 #ifndef ROOT_Rtypes
-#include "RTYPES.h"
+#include "Rtypes.h"
 #endif
 
-#include "TVIRTUALMENUITEM.h"
+#include "TVirtualMenuItem.h"
 
 class TWin32SendClass;
 

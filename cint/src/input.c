@@ -1,5 +1,3 @@
-/*CMZ :  2.24/05 16/05/2000  12.03.48  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   16/05/2000*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -11,7 +9,7 @@
  ************************************************************************
  * Copyright(c) 1995~1999  Masaharu Goto (MXJ02154@niftyserve.or.jp)
  *
- * Permission to use, copy, modify and distribute this software and its
+ * Permission to use, copy, modify and distribute this software and its 
  * documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies and
  * that both that copyright notice and this permission notice appear
@@ -50,14 +48,14 @@ char *string;
 #else
   char tname[L_tmpnam+10];
 #endif
-
+  
   static char prevstring[G__ONELINE];
   static char histfile[G__ONELINE];
   char *homehist=".cint_hist";
   int line=0;
-
+  
   FILE *fp,*tmp;
-
+  
   if(*state==0) {
     /********************************************************
      * read history file and set command history
@@ -95,9 +93,9 @@ char *string;
   else {
     return;
   }
-
+  
   *state=1;
-
+  
   /********************************************************
    * shrink history file (using tmpfile)
    ********************************************************/
@@ -114,7 +112,7 @@ char *string;
   }
   if(tmp) fclose(tmp);
   if(fp) fclose(fp);
-
+  
   /* copy back to history file */
   fp=fopen(histfile,"w");
   tmp=fopen(tname,"r");
@@ -146,15 +144,15 @@ char *prompt;
 #ifndef G__OLDIMPLEMENTATION1078
   if(G__quiet) prompt="";
 #endif
-
+  
   if(G__Xdumpreadline[0]) {
     pchar=G__xdumpinput(prompt);
     strcpy(line,pchar);
   }
   else {
-
+    
 #ifdef G__GNUREADLINE
-
+    
     if(state==0) {
       G__init_readline();
       G__input_history(&state,"");
@@ -175,9 +173,9 @@ char *prompt;
     if(line[0]!='\0') {
       G__input_history(&state,line);
     }
-
+    
 #else /* of G__GNUREADLINE */
-
+    
     if(G__Xdumpreadline[0]) {
       pchar=G__xdumpinput(prompt);
       strcpy(line,pchar);
@@ -187,9 +185,9 @@ char *prompt;
       /* scanf("%s",line); */
       fgets(line,G__ONELINE-5,G__stdin);
     }
-
+    
 #endif /* of G__GNUREADLINE */
-
+    
     if(G__in_pause) { /*G__in_pause is used for G__input and G__valuemonitor*/
       /***********************************************
        * For ATEC replacement
@@ -234,15 +232,15 @@ char *prompt;
 *
 *  Inter face to readline completion
 *
-*   Copyright of source code bolow and GNU readline library
-*  belongs to Free Software Foundation. Refer to GNU GENERAL
+*   Copyright of source code bolow and GNU readline library 
+*  belongs to Free Software Foundation. Refer to GNU GENERAL 
 *  PUBLIC LICENSE and GNU LIBRARY GENERAL PUBLIC LICENSE.
-*
+* 
 ****************************************************************/
 
 #ifdef G__GNUREADLINE
 /* Tell the GNU readline library how to complete. We want to try to
-* complete on compiled function names (if this is the first word in
+* complete on compiled function names (if this is the first word in 
 * the line, or on filenames if not.) */
 
 char **completion_matches();

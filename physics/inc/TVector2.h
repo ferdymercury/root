@@ -1,10 +1,13 @@
-//*CMZ :  2.24/03 20/04/2000  17.13.39  by  Fons Rademakers
-//*CMZ :  2.23/12 28/01/2000  19.14.53  by  Rene Brun
-//*CMZ :  2.23/00 12/08/99  14.12.32  by  Rene Brun
-//*CMZ :  2.22/02 26/05/99  09.41.15  by  Rene Brun
-//*CMZ :  2.22/00 06/04/99  19.09.04  by  Rene Brun
-//*CMZ :  2.21/06 15/02/99  09.30.26  by  Rene Brun
-//*-- Author :    Pasha Murat   12/02/99
+// @(#)root/physics:$Name$:$Id$
+// Author: Pasha Murat   12/02/99
+
+/*************************************************************************
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
+ *                                                                       *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
+ *************************************************************************/
 //------------------------------------------------------------------------------
 // Copyright(c) 1995-1997, P.Murat (CDF collaboration, FNAL)
 //

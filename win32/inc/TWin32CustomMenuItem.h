@@ -1,7 +1,15 @@
-//*CMZ :  1.00/07 04/04/97  11.04.05  by  Rene Brun
-//*-- Author :    Valery Fine(fine@vxcern.cern.ch)   16/08/96
+// @(#)root/win32:$Name$:$Id$
+// Author: Valery Fine   27/03/96
+
+/*************************************************************************
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
+ *                                                                       *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
+ *************************************************************************/
 #ifndef ROOT_TError
-#include "TERROR.h"
+#include "TError.h"
 #endif
 
 

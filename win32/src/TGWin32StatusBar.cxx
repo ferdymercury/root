@@ -1,7 +1,5 @@
-//*CMZ :  2.23/12 26/01/2000  10.08.58  by  Rene Brun
-//*CMZ :  2.23/07 24/10/99  18.28.14  by  Valery Fine(fine@mail.cern.ch)
-//*CMZ :  1.03/01 31/07/97  11.50.13  by  Valery Fine(fine@vxcern.cern.ch)
-//*-- Author :    Valery Fine(fine@vxcern.cern.ch)   26/08/96
+// @(#)root/win32:$Name$:$Id$
+// Author: Valery Fine(fine@vxcern.cern.ch)   26/08/96
 
 
 #ifndef ROOT_TGWin32StatusBar

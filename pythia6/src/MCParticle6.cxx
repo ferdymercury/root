@@ -1,8 +1,5 @@
-//*CMZ :  2.23/12 26/01/2000  10.12.50  by  Rene Brun
-//*CMZ :  2.23/05 20/10/99  14.34.33  by  Rene Brun
-//*CMZ :  2.00/00 18/02/98  09.22.30  by  Rene Brun
-//*CMZ :  1.03/09 08/12/97  21.17.18  by  Fons Rademakers
-//*-- Author :    Piotr Golonka   17/09/97
+// @(#)root/pythia6:$Name$:$Id$
+// Author: Piotr Golonka   17/09/97
 ////////////////////////////////////////////////////////////////////////////////
 //                                                                            //
 //  class TMCParticle                                                         //

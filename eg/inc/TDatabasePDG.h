@@ -1,10 +1,13 @@
-//*CMZ :  2.23/12 26/01/2000  10.26.36  by  Rene Brun
-//*CMZ :  2.23/10 15/12/99  17.35.09  by  Rene Brun
-//*CMZ :  2.23/00 07/08/99  17.38.51  by  Fons Rademakers
-//*CMZ :  2.22/10 15/07/99  09.44.45  by  Rene Brun
-//*CMZ :  2.22/06 18/06/99  09.04.17  by  Rene Brun
-//*CMZ :  2.22/01 16/04/99  15.45.38  by  Rene Brun
-//*-- Author :    Pasha Murat   12/02/99
+// @(#)root/eg:$Name$:$Id$
+// Author: Pasha Murat   12/02/99
+
+/*************************************************************************
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
+ *                                                                       *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
+ *************************************************************************/
 //------------------------------------------------------------------------------
 //  Jan 19 1999 P.Murat: this is the very  first draft, alot of functionality
 //                       is still missing

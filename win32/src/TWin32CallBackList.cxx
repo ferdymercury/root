@@ -1,8 +1,7 @@
-//*CMZ :  2.24/03 29/04/2000  23.45.27  by  Rene Brun
-//*CMZ :  1.00/05 20/03/97  15.18.27  by  Rene Brun
-//*-- Author :
-//*CMZ :          01/01/96  20.58.05  by  Valery Fine
-//*-- Author :    Valery Fine   01/01/96
+// @(#)root/win32:$Name$:$Id$
+// Author: 
+// @(#)root/win32:$Name$:$Id$
+// Author: Valery Fine   01/01/96
 
 //////////////////////////////////////////////////////////////////////////
 //                                                                      //

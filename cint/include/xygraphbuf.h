@@ -1,5 +1,3 @@
-/*CMZ :  2.24/05 16/05/2000  12.03.57  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   16/05/2000*/
 /***************************************************************************
 * xygraphbuf.h
 *
@@ -31,7 +29,7 @@ class graphbuf {
 		array  *pa;
 		carray *pc;
 	} pary[100];
-	int iden[100];        // to distinguish array or carray
+	int iden[100];        // to distinguish array or carray 
 	char *dataname[100];  // name of data
 	int nplot;            // number of data
 	FILE *fp;             // File pointer. NULL for plot
@@ -299,18 +297,18 @@ class arrayistream {
 } ;
 
 
-arrayistream::arrayistream(FILE *fp_init)
-{
+arrayistream::arrayistream(FILE *fp_init) 
+{ 
 	fp=fp_init;
-	nplot=0;
-	ndat=2000000;
+	nplot=0; 
+	ndat=2000000; 
 }
 
 arrayistream::arrayistream(char *filename)
-{
+{ 
 	fp=fopen(filename,"r");
-	nplot=0;
-	ndat=2000000;
+	nplot=0; 
+	ndat=2000000; 
 }
 
 arrayistream::~arrayistream()
@@ -329,7 +327,7 @@ void arrayistream::close(void)
 	}
 }
 
-// add array or carray
+// add array or carray 
 arrayistream& arrayistream::operator >>(array& a)
 {
 	dat[nplot++] = a.dat;
@@ -345,7 +343,7 @@ arrayistream& arrayistream::operator >>(carray& a)
 	return(*this);
 }
 
-// dummy
+// dummy 
 arrayistream& arrayistream::operator >>(double d)
 {
 	return(*this);
@@ -364,7 +362,7 @@ arrayistream& arrayistream::operator >>(ISLOG log)
 // do input
 arrayistream& arrayistream::operator >>(char *s)
 {
-	if(s[strlen(s)-1]=='\n')
+	if(s[strlen(s)-1]=='\n') 
 		*this >> '\n';
 	return(*this);
 }

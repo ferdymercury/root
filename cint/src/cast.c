@@ -1,5 +1,3 @@
-/*CMZ :  2.24/05 16/05/2000  12.03.45  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   16/05/2000*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -11,7 +9,7 @@
  ************************************************************************
  * Copyright(c) 1995~1999  Masaharu Goto (MXJ02154@niftyserve.or.jp)
  *
- * Permission to use, copy, modify and distribute this software and its
+ * Permission to use, copy, modify and distribute this software and its 
  * documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies and
  * that both that copyright notice and this permission notice appear
@@ -35,10 +33,10 @@ int *ptype;
   int offset=0;
   if(-1!=result3->tagnum) {
 #ifdef G__VIRTUALBASE
-    if(-1!=(offset=G__isanybase(tagnum,result3->tagnum,result3->obj.i)))
+    if(-1!=(offset=G__isanybase(tagnum,result3->tagnum,result3->obj.i))) 
       offset=offset;
 #ifndef G__OLDIMPLEMENTATION1050
-    else if(0==castflag && 0==G__oprovld &&
+    else if(0==castflag && 0==G__oprovld && 
 	    (G__SECURE_MARGINAL_CAST&G__security) &&
 #ifndef G__OLDIMPLEMENTATION1176
              (islower(*ptype) || islower(result3->type)) &&
@@ -62,7 +60,7 @@ int *ptype;
       offset=0;
 #endif
 #else
-    if(-1!=(offset=G__isanybase(tagnum,result3->tagnum)))
+    if(-1!=(offset=G__isanybase(tagnum,result3->tagnum))) 
       offset=offset;
     else if(-1!=(offset=G__isanybase(result3->tagnum,tagnum)))
       offset = -offset;
@@ -121,7 +119,7 @@ G__value result3;
   else if (strncmp (casttype, "typename", 8) == 0) {
     strcpy (casttype, casttype+8);
   }
-  if(strncmp(casttype,"const",5)==0 &&
+  if(strncmp(casttype,"const",5)==0 && 
      -1==G__defined_tagname(casttype,2)&&-1==G__defined_typename(casttype)) {
 #ifndef G__OLDIMPLEMENTATION961
     isconst=1;
@@ -207,7 +205,7 @@ G__value result3;
     reftype=G__PARAREFERENCE;
   }
 #endif
-
+  
   type='\0';
   switch(lenitem) {
   case 3:
@@ -320,7 +318,7 @@ G__value result3;
     G__fundamental_conversion_operator(type ,-1 ,-1 ,reftype,isconst
 				       ,&store_result,ttt);
     return(store_result);
-  }
+  }    
 #endif
 
   if(type=='\0') {

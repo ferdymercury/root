@@ -1,5 +1,3 @@
-/*CMZ :  2.24/05 16/05/2000  12.03.49  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   16/05/2000*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -11,7 +9,7 @@
  ************************************************************************
  * Copyright(c) 1995~1999  Masaharu Goto (MXJ02154@niftyserve.or.jp)
  *
- * Permission to use, copy, modify and distribute this software and its
+ * Permission to use, copy, modify and distribute this software and its 
  * documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies and
  * that both that copyright notice and this permission notice appear
@@ -179,7 +177,7 @@ struct G__breakcontinue_list *pbreakcontinue;
 			   ,G__pbreakcontinue->destination
 			   ,G__pbreakcontinue->breakcontinue
 			   ,G__asm_inst[G__pbreakcontinue->destination]);
-			
+			   
 #endif
     p = G__pbreakcontinue->prev;
     free((void*)G__pbreakcontinue);
@@ -197,7 +195,7 @@ struct G__breakcontinue_list *pbreakcontinue;
 int G__exec_try(statement)
 char *statement;
 {
-  G__exec_statement();
+  G__exec_statement(); 
   if(G__RETURN_TRY==G__return) {
     int store_breaksignal=G__breaksignal;
     G__breaksignal=0;
@@ -231,7 +229,7 @@ char *statement;
     fpos_t fpos;
     int line_number;
 
-    /* catch (ehclass& obj) {  }
+    /* catch (ehclass& obj) {  } 
      * ^^^^^^^ */
 #ifndef G__OLDIMPLEMENTATION1282
     do {
@@ -244,7 +242,7 @@ char *statement;
     fgetpos(G__ifile.fp,&fpos);
     line_number=G__ifile.line_number;
 
-    /* catch (ehclass& obj) {  }
+    /* catch (ehclass& obj) {  } 
      *        ^^^^^^^^ */
     c=G__fgetname_template(statement,")&*");
 
@@ -257,7 +255,7 @@ char *statement;
     else {
       int tagnum;
       tagnum=G__defined_tagname(statement,2);
-      if(G__exceptionbuffer.tagnum==tagnum ||
+      if(G__exceptionbuffer.tagnum==tagnum || 
 	 -1!=G__ispublicbase(tagnum,G__exceptionbuffer.tagnum
 			     ,G__exceptionbuffer.obj.i)) {
         /* catch(ehclass& obj) { match } */
@@ -422,7 +420,7 @@ int G__free_exceptionbuffer()
     }
     G__getfunction(destruct,&dmy ,G__TRYDESTRUCTOR);
 #ifndef G__OLDIMPLEMENTATION1277
-    if(G__CPPLINK!=G__struct.iscpplink[G__tagnum])
+    if(G__CPPLINK!=G__struct.iscpplink[G__tagnum]) 
       free((void*)G__store_struct_offset);
 #else
     free((void*)G__store_struct_offset);
@@ -489,7 +487,7 @@ G__value *presult;
       statement[(*piout)++] = *pc;
       *pc=G__fgetstream_new(statement+(*piout) ,";");
     }
-    if(G__breaksignal && G__beforelargestep(statement ,piout ,plargestep)>1)
+    if(G__breaksignal && G__beforelargestep(statement ,piout ,plargestep)>1) 
       return(1);
 #ifdef G__ASM
     if(G__asm_noverflow) G__asm_clear();
@@ -510,9 +508,9 @@ G__value *presult;
     if(G__dispsource) G__disp_mask=1;
   }
 
-  if(G__p_tempbuf->level>=G__templevel && G__p_tempbuf->prev)
+  if(G__p_tempbuf->level>=G__templevel && G__p_tempbuf->prev) 
     G__free_tempobject();
-	
+	  
   if(*plargestep) G__afterlargestep(plargestep);
 
   return(0);
@@ -538,7 +536,7 @@ char *statement;
 #ifdef G__OLDIMPLEMENTATION1083_YET
      && (G__func_now>=0 || G__def_struct_member )
 #else
-     && G__func_now>=0
+     && G__func_now>=0 
 #endif
      && strcmp(statement,"const")==0) {
 #ifndef G__OLDIMPLEMENTATION1103
@@ -601,7 +599,7 @@ char *statement;
      *   allocate memory prerun
      *  if G__prerun==0
      *  G__static_alloc==1
-     *   get preallocated mem
+     *   get preallocated mem 
      *  int G__func_now
      *************************/
 #ifndef G__OLDIMPLEMENTATION610
@@ -628,11 +626,11 @@ char *statement;
 #endif
 
   if(statement[0]!='#') return(0);
-
+  
   /***********************************
    * 1)
    *  #ifdef macro   <---
-   *  #endif
+   *  #endif 
    * 2)
    *  #ifdef macro   <---
    *  #else
@@ -642,7 +640,7 @@ char *statement;
     G__pp_ifdef(1);
     return(1);
   }
-
+  
   /***********************************
    * This part comes in following cases
    * 1)
@@ -656,7 +654,7 @@ char *statement;
   if(strcmp(statement,"#endif")==0) {
     return(1);
   }
-
+  
   if(strcmp(statement,"#undef")==0){
     G__pp_undef();
     return(1);
@@ -682,7 +680,7 @@ char *statement;
   /***********************************
    * 1)
    *  #ifndef macro   <---
-   *  #endif
+   *  #endif 
    * 2)
    *  #ifndef macro   <---
    *  #else
@@ -810,7 +808,7 @@ int *piout,*pspaceflag,mparen;
 * Called by
 *    G__exec_statement()
 *
-*  Set line number by '# <line> <file>' statement
+*  Set line number by '# <line> <file>' statement 
 ***********************************************************************/
 int G__setline(statement,c,piout)
 char *statement;
@@ -853,7 +851,7 @@ int *piout;
 	  if(strncmp(sysinclude,statement+1,(size_t)len)==0||
 	     strncmp(sysstl,statement+1,(size_t)lenstl)==0)
 	    G__globalcomp=G__NOLINK;
-	  else
+	  else 
 	    G__globalcomp=G__store_globalcomp;
 	  statement[strlen(statement)-1]='\0';
 	  strcpy(G__ifile.name,statement+1);
@@ -861,12 +859,12 @@ int *piout;
 	  temp=0;
 	  null_entry = -1;
 	  for(i=0;i<G__nfile;i++) {
-	    if((char*)NULL==G__srcfile[i].filename && -1==null_entry)
+	    if((char*)NULL==G__srcfile[i].filename && -1==null_entry) 
 	      null_entry = i;
 #ifndef G__OLDIMPLEMENTATION1196
 	    if(G__matchfilename(i,G__ifile.name)) {
 #else
-	    if(hash==G__srcfile[i].hash &&
+	    if(hash==G__srcfile[i].hash && 
 	       strcmp(G__ifile.name,G__srcfile[i].filename)==0) {
 #endif
 	      temp=1;
@@ -898,7 +896,7 @@ int *piout;
 	       If the previous file (G__ifile) was preprocessed, this one
 	       wshould also be. */
 	    if( G__cpp && G__srcfile[G__ifile.filenum].prepname[0] ) {
-	      G__srcfile[null_entry].prepname =
+	      G__srcfile[null_entry].prepname = 
 		(char*)malloc(strlen(G__srcfile[G__ifile.filenum].prepname)+1);
 	      strcpy(G__srcfile[null_entry].prepname,
 		     G__srcfile[G__ifile.filenum].prepname);	
@@ -931,7 +929,7 @@ int *piout;
 		 If the previous file (G__ifile) was preprocessed, this one
 		 should also be. */
 	      if( G__cpp && G__srcfile[G__ifile.filenum].prepname[0] ) {
-		G__srcfile[G__nfile].prepname =
+		G__srcfile[G__nfile].prepname = 
 	       (char*)malloc(strlen(G__srcfile[G__ifile.filenum].prepname)+1);
 		strcpy(G__srcfile[G__nfile].prepname,
 		       G__srcfile[G__ifile.filenum].prepname);	
@@ -1037,15 +1035,15 @@ int elifskip;
   char G__argbuf[G__LONGLINE*2];
   char *arg[G__ONELINE];
   int argn;
-
+  
   FILE *G__fp;
   int nest=1;
   char condition[G__ONELINE];
   char temp[G__ONELINE];
   int i;
-
+  
   G__fp=G__ifile.fp;
-
+  
   /* elace traced mark */
   if(0==G__nobreak && 0==G__disp_mask&&
      G__srcfile[G__ifile.filenum].breakpoint&&
@@ -1053,7 +1051,7 @@ int elifskip;
     G__srcfile[G__ifile.filenum].breakpoint[G__ifile.line_number]
       &=G__NOTRACED;
   }
-
+  
   /********************************************************
    * Read lines until end of conditional compilation
    ********************************************************/
@@ -1071,7 +1069,7 @@ int elifskip;
      *
      ************************************************/
     ++G__ifile.line_number;
-
+    
     if(argn>0) {
       if(strcmp(arg[1],"#")==0
 #ifndef G__OLDIMPLEMENTATION425
@@ -1167,16 +1165,16 @@ int elifskip;
       }
     }
   }
-
+  
   /* set traced mark */
-  if(0==G__nobreak &&
+  if(0==G__nobreak && 
      0==G__disp_mask&& 0==G__no_exec_compile &&
      G__srcfile[G__ifile.filenum].breakpoint&&
      G__srcfile[G__ifile.filenum].maxline>G__ifile.line_number) {
     G__srcfile[G__ifile.filenum].breakpoint[G__ifile.line_number]
       |=(!G__no_exec);
   }
-
+  
   if(G__dispsource) {
     if((G__debug||G__break||G__step
 #ifdef G__OLDIMPLEMENTATION473
@@ -1212,7 +1210,7 @@ void G__pp_if()
   int store_asm_wholefunction;
   int store_asm_noverflow;
 #endif
-
+  
   do {
     c = G__fgetstream(condition+len,"\n\r");
     len = strlen(condition)-1;
@@ -1238,11 +1236,11 @@ void G__pp_if()
     }
   }
 #endif
-
+  
   /* This supresses error message when undefined
    * macro is refered in the #if defined(macro) */
   G__noerr_defined=1;
-
+  
   /*************************
    * faulse
    * skip line until #else,
@@ -1286,7 +1284,7 @@ char *macro;
   var = &G__global;
   do {
     for(iout=0;iout<var->allvar;iout++) {
-      if((tolower(var->type[iout])=='p'
+      if((tolower(var->type[iout])=='p' 
 #ifndef G__OLDIMPLEMENTATION904
 	  || 'T'==var->type[iout]
 #endif
@@ -1328,11 +1326,11 @@ int def;  /* 1 for ifdef 0 for ifndef */
 {
   char temp[G__LONGLINE];
   int notfound=1;
-
+  
   G__fgetname(temp,"\n\r");
-
-  notfound = G__defined_macro(temp) ^ 1;
-
+  
+  notfound = G__defined_macro(temp) ^ 1; 
+  
   /*****************************************************************
    * faulse macro not found skip line until #else, #endif or #elif.
    * Then, return to evaluation
@@ -1356,9 +1354,9 @@ void G__pp_undef()
   int i;
   char temp[G__MAXNAME];
   struct G__var_array *var = &G__global;
-
+  
   G__fgetname(temp,"\n\r");
-
+  
   while(var) {
     for(i=0;i<var->allvar;i++) {
       if((strcmp(temp,var->varnamebuf[i])==0)&&
@@ -1403,7 +1401,7 @@ G__value G__exec_do()
 
   fgetpos(G__ifile.fp,&store_fpos);
   store_line_number=G__ifile.line_number;
-
+  
   G__no_exec=0;
   G__mparen=0;
 #ifdef G__ASM
@@ -1444,7 +1442,7 @@ G__value G__exec_do()
     if(allocflag) G__free_breakcontinue_list(store_pbreakcontinue);
     return(result);
   }
-
+  
   /*************************************************
    * do {
    *    if() break;
@@ -1485,10 +1483,10 @@ G__value G__exec_do()
       break;
     }
   }
-
+  
   /* spaceflag=0; */
   /* c='\0'; */
-
+  
   /* G__fignorestream("("); */
   G__fgetstream(condition,"(");
   if(strcmp(condition,"while")!=0) {
@@ -1498,10 +1496,10 @@ G__value G__exec_do()
 	    ,G__ifile.line_number);
   }
   /* iout=0; */
-
-
+  
+  
   G__fgetstream(condition,")");
-
+  
   if(G__breaksignal) {
     G__break=0;
     G__setdebugcond();
@@ -1545,9 +1543,9 @@ G__value G__exec_do()
     G__asm_inst[G__asm_cp]=G__JMP;
     G__asm_inst[G__asm_cp+1]=asm_start_pc;
     G__inc_cp_asm(2,0);
-    /* Check breakcontinue buffer and assign destination
+    /* Check breakcontinue buffer and assign destination 
      *    break     G__asm_cp
-     *    continue  store_asm_cp
+     *    continue  store_asm_cp 
      *  Then free breakcontinue buffer */
     if(allocflag) {
       G__set_breakcontinue_destination(G__asm_cp,store_asm_cp
@@ -1574,7 +1572,7 @@ G__value G__exec_do()
   if(G__no_exec_compile||executed_break) cond=0;
 
   while(cond) {
-
+    
 #ifdef G__ASM
     if(asm_exec) {
       asm_exec=G__exec_asm(asm_start_pc,/*stack*/0,&result,/*localmem*/0);
@@ -1590,7 +1588,7 @@ G__value G__exec_do()
       G__mparen=0;
       result=G__exec_statement();
       if(G__return!=G__RETURN_NON) return(result);
-
+      
       /*************************************************
        * do {
        *    if() break;
@@ -1608,16 +1606,16 @@ G__value G__exec_do()
 	  break;
 	}
       }
-
+      
       /* spaceflag=0; */
-
+      
       if(G__breaksignal) {
 	G__break=0;
 	G__setdebugcond();
 	G__pause();
 	if(G__return>G__RETURN_NORMAL) return(G__null);
       }
-
+      
 #ifdef G__ASM
     }
 #endif
@@ -1628,13 +1626,13 @@ G__value G__exec_do()
   G__fignorestream(";");
   G__disp_mask=0;
   if(G__debug) fprintf(G__serr,";");
-
+  
 #ifdef G__ASM
   G__asm_noverflow = asm_exec && store_asm_noverflow;
 #endif
-
+  
   G__no_exec=0;
-
+  
   return(result);
 }
 
@@ -1652,7 +1650,7 @@ G__value G__return_value(statement)
 char *statement;
 {
   G__value buf;
-						
+						   
   if(G__breaksignal) {
     G__break=0;
     G__setdebugcond();
@@ -1668,7 +1666,7 @@ char *statement;
   }
 
   /* questionable, when to destroy temp object */
-  if(G__p_tempbuf->level>=G__templevel && G__p_tempbuf->prev)
+  if(G__p_tempbuf->level>=G__templevel && G__p_tempbuf->prev) 
     G__free_tempobject();
 
   if(statement[0]=='\0') {
@@ -1740,16 +1738,16 @@ void G__free_tempobject()
 #endif
     }
 #endif
-
+    
     store_p_tempbuf = G__p_tempbuf->prev;
-
+    
     /* calling destructor */
     store_struct_offset = G__store_struct_offset;
     G__store_struct_offset = G__p_tempbuf->obj.obj.i;
-
-
+    
+    
 #ifdef G__ASM
-    if(G__asm_noverflow
+    if(G__asm_noverflow 
 #ifndef G__ASM_IFUNC
        && G__p_tempbuf->cpplink
 #endif
@@ -1761,13 +1759,13 @@ void G__free_tempobject()
       G__inc_cp_asm(1,0);
     }
 #endif
-
+    
     store_tagnum = G__tagnum;
     G__tagnum = G__p_tempbuf->obj.tagnum;
-
+    
     store_return=G__return;
     G__return=G__RETURN_NON;
-
+    
     if(G__dispsource) {
 #ifndef G__FONS31
       fprintf(G__serr
@@ -1783,18 +1781,18 @@ void G__free_tempobject()
 	      ,G__p_tempbuf->level,G__templevel);
 #endif
     }
-
+    
     sprintf(statement,"~%s()",G__struct.name[G__tagnum]);
-    G__getfunction(statement,&iout,G__TRYDESTRUCTOR);
-
+    G__getfunction(statement,&iout,G__TRYDESTRUCTOR); 
+    
     G__store_struct_offset = store_struct_offset;
     G__tagnum = store_tagnum;
     G__return=store_return;
-
-
-
+    
+    
+    
 #ifdef G__ASM
-    if(G__asm_noverflow
+    if(G__asm_noverflow 
 #ifndef G__ASM_IFUNC
        && G__p_tempbuf->cpplink
 #endif
@@ -1806,11 +1804,11 @@ void G__free_tempobject()
       G__inc_cp_asm(1,0);
     }
 #endif
-
+    
     if(0==G__p_tempbuf->cpplink && G__p_tempbuf->obj.obj.i) {
       free((void *)G__p_tempbuf->obj.obj.i);
     }
-
+    
     if(store_p_tempbuf) {
       free((void*)G__p_tempbuf);
       G__p_tempbuf = store_p_tempbuf;
@@ -1851,7 +1849,7 @@ char *string;
   G__p_tempbuf->prev = store_p_tempbuf;
   G__p_tempbuf->level = G__templevel;
   G__p_tempbuf->cpplink = 0;
-
+  
   /* create class object */
   G__p_tempbuf->obj.obj.i = (long)malloc(strlen(string)+1);
   strcpy((char*)G__p_tempbuf->obj.obj.i,string);
@@ -1903,7 +1901,7 @@ int tagnum,typenum;
   G__p_tempbuf->prev = store_p_tempbuf;
   G__p_tempbuf->level = G__templevel;
   G__p_tempbuf->cpplink = 0;
-
+  
   /* create class object */
   G__p_tempbuf->obj.obj.i = (long)malloc((size_t)G__struct.size[tagnum]);
   G__p_tempbuf->obj.type = 'u';
@@ -2042,7 +2040,7 @@ int breakcontinue;
       *pspaceflag=0;
       return(0);
     }
-    else {
+    else { 
       G__no_exec_compile = 1;
 #ifndef G__OLDIMPLEMENTATION744
       if(0==breakcontinue) { /* in case of continue */
@@ -2057,7 +2055,7 @@ int breakcontinue;
 #endif /* G__ASM */
   /*  Assuming that break,continue appears only within if,switch clause
    *  skip to the end of if,switch conditional clause. If they appear
-   *  in plain for,while loop, which make no sense, a strange behavior
+   *  in plain for,while loop, which make no sense, a strange behavior 
    *  may be observed. */
   while(*pmparen) {
     G__fignorestream("}");
@@ -2070,7 +2068,7 @@ int breakcontinue;
 * G__exec_switch()
 *
 * Called by
-*   G__exec_statement()
+*   G__exec_statement() 
 *
 ***********************************************************************/
 G__value G__exec_switch()
@@ -2161,7 +2159,7 @@ G__value G__exec_switch()
 
   /* testing cases until condition matches */
   while((result.type!=G__null.type)&& ((result.type!=G__default.type)&&
-				       (!G__cmp(result,reg)))) {
+				       (!G__cmp(result,reg)))) { 
     G__switch=1;
     G__no_exec=1;
     result=G__exec_statement();
@@ -2179,7 +2177,7 @@ G__value G__exec_switch()
     }
     result=G__exec_statement();
     if(G__return!=G__RETURN_NON) return(result);
-
+    
     /* break found */
     if(result.type==G__block_break.type&&result.obj.i==G__BLOCK_BREAK) {
       if(result.ref==G__block_goto.ref) return(result);
@@ -2195,7 +2193,7 @@ G__value G__exec_switch()
 * G__exec_if()
 *
 * Called by
-*   G__exec_statement()
+*   G__exec_statement() 
 *
 ***********************************************************************/
 G__value G__exec_if()
@@ -2211,21 +2209,21 @@ G__value G__exec_if()
   int store_no_exec_compile=0;
   int asm_jumppointer=0;
   int largestep=0;
-
+  
 #ifndef G__OLDIMPLEMENTATION837
   G__fgetstream_new(condition,")");
 #else
   G__fgetstream(condition,")");
 #endif
-
+  
   if(G__breaksignal &&
      G__beforelargestep(condition,&iout,&largestep)>1) {
     return(G__null);
   }
-
+  
   result=G__null;
 
-
+  
   if(G__test(condition)) {
     if(largestep) G__afterlargestep(&largestep);
 #ifndef G__OLDIMPLEMENTATION906
@@ -2267,7 +2265,7 @@ G__value G__exec_if()
       G__asm_inst[G__asm_cp]=G__CNDJMP;
       asm_jumppointer = G__asm_cp+1;
       G__inc_cp_asm(2,0);
-
+      
       G__no_exec_compile=1;
     }
     else {
@@ -2285,7 +2283,7 @@ G__value G__exec_if()
     G__no_exec=0;
     false=1;
   }
-
+  
   if(G__asm_noverflow) {
 #ifdef G__ASM_DBG
     if(G__asm_dbg) fprintf(G__serr ,"%3x: JMP assigned later\n",G__asm_cp);
@@ -2298,10 +2296,10 @@ G__value G__exec_if()
     G__asm_inst[asm_jumppointer] = G__asm_cp;
     asm_jumppointer = G__asm_cp-1; /* to skip else clause */
   }
-
+  
   fgetpos(G__ifile.fp,&store_fpos);
   store_line_number=G__ifile.line_number;
-
+  
   /* reading else keyword */
   c=' ';
   while(isspace(c)) {
@@ -2353,7 +2351,7 @@ G__value G__exec_if()
     statement[iout] = c;
   }
   statement[4]='\0';
-
+  
   if(strcmp(statement,"else")==0) {
     /* else execute else clause */
     G__temp_read=0;
@@ -2383,7 +2381,7 @@ G__value G__exec_if()
       G__exec_statement();
       G__no_exec_compile=store_no_exec_compile;
 #ifdef G__ASM_DBG
-    if(G__asm_dbg)
+    if(G__asm_dbg) 
 	fprintf(G__serr,"     G__no_exec_compile %d(G__exec_if:2)\n",store_no_exec_compile);
 #endif
       G__no_exec=0;
@@ -2395,7 +2393,7 @@ G__value G__exec_if()
 			=store_line_number;
     fsetpos(G__ifile.fp,&store_fpos);
     statement[0]='\0';
-    if(G__dispsource)
+    if(G__dispsource) 
       G__disp_mask=G__temp_read;
     G__temp_read=0;
   }
@@ -2460,7 +2458,7 @@ char **foraction;
   if(G__p_tempbuf->level>=G__templevel && G__p_tempbuf->prev) {
     G__free_tempobject();
   }
-
+  
 #ifdef G__ASM
   if(G__asm_loopcompile) {
     store_asm_noverflow=G__asm_noverflow;
@@ -2506,7 +2504,7 @@ char **foraction;
     allocflag=0;
   }
 
-
+  
   while(cond) {
 #ifndef G__OLDIMPLEMENTATION744
     int store_no_exec_compile = G__no_exec_compile;
@@ -2539,7 +2537,7 @@ char **foraction;
       if(allocflag) G__free_breakcontinue_list(store_pbreakcontinue);
       return(result);
     }
-
+    
     /*************************************************
      * for() {
      *    if() break;
@@ -2579,12 +2577,12 @@ char **foraction;
 	break;
       }
     }
-
+    
     G__ifile.line_number =store_line_number;
     fsetpos(G__ifile.fp,&store_fpos);
 
     store_asm_cp = G__asm_cp;
-
+    
     if(executed_break) G__no_exec_compile=1;
     if(naction) {
       for(iout=0;iout<naction;iout++) G__getexpr(foraction[iout]);
@@ -2602,9 +2600,9 @@ char **foraction;
       G__asm_inst[G__asm_cp]=G__JMP;
       G__asm_inst[G__asm_cp+1]=asm_start_pc;
       G__inc_cp_asm(2,0);
-      /* Check breakcontinue buffer and assign destination
+      /* Check breakcontinue buffer and assign destination 
        *    break     G__asm_cp
-       *    continue  store_asm_cp
+       *    continue  store_asm_cp 
        *  Then free breakcontinue buffer */
       if(allocflag) {
 	G__set_breakcontinue_destination(G__asm_cp,store_asm_cp
@@ -2651,7 +2649,7 @@ char **foraction;
 #endif
 
     if(G__no_exec_compile) cond=0;
-    else {
+    else { 
       cond=G__test(condition);
 #ifndef G__OLDIMPLEMENTATION906
       if(G__p_tempbuf->level>=G__templevel && G__p_tempbuf->prev) {
@@ -2678,9 +2676,9 @@ char **foraction;
   G__mparen=0;
   G__no_exec=1;
   result=G__exec_statement();
-  if(G__return!=G__RETURN_NON)return(result);
+  if(G__return!=G__RETURN_NON)return(result); 
   G__no_exec=0;
-
+  
   if(largestep) G__afterlargestep(&largestep);
   return(result);
 }
@@ -2689,7 +2687,7 @@ char **foraction;
 * G__exec_while()
 *
 * Called by
-*   G__exec_statement()
+*   G__exec_statement() 
 *
 ***********************************************************************/
 G__value G__exec_while()
@@ -2706,7 +2704,7 @@ G__value G__exec_while()
 * G__exec_for()
 *
 * Called by
-*   G__exec_statement()
+*   G__exec_statement() 
 *
 ***********************************************************************/
 G__value G__exec_for()
@@ -2756,7 +2754,7 @@ G__value G__exec_for()
 * G__exec_else_if()
 *
 * Called by
-*   G__exec_statement()
+*   G__exec_statement() 
 *
 ***********************************************************************/
 G__value G__exec_else_if()
@@ -2770,7 +2768,7 @@ G__value G__exec_else_if()
 
 #ifdef G__ASM
 #ifndef G__OLDIMPLEMENTATION653
-  if(0==G__no_exec_compile)
+  if(0==G__no_exec_compile) 
     G__abortbytecode(); /* this must be redundant, but just in case */
 #else
   G__ASSERT(0==G__asm_noverflow);
@@ -2788,10 +2786,10 @@ G__value G__exec_else_if()
   G__fignorestream(")");
   G__mparen=0;
   G__exec_statement();
-
+  
   fgetpos(G__ifile.fp,&store_fpos);
   store_line_number=G__ifile.line_number;
-
+  
   /* reading else keyword */
   c=' ';
   while(isspace(c)) {
@@ -2843,7 +2841,7 @@ G__value G__exec_else_if()
     statement[iout] = c;
   }
   statement[4]='\0';
-
+  
   if(strcmp(statement,"else")==0) {
     /* else found. Skip elseclause */
     G__temp_read=0;
@@ -2859,7 +2857,7 @@ G__value G__exec_else_if()
     G__temp_read=0;
   }
   G__no_exec=0;
-
+  
   return(result);
 }
 
@@ -2904,7 +2902,7 @@ G__value G__exec_statement()
 #ifndef G__OLDIMPLEMENTATION781
   read_again:
 #endif
-
+    
     switch( c ) {
     case ' ' : /* space */
     case '\t' : /* tab */
@@ -2945,12 +2943,12 @@ G__value G__exec_statement()
 	      iout=0;
 	    }
 	    break;
-	
+	    
 	  case 3:
 	    /***********************************
 	     * 1)
 	     *  #if condition <---
-	     *  #endif
+	     *  #endif 
 	     * 2)
 	     *  #if condition <---
 	     *  #else
@@ -3078,7 +3076,7 @@ G__value G__exec_statement()
 	      spaceflag=0;
 	      break;
 	    }
-	
+	    
 	    /* #ifndef , #pragma */
 	    if(G__keyword_anytime_7(statement)) {
 #ifndef G__OLDIMPLEMENTATION813
@@ -3093,7 +3091,7 @@ G__value G__exec_statement()
 	    /**********************************
 	     * BUGS:
 	     *   default:printf("abc");
-	     *          ^
+	     *          ^ 
 	     * If there is no space char in
 	     * either side of ':', default is
 	     * ignored.
@@ -3158,7 +3156,7 @@ G__value G__exec_statement()
 	    fseek(G__ifile.fp,-3,SEEK_CUR);
 	    if(G__dispsource) G__disp_mask=2;
 	  }
-	
+	  
 	  switch(iout){
 	  case 2:
 	    if(strcmp(statement,"do")==0) {
@@ -3271,11 +3269,11 @@ G__value G__exec_statement()
 		G__abortbytecode();
 #ifndef G__OLDIMPLEMENTATION842
 	      }
-#endif
+#endif 
 	      if(G__no_exec_compile) {
 		if(0==mparen) return(G__null);
 #ifndef G__OLDIMPLEMENTATION842
-		if(G__ASM_FUNC_COMPILE!=G__asm_wholefunction)
+		if(G__ASM_FUNC_COMPILE!=G__asm_wholefunction) 
 		  G__abortbytecode();
 #else
 		G__abortbytecode();
@@ -3291,8 +3289,8 @@ G__value G__exec_statement()
 	      iout=0;
 	    }
 	    break;
-	
-	
+	    
+	    
 	  case 5:
 	    if(strcmp(statement,"short")==0) {
 	      G__DEFVAR('s');
@@ -3367,7 +3365,7 @@ G__value G__exec_statement()
 	      iout=0;
 	    }
 	    break;
-	
+	    
 	  case 6:
 	    if(strcmp(statement,"double")==0) {
 	      G__DEFVAR('d');
@@ -3397,7 +3395,7 @@ G__value G__exec_statement()
 	      G__DEFREFVAR('f');
 	      break;
 	    }
-	
+	    
 	    if(strcmp(statement,"return")==0) {
 	      G__fgetstream_new(statement,";");
 	      result=G__return_value(statement);
@@ -3411,7 +3409,7 @@ G__value G__exec_statement()
 	    }
 	    if(strcmp(statement,"delete")==0) {
 	      G__handle_delete(&iout ,statement); /* iout==1 if 'delete []' */
-	
+	      
 	      if(G__exec_delete(statement,&iout,&spaceflag,iout,mparen)) {
 		return(G__null);
 	      }
@@ -3423,7 +3421,7 @@ G__value G__exec_statement()
 	      return(G__null);
 	    }
 	    break;
-	
+	    
 	  case 7:
 	    if(strcmp(statement,"typedef")==0) {
 	      G__var_type='t';
@@ -3469,8 +3467,8 @@ G__value G__exec_statement()
 	    }
 #endif
 	    break;
-	
-	
+	    
+	    
 	  case 8:
 	    if(strcmp(statement,"unsigned")==0){
 	      if(G__unsignedintegral(&spaceflag,&iout,mparen)) return(G__null);
@@ -3587,13 +3585,13 @@ G__value G__exec_statement()
 	    }
 #endif
 #ifndef G__OLDIMPLEMENTATION872
-	    if(strcmp(statement,"R__EXTERN")==0) {
+	    if(strcmp(statement,"R__EXTERN")==0) { 
 	      if(G__externignore(&iout,&spaceflag,mparen)) return(G__null);
 	      break;
 	    }
 #endif
 	  }
-	
+	  
 #ifndef G__OLDIMPLEMENTATION1062
           if (iout && G__execvarmacro_noexec (statement)) {
             spaceflag = 0;
@@ -3612,7 +3610,7 @@ G__value G__exec_statement()
 	  }
 #ifndef G__OLDIMPLEMENTATION949
           else {
-#ifdef G__NEVER
+#ifdef G__NEVER 
 	    /* This part given by Scott Snyder causes problem on Redhat4.2
 	     * Linux 2.0.30  gcc -O. If optimizer is turned off, everything
 	     * works fine. Other platforms work fine too */
@@ -3633,12 +3631,12 @@ G__value G__exec_statement()
 	  G__var_type = 'p';
 	} /* 1!=spaceflag&&0==G__no_exec */
       }
-#ifdef G__SECURITY
+#ifdef G__SECURITY  
       if(G__return>G__RETURN_NORMAL) return(G__null);
 #endif
       break;
-
-
+      
+      
     case ';' : /* semi-column */
       if((single_quote!=0)||(double_quote!=0)) {
 	statement[iout++] = c ;
@@ -3680,7 +3678,7 @@ G__value G__exec_statement()
 	      return(result);
 	    }
 	    break;
-	
+	    
 	  case 8:
 	    if(strcmp(statement,"continue")==0) {
 	      /****************************************
@@ -3692,9 +3690,9 @@ G__value G__exec_statement()
 	      }
 	    }
 	    break;
-	
+	    
 	  }
-	
+	  
 	  /* Normal commands 'xxxx;' */
 #ifdef G__ASM
 	  if(G__asm_noverflow) G__asm_clear();
@@ -3704,7 +3702,7 @@ G__value G__exec_statement()
 	  if(G__p_tempbuf->level>=G__templevel && G__p_tempbuf->prev) {
 	    G__free_tempobject();
 	  }
-	
+	  
 	}
 	
 	if(largestep) G__afterlargestep(&largestep);
@@ -3713,15 +3711,15 @@ G__value G__exec_statement()
 	if(mparen==0 || G__return>G__RETURN_NORMAL) return(result);
       }
       break;
-
-
+      
+      
     case '(' : /* parenthesis */
       statement[iout++] = c ;
       statement[iout] = '\0' ;
       if((single_quote!=0)||(double_quote!=0)) break;
-
+      
       /* if((spaceflag==1)&&(G__no_exec==0)) { */
-      if(G__no_exec==0) {
+      if(G__no_exec==0) { 
 
 #ifndef G__OLDIMPLEMENTATION942
 	if( (0==G__def_struct_member||strncmp(statement,"ClassDef",8)!=0) &&
@@ -3755,7 +3753,7 @@ G__value G__exec_statement()
 	switch(iout){
 	case 7:
 	  if(strcmp(statement,"return(")==0) {
-	
+	    
 	    /*************************************
 	     * following part used to be
 	     * G__fgetstream(statement,")");
@@ -3763,7 +3761,7 @@ G__value G__exec_statement()
 	    fseek(G__ifile.fp,-1,SEEK_CUR);
 	    if(G__dispsource) G__disp_mask=1;
 	    G__fgetstream_new(statement,";");
-	
+	    
 	    result=G__return_value(statement);
 	    if(G__no_exec_compile) {
 	      statement[0]='\0';
@@ -3774,7 +3772,7 @@ G__value G__exec_statement()
 	    }
 	    return(result);
 	  }
-	
+	  
 	  if(strcmp(statement,"switch(")==0) {
 	    result=G__exec_switch();
 	    if(G__return!=G__RETURN_NON || mparen==0) return(result);
@@ -3789,7 +3787,7 @@ G__value G__exec_statement()
 	  }
 
 	  break;
-	
+	  
 	case 3:
 	  if(strcmp(statement,"if(")==0) {
 	    result=G__exec_if();
@@ -3820,7 +3818,7 @@ G__value G__exec_statement()
 	    spaceflag=0;
 	  }
 	  break;
-	
+	  
 	case 6:
 	  if(strcmp(statement,"while(")==0){
 	    result=G__exec_while();
@@ -3840,7 +3838,7 @@ G__value G__exec_statement()
 	    spaceflag=0;
 	  }
 	  break;
-	
+	  
 	case 4:
 	  if(strcmp(statement,"for(")==0){
 	    result=G__exec_for();
@@ -3891,10 +3889,10 @@ G__value G__exec_statement()
 	    G__ASSERT(pnew);
 	    result=G__new_operator(pnew);
 	  }
-	  else if(G__exec_function(statement,&c,&iout,&largestep,&result))
+	  else if(G__exec_function(statement,&c,&iout,&largestep,&result)) 
 	    return(G__null);
 #else
-	  if(G__exec_function(statement,&c,&iout,&largestep,&result))
+	  if(G__exec_function(statement,&c,&iout,&largestep,&result)) 
 	    return(G__null);
 #endif
 	  if((mparen==0&&c==';')||G__return!=G__RETURN_NON) return(result);
@@ -3913,7 +3911,7 @@ G__value G__exec_statement()
       else if((mparen==0)&&(iout==3)) {
 	
 	/**************************************************
-	 * G__no_exec is set
+	 * G__no_exec is set 
 	 *   if(true)  ;
 	 *   else if() ;  skip this
 	 *          ^
@@ -3935,7 +3933,7 @@ G__value G__exec_statement()
 #endif
       }
       break;
-
+      
     case '=' : /* assignement */
       if((G__no_exec==0 )&& (iout<8 || 9<iout ||
 			     strncmp(statement,"operator",8)!=0) &&
@@ -3974,7 +3972,7 @@ G__value G__exec_statement()
       }
 #ifndef G__OLDIMPLEMENTATION926
       else if(G__prerun && single_quote==0 && double_quote==0) {
-        c = G__fignorestream(";,}");
+        c = G__fignorestream(";,}"); 
 #ifndef G__OLDIMPLEMENTATION1023
 	if('}'==c && mparen) --mparen;
 #endif
@@ -3987,7 +3985,7 @@ G__value G__exec_statement()
 	spaceflag |= 1;
       }
       break;
-
+      
     case ')' :
       if(G__ansiheader!=0) {
 	G__ansiheader=0;
@@ -3996,8 +3994,8 @@ G__value G__exec_statement()
       statement[iout++] = c ;
       spaceflag |= 1;
       break;
-
-    case '{' :
+      
+    case '{' : 
       if(G__funcheader==1) {
 	/* return if called from G__interpret_func()
 	 * as pass parameter declaratioin
@@ -4035,7 +4033,7 @@ G__value G__exec_statement()
 #ifndef G__OLDIMPLEMENTATION612
 	  if(8==iout&&strcmp(statement,"namespace")==0) {
             /* unnamed namespace treat as global scope.
-	     * This implementation may be wrong.
+	     * This implementation may be wrong. 
 	     * Should fix later with using directive in global scope */
 	  }
 #endif
@@ -4044,7 +4042,7 @@ G__value G__exec_statement()
 	spaceflag=0;
       }
       break;
-
+      
     case '}' :
       if((single_quote!=0)||(double_quote!=0)) {
 	statement[iout++] = c ;
@@ -4062,8 +4060,8 @@ G__value G__exec_statement()
 	spaceflag=0;
       }
       break;
-
-
+      
+      
     case '"' : /* double quote */
       statement[iout++] = c ;
       spaceflag=5;
@@ -4081,13 +4079,13 @@ G__value G__exec_statement()
 	}
       }
       break;
-
+      
     case '\'' : /* single quote */
       if(double_quote==0) single_quote ^= 1;
       statement[iout++] = c ;
       spaceflag=5;
       break;
-
+      
     case '/' :
 #ifndef G__OLDIMPLEMENTATION439
       if(iout>0 && double_quote==0 && statement[iout-1]=='/' && commentflag) {
@@ -4106,7 +4104,7 @@ G__value G__exec_statement()
 	spaceflag |= 1;
       }
       break;
-
+      
     case '*' :  /* comment */
 #ifndef G__OLDIMPLEMENTATION439
       if(iout>0 && double_quote==0 && statement[iout-1]=='/' && commentflag) {
@@ -4123,7 +4121,7 @@ G__value G__exec_statement()
 	spaceflag |= 1;
       }
       break;
-
+      
     case ':' :
       statement[iout++] = c ;
       spaceflag |= 1;
@@ -4132,7 +4130,7 @@ G__value G__exec_statement()
 	if(G__label_access_scope(statement,&iout ,&spaceflag,&mparen))
 	  return(G__null);
       }
-
+      
       break;
 
 #ifdef G__TEMPLATECLASS
@@ -4154,17 +4152,17 @@ G__value G__exec_statement()
 	if(mparen==0 || G__return>G__RETURN_NORMAL) return(G__null);
       }
 #endif
-      else
+      else 
 #ifndef G__OLDIMPLEMENTATION870
       {
 	char *s=strchr(statement,'=');
 	if(s) ++s;
 	else  s=statement;
-	if((1==spaceflag||2==spaceflag) &&
+	if((1==spaceflag||2==spaceflag) && 
 	   (('~'==statement[0] && G__defined_templateclass(s+1)) ||
 	    G__defined_templateclass(s))) {
 #else
-	if((1==spaceflag||2==spaceflag) &&
+	if((1==spaceflag||2==spaceflag) && 
 	   (('~'==statement[0] && G__defined_templateclass(statement+1)) ||
 	    G__defined_templateclass(statement))) {
 #endif
@@ -4205,18 +4203,18 @@ G__value G__exec_statement()
 #endif
       break;
 #endif /* G__TEMPLATECLASS */
-
+      
     case EOF : /* end of file */
       statement[iout]='\0';
       G__handleEOF(statement,mparen ,single_quote,double_quote);
       return(G__null);
-
+      
     case '\\':
       statement[iout++] = c ;
       spaceflag |= 1;
       c=G__fgetc();
       /* continue to default case */
-
+      
     default:
       /* G__CHECK(G__SECURE_BUFFER_SIZE,iout==G__LONGLINE,return(G__null)); */
       statement[iout++] = c ;
@@ -4231,7 +4229,7 @@ G__value G__exec_statement()
       break;
     } /* end of switch */
   } /* end of infinite loop */
-
+  
 }
 /***********************************************************************
 * end of G__exec_statement()
@@ -4266,7 +4264,7 @@ char *pvar_type;
 #endif
 
   if('*'==new_name[0]) ispointer=1;
-
+  
   /* pointer of function
    *   type ( *funcpointer(type arg))( type var1,.....)
    *   type ( *funcpointer[n])( type var1,.....)
@@ -4302,7 +4300,7 @@ char *pvar_type;
     strcpy(new_name,p+3);
     *(p+2)='\0';
   }
-
+  
   /* pointer of function
    *   type ( *funcpointer[n])( type var1,.....)
    *                          ^             */
@@ -4371,7 +4369,7 @@ char *pvar_type;
       G__printlinenum();
     }
     if(line2) {
-      /* function returning pointer to function
+      /* function returning pointer to function 
        *   type ( *funcpointer(type arg))( type var1,.....)
        *                       ^ <------- ^    */
        fsetpos(G__ifile.fp,&pos2);

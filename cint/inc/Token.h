@@ -1,5 +1,3 @@
-/*CMZ :  2.24/05 16/05/2000  12.03.44  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   16/05/2000*/
 /* /% C++ %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -11,7 +9,7 @@
  ************************************************************************
  * Copyright(c) 1995~1999  Masaharu Goto (MXJ02154@niftyserve.or.jp)
  *
- * Permission to use, copy, modify and distribute this software and its
+ * Permission to use, copy, modify and distribute this software and its 
  * documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies and
  * that both that copyright notice and this permission notice appear
@@ -22,7 +20,7 @@
 
 
 #ifndef G__TOKENINFO_H
-#define G__TOKENINFO_H
+#define G__TOKENINFO_H 
 
 
 #include "Api.h"
@@ -34,7 +32,7 @@ class G__MethodInfo;
 * class G__TokenInfo
 *
 * Outcome of discussion between Nenad Buncic of CERN. 15 Mar 1997
-*
+* 
 *********************************************************************/
 class G__TokenInfo {
  public:
@@ -57,14 +55,14 @@ class G__TokenInfo {
   int Query(G__ClassInfo& tag_scope,G__MethodInfo& func_scope
 	                 ,char* preopr,char* name, char* postopr);
 
-  // Following functions have to be called after Query
+  // Following functions have to be called after Query 
   enum G__TokenType GetTokenType() { return(tokentype); }
   enum G__TokenProperty GetTokenProperty() { return(tokenproperty); }
   G__ClassInfo GetNextScope() { return(nextscope); }
 
  private:
-  enum G__TokenType tokentype;
-  enum G__TokenProperty tokenproperty;
+  enum G__TokenType tokentype; 
+  enum G__TokenProperty tokenproperty; 
   G__MethodInfo methodscope;
   struct G__bytecodefunc *bytecode;
   struct G__var_array *localvar;
@@ -115,7 +113,7 @@ class G__TokenInfo {
 *    int IsValid();
 *    ..
 *  };
-*
+* 
 *********************************************************************/
 
 #endif

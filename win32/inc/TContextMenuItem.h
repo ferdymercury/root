@@ -1,10 +1,17 @@
-//*CMZ :  2.24/03 29/04/2000  23.42.00  by  Rene Brun
-//*CMZ :  1.00/05 20/03/97  15.34.59  by  Rene Brun
-//*-- Author :    Valery Fine(fine@vxcern.cern.ch)   16/08/96
+// @(#)root/win32:$Name$:$Id$
+// Author: Valery Fine   13/03/96
+
+/*************************************************************************
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
+ *                                                                       *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
+ *************************************************************************/
 #ifndef ROOT_TContextMenuItem
 #define ROOT_TContextMenuItem
 
-#include "TVIRTUALMENUITEM.h"
+#include "TVirtualMenuItem.h"
 
 class TMethod;
 class TContextMenu;

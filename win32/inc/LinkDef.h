@@ -1,6 +1,13 @@
-*CMZ :  2.24/03 29/04/2000  23.42.42  by  Rene Brun
-*CMZ :  2.23/04 11/10/99  03.09.31  by  Fons Rademakers
-*-- Author :    Fons Rademakers   11/10/99
+/* @(#)root/win32:$Name$:$Id$ */
+
+/*************************************************************************
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
+ *                                                                       *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
+ *************************************************************************/
+
 #ifdef __CINT__
 
 #pragma link off all globals;

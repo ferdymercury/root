@@ -1,5 +1,3 @@
-/*CMZ :  2.24/05 16/05/2000  12.03.48  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   16/05/2000*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -543,9 +541,9 @@ char* filename;
 #else
     buf[0] = 0;
 #endif
-    if(strncmp(buf,filename,filenamebase-filename-1)==0)
+    if(strncmp(buf,filename,filenamebase-filename-1)==0) 
       return(filenamebase+2);
-    else
+    else 
       return(filename);
   }
   else return(filename);
@@ -693,7 +691,7 @@ char *filename;
   int badflag=0;
   int comflag=0;
 #ifdef G__VISUAL /* ON959 */
-  char buf[11];
+  char buf[11];  
 #endif
 #ifndef G__OLDIMPLEMENTATION1217
   int unnamedmacro = 0;
@@ -776,7 +774,7 @@ int fentry;
   struct G__var_array *var;
   struct G__Deffuncmacro *deffuncmacro;
   struct G__Definedtemplateclass *definedtemplateclass;
-  struct G__Definetemplatefunc *definedtemplatefunc;
+  struct G__Definetemplatefunc *definedtemplatefunc;   
   struct G__dictposition* dictpos = G__srcfile[fentry].dictpos;
   int varflag = 1;
 
@@ -790,7 +788,7 @@ int fentry;
     struct G__var_array *var2 = dictpos->var;
     int ig152 = dictpos->ig15;
     while(var2 && (var2 != var || ig152 != var->allvar)) {
-      if('p'!=var2->type[ig152]) {
+      if('p'!=var2->type[ig152]) { 
 	varflag = 0;
 	break;
       }
@@ -818,7 +816,7 @@ int fentry;
      dictpos->deffuncmacro == deffuncmacro &&
      dictpos->definedtemplateclass == definedtemplateclass &&
      dictpos->definedtemplatefunc == definedtemplatefunc) {
-    G__srcfile[fentry].hasonlyfunc =
+    G__srcfile[fentry].hasonlyfunc = 
       (struct G__dictposition*)malloc(sizeof(struct G__dictposition));
     G__store_dictposition(G__srcfile[fentry].hasonlyfunc);
   }
@@ -907,7 +905,7 @@ char *filenamein;
   * ++, like script.cxx++ or script.C++
   * ending with only one + means to keep the shared
   * library after the end of this process.
-  *************************************************/
+  *************************************************/  
   if ( len>1&& (strcmp(filename+len-1,"+")==0 ) ) {
     if (len>2 && (strcmp(filename+len-2,"++")==0 ) ) {
 #ifndef G__OLDIMPLEMENTATION1303
@@ -917,7 +915,7 @@ char *filenamein;
     } else {
       compiler_option = "k";
       len -= 1;
-    }
+    } 
     filename[len]='\0';
     external_compiler = 1; /* Request external compilation
 			    * if available (in ROOT) */
@@ -1382,7 +1380,7 @@ char *filenamein;
 /* #endif __hpux */
     }
   }
-
+    
 
   /**********************************************
   * filenum and line_number.
@@ -1430,7 +1428,7 @@ char *filenamein;
       fclose(G__ifile.fp);
       /* since we ignore the file, we can assume that it has no template
 	 nor any references... */
-
+      
       /******************************************************
        * restore input file information to G__ifile
        * and reset G__eof to 0.
@@ -1850,10 +1848,10 @@ char *macros,*undeflist,*ppopt,*includepath;
 			     0==strcmp(inname+strlen(inname)-4,".hxx")||
 			     0==strcmp(inname+strlen(inname)-4,".HXX"))) ||
        (!strchr(inname,'.'))
-       )
+       ) 
 #else
     if(0==strcmp(inname+strlen(inname)-2,".H")||
-       0==strcmp(inname+strlen(inname)-2,".h"))
+       0==strcmp(inname+strlen(inname)-2,".h")) 
 #endif
     {
       /* if header file, create tmpfile name as xxx.C */

@@ -1,6 +1,13 @@
-//*CMZ :  2.24/01 21/03/2000  00.05.58  by  Unknown
-//*CMZ :  2.23/12 26/01/2000  12.24.44  by  Valery Fine(fine@bnl.gov)
-//*-- Author :  Valery Fine(fine@bnl.gov)   25/09/99
+// @(#)root/star:$Name$:$Id$
+// Author: Valery Fine(fine@bnl.gov)   25/09/99
+
+/*************************************************************************
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
+ *                                                                       *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
+ *************************************************************************/
 #ifndef ROOT_TCL
 #define ROOT_TCL
 //

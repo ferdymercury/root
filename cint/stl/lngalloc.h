@@ -1,5 +1,3 @@
-/*CMZ :  2.24/05 16/05/2000  12.04.02  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   16/05/2000*/
 /*
  *
  * Copyright (c) 1994
@@ -32,19 +30,19 @@ public:
     typedef const T& const_reference;
     typedef unsigned long size_type;
     typedef long difference_type;
-    pointer allocate(size_type n) {
+    pointer allocate(size_type n) { 
 	return ::allocate((difference_type)n, (pointer)0);
     }
     void deallocate(pointer p) { ::deallocate(p); }
     pointer address(reference x) { return (pointer)&x; }
-    const_pointer const_address(const_reference x) {
-	return (const_pointer)&x;
+    const_pointer const_address(const_reference x) { 
+	return (const_pointer)&x; 
     }
-    size_type init_page_size() {
-	return max(size_type(1), size_type(4096/sizeof(T)));
+    size_type init_page_size() { 
+	return max(size_type(1), size_type(4096/sizeof(T))); 
     }
-    size_type max_size() const {
-	return max(size_type(1), size_type(ULONG_MAX/sizeof(T)));
+    size_type max_size() const { 
+	return max(size_type(1), size_type(ULONG_MAX/sizeof(T))); 
     }
 };
 

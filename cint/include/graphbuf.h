@@ -1,5 +1,3 @@
-/*CMZ :  2.24/05 16/05/2000  12.03.57  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   16/05/2000*/
 /***************************************************************************
 * graphbuf.h
 *
@@ -56,24 +54,24 @@ private:
   int xlog,ylog;                // log flag
   double xmin,xmax,ymin,ymax;   // scale
   int n[G__ARRAYMAX];           // array of number of data
-
+  
   char *title;                  // title of graph
   char *yunit;                  // y axis unit
-
+  
   char *dataname[G__ARRAYMAX];  // name of data
 public:
   double *pdat[G__ARRAYMAX];    // pointer to data array
-
+  
 public:
   // constructor, destructor, initialization
   graphbuf(void);
   ~graphbuf(void);
   void setnull(void);
   void freebuf(void);
-
+  
   // assignment operator
   graphbuf& operator =(graphbuf& X);
-
+  
   // ostream pipeline operator
   graphbuf& operator <<(array& a);
   graphbuf& operator <<(carray& a);
@@ -82,20 +80,20 @@ public:
   graphbuf& operator  |(double max); // specify max scale
   graphbuf& operator <<(ISLOG log);  // specify log scale
   virtual graphbuf& operator <<(char c);  // do plot
-
+  
   // istream pipeline operator
   graphbuf& operator >>(array& a);
   graphbuf& operator >>(carray& a);
   graphbuf& operator >>(char *s);    // give name or title+do plot
   graphbuf& operator >>(double min); // dummy
   graphbuf& operator >>(ISLOG log);  // dummy
-  graphbuf& operator >>(char c);     //
-
+  graphbuf& operator >>(char c);     // 
+  
   int isterminate(void) {
     if(G__GRAPHBUF_FIXED==status) return(1);
     else                          return(0);
   }
-
+  
   int Nplot(void)   { return(nplot); }
   int Npoint(int i) { return(n[i]); }
   int Minn(void)    { return(minn); }
@@ -114,7 +112,7 @@ public:
   int Status(void) { return(status); }
   int Iden(int i)  { return(iden[i]); }
   void setStatus(int stat) { status = stat; }
-
+  
   void dumpdata(FILE *fp);
   void loaddata(FILE *fp);
 } ;
@@ -345,7 +343,7 @@ graphbuf& graphbuf::operator <<(char c)
 * output
 **********************************************************/
 
-// add array or carray
+// add array or carray 
 graphbuf& graphbuf::operator >>(array& a)
 {
 	if(pout>nplot) {
@@ -368,7 +366,7 @@ graphbuf& graphbuf::operator >>(carray& a)
 	return(*this);
 }
 
-// dummy
+// dummy 
 graphbuf& graphbuf::operator >>(double d)
 {
 	return(*this);

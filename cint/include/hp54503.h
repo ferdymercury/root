@@ -1,5 +1,3 @@
-/*CMZ :  2.24/05 16/05/2000  12.03.57  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   16/05/2000*/
 /*****************************************************************
 * hp54503.h
 *
@@ -33,9 +31,9 @@ class hp54503 {
 
 hp54503::hp54503(int addr)
 {
- 	hpibaddr=addr;
+ 	hpibaddr=addr; 
 	ndig=0;
-}
+} 
 
 hp54503& hp54503::operator <<(char *s)
 {
@@ -54,19 +52,19 @@ hp54503& hp54503::operator >>(array& a)
 {
 	pa[ndig++]=&a;
 	return(*this);
-}
+} 
 
 hp54503& hp54503::operator >>(char *s)
 {
 	get_data();
 	return(*this);
-}
+} 
 
 hp54503& hp54503::operator >>(char c)
 {
 	get_data();
 	return(*this);
-}
+} 
 
 void hp54503::get_data(void)
 {

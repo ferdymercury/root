@@ -1,6 +1,12 @@
-//*CMZ :  2.24/01 18/02/2000  20.19.15  by  Valery Fine(fine@bnl.gov)
-//*CMZ :  2.23/12 26/01/2000  09.42.35  by  Valery Fine(fine@mail.cern.ch)
-//*-- Author :
+/* @(#)root/star:$Name$:$Id$ */
+
+/*************************************************************************
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
+ *                                                                       *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
+ *************************************************************************/
 /* tableDescriptor.h */
 #ifndef TABLEDESCRIPTOR_H
 #define TABLEDESCRIPTOR_H

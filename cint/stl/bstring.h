@@ -1,5 +1,3 @@
-/*CMZ :  2.24/05 16/05/2000  12.04.01  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   16/05/2000*/
 /**
  **  Copyright (c) 1994-1995 Modena Software Inc.,
  **
@@ -7,7 +5,7 @@
  **  and its documentation for any purpose is hereby granted without fee,
  **  provided that the above copyright notice appear in all copies and
  **  that both that copyright notice and this permission notice appear
- **  in supporting documentation.  Modena Software, Inc. makes no
+ **  in supporting documentation.  Modena Software, Inc. makes no 
  **  representations about the suitability of this software for any
  **  purpose.  It is provided "as is" without express or implied warranty.
  **
@@ -30,7 +28,7 @@ extern "C" {
 #include <iostream.h>
 #include <bool.h>
 
-// bc4const
+// bc4const 
 
 #ifndef __CINT__
 #ifdef __BC4_STL
@@ -38,7 +36,7 @@ extern "C" {
 #endif
 
 #ifdef __BC401_STL
-#define __BC401_const
+#define __BC401_const 
 #else
 #define __BC401_const const
 #endif
@@ -47,8 +45,8 @@ extern "C" {
 // bndchk.h
 #ifdef BOUNDS_CHECK
 void check_bounds
-	( 	int index,
-		int container_size,
+	( 	int index, 
+		int container_size, 
 		int lineno,
 		char *filename	);
 #endif
@@ -93,42 +91,42 @@ struct  string_char_baggage {
     // constraints functions
     //
     static void
-    assign (char_type& c1, const char_type& c2)
+    assign (char_type& c1, const char_type& c2) 
     {
         c1 = c2;
     }
     static bool
-    eq (const char_type& c1, const char_type& c2)
+    eq (const char_type& c1, const char_type& c2) 
     {
         return (c1 == c2);
     }
     static bool
-    ne (const char_type& c1, const char_type& c2)
+    ne (const char_type& c1, const char_type& c2) 
     {
         return !(c1 == c2);
     }
     static bool
-    lt (const char_type& c1, const char_type& c2)
+    lt (const char_type& c1, const char_type& c2) 
     {
         return (c1 < c2);
     }
     static char_type
-    eos ()
+    eos () 
     {
         return char_type();     // the null character
     }
     static istream&
-    char_in (istream& is, char_type& c)
+    char_in (istream& is, char_type& c) 
     {
         return is >> c;        // extractor for a char_type object
     }
     static ostream&
-    char_out (ostream& os, char_type c)
+    char_out (ostream& os, char_type c) 
     {
         return os << c;        // inserter for a char_type object
     }
     static bool
-    is_del (char_type c)
+    is_del (char_type c) 
     {
         // characteristic function for delimiters of char_type
         return isspace(c);
@@ -138,7 +136,7 @@ struct  string_char_baggage {
     // speed-up functions
     //
     static int
-    compare (const char_type* s1, const char_type* s2, size_t n)
+    compare (const char_type* s1, const char_type* s2, size_t n) 
     {
         for (size_t i = 0; i < n; ++i, ++s1, ++s2)
             if (ne(*s1, *s2))
@@ -148,7 +146,7 @@ struct  string_char_baggage {
         return 0;
     }
     static size_t
-    length (const char_type* s)
+    length (const char_type* s) 
     {
         size_t l = 0;
         while (ne(*s++, eos()))
@@ -156,7 +154,7 @@ struct  string_char_baggage {
         return l;
     }
     static char_type*
-    copy (char_type* s1, const char_type* s2, size_t n)
+    copy (char_type* s1, const char_type* s2, size_t n) 
     {
         char_type* s = s1;
         for (size_t i = 0; i < n; ++i)
@@ -173,32 +171,32 @@ struct string_char_baggage<char> {
     // constraint member functions
     //
     static void
-    assign (char_type& c1, const char_type& c2)
+    assign (char_type& c1, const char_type& c2) 
     {
         c1 = c2;
     }
     static bool
-    eq (const char_type& c1, const char_type& c2)
+    eq (const char_type& c1, const char_type& c2) 
     {
         return (c1 == c2);
     }
     static bool
-    ne (const char_type& c1, const char_type& c2)
+    ne (const char_type& c1, const char_type& c2) 
     {
         return (c1 != c2);
     }
     static bool
-    lt (const char_type& c1, const char_type& c2)
+    lt (const char_type& c1, const char_type& c2) 
     {
         return (c1 < c2);
     }
     static char_type
-    eos ()
+    eos () 
     {
         return 0;     // the null character
     }
     static istream&
-    char_in (istream& is, char_type& c)
+    char_in (istream& is, char_type& c) 
     {
        // extractor for a char_type object
        // return is >> c;        // this does not work
@@ -206,12 +204,12 @@ struct string_char_baggage<char> {
        return is;
     }
     static ostream&
-    char_out (ostream& os, char_type c)
+    char_out (ostream& os, char_type c) 
     {
         return os << c;        // inserter for a char_type object
     }
     static bool
-    is_del (char_type c)
+    is_del (char_type c) 
     {
         // characteristic function for delimiters of char_type
         return isspace(c);
@@ -221,17 +219,17 @@ struct string_char_baggage<char> {
     // speed-up functions
     //
     static int
-    compare (const char_type* s1, const char_type* s2, size_t n)
+    compare (const char_type* s1, const char_type* s2, size_t n) 
     {
         return memcmp(s1, s2, n);
     }
     static size_t
-    length (const char_type* s)
+    length (const char_type* s) 
     {
         return strlen(s);
     }
     static char_type*
-    copy (char_type* s1, const char_type* s2, size_t n)
+    copy (char_type* s1, const char_type* s2, size_t n) 
     {
         // type cast required as memcpy returns void*
         return (char_type*)memcpy(s1, s2, n);
@@ -244,42 +242,42 @@ struct string_char_baggage<wchar_t> {
     typedef wchar_t char_type;
 
     static void
-    assign (char_type& c1, const char_type& c2)
+    assign (char_type& c1, const char_type& c2) 
     {
         c1 = c2;
     }
     static bool
-    eq (const char_type& c1, const char_type& c2)
+    eq (const char_type& c1, const char_type& c2) 
     {
         return (c1 == c2);
     }
     static bool
-    ne (const char_type& c1, const char_type& c2)
+    ne (const char_type& c1, const char_type& c2) 
     {
         return (c1 != c2);
     }
     static bool
-    lt (const char_type& c1, const char_type& c2)
+    lt (const char_type& c1, const char_type& c2) 
     {
         return (c1 < c2);
     }
     static char_type
-    eos ()
+    eos () 
     {
         return 0;     // the null character
     }
     static istream&
-    char_in (istream& is, char_type& c)
+    char_in (istream& is, char_type& c) 
     {
         return is >> c;        // extractor for a char_type object
     }
     static ostream&
-    char_out (ostream& os, char_type c)
+    char_out (ostream& os, char_type c) 
     {
         return os << c;        // inserter for a char_type object
     }
     static bool
-    is_del (char_type c)
+    is_del (char_type c) 
     {
         // characteristic function for delimiters of char_type
         // using templatized locale::isspace function
@@ -290,18 +288,18 @@ struct string_char_baggage<wchar_t> {
     // speed-up functions
     //
     static int
-    compare (const char_type* s1, const char_type* s2, size_t n)
+    compare (const char_type* s1, const char_type* s2, size_t n) 
     {
         return wmemcmp(s1, s2, n);
     }
     static size_t
-    length (const char_type* s)
+    length (const char_type* s) 
     {
         return wcslen(s);
         // May use Koshida's overloaded MSE function strlen(s)
     }
     static char_type*
-    copy (char_type* s1, const char_type* s2, size_t n)
+    copy (char_type* s1, const char_type* s2, size_t n) 
     {
         return (char_type*)wmemcpy(s1, s2, n);
     }
@@ -404,7 +402,7 @@ private:
 
     inline size_t
     ref_count () const ;
-
+    
     inline static
     charT
     eos () ;
@@ -416,15 +414,15 @@ private:
     append_str (const charT* s, size_t slen) ;
 
     void
-    insert_str (size_t pos, const charT* s, size_t slen)
+    insert_str (size_t pos, const charT* s, size_t slen) 
                 ;
 
     void
-    replace_str (size_t xlen, size_t pos, const charT* s, size_t slen)
+    replace_str (size_t xlen, size_t pos, const charT* s, size_t slen) 
                  ;
 
     int
-    compare_str (size_t pos, const charT* str, size_t slen, size_t strlen)
+    compare_str (size_t pos, const charT* str, size_t slen, size_t strlen) 
                  const ;
 
     size_t
@@ -434,19 +432,19 @@ private:
     rfind_str (const charT* s, size_t pos, size_t len) const ;
 
     size_t
-    find_first_of_str (const charT* s, size_t pos, size_t len) const
+    find_first_of_str (const charT* s, size_t pos, size_t len) const 
                       ;
 
     size_t
-    find_last_of_str (const charT* s, size_t pos, size_t len) const
+    find_last_of_str (const charT* s, size_t pos, size_t len) const 
                      ;
 
     size_t
-    find_first_not_of_str (const charT* s, size_t pos, size_t len) const
+    find_first_not_of_str (const charT* s, size_t pos, size_t len) const 
                            ;
 
     size_t
-    find_last_not_of_str (const charT* s, size_t pos, size_t len) const
+    find_last_not_of_str (const charT* s, size_t pos, size_t len) const 
                          ;
 
 
@@ -497,7 +495,7 @@ public:
     basic_string<charT>&
     operator+= (charT c)  ;
 
-    operator vector<charT> () const
+    operator vector<charT> () const 
 		{
 			return vector<charT> (data(), data()+length());
 		}
@@ -688,7 +686,7 @@ public:
     compare (const charT* s, size_t pos = 0) const ;
 
     int
-    compare (charT c, size_t pos = 0, size_t rep = 1) const
+    compare (charT c, size_t pos = 0, size_t rep = 1) const 
              ;
 
     friend
@@ -726,7 +724,7 @@ public:
 
 template <class charT>
 inline void
-basic_string_ref<charT>::delete_ptr ()
+basic_string_ref<charT>::delete_ptr () 
 {
     if (res)
     {
@@ -738,7 +736,7 @@ basic_string_ref<charT>::delete_ptr ()
 
 template <class charT>
 inline void
-basic_string_ref<charT>::throwlength ()
+basic_string_ref<charT>::throwlength ()  
 {
 #ifdef  __MEXCEPT
    throw   length_error("Length exception occurred");
@@ -750,7 +748,7 @@ basic_string_ref<charT>::throwlength ()
 
 template <class charT>
 inline void
-basic_string_ref<charT>::throwrange ()
+basic_string_ref<charT>::throwrange () 
 {
 #ifdef  __MEXCEPT
    throw   out_of_range("Out of range exception occurred");
@@ -762,7 +760,7 @@ basic_string_ref<charT>::throwrange ()
 
 template <class charT>
 inline void
-basic_string<charT>::delete_ref ()
+basic_string<charT>::delete_ref () 
 {
     --(reference->count);
     if (!(reference->count))
@@ -771,14 +769,14 @@ basic_string<charT>::delete_ref ()
 
 template <class charT>
 inline size_t
-basic_string<charT>::ref_count () const
+basic_string<charT>::ref_count () const 
 {
     return reference->count;
 }
 
 template <class charT>
 inline const charT*
-basic_string<charT>::data () const
+basic_string<charT>::data () const 
 {
     if (length())
         return reference->ptr;
@@ -788,35 +786,35 @@ basic_string<charT>::data () const
 
 template <class charT>
 inline charT*
-basic_string<charT>::point ()
+basic_string<charT>::point () 
 {
     return reference->ptr;
 }
 
 template <class charT>
 inline size_t&
-basic_string<charT>::len ()
+basic_string<charT>::len () 
 {
     return reference->len;
 }
 
 template <class charT>
 inline size_t
-basic_string<charT>::length () const
+basic_string<charT>::length () const 
 {
     return reference->len;
 }
 
 template <class charT>
 inline size_t
-basic_string<charT>::reserve () const
+basic_string<charT>::reserve () const 
 {
     return reference->res;
 }
 
 template <class charT>
 inline charT
-basic_string<charT>::get_at (size_t pos) const
+basic_string<charT>::get_at (size_t pos) const 
 {
     if (pos >= length())
     {
@@ -827,7 +825,7 @@ basic_string<charT>::get_at (size_t pos) const
 
 template <class charT>
 inline charT
-basic_string<charT>::operator[] (size_t pos) const
+basic_string<charT>::operator[] (size_t pos) const 
 {
     if (pos < length())
         return *(data()+pos);
@@ -838,35 +836,35 @@ basic_string<charT>::operator[] (size_t pos) const
 template <class charT>
 inline bool
 operator== (const basic_string<charT>& lhs, const basic_string<charT>& rhs)
-
+            
 {
     return !(lhs.compare(rhs));
 }
 
 template <class charT>
 inline bool
-operator== (const charT* lhs, const basic_string<charT>& rhs)
+operator== (const charT* lhs, const basic_string<charT>& rhs) 
 {
     return !(rhs.compare(lhs));
 }
 
 template <class charT>
 inline bool
-operator== (charT lhs, const basic_string<charT>& rhs)
+operator== (charT lhs, const basic_string<charT>& rhs) 
 {
     return !(rhs.compare(lhs));
 }
 
 template <class charT>
 inline bool
-operator== (const basic_string<charT>& lhs, const charT* rhs)
+operator== (const basic_string<charT>& lhs, const charT* rhs) 
 {
     return !(lhs.compare(rhs));
 }
 
 template <class charT>
 inline bool
-operator== (const basic_string<charT>& lhs, charT rhs)
+operator== (const basic_string<charT>& lhs, charT rhs) 
 {
     return !(lhs.compare(rhs));
 }
@@ -875,7 +873,7 @@ operator== (const basic_string<charT>& lhs, charT rhs)
 template <class charT>
 inline bool
 operator!= (const basic_string<charT>& lhs, const basic_string<charT>& rhs)
-
+            
 {
     return lhs.compare(rhs);
 }
@@ -883,28 +881,28 @@ operator!= (const basic_string<charT>& lhs, const basic_string<charT>& rhs)
 
 template <class charT>
 inline bool
-operator!= (const charT* lhs, const basic_string<charT>& rhs)
+operator!= (const charT* lhs, const basic_string<charT>& rhs) 
 {
     return rhs.compare(lhs);
 }
 
 template <class charT>
 inline bool
-operator!= (charT lhs, const basic_string<charT>& rhs)
+operator!= (charT lhs, const basic_string<charT>& rhs) 
 {
     return rhs.compare(lhs);
 }
 
 template <class charT>
 inline bool
-operator!= (const basic_string<charT>& lhs, const charT* rhs)
+operator!= (const basic_string<charT>& lhs, const charT* rhs) 
 {
     return lhs.compare(rhs);
 }
 
 template <class charT>
 inline bool
-operator!= (const basic_string<charT>& lhs, charT rhs)
+operator!= (const basic_string<charT>& lhs, charT rhs) 
 {
     return lhs.compare(rhs);
 }
@@ -912,7 +910,7 @@ operator!= (const basic_string<charT>& lhs, charT rhs)
 template <class charT>
 inline bool
 operator< (const basic_string<charT>& lhs, const basic_string<charT>& rhs)
-
+           
 {
     if (lhs.compare(rhs) < 0)
         return true;
@@ -922,7 +920,7 @@ operator< (const basic_string<charT>& lhs, const basic_string<charT>& rhs)
 
 template <class charT>
 inline bool
-operator< (const charT* lhs, const basic_string<charT>& rhs)
+operator< (const charT* lhs, const basic_string<charT>& rhs) 
 {
     if (rhs.compare(lhs) > 0)
         return true;
@@ -932,7 +930,7 @@ operator< (const charT* lhs, const basic_string<charT>& rhs)
 
 template <class charT>
 inline bool
-operator< (charT lhs, const basic_string<charT>& rhs)
+operator< (charT lhs, const basic_string<charT>& rhs) 
 {
     if (rhs.compare(lhs) > 0)
         return true;
@@ -942,7 +940,7 @@ operator< (charT lhs, const basic_string<charT>& rhs)
 
 template <class charT>
 inline bool
-operator< (const basic_string<charT>& lhs, const charT* rhs)
+operator< (const basic_string<charT>& lhs, const charT* rhs) 
 {
     if (lhs.compare(rhs) < 0)
         return true;
@@ -952,7 +950,7 @@ operator< (const basic_string<charT>& lhs, const charT* rhs)
 
 template <class charT>
 inline bool
-operator< (const basic_string<charT>& lhs, charT rhs)
+operator< (const basic_string<charT>& lhs, charT rhs) 
 {
     if (lhs.compare(rhs) < 0)
         return true;
@@ -964,7 +962,7 @@ operator< (const basic_string<charT>& lhs, charT rhs)
 template <class charT>
 inline bool
 operator> (const basic_string<charT>& lhs, const basic_string<charT>& rhs)
-
+           
 {
     return (rhs < lhs);
 }
@@ -972,28 +970,28 @@ operator> (const basic_string<charT>& lhs, const basic_string<charT>& rhs)
 
 template <class charT>
 inline bool
-operator> (const charT* lhs, const basic_string<charT>& rhs)
+operator> (const charT* lhs, const basic_string<charT>& rhs) 
 {
     return (rhs < lhs);
 }
 
 template <class charT>
 inline bool
-operator> (charT lhs, const basic_string<charT>& rhs)
+operator> (charT lhs, const basic_string<charT>& rhs) 
 {
     return (rhs < lhs);
 }
 
 template <class charT>
 inline bool
-operator> (const basic_string<charT>& lhs, const charT* rhs)
+operator> (const basic_string<charT>& lhs, const charT* rhs) 
 {
     return (rhs < lhs);
 }
 
 template <class charT>
 inline bool
-operator> (const basic_string<charT>& lhs, charT rhs)
+operator> (const basic_string<charT>& lhs, charT rhs) 
 {
     return (rhs < lhs);
 }
@@ -1002,7 +1000,7 @@ operator> (const basic_string<charT>& lhs, charT rhs)
 template <class charT>
 inline bool
 operator>= (const basic_string<charT>& lhs, const basic_string<charT>& rhs)
-
+            
 {
     return !(lhs < rhs);
 }
@@ -1010,28 +1008,28 @@ operator>= (const basic_string<charT>& lhs, const basic_string<charT>& rhs)
 
 template <class charT>
 inline bool
-operator>= (const charT* lhs, const basic_string<charT>& rhs)
+operator>= (const charT* lhs, const basic_string<charT>& rhs) 
 {
     return !(lhs < rhs);
 }
 
 template <class charT>
 inline bool
-operator>= (charT lhs, const basic_string<charT>& rhs)
+operator>= (charT lhs, const basic_string<charT>& rhs) 
 {
     return !(lhs < rhs);
 }
 
 template <class charT>
 inline bool
-operator>= (const basic_string<charT>& lhs, const charT* rhs)
+operator>= (const basic_string<charT>& lhs, const charT* rhs) 
 {
     return !(lhs < rhs);
 }
 
 template <class charT>
 inline bool
-operator>= (const basic_string<charT>& lhs, charT rhs)
+operator>= (const basic_string<charT>& lhs, charT rhs) 
 {
     return !(lhs < rhs);
 }
@@ -1040,7 +1038,7 @@ operator>= (const basic_string<charT>& lhs, charT rhs)
 template <class charT>
 inline bool
 operator<= (const basic_string<charT>& lhs, const basic_string<charT>& rhs)
-
+            
 {
     return !(rhs < lhs);
 }
@@ -1048,28 +1046,28 @@ operator<= (const basic_string<charT>& lhs, const basic_string<charT>& rhs)
 
 template <class charT>
 inline bool
-operator<= (const charT* lhs, const basic_string<charT>& rhs)
+operator<= (const charT* lhs, const basic_string<charT>& rhs) 
 {
     return !(rhs < lhs);
 }
 
 template <class charT>
 inline bool
-operator<= (charT lhs, const basic_string<charT>& rhs)
+operator<= (charT lhs, const basic_string<charT>& rhs) 
 {
     return !(rhs < lhs);
 }
 
 template <class charT>
 inline bool
-operator<= (const basic_string<charT>& lhs, const charT* rhs)
+operator<= (const basic_string<charT>& lhs, const charT* rhs) 
 {
     return !(rhs < lhs);
 }
 
 template <class charT>
 inline bool
-operator<= (const basic_string<charT>& lhs, charT rhs)
+operator<= (const basic_string<charT>& lhs, charT rhs) 
 {
     return !(rhs < lhs);
 }
@@ -1079,13 +1077,13 @@ operator<= (const basic_string<charT>& lhs, charT rhs)
 
 template <class charT>
 charT
-basic_string_ref<charT>::eos ()
+basic_string_ref<charT>::eos () 
 {
     return baggage_type::eos();
 }
 
 template <class charT>
-basic_string_ref<charT>::basic_string_ref ()
+basic_string_ref<charT>::basic_string_ref () 
 {
      res = len = 0;
      ptr = 0;
@@ -1094,7 +1092,7 @@ basic_string_ref<charT>::basic_string_ref ()
 
 template <class charT>
 basic_string_ref<charT>::basic_string_ref (size_t size, capacity cap)
-
+                                           
 {
     if (cap == ::reserve)
     {
@@ -1123,7 +1121,7 @@ basic_string_ref<charT>::basic_string_ref (size_t size, capacity cap)
 
 template <class charT>
 basic_string_ref<charT>::basic_string_ref (const basic_string<charT>& str,
-                                           size_t pos, size_t rlen)
+                                           size_t pos, size_t rlen) 
 {
     res = len = rlen;
     if (res)
@@ -1138,7 +1136,7 @@ basic_string_ref<charT>::basic_string_ref (const basic_string<charT>& str,
 
 template <class charT>
 basic_string_ref<charT>::basic_string_ref (const charT* s, size_t rlen,
-                                           size_t rres)
+                                           size_t rres) 
 {
     res = rres;
     len = rlen;
@@ -1155,7 +1153,7 @@ basic_string_ref<charT>::basic_string_ref (const charT* s, size_t rlen,
 
 template <class charT>
 basic_string_ref<charT>::basic_string_ref (const charT* s, size_t n)
-
+                                           
 {
     if (n == NPOS)
     {
@@ -1173,7 +1171,7 @@ basic_string_ref<charT>::basic_string_ref (const charT* s, size_t n)
 }
 
 template <class charT>
-basic_string_ref<charT>::basic_string_ref (const charT* s)
+basic_string_ref<charT>::basic_string_ref (const charT* s) 
 {
     res = len = baggage_type::length(s);
     if (res)
@@ -1188,7 +1186,7 @@ basic_string_ref<charT>::basic_string_ref (const charT* s)
 
 template <class charT>
 basic_string_ref<charT>::basic_string_ref (charT c, size_t rep)
-
+                                           
 {
     if (rep == NPOS)
     {
@@ -1208,7 +1206,7 @@ basic_string_ref<charT>::basic_string_ref (charT c, size_t rep)
 
 template <class charT>
 basic_string_ref<charT>::basic_string_ref (const vector<charT>& vec)
-
+                                           
 {
     size_t  n = vec.size();
     if (n == NPOS)
@@ -1227,14 +1225,14 @@ basic_string_ref<charT>::basic_string_ref (const vector<charT>& vec)
 }
 
 template <class charT>
-basic_string_ref<charT>::~basic_string_ref ()
+basic_string_ref<charT>::~basic_string_ref () 
 {
     delete_ptr();
 }
 
 template <class charT>
 charT
-basic_string<charT>::eos ()
+basic_string<charT>::eos () 
 {
     return baggage_type::eos();
 }
@@ -1242,7 +1240,7 @@ basic_string<charT>::eos ()
 template <class charT>
 void
 basic_string<charT>::assign_str (const charT* s, size_t slen)
-
+                                 
 {
     if (slen == NPOS)
     {
@@ -1265,7 +1263,7 @@ basic_string<charT>::assign_str (const charT* s, size_t slen)
 template <class charT>
 void
 basic_string<charT>::append_str (const charT* s, size_t slen)
-
+                                 
 {
 #ifndef __CINT__ // ???
     if (length() >= (NPOS-slen))
@@ -1288,7 +1286,7 @@ basic_string<charT>::append_str (const charT* s, size_t slen)
 template <class charT>
 void
 basic_string<charT>::insert_str (size_t pos, const charT* s, size_t slen)
-
+                                 
 {
     if (pos > length())
     {
@@ -1323,7 +1321,7 @@ basic_string<charT>::insert_str (size_t pos, const charT* s, size_t slen)
 template <class charT>
 void
 basic_string<charT>::replace_str (size_t xlen, size_t pos, const charT* s,
-                     size_t slen)
+                     size_t slen) 
 {
     if (pos > length())
     {
@@ -1343,7 +1341,7 @@ basic_string<charT>::replace_str (size_t xlen, size_t pos, const charT* s,
         delete_ref();
         reference = tmp;
     }
-    else
+    else 
     {
         if (slen < xlen)
             baggage_type::copy (point()+pos+slen, data()+pos+xlen,
@@ -1363,7 +1361,7 @@ basic_string<charT>::replace_str (size_t xlen, size_t pos, const charT* s,
 template <class charT>
 int
 basic_string<charT>::compare_str (size_t pos, const charT* str, size_t slen,
-                     size_t strlen) const
+                     size_t strlen) const 
 {
     if (pos > length())
     {
@@ -1383,8 +1381,8 @@ basic_string<charT>::compare_str (size_t pos, const charT* str, size_t slen,
 
 template <class charT>
 size_t
-basic_string<charT>::find_str (const charT* s, size_t pos, size_t len)
-                               const
+basic_string<charT>::find_str (const charT* s, size_t pos, size_t len) 
+                               const 
 {
     size_t  count = pos;
     size_t  shift;
@@ -1410,12 +1408,12 @@ basic_string<charT>::find_str (const charT* s, size_t pos, size_t len)
 
 template <class charT>
 size_t
-basic_string<charT>::rfind_str (const charT* s, size_t pos, size_t len)
-                                const
+basic_string<charT>::rfind_str (const charT* s, size_t pos, size_t len) 
+                                const 
 {
     size_t  count = (pos < (length()-len)) ? (pos+1) : (length()-len);
     size_t  shift;
-    size_t  place;
+    size_t  place;    
     if ((length() < len) || (len == 0))
         return NPOS;
     while (count > 0)
@@ -1438,8 +1436,8 @@ basic_string<charT>::rfind_str (const charT* s, size_t pos, size_t len)
 
 template <class charT>
 size_t
-basic_string<charT>::find_first_of_str (const charT* s, size_t pos, size_t len)
-                                        const
+basic_string<charT>::find_first_of_str (const charT* s, size_t pos, size_t len) 
+                                        const 
 {
     size_t temp;
     size_t count  = pos;
@@ -1459,8 +1457,8 @@ basic_string<charT>::find_first_of_str (const charT* s, size_t pos, size_t len)
 
 template <class charT>
 size_t
-basic_string<charT>::find_last_of_str (const charT* s, size_t pos, size_t len)
-                                       const
+basic_string<charT>::find_last_of_str (const charT* s, size_t pos, size_t len) 
+                                       const 
 {
     size_t temp = 0;
     size_t count = (pos < length()) ? (pos+1) : length();
@@ -1482,7 +1480,7 @@ basic_string<charT>::find_last_of_str (const charT* s, size_t pos, size_t len)
 template <class charT>
 size_t
 basic_string<charT>::find_first_not_of_str (const charT* s, size_t pos,
-                     size_t len) const
+                     size_t len) const 
 {
     size_t count = pos;
     while (count < length())
@@ -1504,7 +1502,7 @@ basic_string<charT>::find_first_not_of_str (const charT* s, size_t pos,
 template <class charT>
 size_t
 basic_string<charT>::find_last_not_of_str (const charT* s, size_t pos,
-                     size_t len) const
+                     size_t len) const 
 {
     size_t temp = 0;
     size_t count = (pos < length()) ? (pos+1) : length();
@@ -1529,7 +1527,7 @@ basic_string<charT>::find_last_not_of_str (const charT* s, size_t pos,
 }
 
 template <class charT>
-basic_string<charT>::basic_string ()
+basic_string<charT>::basic_string () 
 {
     reference = new basic_string_ref<charT> ();
     c_str_ptr = 0;
@@ -1537,7 +1535,7 @@ basic_string<charT>::basic_string ()
 
 template <class charT>
 basic_string<charT>::basic_string (size_t size, capacity cap)
-
+                                   
 {
     reference = new basic_string_ref<charT> (size, cap);
     c_str_ptr = 0;
@@ -1545,7 +1543,7 @@ basic_string<charT>::basic_string (size_t size, capacity cap)
 
 template <class charT>
 basic_string<charT>::basic_string (const basic_string<charT>& str,
-                                   size_t pos, size_t n)
+                                   size_t pos, size_t n) 
 {
     if (pos > str.length())
     {
@@ -1571,7 +1569,7 @@ basic_string<charT>::basic_string (const basic_string<charT>& str,
 
 template <class charT>
 basic_string<charT>::basic_string (const charT* s, size_t rlen, size_t xlen)
-
+                                   
 {
 #ifndef __CINT__
     if (rlen >= (NPOS - xlen))
@@ -1584,35 +1582,35 @@ basic_string<charT>::basic_string (const charT* s, size_t rlen, size_t xlen)
 }
 
 template <class charT>
-basic_string<charT>::basic_string (const charT* s, size_t n)
+basic_string<charT>::basic_string (const charT* s, size_t n) 
 {
     reference = new basic_string_ref<charT> (s, n);
     c_str_ptr = 0;
 }
 
 template <class charT>
-basic_string<charT>::basic_string (const charT* s)
+basic_string<charT>::basic_string (const charT* s) 
 {
     reference = new basic_string_ref<charT> (s);
     c_str_ptr = 0;
 }
 
 template <class charT>
-basic_string<charT>::basic_string (charT c, size_t rep)
+basic_string<charT>::basic_string (charT c, size_t rep) 
 {
     reference = new basic_string_ref<charT> (c, rep);
     c_str_ptr = 0;
 }
 
 template <class charT>
-basic_string<charT>::basic_string (const vector<charT>& vec)
+basic_string<charT>::basic_string (const vector<charT>& vec) 
 {
     reference = new basic_string_ref<charT> (vec);
     c_str_ptr = 0;
 }
 
 template <class charT>
-basic_string<charT>::~basic_string ()
+basic_string<charT>::~basic_string () 
 {
     delete_ref();
     if (c_str_ptr)
@@ -1621,7 +1619,7 @@ basic_string<charT>::~basic_string ()
 
 template <class charT>
 basic_string<charT>&
-basic_string<charT>::operator= (const basic_string<charT>& str)
+basic_string<charT>::operator= (const basic_string<charT>& str) 
 {
     if (this != &str)
     {
@@ -1645,7 +1643,7 @@ basic_string<charT>::operator= (const basic_string<charT>& str)
 
 template <class charT>
 basic_string<charT>&
-basic_string<charT>::operator= (const charT* s)
+basic_string<charT>::operator= (const charT* s) 
 {
     assign_str (s, baggage_type::length(s));
     return *this;
@@ -1653,7 +1651,7 @@ basic_string<charT>::operator= (const charT* s)
 
 template <class charT>
 basic_string<charT>&
-basic_string<charT>::operator= (charT c)
+basic_string<charT>::operator= (charT c) 
 {
     if ((ref_count() == 1) && (reserve() >= 1))
     {
@@ -1670,7 +1668,7 @@ basic_string<charT>::operator= (charT c)
 
 template <class charT>
 basic_string<charT>&
-basic_string<charT>::operator+= (const basic_string<charT>& rhs)
+basic_string<charT>::operator+= (const basic_string<charT>& rhs) 
 {
     append_str (rhs.data(), rhs.length());
     return *this;
@@ -1678,7 +1676,7 @@ basic_string<charT>::operator+= (const basic_string<charT>& rhs)
 
 template <class charT>
 basic_string<charT>&
-basic_string<charT>::operator+= (const charT* s)
+basic_string<charT>::operator+= (const charT* s) 
 {
     append_str (s, baggage_type::length(s));
     return *this;
@@ -1686,7 +1684,7 @@ basic_string<charT>::operator+= (const charT* s)
 
 template <class charT>
 basic_string<charT>&
-basic_string<charT>::operator+= (charT c)
+basic_string<charT>::operator+= (charT c) 
 {
     if (length() >= (NPOS-1))
     {
@@ -1707,7 +1705,7 @@ basic_string<charT>::operator+= (charT c)
 template <class charT>
 basic_string<charT>&
 basic_string<charT>::append (const basic_string<charT>& str, size_t pos, size_t n)
-
+                     
 {
     if (pos > str.length())
     {
@@ -1719,7 +1717,7 @@ basic_string<charT>::append (const basic_string<charT>& str, size_t pos, size_t 
 
 template <class charT>
 basic_string<charT>&
-basic_string<charT>::append (const charT* s, size_t n)
+basic_string<charT>::append (const charT* s, size_t n) 
 {
     append_str (s, n);
     return *this;
@@ -1727,7 +1725,7 @@ basic_string<charT>::append (const charT* s, size_t n)
 
 template <class charT>
 basic_string<charT>&
-basic_string<charT>::append (const charT* s)
+basic_string<charT>::append (const charT* s) 
 {
     append_str (s, baggage_type::length(s));
     return *this;
@@ -1735,7 +1733,7 @@ basic_string<charT>::append (const charT* s)
 
 template <class charT>
 basic_string<charT>&
-basic_string<charT>::append (charT c, size_t rep)
+basic_string<charT>::append (charT c, size_t rep) 
 {
     if (length() >= (NPOS-rep))
     {
@@ -1760,7 +1758,7 @@ basic_string<charT>::append (charT c, size_t rep)
 template <class charT>
 basic_string<charT>&
 basic_string<charT>::assign (const basic_string<charT>& str, size_t pos, size_t n)
-
+                             
 {
     if (pos > str.length())
     {
@@ -1779,7 +1777,7 @@ basic_string<charT>::assign (const basic_string<charT>& str, size_t pos, size_t 
 
 template <class charT>
 basic_string<charT>&
-basic_string<charT>::assign (const charT* s, size_t n)
+basic_string<charT>::assign (const charT* s, size_t n) 
 {
     assign_str (s, n);
     return *this;
@@ -1787,7 +1785,7 @@ basic_string<charT>::assign (const charT* s, size_t n)
 
 template <class charT>
 basic_string<charT>&
-basic_string<charT>::assign (const charT* s)
+basic_string<charT>::assign (const charT* s) 
 {
     assign_str (s, baggage_type::length(s));
     return *this;
@@ -1795,7 +1793,7 @@ basic_string<charT>::assign (const charT* s)
 
 template <class charT>
 basic_string<charT>&
-basic_string<charT>::assign (charT c, size_t rep)
+basic_string<charT>::assign (charT c, size_t rep) 
 {
     if (rep == NPOS)
     {
@@ -1820,7 +1818,7 @@ basic_string<charT>::assign (charT c, size_t rep)
 template <class charT>
 basic_string<charT>&
 basic_string<charT>::insert (size_t pos1, const basic_string<charT>& str,
-                             size_t pos2, size_t n)
+                             size_t pos2, size_t n) 
 {
     if (pos2 > str.length())
     {
@@ -1834,7 +1832,7 @@ basic_string<charT>::insert (size_t pos1, const basic_string<charT>& str,
 template <class charT>
 basic_string<charT>&
 basic_string<charT>::insert (size_t pos, const charT* s, size_t n)
-
+                             
 {
     insert_str(pos, s, n);
     return *this;
@@ -1843,7 +1841,7 @@ basic_string<charT>::insert (size_t pos, const charT* s, size_t n)
 template <class charT>
 basic_string<charT>&
 basic_string<charT>::insert (size_t pos, const charT* s)
-
+                             
 {
     insert_str(pos, s, baggage_type::length(s));
     return *this;
@@ -1852,7 +1850,7 @@ basic_string<charT>::insert (size_t pos, const charT* s)
 template <class charT>
 basic_string<charT>&
 basic_string<charT>::insert (size_t pos, charT c, size_t rep)
-
+                             
 {
     if (pos > length())
     {
@@ -1892,7 +1890,7 @@ basic_string<charT>::insert (size_t pos, charT c, size_t rep)
 
 template <class charT>
 basic_string<charT>&
-basic_string<charT>::remove (size_t pos, size_t n)
+basic_string<charT>::remove (size_t pos, size_t n) 
 {
     if (pos > length())
     {
@@ -1921,7 +1919,7 @@ basic_string<charT>::remove (size_t pos, size_t n)
 template <class charT>
 basic_string<charT>&
 basic_string<charT>::replace (size_t pos1, size_t n1, const basic_string<charT>& str,
-                     size_t pos2, size_t n2)
+                     size_t pos2, size_t n2) 
 {
     if (pos2 > str.length())
     {
@@ -1936,7 +1934,7 @@ basic_string<charT>::replace (size_t pos1, size_t n1, const basic_string<charT>&
 template <class charT>
 basic_string<charT>&
 basic_string<charT>::replace (size_t pos, size_t n1, const charT* s, size_t n2)
-
+                              
 {
     size_t xlen = (n1 > (length()-pos)) ? (length()-pos) : n1;
     replace_str (xlen, pos, s, n2);
@@ -1946,7 +1944,7 @@ basic_string<charT>::replace (size_t pos, size_t n1, const charT* s, size_t n2)
 template <class charT>
 basic_string<charT>&
 basic_string<charT>::replace (size_t pos, size_t n1, const charT* s)
-
+                              
 {
     size_t xlen = (n1 > (length()-pos)) ? (length()-pos) : n1;
     replace_str (xlen, pos, s, baggage_type::length(s));
@@ -1956,7 +1954,7 @@ basic_string<charT>::replace (size_t pos, size_t n1, const charT* s)
 template <class charT>
 basic_string<charT>&
 basic_string<charT>::replace (size_t pos, size_t n, charT c, size_t rep)
-
+                              
 {
     if (pos > length())
     {
@@ -2011,7 +2009,7 @@ basic_string<charT>::replace (size_t pos, size_t n, charT c, size_t rep)
 
 template <class charT>
 void
-basic_string<charT>::put_at (size_t pos, charT c)
+basic_string<charT>::put_at (size_t pos, charT c) 
 {
     if (pos > length())
     {
@@ -2032,7 +2030,7 @@ basic_string<charT>::put_at (size_t pos, charT c)
 
 template <class charT>
 charT&
-basic_string<charT>::operator[] (size_t pos)
+basic_string<charT>::operator[] (size_t pos) 
 {
     if (pos >= length())
     {
@@ -2050,7 +2048,7 @@ basic_string<charT>::operator[] (size_t pos)
 
 template <class charT>
 const charT*
-basic_string<charT>::c_str () const
+basic_string<charT>::c_str () const 
 {
     if (c_str_ptr)
         delete[] ((basic_string<charT>*)this)->c_str_ptr;
@@ -2065,7 +2063,7 @@ basic_string<charT>::c_str () const
 
 template <class charT>
 void
-basic_string<charT>::resize (size_t n, charT c)
+basic_string<charT>::resize (size_t n, charT c) 
 {
     if (n == NPOS)
     {
@@ -2089,14 +2087,14 @@ basic_string<charT>::resize (size_t n, charT c)
 
 template <class charT>
 void
-basic_string<charT>::resize (size_t n)
+basic_string<charT>::resize (size_t n) 
 {
     resize (n, eos());
 }
 
 template <class charT>
 void
-basic_string<charT>::reserve (size_t res_arg)
+basic_string<charT>::reserve (size_t res_arg) 
 {
     if (res_arg == NPOS)
     {
@@ -2113,7 +2111,7 @@ basic_string<charT>::reserve (size_t res_arg)
 
 template <class charT>
 size_t
-basic_string<charT>::copy (charT* s, size_t n, size_t pos) const
+basic_string<charT>::copy (charT* s, size_t n, size_t pos) const 
 {
     if (pos > length())
     {
@@ -2128,7 +2126,7 @@ basic_string<charT>::copy (charT* s, size_t n, size_t pos) const
 template <class charT>
 size_t
 basic_string<charT>::find (const basic_string<charT>& str, size_t pos) const
-
+                           
 {
     return find_str (str.data(), pos, str.length());
 }
@@ -2136,21 +2134,21 @@ basic_string<charT>::find (const basic_string<charT>& str, size_t pos) const
 template <class charT>
 size_t
 basic_string<charT>::find (const charT* s, size_t pos, size_t n) const
-
+                           
 {
     return find_str (s, pos, n);
 }
 
 template <class charT>
 size_t
-basic_string<charT>::find (const charT* s, size_t pos) const
+basic_string<charT>::find (const charT* s, size_t pos) const 
 {
     return find_str (s, pos, baggage_type::length(s));
 }
 
 template <class charT>
 size_t
-basic_string<charT>::find (charT c, size_t pos) const
+basic_string<charT>::find (charT c, size_t pos) const 
 {
     while ((pos < length()) && (baggage_type::ne(*(data()+pos), c)))
         ++pos;
@@ -2160,7 +2158,7 @@ basic_string<charT>::find (charT c, size_t pos) const
 template <class charT>
 size_t
 basic_string<charT>::rfind (const basic_string<charT>& str, size_t pos) const
-
+                            
 {
     return rfind_str (str.data(), pos, str.length());
 }
@@ -2168,21 +2166,21 @@ basic_string<charT>::rfind (const basic_string<charT>& str, size_t pos) const
 template <class charT>
 size_t
 basic_string<charT>::rfind (const charT* s, size_t pos, size_t n) const
-
+                            
 {
     return rfind_str (s, pos, n);
 }
 
 template <class charT>
 size_t
-basic_string<charT>::rfind (const charT* s, size_t pos) const
+basic_string<charT>::rfind (const charT* s, size_t pos) const 
 {
     return rfind_str (s, pos, baggage_type::length(s));
 }
 
 template <class charT>
 size_t
-basic_string<charT>::rfind (charT c, size_t pos) const
+basic_string<charT>::rfind (charT c, size_t pos) const 
 {
     size_t count = ((pos < length()) ? pos+1 : length());
     if (length() == 0)
@@ -2198,7 +2196,7 @@ basic_string<charT>::rfind (charT c, size_t pos) const
 template <class charT>
 size_t
 basic_string<charT>::find_first_of (const basic_string<charT>& str, size_t pos) const
-
+                                    
 {
     return find_first_of_str (str.data(), pos, str.length());
 }
@@ -2206,7 +2204,7 @@ basic_string<charT>::find_first_of (const basic_string<charT>& str, size_t pos) 
 template <class charT>
 size_t
 basic_string<charT>::find_first_of (const charT* s, size_t pos, size_t n) const
-
+                                    
 {
     return find_first_of_str (s, pos, n);
 }
@@ -2214,14 +2212,14 @@ basic_string<charT>::find_first_of (const charT* s, size_t pos, size_t n) const
 template <class charT>
 size_t
 basic_string<charT>::find_first_of (const charT* s, size_t pos) const
-
+                                    
 {
     return find_first_of_str (s, pos, baggage_type::length(s));
 }
 
 template <class charT>
 size_t
-basic_string<charT>::find_first_of (charT c, size_t pos) const
+basic_string<charT>::find_first_of (charT c, size_t pos) const 
 {
     return find (c, pos);
 }
@@ -2229,7 +2227,7 @@ basic_string<charT>::find_first_of (charT c, size_t pos) const
 template <class charT>
 size_t
 basic_string<charT>::find_last_of (const basic_string<charT>& str, size_t pos) const
-
+                                   
 {
     return find_last_of_str (str.data(), pos, str.length());
 }
@@ -2237,21 +2235,21 @@ basic_string<charT>::find_last_of (const basic_string<charT>& str, size_t pos) c
 template <class charT>
 size_t
 basic_string<charT>::find_last_of (const charT* s, size_t pos, size_t n) const
-
+                                   
 {
     return find_last_of_str (s, pos, n);
 }
 
 template <class charT>
 size_t
-basic_string<charT>::find_last_of (const charT* s, size_t pos) const
+basic_string<charT>::find_last_of (const charT* s, size_t pos) const 
 {
     return find_last_of_str (s, pos, baggage_type::length(s));
 }
 
 template <class charT>
 size_t
-basic_string<charT>::find_last_of (charT c, size_t pos) const
+basic_string<charT>::find_last_of (charT c, size_t pos) const 
 {
     return rfind (c, pos);
 }
@@ -2259,7 +2257,7 @@ basic_string<charT>::find_last_of (charT c, size_t pos) const
 template <class charT>
 size_t
 basic_string<charT>::find_first_not_of (const basic_string<charT>& str, size_t pos)
-                                        const
+                                        const 
 {
     return find_first_not_of_str (str.data(), pos, str.length());
 }
@@ -2267,7 +2265,7 @@ basic_string<charT>::find_first_not_of (const basic_string<charT>& str, size_t p
 template <class charT>
 size_t
 basic_string<charT>::find_first_not_of (const charT* s, size_t pos, size_t n)
-                                        const
+                                        const 
 {
     return find_first_not_of_str (s, pos, n);
 }
@@ -2275,14 +2273,14 @@ basic_string<charT>::find_first_not_of (const charT* s, size_t pos, size_t n)
 template <class charT>
 size_t
 basic_string<charT>::find_first_not_of (const charT* s, size_t pos) const
-
+                                        
 {
     return find_first_not_of_str (s, pos, baggage_type::length(s));
 }
 
 template <class charT>
 size_t
-basic_string<charT>::find_first_not_of (charT c, size_t pos) const
+basic_string<charT>::find_first_not_of (charT c, size_t pos) const 
 {
     while ((pos < length()) && (baggage_type::eq(*(data()+pos), c)))
         ++pos;
@@ -2292,7 +2290,7 @@ basic_string<charT>::find_first_not_of (charT c, size_t pos) const
 template <class charT>
 size_t
 basic_string<charT>::find_last_not_of (const basic_string<charT>& str, size_t pos)
-                                       const
+                                       const 
 {
     return find_last_not_of_str (str.data(), pos, str.length());
 }
@@ -2300,7 +2298,7 @@ basic_string<charT>::find_last_not_of (const basic_string<charT>& str, size_t po
 template <class charT>
 size_t
 basic_string<charT>::find_last_not_of (const charT* s, size_t pos, size_t n)
-                                       const
+                                       const 
 {
     return find_last_not_of_str (s, pos, n);
 }
@@ -2308,14 +2306,14 @@ basic_string<charT>::find_last_not_of (const charT* s, size_t pos, size_t n)
 template <class charT>
 size_t
 basic_string<charT>::find_last_not_of (const charT* s, size_t pos) const
-
+                                       
 {
     return find_last_not_of_str (s, pos, baggage_type::length(s));
 }
 
 template <class charT>
 size_t
-basic_string<charT>::find_last_not_of (charT c, size_t pos) const
+basic_string<charT>::find_last_not_of (charT c, size_t pos) const 
 {
     size_t count = ((pos < length()) ? pos+1 : length());
     if (length() == 0)
@@ -2330,7 +2328,7 @@ basic_string<charT>::find_last_not_of (charT c, size_t pos) const
 
 template <class charT>
 basic_string<charT>
-basic_string<charT>::substr (size_t pos,  size_t n) const
+basic_string<charT>::substr (size_t pos,  size_t n) const 
 {
     if (pos > length())
     {
@@ -2346,7 +2344,7 @@ basic_string<charT>::substr (size_t pos,  size_t n) const
 template <class charT>
 int
 basic_string<charT>::compare (const basic_string<charT>& str, size_t pos,
-                              size_t n) const
+                              size_t n) const 
 {
     size_t slen   = (n > (length()-pos)) ? (length()-pos) : n;
     return compare_str (pos, str.data(), slen, str.length());
@@ -2355,7 +2353,7 @@ basic_string<charT>::compare (const basic_string<charT>& str, size_t pos,
 template <class charT>
 int
 basic_string<charT>::compare (const charT* s, size_t pos, size_t n) const
-
+                              
 {
     if (n == NPOS)
     {
@@ -2366,7 +2364,7 @@ basic_string<charT>::compare (const charT* s, size_t pos, size_t n) const
 
 template <class charT>
 int
-basic_string<charT>::compare (const charT* s, size_t pos) const
+basic_string<charT>::compare (const charT* s, size_t pos) const 
 {
     return compare_str (pos, s, length()-pos, baggage_type::length(s));
 }
@@ -2374,7 +2372,7 @@ basic_string<charT>::compare (const charT* s, size_t pos) const
 template <class charT>
 int
 basic_string<charT>::compare (charT c, size_t pos, size_t rep) const
-
+                              
 {
     if (pos > length())
     {
@@ -2419,9 +2417,9 @@ operator+ (const basic_string<charT>& lhs, const basic_string<charT>& rhs)
 
 template <class charT>
 basic_string<charT>
-operator+ (const charT* lhs, const basic_string<charT>& rhs)
+operator+ (const charT* lhs, const basic_string<charT>& rhs) 
 {
-    typedef  basic_string<charT>::baggage_type  baggage_type;
+    typedef  basic_string<charT>::baggage_type  baggage_type; 
 #ifdef __CINT__
     size_t  slen = basic_string<charT>::baggage_type::length(lhs);
 #else
@@ -2440,9 +2438,9 @@ operator+ (const charT* lhs, const basic_string<charT>& rhs)
 
 template <class charT>
 basic_string<charT>
-operator+ (charT lhs, const basic_string<charT>& rhs)
+operator+ (charT lhs, const basic_string<charT>& rhs) 
 {
-    typedef  basic_string<charT>::baggage_type  baggage_type;
+    typedef  basic_string<charT>::baggage_type  baggage_type; 
     basic_string<charT> tmp(&lhs, 1, rhs.length());
     if (rhs.length())
 #ifdef __CINT__
@@ -2456,9 +2454,9 @@ operator+ (charT lhs, const basic_string<charT>& rhs)
 
 template <class charT>
 basic_string<charT>
-operator+ (const basic_string<charT>& lhs, const charT* rhs)
+operator+ (const basic_string<charT>& lhs, const charT* rhs) 
 {
-    typedef  basic_string<charT>::baggage_type  baggage_type;
+    typedef  basic_string<charT>::baggage_type  baggage_type; 
 #ifdef __CINT__
     size_t  slen = basic_string<charT>::baggage_type::length(rhs);
 #else
@@ -2477,9 +2475,9 @@ operator+ (const basic_string<charT>& lhs, const charT* rhs)
 
 template <class charT>
 basic_string<charT>
-operator+ (const basic_string<charT>& lhs, charT rhs)
+operator+ (const basic_string<charT>& lhs, charT rhs) 
 {
-    typedef  basic_string<charT>::baggage_type  baggage_type;
+    typedef  basic_string<charT>::baggage_type  baggage_type; 
     basic_string<charT> tmp(lhs.data(), lhs.length(), 1);
 #ifdef __CINT__
     basic_string<charT>::baggage_type::assign (*(tmp.point()+lhs.length()), rhs);
@@ -2492,7 +2490,7 @@ operator+ (const basic_string<charT>& lhs, charT rhs)
 
 template <class charT>
 ostream&
-operator<< (ostream& o, const basic_string<charT>& s)
+operator<< (ostream& o, const basic_string<charT>& s) 
 {
     typedef  basic_string<charT>::baggage_type  baggage_type;
     for (size_t count = 0; count < s.length(); ++count)
@@ -2506,9 +2504,9 @@ operator<< (ostream& o, const basic_string<charT>& s)
 
 template <class charT>
 istream&
-operator>> (istream& i, basic_string<charT>& s)
+operator>> (istream& i, basic_string<charT>& s) 
 {
-    typedef  basic_string<charT>::baggage_type  baggage_type;
+    typedef  basic_string<charT>::baggage_type  baggage_type; 
     s.remove();
     while (true)
     {
@@ -2537,9 +2535,9 @@ operator>> (istream& i, basic_string<charT>& s)
                 if (!i.operator void*())
                     break;
 #ifdef __CINT__
-                if (!basic_string<charT>::baggage_type::is_del (value))
+                if (!basic_string<charT>::baggage_type::is_del (value)) 
 #else
-                if (!baggage_type::is_del (value))
+                if (!baggage_type::is_del (value)) 
 #endif
                 {
                     s.append(value);

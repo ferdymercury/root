@@ -1,5 +1,3 @@
-/*CMZ :  2.24/05 16/05/2000  12.03.44  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   16/05/2000*/
 /* /% C++ %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -12,7 +10,7 @@
  ************************************************************************
  * Copyright(c) 1995~1999  Masaharu Goto (MXJ02154@niftyserve.or.jp)
  *
- * Permission to use, copy, modify and distribute this software and its
+ * Permission to use, copy, modify and distribute this software and its 
  * documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies and
  * that both that copyright notice and this permission notice appear
@@ -131,12 +129,12 @@ class G__SourceFileInfo {
   G__SourceFileInfo(int filenin) { filen = filenin; }
   G__SourceFileInfo(const char* fname) { Init(fname); }
   ~G__SourceFileInfo() { }
-  void Init() {
-    filen = -1;
+  void Init() { 
+    filen = -1; 
   }
   void Init(const char* fname);
-  const char *Name();
-  const char *Prepname();
+  const char *Name(); 
+  const char *Prepname(); 
   FILE* fp();
   int MaxLine();
   G__SourceFileInfo& IncludedFrom();
@@ -159,7 +157,7 @@ class G__IncludePathInfo {
   G__IncludePathInfo() { Init(); }
   ~G__IncludePathInfo() { }
   void Init() { p=(struct G__includepath*)NULL; }
-  const char *Name();
+  const char *Name(); 
   long Property();
   int IsValid();
   int Next();

@@ -1,5 +1,3 @@
-/*CMZ :  2.24/05 16/05/2000  12.03.49  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   16/05/2000*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -11,7 +9,7 @@
  ************************************************************************
  * Copyright(c) 1995~1999  Masaharu Goto (MXJ02154@niftyserve.or.jp)
  *
- * Permission to use, copy, modify and distribute this software and its
+ * Permission to use, copy, modify and distribute this software and its 
  * documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies and
  * that both that copyright notice and this permission notice appear
@@ -141,7 +139,7 @@ static int G__rootmode=0;
 *   LeaveCriticalSection(&R__ProtectCriticalSection);
 * }
 *************************************************************************
-*
+* 
 * and then initialize the library as follows. You need to register above
 * 4 functions to G__SetCriticalSectionEnv().
 *
@@ -223,7 +221,7 @@ int G__is_valid_dictpos(dict)
 struct G__dictposition *dict;
 {
   int flag=0;
-  struct G__var_array *var = &G__global;
+  struct G__var_array *var = &G__global; 
   struct G__ifunc_table *ifunc = &G__ifunc;
 
   while(var) {
@@ -251,7 +249,7 @@ struct G__dictposition *dict;
   if(G__allsl<dict->allsl) return(0);
 #endif
   if(G__nfile<dict->nfile) return(0);
-
+  
   return(1);
 }
 
@@ -265,7 +263,7 @@ static int undoindex;
 /******************************************************************
 * G__init_undo()
 ******************************************************************/
-void G__init_undo()
+void G__init_undo() 
 {
   int i;
   undoindex=0;
@@ -325,17 +323,17 @@ int index;
   fprintf(G__sout,"!!! Following objects will be removed by undo !!!\n");
 
   fprintf(G__sout,"Src File : ");
-  while(nfile<G__nfile)
+  while(nfile<G__nfile) 
     fprintf(G__sout,"%s ",G__srcfile[nfile++].filename);
   fprintf(G__sout,"\n");
 
   fprintf(G__sout,"Class    : ");
-  while(tagnum<G__struct.alltag)
+  while(tagnum<G__struct.alltag) 
     fprintf(G__sout,"%s ",G__fulltagname(tagnum++,1));
   fprintf(G__sout,"\n");
 
   fprintf(G__sout,"Typedef  : ");
-  while(typenum<G__newtype.alltype)
+  while(typenum<G__newtype.alltype) 
     fprintf(G__sout,"%s ",G__newtype.name[typenum++]);
   fprintf(G__sout,"\n");
 
@@ -795,7 +793,7 @@ char *filename;
   }
 
   if(flag) {
-    for(i=j;i<G__nfile;i++) {
+    for(i=j;i<G__nfile;i++) { 
       if(G__srcfile[i].filename[0]) {
 	if(G__srcfile[i].prepname) storecpp[storen] = 1;
 	else                       storecpp[storen] = 0;
@@ -837,7 +835,7 @@ char *filename;
 * G__display_classkeyword()
 *
 ************************************************************************/
-void G__display_classkeyword(fout,classnamein,keyword,base)
+void G__display_classkeyword(fout,classnamein,keyword,base) 
 FILE *fout;
 char *classnamein;
 char *keyword;
@@ -913,7 +911,7 @@ FILE *fout;
       }
       G__return=G__RETURN_NON;
 #ifndef G__OLDIMPLEMENTATION1067
-      G__security_error = G__NOERROR;
+      G__security_error = G__NOERROR; 
 #endif
       /* G__security_error = G__NOERROR; */ /* don't remember why not doing */
     }
@@ -1216,7 +1214,7 @@ char *pipefile;
       ((char*)NULL==singlequote||semicolumn>singlequote) &&
       ((char*)NULL==doublequote||semicolumn>doublequote))) {
 
-    if(redirect &&
+    if(redirect && 
 #ifndef G__OLDIMPLEMENTATION493
        (isspace(*(redirect-1)) ||
 	(*(redirect-1)=='2' && isspace(*(redirect-2))) ||
@@ -1228,7 +1226,7 @@ char *pipefile;
        ((char*)NULL==paren||redirect>paren) &&
        ((char*)NULL==blacket||redirect>blacket)) {
 
-      /* get filename to redirect
+      /* get filename to redirect 
        *    cint> command > filename
        *                  ^ -------- */
       while((*(redirect+j))) {
@@ -1241,7 +1239,7 @@ char *pipefile;
       filename[i] = '\0';
       strcpy(pipefile,filename);
 
-      /* get filename to redirect
+      /* get filename to redirect 
        *    cint> command > filename  /keyword
        *                            ^-------- */
       while((*(redirect+j))&&isspace((*(redirect+j)))) ++j;
@@ -1253,7 +1251,7 @@ char *pipefile;
       }
 
       /* check if append mode
-       *   cint> command >> filename
+       *   cint> command >> filename 
        *                 ^^          */
       --redirect;
       if('>'==(*redirect)) {
@@ -1264,8 +1262,8 @@ char *pipefile;
 	openmode="w";
       }
 
-      /* check if stderr
-       *   cint> command 2> filename
+      /* check if stderr 
+       *   cint> command 2> filename 
        *                 ^^          */
       if('2'==(*redirect)) {
 	--redirect;
@@ -1401,7 +1399,7 @@ char *pipefile;
     *sin = (FILE*)NULL;
   }
 #else /* G__REDIRECTIO */
-  int flag=0;
+  int flag=0; 
 #ifndef G__OLDIMPLEMENTATION713
   G__redirect_off();
 #endif
@@ -1548,7 +1546,7 @@ int  *more;
 #endif
 
 #ifndef G__OLDIMPLEMENTATION860
-  if(0==init_process_cmd_called)
+  if(0==init_process_cmd_called) 
     fprintf(G__serr,"Internal error: G__init_process_cmd must be called before G__process_cmd\n");
 #endif
 
@@ -1568,19 +1566,19 @@ int  *more;
   if(!fout) fout=G__sout;
 #endif
 
-
+  
   if ( (com = getenv("EDITOR")) ) strcpy(editor, com);
 #ifdef G__WIN32
   else                            strcpy(editor, "notepad");
 #else
   else                            strcpy(editor, "vi");
 #endif
-
+  
   /*** begin ***/
-
+  
   temp = 0;
   while (isspace(line[temp])) ++temp;
-
+  
   if (*more == 0) {
     strcpy(command, line+temp);
     com = strchr(command,'\n');
@@ -1589,16 +1587,16 @@ int  *more;
       com = strchr(command,'\r');
       if (com) *com = '\0';
     }
-
+    
     /* #ifdef G__ROOT */
     if(G__rootmode) {
       if (command[0] == '.') {
 	strcpy(syscom, command+1);
 	strcpy(command, syscom);
-      }
+      } 
       else if (strcmp(command, "?") == 0) {
 	strcpy(command, "help");
-      }
+      } 
       else if ('\0'!=command[0] && command[0] != '{') {
 #ifndef G__OLDIMPLEMENTATION892
 	if(G__IsBadCommand(command)) {
@@ -1644,9 +1642,9 @@ int  *more;
 		      ,keyword,pipefile);
   }
 #endif
-
+  
   temp=0;
-  if(isalpha(command[temp]))
+  if(isalpha(command[temp])) 
     while(isalpha(command[temp])) ++temp;
   else if(!isdigit(command[temp]))
     ++temp;
@@ -1654,7 +1652,7 @@ int  *more;
 
   stringb=string;
   while(isspace(*stringb)&&(*stringb)) ++stringb;
-
+  
 #ifndef G__OLDIMPLEMENTATION1031
   G__storerewindposition();
 #endif
@@ -1664,11 +1662,11 @@ int  *more;
    *          ^^
    *          com string
    ************************************/
-
+  
   /************************************
    * Break prompt command parser
    ************************************/
-
+  
 #ifndef G__OLDIMPLEMENTATION967
     if(strncmp("class",com,3)==0) {
       char *p = strchr(string,'/');
@@ -1810,7 +1808,7 @@ int  *more;
       if(plocal) {
 #if defined(G__WIN32)
 	*plocal++ = 0;
-	if(FALSE==SetEnvironmentVariable(stringb,plocal))
+	if(FALSE==SetEnvironmentVariable(stringb,plocal)) 
 	  fprintf(G__serr,"can not set environment variable %s=%s\n"
 		  ,stringb,plocal);
 #elif defined(G__POSIX)
@@ -1827,7 +1825,7 @@ int  *more;
       if(FALSE==SetCurrentDirectory(stringb))
 	fprintf(G__serr,"can not change directory to %s\n",stringb);
 #elif defined(G__POSIX)
-      if(0!=chdir(stringb))
+      if(0!=chdir(stringb)) 
 	fprintf(G__serr,"can not change directory to %s\n",stringb);
 #endif
     }
@@ -1906,7 +1904,7 @@ int  *more;
 #ifdef G__ROOT
       fprintf(G__serr,"!!! Sorry, can not reset interpreter !!!\n");
 #else
-      if(!G__isfilebusy(0)) {
+      if(!G__isfilebusy(0)) { 
 	int store_othermain=G__othermain;
 	G__scratch_all(); /* To make memory leak check work */
 	if(G__commandline[0]) G__init_cint(G__commandline);
@@ -2004,7 +2002,7 @@ int  *more;
     else if(strncmp("OPTIMIZE",com,1)==0) {
       G__asm_loopcompile = G__int(G__calc_internal(string));
 #ifndef G__OLDIMPLEMENTATION1155
-      G__asm_loopcompile_mode = G__asm_loopcompile;
+      G__asm_loopcompile_mode = G__asm_loopcompile; 
 #endif
     }
 #ifdef G__ASM_WHOLEFUNC
@@ -2056,7 +2054,7 @@ int  *more;
 	if(strncmp(">>",com,2)==0) G__sout=fopen(command+index,"a");
 	else                       G__sout=fopen(command+index,"w");
 	if(G__sout) {
-	  fprintf(G__stdout,"Output will be saved in file %s! ('>' to display on screen)\n"
+	  fprintf(G__stdout,"Output will be saved in file %s! ('>' to display on screen)\n" 
 		 ,command+index);
 	}
 	else {
@@ -2082,7 +2080,7 @@ int  *more;
 	if(strncmp("2>>",com,3)==0) G__serr=fopen(command+index,"a");
 	else                        G__serr=fopen(command+index,"w");
 	if(G__serr) {
-	  fprintf(G__stdout,"Error will be saved in file %s! ('2>' to display on screen)\n"
+	  fprintf(G__stdout,"Error will be saved in file %s! ('2>' to display on screen)\n" 
 		 ,command+index);
 	}
 	else {
@@ -2130,7 +2128,7 @@ int  *more;
        * Execute C/C++ source file. Filename minus extension
        * must match a function in the source file. This function
        * will be automatically executed.
-       *******************************************************/
+       *******************************************************/ 
 #ifndef G__FONS85
       char *com1;
 #endif
@@ -2171,7 +2169,7 @@ int  *more;
       if (temp1 == 1) {
 #ifndef G__FONS20
 	 G__prerun = 0;
-#endif
+#endif 
          G__unloadfile(string+temp);
 #ifndef G__OLDIMPLEMENTATION1102
 	 G__storerewindposition();
@@ -2604,7 +2602,7 @@ int  *more;
 		    ,(struct G__ifunc_table*)NULL);
 	G__varmonitor(G__temp,&G__global,"","",0);
 	fclose(G__temp);
-
+      
 	if(command[strlen(command)-1]==' ') command[strlen(command)-1]='\0';
 #ifndef G__OLDIMPLEMENTATION577
 	G__display_keyword(G__sout,command+1,tname);
@@ -2976,7 +2974,7 @@ int  *more;
 
     else if(strncmp("e",com,1)==0 && 'x'!=com[1]) {
       /*****************************************************
-       * Step out
+       * Step out 
        *****************************************************/
       G__stepover=0;
       G__step=0;
@@ -3009,7 +3007,7 @@ int  *more;
 	G__closemfp();
 	G__mfp=NULL;
 	G__close_inputfiles();
-	exit(EXIT_SUCCESS);
+	exit(EXIT_SUCCESS); 
       }
       else {
 	G__pause_return=1;
@@ -3035,7 +3033,7 @@ int  *more;
       fprintf(G__sout,"Exit current interpretation.\n");
 #endif
       /*****************************************
-       * return 2 so that user can utilize
+       * return 2 so that user can utilize 
        * while(G__pause()==0) ;
        *****************************************/
       G__pause_return=1;
@@ -3052,7 +3050,7 @@ int  *more;
       return(ignore=2);
     }
 #endif
-
+    
     else if(strncmp("q",com,1)==0 || strncmp("exit",com,4)==0) {
       if(G__doingconstruction) {
 	fprintf(G__serr,"Use 'qqq' when you quit in the middle of object construction (%d)\n"
@@ -3096,7 +3094,7 @@ int  *more;
 #endif
 	}
 	/*****************************************
-	* return 2 so that user can utilize
+	* return 2 so that user can utilize 
 	* while(G__pause()==0) ;
 	*****************************************/
 	G__pause_return=1;
@@ -3124,7 +3122,7 @@ int  *more;
 	 G__exit(EXIT_SUCCESS);
 #else
 	 G__close_inputfiles();
-	 exit(EXIT_SUCCESS);
+	 exit(EXIT_SUCCESS); 
 #endif
       }
     }
@@ -3136,7 +3134,7 @@ int  *more;
     else if(strncmp("E",com,1)==0) {
 #endif
       /*******************************************************
-       * Open tempfile to edit
+       * Open tempfile to edit 
        *******************************************************/
       temp=1;
       while(isspace(command[temp])) temp++;
@@ -3186,7 +3184,7 @@ int  *more;
       G__SET_TEMPENV;
       buf=G__exec_tempfile(syscom);
 #ifndef G__OLDIMPLEMENTATION901
-      if(G__ifile.filenum>=0)
+      if(G__ifile.filenum>=0) 
 	G__security = G__srcfile[G__ifile.filenum].security;
       else
 	G__security = G__SECURE_LEVEL0;
@@ -3240,7 +3238,7 @@ int  *more;
 #endif
 	return(ignore);
       }
-
+      
     }
 
     else if(strncmp("{",com,1)==0) {
@@ -3252,7 +3250,7 @@ int  *more;
 	  G__tmpnam(tname);
 	  ftemp.fp = fopen(tname,"w");
 	} while((FILE*)NULL==ftemp.fp && G__setTMPDIR(tname));
-      }
+      } 
       else {
 	com = command+1;
       }
@@ -3261,7 +3259,7 @@ int  *more;
 	fprintf(G__serr,"Error: could not create file %s\n",tname);
       }
       else {
-	temp = *more;
+	temp = *more; 
         temp1 = 0;
 	double_quote=0; single_quote=0;
 	while(com[temp1]!='\0') {
@@ -3376,7 +3374,7 @@ int  *more;
     }
 
 #ifndef G__OLDIMPLEMENTATION696
-    else if(strncmp("p",com,1)==0 ||
+    else if(strncmp("p",com,1)==0 || 
 	    strncmp("s",com,1)==0 || strncmp("S",com,1)==0) {
       G__STORE_EVALENV;
 #else
@@ -3592,7 +3590,7 @@ int  *more;
 	return(ignore);
       }
 #ifndef G__OLDIMPLEMENTATION696
-      G__RESTORE_EVALENV;
+      G__RESTORE_EVALENV; 
 #endif
     }
 

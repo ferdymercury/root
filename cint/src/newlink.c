@@ -1,5 +1,3 @@
-/*CMZ :  2.24/05 16/05/2000  12.03.48  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   16/05/2000*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -11,7 +9,7 @@
  ************************************************************************
  * Copyright(c) 1995~1999  Masaharu Goto (MXJ02154@niftyserve.or.jp)
  *
- * Permission to use, copy, modify and distribute this software and its
+ * Permission to use, copy, modify and distribute this software and its 
  * documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies and
  * that both that copyright notice and this permission notice appear
@@ -981,7 +979,7 @@ FILE *hfp;
     fprintf(fp,"extern \"C\" void G__cpp_reset_tagtable%s() {\n",G__DLLID);
     break;
   }
-
+  
   for(i=0;i<G__struct.alltag;i++) {
     if(G__NOLINK > G__struct.globalcomp[i] &&
        (G__struct.hash[i] || -1!=G__struct.parent_tagnum[i])) {
@@ -1389,7 +1387,7 @@ char *headerfile;
   case G__CLINK:   /* C link */
     fp = fopen(G__CLINK_C,"a");
     break;
-  default:
+  default: 
     return(0);
   }
   fprintf(fp,"  G__add_compiledheader(\"<%s\");\n",headerfile);
@@ -1418,7 +1416,7 @@ char *headerfilein;
   case G__CPPLINK: /* C++ link */
   case G__CLINK:   /* C link */
     break;
-  default:
+  default: 
     return;
   }
 
@@ -1468,7 +1466,7 @@ char *headerfilein;
       strcpy(headerfile,temp2);
     }
 #endif
-
+    
 #ifdef G__ROOT
     /* if (!strstr(headerfile,"LinkDef.h")&&!strstr(headerfile,"Linkdef.h") &&
        !strstr(headerfile,"linkdef.h")) { */
@@ -1606,7 +1604,7 @@ char *macroin;
   G__var_type = 'p';
   G__p_local = (struct G__var_array*)0;
 #endif
-
+  
   strcpy(macro,macroin);
   G__definemacro=1;
 #ifndef G__OLDIMPLEMENTATION900
@@ -2059,7 +2057,7 @@ int k;
 /**************************************************************************
 * G__p2f_typedef
 **************************************************************************/
-void G__p2f_typedef(fp,ifn,ifunc)
+void G__p2f_typedef(fp,ifn,ifunc) 
 FILE *fp;
 int ifn;
 struct G__ifunc_table *ifunc;
@@ -2608,7 +2606,7 @@ int isnonpublicnew;
     fprintf(fp,"   result7->tagnum = G__get_linked_tagnum(&%s);\n"
 	    ,G__mark_linked_tagnum(tagnum));
 #ifdef G__OLDIMPLEMENTATION579
-    /* This was my mistake. ifn is out of bound and must not call
+    /* This was my mistake. ifn is out of bound and must not call 
      * G__if_ary_union_reset() */
     /* G__if_ary_union_reset(ifn,ifunc); */
 #endif
@@ -2668,7 +2666,7 @@ int isnonpublicnew;
     fprintf(fp,"   result7->tagnum = G__get_linked_tagnum(&%s);\n"
 	    ,G__mark_linked_tagnum(tagnum));
 #ifdef G__OLDIMPLEMENTATION579
-    /* This was my mistake. ifn is out of bound and must not call
+    /* This was my mistake. ifn is out of bound and must not call 
      * G__if_ary_union_reset() */
     /* G__if_ary_union_reset(ifn,ifunc); */
 #endif
@@ -2732,7 +2730,7 @@ int isnonpublicnew;
 	    ,G__fulltagname(tagnum,1));
 #endif
 #ifdef G__OLDIMPLEMENTATION579
-    /* This was my mistake. ifn is out of bound and must not call
+    /* This was my mistake. ifn is out of bound and must not call 
      * G__if_ary_union_reset() */
     /* G__if_ary_union_reset(ifn,ifunc); */
 #endif
@@ -2779,7 +2777,7 @@ int isnonpublicnew;
 	    ,temp,temp,temp);
     fprintf(fp,"   result7->ref=(long)(&obj); result7->obj.i=(long)(&obj);\n");
 #ifdef G__OLDIMPLEMENTATION579
-    /* This was my mistake. ifn is out of bound and must not call
+    /* This was my mistake. ifn is out of bound and must not call 
      * G__if_ary_union_reset() */
     /* G__if_ary_union_reset(ifn,ifunc); */
 #endif
@@ -2882,7 +2880,7 @@ struct G__ifunc_table *ifunc;
       G__cppif_returntype(fp,ifn,ifunc,endoffunc);
 #ifndef G__OLDIMPLEMENTATION1054
       if(-1 != tagnum) {
-	if('n'==G__struct.type[tagnum])
+	if('n'==G__struct.type[tagnum]) 
 	  fprintf(fp,"%s::"
 		  ,G__fulltagname(tagnum,1));
 	else {
@@ -2923,7 +2921,7 @@ struct G__ifunc_table *ifunc;
     G__cppif_returntype(fp,ifn,ifunc,endoffunc);
 #ifndef G__OLDIMPLEMENTATION1054
     if(-1 != tagnum) {
-      if('n'==G__struct.type[tagnum])
+      if('n'==G__struct.type[tagnum]) 
 	fprintf(fp,"%s::",G__fulltagname(tagnum,1));
       else {
 #ifndef G__OLDIMPLEMENTATION1209
@@ -3321,14 +3319,14 @@ int k;
 	   * void f(value_type& x);  // OK
 	   * void f(value_type x);   // OK
 	   * void f(value_type* x);  // OK
-	   * void f(value_type*& x); // bad
+	   * void f(value_type*& x); // bad 
 	   *  reference and pointer to pointer can not happen at once */
 	  fprintf(fp,"libp->para[%d].ref?*(%s*)libp->para[%d].ref:*(%s*)(&G__Mlong(libp->para[%d]))"
 #ifndef G__OLDIMPLEMENTATION1111
-		  ,k,G__type2string(type,tagnum,typenum,0,0)
+		  ,k,G__type2string(type,tagnum,typenum,0,0) 
 		  ,k,G__type2string(type,tagnum,typenum,0,0) ,k);
 #else
-		  ,k,G__type2string(tolower(type),tagnum,typenum,0,0)
+		  ,k,G__type2string(tolower(type),tagnum,typenum,0,0) 
 		  ,k,G__type2string(tolower(type),tagnum,typenum,0,0) ,k);
 #endif
 	  /* above is , in fact, not good. G__type2string returns pointer to
@@ -3337,7 +3335,7 @@ int k;
 	}
 	else {
 	  fprintf(fp,"libp->para[%d].ref?*(%s**)libp->para[%d].ref:*(%s**)(&G__Mlong(libp->para[%d]))"
-		  ,k,G__type2string(tolower(type),tagnum,typenum,0,0)
+		  ,k,G__type2string(tolower(type),tagnum,typenum,0,0) 
 		  ,k,G__type2string(tolower(type),tagnum,typenum,0,0) ,k);
 	  /* above is , in fact, not good. G__type2string returns pointer to
 	   * static buffer. This relies on the fact that the 2 calls are
@@ -3494,7 +3492,7 @@ FILE *hfp;
       }
 #endif
 
-      if(-1==G__struct.line_number[i]) {
+      if(-1==G__struct.line_number[i]) { 
 	if(G__NOLINK==G__struct.iscpplink[i]) {
 	  fprintf(G__serr,"Note: Link requested for undefined class %s "
 		  ,G__fulltagname(i,1));
@@ -3535,7 +3533,7 @@ FILE *hfp;
 	  strcpy(mappedtagname,G__map_cpp_name(tagname));
 	  if(G__CPPLINK==G__globalcomp && '$'!=G__struct.name[i][0]) {
 #ifndef G__OLDIMPLEMENTATION618
-	    if(G__suppress_methods)
+	    if(G__suppress_methods) 
 	      fprintf(fp,"   G__tagtable_setup(G__get_linked_tagnum(&%s),sizeof(%s),%d,%d,%s,G__setup_memvar%s,NULL);\n"
 		      ,G__mark_linked_tagnum(i)
 		      ,G__type2string('u',i,-1,0,0)
@@ -3705,7 +3703,7 @@ FILE *fp;
 #ifndef G__OLDIMPLEMENTATION1075
 	  flag=0;
 	  for(basen=0;basen<G__struct.baseclass[i]->basen;basen++) {
-	    if(0==(G__struct.baseclass[i]->property[basen]&G__ISVIRTUALBASE))
+	    if(0==(G__struct.baseclass[i]->property[basen]&G__ISVIRTUALBASE)) 
 	      ++flag;
 	  }
 	  if(flag) {
@@ -3845,9 +3843,9 @@ FILE *hfp;
 		,G__newtype.reftype[i]
 		);
 #ifndef G__OLDIMPLEMENTATION776
-      if(G__newtype.parent_tagnum[i] == -1)
+      if(G__newtype.parent_tagnum[i] == -1) 
         fprintf(fp,"-1);\n");
-      else
+      else 
         fprintf(fp,"G__get_linked_tagnum(&%s));\n"
 	       ,G__mark_linked_tagnum(G__newtype.parent_tagnum[i]));
 #endif
@@ -3973,7 +3971,7 @@ FILE *fp;
       fprintf(fp,"   G__tag_memvar_setup(G__get_linked_tagnum(&%s));\n"
 	      ,G__mark_linked_tagnum(i));
 #ifndef G__OLDIMPLEMENTATION1054
-      if('n'==G__struct.type[i])
+      if('n'==G__struct.type[i]) 
 	fprintf(fp,"   {\n");
       else
 	fprintf(fp,"   { %s *p; p=(%s*)0x1000; if (p) { }\n"
@@ -4314,7 +4312,7 @@ FILE *fp;
 #ifndef G__OLDIMPLEMENTATION1292
 	       && G__PUBLIC==ifunc->access[j]
 #endif
-	       )
+	       ) 
 	      fprintf(fp,",(void*)%s::%s"
 		      ,G__fulltagname(ifunc->tagnum,1),ifunc->funcname[j]);
 	    else
@@ -5560,7 +5558,7 @@ int tagnum;
 int globalcomp;
 {
   /* double check tagnum points to a enum */
-  if(-1==tagnum || 'e'!=G__struct.type[tagnum]) return;
+  if(-1==tagnum || 'e'!=G__struct.type[tagnum]) return; 
 
   /* enum in global scope */
   if(-1==G__struct.parent_tagnum[tagnum]
@@ -5874,7 +5872,7 @@ int link_stub;
 	if (rf2 == 1) G__struct.rootflag[i] |= G__NOINPUTOPERATOR;
 	if (rf3 == 1) {
 	  G__struct.rootflag[i] = G__USEBYTECOUNT;
-	  if(rf1 || rf2)
+	  if(rf1 || rf2) 
 	    fprintf(G__serr, "option + mutual exclusive with either - or !\n");
 	}
       }
@@ -6235,15 +6233,15 @@ int link_stub;
 #ifndef G__PHILIPPE2
   else if(strncmp(buf,"defined_in",3)==0) {
     int ifile;
-    struct stat statBufItem;
-    struct stat statBuf;
+    struct stat statBufItem;  
+    struct stat statBuf;  
 #ifdef G__WIN32
     char fullItem[_MAX_PATH], fullIndex[_MAX_PATH];
 #endif
     c = G__fgetstream_template(buf,";\n\r<>");
     if ( 0 == stat( buf, & statBufItem ) ) {
 #ifdef G__WIN32
-      _fullpath( fullItem, buf, _MAX_PATH );
+      _fullpath( fullItem, buf, _MAX_PATH );      
 #endif
       for(ifile=0;ifile<G__nfile;ifile++) {
 	if (0 == stat( G__srcfile[ifile].filename, & statBuf ) ) {
@@ -6545,7 +6543,7 @@ void G__resetplocal()
   }
   else {
     G__p_local = (struct G__var_array*)NULL;
-    G__incset_def_struct_member =0;
+    G__incset_def_struct_member =0; 
   }
 #else
   G__p_local = (struct G__var_array*)NULL;
@@ -6563,7 +6561,7 @@ void G__resetglobalenv()
     G__p_local = G__incset_p_local ;
     G__def_struct_member = G__incset_def_struct_member ;
     G__tagdefining = G__incset_tagdefining ;
-
+    
     G__globalvarpointer = G__incset_globalvarpointer ;
     G__var_type = G__incset_var_type ;
     G__tagnum = G__incset_tagnum ;
@@ -6892,12 +6890,12 @@ int G__get_no_exec_compile()
 char* G__Charref(buf)
 G__value *buf;
 {
-  if('c'==buf->type && buf->ref)
+  if('c'==buf->type && buf->ref) 
     return((char*)buf->ref);
-  else if('d'==buf->type || 'f'==buf->type)
+  else if('d'==buf->type || 'f'==buf->type) 
     buf->obj.ch = (char)buf->obj.d;
-  else
-    buf->obj.ch = (char)buf->obj.i;
+  else 
+    buf->obj.ch = (char)buf->obj.i; 
   return(&buf->obj.ch);
 }
 
@@ -6907,12 +6905,12 @@ G__value *buf;
 short* G__Shortref(buf)
 G__value *buf;
 {
-  if('s'==buf->type && buf->ref)
+  if('s'==buf->type && buf->ref) 
     return((short*)buf->ref);
-  else if('d'==buf->type || 'f'==buf->type)
+  else if('d'==buf->type || 'f'==buf->type) 
     buf->obj.sh = (short)buf->obj.d;
-  else
-    buf->obj.sh = (short)buf->obj.i;
+  else 
+    buf->obj.sh = (short)buf->obj.i; 
   return(&buf->obj.sh);
 }
 
@@ -6922,11 +6920,11 @@ G__value *buf;
 int* G__Intref(buf)
 G__value *buf;
 {
-  if('i'==buf->type && buf->ref)
+  if('i'==buf->type && buf->ref) 
     return((int*)buf->ref);
-  else if('d'==buf->type || 'f'==buf->type)
+  else if('d'==buf->type || 'f'==buf->type) 
     buf->obj.in = (int)buf->obj.d;
-  else
+  else 
     buf->obj.in = (int)buf->obj.i;
   return(&buf->obj.in);
 }
@@ -6937,11 +6935,11 @@ G__value *buf;
 long* G__Longref(buf)
 G__value *buf;
 {
-  if('l'==buf->type && buf->ref)
+  if('l'==buf->type && buf->ref) 
     return((long*)buf->ref);
-  else if('d'==buf->type || 'f'==buf->type)
+  else if('d'==buf->type || 'f'==buf->type) 
     buf->obj.i = (long)buf->obj.d;
-  /* else
+  /* else 
     buf->obj.i = (long)buf->obj.i; */
   return(&buf->obj.i);
 }
@@ -6952,12 +6950,12 @@ G__value *buf;
 unsigned char* G__UCharref(buf)
 G__value *buf;
 {
-  if('b'==buf->type && buf->ref)
+  if('b'==buf->type && buf->ref) 
     return((unsigned char*)buf->ref);
-  else if('d'==buf->type || 'f'==buf->type)
+  else if('d'==buf->type || 'f'==buf->type) 
     buf->obj.uch = (unsigned char)buf->obj.d;
-  else
-    buf->obj.uch = (unsigned char)buf->obj.i;
+  else 
+    buf->obj.uch = (unsigned char)buf->obj.i; 
   return(&buf->obj.uch);
 }
 
@@ -6967,12 +6965,12 @@ G__value *buf;
 unsigned short* G__UShortref(buf)
 G__value *buf;
 {
-  if('r'==buf->type && buf->ref)
+  if('r'==buf->type && buf->ref) 
     return((unsigned short*)buf->ref);
-  else if('d'==buf->type || 'f'==buf->type)
+  else if('d'==buf->type || 'f'==buf->type) 
     buf->obj.ush = (unsigned short)buf->obj.d;
-  else
-    buf->obj.ush = (unsigned short)buf->obj.i;
+  else 
+    buf->obj.ush = (unsigned short)buf->obj.i; 
   return(&buf->obj.ush);
 }
 
@@ -6982,11 +6980,11 @@ G__value *buf;
 unsigned int* G__UIntref(buf)
 G__value *buf;
 {
-  if('h'==buf->type && buf->ref)
+  if('h'==buf->type && buf->ref) 
     return((unsigned int*)buf->ref);
-  else if('d'==buf->type || 'f'==buf->type)
+  else if('d'==buf->type || 'f'==buf->type) 
     buf->obj.uin = (unsigned int)buf->obj.d;
-  /* else
+  /* else 
     buf->obj.uin = (unsigned int)buf->obj.i; */
   return(&buf->obj.uin);
 }
@@ -6997,11 +6995,11 @@ G__value *buf;
 unsigned long* G__ULongref(buf)
 G__value *buf;
 {
-  if('k'==buf->type && buf->ref)
+  if('k'==buf->type && buf->ref) 
     return((unsigned long*)buf->ref);
-  else if('d'==buf->type || 'f'==buf->type)
+  else if('d'==buf->type || 'f'==buf->type) 
     buf->obj.ulo = (unsigned long)buf->obj.d;
-  /* else
+  /* else 
     buf->obj.ulo = (unsigned long)buf->obj.i; */
   return(&buf->obj.ulo);
 }
@@ -7012,12 +7010,12 @@ G__value *buf;
 float* G__Floatref(buf)
 G__value *buf;
 {
-  if('f'==buf->type && buf->ref)
+  if('f'==buf->type && buf->ref) 
     return((float*)buf->ref);
-  else if('d'==buf->type || 'f'==buf->type)
+  else if('d'==buf->type || 'f'==buf->type) 
     buf->obj.fl = (float)buf->obj.d;
-  else
-    buf->obj.fl = (float)buf->obj.i;
+  else 
+    buf->obj.fl = (float)buf->obj.i; 
   return(&buf->obj.fl);
 }
 
@@ -7027,12 +7025,12 @@ G__value *buf;
 double* G__Doubleref(buf)
 G__value *buf;
 {
-  if('d'==buf->type && buf->ref)
+  if('d'==buf->type && buf->ref) 
     return((double*)buf->ref);
-  else if('d'==buf->type || 'f'==buf->type)
+  else if('d'==buf->type || 'f'==buf->type) 
     return(&buf->obj.d);
-  else
-    buf->obj.d = (double)buf->obj.i;
+  else 
+    buf->obj.d = (double)buf->obj.i; 
   return(&buf->obj.d);
 }
 /* #endif   ON1167 */

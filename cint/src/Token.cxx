@@ -1,5 +1,3 @@
-//*CMZ :  2.24/05 16/05/2000  12.03.52  by  Masaharu Goto
-//*-- Author :    Masaharu Goto   16/05/2000
 /* /% C++ %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -9,10 +7,10 @@
  * Description:
  *  Extended Run Time Type Identification API
  ************************************************************************
- * Author                  Masaharu Goto
+ * Author                  Masaharu Goto 
  * Copyright(c) 1995~1998  Masaharu Goto (MXJ02154@niftyserve.or.jp)
  *
- * Permission to use, copy, modify and distribute this software and its
+ * Permission to use, copy, modify and distribute this software and its 
  * documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies and
  * that both that copyright notice and this permission notice appear
@@ -30,13 +28,13 @@
 * class G__TokenInfo
 *
 * Outcome of discussion between Nenad Buncic of CERN. 15 Mar 1997
-*
+* 
 *********************************************************************/
 
 ///////////////////////////////////////////////////////////////////////////
-void G__TokenInfo::Init()
+void G__TokenInfo::Init() 
 {
-  // reset status of the object
+  // reset status of the object 
   tokentype= t_invalid;
   tokenproperty= p_invalid;
   methodscope.Init();
@@ -49,7 +47,7 @@ void G__TokenInfo::Init()
 ///////////////////////////////////////////////////////////////////////////
 // MakeLocalTable has to be used when entering to a new function
 G__MethodInfo G__TokenInfo::MakeLocalTable(G__ClassInfo& tag_scope
-                                           ,char* fname,char* paramtype)
+                                           ,char* fname,char* paramtype) 
 {
   long dmy;
 
@@ -62,7 +60,7 @@ G__MethodInfo G__TokenInfo::MakeLocalTable(G__ClassInfo& tag_scope
   // to be implemented
 
   // compile bytecode to get local table, method validity is checked inside
-  bytecode = methodscope.GetBytecode();
+  bytecode = methodscope.GetBytecode(); 
 
   // reset the flag
   // to be implemented
@@ -143,7 +141,7 @@ int G__TokenInfo::SearchLocalVariable(char* name,G__MethodInfo& func_scope
 	     (strcmp(postopr,".")==0||strcmp(postopr,"->")==0)) {
             // set nextscope if followed by . or -> operator
 	    nextscope.Init(var->p_tagtable[ig15]);
-          }
+          } 
           return(1);
 	}
       }
@@ -160,7 +158,7 @@ int G__TokenInfo::SearchDataMember(char* name,G__ClassInfo& tag_scope
   if(tag_scope.IsValid() && tag_scope.HasDataMember(name)) {
     tokenproperty = p_data;
     tokentype = t_datamember;
-    if(strcmp(postopr,".")==0 || strcmp(postopr,"->")==0) {
+    if(strcmp(postopr,".")==0 || strcmp(postopr,"->")==0) { 
       // set nextscope if followed by . or -> operator
       GetNextscope(name,tag_scope);
     }
@@ -177,7 +175,7 @@ int G__TokenInfo::SearchGlobalVariable(char* name,char* postopr)
   if(glob.HasDataMember(name)) {
     tokenproperty = p_data;
     tokentype = t_datamember;
-    if(strcmp(postopr,".")==0 || strcmp(postopr,"->")==0) {
+    if(strcmp(postopr,".")==0 || strcmp(postopr,"->")==0) { 
       // set nextscope if followed by . or -> operator
       GetNextscope(name,glob);
     }
@@ -222,7 +220,7 @@ void G__TokenInfo::GetNextscope(char* name,G__ClassInfo& tag_scope)
     if(strcmp(name,dt.Name())==0) {
       G__TypeInfo *ti = dt.Type();
       // set nextscope if it is a class or struct or union
-      if(ti->Property()&G__BIT_ISTAGNUM) nextscope = *ti;
+      if(ti->Property()&G__BIT_ISTAGNUM) nextscope = *ti; 
       return;
     }
   }

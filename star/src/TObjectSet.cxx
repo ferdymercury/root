@@ -1,7 +1,5 @@
-//*CMZ :  2.24/03 24/04/2000  10.53.13  by  Valery Fine(fine@bnl.gov)
-//*CMZ :  2.24/01 31/03/2000  08.35.13  by  Rene Brun
-//*CMZ :  2.23/12 26/01/2000  12.18.16  by  Valery Fine(fine@bnl.gov)
-//*-- Author : Valery Fine(fine@bnl.gov)   25/12/98
+// @(#)root/star:$Name$:$Id$
+// Author: Valery Fine(fine@bnl.gov)   25/12/98
 // $Id: TObjectSet.cxx,v 1.7 1999/05/07 21:35:32 fine Exp $
 // $Log: TObjectSet.cxx,v $
 // Revision 1.7  1999/05/07 21:35:32  fine

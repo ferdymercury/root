@@ -1,5 +1,3 @@
-/*CMZ :  2.24/05 16/05/2000  12.03.45  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   16/05/2000*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -7,11 +5,11 @@
  * Source file aux.c
  ************************************************************************
  * Description:
- *  Auxuary function
+ *  Auxuary function  
  ************************************************************************
  * Copyright(c) 1995~1999  Masaharu Goto (MXJ02154@niftyserve.or.jp)
  *
- * Permission to use, copy, modify and distribute this software and its
+ * Permission to use, copy, modify and distribute this software and its 
  * documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies and
  * that both that copyright notice and this permission notice appear
@@ -45,7 +43,7 @@ char *argv[];
   int flag=0;
   int n_eof=1;
   int single_quote=0,double_quote=0,back_slash=0;
-
+  
   while((string[i]!='\n')&&
 	(string[i]!='\r')&&
 	(string[i]!='\0')&&
@@ -257,7 +255,7 @@ char *mode;
 *   ydata[i] : *double pointer of y data array
 *   ndata    : int number of data
 *   title    : *char title
-*   mode     : int mode 0:wait for close,
+*   mode     : int mode 0:wait for close, 
 *                       1:leave window and proceed
 *                       2:kill xgraph window
 ************************************************************************/
@@ -274,7 +272,7 @@ char *title;
     system("killproc xgraph");
     return(1);
   }
-
+  
   switch(mode) {
   case 1:
   case 0:
@@ -325,7 +323,7 @@ char *title;
 *
 * Copy object buf2 to buf1 if not a pointer
 *
-*  This function looks different from interpreted environment
+*  This function looks different from interpreted environment 
 * and compiled environment.
 *  Interpreter : G__storeobject(void *buf1,void *buf2)
 *  Compiler    : G__storeobject(G__value *buf1,G__value *buf2)
@@ -336,8 +334,8 @@ G__value *buf1,*buf2;
   int i;
   struct G__var_array *var1,*var2;
   G__value lbuf1,lbuf2;
-
-
+  
+  
   if(buf1->type=='U' && buf2->type=='U' && buf1->tagnum==buf2->tagnum ) {
     G__incsetup_memvar(buf1->tagnum);
     G__incsetup_memvar(buf2->tagnum);
@@ -355,7 +353,7 @@ G__value *buf1,*buf2;
 	  lbuf2.tagnum=var2->p_tagtable[i];
 	  G__storeobject(&lbuf1,&lbuf2);
 	  break;
-	
+	  
 	case 'b':
 	case 'c':
 	  memcpy(
@@ -364,7 +362,7 @@ G__value *buf1,*buf2;
 		 ,G__CHARALLOC*(var1->varlabel[i][1]+1)
 		 );
 	  break;
-	
+	  
 	case 'r':
 	case 's':
 	  memcpy(
@@ -373,7 +371,7 @@ G__value *buf1,*buf2;
 		 ,G__SHORTALLOC*(var1->varlabel[i][1]+1)
 		 );
 	  break;
-	
+	  
 	case 'h':
 	case 'i':
 	  memcpy(
@@ -382,7 +380,7 @@ G__value *buf1,*buf2;
 		 ,G__INTALLOC*(var1->varlabel[i][1]+1)
 		 );
 	  break;
-	
+	  
 	case 'k':
 	case 'l':
 	  memcpy(
@@ -391,7 +389,7 @@ G__value *buf1,*buf2;
 		 ,G__LONGALLOC*(var1->varlabel[i][1]+1)
 		 );
 	  break;
-	
+	  
 	case 'f':
 	  memcpy(
 	         (void *)(buf1->obj.i+var1->p[i])
@@ -399,7 +397,7 @@ G__value *buf1,*buf2;
 		 ,G__FLOATALLOC*(var1->varlabel[i][1]+1)
 		 );
 	  break;
-	
+	  
 	case 'd':
 	case 'w':
 	  memcpy(
@@ -413,7 +411,7 @@ G__value *buf1,*buf2;
       var1 = var1->next;
       var2 = var2->next;
     } while(var1);
-
+    
     return(0);
   }
   else {
@@ -433,7 +431,7 @@ G__value *buf1,*buf2;
 *
 * Scan struct object and call 'G__do_scanobject()'
 *
-*  This function looks different from interpreted environment
+*  This function looks different from interpreted environment 
 * and compiled environment.
 *  Interpreter : G__storeobject(void *buf1,void *buf2)
 *  Compiler    : G__storeobject(G__value *buf1,G__value *buf2)
@@ -479,7 +477,7 @@ G__value *buf1;
       }
       var1 = var1->next;
     } while(var1);
-
+    
     return(0);
   }
   else {
@@ -546,9 +544,9 @@ char *typename;
   G__value buf;
   static char vtype[80];
   char ispointer[3];
-
+  
   buf = G__calc_internal(name);
-
+  
   if(isupper(buf.type)) {
     sprintf(ispointer," *");
   }
@@ -556,7 +554,7 @@ char *typename;
     ispointer[0]='\0';
     /* sprintf(ispointer,""); */
   }
-
+  
   switch(tolower(buf.type)) {
   case 'u':
     sprintf(vtype,"struct %s %s",G__struct.name[buf.tagnum],ispointer);
@@ -616,7 +614,7 @@ char *typename;
   if(type) strcpy(type,vtype);
   if(tagname) strcpy(tagname,G__struct.name[buf.tagnum]) ;
   if(typename) strcpy(typename,G__newtype.name[buf.typenum]) ;
-
+  
   sprintf(vtype,"&%s",name);
   buf = G__calc_internal(vtype);
 
@@ -647,10 +645,10 @@ char *string;
   regex_t re;
   /* char buf[256]; */
   i=regcomp(&re,pattern,REG_EXTENDED|REG_NOSUB);
-  if(i!=0) return(0);
+  if(i!=0) return(0); 
   i=regexec(&re,string,(size_t)0,(regmatch_t*)NULL,0);
   regfree(&re);
-  if(i!=0) return(0);
+  if(i!=0) return(0); 
   return(1); /* match */
 }
 #endif

@@ -1,5 +1,3 @@
-/*CMZ :  2.24/05 16/05/2000  12.03.57  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   16/05/2000*/
 /****************************************************************
 * new.h
 *****************************************************************/
@@ -8,15 +6,15 @@
 
 #include <stdio.h>
 
-// work around ::operator new(size)
+// work around ::operator new(size) 
 void* operatornew(size_t s) {
   return new char[s];
 }
 //void* operatornew(unsigned long s) {return malloc(s);}
 
-// work around ::operator delete(buffer)
+// work around ::operator delete(buffer) 
 void operatordelete(void* p) {
-  if(p) delete p;
+  if(p) delete p; 
 }
 
 // set_new_handler is a dummy function that is provided to

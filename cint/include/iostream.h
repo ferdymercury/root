@@ -1,5 +1,3 @@
-/*CMZ :  2.24/05 16/05/2000  12.03.57  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   16/05/2000*/
 /* /% C++ %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -11,7 +9,7 @@
  ************************************************************************
  * Copyright(c) 1995~1999  Masaharu Goto (MXJ02154@niftyserve.or.jp)
  *
- * Permission to use, copy, modify and distribute this software and its
+ * Permission to use, copy, modify and distribute this software and its 
  * documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies and
  * that both that copyright notice and this permission notice appear
@@ -63,33 +61,33 @@ typedef long streampos;
 //class io_state;
 class streambuf;
 class fstreambase;
-typedef long         SZ_T;
+typedef long         SZ_T;       
 typedef SZ_T         streamsize;
 
 class ios {
  public:
   typedef int      iostate;
   enum io_state {
-    goodbit     = 0x00,
-    badbit      = 0x01,
-    eofbit      = 0x02,
-    failbit     = 0x04
+    goodbit     = 0x00,   
+    badbit      = 0x01,   
+    eofbit      = 0x02,  
+    failbit     = 0x04  
   };
   typedef int      openmode;
   enum open_mode {
-    app         = 0x01,
-    binary      = 0x02,
-    in          = 0x04,
-    out         = 0x08,
-    trunc       = 0x10,
-    ate         = 0x20
+    app         = 0x01,   
+    binary      = 0x02,  
+    in          = 0x04, 
+    out         = 0x08,   
+    trunc       = 0x10,                  
+    ate         = 0x20 
   };
   typedef int      seekdir;
   enum seek_dir {
-    beg         = 0x0,
-    cur         = 0x1,
-    end         = 0x2
-  };
+    beg         = 0x0,    
+    cur         = 0x1,    
+    end         = 0x2   
+  };        
   typedef int      fmtflags;
   enum fmt_flags {
     boolalpha   = 0x0001,
@@ -101,22 +99,22 @@ class ios {
     oct         = 0x0040,
     right       = 0x0080,
     scientific  = 0x0100,
-    showbase    = 0x0200,
-    showpoint   = 0x0400,
-    showpos     = 0x0800,
-    skipws      = 0x1000,
-    unitbuf     = 0x2000,
-    uppercase   = 0x4000,
+    showbase    = 0x0200, 
+    showpoint   = 0x0400, 
+    showpos     = 0x0800, 
+    skipws      = 0x1000, 
+    unitbuf     = 0x2000, 
+    uppercase   = 0x4000, 
     adjustfield = left | right | internal,
     basefield   = dec | oct | hex,
     floatfield  = scientific | fixed
   };
-  enum event {
+  enum event { 
     erase_event   = 0x0001,
     imbue_event   = 0x0002,
     copyfmt_event = 0x0004
   };
-
+  
   ios() { x_width=0; }
   streamsize width(streamsize wide) { x_width=wide; }
  protected:
@@ -192,7 +190,7 @@ ostream& ostream::operator <<(long x)
   if(x_width) {
     char buf[50];
     sprintf(buf,"%d",x);
-    if(x_width>strlen(buf))
+    if(x_width>strlen(buf)) 
       for(int i=strlen(buf);i<x_width;i++) fputc(' ',fout);
     x_width=0;
   }
@@ -205,7 +203,7 @@ ostream& ostream::operator <<(unsigned long x)
   if(x_width) {
     char buf[50];
     sprintf(buf,"%u",x);
-    if(x_width>strlen(buf))
+    if(x_width>strlen(buf)) 
       for(int i=strlen(buf);i<x_width;i++) fputc(' ',fout);
     x_width=0;
   }
@@ -218,7 +216,7 @@ ostream& ostream::operator <<(double d)
   if(x_width) {
     char buf[50];
     sprintf(buf,"%g",d);
-    if(x_width>strlen(buf))
+    if(x_width>strlen(buf)) 
       for(int i=strlen(buf);i<x_width;i++) fputc(' ',fout);
     x_width=0;
   }
@@ -231,7 +229,7 @@ ostream& ostream::operator <<(void *p)
   if(x_width) {
     char buf[50];
     sprintf(buf,"0x%x",p);
-    if(x_width>strlen(buf))
+    if(x_width>strlen(buf)) 
       for(int i=strlen(buf);i<x_width;i++) fputc(' ',fout);
     x_width=0;
   }
@@ -263,10 +261,10 @@ public:
   istream(char *fname);
   ~istream();
   void close() { if(fin) fclose(fin); fin=NULL;}
-  ostream& tie(ostream& cx);
+  ostream& tie(ostream& cx); 
   FILE *fp() { return(fin); }
   int rdstate();
-
+  
   istream& operator >>(char& c);
   istream& operator >>(char *s);
   istream& operator >>(short& s);
@@ -297,12 +295,12 @@ istream::istream(char *fname)
 }
 
 
-ostream& istream::tie(ostream& cx)
-
-{
-  ostream *tmp;
-  tmp=tie;
-  tie = &cx;
+ostream& istream::tie(ostream& cx) 
+     
+{ 
+  ostream *tmp; 
+  tmp=tie; 
+  tie = &cx; 
   return(*tmp);
 }
 
@@ -407,7 +405,7 @@ class iostream : public istream , public ostream {
 
 
 /*********************************************************************
-* ofstream, ifstream
+* ofstream, ifstream 
 *
 *********************************************************************/
 
@@ -454,7 +452,7 @@ ostream& ostream::form(char *format ...) {
 /*********************************************************************
 * iostream manipurator emulation
 *
-*  Following description must be deleted when pointer to compiled
+*  Following description must be deleted when pointer to compiled 
 * function is fully supported.
 *********************************************************************/
 class G__CINT_ENDL { int dmy; } endl;

@@ -1,9 +1,0 @@
-*CMZ :  2.22/05 08/06/99  16.23.12  by  Fons Rademakers
-*-- Author :    Fons Rademakers   08/06/99
-macro install_rootconfig
-
-if $OS = 'UNIX' then
-   ctot -s /$kumacs/root-config
-   sh chmod +x root-config.txt
-   sh mv root-config.txt bin/root-config
-endif

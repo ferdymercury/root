@@ -1,11 +1,13 @@
-*CMZ :  2.23/12 22/01/2000  18.23.23  by  Rene Brun
-*CMZ :  2.23/11 08/01/2000  15.31.07  by  Rene Brun
-*CMZ :  2.23/04 07/10/99  23.35.04  by  Rene Brun
-*CMZ :  2.23/03 11/09/99  19.34.26  by  Rene Brun
-*CMZ :  2.23/00 18/08/99  09.20.10  by  Rene Brun
-*CMZ :  2.20/04 09/12/98  21.21.08  by  Rene Brun
-*CMZ :  2.20/01 01/12/98  19.11.10  by  Rene Brun
-*-- Author :    Fons Rademakers   25/06/98
+/* @(#)root/gpad:$Name$:$Id$ */
+
+/*************************************************************************
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
+ *                                                                       *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
+ *************************************************************************/
+
 #ifdef __CINT__
 
 #pragma link off all globals;

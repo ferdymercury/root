@@ -1,5 +1,3 @@
-//*CMZ :  2.24/05 16/05/2000  12.03.52  by  Masaharu Goto
-//*-- Author :    Masaharu Goto   16/05/2000
 /* /% C++ %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -358,7 +356,7 @@ static int IsInt(G__DataMemberInfo &member) {
 // If errnum is not null, *errnum updated with the error number:
 //   G__DataMemberInfo::G__VALID     : valid array index
 //   G__DataMemberInfo::G__NOT_INT   : array index is not an int
-//   G__DataMemberInfo::G__NOT_DEF   : index not defined before array
+//   G__DataMemberInfo::G__NOT_DEF   : index not defined before array 
 //                                          (this IS an error for streaming to disk)
 //   G__DataMemberInfo::G__IS_PRIVATE: index exist in a parent class but is private
 //   G__DataMemberInfo::G__UNKNOWN   : index is not known
@@ -376,7 +374,7 @@ const char* G__DataMemberInfo::ValidArrayIndex(int *errnum, char **errstr) {
   // the array.
 
   if (errnum) *errnum = VALID;
-  title = Title();
+  title = Title(); 
 
   if ((strncmp(title, "[", 1)!=0) ||
       (strstr(title,"]")     ==0)  ) return 0;
@@ -384,7 +382,7 @@ const char* G__DataMemberInfo::ValidArrayIndex(int *errnum, char **errstr) {
   static char working[G__INFO_TITLELEN], indexvar[G__INFO_TITLELEN];
   strcpy(indexvar,title+1);
   strstr(indexvar,"]")[0] = '\0';
-
+  
   // now we should have indexvar=dimension
   // Let's see if this is legal.
   // which means a combination of data member and digit separated by '*','+','-'
@@ -396,12 +394,12 @@ const char* G__DataMemberInfo::ValidArrayIndex(int *errnum, char **errstr) {
       working[j++] = indexvar[i];
     }
   };
-
+ 
   // Now we go through all indentifiers
   const char * tokenlist = "*+-";
   char *current = working;
   current = strtok(current,tokenlist);
-
+  
   while (current!=0) {
     // Check the token
     if (isdigit(current[0])) {

@@ -1,6 +1,5 @@
-//*CMZ :  2.24/03 29/04/2000  23.45.27  by  Rene Brun
-//*CMZ :  1.02/00 22/07/97  13.45.35  by  Valery Fine(fine@vxcern.cern.ch)
-//*-- Author :    Valery Fine   06/05/96
+// @(#)root/win32:$Name$:$Id$
+// Author: Valery Fine   06/05/96
 
 #include "RConfig.h"
 #include "TCritSection.h"

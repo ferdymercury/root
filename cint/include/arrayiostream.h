@@ -1,5 +1,3 @@
-/*CMZ :  2.24/05 16/05/2000  12.03.57  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   16/05/2000*/
 /***************************************************************************
 * arrayiostream.h
 *
@@ -41,7 +39,7 @@
 class arrayostream {
 	// Due to cint limitation, base class inheritance is emulated by
 	// having pointer of graphbuf and construct it by new operator.
-	graphbuf *buf;
+	graphbuf *buf;  
 
 	// data member
 	FILE *fp;
@@ -250,7 +248,7 @@ void arrayostream::printdata(void)
 			fprintf(fp,"%g ",buf->pdat[n][i]);
 			// Doing above due to cint limitation,
 			// supposed to be like below.
-			// fprintf(fp,"%g ",buf->Dat(n,i));
+			// fprintf(fp,"%g ",buf->Dat(n,i)); 
 		}
 		fprintf(fp,"\n");
 	}
@@ -288,20 +286,20 @@ class arrayistream {
 } ;
 
 
-arrayistream::arrayistream(FILE *fp_init)
-{
+arrayistream::arrayistream(FILE *fp_init) 
+{ 
 	fp=fp_init;
-	nplot=0;
-	ndat=2000000;
+	nplot=0; 
+	ndat=2000000; 
 	importedfp=1;
 }
 
 arrayistream::arrayistream(char *filename)
-{
+{ 
 	fp=fopen(filename,"rb");
 	if(NULL==fp) cerr << filename << " could not open\n" ;
-	nplot=0;
-	ndat=2000000;
+	nplot=0; 
+	ndat=2000000; 
 	importedfp=0;
 }
 
@@ -319,7 +317,7 @@ void arrayistream::close(void)
 arrayistream& arrayistream::operator >>(graphbuf& a)
 {
 	if(fp) {
-		FILE *FP;
+		FILE *FP;       
 		FP=fp;          // Assigning to FP
 		a.loaddata(FP); // cint bug work around
 		nplot=0;
@@ -332,7 +330,7 @@ arrayistream& arrayistream::operator >>(graphbuf& a)
 	return(*this);
 }
 
-// add array or carray
+// add array or carray 
 arrayistream& arrayistream::operator >>(array& a)
 {
 	dat[nplot++] = a.dat;
@@ -348,7 +346,7 @@ arrayistream& arrayistream::operator >>(carray& a)
 	return(*this);
 }
 
-// dummy
+// dummy 
 arrayistream& arrayistream::operator >>(double d)
 {
 	return(*this);
@@ -367,7 +365,7 @@ arrayistream& arrayistream::operator >>(ISLOG log)
 // do input
 arrayistream& arrayistream::operator >>(char *s)
 {
-	if(s[strlen(s)-1]=='\n')
+	if(s[strlen(s)-1]=='\n') 
 		*this >> '\n';
 	return(*this);
 }

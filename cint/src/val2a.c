@@ -1,5 +1,3 @@
-/*CMZ :  2.24/05 16/05/2000  12.03.51  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   16/05/2000*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -11,7 +9,7 @@
  ************************************************************************
  * Copyright(c) 1995~1999  Masaharu Goto (MXJ02154@niftyserve.or.jp)
  *
- * Permission to use, copy, modify and distribute this software and its
+ * Permission to use, copy, modify and distribute this software and its 
  * documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies and
  * that both that copyright notice and this permission notice appear
@@ -26,7 +24,7 @@
 
 /****************************************************************
 * char *G__valuemonitor()
-*
+* 
 ****************************************************************/
 char *G__valuemonitor(buf,temp)
 G__value buf;
@@ -62,7 +60,7 @@ char *temp;
   case 'b':
     if(G__in_pause)
       sprintf(temp,"(unsigned char)%u",(unsigned char)buf.obj.i);
-    else
+    else 
       sprintf(temp,"(unsignedchar)%u",(unsigned char)buf.obj.i);
     break;
   case 'r':
@@ -88,12 +86,12 @@ char *temp;
       if(islower(buf.type)) {
 #ifndef G__OLDIMPLEMENTATION719
 	if(buf.obj.i<0)
-	  sprintf(temp,"(%s)(%ld)"
+	  sprintf(temp,"(%s)(%ld)" 
 		  ,G__type2string(buf.type ,buf.tagnum ,buf.typenum
 				  ,buf.obj.reftype.reftype,0)
 		  ,buf.obj.i);
 	else
-	  sprintf(temp,"(%s)%ld"
+	  sprintf(temp,"(%s)%ld" 
 		  ,G__type2string(buf.type ,buf.tagnum ,buf.typenum
 				  ,buf.obj.reftype.reftype,0)
 		  ,buf.obj.i);
@@ -107,13 +105,13 @@ char *temp;
       else {
 #ifndef G__OLDIMPLEMENTATION719
 	if('C'==buf.type&&G__in_pause && buf.obj.i>0x10000 &&
-	   G__PARANORMAL==buf.obj.reftype.reftype)
+	   G__PARANORMAL==buf.obj.reftype.reftype) 
 	  sprintf(temp,"(%s 0x%lx)\"%s\""
 		  ,G__type2string(buf.type ,buf.tagnum ,buf.typenum
 				  ,buf.obj.reftype.reftype,0)
 		  ,buf.obj.i,(char*)buf.obj.i);
 	else
-	  sprintf(temp,"(%s)0x%lx"
+	  sprintf(temp,"(%s)0x%lx" 
 		  ,G__type2string(buf.type ,buf.tagnum ,buf.typenum
 				  ,buf.obj.reftype.reftype,0)
 		  ,buf.obj.i);
@@ -152,7 +150,7 @@ char *temp;
     }
     return(temp);
   }
-
+  
   switch(buf.type) {
   case '\0':
     sprintf(temp,"NULL");
@@ -160,13 +158,13 @@ char *temp;
   case 'b':
     if(G__in_pause)
       sprintf(temp,"(unsigned char)%u",(unsigned char)buf.obj.i);
-    else
+    else 
       sprintf(temp,"(unsignedchar)%u",(unsigned char)buf.obj.i);
     break;
   case 'B':
     if(G__in_pause)
       sprintf(temp,"(unsigned char*)0x%lx",buf.obj.i);
-    else
+    else 
       sprintf(temp,"(unsignedchar*)0x%lx",buf.obj.i);
     break;
 #ifndef G__OLDIMPLEMENTATION1001
@@ -190,9 +188,9 @@ char *temp;
       }
     }
     else {
-      if(G__in_pause)
+      if(G__in_pause) 
 	sprintf(temp,"(char* 0x0)\"\"");
-      else
+      else 
 	sprintf(temp,"(char*)0x0");
     }
     break;
@@ -218,7 +216,7 @@ char *temp;
   case 's':
     if(buf.obj.i<0)
       sprintf(temp,"(short)(%d)",(short)buf.obj.i);
-    else
+    else 
       sprintf(temp,"(short)%d",(short)buf.obj.i);
     break;
   case 'S':
@@ -247,14 +245,14 @@ char *temp;
       else {
 	if(buf.obj.i<0)
 	  sprintf(temp,"(int)(%d)",(int)buf.obj.i);
-	else
+	else 
 	  sprintf(temp,"(int)%d",(int)buf.obj.i);
       }
     }
     else {
       if(buf.obj.i<0)
 	sprintf(temp,"(int)(%d)",(int)buf.obj.i);
-      else
+      else 
 	sprintf(temp,"(int)%d",(int)buf.obj.i);
     }
     break;
@@ -327,14 +325,14 @@ char *temp;
     switch(G__struct.type[buf.tagnum]) {
     case 's':
       if(buf.obj.i<0)
-	sprintf(temp,"(struct %s)(%ld)"
+	sprintf(temp,"(struct %s)(%ld)" 
 		,G__fulltagname(buf.tagnum,1),buf.obj.i);
       else
 	sprintf(temp,"(struct %s)%ld" ,G__fulltagname(buf.tagnum,1),buf.obj.i);
       break;
     case 'c':
-      if(buf.obj.i<0)
-	sprintf(temp,"(class %s)(%ld)"
+      if(buf.obj.i<0) 
+	sprintf(temp,"(class %s)(%ld)" 
 		,G__fulltagname(buf.tagnum,1) ,buf.obj.i);
       else
 	sprintf(temp,"(class %s)%ld" ,G__fulltagname(buf.tagnum,1) ,buf.obj.i);
@@ -351,9 +349,9 @@ char *temp;
       break;
     default:
       if(buf.obj.i<0)
-	sprintf(temp,"(unknown %s)(%ld)"
+	sprintf(temp,"(unknown %s)(%ld)" 
 		,G__struct.name[buf.tagnum] ,buf.obj.i);
-      else
+      else 
 	sprintf(temp,"(unknown %s)%ld" ,G__struct.name[buf.tagnum] ,buf.obj.i);
       break;
     }
@@ -450,7 +448,7 @@ int tagtype;
 #ifndef G__OLDIMPLEMENTATION612
   case 'n': return("namespace");
 #endif
-  case  0 : return("(unknown)");
+  case  0 : return("(unknown)");  
   }
   G__genericerror("Internal error: Unexpected tagtype G__tagtype2string()");
   return("");
@@ -521,7 +519,7 @@ int type,tagnum,typenum,reftype,isconst;
     string+=6;
   }
   if(-1!=typenum) {
-    if(0<=G__newtype.parent_tagnum[typenum])
+    if(0<=G__newtype.parent_tagnum[typenum]) 
       sprintf(string,"%s::%s"
 	      ,G__fulltagname(G__newtype.parent_tagnum[typenum],1)
 	      ,G__newtype.name[typenum]);
@@ -557,7 +555,7 @@ int type,tagnum,typenum,reftype,isconst;
 	    default: --reftype; break;
 	    }
 	  }
-	} else
+	} else 
 #endif
 	if(islower(type) || G__newtype.reftype[typenum]>reftype) {
 	  return(G__type2string(type,tagnum,-1,reftype,isconst));
@@ -590,7 +588,7 @@ int type,tagnum,typenum,reftype,isconst;
     if('$'==G__struct.name[tagnum][0]) {
       if('\0'==G__struct.name[tagnum][1]) {
 	G__ASSERT('e'==G__struct.type[tagnum]);
-	sprintf(string,"enum ");
+	sprintf(string,"enum "); 
 	len=5;
       }
       else {
@@ -633,7 +631,7 @@ int type,tagnum,typenum,reftype,isconst;
     case 'l': strcpy(string,"long"); break;
     case 'f': strcpy(string,"float"); break;
     case 'd': strcpy(string,"double"); break;
-    case 'q':
+    case 'q': 
     case 'y': strcpy(string,"void"); break;
     case 'e': strcpy(string,"FILE"); break;
     case 'u': strcpy(string,"enum");
@@ -649,7 +647,7 @@ int type,tagnum,typenum,reftype,isconst;
     case 'm':
     case 'p': sprintf(string,"#define"); return(string);
     case 'o': string[0]='\0'; /* sprintf(string,""); */ return(string);
-    case 'a':
+    case 'a': 
       G__ASSERT(isupper(type));
       strcpy(string,"G__p2memfunc");
       type=tolower(type);
@@ -669,9 +667,9 @@ int type,tagnum,typenum,reftype,isconst;
     break;
   default:
     if(isupper(type)) {
-      if((isconst&G__PCONSTVAR)&&G__PARANORMAL==reftype)
+      if((isconst&G__PCONSTVAR)&&G__PARANORMAL==reftype) 
 	strcpy(string+strlen(string)," *const");
-      else
+      else 
 	strcpy(string+strlen(string),"*");
     }
     switch(reftype) {
@@ -763,7 +761,7 @@ char *string;
   double expo,polarity=1;
   double result5=0.0;
   double ratio=0.1;
-
+  
   lenstring=strlen(string);
   if(string[ig16]=='-') {
     polarity = -1;
@@ -975,7 +973,7 @@ int *known4;
   * scan string
   ********************************************/
   while(n<nchar) {
-
+    
     /********************************************
      * error check, never happen because same
      * condition is already checked in G__getitem()
@@ -991,7 +989,7 @@ int *known4;
 #endif
       return(G__null);
     }
-    else {
+    else { 
       /**********************************************
        * check base specification
        **********************************************/
@@ -1043,17 +1041,17 @@ int *known4;
 #endif
 	break;
       }
-
+      
       /********************************************
        * initialize value
        ********************************************/
       value=0; tristate=0;
-
+      
       /********************************************
        * increment scanning pointer
        ********************************************/
       n++;
-
+      
       /********************************************
        * scan constant expression body
        ********************************************/
@@ -1156,7 +1154,7 @@ int *known4;
 	  case 'S':
 	    /********************************************
 	     * short, may not exist in ANSI
-	     * and doesn't work fine.
+	     * and doesn't work fine. 
 	     * shoud be done as casting
 	     ********************************************/
 	    type = 's';
@@ -1236,12 +1234,12 @@ int *type;
   int ig17=0;
   int c;
   int result=0, unsing = 0 ;
-
+  
   /*************************************************************
    * default type is int
    *************************************************************/
   *type = 'i';
-
+  
   /**************************************************************
    * check type of constant expression
    **************************************************************/
@@ -1311,7 +1309,7 @@ int *type;
 #endif
     }
   }
-
+  
   /**************************************************************
    * check illegal type specification
    **************************************************************/
@@ -1334,7 +1332,7 @@ int *type;
       break;
     }
   }
-
+  
   /**************************************************************
    * return 1 if float or double
    **************************************************************/
@@ -1421,7 +1419,7 @@ int lenexpr;
     }
     return(0);
   }
-
+  
 }
 
 

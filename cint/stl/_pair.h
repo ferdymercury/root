@@ -1,5 +1,3 @@
-/*CMZ :  2.24/05 16/05/2000  12.04.01  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   16/05/2000*/
 /*
  *
  * Copyright (c) 1994
@@ -29,13 +27,13 @@ struct pair {
 };
 
 template <class T1, class T2>
-inline bool operator==(const pair<T1, T2>& x, const pair<T1, T2>& y) {
-    return x.first == y.first && x.second == y.second;
+inline bool operator==(const pair<T1, T2>& x, const pair<T1, T2>& y) { 
+    return x.first == y.first && x.second == y.second; 
 }
 
 template <class T1, class T2>
-inline bool operator<(const pair<T1, T2>& x, const pair<T1, T2>& y) {
-    return x.first < y.first || (!(y.first < x.first) && x.second < y.second);
+inline bool operator<(const pair<T1, T2>& x, const pair<T1, T2>& y) { 
+    return x.first < y.first || (!(y.first < x.first) && x.second < y.second); 
 }
 
 template <class T1, class T2>

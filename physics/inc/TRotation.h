@@ -1,7 +1,13 @@
-//*CMZ :  2.22/09 10/07/99  16.26.26  by  Rene Brun
-//*CMZ :  2.22/07 02/07/99  08.25.31  by  Rene Brun
-//*CMZ :  2.22/06 19/06/99  09.08.45  by  Peter Malzacher
-//*-- Author :    Peter Malzacher   19/06/99
+// @(#)root/physics:$Name$:$Id$
+// Author: Peter Malzacher   19/06/99
+
+/*************************************************************************
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
+ *                                                                       *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
+ *************************************************************************/
 #ifndef ROOT_TRotation
 #define ROOT_TRotation
 

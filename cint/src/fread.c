@@ -1,5 +1,3 @@
-/*CMZ :  2.24/05 16/05/2000  12.03.46  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   16/05/2000*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -11,7 +9,7 @@
  ************************************************************************
  * Copyright(c) 1995~1999  Masaharu Goto (MXJ02154@niftyserve.or.jp)
  *
- * Permission to use, copy, modify and distribute this software and its
+ * Permission to use, copy, modify and distribute this software and its 
  * documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies and
  * that both that copyright notice and this permission notice appear
@@ -37,7 +35,7 @@ int c;
       /* assuming there is no half-sized kana chars, this code does not
        * exist in S-JIS, set EUC flag and return 0 */
       G__lang=G__EUC;
-      return(0);
+      return(0); 
     }
     return(1); /* assuming S-JIS but not sure yet */
   case G__EUC:
@@ -109,13 +107,13 @@ char *string,*endmark;
   int tmpltnest=0;
   char *pp = string;
 #endif
-
+  
   spaceflag=0;
 
   do {
     ignoreflag=0;
     c=G__fgetc() ;
-
+    
     if((single_quote==0)&&(double_quote==0)&&nest==0) {
       l=0;
       while((prev=endmark[l++])!='\0') {
@@ -127,7 +125,7 @@ char *string,*endmark;
     }
 
   backtoreadtemplate:
-
+    
     switch(c) {
     case ' ':
     case '\t':
@@ -179,7 +177,7 @@ char *string,*endmark;
 #ifndef G__OLDIMPLEMENTATION677
         pp = string+i;
 #ifndef G__OLDIMPLEMENTATION811
-        while(pp>string && (pp[-1]!='<' || lnest)
+        while(pp>string && (pp[-1]!='<' || lnest) 
 	      && pp[-1]!=',' && pp[-1]!=' ') {
 	  switch(pp[-1]) {
 	  case '>': ++lnest; break;
@@ -260,9 +258,9 @@ char *string,*endmark;
 	  break;
 	}
       }
-
+      
       break;
-
+      
     case '#':
       if(single_quote==0&&double_quote==0&&(i==0||string[i-1]!='$')) {
 	G__pp_command();
@@ -296,11 +294,11 @@ char *string,*endmark;
 #endif
       break;
     }
-
+    
     if(ignoreflag==0) {
       string[i++] = c ;
     }
-
+    
   } while(flag==0) ;
 
   if(isspace(c)) {
@@ -325,9 +323,9 @@ char *string,*endmark;
       c=' ';
     }
   }
-
+  
   string[i]='\0';
-
+  
   return(c);
 }
 /***********************************************************************
@@ -346,7 +344,7 @@ char *string,*endmark;
 *   If char is space char which is not surrounded by quoatation
 *   it is not stored into char *string.
 * 2) When one of endmark char appears or parenthesis nesting of
-*   parenthesis gets negative , like '())' , stop reading and
+*   parenthesis gets negative , like '())' , stop reading and 
 *   return the last char.
 *
 *  *endmark=";"
@@ -376,7 +374,7 @@ char *string,*endmark;
   do {
     ignoreflag=0;
     c=G__fgetc() ;
-
+    
     if((nest<=0)&&(single_quote==0)&&(double_quote==0)) {
       l=0;
       while((prev=endmark[l++])!='\0') {
@@ -386,7 +384,7 @@ char *string,*endmark;
 	}
       }
     }
-
+    
     switch(c) {
     case ' ':
     case '\f':
@@ -473,14 +471,14 @@ char *string,*endmark;
 	single_quote ^= 1;
       }
       break;
-
+      
     case '\\':
       if(ignoreflag==0) {
 	string[i++] = c ;
 	c=G__fgetc() ;
       }
       break;
-
+      
     case '/':
       if(0==double_quote && 0==single_quote && i>0 && string[i-1]=='/' &&
 	 commentflag) {
@@ -492,7 +490,7 @@ char *string,*endmark;
 	commentflag=1;
       }
       break;
-
+      
     case '*':
       /* comment */
       if(0==double_quote && 0==single_quote && i>0 && string[i-1]=='/' &&
@@ -530,15 +528,15 @@ char *string,*endmark;
       break;
 #endif
     }
-
+    
     if(ignoreflag==0) {
       string[i++] = c ;
     }
-
+    
   } while(flag==0) ;
-
+  
   string[i]='\0';
-
+  
   return(c);
 }
 /***********************************************************************
@@ -553,7 +551,7 @@ char *string,*endmark;
 *   If char is space char which is not surrounded by quoatation
 *   it is not stored into char *string.
 * 2) When one of endmark char appears or parenthesis nesting of
-*   parenthesis gets negative , like '())' , stop reading and
+*   parenthesis gets negative , like '())' , stop reading and 
 *   return the last char.
 *
 *  *endmark=";"
@@ -575,12 +573,12 @@ char *string,*endmark;
 #ifndef G__OLDIMPLEMENTATION608
   char *pp = string;
 #endif
-
-
+  
+  
   do {
     ignoreflag=0;
     c=G__fgetc() ;
-
+    
     if((nest==0)&&(single_quote==0)&&(double_quote==0)) {
       l=0;
       while((prev=endmark[l++])!='\0') {
@@ -590,7 +588,7 @@ char *string,*endmark;
 	}
       }
     }
-
+    
     switch(c) {
     case ' ':
     case '\f':
@@ -653,14 +651,14 @@ char *string,*endmark;
     case '\'':
       if(double_quote==0) single_quote ^= 1;
       break;
-
+      
     case '\\':
       if(ignoreflag==0) {
 	string[i++] = c ;
 	c=G__fgetc() ;
       }
       break;
-
+      
     case '/':
       if(0==double_quote && 0==single_quote && i>0 && string[i-1]=='/' &&
 	 commentflag) {
@@ -672,7 +670,7 @@ char *string,*endmark;
 	commentflag=1;
       }
       break;
-
+      
     case '*':
       /* comment */
       if(0==double_quote && 0==single_quote && i>0 && string[i-1]=='/' &&
@@ -719,15 +717,15 @@ char *string,*endmark;
       break;
 #endif
     }
-
+    
     if(ignoreflag==0) {
       string[i++] = c ;
     }
-
+    
   } while(flag==0) ;
-
+  
   string[i]='\0';
-
+  
   return(c);
 }
 /***********************************************************************
@@ -762,12 +760,12 @@ char *string,*endmark;
 #ifndef G__OLDIMPLEMENTATION608
   char *pp = string;
 #endif
-
+  
 
   do {
     ignoreflag=0;
     c = source[(*isrc)++] ;
-
+    
     if((nest==0)&&(single_quote==0)&&(double_quote==0)) {
       l=0;
       while((prev=endmark[l++])!='\0') {
@@ -777,7 +775,7 @@ char *string,*endmark;
 	}
       }
     }
-
+    
     switch(c) {
     case '"':
       if(single_quote==0) double_quote ^= 1;
@@ -870,13 +868,13 @@ char *string,*endmark;
       break;
 #endif
     }
-
+    
     if(ignoreflag==0) string[i++] = c ;
-
+    
   } while(flag==0) ;
-
+  
   string[i]='\0';
-
+  
   return(c);
 }
 
@@ -905,7 +903,7 @@ int G__fgetspace()
 
   do {
     c=G__fgetc() ;
-
+    
     switch(c) {
     case ' ':
     case '\t':
@@ -916,7 +914,7 @@ int G__fgetspace()
 
     case '/':
       /* comment */
-
+      
       c=G__fgetc();
       switch(c) {
       case '*':
@@ -941,7 +939,7 @@ int G__fgetspace()
       c=' ';
 #endif
       break;
-
+      
     case EOF:
       G__unexpectedEOF("G__fgetspace():2");
       return(c);
@@ -950,9 +948,9 @@ int G__fgetspace()
       flag=1;
       break;
     }
-
+    
   } while(flag==0) ;
-
+  
   return(c);
 }
 
@@ -974,11 +972,11 @@ char *endmark;
 #ifndef G__OLDIMPLEMENtATION1056
   char* pp = string;
 #endif
-
+  
   do {
     ignoreflag=0;
     c=G__fgetc() ;
-
+    
     if((nest==0)&&(single_quote==0)&&(double_quote==0)) {
       l=0;
       while((prev=endmark[l++])!='\0') {
@@ -988,7 +986,7 @@ char *endmark;
 	}
       }
     }
-
+    
     switch(c) {
     case ' ':
     case '\t':
@@ -1035,7 +1033,7 @@ char *endmark;
         pp = string + i + 1;
       }
 #endif
-      if(notmpltflag || (8==i && strncmp("operator",string,8)==0)
+      if(notmpltflag || (8==i && strncmp("operator",string,8)==0) 
 	 || (9==i && (strncmp("&operator",string,9)==0||
 		      strncmp("*operator",string,9)==0))
 	 ) {
@@ -1150,17 +1148,17 @@ char *endmark;
 #endif
       break;
     }
-
+    
     if(ignoreflag==0) {
       string[i++] = c ;
     }
-
+    
   } while(flag==0) ;
-
+  
   string[i]='\0';
-
+  
   return(c);
-
+  
 }
 
 /***********************************************************************
@@ -1194,13 +1192,13 @@ char *string,*endmark;
   short i=0,l;
   int c,prev;
   short single_quote=0,double_quote=0,flag=0,spaceflag,ignoreflag;
-
+  
   spaceflag=0;
 
   do {
     ignoreflag=0;
     c=G__fgetc() ;
-
+    
     if((single_quote==0)&&(double_quote==0)) {
       l=0;
       while((prev=endmark[l++])!='\0') {
@@ -1210,7 +1208,7 @@ char *string,*endmark;
 	}
       }
     }
-
+    
     switch(c) {
     case ' ':
     case '\t':
@@ -1265,9 +1263,9 @@ char *string,*endmark;
 	  break;
 	}
       }
-
+      
       break;
-
+      
     case '#':
       if(single_quote==0&&double_quote==0&&(i==0||string[i-1]!='$')) {
 	G__pp_command();
@@ -1295,15 +1293,15 @@ char *string,*endmark;
 #endif
       break;
     }
-
+    
     if(ignoreflag==0) {
       string[i++] = c ;
     }
-
+    
   } while(flag==0) ;
-
+  
   string[i]='\0';
-
+  
   return(c);
 }
 /***********************************************************************
@@ -1320,11 +1318,11 @@ char *string,*endmark;
 #ifndef G__OLDIMPLEMENTATION439
   int commentflag=0;
 #endif
-
+  
   do {
     ignoreflag=0;
     c=G__fgetc() ;
-
+    
     if((nest==0)&&(single_quote==0)&&(double_quote==0)) {
       l=0;
       while((prev=endmark[l++])!='\0') {
@@ -1334,7 +1332,7 @@ char *string,*endmark;
 	}
       }
     }
-
+    
     switch(c) {
     case ' ':
     case '\t':
@@ -1349,7 +1347,7 @@ char *string,*endmark;
 	if(i>0 && isspace(string[i-1])) ignoreflag=1;
       }
       break;
-	
+	 
     case '{':
     case '(':
     case '[':
@@ -1378,14 +1376,14 @@ char *string,*endmark;
 	single_quote ^= 1;
       }
       break;
-
+      
     case '\\':
       if(ignoreflag==0) {
 	string[i++] = c ;
 	c=G__fgetc() ;
       }
       break;
-
+      
       /*
 	case '\0':
 	flag=1;
@@ -1393,7 +1391,7 @@ char *string,*endmark;
 	break;
 	*/
 
-
+      
     case '/':
 #ifndef G__OLDIMPLEMENTATION439
       if(0==double_quote && 0==single_quote && i>0 && string[i-1]=='/' &&
@@ -1411,7 +1409,7 @@ char *string,*endmark;
       }
 #endif
       break;
-
+      
     case '*':
       /* comment */
 #ifndef G__OLDIMPLEMENTATION439
@@ -1453,15 +1451,15 @@ char *string,*endmark;
       break;
 #endif
     }
-
+    
     if(ignoreflag==0) {
       string[i++] = c ;
     }
-
+    
   } while(flag==0) ;
-
+  
   string[i]='\0';
-
+  
   return(c);
 }
 
@@ -1479,7 +1477,7 @@ char *string,*endmark;
 *   If char is space char which is not surrounded by quoatation
 *   it is not stored into char *string.
 * 2) When one of endmark char appears or parenthesis nesting of
-*   parenthesis gets negative , like '())' , stop reading and
+*   parenthesis gets negative , like '())' , stop reading and 
 *   return the last char.
 *
 *  *endmark=";"
@@ -1500,12 +1498,12 @@ char *string,*endmark;
 #ifndef G__OLDIMPLEMENTATION439
   int commentflag=0;
 #endif
-
-
+  
+  
   do {
     ignoreflag=0;
     c=G__fgetc() ;
-
+    
     if((nest==0)&&(single_quote==0)&&(double_quote==0)) {
       l=0;
       while((prev=endmark[l++])!='\0') {
@@ -1515,7 +1513,7 @@ char *string,*endmark;
 	}
       }
     }
-
+    
     switch(c) {
     case '\f':
     case '\n':
@@ -1557,14 +1555,14 @@ char *string,*endmark;
 	single_quote ^= 1;
       }
       break;
-
+      
     case '\\':
       if(ignoreflag==0) {
 	string[i++] = c ;
 	c=G__fgetc() ;
       }
       break;
-
+      
       /*
 	case '\0':
 	flag=1;
@@ -1572,7 +1570,7 @@ char *string,*endmark;
 	break;
 	*/
 
-
+      
     case '/':
 #ifndef G__OLDIMPLEMENTATION439
       if(0==double_quote && 0==single_quote && i>0 && string[i-1]=='/' &&
@@ -1590,7 +1588,7 @@ char *string,*endmark;
       }
 #endif
       break;
-
+      
     case '*':
       /* comment */
 #ifndef G__OLDIMPLEMENTATION439
@@ -1636,15 +1634,15 @@ char *string,*endmark;
       break;
 #endif
     }
-
+    
     if(ignoreflag==0) {
       string[i++] = c ;
     }
-
+    
   } while(flag==0) ;
-
+  
   string[i]='\0';
-
+  
   return(c);
 }
 
@@ -1660,7 +1658,7 @@ char *string,*endmark;
 *
 * 1) read source file.
 * 2) When one of endmark char appears or parenthesis nesting of
-*   parenthesis gets negative , like '())' , stop reading and
+*   parenthesis gets negative , like '())' , stop reading and 
 *   return the last char.
 *
 *  *endmark=";"
@@ -1678,12 +1676,12 @@ char *endmark;
   short l;
   int c,prev;
   short nest=0,single_quote=0,double_quote=0,flag=0;
-
-
+  
+  
   do {
     c=G__fgetc() ;
-
-
+    
+    
     if((nest==0)&&(single_quote==0)&&(double_quote==0)) {
       l=0;
       while((prev=endmark[l++])!='\0') {
@@ -1692,7 +1690,7 @@ char *endmark;
 	}
       }
     }
-
+    
     switch(c) {
     case '{':
     case '(':
@@ -1721,11 +1719,11 @@ char *endmark;
 	single_quote ^= 1;
       }
       break;
-
+      
     case '\\':
       if(flag==0) c=G__fgetc() ;
       break;
-
+      
     case '/':
       if((single_quote==0)&&(double_quote==0)) {
 	/* comment */
@@ -1748,9 +1746,9 @@ char *endmark;
 	}
       }
       break;
-
+      
     /* need to handle preprocessor statements */
-
+      
     case EOF:
       G__unexpectedEOF("G__fignorestream():3");
       return(c);
@@ -1764,9 +1762,9 @@ char *endmark;
       break;
 #endif
     }
-
+    
   } while(flag==0) ;
-
+  
   return(c);
 }
 
@@ -1786,7 +1784,7 @@ char *endmark;
 *   If char is space char which is not surrounded by quoatation
 *   it is not stored into char *string.
 * 2) When one of endmark char appears or parenthesis nesting of
-*   parenthesis gets negative , like '())' , stop reading and
+*   parenthesis gets negative , like '())' , stop reading and 
 *   return the last char.
 *
 *  *endmark=";"
@@ -1816,7 +1814,7 @@ char *string,*endmark;
   do {
     ignoreflag=0;
     c=G__fgetc() ;
-
+    
     if((nest<=0)&&(single_quote==0)&&(double_quote==0)) {
       l=0;
       while((prev=endmark[l++])!='\0') {
@@ -1826,7 +1824,7 @@ char *string,*endmark;
 	}
       }
     }
-
+    
     switch(c) {
     case '\f':
     case '\n':
@@ -1884,14 +1882,14 @@ char *string,*endmark;
 	single_quote ^= 1;
       }
       break;
-
+      
     case '\\':
       if(ignoreflag==0) {
 	string[i++] = c ;
 	c=G__fgetc() ;
       }
       break;
-
+      
     case '/':
 #ifndef G__OLDIMPLEMENTATION439
       if(0==double_quote && 0==single_quote && i>0 && string[i-1]=='/' &&
@@ -1909,7 +1907,7 @@ char *string,*endmark;
       }
 #endif
       break;
-
+      
     case '*':
       /* comment */
 #ifndef G__OLDIMPLEMENTATION439
@@ -1951,15 +1949,15 @@ char *string,*endmark;
       break;
 #endif
     }
-
+    
     if(ignoreflag==0) {
       string[i++] = c ;
     }
-
+    
   } while(flag==0) ;
-
+  
   string[i]='\0';
-
+  
   return(c);
 }
 
@@ -1997,7 +1995,7 @@ char *string,*endmark;
   do {
     ignoreflag=0;
     c=G__fgetc() ;
-
+    
     if((nest<=0)&&(single_quote==0)&&(double_quote==0)) {
       l=0;
       while((prev=endmark[l++])!='\0') {
@@ -2007,7 +2005,7 @@ char *string,*endmark;
 	}
       }
     }
-
+    
     switch(c) {
     case '\f':
     case '\n':
@@ -2045,14 +2043,14 @@ char *string,*endmark;
 	single_quote ^= 1;
       }
       break;
-
+      
     case '\\':
       if(ignoreflag==0) {
 	string[i++] = c ;
 	c=G__fgetc() ;
       }
       break;
-
+      
     case '/':
       if(0==double_quote && 0==single_quote && i>0 && string[i-1]=='/' &&
 	 commentflag) {
@@ -2064,7 +2062,7 @@ char *string,*endmark;
 	commentflag=1;
       }
       break;
-
+      
     case '*':
       /* comment */
       if(0==double_quote && 0==single_quote && i>0 && string[i-1]=='/' &&
@@ -2100,20 +2098,20 @@ char *string,*endmark;
       break;
 #endif
     }
-
+    
     if(ignoreflag==0) {
       string[i++] = c ;
     }
 
     last_was_space = (c == ' ');
-
+    
   } while(flag==0) ;
 
   while (i > 0 && string[i-1] == ' ')
     --i;
-
+  
   string[i]='\0';
-
+  
   return(c);
 }
 #endif
@@ -2152,13 +2150,13 @@ char *string,*endmark;
   short i=0,l;
   int c,prev;
   short nest=0,single_quote=0,double_quote=0,flag=0,ignoreflag;
-
-
+  
+  
   do {
     ignoreflag=0;
     c = source[(*isrc)++] ;
-
-
+    
+    
     if((nest==0)&&(single_quote==0)&&(double_quote==0)) {
       l=0;
       while((prev=endmark[l++])!='\0') {
@@ -2168,7 +2166,7 @@ char *string,*endmark;
 	}
       }
     }
-
+    
     switch(c) {
     case '"':
       if(single_quote==0) {
@@ -2230,15 +2228,15 @@ char *string,*endmark;
       break;
 #endif
     }
-
+    
     if(ignoreflag==0) {
       string[i++] = c ;
     }
-
+    
   } while(flag==0) ;
-
+  
   string[i]='\0';
-
+  
   return(c);
 }
 
@@ -2384,13 +2382,13 @@ int G__fgetc()
 #endif
 
   c=fgetc(G__ifile.fp);
-
+  
   switch(c) {
   case '\n':
   /* case '\r': */
     ++G__ifile.line_number;
-    if(0==G__nobreak &&
-       0==G__disp_mask&&
+    if(0==G__nobreak && 
+       0==G__disp_mask&& 
        G__srcfile[G__ifile.filenum].breakpoint &&
        G__srcfile[G__ifile.filenum].maxline>G__ifile.line_number &&
        G__TESTBREAK&(G__srcfile[G__ifile.filenum].breakpoint[G__ifile.line_number]|=(!G__no_exec))) {
@@ -2411,7 +2409,7 @@ int G__fgetc()
     if(G__dispsource) G__DISPfgetc(c);
     break;
   }
-
+  
   return( c ) ;
 }
 

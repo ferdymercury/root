@@ -1,11 +1,5 @@
-//*CMZ :  2.24/01 17/02/2000  10.25.29  by  Fons Rademakers
-//*CMZ :  2.23/12 18/01/2000  16.43.53  by  Rene Brun
-//*CMZ :  2.23/09 19/11/99  13.29.23  by  Fons Rademakers
-//*CMZ :  2.21/05 08/02/99  12.42.39  by  Fons Rademakers
-//*CMZ :  2.21/04 27/01/99  09.57.44  by  Fons Rademakers
-//*CMZ :  2.00/10 23/07/98  14.34.20  by  akiya miyamoto
-//*CMZ :  2.00/07 15/05/98  16.46.09  by  Rene Brun
-//*-- Author :    Fons Rademakers   19/02/98
+// @(#)root/rootx:$Name$:$Id$
+// Author: Fons Rademakers   19/02/98
 
 //////////////////////////////////////////////////////////////////////////
 //                                                                      //

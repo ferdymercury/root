@@ -1,5 +1,3 @@
-//*CMZ :  2.24/05 16/05/2000  12.03.52  by  Masaharu Goto
-//*-- Author :    Masaharu Goto   16/05/2000
 /* /% C++ %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -9,10 +7,10 @@
  * Description:
  *  Extended Run Time Type Identification API
  ************************************************************************
- * Author                  Masaharu Goto
+ * Author                  Masaharu Goto 
  * Copyright(c) 1995~1999  Masaharu Goto (MXJ02154@niftyserve.or.jp)
  *
- * Permission to use, copy, modify and distribute this software and its
+ * Permission to use, copy, modify and distribute this software and its 
  * documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies and
  * that both that copyright notice and this permission notice appear
@@ -27,7 +25,7 @@
 /*********************************************************************
 * class G__MethodInfo
 *
-*
+* 
 *********************************************************************/
 ///////////////////////////////////////////////////////////////////////////
 void G__MethodInfo::Init()
@@ -161,7 +159,7 @@ struct G__ifunc_table* G__MethodInfo::ifunc()
   }
 }
 ///////////////////////////////////////////////////////////////////////////
-const char* G__MethodInfo::Title()
+const char* G__MethodInfo::Title() 
 {
   static char buf[G__INFO_TITLELEN];
   buf[0]='\0';
@@ -188,7 +186,7 @@ long G__MethodInfo::Property()
     case G__PRIVATE: property|=G__BIT_ISPRIVATE; break;
     }
 #ifndef G__OLDIMPLEMENTATION1189
-    if(ifunc->isconst[index]&G__CONSTFUNC) property|=G__BIT_ISCONSTANT;
+    if(ifunc->isconst[index]&G__CONSTFUNC) property|=G__BIT_ISCONSTANT; 
 #endif
     if(ifunc->isconst[index]&G__CONSTVAR) property|=G__BIT_ISCONSTANT;
     if(ifunc->isconst[index]&G__PCONSTVAR) property|=G__BIT_ISPCONSTANT;
@@ -240,7 +238,7 @@ int G__MethodInfo::NDefaultArg()
   else {
     return(-1);
   }
-  return(-1); // dummy
+  return(-1); // dummy 
 }
 ///////////////////////////////////////////////////////////////////////////
 G__InterfaceMethod G__MethodInfo::InterfaceMethod()
@@ -279,7 +277,7 @@ struct G__bytecodefunc *G__MethodInfo::GetBytecode()
     struct G__ifunc_table *ifunc;
     ifunc = (struct G__ifunc_table*)handle;
     if(!ifunc->pentry[index]->bytecode &&
-       -1!=ifunc->pentry[index]->filenum &&
+       -1!=ifunc->pentry[index]->filenum && 
        G__BYTECODE_NOTYET==ifunc->pentry[index]->bytecodestatus) {
       G__compile_bytecode(ifunc,(int)index);
     }
@@ -332,7 +330,7 @@ void* G__MethodInfo::PointerToFunc()
   if(IsValid()) {
     struct G__ifunc_table *ifunc;
     ifunc = (struct G__ifunc_table*)handle;
-    if(-1!=ifunc->pentry[index]->filenum &&
+    if(-1!=ifunc->pentry[index]->filenum && 
        G__BYTECODE_NOTYET==ifunc->pentry[index]->bytecodestatus) {
       G__compile_bytecode(ifunc,(int)index);
     }
@@ -406,7 +404,7 @@ int G__MethodInfo::Next()
 	handle=0;
 	index = -1;
       }
-    }
+    } 
     if(IsValid()) {
       type.type=ifunc->type[index];
       type.tagnum=ifunc->p_tagtable[index];
@@ -482,7 +480,7 @@ int G__MethodInfo::LineNumber()
 ///////////////////////////////////////////////////////////////////////////
 #ifndef G__OLDIMPLEMENTATION644
 long G__MethodInfo::FilePosition()
-{
+{ 
   // returns  'type fname(type p1,type p2)'
   //                      ^
   long invalid=0L;

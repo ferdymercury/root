@@ -1,8 +1,5 @@
-/*CMZ :  2.24/01 31/03/2000  12.15.30  by  Rene Brun*/
-/*CMZ :  2.23/09 24/11/99  11.23.02  by  Rene Brun*/
-/*CMZ :  2.00/00 08/03/98  11.27.32  by  Rene Brun*/
-/*CMZ :  0.80/00 12/08/96   1.23.37  by  Fons Rademakers*/
-/*-- Author :*/
+/* @(#)root/zip:$Name$:$Id$ */
+/* Author: */
 /*
 
  Copyright (C) 1990-1993 Mark Adler, Richard B. Wales, Jean-loup Gailly,

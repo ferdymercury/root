@@ -1,5 +1,3 @@
-/*CMZ :  2.24/05 16/05/2000  12.03.44  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   16/05/2000*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -11,7 +9,7 @@
  ************************************************************************
  * Copyright(c) 1995~1999  Masaharu Goto (MXJ02154@niftyserve.or.jp)
  *
- * Permission to use, copy, modify and distribute this software and its
+ * Permission to use, copy, modify and distribute this software and its 
  * documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies and
  * that both that copyright notice and this permission notice appear
@@ -25,7 +23,7 @@
 
 
 /**************************************************************************
-* HSTD local facilities are turned on by defining G__HSTD.
+* HSTD local facilities are turned on by defining G__HSTD. 
 * Usually doesn't matter
 **************************************************************************/
 #ifndef __CINT__
@@ -260,7 +258,7 @@
 #define G__DEFAULT_FUNCCALL 9
 
 /**************************************************************************
-* break,continue,goto,default statement
+* break,continue,goto,default statement 
 **************************************************************************/
 #define G__SWITCH_START    -3229
 #define G__SWITCH_DEFAULT  -1000
@@ -270,11 +268,11 @@
 /**************************************************************************
 * ByteCode compiler (loops only)
 *
-*  Following macro definitions accelarates the most inner loop execution
+*  Following macro definitions accelarates the most inner loop execution 
 * by factor of 4.
 *  Search macro symble G__ASM to figure out related source for the inner
 * loop compiler.
-*  With -O0 command line option, the inner loop compilation mode can be
+*  With -O0 command line option, the inner loop compilation mode can be 
 * turned off.
 **************************************************************************/
 
@@ -319,7 +317,7 @@
 /*********************************************
 * p-code instructions
 *  Instructions which appears frequently in
-* typical application is assigned to a smaller
+* typical application is assigned to a smaller 
 * number. This speeds up the execution by
 * 10~20%.
 *********************************************/
@@ -465,7 +463,7 @@ struct G__breakcontinue_list {
 
 
 /**************************************************************************
-* class template
+* class template 
 **************************************************************************/
 #define G__TEMPLATECLASS
 #define G__TEMPLATEMEMFUNC
@@ -682,9 +680,9 @@ struct G__baseparam {
 #define G__TRYNORMAL        0
 #define G__CALLMEMFUNC      1
 #define G__TRYMEMFUNC       2
-#define G__CALLCONSTRUCTOR  3
-#define G__TRYCONSTRUCTOR   4
-#define G__TRYDESTRUCTOR    5
+#define G__CALLCONSTRUCTOR  3  
+#define G__TRYCONSTRUCTOR   4  
+#define G__TRYDESTRUCTOR    5  
 #define G__CALLSTATICMEMFUNC 6
 
 #ifndef G__OLDIMPLEMENTATINO1250
@@ -761,7 +759,7 @@ struct G__dictposition {
   /* template class */
   struct G__Definedtemplateclass *definedtemplateclass;
   /* function template */
-  struct G__Definetemplatefunc *definedtemplatefunc;
+  struct G__Definetemplatefunc *definedtemplatefunc;   
 };
 
 #ifdef G__SECURITY
@@ -835,9 +833,9 @@ struct G__AppPragma {
 #define G__ONEBYTE       4
 
 /* checking both EUC and S-JIS by flag */
-#define G__IsDBCSLeadByte(c) ((0x80&c)&&G__EUC!=G__lang&&G__CodingSystem(c))
+#define G__IsDBCSLeadByte(c) ((0x80&c)&&G__EUC!=G__lang&&G__CodingSystem(c)) 
 
-/* Checking multi-byte coding system by 2nd byte,
+/* Checking multi-byte coding system by 2nd byte, 
  * MSB of 2nd byte may be 0 in S-JIS */
 #define G__CheckDBCS2ndByte(c) if(0==(0x80&c)) G__lang=G__SJIS
 #endif
@@ -853,14 +851,14 @@ struct G__AppPragma {
 *********************************************************************/
 #ifndef G__OLDIMPLEMENTATION754
 #define G__RETURN_NON       0
-#define G__RETURN_NORMAL    1
+#define G__RETURN_NORMAL    1 
 #define G__RETURN_IMMEDIATE 2
-#define G__RETURN_TRY       3
+#define G__RETURN_TRY       3 
 #define G__RETURN_EXIT1     4
 #define G__RETURN_EXIT2     5
 #else
 #define G__RETURN_NON       0
-#define G__RETURN_NORMAL    1
+#define G__RETURN_NORMAL    1 
 #define G__RETURN_IMMEDIATE 2
 #define G__RETURN_EXIT1     3
 #define G__RETURN_EXIT2     4

@@ -1,5 +1,3 @@
-/*CMZ :  2.24/05 16/05/2000  12.04.01  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   16/05/2000*/
 /*
  *
  * Copyright (c) 1994
@@ -61,25 +59,25 @@ inline const T& max(const T& a, const T& b, Compare comp) {
 }
 
 template <class InputIterator, class Distance>
-void __distance(InputIterator first, InputIterator last, Distance& n,
+void __distance(InputIterator first, InputIterator last, Distance& n, 
 		input_iterator_tag) {
     while (first != last) { ++first; ++n; }
 }
 
 template <class ForwardIterator, class Distance>
-void __distance(ForwardIterator first, ForwardIterator last, Distance& n,
+void __distance(ForwardIterator first, ForwardIterator last, Distance& n, 
 		forward_iterator_tag) {
     while (first != last) { ++first; ++n; }
 }
 
 template <class BidirectionalIterator, class Distance>
-void __distance(BidirectionalIterator first, BidirectionalIterator last,
+void __distance(BidirectionalIterator first, BidirectionalIterator last, 
 		Distance& n, bidirectional_iterator_tag) {
     while (first != last) { ++first; ++n; }
 }
 
 template <class RandomAccessIterator, class Distance>
-inline void __distance(RandomAccessIterator first, RandomAccessIterator last,
+inline void __distance(RandomAccessIterator first, RandomAccessIterator last, 
 		       Distance& n, random_access_iterator_tag) {
     n = last - first;
 }
@@ -100,7 +98,7 @@ void __advance(ForwardIterator& i, Distance n, forward_iterator_tag) {
 }
 
 template <class BidirectionalIterator, class Distance>
-void __advance(BidirectionalIterator& i, Distance n,
+void __advance(BidirectionalIterator& i, Distance n, 
 	       bidirectional_iterator_tag) {
     if (n >= 0)
 	while (n--) ++i;
@@ -109,7 +107,7 @@ void __advance(BidirectionalIterator& i, Distance n,
 }
 
 template <class RandomAccessIterator, class Distance>
-inline void __advance(RandomAccessIterator& i, Distance n,
+inline void __advance(RandomAccessIterator& i, Distance n, 
 		      random_access_iterator_tag) {
     i += n;
 }
@@ -132,7 +130,7 @@ ForwardIterator uninitialized_copy(InputIterator first, InputIterator last,
 }
 
 template <class ForwardIterator, class T>
-void uninitialized_fill(ForwardIterator first, ForwardIterator last,
+void uninitialized_fill(ForwardIterator first, ForwardIterator last, 
 			const T& x) {
     while (first != last) construct(first++, x);
 }
@@ -150,8 +148,8 @@ OutputIterator copy(InputIterator first, InputIterator last,
 }
 
 template <class BidirectionalIterator1, class BidirectionalIterator2>
-BidirectionalIterator2 copy_backward(BidirectionalIterator1 first,
-				     BidirectionalIterator1 last,
+BidirectionalIterator2 copy_backward(BidirectionalIterator1 first, 
+				     BidirectionalIterator1 last, 
 				     BidirectionalIterator2 result) {
     while (first != last) *--result = *--last;
     return result;

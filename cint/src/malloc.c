@@ -1,5 +1,3 @@
-/*CMZ :  2.24/05 16/05/2000  12.03.48  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   16/05/2000*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -7,11 +5,11 @@
  * Source file malloc.c
  ************************************************************************
  * Description:
- *  Allocate automatic variable arena
+ *  Allocate automatic variable arena 
  ************************************************************************
  * Copyright(c) 1995~1999  Masaharu Goto (MXJ02154@niftyserve.or.jp)
  *
- * Permission to use, copy, modify and distribute this software and its
+ * Permission to use, copy, modify and distribute this software and its 
  * documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies and
  * that both that copyright notice and this permission notice appear
@@ -92,10 +90,10 @@ char *item;
     size=G__LONGALLOC;
   }
 #endif
-
+  
   if(G__globalvarpointer==G__PVOID) {
     /********************************************
-     * Interpretively allocate memory area
+     * Interpretively allocate memory area 
      ********************************************/
 #ifdef G__ASM_WHOLEFUNC
     if(G__def_struct_member==0 && G__ASM_FUNC_NOP==G__asm_wholefunction) {
@@ -147,7 +145,7 @@ char *item;
       }
       return(allocmem);
     }
-
+    
     /********************************************
      * Interpretively calculate struct offset
      ********************************************/
@@ -188,7 +186,7 @@ char *item;
 	 ***********************************/
 	G__struct.size[G__tagdefining] += size;
 	/***********************************
-	 * padding
+	 * padding 
 	 ***********************************/
 	if(allocmem&&G__struct.size[G__tagdefining]%allocmem!=0){
 	  G__struct.size[G__tagdefining]
@@ -202,7 +200,7 @@ char *item;
       else if(G__struct.type[G__tagdefining]=='u') {
 	if(G__struct.size[G__tagdefining]<size) {
 	  G__struct.size[G__tagdefining] = size;
-	  if((size%2)==1)
+	  if((size%2)==1) 
 	    G__struct.size[G__tagdefining]++;
 	}
 	return(0);

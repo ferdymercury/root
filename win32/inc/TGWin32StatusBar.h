@@ -1,13 +1,20 @@
-//*CMZ :  2.23/07 24/10/99  18.27.34  by  Valery Fine(fine@mail.cern.ch)
-//*CMZ :  1.03/01 31/07/97  11.45.02  by  Valery Fine(fine@vxcern.cern.ch)
-//*-- Author :    Valery Fine(fine@vxcern.cern.ch)   26/08/96
+// @(#)root/win32:$Name$:$Id$
+// Author: Valery Fine(fine@vxcern.cern.ch)   26/08/96
+
+/*************************************************************************
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
+ *                                                                       *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
+ *************************************************************************/
 
 // This class generates an object to draw the status bar for Win32WindowsObject
 
 #ifndef ROOT_TGWin32StatusBar
 #define ROOT_TGWin32StatusBar
 
-#include "RTypes.h"
+#include "Rtypes.h"
 #include "Windows4Root.h"
 
 #include <commctrl.h>

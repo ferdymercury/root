@@ -1,6 +1,5 @@
-//*CMZ :  2.24/01 31/03/2000  08.37.58  by  Rene Brun
-//*CMZ :  2.23/12 26/01/2000  12.18.16  by  Valery Fine(fine@bnl.gov)
-//*-- Author : Valery Fine   10/05/99  (E-mail: fine@bnl.gov)
+// @(#)root/star:$Name$:$Id$
+// Author: Valery Fine   10/05/99  (E-mail: fine@bnl.gov)
 
 #include "TTable3Points.h"
 

@@ -1,5 +1,13 @@
-//*CMZ :  0.90/12 10/01/97  18.53.44  by  Valery Fine(fine@vxcern.cern.ch)
-//*-- Author :    Valery Fine(fine@vxcern.cern.ch)   16/08/96
+// @(#)root/win32:$Name$:$Id$
+// Author: Valery Fine   26/01/96
+
+/*************************************************************************
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
+ *                                                                       *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
+ *************************************************************************/
 #ifndef ROOT_TGWin32Brush
 #define ROOT_TGWin32Brush
 
@@ -11,7 +19,7 @@
 
 #define WHITE_ROOT_COLOR ROOTColorIndex(0)
 
-#include "WINDOWS4ROOT.h"
+#include "Windows4Root.h"
 //
 //*-*- data to create fill area interior style
 //

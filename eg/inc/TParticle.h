@@ -1,11 +1,13 @@
-//*CMZ :  2.24/01 01/03/2000  17.34.39  by  Rene Brun
-//*CMZ :  2.23/12 26/01/2000  09.49.06  by  Rene Brun
-//*CMZ :  2.23/10 10/12/99  09.24.30  by  Rene Brun
-//*CMZ :  2.23/03 08/09/99  18.59.23  by  Fons Rademakers
-//*CMZ :  2.22/08 07/07/99  18.51.24  by  Rene Brun
-//*CMZ :  2.22/07 02/07/99  11.56.34  by  Fons Rademakers
-//*CMZ :  2.22/06 22/06/99  20.56.04  by  Rene Brun
-//*-- Author :    Rene Brun, Federico Carminati, Pasha Murat   26/04/99
+// @(#)root/eg:$Name$:$Id$
+// Author: Rene Brun , Federico Carminati  26/04/99
+
+/*************************************************************************
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
+ *                                                                       *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
+ *************************************************************************/
 //////////////////////////////////////////////////////////////////////////
 //                                                                      //
 // TParticle: defines  equivalent of HEPEVT particle                    //

@@ -1,5 +1,3 @@
-/*CMZ :  2.24/05 16/05/2000  12.03.50  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   16/05/2000*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -11,7 +9,7 @@
  ************************************************************************
  * Copyright(c) 1995~1999  Masaharu Goto (MXJ02154@niftyserve.or.jp)
  *
- * Permission to use, copy, modify and distribute this software and its
+ * Permission to use, copy, modify and distribute this software and its 
  * documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies and
  * that both that copyright notice and this permission notice appear
@@ -309,7 +307,7 @@ struct G__ifunc_table *ifunc;
   }
 
   /*******************************************************************
-  * local variable declaration and initialization
+  * local variable declaration and initialization 
   *******************************************************************/
   fprintf(fp,"  G__value buf;\n");
   fprintf(fp,"  struct G__StoreEnv storeenv;\n");
@@ -371,16 +369,16 @@ struct G__ifunc_table *ifunc;
       break;
     }
   }
-
+  
   fprintf(fp,"}\n\n");
 }
 
 
 /**************************************************************************
-* G__cppstub_memfunc()
+* G__cppstub_memfunc() 
 *
 *  Generate stub member function. Not used
-*
+* 
 **************************************************************************/
 void G__cppstub_memfunc(fp)
 FILE *fp;
@@ -410,7 +408,7 @@ FILE *fp;
 
       while(ifunc) {
 	for(j=0;j<ifunc->allifunc;j++) {
-	
+	  
 	  if(-1==ifunc->pentry[j]->line_number
 	     &&0==ifunc->ispurevirtual[j] && ifunc->hash[j] &&
 	     (G__CPPSTUB==ifunc->globalcomp[j]||
@@ -435,10 +433,10 @@ FILE *fp;
 }
 
 /**************************************************************************
-* G__cppstub_func()
+* G__cppstub_func() 
 *
 *  Generate stub global function
-*
+* 
 **************************************************************************/
 void G__cppstub_func(fp)
 FILE *fp;
@@ -454,7 +452,7 @@ FILE *fp;
   /* member function interface */
   while(ifunc) {
     for(j=0;j<ifunc->allifunc;j++) {
-      if((G__CPPSTUB==ifunc->globalcomp[j]||G__CSTUB==ifunc->globalcomp[j])&&
+      if((G__CPPSTUB==ifunc->globalcomp[j]||G__CSTUB==ifunc->globalcomp[j])&& 
 	 ifunc->hash[j]) {
 	
 	G__cppstub_genfunc(fp,-1,j,ifunc);

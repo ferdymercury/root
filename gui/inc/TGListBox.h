@@ -1,19 +1,6 @@
-//*CMZ :  2.23/10 16/12/99  02.05.02  by  Fons Rademakers
-//*CMZ :  2.22/05 15/06/99  16.36.53  by  Fons Rademakers
-//*CMZ :  2.00/06 24/04/98  19.51.35  by  Fons Rademakers
-//*CMZ :  2.00/03 27/03/98  18.25.44  by  Fons Rademakers
-//*CMZ :  2.00/00 13/01/98  18.00.46  by  Fons Rademakers
-//*-- Author :    Fons Rademakers   12/01/98
+// @(#)root/gui:$Name$:$Id$
+// Author: Fons Rademakers   12/01/98
 
-#ifndef ROOT_TGListBox
-#define ROOT_TGListBox
-
-/*CMZ :  2.24/01 24/02/2000  11.49.40  by  Fons Rademakers*/
-/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
-/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
-/*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
-/*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
-/*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
  * All rights reserved.                                                  *
@@ -21,6 +8,10 @@
  * For the licensing terms see $ROOTSYS/LICENSE.                         *
  * For the list of contributors see $ROOTSYS/README/CREDITS.             *
  *************************************************************************/
+
+#ifndef ROOT_TGListBox
+#define ROOT_TGListBox
+
 
 //////////////////////////////////////////////////////////////////////////
 //                                                                      //

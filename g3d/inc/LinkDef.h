@@ -1,12 +1,13 @@
-*CMZ :  2.24/01 17/03/2000  13.17.31  by  Valery Fine(fine@bnl.gov)
-*CMZ :  2.23/12 22/01/2000  18.17.03  by  Rene Brun
-*CMZ :  2.23/11 11/01/2000  08.52.05  by  Rene Brun
-*CMZ :  2.23/07 21/10/99  23.09.33  by  Rene Brun
-*CMZ :  2.23/02 03/09/99  11.47.53  by  Rene Brun
-*CMZ :  2.23/01 24/08/99  09.13.51  by  Rene Brun
-*CMZ :  2.22/01 10/05/99  16.32.58  by  Valery Fine(fine@mail.cern.ch)
-*CMZ :  2.20/04 08/12/98  09.35.30  by  Rene Brun
-*-- Author :    Fons Rademakers   25/06/98
+/* @(#)root/g3d:$Name$:$Id$ */
+
+/*************************************************************************
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
+ *                                                                       *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
+ *************************************************************************/
+
 #ifdef __CINT__
 
 #pragma link off all globals;

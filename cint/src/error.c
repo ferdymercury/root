@@ -1,5 +1,3 @@
-/*CMZ :  2.24/05 16/05/2000  12.03.46  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   16/05/2000*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -7,11 +5,11 @@
  * Source file error.c
  ************************************************************************
  * Description:
- *  Show error message
+ *  Show error message 
  ************************************************************************
  * Copyright(c) 1995~1999  Masaharu Goto (MXJ02154@niftyserve.or.jp)
  *
- * Permission to use, copy, modify and distribute this software and its
+ * Permission to use, copy, modify and distribute this software and its 
  * documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies and
  * that both that copyright notice and this permission notice appear
@@ -100,7 +98,7 @@ char *item;
 int p_inc;
 {
   int ig25;
-
+  
   fprintf(G__serr,"Error: Array index out of range %s -> [%d] " ,item,p_inc);
   fprintf(G__serr," valid upto %s",var->varnamebuf[ig15]);
   if(var->varlabel[ig15][1]!=0)
@@ -212,7 +210,7 @@ char* s2;
 /**************************************************************************
 * G__splitmessage()
 **************************************************************************/
-int G__splitmessage(item)
+int G__splitmessage(item) 
 char *item;
 {
   int stat=0;
@@ -311,7 +309,7 @@ char *message;
 #else
   G__printlinenum();
 #endif
-  if(0==G__cpp)
+  if(0==G__cpp) 
     fprintf(G__serr,"Advice: You may need to use +P or -p option\n");
   G__CHECK(G__SECURE_EXIT_AT_ERROR,1,G__return=G__RETURN_EXIT1);
 #ifdef G__SECURITY
@@ -463,7 +461,7 @@ char *item,*categ;
 int G__printlinenum()
 {
 #ifndef G__OLDIMPLEMENTATION1196
-  fprintf(G__serr," FILE:%s LINE:%d\n"
+  fprintf(G__serr," FILE:%s LINE:%d\n" 
 	  ,G__stripfilename(G__ifile.name),G__ifile.line_number);
 #else
 #ifndef G__OLDIMPLEMENTATION1171
@@ -581,15 +579,15 @@ int mparen;
     G__genericerror("Error: friend keyword appears outside class definition");
   }
 #endif
-
-
+  
+  
 #ifdef G__FRIEND
   store_tagnum = G__tagnum;
   store_def_tagnum = G__def_tagnum;
   store_def_struct_member = G__def_struct_member;
   store_tagdefining = G__tagdefining;
   store_access = G__access;
-
+  
   G__friendtagnum=envtagnum;
   G__tagnum = -1;
   G__def_tagnum = -1;
@@ -641,9 +639,9 @@ int mparen;
     G__access = G__PUBLIC;
     G__var_type='p';
 #endif
-
+    
     G__exec_statement();
-
+    
 #ifndef G__FRIEND
     G__tagnum = store_tagnum;
     G__def_tagnum = store_def_tagnum;
@@ -652,7 +650,7 @@ int mparen;
     G__access = store_access;
 #endif
   }
-
+    
 #ifdef G__FRIEND
   G__tagnum = store_tagnum;
   G__def_tagnum = store_def_tagnum;
@@ -661,7 +659,7 @@ int mparen;
   G__access = store_access;
   G__friendtagnum = -1;
 #endif
-
+    
   *pspaceflag = -1;
   *piout=0;
   return(!mparen);
@@ -748,13 +746,13 @@ double d;
 G__value *result7;
 char *funcname;
 {
-  if(d<low||up<d) {
+  if(d<low||up<d) { 
     fprintf(G__serr,"Error: %s param[%d]=%g up:%g low:%g out of range"
-	    ,funcname,p,d,up,low);
-    G__genericerror((char*)NULL);
-    *result7=G__null;
-    return(1);
-  }
+	    ,funcname,p,d,up,low); 
+    G__genericerror((char*)NULL); 
+    *result7=G__null; 
+    return(1); 
+  } 
   else {
     return(0);
   }
@@ -772,18 +770,18 @@ long l;
 G__value *result7;
 char *funcname;
 {
-  if(l<low||up<l) {
+  if(l<low||up<l) { 
 #ifndef G__FONS31
     fprintf(G__serr,"Error: %s param[%d]=%ld up:%ld low:%ld out of range"
-	    ,funcname,p,l,up,low);
+	    ,funcname,p,l,up,low); 
 #else
     fprintf(G__serr,"Error: %s param[%d]=%d up:%d low:%d out of range"
-	    ,funcname,p,l,up,low);
+	    ,funcname,p,l,up,low); 
 #endif
-    G__genericerror((char*)NULL);
-    *result7=G__null;
-    return(1);
-  }
+    G__genericerror((char*)NULL); 
+    *result7=G__null; 
+    return(1); 
+  } 
   else {
     return(0);
   }
@@ -802,9 +800,9 @@ G__value *result7;
 char *funcname;
 {
   if(para->type!=t1 && para->type!=t2) {
-    fprintf(G__serr,"Error: %s param[%d] type mismatch",funcname,p);
-    G__genericerror((char*)NULL);
-    *result7=G__null;
+    fprintf(G__serr,"Error: %s param[%d] type mismatch",funcname,p); 
+    G__genericerror((char*)NULL); 
+    *result7=G__null; 
     return(1);
   }
   return(0);
@@ -835,20 +833,20 @@ char *funcname;
   long l;
   l = G__int(*para);
 #endif
-  if(0==l) {
-    fprintf(G__serr,"Error: %s param[%d]=%ld must not be 0",funcname,p,l);
-    G__genericerror((char*)NULL);
-    *result7=G__null;
-    return(1);
-  }
+  if(0==l) { 
+    fprintf(G__serr,"Error: %s param[%d]=%ld must not be 0",funcname,p,l); 
+    G__genericerror((char*)NULL); 
+    *result7=G__null; 
+    return(1); 
+  } 
 #ifndef G__OLDIMPLEMENTATION575
   else if(t!=para->type) {
     if('Y'!=t){
       fprintf(G__serr,"Error: %s parameter mismatch param[%d] %c %c"
-	      ,funcname,p,t,para->type);
-      G__genericerror((char*)NULL);
-      *result7=G__null;
-      return(1);
+	      ,funcname,p,t,para->type); 
+      G__genericerror((char*)NULL); 
+      *result7=G__null; 
+      return(1); 
     }
     return(0);
   }

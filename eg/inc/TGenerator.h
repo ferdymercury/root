@@ -1,16 +1,6 @@
-//*CMZ :  2.23/12 26/01/2000  09.49.06  by  Rene Brun
-//*CMZ :  2.23/01 26/08/99  12.29.57  by  Rene Brun
-//*CMZ :  2.22/03 31/05/99  17.06.36  by  Rene Brun
-//*CMZ :  2.22/01 03/05/99  09.32.35  by  Rene Brun
-//*CMZ :  1.03/04 17/09/97  13.02.46  by  Piotr Golonka
-//*-- Author :    Ola Nordmann   21/09/95
+// @(#)root/eg:$Name$:$Id$
+// Author: Ola Nordmann   21/09/95
 
-/*CMZ :  2.24/01 24/02/2000  11.49.40  by  Fons Rademakers*/
-/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
-/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
-/*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
-/*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
-/*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
  * All rights reserved.                                                  *
@@ -18,6 +8,7 @@
  * For the licensing terms see $ROOTSYS/LICENSE.                         *
  * For the list of contributors see $ROOTSYS/README/CREDITS.             *
  *************************************************************************/
+
 
 //////////////////////////////////////////////////////////////////////////
 //                                                                      //

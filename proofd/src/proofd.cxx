@@ -1,16 +1,6 @@
-//*CMZ :  2.24/05 15/05/2000  11.45.40  by  Rene Brun
-//*CMZ :  2.22/10 23/07/99  15.26.15  by  Fons Rademakers
-//*CMZ :  2.22/05 04/06/99  11.24.24  by  Fons Rademakers
-//*CMZ :  2.22/01 23/04/99  10.48.15  by  Fons Rademakers
-//*CMZ :  2.21/08 18/03/99  15.13.31  by  Fons Rademakers
-//*-- Author :    Fons Rademakers   02/02/97
+// @(#)root/proofd:$Name$:$Id$
+// Author: Fons Rademakers   02/02/97
 
-/*CMZ :  2.24/01 24/02/2000  11.49.40  by  Fons Rademakers*/
-/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
-/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
-/*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
-/*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
-/*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
  * All rights reserved.                                                  *
@@ -177,10 +167,6 @@ char *check_pass()
    struct spwd *spw;
 #endif
    int    n, i;
-+IF,CORE.
-   extern char *getactent(struct passwd *, char *, char *, int);
-   char   accbuf[128];
-+ENDIF.
 
    if ((n = Recv(new_user_pass, sizeof(new_user_pass))) < 0) {
       fatal_error("Cannot receive authentication");
@@ -231,14 +217,6 @@ char *check_pass()
       fatal_error(msg);
    }
 
-+IF,CORE.
-   if (!getactent(pw, NULL, accbuf, sizeof(accbuf)) ||
-      // !strstr(accbuf, "proof")) {
-      strstr(accbuf, "coretapes")) {
-      sprintf(msg, "PROOF access not enabled for user %s", user_name);
-      fatal_error(msg);
-   }
-+ENDIF.
 
    if (chdir(pw->pw_dir) == -1) {
       sprintf(msg, "Cannot change directory to %s", pw->pw_dir);
@@ -341,12 +319,6 @@ int main(int /* argc */, char **argv)
    char  vtag[80];
    char  msg[80];
 
-+IF,DEBUG.
-   int debug = 1;
-   while(debug == 1) {
-      continue;
-   }
-+ENDIF.
 
    //
    // Make this process the process group leader and disassociate from
@@ -420,3 +392,4 @@ int main(int /* argc */, char **argv)
    Send(msg);
 
    return 0;
+}

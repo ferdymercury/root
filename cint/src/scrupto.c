@@ -1,5 +1,3 @@
-/*CMZ :  2.24/05 16/05/2000  12.03.50  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   16/05/2000*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -11,7 +9,7 @@
  ************************************************************************
  * Copyright(c) 1995~1999  Masaharu Goto (MXJ02154@niftyserve.or.jp)
  *
- * Permission to use, copy, modify and distribute this software and its
+ * Permission to use, copy, modify and distribute this software and its 
  * documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies and
  * that both that copyright notice and this permission notice appear
@@ -29,7 +27,7 @@
 *    G__dictposition pos;
 *    G__store_dictposition(&pos);
 *           .
-*    // Do anything,
+*    // Do anything, 
 *           .
 *    if(!G__isfuncbusy(pos.nfile)) G__scratch_upto(&pos);
 *
@@ -61,14 +59,14 @@ struct G__dictposition *dictpos;
   dictpos->ifunc = &G__ifunc;
   while(dictpos->ifunc->next) dictpos->ifunc=dictpos->ifunc->next;
   dictpos->ifn = dictpos->ifunc->allifunc;
-
+  
   /* include path */
   dictpos->ipath = &G__ipathentry;
   while(dictpos->ipath->next) dictpos->ipath=dictpos->ipath->next;
 
   /* preprocessfilekey */
   dictpos->preprocessfilekey = &G__preprocessfilekey;
-  while(dictpos->preprocessfilekey->next)
+  while(dictpos->preprocessfilekey->next) 
     dictpos->preprocessfilekey=dictpos->preprocessfilekey->next;
 
 #ifdef G__SHAREDLIB
@@ -370,11 +368,11 @@ int tagnum;
       while(var) {
 	for(i=0;i<var->allvar;i++) {
 #ifndef G__OLDIMPLEMENTATION684
-	  if(G__LOCALSTATIC==var->statictype[i] &&
+	  if(G__LOCALSTATIC==var->statictype[i] && 
 	     G__COMPILEDGLOBAL!=var->globalcomp[i] &&
 	     G__PARANORMAL==var->reftype[i]) {
 #else
-	  if(G__LOCALSTATIC==var->statictype[i] &&
+	  if(G__LOCALSTATIC==var->statictype[i] && 
 	     G__COMPILEDGLOBAL!=var->globalcomp[i]) {
 #endif
 	    if('u'==var->type[i]) {
@@ -416,7 +414,7 @@ int tagnum;
       while(var) {
 	for(i=0;i<var->allvar;i++) {
 	  /* need to free compiled enum value */
-	  if(G__LOCALSTATIC==var->statictype[i] &&
+	  if(G__LOCALSTATIC==var->statictype[i] && 
 #ifndef G__OLDIMPLEMENTATION614
 	     G__COMPILEDGLOBAL!=var->globalcomp[i] &&
 #endif
@@ -505,7 +503,7 @@ int tagnum;
 	for(i=0;i<var->allvar;i++) {
 	  /* need to free compiled enum value */
 #ifdef G__NEWINHERIT
-	  if(G__LOCALSTATIC==var->statictype[i] &&
+	  if(G__LOCALSTATIC==var->statictype[i] && 
 	     -1!=var->p_tagtable[i]&&'e'==G__struct.type[var->p_tagtable[i]]) {
 	    free((void*)var->p[i]);
 	  }
@@ -571,7 +569,7 @@ struct G__var_array *dictpos;
 int ig15;
 {
   int itemp=0,itemp1=0;
-
+  
   char temp[G__ONELINE];
   int store_tagnum;
   long store_struct_offset; /* used to be int */
@@ -585,7 +583,7 @@ int ig15;
   int cpplink;
   int i,size;
   long address;
-
+  
   /*******************************************
    * If there are any sub var array list,
    * destroy it too.
@@ -610,7 +608,7 @@ int ig15;
     }
 #endif
   }
-
+  
   for(itemp=var->allvar-1;itemp>=remain;itemp--) {
 
 #ifdef G__FONS22
@@ -619,7 +617,7 @@ int ig15;
       return(1);
     }
 #endif
-
+    
     /*****************************************
      * If the variable is a function scope
      * static variable, it will be kept.
@@ -628,7 +626,7 @@ int ig15;
      *****************************************/
     if((var->statictype[itemp]!=G__LOCALSTATIC||global) &&
        var->statictype[itemp]!=G__COMPILEDGLOBAL) {
-
+      
       cpplink=0;
       /****************************************************
        * If C++ class, destructor has to be called
@@ -661,12 +659,12 @@ int ig15;
 	store_prerun = G__prerun;
 	G__prerun=0;
 	/********************************************************
-	 * destruction of array
+	 * destruction of array 
 	 ********************************************************/
 	if(-1==G__struct.iscpplink[G__tagnum]) {
 	  G__store_struct_offset = var->p[itemp];
 	  if((i=var->varlabel[itemp][1])>0) G__cpp_aryconstruct=i+1;
-	  G__getfunction(temp,&itemp1,G__TRYDESTRUCTOR);
+	  G__getfunction(temp,&itemp1,G__TRYDESTRUCTOR); 
 	  G__cpp_aryconstruct=0;
 	  cpplink=1;
 	}
@@ -681,7 +679,7 @@ int ig15;
 	      fprintf(G__serr,"\n0x%x.%s",G__store_struct_offset,temp);
 #endif
 	    }
-	    G__getfunction(temp,&itemp1,G__TRYDESTRUCTOR);
+	    G__getfunction(temp,&itemp1,G__TRYDESTRUCTOR); 
 	    if(0==itemp1) break;
 	  }
 	}
@@ -692,7 +690,7 @@ int ig15;
 	G__return=store_return;
       } /*  end of type=='u' */
 
-      else if(G__security&G__SECURE_GARBAGECOLLECTION &&
+      else if(G__security&G__SECURE_GARBAGECOLLECTION && 
 #ifndef G__OLDIMPLEMENTATION545
 	      (!G__no_exec_compile) &&
 #endif
@@ -712,9 +710,9 @@ int ig15;
       fprintf(G__memhist,"Free(%s)\n",var->varnamebuf[itemp]);
 #endif
       if(G__NOLINK==cpplink && var->p[itemp]) free((void*)var->p[itemp]);
-
+      
     } /* end of statictype==LOCALSTATIC or COMPILEDGLOBAL */
-
+    
 #ifdef G__DEBUG
     else if(G__memhist) {
 #ifndef G__FONS31
@@ -728,9 +726,9 @@ int ig15;
 	      ,var->p[itemp],var->varnamebuf[itemp]
 	      ,G__ifile.name,G__ifile.line_number);
 #endif
-    }
+    } 
 #endif
-
+    
     /* initialize varpointer and varlabel */
     /* var->varpointer[itemp]=0;*/
     for(itemp1=0;itemp1<G__MAXVARDIM;itemp1++) {
@@ -738,10 +736,10 @@ int ig15;
     }
 
   }
-
+  
   var->allvar = remain;
   return(0);
-
+  
 }
 
 
@@ -784,13 +782,13 @@ int nfile;
     }
 #endif
 #endif
-    if(G__srcfile[G__nfile].fp) {
+    if(G__srcfile[G__nfile].fp) { 
       fclose(G__srcfile[G__nfile].fp);
 #ifndef G__PHILIPPE0
       if(G__srcfile[G__nfile].prepname) {
 	int j;
 	for(j=G__nfile-1;j>=0;j--) {
-	  if(G__srcfile[j].fp==G__srcfile[G__nfile].fp)
+	  if(G__srcfile[j].fp==G__srcfile[G__nfile].fp) 
 	    G__srcfile[j].fp=(FILE*)NULL;
 	}
       }

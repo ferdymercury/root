@@ -1,6 +1,5 @@
-//*CMZ :  2.24/01 31/03/2000  08.37.04  by  Rene Brun
-//*CMZ :  2.23/12 26/01/2000  12.08.00  by  Valery Fine(fine@bnl.gov)
-//*-- Author :
+// @(#)root/star:$Name$:$Id$
+// Author: 
 // $Id: TPolyLineShape.cxx,v 1.21 1999/12/21 18:57:14 fine Exp $
 // ***********************************************************************
 // *  C++ class library to define an abstract 3D shape os STAR "event" geometry
