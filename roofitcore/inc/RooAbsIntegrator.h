@@ -1,7 +1,7 @@
 /*****************************************************************************
  * Project: RooFit                                                           *
  * Package: RooFitCore                                                       *
- *    File: $Id$
+ *    File: $Id: RooAbsIntegrator.rdl,v 1.12 2002/09/05 04:33:06 verkerke Exp $
  * Authors:                                                                  *
  *   WV, Wouter Verkerke, UC Santa Barbara, verkerke@slac.stanford.edu       *
  *   DK, David Kirkby,    UC Irvine,         dkirkby@uci.edu                 *
@@ -28,9 +28,10 @@ public:
   inline const RooAbsFunc *integrand() const { return _function; }
 
   inline virtual Bool_t checkLimits() const { return kTRUE; }
-  virtual Double_t integral()=0 ;
+  virtual Double_t integral(const Double_t *yvec=0)=0 ;
 
 protected:
+
   const RooAbsFunc *_function;
   Bool_t _valid;
 
