@@ -1,11 +1,16 @@
-//*CMZ :  2.24/03 29/04/2000  23.42.00  by  Rene Brun
-//*CMZ :  2.23/02 02/09/99  15.39.27  by  Rene Brun
-//*CMZ :  1.03/09 08/12/97  15.54.30  by  Fons Rademakers
-//*-- Author :    Valery Fine(fine@vxcern.cern.ch)   16/08/96
+/* @(#)root/win32:$Name$:$Id$ */
+
+/*************************************************************************
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
+ *                                                                       *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
+ *************************************************************************/
 #ifndef ROOT_TGWin32PixmapObject
 #define ROOT_TGWin32PixmapObject
 
-#include "TGWIN32OBJECT.h"
+#include "TGWin32Object.h"
 
 class TGWin32PixmapObject : public TGWin32Object  {
 

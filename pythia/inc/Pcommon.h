@@ -1,5 +1,12 @@
-//*CMZ :  1.03/05 01/10/97  20.14.17  by  Fons Rademakers
-//*-- Author :    Piotr Golonka   10/09/97
+/* @(#)root/pythia:$Name$:$Id$ */
+
+/*************************************************************************
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
+ *                                                                       *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
+ *************************************************************************/
 
 #ifndef ROOT_PCommon
 #define ROOT_PCommon

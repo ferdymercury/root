@@ -1,6 +1,5 @@
-//*CMZ :  2.24/01 31/03/2000  08.14.14  by  Rene Brun
-//*CMZ :  2.23/12 26/01/2000  12.18.16  by  Valery Fine(fine@bnl.gov)
-//*-- Author :    Valery Fine(fine@mail.cern.ch)   24/04/99
+// @(#)root/star:$Name$:$Id$
+// Author: Valery Fine(fine@mail.cern.ch)   24/04/99
 
 // $Id: TPoints3D.cxx,v 1.4 1999/12/17 23:28:40 fine Exp $
 // ***********************************************************************

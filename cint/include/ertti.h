@@ -1,5 +1,3 @@
-/*CMZ :  2.24/05 16/05/2000  12.03.57  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   16/05/2000*/
 /************************************************************************
 * Extensive Run Time Type Identification class
 *
@@ -134,7 +132,7 @@ void G__ERTTI::inheritance(char *classname)
   if(classinfo.Property()&G__BIT_ISENUM) printf("enum ");
   printenclosing(classinfo);
   printf("%s",classinfo.Name());
-
+  
   G__BaseClassInfo baseinfo(classinfo);
   while(baseinfo.Next()) {
     if(baseinfo.Property()&G__BIT_ISPUBLIC) printf(" public:");
@@ -182,9 +180,9 @@ void G__ERTTI::function(char *classname)
 
   while(funcinfo.Next()) {
     flag=0;
-
+    
     printf("FILE:%-15s LINE:%-4d ",funcinfo.FileName(),funcinfo.LineNumber());
-    // print property
+    // print property 
     if(funcinfo.Property()&G__BIT_ISPUBLIC) printf("public: ");
     if(funcinfo.Property()&G__BIT_ISPROTECTED) printf("protected: ");
     if(funcinfo.Property()&G__BIT_ISPRIVATE) printf("private: ");
@@ -240,7 +238,7 @@ void G__ERTTI::datamember(char *classname)
     filename = datainfo.FileName();
     if(filename) printf("%-14s",filename);
     else         printf("%-14s","");
-    // print property
+    // print property 
     if(datainfo.Property()&G__BIT_ISPUBLIC) printf("public: ");
     if(datainfo.Property()&G__BIT_ISPROTECTED) printf("protected: ");
     if(datainfo.Property()&G__BIT_ISPRIVATE) printf("private: ");

@@ -1,6 +1,5 @@
-//*CMZ :  2.24/01 31/03/2000  08.22.33  by  Rene Brun
-//*CMZ :  2.23/12 26/01/2000  16.06.53  by  Valery Fine(fine@bnl.gov)
-//*-- Author : Valery Fine   26/01/99  (E-mail: fine@bnl.gov)
+// @(#)root/star:$Name$:$Id$
+// Author: Valery Fine   26/01/99  (E-mail: fine@bnl.gov)
 // $Id: TTableSorter.cxx,v 1.26 2000/01/12 02:19:20 fine Exp $
 
 #include <stdlib.h>

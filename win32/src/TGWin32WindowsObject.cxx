@@ -1,22 +1,6 @@
-//*CMZ :  2.24/05 07/05/2000  02.30.10  by  Fons Rademakers
-//*CMZ :  2.24/03 29/04/2000  23.45.27  by  Rene Brun
-//*CMZ :  2.24/01 04/03/2000  22.43.38  by  Valery Fine(fine@bnl.gov)
-//*CMZ :  2.23/12 26/01/2000  10.08.58  by  Rene Brun
-//*CMZ :  2.23/11 11/01/2000  08.53.01  by  Valery Fine(fine@mail.cern.ch)
-//*CMZ :  2.23/07 24/10/99  18.23.21  by  Valery Fine(fine@mail.cern.ch)
-//*CMZ :  2.23/04 13/10/99  16.01.03  by  Fons Rademakers
-//*CMZ :  2.23/03 13/09/99  14.37.12  by  Rene Brun
-//*CMZ :  2.23/02 02/09/99  15.54.28  by  Rene Brun
-//*CMZ :  2.22/01 11/04/99  21.23.25  by  Valery Fine(fine@mail.cern.ch)
-//*CMZ :  2.21/06 12/02/99  17.22.36  by  Valery Fine(fine@vxcern.cern.ch)
-//*-- Author :    Valery Fine   11/03/96
+// @(#)root/win32:$Name$:$Id$
+// Author: Valery Fine   11/03/96
 
-/*CMZ :  2.24/01 24/02/2000  11.49.40  by  Fons Rademakers*/
-/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
-/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
-/*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
-/*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
-/*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
  * All rights reserved.                                                  *

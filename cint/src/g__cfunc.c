@@ -1,5 +1,3 @@
-/*CMZ :  2.24/05 16/05/2000  12.03.47  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   16/05/2000*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -11,7 +9,7 @@
  ************************************************************************
  * Copyright(c) 1995~1999  Masaharu Goto (MXJ02154@niftyserve.or.jp)
  *
- * Permission to use, copy, modify and distribute this software and its
+ * Permission to use, copy, modify and distribute this software and its 
  * documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies and
  * that both that copyright notice and this permission notice appear
@@ -63,7 +61,7 @@ void* memcpy(void *region1,const void *region2,size_t n);
 #elif defined(G__NEWSOS4) || defined(G__NEWSOS6)
 /* Sony NewsOS */
 int memcmp();
-#elif !defined(__MWERKS__) && !defined(__alpha)
+#elif !defined(__MWERKS__) && !defined(__alpha) 
 /* if not MetroWerks compiler on Mac or Alpha OSF or NewsOS */
 int memcmp();
 void* memcpy();
@@ -1094,7 +1092,7 @@ int hash;
 
   if((hash==422)&&(strcmp(funcname,"acos")==0)) {
 #ifndef G__MASKERROR
-    if(1!=libp->paran) {
+    if(1!=libp->paran) { 
       G__printerror("acos",1,libp->paran);
       *result7=G__null;
       return(1);
@@ -1111,7 +1109,7 @@ int hash;
 
   if((hash==427)&&(strcmp(funcname,"asin")==0)) {
 #ifndef G__MASKERROR
-    if(1!=libp->paran) {
+    if(1!=libp->paran) { 
       G__printerror("asin",1,libp->paran);
       *result7=G__null;
       return(1);
@@ -1128,7 +1126,7 @@ int hash;
 
   if((hash==420)&&(strcmp(funcname,"atan")==0)) {
 #ifndef G__MASKERROR
-    if(1!=libp->paran) {
+    if(1!=libp->paran) { 
       G__printerror("atan",1,libp->paran);
       *result7=G__null;
       return(1);
@@ -1144,7 +1142,7 @@ int hash;
 
   if((hash==470)&&(strcmp(funcname,"atan2")==0)) {
 #ifndef G__MASKERROR
-    if(2!=libp->paran) {
+    if(2!=libp->paran) { 
       G__printerror("atan2",2,libp->paran);
       *result7=G__null;
       return(1);
@@ -1209,7 +1207,7 @@ int hash;
 
   if((hash==310)&&(strcmp(funcname,"abs")==0)) {
 #ifndef G__MASKERROR
-    if(1!=libp->paran) {
+    if(1!=libp->paran) { 
       G__printerror("abs",1,libp->paran);
       *result7=G__null;
       return(1);
@@ -1358,7 +1356,7 @@ int hash;
 #ifndef G__OLDIMPLEMENTATION467
   if((hash==742)&&(strcmp(funcname,"asctime")==0)) {
 #ifndef G__MASKERROR
-    if(1!=libp->paran) {
+    if(1!=libp->paran) { 
       G__printerror("asctime",1,libp->paran);
       *result7=G__null;
       return(1);

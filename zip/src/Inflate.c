@@ -1,10 +1,5 @@
-/*CMZ :  2.24/03 23/04/2000  21.41.03  by  Rene Brun*/
-/*CMZ :  2.24/02 07/04/2000  08.24.34  by  Rene Brun*/
-/*CMZ :  2.24/01 31/03/2000  12.15.31  by  Rene Brun*/
-/*CMZ :  2.23/09 24/11/99  11.28.32  by  Rene Brun*/
-/*CMZ :  2.00/00 08/03/98  11.27.33  by  Rene Brun*/
-/*CMZ :  1.00/03 14/03/97  18.15.11  by  Rene Brun*/
-/*-- Author :*/
+/* @(#)root/zip:$Name$:$Id$ */
+/* Author: */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

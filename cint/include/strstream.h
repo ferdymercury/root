@@ -1,5 +1,3 @@
-/*CMZ :  2.24/05 16/05/2000  12.03.57  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   16/05/2000*/
 /*********************************************************************
 * strstream.h
 *
@@ -206,7 +204,7 @@ istrstream& istrstream::operator >>(double& d)
 * NOT COMPLETE
 *********************************************************************/
 class iostrstream : public istrstream , public ostrstream {
-	iostrstream(char *p,int bufsize)
+	iostrstream(char *p,int bufsize) 
 		: istrstream(p,bufsize) , ostrstream(p,bufsize) { }
 };
 

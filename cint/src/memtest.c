@@ -1,5 +1,3 @@
-/*CMZ :  2.24/05 16/05/2000  12.03.48  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   16/05/2000*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -9,11 +7,11 @@
  * Description:
  *  Memory leak test utility.
  * Comment:
- *  This source is usually unnecessary.
+ *  This source is usually unnecessary. 
  ************************************************************************
  * Copyright(c) 1995~1999  Masaharu Goto (MXJ02154@niftyserve.or.jp)
  *
- * Permission to use, copy, modify and distribute this software and its
+ * Permission to use, copy, modify and distribute this software and its 
  * documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies and
  * that both that copyright notice and this permission notice appear
@@ -63,17 +61,17 @@ size_t size;
   int j;
   void *result;
   char *pc;
-
+  
   result = malloc(size);
-
+  
   /*******************************************************
-   * Set strange data
+   * Set strange data 
    *******************************************************/
   pc=(char *)result;
   for(j=0;j<size;j++) {
     *(pc+j) = (char)0xa3;
   }
-
+  
 #ifdef G__SAVEMEMORY
   while(G__mem[i].alive!=0 && i<G__MALLOCSIZE) ++i;
   if(i>=G__MALLOCSIZE) {
@@ -88,7 +86,7 @@ size_t size;
   G__mem[i].type= G__TYPE_MALLOC;
 #else
   while(i<G__imem && G__mem[i].p!=result) ++i;
-
+  
   if(i<G__imem) {
     G__mem[i].alive++;
     G__mem[i].use = G__mem[i].use+1;
@@ -133,12 +131,12 @@ size_t n,bsize;
   void *result;
   /* char *pc; */
   int size;
-
+  
   size=n*bsize;
   result = calloc(n,bsize);
-
+  
   /*******************************************************
-   * Set strange data
+   * Set strange data 
    *******************************************************/
   /*
     pc=(char *)result;
@@ -146,7 +144,7 @@ size_t n,bsize;
     *(pc+j) = (char)0xa3;
     }
     */
-
+  
 #ifdef G__SAVEMEMORY
   while(G__mem[i].alive!=0 && i<G__MALLOCSIZE) ++i;
   if(i>=G__MALLOCSIZE) {
@@ -161,7 +159,7 @@ size_t n,bsize;
   G__mem[i].type= G__TYPE_MALLOC;
 #else
   while(i<G__imem && G__mem[i].p!=result) ++i;
-
+  
   if(i<G__imem) {
     G__mem[i].alive++;
     G__mem[i].use = G__mem[i].use+1;
@@ -204,11 +202,11 @@ void *p;
   int i=0;
   int j;
   char *pc;
-
+  
   while(i<G__imem && G__mem[i].p!=p) ++i;
   if(i<G__imem) {
     G__mem[i].alive--;
-
+    
     /***************************************************
      * Set strange data
      ***************************************************/
@@ -216,7 +214,7 @@ void *p;
     for(j=0;j<G__mem[i].size;j++) {
       *(pc+j) = (char)0xa5;
     }
-
+    
 #ifdef G__DUMPMEMHISTORY
 #ifndef G__FONS31
     if(G__mem[i].alive<0)
@@ -279,7 +277,7 @@ size_t size;
   int j;
   char *pc;
   void *tmp;
-
+  
   if((void*)NULL==p) {
     return(G__TEST_Malloc(size));
   }
@@ -287,12 +285,12 @@ size_t size;
     G__TEST_Free(p);
     return((void*)NULL);
   }
-
+  
   tmp=realloc(p,size);
-
+  
   while(i<G__imem && G__mem[i].p!=p) ++i;
   if(i<G__imem) {
-
+    
 #ifdef G__DUMPMEMHISTORY
 #ifndef G__FONS31
     fprintf(G__memhist
@@ -306,7 +304,7 @@ size_t size;
 	    ,G__ifile.name,G__ifile.line_number);
 #endif
 #endif
-
+    
     if(tmp) {
       G__mem[i].p=tmp;
       /***************************************************
@@ -320,7 +318,7 @@ size_t size;
       }
       G__mem[i].size = size;
     }
-
+    
   }
   else {
 #ifdef G__DUMPMEMHISTORY
@@ -342,7 +340,7 @@ size_t size;
 #ifdef G__DUMPMEMHISTORY
   fflush(G__memhist);
 #endif
-
+  
   return(tmp);
 }
 
@@ -434,10 +432,10 @@ char *fname,*mode;
   /* int j; */
   FILE *result;
   /* char *pc; */
-
+  
   result = fopen(fname,mode);
   if(result==NULL) return(result);
-
+  
 #ifdef G__SAVEMEMORY
   while(G__mem[i].alive!=0 && i<G__MALLOCSIZE) ++i;
   if(i>=G__MALLOCSIZE) {
@@ -452,7 +450,7 @@ char *fname,*mode;
   G__mem[i].type= G__TYPE_FOPEN;
 #else
   while(i<G__imem && G__mem[i].p!=result) ++i;
-
+  
   if(i<G__imem) {
     G__mem[i].alive++;
     G__mem[i].use = G__mem[i].use+1;
@@ -494,11 +492,11 @@ FILE *p;
 {
   int i=0;
   /* int j; */
-
+  
   while(i<G__imem && G__mem[i].p!=(void *)p) ++i;
   if(i<G__imem) {
     G__mem[i].alive--;
-
+    
 #ifdef G__DUMPMEMHISTORY
 #ifndef G__FONS31
     fprintf(G__memhist
@@ -529,7 +527,7 @@ FILE *p;
 #ifdef G__DUMPMEMHISTORY
   fflush(G__memhist);
 #endif
-
+  
   return(fclose(p));
 }
 

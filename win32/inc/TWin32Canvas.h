@@ -1,17 +1,6 @@
-//*CMZ :  2.24/03 29/04/2000  23.42.00  by  Rene Brun
-//*CMZ :  2.24/01 18/02/2000  13.39.42  by  Valery Fine(fine@bnl.gov)
-//*CMZ :  2.23/02 02/09/99  15.54.28  by  Rene Brun
-//*CMZ :  2.21/06 12/02/99  15.50.40  by  Valery Fine(fine@vxcern.cern.ch)
-//*CMZ :  2.00/13 29/10/98  16.15.39  by  Valery Fine(fine@mail.cern.ch)
-//*CMZ :  1.03/01 25/07/97  14.04.50  by  Valery Fine(fine@vxcern.cern.ch)
-//*-- Author :    Valery Fine(fine@vxcern.cern.ch)   16/08/96
+// @(#)root/win32:$Name$:$Id$
+// Author: Valery Fine   05/01/96
 
-/*CMZ :  2.24/01 24/02/2000  11.49.40  by  Fons Rademakers*/
-/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
-/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
-/*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
-/*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
-/*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
  * All rights reserved.                                                  *
@@ -19,6 +8,7 @@
  * For the licensing terms see $ROOTSYS/LICENSE.                         *
  * For the list of contributors see $ROOTSYS/README/CREDITS.             *
  *************************************************************************/
+
 
 #ifndef ROOT_TWin32Canvas
 #define ROOT_TWin32Canvas
@@ -34,12 +24,12 @@
 
 
 #ifndef ROOT_TCanvasImp
-#include "TCANVASIMP.h"
+#include "TCanvasImp.h"
 #endif
 
-#include "TWIN32MENU.h"
-#include "TCANVAS.h"
-#include "TWIN32COMMAND.h"
+#include "TWin32Menu.h"
+#include "TCanvas.h"
+#include "TWin32Command.h"
 #include "TGWin32Object.h"
 #include "TGWin32WindowsObject.h"
 

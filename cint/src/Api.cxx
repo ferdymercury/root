@@ -1,5 +1,3 @@
-//*CMZ :  2.24/05 16/05/2000  12.03.51  by  Masaharu Goto
-//*-- Author :    Masaharu Goto   16/05/2000
 /* /% C++ %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -11,7 +9,7 @@
  ************************************************************************
  * Copyright(c) 1995~1999  Masaharu Goto (MXJ02154@niftyserve.or.jp)
  *
- * Permission to use, copy, modify and distribute this software and its
+ * Permission to use, copy, modify and distribute this software and its 
  * documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies and
  * that both that copyright notice and this permission notice appear
@@ -27,7 +25,7 @@
 /*********************************************************************
 * $xxx object resolution function Generic form
 * There is another form of interface which only allow you to return
-* pointer to a class object if you want to gain a slight speed
+* pointer to a class object if you want to gain a slight speed 
 * advantage.
 *********************************************************************/
 //
@@ -58,7 +56,7 @@ extern "C" void G__TypeInfo2G__value(G__TypeInfo* type,G__value* pvalue
 
 //
 // Used directly from src/expr.c:G__getitem()
-//
+// 
 #if !defined(G__OLDIMPLEMENTATION481)
 extern "C" G__value G__APIGetSpecialValue_layer1(char *item,void **pptr
 	,void **ppdict)
@@ -86,7 +84,7 @@ extern "C" G__value G__APIGetSpecialValue_layer1(char *item)
 //
 // Initialization routine
 //
-extern "C" void G__InitGetSpecialValue(G__pMethodSpecialValue pmethod)
+extern "C" void G__InitGetSpecialValue(G__pMethodSpecialValue pmethod) 
 {
 #if !defined(G__OLDIMPLEMENTATION481)
   G__GetSpecialObject
@@ -125,7 +123,7 @@ extern "C" void G__ClassInfo2G__value(G__ClassInfo* type
 
 //
 // Used directly from src/expr.c:G__getitem()
-//
+// 
 #if !defined(G__OLDIMPLEMENTATION481)
 extern "C" G__value G__APIGetSpecialObject_layer1(char *item,void** pptr
 	,void** ppdict)
@@ -157,7 +155,7 @@ extern "C" G__value G__APIGetSpecialObject_layer1(char *item)
 //
 // Initialization routine
 //
-extern "C" void G__InitGetSpecialObject(G__pMethodSpecialObject pmethod)
+extern "C" void G__InitGetSpecialObject(G__pMethodSpecialObject pmethod) 
 {
 #ifndef G__OLDIMPLEMENTATION1035
   G__LockCriticalSection();
@@ -217,7 +215,7 @@ void G__SourceFileInfo::Init(const char* fname) {
   for(filen=0;filen<G__nfile;filen++) {
     if(0==strcmp(fname,G__srcfile[filen].filename)) return;
   }
-}
+} 
 ////////////////////////////////////////////////////////////////////
 const char* G__SourceFileInfo::Name() {
   if(IsValid()) {
@@ -226,7 +224,7 @@ const char* G__SourceFileInfo::Name() {
   else {
     return((char*)NULL);
   }
-}
+} 
 ////////////////////////////////////////////////////////////////////
 const char* G__SourceFileInfo::Prepname() {
   if(IsValid()) {
@@ -235,7 +233,7 @@ const char* G__SourceFileInfo::Prepname() {
   else {
     return((char*)NULL);
   }
-}
+} 
 ////////////////////////////////////////////////////////////////////
 FILE* G__SourceFileInfo::fp() {
   if(IsValid()) {
@@ -266,13 +264,13 @@ G__SourceFileInfo& G__SourceFileInfo::IncludedFrom() {
   return(x);
 }
 ////////////////////////////////////////////////////////////////////
-long G__SourceFileInfo::Property() {
-  return(0);
+long G__SourceFileInfo::Property() { 
+  return(0); 
 }
 ////////////////////////////////////////////////////////////////////
-int G__SourceFileInfo::IsValid() {
+int G__SourceFileInfo::IsValid() { 
   if(filen<0||filen>=G__nfile) return(0);
-  else return(1);
+  else return(1); 
 }
 ////////////////////////////////////////////////////////////////////
 int G__SourceFileInfo::Next() {
@@ -293,10 +291,10 @@ const char* G__IncludePathInfo::Name() {
   else {
     return((char*)NULL);
   }
-}
+} 
 ////////////////////////////////////////////////////////////////////
-long G__IncludePathInfo::Property() {
-  return(0);
+long G__IncludePathInfo::Property() { 
+  return(0); 
 }
 ////////////////////////////////////////////////////////////////////
 int G__IncludePathInfo::IsValid() {

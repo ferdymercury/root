@@ -1,5 +1,3 @@
-/*CMZ :  2.24/05 16/05/2000  12.03.45  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   16/05/2000*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -11,7 +9,7 @@
  ************************************************************************
  * Copyright(c) 1995~1999  Masaharu Goto (MXJ02154@niftyserve.or.jp)
  *
- * Permission to use, copy, modify and distribute this software and its
+ * Permission to use, copy, modify and distribute this software and its 
  * documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies and
  * that both that copyright notice and this permission notice appear
@@ -214,7 +212,7 @@ char *func;
     for(i1=0;i1<baseclass->basen;i1++) {
       ifunc = G__struct.memfunc[baseclass->basetagnum[i1]];
       if(i) {
-	if(G__listfunc(fp,G__PUBLIC_PROTECTED_PRIVATE,funcname,ifunc))
+	if(G__listfunc(fp,G__PUBLIC_PROTECTED_PRIVATE,funcname,ifunc)) 
 	  return(1);
       }
       else  {
@@ -287,7 +285,7 @@ char *file;
   while(len>1&&isspace(file[len-1])) {
     file[--len]='\0';
   }
-
+  
 #ifndef G__WIN32
   ftemp.fp = fopen(file,"r");
 #else
@@ -308,7 +306,7 @@ char *file;
     }
     store_ifile = G__ifile;
     G__ifile = ftemp;
-
+    
     /**********************************************
      * interrpret signal handling during inner loop asm exec
      **********************************************/
@@ -316,7 +314,7 @@ char *file;
     G__STORE_ASMENV;
 #endif
     store_var_type = G__var_type;
-
+    
     G__var_type='p';
 
 #ifdef G__EH_SIGNAL
@@ -385,12 +383,12 @@ char *file;
     signal(SIGBUS,bus);
 #endif
 #endif
-
+    
 #ifdef G__ASM
     G__RECOVER_ASMENV;
 #endif
     G__var_type = store_var_type;
-
+    
     /* print out result */
     G__ifile = store_ifile;
     if(G__ifile.fp && G__ifile.filenum>=0) {
@@ -474,7 +472,7 @@ void G__EOFfgetc()
   G__eof_count++;
   if(G__eof_count>10) {
     G__unexpectedEOF("G__fgetc()");
-    if(G__steptrace||G__stepover||G__break||G__breaksignal||G__debug)
+    if(G__steptrace||G__stepover||G__break||G__breaksignal||G__debug) 
       G__pause();
     G__exit(EXIT_FAILURE);
   }
@@ -490,7 +488,7 @@ void G__EOFfgetc()
     }
     if(G__disp_mask>0) G__disp_mask-- ;
   }
-  if(G__NOLINK==G__globalcomp &&
+  if(G__NOLINK==G__globalcomp && 
      NULL==G__srcfile[G__ifile.filenum].breakpoint) {
     G__srcfile[G__ifile.filenum].breakpoint
       =(char*)calloc((size_t)G__ifile.line_number,1);
@@ -511,7 +509,7 @@ void G__BREAKfgetc()
     G__break=1;
     G__setdebugcond();
     if(G__srcfile[G__ifile.filenum].breakpoint) {
-      G__srcfile[G__ifile.filenum].breakpoint[G__ifile.line_number]
+      G__srcfile[G__ifile.filenum].breakpoint[G__ifile.line_number] 
 	&= G__NOCONTUNTIL;
     }
   }
@@ -533,9 +531,9 @@ void G__DISPNfgetc()
 #endif
       )&&
      ((G__prerun)||(G__no_exec==0))&&(G__disp_mask==0)){
-
+    
     fprintf(G__serr,"\n%-5d",G__ifile.line_number);
-
+    
   }
   if(G__disp_mask>0) G__disp_mask-- ;
 }
@@ -583,10 +581,10 @@ char *varname;
   fprintf(G__serr,"Warning: lock variable obsolete feature");
   G__printlinenum();
 #endif
-
+  
   G__hash(varname,hash,ig15)
   var = G__getvarentry(varname,hash,&ig15,&G__global,G__p_local);	
-
+  
   if(var) {
     var->constvar[ig15] |= G__LOCKVAR;
     fprintf(G__serr,"Variable %s locked FILE:%s LINE:%d\n"
@@ -613,10 +611,10 @@ char *varname;
   fprintf(G__serr,"Warning: lock variable obsolete feature");
   G__printlinenum();
 #endif
-
+  
   G__hash(varname,hash,ig15)
     var = G__getvarentry(varname,hash,&ig15,&G__global,G__p_local);	
-
+  
   if(var) {
     var->constvar[ig15] &= ~G__LOCKVAR;
     fprintf(G__serr,"Variable %s unlocked FILE:%s LINE:%d\n"
@@ -640,10 +638,10 @@ char *breakline,*breakfile;
 {
   int ii;
   int line;
-
+  
   if(isdigit(breakline[0])) {
     line=atoi(breakline);
-
+    
     if(NULL==breakfile || '\0'==breakfile[0]) {
       fprintf(G__serr," -b : break point on line %d every file\n",line);
       for(ii=0;ii<G__nfile;ii++) {
@@ -742,7 +740,7 @@ char *name;
       p = strchr(s,' ');
       if(p) *p = '\0';
       tagnum = G__defined_tagname(s,0);
-      if(-1!=tagnum) {
+      if(-1!=tagnum) { 
 	G__struct.istrace[tagnum] = 1;
 	fprintf(G__sout,"trace %s object on\n",s);
       }

@@ -1,5 +1,3 @@
-/*CMZ :  2.24/05 16/05/2000  12.03.43  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   16/05/2000*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -11,7 +9,7 @@
  ************************************************************************
  * Copyright(c) 1995~1999  Masaharu Goto (MXJ02154@niftyserve.or.jp)
  *
- * Permission to use, copy, modify and distribute this software and its
+ * Permission to use, copy, modify and distribute this software and its 
  * documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies and
  * that both that copyright notice and this permission notice appear
@@ -39,13 +37,13 @@
 #define G__OLDIMPLEMENTATION1260 /* use isconst info for func overloading */
 #endif
 
-/* New function overloading resolution algorithm which is closer to
+/* New function overloading resolution algorithm which is closer to 
  * ANSI/ISO standard is implemented from cint5.14.35. This is a major
  * change and there are some risks. Define following macro in order to
  * use old algorithm. */
 /* #define G__OLDIMPLEMENTATION1290 */
 
-/* Define G__EXCEPTIONWRAPPER for activating C++ exception catching
+/* Define G__EXCEPTIONWRAPPER for activating C++ exception catching 
  * when calling precompiled function. It is better to define this macro
  * in platform dependency file OTHMACRO flag.
  */
@@ -55,15 +53,15 @@
 #define G__EXCEPTIONWRAPPER
 #endif
 
-/* If you define G__REFCONV in platform dependency file, bug fix for
+/* If you define G__REFCONV in platform dependency file, bug fix for 
  * reference argument conversion is activated. Reason of not making
  * this default is because it breaks DLL compatibility. If you define
- * G__REFCONV, cint5.14.15 or newer version can load older DLL. But
+ * G__REFCONV, cint5.14.15 or newer version can load older DLL. But 
  * cint5.14.14 or older version can not load DLL that is created by
  * cint5.14.15 or later. */
 #define G__REFCONV
 
-/* This change activates bytecode compilation of class object
+/* This change activates bytecode compilation of class object 
  * instantiation in a function. Because the change includes some
  * problems , it is turned off at this moment by defining following
  * macro. */
@@ -72,11 +70,11 @@
 /* define related macros here */
 #endif
 
-/* Scott Snyder's modification Apr1999 9.Improvements for `variable' macros.
+/* Scott Snyder's modification Apr1999 9.Improvements for `variable' macros. 
  * Comment out line below to activate the change */
 #define G__OLDIMPLEMENTATION1062
 
-/* Scott Snyder's modification Apr1999 10.More CRLF problems
+/* Scott Snyder's modification Apr1999 10.More CRLF problems 
  * Comment out line below to activate the change */
 #define G__OLDIMPLEMENTATION1063
 
@@ -112,7 +110,7 @@
 #endif
 
 /**********************************************************************
-* Define following macro if you want to know where global variable is defined.
+* Define following macro if you want to know where global variable is defined. 
 * This macro is usually not defined to keep backward compatibility of DLL.
 **********************************************************************/
 /* #define G__VARIABLEFPOS */
@@ -204,8 +202,8 @@ typedef long fpos_tt; /* pos_t is defined to be a struct{32,32} in VMS.
 #   define DllImport   __declspec(dllimport)
 #   define DllExport   __declspec(dllexport)
 #  else
-#   define DllImport
-#   define DllExport
+#   define DllImport 
+#   define DllExport 
 #  endif
 #  ifdef G__CINTBODY
 #   define G__EXTERN   DllExport extern
@@ -218,7 +216,7 @@ G__EXTERN int G__globalcomp;
 #endif
 #endif
 
-#if defined(G__SIGNEDCHAR)
+#if defined(G__SIGNEDCHAR) 
 typedef signed char G__SIGNEDCHAR_T;
 #else
 typedef char G__SIGNEDCHAR_T;
@@ -305,7 +303,7 @@ extern "C" {   /* extern C 1 */
 #define G__DANGEROUS          0x0002
 #define G__FATAL              0x0004
 
-#if (defined(G__SGICC) || defined(G__DECCXX)) && defined(G__ROOT)
+#if (defined(G__SGICC) || defined(G__DECCXX)) && defined(G__ROOT) 
 #define G__CHECK(ITEM,COND,ACTION)                                       \
  if((G__security=G__SECURE_LEVEL0)&&(G__security&ITEM) && (COND) && G__security_handle(ITEM)) ACTION
 #else
@@ -682,12 +680,12 @@ typedef struct {
 #ifndef __CINT__
 #define G__CONST const
 #else
-#define G__CONST
+#define G__CONST 
 #endif
 
 #else /* __cplusplus */
 
-#define G__CONST
+#define G__CONST 
 
 #endif /* __cplusplus */
 

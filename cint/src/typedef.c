@@ -1,5 +1,3 @@
-/*CMZ :  2.24/05 16/05/2000  12.03.51  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   16/05/2000*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -11,7 +9,7 @@
  ************************************************************************
  * Copyright(c) 1995~1999  Masaharu Goto (MXJ02154@niftyserve.or.jp)
  *
- * Permission to use, copy, modify and distribute this software and its
+ * Permission to use, copy, modify and distribute this software and its 
  * documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies and
  * that both that copyright notice and this permission notice appear
@@ -77,12 +75,12 @@ char *typename;
   }
 
   len=strlen(temp);
-
+  
   if(temp[len-1]=='*') {
     temp[--len]='\0';
     ispointer = 'A' - 'a';
   }
-
+  
   for(i=0;i<G__newtype.alltype;i++) {
     if(len==G__newtype.hash[i] && strcmp(G__newtype.name[i],temp)==0 && (
 #ifndef G__OLDIMPLEMENTATION620
@@ -93,13 +91,13 @@ char *typename;
 #endif
 	)) {
       flag=1;
-      /* This must be a bad manner. Somebody needs to reset G__var_type
+      /* This must be a bad manner. Somebody needs to reset G__var_type 
        * especially when typein is 0. */
       G__var_type=G__newtype.type[i] + ispointer ;
       break;
     }
   }
-
+  
   if(flag==0) return(-1);
   return(i);
 }
@@ -150,8 +148,8 @@ void G__define_type()
   int env_tagnum;
 
   tagname[0] = '\0';		/* initialize it */
-
-
+  
+  
 #ifdef G__ASM
 #ifdef G__ASM_DBG
   if(G__asm_dbg&&G__asm_noverflow)
@@ -171,7 +169,7 @@ void G__define_type()
    *          ^
    * read type
    */
-
+  
   c=G__fgetname_template(type1,"{");
   if(isspace(c)) {
     len=strlen(type1);
@@ -193,9 +191,9 @@ void G__define_type()
       if(G__dispsource) G__disp_mask=1;
     }
   }
-
+  
 #ifndef G__OLDIMPLEMENTATION678
-  while(isspace(c) &&
+  while(isspace(c) && 
 	(strcmp(type1,"const")==0 ||strcmp(type1,"volatile")==0 ||
 	 strcmp(type1,"mutable")==0 || strcmp(type1,"typename") == 0)) {
     c=G__fgetname_template(type1,"{");
@@ -210,7 +208,7 @@ void G__define_type()
     c=G__fgetname_template(type1,"{");
   }
 #endif
-
+  
   /*
    *  typedef unsigned  int  newtype ;
    *                   ^
@@ -226,7 +224,7 @@ void G__define_type()
     c=G__fgetname(type1,"");
   }
 #endif
-
+  
   /*
    *  typedef  [struct|union|enum]  tagname { member } newtype;
    *                               ^
@@ -288,7 +286,7 @@ void G__define_type()
   else if(strcmp(type1,"FILE")==0) {
     type='e';
   }
-
+  
   else if((strcmp(type1,"struct")==0)||(strcmp(type1,"union")==0)||
 	  (strcmp(type1,"enum")==0)||(strcmp(type1,"class")==0)) {
     type='u';
@@ -297,10 +295,10 @@ void G__define_type()
     if(strcmp(type1,"union")==0) tagtype='u';
     if(strcmp(type1,"enum")==0) tagtype='e';
     tagname[0]='\0';
-
+    
     /*  typedef [struct|union|enum]{ member } newtype;
      *                              ^ */
-
+    
     /*  typedef [struct|union|enum]  tagname { member } newtype;
      *  typedef [struct|union|enum]  tagname  newtype;
      *  typedef [struct|union|enum]  { member } newtype;
@@ -308,23 +306,23 @@ void G__define_type()
      *  read tagname
      */
     if(c!='{') c=G__fgetname(tagname,"{");
-
-
+    
+    
     /*
      *  typedef [struct|union|enum]{ member } newtype;
      *                              ^
      *  typedef [struct|union|enum] tagname  { member } newtype;
-     *                                      ^
+     *                                      ^ 
      *  typedef [struct|union|enum] tagname{ member } newtype;
-     *                                      ^
+     *                                      ^ 
      *  typedef [struct|union|enum] 	     { member } newtype;
-     *                                     ^
+     *                                     ^ 
      *  typedef [struct|union|enum] tagname  newtype;
      *                                      ^            */
     if(c!='{') {
       c=G__fgetspace();
       /* typedef [struct] tag   { member } newtype;
-       *                         ^
+       *                         ^ 
        * typedef [struct|union|enum] tagname  newtype;
        *                                       ^     */
       if(c!='{') {
@@ -332,15 +330,15 @@ void G__define_type()
 	if(G__dispsource) G__disp_mask=1;
       }
     }
-
+    
     /*  typedef [struct|union|enum]{ member } newtype;
      *                              ^
      *  typedef [struct|union|enum] tagname  { member } newtype;
-     *                                        ^
+     *                                        ^ 
      *  typedef [struct|union|enum] tagname{ member } newtype;
-     *                                      ^
+     *                                      ^ 
      *  typedef [struct|union|enum] 	     { member } newtype;
-     *                                     ^
+     *                                     ^ 
      *  typedef [struct|union|enum] tagname  newtype;
      *                                       ^
      *  skip member declaration if exists */
@@ -418,13 +416,13 @@ void G__define_type()
   }
 
   if(isorgtypepointer) type=toupper(type);
-
+  
   /*
    *  typedef [struct|union|enum] tagname { member } newtype ;
    *                                                ^^
    * skip member declaration if exists
    */
-
+  
   if(rawunsigned) {
     strcpy(typename,type1);
   }
@@ -460,10 +458,10 @@ void G__define_type()
     c=G__fgetname(typename,";,[");
   }
 #endif
-
+  
   /* in case of
    *  typedef unsigned long int  int32;
-   *                           ^
+   *                           ^ 
    *  read typename
    */
   if(strcmp(typename,"int")==0) {
@@ -504,12 +502,12 @@ void G__define_type()
       c = G__fignorestream(";,[");
     }
   }
-
+  
   /* in case of
    *   typedef <unsigned long int|struct A {}>  int32 , *pint32;
    *                                                   ^
    */
-
+  
   nindex=0;
   while('['==c) {
     store_var_type = G__var_type;
@@ -519,14 +517,14 @@ void G__define_type()
     c=G__fignorestream("[,;");
     G__var_type = store_var_type;
   }
-
+  
  next_name:
 
   p=strchr(typename,'(');
   if(p) {
 
     if(p==typename) {
-      /* function to pointer 'typedef type (*newtype)();'
+      /* function to pointer 'typedef type (*newtype)();' 
        * handle this as 'typedef void* newtype;'
        */
       strcpy(val,p+1);
@@ -543,7 +541,7 @@ void G__define_type()
       }
     }
     else if(p==typename+1 && '*'==typename[0]) {
-      /* function to pointer 'typedef type *(*newtype)();'
+      /* function to pointer 'typedef type *(*newtype)();' 
        * handle this as 'typedef void* newtype;'
        */
       strcpy(val,p+1);
@@ -564,14 +562,14 @@ void G__define_type()
       }
     }
     else {
-      /* function type 'typedef type newtype();'
+      /* function type 'typedef type newtype();' 
        * handle this as 'typedef void newtype;'
        */
       *p = '\0';
       type='y';
     }
   }
-
+  
   isnext=0;
   if(','==c) {
     isnext=1;
@@ -584,8 +582,8 @@ void G__define_type()
    *  struct,union.enum member declaration
    */
   temp_line=G__ifile.line_number;
-
-
+  
+  
  /* anothername: */
 
   /* typedef  oldtype     *newtype
@@ -632,7 +630,7 @@ void G__define_type()
     }
   }
 #endif
-
+  
   /*
    * check if typedef hasn't been defined
    */
@@ -641,12 +639,12 @@ void G__define_type()
 #else
   typenum = G__defined_typename(typename);
 #endif
-
+  
   /*
    * if new typedef, add it to newtype table
    */
   if(-1==typenum) {
-
+    
     if(G__newtype.alltype==G__MAXTYPEDEF) {
       fprintf(G__serr
 	      ,"Limitation: Number of typedef exceed %d FILE:%s LINE:%d\nFatal error, exit program. Increase G__MAXTYPEDEF in G__ci.h and recompile %s\n"
@@ -696,14 +694,14 @@ void G__define_type()
       }
     }
     G__newtype.tagnum[typenum] = -1;
-
+    
     /*
      * maybe better to change G__defined_type
      */
     G__newtype.type[typenum]=type;
     G__newtype.globalcomp[typenum]=G__globalcomp;
     G__newtype.reftype[typenum]=reftype;
-
+    
     if(G__def_struct_member) env_tagnum = G__tagnum;
     else if(-1!=G__func_now) {
       env_tagnum = -2;
@@ -716,7 +714,7 @@ void G__define_type()
     G__newtype.parent_tagnum[typenum]=env_tagnum;
     ++G__newtype.alltype;
   }
-
+  
   /*
    *  return if the type is already defined
    */
@@ -724,19 +722,19 @@ void G__define_type()
     if(';'!=c) G__fignorestream(";");
     return;
   }
-
+  
   if(tolower(type)=='u') {
-
-
+    
+    
     G__tagnum=G__search_tagname(tagname,tagtype);
     if(G__tagnum<0) {
       G__fignorestream(";");
       return;
     }
     G__newtype.tagnum[typenum]=G__tagnum;
-
+    
     if(mem_def==1) {
-
+      
       if(G__struct.size[G__tagnum]==0) {
 	fsetpos(G__ifile.fp,&rewind_fpos);
 
@@ -780,7 +778,7 @@ void G__define_type()
 	  } while(c!='}') ;
 	  G__constvar=0;
 	  G__enumdef=0;
-	
+	  
 	  G__fignorestream(";");
 	  G__disp_mask=0;
 	  G__ifile.line_number=temp_line;
@@ -805,24 +803,24 @@ void G__define_type()
 	    fprintf(G__serr,"Error: Illegal tagtype. struct,union,enum expected\n");
 	    break;
 	  }
-	
+	  
 	  store_local = G__p_local;
 	  G__p_local=G__struct.memvar[G__tagnum];
-	
+	  
 	  store_def_struct_member=G__def_struct_member;
 	  G__def_struct_member=1;
 	  /* G__prerun = 1; */ /* redundant */
 	  G__switch = 0; /* redundant */
 	  mparen = G__mparen;
 	  G__mparen=0;
-	
+	  
 	  G__disp_mask=10000;
 	  G__tagdefining=G__tagnum;
 	  G__def_tagnum = G__tagdefining;
 	  G__exec_statement();
 	  G__tagnum=G__tagdefining;
 	  G__def_tagnum = store_def_tagnum;
-	
+	  
 	  /********************************************
 	   * Padding for PA-RISC, Spark, etc
 	   * If struct size can not be divided by G__DOUBLEALLOC
@@ -833,15 +831,15 @@ void G__define_type()
 	      += G__DOUBLEALLOC
 		- G__struct.size[G__tagnum]%G__DOUBLEALLOC;
 	  }
-	
+	  
 	  G__tagdefining = store_tagdefining;
-	
+	  
 	  G__def_struct_member=store_def_struct_member;
 	  G__mparen=mparen;
 	  G__p_local = store_local;
-	
+	  
 	  G__fignorestream(";");
-	
+	  
 	  G__disp_mask=0;
 	  G__ifile.line_number=temp_line;
 	} /* end of struct, class , union */
@@ -851,26 +849,26 @@ void G__define_type()
     else { /* mem_def!=1 */
       /* oldlink eliminated */
     }  /* of mem_def */
-
+    
     G__tagnum=store_tagnum;
-
+    
   } /* end of struct,class,union,enum */
   else { /* scalar type */
     /* oldlink eliminated */
   } /* end of scalar type */
-
+  
   if(isnext) {
     fsetpos(G__ifile.fp,&next_fpos);
     c=G__fgetstream(typename,",;");
     goto next_name;
   }
-
+  
 #ifdef G__FONS_COMMENT
   if(G__fons_comment) {
     G__fsetcomment(&G__newtype.comment[G__newtype.alltype-1]);
   }
 #endif
-
+  
 }
 
 
@@ -926,18 +924,18 @@ char *typename;
   }
 
   len=strlen(temp);
-
+  
   if(temp[len-1]=='*') {
     temp[--len]='\0';
     ispointer = 'A' - 'a';
   }
-
+  
 #ifndef G__OLDIMPLEMENTATION620
   for(i=0;i<G__newtype.alltype;i++) {
     if(len==G__newtype.hash[i] && strcmp(G__newtype.name[i],temp)==0) {
       thisflag=0;
       /* global scope */
-      if(-1==G__newtype.parent_tagnum[i])
+      if(-1==G__newtype.parent_tagnum[i]) 
 	thisflag=0x1;
       /* enclosing tag scope */
       if(G__isenclosingclass(G__newtype.parent_tagnum[i],env_tagnum))
@@ -961,17 +959,17 @@ char *typename;
         thisflag = 0x04;
 #endif
       /* exact template definition scope */
-      if(0<=G__tmplt_def_tagnum &&
-	 G__tmplt_def_tagnum==G__newtype.parent_tagnum[i])
+      if(0<=G__tmplt_def_tagnum && 
+	 G__tmplt_def_tagnum==G__newtype.parent_tagnum[i]) 
 	thisflag=0x20;
       /* exact tag scope */
-      if(0<=env_tagnum && env_tagnum==G__newtype.parent_tagnum[i])
+      if(0<=env_tagnum && env_tagnum==G__newtype.parent_tagnum[i]) 
 	thisflag=0x40;
-
+      
       if(thisflag && thisflag>=matchflag) {
 	matchflag = thisflag;
 	typenum = i;
-	/* This must be a bad manner. Somebody needs to reset G__var_type
+	/* This must be a bad manner. Somebody needs to reset G__var_type 
 	 * especially when typein is 0. */
 	G__var_type=G__newtype.type[i] + ispointer ;
       }
@@ -990,13 +988,13 @@ char *typename;
 	||G__isenclosingclass(G__newtype.parent_tagnum[i],G__tmplt_def_tagnum)
 	)) {
       flag=1;
-      /* This must be a bad manner. Somebody needs to reset G__var_type
+      /* This must be a bad manner. Somebody needs to reset G__var_type 
        * especially when typein is 0. */
       G__var_type=G__newtype.type[i] + ispointer ;
       break;
     }
   }
-
+  
   if(flag==0) return(-1);
   return(i);
 #endif
@@ -1018,7 +1016,7 @@ char *typename;
   int spacecnt=0;
   int isstart=1;
 
-  /*  input  'void* (*)(int , void * , short )'
+  /*  input  'void* (*)(int , void * , short )' 
    *         ^ start                         */
   from = strchr(typename,'(');
   if(!from) return(1);
@@ -1026,18 +1024,18 @@ char *typename;
   if(!from) return(1);
   ++from;
   to = from;
-  /*  input  'void* (*)(int , void * , short )'
+  /*  input  'void* (*)(int , void * , short )' 
    *                    ^ got this position  */
 
   while(*from) {
     if(isspace(*from)) {
       if(0==spacecnt && 0==isstart) {
-	/*  input  'void* (*)(int   * , void  * , short )'
+	/*  input  'void* (*)(int   * , void  * , short )' 
 	 *                       ^ here  */
 	*(to++) = ' ';
       }
       else {
-	/*  input  'void* (*)(int   * , void  * , short )'
+	/*  input  'void* (*)(int   * , void  * , short )' 
 	 *                        ^^ here  */
 	/* Ignore consequitive space */
       }
@@ -1054,15 +1052,15 @@ char *typename;
 	case ')':
 	case '*':
 	case '&':
-	  /*  input  'void* (*)(int   * , void  * , short )'
-	   *                          ^ here
-           *  output 'void* (*)(int*
+	  /*  input  'void* (*)(int   * , void  * , short )' 
+	   *                          ^ here  
+           *  output 'void* (*)(int*  
 	   *                       ^ put here */
 	  *(to-1) = *from;
 	  break;
 	default:
-	  /*  input  'void* (*)(unsigned  int   * , void  * , short )'
-	   *                              ^ here
+	  /*  input  'void* (*)(unsigned  int   * , void  * , short )' 
+	   *                              ^ here  
            *  output 'void* (*)(unsigned i
 	   *                             ^ put here */
 	  *(to++) = *from;
@@ -1070,7 +1068,7 @@ char *typename;
 	}
       }
       else {
-	/*  input  'void* (*)(unsigned  int   * , void  * , short )'
+	/*  input  'void* (*)(unsigned  int   * , void  * , short )' 
 	 *                      ^ here   */
 	*(to++) = *from;
       }
@@ -1117,7 +1115,7 @@ int reftype;
   /* keep uniqueness for pointer to function typedefs */
   if('Q'==typein) G__make_uniqueP2Ftypedef(typename);
 #endif
-
+  
 /* G__OLDIMPLEMENTATIONON620 should affect, but not implemented here */
   /* Doing exactly the same thing as G__defined_typename() */
   len=strlen(typename);
@@ -1139,7 +1137,7 @@ int reftype;
     }
   }
   /* Above is same as G__defined_typename() */
-
+  
   /* allocate new type table entry */
   if(flag==0 && typein) {
     if(G__newtype.alltype==G__MAXTYPEDEF) {
@@ -1247,7 +1245,7 @@ int len;
    *          ^ must be alphabet '_' , '*' or '('
    * else
    *   if not alphabet, return
-   *     type (param);   function name
+   *     type (param);   function name 
    *     type = expr ;   variable assignment
    *************************************************************/
   cin = G__fgetspace();
@@ -1279,16 +1277,16 @@ int len;
     return(0);
   }
 #endif
-
+  
   if(typename[len-1]=='&') {
     G__reftype=G__PARAREFERENCE;
     typename[--len]='\0';
     --refrewind;
   }
-
+  
   store_tagnum = G__tagnum;
   store_typenum=G__typenum;
-
+  
   /* search for typedef names */
   if(len>2 && '*'==typename[len-1] && '*'==typename[len-2]) {
     /* pointer to pointer */
@@ -1321,14 +1319,14 @@ int len;
   }
 
   G__typenum = G__defined_typename(typename);
-
+  
   if(-1 == G__typenum) {
     /* search for class/struct/enum tagnames */
     G__tagnum = G__defined_tagname(typename,1);
     if(-1 == G__tagnum) {
 #ifndef G__OLDIMPLEMENTATION411
       /* This change is risky. Need more evaluation */
-      if(G__fpundeftype && '('!=cin &&
+      if(G__fpundeftype && '('!=cin && 
 	 (-1==G__func_now || -1!=G__def_tagnum)) {
 	G__tagnum=G__search_tagname(typename,'c');
 	fprintf(G__fpundeftype,"class %s; /* %s %d */\n",typename
@@ -1377,19 +1375,19 @@ int len;
     /* in case of enum */
     G__var_type='i';
   }
-
-
+  
+  
   /* allocate variable */
   G__define_var(G__tagnum,G__typenum);
-
+  
   G__typedefnindex = 0;
   G__typedefindex = (int*)NULL;
-
+  
   G__tagnum=store_tagnum;
   G__typenum=store_typenum;
-
+  
   G__reftype=G__PARANORMAL;
-
+  
   return(1);
 }
 

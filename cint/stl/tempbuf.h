@@ -1,5 +1,3 @@
-/*CMZ :  2.24/05 16/05/2000  12.04.02  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   16/05/2000*/
 /*
  *
  * Copyright (c) 1994
@@ -37,7 +35,7 @@ pair<T*, int> get_temporary_buffer(int len, T*) {
         if (tmp) return pair<T*, int>(tmp, len);
         len = len / 2;
     }
-    return pair<T*, int>((T*)__stl_temp_buffer,
+    return pair<T*, int>((T*)__stl_temp_buffer, 
                          (int)(__stl_buffer_size / sizeof(T)));
 }
 
@@ -48,7 +46,7 @@ void return_temporary_buffer(T* p) {
 
 template <class T>
 pair<T*, long> get_temporary_buffer(long len, T* p) {
-    if (len > INT_MAX/sizeof(T))
+    if (len > INT_MAX/sizeof(T)) 
 	len = INT_MAX/sizeof(T);
     pair<T*, int> tmp = get_temporary_buffer((int)len, p);
     return pair<T*, long>(tmp.first, (long)(tmp.second));

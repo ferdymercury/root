@@ -1,5 +1,3 @@
-/*CMZ :  2.24/05 16/05/2000  12.03.45  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   16/05/2000*/
 /********************************************************************
 * vcstrm.h
 ********************************************************************/
@@ -49,3 +47,4 @@ extern G__linked_taginfo G__G__streamLN_fstream;
 extern G__linked_taginfo G__G__streamLN_strstreambuf;
 extern G__linked_taginfo G__G__streamLN_istrstream;
 extern G__linked_taginfo G__G__streamLN_ostrstream;
+extern G__linked_taginfo G__G__streamLN_strstream;

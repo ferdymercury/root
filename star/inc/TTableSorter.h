@@ -1,6 +1,13 @@
-//*CMZ :  2.24/01 31/03/2000  08.46.15  by  Rene Brun
-//*CMZ :  2.23/12 26/01/2000  16.07.13  by  Valery Fine(fine@bnl.gov)
-//*-- Author :  Valery Fine   26/01/99  (E-mail: fine@bnl.gov)
+// @(#)root/star:$Name$:$Id$
+// Author: Valery Fine   26/01/99  (E-mail: fine@bnl.gov)
+
+/*************************************************************************
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
+ *                                                                       *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
+ *************************************************************************/
 #ifndef ROOT_TTableSorter
 #define ROOT_TTableSorter
 

@@ -1,7 +1,13 @@
-*CMZ :  2.23/04 13/10/99  18.42.42  by  Rene Brun
-*CMZ :  2.23/02 05/09/99  21.35.23  by  Rene Brun
-*CMZ :  2.22/07 05/07/99  18.25.43  by  Rene Brun
-*-- Author :    Rene Brun   05/07/99
+/* @(#)root/x3d:$Name$:$Id$ */
+
+/*************************************************************************
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
+ *                                                                       *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
+ *************************************************************************/
+
 #ifdef __CINT__
 
 #pragma link off all globals;
@@ -10,3 +16,4 @@
 
 #pragma link C++ class TViewerX3D;
 
+#endif

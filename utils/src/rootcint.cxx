@@ -1,22 +1,6 @@
-//*CMZ :  2.24/04 04/05/2000  19.43.27  by  Fons Rademakers
-//*CMZ :  2.24/03 02/05/2000  18.38.41  by  Rene Brun
-//*CMZ :  2.24/02 06/04/2000  15.30.21  by  Fons Rademakers
-//*CMZ :  2.24/01 11/03/2000  09.49.43  by  Rene Brun
-//*CMZ :  2.23/09 24/11/99  14.17.59  by  Fons Rademakers
-//*CMZ :  2.23/08 01/11/99  12.51.29  by  Fons Rademakers
-//*CMZ :  2.23/07 26/10/99  17.28.09  by  Fons Rademakers
-//*CMZ :  2.23/01 23/08/99  17.57.49  by  Fons Rademakers
-//*CMZ :  2.23/00 07/08/99  18.33.19  by  Fons Rademakers
-//*CMZ :  2.22/09 13/07/99  18.38.05  by  Fons Rademakers
-//*CMZ :  2.22/05 15/06/99  15.04.08  by  Fons Rademakers
-//*-- Author :    Fons Rademakers   13/07/96
+// @(#)root/utils:$Name$:$Id$
+// Author: Fons Rademakers   13/07/96
 
-/*CMZ :  2.24/01 24/02/2000  11.49.40  by  Fons Rademakers*/
-/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
-/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
-/*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
-/*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
-/*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
  * All rights reserved.                                                  *

@@ -1,9 +1,13 @@
-//*CMZ :  2.23/12 28/01/2000  19.07.36  by  Rene Brun
-//*CMZ :  2.23/00 12/08/99  14.10.11  by  Rene Brun
-//*CMZ :  2.22/09 12/07/99  18.43.37  by  Rene Brun
-//*CMZ :  2.22/07 02/07/99  08.22.55  by  Rene Brun
-//*CMZ :  2.22/06 23/06/99  08.27.58  by  Rene Brun
-//*-- Author :    Pasha Murat, Peter Malzacher  12/02/99
+// @(#)root/physics:$Name$:$Id$
+// Author: Pasha Murat , Peter Malzacher  12/02/99
+
+/*************************************************************************
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
+ *                                                                       *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
+ *************************************************************************/
 
 #ifndef ROOT_TLorentzVector
 #define ROOT_TLorentzVector

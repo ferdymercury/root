@@ -1,5 +1,3 @@
-/*CMZ :  2.24/05 16/05/2000  12.03.48  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   16/05/2000*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -11,7 +9,7 @@
  ************************************************************************
  * Copyright(c) 1995~1999  Masaharu Goto (MXJ02154@niftyserve.or.jp)
  *
- * Permission to use, copy, modify and distribute this software and its
+ * Permission to use, copy, modify and distribute this software and its 
  * documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies and
  * that both that copyright notice and this permission notice appear
@@ -63,7 +61,7 @@ int operator;
     return("<<");
   case '@': /* power */
     return("@");
-  case '!':
+  case '!': 
     return("!");
   case 'E': /* == */
     return("==");
@@ -233,7 +231,7 @@ long val;
 
 
 /***********************************************************************
-* G__bstore()
+* G__bstore() 
 *
 * Called by
 *    G__getexpr()
@@ -265,8 +263,8 @@ G__value *defined;
    * for overloading of operator
    *********************************************************/
   /****************************************************************
-   * C++
-   * If one of the parameter is struct(class) type, call user
+   * C++ 
+   * If one of the parameter is struct(class) type, call user 
    * defined operator function
    * Assignment operators (=,+=,-=) do not work in this way.
    ****************************************************************/
@@ -293,7 +291,7 @@ G__value *defined;
 	case G__OPR_PREFIXDEC:
 #ifdef G__ASM_DBG
 	  if(G__asm_dbg) {
-	    if(isprint(operator))
+	    if(isprint(operator)) 
 	      fprintf(G__serr,"%3x: OP1  '%c' %d\n"
 		      ,G__asm_cp,operator,operator);
 	    else
@@ -314,7 +312,7 @@ G__value *defined;
 	 ****************************/
 #ifdef G__ASM_DBG
 	if(G__asm_dbg) {
-	  if(isprint(operator))
+	  if(isprint(operator)) 
 	    fprintf(G__serr,"%3x: OP2  '%c' %d\n"
 		    ,G__asm_cp,operator,operator);
 	  else
@@ -337,7 +335,7 @@ G__value *defined;
       else                      defined->obj.i=0;
     }
   }
-
+  
   /****************************************************************
    * double operator double
    * double operator int
@@ -388,7 +386,7 @@ G__value *defined;
       defined->ref=0;
       break;
 #endif /* G__NONANSIOPR */
-    case '&': /* binary and */
+    case '&': /* binary and */ 
       /* Don't know why but this one has a problem if deleted */
       if(defined->type==G__null.type) {
 	G__letint(defined,'i',(long)fexpression);
@@ -421,14 +419,14 @@ G__value *defined;
       defined->ref=0;
       break;
     case '>':
-      if(defined->type==G__null.type)
+      if(defined->type==G__null.type) 
 	G__letdouble(defined,'d',fexpression);
       else
 	G__letint(defined,'i',fdefined>fexpression);
       defined->ref=0;
       break;
     case '<':
-      if(defined->type==G__null.type)
+      if(defined->type==G__null.type) 
 	G__letdouble(defined,'d',fexpression);
       else
 	G__letint(defined,'i',fdefined<fexpression);
@@ -474,7 +472,7 @@ G__value *defined;
       defined->ref=0;
       break;
 #ifdef G__NONANSIOPR
-    case '!':
+    case '!': 
       if(fexpression==0) G__letdouble(defined,'i',1);
       else               G__letdouble(defined,'i',0);
       defined->ref=0;
@@ -498,33 +496,33 @@ G__value *defined;
       break;
 #ifndef G__OLDIMPLEMENTATION470
     case G__OPR_ADDASSIGN:
-      if(!G__no_exec_compile&&defined->ref)
+      if(!G__no_exec_compile&&defined->ref) 
 	G__doubleassignbyref(defined,fdefined+fexpression);
       break;
     case G__OPR_SUBASSIGN:
-      if(!G__no_exec_compile&&defined->ref)
+      if(!G__no_exec_compile&&defined->ref) 
 	G__doubleassignbyref(defined,fdefined-fexpression);
       break;
     case G__OPR_MODASSIGN:
-      if(!G__no_exec_compile&&defined->ref)
+      if(!G__no_exec_compile&&defined->ref) 
 	G__doubleassignbyref(defined
 			     ,(double)((long)fdefined%(long)fexpression));
       break;
     case G__OPR_MULASSIGN:
-      if(!G__no_exec_compile&&defined->ref)
+      if(!G__no_exec_compile&&defined->ref) 
 	G__doubleassignbyref(defined,fdefined*fexpression);
       break;
     case G__OPR_DIVASSIGN:
-      if(!G__no_exec_compile&&defined->ref)
+      if(!G__no_exec_compile&&defined->ref) 
 	G__doubleassignbyref(defined,fdefined/fexpression);
       break;
     case G__OPR_ANDASSIGN:
-      if(!G__no_exec_compile&&defined->ref)
+      if(!G__no_exec_compile&&defined->ref) 
 	G__doubleassignbyref(defined
 			     ,(double)((long)fdefined&&(long)fexpression));
       break;
     case G__OPR_ORASSIGN:
-      if(!G__no_exec_compile&&defined->ref)
+      if(!G__no_exec_compile&&defined->ref) 
 	G__doubleassignbyref(defined
 			     ,(double)((long)fdefined||(long)fexpression));
       break;
@@ -565,18 +563,18 @@ G__value *defined;
 	break;
     }
   }
-
+  
   /****************************************************************
    * pointer operator pointer
    * pointer operator int
    * int     operator pointer
    ****************************************************************/
   else if(isupper(defined->type)||isupper(expressionin.type)) {
-
+    
     G__CHECK(G__SECURE_POINTER_CALC,'+'==operator||'-'==operator,return);
-
+    
     if(isupper(defined->type)) {
-
+      
       /*
        *  pointer - pointer , integer [==] pointer
        */
@@ -629,7 +627,7 @@ G__value *defined;
       	  break;
 #ifndef G__OLDIMPLEMENTATION470
 	case G__OPR_SUBASSIGN:
-	  if(!G__no_exec_compile&&defined->ref)
+	  if(!G__no_exec_compile&&defined->ref) 
 	    G__intassignbyref(defined
 			      ,(defined->obj.i-expressionin.obj.i)
 			       /G__sizeof(defined));
@@ -646,7 +644,7 @@ G__value *defined;
 	}
       }
       /*
-       *  pointer [+-==] integer ,
+       *  pointer [+-==] integer , 
        */
       else {
 	switch(operator) {
@@ -663,7 +661,7 @@ G__value *defined;
 	  defined->obj.i=defined->obj.i-expressionin.obj.i*G__sizeof(defined);
 	  defined->ref=0;
 	  break;
-	case '!':
+	case '!': 
 	  G__letint(defined,'i',!expressionin.obj.i);
 	  defined->ref=0;
 	  break;
@@ -693,12 +691,12 @@ G__value *defined;
       	  break;
 #ifndef G__OLDIMPLEMENTATION470
 	case G__OPR_ADDASSIGN:
-	  if(!G__no_exec_compile&&defined->ref)
+	  if(!G__no_exec_compile&&defined->ref) 
 	    G__intassignbyref(defined
 		       ,defined->obj.i+expressionin.obj.i*G__sizeof(defined));
 	  break;
 	case G__OPR_SUBASSIGN:
-	  if(!G__no_exec_compile&&defined->ref)
+	  if(!G__no_exec_compile&&defined->ref) 
 	    G__intassignbyref(defined
 	          ,defined->obj.i-expressionin.obj.i*G__sizeof(defined));
 	  break;
@@ -714,9 +712,9 @@ G__value *defined;
 	}
       }
     }
-
+    
     /*
-     *  integer [+-] pointer
+     *  integer [+-] pointer 
      */
     else {
       switch(operator) {
@@ -748,7 +746,7 @@ G__value *defined;
 #endif
 	defined->ref=0;
 	break;
-      case '!':
+      case '!': 
 	G__letint(defined,'i',!expressionin.obj.i);
 	defined->ref=0;
 	break;
@@ -762,12 +760,12 @@ G__value *defined;
 	break;
 #ifndef G__OLDIMPLEMENTATION470
       case G__OPR_ADDASSIGN:
-	if(!G__no_exec_compile&&defined->ref)
+	if(!G__no_exec_compile&&defined->ref) 
 	  G__intassignbyref(defined
 		    ,defined->obj.i*G__sizeof(defined) +expressionin.obj.i);
 	break;
       case G__OPR_SUBASSIGN:
-	if(!G__no_exec_compile&&defined->ref)
+	if(!G__no_exec_compile&&defined->ref) 
 	  G__intassignbyref(defined
 		    ,defined->obj.i*G__sizeof(defined) -expressionin.obj.i);
 	break;
@@ -813,11 +811,11 @@ G__value *defined;
       }
     }
   }
-
-
+  
+  
   /****************************************************************
    * int operator int
-   *
+   * 
    ****************************************************************/
   else {
 #ifndef G__OLDIMPLEMENTATION918
@@ -904,14 +902,14 @@ G__value *defined;
       defined->ref=0;
       break;
     case '>':
-      if(defined->type==G__null.type)
+      if(defined->type==G__null.type) 
 	G__letint(defined,'i',lexpression);
       else
 	G__letint(defined,'i',ldefined>lexpression);
       defined->ref=0;
       break;
     case '<':
-      if(defined->type==G__null.type)
+      if(defined->type==G__null.type) 
 	G__letint(defined,'i',lexpression);
       else
 	G__letint(defined,'i',ldefined<lexpression);
@@ -929,7 +927,7 @@ G__value *defined;
 	  G__letint(defined,'l',uldefined>>lexpression);
 	}
 	break;
-      default:
+      default: 
 	G__letint(defined,'i',ldefined>>lexpression);
 	break;
       }
@@ -963,7 +961,7 @@ G__value *defined;
       G__letint(defined,'i',lresult);
       defined->ref=0;
       break;
-    case '!':
+    case '!': 
       G__letint(defined,'i',!lexpression);
       defined->ref=0;
       break;
@@ -985,51 +983,51 @@ G__value *defined;
       break;
 #ifndef G__OLDIMPLEMENTATION470
     case G__OPR_ADDASSIGN:
-      if(!G__no_exec_compile&&defined->ref)
+      if(!G__no_exec_compile&&defined->ref) 
 	G__intassignbyref(defined,ldefined+lexpression);
       break;
     case G__OPR_SUBASSIGN:
-      if(!G__no_exec_compile&&defined->ref)
+      if(!G__no_exec_compile&&defined->ref) 
 	G__intassignbyref(defined,ldefined-lexpression);
       break;
     case G__OPR_MODASSIGN:
-      if(!G__no_exec_compile&&defined->ref)
+      if(!G__no_exec_compile&&defined->ref) 
 	G__intassignbyref(defined,ldefined%lexpression);
       break;
     case G__OPR_MULASSIGN:
-      if(!G__no_exec_compile&&defined->ref)
+      if(!G__no_exec_compile&&defined->ref) 
 	G__intassignbyref(defined,ldefined*lexpression);
       break;
     case G__OPR_DIVASSIGN:
-      if(!G__no_exec_compile&&defined->ref)
+      if(!G__no_exec_compile&&defined->ref) 
 	G__intassignbyref(defined,ldefined/lexpression);
       break;
     case G__OPR_RSFTASSIGN:
-      if(!G__no_exec_compile&&defined->ref)
+      if(!G__no_exec_compile&&defined->ref) 
 	G__intassignbyref(defined,ldefined>>lexpression);
       break;
     case G__OPR_LSFTASSIGN:
-      if(!G__no_exec_compile&&defined->ref)
+      if(!G__no_exec_compile&&defined->ref) 
 	G__intassignbyref(defined,ldefined<<lexpression);
       break;
     case G__OPR_BANDASSIGN:
-      if(!G__no_exec_compile&&defined->ref)
+      if(!G__no_exec_compile&&defined->ref) 
 	G__intassignbyref(defined,ldefined&lexpression);
       break;
     case G__OPR_BORASSIGN:
-      if(!G__no_exec_compile&&defined->ref)
+      if(!G__no_exec_compile&&defined->ref) 
 	G__intassignbyref(defined,ldefined|lexpression);
       break;
     case G__OPR_EXORASSIGN:
-      if(!G__no_exec_compile&&defined->ref)
+      if(!G__no_exec_compile&&defined->ref) 
 	G__intassignbyref(defined,ldefined^lexpression);
       break;
     case G__OPR_ANDASSIGN:
-      if(!G__no_exec_compile&&defined->ref)
+      if(!G__no_exec_compile&&defined->ref) 
 	G__intassignbyref(defined,ldefined&&lexpression);
       break;
     case G__OPR_ORASSIGN:
-      if(!G__no_exec_compile&&defined->ref)
+      if(!G__no_exec_compile&&defined->ref) 
 	G__intassignbyref(defined,ldefined||lexpression);
       break;
 #endif
@@ -1111,7 +1109,7 @@ int *ptagnum;
 #ifndef G__OLDIMPLEMENTATION741
    pparen = strchr(name,'(');
 #endif
-  if(NULL==pc || strncmp(name,"operator ",9)==0
+  if(NULL==pc || strncmp(name,"operator ",9)==0 
 #ifndef G__OLDIMPLEMENTATION741
      || (pparen && pparen<pc)
 #endif
@@ -1119,7 +1117,7 @@ int *ptagnum;
     G__fixedscope=0;
     return(G__NOSCOPEOPR);
   }
-
+  
   G__fixedscope=1;
 
   /* if scope operator found at the beginning of the name, global scope */
@@ -1144,7 +1142,7 @@ int *ptagnum;
     return(G__GLOBALSCOPE);
   }
 #endif
-
+  
   /* otherwise, specific class scope */
   offset_sum=0;
   strcpy(temp,name);
@@ -1170,7 +1168,7 @@ int *ptagnum;
     G__tagdefining = save_tagdefining;
     G__def_tagnum = save_def_tagnum;
 #endif
-
+    
 #ifdef G__VIRTUALBASE
 #ifndef G__OLDIMPLEMENTATION660
     if(-1==(offset=G__ispublicbase(scopetagnum,*ptagnum
@@ -1190,20 +1188,20 @@ int *ptagnum;
 
     *ptagnum = scopetagnum;
     offset_sum += offset;
-
+    
     scope=member;
 #ifndef G__OLDIMPLEMENTATION671
   } while((pc=G__find_first_scope_operator(scope)));
 #else
-  } while(pc=strstr(scope,"::"));
+  } while(pc=strstr(scope,"::")); 
 #endif
-
+  
   *pstruct_offset += offset_sum;
-
+  
 #ifdef G__ASM
   if(G__asm_noverflow) {
 #ifdef G__ASM_DBG
-    if(G__asm_dbg)
+    if(G__asm_dbg) 
       fprintf(G__serr ,"%3x: ADDSTROS %d\n" ,G__asm_cp,offset_sum);
 #endif
     G__asm_inst[G__asm_cp]=G__ADDSTROS;
@@ -1211,7 +1209,7 @@ int *ptagnum;
     G__inc_cp_asm(2,0);
   }
 #endif
-
+  
   strcpy(temp,member);
   if(*name=='~') strcpy(name+1,temp); /* explicit destructor */
   else           strcpy(name,temp);
@@ -1243,7 +1241,7 @@ int *piout,*pspaceflag,*pmparen;
    **********************************************/
   if(c==':') {
     /* member function definition */
-    if(1==G__prerun && -1==G__func_now &&
+    if(1==G__prerun && -1==G__func_now && 
        (
 #ifndef G__OLDIMPLEMENTATION971
        (-1==G__def_tagnum||'n'==G__struct.type[G__def_tagnum])
@@ -1261,7 +1259,7 @@ int *piout,*pspaceflag,*pmparen;
       int store_def_struct_member = G__def_struct_member;
 #endif
 
-      /* X<T>::TYPE X<T>::f()
+      /* X<T>::TYPE X<T>::f() 
        *      ^             */
       fgetpos(G__ifile.fp,&pos);
       line = G__ifile.line_number;
@@ -1287,7 +1285,7 @@ int *piout,*pspaceflag,*pmparen;
 #else
 	if(isalpha(c) && strcmp(temp,"operator")!=0) {
 #endif
-	  /* X<T>::TYPE X<T>::f()
+	  /* X<T>::TYPE X<T>::f() 
 	   *      space^^alpha , taking as a nested class specification */
 	  fsetpos(G__ifile.fp,&pos);
 	  G__ifile.line_number=line;
@@ -1383,7 +1381,7 @@ int *piout,*pspaceflag,*pmparen;
 
 /****************************************************************
 * int G__cmp(G__value buf1,G__value buf2)
-*
+* 
 ****************************************************************/
 int G__cmp(buf1,buf2)
 G__value buf1,buf2;
@@ -1405,7 +1403,7 @@ G__value buf1,buf2;
       return(0);
     /* break; */
   }
-
+  
   if(G__int(buf1)==G__int(buf2)) return(1);
   /* else */ return(0);
 }
@@ -1425,7 +1423,7 @@ G__value *preg;
   int i1=1,i2=0;
   G__value reg;
   char prodpower=0;
-
+  
   *preg=G__null;
   while(1) {
     c=expression[i1];
@@ -1537,10 +1535,10 @@ G__value *pios;
     if(G__asm_dbg) fprintf(G__serr,"%3x: OP1 '!'\n",G__asm_cp+1);
 #endif
     G__asm_inst[G__asm_cp] = G__POPSTROS;
-    G__inc_cp_asm(1,0);
+    G__inc_cp_asm(1,0); 
     G__asm_inst[G__asm_cp] = G__OP1;
     G__asm_inst[G__asm_cp+1] = '!';
-    G__inc_cp_asm(2,0);
+    G__inc_cp_asm(2,0); 
   }
 #endif /* G__ASM */
 
@@ -1566,7 +1564,7 @@ G__value expressionin;
 G__value *defined;
 {
   int ig2;
-
+  
   /* struct G__param fpara; */
   char expr[G__LONGLINE],opr[12],arg1[G__LONGLINE],arg2[G__LONGLINE];
   long store_struct_offset; /* used to be int */
@@ -1574,7 +1572,7 @@ G__value *defined;
   G__value buffer;
   char *pos;
   int postfixflag=0;
-
+  
   switch(operator) {
   case '+': /* add */
   case '-': /* subtract */
@@ -1588,38 +1586,38 @@ G__value *defined;
   case '>':
   case '<':
   case '@': /* power */
-  case '!':
+  case '!': 
     sprintf(opr,"operator%c",operator);
     break;
-
+    
   case 'A': /* logic and  && */
     sprintf(opr,"operator&&");
     break;
-
+    
   case 'O': /* logic or   || */
     sprintf(opr,"operator||");
     break;
-
+    
   case 'R': /* right shift >> */
     sprintf(opr,"operator>>");
     break;
   case 'L': /* left shift  << */
     sprintf(opr,"operator<<");
     break;
-
-  case 'E':
+    
+  case 'E': 
     sprintf(opr,"operator==");
     break;
-  case 'N':
+  case 'N': 
     sprintf(opr,"operator!=");
     break;
-  case 'G':
+  case 'G': 
     sprintf(opr,"operator>=");
     break;
-  case 'l':
+  case 'l': 
     sprintf(opr,"operator<=");
     break;
-
+    
   case '\0':
     *defined=expressionin;
     return(0);
@@ -1669,19 +1667,19 @@ G__value *defined;
   case G__OPR_PREFIXDEC:
     sprintf(opr,"operator--");
     break;
-
+    
   default:
     G__genericerror(
 	    "Limitation: Can't handle combination of overloading operators"
 		    );
     return(0);
   }
-
+  
   /*****************************************************
    * Unary operator
    *****************************************************/
   if(defined->type==0) {
-
+    
     switch(operator) {
     case '-':
     case '!':
@@ -1697,7 +1695,7 @@ G__value *defined;
       return(0);
       /* break; */
     }
-
+    
     G__oprovld=1;
 #ifdef G__ASM
     if(G__asm_noverflow) {
@@ -1712,9 +1710,9 @@ G__value *defined;
 #endif
     }
 #endif /* G__ASM */
-
+    
     /***************************************************
-     * search for member function
+     * search for member function 
      ****************************************************/
     ig2=0;
     switch(operator) {
@@ -1740,17 +1738,17 @@ G__value *defined;
       sprintf(expr,"%s()",opr);
       break;
     }
-
+    
     store_struct_offset = G__store_struct_offset;
     store_tagnum = G__tagnum;
     G__store_struct_offset = expressionin.obj.i;
     G__tagnum = expressionin.tagnum;
-
+    
     buffer = G__getfunction(expr,&ig2,G__TRYMEMFUNC);
-
+    
     G__store_struct_offset = store_struct_offset;
     G__tagnum = store_tagnum;
-
+    
     /***************************************************
      * search for global function
      ****************************************************/
@@ -1764,7 +1762,7 @@ G__value *defined;
 	  if(G__asm_dbg) fprintf(G__serr,"LD cancelled\n");
 #endif
 	}
-	G__inc_cp_asm(-2,0);
+	G__inc_cp_asm(-2,0); 
 #ifdef G__ASM_DBG
 	if(G__asm_dbg) fprintf(G__serr,"PUSHSTROS,SETSTROS cancelled\n");
 #endif
@@ -1775,17 +1773,17 @@ G__value *defined;
       case G__OPR_POSTFIXDEC:
 #ifndef G__OLDIMPLEMENTATION719
 	if(expressionin.obj.i<0)
-	  sprintf(expr,"%s((%s)(%ld),1)",opr
+	  sprintf(expr,"%s((%s)(%ld),1)",opr 
 		  ,G__fulltagname(expressionin.tagnum,1),expressionin.obj.i);
-	else
-	  sprintf(expr,"%s((%s)%ld,1)",opr
+	else 
+	  sprintf(expr,"%s((%s)%ld,1)",opr 
 		  ,G__fulltagname(expressionin.tagnum,1),expressionin.obj.i);
 #else
 	if(expressionin.obj.i<0)
-	  sprintf(expr,"%s((%s)(%ld),1)",opr
+	  sprintf(expr,"%s((%s)(%ld),1)",opr 
 		  ,G__struct.name[expressionin.tagnum],expressionin.obj.i);
-	else
-	  sprintf(expr,"%s((%s)%ld,1)",opr
+	else 
+	  sprintf(expr,"%s((%s)%ld,1)",opr 
 		  ,G__struct.name[expressionin.tagnum] ,expressionin.obj.i);
 #endif
 #ifdef G__ASM
@@ -1806,15 +1804,15 @@ G__value *defined;
 	if(expressionin.obj.i<0)
 	  sprintf(expr,"%s((%s)(%ld))",opr
 		  ,G__fulltagname(expressionin.tagnum,1),expressionin.obj.i);
-	else
-	  sprintf(expr,"%s((%s)%ld)" ,opr
+	else 
+	  sprintf(expr,"%s((%s)%ld)" ,opr 
 		  ,G__fulltagname(expressionin.tagnum,1),expressionin.obj.i);
 #else
 	if(expressionin.obj.i<0)
 	  sprintf(expr,"%s((%s)(%ld))",opr
 		  ,G__struct.name[expressionin.tagnum] ,expressionin.obj.i);
-	else
-	  sprintf(expr,"%s((%s)%ld)" ,opr
+	else 
+	  sprintf(expr,"%s((%s)%ld)" ,opr 
 		  ,G__struct.name[expressionin.tagnum] ,expressionin.obj.i);
 #endif
 	break;
@@ -1827,11 +1825,11 @@ G__value *defined;
       if(G__asm_dbg) fprintf(G__serr,"%3x: POPSTROS\n",G__asm_cp);
 #endif
       G__asm_inst[G__asm_cp] = G__POPSTROS;
-      G__inc_cp_asm(1,0);
+      G__inc_cp_asm(1,0); 
     }
 #endif /* G__ASM */
     *defined = buffer;
-
+    
     G__oprovld=0;
   } /* end of if(defined->type==0) */
 
@@ -1839,7 +1837,7 @@ G__value *defined;
    * Binary operator
    *****************************************************/
   else {
-
+    
     G__oprovld=1;
 #ifdef G__ASM
     if(G__asm_noverflow) {
@@ -1861,12 +1859,12 @@ G__value *defined;
 #endif
     }
 #endif /* G__ASM */
-
+    
     /***************************************************
-     * search for member function
+     * search for member function 
      ****************************************************/
     ig2=0;
-
+    
     if(expressionin.type=='u') {
 #ifndef G__OLDIMPLEMENTATION719
       if(expressionin.obj.i<0)
@@ -1896,27 +1894,27 @@ G__value *defined;
 	pos=strchr(arg2,')');
 	*pos = '\0';
 	if(expressionin.ref<0)
-	  sprintf(expr,"*%s*)(%ld)",arg2,expressionin.ref);
+	  sprintf(expr,"*%s*)(%ld)",arg2,expressionin.ref);  
 	else
-	  sprintf(expr,"*%s*)%ld",arg2,expressionin.ref);
+	  sprintf(expr,"*%s*)%ld",arg2,expressionin.ref);  
 	strcpy(arg2,expr);
       }
     }
 
     if(defined->type=='u') {
       sprintf(expr,"%s(%s)" ,opr ,arg2);
-
+      
       store_struct_offset = G__store_struct_offset;
       store_tagnum = G__tagnum;
       G__store_struct_offset = defined->obj.i;
-      G__tagnum = defined->tagnum;
-
+      G__tagnum = defined->tagnum; 
+      
       buffer = G__getfunction(expr,&ig2,G__TRYMEMFUNC);
-
+      
       G__store_struct_offset = store_struct_offset;
       G__tagnum = store_tagnum;
     }
-
+    
     /***************************************************
      * search for global function
      ****************************************************/
@@ -1924,9 +1922,9 @@ G__value *defined;
 #ifdef G__ASM
       if(G__asm_noverflow) {
 #ifdef G__ASM_IFUNC
-	G__inc_cp_asm(-3,0);
+	G__inc_cp_asm(-3,0); 
 #else
-	G__inc_cp_asm(-2,0);
+	G__inc_cp_asm(-2,0); 
 #endif
 #ifdef G__ASM_DBG
 	if(G__asm_dbg) fprintf(G__serr,"PUSHSTROS,SETSTROS cancelled\n");
@@ -1963,28 +1961,28 @@ G__value *defined;
 	  pos=strchr(arg1,')');
 	  *pos = '\0';
 	  if(defined->ref<0)
-	    sprintf(expr,"*%s*)(%ld)",arg1,defined->ref);
+	    sprintf(expr,"*%s*)(%ld)",arg1,defined->ref);  
 	  else
-	    sprintf(expr,"*%s*)%ld",arg1,defined->ref);
+	    sprintf(expr,"*%s*)%ld",arg1,defined->ref);  
 	  strcpy(arg1,expr);
 	}
       }
       sprintf(expr,"%s(%s,%s)" ,opr ,arg1 ,arg2);
       buffer = G__getfunction(expr,&ig2,G__TRYNORMAL);
 #ifdef G__OLDIMPLEMENTATION1286_YET
-      /* Need to check ANSI/ISO standard. What happens if operator
+      /* Need to check ANSI/ISO standard. What happens if operator 
        * function defined in a namespace is used in other namespace */
-      if(0==ig2 && -1!=expressionin.tagnum &&
+      if(0==ig2 && -1!=expressionin.tagnum && 
 	 -1!= G__struct.parent_tagnum[expressionin.tagnum]) {
 	sprintf(expr,"%s::%s(%s,%s)"
-		,G__fulltagname(G__struct.parent_tagnum[expressionin.tagnum],1)
+		,G__fulltagname(G__struct.parent_tagnum[expressionin.tagnum],1) 
 		,opr ,arg1 ,arg2);
 	buffer = G__getfunction(expr,&ig2,G__TRYNORMAL);
       }
-      if(0==ig2 && -1!=defined->tagnum &&
+      if(0==ig2 && -1!=defined->tagnum && 
 	 -1!= G__struct.parent_tagnum[defined->tagnum]) {
 	sprintf(expr,"%s::%s(%s,%s)"
-		,G__fulltagname(G__struct.parent_tagnum[defined->tagnum],1)
+		,G__fulltagname(G__struct.parent_tagnum[defined->tagnum],1) 
 		,opr ,arg1 ,arg2);
 	buffer = G__getfunction(expr,&ig2,G__TRYNORMAL);
       }
@@ -2013,11 +2011,11 @@ G__value *defined;
       if(G__asm_dbg) fprintf(G__serr,"%3x: POPSTROS\n",G__asm_cp);
 #endif
       G__asm_inst[G__asm_cp] = G__POPSTROS;
-      G__inc_cp_asm(1,0);
+      G__inc_cp_asm(1,0); 
     }
 #endif /* G__ASM */
     *defined = buffer;
-
+      
     G__oprovld=0;
   }  /* end ob binary operator else */
   return(0);
@@ -2046,7 +2044,7 @@ int flag;
   int store_memberfunc_struct_offset;
 
 #ifndef G__OLDIMPLEMENTATION745
-  if(strncmp(funcname,"operatr",8)==0 || strcmp(funcname,"G__ateval")==0)
+  if(strncmp(funcname,"operatr",8)==0 || strcmp(funcname,"G__ateval")==0) 
     return(0);
 #endif
 
@@ -2160,10 +2158,10 @@ int paran,ig25;
 
 #ifdef G__ASM
   if(G__asm_noverflow) {
-    /*  X a[2][3];
+    /*  X a[2][3]; 
      *  Y X::operator[]()
      *  Y::operator[]()
-     *    a[x][y][z][w];   stack x y z w ->  stack w z x y
+     *    a[x][y][z][w];   stack x y z w ->  stack w z x y 
      *                                             Y X a a
      */
     if(paran>1 && paran>ig25) {
@@ -2234,7 +2232,7 @@ int paran,ig25;
 	G__inc_cp_asm(1,0);
       }
 #endif
-
+      
       if(para[ig25].type=='u') {
 #ifndef G__OLDIMPLEMENTATION409
 	if(para[ig25].obj.i<0)
@@ -2261,16 +2259,16 @@ int paran,ig25;
 	  *pos = '\0';
 #ifndef G__OLDIMPLEMENTATION409
 	  if(para[ig25].ref<0)
-	    sprintf(expr,"*%s*)(%ld)",arg2,para[ig25].ref);
+	    sprintf(expr,"*%s*)(%ld)",arg2,para[ig25].ref);  
 	  else
-	    sprintf(expr,"*%s*)%ld",arg2,para[ig25].ref);
+	    sprintf(expr,"*%s*)%ld",arg2,para[ig25].ref);  
 #else
-	  sprintf(expr,"*%s*)%ld",arg2,para[ig25].ref);
+	  sprintf(expr,"*%s*)%ld",arg2,para[ig25].ref);  
 #endif
 	  strcpy(arg2,expr);
 	}
       }
-
+      
       sprintf(expr,"operator[](%s)",arg2);
       store_asm_exec = G__asm_exec;
       G__asm_exec=0;

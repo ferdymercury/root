@@ -1,5 +1,3 @@
-/*CMZ :  2.24/05 16/05/2000  12.03.47  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   16/05/2000*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -7,11 +5,11 @@
  * Source file inherit.c
  ************************************************************************
  * Description:
- *  Class inheritance
+ *  Class inheritance 
  ************************************************************************
  * Copyright(c) 1995~1999  Masaharu Goto (MXJ02154@niftyserve.or.jp)
  *
- * Permission to use, copy, modify and distribute this software and its
+ * Permission to use, copy, modify and distribute this software and its 
  * documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies and
  * that both that copyright notice and this permission notice appear
@@ -53,7 +51,7 @@ char baseaccess;
   offset = to_base->baseoffset[to_base->basen]; /* just to simplify */
 
   /****************************************************
-  * copy virtual offset
+  * copy virtual offset 
   ****************************************************/
   /* Bug fix for multiple inheritance, if virtual offset is already
    * set, don't overwrite.  */
@@ -61,15 +59,15 @@ char baseaccess;
      -1 == G__struct.virtual_offset[to_tagnum]) {
 #ifdef G__VIRTUALBASE
     if(to_base->property[to_base->basen]&G__ISVIRTUALBASE) {
-      G__struct.virtual_offset[to_tagnum]
+      G__struct.virtual_offset[to_tagnum] 
 	=offset+G__struct.virtual_offset[from_tagnum]+G__DOUBLEALLOC;
     }
     else {
-      G__struct.virtual_offset[to_tagnum]
+      G__struct.virtual_offset[to_tagnum] 
 	=offset+G__struct.virtual_offset[from_tagnum];
     }
 #else
-    G__struct.virtual_offset[to_tagnum]
+    G__struct.virtual_offset[to_tagnum] 
       =offset+G__struct.virtual_offset[from_tagnum];
 #endif
   }
@@ -77,10 +75,10 @@ char baseaccess;
   G__struct.isabstract[to_tagnum]+=G__struct.isabstract[from_tagnum];
 
   /****************************************************
-  *  copy grand base class info
+  *  copy grand base class info 
   ****************************************************/
 #ifndef G__OLDIMPLEMENTATION692
-  isvirtualbase = (to_base->property[to_base->basen]&G__ISVIRTUALBASE);
+  isvirtualbase = (to_base->property[to_base->basen]&G__ISVIRTUALBASE); 
 #endif
   basen=to_base->basen;
   for(i=0;i<from_base->basen;i++) {
@@ -88,12 +86,12 @@ char baseaccess;
     to_base->basetagnum[basen] = from_base->basetagnum[i];
     to_base->baseoffset[basen] = offset+from_base->baseoffset[i];
 #ifndef G__OLDIMPLEMENTATION692
-    to_base->property[basen]
+    to_base->property[basen] 
       = ((from_base->property[i]&G__ISVIRTUALBASE) | isvirtualbase);
 #else
     to_base->property[basen] = from_base->property[i]&G__ISVIRTUALBASE;
 #endif
-    if(from_base->baseaccess[i]>=G__PRIVATE)
+    if(from_base->baseaccess[i]>=G__PRIVATE) 
       to_base->baseaccess[basen]=G__GRANDPRIVATE;
     else if(G__PRIVATE==baseaccess)
       to_base->baseaccess[basen]=G__PRIVATE;
@@ -119,13 +117,13 @@ int G__baseconstructorwp()
   int n=0;
   char buf[G__ONELINE];
   struct G__baseparam baseparam;
-
+  
   /*  X::X(int a,int b) : base1(a), base2(b) { }
    *                   ^
    */
   c=G__fignorestream(":{");
   if(':'==c) c=',';
-
+  
   while(','==c) {
     c=G__fgetstream_newtemplate(buf,"({,"); /* case 3) */
     if('('==c) {
@@ -142,15 +140,15 @@ int G__baseconstructorwp()
       c=G__fgetstream(buf,",{");
     }
   }
-
+  
   G__baseconstructor(n,&baseparam);
-
+  
   while(n>0) {
     --n;
     free((void*)baseparam.param[n]);
     free((void*)baseparam.name[n]);
   }
-
+  
   fseek(G__ifile.fp,-1,SEEK_CUR);
   if(G__dispsource) G__disp_mask=1;
   return(0);
@@ -166,7 +164,7 @@ struct G__vbaseaddrlist {
   struct G__vbaseaddrlist *next;
 };
 
-static struct G__vbaseaddrlist *G__pvbaseaddrlist
+static struct G__vbaseaddrlist *G__pvbaseaddrlist 
   = (struct G__vbaseaddrlist*)NULL;
 static int G__toplevelinstantiation=1;
 
@@ -271,12 +269,12 @@ struct G__baseparam *pbaseparam;
   int store_toplevelinstantiation;
   struct G__vbaseaddrlist *store_pvbaseaddrlist=NULL;
 #endif
-
+  
   /* store current tag information */
   store_tagnum=G__tagnum;
   store_struct_offset = G__store_struct_offset;
   store_globalvarpointer = G__globalvarpointer;
-
+  
 #ifdef G__VIRTUALBASE
   if(G__toplevelinstantiation) {
     store_pvbaseaddrlist = G__storevbaseaddrlist();
@@ -284,7 +282,7 @@ struct G__baseparam *pbaseparam;
   store_toplevelinstantiation=G__toplevelinstantiation;
   G__toplevelinstantiation=0;
 #endif
-
+  
   /****************************************************************
    * base classes
    ****************************************************************/
@@ -328,7 +326,7 @@ struct G__baseparam *pbaseparam;
       G__store_struct_offset=store_struct_offset+baseclass->baseoffset[i];
 #endif
 
-      /* search for constructor argument */
+      /* search for constructor argument */ 
       flag=0;
       tagname = G__struct.name[G__tagnum];
       if(donen<n) {
@@ -340,12 +338,12 @@ struct G__baseparam *pbaseparam;
 	  }
 	}
       }
-      if(flag)
+      if(flag) 
 	sprintf(construct,"%s(%s)" ,tagname,pbaseparam->param[j]);
-      else
+      else 
 	sprintf(construct,"%s()",tagname);
-
-
+      
+      
       if(G__dispsource) {
 	fprintf(G__serr ,"\n!!!Calling base class constructor %s",construct);
       }
@@ -383,7 +381,7 @@ struct G__baseparam *pbaseparam;
   }
   G__toplevelinstantiation=1;
 #endif
-
+  
   /****************************************************************
    * class members
    ****************************************************************/
@@ -392,7 +390,7 @@ struct G__baseparam *pbaseparam;
 
   while(mem) {
     for(i=0;i<mem->allvar;i++) {
-      if('u'==mem->type[i] &&
+      if('u'==mem->type[i] && 
 #ifndef G__NEWINHERIT
 	 0==mem->isinherit[i] &&
 #endif
@@ -416,7 +414,7 @@ struct G__baseparam *pbaseparam;
 	if(flag) {
 	  if(G__PARAREFERENCE==mem->reftype[i]) {
 #ifndef G__OLDIMPLEMENTATION945
-	    if(G__NOLINK!=G__globalcomp)
+	    if(G__NOLINK!=G__globalcomp) 
 #endif
 	      {
 	    if('\0'==pbaseparam->param[j][0]) {
@@ -437,7 +435,7 @@ struct G__baseparam *pbaseparam;
 	  sprintf(construct,"%s()" ,G__struct.name[G__tagnum]);
 	  if(G__PARAREFERENCE==mem->reftype[i]) {
 #ifndef G__OLDIMPLEMENTATION945
-	    if(G__NOLINK!=G__globalcomp)
+	    if(G__NOLINK!=G__globalcomp) 
 #endif
 	      {
 	    fprintf(G__serr,"Error: No initializer for reference %s "
@@ -477,7 +475,7 @@ struct G__baseparam *pbaseparam;
 	if(flag) {
 	  if(G__PARAREFERENCE==mem->reftype[i]) {
 #ifndef G__OLDIMPLEMENTATION945
-	    if(G__NOLINK!=G__globalcomp)
+	    if(G__NOLINK!=G__globalcomp) 
 #endif
 	      {
 	    if('\0'==pbaseparam->param[j][0]) {
@@ -556,11 +554,11 @@ struct G__baseparam *pbaseparam;
 #ifdef G__VIRTUALBASE
   G__toplevelinstantiation=store_toplevelinstantiation;
 #endif
-
+  
   /* restore derived tagnum */
   G__tagnum = store_tagnum;
   G__store_struct_offset = store_struct_offset;
-
+  
   /* assign virtual_identity if contains virtual
    * function.  */
   if(-1 != G__struct.virtual_offset[G__tagnum]
@@ -598,7 +596,7 @@ int G__basedestructor()
   store_tagnum=G__tagnum;
   store_struct_offset = G__store_struct_offset;
   store_globalvarpointer = G__globalvarpointer;
-
+  
   /****************************************************************
    * class members
    ****************************************************************/
@@ -648,13 +646,13 @@ int G__basedestructor()
 #ifndef G__OLDIMPLEMENTATION1158
       if(G__asm_noverflow) G__gen_addstros(store_addstros);
 #endif
-      /* avoid recursive and infinite virtual destructor call
+      /* avoid recursive and infinite virtual destructor call 
        * let the base class object pretend like its own class object */
-      if(-1!=G__struct.virtual_offset[G__tagnum])
+      if(-1!=G__struct.virtual_offset[G__tagnum]) 
 	*(long*)(G__store_struct_offset+G__struct.virtual_offset[G__tagnum])
 	  = G__tagnum;
       sprintf(destruct,"~%s()",G__struct.name[G__tagnum]);
-      if(G__dispsource)
+      if(G__dispsource) 
 	fprintf(G__serr ,"\n!!!Calling base class destructor %s",destruct);
       j=0;
       if(G__CPPLINK==G__struct.iscpplink[G__tagnum]) {
@@ -696,7 +694,7 @@ struct G__var_array *mem;
 #endif
 
   store_globalvarpointer = G__globalvarpointer;
-
+  
   if(mem->next) {
     G__basedestructrc(mem->next);
   }
@@ -704,15 +702,15 @@ struct G__var_array *mem;
   /* store current tag information */
   /* store_tagnum=G__tagnum; */
   store_struct_offset = G__store_struct_offset;
-
+  
   for(i=mem->allvar-1;i>=0;i--) {
-    if('u'==mem->type[i] &&
+    if('u'==mem->type[i] && 
 #ifndef G__NEWINHERIT
        0==mem->isinherit[i] &&
 #endif
        'e'!=G__struct.type[mem->p_tagtable[i]] &&
        G__LOCALSTATIC!=mem->statictype[i]) {
-
+      
       G__tagnum=mem->p_tagtable[i];
       G__store_struct_offset=store_struct_offset+mem->p[i];
       sprintf(destruct,"~%s()",G__struct.name[G__tagnum]);
@@ -733,7 +731,7 @@ struct G__var_array *mem;
 	}
 	else G__globalvarpointer = G__PVOID;
 	/* avoid recursive and infinite virtual destructor call */
-	if(-1!=G__struct.virtual_offset[G__tagnum])
+	if(-1!=G__struct.virtual_offset[G__tagnum]) 
 	  *(long*)(G__store_struct_offset+G__struct.virtual_offset[G__tagnum])
 	    = G__tagnum;
 	if(G__dispsource) {
@@ -751,7 +749,7 @@ struct G__var_array *mem;
       if(G__asm_noverflow) G__gen_addstros(-mem->p[i]);
 #endif
     }
-    else if(G__security&G__SECURE_GARBAGECOLLECTION &&
+    else if(G__security&G__SECURE_GARBAGECOLLECTION && 
 #ifndef G__OLDIMPLEMENTATION545
 	    (!G__no_exec_compile) &&
 #endif
@@ -777,7 +775,7 @@ struct G__var_array *mem;
 /**************************************************************************
 * G__ispublicbase()
 *
-* check if derivedtagnum is derived from basetagnum.
+* check if derivedtagnum is derived from basetagnum. 
 * If public base or reference from member function return offset
 * else return -1
 * Used in standard pointer conversion
@@ -887,7 +885,7 @@ int virtualtag;
 {
   int i;
   struct G__inheritance *baseclass;
-
+  
   if(0>virtualtag) return(0);
   baseclass = G__struct.baseclass[virtualtag];
   for(i=0;i<baseclass->basen;i++) {

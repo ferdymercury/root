@@ -1,5 +1,13 @@
-*CMZ :  2.00/10 27/06/98  19.20.07  by  Fons Rademakers
-*-- Author :    Fons Rademakers   27/06/98
+/* @(#)root/venus:$Name$:$Id$ */
+
+/*************************************************************************
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
+ *                                                                       *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
+ *************************************************************************/
+
 #ifdef __CINT__
 
 #pragma link off all globals;

@@ -1,7 +1,5 @@
-//*CMZ :  2.24/03 23/04/2000  18.59.40  by  Valery Fine(fine@bnl.gov)
-//*CMZ :  2.24/01 31/03/2000  08.29.26  by  Rene Brun
-//*CMZ :  2.23/12 29/01/2000  15.31.22  by  Valery Fine(fine@bnl.gov)
-//*-- Author : Valery Fine   10/12/98
+// @(#)root/star:$Name$:$Id$
+// Author: Valery Fine   10/12/98
 //
 /*************************************************************************
  * Copyright(c) 1998, FineSoft, All rights reserved. Valery Fine (Faine) *

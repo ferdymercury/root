@@ -1,12 +1,5 @@
-//*CMZ :  2.24/03 29/04/2000  23.45.27  by  Rene Brun
-//*CMZ :  2.24/01 18/02/2000  13.52.09  by  Valery Fine(fine@bnl.gov)
-//*CMZ :  2.23/12 26/01/2000  10.08.58  by  Rene Brun
-//*CMZ :  2.23/09 19/11/99  19.49.55  by  Valery Fine(fine@mail.cern.ch)
-//*CMZ :  2.23/03 21/09/99  11.30.34  by  Rene Brun
-//*CMZ :  2.23/01 27/08/99  08.53.44  by  Rene Brun
-//*CMZ :  2.23/00 16/08/99  14.04.57  by  Rene Brun
-//*CMZ :  2.21/06 12/02/99  18.12.35  by  Valery Fine(fine@vxcern.cern.ch)
-//*-- Author :    Valery Fine   05/01/96
+// @(#)root/win32:$Name$:$Id$
+// Author: Valery Fine   05/01/96
 
 #include "TWin32Canvas.h"
 #include "TGWin32WindowsObject.h"

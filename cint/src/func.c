@@ -1,5 +1,3 @@
-/*CMZ :  2.24/05 16/05/2000  12.03.46  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   16/05/2000*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -11,7 +9,7 @@
  ************************************************************************
  * Copyright(c) 1995~1999  Masaharu Goto (MXJ02154@niftyserve.or.jp)
  *
- * Permission to use, copy, modify and distribute this software and its
+ * Permission to use, copy, modify and distribute this software and its 
  * documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies and
  * that both that copyright notice and this permission notice appear
@@ -109,7 +107,7 @@ void G__p2f_void_void(p2f)
 void *p2f;
 {
   switch(G__isinterpretedp2f(p2f)) {
-  case G__INTERPRETEDFUNC:
+  case G__INTERPRETEDFUNC: 
   {
     char buf[G__ONELINE];
     char *fname;
@@ -119,7 +117,7 @@ void *p2f;
     G__calc_internal(buf);
   }
     break;
-  case G__BYTECODEFUNC:
+  case G__BYTECODEFUNC: 
   {
     struct G__param param;
     G__value result;
@@ -234,9 +232,9 @@ G__value *presult3;
   int flag=0;
 
 #ifndef G__OLDIMPLEMENTATION491
-  /*
+  /* 
   if('u'==presult3->type && -1!=presult3->tagnum) {
-  }
+  } 
   */
 #endif
 
@@ -525,7 +523,7 @@ int addstros;
 #ifdef G__ASM
   if(G__asm_noverflow) {
 #ifdef G__ASM_DBG
-    if(G__asm_dbg)
+    if(G__asm_dbg) 
       fprintf(G__serr ,"%3x: ADDSTROS %d\n" ,G__asm_cp,addstros);
 #endif
     G__asm_inst[G__asm_cp]=G__ADDSTROS;
@@ -565,7 +563,7 @@ int *known3;
     mem+=3;
     opx="->";
   }
-
+ 
   res = G__getexpr(mem);
   if(!res.type) {
     fprintf(G__serr,"Error: Pointer to member function %s not found"
@@ -632,12 +630,12 @@ int memfunc_flag;
 #ifndef G__OLDIMPLEMENTATION407
   int base1=0;
 #endif
-
+  
   store_exec_memberfunc = G__exec_memberfunc;
   store_memberfunc_tagnum = G__memberfunc_tagnum;
   store_memberfunc_struct_offset=G__memberfunc_struct_offset;
-
-
+  
+  
   /******************************************************
    * if string expression "string"
    * return
@@ -646,13 +644,13 @@ int memfunc_flag;
     result3=G__null;
     return(result3);
   }
-
-
+  
+  
   /******************************************************
    * get length of expression
    ******************************************************/
   lenitem=strlen(item);
-
+  
   /******************************************************
    * Scan item[] until '(' to get function name and hash
    ******************************************************/
@@ -666,7 +664,7 @@ int memfunc_flag;
   }
 
 #ifndef G__OLDIMPLEMENTATION1236
-  if(8==ig15 && strncmp(funcname,"operator",8)==0 &&
+  if(8==ig15 && strncmp(funcname,"operator",8)==0 && 
      strncmp(item+ig15,"()(",3)==0) {
     strcpy(funcname+8,"()");
     hash = hash + '(' + ')';
@@ -680,8 +678,8 @@ int memfunc_flag;
    ******************************************************/
   castflag=0;
   if(ig15==0) castflag=1;
-
-
+  
+  
   /******************************************************
    * if '(' not found in expression, this is not a function
    * call , so just return.
@@ -692,14 +690,14 @@ int memfunc_flag;
     result3=G__null;
     return(result3);
   }
-
+  
   /******************************************************
    * put null char to the end of function name
    ******************************************************/
   funcname[ig15++]='\0';
-
-
-
+  
+  
+  
   /******************************************************
    * get paramtters
    *
@@ -710,20 +708,20 @@ int memfunc_flag;
 #ifndef G__OLDIMPLEMENTATION834
   fpara.next = (struct G__param*)NULL;
 #endif
-
+  
   /* Get Parenthesis */
-
+  
   /******************************************************
    * this if statement should be always true,
    * should be able to omit.
    ******************************************************/
   if(ig15<lenitem) {
-
+    
     /*****************************************************
      * scan '(param1,param2,param3)'
      *****************************************************/
     while(ig15<lenitem) {
-
+      
       /*************************************************
        * scan one parameter upto 'param,' or 'param)'
        * by reading upto ',' or ')'
@@ -821,7 +819,7 @@ int memfunc_flag;
       if((item[ig15]==')')&&(ig15<lenitem-1)) {
 	if(1==castflag) {
 #ifndef G__OLDIMPLEMENTATION407
-	  if(('-'==item[ig15+1]&&'>'==item[ig15+2]) || '.'==item[ig15+1])
+	  if(('-'==item[ig15+1]&&'>'==item[ig15+2]) || '.'==item[ig15+1]) 
 	    castflag=3;
 #else
 	  if('-'==item[ig15+1] || '.'==item[ig15+1]) castflag=3;
@@ -847,7 +845,7 @@ int memfunc_flag;
 	}
 #endif
       }
-
+      
       /*************************************************
        * set null char to parameter list buffer.
        *************************************************/
@@ -856,7 +854,7 @@ int memfunc_flag;
       fpara.parameter[fpara.paran][0]='\0';
     }
   }
-
+  
   /***************************************************************
    * member access by (xxx)->xxx , (xxx).xxx
    *
@@ -874,30 +872,30 @@ int memfunc_flag;
 #ifndef G__OLDIMPLEMENTATION1013
     if(G__CALLMEMFUNC==memfunc_flag)
       result3=G__getstructmem(store_var_type ,funcname ,fpara.parameter[1]+i
-			      ,fpara.parameter[0] ,known3
+			      ,fpara.parameter[0] ,known3 
 			      ,(struct G__var_array*)NULL,i);
-    else
+    else 
       result3=G__getstructmem(store_var_type ,funcname ,fpara.parameter[1]+i
 			      ,fpara.parameter[0] ,known3 ,&G__global,i);
 #else
     if(G__CALLMEMFUNC==memfunc_flag)
       result3=G__getstructmem(store_var_type ,funcname ,fpara.parameter[1]+i
-			      ,fpara.parameter[0] ,known3
+			      ,fpara.parameter[0] ,known3 
 			      ,(struct G__var_array*)NULL);
-    else
+    else 
       result3=G__getstructmem(store_var_type ,funcname ,fpara.parameter[1]+i
 			      ,fpara.parameter[0] ,known3 ,&G__global);
 #endif
     G__var_type=store_var_type;
     return(result3);
   }
-
+  
   /***************************************************************
    * casting or pointer to function
    *
    ***************************************************************/
   if(castflag==2) {
-
+    
     /***************************************************************
      * pointer to function
      *
@@ -924,7 +922,7 @@ int memfunc_flag;
 				       ,fpara.parameter[1],known3));
     }
 #endif
-
+    
 #ifndef G__OLDIMPLEMENTATION1001
     /***************************************************************
      * (expr)[n]
@@ -959,9 +957,9 @@ int memfunc_flag;
    * end of casting or pointer to function
    *
    ***************************************************************/
-
-
-
+  
+  
+  
   /***************************************************************
    * if length of the first parameter is 0 , there are no
    * parameters. set fpara.paran to 0.
@@ -977,8 +975,8 @@ int memfunc_flag;
 #else
   if(strlen(fpara.parameter[0])==0) fpara.paran=0;
 #endif
-
-
+  
+  
   /***************************************************************
    * initialize type to fundamental type, and known3 to 1
    ***************************************************************/
@@ -989,11 +987,11 @@ int memfunc_flag;
   result3.isconst = 0;
 #endif
   result3.obj.reftype.reftype = G__PARANORMAL;
-
+  
   *known3 = 1;
-
+  
   /***************************************************************
-   *  Search for sizeof(),
+   *  Search for sizeof(), 
    * before parameters are evaluated
    *  sizeof() is processed specially.
    ***************************************************************/
@@ -1001,10 +999,10 @@ int memfunc_flag;
     G__var_type = 'p';
     return(result3);
   }
-
+  
   /***************************************************************
-   *  Evaluate parameters  parameter:string expression ,
-   *                       para     :evaluated expression
+   *  Evaluate parameters  parameter:string expression , 
+   *                       para     :evaluated expression 
    ***************************************************************/
 #ifdef G__ASM
   store_asm_noverflow = G__asm_noverflow;
@@ -1096,11 +1094,11 @@ int memfunc_flag;
 #endif
 #endif
 
-
+  
   fpara.para[fpara.paran] = G__null;
-
+  
   /***************************************************************
-   * if not function name, this is '(expr1,expr2,...,exprn)'
+   * if not function name, this is '(expr1,expr2,...,exprn)' 
    * According to ANSI-C , exprn has to be returned,
    ***************************************************************/
   if(funcname[0]=='\0') {
@@ -1112,10 +1110,10 @@ int memfunc_flag;
     return(result3);
   }
 
-
+  
   /* scope operator ::f() , A::B::f()
-   * note,
-   *    G__exec_memberfunc restored at return memfunc_flag is local,
+   * note, 
+   *    G__exec_memberfunc restored at return memfunc_flag is local, 
    *   there should be no problem modifying these variables.
    *    store_struct_offset and store_tagnum are only used in the
    *   explicit type conversion section.  It is OK to use them here
@@ -1136,10 +1134,10 @@ int memfunc_flag;
 #endif
     break;
   }
-
+  
 #ifdef G__DUMPFILE
   /***************************************************************
-   * dump that a function is called
+   * dump that a function is called 
    ***************************************************************/
   if(G__dumpfile!=NULL && 0==G__no_exec_compile) {
     for(ipara=0;ipara<G__dumpspace;ipara++) fprintf(G__dumpfile," ");
@@ -1149,11 +1147,11 @@ int memfunc_flag;
       G__valuemonitor(fpara.para[ipara-1],result7);
       fprintf(G__dumpfile,"%s",result7);
     }
-    fprintf(G__dumpfile,");/*%s %d,%lx %lx*/\n"
+    fprintf(G__dumpfile,");/*%s %d,%lx %lx*/\n" 
 	    ,G__ifile.name,G__ifile.line_number
 	    ,store_struct_offset,G__store_struct_offset);
     G__dumpspace += 3;
-
+    
   }
 #endif
 
@@ -1161,7 +1159,7 @@ int memfunc_flag;
    * Begin Loop to resolve overloaded function
    ********************************************************************/
   for(funcmatch=G__EXACT;funcmatch<=G__USERCONV;funcmatch++) {
-
+    
     /***************************************************************
      * search for interpreted member function
      * if(G__exec_memberfunc)     ==>  memfunc();
@@ -1172,7 +1170,7 @@ int memfunc_flag;
       int local_tagnum;
       if(G__exec_memberfunc&&-1==G__tagnum)
 	local_tagnum = G__memberfunc_tagnum;
-      else
+      else 
 	local_tagnum = G__tagnum;
       if(-1!=G__tagnum) G__incsetup_memfunc(G__tagnum);
 #else
@@ -1198,7 +1196,7 @@ int memfunc_flag;
 	}
 #endif
 #ifndef G__OLDIMPLEMENTATION517
-	if(G__store_struct_offset!=store_struct_offset)
+	if(G__store_struct_offset!=store_struct_offset) 
 	  G__gen_addstros(store_struct_offset-G__store_struct_offset);
 #endif
 	G__store_struct_offset = store_struct_offset;
@@ -1235,7 +1233,7 @@ int memfunc_flag;
                     ,funcname,result7);
           }
 #endif
-
+      
           G__exec_memberfunc = store_exec_memberfunc;
           G__memberfunc_tagnum=store_memberfunc_tagnum;
           G__memberfunc_struct_offset=store_memberfunc_struct_offset;
@@ -1246,8 +1244,8 @@ int memfunc_flag;
       }
 #endif
     }
-
-
+    
+    
     /***************************************************************
      * If memberfunction is called explicitly by clarifying scope
      * don't examine global function and exit from G__getfunction().
@@ -1264,11 +1262,11 @@ int memfunc_flag;
        &&(G__store_struct_offset||G__CALLSTATICMEMFUNC!=memfunc_flag)
 #endif
        ) {
-
+      
       G__exec_memberfunc = store_exec_memberfunc;
       G__memberfunc_tagnum=store_memberfunc_tagnum;
       G__memberfunc_struct_offset=store_memberfunc_struct_offset;
-
+      
       /* If the last resolution of overloading failed */
       if(funcmatch==G__USERCONV) {
 	
@@ -1298,7 +1296,7 @@ int memfunc_flag;
 #ifndef G__OLDIMPLEMENTATINO1250
 	  case G__TRYIMPLICITCONSTRUCTOR:
 #endif
-	    /* constructor for base class and class members default
+	    /* constructor for base class and class members default 
 	     * constructor only */
 #ifdef G__VIRTUALBASE
 	    if(G__CPPLINK!=G__struct.iscpplink[G__tagnum])
@@ -1319,7 +1317,7 @@ int memfunc_flag;
 	  if(G__parenthesisovld(&result3,funcname,&fpara,G__CALLMEMFUNC)) {
 	    *known3=1;
 #ifndef G__OLDIMPLEMENTATION517
-	    if(G__store_struct_offset!=store_struct_offset)
+	    if(G__store_struct_offset!=store_struct_offset) 
 	      G__gen_addstros(store_struct_offset-G__store_struct_offset);
 #endif
 	    G__store_struct_offset = store_struct_offset;
@@ -1372,7 +1370,7 @@ int memfunc_flag;
 #endif
 	
 #ifndef G__OLDIMPLEMENTATION517
-	if(G__store_struct_offset!=store_struct_offset)
+	if(G__store_struct_offset!=store_struct_offset) 
 	  G__gen_addstros(store_struct_offset-G__store_struct_offset);
 #endif
 	G__store_struct_offset = store_struct_offset;
@@ -1395,19 +1393,19 @@ int memfunc_flag;
       /* ELSE next level overloaded function resolution */
       continue;
     }
-
-
-
+    
+    
+    
     /***************************************************************
      * reset G__exec_memberfunc for global function.
-     * Original value(store_exec_memberfunc) is restored when exit
+     * Original value(store_exec_memberfunc) is restored when exit 
      * from this function
      ***************************************************************/
     tempstore = G__exec_memberfunc;
     G__exec_memberfunc = 0;
-
-
-
+    
+    
+    
     /***************************************************************
      * search for interpreted global function
      *
@@ -1422,7 +1420,7 @@ int memfunc_flag;
 	fprintf(G__dumpfile ,"/* return(inp) %s()=%s*/\n" ,funcname,result7);
       }
 #endif
-
+      
       G__exec_memberfunc = store_exec_memberfunc;
       G__memberfunc_tagnum=store_memberfunc_tagnum;
       G__memberfunc_struct_offset=store_memberfunc_struct_offset;
@@ -1436,22 +1434,22 @@ int memfunc_flag;
     }
 
     G__exec_memberfunc = tempstore;
-
+    
     /* there is no function overload resolution after this point,
      * thus, if not found in G__EXACT trial, there is no chance to
      * find matched function in consequitive search
      */
     if(G__USERCONV==funcmatch) goto templatefunc;
     if(G__EXACT!=funcmatch) continue;
-
-
-
+    
+    
+    
     /***************************************************************
      * search for compiled(archived) function
      *
      ***************************************************************/
     if( G__compiled_func(&result3,funcname,&fpara,hash)==1 ) {
-
+      
 #ifdef G__ASM
       if(G__asm_noverflow) {
 	/****************************************
@@ -1483,7 +1481,7 @@ int memfunc_flag;
 	}
       }
 #endif /* G__ASM */
-
+      
 #ifdef G__DUMPFILE
       if(G__dumpfile!=NULL && 0==G__no_exec_compile) {
 	G__dumpspace -= 3;
@@ -1492,7 +1490,7 @@ int memfunc_flag;
 	fprintf(G__dumpfile ,"/* return(cmp) %s()=%s */\n" ,funcname,result7);
       }
 #endif
-
+      
       G__exec_memberfunc = store_exec_memberfunc;
       G__memberfunc_tagnum=store_memberfunc_tagnum;
       G__memberfunc_struct_offset=store_memberfunc_struct_offset;
@@ -1503,8 +1501,8 @@ int memfunc_flag;
 #endif
       return(result3);
     }
-
-
+    
+    
     /***************************************************************
      * search for library function which are included in G__ci.c
      *
@@ -1533,14 +1531,14 @@ int memfunc_flag;
 	else {
 	  G__abortbytecode();
 #ifdef G__ASM_DBG
-	  if(G__asm_dbg)
+	  if(G__asm_dbg) 
 	    fprintf(G__serr,"COMPILE ABORT function name buffer overflow");
 	    G__printlinenum();
 #endif
 	}
       }
 #endif /* G__ASM */
-
+      
 #ifdef G__DUMPFILE
       if(G__dumpfile!=NULL && 0==G__no_exec_compile) {
 	G__dumpspace -= 3;
@@ -1549,7 +1547,7 @@ int memfunc_flag;
 	fprintf(G__dumpfile ,"/* return(lib) %s()=%s */\n" ,funcname,result7);
       }
 #endif
-	
+	    
       G__exec_memberfunc = store_exec_memberfunc;
       G__memberfunc_tagnum=store_memberfunc_tagnum;
       G__memberfunc_struct_offset=store_memberfunc_struct_offset;
@@ -1560,7 +1558,7 @@ int memfunc_flag;
 #endif
       return(result3);
     }
-
+    
 #ifdef G__TEMPLATEFUNC
     templatefunc:
     /******************************************************************
@@ -1577,24 +1575,24 @@ int memfunc_flag;
 	fprintf(G__dumpfile ,"/* return(lib) %s()=%s */\n" ,funcname,result7);
       }
 #endif
-
+      
       G__exec_memberfunc = store_exec_memberfunc;
       G__memberfunc_tagnum=store_memberfunc_tagnum;
       G__memberfunc_struct_offset=store_memberfunc_struct_offset;
       return(result3);
     }
 #endif /* G__TEMPLATEFUNC */
-
+    
     /******************************************************************
      * End Loop to resolve overloaded function
      ******************************************************************/
-
+    
     /* next_overload_match:
        ; */
-
+    
   }
 
-
+  
   /********************************************************************
    * Explicit type conversion by searching constructors
    ********************************************************************/
@@ -1618,7 +1616,7 @@ int memfunc_flag;
 #ifndef G__OLDIMPLEMENTATION1188
 	char ttt[G__ONELINE];
 	result3 = fpara.para[0];
-	if(G__fundamental_conversion_operator(G__newtype.type[i],-1
+	if(G__fundamental_conversion_operator(G__newtype.type[i],-1 
 					      ,i ,G__newtype.reftype[i],0
 					      ,&result3,ttt)) {
 	  *known3=1;
@@ -1696,7 +1694,7 @@ int memfunc_flag;
 	  result3.ref=G__store_struct_offset;
 #ifdef G__OLDIMPLEMENTATION843      /* FOLLOWING PART SHOULD BE REMOVED */
 #ifdef G__ASM                       /* WATCH FOR PROBLEM in stl/vec3.cxx */
-	  /* Loop compilation of explicit conversion not ready yet,
+	  /* Loop compilation of explicit conversion not ready yet, 
 	   * mainly because of temporary object handling difficulty */
 	  if(G__asm_noverflow) {
 	    G__abortbytecode();
@@ -1746,7 +1744,7 @@ int memfunc_flag;
 
   } /* if(G__TRYNORMAL==memfunc_flag) */
 
-
+  
   if(G__parenthesisovld(&result3,funcname,&fpara,G__TRYNORMAL)) {
     *known3=1;
 #ifndef G__OLDIMPLEMENTATION405
@@ -1760,7 +1758,7 @@ int memfunc_flag;
 #ifndef G__OLDIMPLEMENTATION403
   /********************************************************************
   * pointer to function described like normal function
-  * int (*p2f)(void);  p2f();
+  * int (*p2f)(void);  p2f(); 
   ********************************************************************/
   var = G__getvarentry(funcname,hash,&ig15,&G__global,G__p_local);
   if(var) {
@@ -1787,17 +1785,17 @@ int memfunc_flag;
     }
   }
 #endif
-
+  
   *known3=0;
   /* bug fix, together with G__OLDIMPLEMENTATION29 */
 #ifdef G__DUMPFILE
   if(G__dumpfile!=NULL && 0==G__no_exec_compile) G__dumpspace -= 3;
 #endif
-
+  
   G__exec_memberfunc = store_exec_memberfunc;
   G__memberfunc_tagnum=store_memberfunc_tagnum;
   G__memberfunc_struct_offset=store_memberfunc_struct_offset;
-
+  
 
   if(!G__oprovld) {
     result3 = G__execfuncmacro(item,known3);
@@ -1811,10 +1809,10 @@ int memfunc_flag;
     }
   }
 
-
+  
   return(G__null);
   /* return(result3); */
-
+  
 }
 
 
@@ -1853,10 +1851,10 @@ int hash;
       G__asm_stack[G__asm_dt] = *result7;
       G__inc_cp_asm(2,1);
     }
-#endif
+#endif    
     return(1);
   }
-
+  
   if((hash==860)&&(strcmp(funcname,"offsetof")==0)) {
     if(libp->paran>2) {
       G__letint(result7,'i'
@@ -1878,7 +1876,7 @@ int hash;
       G__asm_stack[G__asm_dt] = *result7;
       G__inc_cp_asm(2,1);
     }
-#endif
+#endif    
     return(1);
   }
 
@@ -1914,7 +1912,7 @@ int hash;
     return(1);
   }
 #endif
-
+  
 #ifdef G__OLDIMPLEMENTATION1276
   if(((hash==466)&&(strcmp(funcname,"ASSERT")==0))||
      ((hash==658)&&(strcmp(funcname,"assert")==0))||
@@ -1937,26 +1935,26 @@ int hash;
     return(1);
   }
 #endif
-
+  
 #ifdef G__NEVER_BUT_KEEP
   if(hash==868&&strcmp(funcname,"va_start")==0) {
     if(G__no_exec_compile) return(1);
     return(1);
   }
-
+  
   if(hash==624&&strcmp(funcname,"va_arg")==0) {
     if(G__no_exec_compile) return(1);
     return(1);
   }
-
+  
   if(hash==621&&strcmp(funcname,"va_end")==0) {
     if(G__no_exec_compile) return(1);
     return(1);
   }
 #endif
-
+  
   return(0);
-
+       
 }
 
 
@@ -1980,7 +1978,7 @@ int hash;
 {
   char temp[G__LONGLINE] ;
   /* FILE *fopen(); */
-
+  
   static int first_getopt=1;
   extern int optind;
   extern char *optarg;
@@ -1988,11 +1986,11 @@ int hash;
 #ifndef G__OLDIMPLEMENTATION1192
   *result7 = G__null;
 #endif
-
+  
   /*********************************************************************
   * high priority
   *********************************************************************/
-
+  
   if(638==hash&&strcmp(funcname,"sscanf")==0) {
     if(G__no_exec_compile) return(1);
     /* this is a fake function. not compatible with real func */
@@ -2117,7 +2115,7 @@ int hash;
     }
     return(1);
   }
-
+  
   if(625==hash&&strcmp(funcname,"fscanf")==0) {
     if(G__no_exec_compile) return(1);
     /* this is a fake function. not compatible with real func */
@@ -2358,7 +2356,7 @@ int hash;
     }
     return(1);
   }
-
+  
   if(659==hash&&strcmp(funcname,"printf")==0) {
     if(G__no_exec_compile) return(1);
 #ifndef G__OLDIMPLEMENTATION575
@@ -2373,7 +2371,7 @@ int hash;
 #endif
     return(1);
   }
-
+  
   if(761==hash&&strcmp(funcname,"fprintf")==0) {
     if(G__no_exec_compile) return(1);
 #ifndef G__OLDIMPLEMENTATION575
@@ -2386,7 +2384,7 @@ int hash;
 	      fprintf((FILE *)G__int(libp->para[0]),"%s",temp));
     return(1);
   }
-
+  
   if(774==hash&&strcmp(funcname,"sprintf")==0) {
     if(G__no_exec_compile) return(1);
 #ifndef G__OLDIMPLEMENTATION575
@@ -2407,7 +2405,7 @@ int hash;
     G__letint(result7,'i',G__defined_macro(libp->parameter[0]));
     return(1);
   }
-
+  
 
   if(664==hash&&strcmp(funcname,"G__calc")==0) {
     if(G__no_exec_compile) return(1);
@@ -2595,7 +2593,7 @@ int hash;
     return(1);
   }
 #endif
-
+  
   if(659==hash&&strcmp(funcname,"getopt")==0) {
     if(G__no_exec_compile) return(1);
 #ifndef G__OLDIMPLEMENTATION575
@@ -2609,7 +2607,7 @@ int hash;
       G__abortbytecode();
       G__getexpr("optind=1");
       G__asm_noverflow=1;
-
+      
       G__globalvarpointer = (long)(&optarg);
       G__var_type='C';
       G__getexpr("optarg=");
@@ -2620,7 +2618,7 @@ int hash;
 			   ,(char *)G__int(libp->para[2])));
     return(1);
   }
-
+  
 
   if(1093==hash&&strcmp(funcname,"G__loadfile")==0) {
     if(G__no_exec_compile) return(1);
@@ -2631,7 +2629,7 @@ int hash;
 	      ,(long)G__loadfile((char *)G__int(libp->para[0])));
     return(1);
   }
-
+  
   if(1320==hash&&strcmp(funcname,"G__unloadfile")==0) {
     if(G__no_exec_compile) return(1);
 #ifndef G__OLDIMPLEMENTATION575
@@ -2640,7 +2638,7 @@ int hash;
     G__letint(result7,'i',(long)G__unloadfile((char *)G__int(libp->para[0])));
     return(1);
   }
-
+  
   if(1308==hash&&strcmp(funcname,"G__reloadfile")==0) {
     if(G__no_exec_compile) return(1);
 #ifndef G__OLDIMPLEMENTATION575
@@ -2732,13 +2730,13 @@ int hash;
     qsort((void *)G__int(libp->para[0])
 	  ,(size_t)G__int(libp->para[1])
 	  ,(size_t)G__int(libp->para[2])
-	  ,(int (*)())G__int(libp->para[3])
+	  ,(int (*)())G__int(libp->para[3]) 
 	  /* ,(int (*)(void *arg1,void *argv2))G__int(libp->para[3]) */
 	  );
     *result7=G__null;
     return(1);
   }
-
+  
   if(728==hash&&strcmp(funcname,"bsearch")==0) {
     if(G__no_exec_compile) return(1);
 #ifndef G__MASKERROR
@@ -2752,7 +2750,7 @@ int hash;
 	    ,(void *)G__int(libp->para[1])
 	    ,(size_t)G__int(libp->para[2])
 	    ,(size_t)G__int(libp->para[3])
-	    ,(int (*)())G__int(libp->para[4])
+	    ,(int (*)())G__int(libp->para[4]) 
 	    );
     *result7=G__null;
     return(1);
@@ -2764,7 +2762,7 @@ int hash;
 	      ,(long)G__textprocessing((FILE *)G__int(libp->para[0])));
     return(1);
   }
-
+  
 #if defined(G__REGEXP) || defined(G__REGEXP1)
   if(strcmp(funcname,"$regex")==0) {
     if(G__no_exec_compile) return(1);
@@ -2783,7 +2781,7 @@ int hash;
     return(1);
   }
 #endif
-
+  
   if(strcmp(funcname,"$")==0) {
     if(G__no_exec_compile) return(1);
     *result7=G__getrsvd((int)G__int(libp->para[0]));
@@ -2812,7 +2810,7 @@ int hash;
     G__letint(result7,'i',G__int(libp->para[0]));
     return(1);
   }
-
+  
   if(655==hash&&strcmp(funcname,"atexit")==0) {
     if(G__no_exec_compile) return(1);
     if(G__int(libp->para[0])==0) {
@@ -2849,7 +2847,7 @@ int hash;
     return(1);
   }
 #endif
-
+  
   if(803==hash&&strcmp(funcname,"G__pause")==0) {
     if(G__no_exec_compile) return(1);
     /* pause */
@@ -2872,7 +2870,7 @@ int hash;
     return(1);
   }
 #endif
-
+  
   if(821==hash&&strcmp(funcname,"G__input")==0) {
     if(G__no_exec_compile) return(1);
 #ifndef G__OLDIMPLEMENTATION575
@@ -3003,7 +3001,7 @@ int hash;
 #endif
 
 #ifndef G__SMALLOBJECT
-
+  
 
 #ifdef G__TRUEP2F
   if(strcmp(funcname,"G__p2f2funcname")==0) {
@@ -3020,7 +3018,7 @@ int hash;
     return(1);
   }
 #endif
-
+  
 #ifndef G__OLDIMPLEMENTATION546
   if(strcmp(funcname,"G__deleteglobal")==0) {
     if(G__no_exec_compile) return(1);
@@ -3039,7 +3037,7 @@ int hash;
 				 ,(short)G__int(libp->para[3])));
     return(1);
   }
-
+  
   if(strcmp(funcname,"G__setarray")==0) {
     if(G__no_exec_compile) return(1);
     G__setarray((short *)G__int(libp->para[0])
@@ -3069,7 +3067,7 @@ int hash;
 			      (char **)G__int(libp->para[3])));
     return(1);
   }
-
+  
   if(strcmp(funcname,"G__readline")==0) {
     if(G__no_exec_compile) return(1);
     G__letint(result7,'i'
@@ -3081,7 +3079,7 @@ int hash;
     return(1);
   }
 #endif
-
+  
 #ifndef G__OLDIMPLEMENTATION564
   if(strcmp(funcname,"G__tracemode")==0||
      strcmp(funcname,"G__debugmode")==0) {
@@ -3089,7 +3087,7 @@ int hash;
     G__letint(result7,'i',(long)G__tracemode((int)G__int(libp->para[0])));
     return(1);
   }
-
+  
   if(strcmp(funcname,"G__stepmode")==0) {
     if(G__no_exec_compile) return(1);
     G__letint(result7,'i',(long)G__stepmode((int)G__int(libp->para[0])));
@@ -3101,7 +3099,7 @@ int hash;
     G__letint(result7,'i',(long)G__gettracemode());
     return(1);
   }
-
+  
   if(strcmp(funcname,"G__getstepmode")==0) {
     if(G__no_exec_compile) return(1);
     G__letint(result7,'i',(long)G__getstepmode());
@@ -3131,7 +3129,7 @@ int hash;
     return(1);
   }
 #endif
-
+  
   if(strcmp(funcname,"G__setbreakpoint")==0) {
     if(G__no_exec_compile) return(1);
     G__letint(result7,'i'
@@ -3139,14 +3137,14 @@ int hash;
 				      ,(char*)G__int(libp->para[1])));
     return(1);
   }
-
+  
   if(strcmp(funcname,"G__showstack")==0) {
     if(G__no_exec_compile) return(1);
     G__showstack((FILE*)G__int(libp->para[0]));
     *result7=G__null;
     return(1);
   }
-
+  
   if(strcmp(funcname,"G__graph")==0) {
     if(G__no_exec_compile) return(1);
     G__letint(result7,'i'
@@ -3166,7 +3164,7 @@ int hash;
 					   ,(int)G__int(libp->para[1])));
     return(1);
   }
-
+  
   if(strcmp(funcname,"G__what_type")==0) {
     if(G__no_exec_compile) return(1);
     G__letint(result7,'Y',(long)G__what_type((char *)G__int(libp->para[0])
@@ -3176,9 +3174,9 @@ int hash;
 					     ));
     return(1);
   }
-
+  
 #endif
-
+  
 #ifndef G__NSTOREOBJECT
   if(strcmp(funcname,"G__storeobject")==0) {
     if(G__no_exec_compile) return(1);
@@ -3186,10 +3184,10 @@ int hash;
 					       (&libp->para[1])));
     return(1);
   }
-
+  
   if(strcmp(funcname,"G__scanobject")==0) {
     if(G__no_exec_compile) return(1);
-
+    
     G__letint(result7,'i',(long)G__scanobject((&libp->para[0])));
     return(1);
   }
@@ -3202,7 +3200,7 @@ int hash;
 				   ,(int)G__int(libp->para[2])));
     return(1);
   }
-
+  
   if(strcmp(funcname,"G__loadobject")==0) {
     if(G__no_exec_compile) return(1);
     G__letint(result7,'i'
@@ -3212,14 +3210,14 @@ int hash;
     return(1);
   }
 #endif
-
+  
   if(strcmp(funcname,"G__lock_variable")==0) {
     if(G__no_exec_compile) return(1);
     G__letint(result7,'i'
 	      ,(long)G__lock_variable((char *)G__int(libp->para[0])));
     return(1);
   }
-
+  
   if(strcmp(funcname,"G__unlock_variable")==0) {
     if(G__no_exec_compile) return(1);
     G__letint(result7,'i'
@@ -3228,17 +3226,17 @@ int hash;
   }
 
 #endif /* G__SMALLOBJECT */
-
+  
 #ifdef G__GNUREADLINE
   /*******************************************************************
-   * GNU readline
+   * GNU readline 
    *******************************************************************/
   if(strcmp(funcname,"readline")==0) {
     if(G__no_exec_compile) return(1);
     G__letint(result7,'C',(long)readline((char *)G__int(libp->para[0])));
     return(1);
   }
-
+  
   if(strcmp(funcname,"add_history")==0) {
     if(G__no_exec_compile) return(1);
     add_history((char *)G__int(libp->para[0]));
@@ -3248,16 +3246,16 @@ int hash;
 #endif
 
 
-
+  
   return(0);
-
+  
 }
 
 #ifndef G__OLDIMPLEMENTATION827
 /******************************************************************
 * G__printf_error()
 ******************************************************************/
-void G__printf_error()
+void G__printf_error() 
 {
   fprintf(G__serr,"Limitation: printf string too long. Upto %d. Use fputs()"
 	  ,G__LONGLINE);
@@ -3265,7 +3263,7 @@ void G__printf_error()
 }
 
 #define G__PRINTF_ERROR(COND)                       \
-   if(COND) { G__printf_error(); return(result); }
+   if(COND) { G__printf_error(); return(result); }  
 
 #endif
 
@@ -3283,7 +3281,7 @@ char *result;
   char onefmt[G__LONGLINE],fmt[G__LONGLINE];
   char pformat[G__LONGLINE];
   short dig=0;
-
+  
   strcpy(pformat,(char *)G__int(libp->para[ifmt]));
   result[0]='\0';
   ipara=ifmt+1;
@@ -3418,7 +3416,7 @@ char *result;
       break;
     }
   }
-
+  
   return(result);
 }
 
@@ -3485,7 +3483,7 @@ int optimizemode;
 {
   G__asm_loopcompile = optimizemode;
 #ifndef G__OLDIMPLEMENTATION1155
-  G__asm_loopcompile_mode = G__asm_loopcompile;
+  G__asm_loopcompile_mode = G__asm_loopcompile; 
 #endif
   return(G__asm_loopcompile);
 }

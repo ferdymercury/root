@@ -1,9 +1,5 @@
-/*CMZ :  2.23/11 29/12/99  11.35.52  by  Rene Brun*/
-/*CMZ :  2.23/10 29/12/99  08.59.34  by  Rene Brun*/
-/*CMZ :  2.22/01 20/05/99  09.47.37  by  Rene Brun*/
-/*CMZ :  2.20/04 20/05/99  09.24.33  by  Fons Rademakers*/
-/*CMZ :  1.03/09 08/12/97  18.03.24  by  Fons Rademakers*/
-/*-- Author : Mark Spychalla*/
+/* @(#)root/x3d:$Name$:$Id$ */
+/* Author: Mark Spychalla*/
 /*
   Copyright 1992 Mark Spychalla
 
@@ -86,7 +82,7 @@ e) If possible, be careful not to needlessly sacrifice significant readability
 
 
 #ifndef WIN32
-#include "X3D.h"
+#include "x3d.h"
 #include "X3DBuffer.h"
 #endif
 

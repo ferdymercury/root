@@ -1,7 +1,5 @@
-//*CMZ :  2.24/03 29/04/2000  19.43.03  by  Fons Rademakers
-//*CMZ :  2.24/01 31/03/2000  08.23.46  by  Rene Brun
-//*CMZ :  2.23/12 26/01/2000  12.13.00  by  Valery Fine(fine@bnl.gov)
-//*-- Author : Valery Fine(fine@bnl.gov)   25/12/98
+// @(#)root/star:$Name$:$Id$
+// Author: Valery Fine(fine@bnl.gov)   25/12/98
 // $Id: TNodePosition.cxx,v 1.23 1999/12/21 18:57:14 fine Exp $
 
 #include <iostream.h>

@@ -1,6 +1,13 @@
-//*CMZ :  2.24/01 31/03/2000  08.46.15  by  Rene Brun
-//*CMZ :  2.23/12 26/01/2000  12.50.28  by  Valery Fine(fine@bnl.gov)
-//*-- Author :    Valery Fine(fine@mail.cern.ch)   13/08/98
+// @(#)root/star:$Name$:$Id$
+// Author: Valery Fine(fine@mail.cern.ch)   03/07/98
+
+/*************************************************************************
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
+ *                                                                       *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
+ *************************************************************************/
 //***********************************************************************
 //     C++ class library to create and manipulate hierarchy datasets
 // * Copyright(c) 1997~1999  [BNL] Brookhaven National Laboratory, STAR, All rights reserved

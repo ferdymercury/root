@@ -1,9 +1,5 @@
-//*CMZ :  2.24/05 15/05/2000  11.33.03  by  Valery Fine(fine@bnl.gov)
-//*CMZ :  2.24/03 01/05/2000  13.01.55  by  Valery Fine(fine@bnl.gov)
-//*CMZ :  2.24/02 06/04/2000  10.45.25  by  Valery Fine(fine@bnl.gov)
-//*CMZ :  2.24/01 31/03/2000  08.19.27  by  Rene Brun
-//*CMZ :  2.23/12 26/01/2000  12.10.10  by  Valery Fine(fine@bnl.gov)
-//*-- Author :    Valery Fine   09/08/99  (E-mail: fine@bnl.gov)
+// @(#)root/star:$Name$:$Id$
+// Author: Valery Fine   09/08/99  (E-mail: fine@bnl.gov)
 // $Id: STAR_TTableDescriptor.cxx,v 1.9 2000/04/28 14:10:59 fine Exp $
 #include <stdlib.h>
 

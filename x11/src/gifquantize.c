@@ -1,6 +1,5 @@
-/*CMZ :  2.20/01 30/11/98  16.44.29  by  Fons Rademakers*/
-/*CMZ :  2.20/00 04/11/98  16.18.46  by  Fons Rademakers*/
-/*-- Author :    Fons Rademakers   04/11/98*/
+/* @(#)root/x11:$Name$:$Id$ */
+/* Author: Fons Rademakers   04/11/98*/
 /*****************************************************************************
 * Module to quantize high resolution image into lower one. You may want to   *
 * peek into the following article this code is based on:                     *

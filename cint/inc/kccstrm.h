@@ -1,5 +1,3 @@
-/*CMZ :  2.24/05 16/05/2000  12.03.44  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   16/05/2000*/
 /********************************************************************
 * G__cpp_kcciostream.h
 ********************************************************************/
@@ -12,7 +10,9 @@
 #include <math.h>
 #include <string.h>
 #define G__ANSIHEADER
+/*KEEP,G__ci.*/
 #include "G__ci.h"
+/*KEND.*/
 extern "C" {
 extern void G__cpp_setup_tagtable();
 extern void G__cpp_setup_inheritance();

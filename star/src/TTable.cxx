@@ -1,9 +1,7 @@
-//*CMZ :  2.24/03 03/05/2000  16.29.17  by  Rene Brun
-//*CMZ :  2.24/02 06/04/2000  18.22.26  by  Valery Fine(fine@bnl.gov)
-//*CMZ :  2.23/12 28/01/2000  18.48.08  by  Valery Fine(fine@bnl.gov)
 // $Id: STAR_TTable.cxx,v 1.12 2000/04/28 02:11:09 fine Exp $
 //
-//*-- Author :    Valery Fine(fine@mail.cern.ch)   03/07/98
+// @(#)root/star:$Name$:$Id$
+// Author: Valery Fine(fine@mail.cern.ch)   03/07/98
 // Copyright (C) Valery Fine (Valeri Faine) 1998. All right reserved
 //
 //////////////////////////////////////////////////////////////////////////

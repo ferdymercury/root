@@ -1,5 +1,3 @@
-/*CMZ :  2.24/05 16/05/2000  12.03.57  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   16/05/2000*/
 /**************************************************************************
 * carray.h
 *
@@ -38,13 +36,13 @@ class carray  {
 	carray(double real,double imag,int ndat);
 	carray(void);
 
-	//conversion
+	//conversion 
 	carray(complex& x);
 	carray(double x,double y=0);
 	carray(array& X);
 	carray(carray& X);
 
-	~carray();
+	~carray(); 
 
 	carray& operator =(carray& a);
 	carray operator()(int from,int to);
@@ -77,7 +75,7 @@ carray::carray(carray& X)
 }
 
 /***********************************************
-* Implicit conversion constructor
+* Implicit conversion constructor 
 ***********************************************/
 
 // double to carray
@@ -152,7 +150,7 @@ carray::carray(double real,double imag,int ndat)
 }
 
 /***********************************************
-* constructor
+* constructor 
 ***********************************************/
 carray::carray(void)
 {
@@ -166,7 +164,7 @@ carray::carray(void)
 }
 
 /***********************************************
-* constructor
+* constructor 
 ***********************************************/
 carray::carray(double *pre,double *pim,int ndat)
 {
@@ -208,7 +206,7 @@ carray::carray(carray& X,int offset,int ndat)
 int carray::resize(int size)
 {
   double *tempre,*tempim;
-
+  
   if(size<n) {
     tempre = new double[size];
     tempim = new double[size];
@@ -509,7 +507,7 @@ array re(carray& X)
 }
 
 /***********************************************
- * im
+ * im 
  ***********************************************/
 array im(carray& X)
 {

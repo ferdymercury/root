@@ -1,13 +1,11 @@
-//*CMZ :  2.24/05 08/05/2000  12.40.25  by  Valery Fine(fine@bnl.gov)
-//*CMZ :  2.24/01 31/03/2000  08.13.15  by  Rene Brun
-//*CMZ :  2.23/12 26/01/2000  12.33.30  by  Valery Fine(fine@bnl.gov)
-//*-- Author :    Valery Fine(fine@mail.cern.ch)   03/07/98
+// @(#)root/star:$Name$:$Id$
+// Author: Valery Fine(fine@mail.cern.ch)   03/07/98
 // Copyright (C) Valery Fine (Valeri Faine) 1998. All right reserved
 
 #include <iostream.h>
 #include <iomanip.h>
 
-#include "TDatasetIter.h"
+#include "TDataSetIter.h"
 #include "TBrowser.h"
 #include "TSystem.h"
 

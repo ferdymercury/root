@@ -1,5 +1,13 @@
-//*CMZ :  2.23/05 20/10/99  11.23.50  by  Rene Brun
-//*-- Author :    Pasha Murat   19/10/99
+// @(#)root/pythia6:$Name$:$Id$
+// Author: Rene Brun   19/10/99
+
+/*************************************************************************
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
+ *                                                                       *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
+ *************************************************************************/
 #ifndef PYTHIA_TPythia6
 #define PYTHIA_TPythia6
 ////////////////////////////////////////////////////////////////////////////////

@@ -1,5 +1,13 @@
-*CMZ :  2.23/03 22/09/99  17.13.52  by  Rene Brun
-*-- Author :    Rene Brun   11/09/99
+/* @(#)root/treeviewer:$Name$:$Id$ */
+
+/*************************************************************************
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
+ *                                                                       *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
+ *************************************************************************/
+
 #ifdef __CINT__
 
 #pragma link off all globals;

@@ -1,7 +1,12 @@
-//*CMZ :  2.21/05 08/02/99  12.56.42  by  Fons Rademakers
-//*CMZ :  2.00/10 23/07/98  14.22.16  by  akiya miyamoto
-//*CMZ :  1.03/09 08/12/97  21.24.38  by  Fons Rademakers
-//*-- Author :
+/* @(#)root/eg:$Name$:$Id$ */
+
+/*************************************************************************
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
+ *                                                                       *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
+ *************************************************************************/
 /* cfortran.h  3.3 */          /* anonymous ftp@zebra.desy.de */
 /* Burkhard Burow  burow@desy.de                 1990 - 1995. */
 

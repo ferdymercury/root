@@ -1,9 +1,0 @@
-*CMZ :  2.20/00 07/11/98  09.38.30  by  Rene Brun
-*-- Author :    Rene Brun   07/11/98
-macro str
-sel test
-set test/stress.cxx -f c++
-cx //root/test/stress
-sel -test
-SET $ROOTSYS/src/$CMZDIR_*.cxx -f C++
-return

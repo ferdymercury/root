@@ -1,6 +1,5 @@
-/*CMZ :  2.22/10 22/07/99  14.06.48  by  Fons Rademakers*/
-/*CMZ :  1.03/09 10/12/97  08.56.10  by  Rene Brun*/
-/*-- Author :    Rene Brun   11/06/97*/
+/* @(#)root/x11:$Name$:$Id$ */
+/* Author: Rene Brun   11/06/97*/
 #include <stdio.h>
 #include <string.h>
 

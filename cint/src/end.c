@@ -1,5 +1,3 @@
-/*CMZ :  2.24/05 16/05/2000  12.03.46  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   16/05/2000*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -11,7 +9,7 @@
  ************************************************************************
  * Copyright(c) 1995~1999  Masaharu Goto (MXJ02154@niftyserve.or.jp)
  *
- * Permission to use, copy, modify and distribute this software and its
+ * Permission to use, copy, modify and distribute this software and its 
  * documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies and
  * that both that copyright notice and this permission notice appear
@@ -135,7 +133,7 @@ void G__scratch_all()
   G__ifunc.allifunc = 0;
 
   /********************************************
-   * local variable is NULL at scratch
+   * local variable is NULL at scratch 
    *********************************************/
   G__p_local = NULL;
 
@@ -264,7 +262,7 @@ void G__scratch_all()
 void G__free_friendtag(friendtag)
 struct G__friendtag *friendtag;
 {
-  if(friendtag
+  if(friendtag 
 #ifndef G__OLDIMPLEMENTATION1295
      && friendtag!=friendtag->next
 #endif
@@ -381,7 +379,7 @@ struct G__var_array *var;
 int isglobal;
 {
   int itemp=0,itemp1=0;
-
+  
   char temp[G__ONELINE];
   int store_tagnum;
   long store_struct_offset; /* used to be int */
@@ -391,7 +389,7 @@ int isglobal;
   int cpplink;
   int i,size;
   long address;
-
+  
   /*******************************************
    * If there are any sub var array list,
    * destroy it too.
@@ -411,9 +409,9 @@ int isglobal;
     }
 #endif
   }
-
+  
   for(itemp=var->allvar-1;itemp>=remain;itemp--) {
-
+    
     /*****************************************
      * If the variable is a function scope
      * static variable, it will be kept.
@@ -421,16 +419,16 @@ int isglobal;
      * allocated memory area.
      *****************************************/
 #ifdef G__ASM_WHOLEFUNC
-    if(((var->statictype[itemp]!=G__LOCALSTATIC||G__GLOBAL_VAR==isglobal) &&
+    if(((var->statictype[itemp]!=G__LOCALSTATIC||G__GLOBAL_VAR==isglobal) && 
 	var->statictype[itemp]!=G__COMPILEDGLOBAL &&
 	G__BYTECODELOCAL_VAR!=isglobal)) {
        /* (G__BYTECODELOCAL_VAR==isglobal &&
 	var->statictype[itemp]==G__LOCALSTATIC)) { */
 #else
-    if((var->statictype[itemp]!=G__LOCALSTATIC||isglobal) &&
+    if((var->statictype[itemp]!=G__LOCALSTATIC||isglobal) && 
        var->statictype[itemp]!=G__COMPILEDGLOBAL) {
 #endif
-
+      
       cpplink=0;
       /****************************************************
        * If C++ class, destructor has to be called
@@ -464,12 +462,12 @@ int isglobal;
 	store_prerun = G__prerun;
 	G__prerun=0;
 	/********************************************************
-	 * destruction of array
+	 * destruction of array 
 	 ********************************************************/
 	if(G__CPPLINK==G__struct.iscpplink[G__tagnum]) {
 	  G__store_struct_offset = var->p[itemp];
 	  if((i=var->varlabel[itemp][1])>0) G__cpp_aryconstruct=i+1;
-	  G__getfunction(temp,&itemp1,G__TRYDESTRUCTOR);
+	  G__getfunction(temp,&itemp1,G__TRYDESTRUCTOR); 
 	  G__cpp_aryconstruct=0;
 	  cpplink=1;
 	}
@@ -484,7 +482,7 @@ int isglobal;
 	      fprintf(G__serr,"\n0x%x.%s",G__store_struct_offset,temp);
 #endif
 	    }
-	    G__getfunction(temp,&itemp1,G__TRYDESTRUCTOR);
+	    G__getfunction(temp,&itemp1,G__TRYDESTRUCTOR); 
 	    if(0==itemp1) break;
 	  }
 	}
@@ -496,7 +494,7 @@ int isglobal;
       } /*  end of type=='u' */
 
 #ifdef G__SECURITY
-      else if(G__security&G__SECURE_GARBAGECOLLECTION &&
+      else if(G__security&G__SECURE_GARBAGECOLLECTION && 
 #ifndef G__OLDIMPLEMENTATION545
 	      (!G__no_exec_compile) &&
 #endif
@@ -518,9 +516,9 @@ int isglobal;
 #endif
       /* ??? Scott Snyder fixed as var->p[itemp]>0x10000 ??? */
       if(G__NOLINK==cpplink && var->p[itemp]) free((void*)var->p[itemp]);
-
+      
     } /* end of statictype==LOCALSTATIC or COMPILEDGLOBAL */
-
+    
 #ifdef G__DEBUG
     else if(G__memhist) {
 #ifndef G__FONS31
@@ -534,18 +532,18 @@ int isglobal;
 	      ,var->p[itemp],var->varnamebuf[itemp]
 	      ,G__ifile.name,G__ifile.line_number);
 #endif
-    }
+    } 
 #endif
-
+    
     /* initialize varpointer and varlabel */
     /* var->varpointer[itemp]=0;*/
     for(itemp1=0;itemp1<G__MAXVARDIM;itemp1++) {
       var->varlabel[itemp][itemp1]=0;
     }
   }
-
+  
   var->allvar = remain;
-
+  
 }
 
 
@@ -612,13 +610,13 @@ int G__close_inputfiles()
       G__srcfile[iarg].hasonlyfunc=(struct G__dictposition*)NULL;
     }
 #endif
-    if(G__srcfile[iarg].fp) {
+    if(G__srcfile[iarg].fp) { 
       fclose(G__srcfile[iarg].fp);
 #ifndef G__PHILIPPE0
       if(G__srcfile[iarg].prepname) {
 	int j;
 	for(j=iarg+1;j<G__nfile;j++) {
-	  if(G__srcfile[j].fp==G__srcfile[iarg].fp)
+	  if(G__srcfile[j].fp==G__srcfile[iarg].fp) 
 	    G__srcfile[j].fp=(FILE*)NULL;
 	}
       }

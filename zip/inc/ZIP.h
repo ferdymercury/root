@@ -1,7 +1,12 @@
-/*CMZ :  2.23/09 24/11/99  11.23.02  by  Rene Brun*/
-/*CMZ :  2.00/00 08/03/98  11.27.32  by  Rene Brun*/
-/*CMZ :  1.00/07 28/03/97  09.27.38  by  Rene Brun*/
-/*-- Author :*/
+/* @(#)root/zip:$Name$:$Id$ */
+
+/*************************************************************************
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
+ *                                                                       *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
+ *************************************************************************/
 /*
 
  Copyright (C) 1990-1993 Mark Adler, Richard B. Wales, Jean-loup Gailly,
@@ -21,7 +26,7 @@
 
 /* Set up portability */
 /* #include "tailor.h" */
-#include "TAILOR.h"
+#include "Tailor.h"
 
 #define MIN_MATCH  3
 #define MAX_MATCH  258

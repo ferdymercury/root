@@ -1,5 +1,3 @@
-/*CMZ :  2.24/05 16/05/2000  12.03.44  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   16/05/2000*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -11,7 +9,7 @@
  ************************************************************************
  * Copyright(c) 1995~1999  Masaharu Goto (MXJ02154@niftyserve.or.jp)
  *
- * Permission to use, copy, modify and distribute this software and its
+ * Permission to use, copy, modify and distribute this software and its 
  * documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies and
  * that both that copyright notice and this permission notice appear
@@ -30,7 +28,7 @@ extern "C" {
 #endif
 
 /***********************************************************************
-* EH_env and err_env are only variable name which isn't escaped by 'G__'
+* EH_env and err_env are only variable name which isn't escaped by 'G__' 
 ***********************************************************************/
 #ifdef G__HSTD
 extern jmp_buf EH_env;
@@ -41,7 +39,7 @@ extern jmp_buf EH_env;
 /**************************************************************************
 * get CINTSYSDIR environment variable here
 **************************************************************************/
-extern char G__cintsysdir[G__MAXFILENAME] ;
+extern char G__cintsysdir[G__MAXFILENAME] ; 
 
 
 /**************************************************************************
@@ -78,26 +76,26 @@ extern G__value *G__asm_stack; /* data stack */
 extern char *G__asm_name;
 extern long G__asm_inst_g[G__MAXINST]; /* p-code instruction buffer */
 extern G__value G__asm_stack_g[G__MAXSTACK]; /* data stack */
-extern char G__asm_name_g[]; /* buffer to store function names which
+extern char G__asm_name_g[]; /* buffer to store function names which 
 				* is called within the compiled loop */
 extern int G__asm_name_p; /* pointer to the function name buffer */
 #else
 extern long G__asm_inst[G__MAXINST]; /* p-code instruction buffer */
 extern G__value G__asm_stack[G__MAXSTACK]; /* data stack */
-extern char G__asm_name[]; /* buffer to store function names which
+extern char G__asm_name[]; /* buffer to store function names which 
 				* is called within the compiled loop */
 extern int G__asm_name_p; /* pointer to the function name buffer */
 #endif
 
-extern struct G__param *G__asm_param; /* pointer of parameter buffer to
+extern struct G__param *G__asm_param; /* pointer of parameter buffer to 
 				* bring function parameter */
 extern int G__asm_exec; /* p-code execution flag */
-extern int G__asm_loopcompile; /* loop compilation mode. default on(1).
+extern int G__asm_loopcompile; /* loop compilation mode. default on(1). 
 			   * This is set to 0 by -O0 */
 #ifndef G__OLDIMPLEMENTATION1155
-extern int G__asm_loopcompile_mode;
+extern int G__asm_loopcompile_mode; 
 #endif
-extern int G__asm_noverflow; /* When this is set to 1, compilation starts.
+extern int G__asm_noverflow; /* When this is set to 1, compilation starts. 
 			 * If any error found, reset */
 extern int G__asm_dbg; /* p-code debugging flag, only valid when compiled with
 		   * G__ASM_DBG */
@@ -114,12 +112,12 @@ extern int G__asm_index;              /* variable index */
 * signal handling
 **************************************************************************/
 #ifdef G__SIGNAL
-extern char *G__SIGINT;
-extern char *G__SIGILL;
-extern char *G__SIGFPE;
-extern char *G__SIGABRT;
-extern char *G__SIGSEGV;
-extern char *G__SIGTERM;
+extern char *G__SIGINT; 
+extern char *G__SIGILL; 
+extern char *G__SIGFPE; 
+extern char *G__SIGABRT; 
+extern char *G__SIGSEGV; 
+extern char *G__SIGTERM; 
 #ifdef SIGHUP
 extern char *G__SIGHUP;
 #endif
@@ -148,7 +146,7 @@ extern char *G__SIGUSR2;
 
 
 /**************************************************************************
-* class template
+* class template 
 **************************************************************************/
 #ifdef G__TEMPLATECLASS
 extern struct G__Definedtemplateclass G__definedtemplateclass;
@@ -445,7 +443,7 @@ extern struct G__includepath G__ipathentry;
 *********************************************************************/
 #ifdef G__SHAREDLIB
 extern short G__allsl;
-#endif
+#endif 
 
 /*********************************************************************
 * #pragma compile feature utilizing DLL
@@ -488,7 +486,7 @@ extern FILE *G__memhist;
 #endif
 
 /**************************************************************************
-* Having K&R function in new linking
+* Having K&R function in new linking 
 **************************************************************************/
 extern int G__nonansi_func;
 
@@ -503,7 +501,7 @@ extern int G__sizep2memfunc;
 extern int G__parseextern;
 
 /**************************************************************************
-* class specific debugging
+* class specific debugging 
 **************************************************************************/
 extern int G__istrace;
 

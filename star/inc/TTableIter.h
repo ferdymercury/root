@@ -1,6 +1,13 @@
-//*CMZ :  2.24/01 31/03/2000  08.46.15  by  Rene Brun
-//*CMZ :  2.23/12 26/01/2000  12.24.45  by  Valery Fine(fine@bnl.gov)
-//*-- Author : Valery Fine(fine@bnl.gov)   03/12/99
+// @(#)root/star:$Name$:$Id$
+// Author: Valery Fine(fine@bnl.gov)   03/12/99
+
+/*************************************************************************
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
+ *                                                                       *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
+ *************************************************************************/
 #ifndef ROOT_TTableIter
 #define ROOT_TTableIter
 // $Id: TTableIter.h,v 1.3 1999/12/05 06:34:16 fine Exp $

@@ -1,5 +1,3 @@
-/*CMZ :  2.24/05 16/05/2000  12.03.50  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   16/05/2000*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -11,7 +9,7 @@
  ************************************************************************
  * Copyright(c) 1995~1999  Masaharu Goto (MXJ02154@niftyserve.or.jp)
  *
- * Permission to use, copy, modify and distribute this software and its
+ * Permission to use, copy, modify and distribute this software and its 
  * documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies and
  * that both that copyright notice and this permission notice appear
@@ -51,7 +49,7 @@ G__value *pval;
 /******************************************************************
 * G__value G__strip_quotation(string)
 *
-* Allocate memory and store const string expression. Then return
+* Allocate memory and store const string expression. Then return 
 * the string type value.
 *
 ******************************************************************/
@@ -174,7 +172,7 @@ char *string;
       case '"':
 	if('"'==string[itemp+1]) itemp+=2;
 #ifndef G__OLDIMPLEMENTATION998
-	else if(G__NOLINK==G__globalcomp)
+	else if(G__NOLINK==G__globalcomp) 
 	  G__genericerror("Error: String literal syntax error");
 #endif
       default:
@@ -215,7 +213,7 @@ char *string;
   }
 
   /* Create new conststring entry */
-  pconststring
+  pconststring 
     = (struct G__ConstStringList*)malloc(sizeof(struct G__ConstStringList));
   pconststring->prev = G__plastconststring;
   G__plastconststring = pconststring;
@@ -377,7 +375,7 @@ char *string;
 	result.tagnum = G__newtype.tagnum[result.typenum];
 	result.type = G__newtype.type[result.typenum];
       }
-#endif
+#endif      
       break;
     }
   }
@@ -391,7 +389,7 @@ char *string;
 * char *G__add_quotation(string)
 *
 * Called by
-*
+*    
 ******************************************************************/
 char *G__add_quotation(string,temp)
 char *string;
@@ -402,23 +400,23 @@ char *temp;
   temp[i++]='"';
   while((c=string[l++])!='\0') {
     switch(c) {
-    case '\n':
+    case '\n': 
       temp[i++]='\\';
       temp[i++]='n';
       break;
-    case '\r':
+    case '\r': 
       temp[i++]='\\';
       temp[i++]='r';
       break;
-    case '\\':
+    case '\\': 
       temp[i++]='\\';
       temp[i++]='\\';
       break;
-    case '"':
+    case '"': 
       temp[i++]='\\';
       temp[i++]='"';
       break;
-    default:
+    default: 
       temp[i++]=c;
       break;
     }
@@ -445,7 +443,7 @@ char *result7;
 
 /****************************************************************
 * char *G__string()
-*
+* 
 ****************************************************************/
 char *G__string(buf,temp)
 G__value buf;
@@ -485,7 +483,7 @@ char *temp;
 
 /****************************************************************
 * char *G__quotedstring()
-*
+* 
 ****************************************************************/
 char *G__quotedstring(buf,result)
 char *buf;
@@ -512,7 +510,7 @@ char *result;
 
 /****************************************************************
 * char *G__logicstring()
-*
+* 
 ****************************************************************/
 char *G__logicstring(buf,dig,result)
 G__value buf;

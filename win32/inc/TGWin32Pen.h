@@ -1,15 +1,22 @@
-//*CMZ :  2.24/03 29/04/2000  23.42.00  by  Rene Brun
-//*CMZ :  0.80/01 16/08/96  17.29.41  by  Rene Brun
-//*-- Author :    Valery Fine(fine@vxcern.cern.ch)   16/08/96
+// @(#)root/win32:$Name$:$Id$
+// Author: Valery Fine   19/01/96
+
+/*************************************************************************
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
+ *                                                                       *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
+ *************************************************************************/
 #ifndef ROOT_TGWin32Pen
 #define ROOT_TGWin32Pen
 
 #ifndef ROOT_TObject
-#include "TOBJECT.h"
+#include "TObject.h"
 #endif
 
 #ifndef ROOT_Windows4Root
-#include "WINDOWS4ROOT.h"
+#include "Windows4Root.h"
 #endif
 
 class TGWin32Pen : public TObject {

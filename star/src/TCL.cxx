@@ -1,6 +1,5 @@
-//*CMZ :  2.24/01 31/03/2000  08.24.31  by  Rene Brun
-//*CMZ :  2.23/12 28/01/2000  18.40.48  by  Valery Fine(fine@bnl.gov)
-//*-- Author :    Valery Fine(fine@bnl.gov)   25/09/99
+// @(#)root/star:$Name$:$Id$
+// Author: Valery Fine(fine@bnl.gov)   25/09/99
 //
 // The set of methods to work with the plain matrix / vector
 // "derived" from  http://wwwinfo.cern.ch/asdoc/shortwrupsdir/f110/top.html

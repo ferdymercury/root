@@ -1,7 +1,12 @@
-/*CMZ :  2.23/03 24/09/99  18.25.38  by  Fons Rademakers*/
-/*CMZ :  2.00/00 08/03/98  11.27.32  by  Rene Brun*/
-/*CMZ :  1.03/09 16/12/97  16.26.16  by  Rene Brun*/
-/*-- Author :*/
+/* @(#)root/zip:$Name$:$Id$ */
+
+/*************************************************************************
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
+ *                                                                       *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
+ *************************************************************************/
 /* tailor.h -- Not copyrighted 1993 Mark Adler */
 
 /* Define MSDOS for Turbo C and Power C */

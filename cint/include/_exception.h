@@ -1,5 +1,3 @@
-/*CMZ :  2.24/05 16/05/2000  12.03.57  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   16/05/2000*/
 #ifndef G__EXCEPTION_H
 #define G__EXCEPTION_H
 
@@ -37,7 +35,7 @@ class exception {
   virtual ~exception() /* throw() */ { delete[] msg; }
   virtual const char* what() const /* throw() */{return(msg);}
 
-  exception(const char* msgin) {
+  exception(const char* msgin) { 
     msg = new char[strlen(msgin)+1];
     strcpy(msg,msgin);
   }
@@ -52,7 +50,7 @@ class bad_exception : public exception {
   bad_exception(const bad_exception&) /* throw() */ {}
   bad_exception& operator=(const bad_exception&) /* throw() */ {}
   virtual ~bad_exception() /* throw() */ {}
-  virtual const char* what() const /* throw() */ {return("Unknown bad_exception");}
+  virtual const char* what() const /* throw() */ {return("Unknown bad_exception");} 
 };
 
 #ifdef __MAKECINT__
@@ -70,3 +68,4 @@ class bad_exception : public exception {
 
 //}
 
+#endif

@@ -1,5 +1,3 @@
-/*CMZ :  2.24/05 16/05/2000  12.04.02  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   16/05/2000*/
 /*
  *
  * Copyright (c) 1994
@@ -26,7 +24,7 @@ void __push_heap(RandomAccessIterator first, Distance holeIndex,
 	*(first + holeIndex) = *(first + parent);
 	holeIndex = parent;
 	parent = (holeIndex - 1) / 2;
-    }
+    }    
     *(first + holeIndex) = value;
 }
 
@@ -148,7 +146,7 @@ void __make_heap(RandomAccessIterator first, RandomAccessIterator last, T*,
     if (last - first < 2) return;
     Distance len = last - first;
     Distance parent = (len - 2)/2;
-
+    
     while (true) {
 	__adjust_heap(first, parent, len, T(*(first + parent)));
 	if (parent == 0) return;
@@ -167,7 +165,7 @@ void __make_heap(RandomAccessIterator first, RandomAccessIterator last,
     if (last - first < 2) return;
     Distance len = last - first;
     Distance parent = (len - 2)/2;
-
+    
     while (true) {
 	__adjust_heap(first, parent, len, T(*(first + parent)), comp);
 	if (parent == 0) return;

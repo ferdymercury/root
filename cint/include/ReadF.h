@@ -1,5 +1,3 @@
-/*CMZ :  2.24/05 16/05/2000  12.03.57  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   16/05/2000*/
 /*****************************************************************************
 * ReadFile.h
 *
@@ -41,8 +39,8 @@ class ReadFile {
 #ifdef G__NEVER
   int regex(char *pattern,char *string=(char*)NULL);
 #endif
-  void setseparator(const char *separatorin);
-  void setendofline(const char *endoflinein);
+  void setseparator(const char *separatorin); 
+  void setendofline(const char *endoflinein); 
 
   int isvalid() { if(fp) return(1); else return(0); }
   void disp();

@@ -1,9 +1,13 @@
-*CMZ :  2.23/12 28/01/2000  19.18.56  by  Rene Brun
-*CMZ :  2.22/06 23/06/99  08.19.49  by  Rene Brun
-*CMZ :  2.22/00 29/03/99  05.51.23  by  Rene Brun
-*CMZ :  2.21/06 15/02/99  09.30.26  by  Rene Brun
-*CMZ :  2.21/03 20/01/99  14.43.50  by  Fons Rademakers
-*-- Author :    Fons Rademakers   20/01/99
+/* @(#)root/physics:$Name$:$Id$ */
+
+/*************************************************************************
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
+ *                                                                       *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
+ *************************************************************************/
+
 #ifdef __CINT__
 
 #pragma link off all globals;

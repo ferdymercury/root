@@ -1,5 +1,3 @@
-/*CMZ :  2.24/05 16/05/2000  12.03.51  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   16/05/2000*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -11,7 +9,7 @@
  ************************************************************************
  * Copyright(c) 1995~1999  Masaharu Goto (MXJ02154@niftyserve.or.jp)
  *
- * Permission to use, copy, modify and distribute this software and its
+ * Permission to use, copy, modify and distribute this software and its 
  * documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies and
  * that both that copyright notice and this permission notice appear
@@ -61,7 +59,7 @@ long value; /* used to be int */
 
 /****************************************************************
 * int G__isdouble(G__value buf)
-*
+* 
 ****************************************************************/
 int G__isdouble(buf)
 G__value buf;
@@ -78,7 +76,7 @@ G__value buf;
 #ifdef G__NEVER
 /****************************************************************
 * float G__float(G__value buf)
-*
+* 
 ****************************************************************/
 float G__float(buf)
 G__value buf;
@@ -105,7 +103,7 @@ G__value buf;
 
 /****************************************************************
 * double G__double(G__value buf)
-*
+* 
 ****************************************************************/
 double G__double(buf)
 G__value buf;
@@ -129,7 +127,7 @@ G__value buf;
 
 /****************************************************************
 * long G__int(G__value buf)
-*
+* 
 ****************************************************************/
 long G__int(buf) /* used to be int */
 G__value buf;
@@ -317,8 +315,8 @@ G__value p;
     result.obj.i = p.obj.i;
     break;
 #ifndef G__OLDIMPLEMENTATION740
-  case 'u':
-    {
+  case 'u': 
+    { 
       char refopr[G__MAXNAME];
       long store_struct_offsetX = G__store_struct_offset;
       int store_tagnumX = G__tagnum;
@@ -345,7 +343,7 @@ G__value p;
       strcpy(refopr,"operator*()");
       result=G__getfunction(refopr,&done,G__TRYMEMFUNC);
       G__tagnum = store_tagnumX;
-      G__store_struct_offset = store_struct_offsetX;
+      G__store_struct_offset = store_struct_offsetX; 
 #ifndef G__OLDIMPLEMENTATION747
 #ifdef G__ASM
       if(G__asm_noverflow) {
@@ -368,7 +366,7 @@ G__value p;
   }
   result.type = tolower(p.type);
   result.ref = p.obj.i;
-
+  
   return(result);
 }
 
@@ -493,7 +491,7 @@ G__value *p,result;
     G__genericerror("Error: Illegal pointer operation (letvalue)");
     break;
   }
-
+  
   return(result);
 }
 

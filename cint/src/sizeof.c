@@ -1,5 +1,3 @@
-/*CMZ :  2.24/05 16/05/2000  12.03.50  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   16/05/2000*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -7,11 +5,11 @@
  * Source file sizeof.c
  ************************************************************************
  * Description:
- *  Getting object size
+ *  Getting object size 
  ************************************************************************
  * Copyright(c) 1995~1999  Masaharu Goto (MXJ02154@niftyserve.or.jp)
  *
- * Permission to use, copy, modify and distribute this software and its
+ * Permission to use, copy, modify and distribute this software and its 
  * documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies and
  * that both that copyright notice and this permission notice appear
@@ -22,7 +20,7 @@
 
 #include "common.h"
 
-/* array index for type_info. This must correspond to the class member
+/* array index for type_info. This must correspond to the class member 
 * layout of class type_info in the <typeinfo.h> */
 #define G__TYPEINFO_VIRTUALID 0
 #define G__TYPEINFO_TYPE      1
@@ -278,14 +276,14 @@ char *typename;
 #endif
     if(pointlevel<=var->paran[ig15]) {
       switch(pointlevel) {
-      case 0:
-	pinc=var->varlabel[ig15][1]+1;
+      case 0: 
+	pinc=var->varlabel[ig15][1]+1; 
 	break;
       case 1:
-	pinc=var->varlabel[ig15][0];
+	pinc=var->varlabel[ig15][0]; 
 	break;
       default:
-	pinc=var->varlabel[ig15][0];
+	pinc=var->varlabel[ig15][0]; 
 	for(i=1;i<pointlevel;i++) pinc/=var->varlabel[ig15][i+1];
 	break;
       }
@@ -351,7 +349,7 @@ char *typenamein;
   char *typename;
 
   /**********************************************************************
-  * Get type_info tagname
+  * Get type_info tagname 
   ***********************************************************************/
   tag_type_info = G__defined_tagname("type_info",1);
   if(-1==tag_type_info) {
@@ -441,8 +439,8 @@ char *typenamein;
     else if((strncmp(typename,"union",5)==0)) {
       typename = typename+5;
     }
-
-    tagnum = G__defined_tagname(typename,1);
+    
+    tagnum = G__defined_tagname(typename,1); 
     if(-1 != tagnum) {
       reftype=G__PARANORMAL;
       switch(G__struct.type[tagnum]) {
@@ -510,7 +508,7 @@ char *typenamein;
 	size = G__CHARALLOC;
       }
       if(strcmp(typename,"float")==0) {
-	type = 's';
+	type = 's'; 
 	size = G__FLOATALLOC;
       }
       if((strcmp(typename,"double")==0)||
@@ -534,7 +532,7 @@ char *typenamein;
   }
 
   /**********************************************************************
-   * If no type name matches, evaluate the expression and get the type
+   * If no type name matches, evaluate the expression and get the type 
    * information of the object
    *********************************************************************/
   if(0==type) {
@@ -639,7 +637,7 @@ int tagnum;
       if((FILE*)NULL==fp) {
 #ifndef G__PHILIPPE0
 	/* Open the right file even in case where we use the preprocessor */
-	if (
+	if ( 
 #ifndef G__OLDIMPLEMENTATION1100
 	    filenum<G__MAXFILE &&
 #endif
@@ -731,7 +729,7 @@ int typenum;
       if((FILE*)NULL==fp) {
 #ifndef G__PHILIPPE0
 	/* Open the right file even in case where we use the preprocessor */
-	if (
+	if ( 
 #ifndef G__OLDIMPLEMENTATION1100
 	    filenum<G__MAXFILE &&
 #endif
@@ -818,8 +816,8 @@ int tagnum;
   /**********************************************************************
    * check validity
    **********************************************************************/
-  if(tagnum<0 || G__struct.alltag<=tagnum ||
-     ('c'!=G__struct.type[tagnum] && 's'!=G__struct.type[tagnum]))
+  if(tagnum<0 || G__struct.alltag<=tagnum || 
+     ('c'!=G__struct.type[tagnum] && 's'!=G__struct.type[tagnum])) 
     return(0);
 
   /**********************************************************************
@@ -967,9 +965,9 @@ int tagnum;
     tag_string_buf = G__defined_tagname("G__string_buf",0);
     G__alloc_tempobject(tag_string_buf, -1 );
     buf = (char*)G__p_tempbuf->obj.obj.i;
-    strcpy(buf,G__type2string(var->type[index]
+    strcpy(buf,G__type2string(var->type[index] 
 			      ,var->p_tagtable[index]
-			      ,var->p_typetable[index]
+			      ,var->p_typetable[index] 
 			      ,var->reftype[index],0));
     return((long)buf);
   }
@@ -1081,9 +1079,9 @@ int tagnum;
     tag_string_buf = G__defined_tagname("G__string_buf",0);
     G__alloc_tempobject(tag_string_buf, -1 );
     buf = (char*)G__p_tempbuf->obj.obj.i;
-    strcpy(buf,G__type2string(ifunc->type[index]
+    strcpy(buf,G__type2string(ifunc->type[index] 
 			      ,ifunc->p_tagtable[index]
-			      ,ifunc->p_typetable[index]
+			      ,ifunc->p_typetable[index] 
 			      ,ifunc->reftype[index],0));
     return((long)buf);
   }

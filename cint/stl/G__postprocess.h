@@ -1,10 +1,8 @@
-/*CMZ :  2.24/05 16/05/2000  12.04.01  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   16/05/2000*/
 /*************************************************************************
  * stl/G__postprocess.h
  *
  * Description:
- *  This source code should be used to disable specific member function
+ *  This source code should be used to disable specific member function 
  *  linkage from STL container.
  *
  *  #pragma link postprocess G__postprocess.cxx G__postprocess("Ary");
@@ -20,18 +18,18 @@ void G__postprocess(const char* templatename) {
   G__TypeInfo tmparg;
   long offset;
   int len;
-
+  
   sprintf(tempname,"%s<",templatename);
   len = strlen(tempname);
-
+  
   // iterate on all class, struct
-  while(c.Next()) {
+  while(c.Next()) { 
     strcpy(classname,c.Name());
-
+    
     // choose instantiated template class and interpreted one
-    if((0==c.Property()&G__BIT_ISCOMPILED) &&
+    if((0==c.Property()&G__BIT_ISCOMPILED) && 
        strncmp(classname,tempname,len)==0) {
-
+      
       // Assuming the first tmparg is the element type, get that typename
       char *tmpargname = strchr(classname,'<');
       char *p2 = strrchr(classname,'>');
@@ -40,7 +38,7 @@ void G__postprocess(const char* templatename) {
       if(p2) *p2 = 0;
       if(p3) *p3 = 0;
       ++tmpargname;
-
+      
       // Get type information of template argument
       tmparg.Init(tmpargname);
       if(tmparg.IsValid()) {
@@ -132,7 +130,7 @@ void G__postprocess(const char* templatename) {
 }
 
 void G__controloperation(const char* fname,G__ClassInfo& c
-			 ,G__TypeInfo& tmparg,int globalcomp)
+			 ,G__TypeInfo& tmparg,int globalcomp) 
 {
   long offset;
   G__MethodInfo m;
@@ -140,19 +138,19 @@ void G__controloperation(const char* fname,G__ClassInfo& c
   char classname[200],args[300];
   strcpy(classname,c.Name());
   int flag = globalcomp? -1 : 0 ;
-
+  
   // member function
   m = c.GetMethod(fname,classname,&offset);
   m.SetGlobalcomp(flag);
-
+  
   // global function
   sprintf(args,"%s,%s",classname,classname);
   m = global.GetMethod(fname,args,&offset);
   m.SetGlobalcomp(flag);
 }
-
+  
 void G__controloperation(const char* fname,G__ClassInfo& c
-			 ,G__TypeInfo& tmparg)
+			 ,G__TypeInfo& tmparg) 
 {
   long offset;
   G__MethodInfo m;
@@ -160,21 +158,21 @@ void G__controloperation(const char* fname,G__ClassInfo& c
   int globalcomp = 0;
   char classname[200],args[300];
   strcpy(classname,tmparg.Name());
-
+  
   // member function
   m = tmparg.GetMethod(fname,classname,&offset);
   if(m.IsValid()) globalcomp = 1;
-
+  
   // global function
   sprintf(args,"%s,%s",classname,classname);
   m = global.GetMethod(fname,args,&offset);
   if(m.IsValid()) globalcomp = 1;
-
-  G__controloperation(fname,c,tmparg,globalcomp);
+  
+  G__controloperation(fname,c,tmparg,globalcomp); 
 }
 
 /*************************************************************************
-* Use this function with '#pragma link postprocess' as follows at the end
+* Use this function with '#pragma link postprocess' as follows at the end 
 * of ROOT linkdef files.
 *
 *  #pragma link postprocess G__postprocess.h G__ROOT_T();

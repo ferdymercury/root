@@ -1,5 +1,12 @@
-//*CMZ :  1.03/01 01/08/97  10.47.01  by  Valery Fine(fine@vxcern.cern.ch)
-//*-- Author :    Valery Fine(fine@vxcern.cern.ch)   16/08/96
+/* @(#)root/win32:$Name$:$Id$ */
+
+/*************************************************************************
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
+ *                                                                       *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
+ *************************************************************************/
 #ifndef ROOT_Win32Constants
 #define ROOT_Win32Constants
 
@@ -195,3 +202,4 @@ enum EListOfIcons {kMainROOTIcon, kCanvasIcon, kBrowserIcon, kClosedFolderIcon, 
 
 #define  GetWin32ApplicationImp() ((TWin32Application *)( gROOT->GetApplication()->GetApplicationImp()))
 
+#endif

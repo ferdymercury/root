@@ -1,13 +1,11 @@
-/*CMZ :  2.24/05 16/05/2000  12.03.57  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   16/05/2000*/
 /*********************************************************************
 * typeinfo.h
 *
 *  Run time type identification
 *
 * Memo:
-*   typeid(typename) , typeid(expression) is implemented as special
-*  function in the cint body src/G__func.c.
+*   typeid(typename) , typeid(expression) is implemented as special 
+*  function in the cint body src/G__func.c. 
 *
 *   As an extention, G__typeid(char *name) is defined in src/G__func.c
 *  too for more dynamic use of the typeid.
@@ -31,7 +29,7 @@
 /*********************************************************************
 * Functions embedded in cint core
 * Most of those functions are defined in src/sizeof.c
-*
+* 
 *********************************************************************/
 // type_info typeid(expression);
 // type_info typeid(char *typename);
@@ -45,7 +43,7 @@
 * type_info
 *
 *  Included in ANSI/ISO resolution proposal 1995 spring
-*
+* 
 *********************************************************************/
 class type_info {
  public:
@@ -76,9 +74,9 @@ class type_info {
 
 bool type_info::operator==(const type_info& a) const
 {
-  if(reftype == a.reftype && tagnum == a.tagnum && type == a.type)
+  if(reftype == a.reftype && tagnum == a.tagnum && type == a.type) 
     return(true);
-  else
+  else 
     return(false);
 }
 
@@ -90,11 +88,11 @@ bool type_info::operator!=(const type_info& a) const
 
 bool type_info::before(const type_info& a) const
 {
-  if(-1!=tagnum)
+  if(-1!=tagnum) 
     return( tagnum < a.tagnum );
-  else if(-1!=a.tagnum)
+  else if(-1!=a.tagnum) 
     return( -1 < a.tagnum );
-  else
+  else 
     return( type < a.type );
 }
 
@@ -149,7 +147,7 @@ class G__class_info : public type_info {
   G__class_info() { init(); }
   G__class_info(type_info& a) { init(a); }
   G__class_info(char *classname) { init(G__typeid(classname)); }
-
+  
   void init() {
     typenum = -1;
     reftype = 0;
@@ -207,7 +205,7 @@ class G__class_info : public type_info {
   }
 
 };
-
+  
 
 /*********************************************************************
 * G__variable_info
@@ -257,7 +255,7 @@ class G__variable_info {
   long handle; // pointer to variable table
   long index;
   long tagnum; // class/struct identity
-};
+};  
 
 /*********************************************************************
 * G__function_info
@@ -309,7 +307,7 @@ class G__function_info {
   long handle; // pointer to variable table
   long index;
   long tagnum; // class/struct identity
-};
+};  
 
 /*********************************************************************
 * G__string_buf

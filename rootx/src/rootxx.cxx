@@ -1,7 +1,5 @@
-//*CMZ :  2.00/06 07/05/98  13.54.24  by  Fons Rademakers
-//*CMZ :  2.00/02 22/03/98  13.00.48  by  Fons Rademakers
-//*CMZ :  2.00/00 19/02/98  22.44.57  by  Fons Rademakers
-//*-- Author :    Fons Rademakers   19/02/98
+// @(#)root/rootx:$Name$:$Id$
+// Author: Fons Rademakers   19/02/98
 
 //////////////////////////////////////////////////////////////////////////
 //                                                                      //
@@ -224,3 +222,4 @@ void CloseDisplay()
 
    if (gDisplay)
       close(ConnectionNumber(gDisplay));
+}

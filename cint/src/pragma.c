@@ -1,5 +1,3 @@
-/*CMZ :  2.24/05 16/05/2000  12.03.50  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   16/05/2000*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -11,7 +9,7 @@
  ************************************************************************
  * Copyright(c) 1995~1999  Masaharu Goto (MXJ02154@niftyserve.or.jp)
  *
- * Permission to use, copy, modify and distribute this software and its
+ * Permission to use, copy, modify and distribute this software and its 
  * documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies and
  * that both that copyright notice and this permission notice appear
@@ -223,7 +221,7 @@ int G__pragma()
     c = G__fgetstream(command,";\n\r");
     G__asm_loopcompile = G__int(G__calc_internal(command));
 #ifndef G__OLDIMPLEMENTATION1155
-    G__asm_loopcompile_mode = G__asm_loopcompile;
+    G__asm_loopcompile_mode = G__asm_loopcompile; 
 #endif
     /* if('\n'!=c&&'\r'!=c) G__fignoreline(); */
   }
@@ -486,7 +484,7 @@ int G__setautoccnames()
   if(p) *p = '\0';
 
   /* assign autocc filenames */
-  if(G__iscpp)
+  if(G__iscpp) 
     sprintf(G__autocc_c,"G__AC%s%s",fname,G__getmakeinfo("CPPSRCPOST"));
   else
     sprintf(G__autocc_c,"G__AC%s%s",fname,G__getmakeinfo("CSRCPOST"));
@@ -513,7 +511,7 @@ int G__setautoccnames()
     fpto=fopen(backup,"w");
     if(fpto) fprintf(fpto,"new autocc file\n");
     fclose(fpto);
-  }
+  } 
   G__autoccfilenum = G__ifile.filenum;
   return(0);
 }
@@ -588,7 +586,7 @@ int G__autocc()
     system(temp);
 #endif
 
-
+    
 #ifdef G__OLDIMPLEMENTATION486
     sprintf(temp,"mv %s %s.bk",G__autocc_c,G__autocc_c);
     system(temp);
@@ -622,18 +620,18 @@ FILE *fp;
     ++G__ifile.line_number;
     if((argn>=3 && strcmp(arg[1],"#")==0 && strcmp(arg[2],"pragma")==0 &&
 	strcmp(arg[3],"endcompile")==0) ||
-       (argn>=2 && strcmp(arg[1],"#pragma")==0 &&
+       (argn>=2 && strcmp(arg[1],"#pragma")==0 && 
 	strcmp(arg[2],"endcompile")==0)) {
       return(EXIT_SUCCESS);
     }
     else if(argn>=2 && strcmp(arg[1],"#")==0 && strcmp(arg[2],"pragma")==0) {
-      if(argn>=3 && strcmp(arg[3],"include")==0)
+      if(argn>=3 && strcmp(arg[3],"include")==0) 
 	fprintf(fp,"#include \"%s\"\n",arg[4]);
       else if(argn>=3 && strcmp(arg[3],"define")==0)
 	fprintf(fp,"#%s\n",strstr(arg[0],"define"));
     }
     else if(argn>=1 && strcmp(arg[1],"#pragma")==0) {
-      if(argn>=3 && strcmp(arg[2],"include")==0)
+      if(argn>=3 && strcmp(arg[2],"include")==0) 
 	fprintf(fp,"#include \"%s\"\n",arg[3]);
       else if(argn>=2 && strcmp(arg[2],"define")==0)
 	fprintf(fp,"#%s\n",strstr(arg[0],"define"));
@@ -727,7 +725,7 @@ char *string;
   /* In case of preprocessed file, the same logical file might actually
      be processed more than once. */
   if((G__security&G__SECURE_NO_CHANGE) &&(G__security!=code) ) {
-#else
+#else 
   if(G__security&G__SECURE_NO_CHANGE) {
 #endif
     fprintf(G__serr,"Warning: security level locked, can't change");

@@ -1,9 +1,13 @@
-//*CMZ :  2.23/12 26/01/2000  09.49.06  by  Rene Brun
-//*CMZ :  2.22/06 22/06/99  15.04.49  by  Rene Brun
-//*CMZ :  2.22/02 26/05/99  09.29.36  by  Rene Brun
-//*CMZ :  2.22/01 21/04/99  10.48.10  by  Rene Brun
-//*CMZ :  2.21/06 12/02/99  13.21.45  by  Pasha Murat
-//*-- Author :    Pasha Murat   12/02/99
+// @(#)root/eg:$Name$:$Id$
+// Author: Pasha Murat   12/02/99
+
+/*************************************************************************
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
+ *                                                                       *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
+ *************************************************************************/
 #ifndef ROOT_TParticlePDG
 #define ROOT_TParticlePDG
 

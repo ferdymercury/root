@@ -1,5 +1,3 @@
-/*CMZ :  2.24/05 16/05/2000  12.03.57  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   16/05/2000*/
 /**************************************************************************
 * array.h
 *
@@ -20,12 +18,12 @@
 
 #ifndef G__ARRAYSL
 # ifdef G__SHAREDLIB
-#pragma include_noerr <array.dl>
+#pragma include_noerr <array.dl>  
 #  ifndef G__ARRAYSL
-#include <array.c>
+#include <array.c>  
 #  endif
 # else
-#include <array.c>
+#include <array.c>  
 # endif
 #endif // G__ARRAYSL
 

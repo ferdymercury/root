@@ -1,5 +1,3 @@
-/*CMZ :  2.24/05 16/05/2000  12.03.44  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   16/05/2000*/
 /* /% C++ %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -11,7 +9,7 @@
  ************************************************************************
  * Copyright(c) 1995~1999  Masaharu Goto (MXJ02154@niftyserve.or.jp)
  *
- * Permission to use, copy, modify and distribute this software and its
+ * Permission to use, copy, modify and distribute this software and its 
  * documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies and
  * that both that copyright notice and this permission notice appear
@@ -22,7 +20,7 @@
 
 
 #ifndef G__TYPEDEFINFO_H
-#define G__TYPEDEFINFO_H
+#define G__TYPEDEFINFO_H 
 
 
 #include "Api.h"
@@ -30,16 +28,16 @@
 /*********************************************************************
 * class G__TypedefInfo
 *
-*
+* 
 *********************************************************************/
 class G__TypedefInfo : public G__TypeInfo {
  public:
   ~G__TypedefInfo() {}
   G__TypedefInfo() { Init(); }
   void Init();
-  G__TypedefInfo(const char *typenamein) { Init(typenamein); }
+  G__TypedefInfo(const char *typenamein) { Init(typenamein); } 
   void Init(const char *typenamein);
-  G__TypedefInfo(int typenumin) { Init(typenumin); }
+  G__TypedefInfo(int typenumin) { Init(typenumin); } 
   void Init(int typenumin);
   G__ClassInfo EnclosingClassOfTypedef();
 

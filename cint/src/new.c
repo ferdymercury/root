@@ -1,5 +1,3 @@
-/*CMZ :  2.24/05 16/05/2000  12.03.48  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   16/05/2000*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -11,7 +9,7 @@
  ************************************************************************
  * Copyright(c) 1995~1999  Masaharu Goto (MXJ02154@niftyserve.or.jp)
  *
- * Permission to use, copy, modify and distribute this software and its
+ * Permission to use, copy, modify and distribute this software and its 
  * documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies and
  * that both that copyright notice and this permission notice appear
@@ -31,7 +29,7 @@ extern void G__delete_interpreted_object G__P((void* p));
 
 /****************************************************************
 * G__value G__new_operator()
-*
+* 
 * Called by:
 *   G__getpower()
 *
@@ -106,7 +104,7 @@ char *expression;
   else {
     arena[0]='\0';
   }
-
+  
   /******************************************************
    * get initializer,arrayindex,type,pinc and size
    ******************************************************/
@@ -148,7 +146,7 @@ char *expression;
     sprintf(construct,"%s()",type);
 #endif
 #ifndef G__OLDIMPLEMENTATION911
-    if(G__asm_wholefunction) G__abortbytecode();
+    if(G__asm_wholefunction) G__abortbytecode(); 
 #endif
   }
   else {
@@ -200,15 +198,15 @@ char *expression;
 #endif
     }
   }
-
+  
   size = G__Lsizeof(type);
   if(size == -1) {
     fprintf(G__serr,"Error: type %s not defined FILE:%s LINE:%d\n"
 	    ,type,G__ifile.name,G__ifile.line_number);
     return(G__null);
   }
-
-
+  
+  
   /******************************************************
    * Store member function executing environment
    ******************************************************/
@@ -257,7 +255,7 @@ char *expression;
 #endif
     type[--typelen]='\0';
   }
-
+  
   /******************************************************
    * identify type
    ******************************************************/
@@ -315,7 +313,7 @@ char *expression;
   }
 #endif
 #endif /* 1157 */
-
+  
   /******************************************************
    * allocate memory if this is a class object and
    * not pre-compiled.
@@ -382,7 +380,7 @@ char *expression;
 #endif
 #endif
   }
-
+  
   /******************************************************
    * call constructor if struct, class
    ******************************************************/
@@ -391,7 +389,7 @@ char *expression;
       fprintf(G__serr,"\n!!!Calling constructor 0x%lx.%s for new %s"
 	      ,G__store_struct_offset,type,type);
     }
-
+    
     if(G__CPPLINK==G__struct.iscpplink[G__tagnum]) {
       /* This is a pre-compiled class */
       long store_globalvarpointer = G__globalvarpointer;
@@ -490,9 +488,9 @@ char *expression;
 	    /* G__ASSERT(-1!=buf.tagnum); */
 #ifndef G__OLDIMPLEMENTATION843
 	    G__abortbytecode(); /* Disable bytecode */
-	    if(-1!=buf.tagnum && 0==G__no_exec_compile)
+	    if(-1!=buf.tagnum && 0==G__no_exec_compile) 
 #else
-	    if(-1!=buf.tagnum)
+	    if(-1!=buf.tagnum) 
 #endif
 	      memcpy((void*)G__store_struct_offset,(void*)buf.obj.i
 		     ,G__struct.size[buf.tagnum]);
@@ -501,7 +499,7 @@ char *expression;
 	  break;
 	}
 	G__store_struct_offset += size;
-	/* WARNING: FOLLOWING PART MUST BE REDESIGNED TO SUPPORT WHOLE
+	/* WARNING: FOLLOWING PART MUST BE REDESIGNED TO SUPPORT WHOLE 
 	 * FUNCTION COMPILATION */
 #ifdef G__ASM_IFUNC
 #ifdef G__ASM
@@ -575,7 +573,7 @@ char *expression;
     para.next = (struct G__param*)NULL;
 #endif
     G__var_type = store_var_type;
-    if(!G__no_exec_compile) result.ref = pointer;
+    if(!G__no_exec_compile) result.ref = pointer; 
     else                    result.ref = 0;
     /* following call generates CAST instruction */
 #ifndef G__OLDIMPLEMENTATION924
@@ -601,7 +599,7 @@ char *expression;
     }
 #endif /* ASM */
   }
-
+  
 #ifndef G__OLDIMPLEMENTATION683
   if(isupper(var_type)) {
     G__letint(&result,var_type,pointer);
@@ -625,7 +623,7 @@ char *expression;
 #endif
   result.tagnum=G__tagnum;
   result.typenum=G__typenum;
-
+  
   G__store_struct_offset = store_struct_offset;
   G__tagnum = store_tagnum;
   G__typenum = store_typenum;
@@ -658,13 +656,13 @@ char *expression;
 #endif
   }
 #endif
-
+  
   return(result);
 }
 
 /****************************************************************
 * G__getarrayindex()
-*
+* 
 * Called by:
 *   G__new_operator()
 *
@@ -682,7 +680,7 @@ char *indexlist;
   int store_var_type=G__var_type;
   G__var_type='p';
 #endif
-
+  
   c = G__getstream(indexlist,&p,index,"]");
   p_inc *= G__int(G__getexpr(index));
   while(*(indexlist+p)=='[') {
@@ -707,19 +705,19 @@ char *indexlist;
 #ifndef G__OLDIMPLEMENTATION1147
   G__var_type=store_var_type;
 #endif
-
+  
   return(p_inc);
 }
 
 /****************************************************************
 * void G__delete_operator()
-*
+* 
 * Called by:
 *   G__exec_statement()
 *   G__exec_statement()
 *
 *        V
-* delete
+* delete 
 *
 ****************************************************************/
 void G__delete_operator(expression,isarray)
@@ -736,7 +734,7 @@ int isarray;
 #ifndef G__OLDIMPLEMENTATION864
   int zeroflag=0;
 #endif
-
+  
 
   buf=G__getitem(expression);
   if(islower(buf.type)) {
@@ -745,7 +743,7 @@ int isarray;
     return;
   }
 #ifndef G__OLDIMPLEMENTATION864
-  else if(0==buf.obj.i && 0==G__no_exec_compile &&
+  else if(0==buf.obj.i && 0==G__no_exec_compile && 
 	  G__ASM_FUNC_NOP==G__asm_wholefunction) {
     zeroflag=1;
     G__no_exec_compile = 1;
@@ -753,7 +751,7 @@ int isarray;
     buf.obj.i = 1;
   }
 #else
-  else if(0==buf.obj.i && 0==G__no_exec_compile &&
+  else if(0==buf.obj.i && 0==G__no_exec_compile && 
 	  G__ASM_FUNC_NOP==G__asm_wholefunction) {
     fprintf(G__serr,"Error: %s==NULL cannot delete",expression);
     G__genericerror((char*)NULL);
@@ -777,7 +775,7 @@ int isarray;
 #endif
   }
 #endif
-
+  
   /*********************************************************
    * Call destructor if struct of class
    *********************************************************/
@@ -785,11 +783,11 @@ int isarray;
     store_struct_offset = G__store_struct_offset;
     store_typenum = G__typenum;
     store_tagnum = G__tagnum;
-
-    G__store_struct_offset = buf.obj.i;
+    
+    G__store_struct_offset = buf.obj.i; 
     G__typenum = buf.typenum;
     G__tagnum = buf.tagnum;
-
+    
     sprintf(destruct,"~%s()",G__struct.name[G__tagnum]);
     if(G__dispsource) {
       fprintf(G__serr,"\n!!!Calling destructor 0x%lx.%s for %s"
@@ -799,14 +797,14 @@ int isarray;
 
 #ifndef G__OLDIMPLEMENTATION659
     if(0==G__no_exec_compile && -1!=G__struct.virtual_offset[G__tagnum]&&
-       G__tagnum!=
+       G__tagnum!= 
        *(long*)(G__store_struct_offset+G__struct.virtual_offset[G__tagnum])) {
       int virtualtag=
        *(long*)(G__store_struct_offset+G__struct.virtual_offset[G__tagnum]);
       buf.obj.i -= G__find_virtualoffset(virtualtag);
-    }
+    } 
 #endif
-
+    
     /*****************************************************
      * Push and set G__store_struct_offset
      *****************************************************/
@@ -832,7 +830,7 @@ int isarray;
     if(G__CPPLINK==G__struct.iscpplink[G__tagnum]) {
       /* pre-compiled class */
       if(isarray) G__cpp_aryconstruct=1;
-
+      
 #ifndef G__ASM_IFUNC
 #ifdef G__ASM
       if(G__asm_noverflow) {
@@ -848,10 +846,10 @@ int isarray;
       }
 #endif /* G__ASM */
 #endif /* !G__ASM_IFUNC */
-
+      
       G__getfunction(destruct,&done,G__TRYDESTRUCTOR);
       /* Precompiled destructor must always exist here */
-
+      
 #ifndef G__ASM_IFUNC
 #ifdef G__ASM
       if(G__asm_noverflow) {
@@ -863,7 +861,7 @@ int isarray;
       }
 #endif /* G__ASM */
 #endif /* !G__ASM_IFUNC */
-
+      
       G__cpp_aryconstruct=0;
       cpplink=1;
     }
@@ -904,7 +902,7 @@ int isarray;
       }
     }
 
-#ifdef G__ASM
+#ifdef G__ASM 
 #ifdef G__SECURITY
     if(G__security&G__SECURE_GARBAGECOLLECTION &&G__asm_noverflow&&0==done) {
 #ifdef G__ASM_DBG
@@ -917,7 +915,7 @@ int isarray;
     }
 #endif
 #endif
-
+    
     /*****************************************************
      * Push and set G__store_struct_offset
      *****************************************************/
@@ -973,7 +971,7 @@ int isarray;
     G__asm_inst[G__asm_cp] = G__POPSTROS;
     G__inc_cp_asm(1,0);
   }
-
+  
   /*****************************************************
    * free memory if interpreted object
    *****************************************************/
@@ -1022,8 +1020,8 @@ int pinc;
    ****************************************************/
   newary = &G__newarray;
   while(newary->next) newary = newary->next;
-
-
+  
+  
   /****************************************************
    * create next list
    ****************************************************/
@@ -1050,7 +1048,7 @@ long point;
 #ifdef G__MEMTEST
   fprintf(G__memhist,"G__free_newarraylist(%lx)\n",point);
 #endif
-
+  
   /****************************************************
    * Search point
    ****************************************************/
@@ -1064,24 +1062,24 @@ long point;
     prev = newary;
     newary = newary->next;
   }
-
+  
   if(flag==0) {
     fprintf(G__serr,"Error: delete[] on wrong object 0x%lx FILE:%s LINE:%d\n"
 	    ,point,G__ifile.name,G__ifile.line_number);
     return(0);
   }
-
+  
   /******************************************************
    * get malloc size information
    ******************************************************/
   pinc = newary->pinc;
-
+  
   /******************************************************
    * delete newarraylist
    ******************************************************/
   prev->next = newary->next;
   free((void*)newary);
-
+  
   /* return result */
   return(pinc);
 }

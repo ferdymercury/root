@@ -1,5 +1,3 @@
-/*CMZ :  2.24/05 16/05/2000  12.03.51  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   16/05/2000*/
 /***********************************************************************
  * cint (C/C++ interpreter)
  ************************************************************************
@@ -10,7 +8,7 @@
  ************************************************************************
  * Copyright(c) 1995~1999  Masaharu Goto (MXJ02154@niftyserve.or.jp)
  *
- * Permission to use, copy, modify and distribute this software and its
+ * Permission to use, copy, modify and distribute this software and its 
  * documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies and
  * that both that copyright notice and this permission notice appear
@@ -45,7 +43,7 @@ int fsetpos(fp,position)
 FILE *fp;
 fpos_t *position;
 {
-        if(fp)
+        if(fp) 
 	  fseek(fp,*position,SEEK_SET);
 	return(0);
 }
@@ -61,7 +59,7 @@ fpos_t *position;
 }
 
 /************************************************************************
-*
+* 
 ************************************************************************/
 G__sunos_nosupport(funcname)
 char *funcname;

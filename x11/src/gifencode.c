@@ -1,5 +1,5 @@
-/*CMZ :  1.03/09 10/12/97  08.57.17  by  Rene Brun*/
-/*-- Author :    E.Chernyaev   19/01/94*/
+/* @(#)root/x11:$Name$:$Id$ */
+/* Author: E.Chernyaev   19/01/94*/
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

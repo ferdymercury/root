@@ -1,5 +1,3 @@
-/*CMZ :  2.24/05 16/05/2000  12.03.47  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   16/05/2000*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -11,7 +9,7 @@
  ************************************************************************
  * Copyright(c) 1995~1999  Masaharu Goto (MXJ02154@niftyserve.or.jp)
  *
- * Permission to use, copy, modify and distribute this software and its
+ * Permission to use, copy, modify and distribute this software and its 
  * documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies and
  * that both that copyright notice and this permission notice appear
@@ -24,7 +22,7 @@
 
 
 /***********************************************************************
-* EH_env and err_env are only variable name which isn't escaped by 'G__'
+* EH_env and err_env are only variable name which isn't escaped by 'G__' 
 ***********************************************************************/
 #ifdef G__HSTD
 jmp_buf EH_env;
@@ -35,7 +33,7 @@ jmp_buf EH_env;
 /**************************************************************************
 * get CINTSYSDIR environment variable here
 **************************************************************************/
-char G__cintsysdir[G__MAXFILENAME] ;
+char G__cintsysdir[G__MAXFILENAME] ; 
 
 
 /**************************************************************************
@@ -74,15 +72,15 @@ char *G__asm_name;
 
 long G__asm_inst_g[G__MAXINST]; /* p-code instruction buffer */
 G__value G__asm_stack_g[G__MAXSTACK]; /* data stack */
-char G__asm_name_g[G__ASM_FUNCNAMEBUF]; /* buffer to store function names
-				         * which is called within the
+char G__asm_name_g[G__ASM_FUNCNAMEBUF]; /* buffer to store function names 
+				         * which is called within the 
 					 * compiled loop */
 int G__asm_name_p=0; /* pointer to the function name buffer */
 
 #else /* G__ASM_IFUNC */
 long G__asm_inst[G__MAXINST]; /* p-code instruction buffer */
 G__value G__asm_stack[G__MAXSTACK]; /* data stack */
-char G__asm_name[G__LONGLINE*2]; /* buffer to store function names which
+char G__asm_name[G__LONGLINE*2]; /* buffer to store function names which 
 				* is called within the compiled loop */
 int G__asm_name_p=0; /* pointer to the function name buffer */
 #endif /* G__ASM_IFUNC */
@@ -93,17 +91,17 @@ int G__asm_dt=G__MAXSTACK-1;   /* compile time stack pointer */
 
 /* Global variables to bring compilation data */
 int G__asm_index;              /* variable index */
-struct G__param *G__asm_param; /* pointer of parameter buffer to
+struct G__param *G__asm_param; /* pointer of parameter buffer to 
 				* bring function parameter */
 
 /* Loop compiler flags */
-int G__asm_loopcompile; /* loop compilation mode. default on(4).
+int G__asm_loopcompile; /* loop compilation mode. default on(4). 
 			   * This is set to 0 by -O0 */
 #ifndef G__OLDIMPLEMENTATION1155
-int G__asm_loopcompile_mode;
+int G__asm_loopcompile_mode; 
 #endif
 int G__asm_exec=0; /* p-code execution flag */
-int G__asm_noverflow=0; /* When this is set to 1, compilation starts.
+int G__asm_noverflow=0; /* When this is set to 1, compilation starts. 
 			 * If any error found, reset */
 
 int G__asm_dbg=0; /* p-code debugging flag, only valid when compiled with
@@ -118,12 +116,12 @@ char *G__LOOPCOMPILEABORT="LOOP COMPILE ABORTED";
 * signal handling
 **************************************************************************/
 #ifdef G__SIGNAL
-char *G__SIGINT;
-char *G__SIGILL;
-char *G__SIGFPE;
-char *G__SIGABRT;
-char *G__SIGSEGV;
-char *G__SIGTERM;
+char *G__SIGINT; 
+char *G__SIGILL; 
+char *G__SIGFPE; 
+char *G__SIGABRT; 
+char *G__SIGSEGV; 
+char *G__SIGTERM; 
 #ifdef SIGHUP
 char *G__SIGHUP;
 #endif
@@ -152,7 +150,7 @@ char *G__SIGUSR2;
 
 
 /**************************************************************************
-* class template
+* class template 
 **************************************************************************/
 #ifdef G__TEMPLATECLASS
 struct G__Definedtemplateclass G__definedtemplateclass;
@@ -251,7 +249,7 @@ struct G__newarylist G__newarray;
 
 
 /**************************************************************************
-* pointer to function which is evaluated at pause
+* pointer to function which is evaluated at pause 
 **************************************************************************/
 void (*G__atpause)();
 

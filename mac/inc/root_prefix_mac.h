@@ -1,5 +1,12 @@
-/*CMZ :  0.80/00 12/08/96  12.18.19  by  Fons Rademakers*/
-/*-- Author :    Fons Rademakers   12/08/96*/
+/* @(#)root/mac:$Name$:$Id$ */
+
+/*************************************************************************
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
+ *                                                                       *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
+ *************************************************************************/
 
 #ifndef ROOT_PREFIX_MAC
 #define ROOT_PREFIX_MAC

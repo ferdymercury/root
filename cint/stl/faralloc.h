@@ -1,5 +1,3 @@
-/*CMZ :  2.24/05 16/05/2000  12.04.02  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   16/05/2000*/
 /*
  *
  * Copyright (c) 1994
@@ -63,10 +61,10 @@ inline void __far * operator new(size_t, void __far *p) { return p; }
 template <class T>
 inline T __far * allocate(long size, T __far * p) {
     set_new_handler(0);
-    T __far * tmp =
+    T __far * tmp = 
         (T __far *)(::operator new((unsigned long)(size * sizeof(T))));
     if (tmp == 0) {
-	cout << "out of memory" << endl;
+	cout << "out of memory" << endl; 
 	exit(1);
     }
     return tmp;
@@ -103,14 +101,14 @@ public:
     }
     void deallocate(pointer p) { ::deallocate(p); }
     pointer address(reference x) { return (pointer)&x; }
-    const_pointer const_address(const_reference x) {
-	return (const_pointer)&x;
+    const_pointer const_address(const_reference x) { 
+	return (const_pointer)&x; 
     }
-    size_type init_page_size() {
-	return max(size_type(1), size_type(4096/sizeof(T)));
+    size_type init_page_size() { 
+	return max(size_type(1), size_type(4096/sizeof(T))); 
     }
-    size_type max_size() const {
-	return max(size_type(1), size_type(ULONG_MAX/sizeof(T)));
+    size_type max_size() const { 
+	return max(size_type(1), size_type(ULONG_MAX/sizeof(T))); 
     }
 };
 

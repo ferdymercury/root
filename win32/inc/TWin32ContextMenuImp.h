@@ -1,6 +1,13 @@
-//*CMZ :  2.24/03 29/04/2000  23.42.00  by  Rene Brun
-//*CMZ :  1.00/07 27/03/97  18.11.12  by  Rene Brun
-//*-- Author :    Valery Fine(fine@vxcern.cern.ch)   16/08/96
+// @(#)root/win32:$Name$:$Id$
+// Author: Valery Fine   22/02/96
+
+/*************************************************************************
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
+ *                                                                       *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
+ *************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////
 //                                                                            //
 // TWin32ContextMenuImp                                                       //
@@ -14,9 +21,9 @@
 #ifndef ROOT_TWin32ContextMenuImp
 #define ROOT_TWin32ContextMenuImp
 
-#include "TCONTEXTMENUIMP.h"
+#include "TContextMenuImp.h"
 
-#include "TWIN32MENU.h"
+#include "TWin32Menu.h"
 
 #ifdef ROOT_TWin32MenuItem
 #include "TWin32MenuItem.h"

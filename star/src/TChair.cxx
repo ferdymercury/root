@@ -1,6 +1,6 @@
-//*CMZ :  2.24/01 13/03/2000  10.20.51  by  Valery Fine(fine@bnl.gov)
-//*-- Author :    Valery Fine(fine@bnl.gov)   13/03/2000
-+SEQ,TChair.h
+// @(#)root/star:$Name$:$Id$
+// Author: Valery Fine(fine@bnl.gov)   13/03/2000
+#include "TChair.h"
 
 //////////////////////////////////////////////////////////////////////////
 //                                                                      //

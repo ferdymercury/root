@@ -1,7 +1,13 @@
-//*CMZ :  2.24/03 20/04/2000  18.44.06  by  Valery Fine(fine@bnl.gov)
-//*CMZ :  2.24/01 31/03/2000  08.46.15  by  Rene Brun
-//*CMZ :  2.23/12 26/01/2000  12.24.45  by  Valery Fine(fine@bnl.gov)
-//*-- Author : Valery Fine(fine@bnl.gov)   25/12/98
+// @(#)root/star:$Name$:$Id$
+// Author: Valery Fine   10/12/98
+
+/*************************************************************************
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
+ *                                                                       *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
+ *************************************************************************/
 //
 //Copyright (C) 1998. Brookhaven National Laboratory. Valery Fine (Faine). All right reserved.
 

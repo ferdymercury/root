@@ -1,5 +1,3 @@
-/*CMZ :  2.24/05 16/05/2000  12.03.49  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   16/05/2000*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -11,7 +9,7 @@
  ************************************************************************
  * Copyright(c) 1995~1999  Masaharu Goto (MXJ02154@niftyserve.or.jp)
  *
- * Permission to use, copy, modify and distribute this software and its
+ * Permission to use, copy, modify and distribute this software and its 
  * documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies and
  * that both that copyright notice and this permission notice appear
@@ -322,11 +320,11 @@ long localmem;
 		,var->varnamebuf[G__asm_inst[pc+3]]);
       }
 #endif
-      G__asm_stack[sp].obj.i = (G__asm_inst[pc+5]&1) ?
+      G__asm_stack[sp].obj.i = (G__asm_inst[pc+5]&1) ? 
 	*(int*)(G__asm_inst[pc+1]+localmem) : *(int*)G__asm_inst[pc+1];
       G__asm_stack[sp++].type = 'i';
       p2f = (void (*)())G__asm_inst[pc+2];
-      (*p2f)(G__asm_stack,&sp, (G__asm_inst[pc+5]&2)?localmem:0
+      (*p2f)(G__asm_stack,&sp, (G__asm_inst[pc+5]&2)?localmem:0 
 	     ,(struct G__var_array*)G__asm_inst[pc+6],G__asm_inst[pc+3]);
       pc+=G__asm_inst[pc+4];
 #ifdef G__ASM_DBG
@@ -358,10 +356,10 @@ long localmem;
 		,var->varnamebuf[G__asm_inst[pc+5]]);
       }
 #endif
-
+      
       switch(G__asm_inst[pc+3]) {
       case '+':
-	G__asm_stack[sp].obj.i =
+	G__asm_stack[sp].obj.i = 
 	  ((G__asm_inst[pc+7]&1)?
 	   (*(int*)(G__asm_inst[pc+1]+localmem)):(*(int*)G__asm_inst[pc+1]))
 	    +
@@ -369,7 +367,7 @@ long localmem;
 	   (*(int*)(G__asm_inst[pc+2]+localmem)):(*(int*)G__asm_inst[pc+2]));
 	break;
       case '-':
-	G__asm_stack[sp].obj.i =
+	G__asm_stack[sp].obj.i = 
 	  ((G__asm_inst[pc+7]&1)?
 	   (*(int*)(G__asm_inst[pc+1]+localmem)):(*(int*)G__asm_inst[pc+1]))
 	    -
@@ -712,7 +710,7 @@ long localmem;
 			       * member function */
       }
 #ifndef G__OLDIMPLEMENTATION804
-      result->ref = 0;
+      result->ref = 0; 
 #endif
 #ifdef G__EXCEPTIONWRAPPER
       G__asm_exec=0;
@@ -767,7 +765,7 @@ long localmem;
       * 1 type
       * 2 typenum
       * 3 tagnum
-      * 4 reftype
+      * 4 reftype 
       * stack
       * sp-1    <- cast on this
       * sp
@@ -1639,7 +1637,7 @@ long localmem;
       * 1 tagnum
       * 2 type
       * stack
-      * sp-1
+      * sp-1 
       * sp        G__store_struct_offset
       * sp+1   <-
       ***************************************/
@@ -2182,7 +2180,7 @@ long localmem;
       * sp
       ***************************************/
 #ifdef G__ASM_DBG
-      if(G__asm_dbg)
+      if(G__asm_dbg) 
 	fprintf(G__serr,"%3x,%d: SETGVP %d\n",pc,sp,G__asm_inst[pc+1]);
 #endif
       if(G__asm_inst[pc+1]) {
@@ -2228,7 +2226,7 @@ long localmem;
       * 2 var_array pointer
       ***************************************/
 #ifdef G__ASM_DBG
-      if(G__asm_dbg)
+      if(G__asm_dbg) 
 	fprintf(G__serr,"%3x,%d: CTOR_SETGVP\n",pc,sp);
 #endif
       var=(struct G__var_array*)G__asm_inst[pc+2];
@@ -2825,11 +2823,11 @@ struct G__var_array *var;
 long ig15;
 {
   /* G__ASM_GET_INT_P10(int,'i'); */
-  G__value *buf= &pbuf[*psp-1];
-  buf->tagnum = -1;
-  buf->type = 'i';
-  buf->typenum = var->p_typetable[ig15];
-  buf->ref = *(long*)(var->p[ig15]+offset)+buf->obj.i*sizeof(int);
+  G__value *buf= &pbuf[*psp-1];   
+  buf->tagnum = -1;               
+  buf->type = 'i';              
+  buf->typenum = var->p_typetable[ig15];   
+  buf->ref = *(long*)(var->p[ig15]+offset)+buf->obj.i*sizeof(int); 
   buf->obj.i = *(int*)buf->ref;
 }
 
@@ -5196,7 +5194,7 @@ G__value *pbuf;
 /******************************************************************
 * G__suspendbytecode()
 ******************************************************************/
-void G__suspendbytecode()
+void G__suspendbytecode() 
 {
   if(G__asm_dbg && G__asm_noverflow) {
     fprintf(G__serr,"Note: Bytecode compiler suspended(off) and resumed(on)");
@@ -5207,7 +5205,7 @@ void G__suspendbytecode()
 /******************************************************************
 * G__abortbytecode()
 ******************************************************************/
-void G__resetbytecode()
+void G__resetbytecode() 
 {
   if(G__asm_dbg && G__asm_noverflow) {
     fprintf(G__serr,"Note: Bytecode compiler reset (off)");
@@ -5221,11 +5219,11 @@ void G__resetbytecode()
 /******************************************************************
 * G__abortbytecode()
 ******************************************************************/
-void G__abortbytecode()
+void G__abortbytecode() 
 {
   if(G__asm_dbg && G__asm_noverflow) {
 #ifndef G__OLDIMPLEMENTATION1164
-    if(0==G__xrefflag)
+    if(0==G__xrefflag) 
       fprintf(G__serr,"Note: Bytecode compiler stops at this line. Enclosing loop or function may be slow %d"
 	      ,G__asm_noverflow);
     else
@@ -5462,7 +5460,7 @@ char *buf;
 /**************************************************************************
 * G__get__date__()
 **************************************************************************/
-char* G__get__date__()
+char* G__get__date__() 
 {
   int i=0,j=0;
   char buf[80];
@@ -5483,7 +5481,7 @@ char* G__get__date__()
 /**************************************************************************
 * G__get__time__()
 **************************************************************************/
-char* G__get__time__()
+char* G__get__time__() 
 {
   int i=0,j=0;
   char buf[80];
@@ -6978,7 +6976,7 @@ int *pi;
    * 5 point_level == p                  local_global
    * 6 var_array pointer                 var_array pointer
    ********************************************************************/
-  if((G__LD_VAR==G__asm_inst[pc+2] || G__LD_LVAR==G__asm_inst[pc+2]) &&
+  if((G__LD_VAR==G__asm_inst[pc+2] || G__LD_LVAR==G__asm_inst[pc+2]) && 
      1==G__asm_inst[pc+4] &&
      'p' == G__asm_inst[pc+5] &&
      (var = (struct G__var_array*)G__asm_inst[pc+6]) &&
@@ -7858,7 +7856,7 @@ int *start;
       * 1 type
       * 2 typenum
       * 3 tagnum
-      * 4 reftype
+      * 4 reftype 
       * stack
       * sp-1    <- cast on this
       * sp
@@ -8239,8 +8237,8 @@ int *start;
 	case 'v':
 	  break;
 	}
-      }
-      else
+      } 
+      else 
       if('p'==var_type &&
 	 (islower(var->type[ig15])||G__PARANORMAL==var->reftype[ig15])) {
 	long inst;
@@ -8302,8 +8300,8 @@ int *start;
 	case 'v':
 	  break;
 	}
-      }
-      else
+      } 
+      else 
       if(('p'==var_type || var_type == var->type[ig15]) &&
 	 (islower(var->type[ig15])||G__PARANORMAL==var->reftype[ig15])) {
 	long inst;
@@ -9274,7 +9272,7 @@ int isthrow;
       * 1 type
       * 2 typenum
       * 3 tagnum
-      * 4 reftype
+      * 4 reftype 
       * stack
       * sp-1    <- cast on this
       * sp

@@ -1,5 +1,3 @@
-/*CMZ :  2.24/05 16/05/2000  12.03.44  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   16/05/2000*/
 /* /% C++ %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -11,7 +9,7 @@
  ************************************************************************
  * Copyright(c) 1995~1999  Masaharu Goto (MXJ02154@niftyserve.or.jp)
  *
- * Permission to use, copy, modify and distribute this software and its
+ * Permission to use, copy, modify and distribute this software and its 
  * documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies and
  * that both that copyright notice and this permission notice appear
@@ -29,13 +27,13 @@
 /*********************************************************************
 * class G__MethodArgInfo
 *
-*
+* 
 *********************************************************************/
 class G__MethodArgInfo {
  public:
   ~G__MethodArgInfo() {}
   void Init(class G__MethodInfo &a);
-  G__MethodArgInfo(class G__MethodInfo &a) : type() { Init(a); }
+  G__MethodArgInfo(class G__MethodInfo &a) : type() { Init(a); } 
 
   const char *Name();
   G__TypeInfo* Type() { return(&type); }
@@ -51,7 +49,7 @@ class G__MethodArgInfo {
   G__TypeInfo type;
 
  public:
-  G__MethodArgInfo() {}
+  G__MethodArgInfo() {} 
 
 };
 

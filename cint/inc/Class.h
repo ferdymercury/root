@@ -1,5 +1,3 @@
-/*CMZ :  2.24/05 16/05/2000  12.03.44  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   16/05/2000*/
 /* /% C++ %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -11,7 +9,7 @@
  ************************************************************************
  * Copyright(c) 1995~1998  Masaharu Goto (MXJ02154@niftyserve.or.jp)
  *
- * Permission to use, copy, modify and distribute this software and its
+ * Permission to use, copy, modify and distribute this software and its 
  * documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies and
  * that both that copyright notice and this permission notice appear
@@ -22,7 +20,7 @@
 
 
 #ifndef G__CLASSINFO_H
-#define G__CLASSINFO_H
+#define G__CLASSINFO_H 
 
 
 #include "Api.h"
@@ -35,16 +33,16 @@ class G__FriendInfo;
 /*********************************************************************
 * class G__ClassInfo
 *
-*
+* 
 *********************************************************************/
 class G__ClassInfo {
  public:
   ~G__ClassInfo() {}
   G__ClassInfo() { Init(); }
   void Init();
-  G__ClassInfo(const char *classname) { Init(classname); }
+  G__ClassInfo(const char *classname) { Init(classname); } 
   void Init(const char *classname);
-  G__ClassInfo(int tagnumin) { Init(tagnumin); }
+  G__ClassInfo(int tagnumin) { Init(tagnumin); } 
   void Init(int tagnumin);
 
   int operator==(const G__ClassInfo& a);
@@ -53,7 +51,7 @@ class G__ClassInfo {
   const char *Name() ;
   const char *Fullname();
   const char *Title() ;
-  int Size() ;
+  int Size() ; 
   long Property();
   int NDataMembers();
   int NMethods();
@@ -62,7 +60,7 @@ class G__ClassInfo {
   long Tagnum() { return(tagnum); }
   G__ClassInfo EnclosingClass() ;
 #ifndef G__OLDIMPLEMENTATION1020
-  struct G__friendtag* GetFriendInfo();
+  struct G__friendtag* GetFriendInfo(); 
 #endif
   void SetGlobalcomp(int globalcomp);
 #ifdef G__OLDIMPLEMENTATION1218_YET
@@ -80,7 +78,7 @@ class G__ClassInfo {
   int IsTmplt();
   const char* TmpltName();
   const char* TmpltArg();
-
+  
 
  protected:
   long tagnum;  // class,struct,union,enum key for cint dictionary
@@ -105,7 +103,7 @@ class G__ClassInfo {
   int Version();
   void *New();
   void *New(int n);
-  int InstanceCount();
+  int InstanceCount(); 
   void ResetInstanceCount();
   void IncInstanceCount();
   int HeapInstanceCount();
@@ -137,7 +135,7 @@ class G__ClassInfo {
 /*********************************************************************
 * class G__FriendInfo
 *
-*
+* 
 *********************************************************************/
 class G__FriendInfo {
  public:
@@ -145,13 +143,13 @@ class G__FriendInfo {
   void operator=(const G__FriendInfo& x) { Init(x.pfriendtag); }
   void Init(struct G__friendtag* pin) {
     pfriendtag = pin;
-    if(pfriendtag) cls.Init(pfriendtag->tagnum);
+    if(pfriendtag) cls.Init(pfriendtag->tagnum); 
     else           cls.Init(-1);
   }
   G__ClassInfo* FriendOf() { return(&cls); }
-  int Next() {
+  int Next() { 
     if(pfriendtag) {
-      pfriendtag=pfriendtag->next;
+      pfriendtag=pfriendtag->next; 
       Init(pfriendtag);
       return(IsValid());
     }

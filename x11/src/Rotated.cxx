@@ -1,6 +1,5 @@
-//*CMZ :  2.23/09 22/11/99  17.31.43  by  Fons Rademakers
-//*CMZ :  1.03/09 11/12/97  08.14.50  by  Fons Rademakers
-//*-- Author :    O.Couet   17/11/93
+// @(#)root/x11:$Name$:$Id$
+// Author: O.Couet   17/11/93
 
 #ifndef _XVERTEXT_INCLUDED_
 #define _XVERTEXT_INCLUDED_
@@ -1461,3 +1460,4 @@ XPoint *XRotTextExtents(Display *, XFontStruct *font, float angle, int x, int y,
     free((char *)xp_in);
 
     return xp_out;
+}

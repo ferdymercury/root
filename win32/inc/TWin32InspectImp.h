@@ -1,6 +1,13 @@
-//*CMZ :  2.24/05 08/05/2000  17.24.43  by  Fons Rademakers
-//*CMZ :  0.90/11 02/01/97  21.40.31  by  Valery Fine(fine@vxcern.cern.ch)
-//*-- Author :    Valery Fine(fine@vxcern.cern.ch)   09/12/96
+// @(#)root/win32:$Name$:$Id$
+// Author: Valery Fine(fine@vxcern.cern.ch)   09/12/96
+
+/*************************************************************************
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
+ *                                                                       *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
+ *************************************************************************/
 
 #ifndef ROOT_TWin32InspectImp
 #define ROOT_TWin32InspectImp

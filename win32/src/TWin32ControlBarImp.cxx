@@ -1,10 +1,5 @@
-//*CMZ :  2.24/03 29/04/2000  23.45.27  by  Rene Brun
-//*CMZ :  2.23/11 07/01/2000  08.17.58  by  Valery Fine(fine@mail.cern.ch)
-//*CMZ :  2.23/02 02/09/99  15.54.29  by  Rene Brun
-//*CMZ :  2.00/08 26/05/98  10.27.16  by  Rene Brun
-//*CMZ :  2.00/00 22/02/98  23.32.45  by  Fons Rademakers
-//*CMZ :  1.03/09 16/12/97  11.51.12  by  Valery Fine(fine@mail.cern.ch)
-//*-- Author :    Valery Fine   26/02/96
+// @(#)root/win32:$Name$:$Id$
+// Author: Valery Fine   26/02/96
 
 
 #include "TWin32ControlBarImp.h"

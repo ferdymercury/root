@@ -1,16 +1,14 @@
-/*CMZ :  2.24/05 16/05/2000  12.03.58  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   16/05/2000*/
 // include/_iostream
 
-std::ostream& operator<<(std::ostream& ostr,std::G__CINT_ENDL& i)
+std::ostream& operator<<(std::ostream& ostr,std::G__CINT_ENDL& i) 
 	{return(std::endl(ostr));}
-std::ostream& operator<<(std::ostream& ostr,std::G__CINT_ENDS& i)
+std::ostream& operator<<(std::ostream& ostr,std::G__CINT_ENDS& i) 
 	{return(std::ends(ostr));}
-std::ostream& operator<<(std::ostream& ostr,std::G__CINT_FLUSH& i)
+std::ostream& operator<<(std::ostream& ostr,std::G__CINT_FLUSH& i) 
 	{return(std::flush(ostr));}
-std::istream& operator>>(std::istream& istr,std::G__CINT_ws& i)
+std::istream& operator>>(std::istream& istr,std::G__CINT_ws& i) 
 	{return(std::ws(istr));}
-std::istream& operator>>(std::istream& istr,std::G__CINT_WS& i)
+std::istream& operator>>(std::istream& istr,std::G__CINT_WS& i) 
 	{return(std::WS(istr));}
 
 std::istream& operator>>(std::istream& istr,std::G__CINT_HEX& i) {
@@ -66,3 +64,4 @@ int G__ateval(const long x) {return(0);}
 int G__ateval(const unsigned char x) {return(0);}
 int G__ateval(const unsigned short x) {return(0);}
 int G__ateval(const unsigned int x) {return(0);}
+int G__ateval(const unsigned long x) {return(0);}
