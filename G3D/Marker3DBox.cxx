@@ -1,3 +1,4 @@
+//*CMZ :  2.21/07 21/02/99  19.20.02  by  Valery Fine(fine@mail.cern.ch)
 //*CMZ :  2.20/05 15/12/98  09.17.22  by  Rene Brun
 //*CMZ :  2.00/13 16/10/98  17.43.38  by  Rene Brun
 //*CMZ :  2.00/12 07/10/98  10.00.56  by  Rene Brun
@@ -204,7 +205,8 @@ void TMarker3DBox::Paint(Option_t *option)
     }
 
     //*-* Paint in the pad
-    PaintShape(buff);
+    Bool_t rangeView = strcmp(option,"range")==0 ? kTRUE : kFALSE;
+    PaintShape(buff,rangeView);
 
     if (strstr(option, "x3d")) {
         if(buff && buff->points && buff->segs)
@@ -232,15 +234,18 @@ void TMarker3DBox::PaintGLPoints(Float_t *vertex)
 }
 
 //______________________________________________________________________________
-void TMarker3DBox::PaintShape(X3DBuffer *buff)
+void TMarker3DBox::PaintShape(X3DBuffer *buff, Bool_t rangeView)
 {
 //*-*-*-*-*Paint 3-D marker in current pad with its current attributes*-*-*-*-*
 //*-*      ==========================================================
 
     //*-* Paint in the pad
 
-    Float_t points[6];
+    Float_t points[6], x0, y0, z0, x1, y1, z1;
+    const Int_t kExpandView = 2;
     int i0;
+
+    x0 = y0 = z0 = x1 = y1 = z1 = buff->points[0];
 
     TAttLine::Modify();  //Change line attributes only if necessary
     TAttFill::Modify();  //Change fill area attributes only if necessary
@@ -256,8 +261,20 @@ void TMarker3DBox::PaintShape(X3DBuffer *buff)
         points[4] = buff->points[i0++];
         points[5] = buff->points[i0];
 
-        gPad->PaintLine3D(&points[0], &points[3]);
+        x0 = points[0] < x0 ? points[0] : x0;
+        y0 = points[1] < y0 ? points[1] : y0;
+        z0 = points[2] < z0 ? points[2] : z0;
+        x1 = points[0] > x1 ? points[0] : x1;
+        y1 = points[1] > y1 ? points[1] : y1;
+        z1 = points[2] > z1 ? points[2] : z1;
+
+       if (!rangeView) gPad->PaintLine3D(&points[0], &points[3]);
     }
+    if (rangeView){
+      TView *view = gPad->GetView();
+      if (view->GetAutoRange()) view->SetRange(x0,y0,z0,x1,y1,z1,kExpandView);
+    }
+
 }
 
 //______________________________________________________________________________

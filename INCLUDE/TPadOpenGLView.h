@@ -1,3 +1,4 @@
+//*CMZ :  2.21/04 23/01/99  11.35.56  by  Valery Fine(fine@mail.cern.ch)
 //*CMZ :  1.03/09 09/12/97  15.19.41  by  Fons Rademakers
 //*-- Author :    Valery Fine(fine@vxcern.cern.ch)   08/05/97
 //*
@@ -100,9 +101,11 @@ class TPadOpenGLView : public TPadView3D
    virtual void PopMatrix();
    virtual void ResetView(Bool_t flag=kTRUE){fResetView=flag;}
    virtual void SetAttNode(TNode *node,Option_t *opt="");
+   virtual void SetLineAttr(Color_t color,Int_t  width, Option_t *opt="");
    virtual void SetSpeedMove(Float_t speed) { fSpeedMove = speed;}
    virtual void SetSteps(Float_t *steps) {if (steps) {fStep[0] = steps[0]; fStep[1] = steps[1]; fStep[2] = steps[2];}; }
    virtual void UpdateNodeMatrix(TNode *node,Option_t *opt="");
+   virtual void UpdatePosition(Double_t x,Double_t y,Double_t z,TRotMatrix *matrix,Option_t *opt="");
 
    virtual void UpdateProjectView();
 

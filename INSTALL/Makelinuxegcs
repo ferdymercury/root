@@ -1,3 +1,4 @@
+*CMZ :  2.21/08 15/03/99  08.56.37  by  Rene Brun
 *CMZ :  2.20/00 22/11/98  18.43.27  by  Fons Rademakers
 *CMZ :  2.00/10 15/07/98  19.22.51  by  Fons Rademakers
 *CMZ :  2.00/09 26/06/98  19.24.14  by  Fons Rademakers
@@ -14,7 +15,7 @@ CINTCXXFLAGS  = -Wall -fPIC -fno-rtti -fno-exceptions -DG__REGEXP \
                 -DG__UNIX -DG__SHAREDLIB -DG__OSFDLL -DG__ROOT -DG__REDIRECTIO
 CINTCFLAGS    = -Wall -fPIC -DG__REGEXP -DG__UNIX -DG__SHAREDLIB \
                 -DG__OSFDLL -DG__ROOT -DG__REDIRECTIO
-OPT           = -g
+OPT           = -O
 NOOPT         =
 LD            = g++
 LDFLAGS       = $(OPT)

@@ -1,3 +1,5 @@
+//*CMZ :  2.21/07 01/03/99  09.32.45  by  Rene Brun
+//*CMZ :  2.21/06 12/02/99  15.31.46  by  Rene Brun
 //*CMZ :  2.20/05 15/12/98  09.17.20  by  Rene Brun
 //*CMZ :  2.00/08 19/05/98  11.12.07  by  Rene Brun
 //*CMZ :  1.03/09 06/12/97  17.22.07  by  Fons Rademakers
@@ -86,6 +88,8 @@ TGraphErrors::TGraphErrors(Int_t n, Float_t *x, Float_t *y, Float_t *ex, Float_t
 {
 //*-*-*-*-*-*-*-*-*-*-*TGraphErrors normal constructor*-*-*-*-*-*-*-*-*-*-*-*-*
 //*-*                  ===============================
+//
+//  if ex or ey are null, the corresponding arrays are preset to zero
 
    if (n <= 0) {
       Error("TGraphErrors", "illegal number of points (%d)", n);
@@ -94,10 +98,12 @@ TGraphErrors::TGraphErrors(Int_t n, Float_t *x, Float_t *y, Float_t *ex, Float_t
 
    fEX       = new Float_t[n];
    fEY       = new Float_t[n];
-   if (!ex || !ey) return;
+
    for (Int_t i=0;i<n;i++) {
-      fEX[i] = ex[i];
-      fEY[i] = ey[i];
+      if (ex) fEX[i] = ex[i];
+      else    fEX[i] = 0;
+      if (ey) fEY[i] = ey[i];
+      else    fEY[i] = 0;
    }
 }
 
@@ -253,13 +259,49 @@ void TGraphErrors::SavePrimitive(ofstream &out, Option_t *option)
 }
 
 //______________________________________________________________________________
+void TGraphErrors::SetPoint(Int_t i, Float_t x, Float_t y)
+{
+//*-*-*-*-*-*-*-*-*-*-*Set x and y values for point number i*-*-*-*-*-*-*-*-*
+//*-*                  =====================================
+
+   if (i < 0) return;
+   if (i >= fNpoints) {
+   // re-allocate the object
+      Float_t *savex  = new Float_t[i+1];
+      Float_t *savey  = new Float_t[i+1];
+      Float_t *saveex = new Float_t[i+1];
+      Float_t *saveey = new Float_t[i+1];
+      if (fNpoints > 0) {
+         memcpy(savex, fX, fNpoints*sizeof(Float_t));
+         memcpy(savey, fY, fNpoints*sizeof(Float_t));
+         memcpy(saveex,fEX,fNpoints*sizeof(Float_t));
+         memcpy(saveey,fEY,fNpoints*sizeof(Float_t));
+      }
+      if (fX)  delete [] fX;
+      if (fY)  delete [] fY;
+      if (fEX) delete [] fEX;
+      if (fEY) delete [] fEY;
+      fX  = savex;
+      fY  = savey;
+      fEX = saveex;
+      fEY = saveey;
+      fNpoints = i+1;
+   }
+   fX[i] = x;
+   fY[i] = y;
+}
+
+//______________________________________________________________________________
 void TGraphErrors::SetPointError(Int_t i, Float_t ex, Float_t ey)
 {
 //*-*-*-*-*-*-*-*-*-*-*Set ex and ey values for point number i*-*-*-*-*-*-*-*
 //*-*                  =======================================
 
-   if (i < 0 || i >= fNpoints) return;
-   if (!fEX || !fEY) return;
+   if (i < 0) return;
+   if (i >= fNpoints) {
+   // re-allocate the object
+      TGraphErrors::SetPoint(i,0,0);
+   }
    fEX[i] = ex;
    fEY[i] = ey;
 }

@@ -1,5 +1,5 @@
-/*CMZ :  2.20/04 08/12/98  16.25.29  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   08/12/98*/
+/*CMZ :  2.21/08 17/03/99  13.13.42  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   17/03/99*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -25,6 +25,91 @@
 #include "common.h"
 
 
+#ifndef G__OLDIMPLEMENTATION999
+/***********************************************************************
+* G__getoperatorstring()
+***********************************************************************/
+static char* G__getoperatorstring(operator)
+int operator;
+{
+  switch(operator) {
+  case '+': /* add */
+    return("+");
+  case '-': /* subtract */
+    return("-");
+  case '*': /* multiply */
+    return("*");
+  case '/': /* divide */
+    return("/");
+  case '%': /* modulus */
+    return("%");
+  case '&': /* binary and */
+    return("&");
+  case '|': /* binary or */
+    return("|");
+  case '^': /* binary exclusive or */
+    return("^");
+  case '~': /* binary inverse */
+    return("~");
+  case 'A': /* logical and */
+    return("&&");
+  case 'O': /* logical or */
+    return("||");
+  case '>':
+    return(">");
+  case '<':
+    return("<");
+  case 'R': /* right shift */
+    return(">>");
+  case 'L': /* left shift */
+    return("<<");
+  case '@': /* power */
+    return("@");
+  case '!':
+    return("!");
+  case 'E': /* == */
+    return("==");
+  case 'N': /* != */
+    return("!=");
+  case 'G': /* >= */
+    return(">=");
+  case 'l': /* <= */
+    return("<=");
+  case G__OPR_ADDASSIGN:
+    return("+=");
+  case G__OPR_SUBASSIGN:
+    return("-=");
+  case G__OPR_MODASSIGN:
+    return("%=");
+  case G__OPR_MULASSIGN:
+    return("*=");
+  case G__OPR_DIVASSIGN:
+    return("/=");
+  case G__OPR_RSFTASSIGN:
+    return(">>=");
+  case G__OPR_LSFTASSIGN:
+    return("<<=");
+  case G__OPR_BANDASSIGN:
+    return("&=");
+  case G__OPR_BORASSIGN:
+    return("|=");
+  case G__OPR_EXORASSIGN:
+    return("^=");
+  case G__OPR_ANDASSIGN:
+    return("&&=");
+  case G__OPR_ORASSIGN:
+    return("||=");
+  case G__OPR_POSTFIXINC:
+  case G__OPR_PREFIXINC:
+    return("++");
+  case G__OPR_POSTFIXDEC:
+  case G__OPR_PREFIXDEC:
+    return("--");
+  default:
+    return("(unknown operator)");
+  }
+}
+#endif
 
 #ifndef G__OLDIMPLEMENTATION470
 /***********************************************************************
@@ -464,7 +549,11 @@ G__value *defined;
       break;
 #endif
     default:
+#ifndef G__OLDIMPLEMENTATION999
+	fprintf(G__serr,"Error: %s ",G__getoperatorstring(operator));
+#else
 	fprintf(G__serr,"Error: %c ",operator);
+#endif
 	G__genericerror("Illegal operator for real number");
 	break;
     }
@@ -540,7 +629,11 @@ G__value *defined;
 	  break;
 #endif
 	default:
+#ifndef G__OLDIMPLEMENTATION999
+	  fprintf(G__serr,"Error: %s ",G__getoperatorstring(operator));
+#else
 	  fprintf(G__serr,"Error: %c ",operator);
+#endif
 	  G__genericerror("Illegal operator for pointer 1");
 	  break;
 	}
@@ -604,7 +697,11 @@ G__value *defined;
 	  break;
 #endif
 	default:
+#ifndef G__OLDIMPLEMENTATION999
+	  fprintf(G__serr,"Error: %s ",G__getoperatorstring(operator));
+#else
 	  fprintf(G__serr,"Error: %c ",operator);
+#endif
 	  G__genericerror("Illegal operator for pointer 2");
 	  break;
 	}
@@ -699,7 +796,11 @@ G__value *defined;
 	break;
 #endif
       default:
+#ifndef G__OLDIMPLEMENTATION999
+	fprintf(G__serr,"Error: %s ",G__getoperatorstring(operator));
+#else
 	fprintf(G__serr,"Error: %c ",operator);
+#endif
 	G__genericerror("Illegal operator for pointer 3");
 	break;
       }
@@ -810,7 +911,24 @@ G__value *defined;
       defined->ref=0;
       break;
     case 'R': /* right shift */
+#ifndef G__OLDIMPLEMENTATION977
+      switch(defined->type) {
+      case 'b':
+      case 'r':
+      case 'h':
+      case 'k':
+	{
+	  unsigned long uldefined=ldefined;
+	  G__letint(defined,'l',uldefined>>lexpression);
+	}
+	break;
+      default:
+	G__letint(defined,'i',ldefined>>lexpression);
+	break;
+      }
+#else
       G__letint(defined,'i',ldefined>>lexpression);
+#endif
       defined->ref=0;
       break;
     case 'L': /* left shift */
@@ -818,8 +936,17 @@ G__value *defined;
       defined->ref=0;
       break;
     case '@': /* power */
+#ifndef G__OLDIMPLEMENTATION966
+      fdefined=1.0;
+      for(ig2=1;ig2<=lexpression;ig2++) fdefined *= ldefined;
+      if(fdefined>(double)LONG_MAX||fdefined<(double)LONG_MIN) {
+        G__genericerror("Error: integer overflow. Use 'double' for power operator");
+      }
+      lresult = (long)fdefined;
+#else
       lresult=1;
       for(ig2=1;ig2<=lexpression;ig2++) lresult *= ldefined;
+#endif
       G__letint(defined,'i',lresult);
       defined->ref=0;
       break;
@@ -920,7 +1047,11 @@ G__value *defined;
       break;
 #endif
     default:
+#ifndef G__OLDIMPLEMENTATION999
+	fprintf(G__serr,"Error: %s ",G__getoperatorstring(operator));
+#else
 	fprintf(G__serr,"Error: %c ",operator);
+#endif
 	G__genericerror("Illegal operator for integer");
 	break;
     }
@@ -1096,12 +1227,22 @@ int *piout,*pspaceflag,*pmparen;
   if(c==':') {
     /* member function definition */
     if(1==G__prerun && -1==G__func_now &&
-       (-1==G__def_tagnum||memfunc_def_flag
+       (
+#ifndef G__OLDIMPLEMENTATION971
+       (-1==G__def_tagnum||'n'==G__struct.type[G__def_tagnum])
+#else
+        -1==G__def_tagnum
+#endif
+        ||memfunc_def_flag
 #define G__OLDIMPLEMENTATION694 /* Scott Snyder's patch */
 #ifndef G__OLDIMPLEMENTATION694
 	|| -1!=G__tmplt_def_tagnum
 #endif
 	)) {
+#ifndef G__OLDIMPLEMENTATION971
+      int store_def_tagnum = G__def_tagnum;
+      int store_def_struct_member = G__def_struct_member;
+#endif
 
       /* X<T>::TYPE X<T>::f()
        *      ^             */
@@ -1146,9 +1287,14 @@ int *piout,*pspaceflag,*pmparen;
       memfunc_def_flag=1;
       G__def_struct_member = 1;
       G__exec_statement(); /* basically, make_ifunctable */
-      G__def_struct_member = 0;
       memfunc_def_flag=0;
+#ifndef G__OLDIMPLEMENTATION971
+      G__def_tagnum = store_def_tagnum;
+      G__def_struct_member = store_def_struct_member;
+#else
+      G__def_struct_member = 0;
       G__def_tagnum = -1; /* store_tagnum ? */
+#endif
       G__tagdefining = store_tagdefining;
       *piout = 0;
       *pspaceflag=0;
@@ -1184,12 +1330,10 @@ int *piout,*pspaceflag,*pmparen;
        ***************************************/
       statement[*piout]='\0';
       if(0==G__switch && (char*)NULL==strchr(statement,'?')) {
-#ifdef G__OLDIMPLEMENTATION963
-        /* THIS DOES NOT WORK WELL. case -1: case a*2: */
-        int itmp=0;
-	int ctmp;
+#ifndef G__OLDIMPLEMENTATION963
+        int itmp=0,ctmp;
 	ctmp = G__getstream(statement,&itmp,temp,"+-*%/&|<>=^!");
-        if(ctmp) {
+        if(ctmp && 0!=strncmp(statement,"case",4)) {
           fprintf(G__serr,"Error: illegal label name %s",statement) ;
           G__genericerror((char*)NULL);
         }
@@ -1319,6 +1463,10 @@ G__value *pios;
   int ig2;
   long store_struct_offset;
   int store_tagnum;
+
+#ifndef G__OLDIMPLEMENTATION975
+  if(-1!=pios->tagnum&&'e'==G__struct.type[pios->tagnum]) return(pios->obj.i);
+#endif
 
   /* store member function call environment */
   store_struct_offset = G__store_struct_offset;
@@ -1704,7 +1852,11 @@ G__value *defined;
       G__valuemonitor(expressionin,arg2);
       /* This part must be fixed when reference to pointer type
        * is supported */
-      if(expressionin.ref && islower(expressionin.type)) {
+#ifndef G__OLDIMPLEMENTATION1017
+      if(expressionin.ref && 1!=expressionin.ref) {
+#else
+      if(expressionin.ref) {
+#endif
 	pos=strchr(arg2,')');
 	*pos = '\0';
 	if(expressionin.ref<0)
@@ -1767,7 +1919,11 @@ G__value *defined;
 	G__valuemonitor(*defined,arg1);
 	/* This part must be fixed when reference to pointer type
 	 * is supported */
+#ifndef G__OLDIMPLEMENTATION995
+	if(defined->ref) {
+#else
 	if(defined->ref && islower(defined->type)) {
+#endif
 	  pos=strchr(arg1,')');
 	  *pos = '\0';
 	  if(defined->ref<0)
@@ -1826,7 +1982,8 @@ int flag;
   int store_memberfunc_struct_offset;
 
 #ifndef G__OLDIMPLEMENTATION745
-  if(strncmp(funcname,"operatr",8)==0) return(0);
+  if(strncmp(funcname,"operatr",8)==0 || strcmp(funcname,"G__ateval")==0)
+    return(0);
 #endif
 
   if(flag==G__CALLMEMFUNC) {
@@ -2031,7 +2188,11 @@ int paran,ig25;
 	G__valuemonitor(para[ig25],arg2);
 	/* This part must be fixed when reference to pointer type
 	 * is supported */
+#ifndef G__OLDIMPLEMENTATION995
+	if(para[ig25].ref) {
+#else
 	if(para[ig25].ref && islower(para[ig25].type)) {
+#endif
 	  pos=strchr(arg2,')');
 	  *pos = '\0';
 #ifndef G__OLDIMPLEMENTATION409
@@ -2189,6 +2350,12 @@ G__value *rval;
 
   /* don't optimze if optimize level is less than 3 */
   if(G__asm_loopcompile<3) return(opr);
+
+#ifndef G__OLDIMPLEMENTATION1007
+  if(0==rval->type) {
+    G__genericerror("Error: Binary operator oprand missing");
+  }
+#endif
 
   lisdouble = G__isdouble(*lval);
   risdouble = G__isdouble(*rval);

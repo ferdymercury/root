@@ -1,3 +1,6 @@
+//*CMZ :  2.21/07 01/03/99  10.08.38  by  Rene Brun
+//*CMZ :  2.21/05 10/02/99  09.31.56  by  Rene Brun
+//*CMZ :  2.21/01 05/01/99  16.09.50  by  Rene Brun
 //*CMZ :  2.20/00 05/11/98  18.52.40  by  Rene Brun
 //*CMZ :  2.00/10 29/07/98  22.28.16  by  Rene Brun
 //*CMZ :  2.00/00 05/03/98  18.02.40  by  Fons Rademakers
@@ -169,6 +172,22 @@ void TH2C::DrawCopy(Option_t *option)
 }
 
 //______________________________________________________________________________
+Int_t TH2C::Fill(Axis_t x, Axis_t y)
+{
+   Int_t ok = TH1::Fill12(x,y);
+   if (ok >= 0) TH2::Fill20(x,y);
+   return ok;
+}
+
+//______________________________________________________________________________
+Int_t TH2C::Fill(Axis_t x, Axis_t y, Stat_t w)
+{
+   Int_t ok = TH1::Fill(x,y,w);
+   if (ok >= 0) TH2::Fill20(x,y,w);
+   return ok;
+}
+
+//______________________________________________________________________________
 Stat_t TH2C::GetCorrelationFactor(Int_t axis1, Int_t axis2)
 {
 //*-*-*-*-*-*-*-*Return correlation factor between axis1 and axis2*-*-*-*-*
@@ -226,6 +245,18 @@ Stat_t TH2C::GetRMS(Int_t axis)
   if (axis == 1) rms2 = TMath::Abs(fTsumwx2/fTsumw - fTsumwx*fTsumwx/(fTsumw*fTsumw));
   if (axis == 2) rms2 = TMath::Abs(fTsumwy2/fTsumw - fTsumwy*fTsumwy/(fTsumw*fTsumw));
   return TMath::Sqrt(rms2);
+}
+
+//______________________________________________________________________________
+void TH2C::Reset(Option_t *option)
+{
+//*-*-*-*-*-*-*-*Reset this histogram: contents, errors, etc*-*-*-*-*-*-*-*
+//*-*            ===========================================
+
+   TH1C::Reset(option);
+   fTsumwy  = 0;
+   fTsumwy2 = 0;
+   fTsumwxy = 0;
 }
 
 //______________________________________________________________________________
@@ -366,6 +397,23 @@ void TH2S::DrawCopy(Option_t *option)
    newth2->SetBit(kCanDelete);
    newth2->AppendPad(option);
 }
+
+//______________________________________________________________________________
+Int_t TH2S::Fill(Axis_t x, Axis_t y)
+{
+   Int_t ok = TH1::Fill12(x,y);
+   if (ok >= 0) TH2::Fill20(x,y);
+   return ok;
+}
+
+//______________________________________________________________________________
+Int_t TH2S::Fill(Axis_t x, Axis_t y, Stat_t w)
+{
+   Int_t ok = TH1::Fill(x,y,w);
+   if (ok >= 0) TH2::Fill20(x,y,w);
+   return ok;
+}
+
 //______________________________________________________________________________
 Stat_t TH2S::GetCorrelationFactor(Int_t axis1, Int_t axis2)
 {
@@ -425,6 +473,18 @@ Stat_t TH2S::GetRMS(Int_t axis)
   if (axis == 1) rms2 = TMath::Abs(fTsumwx2/fTsumw - fTsumwx*fTsumwx/(fTsumw*fTsumw));
   if (axis == 2) rms2 = TMath::Abs(fTsumwy2/fTsumw - fTsumwy*fTsumwy/(fTsumw*fTsumw));
   return TMath::Sqrt(rms2);
+}
+
+//______________________________________________________________________________
+void TH2S::Reset(Option_t *option)
+{
+//*-*-*-*-*-*-*-*Reset this histogram: contents, errors, etc*-*-*-*-*-*-*-*
+//*-*            ===========================================
+
+   TH1S::Reset(option);
+   fTsumwy  = 0;
+   fTsumwy2 = 0;
+   fTsumwxy = 0;
 }
 
 //______________________________________________________________________________
@@ -568,6 +628,23 @@ void TH2F::DrawCopy(Option_t *option)
    newth2->SetBit(kCanDelete);
    newth2->AppendPad(option);
 }
+
+//______________________________________________________________________________
+Int_t TH2F::Fill(Axis_t x, Axis_t y)
+{
+   Int_t ok = TH1::Fill12(x,y);
+   if (ok >= 0) TH2::Fill20(x,y);
+   return ok;
+}
+
+//______________________________________________________________________________
+Int_t TH2F::Fill(Axis_t x, Axis_t y, Stat_t w)
+{
+   Int_t ok = TH1::Fill(x,y,w);
+   if (ok >= 0) TH2::Fill20(x,y,w);
+   return ok;
+}
+
 //______________________________________________________________________________
 Stat_t TH2F::GetCorrelationFactor(Int_t axis1, Int_t axis2)
 {
@@ -627,6 +704,18 @@ Stat_t TH2F::GetRMS(Int_t axis)
   if (axis == 1) rms2 = TMath::Abs(fTsumwx2/fTsumw - fTsumwx*fTsumwx/(fTsumw*fTsumw));
   if (axis == 2) rms2 = TMath::Abs(fTsumwy2/fTsumw - fTsumwy*fTsumwy/(fTsumw*fTsumw));
   return TMath::Sqrt(rms2);
+}
+
+//______________________________________________________________________________
+void TH2F::Reset(Option_t *option)
+{
+//*-*-*-*-*-*-*-*Reset this histogram: contents, errors, etc*-*-*-*-*-*-*-*
+//*-*            ===========================================
+
+   TH1F::Reset(option);
+   fTsumwy  = 0;
+   fTsumwy2 = 0;
+   fTsumwxy = 0;
 }
 
 //______________________________________________________________________________
@@ -779,6 +868,23 @@ void TH2D::DrawCopy(Option_t *option)
    newth2->SetBit(kCanDelete);
    newth2->AppendPad();
 }
+
+//______________________________________________________________________________
+Int_t TH2D::Fill(Axis_t x, Axis_t y)
+{
+   Int_t ok = TH1::Fill12(x,y);
+   if (ok >= 0) TH2::Fill20(x,y);
+   return ok;
+}
+
+//______________________________________________________________________________
+Int_t TH2D::Fill(Axis_t x, Axis_t y, Stat_t w)
+{
+   Int_t ok = TH1::Fill(x,y,w);
+   if (ok >= 0) TH2::Fill20(x,y,w);
+   return ok;
+}
+
 //______________________________________________________________________________
 Stat_t TH2D::GetCorrelationFactor(Int_t axis1, Int_t axis2)
 {
@@ -838,6 +944,18 @@ Stat_t TH2D::GetRMS(Int_t axis)
   if (axis == 1) rms2 = TMath::Abs(fTsumwx2/fTsumw - fTsumwx*fTsumwx/(fTsumw*fTsumw));
   if (axis == 2) rms2 = TMath::Abs(fTsumwy2/fTsumw - fTsumwy*fTsumwy/(fTsumw*fTsumw));
   return TMath::Sqrt(rms2);
+}
+
+//______________________________________________________________________________
+void TH2D::Reset(Option_t *option)
+{
+//*-*-*-*-*-*-*-*Reset this histogram: contents, errors, etc*-*-*-*-*-*-*-*
+//*-*            ===========================================
+
+   TH1D::Reset(option);
+   fTsumwy  = 0;
+   fTsumwy2 = 0;
+   fTsumwxy = 0;
 }
 
 //______________________________________________________________________________

@@ -1,3 +1,4 @@
+//*CMZ :  2.21/04 02/02/99  19.04.08  by  Fons Rademakers
 //*CMZ :  2.00/11 09/08/98  10.30.13  by  Rene Brun
 //*CMZ :  1.00/02 07/03/97  18.40.23  by  Rene Brun
 //*-- Author :    Rene Brun   22/09/95
@@ -36,6 +37,9 @@
 #include "THashList.h"
 #endif
 
+const Int_t kMAXLEVELS = 20;
+const Int_t kVectorSize = 3;
+const Int_t kMatrixSize = kVectorSize*kVectorSize;
 
 class TNode;
 class TBrowser;
@@ -55,6 +59,15 @@ private:
    TRotMatrix      **fMatrixPointer;      //Pointers to rotation matrices
    TShape          **fShapePointer;       //Pointers to shapes
    Float_t           fBomb;               //Bomb factor for exploded geometry
+   TRotMatrix      *fMatrix;              //! Pointers to current rotation matrices
+   Double_t         fX;                   //!
+   Double_t         fY;                   //! The global translation of the current node
+   Double_t         fZ;                   //!
+   Double_t         fTranslation[kMAXLEVELS][kVectorSize];//!
+   Double_t         fRotMatrix[kMAXLEVELS][kMatrixSize];  //!
+   Bool_t           fIsReflection[kMAXLEVELS];            //!
+   Int_t            fGeomLevel;                           //!
+
 
 public:
 
@@ -64,12 +77,13 @@ public:
    virtual void   Browse(TBrowser *b);
    virtual void   cd(const Text_t *path=0);
    virtual void   Draw(Option_t *option="");
-   Float_t        GetBomb() {return fBomb;}
-   THashList      *GetListOfShapes()   {return fShapes;}
-   TList          *GetListOfNodes()    {return fNodes;}
-   THashList      *GetListOfMaterials(){return fMaterials;}
-   THashList      *GetListOfMatrices() {return fMatrices;}
-   TNode          *GetCurrentNode()    {return fCurrentNode;}
+   Float_t        GetBomb() const {return fBomb;}
+   Int_t          GeomLevel() const {return fGeomLevel;}
+   THashList      *GetListOfShapes() const  {return fShapes;}
+   TList          *GetListOfNodes()  const   {return fNodes;}
+   THashList      *GetListOfMaterials() const {return fMaterials;}
+   THashList      *GetListOfMatrices() const {return fMatrices;}
+   TNode          *GetCurrentNode()  const {return fCurrentNode;}
    TMaterial      *GetMaterial(const Text_t *name);
    TMaterial      *GetMaterialByNumber(Int_t number);
    TNode          *GetNode(const Text_t *name);
@@ -77,16 +91,73 @@ public:
    TShape         *GetShapeByNumber(Int_t number);
    TRotMatrix     *GetRotMatrix(const Text_t *name);
    TRotMatrix     *GetRotMatrixByNumber(Int_t number);
+   TRotMatrix     *GetCurrentMatrix() const;
+   TRotMatrix     *GetCurrentPosition(Double_t *x,Double_t *y,Double_t *z) const;
+   TRotMatrix     *GetCurrentPosition(Float_t *x,Float_t *y,Float_t *z) const;
+   Bool_t         GetCurrentReflection() const;
    Bool_t         IsFolder() {return kTRUE;}
+   virtual void   Local2Master(Double_t *local, Double_t *master);
+   virtual void   Local2Master(Float_t *local, Float_t *master);
    virtual void   ls(Option_t *option="rsn2");
    virtual void   Node(const Text_t *name, const Text_t *title, const Text_t *shapename, Double_t x=0, Double_t y=0, Double_t z=0
                         , const Text_t *matrixname="", Option_t *option="");
+   virtual Int_t  PushLevel(){return fGeomLevel++;}
+   virtual Int_t  PopLevel(){return fGeomLevel>0?fGeomLevel--:0;}
    virtual void   RecursiveRemove(TObject *obj);
    virtual void   SetBomb(Float_t bomb=1.4) {fBomb = bomb;}
    virtual void   SetCurrentNode(TNode *node) {fCurrentNode = node;}
+   virtual void   SetGeomLevel(Int_t level=0){fGeomLevel=level;}
+   virtual void   SetMatrix(TRotMatrix *matrix=0){fMatrix = matrix;}
+   virtual void   SetPosition(TRotMatrix *matrix, Double_t x=0,Double_t y=0,Double_t z=0);
+   virtual void   SetPosition(TRotMatrix *matrix, Float_t x,Float_t y,Float_t z);
+   virtual void   SetPosition(Double_t x,Double_t y,Double_t z);
+   virtual void   SetPosition(Float_t x,Float_t y,Float_t z);
+   virtual void   UpdateMatrix(TNode *node);
+   virtual void   UpdateTempMatrix(Double_t x=0, Double_t y=0, Double_t z=0, TRotMatrix *matrix=0);
+   virtual void   UpdateTempMatrix(Double_t x, Double_t y, Double_t z, Double_t *matrix,Bool_t isReflection=kFALSE);
+   static  void   UpdateTempMatrix(Double_t *dx1,Double_t *rmat1
+                , Double_t x, Double_t y, Double_t z, Double_t *matrix
+                , Double_t *dxnew, Double_t *rmatnew);
+
 
    ClassDef(TGeometry,1)  //Structure for Matrices, Shapes and Nodes
 };
+
+
+inline TRotMatrix *TGeometry::GetCurrentMatrix() const
+{
+   return fMatrix;
+}
+inline TRotMatrix *TGeometry::GetCurrentPosition(Double_t *x,Double_t *y,Double_t *z) const
+{
+   *x = fX; *y = fY; *z = fZ; return GetCurrentMatrix();
+}
+inline TRotMatrix *TGeometry::GetCurrentPosition(Float_t *x,Float_t *y,Float_t *z) const
+{
+   *x = Float_t(fX); *y = Float_t(fY); *z = Float_t(fZ); return GetCurrentMatrix();
+}
+inline Bool_t TGeometry::GetCurrentReflection() const
+{
+   return fIsReflection[fGeomLevel];
+}
+inline void TGeometry::SetPosition(Double_t x,Double_t y,Double_t z)
+{
+   fX = x; fY = y; fZ = z;
+}
+inline void TGeometry::SetPosition(Float_t x,Float_t y,Float_t z)
+{
+   fX = x; fY = y; fZ = z;
+}
+inline void TGeometry::SetPosition(TRotMatrix *matrix, Double_t x,Double_t y,Double_t z)
+{
+   SetMatrix(matrix);
+   SetPosition(x,y,z);
+}
+inline void TGeometry::SetPosition(TRotMatrix *matrix, Float_t x,Float_t y,Float_t z)
+{
+   SetMatrix(matrix);
+   SetPosition(x,y,z);
+}
 
 R__EXTERN TGeometry *gGeometry;
 

@@ -1,3 +1,4 @@
+//*CMZ :  2.21/07 01/03/99  09.33.20  by  Rene Brun
 //*CMZ :  2.00/08 19/05/98  11.12.07  by  Rene Brun
 //*CMZ :  1.03/05 14/10/97  17.45.33  by  Rene Brun
 //*-- Author :    Rene Brun   15/09/96
@@ -51,6 +52,7 @@ public:
         virtual void    Paint(Option_t *chopt="");
         virtual void    Print(Option_t *chopt="");
         virtual void    SavePrimitive(ofstream &out, Option_t *option);
+        virtual void    SetPoint(Int_t i, Float_t x, Float_t y);
         virtual void    SetPointError(Int_t i, Float_t ex, Float_t ey);
 
         ClassDef(TGraphErrors,1)  //a Graph with error bars

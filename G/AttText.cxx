@@ -1,4 +1,4 @@
-//*CMZ :  2.20/05 15/12/98  17.02.02  by  Fons Rademakers
+//*CMZ :  2.21/01 07/01/99  13.49.12  by  Fons Rademakers
 //*CMZ :  2.20/00 21/11/98  01.06.52  by  Fons Rademakers
 //*CMZ :  2.00/05 30/10/98  09.05.36  by  Rene Brun
 //*CMZ :  1.03/09 28/02/98  18.39.56  by  Fons Rademakers
@@ -155,14 +155,15 @@ void TAttText::Modify()
 
 #ifndef WIN32
 again:
+#ifndef R__TTFROT
       if (gGXW->HasTTFonts() && gGXW->GetTextSize() != -10.0) {
-      //if (gGXW->HasTTFonts()) {
-//#if 0
          if (fTextAngle != 0) {
             gGXW->SetTextSize(-10.0);
             goto again;
          }
-//#endif
+#else
+      if (gGXW->HasTTFonts()) {
+#endif
          if (gGXW->GetTextFont() != fTextFont) {
             gGXW->SetTextFont(fTextFont);
             if (!gGXW->HasTTFonts()) goto again;

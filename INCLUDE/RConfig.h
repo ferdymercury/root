@@ -1,3 +1,5 @@
+//*CMZ :  2.21/05 09/02/99  15.51.20  by  Fons Rademakers
+//*CMZ :  2.21/04 27/01/99  09.55.13  by  Fons Rademakers
 //*CMZ :  2.00/12 17/09/98  17.49.01  by  Fons Rademakers
 //*CMZ :  2.00/11 16/08/98  16.44.00  by  Rene Brun
 //*CMZ :  2.00/10 15/07/98  16.44.07  by  Rene Brun
@@ -94,8 +96,17 @@
 #   define R__LINUX
 #   define R__UNIX
 #   define NEED_SIGJMP
+#   if __GNUC_MINOR__ >= 90   /* egcs */
+#      define R__PPCEGCS
+#   endif
 #endif
 
+#if defined(__FreeBSD__)
+#   define R__FBSD
+#   define R__UNIX
+#   define R__BYTESWAP
+#   define R__NOSTATS         /* problem using stats with FreeBSD malloc/free */
+#endif
 
 #ifdef _HIUX_SOURCE
 #   define R__HIUX
@@ -103,7 +114,6 @@
 #   define NEED_SIGJMP
 #   define ANSICPP
 #endif
-
 
 #ifdef __GNUG__
 #   define R__GNU
@@ -176,7 +186,7 @@
 
 /*--- memory and object statistics -------------------------------------------*/
 
-/* #define NOSTATS     */
+/* #define R__NOSTATS     */
 
 
 /*--- cpp --------------------------------------------------------------------*/

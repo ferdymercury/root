@@ -1,5 +1,5 @@
-/*CMZ :  2.20/04 08/12/98  16.25.42  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   08/12/98*/
+/*CMZ :  2.21/08 17/03/99  13.13.52  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   17/03/99*/
 #ifndef G__LIMITS_H
 #define G__LIMITS_H
 #define 	CHAR_BIT (8)
@@ -14,7 +14,7 @@
 #define 	SHRT_MAX (32767)
 #define 	SHRT_MIN (-32768)
 #define 	UCHAR_MAX (255)
-#define 	UINT_MAX (-1)
-#define 	ULONG_MAX (-1)
+const unsigned int  	UINT_MAX =(4294967295);
+const unsigned long 	ULONG_MAX =(4294967295);
 #define 	USHRT_MAX (65535)
 #endif

@@ -1,3 +1,4 @@
+//*CMZ :  2.21/06 12/02/99  18.12.35  by  Valery Fine(fine@vxcern.cern.ch)
 //*CMZ :  2.20/01 01/12/98  23.47.56  by  Rene Brun
 //*CMZ :  2.00/13 29/10/98  17.46.25  by  Fons Rademakers
 //*CMZ :  2.00/12 01/10/98  11.42.09  by  Valery Fine(fine@mail.cern.ch)
@@ -137,6 +138,8 @@ TWin32Menu *PopUpMenu;
  fStaticMenuItems[i++] = new TWin32MenuItem("Markers","&Markers",MarkersCB);
  fStaticMenuItems[i++] = new TWin32MenuItem("Iconify","&Iconify",IconifyCB);
  fStaticMenuItems[i++] = new TWin32MenuItem("X3D","&3D View",X3DViewCB);
+ fStaticMenuItems[i++] = new                                   TWin32MenuItem(kSeparator);
+ fStaticMenuItems[i++] = new TWin32MenuItem("Interrupt","No&tify CINT",InterruptCB);
  Int_t iViewMenuEnd = i-1;
 
 //*-*   Items for the Options Menu
@@ -502,7 +505,11 @@ void TWin32Canvas::X3DViewCB(TWin32Canvas *obj, TVirtualMenuItem *item)
 {
    gPad->x3d("OPENGL");
 }
-
+//______________________________________________________________________________
+void TWin32Canvas::InterruptCB(TWin32Canvas *obj, TVirtualMenuItem *item)
+{
+ gROOT->SetInterrupt();
+}
 //______________________________________________________________________________
 void TWin32Canvas::EventStatusCB(TWin32Canvas *obj, TVirtualMenuItem *item)
 {

@@ -1,3 +1,4 @@
+//*CMZ :  2.21/08 10/03/99  19.27.23  by  Fons Rademakers
 //*CMZ :  2.20/05 14/12/98  15.17.01  by  Fons Rademakers
 //*CMZ :  2.00/13 29/10/98  15.22.45  by  Fons Rademakers
 //*CMZ :  2.00/10 15/07/98  19.59.52  by  Fons Rademakers
@@ -83,6 +84,7 @@ private:
    Bool_t   HandleContainerKey(Event_t *ev);
    Bool_t   HandleContainerMotion(Event_t *ev);
    Bool_t   HandleContainerExpose(Event_t *ev);
+   Bool_t   HandleContainerCrossing(Event_t *ev);
 
 public:
    TRootCanvas(TCanvas *c, const char *name, UInt_t width, UInt_t height);

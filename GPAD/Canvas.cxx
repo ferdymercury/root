@@ -1,3 +1,8 @@
+//*CMZ :  2.21/08 11/03/99  08.17.14  by  Rene Brun
+//*CMZ :  2.21/07 03/03/99  11.58.31  by  Rene Brun
+//*CMZ :  2.21/05 09/02/99  13.16.29  by  Fons Rademakers
+//*CMZ :  2.21/04 05/02/99  17.17.10  by  Fons Rademakers
+//*CMZ :  2.21/02 18/01/99  11.06.39  by  Rene Brun
 //*CMZ :  2.20/05 15/12/98  09.21.57  by  Rene Brun
 //*CMZ :  2.20/01 01/12/98  12.40.53  by  Rene Brun
 //*CMZ :  2.20/00 23/11/98  18.42.32  by  Fons Rademakers
@@ -404,6 +409,11 @@ void TCanvas::Build()
       fPrimitives     = new TList(this);
       SetFillColor(gStyle->GetCanvasColor());
       SetFillStyle(1001);
+      SetGrid(gStyle->GetPadGridX(),gStyle->GetPadGridY());
+      SetTicks(gStyle->GetPadTickX(),gStyle->GetPadTickY());
+      SetLogx(gStyle->GetOptLogx());
+      SetLogy(gStyle->GetOptLogy());
+      SetLogz(gStyle->GetOptLogz());
       SetBottomMargin(gStyle->GetPadBottomMargin());
       SetTopMargin(gStyle->GetPadTopMargin());
       SetLeftMargin(gStyle->GetPadLeftMargin());
@@ -462,6 +472,8 @@ void TCanvas::Clear(Option_t *option)
    if (fCanvasID == -1) return;
    TPad::Clear(option);   //Remove primitives from pad
 
+   fSelected    = 0;
+   fSelectedPad = 0;
 }
 
 //______________________________________________________________________________
@@ -540,7 +552,7 @@ void TCanvas::Draw(Option_t *)
 }
 
 //______________________________________________________________________________
-void TCanvas::DrawEventStatus(Int_t, Int_t px, Int_t py, TObject *selected)
+void TCanvas::DrawEventStatus(Int_t event, Int_t px, Int_t py, TObject *selected)
 {
 //*-*-*-*-*-*-*Report name and title of primitive below the cursor*-*-*-*-*-*
 //*-*          ===================================================
@@ -570,9 +582,13 @@ void TCanvas::DrawEventStatus(Int_t, Int_t px, Int_t py, TObject *selected)
    atext[kTMAX-1] = 0;
    gGXW->DrawText(pxt, pyt, 0, 1, atext, TGXW::kOpaque);
 #else
+   if (!fCanvasImp) return; //this may happen when closing a TAttCanvas
    fCanvasImp->SetStatusText((Text_t *)(selected->GetTitle()),0);
    fCanvasImp->SetStatusText((Text_t *)(selected->GetName()),1);
-   sprintf(atext,"%d,%d",px,py);
+   if (event == kKeyPress)
+      sprintf(atext, "%c", (char) px);
+   else
+      sprintf(atext, "%d,%d", px, py);
    fCanvasImp->SetStatusText(atext,2);
    fCanvasImp->SetStatusText((Text_t *)(selected->GetObjectInfo(px,py)),3);
 #endif
@@ -600,6 +616,30 @@ void TCanvas::EditorBar()
    ed->AddButton("CutG",     "gROOT->SetEditorMode(\"CutG\")",      "Create a Graphical Cut");
    ed->Show();
    fEditorBar = ed;
+}
+
+//______________________________________________________________________________
+void TCanvas::EnterLeave(TPad *prevSelPad, TObject *prevSelObj)
+{
+   // Generate kMouseEnter and kMouseLeave events depending on the previously
+   // selected object and the currently selected object. Does nothing if the
+   // selected object does not change.
+
+   if (prevSelObj == fSelected) return;
+
+   TPad *padsav = (TPad *)gPad;
+
+   if (prevSelObj) {
+      gPad = prevSelPad;
+      prevSelObj->ExecuteEvent(kMouseLeave, 0, 0);
+   }
+
+   gPad = fSelectedPad;
+
+   if (fSelected)
+      fSelected->ExecuteEvent(kMouseEnter, 0, 0);
+
+   gPad = padsav;
 }
 
 //______________________________________________________________________________
@@ -712,6 +752,13 @@ void TCanvas::HandleInput(EEventType event, Int_t px, Int_t py)
 
    TPad         *pad;
    TObjLink     *pickobj;
+   TObject      *prevSelObj = 0;
+   TPad         *prevSelPad = 0;
+
+   if (fSelected && fSelected->TestBit(kNotDeleted))
+      prevSelObj = fSelected;
+   if (fSelectedPad && fSelectedPad->TestBit(kNotDeleted))
+      prevSelPad = (TPad*) fSelectedPad;
 
    fPadSave = (TPad*)gPad;
    cd();        // make sure this canvas is the current canvas
@@ -741,6 +788,8 @@ void TCanvas::HandleInput(EEventType event, Int_t px, Int_t py)
          }
       }
       fSelectedPad = pad;
+
+      EnterLeave(prevSelPad, prevSelObj);
 
       gPad = pad;   // don't use cd() we will use the current
                     // canvas via the GetCanvas member and not via
@@ -883,8 +932,8 @@ void TCanvas::HandleInput(EEventType event, Int_t px, Int_t py)
 
    case kButton3Down:
    {
-      pad = Pick( px, py, pickobj );
-      if ( !pad ) return;
+      pad = Pick(px, py, pickobj);
+      if (!pad) return;
 
       if (!pickobj) {
          fSelected    = pad;
@@ -897,8 +946,8 @@ void TCanvas::HandleInput(EEventType event, Int_t px, Int_t py)
       }
       fSelectedPad = pad;
 
-      if( fContextMenu )
-          fContextMenu->Popup( px, py, fSelected, this, pad );
+      if (fContextMenu)
+          fContextMenu->Popup(px, py, fSelected, this, pad);
 
       break;
    }
@@ -909,6 +958,36 @@ void TCanvas::HandleInput(EEventType event, Int_t px, Int_t py)
       break;
 
    case kButton3Double:
+      break;
+
+   case kKeyPress:
+
+      // find pad in which input occured
+      fSelected    = 0;
+      fSelectedOpt = "";
+      fSelectedPad = 0;
+      pickobj      = 0;
+      pad = Pick(px, py, pickobj);
+      if (!pad) return;
+
+      if (!pickobj) {
+         fSelected    = pad;
+         fSelectedOpt = "";
+      } else {
+         if (!fSelected) {
+            fSelected    = pickobj->GetObject();
+            fSelectedOpt = pickobj->GetOption();
+         }
+      }
+      fSelectedPad = pad;
+
+      gPad = pad;   // don't use cd() because we won't draw in pad
+                    // we will only use its coordinate system
+
+      fSelected->ExecuteEvent(event, px, py);
+
+      if (fShowEventStatus) DrawEventStatus(event, px, py, fSelected);
+
       break;
 
    default:
@@ -941,7 +1020,7 @@ void TCanvas::MakeDefCanvas()
    char cdef[64];
    TList *lc = (TList*)gROOT->GetListOfCanvases();
    if (lc->FindObject(defcanvas)) {
-      sprintf(cdef,"%s_%d",defcanvas,lc->GetSize()+1);
+      sprintf(cdef,"%s_n%d",defcanvas,lc->GetSize()+1);
    } else {
       sprintf(cdef,"%s",defcanvas);
    }
@@ -1318,13 +1397,13 @@ void TCanvas::Update()
 //*-*              =========================
 
 
-+IF,THREAD.
+#ifdef R__THREAD
    if (gThreadXAR) {
      void *arr[2];
      arr[1] = this;
      if ((*gThreadXAR)("CUPD", 2, arr, NULL)) return;
    }
-+ENDIF
+#endif
 
    if (!IsBatch()) FeedbackMode(kFALSE);      // Goto double buffer mode
 

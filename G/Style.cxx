@@ -1,3 +1,5 @@
+//*CMZ :  2.21/04 03/02/99  10.49.07  by  Rene Brun
+//*CMZ :  2.21/02 16/01/99  12.20.44  by  Rene Brun
 //*CMZ :  2.20/02 03/12/98  18.59.19  by  Rene Brun
 //*CMZ :  2.00/13 29/10/98  18.54.20  by  Rene Brun
 //*CMZ :  2.00/12 30/09/98  10.13.46  by  Rene Brun
@@ -118,6 +120,10 @@ void TStyle::Copy(TObject &obj)
    ((TStyle&)obj).fPadTopMargin   = fPadTopMargin;
    ((TStyle&)obj).fPadLeftMargin  = fPadLeftMargin;
    ((TStyle&)obj).fPadRightMargin = fPadRightMargin;
+   ((TStyle&)obj).fPadGridX       = fPadGridX;
+   ((TStyle&)obj).fPadGridY       = fPadGridY;
+   ((TStyle&)obj).fPadTickX       = fPadTickX;
+   ((TStyle&)obj).fPadTickY       = fPadTickY;
    ((TStyle&)obj).fFuncColor      = fFuncColor;
    ((TStyle&)obj).fFuncStyle      = fFuncStyle;
    ((TStyle&)obj).fFuncWidth      = fFuncWidth;
@@ -148,17 +154,13 @@ void TStyle::Copy(TObject &obj)
    ((TStyle&)obj).fErrorMsize     = fErrorMsize;
    ((TStyle&)obj).fErrorX         = fErrorX;
    ((TStyle&)obj).fStatColor      = fStatColor;
+   ((TStyle&)obj).fStatBorderSize = fStatBorderSize;
    ((TStyle&)obj).fStatW          = fStatW;
    ((TStyle&)obj).fStatH          = fStatH ;
    ((TStyle&)obj).fStatX          = fStatX;
    ((TStyle&)obj).fStatY          = fStatY;
    ((TStyle&)obj).fTitleColor     = fTitleColor;
-   ((TStyle&)obj).fTitleXOffset   = fTitleXOffset;
-   ((TStyle&)obj).fTitleXFont     = fTitleXFont;
-   ((TStyle&)obj).fTitleXSize     = fTitleXSize;
-   ((TStyle&)obj).fTitleYOffset   = fTitleYOffset;
-   ((TStyle&)obj).fTitleYFont     = fTitleYFont;
-   ((TStyle&)obj).fTitleYSize     = fTitleYSize;
+   ((TStyle&)obj).fTitleBorderSize= fTitleBorderSize;
    ((TStyle&)obj).fTitleW         = fTitleW;
    ((TStyle&)obj).fTitleH         = fTitleH;
    ((TStyle&)obj).fTitleX         = fTitleX;
@@ -197,6 +199,10 @@ void TStyle::Reset(Option_t *)
    fPadTopMargin   = 0.1;
    fPadLeftMargin  = 0.1;
    fPadRightMargin = 0.1;
+   fPadGridX       = kFALSE;
+   fPadGridY       = kFALSE;
+   fPadTickX       = 0;
+   fPadTickY       = 0;
    fFuncColor      = 1;
    fFuncStyle      = 1;
    fFuncWidth      = 3;
@@ -228,17 +234,13 @@ void TStyle::Reset(Option_t *)
    fErrorX         = 0.5;
    fScreenFactor   = 1;
    fStatColor      = fCanvasColor;
+   fStatBorderSize = 2;
    fStatW          = 0.20;
    fStatH          = 0.16;
    fStatX          = 0.98;
    fStatY          = 0.98;
    fTitleColor     = fCanvasColor;
-   fTitleXOffset   = 1;
-   fTitleXFont     = 62;
-   fTitleXSize     = 0.02;
-   fTitleYOffset   = 1;
-   fTitleYFont     = 62;
-   fTitleYSize     = 0.02;
+   fTitleBorderSize= 2;
    fTitleW         = 0;
    fTitleH         = 0;
    fTitleX         = 0.01;
@@ -374,6 +376,16 @@ Float_t TStyle::GetTitleOffset( Option_t *axis)
    if (ax == 1) return fXaxis.GetTitleOffset();
    if (ax == 2) return fYaxis.GetTitleOffset();
    if (ax == 3) return fZaxis.GetTitleOffset();
+   return 0;
+}
+
+//______________________________________________________________________________
+Float_t TStyle::GetTitleSize( Option_t *axis)
+{
+   Int_t ax = AxisChoice(axis);
+   if (ax == 1) return fXaxis.GetTitleSize();
+   if (ax == 2) return fYaxis.GetTitleSize();
+   if (ax == 3) return fZaxis.GetTitleSize();
    return 0;
 }
 
@@ -596,6 +608,19 @@ void TStyle::SetTitleOffset(Float_t offset, Option_t *axis)
    if (ax == 1) fXaxis.SetTitleOffset(offset);
    if (ax == 2) fYaxis.SetTitleOffset(offset);
    if (ax == 3) fZaxis.SetTitleOffset(offset);
+}
+
+//______________________________________________________________________________
+void TStyle::SetTitleSize(Float_t size, Option_t *axis)
+{
+// Set the axis title size.
+//
+// axis specifies which axis ("x","y","z"), default = "x"
+
+   Int_t ax = AxisChoice(axis);
+   if (ax == 1) fXaxis.SetTitleSize(size);
+   if (ax == 2) fYaxis.SetTitleSize(size);
+   if (ax == 3) fZaxis.SetTitleSize(size);
 }
 
 //______________________________________________________________________________

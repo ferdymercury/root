@@ -1,5 +1,5 @@
-/*CMZ :  2.20/04 08/12/98  16.25.27  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   08/12/98*/
+/*CMZ :  2.21/08 17/03/99  13.13.41  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   17/03/99*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -34,6 +34,49 @@
 
 static int G__kindofheader = G__USERHEADER;
 
+#ifndef G__OLDIMPLEMENTATION970
+static int G__copyflag = 0;
+
+/******************************************************************
+* G__copysourcetotmp()
+******************************************************************/
+static void G__copysourcetotmp(prepname,pifile,fentry)
+char *prepname;
+struct G__input_file *pifile;
+int fentry;
+{
+  if(G__copyflag && 0==prepname[0]) {
+    FILE *fpout;
+    G__tmpnam(prepname);
+    fpout = fopen(prepname,"wb");
+    if(!fpout) {
+      fprintf(G__serr,"tmp file %s can not open",prepname);
+      G__genericerror((char*)NULL);
+      prepname[0] = 0;
+      return;
+    }
+    G__copyfile(fpout,pifile->fp);
+    G__srcfile[fentry].prepname = (char*)malloc(strlen(prepname)+1);
+    strcpy(G__srcfile[fentry].prepname,prepname);
+    fclose(pifile->fp);
+    fclose(fpout);
+#ifndef G__WIN32
+    pifile->fp = fopen(prepname,"r");
+#else
+    pifile->fp = fopen(prepname,"rb");
+#endif
+  }
+}
+
+/**************************************************************************
+* G__setcopyflag()
+**************************************************************************/
+void G__setcopyflag(flag)
+int flag;
+{
+  G__copyflag = flag;
+}
+#endif
 
 /******************************************************************
 * G__ispreprocessfilekey
@@ -403,7 +446,7 @@ char *filename;
     fprintf(G__serr,"File=%s unloaded\n",filename);
   }
 
-  return(G__UNLOADFILE_FAILURE);
+  return(G__UNLOADFILE_SUCCESS);
 
 }
 
@@ -518,6 +561,14 @@ char *filenamein;
   int store_func_now;
   int pragmacompile_iscpp;
   int pragmacompile_filenum;
+#endif
+#ifndef G__OLDIMPLEMENTATION974
+  int store_asm_noverflow;
+  int store_no_exec_compile;
+  int store_asm_exec;
+#endif
+#if defined(R__FBSD)
+  char soext[]=SOEXT;
 #endif
   char filename[G__ONELINE];
   strcpy(filename,filenamein);
@@ -640,9 +691,19 @@ char *filenamein;
 	  strcpy(filename+len-3,G__getmakeinfo("DLLPOST"));
 	}
 	else if((len>4&& (strcmp(filename+len-4,".dll")==0 ||
-		     strcmp(filename+len-4,".DLL")==0))) {
+			  strcmp(filename+len-4,".DLL")==0))) {
 	  strcpy(filename+len-4,G__getmakeinfo("DLLPOST"));
 	}
+	else if((len>2&& (strcmp(filename+len-2,".a")==0 ||
+			  strcmp(filename+len-2,".A")==0))) {
+	  strcpy(filename+len-2,G__getmakeinfo("DLLPOST"));
+	}
+#if defined(R__FBSD)
+	else if (len>strlen(soext) &&
+		 strcmp(filename+len-strlen(soext),soext)==0) {
+	  strcpy(filename+len-strlen(soext),G__getmakeinfo("DLLPOST"));
+	}
+#endif
       }
 #else
     for(i2=0;i2<2;i2++) {
@@ -1049,14 +1110,28 @@ char *filenamein;
 #endif
   store_macroORtemplateINfile = G__macroORtemplateINfile;
   G__macroORtemplateINfile = 0;
+#ifndef G__OLDIMPLEMENTATION974
+  store_asm_noverflow = G__asm_noverflow;
+  store_no_exec_compile = G__no_exec_compile;
+  store_asm_exec = G__asm_exec;
+  G__asm_noverflow = 0;
+  G__no_exec_compile = 0;
+  G__asm_exec = 0;
+#endif
 
 #ifdef G__SHAREDLIB
   len = strlen(filename);
   if((len>3&& (strcmp(filename+len-3,".sl")==0 ||
 	       strcmp(filename+len-3,".dl")==0 ||
 	       strcmp(filename+len-3,".so")==0)) ||
-      (len>4&& (strcmp(filename+len-4,".dll")==0 ||
-		strcmp(filename+len-4,".DLL")==0))) {
+     (len>4&& (strcmp(filename+len-4,".dll")==0 ||
+	       strcmp(filename+len-4,".DLL")==0)) ||
+#if defined(R__FBSD)
+     (len>strlen(soext) && strcmp(filename+len-strlen(soext), soext)==0) ||
+#endif
+     (len>2&& (strcmp(filename+len-2,".a")==0 ||
+	       strcmp(filename+len-2,".A")==0))
+     ) {
     /* Caution, G__ifile.fp is left openned.
      * This may cause trouble in future */
     fclose(G__srcfile[fentry].fp);
@@ -1076,6 +1151,9 @@ char *filenamein;
 #endif
 	return(G__LOADFILE_FAILURE);
       }
+#ifndef G__OLDIMPLEMENTATION970
+      if(G__copyflag) G__copysourcetotmp(prepname,&G__ifile,fentry);
+#endif
       while (!G__eof && G__return<G__RETURN_EXIT1) G__exec_statement();
     }
   }
@@ -1124,6 +1202,12 @@ char *filenamein;
   G__nobreak=store_nobreak;
   G__prerun=store_prerun;
   G__p_local=store_p_local;
+
+#ifndef G__OLDIMPLEMENTATION974
+  G__asm_noverflow = store_asm_noverflow;
+  G__no_exec_compile = store_no_exec_compile;
+  G__asm_exec = store_asm_exec;
+#endif
 
   /******************************************************
    * restore input file information to G__ifile
@@ -1280,7 +1364,6 @@ char *macros,*undeflist,*ppopt,*includepath;
   /* If using C preprocessor '-p' option' */
   if(cppflag && flag) {
 
-
     /* Determine what C/C++ preprocessor to use */
     if('\0'==G__ccom[0]) {
       switch(G__globalcomp) {
@@ -1407,6 +1490,7 @@ char *macros,*undeflist,*ppopt,*includepath;
   }
   return(0);
 }
+
 
 #ifndef G__OLDIMPLEMENTATION486
 /**************************************************************************

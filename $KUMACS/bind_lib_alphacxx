@@ -1,6 +1,7 @@
+*CMZ :  2.21/03 20/01/99  12.29.25  by  Fons Rademakers
 *CMZ :  0.90/01 29/10/96  12.01.52  by  Fons Rademakers
 *-- Author :    Rene Brun   14/09/95
-macro bind_lib 1='root'   2='*.o'
+macro bind_lib 1='root'   2='*.o' 3='' 4='' 5=''
 * macro to generate a shared library from the sources specified in par 2.
 
 message Generating library: $ROOTSYS/lib/lib[1].so
@@ -8,10 +9,10 @@ message Generating library: $ROOTSYS/lib/lib[1].so
 shell /bin/rm -f $ROOTSYS/lib/lib[1].so
 * due to a bug in cxx/ld under osf3.xx, one cannot use cxx to generate
 * a shared library. One must use ld instead.
-*shell cxx -call_shared -o $ROOTSYS/lib/lib[1].so $ROOTSYS/src/[2]
+*shell cxx -call_shared -o $ROOTSYS/lib/lib[1].so $ROOTSYS/src/[2] [3] [4] [5]
 shell ld  -L/usr/lib/cmplrs/cxx -rpath /usr/lib/cmplrs/cxx -expect_unresolved _
  -g0 -O1 -shared /usr/lib/cmplrs/cc/crt0.o /usr/lib/cmplrs/cxx/_main.o _
- -o $ROOTSYS/lib/lib[1].so $ROOTSYS/src/[2] -lcxxstd -lcxx -lexc -lots -lc
+ -o $ROOTSYS/lib/lib[1].so $ROOTSYS/src/[2] [3] [4] [5] -lcxxstd -lcxx -lexc -lots -lc
 
 shell chmod 555 $ROOTSYS/lib/lib[1].so
 

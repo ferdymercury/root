@@ -1,3 +1,5 @@
+*CMZ :  2.21/08 11/03/99  08.00.22  by  Rene Brun
+*CMZ :  2.21/06 11/02/99  16.15.08  by  Valery Fine(fine@vxcern.cern.ch)
 *CMZ :  2.20/00 09/11/98  12.34.27  by  Valery Fine(fine@mail.cern.ch)
 *CMZ :  2.00/13 29/10/98  13.35.51  by  Rene Brun
 *CMZ :  2.00/10 28/07/98  16.42.35  by  Rene Brun
@@ -88,10 +90,10 @@ STRESS        = stress$(ExeSuf)
 
 OBJS          = $(EVENTO) $(MAINEVENTO) $(HWORLDO) $(HSIMPLEO) $(MINEXAMO) \
                 $(TSTRINGO) $(TCOLLEXO) $(VVECTORO) $(VMATRIXO) $(VLAZYO) \
-                $(GUITESTO) $(HELLOO) $(ACLOCKO) $(STRESSO) $(EVENTSO)
+                $(HELLOO) $(ACLOCKO) $(STRESSO) $(EVENTSO)
 
 PROGRAMS      = $(EVENT) $(HWORLD) $(HSIMPLE) $(MINEXAM) $(TSTRING) \
-                $(TCOLLEX) $(VVECTOR) $(VMATRIX) $(VLAZY) $(GUITEST) \
+                $(TCOLLEX) $(VVECTOR) $(VMATRIX) $(VLAZY) \
                 $(HELLOSO) $(ACLOCKSO) $(STRESS)
 
 all:            $(PROGRAMS)

@@ -1,3 +1,4 @@
+//*CMZ :  2.21/02 14/01/99  19.04.59  by  Fons Rademakers
 //*CMZ :  2.00/10 06/07/98  09.32.08  by  Rene Brun
 //*CMZ :  1.03/08 14/11/97  17.23.48  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   14/11/97
@@ -16,6 +17,19 @@
 #include "TMatrix.h"
 #include <iostream.h>
 
+
+class do_downsample : public TElementPosAction {
+private:
+   const TMatrix &fOrigMatrix;
+   const int row_lwb, col_lwb;
+   void Operation(Real_t &element)
+       { element = fOrigMatrix((fI-row_lwb)*2+row_lwb,(fJ-col_lwb)*2+col_lwb); }
+public:
+   do_downsample(const TMatrix &orig_matrix)
+      : fOrigMatrix(orig_matrix),
+        row_lwb(orig_matrix.GetRowLwb()),
+        col_lwb(orig_matrix.GetColLwb()) { }
+};
 
 // Downsample matrix - new style
 class downsample_matrix : public TLazyMatrix {
@@ -38,18 +52,6 @@ downsample_matrix::downsample_matrix(const TMatrix &orig_matrix)
 // "construct" the new matrix (when the lazy matrix is being "rolled out")
 void downsample_matrix::FillIn(TMatrix &m) const
 {
-   class do_downsample : public TElementPosAction {
-   private:
-      const TMatrix &fOrigMatrix;
-      const int row_lwb, col_lwb;
-      void Operation(Real_t &element)
-       { element = fOrigMatrix((fI-row_lwb)*2+row_lwb,(fJ-col_lwb)*2+col_lwb); }
-   public:
-      do_downsample(const TMatrix &orig_matrix)
-        : fOrigMatrix(orig_matrix),
-          row_lwb(orig_matrix.GetRowLwb()),
-          col_lwb(orig_matrix.GetColLwb()) {}
-   };
    do_downsample d(fOrigMatrix);
    m.Apply(d);
 }

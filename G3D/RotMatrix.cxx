@@ -1,3 +1,5 @@
+//*CMZ :  2.21/06 11/02/99  14.50.59  by  Rene Brun
+//*CMZ :  2.21/04 22/01/99  19.05.00  by  Valery Fine(fine@mail.cern.ch)
 //*CMZ :  2.00/12 07/10/98  08.52.28  by  Valery Fine(fine@mail.cern.ch)
 //*CMZ :  2.00/04 30/03/98  17.16.57  by  Rene Brun
 //*CMZ :  1.03/09 07/12/97  17.04.29  by  Fons Rademakers
@@ -65,7 +67,7 @@ TRotMatrix::TRotMatrix(Text_t *name, Text_t *title, Double_t theta, Double_t phi
    fTheta  = theta;
    fPhi    = phi;
    fPsi    = psi;
-   fType   = 0;
+   fType   = 2;
    for (i=0;i<9;i++) fMatrix[i] = 0;
    fMatrix[0] = 1;   fMatrix[4] = 1;   fMatrix[8] = 1;
 
@@ -83,13 +85,31 @@ TRotMatrix::TRotMatrix(Text_t *name, Text_t *title, Double_t theta1, Double_t ph
 {
 //*-*-*-*-*-*RotMatrix normal constructor defined a la GEANT*-*-*-*-*-*-*
 //*-*        ===============================================
+//
+// The TRotMatrix constructor with six angles uses the GEANT convention:
+//
+// theta1 is the polar angle of the x-prim axis in the main reference system
+// (MRS), theta2 and theta3 have the same meaning for the y-prim and z-prim
+// axis.
+//
+// Phi1 is the azimuthal angle of the x-prim in the MRS and phi2 and phi3
+// have the same meaning for y-prim and z-prim.
+//
+//
+// for example, the unit matrix is defined in the following way.
+//
+//     x-prim || x, y-prim || y, z-prim || z
+//
+//     means:  theta1=90, theta2=90, theta3=0, phi1=0, phi2=90, phi3=0
 
    const Double_t degrad = 0.0174532925199432958;
 
    fTheta  = theta1;
    fPhi    = phi1;
    fPsi    = theta2;
-   fType   = 0;
+
+   fType   = 2;
+   if (strcmp(GetName(),"Identity")) fType = 0;
 
    fMatrix[0] = TMath::Sin(theta1*degrad)*TMath::Cos(phi1*degrad);
    fMatrix[1] = TMath::Sin(theta1*degrad)*TMath::Sin(phi1*degrad);
@@ -118,7 +138,7 @@ TRotMatrix::~TRotMatrix()
 }
 
 //______________________________________________________________________________
-Double_t  TRotMatrix::Determinant()
+Double_t  TRotMatrix::Determinant() const
 {
 //*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 //*-*
@@ -132,7 +152,7 @@ Double_t  TRotMatrix::Determinant()
 }
 
 //______________________________________________________________________________
-Double_t* TRotMatrix::GetGLMatrix(Double_t *rGLMatrix)
+Double_t* TRotMatrix::GetGLMatrix(Double_t *rGLMatrix) const
 {
 //*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 //*-*  Convert this matrix to the OpenGL [4x4]
@@ -152,7 +172,7 @@ Double_t* TRotMatrix::GetGLMatrix(Double_t *rGLMatrix)
 //*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 
    Double_t *glmatrix = rGLMatrix;
-   Double_t *matrix   = fMatrix;
+   const Double_t *matrix   = fMatrix;
    if (rGLMatrix)
    {
        for (Int_t i=0;i<3;i++)
@@ -183,6 +203,7 @@ void TRotMatrix::SetMatrix(const Double_t *matrix)
    fPsi    = 0;
    fType   = 0;
    if (!matrix) return;
+   fType   = 2;
    memcpy(fMatrix,matrix,9*sizeof(Double_t));
    SetReflection();
 }
@@ -195,5 +216,5 @@ void TRotMatrix::SetReflection()
 //*-*                     and set the "reflection" flag if any
 //*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
    ResetBit(kReflection);
-   if (Determinant() < 0) SetBit(kReflection);
+   if (Determinant() < 0) { fType=1; SetBit(kReflection);}
 }

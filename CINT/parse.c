@@ -1,5 +1,5 @@
-/*CMZ :  2.20/04 08/12/98  16.58.33  by  Rene Brun*/
-/*-- Author :    Masaharu Goto   08/12/98*/
+/*CMZ :  2.21/08 17/03/99  13.13.43  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   17/03/99*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -310,7 +310,7 @@ char* statement;
       G__printlinenum();
     }
 #endif
-    G__asm_noverflow=0;
+    G__abortbytecode();
     if(G__no_exec_compile) return(0);
   }
 #endif
@@ -409,7 +409,11 @@ int *plargestep;
 G__value *presult;
 {
   /* function call */
-  if(*pc==';' || G__isoperator(*pc) || *pc==',' || *pc=='.') {
+  if(*pc==';' || G__isoperator(*pc) || *pc==',' || *pc=='.'
+#ifndef G__OLDIMPLEMENTATION1001
+     || *pc=='['
+#endif
+     ) {
     if(*pc!=';' && *pc!=',') {
       statement[(*piout)++] = *pc;
       *pc=G__fgetstream_new(statement+(*piout) ,";");
@@ -454,6 +458,15 @@ char *statement;
   int c=0;
   int iout=0;
 #endif
+
+#ifndef G__OLDIMPLEMENTATION986
+  if((G__prerun||(G__ASM_FUNC_COMPILE==G__asm_wholefunction&&0==G__ansiheader))
+      && G__func_now>=0&&strcmp(statement,"const")==0) {
+     G__constvar = G__CONSTVAR;
+     return(G__keyword_anytime_6("static"));
+  }
+#endif
+
   if(statement[0]!='#') return(0);
 
   /**********************************
@@ -954,7 +967,7 @@ int elifskip;
 	    int store_asm_noverflow=G__asm_noverflow;
 	    G__no_exec_compile=0;
 	    G__asm_wholefunction=0;
-	    G__asm_noverflow=0;
+	    G__abortbytecode();
 #endif
 	    strcpy(condition,"");
 	    for(i=3;i<=argn;i++) {
@@ -993,7 +1006,7 @@ int elifskip;
 	  int store_asm_noverflow=G__asm_noverflow;
 	  G__no_exec_compile=0;
 	  G__asm_wholefunction=0;
-	  G__asm_noverflow=0;
+	  G__abortbytecode();
 #endif
 	  strcpy(condition,"");
 	  for(i=2;i<=argn;i++) {
@@ -1094,7 +1107,7 @@ void G__pp_if()
   store_asm_noverflow=G__asm_noverflow;
   G__no_exec_compile=0;
   G__asm_wholefunction=0;
-  G__asm_noverflow=0;
+  G__abortbytecode();
 #endif
   if(!G__test(condition)) {
     /********************
@@ -1258,6 +1271,9 @@ G__value G__exec_do()
       G__printlinenum();
     }
 #endif
+#ifndef G__OLDIMPLEMENTATION1019
+    G__asm_clear();
+#endif
   }
 #endif
 
@@ -1391,7 +1407,7 @@ G__value G__exec_do()
     }
     G__asm_inst[G__asm_cp]=G__RETURN;
     asm_exec=1;
-    G__asm_noverflow=0;
+    G__abortbytecode();
     /* local compile assembler optimize */
     if(G__asm_loopcompile>=2) G__asm_optimize(&asm_start_pc);
   }
@@ -1531,7 +1547,7 @@ char *statement;
     G__inc_cp_asm(2,0);
   }
   else {
-    G__asm_noverflow=0;
+    G__abortbytecode();
     G__return=G__RETURN_NORMAL;
   }
   return(buf);
@@ -1906,7 +1922,7 @@ G__value G__exec_switch()
       G__printlinenum();
     }
 #endif
-    G__asm_noverflow=0;
+    G__abortbytecode();
 #endif
 #ifndef G__OLDIMPLEMENTATION844
   }
@@ -2331,6 +2347,9 @@ char **foraction;
       G__asm_inst[G__asm_cp]=G__CNDJMP;
       asm_jumppointer = G__asm_cp+1;
       G__inc_cp_asm(2,0);
+#ifndef G__OLDIMPLEMENTATION1019
+      G__asm_clear();
+#endif
     }
 #endif
     result=G__exec_statement();
@@ -2560,10 +2579,10 @@ G__value G__exec_else_if()
 #ifdef G__ASM
 #ifndef G__OLDIMPLEMENTATION653
   if(0==G__no_exec_compile)
-    G__asm_noverflow=0; /* this must be redundant, but just in case */
+    G__abortbytecode(); /* this must be redundant, but just in case */
 #else
   G__ASSERT(0==G__asm_noverflow);
-  G__asm_noverflow=0; /* this must be redundant, but just in case */
+  G__abortbytecode(); /* this must be redundant, but just in case */
 #endif
 #endif
 
@@ -3047,7 +3066,7 @@ G__value G__exec_statement()
 		  G__printlinenum();
 		}
 #endif
-		G__asm_noverflow=0;
+		G__abortbytecode();
 #ifndef G__OLDIMPLEMENTATION842
 	      }
 #endif
@@ -3055,9 +3074,9 @@ G__value G__exec_statement()
 		if(0==mparen) return(G__null);
 #ifndef G__OLDIMPLEMENTATION842
 		if(G__ASM_FUNC_COMPILE!=G__asm_wholefunction)
-		  G__asm_noverflow=0;
+		  G__abortbytecode();
 #else
-		G__asm_noverflow=0;
+		G__abortbytecode();
 #endif
 		spaceflag = -1;
 		iout=0;
@@ -3476,8 +3495,7 @@ G__value G__exec_statement()
       if(G__no_exec==0) {
 
 #ifndef G__OLDIMPLEMENTATION942
-	if( (0==G__fons_comment||0==G__def_struct_member||
-	     strncmp(statement,"ClassDef",8)!=0) &&
+	if( (0==G__def_struct_member||strncmp(statement,"ClassDef",8)!=0) &&
 	    G__execfuncmacro_noexec(statement)) {
 	  spaceflag=0;
 	  iout =0;

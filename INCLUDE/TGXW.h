@@ -1,3 +1,4 @@
+//*CMZ :  2.21/06 10/02/99  16.53.42  by  Valery Fine(fine@vxcern.cern.ch)
 //*CMZ :  2.20/00 08/11/98  17.41.29  by  Fons Rademakers
 //*CMZ :  2.00/13 28/10/98  11.47.55  by  Fons Rademakers
 //*CMZ :  2.00/12 01/10/98  00.24.00  by  Fons Rademakers
@@ -56,9 +57,9 @@
 
 
 // WM Atoms are initialized in TGClient
-extern Atom_t gWM_DELETE_WINDOW;
-extern Atom_t gMOTIF_WM_HINTS;
-extern Atom_t gROOT_MESSAGE;
+R__EXTERN Atom_t gWM_DELETE_WINDOW;
+R__EXTERN Atom_t gMOTIF_WM_HINTS;
+R__EXTERN Atom_t gROOT_MESSAGE;
 
 const int kNumCursors = 18;
 enum ECursor { kBottomLeft, kBottomRight, kTopLeft, kTopRight,

@@ -1,5 +1,5 @@
-//*CMZ :  2.00/12 08/10/98  19.50.19  by  Fons Rademakers
-//*-- Author :    Fons Rademakers   08/10/98
+//*CMZ :  2.21/07 08/03/99  12.34.45  by  Fons Rademakers
+//*-- Author :    Fons Rademakers   08/03/99
 //*CMZ :  1.00/09 23/04/97  17.59.54  by  Rene Brun
 //*-- Author :    Rene Brun   23/04/97
 #if defined(__hpux) && !defined(__GNUG__)
@@ -75,6 +75,7 @@ extern G__linked_taginfo G__G__MatrixLN_TMatrixcLcLEMatrixCreatorsOp2;
 #undef malloc
 #endif
 
+extern "C" void G__cpp_reset_tagtableG__Matrix();
 
 extern "C" void G__set_cpp_environmentG__Matrix() {
   G__add_macro("__MAKECINT__");
@@ -83,8 +84,9 @@ extern "C" void G__set_cpp_environmentG__Matrix() {
   G__add_compiledheader("TVector.h");
   G__add_compiledheader("TMatrix.h");
   G__add_compiledheader("TMatrixUtils.h");
+  G__cpp_reset_tagtableG__Matrix();
 }
-int G__cpp_dllrevG__Matrix() { return(51111); }
+extern "C" int G__cpp_dllrevG__Matrix() { return(51111); }
 
 /*********************************************************
 * Member function Interface Method
@@ -568,42 +570,30 @@ static int G__TVector_TVector_5_0(G__value *result7,char *funcname,struct G__par
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TVector_TVector_6_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
-   TVector *p=NULL;
-      p = new TVector(
-(Int_t)G__int(libp->para[0]),(Int_t)G__int(libp->para[1])
-,(Double_t)G__double(libp->para[2]),(int)G__int(libp->para[3]));
-      result7->obj.i = (long)p;
-      result7->ref = (long)p;
-      result7->type = 'u';
-      result7->tagnum = G__get_linked_tagnum(&G__G__MatrixLN_TVector);
-   return(1 || funcname || hash || result7 || libp) ;
-}
-
-static int G__TVector_ResizeTo_8_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TVector_ResizeTo_7_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TVector*)(G__getstructoffset()))->ResizeTo((Int_t)G__int(libp->para[0]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TVector_ResizeTo_9_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TVector_ResizeTo_8_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TVector*)(G__getstructoffset()))->ResizeTo((Int_t)G__int(libp->para[0]),(Int_t)G__int(libp->para[1]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TVector_ResizeTo_0_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TVector_ResizeTo_9_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TVector*)(G__getstructoffset()))->ResizeTo(*(TVector*)libp->para[0].ref);
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TVector_IsValid_1_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TVector_IsValid_0_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,98,(long)((TVector*)(G__getstructoffset()))->IsValid());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TVector_operatoroPcP_2_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TVector_operatoroPcP_1_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       {
         Real_t& obj=((TVector*)(G__getstructoffset()))->operator()((Int_t)G__int(libp->para[0]));
          result7->ref=(long)(&obj); result7->obj.d=(double)(obj);
@@ -611,27 +601,27 @@ static int G__TVector_operatoroPcP_2_1(G__value *result7,char *funcname,struct G
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TVector_GetLwb_3_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TVector_GetLwb_2_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TVector*)(G__getstructoffset()))->GetLwb());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TVector_GetUpb_4_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TVector_GetUpb_3_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TVector*)(G__getstructoffset()))->GetUpb());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TVector_GetNrows_5_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TVector_GetNrows_4_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TVector*)(G__getstructoffset()))->GetNrows());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TVector_GetNoElements_6_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TVector_GetNoElements_5_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TVector*)(G__getstructoffset()))->GetNoElements());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TVector_operatoreQ_7_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TVector_operatoreQ_6_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       {
         TVector& obj=((TVector*)(G__getstructoffset()))->operator=(*(TVector*)libp->para[0].ref);
          result7->ref=(long)(&obj); result7->obj.i=(long)(&obj);
@@ -639,7 +629,7 @@ static int G__TVector_operatoreQ_7_1(G__value *result7,char *funcname,struct G__
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TVector_operatoreQ_8_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TVector_operatoreQ_7_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       {
         TVector& obj=((TVector*)(G__getstructoffset()))->operator=((Real_t)G__double(libp->para[0]));
          result7->ref=(long)(&obj); result7->obj.i=(long)(&obj);
@@ -647,7 +637,7 @@ static int G__TVector_operatoreQ_8_1(G__value *result7,char *funcname,struct G__
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TVector_operatoreQ_9_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TVector_operatoreQ_8_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       {
         TVector& obj=((TVector*)(G__getstructoffset()))->operator=(*(TMatrixRow*)libp->para[0].ref);
          result7->ref=(long)(&obj); result7->obj.i=(long)(&obj);
@@ -655,7 +645,7 @@ static int G__TVector_operatoreQ_9_1(G__value *result7,char *funcname,struct G__
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TVector_operatoreQ_0_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TVector_operatoreQ_9_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       {
         TVector& obj=((TVector*)(G__getstructoffset()))->operator=(*(TMatrixColumn*)libp->para[0].ref);
          result7->ref=(long)(&obj); result7->obj.i=(long)(&obj);
@@ -663,7 +653,7 @@ static int G__TVector_operatoreQ_0_2(G__value *result7,char *funcname,struct G__
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TVector_operatoreQ_1_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TVector_operatoreQ_0_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       {
         TVector& obj=((TVector*)(G__getstructoffset()))->operator=(*(TMatrixDiag*)libp->para[0].ref);
          result7->ref=(long)(&obj); result7->obj.i=(long)(&obj);
@@ -671,7 +661,7 @@ static int G__TVector_operatoreQ_1_2(G__value *result7,char *funcname,struct G__
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TVector_operatormIeQ_2_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TVector_operatormIeQ_1_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       {
         TVector& obj=((TVector*)(G__getstructoffset()))->operator-=((Double_t)G__double(libp->para[0]));
          result7->ref=(long)(&obj); result7->obj.i=(long)(&obj);
@@ -679,7 +669,7 @@ static int G__TVector_operatormIeQ_2_2(G__value *result7,char *funcname,struct G
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TVector_operatorpLeQ_3_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TVector_operatorpLeQ_2_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       {
         TVector& obj=((TVector*)(G__getstructoffset()))->operator+=((Double_t)G__double(libp->para[0]));
          result7->ref=(long)(&obj); result7->obj.i=(long)(&obj);
@@ -687,7 +677,7 @@ static int G__TVector_operatorpLeQ_3_2(G__value *result7,char *funcname,struct G
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TVector_operatormUeQ_4_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TVector_operatormUeQ_3_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       {
         TVector& obj=((TVector*)(G__getstructoffset()))->operator*=((Double_t)G__double(libp->para[0]));
          result7->ref=(long)(&obj); result7->obj.i=(long)(&obj);
@@ -695,7 +685,7 @@ static int G__TVector_operatormUeQ_4_2(G__value *result7,char *funcname,struct G
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TVector_operatormUeQ_5_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TVector_operatormUeQ_4_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       {
         TVector& obj=((TVector*)(G__getstructoffset()))->operator*=(*(TMatrix*)libp->para[0].ref);
          result7->ref=(long)(&obj); result7->obj.i=(long)(&obj);
@@ -703,37 +693,37 @@ static int G__TVector_operatormUeQ_5_2(G__value *result7,char *funcname,struct G
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TVector_operatoreQeQ_6_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TVector_operatoreQeQ_5_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,98,(long)((TVector*)(G__getstructoffset()))->operator==((Real_t)G__double(libp->para[0])));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TVector_operatornOeQ_7_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TVector_operatornOeQ_6_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,98,(long)((TVector*)(G__getstructoffset()))->operator!=((Real_t)G__double(libp->para[0])));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TVector_operatorlE_8_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TVector_operatorlE_7_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,98,(long)((TVector*)(G__getstructoffset()))->operator<((Real_t)G__double(libp->para[0])));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TVector_operatorlEeQ_9_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TVector_operatorlEeQ_8_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,98,(long)((TVector*)(G__getstructoffset()))->operator<=((Real_t)G__double(libp->para[0])));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TVector_operatorgR_0_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TVector_operatorgR_9_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,98,(long)((TVector*)(G__getstructoffset()))->operator>((Real_t)G__double(libp->para[0])));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TVector_operatorgReQ_1_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TVector_operatorgReQ_0_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,98,(long)((TVector*)(G__getstructoffset()))->operator>=((Real_t)G__double(libp->para[0])));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TVector_Zero_2_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TVector_Zero_1_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       {
         TVector& obj=((TVector*)(G__getstructoffset()))->Zero();
          result7->ref=(long)(&obj); result7->obj.i=(long)(&obj);
@@ -741,7 +731,7 @@ static int G__TVector_Zero_2_3(G__value *result7,char *funcname,struct G__param 
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TVector_Abs_3_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TVector_Abs_2_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       {
         TVector& obj=((TVector*)(G__getstructoffset()))->Abs();
          result7->ref=(long)(&obj); result7->obj.i=(long)(&obj);
@@ -749,7 +739,7 @@ static int G__TVector_Abs_3_3(G__value *result7,char *funcname,struct G__param *
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TVector_Sqr_4_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TVector_Sqr_3_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       {
         TVector& obj=((TVector*)(G__getstructoffset()))->Sqr();
          result7->ref=(long)(&obj); result7->obj.i=(long)(&obj);
@@ -757,7 +747,7 @@ static int G__TVector_Sqr_4_3(G__value *result7,char *funcname,struct G__param *
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TVector_Sqrt_5_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TVector_Sqrt_4_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       {
         TVector& obj=((TVector*)(G__getstructoffset()))->Sqrt();
          result7->ref=(long)(&obj); result7->obj.i=(long)(&obj);
@@ -765,7 +755,7 @@ static int G__TVector_Sqrt_5_3(G__value *result7,char *funcname,struct G__param 
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TVector_Apply_6_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TVector_Apply_5_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       {
         TVector& obj=((TVector*)(G__getstructoffset()))->Apply(*(TElementAction*)libp->para[0].ref);
          result7->ref=(long)(&obj); result7->obj.i=(long)(&obj);
@@ -773,7 +763,7 @@ static int G__TVector_Apply_6_3(G__value *result7,char *funcname,struct G__param
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TVector_Apply_7_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TVector_Apply_6_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       {
         TVector& obj=((TVector*)(G__getstructoffset()))->Apply(*(TElementPosAction*)libp->para[0].ref);
          result7->ref=(long)(&obj); result7->obj.i=(long)(&obj);
@@ -781,22 +771,22 @@ static int G__TVector_Apply_7_3(G__value *result7,char *funcname,struct G__param
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TVector_Norm1_8_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TVector_Norm1_7_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letdouble(result7,100,(double)((TVector*)(G__getstructoffset()))->Norm1());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TVector_Norm2Sqr_9_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TVector_Norm2Sqr_8_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letdouble(result7,100,(double)((TVector*)(G__getstructoffset()))->Norm2Sqr());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TVector_NormInf_0_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TVector_NormInf_9_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letdouble(result7,100,(double)((TVector*)(G__getstructoffset()))->NormInf());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TVector_Print_1_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TVector_Print_0_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -810,61 +800,61 @@ static int G__TVector_Print_1_4(G__value *result7,char *funcname,struct G__param
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TVector_DeclFileName_2_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TVector_DeclFileName_1_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,67,(long)((TVector*)(G__getstructoffset()))->DeclFileName());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TVector_DeclFileLine_3_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TVector_DeclFileLine_2_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TVector*)(G__getstructoffset()))->DeclFileLine());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TVector_ImplFileName_4_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TVector_ImplFileName_3_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,67,(long)((TVector*)(G__getstructoffset()))->ImplFileName());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TVector_ImplFileLine_5_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TVector_ImplFileLine_4_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TVector*)(G__getstructoffset()))->ImplFileLine());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TVector_Class_Version_6_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TVector_Class_Version_5_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,115,(long)((TVector*)(G__getstructoffset()))->Class_Version());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TVector_Class_7_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TVector_Class_6_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((TVector*)(G__getstructoffset()))->Class());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TVector_Dictionary_8_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TVector_Dictionary_7_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TVector*)(G__getstructoffset()))->Dictionary();
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TVector_IsA_9_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TVector_IsA_8_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((TVector*)(G__getstructoffset()))->IsA());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TVector_ShowMembers_0_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TVector_ShowMembers_9_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TVector*)(G__getstructoffset()))->ShowMembers(*(TMemberInspector*)libp->para[0].ref,(char*)G__int(libp->para[1]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TVector_Streamer_1_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TVector_Streamer_0_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TVector*)(G__getstructoffset()))->Streamer(*(TBuffer*)libp->para[0].ref);
    return(1 || funcname || hash || result7 || libp) ;
 }
 
 // automatic destructor
-static int G__TVector_wATVector_2_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TVector_wATVector_1_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    if(G__getaryconstruct())
      if(G__PVOID==G__getgvp())
        delete[] (TVector *)(G__getstructoffset());
@@ -1612,10 +1602,10 @@ extern "C" void G__cpp_setup_typetableG__Matrix() {
    G__search_typename2("FreeHookFun_t",89,-1,0,
 -1);
    G__setnewtype(-1,NULL,0);
-   G__search_typename2("ReAllocFun_t",81,-1,2,
+   G__search_typename2("ReAllocFun_t",81,-1,0,
 -1);
    G__setnewtype(-1,NULL,0);
-   G__search_typename2("ReAllocCFun_t",81,-1,2,
+   G__search_typename2("ReAllocCFun_t",81,-1,0,
 -1);
    G__setnewtype(-1,NULL,0);
    G__search_typename2("Axis_t",102,-1,0,
@@ -1842,57 +1832,54 @@ static void G__setup_memfuncTVector(void) {
    G__memfunc_setup("TVector",711,G__TVector_TVector_4_0,105,G__get_linked_tagnum(&G__G__MatrixLN_TVector),-1,0,2,1,1,0,
 "i - 'Int_t' 0 - lwb i - 'Int_t' 0 - upb",(char*)NULL,(void*)NULL,0);
    G__memfunc_setup("TVector",711,G__TVector_TVector_5_0,105,G__get_linked_tagnum(&G__G__MatrixLN_TVector),-1,0,1,1,1,0,"u 'TVector' - 1 - another",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("TVector",711,G__TVector_TVector_6_0,105,G__get_linked_tagnum(&G__G__MatrixLN_TVector),-1,0,4,2,1,0,
-"i - 'Int_t' 0 - lwb i - 'Int_t' 0 - upb "
-"d - 'Double_t' 0 - iv1 i - - 0 - -",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("ResizeTo",821,G__TVector_ResizeTo_8_0,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 - n",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("ResizeTo",821,G__TVector_ResizeTo_9_0,121,-1,-1,0,2,1,1,0,
+   G__memfunc_setup("ResizeTo",821,G__TVector_ResizeTo_7_0,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 - n",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ResizeTo",821,G__TVector_ResizeTo_8_0,121,-1,-1,0,2,1,1,0,
 "i - 'Int_t' 0 - lwb i - 'Int_t' 0 - upb",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("ResizeTo",821,G__TVector_ResizeTo_0_1,121,-1,-1,0,1,1,1,0,"u 'TVector' - 1 - v",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("IsValid",684,G__TVector_IsValid_1_1,98,-1,G__defined_typename("Bool_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("operator()",957,G__TVector_operatoroPcP_2_1,102,-1,G__defined_typename("Real_t"),1,1,1,1,8,"i - 'Int_t' 0 - index",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetLwb",581,G__TVector_GetLwb_3_1,105,-1,G__defined_typename("Int_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetUpb",583,G__TVector_GetUpb_4_1,105,-1,G__defined_typename("Int_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetNrows",825,G__TVector_GetNrows_5_1,105,-1,G__defined_typename("Int_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetNoElements",1306,G__TVector_GetNoElements_6_1,105,-1,G__defined_typename("Int_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("operator=",937,G__TVector_operatoreQ_7_1,117,G__get_linked_tagnum(&G__G__MatrixLN_TVector),-1,1,1,1,1,0,"u 'TVector' - 1 - source",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("operator=",937,G__TVector_operatoreQ_8_1,117,G__get_linked_tagnum(&G__G__MatrixLN_TVector),-1,1,1,1,1,0,"f - 'Real_t' 0 - val",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("operator=",937,G__TVector_operatoreQ_9_1,117,G__get_linked_tagnum(&G__G__MatrixLN_TVector),-1,1,1,1,1,0,"u 'TMatrixRow' - 1 - mr",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("operator=",937,G__TVector_operatoreQ_0_2,117,G__get_linked_tagnum(&G__G__MatrixLN_TVector),-1,1,1,1,1,0,"u 'TMatrixColumn' - 1 - mc",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("operator=",937,G__TVector_operatoreQ_1_2,117,G__get_linked_tagnum(&G__G__MatrixLN_TVector),-1,1,1,1,1,0,"u 'TMatrixDiag' - 1 - md",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("operator-=",982,G__TVector_operatormIeQ_2_2,117,G__get_linked_tagnum(&G__G__MatrixLN_TVector),-1,1,1,1,1,0,"d - 'Double_t' 0 - val",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("operator+=",980,G__TVector_operatorpLeQ_3_2,117,G__get_linked_tagnum(&G__G__MatrixLN_TVector),-1,1,1,1,1,0,"d - 'Double_t' 0 - val",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("operator*=",979,G__TVector_operatormUeQ_4_2,117,G__get_linked_tagnum(&G__G__MatrixLN_TVector),-1,1,1,1,1,0,"d - 'Double_t' 0 - val",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("operator*=",979,G__TVector_operatormUeQ_5_2,117,G__get_linked_tagnum(&G__G__MatrixLN_TVector),-1,1,1,1,1,0,"u 'TMatrix' - 1 - a",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("operator==",998,G__TVector_operatoreQeQ_6_2,98,-1,G__defined_typename("Bool_t"),0,1,1,1,8,"f - 'Real_t' 0 - val",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("operator!=",970,G__TVector_operatornOeQ_7_2,98,-1,G__defined_typename("Bool_t"),0,1,1,1,8,"f - 'Real_t' 0 - val",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("operator<",936,G__TVector_operatorlE_8_2,98,-1,G__defined_typename("Bool_t"),0,1,1,1,8,"f - 'Real_t' 0 - val",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("operator<=",997,G__TVector_operatorlEeQ_9_2,98,-1,G__defined_typename("Bool_t"),0,1,1,1,8,"f - 'Real_t' 0 - val",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("operator>",938,G__TVector_operatorgR_0_3,98,-1,G__defined_typename("Bool_t"),0,1,1,1,8,"f - 'Real_t' 0 - val",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("operator>=",999,G__TVector_operatorgReQ_1_3,98,-1,G__defined_typename("Bool_t"),0,1,1,1,8,"f - 'Real_t' 0 - val",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Zero",416,G__TVector_Zero_2_3,117,G__get_linked_tagnum(&G__G__MatrixLN_TVector),-1,1,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Abs",278,G__TVector_Abs_3_3,117,G__get_linked_tagnum(&G__G__MatrixLN_TVector),-1,1,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Sqr",310,G__TVector_Sqr_4_3,117,G__get_linked_tagnum(&G__G__MatrixLN_TVector),-1,1,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Sqrt",426,G__TVector_Sqrt_5_3,117,G__get_linked_tagnum(&G__G__MatrixLN_TVector),-1,1,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Apply",518,G__TVector_Apply_6_3,117,G__get_linked_tagnum(&G__G__MatrixLN_TVector),-1,1,1,1,1,0,"u 'TElementAction' - 1 - action",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Apply",518,G__TVector_Apply_7_3,117,G__get_linked_tagnum(&G__G__MatrixLN_TVector),-1,1,1,1,1,0,"u 'TElementPosAction' - 1 - action",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Norm1",461,G__TVector_Norm1_8_3,100,-1,G__defined_typename("Double_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Norm2Sqr",772,G__TVector_Norm2Sqr_9_3,100,-1,G__defined_typename("Double_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("NormInf",697,G__TVector_NormInf_0_4,100,-1,G__defined_typename("Double_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Print",525,G__TVector_Print_1_4,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("DeclFileName",1145,G__TVector_DeclFileName_2_4,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("DeclFileLine",1152,G__TVector_DeclFileLine_3_4,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("ImplFileName",1171,G__TVector_ImplFileName_4_4,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("ImplFileLine",1178,G__TVector_ImplFileLine_5_4,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Class_Version",1339,G__TVector_Class_Version_6_4,115,-1,G__defined_typename("Version_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Class",502,G__TVector_Class_7_4,85,G__get_linked_tagnum(&G__G__MatrixLN_TClass),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Dictionary",1046,G__TVector_Dictionary_8_4,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("IsA",253,G__TVector_IsA_9_4,85,G__get_linked_tagnum(&G__G__MatrixLN_TClass),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("ShowMembers",1132,G__TVector_ShowMembers_0_5,121,-1,-1,0,2,1,1,0,
+   G__memfunc_setup("ResizeTo",821,G__TVector_ResizeTo_9_0,121,-1,-1,0,1,1,1,0,"u 'TVector' - 1 - v",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("IsValid",684,G__TVector_IsValid_0_1,98,-1,G__defined_typename("Bool_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("operator()",957,G__TVector_operatoroPcP_1_1,102,-1,G__defined_typename("Real_t"),1,1,1,1,8,"i - 'Int_t' 0 - index",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetLwb",581,G__TVector_GetLwb_2_1,105,-1,G__defined_typename("Int_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetUpb",583,G__TVector_GetUpb_3_1,105,-1,G__defined_typename("Int_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetNrows",825,G__TVector_GetNrows_4_1,105,-1,G__defined_typename("Int_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetNoElements",1306,G__TVector_GetNoElements_5_1,105,-1,G__defined_typename("Int_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("operator=",937,G__TVector_operatoreQ_6_1,117,G__get_linked_tagnum(&G__G__MatrixLN_TVector),-1,1,1,1,1,0,"u 'TVector' - 1 - source",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("operator=",937,G__TVector_operatoreQ_7_1,117,G__get_linked_tagnum(&G__G__MatrixLN_TVector),-1,1,1,1,1,0,"f - 'Real_t' 0 - val",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("operator=",937,G__TVector_operatoreQ_8_1,117,G__get_linked_tagnum(&G__G__MatrixLN_TVector),-1,1,1,1,1,0,"u 'TMatrixRow' - 1 - mr",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("operator=",937,G__TVector_operatoreQ_9_1,117,G__get_linked_tagnum(&G__G__MatrixLN_TVector),-1,1,1,1,1,0,"u 'TMatrixColumn' - 1 - mc",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("operator=",937,G__TVector_operatoreQ_0_2,117,G__get_linked_tagnum(&G__G__MatrixLN_TVector),-1,1,1,1,1,0,"u 'TMatrixDiag' - 1 - md",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("operator-=",982,G__TVector_operatormIeQ_1_2,117,G__get_linked_tagnum(&G__G__MatrixLN_TVector),-1,1,1,1,1,0,"d - 'Double_t' 0 - val",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("operator+=",980,G__TVector_operatorpLeQ_2_2,117,G__get_linked_tagnum(&G__G__MatrixLN_TVector),-1,1,1,1,1,0,"d - 'Double_t' 0 - val",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("operator*=",979,G__TVector_operatormUeQ_3_2,117,G__get_linked_tagnum(&G__G__MatrixLN_TVector),-1,1,1,1,1,0,"d - 'Double_t' 0 - val",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("operator*=",979,G__TVector_operatormUeQ_4_2,117,G__get_linked_tagnum(&G__G__MatrixLN_TVector),-1,1,1,1,1,0,"u 'TMatrix' - 1 - a",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("operator==",998,G__TVector_operatoreQeQ_5_2,98,-1,G__defined_typename("Bool_t"),0,1,1,1,8,"f - 'Real_t' 0 - val",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("operator!=",970,G__TVector_operatornOeQ_6_2,98,-1,G__defined_typename("Bool_t"),0,1,1,1,8,"f - 'Real_t' 0 - val",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("operator<",936,G__TVector_operatorlE_7_2,98,-1,G__defined_typename("Bool_t"),0,1,1,1,8,"f - 'Real_t' 0 - val",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("operator<=",997,G__TVector_operatorlEeQ_8_2,98,-1,G__defined_typename("Bool_t"),0,1,1,1,8,"f - 'Real_t' 0 - val",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("operator>",938,G__TVector_operatorgR_9_2,98,-1,G__defined_typename("Bool_t"),0,1,1,1,8,"f - 'Real_t' 0 - val",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("operator>=",999,G__TVector_operatorgReQ_0_3,98,-1,G__defined_typename("Bool_t"),0,1,1,1,8,"f - 'Real_t' 0 - val",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Zero",416,G__TVector_Zero_1_3,117,G__get_linked_tagnum(&G__G__MatrixLN_TVector),-1,1,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Abs",278,G__TVector_Abs_2_3,117,G__get_linked_tagnum(&G__G__MatrixLN_TVector),-1,1,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Sqr",310,G__TVector_Sqr_3_3,117,G__get_linked_tagnum(&G__G__MatrixLN_TVector),-1,1,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Sqrt",426,G__TVector_Sqrt_4_3,117,G__get_linked_tagnum(&G__G__MatrixLN_TVector),-1,1,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Apply",518,G__TVector_Apply_5_3,117,G__get_linked_tagnum(&G__G__MatrixLN_TVector),-1,1,1,1,1,0,"u 'TElementAction' - 1 - action",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Apply",518,G__TVector_Apply_6_3,117,G__get_linked_tagnum(&G__G__MatrixLN_TVector),-1,1,1,1,1,0,"u 'TElementPosAction' - 1 - action",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Norm1",461,G__TVector_Norm1_7_3,100,-1,G__defined_typename("Double_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Norm2Sqr",772,G__TVector_Norm2Sqr_8_3,100,-1,G__defined_typename("Double_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("NormInf",697,G__TVector_NormInf_9_3,100,-1,G__defined_typename("Double_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Print",525,G__TVector_Print_0_4,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("DeclFileName",1145,G__TVector_DeclFileName_1_4,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("DeclFileLine",1152,G__TVector_DeclFileLine_2_4,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ImplFileName",1171,G__TVector_ImplFileName_3_4,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ImplFileLine",1178,G__TVector_ImplFileLine_4_4,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Class_Version",1339,G__TVector_Class_Version_5_4,115,-1,G__defined_typename("Version_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Class",502,G__TVector_Class_6_4,85,G__get_linked_tagnum(&G__G__MatrixLN_TClass),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Dictionary",1046,G__TVector_Dictionary_7_4,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("IsA",253,G__TVector_IsA_8_4,85,G__get_linked_tagnum(&G__G__MatrixLN_TClass),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("ShowMembers",1132,G__TVector_ShowMembers_9_4,121,-1,-1,0,2,1,1,0,
 "u 'TMemberInspector' - 1 - insp C - - 0 - parent",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("Streamer",835,G__TVector_Streamer_1_5,121,-1,-1,0,1,1,1,0,"u 'TBuffer' - 1 - b",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Streamer",835,G__TVector_Streamer_0_5,121,-1,-1,0,1,1,1,0,"u 'TBuffer' - 1 - b",(char*)NULL,(void*)NULL,1);
    // automatic destructor
-   G__memfunc_setup("~TVector",837,G__TVector_wATVector_2_5,(int)('y'),-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("~TVector",837,G__TVector_wATVector_1_5,(int)('y'),-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
    G__tag_memfunc_reset();
 }
 
@@ -2104,6 +2091,20 @@ G__linked_taginfo G__G__MatrixLN_TLazyMatrix = { "TLazyMatrix" , 99 , -1 };
 G__linked_taginfo G__G__MatrixLN_TMatrixcLcLEMatrixCreatorsOp1 = { "TMatrix::EMatrixCreatorsOp1" , 101 , -1 };
 G__linked_taginfo G__G__MatrixLN_TMatrixcLcLEMatrixCreatorsOp2 = { "TMatrix::EMatrixCreatorsOp2" , 101 , -1 };
 
+/* Reset class/struct taginfo */
+extern "C" void G__cpp_reset_tagtableG__Matrix() {
+  G__G__MatrixLN_TClass.tagnum = -1 ;
+  G__G__MatrixLN_TObject.tagnum = -1 ;
+  G__G__MatrixLN_TMatrix.tagnum = -1 ;
+  G__G__MatrixLN_TVector.tagnum = -1 ;
+  G__G__MatrixLN_TMatrixRow.tagnum = -1 ;
+  G__G__MatrixLN_TMatrixColumn.tagnum = -1 ;
+  G__G__MatrixLN_TMatrixDiag.tagnum = -1 ;
+  G__G__MatrixLN_TLazyMatrix.tagnum = -1 ;
+  G__G__MatrixLN_TMatrixcLcLEMatrixCreatorsOp1.tagnum = -1 ;
+  G__G__MatrixLN_TMatrixcLcLEMatrixCreatorsOp2.tagnum = -1 ;
+}
+
 extern "C" void G__cpp_setup_tagtableG__Matrix() {
 
    /* Setting up class,struct,union tag entry */
@@ -2140,7 +2141,7 @@ class G__cpp_setup_initG__Matrix {
 G__cpp_setup_initG__Matrix G__cpp_setup_initializerG__Matrix;
 
 //
-// File generated by /home/rdm/root/bin/rootcint at Thu Oct  8 19:50:19 1998.
+// File generated by /home/rdm/root/bin/rootcint at Mon Mar  8 12:34:44 1999.
 // Do NOT change. Changes will be lost next time file is generated
 //
 

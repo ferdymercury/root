@@ -1,3 +1,4 @@
+//*CMZ :  2.21/00 02/01/99  21.56.23  by  Valery Fine(fine@mail.cern.ch)
 //*CMZ :  2.00/12 07/10/98  08.52.48  by  Valery Fine(fine@mail.cern.ch)
 //*CMZ :  1.03/09 05/12/97  13.26.56  by  Fons Rademakers
 //*-- Author :    Rene Brun   14/09/95
@@ -59,15 +60,15 @@ public:
                                            Double_t theta2, Double_t phi2,
                                            Double_t theta3, Double_t phi3);
    virtual ~TRotMatrix();
-   virtual Double_t  Determinant();   // returns the determinant of this matrix
-   virtual Double_t* GetMatrix() {return &fMatrix[0];}
-   virtual Int_t     GetNumber() {return fNumber;}
-   virtual Int_t     GetType()   {return fType;}
-   virtual Double_t  GetTheta()  {return fTheta;}
-   virtual Double_t  GetPhi()    {return fPhi;}
-   virtual Double_t  GetPsi()    {return fPsi;}
-   virtual Double_t* GetGLMatrix(Double_t *rGLMatrix);  // Convert this matrix to the OpenGL [4x4]
-   virtual Bool_t    IsReflection(){return TestBit(kReflection);}  // Return kTRUE if this matrix defines the reflection
+   virtual Double_t  Determinant() const ;   // returns the determinant of this matrix
+   virtual Double_t* GetMatrix()         {return &fMatrix[0];}
+   virtual Int_t     GetNumber()   const {return fNumber;}
+   virtual Int_t     GetType()     const {return fType;}
+   virtual Double_t  GetTheta()    const {return fTheta;}
+   virtual Double_t  GetPhi()      const {return fPhi;}
+   virtual Double_t  GetPsi()      const {return fPsi;}
+   virtual Double_t* GetGLMatrix(Double_t *rGLMatrix) const ;  // Convert this matrix to the OpenGL [4x4]
+   virtual Bool_t    IsReflection() const {return TestBit(kReflection);}  // Return kTRUE if this matrix defines the reflection
    virtual void      SetMatrix(const Double_t *matrix);
    virtual void      SetName(const Text_t *name);
 

@@ -1,3 +1,4 @@
+//*CMZ :  2.21/01 13/01/99  15.19.34  by  Fons Rademakers
 //*CMZ :  2.00/09 28/05/98  14.31.39  by  Kaori Wada
 //*CMZ :  2.00/06 13/05/98  08.37.31  by  Kaori Wada
 //*CMZ :  1.03/09 16/12/97  17.59.20  by  Fons Rademakers
@@ -1275,9 +1276,10 @@ int TVmsSystem::RecvRaw(int sock, void *buf, int length, int opt)
    // Receive exactly length bytes into buffer. Use opt to receive out-of-band
    // data or to have a peek at what is in the buffer (see TSocket). Buffer
    // must be able to store at least lenght bytes. Returns the number of
-   // bytes received or -1 in case of error, -2 in case of MSG_OOB
-   // and errno == EWOULDBLOCK, -3 in case of MSG_OOB and errno == EINVAL
-   // and -4 in case of kNonBlock and errno == EWOULDBLOCK.
+   // bytes received (can be 0 if other side of connection was closed) or -1
+   // in case of error, -2 in case of MSG_OOB and errno == EWOULDBLOCK, -3
+   // in case of MSG_OOB and errno == EINVAL and -4 in case of kNonBlock and
+   // errno == EWOULDBLOCK.
 
    int flag;
 
@@ -1297,7 +1299,7 @@ int TVmsSystem::RecvRaw(int sock, void *buf, int length, int opt)
    }
 
    int n;
-   if ((n = VmsRecv(sock, buf, length, flag)) < 0) {
+   if ((n = VmsRecv(sock, buf, length, flag)) <= 0) {
       if (n == -1 && errno != EINTR)
          Error("RecvRaw", "cannot receive buffer");
       return n;
@@ -1563,7 +1565,7 @@ printf("VmsSignal::This will not execute anything.  Sigaction not defined.\n");
 //     sigact.sa_flags = 0;
 //#endif
 //      if (sigaction(gSignalMap[sig].code, &sigact, 0) < 0)
-//         ::SysError("VmsSignal", "sigaction");
+//         ::SysError("TVmsSystem::VmsSignal", "sigaction");
 //   }
 }
 
@@ -1595,7 +1597,7 @@ Long_t TVmsSystem::VmsNow()
 
       jan95 = mktime(&tp);
       if ((int)jan95 == -1) {
-         ::SysError("VmsNow", "error converting 950001 0:00 to time_t");
+         ::SysError("TVmsSystem::VmsNow", "error converting 950001 0:00 to time_t");
          return 0;
       }
    }
@@ -1880,12 +1882,12 @@ int TVmsSystem::VmsTcpConnect(const char *hostname, int port)
    // Create socket
    int sock;
    if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
-      ::SysError("VmsConnectTcp", "socket");
+      ::SysError("TVmsSystem::VmsConnectTcp", "socket");
       return -1;
    }
 
    if (connect(sock, (struct sockaddr*) &server, sizeof(server)) < 0) {
-      //::SysError("VmsConnectTcp", "connect");
+      //::SysError("TVmsSystem::VmsConnectTcp", "connect");
       close(sock);
       return -1;
    }
@@ -1915,12 +1917,12 @@ int TVmsSystem::VmsVmsConnect(int port)
 
    // Open socket
    if ((sock = socket(AF_UNIX, SOCK_STREAM, 0)) < 0) {
-      ::SysError("VmsVmsConnect", "socket");
+      ::SysError("TVmsSystem::VmsVmsConnect", "socket");
       return -1;
    }
 
    if (connect(sock, (struct sockaddr*) &unserver, strlen(unserver.sun_path)+2) < 0) {
-      // ::SysError("VmsVmsConnect", "connect");
+      // ::SysError("TVmsSystem::VmsVmsConnect", "connect");
       close(sock);
       return -1;
    }
@@ -1945,7 +1947,7 @@ int TVmsSystem::VmsTcpService(int port, Bool_t reuse, int backlog)
    // Create tcp socket
    int sock;
    if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
-      ::SysError("VmsTcpService", "socket");
+      ::SysError("TVmsSystem::VmsTcpService", "socket");
       return -1;
    }
 
@@ -1961,7 +1963,7 @@ int TVmsSystem::VmsTcpService(int port, Bool_t reuse, int backlog)
    // Bind socket
    for (int retry = 20; bind(sock, (struct sockaddr*) &inserver, sizeof(inserver)); retry--) {
       if (retry <= 0) {
-         ::SysError("VmsTcpService", "bind");
+         ::SysError("TVmsSystem::VmsTcpService", "bind");
          return -1;
       }
       sleep(10);
@@ -1969,7 +1971,7 @@ int TVmsSystem::VmsTcpService(int port, Bool_t reuse, int backlog)
 
    // Start accepting connections
    if (listen(sock, backlog)) {
-      ::SysError("VmsTcpService", "listen");
+      ::SysError("TVmsSystem::VmsTcpService", "listen");
       return -1;
    }
 
@@ -2001,18 +2003,18 @@ int TVmsSystem::VmsVmsService(int port, int backlog)
 
    // Create socket
    if ((sock = socket(AF_UNIX, SOCK_STREAM, 0)) < 0) {
-      ::SysError("VmsVmsService", "socket");
+      ::SysError("TVmsSystem::VmsVmsService", "socket");
       return -1;
    }
 
    if (bind(sock, (struct sockaddr*) &unserver, strlen(unserver.sun_path)+2)) {
-      ::SysError("VmsVmsService", "bind");
+      ::SysError("TVmsSystem::VmsVmsService", "bind");
       return -1;
    }
 
    // Start accepting connections
    if (listen(sock, backlog)) {
-      ::SysError("VmsVmsService", "listen");
+      ::SysError("TVmsSystem::VmsVmsService", "listen");
       return -1;
    }
 
@@ -2048,7 +2050,7 @@ int TVmsSystem::VmsRecv(int sock, void *buffer, int length, int flag)
             return -4;
          else {
             if (errno != EINTR)
-               ::SysError("VmsRecv", "recv");
+               ::SysError("TVmsSystem::VmsRecv", "recv");
             return -1;
          }
       }
@@ -2069,7 +2071,7 @@ int TVmsSystem::VmsSend(int sock, const void *buffer, int length, int flag)
 
    for (n = 0; n < length; n += nsent) {
       if ((nsent = send(sock, buf+n, length-n, flag)) <= 0) {
-         ::SysError("VmsSend", "send");
+         ::SysError("TVmsSystem::VmsSend", "send");
          return nsent;
       }
    }
@@ -2189,7 +2191,7 @@ Func_t TVmsSystem::VmsDynFindSymbol(const char *lib, const char *entry)
    if (handle = (shl_t)FindDynLib(lib)) {
       Func_t addr = 0;
       if (shl_findsym(&handle, entry, TYPE_PROCEDURE, addr) == -1)
-         ::SysError("VmsDynFindSymbol", "shl_findsym");
+         ::SysError("TVmsSystem::VmsDynFindSymbol", "shl_findsym");
       return addr;
    }
    return 0;
@@ -2286,11 +2288,11 @@ void TVmsSystem::VmsDynUnload(const char *lib)
 
    if (handle = (shl_t)FindDynLib(lib))
       if (cxxshl_unload(handle) == -1)
-         ::SysError("VmsDynUnload", "could not unload library %s", lib);
+         ::SysError("TVmsSystem::VmsDynUnload", "could not unload library %s", lib);
 #else
    if (lib) { }
    // should call CINT unload file here, but does not work for sl's yet.
-   ::Warning("VmsDynUnload", "CINT does not support unloading shared libs");
+   ::Warning("TVmsSystem::VmsDynUnload", "CINT does not support unloading shared libs");
 #endif
 }
 

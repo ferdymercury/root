@@ -1,3 +1,4 @@
+//*CMZ :  2.21/02 16/01/99  15.04.29  by  Rene Brun
 //*CMZ :  1.03/09 06/12/97  16.51.54  by  Fons Rademakers
 //*-- Author :    Rene Brun   04/01/95
 
@@ -19,6 +20,7 @@
 
 #include "Strlen.h"
 #include "TAttPad.h"
+#include "TBuffer.h"
 
 ClassImp(TAttPad)
 
@@ -52,6 +54,13 @@ void TAttPad::Copy(TAttPad &attpad)
    attpad.fXstat   = fXstat;
    attpad.fYstat   = fYstat;
    attpad.fAstat   = fAstat;
+   attpad.fFrameFillColor = fFrameFillColor;
+   attpad.fFrameFillStyle = fFrameFillStyle;
+   attpad.fFrameLineColor = fFrameLineColor;
+   attpad.fFrameLineStyle = fFrameLineStyle;
+   attpad.fFrameLineWidth = fFrameLineWidth;
+   attpad.fFrameBorderSize= fFrameBorderSize;
+   attpad.fFrameBorderMode= fFrameBorderMode;
 }
 
 //______________________________________________________________________________
@@ -72,6 +81,13 @@ void TAttPad::Reset(Option_t *)
    fXstat  = 0.99;
    fYstat  = 0.99;
    fAstat  = 2;
+   fFrameLineColor = 1;
+   fFrameFillColor = 0;
+   fFrameFillStyle = 1001;
+   fFrameLineStyle = 1;
+   fFrameLineWidth = 1;
+   fFrameBorderSize= 1;
+   fFrameBorderMode= 1;
 }
 
 //______________________________________________________________________________
@@ -112,4 +128,52 @@ void TAttPad::SetTopMargin(Float_t margin)
    if (margin <= 0 || margin >=1) margin = 0.1;
    if (margin + fBottomMargin >= 1) return;
    fTopMargin = margin;
+}
+
+//______________________________________________________________________________
+void TAttPad::Streamer(TBuffer &R__b)
+{
+   // Stream an object of class TAttPad.
+
+   if (R__b.IsReading()) {
+      Version_t R__v = R__b.ReadVersion();
+      R__b >> fLeftMargin;
+      R__b >> fRightMargin;
+      R__b >> fBottomMargin;
+      R__b >> fTopMargin;
+      R__b >> fXfile;
+      R__b >> fYfile;
+      R__b >> fAfile;
+      R__b >> fXstat;
+      R__b >> fYstat;
+      R__b >> fAstat;
+      if (R__v > 1) {
+         R__b >> fFrameFillColor;
+         R__b >> fFrameLineColor;
+         R__b >> fFrameFillStyle;
+         R__b >> fFrameLineStyle;
+         R__b >> fFrameLineWidth;
+         R__b >> fFrameBorderSize;
+         R__b >> fFrameBorderMode;
+      }
+   } else {
+      R__b.WriteVersion(TAttPad::IsA());
+      R__b << fLeftMargin;
+      R__b << fRightMargin;
+      R__b << fBottomMargin;
+      R__b << fTopMargin;
+      R__b << fXfile;
+      R__b << fYfile;
+      R__b << fAfile;
+      R__b << fXstat;
+      R__b << fYstat;
+      R__b << fAstat;
+      R__b << fFrameFillColor;
+      R__b << fFrameLineColor;
+      R__b << fFrameFillStyle;
+      R__b << fFrameLineStyle;
+      R__b << fFrameLineWidth;
+      R__b << fFrameBorderSize;
+      R__b << fFrameBorderMode;
+   }
 }

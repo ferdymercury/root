@@ -1,3 +1,7 @@
+//*CMZ :  2.21/08 17/03/99  09.24.48  by  Rene Brun
+//*CMZ :  2.21/06 18/02/99  09.01.50  by  Rene Brun
+//*CMZ :  2.21/02 17/01/99  17.07.50  by  Rene Brun
+//*CMZ :  2.21/01 08/01/99  17.39.13  by  Rene Brun
 //*CMZ :  2.20/03 05/12/98  16.29.35  by  Rene Brun
 //*CMZ :  2.00/12 05/10/98  23.56.16  by  Rene Brun
 //*CMZ :  2.00/11 17/08/98  15.14.15  by  Rene Brun
@@ -113,7 +117,7 @@ private:
     void    PaintContour();
     Int_t   PaintContourLine(Float_t elev1, Int_t icont1, Float_t x1, Float_t y1,
                            Float_t elev2, Int_t icont2, Float_t x2, Float_t y2,
-                           Float_t *xarr, Float_t *yarr, Int_t *itarr, Int_t ncont);
+                           Float_t *xarr, Float_t *yarr, Int_t *itarr);
     void    PaintDate();
     void    PaintErrors();
     void    PaintFile();
@@ -156,11 +160,11 @@ public:
     virtual void    DrawPanel(); // *MENU*
     virtual void    Eval(TF1 *f1, Option_t *option="");
     virtual void    ExecuteEvent(Int_t event, Int_t px, Int_t py);
-    virtual void    Fill(Axis_t x);
-    virtual void    Fill(Axis_t x, Stat_t w);
-    virtual void    Fill(Axis_t x, Axis_t y, Stat_t w);
-    virtual void    Fill(Axis_t x, Axis_t y, Axis_t z, Stat_t w);
-    virtual void    Fill12(Axis_t x, Axis_t y);
+    virtual Int_t   Fill(Axis_t x);
+    virtual Int_t   Fill(Axis_t x, Stat_t w);
+    virtual Int_t   Fill(Axis_t x, Axis_t y, Stat_t w);
+    virtual Int_t   Fill(Axis_t x, Axis_t y, Axis_t z, Stat_t w);
+    virtual Int_t   Fill12(Axis_t x, Axis_t y);
     virtual void    FillN(Int_t ntimes, Axis_t *x, Double_t *w, Int_t stride=1);
     virtual void    FillN(Int_t ntimes, Axis_t *x, Axis_t *y, Double_t *w, Int_t stride=1);
             void    FillRandom(char *fname, Int_t ntimes=5000);
@@ -229,15 +233,17 @@ public:
     virtual void    PaintStat(Int_t dostat, TF1 *fit);
     virtual void    PaintStat2(Int_t dostat, TF1 *fit);
     virtual void    Print(Option_t *option="");
-        TProfile    *ProfileX(const char *name="_pfx", Int_t firstybin=0, Int_t lastybin=0, Option_t *option="");
-        TProfile    *ProfileY(const char *name="_pfy", Int_t firstxbin=0, Int_t lastxbin=0, Option_t *option="");
-            TH1D    *ProjectionX(const char *name="_px", Int_t firstybin=0, Int_t lastybin=0, Option_t *option="");
-            TH1D    *ProjectionY(const char *name="_py", Int_t firstxbin=0, Int_t lastxbin=0, Option_t *option="");
+        TProfile    *ProfileX(const char *name="_pfx", Int_t firstybin=0, Int_t lastybin=9999, Option_t *option="");
+        TProfile    *ProfileY(const char *name="_pfy", Int_t firstxbin=0, Int_t lastxbin=9999, Option_t *option="");
+            TH1D    *ProjectionX(const char *name="_px", Int_t firstybin=0, Int_t lastybin=9999, Option_t *option="");
+            TH1D    *ProjectionY(const char *name="_py", Int_t firstxbin=0, Int_t lastxbin=9999, Option_t *option="");
+            TH1D    *ProjectionZ(const char *name="_pz", Int_t firstxbin=0, Int_t lastxbin=9999, Int_t firstybin=0, Int_t lastybin=9999, Option_t *option="");
             TH1     *Rebin(Int_t ngroup=2, const char*newname="");
     virtual void    Reset(Option_t *option="");
     virtual void    SavePrimitive(ofstream &out, Option_t *option);
     virtual void    Scale(Float_t c1=1);
     virtual void    SetAxisColor(Color_t color=1, Option_t *axis="X");
+    virtual void    SetAxisRange(Float_t xmin, Float_t xmax, Option_t *axis="X");
     virtual void    SetBarOffset(Float_t offset=0.25) {fBarOffset = Short_t(1000*offset);}
     virtual void    SetBarWidth(Float_t width=0.5) {fBarWidth = Short_t(1000*width);}
     virtual void    SetBinContent(Int_t bin, Stat_t content);
@@ -246,6 +252,7 @@ public:
                                 {fXaxis.SetBinLabel(bin,label);}
     virtual void    SetBins(Int_t nx, Float_t xmin, Float_t xmax);
     virtual void    SetBins(Int_t nx, Float_t xmin, Float_t xmax, Int_t ny, Float_t ymin, Float_t ymax);
+    virtual void    SetBins(Int_t nx, Float_t xmin, Float_t xmax, Int_t ny, Float_t ymin, Float_t ymax, Int_t nz, Float_t zmin, Float_t zmax);
     virtual void    SetBinsLength(Int_t) {;} //refefined in derived classes
     virtual void    SetCellContent(Int_t binx, Int_t biny, Stat_t content) {SetBinContent(biny*(fXaxis.GetNbins()+2) + binx,content);}
     virtual void    SetCellError(Int_t binx, Int_t biny, Stat_t content);
@@ -267,6 +274,7 @@ public:
     virtual void    SetName(const Text_t *name); // *MENU*
     virtual void    SetNdivisions(Int_t n=510, Option_t *axis="X");
     virtual void    SetNormFactor(Float_t factor=1) {fNormFactor = factor;}
+    virtual void    SetStats(Bool_t stats=kTRUE);
     virtual void    SetOption(Option_t *option=" ") {fOption = option;}
     virtual void    SetTickLength(Float_t length=0.02, Option_t *axis="X");
     virtual void    SetTitleOffset(Float_t offset=1, Option_t *axis="X");

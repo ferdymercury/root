@@ -1,3 +1,4 @@
+//*CMZ :  2.21/04 05/02/99  16.43.32  by  Fons Rademakers
 //*CMZ :  2.00/08 03/06/98  23.14.52  by  Fons Rademakers
 //*CMZ :  2.00/00 23/01/98  11.52.56  by  Fons Rademakers
 //*CMZ :  1.00/06 23/03/97  11.01.57  by  Rene Brun
@@ -233,7 +234,7 @@ TSubString TString::operator()(const TRegexp& r)
 }
 
 //______________________________________________________________________________
-const TSubString TString::operator()(const TRegexp& r, Ssiz_t start) const
+TSubString TString::operator()(const TRegexp& r, Ssiz_t start) const
 {
    // Return the substring found by applying the regexp starting at start.
 
@@ -243,7 +244,7 @@ const TSubString TString::operator()(const TRegexp& r, Ssiz_t start) const
 }
 
 //______________________________________________________________________________
-const TSubString TString::operator()(const TRegexp& r) const
+TSubString TString::operator()(const TRegexp& r) const
 {
    // Return the substring found by applying the regexp.
 

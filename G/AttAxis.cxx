@@ -1,3 +1,4 @@
+//*CMZ :  2.21/04 03/02/99  10.49.07  by  Rene Brun
 //*CMZ :  2.00/08 05/06/98  14.34.43  by  Fons Rademakers
 //*CMZ :  2.00/00 25/05/98  22.27.02  by  Rene Brun
 //*CMZ :  1.03/09 06/12/97  16.46.57  by  Fons Rademakers
@@ -70,7 +71,7 @@ void TAttAxis::Reset(Option_t *option)
       fLabelSize   = gStyle->GetLabelSize(option);
       fTickLength  = gStyle->GetTickLength(option);
       fTitleOffset = gStyle->GetTitleOffset(option);
-      fTitleSize   = fLabelSize;
+      fTitleSize   = gStyle->GetTitleSize(option);
    } else {
       fNdivisions  = 510;
       fAxisColor   = 1;

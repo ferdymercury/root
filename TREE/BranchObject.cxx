@@ -1,4 +1,6 @@
-//*CMZ :  2.20/01 01/12/98  11.09.56  by  Rene Brun
+//*CMZ :  2.21/08 14/03/99  11.04.57  by  Rene Brun
+//*CMZ :  2.21/07 14/03/99  07.55.47  by  Rene Brun
+//*CMZ :  2.20/01 03/03/99  14.18.31  by  Rene Brun
 //*CMZ :  2.00/11 19/08/98  21.30.57  by  Rene Brun
 //*CMZ :  2.00/08 04/06/98  20.33.49  by  Rene Brun
 //*CMZ :  2.00/01 09/03/98  15.32.13  by  Rene Brun
@@ -67,7 +69,10 @@ TBranchObject::TBranchObject(const Text_t *name, const Text_t *classname, void *
 //*-*                      =====================
 //
    TClass *cl      = gROOT->GetClass(classname);
-   if (!cl) return;
+   if (!cl) {
+      Error("TBranchObject","Cannot find class:%s",classname);
+      return;
+   }
    if (!cl->GetListOfRealData())  cl->BuildRealData();
    SetName(name);
    SetTitle(name);
@@ -135,6 +140,7 @@ Int_t TBranchObject::Fill()
    Int_t nbranches = fBranches.GetEntriesFast();
    if (nbranches) {
       fEntries++;
+      UpdateAddress();
       for (i=0;i<nbranches;i++)  {
          TBranch *branch = (TBranch*)fBranches[i];
          if (!branch->TestBit(kDoNotProcess)) nbytes += branch->Fill();
@@ -156,7 +162,8 @@ Int_t TBranchObject::GetEvent(Int_t event)
    const Int_t kWarn = BIT(12);
    Int_t nbytes;
    Int_t nbranches = fBranches.GetEntriesFast();
-   if (nbranches) {
+
+      if (nbranches) {
       if (fAddress == 0) { // try to create object
          if (!TestBit(kWarn)) {
             TClass *cl = gROOT->GetClass(fClassName);
@@ -262,6 +269,12 @@ void TBranchObject::SetAddress(void *add)
       return;
    }
    if (!cl->GetListOfRealData())  cl->BuildRealData();
+//printf("TBranchObject::SetAddress, branch=%s\n",GetName());
+   char *fullname = new char[200];
+   const char *bname = GetName();
+   Int_t lenName = strlen(bname);
+   Int_t isDot = 0;
+   if (bname[lenName-1] == '.') isDot = 1;
    const char *rdname;
    TRealData *rd;
    TIter      next(cl->GetListOfRealData());
@@ -274,6 +287,7 @@ void TBranchObject::SetAddress(void *add)
       if (dtype) code = dm->GetDataType()->GetType();
       offset  = rd->GetThisOffset();
       pointer = (char*)obj + offset;
+//printf(" rdname=%s, offset=%d\n",rdname,offset);
       branch  = 0;
       if (dm->IsaPointer()) {
          TClass *clobj = 0;
@@ -283,19 +297,27 @@ void TBranchObject::SetAddress(void *add)
          } else {
             if (!clobj) {
                if (code != 1) continue;
-               branch = (TBranch*)fBranches.FindObject(&rdname[0]);
+               if (isDot) sprintf(fullname,"%s%s",bname,&rdname[0]);
+               else       sprintf(fullname,"%s",&rdname[0]);
+               branch = (TBranch*)fBranches.FindObject(fullname);
             } else {
                if (!clobj->InheritsFrom(TObject::Class())) continue;
-               branch = (TBranch*)fBranches.FindObject(&rdname[1]);
+               if (isDot) sprintf(fullname,"%s%s",bname,&rdname[1]);
+               else       sprintf(fullname,"%s",&rdname[1]);
+               branch = (TBranch*)fBranches.FindObject(fullname);
             }
          }
       } else {
          if (dm->IsBasic()) {
-            branch = (TBranch*)fBranches.FindObject(&rdname[0]);
+            if (isDot) sprintf(fullname,"%s%s",bname,&rdname[0]);
+            else       sprintf(fullname,"%s",&rdname[0]);
+            branch = (TBranch*)fBranches.FindObject(fullname);
          }
       }
+//if(!branch)printf("cannot find branch\n");
       if(branch) branch->SetAddress(pointer);
    }
+   delete [] fullname;
 }
 
 //______________________________________________________________________________

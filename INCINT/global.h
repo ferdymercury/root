@@ -1,6 +1,5 @@
-/*CMZ :  2.20/05 15/12/98  18.46.09  by  Rene Brun*/
-/*CMZ :  2.20/04 08/12/98  16.25.21  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   08/12/98*/
+/*CMZ :  2.21/08 17/03/99  13.13.37  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   17/03/99*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -25,27 +24,6 @@
 
 #ifndef G__GLOBAL_H
 #define G__GLOBAL_H
-
-#ifndef ROOT_DllImport
-#define ROOT_DllImport
-
-#ifndef __CINT__
-#if defined(WIN32) && defined(_DLL)
-#  define DllImport     __declspec( dllimport )
-#  define DllExport     __declspec( dllexport )
-#else
-#  define DllImport
-#  define DllExport
-#endif
-#  define R__EXTERN       DllImport extern
-#  ifndef EXTERN
-#     define EXTERN       DllImport extern
-#  endif
-#endif
-
-
-#endif
-
 
 #ifndef __MAKECINT__
 
@@ -305,7 +283,7 @@ extern int G__switch;           /* switch case control flag */
 extern int G__mparen;           /* switch case break nesting control */
 extern int G__eof_count;        /* end of file error flag */
 extern int G__ismain;           /* is there a main function */
-R__EXTERN int G__globalcomp;    /* make compiled func's global table */
+extern int G__globalcomp;       /* make compiled func's global table */
 extern int G__store_globalcomp;
 extern long G__globalvarpointer; /* make compiled func's global table */
 
@@ -377,7 +355,7 @@ extern int G__func_page;
 extern char *G__varname_now;
 
 extern short G__twice;
-R__EXTERN short G__othermain;
+extern short G__othermain;
 extern int G__cpp;
 extern int G__include_cpp;
 extern char G__ccom[G__MAXFILENAME];

@@ -1,3 +1,4 @@
+//*CMZ :  2.21/06 12/02/99  15.50.40  by  Valery Fine(fine@vxcern.cern.ch)
 //*CMZ :  2.00/13 29/10/98  16.15.39  by  Valery Fine(fine@mail.cern.ch)
 //*CMZ :  1.03/01 25/07/97  14.04.50  by  Valery Fine(fine@vxcern.cern.ch)
 //*-- Author :    Valery Fine(fine@vxcern.cern.ch)   16/08/96
@@ -111,6 +112,7 @@ public:
    static void MarkersCB(TWin32Canvas *obj, TVirtualMenuItem *item);
    static void IconifyCB(TWin32Canvas *obj, TVirtualMenuItem *item);
    static void X3DViewCB(TWin32Canvas *obj, TVirtualMenuItem *item);
+   static void InterruptCB(TWin32Canvas *obj, TVirtualMenuItem *item);
    static void FitCanvasCB(TWin32Canvas *obj, TVirtualMenuItem *item);
    static void RefreshCB(TWin32Canvas *obj, TVirtualMenuItem *item);
    static void OptStatCB(TWin32Canvas *obj, TVirtualMenuItem *item);

@@ -1,3 +1,4 @@
+//*CMZ :  2.21/01 07/01/99  14.47.09  by  Rene Brun
 //*CMZ :  2.20/05 15/12/98  09.17.20  by  Rene Brun
 //*CMZ :  2.20/00 13/11/98  18.38.02  by  Rene Brun
 //*CMZ :  2.00/12 15/09/98  01.38.01  by  Rene Brun
@@ -1020,15 +1021,13 @@ L110:
                if (X0 != X1) { Xfactor = X1-X0+0.1*charheight; Yfactor = 0; }
                else          { Xfactor = Y1-Y0+0.1*charheight; Yfactor = 0; }
                LabelsLimits(LABEL,first,last);
-               if (OptionNoopt && !OptionInt)
-                     Rotate (Xfactor,Yfactor,cosphi,sinphi,X0,Y0,XX,YY);
-               else  Rotate (Xfactor,Yfactor,cosphi,sinphi,XX0,YY0,XX,YY);
+               Rotate (Xfactor,Yfactor,cosphi,sinphi,X0,Y0,XX,YY);
                textaxis->SetTextAlign(11);
                textaxis->PaintTextNDC(XX,YY,"x10");
                if (NEXE != 1) {
                   Float_t s10 = textaxis->GetTextSize();
                   textaxis->SetTextSize (0.6*s10);
-                  XexpT = XX + 0.95*s10;
+                  XexpT = XX + 1.05*s10;
                   YexpT = YY + 0.54*s10;
                   textaxis->PaintTextNDC(XexpT,YexpT,&LABEL[first]);
                   textaxis->SetTextSize (charheight);

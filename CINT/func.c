@@ -1,5 +1,5 @@
-/*CMZ :  2.20/04 08/12/98  16.25.25  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   08/12/98*/
+/*CMZ :  2.21/08 17/03/99  13.13.40  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   17/03/99*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -672,12 +672,20 @@ int memfunc_flag;
     G__var_type='p';
     if('.'==fpara.parameter[1][0]) i=1;
     else                           i=2;
-#ifndef G__OLDIMPLEMENTATION407
     if(base1) {
       strncpy(fpara.parameter[0],item,base1);
       fpara.parameter[0][base1]='\0';
       strcpy(fpara.parameter[1],item+base1);
     }
+#ifndef G__OLDIMPLEMENTATION1013
+    if(G__CALLMEMFUNC==memfunc_flag)
+      result3=G__getstructmem(store_var_type ,funcname ,fpara.parameter[1]+i
+			      ,fpara.parameter[0] ,known3
+			      ,(struct G__var_array*)NULL,i);
+    else
+      result3=G__getstructmem(store_var_type ,funcname ,fpara.parameter[1]+i
+			      ,fpara.parameter[0] ,known3 ,&G__global,i);
+#else
     if(G__CALLMEMFUNC==memfunc_flag)
       result3=G__getstructmem(store_var_type ,funcname ,fpara.parameter[1]+i
 			      ,fpara.parameter[0] ,known3
@@ -685,9 +693,6 @@ int memfunc_flag;
     else
       result3=G__getstructmem(store_var_type ,funcname ,fpara.parameter[1]+i
 			      ,fpara.parameter[0] ,known3 ,&G__global);
-#else
-    result3=G__getstructmem(store_var_type ,funcname ,fpara.parameter[1]+i
-			    ,fpara.parameter[0] ,known3 ,&G__global);
 #endif
     G__var_type=store_var_type;
     return(result3);
@@ -710,6 +715,17 @@ int memfunc_flag;
       /* function pointer */
       return(G__pointer2func(fpara.parameter[0],fpara.parameter[1],known3));
     }
+
+#ifndef G__OLDIMPLEMENTATION1001
+    /***************************************************************
+     * (expr)[n]
+     ***************************************************************/
+    else if(fpara.paran>=2&&'['==fpara.parameter[1][0]) {
+      result3 = G__getexpr(G__catparam(&fpara,fpara.paran,""));
+      *known3=1;
+      return(result3);
+    }
+#endif
 
     /***************************************************************
      * casting
@@ -977,7 +993,7 @@ int memfunc_flag;
 #ifdef G__ASM
 #ifdef G__SECURITY
 	  store_asm_noverflow = G__asm_noverflow;
-	  if(G__security&G__SECURE_GARBAGECOLLECTION) G__asm_noverflow=0;
+	  if(G__security&G__SECURE_GARBAGECOLLECTION) G__abortbytecode();
 #endif
 #endif
 #ifdef G__VIRTUALBASE
@@ -1038,14 +1054,12 @@ int memfunc_flag;
 	  fprintf(G__serr, "Error: Can't call %s::%s() in current scope"
 		  ,G__struct.name[G__tagnum],funcname);
 	  G__genericerror((char*)NULL);
-	  if(G__nfile==G__ifile.filenum) { /* this means G__exec_tempfile() */
-	    store_exec_memberfunc=G__exec_memberfunc;
-	    G__exec_memberfunc=1;
-	    fprintf(G__sout,"Possible canditates are...\n");
-	    G__listfunc(G__sout,G__PUBLIC_PROTECTED_PRIVATE,funcname
-			,G__struct.memfunc[G__tagnum]);
-	    G__exec_memberfunc=store_exec_memberfunc;
-	  }
+	  store_exec_memberfunc=G__exec_memberfunc;
+	  G__exec_memberfunc=1;
+	  fprintf(G__serr,"Possible canditates are...\n");
+	  G__listfunc(G__serr,G__PUBLIC_PROTECTED_PRIVATE,funcname
+		      ,G__struct.memfunc[G__tagnum]);
+	  G__exec_memberfunc=store_exec_memberfunc;
 	}
 #ifdef G__DUMPFILE
 	if(G__dumpfile!=NULL && 0==G__no_exec_compile) G__dumpspace -= 3;
@@ -1147,7 +1161,7 @@ int memfunc_flag;
 	  G__inc_cp_asm(5,0);
 	}
 	else {
-	  G__asm_noverflow = 0;
+	  G__abortbytecode();
 #ifdef G__ASM_DBG
 	  if(G__asm_dbg) {
 	    fprintf(G__serr,"COMPILE ABORT function name buffer overflow");
@@ -1205,7 +1219,7 @@ int memfunc_flag;
 	  G__inc_cp_asm(5,0);
 	}
 	else {
-	  G__asm_noverflow = 0;
+	  G__abortbytecode();
 #ifdef G__ASM_DBG
 	  if(G__asm_dbg)
 	    fprintf(G__serr,"COMPILE ABORT function name buffer overflow");
@@ -1273,8 +1287,13 @@ int memfunc_flag;
    * Explicit type conversion by searching constructors
    ********************************************************************/
   if(G__TRYNORMAL==memfunc_flag) {
-
+#ifndef G__OLDIMPLEMENTATION985
+    int store_var_typeX = G__var_type;
+#endif
     i=G__defined_typename(funcname);
+#ifndef G__OLDIMPLEMENTATION985
+    G__var_type = store_var_typeX;
+#endif
     if(-1!=i) {
 #ifndef G__OLDIMPLEMENTATION650
       if(-1!=G__newtype.tagnum[i]) {
@@ -1360,7 +1379,7 @@ int memfunc_flag;
 	  /* Loop compilation of explicit conversion not ready yet,
 	   * mainly because of temporary object handling difficulty */
 	  if(G__asm_noverflow) {
-	    G__asm_noverflow = 0;
+	    G__abortbytecode();
 	    if(G__asm_dbg) {
 	      fprintf(G__serr,"COMPILE ABORT Explicit conversion");
 	      G__printlinenum();
@@ -2233,7 +2252,7 @@ int hash;
       first_getopt=0;
       G__globalvarpointer = (long)(&optind);
       G__var_type='i';
-      G__asm_noverflow=0;
+      G__abortbytecode();
       G__getexpr("optind=1");
       G__asm_noverflow=1;
 
@@ -2282,7 +2301,7 @@ int hash;
 #ifndef G__OLDIMPLEMENTATION832
   if(1655==hash&&strcmp(funcname,"G__charformatter")==0) {
     if(G__no_exec_compile) {
-      G__asm_noverflow=0;
+      G__abortbytecode();
       return(1);
     }
     G__CHECKNONULL(1,'C');
@@ -2296,7 +2315,7 @@ int hash;
 #ifndef G__OLDIMPLEMENTATION863
   if(1023==hash&&strcmp(funcname,"G__findsym")==0) {
     if(G__no_exec_compile) {
-      G__asm_noverflow=0;
+      G__abortbytecode();
       return(1);
     }
     G__CHECKNONULL(0,'C');
@@ -2304,6 +2323,16 @@ int hash;
     return(1);
   }
 #endif
+
+  if(1783==hash&&strcmp(funcname,"G__set_sym_underscore")==0) {
+    if(G__no_exec_compile) {
+      G__abortbytecode();
+      return(1);
+    }
+    G__set_sym_underscore((int)G__int(libp->para[0]));
+    *result7=G__null;
+    return(1);
+  }
 
   /*********************************************************************
   * low priority 2

@@ -1,3 +1,5 @@
+//*CMZ :  2.21/07 05/03/99  19.22.41  by  Rene Brun
+//*CMZ :  2.21/06 16/02/99  18.41.13  by  Fons Rademakers
 //*CMZ :  2.20/00 10/11/98  11.26.42  by  Fons Rademakers
 //*CMZ :  2.00/10 29/07/98  15.56.44  by  Fons Rademakers
 //*CMZ :  2.00/08 04/06/98  15.38.07  by  Fons Rademakers
@@ -241,7 +243,9 @@ void TClonesArray::ExpandCreate(Int_t n)
 
       fCont[i] = fKeep->fCont[i];
    }
-
+/*
+ //this function is currently only called by TBranchClones::GetEvent
+ //the following lines have been commented (not necessary for getEvent)
    for (i = n; i < fSize; i++)
       if (fKeep->fCont[i]) {
          if (TObject::GetObjectStat() && gObjectTable)
@@ -249,7 +253,7 @@ void TClonesArray::ExpandCreate(Int_t n)
          ::operator delete(fKeep->fCont[i]);
          fKeep->fCont[i] = 0;
       }
-
+*/
    fLast = n - 1;
    Changed();
 }
@@ -346,6 +350,7 @@ void TClonesArray::Streamer(TBuffer &b)
       if (fClass == 0 && fKeep == 0) {
          fClass = cl;
          fKeep  = new TObjArray(nobjects);
+         Expand(nobjects);
       }
       if (cl != fClass) {
          Error("Streamer", "expecting objects of type %s, finding objects"

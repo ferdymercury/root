@@ -1,3 +1,5 @@
+//*CMZ :  2.21/02 16/01/99  11.07.15  by  Rene Brun
+//*CMZ :  2.21/01 10/01/99  11.38.03  by  Rene Brun
 //*CMZ :  2.20/05 13/12/98  10.54.43  by  Rene Brun
 //*CMZ :  2.20/03 05/12/98  16.31.24  by  Rene Brun
 //*CMZ :  2.20/01 01/12/98  22.35.17  by  Rene Brun
@@ -196,6 +198,7 @@ void TF3::GetRandom3(Float_t &xrandom, Float_t &yrandom, Float_t &zrandom)
    Float_t dz   = (fZmax-fZmin)/fNpz;
    Int_t ncells = fNpx*fNpy*fNpz;
    Double_t xx[3];
+   InitArgs(xx,fParams);
    if (fIntegral == 0) {
       fIntegral = new Double_t[ncells+1];
       fIntegral[0] = 0;
@@ -251,6 +254,23 @@ void TF3::GetRange(Float_t &xmin, Float_t &ymin, Float_t &zmin, Float_t &xmax, F
    ymax = fYmax;
    zmin = fZmin;
    zmax = fZmax;
+}
+
+//______________________________________________________________________________
+Double_t TF3::Integral(Float_t ax, Float_t bx, Float_t ay, Float_t by, Float_t az, Float_t bz, Float_t epsilon)
+{
+// Return Integral of a 3d function in range [ax,bx],[ay,by],[az,bz]
+//
+   Float_t a[3], b[3];
+   a[0] = ax;
+   b[0] = bx;
+   a[1] = ay;
+   b[1] = by;
+   a[2] = az;
+   b[2] = bz;
+   Float_t relerr  = 0;
+   Double_t result = IntegralMultiple(3,a,b,epsilon,relerr);
+   return result;
 }
 
 //______________________________________________________________________________

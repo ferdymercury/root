@@ -1,3 +1,4 @@
+//*CMZ :  2.21/01 05/01/99  16.29.20  by  Rene Brun
 //*CMZ :  2.20/03 05/12/98  22.30.19  by  Rene Brun
 //*CMZ :  2.00/11 17/08/98  15.18.36  by  Rene Brun
 //*CMZ :  2.00/10 27/07/98  19.08.43  by  Rene Brun
@@ -473,14 +474,14 @@ void TProfile::DrawCopy(Option_t *option)
 }
 
 //______________________________________________________________________________
-void TProfile::Fill(Axis_t x, Axis_t y)
+Int_t TProfile::Fill(Axis_t x, Axis_t y)
 {
 //*-*-*-*-*-*-*-*-*-*-*Fill a Profile histogram (no weights)*-*-*-*-*-*-*-*
 //*-*                  =====================================
    Int_t bin;
 
    if (fYmin != fYmax) {
-      if (y <fYmin || y> fYmax) return;
+      if (y <fYmin || y> fYmax) return -1;
    }
 
    fEntries++;
@@ -488,21 +489,23 @@ void TProfile::Fill(Axis_t x, Axis_t y)
    AddBinContent(bin, y);
    fSumw2.fArray[bin] += (Stat_t)y*y;
    fBinEntries.fArray[bin] += 1;
+   if (bin == 0 || bin > fXaxis.GetNbins()) return -1;
    fTsumw++;
    fTsumw2++;
    fTsumwx  += x;
    fTsumwx2 += x*x;
+   return bin;
 }
 
 //______________________________________________________________________________
-void TProfile::Fill(Axis_t x, Axis_t y, Stat_t w)
+Int_t TProfile::Fill(Axis_t x, Axis_t y, Stat_t w)
 {
 //*-*-*-*-*-*-*-*-*-*-*Fill a Profile histogram with weights*-*-*-*-*-*-*-*
 //*-*                  =====================================
    Int_t bin;
 
    if (fYmin != fYmax) {
-      if (y <fYmin || y> fYmax) return;
+      if (y <fYmin || y> fYmax) return -1;
    }
 
    Stat_t z= (w > 0 ? w : -w);
@@ -511,10 +514,12 @@ void TProfile::Fill(Axis_t x, Axis_t y, Stat_t w)
    AddBinContent(bin, z*y);
    fSumw2.fArray[bin] += z*y*y;
    fBinEntries.fArray[bin] += w;
+   if (bin == 0 || bin > fXaxis.GetNbins()) return -1;
    fTsumw   += z;
    fTsumw2  += z*z;
    fTsumwx  += z*x;
    fTsumwx2 += z*x*x;
+   return bin;
 }
 
 
@@ -704,4 +709,3 @@ void TProfile::SetErrorOption(Option_t *option)
    if (opt.Contains("s")) fErrorMode = kERRORSPREAD;
    if (opt.Contains("i")) fErrorMode = kERRORSPREADI;
    if (opt.Contains("g")) fErrorMode = kERRORSPREADG;
-}

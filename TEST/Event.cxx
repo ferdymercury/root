@@ -1,3 +1,4 @@
+//*CMZ :  2.21/06 17/02/99  19.02.12  by  Rene Brun
 //*CMZ :  2.20/00 06/11/98  15.21.16  by  Rene Brun
 //*CMZ :  2.00/13 28/10/98  12.53.06  by  Fons Rademakers
 //*CMZ :  1.03/09 11/12/97  11.00.17  by  Rene Brun
@@ -91,6 +92,8 @@ Event::Event()
 Event::~Event()
 {
    Clear();
+   delete fH;
+   fH = 0;
 }
 
 //______________________________________________________________________________
@@ -116,7 +119,7 @@ void Event::Clear(Option_t *option)
 void Event::Reset(Option_t *option)
 {
 // Static function to reset all static objects for this event
-   fgTracks->Delete(option);
+//   fgTracks->Delete(option);
    delete fgTracks; fgTracks = 0;
    fgHist   = 0;
 }

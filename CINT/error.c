@@ -1,5 +1,5 @@
-/*CMZ :  2.20/04 08/12/98  16.25.24  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   08/12/98*/
+/*CMZ :  2.21/08 17/03/99  13.13.40  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   17/03/99*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -156,14 +156,15 @@ char *item;
 int G__warnundefined(item)
 char *item;
 {
+#ifndef G__OLDIMPLEMENtATION997
+  if(G__prerun&&G__static_alloc&&G__func_now>=0) return(0);
+#endif
   if(G__in_pause) return(0);
-#ifndef G__OLDIMPLEMENTATION629
   if(G__ASM_FUNC_COMPILE&G__asm_wholefunction) {
     G__CHECK(G__SECURE_PAUSE,1,G__pause());
     G__CHECK(G__SECURE_EXIT_AT_ERROR,1,G__return=G__RETURN_EXIT1);
   }
   else {
-#endif
 #ifdef G__ROOT
     fprintf(G__serr
 	    ,"Error: No symbol %s in current scope ",item[0]=='$'?item+1:item);
@@ -172,9 +173,7 @@ char *item;
 	    ,"Error: No symbol %s in current scope ",item);
 #endif
     G__genericerror((char*)NULL);
-#ifndef G__OLDIMPLEMENTATION629
   }
-#endif
 #ifdef G__SECURITY
   G__security_error = G__RECOVERABLE;
 #endif

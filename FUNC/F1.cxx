@@ -1,3 +1,7 @@
+//*CMZ :  2.21/07 02/03/99  16.39.53  by  Rene Brun
+//*CMZ :  2.21/05 09/02/99  12.30.16  by  Rene Brun
+//*CMZ :  2.21/02 18/01/99  12.19.48  by  Rene Brun
+//*CMZ :  2.21/01 16/01/99  10.38.56  by  Rene Brun
 //*CMZ :  2.20/05 15/12/98  09.17.19  by  Rene Brun
 //*CMZ :  2.20/03 05/12/98  16.28.27  by  Rene Brun
 //*CMZ :  2.20/00 04/11/98  21.54.21  by  Rene Brun
@@ -140,6 +144,9 @@ TF1::TF1(const char *name,const char *formula, Float_t xmin, Float_t xmax)
 //*-*
 //*-*  See TFormula constructor for explanation of the formula syntax.
 //*-*
+//*-*  See tutorials: fillrandom, first, fit1, formula1, multifit
+//*-*  for real examples.
+//*-*
 //*-*  Creates a function of type A or B between xmin and xmax
 //*-*
 //*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
@@ -194,6 +201,10 @@ TF1::TF1(const char *name,void *fcn, Float_t xmin, Float_t xmax, Int_t npar)
 //*-*  The function is defined with npar parameters
 //*-*  fcn must be a function of type:
 //*-*     Double_t fcn(Double_t *x, Double_t *params)
+//*-*
+//*-*  see tutorial; myfit for an example of use
+//*-*  also test/stress.cxx (see function stress1)
+//*-*
 //*-*
 //*-*  This constructor is called for functions of type C by CINT.
 //*-*
@@ -266,6 +277,10 @@ TF1::TF1(const char *name,Double_t (*fcn)(Double_t *, Double_t *), Float_t xmin,
 //*-*
 //*-*   This constructor creates a function of type C when invoked
 //*-*   with the normal C++ compiler.
+//*-*
+//*-*   see test program test/stress.cxx (function stress1) for an example.
+//*-*   note the interface with an intermediate pointer.
+//*-*
 //*-*
 //*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 
@@ -581,8 +596,10 @@ Double_t TF1::EvalPar(Double_t *x, Double_t *params)
    if (fType == 0) return TFormula::EvalPar(x,params);
    Double_t result = 0;
    if (fType == 1)  {
-      if (fFunction) result = (*fFunction)(x,params);
-      else           result = GetSave(x);
+      if (fFunction) {
+         if (params) result = (*fFunction)(x,params);
+         else        result = (*fFunction)(x,fParams);
+      }else          result = GetSave(x);
    }
    if (fType == 2) {
       if (fMethodCall) fMethodCall->Execute(result);
@@ -605,6 +622,19 @@ void TF1::ExecuteEvent(Int_t event, Int_t px, Int_t py)
    if (!gPad->GetView()) {
       if (event == kMouseMotion)  gPad->SetCursor(kHand);
    }
+}
+
+//______________________________________________________________________________
+TH1F *TF1::GetHistogram()
+{
+// return a pointer to teh histogram used to vusualize the function
+
+   if (fHistogram) return fHistogram;
+
+   // may be function has not yet be painted. force a pad update
+   gPad->Modified();
+   gPad->Update();
+   return fHistogram;
 }
 
 //______________________________________________________________________________
@@ -888,6 +918,291 @@ CASE2:
 }
 
 //______________________________________________________________________________
+Double_t TF1::Integral(Float_t, Float_t, Float_t, Float_t, Float_t)
+{
+// Return Integral of a 2d function in range [ax,bx],[ay,by]
+//
+   Error("Integral","Must be called with a TF2 only");
+   return 0;
+}
+
+//______________________________________________________________________________
+Double_t TF1::Integral(Float_t, Float_t, Float_t, Float_t, Float_t, Float_t, Float_t)
+{
+// Return Integral of a 3d function in range [ax,bx],[ay,by],[az,bz]
+//
+   Error("Integral","Must be called with a TF3 only");
+   return 0;
+}
+
+//______________________________________________________________________________
+Double_t TF1::IntegralMultiple(Int_t n, Float_t *a, Float_t *b, Float_t eps, Float_t &relerr)
+{
+//  Adaptive Quadrature for Multiple Integrals over N-Dimensional
+//  Rectangular Regions
+//
+//Begin_Html
+/*
+<img src="gif/integralmultiple.gif">
+*/
+//End_Html
+//
+// Author(s): A.C. Genz, A.A. Malik
+// converted/adaptedted by R.Brun to C++ from Fortran CERNLIB routine RADMUL (D120)
+// The new code features many changes compared to the Fortran version.
+// Note that this function is currently called only by TF2::Integral (n=2)
+// and TF3::Integral (n=3).
+//
+// This function computes, to an attempted specified accuracy, the value of
+// the integral over an n-dimensional rectangular region.
+//
+// N Number of dimensions.
+// A,B One-dimensional arrays of length >= N . On entry A[i],  and  B[i],
+//     contain the lower and upper limits of integration, respectively.
+// EPS    Specified relative accuracy.
+// RELERR Contains, on exit, an estimation of the relative accuray of RESULT.
+//
+// Method:
+//
+// An integration rule of degree seven is used together with a certain
+// strategy of subdivision.
+// For a more detailed description of the method see References.
+//
+// Notes:
+//
+//   1.Multi-dimensional integration is time-consuming. For each rectangular
+//     subregion, the routine requires function evaluations.
+//     Careful programming of the integrand might result in substantial saving
+//     of time.
+//   2.Numerical integration usually works best for smooth functions.
+//     Some analysis or suitable transformations of the integral prior to
+//     numerical work may contribute to numerical efficiency.
+//
+// References:
+//
+//   1.A.C. Genz and A.A. Malik, Remarks on algorithm 006:
+//     An adaptive algorithm for numerical integration over
+//     an N-dimensional rectangular region, J. Comput. Appl. Math. 6 (1980) 295-302.
+//   2.A. van Doren and L. de Ridder, An adaptive algorithm for numerical
+//     integration over an n-dimensional cube, J.Comput. Appl. Math. 2 (1976) 207-217.
+//
+//=========================================================================
+   Double_t ctr[15], wth[15], wthl[15], z[15];
+
+   const Double_t xl2 = 0.358568582800318073;
+   const Double_t xl4 = 0.948683298050513796;
+   const Double_t xl5 = 0.688247201611685289;
+   const Double_t w2  = 980./6561;
+   const Double_t w4  = 200./19683;
+   const Double_t wp2 = 245./486;
+   const Double_t wp4 = 25./729;
+
+   Double_t wn1[14] = {     -0.193872885230909911, -0.555606360818980835,
+     -0.876695625666819078, -1.15714067977442459,  -1.39694152314179743,
+     -1.59609815576893754,  -1.75461057765584494,  -1.87247878880251983,
+     -1.94970278920896201,  -1.98628257887517146,  -1.98221815780114818,
+     -1.93750952598689219,  -1.85215668343240347,  -1.72615963013768225};
+
+   Double_t wn3[14] = {     0.0518213686937966768,  0.0314992633236803330,
+     0.0111771579535639891,-0.00914494741655235473,-0.0294670527866686986,
+    -0.0497891581567850424,-0.0701112635269013768, -0.0904333688970177241,
+    -0.110755474267134071, -0.131077579637250419,  -0.151399685007366752,
+    -0.171721790377483099, -0.192043895747599447,  -0.212366001117715794};
+
+   Double_t wn5[14] = {         0.871183254585174982e-01,  0.435591627292587508e-01,
+     0.217795813646293754e-01,  0.108897906823146873e-01,  0.544489534115734364e-02,
+     0.272244767057867193e-02,  0.136122383528933596e-02,  0.680611917644667955e-03,
+     0.340305958822333977e-03,  0.170152979411166995e-03,  0.850764897055834977e-04,
+     0.425382448527917472e-04,  0.212691224263958736e-04,  0.106345612131979372e-04};
+
+   Double_t wpn1[14] = {   -1.33196159122085045, -2.29218106995884763,
+     -3.11522633744855959, -3.80109739368998611, -4.34979423868312742,
+     -4.76131687242798352, -5.03566529492455417, -5.17283950617283939,
+     -5.17283950617283939, -5.03566529492455417, -4.76131687242798352,
+     -4.34979423868312742, -3.80109739368998611, -3.11522633744855959};
+
+   Double_t wpn3[14] = {     0.0445816186556927292, -0.0240054869684499309,
+    -0.0925925925925925875, -0.161179698216735251,  -0.229766803840877915,
+    -0.298353909465020564,  -0.366941015089163228,  -0.435528120713305891,
+    -0.504115226337448555,  -0.572702331961591218,  -0.641289437585733882,
+    -0.709876543209876532,  -0.778463648834019195,  -0.847050754458161859};
+
+   Double_t result = 0;
+   Double_t abserr = 0;
+   Int_t ifail = 3;
+   if (n < 2 || n > 15) return 0;
+
+   Double_t twondm = TMath::Power(2,n);
+   Int_t ifncls = 0;
+   Bool_t ldv   = kFALSE;
+   Int_t irgnst = 2*n+3;
+   Int_t irlcls = Int_t(twondm) +2*n*(n+1)+1;
+   Int_t isbrgn = irgnst;
+   Int_t isbrgs = irgnst;
+
+// The original algorithm expected a parameter MAXPTS
+//   where MAXPTS = Maximum number of function evaluations to be allowed.
+//   Here we set MAXPTS to 2*(the lowest possible value)
+   Int_t maxpts = 2*irlcls;
+   Int_t minpts = 1;
+
+// The original agorithm expected a working space array WK of length IWK
+// with IWK Length ( >= (2N + 3) * (1 + MAXPTS/(2**N + 2N(N + 1) + 1))/2).
+// Here, this array is allocated dynamically
+
+   Int_t iwk = irgnst*(1 +maxpts/irlcls)/2;
+   Double_t *wk = new Double_t[iwk+10];
+   Int_t j;
+   for (j=0;j<n;j++) {
+      ctr[j] = (b[j] + a[j])*0.5;
+      wth[j] = (b[j] - a[j])*0.5;
+   }
+
+   Double_t rgnvol, sum1, sum2, sum3, sum4, sum5, difmax, f2, f3, dif;
+   Double_t rgncmp=0, rgnval, rgnerr;
+   Int_t j1, k, l, m, idvaxn=0, idvax0=0, isbtmp, isbtpp;
+
+   InitArgs(z,fParams);
+
+L20:
+   rgnvol = twondm;
+   for (j=0;j<n;j++) {
+      rgnvol *= wth[j];
+      z[j]    = ctr[j];
+   }
+   sum1 = EvalPar(z,fParams); //evaluate function
+
+   difmax = 0;
+   sum2   = 0;
+   sum3   = 0;
+   for (j=0;j<n;j++) {
+      z[j]    = ctr[j] - xl2*wth[j];
+      f2      = EvalPar(z,fParams);
+      z[j]    = ctr[j] + xl2*wth[j];
+      f2     += EvalPar(z,fParams);
+      wthl[j] = xl4*wth[j];
+      z[j]    = ctr[j] - wthl[j];
+      f3      = EvalPar(z,fParams);
+      z[j]    = ctr[j] + wthl[j];
+      f3     += EvalPar(z,fParams);
+      sum2   += f2;
+      sum3   += f3;
+      dif     = TMath::Abs(7*f2-f3-12*sum1);
+      difmax  = TMath::Max(dif, difmax);
+      if (difmax == dif) idvaxn = j+1;
+      z[j]    = ctr[j];
+   }
+
+   sum4 = 0;
+   for (j=1;j<n;j++) {
+      j1 = j-1;
+      for (k=j;k<n;k++) {
+         for (l=0;l<2;l++) {
+            wthl[j1] = -wthl[j1];
+            z[j1]    = ctr[j1] + wthl[j1];
+            for (m=0;m<2;m++) {
+               wthl[k] = -wthl[k];
+               z[k]    = ctr[k] + wthl[k];
+               sum4 += EvalPar(z,fParams);
+            }
+         }
+         z[k] = ctr[k];
+      }
+      z[j1] = ctr[j1];
+   }
+
+   sum5 = 0;
+   for (j=0;j<n;j++) {
+      wthl[j] = -xl5*wth[j];
+      z[j] = ctr[j] + wthl[j];
+   }
+L90:
+   sum5 += EvalPar(z,fParams);
+   for (j=0;j<n;j++) {
+      wthl[j] = -wthl[j];
+      z[j] = ctr[j] + wthl[j];
+      if (wthl[j] > 0) goto L90;
+   }
+
+   rgncmp  = rgnvol*(wpn1[n-2]*sum1+wp2*sum2+wpn3[n-2]*sum3+wp4*sum4);
+   rgnval  = wn1[n-2]*sum1+w2*sum2+wn3[n-2]*sum3+w4*sum4+wn5[n-2]*sum5;
+   rgnval *= rgnvol;
+   rgnerr  = TMath::Abs(rgnval-rgncmp);
+   result += rgnval;
+   abserr += rgnerr;
+   ifncls += irlcls;
+
+   if (ldv) {
+L110:
+       isbtmp = 2*isbrgn;
+       if (isbtmp > isbrgs) goto L160;
+       if (isbtmp < isbrgs) {
+          isbtpp = isbtmp + irgnst;
+          if (wk[isbtmp-1] < wk[isbtpp-1]) isbtmp = isbtpp;
+       }
+       if (rgnerr >= wk[isbtmp-1]) goto L160;
+       for (k=0;k<irgnst;k++) {
+          wk[isbrgn-k-1] = wk[isbtmp-k-1];
+       }
+       isbrgn = isbtmp;
+       goto L110;
+    }
+L140:
+    isbtmp = (isbrgn/(2*irgnst))*irgnst;
+    if (isbtmp >= irgnst && rgnerr > wk[isbtmp-1]) {
+       for (k=0;k<irgnst;k++) {
+          wk[isbrgn-k-1] = wk[isbtmp-k-1];
+       }
+       isbrgn = isbtmp;
+       goto L140;
+    }
+
+L160:
+   wk[isbrgn-1] = rgnerr;
+   wk[isbrgn-2] = rgnval;
+   wk[isbrgn-3] = Double_t(idvaxn);
+   for (j=0;j<n;j++) {
+      isbtmp = isbrgn-2*j-4;
+      wk[isbtmp]   = ctr[j];
+      wk[isbtmp-1] = wth[j];
+   }
+   if (ldv) {
+      ldv = kFALSE;
+      ctr[idvax0-1] += 2*wth[idvax0-1];
+      isbrgs += irgnst;
+      isbrgn  = isbrgs;
+      goto L20;
+   }
+   relerr = abserr/TMath::Abs(result);
+   if (isbrgs+irgnst > iwk) ifail = 2;
+   if (ifncls+2*irlcls > maxpts) ifail = 1;
+   if (relerr < eps && ifncls >= minpts) ifail = 0;
+   if (ifail == 3) {
+      ldv = kTRUE;
+      isbrgn  = irgnst;
+      abserr -= wk[isbrgn-1];
+      result -= wk[isbrgn-2];
+      idvax0  = Int_t(wk[isbrgn-3]);
+      for (j=0;j<n;j++) {
+         isbtmp = isbrgn-2*j-4;
+         ctr[j] = wk[isbtmp];
+         wth[j] = wk[isbtmp-1];
+      }
+      wth[idvax0-1]  = 0.5*wth[idvax0-1];
+      ctr[idvax0-1] -= wth[idvax0-1];
+      goto L20;
+   }
+// IFAIL On exit:
+//     0 Normal exit.  . At most MAXPTS calls to the function F were performed.
+//     1 MAXPTS is too small for the specified accuracy EPS. RESULT and RELERR
+//              contain the values obtainable for the specified value of MAXPTS.
+//
+   delete [] wk;
+//   Int_t nfnevl = ifncls; //number of function evaluations performed.
+   return result;         //an approximate value of the integral
+}
+
+//______________________________________________________________________________
 void TF1::Paint(Option_t *option)
 {
 //*-*-*-*-*-*-*-*-*-*-*Paint this function with its current attributes*-*-*-*-*
@@ -1069,8 +1384,9 @@ void TF1::SetParLimits(Int_t ipar, Double_t parmin, Double_t parmax)
 //     when the option "B" is specified (Bounds).
 
    if (ipar < 0 || ipar > fNpar-1) return;
-   if (!fParMin) fParMin = new Double_t[fNpar];
-   if (!fParMax) fParMax = new Double_t[fNpar];
+   Int_t i;
+   if (!fParMin) {fParMin = new Double_t[fNpar]; for (i=0;i<fNpar;i++) fParMin[i]=0;}
+   if (!fParMax) {fParMax = new Double_t[fNpar]; for (i=0;i<fNpar;i++) fParMin[i]=0;}
    fParMin[ipar] = parmin;
    fParMax[ipar] = parmax;
 }

@@ -1,3 +1,4 @@
+//*CMZ :  2.21/04 02/02/99  19.06.30  by  Fons Rademakers
 //*CMZ :  2.20/00 25/11/98  18.28.15  by  Fons Rademakers
 //*CMZ :  2.00/11 25/08/98  10.55.56  by  Fons Rademakers
 //*CMZ :  2.00/10 22/07/98  12.10.34  by  Fons Rademakers
@@ -176,6 +177,8 @@ protected:
    TSeqCollection  *fFileHandler;     //List of file handlers
    TSeqCollection  *fOnExitList;      //List of items to be cleaned-up on exit
 
+   virtual const char    *ExpandFileName(const char *fname);
+
 public:
    TSystem(const char *name = "Generic", const char *title = "Generic System");
    virtual ~TSystem();
@@ -229,7 +232,7 @@ public:
    virtual const char     *GetDirEntry(void *dirp);
    virtual Bool_t          ChangeDirectory(const char *path);
    virtual const char     *WorkingDirectory();
-   virtual const char     *HomeDirectory();
+   virtual const char     *HomeDirectory(const Char_t *userName = 0);
    int                     mkdir(const char *name) { return MakeDirectory(name); }
    Bool_t                  cd(const char *path) { return ChangeDirectory(path); }
    const char             *pwd() { return WorkingDirectory(); }

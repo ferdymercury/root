@@ -1,3 +1,5 @@
+//*CMZ :          19/03/99  00.01.22  by  Rene Brun
+//*CMZ :  2.21/01 05/01/99  16.20.59  by  Rene Brun
 //*CMZ :  2.00/11 17/08/98  15.14.16  by  Rene Brun
 //*CMZ :  2.00/08 25/05/98  10.06.15  by  Rene Brun
 //*CMZ :  1.03/09 12/12/97  16.10.50  by  Fons Rademakers
@@ -46,12 +48,14 @@ protected:
     Float_t     fYmax;            //Upper limit in Y (if set)
 
 private:
-   void Fill(Axis_t) { MayNotUse("Fill(Axis_t)"); }
-   void Fill(Axis_t, Stat_t) { MayNotUse("Fill(Axis_t, Stat_t)"); }
-   void Fill(Axis_t, Axis_t, Axis_t, Stat_t) { MayNotUse("Fill(Axis_t, Axis_t, Axis_t, Stat_t)"); }
+   Int_t Fill(Axis_t) { MayNotUse("Fill(Axis_t)"); return -1;}
+   Int_t Fill(Axis_t, Stat_t) { MayNotUse("Fill(Axis_t, Stat_t)"); return -1; }
+   Int_t Fill(Axis_t, Axis_t, Axis_t, Stat_t) { MayNotUse("Fill(Axis_t, Axis_t, Axis_t, Stat_t)"); return -1; }
    void FillN(Int_t, Axis_t *, Double_t *, Int_t) { MayNotUse("FillN(Int_t, Axis_t*, Double_t*, Int_t)"); }
    void SetBins(Int_t, Float_t, Float_t, Int_t, Float_t, Float_t)
       { MayNotUse("SetBins(Int_t, Float_t, Float_t, Int_t, Float_t, Float_t"); }
+   void SetBins(Int_t, Float_t, Float_t, Int_t, Float_t, Float_t, Int_t, Float_t, Float_t)
+      { MayNotUse("SetBins(Int_t, Float_t, Float_t, Int_t, Float_t, Float_t, Int_t, Float_t, Float_t"); }
    Double_t *GetB()  {return &fBinEntries.fArray[0];}
    Double_t *GetW()  {return &fArray[0];}
    Double_t *GetW2() {return &fSumw2.fArray[0];}
@@ -70,8 +74,8 @@ public:
     virtual void    Divide(TH1 *h1);
     virtual void    Divide(TH1 *h1, TH1 *h2, Float_t c1=1, Float_t c2=1, Option_t *option=""); // *MENU*
     virtual void    DrawCopy(Option_t *option="");
-    virtual void    Fill(Axis_t x, Axis_t y);
-    virtual void    Fill(Axis_t x, Axis_t y, Stat_t w);
+    virtual Int_t   Fill(Axis_t x, Axis_t y);
+    virtual Int_t   Fill(Axis_t x, Axis_t y, Stat_t w);
     virtual void    FillN(Int_t ntimes, Axis_t *x, Axis_t *y, Double_t *w, Int_t stride=1);
     virtual Stat_t  GetBinContent(Int_t bin);
     virtual Stat_t  GetBinError(Int_t bin);

@@ -1,3 +1,5 @@
+//*CMZ :  2.21/07 21/02/99  19.09.01  by  Valery Fine(fine@mail.cern.ch)
+//*CMZ :  2.21/00 03/01/99  23.12.56  by  Valery Fine(fine@mail.cern.ch)
 //*CMZ :  1.03/09 07/12/97  16.03.42  by  Fons Rademakers
 //*-- Author :    Nenad Buncic   17/09/95
 
@@ -81,26 +83,8 @@ Int_t TBRIK::DistancetoPrimitive(Int_t px, Int_t py)
 //*-*  Compute the closest distance of approach from point px,py to each corner
 //*-*  point of the BRIK.
 //*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
-
    const Int_t numPoints = 8;
-   Int_t dist = 9999;
-   Float_t points[3*numPoints];
-
-   TView *view = gPad->GetView();
-   if (!view) return dist;
-
-   SetPoints(points);
-   Float_t dpoint, dpoint2, x1, y1, xndc[3];
-   for (Int_t i = 0; i < numPoints; i++) {
-      gNode->Local2Master(&points[3*i],&points[3*i]);
-      view->WCtoNDC(&points[3*i], xndc);
-      x1     = gPad->XtoAbsPixel(xndc[0]);
-      y1     = gPad->YtoAbsPixel(xndc[1]);
-      dpoint2= (px-x1)*(px-x1) + (py-y1)*(py-y1);
-      dpoint = TMath::Sqrt(dpoint2);
-      if (dpoint < dist) dist = (Int_t)dpoint;
-   }
-   return dist;
+   return ShapeDistancetoPrimitive(numPoints,px,py);
 }
 
 //______________________________________________________________________________
@@ -120,8 +104,8 @@ void TBRIK::Paint(Option_t *option)
 
    if (gPad->GetView3D()) PaintGLPoints(points);
 
-   for (Int_t i = 0; i < numpoints; i++)
-            gNode->Local2Master(&points[3*i],&points[3*i]);
+ //==  for (Int_t i = 0; i < numpoints; i++)
+ //            gNode->Local2Master(&points[3*i],&points[3*i]);
 
 
    Int_t c = ((GetLineColor() % 8) - 1) * 4;     // Basic colors: 0, 1, ... 7
@@ -174,7 +158,8 @@ void TBRIK::Paint(Option_t *option)
     }
 
     //*-* Paint in the pad
-    PaintShape(buff);
+    Bool_t rangeView = strcmp(option,"range")==0 ? kTRUE : kFALSE;
+    PaintShape(buff,rangeView);
 
     if (strstr(option, "x3d")) {
         if(buff && buff->points && buff->segs)

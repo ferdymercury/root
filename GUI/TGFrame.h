@@ -1,3 +1,5 @@
+//*CMZ :  2.21/06 15/02/99  15.32.45  by  Fons Rademakers
+//*CMZ :  2.21/04 03/02/99  10.35.20  by  Fons Rademakers
 //*CMZ :  2.20/00 02/11/98  18.09.32  by  Fons Rademakers
 //*CMZ :  2.00/13 28/10/98  11.15.14  by  Fons Rademakers
 //*CMZ :  2.00/07 18/05/98  13.39.31  by  Fons Rademakers
@@ -128,6 +130,7 @@ protected:
    UInt_t   fHeight;        // frame height
    Int_t    fBorderWidth;   // frame border width
    UInt_t   fOptions;       // frame options
+   ULong_t  fBackground;    // frame background color
 
    static ULong_t     fgDefaultFrameBackground;
    static ULong_t     fgDefaultSelectedBackground;
@@ -140,6 +143,17 @@ protected:
    static Time_t      fgLastClick;
    static UInt_t      fgLastButton, fgDbx, fgDby;
    static Window_t    fgDbw;
+
+   static ULong_t     GetDefaultFrameBackground();
+   static ULong_t     GetDefaultSelectedBackground();
+   static ULong_t     GetWhitePixel();
+   static ULong_t     GetBlackPixel();
+   static GContext_t  GetBlackGC();
+   static GContext_t  GetWhiteGC();
+   static GContext_t  GetHilightGC();
+   static GContext_t  GetShadowGC();
+   static GContext_t  GetBckgndGC();
+   static Time_t      GetLastClick();
 
    virtual void DoRedraw();
    virtual const TGWindow *GetMainFrame() const { return TGWindow::GetMainFrame(); }
@@ -174,12 +188,14 @@ public:
    virtual TGDimension GetDefaultSize() const
       { return TGDimension(fWidth, fHeight); }
 
-   virtual UInt_t GetOptions() const { return fOptions; }
-   virtual void ChangeOptions(UInt_t options);
-   virtual void Layout() { }
-   virtual void MapSubwindows() { }  // Simple frames do not have subwindows
-                                     // Redefine this in TGCompositeFrame!
-   virtual void DrawBorder();
+   virtual ULong_t GetBackground() const { return fBackground; }
+   virtual void    ChangeBackground(ULong_t back);
+   virtual UInt_t  GetOptions() const { return fOptions; }
+   virtual void    ChangeOptions(UInt_t options);
+   virtual void    Layout() { }
+   virtual void    MapSubwindows() { }  // Simple frames do not have subwindows
+                                        // Redefine this in TGCompositeFrame!
+   virtual void    DrawBorder();
 
    UInt_t GetWidth() const { return fWidth; }
    UInt_t GetHeight() const { return fHeight; }

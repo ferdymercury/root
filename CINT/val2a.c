@@ -1,5 +1,5 @@
-/*CMZ :  2.20/04 08/12/98  16.25.33  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   08/12/98*/
+/*CMZ :  2.21/08 17/03/99  13.13.45  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   17/03/99*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -145,6 +145,9 @@ char *temp;
     else
       sprintf(temp,"(unsignedchar*)0x%lx",buf.obj.i);
     break;
+#ifndef G__OLDIMPLEMENTATION1001
+  case 'T':
+#endif
   case 'C':
     if(buf.obj.i!=0) {
       if(G__in_pause && G__PARANORMAL==buf.obj.reftype.reftype) {
@@ -714,80 +717,80 @@ G__value *result7;
 double G__atodouble(string)
 char *string;
 {
-	int lenstring;
-	int ig16=0,ig26=0;
-	char exponent[G__ONELINE];
-	double expo,polarity=1;
-	double result5=0.0;
-	double ratio=0.1;
+  int lenstring;
+  int ig16=0,ig26=0;
+  char exponent[G__ONELINE];
+  double expo,polarity=1;
+  double result5=0.0;
+  double ratio=0.1;
 
-	lenstring=strlen(string);
-	if(string[ig16]=='-') {
-		polarity = -1;
-		ig16++;
-	}
-	while((isdigit(string[ig16]))&&(ig16<lenstring)) {
-		result5 = result5*10 + (double)(string[ig16++]-'0');
-	}
-	if(string[ig16]=='.') {
-		ig16++;
-		while((isdigit(string[ig16]))&&(ig16<lenstring)) {
-			result5 += ratio * (double)(string[ig16++]-'0');
-			ratio /= 10;
-		}
-	}
-	if(ig16<lenstring) {
-		switch(string[ig16]) {
-		case 'e':
-		case 'E':
-			ig16++;
-			while(ig16<lenstring) exponent[ig26++]=string[ig16++];
-			exponent[ig26]='\0';
-			expo = (double)(atoi(exponent));
-			expo = exp(expo*log(10.0));
-			result5 *= expo;
-			break;
-		case 't':
-		case 'T':
-			result5 *= 1e12;
-			break;
-		case 'g':
-		case 'G':
-			result5 *= 1e9;
-			break;
-		case 'M':
-			result5 *= 1e6;
-			break;
-		case 'k':
-		case 'K':
-			result5 *= 1e3;
-			break;
-		case 'm':
-			result5 *= 1e-3;
-			break;
-		case 'u':
-		case 'U':
-			result5 *= 1e-6;
-			break;
-		case 'n':
-		case 'N':
-			result5 *= 1e-9;
-			break;
-		case 'p':
-		case 'P':
-			result5 *= 1e-12;
-			break;
-		case 'f':
-		case 'F':
-			result5 *= 1e-15;
-			break;
-		case 'a':
-		case 'A':
-			result5 *= 1e-18;
-			break;
-		}
-	}
-	return(polarity*result5);
+  lenstring=strlen(string);
+  if(string[ig16]=='-') {
+    polarity = -1;
+    ig16++;
+  }
+  while((isdigit(string[ig16]))&&(ig16<lenstring)) {
+    result5 = result5*10 + (double)(string[ig16++]-'0');
+  }
+  if(string[ig16]=='.') {
+    ig16++;
+    while((isdigit(string[ig16]))&&(ig16<lenstring)) {
+      result5 += ratio * (double)(string[ig16++]-'0');
+      ratio /= 10;
+    }
+  }
+  if(ig16<lenstring) {
+    switch(string[ig16]) {
+    case 'e':
+    case 'E':
+      ig16++;
+      while(ig16<lenstring) exponent[ig26++]=string[ig16++];
+      exponent[ig26]='\0';
+      expo = (double)(atoi(exponent));
+      expo = exp(expo*log(10.0));
+      result5 *= expo;
+      break;
+    case 't':
+    case 'T':
+      result5 *= 1e12;
+      break;
+    case 'g':
+    case 'G':
+      result5 *= 1e9;
+      break;
+    case 'M':
+      result5 *= 1e6;
+      break;
+    case 'k':
+    case 'K':
+      result5 *= 1e3;
+      break;
+    case 'm':
+      result5 *= 1e-3;
+      break;
+    case 'u':
+    case 'U':
+      result5 *= 1e-6;
+      break;
+    case 'n':
+    case 'N':
+      result5 *= 1e-9;
+      break;
+    case 'p':
+    case 'P':
+      result5 *= 1e-12;
+      break;
+    case 'f':
+    case 'F':
+      result5 *= 1e-15;
+      break;
+    case 'a':
+    case 'A':
+      result5 *= 1e-18;
+      break;
+    }
+  }
+  return(polarity*result5);
 }
 #endif
 
@@ -815,10 +818,10 @@ char *result1;
   value=expression;
 
   while((ig28<digit)||((digit==0)&&(value!=0))) {
-	  onedig = value % base ;
-	  result[ig28] = G__getdigit(onedig);
-	  value = (value - onedig)/base;
-	  ig28++ ;
+    onedig = value % base ;
+    result[ig28] = G__getdigit(onedig);
+    value = (value - onedig)/base;
+    ig28++ ;
   }
   ig28-- ;
 
@@ -931,94 +934,91 @@ int *known4;
   /********************************************
   * scan string
   ********************************************/
-  while(n<nchar)
-    {
+  while(n<nchar) {
+
+    /********************************************
+     * error check, never happen because same
+     * condition is already checked in G__getitem()
+     * Thus, this condition can be removed
+     ********************************************/
+    if(string[0]!='0') {
+#ifndef G__FONS31
+      fprintf(G__serr,"Error: G__checkBase(%s) " ,string);
+      G__genericerror((char*)NULL);
+#else
+      fprintf(G__serr,"Error: G__checkBase(%s) FILE:%s LINE:%d\n"
+	      ,string,G__ifile.name,G__ifile.line_number);
+#endif
+      return(G__null);
+    }
+    else {
+      /**********************************************
+       * check base specification
+       **********************************************/
+      switch(string[++n]) {
+      case 'b':
+      case 'B':
+	/*******************************
+	 * binary base doesn't exist in
+	 * ANSI. Original enhancement
+	 *******************************/
+	base=2;
+	break;
+      case 'q':
+      case 'Q':
+	/******************************
+	 * quad specifier may not exist
+	 * in ANSI
+	 ******************************/
+	base=4;
+	break;
+      case 'o':
+      case 'O':
+	/******************************
+	 * octal specifier may not exist
+	 * in ANSI
+	 ******************************/
+	base=8;
+	break;
+      case 'h':
+      case 'H':
+	/*******************************
+	 * 0h and 0H doesn't exist in
+	 * ANSI. Original enhancement
+	 *******************************/
+      case 'x':
+      case 'X':
+	base=16;
+	break;
+      default:
+	/*******************************
+	 * Octal if other specifiers,
+	 * namely a digit
+	 *******************************/
+#ifndef G__OLDIMPLEMENTATION426
+	base=8;
+	--n;
+#else
+	base=10;
+#endif
+	break;
+      }
 
       /********************************************
-       * error check, never happen because same
-       * condition is already checked in G__getitem()
-       * Thus, this condition can be removed
+       * initialize value
        ********************************************/
-      if(string[0]!='0') {
-#ifndef G__FONS31
-	fprintf(G__serr,"Error: G__checkBase(%s) " ,string);
-	G__genericerror((char*)NULL);
-#else
-	fprintf(G__serr,"Error: G__checkBase(%s) FILE:%s LINE:%d\n"
-		,string,G__ifile.name,G__ifile.line_number);
-#endif
-	return(G__null);
-      }
-      else {
-	/**********************************************
-	 * check base specification
-	 **********************************************/
-	switch(string[++n]) {
-	case 'b':
-	case 'B':
-	  /*******************************
-	   * binary base doesn't exist in
-	   * ANSI. Original enhancement
-	   *******************************/
-	  base=2;
-	  break;
-	case 'q':
-	case 'Q':
-	  /******************************
-	   * quad specifier may not exist
-	   * in ANSI
-	   ******************************/
-	  base=4;
-	  break;
-	case 'o':
-	case 'O':
-	  /******************************
-	   * octal specifier may not exist
-	   * in ANSI
-	   ******************************/
-	  base=8;
-	  break;
-	case 'h':
-	case 'H':
-	  /*******************************
-	   * 0h and 0H doesn't exist in
-	   * ANSI. Original enhancement
-	   *******************************/
-	case 'x':
-	case 'X':
-	  base=16;
-	  break;
-	default:
-	  /*******************************
-	   * Octal if other specifiers,
-	   * namely a digit
-	   *******************************/
-#ifndef G__OLDIMPLEMENTATION426
-	  base=8;
-	  --n;
-#else
-	  base=10;
-#endif
-	  break;
-	}
-	
-	/********************************************
-	 * initialize value
-	 ********************************************/
-	value=0; tristate=0;
-	
-	/********************************************
-	 * increment scanning pointer
-	 ********************************************/
-	n++;
-	
-	/********************************************
-	 * scan constant expression body
-	 ********************************************/
-	while((string[n]!=' ')&&(string[n]!='\t')&&(n<nchar))
-	{
-	  switch(string[n])
-	  {
+      value=0; tristate=0;
+
+      /********************************************
+       * increment scanning pointer
+       ********************************************/
+      n++;
+
+      /********************************************
+       * scan constant expression body
+       ********************************************/
+      while((string[n]!=' ')&&(string[n]!='\t')&&(n<nchar)) {
+	  switch(string[n]) {
 	  case '0':
 	    /*
 	      case 'L':
@@ -1174,8 +1174,8 @@ int *known4;
   * if tristate logic , specify it
   *******************************************************/
   if((base==2)||(tristate!=0)) {
-	  *(&result4.obj.i+1) = tristate;
-	  result4.type = 'w';
+    *(&result4.obj.i+1) = tristate;
+    result4.type = 'w';
   }
 
   return(result4);
@@ -1193,93 +1193,112 @@ int G__isfloat(string,type)
 char *string;
 int *type;
 {
-	int ig17=0;
-	int c;
-	int result=0, unsing = 0 ;
+  int ig17=0;
+  int c;
+  int result=0, unsing = 0 ;
 
-	/*************************************************************
-	* default type is int
-	*************************************************************/
-	*type = 'i';
+  /*************************************************************
+   * default type is int
+   *************************************************************/
+  *type = 'i';
 
-	/**************************************************************
-	* check type of constant expression
-	**************************************************************/
-	while((c=string[ig17++])!='\0') {
-		switch(c) {
-		case '.':
-		case 'e':
-		case 'E':
-		  /******************************
-		  * double
-		  ******************************/
-		  result = 1;
-		  *type = 'd';
-		  break;
-	        case 'f':
-	        case 'F':
-		  /******************************
-		  * float
-		  ******************************/
-		  result = 1;
-		  *type = 'f';
-		  break;
-	        case 'l':
-	        case 'L':
-		  /******************************
-		  * long
-		  ******************************/
-		  *type = 'l';
-		  break;
+  /**************************************************************
+   * check type of constant expression
+   **************************************************************/
+  while((c=string[ig17++])!='\0') {
+    switch(c) {
+    case '.':
+    case 'e':
+    case 'E':
+      /******************************
+       * double
+       ******************************/
+      result = 1;
+      *type = 'd';
+      break;
+    case 'f':
+    case 'F':
+      /******************************
+       * float
+       ******************************/
+      result = 1;
+      *type = 'f';
+      break;
+    case 'l':
+    case 'L':
+      /******************************
+       * long
+       ******************************/
+      *type = 'l';
+      break;
 #ifdef G__NEVER
-	        case 's':
-	        case 'S':
-		  /******************************
-		  * short, This may not be
-		  * included in ANSI
-		  * and does't work fine.
-		  * should be done by casting
-		  ******************************/
-		  *type = 's';
-		  break;
+    case 's':
+    case 'S':
+      /******************************
+       * short, This may not be
+       * included in ANSI
+       * and does't work fine.
+       * should be done by casting
+       ******************************/
+      *type = 's';
+      break;
 #endif
-		case 'u':
-		case 'U':
-		  /******************************
-		  * unsigned
-		  ******************************/
-		  unsing = 1;
-		  break;
-		}
-	}
+    case 'u':
+    case 'U':
+      /******************************
+       * unsigned
+       ******************************/
+      unsing = 1;
+      break;
+#ifndef G__OLDIMPLEMENTATION1014
+    case '0':
+    case '1':
+    case '2':
+    case '3':
+    case '4':
+    case '5':
+    case '6':
+    case '7':
+    case '8':
+    case '9':
+    case '+':
+    case '-':
+      break;
+    default:
+      fprintf(G__serr,"Warning: Illegal numerical expression %s",string);
+      G__printlinenum();
+      break;
+#endif
+    }
+  }
 
-	/**************************************************************
-	* check illegal type specification
-	**************************************************************/
-	if(unsing) {
-	  switch(*type) {
-	  case 'd':
-	  case 'f':
+  /**************************************************************
+   * check illegal type specification
+   **************************************************************/
+  if(unsing) {
+    switch(*type) {
+    case 'd':
+    case 'f':
 #ifndef G__FONS31
-	    fprintf(G__serr
-		,"Error: unsigned can not be specified for float or double %s "
-		    ,string );
-	    G__genericerror((char*)NULL);
+      fprintf(G__serr
+	      ,"Error: unsigned can not be specified for float or double %s "
+	      ,string );
+      G__genericerror((char*)NULL);
 #else
-	    fprintf(G__serr,"Error: unsigned can not be specified for float or double %s FILE:%s LINE:%d\n"
-		    ,string ,G__ifile.name ,G__ifile.line_number);
+      fprintf(G__serr,"Error: unsigned can not be specified for float or double %s FILE:%s LINE:%d\n"
+	      ,string ,G__ifile.name ,G__ifile.line_number);
 #endif
-	    break;
-	  default:
-	    *type = *type - unsing ;
-	    break;
-	  }
-	}
+      break;
+    default:
+      *type = *type - unsing ;
+      break;
+    }
+  }
 
-	/**************************************************************
-	* return 1 if float or double
-	**************************************************************/
-	return(result);
+  /**************************************************************
+   * return 1 if float or double
+   **************************************************************/
+  return(result);
 }
 
 /* #ifdef G__NEVER */

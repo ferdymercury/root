@@ -1,4 +1,5 @@
-//*CMZ :  2.20/01 01/12/98  11.09.32  by  Rene Brun
+//*CMZ :  2.21/07 14/03/99  07.55.47  by  Rene Brun
+//*CMZ :  2.20/01 03/03/99  14.18.31  by  Rene Brun
 //*CMZ :  2.00/12 11/09/98  05.02.03  by  Rene Brun
 //*CMZ :  2.00/11 11/09/98  00.31.46  by  Rene Brun
 //*CMZ :  2.00/09 11/06/98  19.16.04  by  Rene Brun
@@ -194,7 +195,7 @@ Int_t TBranchClones::Fill()
    }
    nbytes += fBranchCount->Fill();
    for (i=0;i<nbranches;i++)  {
-      TBranch *branch = (TBranch*)fBranches[i];
+      TBranch *branch = (TBranch*)fBranches.UncheckedAt(i);
       TObjArray *leaves = branch->GetListOfLeaves();
       TLeaf *leaf = (TLeaf*)leaves->UncheckedAt(0);
       leaf->Import(fList, fN);
@@ -219,15 +220,18 @@ Int_t TBranchClones::GetEvent(Int_t event)
      fList->ExpandCreate(fN);
    }
 
+   TObjArray *leaves;
+   TBranch *branch;
+   TLeaf *leaf;
    Int_t nbranches = fBranches.GetEntriesFast();
    for (Int_t i=0;i<nbranches;i++)  {
-      TBranch *branch = (TBranch*)fBranches[i];
+      branch = (TBranch*)fBranches.UncheckedAt(i);
       if (branch->TestBit(kDoNotProcess)) continue;
       nbytes += branch->GetEvent(event);
       if (!fList) continue;
-      TObjArray *leaves = branch->GetListOfLeaves();
-      TLeaf *leaf = (TLeaf*)leaves->UncheckedAt(0);
-      leaf->Export(fList);
+      leaves = branch->GetListOfLeaves();
+      leaf = (TLeaf*)leaves->UncheckedAt(0);
+      leaf->Export(fList,fN);
    }
 
   return nbytes;

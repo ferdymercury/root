@@ -1,5 +1,5 @@
-//*CMZ :  2.20/05 13/12/98  10.55.27  by  Rene Brun
-//*-- Author :    Rene Brun   13/12/98
+//*CMZ :  2.21/07 08/03/99  12.34.14  by  Fons Rademakers
+//*-- Author :    Fons Rademakers   08/03/99
 //*CMZ :  1.00/09 23/04/97  17.59.54  by  Rene Brun
 //*-- Author :    Rene Brun   23/04/97
 #if defined(__hpux) && !defined(__GNUG__)
@@ -62,6 +62,7 @@ extern void G__set_cpp_environmentG__Graf1();
 #include "TGaxis.h"
 #include "TGraph.h"
 #include "TGraphErrors.h"
+#include "TGraphAsymmErrors.h"
 #include "TLatex.h"
 #include "TLine.h"
 #include "TMarker.h"
@@ -95,6 +96,7 @@ extern G__linked_taginfo G__G__Graf1LN_TEllipse;
 extern G__linked_taginfo G__G__Graf1LN_TArc;
 extern G__linked_taginfo G__G__Graf1LN_TLine;
 extern G__linked_taginfo G__G__Graf1LN_TArrow;
+extern G__linked_taginfo G__G__Graf1LN_TGToolTip;
 extern G__linked_taginfo G__G__Graf1LN_TBox;
 extern G__linked_taginfo G__G__Graf1LN_TPave;
 extern G__linked_taginfo G__G__Graf1LN_TAttText;
@@ -109,6 +111,7 @@ extern G__linked_taginfo G__G__Graf1LN_TH1F;
 extern G__linked_taginfo G__G__Graf1LN_TAxis;
 extern G__linked_taginfo G__G__Graf1LN_TGraph;
 extern G__linked_taginfo G__G__Graf1LN_TGraphErrors;
+extern G__linked_taginfo G__G__Graf1LN_TGraphAsymmErrors;
 extern G__linked_taginfo G__G__Graf1LN_s_FormSize;
 extern G__linked_taginfo G__G__Graf1LN_FormSize;
 extern G__linked_taginfo G__G__Graf1LN_TLatex;
@@ -119,6 +122,7 @@ extern G__linked_taginfo G__G__Graf1LN_TPaveLabel;
 extern G__linked_taginfo G__G__Graf1LN_TPavesText;
 extern G__linked_taginfo G__G__Graf1LN_TFormula;
 extern G__linked_taginfo G__G__Graf1LN_TMethodCall;
+extern G__linked_taginfo G__G__Graf1LN_TArrayF;
 extern G__linked_taginfo G__G__Graf1LN_TF2;
 extern G__linked_taginfo G__G__Graf1LN_TF3;
 /********************************************************
@@ -129,6 +133,7 @@ extern G__linked_taginfo G__G__Graf1LN_TF3;
 #undef malloc
 #endif
 
+extern "C" void G__cpp_reset_tagtableG__Graf1();
 
 extern "C" void G__set_cpp_environmentG__Graf1() {
   G__add_macro("__MAKECINT__");
@@ -146,6 +151,7 @@ extern "C" void G__set_cpp_environmentG__Graf1() {
   G__add_compiledheader("TGaxis.h");
   G__add_compiledheader("TGraph.h");
   G__add_compiledheader("TGraphErrors.h");
+  G__add_compiledheader("TGraphAsymmErrors.h");
   G__add_compiledheader("TLatex.h");
   G__add_compiledheader("TLine.h");
   G__add_compiledheader("TMarker.h");
@@ -160,6 +166,7 @@ extern "C" void G__set_cpp_environmentG__Graf1() {
   G__add_compiledheader("TF2.h");
   G__add_compiledheader("TF3.h");
   G__add_compiledheader("TWbox.h");
+  G__cpp_reset_tagtableG__Graf1();
 }
 extern "C" int G__cpp_dllrevG__Graf1() { return(51111); }
 
@@ -742,7 +749,47 @@ static int G__TF1_Integral_5_3(G__value *result7,char *funcname,struct G__param 
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TF1_Paint_6_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TF1_Integral_6_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 5:
+      G__letdouble(result7,100,(double)((TF1*)(G__getstructoffset()))->Integral((Float_t)G__double(libp->para[0]),(Float_t)G__double(libp->para[1])
+,(Float_t)G__double(libp->para[2]),(Float_t)G__double(libp->para[3])
+,(Float_t)G__double(libp->para[4])));
+      break;
+   case 4:
+      G__letdouble(result7,100,(double)((TF1*)(G__getstructoffset()))->Integral((Float_t)G__double(libp->para[0]),(Float_t)G__double(libp->para[1])
+,(Float_t)G__double(libp->para[2]),(Float_t)G__double(libp->para[3])));
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TF1_Integral_7_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 7:
+      G__letdouble(result7,100,(double)((TF1*)(G__getstructoffset()))->Integral(
+(Float_t)G__double(libp->para[0]),(Float_t)G__double(libp->para[1])
+,(Float_t)G__double(libp->para[2]),(Float_t)G__double(libp->para[3])
+,(Float_t)G__double(libp->para[4]),(Float_t)G__double(libp->para[5])
+,(Float_t)G__double(libp->para[6])));
+      break;
+   case 6:
+      G__letdouble(result7,100,(double)((TF1*)(G__getstructoffset()))->Integral((Float_t)G__double(libp->para[0]),(Float_t)G__double(libp->para[1])
+,(Float_t)G__double(libp->para[2]),(Float_t)G__double(libp->para[3])
+,(Float_t)G__double(libp->para[4]),(Float_t)G__double(libp->para[5])));
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TF1_IntegralMultiple_8_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letdouble(result7,100,(double)((TF1*)(G__getstructoffset()))->IntegralMultiple((Int_t)G__int(libp->para[0]),(Float_t*)G__int(libp->para[1])
+,(Float_t*)G__int(libp->para[2]),(Float_t)G__double(libp->para[3])
+,libp->para[4].ref?*(Float_t*)libp->para[4].ref:G__Mfloat(libp->para[4])));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TF1_Paint_9_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -756,7 +803,7 @@ static int G__TF1_Paint_6_3(G__value *result7,char *funcname,struct G__param *li
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TF1_Print_7_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TF1_Print_0_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -770,25 +817,25 @@ static int G__TF1_Print_7_3(G__value *result7,char *funcname,struct G__param *li
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TF1_Save_8_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TF1_Save_1_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TF1*)(G__getstructoffset()))->Save((Float_t)G__double(libp->para[0]),(Float_t)G__double(libp->para[1]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TF1_SavePrimitive_9_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TF1_SavePrimitive_2_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TF1*)(G__getstructoffset()))->SavePrimitive(*(ofstream*)libp->para[0].ref,(Option_t*)G__int(libp->para[1]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TF1_SetChisquare_0_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TF1_SetChisquare_3_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TF1*)(G__getstructoffset()))->SetChisquare((Double_t)G__double(libp->para[0]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TF1_SetMaximum_1_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TF1_SetMaximum_4_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -802,7 +849,7 @@ static int G__TF1_SetMaximum_1_4(G__value *result7,char *funcname,struct G__para
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TF1_SetMinimum_2_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TF1_SetMinimum_5_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -816,13 +863,13 @@ static int G__TF1_SetMinimum_2_4(G__value *result7,char *funcname,struct G__para
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TF1_SetNumberFitPoints_3_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TF1_SetNumberFitPoints_6_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TF1*)(G__getstructoffset()))->SetNumberFitPoints((Int_t)G__int(libp->para[0]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TF1_SetNpx_4_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TF1_SetNpx_7_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -836,20 +883,20 @@ static int G__TF1_SetNpx_4_4(G__value *result7,char *funcname,struct G__param *l
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TF1_SetParError_5_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TF1_SetParError_8_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TF1*)(G__getstructoffset()))->SetParError((Int_t)G__int(libp->para[0]),(Double_t)G__double(libp->para[1]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TF1_SetParLimits_6_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TF1_SetParLimits_9_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TF1*)(G__getstructoffset()))->SetParLimits((Int_t)G__int(libp->para[0]),(Double_t)G__double(libp->para[1])
 ,(Double_t)G__double(libp->para[2]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TF1_SetParent_7_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TF1_SetParent_0_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -863,20 +910,20 @@ static int G__TF1_SetParent_7_4(G__value *result7,char *funcname,struct G__param
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TF1_SetRange_8_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TF1_SetRange_1_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TF1*)(G__getstructoffset()))->SetRange((Float_t)G__double(libp->para[0]),(Float_t)G__double(libp->para[1]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TF1_SetRange_9_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TF1_SetRange_2_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TF1*)(G__getstructoffset()))->SetRange((Float_t)G__double(libp->para[0]),(Float_t)G__double(libp->para[1])
 ,(Float_t)G__double(libp->para[2]),(Float_t)G__double(libp->para[3]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TF1_SetRange_0_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TF1_SetRange_3_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TF1*)(G__getstructoffset()))->SetRange((Float_t)G__double(libp->para[0]),(Float_t)G__double(libp->para[1])
 ,(Float_t)G__double(libp->para[2]),(Float_t)G__double(libp->para[3])
@@ -884,67 +931,67 @@ static int G__TF1_SetRange_0_5(G__value *result7,char *funcname,struct G__param 
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TF1_Update_1_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TF1_Update_4_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TF1*)(G__getstructoffset()))->Update();
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TF1_DeclFileName_2_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TF1_DeclFileName_5_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,67,(long)((TF1*)(G__getstructoffset()))->DeclFileName());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TF1_DeclFileLine_3_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TF1_DeclFileLine_6_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TF1*)(G__getstructoffset()))->DeclFileLine());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TF1_ImplFileName_4_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TF1_ImplFileName_7_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,67,(long)((TF1*)(G__getstructoffset()))->ImplFileName());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TF1_ImplFileLine_5_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TF1_ImplFileLine_8_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TF1*)(G__getstructoffset()))->ImplFileLine());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TF1_Class_Version_6_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TF1_Class_Version_9_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,115,(long)((TF1*)(G__getstructoffset()))->Class_Version());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TF1_Class_7_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TF1_Class_0_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((TF1*)(G__getstructoffset()))->Class());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TF1_Dictionary_8_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TF1_Dictionary_1_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TF1*)(G__getstructoffset()))->Dictionary();
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TF1_IsA_9_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TF1_IsA_2_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((TF1*)(G__getstructoffset()))->IsA());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TF1_ShowMembers_0_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TF1_ShowMembers_3_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TF1*)(G__getstructoffset()))->ShowMembers(*(TMemberInspector*)libp->para[0].ref,(char*)G__int(libp->para[1]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TF1_Streamer_1_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TF1_Streamer_4_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TF1*)(G__getstructoffset()))->Streamer(*(TBuffer*)libp->para[0].ref);
    return(1 || funcname || hash || result7 || libp) ;
 }
 
 // automatic destructor
-static int G__TF1_wATF1_2_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TF1_wATF1_5_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    if(G__getaryconstruct())
      if(G__PVOID==G__getgvp())
        delete[] (TF1 *)(G__getstructoffset());
@@ -1025,7 +1072,42 @@ static int G__TAttPad_GetYstat_2_1(G__value *result7,char *funcname,struct G__pa
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TAttPad_Print_3_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TAttPad_GetFrameFillColor_3_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,115,(long)((TAttPad*)(G__getstructoffset()))->GetFrameFillColor());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TAttPad_GetFrameLineColor_4_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,115,(long)((TAttPad*)(G__getstructoffset()))->GetFrameLineColor());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TAttPad_GetFrameFillStyle_5_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,115,(long)((TAttPad*)(G__getstructoffset()))->GetFrameFillStyle());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TAttPad_GetFrameLineStyle_6_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,115,(long)((TAttPad*)(G__getstructoffset()))->GetFrameLineStyle());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TAttPad_GetFrameLineWidth_7_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,115,(long)((TAttPad*)(G__getstructoffset()))->GetFrameLineWidth());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TAttPad_GetFrameBorderSize_8_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,115,(long)((TAttPad*)(G__getstructoffset()))->GetFrameBorderSize());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TAttPad_GetFrameBorderMode_9_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TAttPad*)(G__getstructoffset()))->GetFrameBorderMode());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TAttPad_Print_0_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -1039,7 +1121,7 @@ static int G__TAttPad_Print_3_1(G__value *result7,char *funcname,struct G__param
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TAttPad_Reset_4_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TAttPad_Reset_1_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -1053,121 +1135,219 @@ static int G__TAttPad_Reset_4_1(G__value *result7,char *funcname,struct G__param
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TAttPad_SetBottomMargin_5_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TAttPad_SetBottomMargin_2_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TAttPad*)(G__getstructoffset()))->SetBottomMargin((Coord_t)G__double(libp->para[0]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TAttPad_SetLeftMargin_6_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TAttPad_SetLeftMargin_3_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TAttPad*)(G__getstructoffset()))->SetLeftMargin((Coord_t)G__double(libp->para[0]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TAttPad_SetRightMargin_7_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TAttPad_SetRightMargin_4_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TAttPad*)(G__getstructoffset()))->SetRightMargin((Coord_t)G__double(libp->para[0]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TAttPad_SetTopMargin_8_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TAttPad_SetTopMargin_5_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TAttPad*)(G__getstructoffset()))->SetTopMargin((Coord_t)G__double(libp->para[0]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TAttPad_SetAfile_9_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TAttPad_SetAfile_6_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TAttPad*)(G__getstructoffset()))->SetAfile((Coord_t)G__double(libp->para[0]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TAttPad_SetXfile_0_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TAttPad_SetXfile_7_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TAttPad*)(G__getstructoffset()))->SetXfile((Coord_t)G__double(libp->para[0]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TAttPad_SetYfile_1_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TAttPad_SetYfile_8_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TAttPad*)(G__getstructoffset()))->SetYfile((Coord_t)G__double(libp->para[0]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TAttPad_SetAstat_2_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TAttPad_SetAstat_9_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TAttPad*)(G__getstructoffset()))->SetAstat((Coord_t)G__double(libp->para[0]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TAttPad_SetXstat_3_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TAttPad_SetXstat_0_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TAttPad*)(G__getstructoffset()))->SetXstat((Coord_t)G__double(libp->para[0]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TAttPad_SetYstat_4_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TAttPad_SetYstat_1_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TAttPad*)(G__getstructoffset()))->SetYstat((Coord_t)G__double(libp->para[0]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TAttPad_DeclFileName_5_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TAttPad_SetFrameFillColor_2_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 1:
+      G__setnull(result7);
+      ((TAttPad*)(G__getstructoffset()))->SetFrameFillColor((Color_t)G__int(libp->para[0]));
+      break;
+   case 0:
+      G__setnull(result7);
+      ((TAttPad*)(G__getstructoffset()))->SetFrameFillColor();
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TAttPad_SetFrameLineColor_3_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 1:
+      G__setnull(result7);
+      ((TAttPad*)(G__getstructoffset()))->SetFrameLineColor((Color_t)G__int(libp->para[0]));
+      break;
+   case 0:
+      G__setnull(result7);
+      ((TAttPad*)(G__getstructoffset()))->SetFrameLineColor();
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TAttPad_SetFrameFillStyle_4_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 1:
+      G__setnull(result7);
+      ((TAttPad*)(G__getstructoffset()))->SetFrameFillStyle((Style_t)G__int(libp->para[0]));
+      break;
+   case 0:
+      G__setnull(result7);
+      ((TAttPad*)(G__getstructoffset()))->SetFrameFillStyle();
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TAttPad_SetFrameLineStyle_5_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 1:
+      G__setnull(result7);
+      ((TAttPad*)(G__getstructoffset()))->SetFrameLineStyle((Style_t)G__int(libp->para[0]));
+      break;
+   case 0:
+      G__setnull(result7);
+      ((TAttPad*)(G__getstructoffset()))->SetFrameLineStyle();
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TAttPad_SetFrameLineWidth_6_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 1:
+      G__setnull(result7);
+      ((TAttPad*)(G__getstructoffset()))->SetFrameLineWidth((Width_t)G__int(libp->para[0]));
+      break;
+   case 0:
+      G__setnull(result7);
+      ((TAttPad*)(G__getstructoffset()))->SetFrameLineWidth();
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TAttPad_SetFrameBorderSize_7_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 1:
+      G__setnull(result7);
+      ((TAttPad*)(G__getstructoffset()))->SetFrameBorderSize((Width_t)G__int(libp->para[0]));
+      break;
+   case 0:
+      G__setnull(result7);
+      ((TAttPad*)(G__getstructoffset()))->SetFrameBorderSize();
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TAttPad_SetFrameBorderMode_8_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 1:
+      G__setnull(result7);
+      ((TAttPad*)(G__getstructoffset()))->SetFrameBorderMode((Int_t)G__int(libp->para[0]));
+      break;
+   case 0:
+      G__setnull(result7);
+      ((TAttPad*)(G__getstructoffset()))->SetFrameBorderMode();
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TAttPad_DeclFileName_9_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,67,(long)((TAttPad*)(G__getstructoffset()))->DeclFileName());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TAttPad_DeclFileLine_6_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TAttPad_DeclFileLine_0_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TAttPad*)(G__getstructoffset()))->DeclFileLine());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TAttPad_ImplFileName_7_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TAttPad_ImplFileName_1_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,67,(long)((TAttPad*)(G__getstructoffset()))->ImplFileName());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TAttPad_ImplFileLine_8_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TAttPad_ImplFileLine_2_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TAttPad*)(G__getstructoffset()))->ImplFileLine());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TAttPad_Class_Version_9_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TAttPad_Class_Version_3_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,115,(long)((TAttPad*)(G__getstructoffset()))->Class_Version());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TAttPad_Class_0_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TAttPad_Class_4_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((TAttPad*)(G__getstructoffset()))->Class());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TAttPad_Dictionary_1_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TAttPad_Dictionary_5_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TAttPad*)(G__getstructoffset()))->Dictionary();
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TAttPad_IsA_2_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TAttPad_IsA_6_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((TAttPad*)(G__getstructoffset()))->IsA());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TAttPad_ShowMembers_3_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TAttPad_ShowMembers_7_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TAttPad*)(G__getstructoffset()))->ShowMembers(*(TMemberInspector*)libp->para[0].ref,(char*)G__int(libp->para[1]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TAttPad_Streamer_4_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TAttPad_Streamer_8_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TAttPad*)(G__getstructoffset()))->Streamer(*(TBuffer*)libp->para[0].ref);
    return(1 || funcname || hash || result7 || libp) ;
 }
 
 // automatic copy constructor
-static int G__TAttPad_TAttPad_5_3(G__value *result7,char *funcname,struct G__param *libp,int hash)
+static int G__TAttPad_TAttPad_9_4(G__value *result7,char *funcname,struct G__param *libp,int hash)
 {
    TAttPad *p;
    if(1!=libp->paran) ;
@@ -1180,7 +1360,7 @@ static int G__TAttPad_TAttPad_5_3(G__value *result7,char *funcname,struct G__par
 }
 
 // automatic destructor
-static int G__TAttPad_wATAttPad_6_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TAttPad_wATAttPad_0_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    if(G__getaryconstruct())
      if(G__PVOID==G__getgvp())
        delete[] (TAttPad *)(G__getstructoffset());
@@ -2445,7 +2625,13 @@ static int G__TBox_GetY2_3_1(G__value *result7,char *funcname,struct G__param *l
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TBox_ls_4_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TBox_HideToolTip_4_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TBox*)(G__getstructoffset()))->HideToolTip((Int_t)G__int(libp->para[0]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TBox_ls_5_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -2459,7 +2645,7 @@ static int G__TBox_ls_4_1(G__value *result7,char *funcname,struct G__param *libp
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TBox_Paint_5_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TBox_Paint_6_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -2473,7 +2659,7 @@ static int G__TBox_Paint_5_1(G__value *result7,char *funcname,struct G__param *l
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TBox_PaintBox_6_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TBox_PaintBox_7_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 5:
       G__setnull(result7);
@@ -2490,7 +2676,7 @@ static int G__TBox_PaintBox_6_1(G__value *result7,char *funcname,struct G__param
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TBox_Print_7_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TBox_Print_8_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -2504,91 +2690,105 @@ static int G__TBox_Print_7_1(G__value *result7,char *funcname,struct G__param *l
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TBox_SavePrimitive_8_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TBox_SavePrimitive_9_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TBox*)(G__getstructoffset()))->SavePrimitive(*(ofstream*)libp->para[0].ref,(Option_t*)G__int(libp->para[1]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TBox_SetX1_9_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TBox_SetX1_0_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TBox*)(G__getstructoffset()))->SetX1((Coord_t)G__double(libp->para[0]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TBox_SetX2_0_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TBox_SetX2_1_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TBox*)(G__getstructoffset()))->SetX2((Coord_t)G__double(libp->para[0]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TBox_SetY1_1_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TBox_SetY1_2_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TBox*)(G__getstructoffset()))->SetY1((Coord_t)G__double(libp->para[0]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TBox_SetY2_2_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TBox_SetY2_3_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TBox*)(G__getstructoffset()))->SetY2((Coord_t)G__double(libp->para[0]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TBox_DeclFileName_3_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TBox_SetToolTipText_4_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 2:
+      G__setnull(result7);
+      ((TBox*)(G__getstructoffset()))->SetToolTipText((const char*)G__int(libp->para[0]),(Long_t)G__int(libp->para[1]));
+      break;
+   case 1:
+      G__setnull(result7);
+      ((TBox*)(G__getstructoffset()))->SetToolTipText((const char*)G__int(libp->para[0]));
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TBox_DeclFileName_5_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,67,(long)((TBox*)(G__getstructoffset()))->DeclFileName());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TBox_DeclFileLine_4_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TBox_DeclFileLine_6_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TBox*)(G__getstructoffset()))->DeclFileLine());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TBox_ImplFileName_5_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TBox_ImplFileName_7_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,67,(long)((TBox*)(G__getstructoffset()))->ImplFileName());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TBox_ImplFileLine_6_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TBox_ImplFileLine_8_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TBox*)(G__getstructoffset()))->ImplFileLine());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TBox_Class_Version_7_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TBox_Class_Version_9_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,115,(long)((TBox*)(G__getstructoffset()))->Class_Version());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TBox_Class_8_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TBox_Class_0_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((TBox*)(G__getstructoffset()))->Class());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TBox_Dictionary_9_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TBox_Dictionary_1_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TBox*)(G__getstructoffset()))->Dictionary();
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TBox_IsA_0_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TBox_IsA_2_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((TBox*)(G__getstructoffset()))->IsA());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TBox_ShowMembers_1_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TBox_ShowMembers_3_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TBox*)(G__getstructoffset()))->ShowMembers(*(TMemberInspector*)libp->para[0].ref,(char*)G__int(libp->para[1]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TBox_Streamer_2_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TBox_Streamer_4_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TBox*)(G__getstructoffset()))->Streamer(*(TBuffer*)libp->para[0].ref);
    return(1 || funcname || hash || result7 || libp) ;
 }
 
 // automatic destructor
-static int G__TBox_wATBox_3_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TBox_wATBox_5_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    if(G__getaryconstruct())
      if(G__PVOID==G__getgvp())
        delete[] (TBox *)(G__getstructoffset());
@@ -5096,68 +5296,75 @@ static int G__TGraphErrors_SavePrimitive_0_1(G__value *result7,char *funcname,st
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGraphErrors_SetPointError_1_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGraphErrors_SetPoint_1_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TGraphErrors*)(G__getstructoffset()))->SetPoint((Int_t)G__int(libp->para[0]),(Float_t)G__double(libp->para[1])
+,(Float_t)G__double(libp->para[2]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TGraphErrors_SetPointError_2_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TGraphErrors*)(G__getstructoffset()))->SetPointError((Int_t)G__int(libp->para[0]),(Float_t)G__double(libp->para[1])
 ,(Float_t)G__double(libp->para[2]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGraphErrors_DeclFileName_2_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGraphErrors_DeclFileName_3_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,67,(long)((TGraphErrors*)(G__getstructoffset()))->DeclFileName());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGraphErrors_DeclFileLine_3_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGraphErrors_DeclFileLine_4_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TGraphErrors*)(G__getstructoffset()))->DeclFileLine());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGraphErrors_ImplFileName_4_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGraphErrors_ImplFileName_5_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,67,(long)((TGraphErrors*)(G__getstructoffset()))->ImplFileName());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGraphErrors_ImplFileLine_5_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGraphErrors_ImplFileLine_6_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TGraphErrors*)(G__getstructoffset()))->ImplFileLine());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGraphErrors_Class_Version_6_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGraphErrors_Class_Version_7_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,115,(long)((TGraphErrors*)(G__getstructoffset()))->Class_Version());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGraphErrors_Class_7_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGraphErrors_Class_8_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((TGraphErrors*)(G__getstructoffset()))->Class());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGraphErrors_Dictionary_8_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGraphErrors_Dictionary_9_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TGraphErrors*)(G__getstructoffset()))->Dictionary();
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGraphErrors_IsA_9_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGraphErrors_IsA_0_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((TGraphErrors*)(G__getstructoffset()))->IsA());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGraphErrors_ShowMembers_0_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGraphErrors_ShowMembers_1_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TGraphErrors*)(G__getstructoffset()))->ShowMembers(*(TMemberInspector*)libp->para[0].ref,(char*)G__int(libp->para[1]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGraphErrors_Streamer_1_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGraphErrors_Streamer_2_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TGraphErrors*)(G__getstructoffset()))->Streamer(*(TBuffer*)libp->para[0].ref);
    return(1 || funcname || hash || result7 || libp) ;
 }
 
 // automatic copy constructor
-static int G__TGraphErrors_TGraphErrors_2_2(G__value *result7,char *funcname,struct G__param *libp,int hash)
+static int G__TGraphErrors_TGraphErrors_3_2(G__value *result7,char *funcname,struct G__param *libp,int hash)
 {
    TGraphErrors *p;
    if(1!=libp->paran) ;
@@ -5170,7 +5377,7 @@ static int G__TGraphErrors_TGraphErrors_2_2(G__value *result7,char *funcname,str
 }
 
 // automatic destructor
-static int G__TGraphErrors_wATGraphErrors_3_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGraphErrors_wATGraphErrors_4_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    if(G__getaryconstruct())
      if(G__PVOID==G__getgvp())
        delete[] (TGraphErrors *)(G__getstructoffset());
@@ -5178,6 +5385,230 @@ static int G__TGraphErrors_wATGraphErrors_3_2(G__value *result7,char *funcname,s
        for(int i=G__getaryconstruct()-1;i>=0;i--)
          delete (TGraphErrors *)((G__getstructoffset())+sizeof(TGraphErrors)*i);
    else  delete (TGraphErrors *)(G__getstructoffset());
+      G__setnull(result7);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+
+/* TGraphAsymmErrors */
+static int G__TGraphAsymmErrors_TGraphAsymmErrors_0_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   TGraphAsymmErrors *p=NULL;
+   if(G__getaryconstruct()) p=new TGraphAsymmErrors[G__getaryconstruct()];
+   else                    p=new TGraphAsymmErrors;
+      result7->obj.i = (long)p;
+      result7->ref = (long)p;
+      result7->type = 'u';
+      result7->tagnum = G__get_linked_tagnum(&G__G__Graf1LN_TGraphAsymmErrors);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TGraphAsymmErrors_TGraphAsymmErrors_1_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   TGraphAsymmErrors *p=NULL;
+   switch(libp->paran) {
+   case 7:
+      p = new TGraphAsymmErrors(
+(Int_t)G__int(libp->para[0]),(Float_t*)G__int(libp->para[1])
+,(Float_t*)G__int(libp->para[2]),(Float_t*)G__int(libp->para[3])
+,(Float_t*)G__int(libp->para[4]),(Float_t*)G__int(libp->para[5])
+,(Float_t*)G__int(libp->para[6]));
+      break;
+   case 6:
+      p = new TGraphAsymmErrors(
+(Int_t)G__int(libp->para[0]),(Float_t*)G__int(libp->para[1])
+,(Float_t*)G__int(libp->para[2]),(Float_t*)G__int(libp->para[3])
+,(Float_t*)G__int(libp->para[4]),(Float_t*)G__int(libp->para[5]));
+      break;
+   case 5:
+      p = new TGraphAsymmErrors(
+(Int_t)G__int(libp->para[0]),(Float_t*)G__int(libp->para[1])
+,(Float_t*)G__int(libp->para[2]),(Float_t*)G__int(libp->para[3])
+,(Float_t*)G__int(libp->para[4]));
+      break;
+   case 4:
+      p = new TGraphAsymmErrors(
+(Int_t)G__int(libp->para[0]),(Float_t*)G__int(libp->para[1])
+,(Float_t*)G__int(libp->para[2]),(Float_t*)G__int(libp->para[3]));
+      break;
+   case 3:
+      p = new TGraphAsymmErrors(
+(Int_t)G__int(libp->para[0]),(Float_t*)G__int(libp->para[1])
+,(Float_t*)G__int(libp->para[2]));
+      break;
+   case 2:
+      p = new TGraphAsymmErrors((Int_t)G__int(libp->para[0]),(Float_t*)G__int(libp->para[1]));
+      break;
+   case 1:
+      p = new TGraphAsymmErrors((Int_t)G__int(libp->para[0]));
+      break;
+   }
+      result7->obj.i = (long)p;
+      result7->ref = (long)p;
+      result7->type = 'u';
+      result7->tagnum = G__get_linked_tagnum(&G__G__Graf1LN_TGraphAsymmErrors);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TGraphAsymmErrors_ComputeRange_3_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TGraphAsymmErrors*)(G__getstructoffset()))->ComputeRange(libp->para[0].ref?*(Float_t*)libp->para[0].ref:G__Mfloat(libp->para[0]),libp->para[1].ref?*(Float_t*)libp->para[1].ref:G__Mfloat(libp->para[1])
+,libp->para[2].ref?*(Float_t*)libp->para[2].ref:G__Mfloat(libp->para[2]),libp->para[3].ref?*(Float_t*)libp->para[3].ref:G__Mfloat(libp->para[3]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TGraphAsymmErrors_GetErrorX_4_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letdouble(result7,102,(double)((TGraphAsymmErrors*)(G__getstructoffset()))->GetErrorX((Int_t)G__int(libp->para[0])));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TGraphAsymmErrors_GetErrorY_5_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letdouble(result7,102,(double)((TGraphAsymmErrors*)(G__getstructoffset()))->GetErrorY((Int_t)G__int(libp->para[0])));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TGraphAsymmErrors_GetEXlow_6_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,70,(long)((TGraphAsymmErrors*)(G__getstructoffset()))->GetEXlow());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TGraphAsymmErrors_GetEXhigh_7_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,70,(long)((TGraphAsymmErrors*)(G__getstructoffset()))->GetEXhigh());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TGraphAsymmErrors_GetEYlow_8_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,70,(long)((TGraphAsymmErrors*)(G__getstructoffset()))->GetEYlow());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TGraphAsymmErrors_GetEYhigh_9_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,70,(long)((TGraphAsymmErrors*)(G__getstructoffset()))->GetEYhigh());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TGraphAsymmErrors_Paint_0_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 1:
+      G__setnull(result7);
+      ((TGraphAsymmErrors*)(G__getstructoffset()))->Paint((Option_t*)G__int(libp->para[0]));
+      break;
+   case 0:
+      G__setnull(result7);
+      ((TGraphAsymmErrors*)(G__getstructoffset()))->Paint();
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TGraphAsymmErrors_Print_1_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 1:
+      G__setnull(result7);
+      ((TGraphAsymmErrors*)(G__getstructoffset()))->Print((Option_t*)G__int(libp->para[0]));
+      break;
+   case 0:
+      G__setnull(result7);
+      ((TGraphAsymmErrors*)(G__getstructoffset()))->Print();
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TGraphAsymmErrors_SavePrimitive_2_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TGraphAsymmErrors*)(G__getstructoffset()))->SavePrimitive(*(ofstream*)libp->para[0].ref,(Option_t*)G__int(libp->para[1]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TGraphAsymmErrors_SetPoint_3_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TGraphAsymmErrors*)(G__getstructoffset()))->SetPoint((Int_t)G__int(libp->para[0]),(Float_t)G__double(libp->para[1])
+,(Float_t)G__double(libp->para[2]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TGraphAsymmErrors_SetPointError_4_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TGraphAsymmErrors*)(G__getstructoffset()))->SetPointError((Int_t)G__int(libp->para[0]),(Float_t)G__double(libp->para[1])
+,(Float_t)G__double(libp->para[2]),(Float_t)G__double(libp->para[3])
+,(Float_t)G__double(libp->para[4]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TGraphAsymmErrors_DeclFileName_5_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,67,(long)((TGraphAsymmErrors*)(G__getstructoffset()))->DeclFileName());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TGraphAsymmErrors_DeclFileLine_6_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TGraphAsymmErrors*)(G__getstructoffset()))->DeclFileLine());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TGraphAsymmErrors_ImplFileName_7_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,67,(long)((TGraphAsymmErrors*)(G__getstructoffset()))->ImplFileName());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TGraphAsymmErrors_ImplFileLine_8_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TGraphAsymmErrors*)(G__getstructoffset()))->ImplFileLine());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TGraphAsymmErrors_Class_Version_9_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,115,(long)((TGraphAsymmErrors*)(G__getstructoffset()))->Class_Version());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TGraphAsymmErrors_Class_0_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,85,(long)((TGraphAsymmErrors*)(G__getstructoffset()))->Class());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TGraphAsymmErrors_Dictionary_1_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TGraphAsymmErrors*)(G__getstructoffset()))->Dictionary();
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TGraphAsymmErrors_IsA_2_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,85,(long)((TGraphAsymmErrors*)(G__getstructoffset()))->IsA());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TGraphAsymmErrors_ShowMembers_3_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TGraphAsymmErrors*)(G__getstructoffset()))->ShowMembers(*(TMemberInspector*)libp->para[0].ref,(char*)G__int(libp->para[1]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TGraphAsymmErrors_Streamer_4_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TGraphAsymmErrors*)(G__getstructoffset()))->Streamer(*(TBuffer*)libp->para[0].ref);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+// automatic copy constructor
+static int G__TGraphAsymmErrors_TGraphAsymmErrors_5_2(G__value *result7,char *funcname,struct G__param *libp,int hash)
+{
+   TGraphAsymmErrors *p;
+   if(1!=libp->paran) ;
+   p=new TGraphAsymmErrors(*(TGraphAsymmErrors*)G__int(libp->para[0]));
+   result7->obj.i = (long)p;
+   result7->ref = (long)p;
+   result7->type = 'u';
+   result7->tagnum = G__get_linked_tagnum(&G__G__Graf1LN_TGraphAsymmErrors);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+// automatic destructor
+static int G__TGraphAsymmErrors_wATGraphAsymmErrors_6_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   if(G__getaryconstruct())
+     if(G__PVOID==G__getgvp())
+       delete[] (TGraphAsymmErrors *)(G__getstructoffset());
+     else
+       for(int i=G__getaryconstruct()-1;i>=0;i--)
+         delete (TGraphAsymmErrors *)((G__getstructoffset())+sizeof(TGraphAsymmErrors)*i);
+   else  delete (TGraphAsymmErrors *)(G__getstructoffset());
       G__setnull(result7);
    return(1 || funcname || hash || result7 || libp) ;
 }
@@ -6787,40 +7218,57 @@ static int G__TF2_ExecuteEvent_1_1(G__value *result7,char *funcname,struct G__pa
 }
 
 static int G__TF2_GetContour_2_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 1:
+      G__letint(result7,105,(long)((TF2*)(G__getstructoffset()))->GetContour((Float_t*)G__int(libp->para[0])));
+      break;
+   case 0:
       G__letint(result7,105,(long)((TF2*)(G__getstructoffset()))->GetContour());
+      break;
+   }
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TF2_GetNpy_3_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TF2_GetContourLevel_3_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letdouble(result7,102,(double)((TF2*)(G__getstructoffset()))->GetContourLevel((Int_t)G__int(libp->para[0])));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TF2_GetNpy_4_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TF2*)(G__getstructoffset()))->GetNpy());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TF2_GetRandom_4_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TF2_GetObjectInfo_5_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,67,(long)((TF2*)(G__getstructoffset()))->GetObjectInfo((Int_t)G__int(libp->para[0]),(Int_t)G__int(libp->para[1])));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TF2_GetRandom_6_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letdouble(result7,100,(double)((TF2*)(G__getstructoffset()))->GetRandom());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TF2_GetRandom2_5_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TF2_GetRandom2_7_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TF2*)(G__getstructoffset()))->GetRandom2(libp->para[0].ref?*(Float_t*)libp->para[0].ref:G__Mfloat(libp->para[0]),libp->para[1].ref?*(Float_t*)libp->para[1].ref:G__Mfloat(libp->para[1]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TF2_GetRange_6_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TF2_GetRange_8_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TF2*)(G__getstructoffset()))->GetRange(libp->para[0].ref?*(Float_t*)libp->para[0].ref:G__Mfloat(libp->para[0]),libp->para[1].ref?*(Float_t*)libp->para[1].ref:G__Mfloat(libp->para[1]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TF2_GetRange_7_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TF2_GetRange_9_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TF2*)(G__getstructoffset()))->GetRange(libp->para[0].ref?*(Float_t*)libp->para[0].ref:G__Mfloat(libp->para[0]),libp->para[1].ref?*(Float_t*)libp->para[1].ref:G__Mfloat(libp->para[1])
 ,libp->para[2].ref?*(Float_t*)libp->para[2].ref:G__Mfloat(libp->para[2]),libp->para[3].ref?*(Float_t*)libp->para[3].ref:G__Mfloat(libp->para[3]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TF2_GetRange_8_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TF2_GetRange_0_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TF2*)(G__getstructoffset()))->GetRange(libp->para[0].ref?*(Float_t*)libp->para[0].ref:G__Mfloat(libp->para[0]),libp->para[1].ref?*(Float_t*)libp->para[1].ref:G__Mfloat(libp->para[1])
 ,libp->para[2].ref?*(Float_t*)libp->para[2].ref:G__Mfloat(libp->para[2]),libp->para[3].ref?*(Float_t*)libp->para[3].ref:G__Mfloat(libp->para[3])
@@ -6828,17 +7276,67 @@ static int G__TF2_GetRange_8_1(G__value *result7,char *funcname,struct G__param 
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TF2_GetYmin_9_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TF2_GetYmin_1_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letdouble(result7,102,(double)((TF2*)(G__getstructoffset()))->GetYmin());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TF2_GetYmax_0_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TF2_GetYmax_2_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letdouble(result7,102,(double)((TF2*)(G__getstructoffset()))->GetYmax());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TF2_Paint_1_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TF2_Integral_3_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 4:
+      G__letdouble(result7,100,(double)((TF2*)(G__getstructoffset()))->Integral((Float_t)G__double(libp->para[0]),(Float_t)G__double(libp->para[1])
+,(Double_t*)G__int(libp->para[2]),(Float_t)G__double(libp->para[3])));
+      break;
+   case 3:
+      G__letdouble(result7,100,(double)((TF2*)(G__getstructoffset()))->Integral((Float_t)G__double(libp->para[0]),(Float_t)G__double(libp->para[1])
+,(Double_t*)G__int(libp->para[2])));
+      break;
+   case 2:
+      G__letdouble(result7,100,(double)((TF2*)(G__getstructoffset()))->Integral((Float_t)G__double(libp->para[0]),(Float_t)G__double(libp->para[1])));
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TF2_Integral_4_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 5:
+      G__letdouble(result7,100,(double)((TF2*)(G__getstructoffset()))->Integral((Float_t)G__double(libp->para[0]),(Float_t)G__double(libp->para[1])
+,(Float_t)G__double(libp->para[2]),(Float_t)G__double(libp->para[3])
+,(Float_t)G__double(libp->para[4])));
+      break;
+   case 4:
+      G__letdouble(result7,100,(double)((TF2*)(G__getstructoffset()))->Integral((Float_t)G__double(libp->para[0]),(Float_t)G__double(libp->para[1])
+,(Float_t)G__double(libp->para[2]),(Float_t)G__double(libp->para[3])));
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TF2_Integral_5_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 7:
+      G__letdouble(result7,100,(double)((TF2*)(G__getstructoffset()))->Integral(
+(Float_t)G__double(libp->para[0]),(Float_t)G__double(libp->para[1])
+,(Float_t)G__double(libp->para[2]),(Float_t)G__double(libp->para[3])
+,(Float_t)G__double(libp->para[4]),(Float_t)G__double(libp->para[5])
+,(Float_t)G__double(libp->para[6])));
+      break;
+   case 6:
+      G__letdouble(result7,100,(double)((TF2*)(G__getstructoffset()))->Integral((Float_t)G__double(libp->para[0]),(Float_t)G__double(libp->para[1])
+,(Float_t)G__double(libp->para[2]),(Float_t)G__double(libp->para[3])
+,(Float_t)G__double(libp->para[4]),(Float_t)G__double(libp->para[5])));
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TF2_Paint_6_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -6852,7 +7350,7 @@ static int G__TF2_Paint_1_2(G__value *result7,char *funcname,struct G__param *li
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TF2_SetNpy_2_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TF2_SetNpy_7_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -6866,8 +7364,12 @@ static int G__TF2_SetNpy_2_2(G__value *result7,char *funcname,struct G__param *l
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TF2_SetContour_3_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TF2_SetContour_8_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
+   case 2:
+      G__setnull(result7);
+      ((TF2*)(G__getstructoffset()))->SetContour((Int_t)G__int(libp->para[0]),(Float_t*)G__int(libp->para[1]));
+      break;
    case 1:
       G__setnull(result7);
       ((TF2*)(G__getstructoffset()))->SetContour((Int_t)G__int(libp->para[0]));
@@ -6880,20 +7382,26 @@ static int G__TF2_SetContour_3_2(G__value *result7,char *funcname,struct G__para
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TF2_SetRange_4_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TF2_SetContourLevel_9_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TF2*)(G__getstructoffset()))->SetContourLevel((Int_t)G__int(libp->para[0]),(Float_t)G__double(libp->para[1]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TF2_SetRange_0_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TF2*)(G__getstructoffset()))->SetRange((Float_t)G__double(libp->para[0]),(Float_t)G__double(libp->para[1]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TF2_SetRange_5_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TF2_SetRange_1_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TF2*)(G__getstructoffset()))->SetRange((Float_t)G__double(libp->para[0]),(Float_t)G__double(libp->para[1])
 ,(Float_t)G__double(libp->para[2]),(Float_t)G__double(libp->para[3]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TF2_SetRange_6_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TF2_SetRange_2_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TF2*)(G__getstructoffset()))->SetRange((Float_t)G__double(libp->para[0]),(Float_t)G__double(libp->para[1])
 ,(Float_t)G__double(libp->para[2]),(Float_t)G__double(libp->para[3])
@@ -6901,61 +7409,61 @@ static int G__TF2_SetRange_6_2(G__value *result7,char *funcname,struct G__param 
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TF2_DeclFileName_7_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TF2_DeclFileName_3_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,67,(long)((TF2*)(G__getstructoffset()))->DeclFileName());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TF2_DeclFileLine_8_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TF2_DeclFileLine_4_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TF2*)(G__getstructoffset()))->DeclFileLine());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TF2_ImplFileName_9_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TF2_ImplFileName_5_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,67,(long)((TF2*)(G__getstructoffset()))->ImplFileName());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TF2_ImplFileLine_0_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TF2_ImplFileLine_6_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TF2*)(G__getstructoffset()))->ImplFileLine());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TF2_Class_Version_1_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TF2_Class_Version_7_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,115,(long)((TF2*)(G__getstructoffset()))->Class_Version());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TF2_Class_2_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TF2_Class_8_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((TF2*)(G__getstructoffset()))->Class());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TF2_Dictionary_3_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TF2_Dictionary_9_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TF2*)(G__getstructoffset()))->Dictionary();
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TF2_IsA_4_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TF2_IsA_0_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((TF2*)(G__getstructoffset()))->IsA());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TF2_ShowMembers_5_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TF2_ShowMembers_1_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TF2*)(G__getstructoffset()))->ShowMembers(*(TMemberInspector*)libp->para[0].ref,(char*)G__int(libp->para[1]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TF2_Streamer_6_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TF2_Streamer_2_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TF2*)(G__getstructoffset()))->Streamer(*(TBuffer*)libp->para[0].ref);
    return(1 || funcname || hash || result7 || libp) ;
 }
 
 // automatic destructor
-static int G__TF2_wATF2_7_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TF2_wATF2_3_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    if(G__getaryconstruct())
      if(G__PVOID==G__getgvp())
        delete[] (TF2 *)(G__getstructoffset());
@@ -7231,7 +7739,57 @@ static int G__TF3_GetZmax_6_1(G__value *result7,char *funcname,struct G__param *
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TF3_Paint_7_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TF3_Integral_7_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 4:
+      G__letdouble(result7,100,(double)((TF3*)(G__getstructoffset()))->Integral((Float_t)G__double(libp->para[0]),(Float_t)G__double(libp->para[1])
+,(Double_t*)G__int(libp->para[2]),(Float_t)G__double(libp->para[3])));
+      break;
+   case 3:
+      G__letdouble(result7,100,(double)((TF3*)(G__getstructoffset()))->Integral((Float_t)G__double(libp->para[0]),(Float_t)G__double(libp->para[1])
+,(Double_t*)G__int(libp->para[2])));
+      break;
+   case 2:
+      G__letdouble(result7,100,(double)((TF3*)(G__getstructoffset()))->Integral((Float_t)G__double(libp->para[0]),(Float_t)G__double(libp->para[1])));
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TF3_Integral_8_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 5:
+      G__letdouble(result7,100,(double)((TF3*)(G__getstructoffset()))->Integral((Float_t)G__double(libp->para[0]),(Float_t)G__double(libp->para[1])
+,(Float_t)G__double(libp->para[2]),(Float_t)G__double(libp->para[3])
+,(Float_t)G__double(libp->para[4])));
+      break;
+   case 4:
+      G__letdouble(result7,100,(double)((TF3*)(G__getstructoffset()))->Integral((Float_t)G__double(libp->para[0]),(Float_t)G__double(libp->para[1])
+,(Float_t)G__double(libp->para[2]),(Float_t)G__double(libp->para[3])));
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TF3_Integral_9_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 7:
+      G__letdouble(result7,100,(double)((TF3*)(G__getstructoffset()))->Integral(
+(Float_t)G__double(libp->para[0]),(Float_t)G__double(libp->para[1])
+,(Float_t)G__double(libp->para[2]),(Float_t)G__double(libp->para[3])
+,(Float_t)G__double(libp->para[4]),(Float_t)G__double(libp->para[5])
+,(Float_t)G__double(libp->para[6])));
+      break;
+   case 6:
+      G__letdouble(result7,100,(double)((TF3*)(G__getstructoffset()))->Integral((Float_t)G__double(libp->para[0]),(Float_t)G__double(libp->para[1])
+,(Float_t)G__double(libp->para[2]),(Float_t)G__double(libp->para[3])
+,(Float_t)G__double(libp->para[4]),(Float_t)G__double(libp->para[5])));
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TF3_Paint_0_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -7245,7 +7803,7 @@ static int G__TF3_Paint_7_1(G__value *result7,char *funcname,struct G__param *li
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TF3_SetNpz_8_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TF3_SetNpz_1_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -7259,20 +7817,20 @@ static int G__TF3_SetNpz_8_1(G__value *result7,char *funcname,struct G__param *l
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TF3_SetRange_9_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TF3_SetRange_2_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TF3*)(G__getstructoffset()))->SetRange((Float_t)G__double(libp->para[0]),(Float_t)G__double(libp->para[1]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TF3_SetRange_0_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TF3_SetRange_3_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TF3*)(G__getstructoffset()))->SetRange((Float_t)G__double(libp->para[0]),(Float_t)G__double(libp->para[1])
 ,(Float_t)G__double(libp->para[2]),(Float_t)G__double(libp->para[3]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TF3_SetRange_1_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TF3_SetRange_4_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TF3*)(G__getstructoffset()))->SetRange((Float_t)G__double(libp->para[0]),(Float_t)G__double(libp->para[1])
 ,(Float_t)G__double(libp->para[2]),(Float_t)G__double(libp->para[3])
@@ -7280,61 +7838,61 @@ static int G__TF3_SetRange_1_2(G__value *result7,char *funcname,struct G__param 
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TF3_DeclFileName_2_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TF3_DeclFileName_5_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,67,(long)((TF3*)(G__getstructoffset()))->DeclFileName());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TF3_DeclFileLine_3_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TF3_DeclFileLine_6_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TF3*)(G__getstructoffset()))->DeclFileLine());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TF3_ImplFileName_4_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TF3_ImplFileName_7_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,67,(long)((TF3*)(G__getstructoffset()))->ImplFileName());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TF3_ImplFileLine_5_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TF3_ImplFileLine_8_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TF3*)(G__getstructoffset()))->ImplFileLine());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TF3_Class_Version_6_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TF3_Class_Version_9_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,115,(long)((TF3*)(G__getstructoffset()))->Class_Version());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TF3_Class_7_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TF3_Class_0_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((TF3*)(G__getstructoffset()))->Class());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TF3_Dictionary_8_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TF3_Dictionary_1_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TF3*)(G__getstructoffset()))->Dictionary();
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TF3_IsA_9_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TF3_IsA_2_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((TF3*)(G__getstructoffset()))->IsA());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TF3_ShowMembers_0_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TF3_ShowMembers_3_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TF3*)(G__getstructoffset()))->ShowMembers(*(TMemberInspector*)libp->para[0].ref,(char*)G__int(libp->para[1]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TF3_Streamer_1_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TF3_Streamer_4_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TF3*)(G__getstructoffset()))->Streamer(*(TBuffer*)libp->para[0].ref);
    return(1 || funcname || hash || result7 || libp) ;
 }
 
 // automatic destructor
-static int G__TF3_wATF3_2_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TF3_wATF3_5_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    if(G__getaryconstruct())
      if(G__PVOID==G__getgvp())
        delete[] (TF3 *)(G__getstructoffset());
@@ -7388,6 +7946,8 @@ static int G__TF3_wATF3_2_3(G__value *result7,char *funcname,struct G__param *li
 /* TGraph */
 
 /* TGraphErrors */
+
+/* TGraphAsymmErrors */
 
 /* TLatex */
 
@@ -7776,6 +8336,34 @@ extern "C" void G__cpp_setup_inheritanceG__Graf1() {
        G__inheritance_setup(G__get_linked_tagnum(&G__G__Graf1LN_TGraphErrors),G__get_linked_tagnum(&G__G__Graf1LN_TAttMarker),(long)G__Lpbase-(long)G__Lderived,1,0);
      }
    }
+   if(0==G__getnumbaseclass(G__get_linked_tagnum(&G__G__Graf1LN_TGraphAsymmErrors))) {
+     TGraphAsymmErrors *G__Lderived;
+     G__Lderived=(TGraphAsymmErrors*)0x1000;
+     {
+       TGraph *G__Lpbase=(TGraph*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__Graf1LN_TGraphAsymmErrors),G__get_linked_tagnum(&G__G__Graf1LN_TGraph),(long)G__Lpbase-(long)G__Lderived,1,1);
+     }
+     {
+       TNamed *G__Lpbase=(TNamed*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__Graf1LN_TGraphAsymmErrors),G__get_linked_tagnum(&G__G__Graf1LN_TNamed),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+     {
+       TObject *G__Lpbase=(TObject*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__Graf1LN_TGraphAsymmErrors),G__get_linked_tagnum(&G__G__Graf1LN_TObject),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+     {
+       TAttLine *G__Lpbase=(TAttLine*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__Graf1LN_TGraphAsymmErrors),G__get_linked_tagnum(&G__G__Graf1LN_TAttLine),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+     {
+       TAttFill *G__Lpbase=(TAttFill*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__Graf1LN_TGraphAsymmErrors),G__get_linked_tagnum(&G__G__Graf1LN_TAttFill),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+     {
+       TAttMarker *G__Lpbase=(TAttMarker*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__Graf1LN_TGraphAsymmErrors),G__get_linked_tagnum(&G__G__Graf1LN_TAttMarker),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+   }
    if(0==G__getnumbaseclass(G__get_linked_tagnum(&G__G__Graf1LN_TLatex))) {
      TLatex *G__Lderived;
      G__Lderived=(TLatex*)0x1000;
@@ -8157,6 +8745,13 @@ static void G__setup_memvarTAttPad(void) {
    G__memvar_setup((void*)NULL,102,0,0,-1,G__defined_typename("Coord_t"),-1,2,"fXstat=",0,"X position where to draw the statistics");
    G__memvar_setup((void*)NULL,102,0,0,-1,G__defined_typename("Coord_t"),-1,2,"fYstat=",0,"X position where to draw the statistics");
    G__memvar_setup((void*)NULL,102,0,0,-1,G__defined_typename("Coord_t"),-1,2,"fAstat=",0,"Alignment for the statistics");
+   G__memvar_setup((void*)NULL,115,0,0,-1,G__defined_typename("Color_t"),-1,2,"fFrameFillColor=",0,"pad frame fill color");
+   G__memvar_setup((void*)NULL,115,0,0,-1,G__defined_typename("Color_t"),-1,2,"fFrameLineColor=",0,"pad frame line color");
+   G__memvar_setup((void*)NULL,115,0,0,-1,G__defined_typename("Style_t"),-1,2,"fFrameFillStyle=",0,"pad frame fill style");
+   G__memvar_setup((void*)NULL,115,0,0,-1,G__defined_typename("Style_t"),-1,2,"fFrameLineStyle=",0,"pad frame line style");
+   G__memvar_setup((void*)NULL,115,0,0,-1,G__defined_typename("Width_t"),-1,2,"fFrameLineWidth=",0,"pad frame line width");
+   G__memvar_setup((void*)NULL,115,0,0,-1,G__defined_typename("Width_t"),-1,2,"fFrameBorderSize=",0,"pad frame border size");
+   G__memvar_setup((void*)NULL,105,0,0,-1,G__defined_typename("Int_t"),-1,2,"fFrameBorderMode=",0,"pad frame border mode");
    G__memvar_setup((void*)NULL,108,0,0,-1,-1,-1,4,"G__virtualinfo=",0,(char*)NULL);
    G__memvar_setup((void*)NULL,85,0,0,G__get_linked_tagnum(&G__G__Graf1LN_TClass),-1,-2,4,"fgIsA=",0,(char*)NULL);
    }
@@ -8239,6 +8834,7 @@ static void G__setup_memvarTArrow(void) {
 static void G__setup_memvarTBox(void) {
    G__tag_memvar_setup(G__get_linked_tagnum(&G__G__Graf1LN_TBox));
    { TBox *p; p=(TBox*)0x1000; if (p) { }
+   G__memvar_setup((void*)NULL,85,0,0,G__get_linked_tagnum(&G__G__Graf1LN_TGToolTip),-1,-1,4,"fTip=",0,"!tool tip associated with box");
    G__memvar_setup((void*)NULL,102,0,0,-1,G__defined_typename("Coord_t"),-1,2,"fX1=",0,"X of 1st point");
    G__memvar_setup((void*)NULL,102,0,0,-1,G__defined_typename("Coord_t"),-1,2,"fY1=",0,"Y of 1st point");
    G__memvar_setup((void*)NULL,102,0,0,-1,G__defined_typename("Coord_t"),-1,2,"fX2=",0,"X of 2nd point");
@@ -8379,6 +8975,20 @@ static void G__setup_memvarTGraphErrors(void) {
 }
 
 
+   /* TGraphAsymmErrors */
+static void G__setup_memvarTGraphAsymmErrors(void) {
+   G__tag_memvar_setup(G__get_linked_tagnum(&G__G__Graf1LN_TGraphAsymmErrors));
+   { TGraphAsymmErrors *p; p=(TGraphAsymmErrors*)0x1000; if (p) { }
+   G__memvar_setup((void*)NULL,70,0,0,-1,G__defined_typename("Float_t"),-1,2,"fEXlow=",0,"array of X low errors");
+   G__memvar_setup((void*)NULL,70,0,0,-1,G__defined_typename("Float_t"),-1,2,"fEXhigh=",0,"array of X high errors");
+   G__memvar_setup((void*)NULL,70,0,0,-1,G__defined_typename("Float_t"),-1,2,"fEYlow=",0,"array of Y low errors");
+   G__memvar_setup((void*)NULL,70,0,0,-1,G__defined_typename("Float_t"),-1,2,"fEYhigh=",0,"array of Y high errors");
+   G__memvar_setup((void*)NULL,85,0,0,G__get_linked_tagnum(&G__G__Graf1LN_TClass),-1,-2,4,"fgIsA=",0,(char*)NULL);
+   }
+   G__tag_memvar_reset();
+}
+
+
    /* TLatex */
 static void G__setup_memvarTLatex(void) {
    G__tag_memvar_setup(G__get_linked_tagnum(&G__G__Graf1LN_TLatex));
@@ -8467,7 +9077,7 @@ static void G__setup_memvarTF2(void) {
    G__memvar_setup((void*)NULL,102,0,0,-1,G__defined_typename("Float_t"),-1,2,"fYmin=",0,"Lower bound for the range in y");
    G__memvar_setup((void*)NULL,102,0,0,-1,G__defined_typename("Float_t"),-1,2,"fYmax=",0,"Upper bound for the range in y");
    G__memvar_setup((void*)NULL,105,0,0,-1,G__defined_typename("Int_t"),-1,2,"fNpy=",0,"Number of points along y used for the graphical representation");
-   G__memvar_setup((void*)NULL,105,0,0,-1,G__defined_typename("Int_t"),-1,2,"fNlevels=",0,"Number of contour levels");
+   G__memvar_setup((void*)NULL,117,0,0,G__get_linked_tagnum(&G__G__Graf1LN_TArrayF),-1,-1,2,"fContour=",0,"Array to display contour levels");
    G__memvar_setup((void*)NULL,85,0,0,G__get_linked_tagnum(&G__G__Graf1LN_TClass),-1,-2,4,"fgIsA=",0,(char*)NULL);
    }
    G__tag_memvar_reset();
@@ -8624,46 +9234,59 @@ static void G__setup_memfuncTF1(void) {
    G__memfunc_setup("Integral",822,G__TF1_Integral_5_3,100,-1,G__defined_typename("Double_t"),0,4,1,1,0,
 "f - 'Float_t' 0 - a f - 'Float_t' 0 - b "
 "D - 'Double_t' 0 0 params f - 'Float_t' 0 0.000001 epsilon",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("Paint",508,G__TF1_Paint_6_3,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("Print",525,G__TF1_Print_7_3,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("Save",399,G__TF1_Save_8_3,121,-1,-1,0,2,1,1,0,
+   G__memfunc_setup("Integral",822,G__TF1_Integral_6_3,100,-1,G__defined_typename("Double_t"),0,5,1,1,0,
+"f - 'Float_t' 0 - ax f - 'Float_t' 0 - bx "
+"f - 'Float_t' 0 - ay f - 'Float_t' 0 - by "
+"f - 'Float_t' 0 0.000001 epsilon",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Integral",822,G__TF1_Integral_7_3,100,-1,G__defined_typename("Double_t"),0,7,1,1,0,
+"f - 'Float_t' 0 - ax f - 'Float_t' 0 - bx "
+"f - 'Float_t' 0 - ay f - 'Float_t' 0 - by "
+"f - 'Float_t' 0 - az f - 'Float_t' 0 - bz "
+"f - 'Float_t' 0 0.000001 epsilon",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("IntegralMultiple",1666,G__TF1_IntegralMultiple_8_3,100,-1,G__defined_typename("Double_t"),0,5,1,1,0,
+"i - 'Int_t' 0 - n F - 'Float_t' 0 - a "
+"F - 'Float_t' 0 - b f - 'Float_t' 0 - epsilon "
+"f - 'Float_t' 1 - relerr",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Paint",508,G__TF1_Paint_9_3,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Print",525,G__TF1_Print_0_4,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Save",399,G__TF1_Save_1_4,121,-1,-1,0,2,1,1,0,
 "f - 'Float_t' 0 - xmin f - 'Float_t' 0 - xmax",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("SavePrimitive",1352,G__TF1_SavePrimitive_9_3,121,-1,-1,0,2,1,1,0,
+   G__memfunc_setup("SavePrimitive",1352,G__TF1_SavePrimitive_2_4,121,-1,-1,0,2,1,1,0,
 "u 'ofstream' - 1 - out C - 'Option_t' 0 - option",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("SetChisquare",1233,G__TF1_SetChisquare_0_4,121,-1,-1,0,1,1,1,0,"d - 'Double_t' 0 - chi2",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("SetMaximum",1034,G__TF1_SetMaximum_1_4,121,-1,-1,0,1,1,1,0,"f - 'Float_t' 0 -1111 maximum","*MENU*",(void*)NULL,1);
-   G__memfunc_setup("SetMinimum",1032,G__TF1_SetMinimum_2_4,121,-1,-1,0,1,1,1,0,"f - 'Float_t' 0 -1111 minimum","*MENU*",(void*)NULL,1);
-   G__memfunc_setup("SetNumberFitPoints",1845,G__TF1_SetNumberFitPoints_3_4,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 - npfits",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("SetNpx",610,G__TF1_SetNpx_4_4,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 100 npx","*MENU*",(void*)NULL,1);
-   G__memfunc_setup("SetParError",1113,G__TF1_SetParError_5_4,121,-1,-1,0,2,1,1,0,
+   G__memfunc_setup("SetChisquare",1233,G__TF1_SetChisquare_3_4,121,-1,-1,0,1,1,1,0,"d - 'Double_t' 0 - chi2",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetMaximum",1034,G__TF1_SetMaximum_4_4,121,-1,-1,0,1,1,1,0,"f - 'Float_t' 0 -1111 maximum","*MENU*",(void*)NULL,1);
+   G__memfunc_setup("SetMinimum",1032,G__TF1_SetMinimum_5_4,121,-1,-1,0,1,1,1,0,"f - 'Float_t' 0 -1111 minimum","*MENU*",(void*)NULL,1);
+   G__memfunc_setup("SetNumberFitPoints",1845,G__TF1_SetNumberFitPoints_6_4,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 - npfits",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetNpx",610,G__TF1_SetNpx_7_4,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 100 npx","*MENU*",(void*)NULL,1);
+   G__memfunc_setup("SetParError",1113,G__TF1_SetParError_8_4,121,-1,-1,0,2,1,1,0,
 "i - 'Int_t' 0 - ipar d - 'Double_t' 0 - error",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("SetParLimits",1217,G__TF1_SetParLimits_6_4,121,-1,-1,0,3,1,1,0,
+   G__memfunc_setup("SetParLimits",1217,G__TF1_SetParLimits_9_4,121,-1,-1,0,3,1,1,0,
 "i - 'Int_t' 0 - ipar d - 'Double_t' 0 - parmin "
 "d - 'Double_t' 0 - parmax",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("SetParent",918,G__TF1_SetParent_7_4,121,-1,-1,0,1,1,1,0,"U 'TObject' - 0 0 p",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("SetRange",793,G__TF1_SetRange_8_4,121,-1,-1,0,2,1,1,0,
+   G__memfunc_setup("SetParent",918,G__TF1_SetParent_0_5,121,-1,-1,0,1,1,1,0,"U 'TObject' - 0 0 p",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetRange",793,G__TF1_SetRange_1_5,121,-1,-1,0,2,1,1,0,
 "f - 'Float_t' 0 - xmin f - 'Float_t' 0 - xmax","*MENU*",(void*)NULL,1);
-   G__memfunc_setup("SetRange",793,G__TF1_SetRange_9_4,121,-1,-1,0,4,1,1,0,
+   G__memfunc_setup("SetRange",793,G__TF1_SetRange_2_5,121,-1,-1,0,4,1,1,0,
 "f - 'Float_t' 0 - xmin f - 'Float_t' 0 - ymin "
 "f - 'Float_t' 0 - xmax f - 'Float_t' 0 - ymax",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("SetRange",793,G__TF1_SetRange_0_5,121,-1,-1,0,6,1,1,0,
+   G__memfunc_setup("SetRange",793,G__TF1_SetRange_3_5,121,-1,-1,0,6,1,1,0,
 "f - 'Float_t' 0 - xmin f - 'Float_t' 0 - ymin "
 "f - 'Float_t' 0 - zmin f - 'Float_t' 0 - xmax "
 "f - 'Float_t' 0 - ymax f - 'Float_t' 0 - zmax",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("Update",611,G__TF1_Update_1_5,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("DeclFileName",1145,G__TF1_DeclFileName_2_5,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("DeclFileLine",1152,G__TF1_DeclFileLine_3_5,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("ImplFileName",1171,G__TF1_ImplFileName_4_5,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("ImplFileLine",1178,G__TF1_ImplFileLine_5_5,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Class_Version",1339,G__TF1_Class_Version_6_5,115,-1,G__defined_typename("Version_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Class",502,G__TF1_Class_7_5,85,G__get_linked_tagnum(&G__G__Graf1LN_TClass),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Dictionary",1046,G__TF1_Dictionary_8_5,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("IsA",253,G__TF1_IsA_9_5,85,G__get_linked_tagnum(&G__G__Graf1LN_TClass),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("ShowMembers",1132,G__TF1_ShowMembers_0_6,121,-1,-1,0,2,1,1,0,
+   G__memfunc_setup("Update",611,G__TF1_Update_4_5,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("DeclFileName",1145,G__TF1_DeclFileName_5_5,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("DeclFileLine",1152,G__TF1_DeclFileLine_6_5,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ImplFileName",1171,G__TF1_ImplFileName_7_5,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ImplFileLine",1178,G__TF1_ImplFileLine_8_5,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Class_Version",1339,G__TF1_Class_Version_9_5,115,-1,G__defined_typename("Version_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Class",502,G__TF1_Class_0_6,85,G__get_linked_tagnum(&G__G__Graf1LN_TClass),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Dictionary",1046,G__TF1_Dictionary_1_6,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("IsA",253,G__TF1_IsA_2_6,85,G__get_linked_tagnum(&G__G__Graf1LN_TClass),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("ShowMembers",1132,G__TF1_ShowMembers_3_6,121,-1,-1,0,2,1,1,0,
 "u 'TMemberInspector' - 1 - insp C - - 0 - parent",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("Streamer",835,G__TF1_Streamer_1_6,121,-1,-1,0,1,1,1,0,"u 'TBuffer' - 1 - b",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Streamer",835,G__TF1_Streamer_4_6,121,-1,-1,0,1,1,1,0,"u 'TBuffer' - 1 - b",(char*)NULL,(void*)NULL,1);
    // automatic destructor
-   G__memfunc_setup("~TF1",329,G__TF1_wATF1_2_6,(int)('y'),-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("~TF1",329,G__TF1_wATF1_5_6,(int)('y'),-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
    G__tag_memfunc_reset();
 }
 
@@ -8682,33 +9305,47 @@ static void G__setup_memfuncTAttPad(void) {
    G__memfunc_setup("GetAstat",797,G__TAttPad_GetAstat_0_1,102,-1,G__defined_typename("Coord_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
    G__memfunc_setup("GetXstat",820,G__TAttPad_GetXstat_1_1,102,-1,G__defined_typename("Coord_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
    G__memfunc_setup("GetYstat",821,G__TAttPad_GetYstat_2_1,102,-1,G__defined_typename("Coord_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Print",525,G__TAttPad_Print_3_1,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("Reset",515,G__TAttPad_Reset_4_1,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("SetBottomMargin",1535,G__TAttPad_SetBottomMargin_5_1,121,-1,-1,0,1,1,1,0,"f - 'Coord_t' 0 - bottommargin",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("SetLeftMargin",1301,G__TAttPad_SetLeftMargin_6_1,121,-1,-1,0,1,1,1,0,"f - 'Coord_t' 0 - leftmargin",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("SetRightMargin",1416,G__TAttPad_SetRightMargin_7_1,121,-1,-1,0,1,1,1,0,"f - 'Coord_t' 0 - rightmargin",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("SetTopMargin",1213,G__TAttPad_SetTopMargin_8_1,121,-1,-1,0,1,1,1,0,"f - 'Coord_t' 0 - topmargin",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("SetAfile",781,G__TAttPad_SetAfile_9_1,121,-1,-1,0,1,1,1,0,"f - 'Coord_t' 0 - afile",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("SetXfile",804,G__TAttPad_SetXfile_0_2,121,-1,-1,0,1,1,1,0,"f - 'Coord_t' 0 - xfile",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("SetYfile",805,G__TAttPad_SetYfile_1_2,121,-1,-1,0,1,1,1,0,"f - 'Coord_t' 0 - yfile",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("SetAstat",809,G__TAttPad_SetAstat_2_2,121,-1,-1,0,1,1,1,0,"f - 'Coord_t' 0 - astat",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("SetXstat",832,G__TAttPad_SetXstat_3_2,121,-1,-1,0,1,1,1,0,"f - 'Coord_t' 0 - xstat",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("SetYstat",833,G__TAttPad_SetYstat_4_2,121,-1,-1,0,1,1,1,0,"f - 'Coord_t' 0 - ystat",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("DeclFileName",1145,G__TAttPad_DeclFileName_5_2,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("DeclFileLine",1152,G__TAttPad_DeclFileLine_6_2,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("ImplFileName",1171,G__TAttPad_ImplFileName_7_2,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("ImplFileLine",1178,G__TAttPad_ImplFileLine_8_2,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Class_Version",1339,G__TAttPad_Class_Version_9_2,115,-1,G__defined_typename("Version_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Class",502,G__TAttPad_Class_0_3,85,G__get_linked_tagnum(&G__G__Graf1LN_TClass),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Dictionary",1046,G__TAttPad_Dictionary_1_3,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("IsA",253,G__TAttPad_IsA_2_3,85,G__get_linked_tagnum(&G__G__Graf1LN_TClass),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("ShowMembers",1132,G__TAttPad_ShowMembers_3_3,121,-1,-1,0,2,1,1,0,
+   G__memfunc_setup("GetFrameFillColor",1681,G__TAttPad_GetFrameFillColor_3_1,115,-1,G__defined_typename("Color_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetFrameLineColor",1682,G__TAttPad_GetFrameLineColor_4_1,115,-1,G__defined_typename("Color_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetFrameFillStyle",1699,G__TAttPad_GetFrameFillStyle_5_1,115,-1,G__defined_typename("Style_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetFrameLineStyle",1700,G__TAttPad_GetFrameLineStyle_6_1,115,-1,G__defined_typename("Style_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetFrameLineWidth",1683,G__TAttPad_GetFrameLineWidth_7_1,115,-1,G__defined_typename("Width_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetFrameBorderSize",1796,G__TAttPad_GetFrameBorderSize_8_1,115,-1,G__defined_typename("Width_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetFrameBorderMode",1774,G__TAttPad_GetFrameBorderMode_9_1,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Print",525,G__TAttPad_Print_0_2,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Reset",515,G__TAttPad_Reset_1_2,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetBottomMargin",1535,G__TAttPad_SetBottomMargin_2_2,121,-1,-1,0,1,1,1,0,"f - 'Coord_t' 0 - bottommargin",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetLeftMargin",1301,G__TAttPad_SetLeftMargin_3_2,121,-1,-1,0,1,1,1,0,"f - 'Coord_t' 0 - leftmargin",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetRightMargin",1416,G__TAttPad_SetRightMargin_4_2,121,-1,-1,0,1,1,1,0,"f - 'Coord_t' 0 - rightmargin",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetTopMargin",1213,G__TAttPad_SetTopMargin_5_2,121,-1,-1,0,1,1,1,0,"f - 'Coord_t' 0 - topmargin",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetAfile",781,G__TAttPad_SetAfile_6_2,121,-1,-1,0,1,1,1,0,"f - 'Coord_t' 0 - afile",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetXfile",804,G__TAttPad_SetXfile_7_2,121,-1,-1,0,1,1,1,0,"f - 'Coord_t' 0 - xfile",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetYfile",805,G__TAttPad_SetYfile_8_2,121,-1,-1,0,1,1,1,0,"f - 'Coord_t' 0 - yfile",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetAstat",809,G__TAttPad_SetAstat_9_2,121,-1,-1,0,1,1,1,0,"f - 'Coord_t' 0 - astat",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetXstat",832,G__TAttPad_SetXstat_0_3,121,-1,-1,0,1,1,1,0,"f - 'Coord_t' 0 - xstat",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetYstat",833,G__TAttPad_SetYstat_1_3,121,-1,-1,0,1,1,1,0,"f - 'Coord_t' 0 - ystat",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetFrameFillColor",1693,G__TAttPad_SetFrameFillColor_2_3,121,-1,-1,0,1,1,1,0,"s - 'Color_t' 0 1 color",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("SetFrameLineColor",1694,G__TAttPad_SetFrameLineColor_3_3,121,-1,-1,0,1,1,1,0,"s - 'Color_t' 0 1 color",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("SetFrameFillStyle",1711,G__TAttPad_SetFrameFillStyle_4_3,121,-1,-1,0,1,1,1,0,"s - 'Style_t' 0 0 styl",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("SetFrameLineStyle",1712,G__TAttPad_SetFrameLineStyle_5_3,121,-1,-1,0,1,1,1,0,"s - 'Style_t' 0 0 styl",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("SetFrameLineWidth",1695,G__TAttPad_SetFrameLineWidth_6_3,121,-1,-1,0,1,1,1,0,"s - 'Width_t' 0 1 width",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("SetFrameBorderSize",1808,G__TAttPad_SetFrameBorderSize_7_3,121,-1,-1,0,1,1,1,0,"s - 'Width_t' 0 1 size",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("SetFrameBorderMode",1786,G__TAttPad_SetFrameBorderMode_8_3,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 1 mode",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("DeclFileName",1145,G__TAttPad_DeclFileName_9_3,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("DeclFileLine",1152,G__TAttPad_DeclFileLine_0_4,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ImplFileName",1171,G__TAttPad_ImplFileName_1_4,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ImplFileLine",1178,G__TAttPad_ImplFileLine_2_4,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Class_Version",1339,G__TAttPad_Class_Version_3_4,115,-1,G__defined_typename("Version_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Class",502,G__TAttPad_Class_4_4,85,G__get_linked_tagnum(&G__G__Graf1LN_TClass),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Dictionary",1046,G__TAttPad_Dictionary_5_4,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("IsA",253,G__TAttPad_IsA_6_4,85,G__get_linked_tagnum(&G__G__Graf1LN_TClass),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("ShowMembers",1132,G__TAttPad_ShowMembers_7_4,121,-1,-1,0,2,1,1,0,
 "u 'TMemberInspector' - 1 - insp C - - 0 - parent",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("Streamer",835,G__TAttPad_Streamer_4_3,121,-1,-1,0,1,1,1,0,"u 'TBuffer' - 1 - b",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Streamer",835,G__TAttPad_Streamer_8_4,121,-1,-1,0,1,1,1,0,"u 'TBuffer' - 1 - b",(char*)NULL,(void*)NULL,1);
    // automatic copy constructor
-   G__memfunc_setup("TAttPad",658,G__TAttPad_TAttPad_5_3,(int)('i'),G__get_linked_tagnum(&G__G__Graf1LN_TAttPad),-1,0,1,1,1,0,"u 'TAttPad' - 1 - -",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("TAttPad",658,G__TAttPad_TAttPad_9_4,(int)('i'),G__get_linked_tagnum(&G__G__Graf1LN_TAttPad),-1,0,1,1,1,0,"u 'TAttPad' - 1 - -",(char*)NULL,(void*)NULL,0);
    // automatic destructor
-   G__memfunc_setup("~TAttPad",784,G__TAttPad_wATAttPad_6_3,(int)('y'),-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("~TAttPad",784,G__TAttPad_wATAttPad_0_5,(int)('y'),-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
    G__tag_memfunc_reset();
 }
 
@@ -8959,36 +9596,39 @@ static void G__setup_memfuncTBox(void) {
 "f - 'Coord_t' 0 - x1 f - 'Coord_t' 0 - y1 "
 "f - 'Coord_t' 0 - x2 f - 'Coord_t' 0 - y2",(char*)NULL,(void*)NULL,1);
    G__memfunc_setup("IsBeingResized",1399,G__TBox_IsBeingResized_9_0,98,-1,G__defined_typename("Bool_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetX1",425,G__TBox_GetX1_0_1,102,-1,G__defined_typename("Coord_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetX2",426,G__TBox_GetX2_1_1,102,-1,G__defined_typename("Coord_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetY1",426,G__TBox_GetY1_2_1,102,-1,G__defined_typename("Coord_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetY2",427,G__TBox_GetY2_3_1,102,-1,G__defined_typename("Coord_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("ls",223,G__TBox_ls_4_1,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("Paint",508,G__TBox_Paint_5_1,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("PaintBox",805,G__TBox_PaintBox_6_1,121,-1,-1,0,5,1,1,0,
+   G__memfunc_setup("GetX1",425,G__TBox_GetX1_0_1,102,-1,G__defined_typename("Coord_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetX2",426,G__TBox_GetX2_1_1,102,-1,G__defined_typename("Coord_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetY1",426,G__TBox_GetY1_2_1,102,-1,G__defined_typename("Coord_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetY2",427,G__TBox_GetY2_3_1,102,-1,G__defined_typename("Coord_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("HideToolTip",1093,G__TBox_HideToolTip_4_1,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 - event",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("ls",223,G__TBox_ls_5_1,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Paint",508,G__TBox_Paint_6_1,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("PaintBox",805,G__TBox_PaintBox_7_1,121,-1,-1,0,5,1,1,0,
 "f - 'Coord_t' 0 - x1 f - 'Coord_t' 0 - y1 "
 "f - 'Coord_t' 0 - x2 f - 'Coord_t' 0 - y2 "
 "C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("Print",525,G__TBox_Print_7_1,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("SavePrimitive",1352,G__TBox_SavePrimitive_8_1,121,-1,-1,0,2,1,1,0,
+   G__memfunc_setup("Print",525,G__TBox_Print_8_1,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SavePrimitive",1352,G__TBox_SavePrimitive_9_1,121,-1,-1,0,2,1,1,0,
 "u 'ofstream' - 1 - out C - 'Option_t' 0 - option",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("SetX1",437,G__TBox_SetX1_9_1,121,-1,-1,0,1,1,1,0,"f - 'Coord_t' 0 - x1",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("SetX2",438,G__TBox_SetX2_0_2,121,-1,-1,0,1,1,1,0,"f - 'Coord_t' 0 - x2",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("SetY1",438,G__TBox_SetY1_1_2,121,-1,-1,0,1,1,1,0,"f - 'Coord_t' 0 - y1",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("SetY2",439,G__TBox_SetY2_2_2,121,-1,-1,0,1,1,1,0,"f - 'Coord_t' 0 - y2",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("DeclFileName",1145,G__TBox_DeclFileName_3_2,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("DeclFileLine",1152,G__TBox_DeclFileLine_4_2,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("ImplFileName",1171,G__TBox_ImplFileName_5_2,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("ImplFileLine",1178,G__TBox_ImplFileLine_6_2,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Class_Version",1339,G__TBox_Class_Version_7_2,115,-1,G__defined_typename("Version_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Class",502,G__TBox_Class_8_2,85,G__get_linked_tagnum(&G__G__Graf1LN_TClass),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Dictionary",1046,G__TBox_Dictionary_9_2,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("IsA",253,G__TBox_IsA_0_3,85,G__get_linked_tagnum(&G__G__Graf1LN_TClass),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("ShowMembers",1132,G__TBox_ShowMembers_1_3,121,-1,-1,0,2,1,1,0,
+   G__memfunc_setup("SetX1",437,G__TBox_SetX1_0_2,121,-1,-1,0,1,1,1,0,"f - 'Coord_t' 0 - x1",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetX2",438,G__TBox_SetX2_1_2,121,-1,-1,0,1,1,1,0,"f - 'Coord_t' 0 - x2",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetY1",438,G__TBox_SetY1_2_2,121,-1,-1,0,1,1,1,0,"f - 'Coord_t' 0 - y1",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetY2",439,G__TBox_SetY2_3_2,121,-1,-1,0,1,1,1,0,"f - 'Coord_t' 0 - y2",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetToolTipText",1436,G__TBox_SetToolTipText_4_2,121,-1,-1,0,2,1,1,0,
+"C - - 0 - text l - 'Long_t' 0 1000 delayms",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("DeclFileName",1145,G__TBox_DeclFileName_5_2,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("DeclFileLine",1152,G__TBox_DeclFileLine_6_2,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ImplFileName",1171,G__TBox_ImplFileName_7_2,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ImplFileLine",1178,G__TBox_ImplFileLine_8_2,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Class_Version",1339,G__TBox_Class_Version_9_2,115,-1,G__defined_typename("Version_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Class",502,G__TBox_Class_0_3,85,G__get_linked_tagnum(&G__G__Graf1LN_TClass),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Dictionary",1046,G__TBox_Dictionary_1_3,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("IsA",253,G__TBox_IsA_2_3,85,G__get_linked_tagnum(&G__G__Graf1LN_TClass),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("ShowMembers",1132,G__TBox_ShowMembers_3_3,121,-1,-1,0,2,1,1,0,
 "u 'TMemberInspector' - 1 - insp C - - 0 - parent",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("Streamer",835,G__TBox_Streamer_2_3,121,-1,-1,0,1,1,1,0,"u 'TBuffer' - 1 - b",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Streamer",835,G__TBox_Streamer_4_3,121,-1,-1,0,1,1,1,0,"u 'TBuffer' - 1 - b",(char*)NULL,(void*)NULL,1);
    // automatic destructor
-   G__memfunc_setup("~TBox",507,G__TBox_wATBox_3_3,(int)('y'),-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("~TBox",507,G__TBox_wATBox_5_3,(int)('y'),-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
    G__tag_memfunc_reset();
 }
 
@@ -9487,24 +10127,74 @@ static void G__setup_memfuncTGraphErrors(void) {
    G__memfunc_setup("Print",525,G__TGraphErrors_Print_9_0,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" chopt",(char*)NULL,(void*)NULL,1);
    G__memfunc_setup("SavePrimitive",1352,G__TGraphErrors_SavePrimitive_0_1,121,-1,-1,0,2,1,1,0,
 "u 'ofstream' - 1 - out C - 'Option_t' 0 - option",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("SetPointError",1344,G__TGraphErrors_SetPointError_1_1,121,-1,-1,0,3,1,1,0,
+   G__memfunc_setup("SetPoint",822,G__TGraphErrors_SetPoint_1_1,121,-1,-1,0,3,1,1,0,
+"i - 'Int_t' 0 - i f - 'Float_t' 0 - x "
+"f - 'Float_t' 0 - y",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetPointError",1344,G__TGraphErrors_SetPointError_2_1,121,-1,-1,0,3,1,1,0,
 "i - 'Int_t' 0 - i f - 'Float_t' 0 - ex "
 "f - 'Float_t' 0 - ey",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("DeclFileName",1145,G__TGraphErrors_DeclFileName_2_1,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("DeclFileLine",1152,G__TGraphErrors_DeclFileLine_3_1,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("ImplFileName",1171,G__TGraphErrors_ImplFileName_4_1,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("ImplFileLine",1178,G__TGraphErrors_ImplFileLine_5_1,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Class_Version",1339,G__TGraphErrors_Class_Version_6_1,115,-1,G__defined_typename("Version_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Class",502,G__TGraphErrors_Class_7_1,85,G__get_linked_tagnum(&G__G__Graf1LN_TClass),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Dictionary",1046,G__TGraphErrors_Dictionary_8_1,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("IsA",253,G__TGraphErrors_IsA_9_1,85,G__get_linked_tagnum(&G__G__Graf1LN_TClass),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("ShowMembers",1132,G__TGraphErrors_ShowMembers_0_2,121,-1,-1,0,2,1,1,0,
+   G__memfunc_setup("DeclFileName",1145,G__TGraphErrors_DeclFileName_3_1,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("DeclFileLine",1152,G__TGraphErrors_DeclFileLine_4_1,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ImplFileName",1171,G__TGraphErrors_ImplFileName_5_1,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ImplFileLine",1178,G__TGraphErrors_ImplFileLine_6_1,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Class_Version",1339,G__TGraphErrors_Class_Version_7_1,115,-1,G__defined_typename("Version_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Class",502,G__TGraphErrors_Class_8_1,85,G__get_linked_tagnum(&G__G__Graf1LN_TClass),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Dictionary",1046,G__TGraphErrors_Dictionary_9_1,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("IsA",253,G__TGraphErrors_IsA_0_2,85,G__get_linked_tagnum(&G__G__Graf1LN_TClass),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("ShowMembers",1132,G__TGraphErrors_ShowMembers_1_2,121,-1,-1,0,2,1,1,0,
 "u 'TMemberInspector' - 1 - insp C - - 0 - parent",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("Streamer",835,G__TGraphErrors_Streamer_1_2,121,-1,-1,0,1,1,1,0,"u 'TBuffer' - 1 - b",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Streamer",835,G__TGraphErrors_Streamer_2_2,121,-1,-1,0,1,1,1,0,"u 'TBuffer' - 1 - b",(char*)NULL,(void*)NULL,1);
    // automatic copy constructor
-   G__memfunc_setup("TGraphErrors",1219,G__TGraphErrors_TGraphErrors_2_2,(int)('i'),G__get_linked_tagnum(&G__G__Graf1LN_TGraphErrors),-1,0,1,1,1,0,"u 'TGraphErrors' - 1 - -",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("TGraphErrors",1219,G__TGraphErrors_TGraphErrors_3_2,(int)('i'),G__get_linked_tagnum(&G__G__Graf1LN_TGraphErrors),-1,0,1,1,1,0,"u 'TGraphErrors' - 1 - -",(char*)NULL,(void*)NULL,0);
    // automatic destructor
-   G__memfunc_setup("~TGraphErrors",1345,G__TGraphErrors_wATGraphErrors_3_2,(int)('y'),-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("~TGraphErrors",1345,G__TGraphErrors_wATGraphErrors_4_2,(int)('y'),-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__tag_memfunc_reset();
+}
+
+static void G__setup_memfuncTGraphAsymmErrors(void) {
+   /* TGraphAsymmErrors */
+   G__tag_memfunc_setup(G__get_linked_tagnum(&G__G__Graf1LN_TGraphAsymmErrors));
+   G__memfunc_setup("TGraphAsymmErrors",1738,G__TGraphAsymmErrors_TGraphAsymmErrors_0_0,105,G__get_linked_tagnum(&G__G__Graf1LN_TGraphAsymmErrors),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("TGraphAsymmErrors",1738,G__TGraphAsymmErrors_TGraphAsymmErrors_1_0,105,G__get_linked_tagnum(&G__G__Graf1LN_TGraphAsymmErrors),-1,0,7,1,1,0,
+"i - 'Int_t' 0 - n F - 'Float_t' 0 0 x "
+"F - 'Float_t' 0 0 y F - 'Float_t' 0 0 exl "
+"F - 'Float_t' 0 0 exh F - 'Float_t' 0 0 eyl "
+"F - 'Float_t' 0 0 eyh",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ComputeRange",1226,G__TGraphAsymmErrors_ComputeRange_3_0,121,-1,-1,0,4,1,1,0,
+"f - 'Float_t' 1 - xmin f - 'Float_t' 1 - ymin "
+"f - 'Float_t' 1 - xmax f - 'Float_t' 1 - ymax",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetErrorX",898,G__TGraphAsymmErrors_GetErrorX_4_0,102,-1,G__defined_typename("Float_t"),0,1,1,1,0,"i - 'Int_t' 0 - bin",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetErrorY",899,G__TGraphAsymmErrors_GetErrorY_5_0,102,-1,G__defined_typename("Float_t"),0,1,1,1,0,"i - 'Int_t' 0 - bin",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetEXlow",783,G__TGraphAsymmErrors_GetEXlow_6_0,70,-1,G__defined_typename("Float_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetEXhigh",861,G__TGraphAsymmErrors_GetEXhigh_7_0,70,-1,G__defined_typename("Float_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetEYlow",784,G__TGraphAsymmErrors_GetEYlow_8_0,70,-1,G__defined_typename("Float_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetEYhigh",862,G__TGraphAsymmErrors_GetEYhigh_9_0,70,-1,G__defined_typename("Float_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Paint",508,G__TGraphAsymmErrors_Paint_0_1,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" chopt",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Print",525,G__TGraphAsymmErrors_Print_1_1,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" chopt",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SavePrimitive",1352,G__TGraphAsymmErrors_SavePrimitive_2_1,121,-1,-1,0,2,1,1,0,
+"u 'ofstream' - 1 - out C - 'Option_t' 0 - option",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetPoint",822,G__TGraphAsymmErrors_SetPoint_3_1,121,-1,-1,0,3,1,1,0,
+"i - 'Int_t' 0 - i f - 'Float_t' 0 - x "
+"f - 'Float_t' 0 - y",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetPointError",1344,G__TGraphAsymmErrors_SetPointError_4_1,121,-1,-1,0,5,1,1,0,
+"i - 'Int_t' 0 - i f - 'Float_t' 0 - exl "
+"f - 'Float_t' 0 - exh f - 'Float_t' 0 - eyl "
+"f - 'Float_t' 0 - eyh",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("DeclFileName",1145,G__TGraphAsymmErrors_DeclFileName_5_1,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("DeclFileLine",1152,G__TGraphAsymmErrors_DeclFileLine_6_1,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ImplFileName",1171,G__TGraphAsymmErrors_ImplFileName_7_1,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ImplFileLine",1178,G__TGraphAsymmErrors_ImplFileLine_8_1,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Class_Version",1339,G__TGraphAsymmErrors_Class_Version_9_1,115,-1,G__defined_typename("Version_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Class",502,G__TGraphAsymmErrors_Class_0_2,85,G__get_linked_tagnum(&G__G__Graf1LN_TClass),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Dictionary",1046,G__TGraphAsymmErrors_Dictionary_1_2,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("IsA",253,G__TGraphAsymmErrors_IsA_2_2,85,G__get_linked_tagnum(&G__G__Graf1LN_TClass),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("ShowMembers",1132,G__TGraphAsymmErrors_ShowMembers_3_2,121,-1,-1,0,2,1,1,0,
+"u 'TMemberInspector' - 1 - insp C - - 0 - parent",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Streamer",835,G__TGraphAsymmErrors_Streamer_4_2,121,-1,-1,0,1,1,1,0,"u 'TBuffer' - 1 - b",(char*)NULL,(void*)NULL,1);
+   // automatic copy constructor
+   G__memfunc_setup("TGraphAsymmErrors",1738,G__TGraphAsymmErrors_TGraphAsymmErrors_5_2,(int)('i'),G__get_linked_tagnum(&G__G__Graf1LN_TGraphAsymmErrors),-1,0,1,1,1,0,"u 'TGraphAsymmErrors' - 1 - -",(char*)NULL,(void*)NULL,0);
+   // automatic destructor
+   G__memfunc_setup("~TGraphAsymmErrors",1864,G__TGraphAsymmErrors_wATGraphAsymmErrors_6_2,(int)('y'),-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
    G__tag_memfunc_reset();
 }
 
@@ -9826,47 +10516,65 @@ static void G__setup_memfuncTF2(void) {
    G__memfunc_setup("ExecuteEvent",1237,G__TF2_ExecuteEvent_1_1,121,-1,-1,0,3,1,1,0,
 "i - 'Int_t' 0 - event i - 'Int_t' 0 - px "
 "i - 'Int_t' 0 - py",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("GetContour",1034,G__TF2_GetContour_2_1,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetNpy",599,G__TF2_GetNpy_3_1,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetRandom",897,G__TF2_GetRandom_4_1,100,-1,G__defined_typename("Double_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("GetRandom2",947,G__TF2_GetRandom2_5_1,121,-1,-1,0,2,1,1,0,
+   G__memfunc_setup("GetContour",1034,G__TF2_GetContour_2_1,105,-1,G__defined_typename("Int_t"),0,1,1,1,0,"F - 'Float_t' 0 0 levels",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetContourLevel",1538,G__TF2_GetContourLevel_3_1,102,-1,G__defined_typename("Float_t"),0,1,1,1,0,"i - 'Int_t' 0 - level",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetNpy",599,G__TF2_GetNpy_4_1,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetObjectInfo",1283,G__TF2_GetObjectInfo_5_1,67,-1,G__defined_typename("Text_t"),0,2,1,1,0,
+"i - 'Int_t' 0 - px i - 'Int_t' 0 - py",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetRandom",897,G__TF2_GetRandom_6_1,100,-1,G__defined_typename("Double_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetRandom2",947,G__TF2_GetRandom2_7_1,121,-1,-1,0,2,1,1,0,
 "f - 'Float_t' 1 - xrandom f - 'Float_t' 1 - yrandom",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("GetRange",781,G__TF2_GetRange_6_1,121,-1,-1,0,2,1,1,0,
+   G__memfunc_setup("GetRange",781,G__TF2_GetRange_8_1,121,-1,-1,0,2,1,1,0,
 "f - 'Float_t' 1 - xmin f - 'Float_t' 1 - xmax",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("GetRange",781,G__TF2_GetRange_7_1,121,-1,-1,0,4,1,1,0,
+   G__memfunc_setup("GetRange",781,G__TF2_GetRange_9_1,121,-1,-1,0,4,1,1,0,
 "f - 'Float_t' 1 - xmin f - 'Float_t' 1 - ymin "
 "f - 'Float_t' 1 - xmax f - 'Float_t' 1 - ymax",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("GetRange",781,G__TF2_GetRange_8_1,121,-1,-1,0,6,1,1,0,
+   G__memfunc_setup("GetRange",781,G__TF2_GetRange_0_2,121,-1,-1,0,6,1,1,0,
 "f - 'Float_t' 1 - xmin f - 'Float_t' 1 - ymin "
 "f - 'Float_t' 1 - zmin f - 'Float_t' 1 - xmax "
 "f - 'Float_t' 1 - ymax f - 'Float_t' 1 - zmax",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("GetYmin",701,G__TF2_GetYmin_9_1,102,-1,G__defined_typename("Float_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("GetYmax",703,G__TF2_GetYmax_0_2,102,-1,G__defined_typename("Float_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("Paint",508,G__TF2_Paint_1_2,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("SetNpy",611,G__TF2_SetNpy_2_2,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 100 npy","*MENU*",(void*)NULL,1);
-   G__memfunc_setup("SetContour",1046,G__TF2_SetContour_3_2,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 20 nl",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("SetRange",793,G__TF2_SetRange_4_2,121,-1,-1,0,2,1,1,0,
+   G__memfunc_setup("GetYmin",701,G__TF2_GetYmin_1_2,102,-1,G__defined_typename("Float_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetYmax",703,G__TF2_GetYmax_2_2,102,-1,G__defined_typename("Float_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Integral",822,G__TF2_Integral_3_2,100,-1,G__defined_typename("Double_t"),0,4,1,1,0,
+"f - 'Float_t' 0 - a f - 'Float_t' 0 - b "
+"D - 'Double_t' 0 0 params f - 'Float_t' 0 0.000001 epsil",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Integral",822,G__TF2_Integral_4_2,100,-1,G__defined_typename("Double_t"),0,5,1,1,0,
+"f - 'Float_t' 0 - ax f - 'Float_t' 0 - bx "
+"f - 'Float_t' 0 - ay f - 'Float_t' 0 - by "
+"f - 'Float_t' 0 0.000001 epsil",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Integral",822,G__TF2_Integral_5_2,100,-1,G__defined_typename("Double_t"),0,7,1,1,0,
+"f - 'Float_t' 0 - ax f - 'Float_t' 0 - bx "
+"f - 'Float_t' 0 - ay f - 'Float_t' 0 - by "
+"f - 'Float_t' 0 - az f - 'Float_t' 0 - bz "
+"f - 'Float_t' 0 0.000001 epsil",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Paint",508,G__TF2_Paint_6_2,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetNpy",611,G__TF2_SetNpy_7_2,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 100 npy","*MENU*",(void*)NULL,1);
+   G__memfunc_setup("SetContour",1046,G__TF2_SetContour_8_2,121,-1,-1,0,2,1,1,0,
+"i - 'Int_t' 0 20 nlevels F - 'Float_t' 0 0 levels",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetContourLevel",1550,G__TF2_SetContourLevel_9_2,121,-1,-1,0,2,1,1,0,
+"i - 'Int_t' 0 - level f - 'Float_t' 0 - value",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetRange",793,G__TF2_SetRange_0_3,121,-1,-1,0,2,1,1,0,
 "f - 'Float_t' 0 - xmin f - 'Float_t' 0 - xmax",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("SetRange",793,G__TF2_SetRange_5_2,121,-1,-1,0,4,1,1,0,
+   G__memfunc_setup("SetRange",793,G__TF2_SetRange_1_3,121,-1,-1,0,4,1,1,0,
 "f - 'Float_t' 0 - xmin f - 'Float_t' 0 - ymin "
 "f - 'Float_t' 0 - xmax f - 'Float_t' 0 - ymax","*MENU*",(void*)NULL,1);
-   G__memfunc_setup("SetRange",793,G__TF2_SetRange_6_2,121,-1,-1,0,6,1,1,0,
+   G__memfunc_setup("SetRange",793,G__TF2_SetRange_2_3,121,-1,-1,0,6,1,1,0,
 "f - 'Float_t' 0 - xmin f - 'Float_t' 0 - ymin "
 "f - 'Float_t' 0 - zmin f - 'Float_t' 0 - xmax "
 "f - 'Float_t' 0 - ymax f - 'Float_t' 0 - zmax",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("DeclFileName",1145,G__TF2_DeclFileName_7_2,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("DeclFileLine",1152,G__TF2_DeclFileLine_8_2,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("ImplFileName",1171,G__TF2_ImplFileName_9_2,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("ImplFileLine",1178,G__TF2_ImplFileLine_0_3,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Class_Version",1339,G__TF2_Class_Version_1_3,115,-1,G__defined_typename("Version_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Class",502,G__TF2_Class_2_3,85,G__get_linked_tagnum(&G__G__Graf1LN_TClass),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Dictionary",1046,G__TF2_Dictionary_3_3,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("IsA",253,G__TF2_IsA_4_3,85,G__get_linked_tagnum(&G__G__Graf1LN_TClass),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("ShowMembers",1132,G__TF2_ShowMembers_5_3,121,-1,-1,0,2,1,1,0,
+   G__memfunc_setup("DeclFileName",1145,G__TF2_DeclFileName_3_3,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("DeclFileLine",1152,G__TF2_DeclFileLine_4_3,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ImplFileName",1171,G__TF2_ImplFileName_5_3,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ImplFileLine",1178,G__TF2_ImplFileLine_6_3,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Class_Version",1339,G__TF2_Class_Version_7_3,115,-1,G__defined_typename("Version_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Class",502,G__TF2_Class_8_3,85,G__get_linked_tagnum(&G__G__Graf1LN_TClass),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Dictionary",1046,G__TF2_Dictionary_9_3,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("IsA",253,G__TF2_IsA_0_4,85,G__get_linked_tagnum(&G__G__Graf1LN_TClass),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("ShowMembers",1132,G__TF2_ShowMembers_1_4,121,-1,-1,0,2,1,1,0,
 "u 'TMemberInspector' - 1 - insp C - - 0 - parent",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("Streamer",835,G__TF2_Streamer_6_3,121,-1,-1,0,1,1,1,0,"u 'TBuffer' - 1 - b",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Streamer",835,G__TF2_Streamer_2_4,121,-1,-1,0,1,1,1,0,"u 'TBuffer' - 1 - b",(char*)NULL,(void*)NULL,1);
    // automatic destructor
-   G__memfunc_setup("~TF2",330,G__TF2_wATF2_7_3,(int)('y'),-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("~TF2",330,G__TF2_wATF2_3_4,(int)('y'),-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
    G__tag_memfunc_reset();
 }
 
@@ -9914,30 +10622,42 @@ static void G__setup_memfuncTF3(void) {
 "f - 'Float_t' 1 - ymax f - 'Float_t' 1 - zmax",(char*)NULL,(void*)NULL,1);
    G__memfunc_setup("GetZmin",702,G__TF3_GetZmin_5_1,102,-1,G__defined_typename("Float_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
    G__memfunc_setup("GetZmax",704,G__TF3_GetZmax_6_1,102,-1,G__defined_typename("Float_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("Paint",508,G__TF3_Paint_7_1,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("SetNpz",612,G__TF3_SetNpz_8_1,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 30 npz",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("SetRange",793,G__TF3_SetRange_9_1,121,-1,-1,0,2,1,1,0,
+   G__memfunc_setup("Integral",822,G__TF3_Integral_7_1,100,-1,G__defined_typename("Double_t"),0,4,1,1,0,
+"f - 'Float_t' 0 - a f - 'Float_t' 0 - b "
+"D - 'Double_t' 0 0 params f - 'Float_t' 0 0.000001 epsilon",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Integral",822,G__TF3_Integral_8_1,100,-1,G__defined_typename("Double_t"),0,5,1,1,0,
+"f - 'Float_t' 0 - ax f - 'Float_t' 0 - bx "
+"f - 'Float_t' 0 - ay f - 'Float_t' 0 - by "
+"f - 'Float_t' 0 0.000001 epsilon",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Integral",822,G__TF3_Integral_9_1,100,-1,G__defined_typename("Double_t"),0,7,1,1,0,
+"f - 'Float_t' 0 - ax f - 'Float_t' 0 - bx "
+"f - 'Float_t' 0 - ay f - 'Float_t' 0 - by "
+"f - 'Float_t' 0 - az f - 'Float_t' 0 - bz "
+"f - 'Float_t' 0 0.000001 epsilon",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Paint",508,G__TF3_Paint_0_2,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetNpz",612,G__TF3_SetNpz_1_2,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 30 npz",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetRange",793,G__TF3_SetRange_2_2,121,-1,-1,0,2,1,1,0,
 "f - 'Float_t' 0 - xmin f - 'Float_t' 0 - xmax",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("SetRange",793,G__TF3_SetRange_0_2,121,-1,-1,0,4,1,1,0,
+   G__memfunc_setup("SetRange",793,G__TF3_SetRange_3_2,121,-1,-1,0,4,1,1,0,
 "f - 'Float_t' 0 - xmin f - 'Float_t' 0 - ymin "
 "f - 'Float_t' 0 - xmax f - 'Float_t' 0 - ymax",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("SetRange",793,G__TF3_SetRange_1_2,121,-1,-1,0,6,1,1,0,
+   G__memfunc_setup("SetRange",793,G__TF3_SetRange_4_2,121,-1,-1,0,6,1,1,0,
 "f - 'Float_t' 0 - xmin f - 'Float_t' 0 - ymin "
 "f - 'Float_t' 0 - zmin f - 'Float_t' 0 - xmax "
 "f - 'Float_t' 0 - ymax f - 'Float_t' 0 - zmax","*MENU*",(void*)NULL,1);
-   G__memfunc_setup("DeclFileName",1145,G__TF3_DeclFileName_2_2,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("DeclFileLine",1152,G__TF3_DeclFileLine_3_2,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("ImplFileName",1171,G__TF3_ImplFileName_4_2,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("ImplFileLine",1178,G__TF3_ImplFileLine_5_2,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Class_Version",1339,G__TF3_Class_Version_6_2,115,-1,G__defined_typename("Version_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Class",502,G__TF3_Class_7_2,85,G__get_linked_tagnum(&G__G__Graf1LN_TClass),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Dictionary",1046,G__TF3_Dictionary_8_2,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("IsA",253,G__TF3_IsA_9_2,85,G__get_linked_tagnum(&G__G__Graf1LN_TClass),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("ShowMembers",1132,G__TF3_ShowMembers_0_3,121,-1,-1,0,2,1,1,0,
+   G__memfunc_setup("DeclFileName",1145,G__TF3_DeclFileName_5_2,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("DeclFileLine",1152,G__TF3_DeclFileLine_6_2,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ImplFileName",1171,G__TF3_ImplFileName_7_2,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ImplFileLine",1178,G__TF3_ImplFileLine_8_2,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Class_Version",1339,G__TF3_Class_Version_9_2,115,-1,G__defined_typename("Version_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Class",502,G__TF3_Class_0_3,85,G__get_linked_tagnum(&G__G__Graf1LN_TClass),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Dictionary",1046,G__TF3_Dictionary_1_3,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("IsA",253,G__TF3_IsA_2_3,85,G__get_linked_tagnum(&G__G__Graf1LN_TClass),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("ShowMembers",1132,G__TF3_ShowMembers_3_3,121,-1,-1,0,2,1,1,0,
 "u 'TMemberInspector' - 1 - insp C - - 0 - parent",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("Streamer",835,G__TF3_Streamer_1_3,121,-1,-1,0,1,1,1,0,"u 'TBuffer' - 1 - b",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Streamer",835,G__TF3_Streamer_4_3,121,-1,-1,0,1,1,1,0,"u 'TBuffer' - 1 - b",(char*)NULL,(void*)NULL,1);
    // automatic destructor
-   G__memfunc_setup("~TF3",331,G__TF3_wATF3_2_3,(int)('y'),-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("~TF3",331,G__TF3_wATF3_5_3,(int)('y'),-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
    G__tag_memfunc_reset();
 }
 
@@ -9989,6 +10709,7 @@ G__linked_taginfo G__G__Graf1LN_TEllipse = { "TEllipse" , 99 , -1 };
 G__linked_taginfo G__G__Graf1LN_TArc = { "TArc" , 99 , -1 };
 G__linked_taginfo G__G__Graf1LN_TLine = { "TLine" , 99 , -1 };
 G__linked_taginfo G__G__Graf1LN_TArrow = { "TArrow" , 99 , -1 };
+G__linked_taginfo G__G__Graf1LN_TGToolTip = { "TGToolTip" , 99 , -1 };
 G__linked_taginfo G__G__Graf1LN_TBox = { "TBox" , 99 , -1 };
 G__linked_taginfo G__G__Graf1LN_TPave = { "TPave" , 99 , -1 };
 G__linked_taginfo G__G__Graf1LN_TAttText = { "TAttText" , 99 , -1 };
@@ -10003,6 +10724,7 @@ G__linked_taginfo G__G__Graf1LN_TH1F = { "TH1F" , 99 , -1 };
 G__linked_taginfo G__G__Graf1LN_TAxis = { "TAxis" , 99 , -1 };
 G__linked_taginfo G__G__Graf1LN_TGraph = { "TGraph" , 99 , -1 };
 G__linked_taginfo G__G__Graf1LN_TGraphErrors = { "TGraphErrors" , 99 , -1 };
+G__linked_taginfo G__G__Graf1LN_TGraphAsymmErrors = { "TGraphAsymmErrors" , 99 , -1 };
 G__linked_taginfo G__G__Graf1LN_s_FormSize = { "s_FormSize" , 115 , -1 };
 G__linked_taginfo G__G__Graf1LN_FormSize = { "FormSize" , 99 , -1 };
 G__linked_taginfo G__G__Graf1LN_TLatex = { "TLatex" , 99 , -1 };
@@ -10013,8 +10735,57 @@ G__linked_taginfo G__G__Graf1LN_TPaveLabel = { "TPaveLabel" , 99 , -1 };
 G__linked_taginfo G__G__Graf1LN_TPavesText = { "TPavesText" , 99 , -1 };
 G__linked_taginfo G__G__Graf1LN_TFormula = { "TFormula" , 99 , -1 };
 G__linked_taginfo G__G__Graf1LN_TMethodCall = { "TMethodCall" , 99 , -1 };
+G__linked_taginfo G__G__Graf1LN_TArrayF = { "TArrayF" , 99 , -1 };
 G__linked_taginfo G__G__Graf1LN_TF2 = { "TF2" , 99 , -1 };
 G__linked_taginfo G__G__Graf1LN_TF3 = { "TF3" , 99 , -1 };
+
+/* Reset class/struct taginfo */
+extern "C" void G__cpp_reset_tagtableG__Graf1() {
+  G__G__Graf1LN_TClass.tagnum = -1 ;
+  G__G__Graf1LN_TList.tagnum = -1 ;
+  G__G__Graf1LN_TObject.tagnum = -1 ;
+  G__G__Graf1LN_TString.tagnum = -1 ;
+  G__G__Graf1LN_TNamed.tagnum = -1 ;
+  G__G__Graf1LN_TColor.tagnum = -1 ;
+  G__G__Graf1LN_TF1.tagnum = -1 ;
+  G__G__Graf1LN_TAttPad.tagnum = -1 ;
+  G__G__Graf1LN_TAttCanvas.tagnum = -1 ;
+  G__G__Graf1LN_TAttLine.tagnum = -1 ;
+  G__G__Graf1LN_TAttFill.tagnum = -1 ;
+  G__G__Graf1LN_TEllipse.tagnum = -1 ;
+  G__G__Graf1LN_TArc.tagnum = -1 ;
+  G__G__Graf1LN_TLine.tagnum = -1 ;
+  G__G__Graf1LN_TArrow.tagnum = -1 ;
+  G__G__Graf1LN_TGToolTip.tagnum = -1 ;
+  G__G__Graf1LN_TBox.tagnum = -1 ;
+  G__G__Graf1LN_TPave.tagnum = -1 ;
+  G__G__Graf1LN_TAttText.tagnum = -1 ;
+  G__G__Graf1LN_TText.tagnum = -1 ;
+  G__G__Graf1LN_TPaveText.tagnum = -1 ;
+  G__G__Graf1LN_TDiamond.tagnum = -1 ;
+  G__G__Graf1LN_TWbox.tagnum = -1 ;
+  G__G__Graf1LN_TFrame.tagnum = -1 ;
+  G__G__Graf1LN_TGaxis.tagnum = -1 ;
+  G__G__Graf1LN_TAttMarker.tagnum = -1 ;
+  G__G__Graf1LN_TH1F.tagnum = -1 ;
+  G__G__Graf1LN_TAxis.tagnum = -1 ;
+  G__G__Graf1LN_TGraph.tagnum = -1 ;
+  G__G__Graf1LN_TGraphErrors.tagnum = -1 ;
+  G__G__Graf1LN_TGraphAsymmErrors.tagnum = -1 ;
+  G__G__Graf1LN_s_FormSize.tagnum = -1 ;
+  G__G__Graf1LN_FormSize.tagnum = -1 ;
+  G__G__Graf1LN_TLatex.tagnum = -1 ;
+  G__G__Graf1LN_TMarker.tagnum = -1 ;
+  G__G__Graf1LN_TPolyLine.tagnum = -1 ;
+  G__G__Graf1LN_TPolyMarker.tagnum = -1 ;
+  G__G__Graf1LN_TPaveLabel.tagnum = -1 ;
+  G__G__Graf1LN_TPavesText.tagnum = -1 ;
+  G__G__Graf1LN_TFormula.tagnum = -1 ;
+  G__G__Graf1LN_TMethodCall.tagnum = -1 ;
+  G__G__Graf1LN_TArrayF.tagnum = -1 ;
+  G__G__Graf1LN_TF2.tagnum = -1 ;
+  G__G__Graf1LN_TF3.tagnum = -1 ;
+}
 
 extern "C" void G__cpp_setup_tagtableG__Graf1() {
 
@@ -10037,6 +10808,7 @@ extern "C" void G__cpp_setup_tagtableG__Graf1() {
    G__tagtable_setup(G__get_linked_tagnum(&G__G__Graf1LN_TGaxis),sizeof(TGaxis),-1,0,"Graphics axis",G__setup_memvarTGaxis,G__setup_memfuncTGaxis);
    G__tagtable_setup(G__get_linked_tagnum(&G__G__Graf1LN_TGraph),sizeof(TGraph),-1,0,"Graph graphics class",G__setup_memvarTGraph,G__setup_memfuncTGraph);
    G__tagtable_setup(G__get_linked_tagnum(&G__G__Graf1LN_TGraphErrors),sizeof(TGraphErrors),-1,0,"a Graph with error bars",G__setup_memvarTGraphErrors,G__setup_memfuncTGraphErrors);
+   G__tagtable_setup(G__get_linked_tagnum(&G__G__Graf1LN_TGraphAsymmErrors),sizeof(TGraphAsymmErrors),-1,0,"a Graph with asymmetric error bars",G__setup_memvarTGraphAsymmErrors,G__setup_memfuncTGraphAsymmErrors);
    G__tagtable_setup(G__get_linked_tagnum(&G__G__Graf1LN_TLatex),sizeof(TLatex),-1,0,"The Latex-style text processor class",G__setup_memvarTLatex,G__setup_memfuncTLatex);
    G__tagtable_setup(G__get_linked_tagnum(&G__G__Graf1LN_TMarker),sizeof(TMarker),-1,0,"Marker",G__setup_memvarTMarker,G__setup_memfuncTMarker);
    G__tagtable_setup(G__get_linked_tagnum(&G__G__Graf1LN_TPolyLine),sizeof(TPolyLine),-1,0,"A PolyLine",G__setup_memvarTPolyLine,G__setup_memfuncTPolyLine);
@@ -10072,7 +10844,7 @@ class G__cpp_setup_initG__Graf1 {
 G__cpp_setup_initG__Graf1 G__cpp_setup_initializerG__Graf1;
 
 //
-// File generated by /user/brun/root/bin/rootcint at Sun Dec 13 10:55:24 1998.
+// File generated by /home/rdm/root/bin/rootcint at Mon Mar  8 12:34:13 1999.
 // Do NOT change. Changes will be lost next time file is generated
 //
 
@@ -10186,38 +10958,6 @@ TBuffer &operator>>(TBuffer &buf, TAttPad *&obj)
 }
 
 //______________________________________________________________________________
-void TAttPad::Streamer(TBuffer &R__b)
-{
-   // Stream an object of class TAttPad.
-
-   if (R__b.IsReading()) {
-      Version_t R__v = R__b.ReadVersion(); if (R__v) { }
-      R__b >> fLeftMargin;
-      R__b >> fRightMargin;
-      R__b >> fBottomMargin;
-      R__b >> fTopMargin;
-      R__b >> fXfile;
-      R__b >> fYfile;
-      R__b >> fAfile;
-      R__b >> fXstat;
-      R__b >> fYstat;
-      R__b >> fAstat;
-   } else {
-      R__b.WriteVersion(TAttPad::IsA());
-      R__b << fLeftMargin;
-      R__b << fRightMargin;
-      R__b << fBottomMargin;
-      R__b << fTopMargin;
-      R__b << fXfile;
-      R__b << fYfile;
-      R__b << fAfile;
-      R__b << fXstat;
-      R__b << fYstat;
-      R__b << fAstat;
-   }
-}
-
-//______________________________________________________________________________
 void TAttPad::ShowMembers(TMemberInspector &R__insp, char *R__parent)
 {
    // Inspect the data members of an object of class TAttPad.
@@ -10235,6 +10975,13 @@ void TAttPad::ShowMembers(TMemberInspector &R__insp, char *R__parent)
    R__insp.Inspect(R__cl, R__parent, "fXstat", &fXstat);
    R__insp.Inspect(R__cl, R__parent, "fYstat", &fYstat);
    R__insp.Inspect(R__cl, R__parent, "fAstat", &fAstat);
+   R__insp.Inspect(R__cl, R__parent, "fFrameFillColor", &fFrameFillColor);
+   R__insp.Inspect(R__cl, R__parent, "fFrameLineColor", &fFrameLineColor);
+   R__insp.Inspect(R__cl, R__parent, "fFrameFillStyle", &fFrameFillStyle);
+   R__insp.Inspect(R__cl, R__parent, "fFrameLineStyle", &fFrameLineStyle);
+   R__insp.Inspect(R__cl, R__parent, "fFrameLineWidth", &fFrameLineWidth);
+   R__insp.Inspect(R__cl, R__parent, "fFrameBorderSize", &fFrameBorderSize);
+   R__insp.Inspect(R__cl, R__parent, "fFrameBorderMode", &fFrameBorderMode);
 }
 
 //______________________________________________________________________________
@@ -10519,6 +11266,7 @@ void TBox::ShowMembers(TMemberInspector &R__insp, char *R__parent)
    TClass *R__cl  = TBox::IsA();
    Int_t   R__ncp = strlen(R__parent);
    if (R__ncp || R__cl || R__insp.IsA()) { }
+   R__insp.Inspect(R__cl, R__parent, "*fTip", &fTip);
    R__insp.Inspect(R__cl, R__parent, "fX1", &fX1);
    R__insp.Inspect(R__cl, R__parent, "fY1", &fY1);
    R__insp.Inspect(R__cl, R__parent, "fX2", &fX2);
@@ -10917,6 +11665,30 @@ void TGraphErrors::ShowMembers(TMemberInspector &R__insp, char *R__parent)
 }
 
 //______________________________________________________________________________
+TBuffer &operator>>(TBuffer &buf, TGraphAsymmErrors *&obj)
+{
+   // Read a pointer to an object of class TGraphAsymmErrors.
+
+   obj = (TGraphAsymmErrors *) buf.ReadObject(TGraphAsymmErrors::Class());
+   return buf;
+}
+
+//______________________________________________________________________________
+void TGraphAsymmErrors::ShowMembers(TMemberInspector &R__insp, char *R__parent)
+{
+   // Inspect the data members of an object of class TGraphAsymmErrors.
+
+   TClass *R__cl  = TGraphAsymmErrors::IsA();
+   Int_t   R__ncp = strlen(R__parent);
+   if (R__ncp || R__cl || R__insp.IsA()) { }
+   R__insp.Inspect(R__cl, R__parent, "*fEXlow", &fEXlow);
+   R__insp.Inspect(R__cl, R__parent, "*fEXhigh", &fEXhigh);
+   R__insp.Inspect(R__cl, R__parent, "*fEYlow", &fEYlow);
+   R__insp.Inspect(R__cl, R__parent, "*fEYhigh", &fEYhigh);
+   TGraph::ShowMembers(R__insp, R__parent);
+}
+
+//______________________________________________________________________________
 TBuffer &operator>>(TBuffer &buf, TLatex *&obj)
 {
    // Read a pointer to an object of class TLatex.
@@ -11157,28 +11929,6 @@ TBuffer &operator>>(TBuffer &buf, TF2 *&obj)
 }
 
 //______________________________________________________________________________
-void TF2::Streamer(TBuffer &R__b)
-{
-   // Stream an object of class TF2.
-
-   if (R__b.IsReading()) {
-      Version_t R__v = R__b.ReadVersion(); if (R__v) { }
-      TF1::Streamer(R__b);
-      R__b >> fYmin;
-      R__b >> fYmax;
-      R__b >> fNpy;
-      R__b >> fNlevels;
-   } else {
-      R__b.WriteVersion(TF2::IsA());
-      TF1::Streamer(R__b);
-      R__b << fYmin;
-      R__b << fYmax;
-      R__b << fNpy;
-      R__b << fNlevels;
-   }
-}
-
-//______________________________________________________________________________
 void TF2::ShowMembers(TMemberInspector &R__insp, char *R__parent)
 {
    // Inspect the data members of an object of class TF2.
@@ -11189,7 +11939,7 @@ void TF2::ShowMembers(TMemberInspector &R__insp, char *R__parent)
    R__insp.Inspect(R__cl, R__parent, "fYmin", &fYmin);
    R__insp.Inspect(R__cl, R__parent, "fYmax", &fYmax);
    R__insp.Inspect(R__cl, R__parent, "fNpy", &fNpy);
-   R__insp.Inspect(R__cl, R__parent, "fNlevels", &fNlevels);
+   fContour.ShowMembers(R__insp, strcat(R__parent,"fContour.")); R__parent[R__ncp] = 0;
    TF1::ShowMembers(R__insp, R__parent);
 }
 

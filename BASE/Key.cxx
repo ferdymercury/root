@@ -1,3 +1,4 @@
+//*CMZ :  2.21/06 17/02/99  18.46.08  by  Fons Rademakers
 //*CMZ :  2.20/04 09/12/98  19.25.21  by  Rene Brun
 //*CMZ :  2.00/13 27/10/98  18.48.25  by  Fons Rademakers
 //*CMZ :  2.00/12 07/10/98  16.59.20  by  Fons Rademakers
@@ -482,11 +483,7 @@ void TKey::Read(TObject *obj)
 
    fBufferRef = new TBuffer(TBuffer::kRead, fObjlen+fKeylen);
 
-   // get version of key
-   fBufferRef->SetBufferOffset(sizeof(fNbytes));
-   Version_t kvers = fBufferRef->ReadVersion();
-
-   if (kvers > 1)
+   if (fVersion > 1)
       fBufferRef->MapObject(obj);  //register obj in map to handle self reference
 
    if (fObjlen > fNbytes-fKeylen) {

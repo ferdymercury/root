@@ -1,3 +1,4 @@
+//*CMZ :  2.21/07 01/03/99  09.06.46  by  Rene Brun
 //*CMZ :  2.00/00 07/03/98  18.27.46  by  Fons Rademakers
 //*CMZ :  1.00/02 10/03/97  15.24.48  by  Nenad Buncic
 //*-- Author :    Fons Rademakers   25/10/95
@@ -49,8 +50,9 @@ class TBrowserTimer;
 class TBrowser : public TNamed {
 
 private:
-   TBrowserImp   *fImp;            //Window system specific browser implementation
-   TBrowserTimer *fTimer;          //Browser's timer
+   TBrowserImp   *fImp;                //Window system specific browser implementation
+   TBrowserTimer *fTimer;              //Browser's timer
+   TObject       *fLastSelectedObject; //The last TObject selected by user
 
 protected:
    TContextMenu  *fContextMenu;    //Context menu pointer
@@ -71,10 +73,12 @@ public:
    TBrowserImp  *GetBrowserImp() const         { return fImp; }
    TContextMenu *GetContextMenu()              { return fContextMenu;}
    Bool_t        GetRefreshFlag()              { return fNeedRefresh; }
+   TObject      *GetSelected();
    void          SetRefreshFlag(Bool_t flag)   { fNeedRefresh = flag; }
    void          Iconify()                     { fImp->Iconify(); }
    virtual void  RecursiveRemove(TObject *obj);
    void          Refresh();
+   void          SetSelected(TObject *clickedObject);
    void          Show()                        { fImp->Show(); }
 
    ClassDef(TBrowser,0)  //ROOT Object Browser

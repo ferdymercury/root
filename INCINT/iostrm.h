@@ -1,5 +1,5 @@
-/*CMZ :  2.20/04 08/12/98  16.25.22  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   08/12/98*/
+/*CMZ :  2.21/08 17/03/99  13.13.38  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   17/03/99*/
 /* /% C++ %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -179,6 +179,7 @@ public: /* Constructor */
 public:	
   int		ipfx(int noskipws /* =0 */);
   void		isfx() { }
+#define G__OLDIMPLEMENTATION762
 #ifdef G__OLDIMPLEMENTATION762
   istream&	seekg(streampos p) ;
   istream&	seekg(streamoff o, ios::seek_dir d) ;

@@ -1,3 +1,6 @@
+//*CMZ :  2.21/08 15/03/99  08.40.02  by  Fons Rademakers
+//*CMZ :  2.21/07 05/03/99  15.21.25  by  Fons Rademakers
+//*CMZ :  2.21/06 15/02/99  19.21.42  by  Fons Rademakers
 //*CMZ :  2.20/00 01/11/98  11.31.53  by  Fons Rademakers
 //*CMZ :  2.00/12 02/10/98  12.14.03  by  Fons Rademakers
 //*CMZ :  2.00/10 27/07/98  16.26.11  by  Fons Rademakers
@@ -50,28 +53,6 @@
 #include "TROOT.h"
 #endif
 
-#if defined(WIN32) && !defined(__CINT__)
-#include "Windows4Root.h"
-# ifdef CreateSemaphore
-#   undef CreateSemaphore
-# endif
-
-# ifdef AcquireSemaphore
-#   undef AcquireSemaphore;
-# endif
-
-# ifdef ReleaseSemaphore
-#   undef ReleaseSemaphore
-# endif
-
-# ifdef DeleteSemaphore
-#   undef DeleteSemaphore
-# endif
-
-#else
-   typedef UInt_t  HANDLE;
-#endif
-
 
 class TBrowser;
 class TDirectory;
@@ -93,11 +74,12 @@ private:
    TMapRec    *fFirst;          //List of streamed objects is shared memory
    TMapRec    *fLast;           //Last object in list of shared objects
    Long_t      fOffset;         //Offset in bytes for region mapped by reader
-   TDirectory *fDirectory;      //pointer to directory associated to this mapfile
-   TList      *fBrowseList;     //list of KeyMapFile objects
+   TDirectory *fDirectory;      //Pointer to directory associated to this mapfile
+   TList      *fBrowseList;     //List of KeyMapFile objects
    Bool_t      fWritable;       //TRUE if mapped file opened in RDWR mode
    Int_t       fSemaphore;      //Modification semaphore (or getpid() for WIN32)
-   HANDLE      fhSemaphore;     //HANDLE of WIN32 Mutex object to implement semaphore
+   ULong_t     fhSemaphore;     //HANDLE of WIN32 Mutex object to implement semaphore
+   TObject    *fGetting;        //Don't deadlock in update mode, when from Get() Add() is called
 
    static Long_t fgMapAddress;  //Map to this address, set address via SetMapAddress()
    static void  *fgMmallocDesc; //Used in Close() and operator delete()
@@ -106,10 +88,12 @@ protected:
    TMapFile();
    TMapFile(const Text_t *name, const Text_t *title, Option_t *option, Int_t size, TMapFile *&newMapFile);
    TMapFile(const TMapFile &f, Long_t offset = 0);
+   void       operator=(const TMapFile &rhs);  // not implemented
 
    TMapFile  *FindShadowMapFile();
    void       InitDirectory();
-   void       operator=(const TMapFile &rhs);  // not implemented
+   TObject   *Remove(TObject *obj, Bool_t lock);
+   TObject   *Remove(const char *name, Bool_t lock);
 
    void   CreateSemaphore(Int_t pid=0);
    Int_t  AcquireSemaphore();
@@ -147,7 +131,8 @@ public:
 
    void          Add(TObject *obj, const char *name = "");
    void          Update(TObject *obj = 0);
-   void          Remove(TObject *obj);
+   TObject      *Remove(TObject *obj) { return Remove(obj, kTRUE); }
+   TObject      *Remove(const char *name) { return Remove(name, kTRUE); }
    void          RemoveAll();
    TObject      *Get(const char *name, TObject *retObj = 0);
 
@@ -156,6 +141,40 @@ public:
    static void      SetMapAddress(Long_t addr);
 
    ClassDef(TMapFile,0)  // Memory mapped directory structure
+};
+
+
+
+//////////////////////////////////////////////////////////////////////////
+//                                                                      //
+// TMapRec                                                              //
+//                                                                      //
+// A TMapFile contains a list of TMapRec objects which keep track of    //
+// the actual objects stored in the mapped file.                        //
+//                                                                      //
+//////////////////////////////////////////////////////////////////////////
+
+class TMapRec {
+
+friend class TMapFile;
+
+private:
+   char            *fName;       // object name
+   char            *fClassName;  // class name
+   TObject         *fObject;     // pointer to original object
+   void            *fBuffer;     // buffer containing object of class name
+   Int_t            fBufSize;    // buffer size
+   TMapRec         *fNext;       // next MapRec in list
+
+public:
+   TMapRec(const char *name, TObject *obj, Int_t size, void *buf);
+   ~TMapRec();
+   const char   *GetName(Long_t offset = 0) const { return (char *)((Long_t) fName + offset); }
+   const char   *GetClassName(Long_t offset = 0) const { return (char *)((Long_t) fClassName + offset); }
+   void         *GetBuffer(Long_t offset = 0) const { return (void *)((Long_t) fBuffer + offset); }
+   Int_t         GetBufSize() const { return fBufSize; }
+   TObject      *GetObject() const;
+   TMapRec      *GetNext(Long_t offset = 0) const { return (TMapRec *)((Long_t) fNext + offset); }
 };
 
 

@@ -1,3 +1,4 @@
+//*CMZ :  2.21/07 01/03/99  09.06.46  by  Rene Brun
 //*CMZ :  2.00/13 27/10/98  18.48.47  by  Fons Rademakers
 //*CMZ :  2.00/12 01/10/98  12.09.26  by  Rene Brun
 //*CMZ :  2.00/00 07/03/98  18.25.03  by  Fons Rademakers
@@ -203,6 +204,14 @@ void TBrowser::ExecuteDefaultAction(TObject *obj)
       fImp->ExecuteDefaultAction(obj);
 }
 
+
+//______________________________________________________________________________
+TObject *TBrowser::GetSelected()
+{
+ // return the last selected object
+ return fLastSelectedObject;
+}
+
 //______________________________________________________________________________
 void TBrowser::RecursiveRemove(TObject *obj)
 {
@@ -224,6 +233,12 @@ void TBrowser::Refresh()
    fNeedRefresh = kFALSE;
 }
 
+//______________________________________________________________________________
+void TBrowser::SetSelected(TObject *clickedObject)
+{
+ // assign the last selected object
+ fLastSelectedObject = clickedObject;
+}
 
 //////////////////////////////////////////////////////////////////////////
 //                                                                      //

@@ -1,3 +1,4 @@
+//*CMZ :  2.21/06 17/02/99  18.59.15  by  Rene Brun
 //*CMZ :  2.20/00 06/11/98  14.34.09  by  Rene Brun
 //*CMZ :  2.00/13 28/10/98  12.51.59  by  Fons Rademakers
 //*CMZ :  1.03/09 11/12/97  11.00.17  by  Rene Brun
@@ -63,6 +64,7 @@ public:
    virtual ~Event();
    void          Clear(Option_t *option ="");
    static void   Reset(Option_t *option ="");
+   void          ResetHistogramPointer() {fH=0;}
    void          SetNseg(Int_t n) { fNseg = n; }
    void          SetNtrack(Int_t n) { fNtrack = n; }
    void          SetNvertex(Int_t n) { fNvertex = n; }

@@ -1,3 +1,5 @@
+//*CMZ :  2.21/04 02/02/99  19.37.19  by  Fons Rademakers
+//*CMZ :  2.21/03 22/01/99  15.27.27  by  Fons Rademakers
 //*CMZ :  2.20/00 25/11/98  18.27.30  by  Fons Rademakers
 //*CMZ :  2.00/11 25/08/98  01.46.07  by  Fons Rademakers
 //*CMZ :  2.00/00 01/01/98  14.48.00  by  Fons Rademakers
@@ -82,7 +84,7 @@ protected:
 
 public:
    TUnixSystem();
-   ~TUnixSystem();
+   virtual ~TUnixSystem();
 
    //---- Misc -------------------------------------------------
    Bool_t            Init();
@@ -132,7 +134,7 @@ public:
    const char       *GetDirEntry(void *dirp);
    Bool_t            ChangeDirectory(const char *path);
    const char       *WorkingDirectory();
-   const char       *HomeDirectory();
+   const char       *HomeDirectory(const Char_t *userName = 0);
 
    //---- Paths & Files ----------------------------------------
    char             *ConcatFileName(const char *dir, const char *name);

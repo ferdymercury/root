@@ -1,3 +1,4 @@
+//*CMZ :  2.21/07 21/02/99  19.15.32  by  Valery Fine(fine@mail.cern.ch)
 //*CMZ :  1.03/08 09/11/97  17.30.21  by  Rene Brun
 //*-- Author :    "Valery fine"   31/10/97
 #ifndef ROOT_TMarker3DBox
@@ -80,7 +81,7 @@ public:
     virtual Bool_t  Is3D() {return kTRUE;}
 
     virtual void    Paint(Option_t *option);
-    virtual void    PaintShape(X3DBuffer *buff);
+    virtual void    PaintShape(X3DBuffer *buff, Bool_t rangeView=kFALSE);
     virtual void    SavePrimitive(ofstream &out, Option_t *option);
     virtual void    SetPoints(Float_t *buff);
     virtual void    SetDirection(Float_t theta, Float_t phi);

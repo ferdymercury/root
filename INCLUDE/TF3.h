@@ -1,3 +1,4 @@
+//*CMZ :  2.21/01 11/01/99  10.19.53  by  Rene Brun
 //*CMZ :  2.20/01 01/12/98  21.46.12  by  Rene Brun
 //*CMZ :  1.03/09 05/12/97  17.00.17  by  Fons Rademakers
 //*-- Author :    Rene Brun   27/10/95
@@ -53,22 +54,25 @@ public:
 
    TF3(const TF3 &f3);
    virtual   ~TF3();
-   virtual void   Copy(TObject &f3);
-   virtual Int_t  DistancetoPrimitive(Int_t px, Int_t py);
-   virtual void   Draw(Option_t *option="");
-   virtual void   ExecuteEvent(Int_t event, Int_t px, Int_t py);
-          Int_t   GetNpz() {return fNpz;}
-   virtual void   GetRandom3(Float_t &xrandom, Float_t &yrandom, Float_t &zrandom);
-   virtual void   GetRange(Float_t &xmin, Float_t &xmax);
-   virtual void   GetRange(Float_t &xmin, Float_t &ymin, Float_t &xmax, Float_t &ymax);
-   virtual void   GetRange(Float_t &xmin, Float_t &ymin, Float_t &zmin, Float_t &xmax, Float_t &ymax, Float_t &zmax);
-   virtual Float_t GetZmin() {return fZmin;}
-   virtual Float_t GetZmax() {return fZmax;}
-   virtual void   Paint(Option_t *option="");
-   virtual void   SetNpz(Int_t npz=30);
-   virtual void   SetRange(Float_t xmin, Float_t xmax);
-   virtual void   SetRange(Float_t xmin, Float_t ymin, Float_t xmax, Float_t ymax);
-   virtual void   SetRange(Float_t xmin, Float_t ymin, Float_t zmin, Float_t xmax, Float_t ymax, Float_t zmax); // *MENU*
+   virtual void     Copy(TObject &f3);
+   virtual Int_t    DistancetoPrimitive(Int_t px, Int_t py);
+   virtual void     Draw(Option_t *option="");
+   virtual void     ExecuteEvent(Int_t event, Int_t px, Int_t py);
+          Int_t     GetNpz() {return fNpz;}
+   virtual void     GetRandom3(Float_t &xrandom, Float_t &yrandom, Float_t &zrandom);
+   virtual void     GetRange(Float_t &xmin, Float_t &xmax);
+   virtual void     GetRange(Float_t &xmin, Float_t &ymin, Float_t &xmax, Float_t &ymax);
+   virtual void     GetRange(Float_t &xmin, Float_t &ymin, Float_t &zmin, Float_t &xmax, Float_t &ymax, Float_t &zmax);
+   virtual Float_t  GetZmin() {return fZmin;}
+   virtual Float_t  GetZmax() {return fZmax;}
+   virtual Double_t Integral(Float_t a, Float_t b, Double_t *params=0, Float_t epsilon=0.000001) {return TF1::Integral(a,b,params,epsilon);}
+   virtual Double_t Integral(Float_t ax, Float_t bx, Float_t ay, Float_t by, Float_t epsilon=0.000001) {return TF1::Integral(ax,bx,ay,by,epsilon);}
+   virtual Double_t Integral(Float_t ax, Float_t bx, Float_t ay, Float_t by, Float_t az, Float_t bz, Float_t epsilon=0.000001);
+   virtual void     Paint(Option_t *option="");
+   virtual void     SetNpz(Int_t npz=30);
+   virtual void     SetRange(Float_t xmin, Float_t xmax);
+   virtual void     SetRange(Float_t xmin, Float_t ymin, Float_t xmax, Float_t ymax);
+   virtual void     SetRange(Float_t xmin, Float_t ymin, Float_t zmin, Float_t xmax, Float_t ymax, Float_t zmax); // *MENU*
 
    ClassDef(TF3,1)  //The Parametric 3-D function
 };

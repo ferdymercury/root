@@ -1,3 +1,4 @@
+//*CMZ :  2.21/05 08/02/99  12.33.11  by  Fons Rademakers
 //*CMZ :  2.20/00 10/11/98  13.12.08  by  Rene Brun
 //*CMZ :  2.00/13 29/10/98  18.03.44  by  Fons Rademakers
 //*CMZ :  2.00/00 05/03/98  20.15.05  by  Fons Rademakers
@@ -28,7 +29,7 @@
 // member one can see all currently active objects in the system.       //
 // Using the resource (in .rootrc): Root.ObjectStat one can toggle this //
 // feature on or off.                                                   //
-// Using the compile option NOSTATS one can de-active this feature      //
+// Using the compile option R__NOSTATS one can de-active this feature   //
 // for the entire system (for maximum performance in highly time        //
 // critical applications).                                              //
 //                                                                      //

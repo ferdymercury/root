@@ -1,5 +1,5 @@
-/*CMZ :  2.20/04 08/12/98  16.25.32  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   08/12/98*/
+/*CMZ :  2.21/08 17/03/99  13.13.44  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   17/03/99*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -370,7 +370,11 @@ int noerror;
   len=strlen(atom_tagname);
   for(i=G__struct.alltag-1;i>=0;i--) {
     if(len==G__struct.hash[i]&&strcmp(atom_tagname,G__struct.name[i])==0&&
+#ifndef G__OLDIMPLEMENTATION1010
+       (((char*)NULL==p&&-1==G__struct.parent_tagnum[i])||
+#else
        (-1==G__struct.parent_tagnum[i]||
+#endif
 	env_tagnum==G__struct.parent_tagnum[i]||
 #ifdef G__VIRTUALBASE
 	-1!=G__isanybase(G__struct.parent_tagnum[i],env_tagnum,0)||
@@ -378,7 +382,11 @@ int noerror;
 	-1!=G__isanybase(G__struct.parent_tagnum[i],env_tagnum)||
 #endif
 	G__isenclosingclass(G__struct.parent_tagnum[i],env_tagnum)
+#ifndef G__OLDIMPLEMENTATION1010
+	||((char*)NULL==p&&G__tmplt_def_tagnum==G__struct.parent_tagnum[i])
+#else
 	||G__tmplt_def_tagnum==G__struct.parent_tagnum[i]
+#endif
 #ifdef G__VIRTUALBASE
 	||-1!=G__isanybase(G__struct.parent_tagnum[i],G__tmplt_def_tagnum,0)
 #else
@@ -776,7 +784,7 @@ char type;
 	    ,G__ifile.name
 	    ,G__ifile.line_number);
 #endif
-  G__asm_noverflow=0;
+  G__abortbytecode();
 #endif
 
   /*

@@ -1,5 +1,5 @@
-//*CMZ :  2.20/05 13/12/98  10.55.18  by  Rene Brun
-//*-- Author :    Rene Brun   13/12/98
+//*CMZ :  2.21/07 08/03/99  12.34.01  by  Fons Rademakers
+//*-- Author :    Fons Rademakers   08/03/99
 //*CMZ :  1.00/09 23/04/97  17.59.54  by  Rene Brun
 //*-- Author :    Rene Brun   23/04/97
 #if defined(__hpux) && !defined(__GNUG__)
@@ -169,6 +169,7 @@ extern G__linked_taginfo G__G__Base1LN_TBenchmark;
 #undef malloc
 #endif
 
+extern "C" void G__cpp_reset_tagtableG__Base1();
 
 extern "C" void G__set_cpp_environmentG__Base1() {
   G__add_macro("__MAKECINT__");
@@ -231,6 +232,7 @@ extern "C" void G__set_cpp_environmentG__Base1() {
   G__add_compiledheader("TBenchmark.h");
   G__add_compiledheader("TTime.h");
   G__add_compiledheader("TTimer.h");
+  G__cpp_reset_tagtableG__Base1();
 }
 extern "C" int G__cpp_dllrevG__Base1() { return(51111); }
 
@@ -1140,7 +1142,7 @@ static int G__TDatime_wATDatime_7_2(G__value *result7,char *funcname,struct G__p
 
 
 /* TFile */
-static int G__TFile_TFile_1_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TFile_TFile_9_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    TFile *p=NULL;
    if(G__getaryconstruct()) p=new TFile[G__getaryconstruct()];
    else                    p=new TFile;
@@ -1151,7 +1153,7 @@ static int G__TFile_TFile_1_0(G__value *result7,char *funcname,struct G__param *
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TFile_TFile_2_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TFile_TFile_0_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    TFile *p=NULL;
    switch(libp->paran) {
    case 4:
@@ -1178,17 +1180,7 @@ static int G__TFile_TFile_2_0(G__value *result7,char *funcname,struct G__param *
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TFile_TFile_3_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
-   TFile *p=NULL;
-      p = new TFile(*(TFile*)libp->para[0].ref);
-      result7->obj.i = (long)p;
-      result7->ref = (long)p;
-      result7->type = 'u';
-      result7->tagnum = G__get_linked_tagnum(&G__G__Base1LN_TFile);
-   return(1 || funcname || hash || result7 || libp) ;
-}
-
-static int G__TFile_Close_5_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TFile_Close_2_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -1202,13 +1194,13 @@ static int G__TFile_Close_5_0(G__value *result7,char *funcname,struct G__param *
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TFile_Copy_6_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TFile_Copy_3_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TFile*)(G__getstructoffset()))->Copy(*(TObject*)libp->para[0].ref);
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TFile_Delete_7_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TFile_Delete_4_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -1222,7 +1214,7 @@ static int G__TFile_Delete_7_0(G__value *result7,char *funcname,struct G__param 
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TFile_Draw_8_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TFile_Draw_5_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -1236,79 +1228,79 @@ static int G__TFile_Draw_8_0(G__value *result7,char *funcname,struct G__param *l
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TFile_FillBuffer_9_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TFile_FillBuffer_6_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TFile*)(G__getstructoffset()))->FillBuffer(*(char**)libp->para[0].ref);
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TFile_Flush_0_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TFile_Flush_7_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TFile*)(G__getstructoffset()))->Flush();
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TFile_GetBestBuffer_1_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TFile_GetBestBuffer_8_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TFile*)(G__getstructoffset()))->GetBestBuffer());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TFile_GetCompressionLevel_2_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TFile_GetCompressionLevel_9_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TFile*)(G__getstructoffset()))->GetCompressionLevel());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TFile_GetCompressionFactor_3_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TFile_GetCompressionFactor_0_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letdouble(result7,102,(double)((TFile*)(G__getstructoffset()))->GetCompressionFactor());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TFile_GetEND_4_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TFile_GetEND_1_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TFile*)(G__getstructoffset()))->GetEND());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TFile_GetFd_5_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TFile_GetFd_2_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TFile*)(G__getstructoffset()))->GetFd());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TFile_GetListOfFree_6_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TFile_GetListOfFree_3_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((TFile*)(G__getstructoffset()))->GetListOfFree());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TFile_GetNfree_7_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TFile_GetNfree_4_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TFile*)(G__getstructoffset()))->GetNfree());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TFile_GetOption_8_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TFile_GetOption_5_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,67,(long)((TFile*)(G__getstructoffset()))->GetOption());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TFile_GetBytesRead_9_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TFile_GetBytesRead_6_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letdouble(result7,100,(double)((TFile*)(G__getstructoffset()))->GetBytesRead());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TFile_GetBytesWritten_0_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TFile_GetBytesWritten_7_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letdouble(result7,100,(double)((TFile*)(G__getstructoffset()))->GetBytesWritten());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TFile_GetVersion_1_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TFile_GetVersion_8_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TFile*)(G__getstructoffset()))->GetVersion());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TFile_IsOpen_2_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TFile_IsOpen_9_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,98,(long)((TFile*)(G__getstructoffset()))->IsOpen());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TFile_ls_3_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TFile_ls_0_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -1322,19 +1314,19 @@ static int G__TFile_ls_3_2(G__value *result7,char *funcname,struct G__param *lib
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TFile_MakeFree_4_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TFile_MakeFree_1_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TFile*)(G__getstructoffset()))->MakeFree((Seek_t)G__int(libp->para[0]),(Seek_t)G__int(libp->para[1]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TFile_Map_5_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TFile_Map_2_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TFile*)(G__getstructoffset()))->Map();
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TFile_Paint_6_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TFile_Paint_3_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -1348,7 +1340,7 @@ static int G__TFile_Paint_6_2(G__value *result7,char *funcname,struct G__param *
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TFile_Print_7_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TFile_Print_4_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -1362,24 +1354,24 @@ static int G__TFile_Print_7_2(G__value *result7,char *funcname,struct G__param *
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TFile_ReadBuffer_8_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TFile_ReadBuffer_5_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,98,(long)((TFile*)(G__getstructoffset()))->ReadBuffer((char*)G__int(libp->para[0]),(int)G__int(libp->para[1])));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TFile_ReadFree_9_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TFile_ReadFree_6_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TFile*)(G__getstructoffset()))->ReadFree();
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TFile_Recover_0_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TFile_Recover_7_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TFile*)(G__getstructoffset()))->Recover();
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TFile_Seek_1_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TFile_Seek_8_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 2:
       G__setnull(result7);
@@ -1393,7 +1385,7 @@ static int G__TFile_Seek_1_3(G__value *result7,char *funcname,struct G__param *l
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TFile_SetCompressionLevel_2_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TFile_SetCompressionLevel_9_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -1407,13 +1399,13 @@ static int G__TFile_SetCompressionLevel_2_3(G__value *result7,char *funcname,str
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TFile_SetEND_3_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TFile_SetEND_0_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TFile*)(G__getstructoffset()))->SetEND((Seek_t)G__int(libp->para[0]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TFile_SetOption_4_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TFile_SetOption_1_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -1427,23 +1419,23 @@ static int G__TFile_SetOption_4_3(G__value *result7,char *funcname,struct G__par
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TFile_Sizeof_5_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TFile_Sizeof_2_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TFile*)(G__getstructoffset()))->Sizeof());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TFile_SumBuffer_6_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TFile_SumBuffer_3_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TFile*)(G__getstructoffset()))->SumBuffer((Int_t)G__int(libp->para[0]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TFile_WriteBuffer_7_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TFile_WriteBuffer_4_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,98,(long)((TFile*)(G__getstructoffset()))->WriteBuffer((const char*)G__int(libp->para[0]),(int)G__int(libp->para[1])));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TFile_Write_8_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TFile_Write_5_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 3:
       G__setnull(result7);
@@ -1466,19 +1458,19 @@ static int G__TFile_Write_8_3(G__value *result7,char *funcname,struct G__param *
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TFile_WriteFree_9_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TFile_WriteFree_6_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TFile*)(G__getstructoffset()))->WriteFree();
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TFile_WriteHeader_0_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TFile_WriteHeader_7_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TFile*)(G__getstructoffset()))->WriteHeader();
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TFile_Open_1_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TFile_Open_8_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 4:
       G__letint(result7,85,(long)((TFile*)(G__getstructoffset()))->Open((const Text_t*)G__int(libp->para[0]),(Option_t*)G__int(libp->para[1])
@@ -1498,17 +1490,17 @@ static int G__TFile_Open_1_4(G__value *result7,char *funcname,struct G__param *l
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TFile_GetFileBytesRead_2_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TFile_GetFileBytesRead_9_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letdouble(result7,100,(double)((TFile*)(G__getstructoffset()))->GetFileBytesRead());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TFile_GetFileBytesWritten_3_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TFile_GetFileBytesWritten_0_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letdouble(result7,100,(double)((TFile*)(G__getstructoffset()))->GetFileBytesWritten());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TFile_SetFileBytesRead_4_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TFile_SetFileBytesRead_1_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -1522,7 +1514,7 @@ static int G__TFile_SetFileBytesRead_4_4(G__value *result7,char *funcname,struct
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TFile_SetFileBytesWritten_5_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TFile_SetFileBytesWritten_2_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -1536,61 +1528,61 @@ static int G__TFile_SetFileBytesWritten_5_4(G__value *result7,char *funcname,str
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TFile_DeclFileName_6_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TFile_DeclFileName_3_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,67,(long)((TFile*)(G__getstructoffset()))->DeclFileName());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TFile_DeclFileLine_7_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TFile_DeclFileLine_4_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TFile*)(G__getstructoffset()))->DeclFileLine());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TFile_ImplFileName_8_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TFile_ImplFileName_5_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,67,(long)((TFile*)(G__getstructoffset()))->ImplFileName());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TFile_ImplFileLine_9_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TFile_ImplFileLine_6_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TFile*)(G__getstructoffset()))->ImplFileLine());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TFile_Class_Version_0_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TFile_Class_Version_7_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,115,(long)((TFile*)(G__getstructoffset()))->Class_Version());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TFile_Class_1_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TFile_Class_8_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((TFile*)(G__getstructoffset()))->Class());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TFile_Dictionary_2_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TFile_Dictionary_9_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TFile*)(G__getstructoffset()))->Dictionary();
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TFile_IsA_3_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TFile_IsA_0_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((TFile*)(G__getstructoffset()))->IsA());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TFile_ShowMembers_4_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TFile_ShowMembers_1_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TFile*)(G__getstructoffset()))->ShowMembers(*(TMemberInspector*)libp->para[0].ref,(char*)G__int(libp->para[1]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TFile_Streamer_5_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TFile_Streamer_2_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TFile*)(G__getstructoffset()))->Streamer(*(TBuffer*)libp->para[0].ref);
    return(1 || funcname || hash || result7 || libp) ;
 }
 
 // automatic destructor
-static int G__TFile_wATFile_6_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TFile_wATFile_3_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    if(G__getaryconstruct())
      if(G__PVOID==G__getgvp())
        delete[] (TFile *)(G__getstructoffset());
@@ -1604,7 +1596,7 @@ static int G__TFile_wATFile_6_5(G__value *result7,char *funcname,struct G__param
 
 
 /* TDirectory */
-static int G__TDirectory_TDirectory_2_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TDirectory_TDirectory_4_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    TDirectory *p=NULL;
    if(G__getaryconstruct()) p=new TDirectory[G__getaryconstruct()];
    else                    p=new TDirectory;
@@ -1615,7 +1607,7 @@ static int G__TDirectory_TDirectory_2_0(G__value *result7,char *funcname,struct 
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TDirectory_TDirectory_3_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TDirectory_TDirectory_5_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    TDirectory *p=NULL;
    switch(libp->paran) {
    case 3:
@@ -1634,40 +1626,30 @@ static int G__TDirectory_TDirectory_3_0(G__value *result7,char *funcname,struct 
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TDirectory_TDirectory_4_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
-   TDirectory *p=NULL;
-      p = new TDirectory(*(TDirectory*)libp->para[0].ref);
-      result7->obj.i = (long)p;
-      result7->ref = (long)p;
-      result7->type = 'u';
-      result7->tagnum = G__get_linked_tagnum(&G__G__Base1LN_TDirectory);
-   return(1 || funcname || hash || result7 || libp) ;
-}
-
-static int G__TDirectory_Append_6_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TDirectory_Append_7_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TDirectory*)(G__getstructoffset()))->Append((TObject*)G__int(libp->para[0]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TDirectory_AppendKey_7_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TDirectory_AppendKey_8_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TDirectory*)(G__getstructoffset()))->AppendKey((TKey*)G__int(libp->para[0])));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TDirectory_Browse_8_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TDirectory_Browse_9_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TDirectory*)(G__getstructoffset()))->Browse((TBrowser*)G__int(libp->para[0]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TDirectory_Build_9_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TDirectory_Build_0_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TDirectory*)(G__getstructoffset()))->Build();
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TDirectory_Clear_0_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TDirectory_Clear_1_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -1681,7 +1663,7 @@ static int G__TDirectory_Clear_0_1(G__value *result7,char *funcname,struct G__pa
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TDirectory_Close_1_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TDirectory_Close_2_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -1695,13 +1677,13 @@ static int G__TDirectory_Close_1_1(G__value *result7,char *funcname,struct G__pa
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TDirectory_Copy_2_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TDirectory_Copy_3_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TDirectory*)(G__getstructoffset()))->Copy(*(TObject*)libp->para[0].ref);
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TDirectory_cd_3_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TDirectory_cd_4_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__letint(result7,98,(long)((TDirectory*)(G__getstructoffset()))->cd((const Text_t*)G__int(libp->para[0])));
@@ -1713,7 +1695,7 @@ static int G__TDirectory_cd_3_1(G__value *result7,char *funcname,struct G__param
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TDirectory_DeleteAll_4_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TDirectory_DeleteAll_5_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -1727,7 +1709,7 @@ static int G__TDirectory_DeleteAll_4_1(G__value *result7,char *funcname,struct G
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TDirectory_Delete_5_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TDirectory_Delete_6_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -1741,7 +1723,7 @@ static int G__TDirectory_Delete_5_1(G__value *result7,char *funcname,struct G__p
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TDirectory_Draw_6_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TDirectory_Draw_7_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -1755,23 +1737,23 @@ static int G__TDirectory_Draw_6_1(G__value *result7,char *funcname,struct G__par
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TDirectory_FillBuffer_7_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TDirectory_FillBuffer_8_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TDirectory*)(G__getstructoffset()))->FillBuffer(*(char**)libp->para[0].ref);
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TDirectory_Get_8_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TDirectory_Get_9_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((TDirectory*)(G__getstructoffset()))->Get((const Text_t*)G__int(libp->para[0])));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TDirectory_GetFile_9_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TDirectory_GetFile_0_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((TDirectory*)(G__getstructoffset()))->GetFile());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TDirectory_GetKey_0_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TDirectory_GetKey_1_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 2:
       G__letint(result7,85,(long)((TDirectory*)(G__getstructoffset()))->GetKey((const Text_t*)G__int(libp->para[0]),(const Short_t)G__int(libp->para[1])));
@@ -1783,62 +1765,62 @@ static int G__TDirectory_GetKey_0_2(G__value *result7,char *funcname,struct G__p
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TDirectory_GetList_1_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TDirectory_GetList_2_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((TDirectory*)(G__getstructoffset()))->GetList());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TDirectory_GetListOfKeys_2_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TDirectory_GetListOfKeys_3_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((TDirectory*)(G__getstructoffset()))->GetListOfKeys());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TDirectory_GetMother_3_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TDirectory_GetMother_4_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((TDirectory*)(G__getstructoffset()))->GetMother());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TDirectory_GetNkeys_4_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TDirectory_GetNkeys_5_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TDirectory*)(G__getstructoffset()))->GetNkeys());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TDirectory_GetSeekDir_5_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TDirectory_GetSeekDir_6_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TDirectory*)(G__getstructoffset()))->GetSeekDir());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TDirectory_GetSeekParent_6_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TDirectory_GetSeekParent_7_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TDirectory*)(G__getstructoffset()))->GetSeekParent());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TDirectory_GetSeekKeys_7_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TDirectory_GetSeekKeys_8_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TDirectory*)(G__getstructoffset()))->GetSeekKeys());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TDirectory_GetPath_8_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TDirectory_GetPath_9_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,67,(long)((TDirectory*)(G__getstructoffset()))->GetPath());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TDirectory_IsFolder_9_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TDirectory_IsFolder_0_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,98,(long)((TDirectory*)(G__getstructoffset()))->IsFolder());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TDirectory_IsModified_0_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TDirectory_IsModified_1_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,98,(long)((TDirectory*)(G__getstructoffset()))->IsModified());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TDirectory_IsWritable_1_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TDirectory_IsWritable_2_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,98,(long)((TDirectory*)(G__getstructoffset()))->IsWritable());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TDirectory_ls_2_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TDirectory_ls_3_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -1852,7 +1834,7 @@ static int G__TDirectory_ls_2_3(G__value *result7,char *funcname,struct G__param
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TDirectory_mkdir_3_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TDirectory_mkdir_4_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 2:
       G__letint(result7,85,(long)((TDirectory*)(G__getstructoffset()))->mkdir((const Text_t*)G__int(libp->para[0]),(const Text_t*)G__int(libp->para[1])));
@@ -1864,7 +1846,7 @@ static int G__TDirectory_mkdir_3_3(G__value *result7,char *funcname,struct G__pa
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TDirectory_Paint_4_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TDirectory_Paint_5_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -1878,7 +1860,7 @@ static int G__TDirectory_Paint_4_3(G__value *result7,char *funcname,struct G__pa
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TDirectory_Print_5_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TDirectory_Print_6_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -1892,7 +1874,7 @@ static int G__TDirectory_Print_5_3(G__value *result7,char *funcname,struct G__pa
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TDirectory_Purge_6_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TDirectory_Purge_7_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -1906,13 +1888,13 @@ static int G__TDirectory_Purge_6_3(G__value *result7,char *funcname,struct G__pa
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TDirectory_pwd_7_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TDirectory_pwd_8_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TDirectory*)(G__getstructoffset()))->pwd();
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TDirectory_ReadAll_8_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TDirectory_ReadAll_9_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -1926,25 +1908,25 @@ static int G__TDirectory_ReadAll_8_3(G__value *result7,char *funcname,struct G__
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TDirectory_ReadKeys_9_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TDirectory_ReadKeys_0_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TDirectory*)(G__getstructoffset()))->ReadKeys();
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TDirectory_RecursiveRemove_0_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TDirectory_RecursiveRemove_1_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TDirectory*)(G__getstructoffset()))->RecursiveRemove((TObject*)G__int(libp->para[0]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TDirectory_Save_1_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TDirectory_Save_2_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TDirectory*)(G__getstructoffset()))->Save();
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TDirectory_SaveSelf_2_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TDirectory_SaveSelf_3_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -1958,24 +1940,24 @@ static int G__TDirectory_SaveSelf_2_4(G__value *result7,char *funcname,struct G_
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TDirectory_SetModified_3_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TDirectory_SetModified_4_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TDirectory*)(G__getstructoffset()))->SetModified();
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TDirectory_SetMother_4_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TDirectory_SetMother_5_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TDirectory*)(G__getstructoffset()))->SetMother((TObject*)G__int(libp->para[0]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TDirectory_Sizeof_5_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TDirectory_Sizeof_6_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TDirectory*)(G__getstructoffset()))->Sizeof());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TDirectory_Write_6_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TDirectory_Write_7_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 3:
       G__setnull(result7);
@@ -1998,92 +1980,92 @@ static int G__TDirectory_Write_6_4(G__value *result7,char *funcname,struct G__pa
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TDirectory_WriteDirHeader_7_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TDirectory_WriteDirHeader_8_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TDirectory*)(G__getstructoffset()))->WriteDirHeader();
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TDirectory_WriteKeys_8_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TDirectory_WriteKeys_9_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TDirectory*)(G__getstructoffset()))->WriteKeys();
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TDirectory_Cd_9_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TDirectory_Cd_0_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,98,(long)((TDirectory*)(G__getstructoffset()))->Cd((const Text_t*)G__int(libp->para[0])));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TDirectory_DecodeNameCycle_0_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TDirectory_DecodeNameCycle_1_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TDirectory*)(G__getstructoffset()))->DecodeNameCycle((const Text_t*)G__int(libp->para[0]),(Text_t*)G__int(libp->para[1])
 ,libp->para[2].ref?*(Short_t*)libp->para[2].ref:G__Mshort(libp->para[2]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TDirectory_EncodeNameCycle_1_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TDirectory_EncodeNameCycle_2_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TDirectory*)(G__getstructoffset()))->EncodeNameCycle((Text_t*)G__int(libp->para[0]),(const Text_t*)G__int(libp->para[1])
 ,(Short_t)G__int(libp->para[2]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TDirectory_DeclFileName_2_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TDirectory_DeclFileName_3_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,67,(long)((TDirectory*)(G__getstructoffset()))->DeclFileName());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TDirectory_DeclFileLine_3_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TDirectory_DeclFileLine_4_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TDirectory*)(G__getstructoffset()))->DeclFileLine());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TDirectory_ImplFileName_4_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TDirectory_ImplFileName_5_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,67,(long)((TDirectory*)(G__getstructoffset()))->ImplFileName());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TDirectory_ImplFileLine_5_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TDirectory_ImplFileLine_6_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TDirectory*)(G__getstructoffset()))->ImplFileLine());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TDirectory_Class_Version_6_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TDirectory_Class_Version_7_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,115,(long)((TDirectory*)(G__getstructoffset()))->Class_Version());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TDirectory_Class_7_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TDirectory_Class_8_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((TDirectory*)(G__getstructoffset()))->Class());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TDirectory_Dictionary_8_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TDirectory_Dictionary_9_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TDirectory*)(G__getstructoffset()))->Dictionary();
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TDirectory_IsA_9_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TDirectory_IsA_0_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((TDirectory*)(G__getstructoffset()))->IsA());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TDirectory_ShowMembers_0_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TDirectory_ShowMembers_1_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TDirectory*)(G__getstructoffset()))->ShowMembers(*(TMemberInspector*)libp->para[0].ref,(char*)G__int(libp->para[1]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TDirectory_Streamer_1_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TDirectory_Streamer_2_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TDirectory*)(G__getstructoffset()))->Streamer(*(TBuffer*)libp->para[0].ref);
    return(1 || funcname || hash || result7 || libp) ;
 }
 
 // automatic destructor
-static int G__TDirectory_wATDirectory_2_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TDirectory_wATDirectory_3_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    if(G__getaryconstruct())
      if(G__PVOID==G__getgvp())
        delete[] (TDirectory *)(G__getstructoffset());
@@ -4186,65 +4168,70 @@ static int G__TAxis_GetBinLowEdge_3_1(G__value *result7,char *funcname,struct G_
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TAxis_GetBinWidth_4_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TAxis_GetBinUpEdge_4_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letdouble(result7,102,(double)((TAxis*)(G__getstructoffset()))->GetBinUpEdge((Int_t)G__int(libp->para[0])));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TAxis_GetBinWidth_5_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letdouble(result7,102,(double)((TAxis*)(G__getstructoffset()))->GetBinWidth((Int_t)G__int(libp->para[0])));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TAxis_GetCenter_5_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TAxis_GetCenter_6_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TAxis*)(G__getstructoffset()))->GetCenter((Axis_t*)G__int(libp->para[0]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TAxis_GetLabel_6_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TAxis_GetLabel_7_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TAxis*)(G__getstructoffset()))->GetLabel((Text_t*)G__int(libp->para[0]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TAxis_GetLowEdge_7_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TAxis_GetLowEdge_8_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TAxis*)(G__getstructoffset()))->GetLowEdge((Axis_t*)G__int(libp->para[0]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TAxis_GetNbins_8_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TAxis_GetNbins_9_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TAxis*)(G__getstructoffset()))->GetNbins());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TAxis_GetTitle_9_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TAxis_GetTitle_0_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,67,(long)((TAxis*)(G__getstructoffset()))->GetTitle());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TAxis_GetXbins_0_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TAxis_GetXbins_1_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((TAxis*)(G__getstructoffset()))->GetXbins());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TAxis_GetFirst_1_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TAxis_GetFirst_2_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TAxis*)(G__getstructoffset()))->GetFirst());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TAxis_GetLast_2_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TAxis_GetLast_3_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TAxis*)(G__getstructoffset()))->GetLast());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TAxis_GetXmin_3_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TAxis_GetXmin_4_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letdouble(result7,102,(double)((TAxis*)(G__getstructoffset()))->GetXmin());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TAxis_GetXmax_4_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TAxis_GetXmax_5_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letdouble(result7,102,(double)((TAxis*)(G__getstructoffset()))->GetXmax());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TAxis_ls_5_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TAxis_ls_6_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -4258,7 +4245,7 @@ static int G__TAxis_ls_5_2(G__value *result7,char *funcname,struct G__param *lib
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TAxis_Paint_6_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TAxis_Paint_7_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -4272,14 +4259,14 @@ static int G__TAxis_Paint_6_2(G__value *result7,char *funcname,struct G__param *
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TAxis_PaintAxis_7_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TAxis_PaintAxis_8_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TAxis*)(G__getstructoffset()))->PaintAxis((Coord_t)G__double(libp->para[0]),(Coord_t)G__double(libp->para[1])
 ,(Coord_t)G__double(libp->para[2]),(Coord_t)G__double(libp->para[3]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TAxis_Print_8_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TAxis_Print_9_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -4293,38 +4280,38 @@ static int G__TAxis_Print_8_2(G__value *result7,char *funcname,struct G__param *
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TAxis_Set_9_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TAxis_Set_0_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TAxis*)(G__getstructoffset()))->Set((Int_t)G__int(libp->para[0]),(Axis_t)G__double(libp->para[1])
 ,(Axis_t)G__double(libp->para[2]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TAxis_Set_0_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TAxis_Set_1_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TAxis*)(G__getstructoffset()))->Set((Int_t)G__int(libp->para[0]),(Axis_t*)G__int(libp->para[1]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TAxis_SetBinLabel_1_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TAxis_SetBinLabel_2_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TAxis*)(G__getstructoffset()))->SetBinLabel((Int_t)G__int(libp->para[0]),(Text_t*)G__int(libp->para[1]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TAxis_SetLabel_2_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TAxis_SetLabel_3_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TAxis*)(G__getstructoffset()))->SetLabel((const Text_t*)G__int(libp->para[0]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TAxis_SetLimits_3_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TAxis_SetLimits_4_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TAxis*)(G__getstructoffset()))->SetLimits((Axis_t)G__double(libp->para[0]),(Axis_t)G__double(libp->para[1]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TAxis_SetRange_4_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TAxis_SetRange_5_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 2:
       G__setnull(result7);
@@ -4342,61 +4329,61 @@ static int G__TAxis_SetRange_4_3(G__value *result7,char *funcname,struct G__para
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TAxis_DeclFileName_5_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TAxis_DeclFileName_6_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,67,(long)((TAxis*)(G__getstructoffset()))->DeclFileName());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TAxis_DeclFileLine_6_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TAxis_DeclFileLine_7_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TAxis*)(G__getstructoffset()))->DeclFileLine());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TAxis_ImplFileName_7_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TAxis_ImplFileName_8_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,67,(long)((TAxis*)(G__getstructoffset()))->ImplFileName());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TAxis_ImplFileLine_8_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TAxis_ImplFileLine_9_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TAxis*)(G__getstructoffset()))->ImplFileLine());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TAxis_Class_Version_9_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TAxis_Class_Version_0_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,115,(long)((TAxis*)(G__getstructoffset()))->Class_Version());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TAxis_Class_0_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TAxis_Class_1_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((TAxis*)(G__getstructoffset()))->Class());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TAxis_Dictionary_1_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TAxis_Dictionary_2_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TAxis*)(G__getstructoffset()))->Dictionary();
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TAxis_IsA_2_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TAxis_IsA_3_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((TAxis*)(G__getstructoffset()))->IsA());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TAxis_ShowMembers_3_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TAxis_ShowMembers_4_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TAxis*)(G__getstructoffset()))->ShowMembers(*(TMemberInspector*)libp->para[0].ref,(char*)G__int(libp->para[1]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TAxis_Streamer_4_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TAxis_Streamer_5_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TAxis*)(G__getstructoffset()))->Streamer(*(TBuffer*)libp->para[0].ref);
    return(1 || funcname || hash || result7 || libp) ;
 }
 
 // automatic destructor
-static int G__TAxis_wATAxis_5_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TAxis_wATAxis_6_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    if(G__getaryconstruct())
      if(G__PVOID==G__getgvp())
        delete[] (TAxis *)(G__getstructoffset());
@@ -6487,9 +6474,6 @@ extern "C" void G__cpp_setup_typetableG__Base1() {
    G__search_typename2("Size_t",102,-1,0,
 -1);
    G__setnewtype(-1,"Attribute size",0);
-   G__search_typename2("HANDLE",104,-1,0,
--1);
-   G__setnewtype(-1,NULL,0);
    G__search_typename2("G__InterfaceMethod",89,-1,0,
 -1);
    G__setnewtype(-1,NULL,0);
@@ -7106,73 +7090,88 @@ static void G__setup_memfuncTFile(void) {
    /* TFile */
    G__tag_memfunc_setup(G__get_linked_tagnum(&G__G__Base1LN_TFile));
    G__memfunc_setup("Init",404,(G__InterfaceMethod)NULL,121,-1,-1,0,1,1,2,0,"b - 'Bool_t' 0 - create",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("TFile",468,G__TFile_TFile_1_0,105,G__get_linked_tagnum(&G__G__Base1LN_TFile),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("TFile",468,G__TFile_TFile_2_0,105,G__get_linked_tagnum(&G__G__Base1LN_TFile),-1,0,4,1,1,0,
+   G__memfunc_setup("SysOpen",721,(G__InterfaceMethod)NULL,105,-1,G__defined_typename("Int_t"),0,3,1,2,8,
+"C - - 0 - pathname i - 'Int_t' 0 - flags "
+"h - 'UInt_t' 0 - mode",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SysClose",821,(G__InterfaceMethod)NULL,105,-1,G__defined_typename("Int_t"),0,1,1,2,8,"i - 'Int_t' 0 - fd",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SysRead",699,(G__InterfaceMethod)NULL,105,-1,G__defined_typename("Int_t"),0,3,1,2,8,
+"i - 'Int_t' 0 - fd Y - - 0 - buf "
+"i - 'Int_t' 0 - len",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SysWrite",842,(G__InterfaceMethod)NULL,105,-1,G__defined_typename("Int_t"),0,3,1,2,8,
+"i - 'Int_t' 0 - fd Y - - 0 - buf "
+"i - 'Int_t' 0 - len",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SysSeek",711,(G__InterfaceMethod)NULL,105,-1,G__defined_typename("Seek_t"),0,3,1,2,8,
+"i - 'Int_t' 0 - fd i - 'Seek_t' 0 - offset "
+"i - 'Int_t' 0 - whence",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SysSync",732,(G__InterfaceMethod)NULL,105,-1,G__defined_typename("Int_t"),0,1,1,2,8,"i - 'Int_t' 0 - fd",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("TFile",468,(G__InterfaceMethod)NULL,105,G__get_linked_tagnum(&G__G__Base1LN_TFile),-1,0,1,1,4,0,"u 'TFile' - 1 - -","Files cannot be copied",(void*)NULL,0);
+   G__memfunc_setup("operator=",937,(G__InterfaceMethod)NULL,121,-1,-1,0,1,1,4,0,"u 'TFile' - 1 - -",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("TFile",468,G__TFile_TFile_9_0,105,G__get_linked_tagnum(&G__G__Base1LN_TFile),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("TFile",468,G__TFile_TFile_0_1,105,G__get_linked_tagnum(&G__G__Base1LN_TFile),-1,0,4,1,1,0,
 "C - 'Text_t' 0 - fname C - 'Option_t' 0 \"\" option "
 "C - 'Text_t' 0 \"\" ftitle i - 'Int_t' 0 1 compress",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("TFile",468,G__TFile_TFile_3_0,105,G__get_linked_tagnum(&G__G__Base1LN_TFile),-1,0,1,1,1,0,"u 'TFile' - 1 - file",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Close",502,G__TFile_Close_5_0,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option","*MENU*",(void*)NULL,1);
-   G__memfunc_setup("Copy",411,G__TFile_Copy_6_0,121,-1,-1,0,1,1,1,0,"u 'TObject' - 1 - file",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("Delete",595,G__TFile_Delete_7_0,121,-1,-1,0,1,1,1,0,"C - 'Text_t' 0 \"\" namecycle",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("Draw",398,G__TFile_Draw_8_0,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("FillBuffer",993,G__TFile_FillBuffer_9_0,121,-1,-1,0,1,1,1,0,"C - - 1 - buffer",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("Flush",514,G__TFile_Flush_0_1,121,-1,-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("GetBestBuffer",1288,G__TFile_GetBestBuffer_1_1,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetCompressionLevel",1962,G__TFile_GetCompressionLevel_2_1,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetCompressionFactor",2065,G__TFile_GetCompressionFactor_3_1,102,-1,G__defined_typename("Float_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetEND",503,G__TFile_GetEND_4_1,105,-1,G__defined_typename("Seek_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("GetFd",458,G__TFile_GetFd_5_1,105,-1,G__defined_typename("Int_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetListOfFree",1267,G__TFile_GetListOfFree_6_1,85,G__get_linked_tagnum(&G__G__Base1LN_TList),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetNfree",784,G__TFile_GetNfree_7_1,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("GetOption",921,G__TFile_GetOption_8_1,67,-1,G__defined_typename("Option_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("GetBytesRead",1187,G__TFile_GetBytesRead_9_1,100,-1,G__defined_typename("Double_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetBytesWritten",1556,G__TFile_GetBytesWritten_0_2,100,-1,G__defined_typename("Double_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetVersion",1030,G__TFile_GetVersion_1_2,105,-1,G__defined_typename("Int_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("IsOpen",590,G__TFile_IsOpen_2_2,98,-1,G__defined_typename("Bool_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("ls",223,G__TFile_ls_3_2,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("MakeFree",768,G__TFile_MakeFree_4_2,121,-1,-1,0,2,1,1,0,
+   G__memfunc_setup("Close",502,G__TFile_Close_2_1,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option","*MENU*",(void*)NULL,1);
+   G__memfunc_setup("Copy",411,G__TFile_Copy_3_1,121,-1,-1,0,1,1,1,0,"u 'TObject' - 1 - -",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Delete",595,G__TFile_Delete_4_1,121,-1,-1,0,1,1,1,0,"C - 'Text_t' 0 \"\" namecycle",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Draw",398,G__TFile_Draw_5_1,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("FillBuffer",993,G__TFile_FillBuffer_6_1,121,-1,-1,0,1,1,1,0,"C - - 1 - buffer",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Flush",514,G__TFile_Flush_7_1,121,-1,-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetBestBuffer",1288,G__TFile_GetBestBuffer_8_1,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetCompressionLevel",1962,G__TFile_GetCompressionLevel_9_1,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetCompressionFactor",2065,G__TFile_GetCompressionFactor_0_2,102,-1,G__defined_typename("Float_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetEND",503,G__TFile_GetEND_1_2,105,-1,G__defined_typename("Seek_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetFd",458,G__TFile_GetFd_2_2,105,-1,G__defined_typename("Int_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetListOfFree",1267,G__TFile_GetListOfFree_3_2,85,G__get_linked_tagnum(&G__G__Base1LN_TList),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetNfree",784,G__TFile_GetNfree_4_2,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetOption",921,G__TFile_GetOption_5_2,67,-1,G__defined_typename("Option_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetBytesRead",1187,G__TFile_GetBytesRead_6_2,100,-1,G__defined_typename("Double_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetBytesWritten",1556,G__TFile_GetBytesWritten_7_2,100,-1,G__defined_typename("Double_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetVersion",1030,G__TFile_GetVersion_8_2,105,-1,G__defined_typename("Int_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("IsOpen",590,G__TFile_IsOpen_9_2,98,-1,G__defined_typename("Bool_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("ls",223,G__TFile_ls_0_3,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("MakeFree",768,G__TFile_MakeFree_1_3,121,-1,-1,0,2,1,1,0,
 "i - 'Seek_t' 0 - first i - 'Seek_t' 0 - last",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("Map",286,G__TFile_Map_5_2,121,-1,-1,0,0,1,1,0,"","*MENU*",(void*)NULL,1);
-   G__memfunc_setup("Paint",508,G__TFile_Paint_6_2,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("Print",525,G__TFile_Print_7_2,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("ReadBuffer",982,G__TFile_ReadBuffer_8_2,98,-1,G__defined_typename("Bool_t"),0,2,1,1,0,
+   G__memfunc_setup("Map",286,G__TFile_Map_2_3,121,-1,-1,0,0,1,1,0,"","*MENU*",(void*)NULL,1);
+   G__memfunc_setup("Paint",508,G__TFile_Paint_3_3,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Print",525,G__TFile_Print_4_3,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("ReadBuffer",982,G__TFile_ReadBuffer_5_3,98,-1,G__defined_typename("Bool_t"),0,2,1,1,0,
 "C - - 0 - buf i - - 0 - len",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("ReadFree",766,G__TFile_ReadFree_9_2,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("Recover",726,G__TFile_Recover_0_3,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("Seek",392,G__TFile_Seek_1_3,121,-1,-1,0,2,1,1,0,
+   G__memfunc_setup("ReadFree",766,G__TFile_ReadFree_6_3,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Recover",726,G__TFile_Recover_7_3,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Seek",392,G__TFile_Seek_8_3,121,-1,-1,0,2,1,1,0,
 "i - 'Seek_t' 0 - offset i 'TFile::ERelativeTo' - 0 kBeg pos",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("SetCompressionLevel",1974,G__TFile_SetCompressionLevel_2_3,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 1 level",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("SetEND",515,G__TFile_SetEND_3_3,121,-1,-1,0,1,1,1,0,"i - 'Seek_t' 0 - last",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("SetOption",933,G__TFile_SetOption_4_3,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \">\" option",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("Sizeof",624,G__TFile_Sizeof_5_3,105,-1,G__defined_typename("Int_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("SumBuffer",911,G__TFile_SumBuffer_6_3,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 - bufsize",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("WriteBuffer",1125,G__TFile_WriteBuffer_7_3,98,-1,G__defined_typename("Bool_t"),0,2,1,1,0,
+   G__memfunc_setup("SetCompressionLevel",1974,G__TFile_SetCompressionLevel_9_3,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 1 level",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetEND",515,G__TFile_SetEND_0_4,121,-1,-1,0,1,1,1,0,"i - 'Seek_t' 0 - last",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetOption",933,G__TFile_SetOption_1_4,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \">\" option",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Sizeof",624,G__TFile_Sizeof_2_4,105,-1,G__defined_typename("Int_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SumBuffer",911,G__TFile_SumBuffer_3_4,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 - bufsize",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("WriteBuffer",1125,G__TFile_WriteBuffer_4_4,98,-1,G__defined_typename("Bool_t"),0,2,1,1,0,
 "C - - 0 - buf i - - 0 - len",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("Write",523,G__TFile_Write_8_3,121,-1,-1,0,3,1,1,0,
+   G__memfunc_setup("Write",523,G__TFile_Write_5_4,121,-1,-1,0,3,1,1,0,
 "C - 'Text_t' 0 0 name i - 'Int_t' 0 0 opt "
 "i - 'Int_t' 0 0 bufsiz",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("WriteFree",909,G__TFile_WriteFree_9_3,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("WriteHeader",1108,G__TFile_WriteHeader_0_4,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("Open",402,G__TFile_Open_1_4,85,G__get_linked_tagnum(&G__G__Base1LN_TFile),-1,0,4,1,1,0,
+   G__memfunc_setup("WriteFree",909,G__TFile_WriteFree_6_4,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("WriteHeader",1108,G__TFile_WriteHeader_7_4,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Open",402,G__TFile_Open_8_4,85,G__get_linked_tagnum(&G__G__Base1LN_TFile),-1,0,4,1,1,0,
 "C - 'Text_t' 0 - name C - 'Option_t' 0 \"\" option "
 "C - 'Text_t' 0 \"\" ftitle i - 'Int_t' 0 1 compress",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetFileBytesRead",1571,G__TFile_GetFileBytesRead_2_4,100,-1,G__defined_typename("Double_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetFileBytesWritten",1940,G__TFile_GetFileBytesWritten_3_4,100,-1,G__defined_typename("Double_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("SetFileBytesRead",1583,G__TFile_SetFileBytesRead_4_4,121,-1,-1,0,1,1,1,0,"d - 'Double_t' 0 0 bytes",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("SetFileBytesWritten",1952,G__TFile_SetFileBytesWritten_5_4,121,-1,-1,0,1,1,1,0,"d - 'Double_t' 0 0 bytes",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("DeclFileName",1145,G__TFile_DeclFileName_6_4,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("DeclFileLine",1152,G__TFile_DeclFileLine_7_4,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("ImplFileName",1171,G__TFile_ImplFileName_8_4,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("ImplFileLine",1178,G__TFile_ImplFileLine_9_4,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Class_Version",1339,G__TFile_Class_Version_0_5,115,-1,G__defined_typename("Version_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Class",502,G__TFile_Class_1_5,85,G__get_linked_tagnum(&G__G__Base1LN_TClass),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Dictionary",1046,G__TFile_Dictionary_2_5,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("IsA",253,G__TFile_IsA_3_5,85,G__get_linked_tagnum(&G__G__Base1LN_TClass),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("ShowMembers",1132,G__TFile_ShowMembers_4_5,121,-1,-1,0,2,1,1,0,
+   G__memfunc_setup("GetFileBytesRead",1571,G__TFile_GetFileBytesRead_9_4,100,-1,G__defined_typename("Double_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetFileBytesWritten",1940,G__TFile_GetFileBytesWritten_0_5,100,-1,G__defined_typename("Double_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("SetFileBytesRead",1583,G__TFile_SetFileBytesRead_1_5,121,-1,-1,0,1,1,1,0,"d - 'Double_t' 0 0 bytes",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("SetFileBytesWritten",1952,G__TFile_SetFileBytesWritten_2_5,121,-1,-1,0,1,1,1,0,"d - 'Double_t' 0 0 bytes",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("DeclFileName",1145,G__TFile_DeclFileName_3_5,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("DeclFileLine",1152,G__TFile_DeclFileLine_4_5,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ImplFileName",1171,G__TFile_ImplFileName_5_5,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ImplFileLine",1178,G__TFile_ImplFileLine_6_5,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Class_Version",1339,G__TFile_Class_Version_7_5,115,-1,G__defined_typename("Version_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Class",502,G__TFile_Class_8_5,85,G__get_linked_tagnum(&G__G__Base1LN_TClass),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Dictionary",1046,G__TFile_Dictionary_9_5,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("IsA",253,G__TFile_IsA_0_6,85,G__get_linked_tagnum(&G__G__Base1LN_TClass),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("ShowMembers",1132,G__TFile_ShowMembers_1_6,121,-1,-1,0,2,1,1,0,
 "u 'TMemberInspector' - 1 - insp C - - 0 - parent",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("Streamer",835,G__TFile_Streamer_5_5,121,-1,-1,0,1,1,1,0,"u 'TBuffer' - 1 - b",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Streamer",835,G__TFile_Streamer_2_6,121,-1,-1,0,1,1,1,0,"u 'TBuffer' - 1 - b",(char*)NULL,(void*)NULL,1);
    // automatic destructor
-   G__memfunc_setup("~TFile",594,G__TFile_wATFile_6_5,(int)('y'),-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("~TFile",594,G__TFile_wATFile_3_6,(int)('y'),-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
    G__tag_memfunc_reset();
 }
 
@@ -7181,78 +7180,79 @@ static void G__setup_memfuncTDirectory(void) {
    G__tag_memfunc_setup(G__get_linked_tagnum(&G__G__Base1LN_TDirectory));
    G__memfunc_setup("cd1",248,(G__InterfaceMethod)NULL,98,-1,G__defined_typename("Bool_t"),0,1,1,2,0,"C - 'Text_t' 0 - path",(char*)NULL,(void*)NULL,0);
    G__memfunc_setup("Cd1",216,(G__InterfaceMethod)NULL,98,-1,G__defined_typename("Bool_t"),0,1,1,2,0,"C - 'Text_t' 0 - path",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("TDirectory",1033,G__TDirectory_TDirectory_2_0,105,G__get_linked_tagnum(&G__G__Base1LN_TDirectory),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("TDirectory",1033,G__TDirectory_TDirectory_3_0,105,G__get_linked_tagnum(&G__G__Base1LN_TDirectory),-1,0,3,1,1,0,
+   G__memfunc_setup("TDirectory",1033,(G__InterfaceMethod)NULL,105,G__get_linked_tagnum(&G__G__Base1LN_TDirectory),-1,0,1,1,4,0,"u 'TDirectory' - 1 - directory","Directories cannot be copied",(void*)NULL,0);
+   G__memfunc_setup("operator=",937,(G__InterfaceMethod)NULL,121,-1,-1,0,1,1,4,0,"u 'TDirectory' - 1 - -",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("TDirectory",1033,G__TDirectory_TDirectory_4_0,105,G__get_linked_tagnum(&G__G__Base1LN_TDirectory),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("TDirectory",1033,G__TDirectory_TDirectory_5_0,105,G__get_linked_tagnum(&G__G__Base1LN_TDirectory),-1,0,3,1,1,0,
 "C - 'Text_t' 0 - name C - 'Text_t' 0 - title "
 "C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("TDirectory",1033,G__TDirectory_TDirectory_4_0,105,G__get_linked_tagnum(&G__G__Base1LN_TDirectory),-1,0,1,1,1,0,"u 'TDirectory' - 1 - directory",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Append",600,G__TDirectory_Append_6_0,121,-1,-1,0,1,1,1,0,"U 'TObject' - 0 - obj",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("AppendKey",897,G__TDirectory_AppendKey_7_0,105,-1,G__defined_typename("Int_t"),0,1,1,1,0,"U 'TKey' - 0 - key",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Browse",626,G__TDirectory_Browse_8_0,121,-1,-1,0,1,1,1,0,"U 'TBrowser' - 0 - b",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("Build",496,G__TDirectory_Build_9_0,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Clear",487,G__TDirectory_Clear_0_1,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("Close",502,G__TDirectory_Close_1_1,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("Copy",411,G__TDirectory_Copy_2_1,121,-1,-1,0,1,1,1,0,"u 'TObject' - 1 - directory",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("cd",199,G__TDirectory_cd_3_1,98,-1,G__defined_typename("Bool_t"),0,1,1,1,0,"C - 'Text_t' 0 0 path",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("DeleteAll",876,G__TDirectory_DeleteAll_4_1,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("Delete",595,G__TDirectory_Delete_5_1,121,-1,-1,0,1,1,1,0,"C - 'Text_t' 0 \"\" namecycle",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("Draw",398,G__TDirectory_Draw_6_1,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("FillBuffer",993,G__TDirectory_FillBuffer_7_1,121,-1,-1,0,1,1,1,0,"C - - 1 - buffer",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("Get",288,G__TDirectory_Get_8_1,85,G__get_linked_tagnum(&G__G__Base1LN_TObject),-1,0,1,1,1,0,"C - 'Text_t' 0 - namecycle",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("GetFile",672,G__TDirectory_GetFile_9_1,85,G__get_linked_tagnum(&G__G__Base1LN_TFile),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("GetKey",585,G__TDirectory_GetKey_0_2,85,G__get_linked_tagnum(&G__G__Base1LN_TKey),-1,0,2,1,1,0,
+   G__memfunc_setup("Append",600,G__TDirectory_Append_7_0,121,-1,-1,0,1,1,1,0,"U 'TObject' - 0 - obj",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("AppendKey",897,G__TDirectory_AppendKey_8_0,105,-1,G__defined_typename("Int_t"),0,1,1,1,0,"U 'TKey' - 0 - key",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Browse",626,G__TDirectory_Browse_9_0,121,-1,-1,0,1,1,1,0,"U 'TBrowser' - 0 - b",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Build",496,G__TDirectory_Build_0_1,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Clear",487,G__TDirectory_Clear_1_1,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Close",502,G__TDirectory_Close_2_1,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Copy",411,G__TDirectory_Copy_3_1,121,-1,-1,0,1,1,1,0,"u 'TObject' - 1 - -",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("cd",199,G__TDirectory_cd_4_1,98,-1,G__defined_typename("Bool_t"),0,1,1,1,0,"C - 'Text_t' 0 0 path",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("DeleteAll",876,G__TDirectory_DeleteAll_5_1,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Delete",595,G__TDirectory_Delete_6_1,121,-1,-1,0,1,1,1,0,"C - 'Text_t' 0 \"\" namecycle",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Draw",398,G__TDirectory_Draw_7_1,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("FillBuffer",993,G__TDirectory_FillBuffer_8_1,121,-1,-1,0,1,1,1,0,"C - - 1 - buffer",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Get",288,G__TDirectory_Get_9_1,85,G__get_linked_tagnum(&G__G__Base1LN_TObject),-1,0,1,1,1,0,"C - 'Text_t' 0 - namecycle",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetFile",672,G__TDirectory_GetFile_0_2,85,G__get_linked_tagnum(&G__G__Base1LN_TFile),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetKey",585,G__TDirectory_GetKey_1_2,85,G__get_linked_tagnum(&G__G__Base1LN_TKey),-1,0,2,1,1,0,
 "C - 'Text_t' 0 - name s - 'Short_t' 0 9999 cycle",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("GetList",700,G__TDirectory_GetList_1_2,85,G__get_linked_tagnum(&G__G__Base1LN_TList),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetListOfKeys",1293,G__TDirectory_GetListOfKeys_2_2,85,G__get_linked_tagnum(&G__G__Base1LN_TList),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetMother",911,G__TDirectory_GetMother_3_2,85,G__get_linked_tagnum(&G__G__Base1LN_TObject),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetNkeys",810,G__TDirectory_GetNkeys_4_2,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("GetSeekDir",967,G__TDirectory_GetSeekDir_5_2,105,-1,G__defined_typename("Seek_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("GetSeekParent",1298,G__TDirectory_GetSeekParent_6_2,105,-1,G__defined_typename("Seek_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("GetSeekKeys",1092,G__TDirectory_GetSeekKeys_7_2,105,-1,G__defined_typename("Seek_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("GetPath",685,G__TDirectory_GetPath_8_2,67,-1,-1,0,0,1,1,9,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("IsFolder",792,G__TDirectory_IsFolder_9_2,98,-1,G__defined_typename("Bool_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("IsModified",989,G__TDirectory_IsModified_0_3,98,-1,G__defined_typename("Bool_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("IsWritable",1014,G__TDirectory_IsWritable_1_3,98,-1,G__defined_typename("Bool_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("ls",223,G__TDirectory_ls_2_3,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("mkdir",535,G__TDirectory_mkdir_3_3,85,G__get_linked_tagnum(&G__G__Base1LN_TDirectory),-1,0,2,1,1,0,
+   G__memfunc_setup("GetList",700,G__TDirectory_GetList_2_2,85,G__get_linked_tagnum(&G__G__Base1LN_TList),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetListOfKeys",1293,G__TDirectory_GetListOfKeys_3_2,85,G__get_linked_tagnum(&G__G__Base1LN_TList),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetMother",911,G__TDirectory_GetMother_4_2,85,G__get_linked_tagnum(&G__G__Base1LN_TObject),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetNkeys",810,G__TDirectory_GetNkeys_5_2,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetSeekDir",967,G__TDirectory_GetSeekDir_6_2,105,-1,G__defined_typename("Seek_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetSeekParent",1298,G__TDirectory_GetSeekParent_7_2,105,-1,G__defined_typename("Seek_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetSeekKeys",1092,G__TDirectory_GetSeekKeys_8_2,105,-1,G__defined_typename("Seek_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetPath",685,G__TDirectory_GetPath_9_2,67,-1,-1,0,0,1,1,9,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("IsFolder",792,G__TDirectory_IsFolder_0_3,98,-1,G__defined_typename("Bool_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("IsModified",989,G__TDirectory_IsModified_1_3,98,-1,G__defined_typename("Bool_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("IsWritable",1014,G__TDirectory_IsWritable_2_3,98,-1,G__defined_typename("Bool_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ls",223,G__TDirectory_ls_3_3,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("mkdir",535,G__TDirectory_mkdir_4_3,85,G__get_linked_tagnum(&G__G__Base1LN_TDirectory),-1,0,2,1,1,0,
 "C - 'Text_t' 0 - name C - 'Text_t' 0 \"\" title",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("Paint",508,G__TDirectory_Paint_4_3,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("Print",525,G__TDirectory_Print_5_3,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("Purge",515,G__TDirectory_Purge_6_3,121,-1,-1,0,1,1,1,0,"s - 'Short_t' 0 1 nkeep",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("pwd",331,G__TDirectory_pwd_7_3,121,-1,-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("ReadAll",661,G__TDirectory_ReadAll_8_3,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("ReadKeys",792,G__TDirectory_ReadKeys_9_3,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("RecursiveRemove",1574,G__TDirectory_RecursiveRemove_0_4,121,-1,-1,0,1,1,1,0,"U 'TObject' - 0 - obj",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("Save",399,G__TDirectory_Save_1_4,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("SaveSelf",793,G__TDirectory_SaveSelf_2_4,121,-1,-1,0,1,1,1,0,"b - 'Bool_t' 0 kFALSE force",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("SetModified",1101,G__TDirectory_SetModified_3_4,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("SetMother",923,G__TDirectory_SetMother_4_4,121,-1,-1,0,1,1,1,0,"U 'TObject' - 0 - mother",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Sizeof",624,G__TDirectory_Sizeof_5_4,105,-1,G__defined_typename("Int_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("Write",523,G__TDirectory_Write_6_4,121,-1,-1,0,3,1,1,0,
+   G__memfunc_setup("Paint",508,G__TDirectory_Paint_5_3,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Print",525,G__TDirectory_Print_6_3,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Purge",515,G__TDirectory_Purge_7_3,121,-1,-1,0,1,1,1,0,"s - 'Short_t' 0 1 nkeep",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("pwd",331,G__TDirectory_pwd_8_3,121,-1,-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("ReadAll",661,G__TDirectory_ReadAll_9_3,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("ReadKeys",792,G__TDirectory_ReadKeys_0_4,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("RecursiveRemove",1574,G__TDirectory_RecursiveRemove_1_4,121,-1,-1,0,1,1,1,0,"U 'TObject' - 0 - obj",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Save",399,G__TDirectory_Save_2_4,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SaveSelf",793,G__TDirectory_SaveSelf_3_4,121,-1,-1,0,1,1,1,0,"b - 'Bool_t' 0 kFALSE force",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetModified",1101,G__TDirectory_SetModified_4_4,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("SetMother",923,G__TDirectory_SetMother_5_4,121,-1,-1,0,1,1,1,0,"U 'TObject' - 0 - mother",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Sizeof",624,G__TDirectory_Sizeof_6_4,105,-1,G__defined_typename("Int_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Write",523,G__TDirectory_Write_7_4,121,-1,-1,0,3,1,1,0,
 "C - 'Text_t' 0 0 name i - 'Int_t' 0 0 opt "
 "i - 'Int_t' 0 0 bufsiz",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("WriteDirHeader",1395,G__TDirectory_WriteDirHeader_7_4,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("WriteKeys",935,G__TDirectory_WriteKeys_8_4,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("Cd",167,G__TDirectory_Cd_9_4,98,-1,G__defined_typename("Bool_t"),0,1,1,1,0,"C - 'Text_t' 0 - path",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("DecodeNameCycle",1461,G__TDirectory_DecodeNameCycle_0_5,121,-1,-1,0,3,1,1,0,
+   G__memfunc_setup("WriteDirHeader",1395,G__TDirectory_WriteDirHeader_8_4,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("WriteKeys",935,G__TDirectory_WriteKeys_9_4,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Cd",167,G__TDirectory_Cd_0_5,98,-1,G__defined_typename("Bool_t"),0,1,1,1,0,"C - 'Text_t' 0 - path",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("DecodeNameCycle",1461,G__TDirectory_DecodeNameCycle_1_5,121,-1,-1,0,3,1,1,0,
 "C - 'Text_t' 0 - namecycle C - 'Text_t' 0 - name "
 "s - 'Short_t' 1 - cycle",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("EncodeNameCycle",1471,G__TDirectory_EncodeNameCycle_1_5,121,-1,-1,0,3,1,1,0,
+   G__memfunc_setup("EncodeNameCycle",1471,G__TDirectory_EncodeNameCycle_2_5,121,-1,-1,0,3,1,1,0,
 "C - 'Text_t' 0 - buffer C - 'Text_t' 0 - name "
 "s - 'Short_t' 0 - cycle",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("DeclFileName",1145,G__TDirectory_DeclFileName_2_5,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("DeclFileLine",1152,G__TDirectory_DeclFileLine_3_5,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("ImplFileName",1171,G__TDirectory_ImplFileName_4_5,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("ImplFileLine",1178,G__TDirectory_ImplFileLine_5_5,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Class_Version",1339,G__TDirectory_Class_Version_6_5,115,-1,G__defined_typename("Version_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Class",502,G__TDirectory_Class_7_5,85,G__get_linked_tagnum(&G__G__Base1LN_TClass),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Dictionary",1046,G__TDirectory_Dictionary_8_5,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("IsA",253,G__TDirectory_IsA_9_5,85,G__get_linked_tagnum(&G__G__Base1LN_TClass),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("ShowMembers",1132,G__TDirectory_ShowMembers_0_6,121,-1,-1,0,2,1,1,0,
+   G__memfunc_setup("DeclFileName",1145,G__TDirectory_DeclFileName_3_5,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("DeclFileLine",1152,G__TDirectory_DeclFileLine_4_5,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ImplFileName",1171,G__TDirectory_ImplFileName_5_5,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ImplFileLine",1178,G__TDirectory_ImplFileLine_6_5,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Class_Version",1339,G__TDirectory_Class_Version_7_5,115,-1,G__defined_typename("Version_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Class",502,G__TDirectory_Class_8_5,85,G__get_linked_tagnum(&G__G__Base1LN_TClass),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Dictionary",1046,G__TDirectory_Dictionary_9_5,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("IsA",253,G__TDirectory_IsA_0_6,85,G__get_linked_tagnum(&G__G__Base1LN_TClass),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("ShowMembers",1132,G__TDirectory_ShowMembers_1_6,121,-1,-1,0,2,1,1,0,
 "u 'TMemberInspector' - 1 - insp C - - 0 - parent",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("Streamer",835,G__TDirectory_Streamer_1_6,121,-1,-1,0,1,1,1,0,"u 'TBuffer' - 1 - b",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Streamer",835,G__TDirectory_Streamer_2_6,121,-1,-1,0,1,1,1,0,"u 'TBuffer' - 1 - b",(char*)NULL,(void*)NULL,1);
    // automatic destructor
-   G__memfunc_setup("~TDirectory",1159,G__TDirectory_wATDirectory_2_6,(int)('y'),-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("~TDirectory",1159,G__TDirectory_wATDirectory_3_6,(int)('y'),-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
    G__tag_memfunc_reset();
 }
 
@@ -7659,48 +7659,49 @@ static void G__setup_memfuncTAxis(void) {
    G__memfunc_setup("GetBinCenter",1178,G__TAxis_GetBinCenter_1_1,102,-1,G__defined_typename("Axis_t"),0,1,1,1,0,"i - 'Int_t' 0 - bin",(char*)NULL,(void*)NULL,1);
    G__memfunc_setup("GetBinLabel",1049,G__TAxis_GetBinLabel_2_1,67,-1,G__defined_typename("Text_t"),0,1,1,1,0,"i - 'Int_t' 0 - bin",(char*)NULL,(void*)NULL,1);
    G__memfunc_setup("GetBinLowEdge",1248,G__TAxis_GetBinLowEdge_3_1,102,-1,G__defined_typename("Axis_t"),0,1,1,1,0,"i - 'Int_t' 0 - bin",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("GetBinWidth",1081,G__TAxis_GetBinWidth_4_1,102,-1,G__defined_typename("Axis_t"),0,1,1,1,0,"i - 'Int_t' 0 - bin",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("GetCenter",897,G__TAxis_GetCenter_5_1,121,-1,-1,0,1,1,1,0,"F - 'Axis_t' 0 - center",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("GetLabel",768,G__TAxis_GetLabel_6_1,121,-1,-1,0,1,1,1,0,"C - 'Text_t' 0 - label",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("GetLowEdge",967,G__TAxis_GetLowEdge_7_1,121,-1,-1,0,1,1,1,0,"F - 'Axis_t' 0 - edge",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("GetNbins",794,G__TAxis_GetNbins_8_1,105,-1,G__defined_typename("Int_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetTitle",802,G__TAxis_GetTitle_9_1,67,-1,G__defined_typename("Text_t"),0,0,1,1,9,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("GetXbins",804,G__TAxis_GetXbins_0_2,85,G__get_linked_tagnum(&G__G__Base1LN_TArrayF),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetFirst",808,G__TAxis_GetFirst_1_2,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetLast",692,G__TAxis_GetLast_2_2,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetXmin",700,G__TAxis_GetXmin_3_2,102,-1,G__defined_typename("Axis_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetXmax",702,G__TAxis_GetXmax_4_2,102,-1,G__defined_typename("Axis_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("ls",223,G__TAxis_ls_5_2,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("Paint",508,G__TAxis_Paint_6_2,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("PaintAxis",913,G__TAxis_PaintAxis_7_2,121,-1,-1,0,4,1,1,0,
+   G__memfunc_setup("GetBinUpEdge",1139,G__TAxis_GetBinUpEdge_4_1,102,-1,G__defined_typename("Axis_t"),0,1,1,1,0,"i - 'Int_t' 0 - bin",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetBinWidth",1081,G__TAxis_GetBinWidth_5_1,102,-1,G__defined_typename("Axis_t"),0,1,1,1,0,"i - 'Int_t' 0 - bin",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetCenter",897,G__TAxis_GetCenter_6_1,121,-1,-1,0,1,1,1,0,"F - 'Axis_t' 0 - center",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetLabel",768,G__TAxis_GetLabel_7_1,121,-1,-1,0,1,1,1,0,"C - 'Text_t' 0 - label",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetLowEdge",967,G__TAxis_GetLowEdge_8_1,121,-1,-1,0,1,1,1,0,"F - 'Axis_t' 0 - edge",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetNbins",794,G__TAxis_GetNbins_9_1,105,-1,G__defined_typename("Int_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetTitle",802,G__TAxis_GetTitle_0_2,67,-1,G__defined_typename("Text_t"),0,0,1,1,9,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetXbins",804,G__TAxis_GetXbins_1_2,85,G__get_linked_tagnum(&G__G__Base1LN_TArrayF),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetFirst",808,G__TAxis_GetFirst_2_2,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetLast",692,G__TAxis_GetLast_3_2,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetXmin",700,G__TAxis_GetXmin_4_2,102,-1,G__defined_typename("Axis_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetXmax",702,G__TAxis_GetXmax_5_2,102,-1,G__defined_typename("Axis_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ls",223,G__TAxis_ls_6_2,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Paint",508,G__TAxis_Paint_7_2,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("PaintAxis",913,G__TAxis_PaintAxis_8_2,121,-1,-1,0,4,1,1,0,
 "f - 'Coord_t' 0 - x1 f - 'Coord_t' 0 - y1 "
 "f - 'Coord_t' 0 - x2 f - 'Coord_t' 0 - y2",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("Print",525,G__TAxis_Print_8_2,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("Set",300,G__TAxis_Set_9_2,121,-1,-1,0,3,1,1,0,
+   G__memfunc_setup("Print",525,G__TAxis_Print_9_2,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Set",300,G__TAxis_Set_0_3,121,-1,-1,0,3,1,1,0,
 "i - 'Int_t' 0 - nbins f - 'Axis_t' 0 - xmin "
 "f - 'Axis_t' 0 - xmax",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("Set",300,G__TAxis_Set_0_3,121,-1,-1,0,2,1,1,0,
+   G__memfunc_setup("Set",300,G__TAxis_Set_1_3,121,-1,-1,0,2,1,1,0,
 "i - 'Int_t' 0 - nbins F - 'Axis_t' 0 - xbins",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("SetBinLabel",1061,G__TAxis_SetBinLabel_1_3,121,-1,-1,0,2,1,1,0,
+   G__memfunc_setup("SetBinLabel",1061,G__TAxis_SetBinLabel_2_3,121,-1,-1,0,2,1,1,0,
 "i - 'Int_t' 0 - bin C - 'Text_t' 0 - label",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("SetLabel",780,G__TAxis_SetLabel_2_3,121,-1,-1,0,1,1,1,0,"C - 'Text_t' 0 - label",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("SetLimits",926,G__TAxis_SetLimits_3_3,121,-1,-1,0,2,1,1,0,
+   G__memfunc_setup("SetLabel",780,G__TAxis_SetLabel_3_3,121,-1,-1,0,1,1,1,0,"C - 'Text_t' 0 - label",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetLimits",926,G__TAxis_SetLimits_4_3,121,-1,-1,0,2,1,1,0,
 "f - 'Axis_t' 0 - xmin f - 'Axis_t' 0 - xmax",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("SetRange",793,G__TAxis_SetRange_4_3,121,-1,-1,0,2,1,1,0,
+   G__memfunc_setup("SetRange",793,G__TAxis_SetRange_5_3,121,-1,-1,0,2,1,1,0,
 "i - 'Int_t' 0 0 first i - 'Int_t' 0 0 last",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("DeclFileName",1145,G__TAxis_DeclFileName_5_3,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("DeclFileLine",1152,G__TAxis_DeclFileLine_6_3,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("ImplFileName",1171,G__TAxis_ImplFileName_7_3,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("ImplFileLine",1178,G__TAxis_ImplFileLine_8_3,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Class_Version",1339,G__TAxis_Class_Version_9_3,115,-1,G__defined_typename("Version_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Class",502,G__TAxis_Class_0_4,85,G__get_linked_tagnum(&G__G__Base1LN_TClass),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Dictionary",1046,G__TAxis_Dictionary_1_4,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("IsA",253,G__TAxis_IsA_2_4,85,G__get_linked_tagnum(&G__G__Base1LN_TClass),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("ShowMembers",1132,G__TAxis_ShowMembers_3_4,121,-1,-1,0,2,1,1,0,
+   G__memfunc_setup("DeclFileName",1145,G__TAxis_DeclFileName_6_3,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("DeclFileLine",1152,G__TAxis_DeclFileLine_7_3,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ImplFileName",1171,G__TAxis_ImplFileName_8_3,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ImplFileLine",1178,G__TAxis_ImplFileLine_9_3,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Class_Version",1339,G__TAxis_Class_Version_0_4,115,-1,G__defined_typename("Version_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Class",502,G__TAxis_Class_1_4,85,G__get_linked_tagnum(&G__G__Base1LN_TClass),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Dictionary",1046,G__TAxis_Dictionary_2_4,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("IsA",253,G__TAxis_IsA_3_4,85,G__get_linked_tagnum(&G__G__Base1LN_TClass),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("ShowMembers",1132,G__TAxis_ShowMembers_4_4,121,-1,-1,0,2,1,1,0,
 "u 'TMemberInspector' - 1 - insp C - - 0 - parent",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("Streamer",835,G__TAxis_Streamer_4_4,121,-1,-1,0,1,1,1,0,"u 'TBuffer' - 1 - b",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Streamer",835,G__TAxis_Streamer_5_4,121,-1,-1,0,1,1,1,0,"u 'TBuffer' - 1 - b",(char*)NULL,(void*)NULL,1);
    // automatic destructor
-   G__memfunc_setup("~TAxis",615,G__TAxis_wATAxis_5_4,(int)('y'),-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("~TAxis",615,G__TAxis_wATAxis_6_4,(int)('y'),-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
    G__tag_memfunc_reset();
 }
 
@@ -8184,6 +8185,60 @@ G__linked_taginfo G__G__Base1LN_TStopwatch = { "TStopwatch" , 99 , -1 };
 G__linked_taginfo G__G__Base1LN_TRandom = { "TRandom" , 99 , -1 };
 G__linked_taginfo G__G__Base1LN_TBenchmark = { "TBenchmark" , 99 , -1 };
 
+/* Reset class/struct taginfo */
+extern "C" void G__cpp_reset_tagtableG__Base1() {
+  G__G__Base1LN_TClass.tagnum = -1 ;
+  G__G__Base1LN_TBuffer.tagnum = -1 ;
+  G__G__Base1LN_TList.tagnum = -1 ;
+  G__G__Base1LN_TBrowser.tagnum = -1 ;
+  G__G__Base1LN_TObjArray.tagnum = -1 ;
+  G__G__Base1LN_TTimer.tagnum = -1 ;
+  G__G__Base1LN_TObject.tagnum = -1 ;
+  G__G__Base1LN_TObjectcLcLdA.tagnum = -1 ;
+  G__G__Base1LN_TMap.tagnum = -1 ;
+  G__G__Base1LN_TBuffercLcLEMode.tagnum = -1 ;
+  G__G__Base1LN_istream.tagnum = -1 ;
+  G__G__Base1LN_ostream.tagnum = -1 ;
+  G__G__Base1LN_TString.tagnum = -1 ;
+  G__G__Base1LN_TNamed.tagnum = -1 ;
+  G__G__Base1LN_TDatime.tagnum = -1 ;
+  G__G__Base1LN_TKey.tagnum = -1 ;
+  G__G__Base1LN_TFile.tagnum = -1 ;
+  G__G__Base1LN_TDirectory.tagnum = -1 ;
+  G__G__Base1LN_TApplication.tagnum = -1 ;
+  G__G__Base1LN_TROOT.tagnum = -1 ;
+  G__G__Base1LN_TArrayF.tagnum = -1 ;
+  G__G__Base1LN_TAttFill.tagnum = -1 ;
+  G__G__Base1LN_TAttAxis.tagnum = -1 ;
+  G__G__Base1LN_TAttFunc.tagnum = -1 ;
+  G__G__Base1LN_TAttHist.tagnum = -1 ;
+  G__G__Base1LN_TAttLine.tagnum = -1 ;
+  G__G__Base1LN_TAttMarker.tagnum = -1 ;
+  G__G__Base1LN_TAttStat.tagnum = -1 ;
+  G__G__Base1LN_TAttText.tagnum = -1 ;
+  G__G__Base1LN_TAxis.tagnum = -1 ;
+  G__G__Base1LN_TOrdCollection.tagnum = -1 ;
+  G__G__Base1LN_TEnv.tagnum = -1 ;
+  G__G__Base1LN_TEnvRec.tagnum = -1 ;
+  G__G__Base1LN_TFilecLcLERelativeTo.tagnum = -1 ;
+  G__G__Base1LN_TFormula.tagnum = -1 ;
+  G__G__Base1LN_TApplicationImp.tagnum = -1 ;
+  G__G__Base1LN_TSignalHandler.tagnum = -1 ;
+  G__G__Base1LN_TBrowserImp.tagnum = -1 ;
+  G__G__Base1LN_TCanvas.tagnum = -1 ;
+  G__G__Base1LN_TCanvasImp.tagnum = -1 ;
+  G__G__Base1LN_TContextMenu.tagnum = -1 ;
+  G__G__Base1LN_TContextMenuImp.tagnum = -1 ;
+  G__G__Base1LN_TControlBar.tagnum = -1 ;
+  G__G__Base1LN_TControlBarImp.tagnum = -1 ;
+  G__G__Base1LN_TSystem.tagnum = -1 ;
+  G__G__Base1LN_TSysEvtHandler.tagnum = -1 ;
+  G__G__Base1LN_TFileHandler.tagnum = -1 ;
+  G__G__Base1LN_TStopwatch.tagnum = -1 ;
+  G__G__Base1LN_TRandom.tagnum = -1 ;
+  G__G__Base1LN_TBenchmark.tagnum = -1 ;
+}
+
 extern "C" void G__cpp_setup_tagtableG__Base1() {
 
    /* Setting up class,struct,union tag entry */
@@ -8237,7 +8292,7 @@ class G__cpp_setup_initG__Base1 {
 G__cpp_setup_initG__Base1 G__cpp_setup_initializerG__Base1;
 
 //
-// File generated by /user/brun/root/bin/rootcint at Sun Dec 13 10:55:16 1998.
+// File generated by /home/rdm/root/bin/rootcint at Mon Mar  8 12:33:59 1999.
 // Do NOT change. Changes will be lost next time file is generated
 //
 

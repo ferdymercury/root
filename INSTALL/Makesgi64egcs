@@ -1,0 +1,39 @@
+*CMZ :  2.21/07 04/03/99  18.12.42  by  Rene Brun
+*-- Author :    Rene Brun   04/03/99
+# Makefile of ROOT for SGI IRIX 6.4 with EGCS compiler
+# contributed by Martin Weber
+
+PLATFORM      = sgi
+
+CXX           = g++
+CC            = gcc
+CXXFLAGS      = -fsigned-char -Wall -fPIC -fno-rtti -fno-exceptions  \
+                -I$(OPENGL)/include
+CFLAGS        = -fsigned-char -fPIC -Wall
+CINTCXXFLAGS  = -fsigned-char -Wall -fPIC -fno-rtti -fno-exceptions -DG__REGEXP1 \
+                -DG__UNIX -DG__SIGNEDCHAR -DG__SHAREDLIB -DG__OSFDLL -DG__DECCXX \
+                -DG__ROOT -DG__REDIRECTIO
+CINTCFLAGS    = -fsigned-char -fPIC -Wall -DG__REGEXP1 -DG__SIGNEDCHAR -DG__UNIX -DG__SHAREDLIB \
+                -DG__OSFDLL -DG__DECCXX -DG__ROOT -DG__REDIRECTIO
+OPT           = -O
+NOOPT         =
+LD            = g++
+LDFLAGS       = $(OPT)  -Wl,-u,__builtin_new -Wl,-u,__builtin_delete \
+                -Wl,-u,__nw__FUiPv -lgcc -lm -L/usr/lib32
+SOFLAGS       = -shared
+SOEXT         = so
+SYSLIBS       = -lm -ldl
+SYSXLIBS      = -lX11 -lm -lPW -ldl -lg++
+XLIBS         = $(ROOTSYS)/lib/libXpm.a -L/usr/lib32 -lX11 -lg++
+CILIBS        = -lm -lgen
+
+
+##### MACROS and TARGETS #####
+
+include Make-macros
+
+
+##### DEPENDENCIES #####
+
+include Make-depend
+

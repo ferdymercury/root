@@ -1,3 +1,4 @@
+//*CMZ :  2.21/04 29/01/99  13.35.07  by  Valery Fine(fine@mail.cern.ch)
 //*CMZ :  2.20/00 25/11/98  18.29.33  by  Fons Rademakers
 //*CMZ :  2.00/12 01/10/98  10.01.38  by  Valery Fine(fine@mail.cern.ch)
 //*CMZ :  2.00/11 13/08/98  14.19.54  by  Fons Rademakers
@@ -140,7 +141,7 @@ public:
 
    const char       *WorkingDirectory(char driveletter);  // The working directory for the selecte drive
    const char       *WorkingDirectory();                  // The working directory for the default drive
-   const char       *HomeDirectory();
+   const char       *HomeDirectory(const Char_t *userName=0);
    char             *ConcatFileName(const char *dir, const char *name);
 
    //---- Paths & Files ----------------------------------------

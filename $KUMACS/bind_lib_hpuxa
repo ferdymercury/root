@@ -1,12 +1,13 @@
+*CMZ :  2.21/03 20/01/99  12.25.56  by  Fons Rademakers
 *CMZ :  0.90/01 29/10/96  12.01.52  by  Fons Rademakers
 *-- Author :    Rene Brun   14/09/95
-macro bind_lib 1='root'   2='*.o'
+macro bind_lib 1='root'   2='*.o' 3='' 4='' 5=''
 * macro to generate a shared library from the sources specified in par 2.
 
 message Generating library: $ROOTSYS/lib/lib[1].sl
 
 shell /bin/rm -f $ROOTSYS/lib/lib[1].sl
-shell aCC -b -z -o $ROOTSYS/lib/lib[1].sl $ROOTSYS/src/[2]
+shell aCC -b -z -o $ROOTSYS/lib/lib[1].sl $ROOTSYS/src/[2] [3] [4] [5]
 shell chmod 555 $ROOTSYS/lib/lib[1].sl
 
 return

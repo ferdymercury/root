@@ -1,3 +1,4 @@
+*CMZ :  2.21/08 15/03/99  17.02.11  by  Rene Brun
 *CMZ :  2.00/09 25/06/98  14.58.33  by  Fons Rademakers
 *-- Author :    Fons Rademakers   25/06/98
 #ifdef __CINT__
@@ -21,6 +22,7 @@
 #pragma link C++ class TH3D;
 #pragma link C++ class TH3F;
 #pragma link C++ class TH3S;
+#pragma link C++ class TPaveStats;
 #pragma link C++ class TProfile;
 
 #pragma link C++ function operator*(Float_t,TH1C&);

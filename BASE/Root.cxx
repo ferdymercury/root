@@ -1,3 +1,4 @@
+//*CMZ :  2.21/03 22/01/99  16.25.57  by  Fons Rademakers
 //*CMZ :  2.20/05 15/12/98  09.19.59  by  Rene Brun
 //*CMZ :  2.20/00 11/11/98  16.29.54  by  Rene Brun
 //*CMZ :  2.00/12 02/10/98  11.55.00  by  Fons Rademakers
@@ -233,6 +234,7 @@ TROOT::TROOT(const Text_t *name, const Text_t *title, VoidFuncPtr_t *initfunc)
    fMustClean     = kTRUE;
    fPrimitive     = 0;
    fSelectPad     = 0;
+   fEditorMode    = 0;
    fDefCanvasName = "c1";
    fEditHistograms= kFALSE;
    fLineIsProcessing  = 1;   // This prevents WIN32 "Windows" thread to pick ROOT objects with mouse
@@ -894,13 +896,13 @@ void TROOT::ProcessLine(const Text_t *line)
 }
 
 //______________________________________________________________________________
-Int_t TROOT::ProcessLineFast(const Text_t *line)
+Long_t TROOT::ProcessLineFast(const Text_t *line)
 {
    // Process interpreter command directly via CINT interpreter.
    // Only executable statements are allowed (no variable declarations),
    // In all other cases use TROOT::ProcessLine().
 
-   Int_t result = 0;
+   Long_t result = 0;
 
    if (fInterpreter)
       result = fInterpreter->Calc(line);

@@ -1,3 +1,4 @@
+//*CMZ :  2.21/06 15/02/99  01.29.37  by  Fons Rademakers
 //*CMZ :  2.20/04 11/12/98  18.41.38  by  Fons Rademakers
 //*CMZ :  2.20/00 26/11/98  12.45.27  by  Fons Rademakers
 //*CMZ :  2.00/12 02/10/98  11.28.58  by  Fons Rademakers
@@ -52,6 +53,7 @@
 #include "TEnv.h"
 #include "TColor.h"
 #include "TGXClient.h"
+#include "TSystemDirectory.h"
 
 
 TApplication *gApplication = 0;
@@ -251,6 +253,27 @@ void TApplication::GetOptions(int *argc, char **argv)
          // used when started by front-end program to signal that
          // splash screen can be popped down (TRint::PrintLogo())
       } else if (argv[i][0] != '-' && argv[i][0] != '+') {
+         Long_t id, size, flags, modtime;
+         char *dir = gSystem->ExpandPathName(argv[i]);
+         if (!gSystem->GetPathInfo(dir, &id, &size, &flags, &modtime) &&
+             (flags & 2)) {  // if directory make it working directory
+            gSystem->ChangeDirectory(dir);
+            TSystemDirectory *workdir = new TSystemDirectory("workdir", gSystem->WorkingDirectory());
+            TObject *w = gROOT->GetListOfBrowsables()->FindObject("workdir");
+            TObjLink *lnk = gROOT->GetListOfBrowsables()->FirstLink();
+            while (lnk) {
+               if (lnk->GetObject() == w) {
+                  lnk->SetObject(workdir);
+                  lnk->SetOption(gSystem->WorkingDirectory());
+                  break;
+               }
+               lnk = lnk->Next();
+            }
+            delete w;
+            delete [] dir;
+            continue;
+         }
+         delete [] dir;
          if (!fFiles) fFiles = new TObjArray;
          fFiles->Add(new TObjString(argv[i]));
       }

@@ -1,3 +1,4 @@
+//*CMZ :  2.21/04 05/02/99  16.43.33  by  Fons Rademakers
 //*CMZ :  2.00/12 08/10/98  15.34.37  by  Fons Rademakers
 //*CMZ :  2.00/05 07/04/98  22.35.08  by  Fons Rademakers
 //*CMZ :  1.03/09 16/12/97  16.44.28  by  Rene Brun
@@ -227,9 +228,12 @@ TString::TString(const char* cs)
 {
    // Create TString and initialize it with string cs.
 
-   Ssiz_t n = strlen(cs);
-   fData = TStringRef::GetRep(n, n)->Data();
-   memcpy(fData, cs, n);
+   if (cs) {
+      Ssiz_t n = strlen(cs);
+      fData = TStringRef::GetRep(n, n)->Data();
+      memcpy(fData, cs, n);
+   } else
+      fData = TStringRef::GetRep(0, 0)->Data();
 }
 
 //______________________________________________________________________________
@@ -296,7 +300,7 @@ TString& TString::operator=(const char* cs)
 {
    // Assign string cs to TString.
 
-   if (cs && !*cs) {
+   if (!cs || (cs && !*cs)) {
       Pref()->UnLink();
       gNullStringRef->AddReference();
       fData = gNullStringRef->Data();
@@ -576,7 +580,7 @@ TSubString TString::Strip(EStripType st, char c)
 }
 
 //______________________________________________________________________________
-const TSubString TString::Strip(EStripType st, char c) const
+TSubString TString::Strip(EStripType st, char c) const
 {
    // Just use the "non-const" version, adjusting the return type.
 
@@ -934,7 +938,7 @@ char& TSubString::operator()(Ssiz_t i)
 }
 
 //______________________________________________________________________________
-const TSubString TString::operator()(Ssiz_t start, Ssiz_t len) const
+TSubString TString::operator()(Ssiz_t start, Ssiz_t len) const
 {
    // Return sub-string of string starting at start with length len.
 
@@ -949,8 +953,8 @@ const TSubString TString::operator()(Ssiz_t start, Ssiz_t len) const
 }
 
 //______________________________________________________________________________
-const TSubString TString::SubString(const char* pattern, Ssiz_t startIndex,
-                                    ECaseCompare cmp) const
+TSubString TString::SubString(const char* pattern, Ssiz_t startIndex,
+                              ECaseCompare cmp) const
 {
    // Return sub-string matching pattern, starting at index. Cmp selects
    // the type of case conversion.

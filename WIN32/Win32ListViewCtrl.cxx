@@ -1,3 +1,4 @@
+//*CMZ :  2.21/07 28/02/99  16.48.58  by  Valery Fine(fine@mail.cern.ch)
 //*CMZ :  2.00/11 19/07/98  16.01.47  by  Valery Fine(fine@mail.cern.ch)
 //*CMZ :  1.03/07 07/11/97  10.45.45  by  Rene Brun
 //*-- Author :    Valery Fine(fine@vxcern.cern.ch)   04/11/96
@@ -17,7 +18,7 @@
  * suitability of this software for any purpose.                         *
  * It is provided "as is" without express or implied warranty.           *
  *************************************************************************/
-
+#include "TBrowser.h"
 #include "TWin32ListViewCtrl.h"
 #include "TWin32BrowserImp.h"
 
@@ -343,7 +344,7 @@ switch (code) {
       case NM_DBLCLK: {
 //            printf(" NM_D_BLCLK\n");
             RECT prc;
-            fObject = (TObject *)GetItemObject(&prc);
+            SetObject((TObject *)GetItemObject(&prc));
             if (fObject) ExecCommandThread();
             return 0;
           }
@@ -449,6 +450,11 @@ void TWin32ListViewCtrl::SetItemCount(Int_t count)
 }
 
 //______________________________________________________________________________
-void TWin32ListViewCtrl::SetObject(TObject *obj){
+void TWin32ListViewCtrl::SetObject(TObject *obj)
+{
   fObject = obj;
+  if (fObject) {
+    TBrowser *b = ((TWin32BrowserImp *)fMasterWindow)->Browser();
+    if (b) b->SetSelected(fObject);
+  }
 }

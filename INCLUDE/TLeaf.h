@@ -1,3 +1,4 @@
+//*CMZ :  2.21/07 06/03/99  16.48.51  by  Rene Brun
 //*CMZ :  2.00/00 17/02/98  10.54.38  by  Rene Brun
 //*CMZ :  1.03/09 07/12/97  14.22.16  by  Fons Rademakers
 //*-- Author :    Rene Brun   08/01/96
@@ -60,7 +61,7 @@ public:
     virtual ~TLeaf();
 
     virtual void    Browse(TBrowser *b);
-    virtual void    Export(TClonesArray *list);
+    virtual void    Export(TClonesArray *list, Int_t n);
     virtual void    FillBasket(TBuffer &b);
     TBranch         *GetBranch() { return fBranch; }
     virtual TLeaf   *GetLeafCount() { return fLeafCount; }
@@ -92,7 +93,7 @@ public:
     ClassDef(TLeaf,1)  //Leaf: description of a Branch data type
 };
 
-inline void    TLeaf::Export(TClonesArray *) { }
+inline void    TLeaf::Export(TClonesArray *, Int_t) { }
 inline Float_t TLeaf::GetValue(Int_t, TTreeFormula *) { return 0; }
 inline void    TLeaf::Import(TClonesArray *, Int_t) { }
 inline void    TLeaf::SetAddress(void *) { }

@@ -1,3 +1,5 @@
+//*CMZ :  2.21/06 03/03/99  14.18.31  by  Rene Brun
+//*CMZ :  2.21/05 09/02/99  18.24.33  by  Rene Brun
 //*CMZ :  2.20/00 21/11/98  17.34.16  by  Rene Brun
 //*CMZ :  2.00/12 15/09/98  16.35.30  by  Fons Rademakers
 //*CMZ :  2.00/11 20/08/98  08.49.23  by  Rene Brun
@@ -104,10 +106,11 @@ TChain::TChain(const Text_t *name, const Text_t *title)
    fFiles          = new TObjArray(fTreeOffsetLen );
    fStatus         = new TList();
    fTreeOffset[0]  = 0;
-   fDirectory      = 0;
    TChainElement *element = new TChainElement("*","");
    fStatus->Add(element);
-   if (gDirectory) gDirectory->GetList()->Remove(this);
+   gDirectory->GetList()->Remove(this);
+   gROOT->GetListOfSpecials()->Add(this);
+   fDirectory = 0;
    gROOT->cd();
 }
 
@@ -117,8 +120,9 @@ TChain::~TChain()
 //*-*-*-*-*-*Default destructor for a Chain*-*-*-*-*-*-*-*-*-*-*-*
 //*-*        ==============================
 
-   if (fFile) {delete fFile; fFile = 0;}
    fDirectory = 0;
+   if (fFile) {delete fFile; fFile = 0;}
+   gROOT->GetListOfSpecials()->Remove(this);
    delete [] fTreeOffset;
    fFiles->Delete();
    delete fFiles;
@@ -320,6 +324,7 @@ Int_t TChain::LoadTree(Int_t event)
 
    //Set the branches status and address for the newly connected file
    fTree->SetMaxVirtualSize(fMaxVirtualSize);
+   SetChainOffset(fTreeOffset[t]);
    TIter next(fStatus);
    Int_t status;
    while ((element = (TChainElement*)next())) {

@@ -1,3 +1,6 @@
+//*CMZ :  2.21/07 08/03/99  12.53.41  by  Fons Rademakers
+//*CMZ :  2.21/06 17/02/99  17.40.58  by  Rene Brun
+//*CMZ :  2.21/01 12/01/99  18.32.54  by  Fons Rademakers
 //*CMZ :  0.90/08 02/12/96  12.02.58  by  Rene Brun
 //*-- Author :    Rene Brun   08/03/96
 {
@@ -28,7 +31,7 @@
    TLine ldot(1,8.5,0.5,6.5);
    ldot.SetLineStyle(2);
    ldot.Draw();
-   ldot.DrawLine(2.5, 8.5, 9, 6.5);
+   ldot.DrawLine(2.5, 8.5, 9.4, 6.5);
    ldot.DrawLine(10.5, 8.5, 10, 6.5);
    ldot.DrawLine(11.3, 8.5, 19.5, 6.5);
    TLine line(2.6,11,2.6,11.5);
@@ -79,17 +82,17 @@
    arrow.DrawArrow( 20,7, 20,8.4,0.01,"|>");
 
    //file header
-   TPaveText header(0.5,.2,9,6.5);
+   TPaveText header(0.5,.2,9.4,6.5);
    header.SetFillColor(44);
    header.Draw();
    TText *fh=header.AddText("File Header");
-   fh.SetTextAlign(23);
-   fh.SetTextSize(0.04);
+   fh->SetTextAlign(23);
+   fh->SetTextSize(0.04);
    header.SetTextSize(0.027);
    header.SetTextAlign(12);
    header.AddText(" ");
    header.AddLine(0,0,0,0);
-   header.AddText(""root": Root File Identifier");
+   header.AddText("\"root\": Root File Identifier");
    header.AddText("fVersion: File version identifier");
    header.AddText("fBEGIN: Pointer to first data record");
    header.AddText("fEND: Pointer to first free word at EOF");
@@ -105,8 +108,8 @@
    lrecord.SetFillColor(33);
    lrecord.Draw();
    TText *tlrh=lrecord.AddText("Logical Record Header (TKEY)");
-   tlrh.SetTextAlign(23);
-   tlrh.SetTextSize(0.04);
+   tlrh->SetTextAlign(23);
+   tlrh->SetTextSize(0.04);
    lrecord.SetTextSize(0.027);
    lrecord.SetTextAlign(12);
    lrecord.AddText(" ");

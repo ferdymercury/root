@@ -1,3 +1,5 @@
+//*CMZ :  2.21/07 02/03/99  19.01.11  by  Rene Brun
+//*CMZ :  2.21/04 28/01/99  16.35.40  by  Valery Fine(fine@mail.cern.ch)
 //*CMZ :  2.20/03 05/12/98  17.06.54  by  Rene Brun
 //*CMZ :  2.20/00 22/11/98  16.55.46  by  Rene Brun
 //*CMZ :  2.00/07 15/05/98  16.47.13  by  Rene Brun
@@ -127,6 +129,7 @@ Double_t TMath::Log2(Double_t x)
 //______________________________________________________________________________
 Double_t TMath::Atan2(Long_t y, Long_t x)
 {
+   if (x == 0) return 90;
    Double_t dd = (0.75 - (atan2(-(Double_t)y,(Double_t)x) / TMath::Pi() + 1.0)/2.0 ) * 360.0;
    while (dd < 0.0)
       dd += 360.0;
@@ -607,6 +610,27 @@ Int_t TMath::BinarySearch(Int_t n, Short_t *array, Short_t value)
 }
 
 //______________________________________________________________________________
+Int_t TMath::BinarySearch(Int_t n, Short_t **array, Short_t value)
+{
+//*-*-*-*-*-*-*Binary search in an array of n values to locate value*-*-*-*-*-*-*
+//*-*          ==================================================
+//*-*  array is supposed  to be sorted prior to this call.
+//*-*  If match is found, function returns position of element.
+//*-*  If no match found, function gives nearest element smaller than value.
+//*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+   Int_t nabove, nbelow, middle;
+   nabove = n+1;
+   nbelow = 0;
+   while(nabove-nbelow > 1) {
+      middle = (nabove+nbelow)/2;
+      if (value == *array[middle-1]) return middle-1;
+      if (value  < *array[middle-1]) nabove = middle;
+      else                           nbelow = middle;
+   }
+   return nbelow-1;
+}
+
+//______________________________________________________________________________
 Int_t TMath::BinarySearch(Int_t n, Int_t *array, Int_t value)
 {
 //*-*-*-*-*-*-*Binary search in an array of n values to locate value*-*-*-*-*-*-*
@@ -623,6 +647,27 @@ Int_t TMath::BinarySearch(Int_t n, Int_t *array, Int_t value)
       if (value == array[middle-1]) return middle-1;
       if (value  < array[middle-1]) nabove = middle;
       else                          nbelow = middle;
+   }
+   return nbelow-1;
+}
+
+//______________________________________________________________________________
+Int_t TMath::BinarySearch(Int_t n, Int_t **array, Int_t value)
+{
+//*-*-*-*-*-*-*Binary search in an array of n values to locate value*-*-*-*-*-*-*
+//*-*          ==================================================
+//*-*  array is supposed  to be sorted prior to this call.
+//*-*  If match is found, function returns position of element.
+//*-*  If no match found, function gives nearest element smaller than value.
+//*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+   Int_t nabove, nbelow, middle;
+   nabove = n+1;
+   nbelow = 0;
+   while(nabove-nbelow > 1) {
+      middle = (nabove+nbelow)/2;
+      if (value == *array[middle-1]) return middle-1;
+      if (value  < *array[middle-1]) nabove = middle;
+      else                           nbelow = middle;
    }
    return nbelow-1;
 }
@@ -649,6 +694,27 @@ Int_t TMath::BinarySearch(Int_t n, Float_t *array, Float_t value)
 }
 
 //______________________________________________________________________________
+Int_t TMath::BinarySearch(Int_t n, Float_t **array, Float_t value)
+{
+//*-*-*-*-*-*-*Binary search in an array of n values to locate value*-*-*-*-*-*-*
+//*-*          ==================================================
+//*-*  array is supposed  to be sorted prior to this call.
+//*-*  If match is found, function returns position of element.
+//*-*  If no match found, function gives nearest element smaller than value.
+//*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+   Int_t nabove, nbelow, middle;
+   nabove = n+1;
+   nbelow = 0;
+   while(nabove-nbelow > 1) {
+      middle = (nabove+nbelow)/2;
+      if (value == *array[middle-1]) return middle-1;
+      if (value  < *array[middle-1]) nabove = middle;
+      else                           nbelow = middle;
+   }
+   return nbelow-1;
+}
+
+//______________________________________________________________________________
 Int_t TMath::BinarySearch(Int_t n, Double_t *array, Double_t value)
 {
 //*-*-*-*-*-*-*Binary search in an array of n values to locate value*-*-*-*-*-*-*
@@ -667,4 +733,291 @@ Int_t TMath::BinarySearch(Int_t n, Double_t *array, Double_t value)
       else                          nbelow = middle;
    }
    return nbelow-1;
+}
+
+//______________________________________________________________________________
+Int_t TMath::BinarySearch(Int_t n, Double_t **array, Double_t value)
+{
+//*-*-*-*-*-*-*Binary search in an array of n values to locate value*-*-*-*-*-*-*
+//*-*          ==================================================
+//*-*  array is supposed  to be sorted prior to this call.
+//*-*  If match is found, function returns position of element.
+//*-*  If no match found, function gives nearest element smaller than value.
+//*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+   Int_t nabove, nbelow, middle;
+   nabove = n+1;
+   nbelow = 0;
+   while(nabove-nbelow > 1) {
+      middle = (nabove+nbelow)/2;
+      if (value == *array[middle-1]) return middle-1;
+      if (value  < *array[middle-1]) nabove = middle;
+      else                           nbelow = middle;
+   }
+   return nbelow-1;
+}
+
+//_____________________________________________________________________________
+void TMath::Sort(Int_t n1, Short_t *a, Int_t *index, Bool_t down)
+{
+//  Sort the n1 elements of the Short_t array a.
+//  In output the array index contains the indices of the sorted array.
+//  if down is false sort in increasing order (default is decreasing order)
+//   This is a translation of the CERNLIB routine sortzv (M101)
+//   based on the quicksort algorithm
+//  NOTE that the array index must be created with a length >= n1
+//  before calling this function.
+
+   Int_t i,i1,n,i2,i3,i33,i222,iswap,n2;
+   Int_t i22 = 0;
+   Short_t ai;
+   n = n1;
+   if (n <= 0) return;
+   if (n == 1) {index[0] = 0; return;}
+   for (i=0;i<n;i++) index[i] = i+1;
+   for (i1=2;i1<=n;i1++) {
+      i3 = i1;
+      i33 = index[i3-1];
+      ai  = a[i33-1];
+      while(1) {
+         i2 = i3/2;
+         if (i2 <= 0) break;
+         i22 = index[i2-1];
+         if (ai <= a[i22-1]) break;
+         index[i3-1] = i22;
+         i3 = i2;
+      }
+      index[i3-1] = i33;
+   }
+
+   while(1) {
+      i3 = index[n-1];
+      index[n-1] = index[0];
+      ai = a[i3-1];
+      n--;
+      if(n-1 < 0) {index[0] = i3; break;}
+      i1 = 1;
+      while(2) {
+         i2 = i1+i1;
+         if (i2 <= n) i22 = index[i2-1];
+         if (i2-n > 0) {index[i1-1] = i3; break;}
+         if (i2-n < 0) {
+            i222 = index[i2];
+            if (a[i22-1] - a[i222-1] < 0) {
+                i2++;
+                i22 = i222;
+            }
+         }
+         if (ai - a[i22-1] > 0) {index[i1-1] = i3; break;}
+         index[i1-1] = i22;
+         i1 = i2;
+      }
+   }
+   if (!down) return;
+   n2 = n1/2;
+   for (i=0;i<n1;i++) index[i]--;
+   for (i=0;i<n2;i++) {
+      iswap         = index[i];
+      index[i]      = index[n1-i-1];
+      index[n1-i-1] = iswap;
+   }
+}
+
+
+//_____________________________________________________________________________
+void TMath::Sort(Int_t n1, Int_t *a, Int_t *index, Bool_t down)
+{
+//  Sort the n1 elements of the Int_t array a.
+//  In output the array index contains the indices of the sorted array.
+//  if down is false sort in increasing order (default is decreasing order)
+//   This is a translation of the CERNLIB routine sortzv (M101)
+//   based on the quicksort algorithm
+//  NOTE that the array index must be created with a length >= n1
+//  before calling this function.
+
+   Int_t i,i1,n,i2,i3,i33,i222,iswap,n2;
+   Int_t i22 = 0;
+   Int_t ai;
+   n = n1;
+   if (n <= 0) return;
+   if (n == 1) {index[0] = 0; return;}
+   for (i=0;i<n;i++) index[i] = i+1;
+   for (i1=2;i1<=n;i1++) {
+      i3 = i1;
+      i33 = index[i3-1];
+      ai  = a[i33-1];
+      while(1) {
+         i2 = i3/2;
+         if (i2 <= 0) break;
+         i22 = index[i2-1];
+         if (ai <= a[i22-1]) break;
+         index[i3-1] = i22;
+         i3 = i2;
+      }
+      index[i3-1] = i33;
+   }
+
+   while(1) {
+      i3 = index[n-1];
+      index[n-1] = index[0];
+      ai = a[i3-1];
+      n--;
+      if(n-1 < 0) {index[0] = i3; break;}
+      i1 = 1;
+      while(2) {
+         i2 = i1+i1;
+         if (i2 <= n) i22 = index[i2-1];
+         if (i2-n > 0) {index[i1-1] = i3; break;}
+         if (i2-n < 0) {
+            i222 = index[i2];
+            if (a[i22-1] - a[i222-1] < 0) {
+                i2++;
+                i22 = i222;
+            }
+         }
+         if (ai - a[i22-1] > 0) {index[i1-1] = i3; break;}
+         index[i1-1] = i22;
+         i1 = i2;
+      }
+   }
+   if (!down) return;
+   n2 = n1/2;
+   for (i=0;i<n1;i++) index[i]--;
+   for (i=0;i<n2;i++) {
+      iswap         = index[i];
+      index[i]      = index[n1-i-1];
+      index[n1-i-1] = iswap;
+   }
+}
+
+
+//_____________________________________________________________________________
+void TMath::Sort(Int_t n1, Float_t *a, Int_t *index, Bool_t down)
+{
+//  Sort the n1 elements of the Float_t array a.
+//  In output the array index contains the indices of the sorted array.
+//  if down is false sort in increasing order (default is decreasing order)
+//   This is a translation of the CERNLIB routine sortzv (M101)
+//   based on the quicksort algorithm
+//  NOTE that the array index must be created with a length >= n1
+//  before calling this function.
+
+   Int_t i,i1,n,i2,i3,i33,i222,iswap,n2;
+   Int_t i22 = 0;
+   Float_t ai;
+   n = n1;
+   if (n <= 0) return;
+   if (n == 1) {index[0] = 0; return;}
+   for (i=0;i<n;i++) index[i] = i+1;
+   for (i1=2;i1<=n;i1++) {
+      i3 = i1;
+      i33 = index[i3-1];
+      ai  = a[i33-1];
+      while(1) {
+         i2 = i3/2;
+         if (i2 <= 0) break;
+         i22 = index[i2-1];
+         if (ai <= a[i22-1]) break;
+         index[i3-1] = i22;
+         i3 = i2;
+      }
+      index[i3-1] = i33;
+   }
+
+   while(1) {
+      i3 = index[n-1];
+      index[n-1] = index[0];
+      ai = a[i3-1];
+      n--;
+      if(n-1 < 0) {index[0] = i3; break;}
+      i1 = 1;
+      while(2) {
+         i2 = i1+i1;
+         if (i2 <= n) i22 = index[i2-1];
+         if (i2-n > 0) {index[i1-1] = i3; break;}
+         if (i2-n < 0) {
+            i222 = index[i2];
+            if (a[i22-1] - a[i222-1] < 0) {
+                i2++;
+                i22 = i222;
+            }
+         }
+         if (ai - a[i22-1] > 0) {index[i1-1] = i3; break;}
+         index[i1-1] = i22;
+         i1 = i2;
+      }
+   }
+   if (!down) return;
+   n2 = n1/2;
+   for (i=0;i<n1;i++) index[i]--;
+   for (i=0;i<n2;i++) {
+      iswap         = index[i];
+      index[i]      = index[n1-i-1];
+      index[n1-i-1] = iswap;
+   }
+}
+
+//_____________________________________________________________________________
+void TMath::Sort(Int_t n1, Double_t *a, Int_t *index, Bool_t down)
+{
+//  Sort the n1 elements of the Double_t array a.
+//  In output the array index contains the indices of the sorted array.
+//  if down is false sort in increasing order (default is decreasing order)
+//   This is a translation of the CERNLIB routine sortzv (M101)
+//   based on the quicksort algorithm
+//  NOTE that the array index must be created with a length >= n1
+//  before calling this function.
+
+   Int_t i,i1,n,i2,i3,i33,i222,iswap,n2;
+   Int_t i22 = 0;
+   Double_t ai;
+   n = n1;
+   if (n <= 0) return;
+   if (n == 1) {index[0] = 0; return;}
+   for (i=0;i<n;i++) index[i] = i+1;
+   for (i1=2;i1<=n;i1++) {
+      i3 = i1;
+      i33 = index[i3-1];
+      ai  = a[i33-1];
+      while(1) {
+         i2 = i3/2;
+         if (i2 <= 0) break;
+         i22 = index[i2-1];
+         if (ai <= a[i22-1]) break;
+         index[i3-1] = i22;
+         i3 = i2;
+      }
+      index[i3-1] = i33;
+   }
+
+   while(1) {
+      i3 = index[n-1];
+      index[n-1] = index[0];
+      ai = a[i3-1];
+      n--;
+      if(n-1 < 0) {index[0] = i3; break;}
+      i1 = 1;
+      while(2) {
+         i2 = i1+i1;
+         if (i2 <= n) i22 = index[i2-1];
+         if (i2-n > 0) {index[i1-1] = i3; break;}
+         if (i2-n < 0) {
+            i222 = index[i2];
+            if (a[i22-1] - a[i222-1] < 0) {
+                i2++;
+                i22 = i222;
+            }
+         }
+         if (ai - a[i22-1] > 0) {index[i1-1] = i3; break;}
+         index[i1-1] = i22;
+         i1 = i2;
+      }
+   }
+   if (!down) return;
+   n2 = n1/2;
+   for (i=0;i<n1;i++) index[i]--;
+   for (i=0;i<n2;i++) {
+      iswap         = index[i];
+      index[i]      = index[n1-i-1];
+      index[n1-i-1] = iswap;
+   }
 }

@@ -1,3 +1,4 @@
+//*CMZ :  2.21/07 06/03/99  16.27.22  by  Rene Brun
 //*CMZ :  2.00/12 22/09/98  15.39.33  by  Rene Brun
 //*CMZ :  1.03/09 08/12/97  13.27.21  by  Fons Rademakers
 //*-- Author :    Rene Brun   31/01/96
@@ -47,7 +48,7 @@ public:
     TLeafB(const Text_t *name, const Text_t *type);
     virtual ~TLeafB();
 
-    virtual void    Export(TClonesArray *list);
+    virtual void    Export(TClonesArray *list, Int_t n);
     virtual void    FillBasket(TBuffer &b);
     const Text_t    *GetTypeName() const;
     Float_t         GetValue(Int_t i=0, TTreeFormula *f=0);

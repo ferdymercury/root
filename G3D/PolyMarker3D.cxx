@@ -1,3 +1,5 @@
+//*CMZ :  2.21/08 10/03/99  16.34.22  by  Rene Brun
+//*CMZ :  2.21/01 12/01/99  07.55.28  by  Valery Fine(fine@mail.cern.ch)
 //*CMZ :  2.20/05 15/12/98  09.17.22  by  Rene Brun
 //*CMZ :  2.00/11 18/08/98  10.12.29  by  Rene Brun
 //*CMZ :  2.00/09 23/06/98  17.01.03  by  Rene Brun
@@ -85,7 +87,7 @@ TPolyMarker3D::TPolyMarker3D()
 
         fN = 0;
         fP = 0;
-
+        fLastPoint = -1;
 }
 
 
@@ -96,6 +98,7 @@ TPolyMarker3D::TPolyMarker3D(Int_t n, Marker_t marker, Option_t *option)
 //*-*-*-*-*-*-*-*-*-*-*-*-*PolyMarker3D normal constructor*-*-*-*-*-*-*-*-*-*-*-*
 //*-*                      ===============================
 
+   fLastPoint = -1;
    fN = n;
    fP = new Float_t [kDimension*fN];
    for (Int_t i = 0; i < kDimension*fN; i++)  fP[i] = 0;
@@ -112,9 +115,19 @@ TPolyMarker3D::TPolyMarker3D(Int_t n, Float_t *p, Marker_t marker, Option_t *opt
 //*-*-*-*-*-*-*-*-*-*-*-*-*-*PolyMarker3D constructor*-*-*-*-*-*-*-*-*-*-*-*-*-*
 //*-*                        ========================
 
-   fN = n;
-   fP = new Float_t [kDimension*fN];
-   for (Int_t i = 0; i < kDimension*fN; i++)  fP[i] = p[i];
+   fLastPoint = -1;
+   fN = 0;
+   fP = 0;
+   if (n > 0) {
+     fN = n;
+     fP = new Float_t [kDimension*fN];
+     if (p) {
+         for (Int_t i = 0; i < kDimension*fN; i++)  fP[i] = p[i];
+         fLastPoint = fN-1;
+     }
+     else
+         memset(fP,0,kDimension*fN*sizeof(Float_t));
+   }
    SetMarkerStyle(marker);
    SetBit(kCanDelete);
    fOption = option;
@@ -129,7 +142,7 @@ TPolyMarker3D::~TPolyMarker3D()
 
         fN = 0;
         if (fP) delete [] fP;
-
+        fLastPoint = -1;
 }
 
 
@@ -151,6 +164,7 @@ void TPolyMarker3D::Copy(TObject &obj)
    for (Int_t i = 0; i < kDimension*fN; i++)  ((TPolyMarker3D&)obj).fP[i] = fP[i];
    ((TPolyMarker3D&)obj).SetMarkerStyle(GetMarkerStyle());
    ((TPolyMarker3D&)obj).fOption = fOption;
+   ((TPolyMarker3D&)obj).fLastPoint = fLastPoint;
 }
 
 
@@ -183,11 +197,10 @@ Int_t TPolyMarker3D::DistancetoPrimitive(Int_t px, Int_t py)
 
    TView *view = gPad->GetView();
    if (!view) return dist;
-
    Int_t i, dpoint;
    Float_t xndc[3];
    Int_t x1,y1;
-   for (i=0;i<fN;i++) {
+   for (i=0;i<Size();i++) {
       view->WCtoNDC(&fP[3*i], xndc);
       x1     = gPad->XtoAbsPixel(xndc[0]);
       y1     = gPad->YtoAbsPixel(xndc[1]);
@@ -221,6 +234,7 @@ void TPolyMarker3D::DrawPolyMarker(Int_t n, Float_t *p, Marker_t, Option_t *opti
    for (Int_t i = 0; i < kDimension*fN; i++)  newpolymarker->fP[i] = p[i];
    newpolymarker->SetMarkerStyle(GetMarkerStyle());
    newpolymarker->fOption = fOption;
+   newpolymarker->fLastPoint = fLastPoint;
    newpolymarker->SetBit(kCanDelete);
    newpolymarker->AppendPad(option);
 }
@@ -249,7 +263,7 @@ void TPolyMarker3D::ls(Option_t *option)
 //*-*                      ==========================
 
    IndentLevel();
-   cout << "    TPolyMarker3D  N=" << fN <<" Option="<<option<<endl;
+   cout << "    TPolyMarker3D  N=" << Size() <<" Option="<<option<<endl;
 }
 
 //______________________________________________________________________________
@@ -265,21 +279,21 @@ void TPolyMarker3D::Paint(Option_t *option)
 
     if ((*option != 'x') && (*option != 'X')) {
         Marker_t marker = GetMarkerStyle();
-        PaintPolyMarker(fN, fP, marker, option);
+        PaintPolyMarker(Size(), fP, marker, option);
     }
     else {
-
+        Int_t size = Size();
         Int_t mode;
         Int_t i, j, k, n;
 
         X3DBuffer *buff = new X3DBuffer;
         if(!buff) return;
 
-        if (fN > 10000) mode = 1;         // One line marker    '-'
-        else if (fN > 3000) mode = 2;     // Two lines marker   '+'
+        if (size > 10000) mode = 1;         // One line marker    '-'
+        else if (size > 3000) mode = 2;     // Two lines marker   '+'
         else mode = 3;                    // Three lines marker '*'
 
-        buff->numSegs   = fN*mode;
+        buff->numSegs   = size*mode;
         buff->numPoints = buff->numSegs*2;
         buff->numPolys  = 0;         //NOTE: Because of different structure, our
         buff->polys     = NULL;      //      TPolyMarker3D can't use polygons
@@ -290,7 +304,7 @@ void TPolyMarker3D::Paint(Option_t *option)
 
         buff->points = new Float_t[buff->numPoints*3];
         if (buff->points) {
-            for (i = 0; i < fN; i++) {
+            for (i = 0; i < size; i++) {
                 for (j = 0; j < mode; j++) {
                     for (k = 0; k < 2; k++) {
                         delta *= -1;
@@ -405,7 +419,7 @@ void TPolyMarker3D::SavePrimitive(ofstream &out, Option_t *)
 
    SaveMarkerAttributes(out,"pmarker3D",1,1,1);
 
-   for (Int_t i=0;i<fN;i++) {
+   for (Int_t i=0;i<Size();i++) {
       out<<"   pmarker3D->SetPoint("<<i<<","<<fP[3*i]<<","<<fP[3*i+1]<<","<<fP[3*i+2]<<");"<<endl;
    }
    out<<"   pmarker3D->Draw();"<<endl;
@@ -416,14 +430,37 @@ void TPolyMarker3D::SetPoint(Int_t n, Float_t x, Float_t y, Float_t z)
 {
 //*-*-*-*-*-*-*-*-*-*-*-*-*-*Set point n to x, y, z*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 //*-*                        ======================
+//*-*  if n is more then the current TPolyMarker3D size (n > fN) - re-allocate this
+//*-*
 
-        if(n < 0 || n >= fN) return;    //Check for range
-
-        fP[kDimension*n+0] = x;
-        fP[kDimension*n+1] = y;
-        fP[kDimension*n+2] = z;
+   if (n < 0) return;
+   if (!fP || n >= fN) {
+   // re-allocate the object
+      Float_t *savepoint = new Float_t [kDimension*(n+1)];
+      if (fP && fN){
+         memcpy(savepoint,fP,kDimension*fN*sizeof(Float_t));
+        delete [] fP;
+      }
+      fP = savepoint;
+      fN = n+1;
+   }
+   fP[kDimension*n  ] = x;
+   fP[kDimension*n+1] = y;
+   fP[kDimension*n+2] = z;
+   fLastPoint = TMath::Max(fLastPoint,n);
 }
 
+//______________________________________________________________________________
+Int_t TPolyMarker3D::SetNextPoint(Float_t x, Float_t y, Float_t z)
+{
+//*-*-*-*-*-*-*-*-*-*-*-*Set "next" point to x, y, z *-*-*-*-*-*-*-*-*-*-*-*-*-*
+//*-*                    ============================
+//*-*     SetNextPoint:  returns the index this point has occupied
+//*-*
+   fLastPoint++;
+   SetPoint(fLastPoint, x, y, z);
+   return fLastPoint;
+}
 
 //______________________________________________________________________________
 void TPolyMarker3D::SetPolyMarker(Int_t n, Float_t *p, Marker_t marker, Option_t *option)
@@ -435,7 +472,10 @@ void TPolyMarker3D::SetPolyMarker(Int_t n, Float_t *p, Marker_t marker, Option_t
        if (fP) delete [] fP;
        fP = new Float_t [kDimension*fN];
        for (Int_t i = 0; i < kDimension*fN; i++) {
-          if (p) fP[i] = p[i];
+          if (p)
+             fP[i] = p[i];
+          else
+             memset(fP,0,kDimension*fN*sizeof(Float_t));
        }
        SetMarkerStyle(marker);
        fOption = option;
@@ -448,13 +488,14 @@ void TPolyMarker3D::Sizeof3D() const
 //*-*        =======================================================
 
     Int_t mode;
+    Int_t size = Size();
 
-    if (fN > 10000) mode = 1;         // One line marker    '-'
-    else if (fN > 3000) mode = 2;     // Two lines marker   '+'
-    else mode = 3;                    // Three lines marker '*'
+    if (size > 10000) mode = 1;         // One line marker    '-'
+    else if (size > 3000) mode = 2;     // Two lines marker   '+'
+    else mode = 3;                      // Three lines marker '*'
 
-    gSize3D.numSegs   += fN*mode;
-    gSize3D.numPoints += fN*mode*2;
+    gSize3D.numSegs   += size*mode;
+    gSize3D.numPoints += size*mode*2;
     gSize3D.numPolys  += 0;
 }
 
@@ -469,17 +510,20 @@ void TPolyMarker3D::Streamer(TBuffer &b)
       TObject::Streamer(b);
       TAttMarker::Streamer(b);
       b >> fN;
+      fLastPoint = 0;
       if (fN) {
-         fP = new Float_t[3*fN];
-         b.ReadFastArray(fP,3*fN);
+         fP = new Float_t[kDimension*fN];
+         b.ReadFastArray(fP,kDimension*fN);
+         fLastPoint = fN-1;
       }
       fOption.Streamer(b);
    } else {
       b.WriteVersion(TPolyMarker3D::IsA());
       TObject::Streamer(b);
       TAttMarker::Streamer(b);
-      b << fN;
-      if (fN) b.WriteFastArray(fP, 3*fN);
+      Int_t size = Size();
+      b << size;
+      if (size) b.WriteFastArray(fP, kDimension*size);
       fOption.Streamer(b);
    }
 }

@@ -1,3 +1,4 @@
+//*CMZ :  2.21/07 06/03/99  19.23.35  by  Rene Brun
 //*CMZ :  2.00/13 29/10/98  08.30.47  by  Fons Rademakers
 //*CMZ :  2.00/06 04/06/98  19.11.26  by  Fons Rademakers
 //*CMZ :  1.03/09 16/12/97  16.52.08  by  Rene Brun
@@ -647,8 +648,16 @@ void TBuffer::ReadFastArray(Int_t *ii, Int_t n)
    if (!n) return;
 
 #ifdef R__BYTESWAP
-   for (int i = 0; i < n; i++)
-      frombuf(fBufCur, &ii[i]);
+   char *sw = (char*)ii;
+   for (int i = 0; i < n; i++) {
+//      frombuf(fBufCur, &ii[i]);
+      sw[0] = fBufCur[3];
+      sw[1] = fBufCur[2];
+      sw[2] = fBufCur[1];
+      sw[3] = fBufCur[0];
+      fBufCur += 4;
+      sw += 4;
+   }
 #else
    Int_t l = sizeof(Int_t)*n;
    memcpy(ii, fBufCur, l);
@@ -681,8 +690,16 @@ void TBuffer::ReadFastArray(Float_t *f, Int_t n)
    if (!n) return;
 
 #ifdef R__BYTESWAP
-   for (int i = 0; i < n; i++)
-      frombuf(fBufCur, &f[i]);
+   char *sw = (char*)f;
+   for (int i = 0; i < n; i++) {
+//      frombuf(fBufCur, &f[i]);
+      sw[0] = fBufCur[3];
+      sw[1] = fBufCur[2];
+      sw[2] = fBufCur[1];
+      sw[3] = fBufCur[0];
+      fBufCur += 4;
+      sw += 4;
+   }
 #else
    Int_t l = sizeof(Float_t)*n;
    memcpy(f, fBufCur, l);

@@ -1,3 +1,4 @@
+//*CMZ :  2.21/04 05/02/99  16.43.33  by  Fons Rademakers
 //*CMZ :  2.00/10 16/07/98  13.40.44  by  Fons Rademakers
 //*CMZ :  2.00/08 24/04/98  19.41.09  by  Fons Rademakers
 //*CMZ :  2.00/06 24/04/98  19.41.09  by  Fons Rademakers
@@ -241,12 +242,12 @@ public:
                            ECaseCompare cmp = kExact);
    char                operator[](Ssiz_t) const;
    char                operator()(Ssiz_t) const;
-   const TSubString    operator()(Ssiz_t start, Ssiz_t len) const;
-   const TSubString    operator()(const TRegexp& re) const;   // Match the RE
-   const TSubString    operator()(const TRegexp& re, Ssiz_t start) const;
-   const TSubString    SubString(const char *pat, Ssiz_t start = 0,
-                                 ECaseCompare cmp = kExact) const;
-   const TSubString    Strip(EStripType s = kTrailing, char c = ' ') const;
+   TSubString    operator()(Ssiz_t start, Ssiz_t len) const;
+   TSubString    operator()(const TRegexp& re) const;   // Match the RE
+   TSubString    operator()(const TRegexp& re, Ssiz_t start) const;
+   TSubString    SubString(const char *pat, Ssiz_t start = 0,
+                           ECaseCompare cmp = kExact) const;
+   TSubString    Strip(EStripType s = kTrailing, char c = ' ') const;
 
    // Non-static member functions
    TString&     Append(const char *cs);

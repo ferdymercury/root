@@ -1,3 +1,5 @@
+//*CMZ :  2.21/07 05/03/99  11.40.20  by  Rene Brun
+//*CMZ :  2.21/00 28/12/98  17.23.23  by  Rene Brun
 //*CMZ :  2.20/05 15/12/98  09.17.21  by  Rene Brun
 //*CMZ :  2.00/13 28/10/98  09.31.48  by  Rene Brun
 //*CMZ :  2.00/12 09/09/98  19.41.09  by  Rene Brun
@@ -26,7 +28,10 @@
 #include "TPave.h"
 #include "TVirtualPad.h"
 #include "TClass.h"
+#include "TInterpreter.h"
 #include "TMath.h"
+
+const Int_t kNameIsAction = BIT(11);
 
 ClassImp(TPave)
 
@@ -164,7 +169,7 @@ void TPave::Draw(Option_t *option)
 
    Option_t *opt;
    if (strlen(option)) opt = option;
-   else                opt = (char*)GetOption();
+   else                opt = GetOption();
 
    AppendPad(opt);
 
@@ -200,6 +205,12 @@ void TPave::ExecuteEvent(Int_t event, Int_t px, Int_t py)
    fY1NDC = (fY1-yp1)/dpy;
    fX2NDC = (fX2-xp1)/dpx;
    fY2NDC = (fY2-yp1)/dpy;
+
+//*-* In case the bit NameIsAction is activated, execute the action
+//    in name via the interpreter.
+   if (event == kButton1Double) {
+      if (TestBit(kNameIsAction)) gInterpreter->ProcessLine(GetName());
+   }
 }
 
 //______________________________________________________________________________
@@ -245,7 +256,6 @@ void TPave::PaintPave(Coord_t x1, Coord_t y1,Coord_t x2, Coord_t  y2,
    Float_t x[7],y[7];
    TString opt = option;
    opt.ToLower();
-
 //*-*- if pave drawn with the arc option, goes through dedicated function
    if (opt.Contains("arc")) {
       PaintPaveArc(x1,y1,x2,y2,bordersize,option);
@@ -261,6 +271,13 @@ void TPave::PaintPave(Coord_t x1, Coord_t y1,Coord_t x2, Coord_t  y2,
 //*-*- Draw first pave as a normal filled box
    TBox::PaintBox(x1,y1,x2,y2);
    if (fBorderSize <= 0) return;
+   if (fBorderSize == 1) {
+      gPad->PaintLine(x1,y1,x2,y1);
+      gPad->PaintLine(x2,y1,x2,y2);
+      gPad->PaintLine(x2,y2,x1,y2);
+      gPad->PaintLine(x1,y2,x1,y1);
+      return;
+   }
 
    Float_t wy = gPad->PixeltoY(0) - gPad->PixeltoY(fBorderSize);
    Float_t wx = gPad->PixeltoX(fBorderSize) - gPad->PixeltoX(0);

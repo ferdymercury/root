@@ -1,0 +1,45 @@
+*CMZ :  2.21/08 18/03/99  21.32.33  by  Rene Brun
+*-- Author :    Rene Brun   18/03/99
+# Makefile of ROOT for AIX with glibc and egcs1.1
+# origin Richard Dubois & Donald Benton
+
+PLATFORM      = aix
+
+CXX           = g++
+CC            = gcc
+
+# CXXFLAGS      = -Wall -DR__GLIBC -fno-rtti -fno-exceptions -D_AIX41 -DR__AIXGCC
+CXXFLAGS      = -D_AIX41 -DR__AIXGCC -D_AIX32 -fsigned-char
+
+# CFLAGS        = -Wall -DR__GLIBC -D_AIX41 -DR__AIXGCC
+CFLAGS      = -D_AIX41 -DR__AIXGCC -D_AIX32 -fsigned-char
+
+CINTCXXFLAGS  = -fsigned-char -DG__REGEXP -D_POSIX2_SOURCE -DG__P2FCAST \
+          -DG__UNIX -DG__SHAREDLIB -DG__OSFDLL -DG__ROOT -DG__REDIRECTIO
+
+CINTCFLAGS  = -fsigned-char -DG__REGEXP -D_POSIX2_SOURCE \
+          -DG__UNIX -DG__SHAREDLIB -DG__OSFDLL -DG__ROOT -DG__REDIRECTIO
+
+OPT           = -g
+NOOPT         =
+# LD            = g++
+LD            = makeSharedLib
+LDFLAGS       =
+# SOFLAGS       = -shared -Wl,-soname,
+SOFLAGS       =
+SOEXT         = so
+SYSLIBS       = -lm -lld -lg++
+SYSXLIBS      = -lX11 -lm -lld
+XLIBS         = -lXpm -lX11 -L/share/lib
+CILIBS        = -lm -L$(ROOTSYS)/lib -lCint -lbsd -lcurses -lld
+
+
+##### MACROS and TARGETS #####
+
+include Make-macros
+
+
+##### DEPENDENCIES #####
+
+include Make-depend
+

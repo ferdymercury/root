@@ -1,5 +1,5 @@
-//*CMZ :  2.20/06 17/12/98  09.31.02  by  Rene Brun
-//*-- Author :    Rene Brun   17/12/98
+//*CMZ :  2.21/07 08/03/99  12.34.54  by  Fons Rademakers
+//*-- Author :    Fons Rademakers   08/03/99
 //*CMZ :  1.00/09 23/04/97  17.59.54  by  Rene Brun
 //*-- Author :    Rene Brun   23/04/97
 #if defined(__hpux) && !defined(__GNUG__)
@@ -123,6 +123,7 @@ extern G__linked_taginfo G__G__TreeLN_TCutG;
 #undef malloc
 #endif
 
+extern "C" void G__cpp_reset_tagtableG__Tree();
 
 extern "C" void G__set_cpp_environmentG__Tree() {
   G__add_macro("__MAKECINT__");
@@ -150,6 +151,7 @@ extern "C" void G__set_cpp_environmentG__Tree() {
   G__add_compiledheader("TPacketGenerator.h");
   G__add_compiledheader("TCut.h");
   G__add_compiledheader("TCutG.h");
+  G__cpp_reset_tagtableG__Tree();
 }
 extern "C" int G__cpp_dllrevG__Tree() { return(51111); }
 
@@ -482,27 +484,32 @@ static int G__TTree_GetBranch_1_3(G__value *result7,char *funcname,struct G__par
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TTree_GetCurrentFile_2_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TTree_GetChainOffset_2_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TTree*)(G__getstructoffset()))->GetChainOffset());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TTree_GetCurrentFile_3_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((TTree*)(G__getstructoffset()))->GetCurrentFile());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TTree_GetDirectory_3_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TTree_GetDirectory_4_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((TTree*)(G__getstructoffset()))->GetDirectory());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TTree_GetEntries_4_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TTree_GetEntries_5_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letdouble(result7,100,(double)((TTree*)(G__getstructoffset()))->GetEntries());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TTree_GetEstimate_5_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TTree_GetEstimate_6_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TTree*)(G__getstructoffset()))->GetEstimate());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TTree_GetEvent_6_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TTree_GetEvent_7_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 2:
       G__letint(result7,105,(long)((TTree*)(G__getstructoffset()))->GetEvent((Int_t)G__int(libp->para[0]),(Int_t)G__int(libp->para[1])));
@@ -517,75 +524,70 @@ static int G__TTree_GetEvent_6_3(G__value *result7,char *funcname,struct G__para
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TTree_GetEventList_7_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TTree_GetEventList_8_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((TTree*)(G__getstructoffset()))->GetEventList());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TTree_GetEventNumber_8_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TTree_GetEventNumber_9_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TTree*)(G__getstructoffset()))->GetEventNumber((Int_t)G__int(libp->para[0])));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TTree_GetLeaf_9_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TTree_GetLeaf_0_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((TTree*)(G__getstructoffset()))->GetLeaf((const Text_t*)G__int(libp->para[0])));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TTree_GetListOfActiveBranches_0_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TTree_GetListOfActiveBranches_1_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((TTree*)(G__getstructoffset()))->GetListOfActiveBranches());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TTree_GetListOfBranches_1_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TTree_GetListOfBranches_2_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((TTree*)(G__getstructoffset()))->GetListOfBranches());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TTree_GetListOfLeaves_2_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TTree_GetListOfLeaves_3_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((TTree*)(G__getstructoffset()))->GetListOfLeaves());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TTree_GetMaxEventLoop_3_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TTree_GetMaxEventLoop_4_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TTree*)(G__getstructoffset()))->GetMaxEventLoop());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TTree_GetMaximum_4_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TTree_GetMaximum_5_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letdouble(result7,102,(double)((TTree*)(G__getstructoffset()))->GetMaximum((Text_t*)G__int(libp->para[0])));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TTree_GetMinimum_5_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TTree_GetMinimum_6_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letdouble(result7,102,(double)((TTree*)(G__getstructoffset()))->GetMinimum((Text_t*)G__int(libp->para[0])));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TTree_GetMaxVirtualSize_6_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TTree_GetMaxVirtualSize_7_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TTree*)(G__getstructoffset()))->GetMaxVirtualSize());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TTree_GetMultiplicity_7_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TTree_GetMultiplicity_8_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((TTree*)(G__getstructoffset()))->GetMultiplicity());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TTree_GetNbranches_8_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TTree_GetNbranches_9_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TTree*)(G__getstructoffset()))->GetNbranches());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TTree_GetNextPacket_9_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TTree_GetNextPacket_0_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TTree*)(G__getstructoffset()))->GetNextPacket((TSlave*)G__int(libp->para[0]),libp->para[1].ref?*(Int_t*)libp->para[1].ref:G__Mint(libp->para[1])
 ,libp->para[2].ref?*(Stat_t*)libp->para[2].ref:G__Mdouble(libp->para[2]),libp->para[3].ref?*(Stat_t*)libp->para[3].ref:G__Mdouble(libp->para[3]));
-   return(1 || funcname || hash || result7 || libp) ;
-}
-
-static int G__TTree_GetOldEventNumber_0_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
-      G__letint(result7,105,(long)((TTree*)(G__getstructoffset()))->GetOldEventNumber());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
@@ -870,7 +872,21 @@ static int G__TTree_SetBranchStatus_1_8(G__value *result7,char *funcname,struct 
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TTree_SetEstimate_2_8(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TTree_SetChainOffset_2_8(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 1:
+      G__setnull(result7);
+      ((TTree*)(G__getstructoffset()))->SetChainOffset((Int_t)G__int(libp->para[0]));
+      break;
+   case 0:
+      G__setnull(result7);
+      ((TTree*)(G__getstructoffset()))->SetChainOffset();
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TTree_SetEstimate_3_8(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -884,13 +900,13 @@ static int G__TTree_SetEstimate_2_8(G__value *result7,char *funcname,struct G__p
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TTree_SetEventList_3_8(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TTree_SetEventList_4_8(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TTree*)(G__getstructoffset()))->SetEventList((TEventList*)G__int(libp->para[0]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TTree_SetMaxEventLoop_4_8(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TTree_SetMaxEventLoop_5_8(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -904,7 +920,7 @@ static int G__TTree_SetMaxEventLoop_4_8(G__value *result7,char *funcname,struct 
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TTree_SetMaxVirtualSize_5_8(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TTree_SetMaxVirtualSize_6_8(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -918,13 +934,13 @@ static int G__TTree_SetMaxVirtualSize_5_8(G__value *result7,char *funcname,struc
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TTree_SetName_6_8(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TTree_SetName_7_8(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TTree*)(G__getstructoffset()))->SetName((const Text_t*)G__int(libp->para[0]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TTree_SetPacketSize_7_8(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TTree_SetPacketSize_8_8(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -938,7 +954,7 @@ static int G__TTree_SetPacketSize_7_8(G__value *result7,char *funcname,struct G_
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TTree_SetScanField_8_8(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TTree_SetScanField_9_8(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -952,7 +968,7 @@ static int G__TTree_SetScanField_8_8(G__value *result7,char *funcname,struct G__
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TTree_SetSelector_9_8(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TTree_SetSelector_0_9(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -966,13 +982,13 @@ static int G__TTree_SetSelector_9_8(G__value *result7,char *funcname,struct G__p
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TTree_SetSelector_0_9(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TTree_SetSelector_1_9(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TTree*)(G__getstructoffset()))->SetSelector((const Text_t*)G__int(libp->para[0]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TTree_SetTimerInterval_1_9(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TTree_SetTimerInterval_2_9(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -986,7 +1002,7 @@ static int G__TTree_SetTimerInterval_1_9(G__value *result7,char *funcname,struct
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TTree_SetUpdate_2_9(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TTree_SetUpdate_3_9(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -1000,7 +1016,7 @@ static int G__TTree_SetUpdate_2_9(G__value *result7,char *funcname,struct G__par
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TTree_Show_3_9(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TTree_Show_4_9(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -1014,7 +1030,7 @@ static int G__TTree_Show_3_9(G__value *result7,char *funcname,struct G__param *l
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TTree_StartViewer_4_9(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TTree_StartViewer_5_9(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 2:
       G__setnull(result7);
@@ -1032,67 +1048,67 @@ static int G__TTree_StartViewer_4_9(G__value *result7,char *funcname,struct G__p
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TTree_UpdateActiveBranches_5_9(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TTree_UpdateActiveBranches_6_9(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TTree*)(G__getstructoffset()))->UpdateActiveBranches();
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TTree_DeclFileName_6_9(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TTree_DeclFileName_7_9(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,67,(long)((TTree*)(G__getstructoffset()))->DeclFileName());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TTree_DeclFileLine_7_9(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TTree_DeclFileLine_8_9(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TTree*)(G__getstructoffset()))->DeclFileLine());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TTree_ImplFileName_8_9(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TTree_ImplFileName_9_9(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,67,(long)((TTree*)(G__getstructoffset()))->ImplFileName());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TTree_ImplFileLine_9_9(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TTree_ImplFileLine_0_10(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TTree*)(G__getstructoffset()))->ImplFileLine());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TTree_Class_Version_0_10(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TTree_Class_Version_1_10(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,115,(long)((TTree*)(G__getstructoffset()))->Class_Version());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TTree_Class_1_10(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TTree_Class_2_10(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((TTree*)(G__getstructoffset()))->Class());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TTree_Dictionary_2_10(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TTree_Dictionary_3_10(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TTree*)(G__getstructoffset()))->Dictionary();
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TTree_IsA_3_10(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TTree_IsA_4_10(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((TTree*)(G__getstructoffset()))->IsA());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TTree_ShowMembers_4_10(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TTree_ShowMembers_5_10(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TTree*)(G__getstructoffset()))->ShowMembers(*(TMemberInspector*)libp->para[0].ref,(char*)G__int(libp->para[1]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TTree_Streamer_5_10(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TTree_Streamer_6_10(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TTree*)(G__getstructoffset()))->Streamer(*(TBuffer*)libp->para[0].ref);
    return(1 || funcname || hash || result7 || libp) ;
 }
 
 // automatic copy constructor
-static int G__TTree_TTree_6_10(G__value *result7,char *funcname,struct G__param *libp,int hash)
+static int G__TTree_TTree_7_10(G__value *result7,char *funcname,struct G__param *libp,int hash)
 {
    TTree *p;
    if(1!=libp->paran) ;
@@ -1105,7 +1121,7 @@ static int G__TTree_TTree_6_10(G__value *result7,char *funcname,struct G__param 
 }
 
 // automatic destructor
-static int G__TTree_wATTree_7_10(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TTree_wATTree_8_10(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    if(G__getaryconstruct())
      if(G__PVOID==G__getgvp())
        delete[] (TTree *)(G__getstructoffset());
@@ -1366,7 +1382,7 @@ static int G__TLeaf_Browse_3_0(G__value *result7,char *funcname,struct G__param 
 
 static int G__TLeaf_Export_4_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
-      ((TLeaf*)(G__getstructoffset()))->Export((TClonesArray*)G__int(libp->para[0]));
+      ((TLeaf*)(G__getstructoffset()))->Export((TClonesArray*)G__int(libp->para[0]),(Int_t)G__int(libp->para[1]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
@@ -4067,7 +4083,7 @@ static int G__TLeafB_TLeafB_1_0(G__value *result7,char *funcname,struct G__param
 
 static int G__TLeafB_Export_3_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
-      ((TLeafB*)(G__getstructoffset()))->Export((TClonesArray*)G__int(libp->para[0]));
+      ((TLeafB*)(G__getstructoffset()))->Export((TClonesArray*)G__int(libp->para[0]),(Int_t)G__int(libp->para[1]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
@@ -4246,7 +4262,7 @@ static int G__TLeafI_TLeafI_1_0(G__value *result7,char *funcname,struct G__param
 
 static int G__TLeafI_Export_3_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
-      ((TLeafI*)(G__getstructoffset()))->Export((TClonesArray*)G__int(libp->para[0]));
+      ((TLeafI*)(G__getstructoffset()))->Export((TClonesArray*)G__int(libp->para[0]),(Int_t)G__int(libp->para[1]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
@@ -4441,7 +4457,7 @@ static int G__TLeafF_TLeafF_1_0(G__value *result7,char *funcname,struct G__param
 
 static int G__TLeafF_Export_3_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
-      ((TLeafF*)(G__getstructoffset()))->Export((TClonesArray*)G__int(libp->para[0]));
+      ((TLeafF*)(G__getstructoffset()))->Export((TClonesArray*)G__int(libp->para[0]),(Int_t)G__int(libp->para[1]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
@@ -4620,7 +4636,7 @@ static int G__TLeafS_TLeafS_1_0(G__value *result7,char *funcname,struct G__param
 
 static int G__TLeafS_Export_3_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
-      ((TLeafS*)(G__getstructoffset()))->Export((TClonesArray*)G__int(libp->para[0]));
+      ((TLeafS*)(G__getstructoffset()))->Export((TClonesArray*)G__int(libp->para[0]),(Int_t)G__int(libp->para[1]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
@@ -4799,7 +4815,7 @@ static int G__TLeafD_TLeafD_1_0(G__value *result7,char *funcname,struct G__param
 
 static int G__TLeafD_Export_3_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
-      ((TLeafD*)(G__getstructoffset()))->Export((TClonesArray*)G__int(libp->para[0]));
+      ((TLeafD*)(G__getstructoffset()))->Export((TClonesArray*)G__int(libp->para[0]),(Int_t)G__int(libp->para[1]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
@@ -4978,7 +4994,7 @@ static int G__TLeafC_TLeafC_1_0(G__value *result7,char *funcname,struct G__param
 
 static int G__TLeafC_Export_3_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
-      ((TLeafC*)(G__getstructoffset()))->Export((TClonesArray*)G__int(libp->para[0]));
+      ((TLeafC*)(G__getstructoffset()))->Export((TClonesArray*)G__int(libp->para[0]),(Int_t)G__int(libp->para[1]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
@@ -6254,7 +6270,7 @@ static void G__setup_memvarTTree(void) {
    G__memvar_setup((void*)NULL,85,0,0,G__get_linked_tagnum(&G__G__TreeLN_TTreeFormula),-1,-1,2,"fVar4=",0,"Pointer to fourth variable formula");
    G__memvar_setup((void*)NULL,85,0,0,G__get_linked_tagnum(&G__G__TreeLN_TTreeFormula),-1,-1,2,"fSelect=",0,"Pointer to selection formula");
    G__memvar_setup((void*)NULL,85,0,0,G__get_linked_tagnum(&G__G__TreeLN_TTreeFormula),-1,-1,2,"fMultiplicity=",0,"Pointer to formula giving ndata per event");
-   G__memvar_setup((void*)NULL,105,0,0,-1,G__defined_typename("Int_t"),-1,2,"fOldEventNumber=",0,"Number of the previously read event");
+   G__memvar_setup((void*)NULL,105,0,0,-1,G__defined_typename("Int_t"),-1,2,"fChainOffset=",0,"Offset of 1st event of this Tree in a TChain");
    G__memvar_setup((void*)NULL,105,0,0,-1,G__defined_typename("Int_t"),-1,2,"fReadEvent=",0,"Number of the event being processed");
    G__memvar_setup((void*)NULL,105,0,0,-1,G__defined_typename("Int_t"),-1,2,"fTotalBuffers=",0,"Total number of bytes in branch buffers");
    G__memvar_setup((void*)NULL,105,0,0,-1,G__defined_typename("Int_t"),-1,2,"fEstimate=",0,"Number of events to estimate histogram limits");
@@ -6693,28 +6709,28 @@ static void G__setup_memfuncTTree(void) {
 "i - 'Int_t' 0 - nbins i - 'Int_t' 1 - newbins "
 "f - 'Float_t' 1 - xmin f - 'Float_t' 1 - xmax",(char*)NULL,(void*)NULL,0);
    G__memfunc_setup("GetBranch",878,G__TTree_GetBranch_1_3,85,G__get_linked_tagnum(&G__G__TreeLN_TBranch),-1,0,1,1,1,0,"C - 'Text_t' 0 - name",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("GetCurrentFile",1411,G__TTree_GetCurrentFile_2_3,85,G__get_linked_tagnum(&G__G__TreeLN_TFile),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetDirectory",1237,G__TTree_GetDirectory_3_3,85,G__get_linked_tagnum(&G__G__TreeLN_TDirectory),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetEntries",1018,G__TTree_GetEntries_4_3,100,-1,G__defined_typename("Stat_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("GetEstimate",1116,G__TTree_GetEstimate_5_3,105,-1,G__defined_typename("Int_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("GetEvent",802,G__TTree_GetEvent_6_3,105,-1,G__defined_typename("Int_t"),0,2,1,1,0,
+   G__memfunc_setup("GetChainOffset",1386,G__TTree_GetChainOffset_2_3,105,-1,G__defined_typename("Int_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetCurrentFile",1411,G__TTree_GetCurrentFile_3_3,85,G__get_linked_tagnum(&G__G__TreeLN_TFile),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetDirectory",1237,G__TTree_GetDirectory_4_3,85,G__get_linked_tagnum(&G__G__TreeLN_TDirectory),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetEntries",1018,G__TTree_GetEntries_5_3,100,-1,G__defined_typename("Stat_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetEstimate",1116,G__TTree_GetEstimate_6_3,105,-1,G__defined_typename("Int_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetEvent",802,G__TTree_GetEvent_7_3,105,-1,G__defined_typename("Int_t"),0,2,1,1,0,
 "i - 'Int_t' 0 0 event i - 'Int_t' 0 0 getall",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("GetEventList",1214,G__TTree_GetEventList_7_3,85,G__get_linked_tagnum(&G__G__TreeLN_TEventList),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetEventNumber",1419,G__TTree_GetEventNumber_8_3,105,-1,G__defined_typename("Int_t"),0,1,1,1,0,"i - 'Int_t' 0 - event",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("GetLeaf",664,G__TTree_GetLeaf_9_3,85,G__get_linked_tagnum(&G__G__TreeLN_TLeaf),-1,0,1,1,1,0,"C - 'Text_t' 0 - name",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("GetListOfActiveBranches",2291,G__TTree_GetListOfActiveBranches_0_4,85,G__get_linked_tagnum(&G__G__TreeLN_TList),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("GetListOfBranches",1687,G__TTree_GetListOfBranches_1_4,85,G__get_linked_tagnum(&G__G__TreeLN_TObjArray),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("GetListOfLeaves",1489,G__TTree_GetListOfLeaves_2_4,85,G__get_linked_tagnum(&G__G__TreeLN_TObjArray),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("GetMaxEventLoop",1506,G__TTree_GetMaxEventLoop_3_4,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("GetMaximum",1022,G__TTree_GetMaximum_4_4,102,-1,G__defined_typename("Float_t"),0,1,1,1,0,"C - 'Text_t' 0 - columname",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("GetMinimum",1020,G__TTree_GetMinimum_5_4,102,-1,G__defined_typename("Float_t"),0,1,1,1,0,"C - 'Text_t' 0 - columname",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("GetMaxVirtualSize",1736,G__TTree_GetMaxVirtualSize_6_4,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("GetMultiplicity",1577,G__TTree_GetMultiplicity_7_4,85,G__get_linked_tagnum(&G__G__TreeLN_TTreeFormula),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetNbranches",1204,G__TTree_GetNbranches_8_4,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("GetNextPacket",1303,G__TTree_GetNextPacket_9_4,121,-1,-1,0,4,1,1,0,
+   G__memfunc_setup("GetEventList",1214,G__TTree_GetEventList_8_3,85,G__get_linked_tagnum(&G__G__TreeLN_TEventList),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetEventNumber",1419,G__TTree_GetEventNumber_9_3,105,-1,G__defined_typename("Int_t"),0,1,1,1,0,"i - 'Int_t' 0 - event",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetLeaf",664,G__TTree_GetLeaf_0_4,85,G__get_linked_tagnum(&G__G__TreeLN_TLeaf),-1,0,1,1,1,0,"C - 'Text_t' 0 - name",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetListOfActiveBranches",2291,G__TTree_GetListOfActiveBranches_1_4,85,G__get_linked_tagnum(&G__G__TreeLN_TList),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetListOfBranches",1687,G__TTree_GetListOfBranches_2_4,85,G__get_linked_tagnum(&G__G__TreeLN_TObjArray),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetListOfLeaves",1489,G__TTree_GetListOfLeaves_3_4,85,G__get_linked_tagnum(&G__G__TreeLN_TObjArray),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetMaxEventLoop",1506,G__TTree_GetMaxEventLoop_4_4,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetMaximum",1022,G__TTree_GetMaximum_5_4,102,-1,G__defined_typename("Float_t"),0,1,1,1,0,"C - 'Text_t' 0 - columname",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetMinimum",1020,G__TTree_GetMinimum_6_4,102,-1,G__defined_typename("Float_t"),0,1,1,1,0,"C - 'Text_t' 0 - columname",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetMaxVirtualSize",1736,G__TTree_GetMaxVirtualSize_7_4,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetMultiplicity",1577,G__TTree_GetMultiplicity_8_4,85,G__get_linked_tagnum(&G__G__TreeLN_TTreeFormula),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetNbranches",1204,G__TTree_GetNbranches_9_4,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetNextPacket",1303,G__TTree_GetNextPacket_0_5,121,-1,-1,0,4,1,1,0,
 "U 'TSlave' - 0 - sl i - 'Int_t' 1 - nevents "
 "d - 'Stat_t' 1 - firstevent d - 'Stat_t' 1 - processed",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("GetOldEventNumber",1706,G__TTree_GetOldEventNumber_0_5,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
    G__memfunc_setup("GetPacketGenerator",1823,G__TTree_GetPacketGenerator_1_5,85,G__get_linked_tagnum(&G__G__TreeLN_TPacketGenerator),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
    G__memfunc_setup("GetPacketSize",1299,G__TTree_GetPacketSize_2_5,105,-1,G__defined_typename("Int_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
    G__memfunc_setup("GetReadEvent",1182,G__TTree_GetReadEvent_3_5,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
@@ -6756,36 +6772,37 @@ static void G__setup_memfuncTTree(void) {
 "C - 'Text_t' 0 - bname Y - - 0 - add",(char*)NULL,(void*)NULL,1);
    G__memfunc_setup("SetBranchStatus",1534,G__TTree_SetBranchStatus_1_8,121,-1,-1,0,2,1,1,0,
 "C - 'Text_t' 0 - bname b - 'Bool_t' 0 1 status",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("SetEstimate",1128,G__TTree_SetEstimate_2_8,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 10000 nevents",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("SetEventList",1226,G__TTree_SetEventList_3_8,121,-1,-1,0,1,1,1,0,"U 'TEventList' - 0 - list",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("SetMaxEventLoop",1518,G__TTree_SetMaxEventLoop_4_8,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 1000000000 maxev","*MENU*",(void*)NULL,1);
-   G__memfunc_setup("SetMaxVirtualSize",1748,G__TTree_SetMaxVirtualSize_5_8,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 0 size","*MENU*",(void*)NULL,1);
-   G__memfunc_setup("SetName",685,G__TTree_SetName_6_8,121,-1,-1,0,1,1,1,0,"C - 'Text_t' 0 - name","*MENU*",(void*)NULL,1);
-   G__memfunc_setup("SetPacketSize",1311,G__TTree_SetPacketSize_7_8,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 100 size",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("SetScanField",1173,G__TTree_SetScanField_8_8,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 50 n","*MENU*",(void*)NULL,1);
-   G__memfunc_setup("SetSelector",1133,G__TTree_SetSelector_9_8,121,-1,-1,0,1,1,1,0,"U 'TSelector' - 0 0 selector",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("SetSelector",1133,G__TTree_SetSelector_0_9,121,-1,-1,0,1,1,1,0,"C - 'Text_t' 0 - macroname",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("SetTimerInterval",1650,G__TTree_SetTimerInterval_1_9,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 333 msec",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("SetUpdate",911,G__TTree_SetUpdate_2_9,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 0 freq",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("Show",417,G__TTree_Show_3_9,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 -1 event",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("StartViewer",1152,G__TTree_StartViewer_4_9,121,-1,-1,0,2,1,1,0,
+   G__memfunc_setup("SetChainOffset",1398,G__TTree_SetChainOffset_2_8,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 0 offset",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetEstimate",1128,G__TTree_SetEstimate_3_8,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 10000 nevents",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetEventList",1226,G__TTree_SetEventList_4_8,121,-1,-1,0,1,1,1,0,"U 'TEventList' - 0 - list",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetMaxEventLoop",1518,G__TTree_SetMaxEventLoop_5_8,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 1000000000 maxev","*MENU*",(void*)NULL,1);
+   G__memfunc_setup("SetMaxVirtualSize",1748,G__TTree_SetMaxVirtualSize_6_8,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 0 size","*MENU*",(void*)NULL,1);
+   G__memfunc_setup("SetName",685,G__TTree_SetName_7_8,121,-1,-1,0,1,1,1,0,"C - 'Text_t' 0 - name","*MENU*",(void*)NULL,1);
+   G__memfunc_setup("SetPacketSize",1311,G__TTree_SetPacketSize_8_8,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 100 size",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetScanField",1173,G__TTree_SetScanField_9_8,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 50 n","*MENU*",(void*)NULL,1);
+   G__memfunc_setup("SetSelector",1133,G__TTree_SetSelector_0_9,121,-1,-1,0,1,1,1,0,"U 'TSelector' - 0 0 selector",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetSelector",1133,G__TTree_SetSelector_1_9,121,-1,-1,0,1,1,1,0,"C - 'Text_t' 0 - macroname",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetTimerInterval",1650,G__TTree_SetTimerInterval_2_9,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 333 msec",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetUpdate",911,G__TTree_SetUpdate_3_9,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 0 freq",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Show",417,G__TTree_Show_4_9,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 -1 event",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("StartViewer",1152,G__TTree_StartViewer_5_9,121,-1,-1,0,2,1,1,0,
 "i - 'Int_t' 0 520 ww i - 'Int_t' 0 400 wh","*MENU*",(void*)NULL,1);
-   G__memfunc_setup("UpdateActiveBranches",2021,G__TTree_UpdateActiveBranches_5_9,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("DeclFileName",1145,G__TTree_DeclFileName_6_9,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("DeclFileLine",1152,G__TTree_DeclFileLine_7_9,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("ImplFileName",1171,G__TTree_ImplFileName_8_9,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("ImplFileLine",1178,G__TTree_ImplFileLine_9_9,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Class_Version",1339,G__TTree_Class_Version_0_10,115,-1,G__defined_typename("Version_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Class",502,G__TTree_Class_1_10,85,G__get_linked_tagnum(&G__G__TreeLN_TClass),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Dictionary",1046,G__TTree_Dictionary_2_10,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("IsA",253,G__TTree_IsA_3_10,85,G__get_linked_tagnum(&G__G__TreeLN_TClass),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("ShowMembers",1132,G__TTree_ShowMembers_4_10,121,-1,-1,0,2,1,1,0,
+   G__memfunc_setup("UpdateActiveBranches",2021,G__TTree_UpdateActiveBranches_6_9,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("DeclFileName",1145,G__TTree_DeclFileName_7_9,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("DeclFileLine",1152,G__TTree_DeclFileLine_8_9,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ImplFileName",1171,G__TTree_ImplFileName_9_9,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ImplFileLine",1178,G__TTree_ImplFileLine_0_10,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Class_Version",1339,G__TTree_Class_Version_1_10,115,-1,G__defined_typename("Version_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Class",502,G__TTree_Class_2_10,85,G__get_linked_tagnum(&G__G__TreeLN_TClass),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Dictionary",1046,G__TTree_Dictionary_3_10,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("IsA",253,G__TTree_IsA_4_10,85,G__get_linked_tagnum(&G__G__TreeLN_TClass),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("ShowMembers",1132,G__TTree_ShowMembers_5_10,121,-1,-1,0,2,1,1,0,
 "u 'TMemberInspector' - 1 - insp C - - 0 - parent",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("Streamer",835,G__TTree_Streamer_5_10,121,-1,-1,0,1,1,1,0,"u 'TBuffer' - 1 - b",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Streamer",835,G__TTree_Streamer_6_10,121,-1,-1,0,1,1,1,0,"u 'TBuffer' - 1 - b",(char*)NULL,(void*)NULL,1);
    // automatic copy constructor
-   G__memfunc_setup("TTree",484,G__TTree_TTree_6_10,(int)('i'),G__get_linked_tagnum(&G__G__TreeLN_TTree),-1,0,1,1,1,0,"u 'TTree' - 1 - -",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("TTree",484,G__TTree_TTree_7_10,(int)('i'),G__get_linked_tagnum(&G__G__TreeLN_TTree),-1,0,1,1,1,0,"u 'TTree' - 1 - -",(char*)NULL,(void*)NULL,0);
    // automatic destructor
-   G__memfunc_setup("~TTree",610,G__TTree_wATTree_7_10,(int)('y'),-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("~TTree",610,G__TTree_wATTree_8_10,(int)('y'),-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
    G__tag_memfunc_reset();
 }
 
@@ -6839,7 +6856,8 @@ static void G__setup_memfuncTLeaf(void) {
    G__memfunc_setup("TLeaf",460,G__TLeaf_TLeaf_1_0,105,G__get_linked_tagnum(&G__G__TreeLN_TLeaf),-1,0,2,1,1,0,
 "C - 'Text_t' 0 - name C - 'Text_t' 0 - type",(char*)NULL,(void*)NULL,0);
    G__memfunc_setup("Browse",626,G__TLeaf_Browse_3_0,121,-1,-1,0,1,1,1,0,"U 'TBrowser' - 0 - b",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("Export",642,G__TLeaf_Export_4_0,121,-1,-1,0,1,1,1,0,"U 'TClonesArray' - 0 - list",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Export",642,G__TLeaf_Export_4_0,121,-1,-1,0,2,1,1,0,
+"U 'TClonesArray' - 0 - list i - 'Int_t' 0 - n",(char*)NULL,(void*)NULL,1);
    G__memfunc_setup("FillBasket",993,G__TLeaf_FillBasket_5_0,121,-1,-1,0,1,1,1,0,"u 'TBuffer' - 1 - b",(char*)NULL,(void*)NULL,1);
    G__memfunc_setup("GetBranch",878,G__TLeaf_GetBranch_6_0,85,G__get_linked_tagnum(&G__G__TreeLN_TBranch),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
    G__memfunc_setup("GetLeafCount",1185,G__TLeaf_GetLeafCount_7_0,85,G__get_linked_tagnum(&G__G__TreeLN_TLeaf),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
@@ -7349,7 +7367,8 @@ static void G__setup_memfuncTLeafB(void) {
    G__memfunc_setup("TLeafB",526,G__TLeafB_TLeafB_0_0,105,G__get_linked_tagnum(&G__G__TreeLN_TLeafB),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
    G__memfunc_setup("TLeafB",526,G__TLeafB_TLeafB_1_0,105,G__get_linked_tagnum(&G__G__TreeLN_TLeafB),-1,0,2,1,1,0,
 "C - 'Text_t' 0 - name C - 'Text_t' 0 - type",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Export",642,G__TLeafB_Export_3_0,121,-1,-1,0,1,1,1,0,"U 'TClonesArray' - 0 - list",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Export",642,G__TLeafB_Export_3_0,121,-1,-1,0,2,1,1,0,
+"U 'TClonesArray' - 0 - list i - 'Int_t' 0 - n",(char*)NULL,(void*)NULL,1);
    G__memfunc_setup("FillBasket",993,G__TLeafB_FillBasket_4_0,121,-1,-1,0,1,1,1,0,"u 'TBuffer' - 1 - b",(char*)NULL,(void*)NULL,1);
    G__memfunc_setup("GetTypeName",1091,G__TLeafB_GetTypeName_5_0,67,-1,G__defined_typename("Text_t"),0,0,1,1,9,"",(char*)NULL,(void*)NULL,1);
    G__memfunc_setup("GetValue",797,G__TLeafB_GetValue_6_0,102,-1,G__defined_typename("Float_t"),0,2,1,1,0,
@@ -7384,7 +7403,8 @@ static void G__setup_memfuncTLeafI(void) {
    G__memfunc_setup("TLeafI",533,G__TLeafI_TLeafI_0_0,105,G__get_linked_tagnum(&G__G__TreeLN_TLeafI),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
    G__memfunc_setup("TLeafI",533,G__TLeafI_TLeafI_1_0,105,G__get_linked_tagnum(&G__G__TreeLN_TLeafI),-1,0,2,1,1,0,
 "C - 'Text_t' 0 - name C - 'Text_t' 0 - type",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Export",642,G__TLeafI_Export_3_0,121,-1,-1,0,1,1,1,0,"U 'TClonesArray' - 0 - list",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Export",642,G__TLeafI_Export_3_0,121,-1,-1,0,2,1,1,0,
+"U 'TClonesArray' - 0 - list i - 'Int_t' 0 - n",(char*)NULL,(void*)NULL,1);
    G__memfunc_setup("FillBasket",993,G__TLeafI_FillBasket_4_0,121,-1,-1,0,1,1,1,0,"u 'TBuffer' - 1 - b",(char*)NULL,(void*)NULL,1);
    G__memfunc_setup("GetTypeName",1091,G__TLeafI_GetTypeName_5_0,67,-1,G__defined_typename("Text_t"),0,0,1,1,9,"",(char*)NULL,(void*)NULL,1);
    G__memfunc_setup("GetMaximum",1022,G__TLeafI_GetMaximum_6_0,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
@@ -7422,7 +7442,8 @@ static void G__setup_memfuncTLeafF(void) {
    G__memfunc_setup("TLeafF",530,G__TLeafF_TLeafF_0_0,105,G__get_linked_tagnum(&G__G__TreeLN_TLeafF),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
    G__memfunc_setup("TLeafF",530,G__TLeafF_TLeafF_1_0,105,G__get_linked_tagnum(&G__G__TreeLN_TLeafF),-1,0,2,1,1,0,
 "C - 'Text_t' 0 - name C - 'Text_t' 0 - type",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Export",642,G__TLeafF_Export_3_0,121,-1,-1,0,1,1,1,0,"U 'TClonesArray' - 0 - list",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Export",642,G__TLeafF_Export_3_0,121,-1,-1,0,2,1,1,0,
+"U 'TClonesArray' - 0 - list i - 'Int_t' 0 - n",(char*)NULL,(void*)NULL,1);
    G__memfunc_setup("FillBasket",993,G__TLeafF_FillBasket_4_0,121,-1,-1,0,1,1,1,0,"u 'TBuffer' - 1 - b",(char*)NULL,(void*)NULL,1);
    G__memfunc_setup("GetTypeName",1091,G__TLeafF_GetTypeName_5_0,67,-1,G__defined_typename("Text_t"),0,0,1,1,9,"",(char*)NULL,(void*)NULL,1);
    G__memfunc_setup("GetValue",797,G__TLeafF_GetValue_6_0,102,-1,G__defined_typename("Float_t"),0,2,1,1,0,
@@ -7457,7 +7478,8 @@ static void G__setup_memfuncTLeafS(void) {
    G__memfunc_setup("TLeafS",543,G__TLeafS_TLeafS_0_0,105,G__get_linked_tagnum(&G__G__TreeLN_TLeafS),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
    G__memfunc_setup("TLeafS",543,G__TLeafS_TLeafS_1_0,105,G__get_linked_tagnum(&G__G__TreeLN_TLeafS),-1,0,2,1,1,0,
 "C - 'Text_t' 0 - name C - 'Text_t' 0 - type",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Export",642,G__TLeafS_Export_3_0,121,-1,-1,0,1,1,1,0,"U 'TClonesArray' - 0 - list",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Export",642,G__TLeafS_Export_3_0,121,-1,-1,0,2,1,1,0,
+"U 'TClonesArray' - 0 - list i - 'Int_t' 0 - n",(char*)NULL,(void*)NULL,1);
    G__memfunc_setup("FillBasket",993,G__TLeafS_FillBasket_4_0,121,-1,-1,0,1,1,1,0,"u 'TBuffer' - 1 - b",(char*)NULL,(void*)NULL,1);
    G__memfunc_setup("GetTypeName",1091,G__TLeafS_GetTypeName_5_0,67,-1,G__defined_typename("Text_t"),0,0,1,1,9,"",(char*)NULL,(void*)NULL,1);
    G__memfunc_setup("GetValue",797,G__TLeafS_GetValue_6_0,102,-1,G__defined_typename("Float_t"),0,2,1,1,0,
@@ -7492,7 +7514,8 @@ static void G__setup_memfuncTLeafD(void) {
    G__memfunc_setup("TLeafD",528,G__TLeafD_TLeafD_0_0,105,G__get_linked_tagnum(&G__G__TreeLN_TLeafD),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
    G__memfunc_setup("TLeafD",528,G__TLeafD_TLeafD_1_0,105,G__get_linked_tagnum(&G__G__TreeLN_TLeafD),-1,0,2,1,1,0,
 "C - 'Text_t' 0 - name C - 'Text_t' 0 - type",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Export",642,G__TLeafD_Export_3_0,121,-1,-1,0,1,1,1,0,"U 'TClonesArray' - 0 - list",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Export",642,G__TLeafD_Export_3_0,121,-1,-1,0,2,1,1,0,
+"U 'TClonesArray' - 0 - list i - 'Int_t' 0 - n",(char*)NULL,(void*)NULL,1);
    G__memfunc_setup("FillBasket",993,G__TLeafD_FillBasket_4_0,121,-1,-1,0,1,1,1,0,"u 'TBuffer' - 1 - b",(char*)NULL,(void*)NULL,1);
    G__memfunc_setup("GetTypeName",1091,G__TLeafD_GetTypeName_5_0,67,-1,G__defined_typename("Text_t"),0,0,1,1,9,"",(char*)NULL,(void*)NULL,1);
    G__memfunc_setup("GetValue",797,G__TLeafD_GetValue_6_0,102,-1,G__defined_typename("Float_t"),0,2,1,1,0,
@@ -7527,7 +7550,8 @@ static void G__setup_memfuncTLeafC(void) {
    G__memfunc_setup("TLeafC",527,G__TLeafC_TLeafC_0_0,105,G__get_linked_tagnum(&G__G__TreeLN_TLeafC),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
    G__memfunc_setup("TLeafC",527,G__TLeafC_TLeafC_1_0,105,G__get_linked_tagnum(&G__G__TreeLN_TLeafC),-1,0,2,1,1,0,
 "C - 'Text_t' 0 - name C - 'Text_t' 0 - type",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Export",642,G__TLeafC_Export_3_0,121,-1,-1,0,1,1,1,0,"U 'TClonesArray' - 0 - list",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Export",642,G__TLeafC_Export_3_0,121,-1,-1,0,2,1,1,0,
+"U 'TClonesArray' - 0 - list i - 'Int_t' 0 - n",(char*)NULL,(void*)NULL,1);
    G__memfunc_setup("FillBasket",993,G__TLeafC_FillBasket_4_0,121,-1,-1,0,1,1,1,0,"u 'TBuffer' - 1 - b",(char*)NULL,(void*)NULL,1);
    G__memfunc_setup("GetMaximum",1022,G__TLeafC_GetMaximum_5_0,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
    G__memfunc_setup("GetMinimum",1020,G__TLeafC_GetMinimum_6_0,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
@@ -7739,6 +7763,49 @@ G__linked_taginfo G__G__TreeLN_TTime = { "TTime" , 99 , -1 };
 G__linked_taginfo G__G__TreeLN_TGraph = { "TGraph" , 99 , -1 };
 G__linked_taginfo G__G__TreeLN_TCutG = { "TCutG" , 99 , -1 };
 
+/* Reset class/struct taginfo */
+extern "C" void G__cpp_reset_tagtableG__Tree() {
+  G__G__TreeLN_TClass.tagnum = -1 ;
+  G__G__TreeLN_TList.tagnum = -1 ;
+  G__G__TreeLN_TObjArray.tagnum = -1 ;
+  G__G__TreeLN_TObject.tagnum = -1 ;
+  G__G__TreeLN_TString.tagnum = -1 ;
+  G__G__TreeLN_TNamed.tagnum = -1 ;
+  G__G__TreeLN_TKey.tagnum = -1 ;
+  G__G__TreeLN_TFile.tagnum = -1 ;
+  G__G__TreeLN_TDirectory.tagnum = -1 ;
+  G__G__TreeLN_TClonesArray.tagnum = -1 ;
+  G__G__TreeLN_TAttLine.tagnum = -1 ;
+  G__G__TreeLN_TAttFill.tagnum = -1 ;
+  G__G__TreeLN_TAttMarker.tagnum = -1 ;
+  G__G__TreeLN_TTree.tagnum = -1 ;
+  G__G__TreeLN_TBasket.tagnum = -1 ;
+  G__G__TreeLN_TLeaf.tagnum = -1 ;
+  G__G__TreeLN_TBranch.tagnum = -1 ;
+  G__G__TreeLN_TCut.tagnum = -1 ;
+  G__G__TreeLN_TSelector.tagnum = -1 ;
+  G__G__TreeLN_TTreeFormula.tagnum = -1 ;
+  G__G__TreeLN_TEventList.tagnum = -1 ;
+  G__G__TreeLN_TPacketGenerator.tagnum = -1 ;
+  G__G__TreeLN_TBranchClones.tagnum = -1 ;
+  G__G__TreeLN_TBranchObject.tagnum = -1 ;
+  G__G__TreeLN_TChain.tagnum = -1 ;
+  G__G__TreeLN_TChainElement.tagnum = -1 ;
+  G__G__TreeLN_TMethodCall.tagnum = -1 ;
+  G__G__TreeLN_TLeafObject.tagnum = -1 ;
+  G__G__TreeLN_TLeafB.tagnum = -1 ;
+  G__G__TreeLN_TLeafI.tagnum = -1 ;
+  G__G__TreeLN_TLeafF.tagnum = -1 ;
+  G__G__TreeLN_TLeafS.tagnum = -1 ;
+  G__G__TreeLN_TLeafD.tagnum = -1 ;
+  G__G__TreeLN_TLeafC.tagnum = -1 ;
+  G__G__TreeLN_TNtuple.tagnum = -1 ;
+  G__G__TreeLN_TFormula.tagnum = -1 ;
+  G__G__TreeLN_TTime.tagnum = -1 ;
+  G__G__TreeLN_TGraph.tagnum = -1 ;
+  G__G__TreeLN_TCutG.tagnum = -1 ;
+}
+
 extern "C" void G__cpp_setup_tagtableG__Tree() {
 
    /* Setting up class,struct,union tag entry */
@@ -7791,7 +7858,7 @@ class G__cpp_setup_initG__Tree {
 G__cpp_setup_initG__Tree G__cpp_setup_initializerG__Tree;
 
 //
-// File generated by /user/brun/root/bin/rootcint at Thu Dec 17 09:31:01 1998.
+// File generated by /home/rdm/root/bin/rootcint at Mon Mar  8 12:34:53 1999.
 // Do NOT change. Changes will be lost next time file is generated
 //
 
@@ -7832,7 +7899,7 @@ void TTree::ShowMembers(TMemberInspector &R__insp, char *R__parent)
    R__insp.Inspect(R__cl, R__parent, "*fVar4", &fVar4);
    R__insp.Inspect(R__cl, R__parent, "*fSelect", &fSelect);
    R__insp.Inspect(R__cl, R__parent, "*fMultiplicity", &fMultiplicity);
-   R__insp.Inspect(R__cl, R__parent, "fOldEventNumber", &fOldEventNumber);
+   R__insp.Inspect(R__cl, R__parent, "fChainOffset", &fChainOffset);
    R__insp.Inspect(R__cl, R__parent, "fReadEvent", &fReadEvent);
    R__insp.Inspect(R__cl, R__parent, "fTotalBuffers", &fTotalBuffers);
    R__insp.Inspect(R__cl, R__parent, "fEstimate", &fEstimate);

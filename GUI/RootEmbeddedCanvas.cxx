@@ -1,3 +1,4 @@
+//*CMZ :  2.21/08 11/03/99  16.36.20  by  Fons Rademakers
 //*CMZ :  2.20/00 03/11/98  19.52.59  by  Fons Rademakers
 //*CMZ :  2.00/10 16/07/98  18.50.45  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   15/07/98
@@ -29,6 +30,7 @@
 
 #include "TRootEmbeddedCanvas.h"
 #include "TCanvas.h"
+#include "TROOT.h"
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -51,6 +53,8 @@ public:
 
    Bool_t  HandleButton(Event_t *ev)
                 { return fCanvas->HandleContainerButton(ev); }
+   Bool_t  HandleDoubleClick(Event_t *ev)
+                { return fCanvas->HandleContainerDoubleClick(ev); }
    Bool_t  HandleConfigureNotify(Event_t *ev)
                 { TGFrame::HandleConfigureNotify(ev);
                   return fCanvas->HandleContainerConfigure(ev); }
@@ -60,6 +64,8 @@ public:
                 { return fCanvas->HandleContainerMotion(ev); }
    Bool_t  HandleExpose(Event_t *ev)
                 { return fCanvas->HandleContainerExpose(ev); }
+   Bool_t  HandleCrossing(Event_t *ev)
+                { return fCanvas->HandleContainerCrossing(ev); }
 };
 
 //______________________________________________________________________________
@@ -74,8 +80,8 @@ TRootEmbeddedContainer::TRootEmbeddedContainer(TRootEmbeddedCanvas *c, Window_t 
                     kButtonPressMask | kButtonReleaseMask,
                     kNone, kNone);
 
-   gGXW->SelectInput(fId, kKeyPressMask | kExposureMask | kPointerMotionMask |
-                     kStructureNotifyMask);
+   gGXW->SelectInput(fId, kKeyPressMask | kKeyReleaseMask | kExposureMask |
+                     kPointerMotionMask | kStructureNotifyMask | kLeaveWindowMask);
 }
 
 
@@ -146,6 +152,25 @@ Bool_t TRootEmbeddedCanvas::HandleContainerButton(Event_t *event)
 }
 
 //______________________________________________________________________________
+Bool_t TRootEmbeddedCanvas::HandleContainerDoubleClick(Event_t *event)
+{
+   // Handle mouse button double click events in the canvas container.
+
+   Int_t button = event->fCode;
+   Int_t x = event->fX;
+   Int_t y = event->fY;
+
+   if (button == kButton1)
+      fCanvas->HandleInput(kButton1Double, x, y);
+   if (button == kButton2)
+      fCanvas->HandleInput(kButton2Double, x, y);
+   if (button == kButton3)
+      fCanvas->HandleInput(kButton3Double, x, y);
+
+   return kTRUE;
+}
+
+//______________________________________________________________________________
 Bool_t TRootEmbeddedCanvas::HandleContainerConfigure(Event_t *)
 {
    // Handle configure (i.e. resize) event.
@@ -162,8 +187,16 @@ Bool_t TRootEmbeddedCanvas::HandleContainerKey(Event_t *event)
 {
    // Handle keyboard events in the canvas container.
 
-   //printf("key event %d\n", event->fCode);
-   if (event->fCode) { }
+   if (event->fType == kGKeyPress) {
+      fButton = event->fCode;
+      UInt_t keysym;
+      char str[2];
+      gGXW->LookupString(event, str, sizeof(str), keysym);
+      if (str[0] == 3)   // ctrl-c sets the interrupt flag
+         gROOT->SetInterrupt();
+      fCanvas->HandleInput(kKeyPress, str[0], 0);
+   } else if (event->fType == kKeyRelease)
+      fButton = 0;
 
    return kTRUE;
 }
@@ -191,6 +224,17 @@ Bool_t TRootEmbeddedCanvas::HandleContainerExpose(Event_t *event)
 
    if (event->fCount == 0)
       fCanvas->Flush();
+
+   return kTRUE;
+}
+
+//______________________________________________________________________________
+Bool_t TRootEmbeddedCanvas::HandleContainerCrossing(Event_t *event)
+{
+   // Handle enter/leave events. Only leave is activated at the moment.
+
+   if (event->fType == kLeaveNotify)
+      fCanvas->HandleInput(kMouseLeave, 0, 0);
 
    return kTRUE;
 }

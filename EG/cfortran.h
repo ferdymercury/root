@@ -1,3 +1,4 @@
+//*CMZ :  2.21/05 08/02/99  12.56.42  by  Fons Rademakers
 //*CMZ :  2.00/10 23/07/98  14.22.16  by  akiya miyamoto
 //*CMZ :  1.03/09 08/12/97  21.24.38  by  Fons Rademakers
 //*-- Author :
@@ -82,7 +83,8 @@ only C calling FORTRAN subroutines will work using K&R style.*/
 #if !(defined(NAGf90Fortran)||defined(f2cFortran)||defined(hpuxFortran)||defined(apolloFortran)||defined(sunFortran)||defined(IBMR2Fortran)||defined(CRAYFortran))
 #if !(defined(mipsFortran)||defined(DECFortran)||defined(vmsFortran)||defined(CONVEXFortran)||defined(PowerStationFortran))
 /* If no Fortran compiler is given, we choose one for the machines we know.   */
-#if defined(lynx) || defined(VAXUltrix) || defined(linux)  || defined(_HIUX_SOURCE)
+#if defined(lynx) || defined(VAXUltrix) || defined(linux) || defined(_HIUX_SOURCE) || \
+    defined(__FreeBSD__)
 #define f2cFortran    /* Lynx:      Only support f2c at the moment.
                          VAXUltrix: f77 behaves like f2c.
                            Support f2c or f77 with gcc, vcc with f2c.

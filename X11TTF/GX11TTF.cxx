@@ -1,4 +1,6 @@
-//*CMZ :  2.20/05 15/12/98  17.07.37  by  Fons Rademakers
+//*CMZ :  2.21/06 12/02/99  08.12.46  by  Rene Brun
+//*CMZ :  2.21/04 26/01/99  11.54.22  by  Fons Rademakers
+//*CMZ :  2.21/01 11/01/99  10.58.43  by  Fons Rademakers
 //*CMZ :  2.20/04 11/12/98  18.29.22  by  Fons Rademakers
 //*CMZ :  2.20/01 02/12/98  18.00.27  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   21/11/98
@@ -206,7 +208,7 @@ void TGX11TTF::ClearCache()
 }
 
 //______________________________________________________________________________
-void TGX11TTF::Align(UInt_t w, UInt_t h, Int_t ascent, Int_t &x, Int_t &y)
+void TGX11TTF::Align(UInt_t w, UInt_t, Int_t ascent, Int_t &x, Int_t &y)
 {
    // Change x,y position depending on required alignment.
 
@@ -231,7 +233,7 @@ void TGX11TTF::Align(UInt_t w, UInt_t h, Int_t ascent, Int_t &x, Int_t &y)
 }
 
 //______________________________________________________________________________
-void TGX11TTF::AlignRotated(UInt_t w, UInt_t h, Int_t, Int_t yoff,
+void TGX11TTF::AlignRotated(UInt_t w, UInt_t, Int_t, Int_t yoff,
                             Int_t &x, Int_t &y)
 {
    // Change x,y position or rotated text depending on required alignment.
@@ -262,8 +264,11 @@ void TGX11TTF::DrawText(Int_t x, Int_t y, Float_t angle, Float_t mgn,
 {
    // Draw text using TrueType fonts.
 
+#ifndef R__TTFROT
    if (!fHasTTFonts || angle != 0.) {
-   //if (!fHasTTFonts) {
+#else
+   if (!fHasTTFonts) {
+#endif
       TGX11::DrawText(x, y, angle, mgn, text, mode);
       return;
    }
@@ -276,6 +281,11 @@ void TGX11TTF::DrawText(Int_t x, Int_t y, Float_t angle, Float_t mgn,
 
    while (angle >= 360.)
       angle -= 360.;
+
+   // FreeType rotates clockwise
+   if (angle > 0)
+      angle = 360 - angle;
+
    angle = (Float_t)TMath::Nint(angle);   // steps of 1 degree
 
    if (angle != 0.) {
@@ -309,7 +319,7 @@ void TGX11TTF::DrawText(Int_t x, Int_t y, Float_t angle, Float_t mgn,
    UInt_t depth = DefaultDepth(fDisplay, fScreenNumber);
    XImage *xim = XCreateImage(fDisplay, DefaultVisual(fDisplay, fScreenNumber),
                               depth, ZPixmap, 0, 0, w, h,
-                              depth == 24 ? 32 : depth, 0);
+                              depth == 24 ? 32 : (depth==15?16:depth), 0);
 
    // use malloc since Xlib will use free() in XDestroyImage
    xim->data = (char *) malloc(xim->bytes_per_line * h);
@@ -386,7 +396,6 @@ void TGX11TTF::DrawRotatedText(Int_t x, Int_t y, Float_t angle, const char *text
 
    printf("GetRotatedTextExtent: angle = %f, width = %d, height = %d, xoff = %d, yoff = %d\n",
           angle,w,h,xoff,yoff);
-   return;
 
    if (w == 0) {
       if (gDebug > 0)
@@ -397,7 +406,7 @@ void TGX11TTF::DrawRotatedText(Int_t x, Int_t y, Float_t angle, const char *text
    AlignRotated(w, h, xoff, yoff, x, y);
 
    Int_t y1 = y - yoff; // top of image (while y is the text baseline)
-   Int_t x1 = x - xoff;
+   Int_t x1 = x + xoff;
 
    if (!IsVisible(x1, y1, w, h)) return;
 
@@ -405,7 +414,7 @@ void TGX11TTF::DrawRotatedText(Int_t x, Int_t y, Float_t angle, const char *text
    UInt_t depth = DefaultDepth(fDisplay, fScreenNumber);
    XImage *xim = XCreateImage(fDisplay, DefaultVisual(fDisplay, fScreenNumber),
                               depth, ZPixmap, 0, 0, w, h,
-                              depth == 24 ? 32 : depth, 0);
+                              depth == 24 ? 32 : (depth==15?16:depth), 0);
 
    // use malloc since Xlib will use free() in XDestroyImage
    xim->data = (char *) malloc(xim->bytes_per_line * h);
@@ -417,21 +426,21 @@ void TGX11TTF::DrawRotatedText(Int_t x, Int_t y, Float_t angle, const char *text
 
    if (mode == kClear) {
       // if mode == kClear we need to get an image of the background
-      XImage *bim = GetBackground(x, y1, w, h);
+      XImage *bim = GetBackground(x1, y1, w, h);
       if (!bim) {
          Error("DrawText", "error getting background image");
          return;
       }
 
       // and copy it into the text image
-      Int_t xoff = 0, yoff = 0;
-      if (x  < 0) xoff = -x;
-      if (y1 < 0) yoff = -y1;
+      Int_t xoff1 = 0, yoff1 = 0;
+      if (x1 < 0) xoff1 = -x1;
+      if (y1 < 0) yoff1 = -y1;
 
       for (int yp = 0; yp < (int) bim->height; yp++) {
          for (int xp = 0; xp < (int) bim->width; xp++) {
             ULong_t pixel = XGetPixel(bim, xp, yp);
-            XPutPixel(xim, xoff+xp, yoff+yp, pixel);
+            XPutPixel(xim, xoff1+xp, yoff1+yp, pixel);
          }
       }
       XDestroyImage(bim);
@@ -443,20 +452,31 @@ void TGX11TTF::DrawRotatedText(Int_t x, Int_t y, Float_t angle, const char *text
    }
 
    // loop over all characters and draw them in the xim image
-   Int_t bx = 0;
+   Int_t bx = 0, by = 0;
+   if (angle > 180.) by = h;
    const char *s = text;
    while (s && *s) {
       UInt_t code = (UChar_t) *s++;
-      TTChar *c = GetChar(code, TMath::Nint(fTextSize * kScale), 0.);
+      TTChar *c = GetChar(code, TMath::Nint(fTextSize * kScale), angle);
       if (!c) continue;
-      DrawImage(c, values.foreground, bg, xim, bx, yoff);
-      bx += c->fCharlen;
+      //DrawImage(c, values.foreground, bg, xim, bx, by+c->fAscent);
+      DrawImage(c, values.foreground, bg, xim, bx, by);
+
+      TT_Pos vec_x, vec_y;
+      vec_x = c->fCharlen << 6;
+      vec_y = 0;
+      TT_Transform_Vector(&vec_x, &vec_y, fRotMatrix);
+      bx += Int_t(vec_x >> 6);
+      if (angle > 180.)
+         by -= Int_t(vec_y >> 6);
+      else
+         by += Int_t(vec_y >> 6);
    }
 
    // put image back to pixmap on X server
    XWindow_t *cws = GetCurrentWindow();
    GC *gc = GetGC(6);      // gGCpxmp
-   XPutImage(fDisplay, cws->drawing, *gc, xim, 0, 0, x, y1, w, h);
+   XPutImage(fDisplay, cws->drawing, *gc, xim, 0, 0, x1, y1, w, h);
 
    // cleanup
    XDestroyImage(xim);
@@ -525,8 +545,8 @@ void TGX11TTF::GetRotatedTextExtent(UInt_t &w, UInt_t &h, Int_t &xoff, Int_t &yo
       vec_x = c->fCharlen << 6;
       vec_y = 0;
       TT_Transform_Vector(&vec_x, &vec_y, fRotMatrix);
-      x += vec_x >> 6;
-      y += vec_y >> 6;
+      x += Int_t(vec_x >> 6);
+      y += Int_t(vec_y >> 6);
 
       if (gDebug > 1)
          printf("char %c: a = %d, d = %d, w = %d\n", code, c->fAscent, c->fDescent, c->fCharlen);
@@ -546,7 +566,11 @@ void TGX11TTF::GetTextExtent(UInt_t &w, UInt_t &h, char *text)
 {
    // Get bounding box of text.
 
+#ifndef R__TTFROT
    if (!fHasTTFonts || fTextAngle != 0.) {
+#else
+   if (!fHasTTFonts) {
+#endif
       TGX11::GetTextExtent(w, h, text);
       return;
    }
@@ -567,7 +591,11 @@ Int_t TGX11TTF::SetTextFont(char *fontname, ETextSetMode mode)
    // Set text font to specified name. This function returns 0 if
    // the specified font is found, 1 if not.
 
+#ifndef R__TTFROT
    if (!fHasTTFonts || fTextAngle != 0.)
+#else
+   if (!fHasTTFonts)
+#endif
       return TGX11::SetTextFont(fontname, mode);
 
    if (gDebug > 0)
@@ -733,7 +761,11 @@ void TGX11TTF::SetTextFont(Font_t fontnumber)
    //       13 : times-medium-r-normal       times.ttf
    //       14 :                             wingding.ttf
 
+#ifndef R__TTFROT
    if (!fHasTTFonts || fTextAngle != 0.) {
+#else
+   if (!fHasTTFonts) {
+#endif
       TGX11::SetTextFont(fontnumber);
       return;
    }
@@ -799,8 +831,15 @@ void TGX11TTF::SetTextSize(Float_t textsize)
 {
    // Set current text size.
 
+#ifndef R__TTFROT
    if (!fHasTTFonts || fTextAngle != 0.) {
+#else
+   if (!fHasTTFonts) {
+#endif
       TGX11::SetTextSize(textsize);
+#ifndef R__TTFROT
+      if (!fHasTTFonts)
+#endif
       return;
    }
 

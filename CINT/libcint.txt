@@ -1,5 +1,5 @@
-*CMZ :  2.20/04 08/12/98  16.25.38  by  Masaharu Goto
-*-- Author :    Masaharu Goto   08/12/98
+*CMZ :  2.21/08 17/03/99  13.13.48  by  Masaharu Goto
+*-- Author :    Masaharu Goto   17/03/99
 LIBRARY		"LIBCINT"
 
 DESCRIPTION	'LIBCINT'
@@ -122,4 +122,4 @@ EXPORTS
 	G__set_atpause @101
 	G__set_aterror @102
 	G__p2f_void_void @103
-
+	G__setglobalcomp @104

@@ -1,0 +1,14 @@
+*CMZ :  2.21/06 15/02/99  09.30.26  by  Rene Brun
+*CMZ :  2.21/03 20/01/99  14.43.50  by  Fons Rademakers
+*-- Author :    Fons Rademakers   20/01/99
+#ifdef __CINT__
+
+#pragma link off all globals;
+#pragma link off all classes;
+#pragma link off all functions;
+
+#pragma link C++ class TLorentzVector;
+#pragma link C++ class TVector2;
+#pragma link C++ class TVector3;
+
+#endif

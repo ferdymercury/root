@@ -1,3 +1,4 @@
+*CMZ :  2.21/05 08/02/99  11.10.43  by  Rene Brun
 *CMZ :  0.90/10 09/12/96  17.08.32  by  Rene Brun
 *-- Author :    Rene Brun   09/12/96
       SUBROUTINE HNTVAR2(ID1,IVAR,CHTAG,CHFULL,BLOCK,NSUB,ITYPE,ISIZE
@@ -160,3 +161,4 @@
       IF (LBLOK .NE. 0) GOTO 5
 *
       END
+

@@ -1,3 +1,4 @@
+//*CMZ :  2.21/03 19/01/99  18.33.32  by  Fons Rademakers
 //*CMZ :  2.00/13 29/10/98  08.32.37  by  Fons Rademakers
 //*CMZ :  2.00/10 28/07/98  12.50.40  by  Fons Rademakers
 //*CMZ :  2.00/05 20/04/98  15.13.21  by  Fons Rademakers
@@ -197,14 +198,14 @@ Int_t TCint::ProcessLineSynch(const char *line)
 }
 
 //______________________________________________________________________________
-Int_t TCint::Calc(const char *line)
+Long_t TCint::Calc(const char *line)
 {
    // Directly execute an executable statement (e.g. "func()", "3+5", etc.
    // however not declarations, like "Int_t x;").
 
-   Int_t result;
+   Long_t result;
 
-   result = (Int_t) G__int(G__calc((char *)line));
+   result = (Long_t) G__int(G__calc((char *)line));
    return result;
 }
 

@@ -1,3 +1,4 @@
+//*CMZ :  2.21/07 08/03/99  12.52.02  by  Fons Rademakers
 //*CMZ :  2.00/09 24/06/98  11.30.16  by  Rene Brun
 //*CMZ :  1.00/04 17/03/97  18.32.25  by  Rene Brun
 //*-- Author :    Rene Brun   01/04/96
@@ -5,26 +6,26 @@
    gROOT->Reset();
    bench = new TCanvas("bench","Benchmarks Summary",-1000,50,200,500);
    summary = new TPaveText(0,0,1,1);
-   summary.SetTextAlign(12);
-   summary.SetTextSize(0.1);
-   summary.Draw();
-   summary.AddText(" ** framework.C");
-   summary.AddText(" ** hsimple.C");
-   summary.AddText(" ** hsum.C");
-   summary.AddText(" ** formula1.C");
-   summary.AddText(" ** fillrandom.C");
-   summary.AddText(" ** fit1.C");
-   summary.AddText(" ** h1draw.C");
-   summary.AddText(" ** graph.C");
-   summary.AddText(" ** gerrors.C");
-   summary.AddText(" ** tornado.C");
-   summary.AddText(" ** surfaces.C");
-   summary.AddText(" ** runzdemo.C");
-   summary.AddText(" ** geometry.C");
-   summary.AddText(" ** na49view.C");
-   summary.AddText(" ** file.C");
-   summary.AddText(" ** ntuple1.C");
-   summary.AddText(" ** rootmarks.C");
+   summary->SetTextAlign(12);
+   summary->SetTextSize(0.1);
+   summary->Draw();
+   summary->AddText(" ** framework.C");
+   summary->AddText(" ** hsimple.C");
+   summary->AddText(" ** hsum.C");
+   summary->AddText(" ** formula1.C");
+   summary->AddText(" ** fillrandom.C");
+   summary->AddText(" ** fit1.C");
+   summary->AddText(" ** h1draw.C");
+   summary->AddText(" ** graph.C");
+   summary->AddText(" ** gerrors.C");
+   summary->AddText(" ** tornado.C");
+   summary->AddText(" ** surfaces.C");
+   summary->AddText(" ** runzdemo.C");
+   summary->AddText(" ** geometry.C");
+   summary->AddText(" ** na49view.C");
+   summary->AddText(" ** file.C");
+   summary->AddText(" ** ntuple1.C");
+   summary->AddText(" ** rootmarks.C");
    bexec("framework.C");
    bexec("hsimple.C");
    bexec("hsum.C");

@@ -1,3 +1,4 @@
+//*CMZ :  2.21/05 09/02/99  11.33.40  by  Fons Rademakers
 //*CMZ :  1.03/05 11/10/97  14.05.01  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   11/08/97
 
@@ -46,8 +47,13 @@
 #define USE_SIGCHLD
 #endif
 
+#if defined(__FreeBSD__)
+#define USE_SIGCHLD
+#define	SIGCLD SIGCHLD
+#endif
+
 #if defined(__linux) || defined(__hpux) || defined(__sun) || defined(__sgi) || \
-    defined(_AIX)
+    defined(_AIX) || defined(__FreeBSD__)
 #define USE_SETSID
 #endif
 
@@ -59,7 +65,7 @@
 static void SigChild(int)
 {
    int         pid;
-#if defined(__hpux)
+#if defined(__hpux) || defined(__FreeBSD__)
    int status;
 #else
    union wait  status;

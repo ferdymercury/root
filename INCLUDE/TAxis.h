@@ -1,3 +1,4 @@
+//*CMZ :  2.21/02 18/01/99  16.14.21  by  Rene Brun
 //*CMZ :  1.03/01 13/08/97  12.02.09  by  axis
 //*-- Author :    Rene Brun   11/12/94
 
@@ -65,6 +66,7 @@ public:
         virtual Axis_t  GetBinCenter(Int_t bin);
         virtual Text_t  *GetBinLabel(Int_t bin);
         virtual Axis_t  GetBinLowEdge(Int_t bin);
+        virtual Axis_t  GetBinUpEdge(Int_t bin);
         virtual Axis_t  GetBinWidth(Int_t bin);
         virtual void    GetCenter(Axis_t *center);
         virtual void    GetLabel(Text_t *label);

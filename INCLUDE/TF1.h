@@ -1,3 +1,5 @@
+//*CMZ :  2.21/07 02/03/99  16.39.52  by  Rene Brun
+//*CMZ :  2.21/01 10/01/99  11.53.18  by  Rene Brun
 //*CMZ :  2.20/05 13/12/98  10.51.29  by  Rene Brun
 //*CMZ :  2.20/03 05/12/98  16.28.52  by  Rene Brun
 //*CMZ :  2.20/01 01/12/98  09.58.43  by  Rene Brun
@@ -95,7 +97,7 @@ public:
    virtual Double_t EvalPar(Double_t *x, Double_t *params=0);
    virtual void     ExecuteEvent(Int_t event, Int_t px, Int_t py);
        Double_t     GetChisquare() {return fChisquare;}
-           TH1F    *GetHistogram() {return fHistogram;}
+           TH1F    *GetHistogram();
           Int_t     GetNDF() {return fNpfits-fNpar;}
           Int_t     GetNpx() {return fNpx;}
     TMethodCall    *GetMethodCall() {return fMethodCall;}
@@ -113,6 +115,9 @@ public:
         Float_t     GetXmax() {return fXmax;}
    virtual void     InitArgs(Double_t *x, Double_t *params);
    virtual Double_t Integral(Float_t a, Float_t b, Double_t *params=0, Float_t epsilon=0.000001);
+   virtual Double_t Integral(Float_t ax, Float_t bx, Float_t ay, Float_t by, Float_t epsilon=0.000001);
+   virtual Double_t Integral(Float_t ax, Float_t bx, Float_t ay, Float_t by, Float_t az, Float_t bz, Float_t epsilon=0.000001);
+   virtual Double_t IntegralMultiple(Int_t n, Float_t *a, Float_t *b, Float_t epsilon, Float_t &relerr);
    virtual void     Paint(Option_t *option="");
    virtual void     Print(Option_t *option="");
    virtual void     Save(Float_t xmin, Float_t xmax);

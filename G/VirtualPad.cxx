@@ -1,3 +1,4 @@
+//*CMZ :  2.21/08 11/03/99  08.16.09  by  Rene Brun
 //*CMZ :  1.03/09 06/12/97  17.45.42  by  Fons Rademakers
 //*-- Author :    Rene Brun   05/12/95
 
@@ -23,13 +24,14 @@
 extern "C" {
    Size3D gSize3D;
 }
-+IF,THREAD.
+#ifdef R__THREAD
 TVirtualPad *gPadMain = 0;
 void **(*gThreadTsd)(void*,Int_t) = 0;
 int (*gThreadXAR)(char *xact, Int_t nb, void **ar, Int_t *iret)=0;
-+ELSE.
+#else
 TVirtualPad *gPad = 0;
-+ENDIF.
+#endif
+
 ClassImp(TVirtualPad)
 
 //______________________________________________________________________________

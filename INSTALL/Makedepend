@@ -1,3 +1,4 @@
+*CMZ :  2.21/07 04/03/99  15.26.24  by  Rene Brun
 *CMZ :  2.20/00 22/11/98  18.43.27  by  Fons Rademakers
 *CMZ :  2.00/10 27/06/98  20.12.19  by  Fons Rademakers
 *CMZ :  2.00/09 27/06/98  01.15.36  by  Fons Rademakers
@@ -223,6 +224,7 @@ BASE_ObjectTable.o: Htypes.h TClass.h TDictionary.h Property.h TMath.h
 BASE_ObjectTable.o: TError.h
 BASE_Random.o: TMath.h TRandom.h TNamed.h TList.h TSeqCollection.h
 BASE_Random.o: TCollection.h TIterator.h TString.h TRefCnt.h
+BASE_Random2.o: TMath.h TRandom.h TRandom2.h TNamed.h TList.h TSeqCollection.h
 BASE_RealData.o: TRealData.h TDataMember.h TClass.h TDictionary.h TObject.h
 BASE_RealData.o: Rtypes.h RConfig.h DllImport.h Varargs.h TStorage.h
 BASE_RealData.o: TBuffer.h Bytes.h Property.h TString.h TRefCnt.h

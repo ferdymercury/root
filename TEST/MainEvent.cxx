@@ -1,3 +1,5 @@
+//*CMZ :  2.21/08 15/03/99  11.39.55  by  Rene Brun
+//*CMZ :  2.21/06 15/02/99  09.08.07  by  Rene Brun
 //*CMZ :  2.00/13 28/10/98  12.53.40  by  Fons Rademakers
 //*CMZ :  2.00/10 02/07/98  18.02.26  by  Rene Brun
 //*CMZ :  2.00/09 05/06/98  17.38.03  by  Fons Rademakers
@@ -114,8 +116,8 @@ int main(int argc, char **argv)
 
 
    TFile *hfile;
-   Event *event;
    TTree *tree;
+   Event *event = new Event();
 
    // Fill event, header and tracks with some random numbers
    //   Create a timer object to benchmark this loop
@@ -135,7 +137,6 @@ int main(int argc, char **argv)
       hfile = new TFile("Event.root");
       tree = (TTree*)hfile->Get("T");
       TBranch *branch = tree->GetBranch("event");
-      event = new Event();
       branch->SetAddress(&event);
       Int_t nentries = (Int_t)tree->GetEntries();
       nevent = TMath::Max(nevent,nentries);
@@ -170,9 +171,6 @@ int main(int argc, char **argv)
         TDirectory *hdir = new TDirectory("histograms", "all histograms");
         hm = new HistogramManager(hdir);
      }
-
-     // Create one event
-     event = new Event();
 
      // Create a ROOT Tree and one superbranch
       TTree *tree = new TTree("T","An example of a ROOT tree");

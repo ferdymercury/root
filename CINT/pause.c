@@ -1,5 +1,5 @@
-/*CMZ :  2.20/04 08/12/98  16.25.30  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   08/12/98*/
+/*CMZ :  2.21/08 17/03/99  13.13.43  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   17/03/99*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -31,6 +31,8 @@
 #include <unistd.h> /* already included in G__ci.h */
 #endif
 #endif
+
+extern void G__setcopyflag G__P((int flag));
 
 #define G__NUM_STDIN  0
 #define G__NUM_STDOUT 1
@@ -179,6 +181,49 @@ char *fname;
   }
   else {
     G__genericerror("Warning: can't open file. keyword search unsuccessful");
+  }
+}
+#endif
+
+#ifndef G__OLDIMPLEMENTATION967
+/************************************************************************
+* G__display_classkeyword()
+*
+************************************************************************/
+void G__display_classkeyword(fout,classnamein,keyword,base)
+FILE *fout;
+char *classnamein;
+char *keyword;
+int base;
+{
+  char classname[G__ONELINE];
+  char *p=classname;
+
+  G__more_pause((FILE*)NULL);
+  strcpy(classname,classnamein);
+  while(*p && isspace(*p)) ++p;
+  while(*p && !isspace(*p)) ++p;
+  if(*p) *p=0;
+  if(keyword&&keyword[0]) {
+#ifndef G__TMPFILE
+    char tname[L_tmpnam];
+#else
+    char tname[G__MAXFILENAME];
+#endif
+    FILE *G__temp;
+    do {
+      G__tmpnam(tname);
+      G__temp=fopen(tname,"w");
+    } while((FILE*)NULL==G__temp && G__setTMPDIR(tname));
+    if(G__temp) {
+      G__display_class(G__temp,classname,base,0);
+      fclose(G__temp);
+      G__display_keyword(fout,keyword,tname);
+      remove(tname);
+    }
+  }
+  else {
+    G__display_class(fout,classname,base,0);
   }
 }
 #endif
@@ -355,7 +400,7 @@ int G__pause()
 
     if (more == 0) {
 #ifdef G__ASM
-       G__asm_noverflow=0;
+       G__abortbytecode();
 #endif
 
     /************************************
@@ -915,6 +960,18 @@ int  *more;
    * Break prompt command parser
    ************************************/
 
+#ifndef G__OLDIMPLEMENTATION967
+    if(strncmp("class",com,3)==0) {
+      char *p = strchr(string,'/');
+      if(p) ++p;
+      G__display_classkeyword(G__sout,string,p,0);
+    }
+    else if(strncmp("Class",com,3)==0) {
+      char *p = strchr(string,'/');
+      if(p) ++p;
+      G__display_classkeyword(G__sout,string,p,1);
+    }
+#else
     if(strncmp("class",com,3)==0) {
       G__more_pause((FILE*)NULL);
       G__display_class(G__sout,string,0,0);
@@ -923,6 +980,7 @@ int  *more;
       G__more_pause((FILE*)NULL);
       G__display_class(G__sout,string,1,0);
     }
+#endif
 
     else if(strncmp("typedef",com,3)==0) {
       G__more_pause((FILE*)NULL);
@@ -1148,15 +1206,22 @@ int  *more;
     else if(strncmp("coverage",com,5)==0) {
       temp=0;
       while(isspace(string[temp])) temp++;
+#ifndef G__OLDIMPLEMENTATION1008
+      if(isalpha(string[temp]))
+	tempfp=fopen(string+temp,"w");
+      else
+	tempfp=(FILE*)NULL;
+#else
       tempfp=fopen(string+temp,"w");
+#endif
       if(tempfp) {
 	fprintf(G__sout,"saving trace coverage to %s\n",string+temp);
 	G__dump_tracecoverage(tempfp);
+	fclose(tempfp);
       }
       else {
 	fprintf(G__sout,"can not open file %s\n",string+temp);
       }
-      fclose(tempfp);
     }
 
     else if(strncmp("debug",com,5)==0) {
@@ -1208,12 +1273,14 @@ int  *more;
 
     /* interactive return of undefined symbol */
     else if(strncmp("return",com,1)==0) {
-#ifndef G__OLDIMPLEMENTATION630
       if(G__interactive_undefined) {
 	G__interactivereturnvalue = G__calc(string);
 	G__pause_return=1;
 	G__unredirectoutput(&store_stdout,&store_stderr,&store_stdin
 		      ,keyword,pipefile);
+#ifdef G__SECURITY
+	G__security_recover(G__sout);
+#endif
 	return(ignore=G__PAUSE_NORMAL);
       }
       else {
@@ -1222,15 +1289,11 @@ int  *more;
 	G__return=G__RETURN_IMMEDIATE;
 	G__unredirectoutput(&store_stdout,&store_stderr,&store_stdin
 		      ,keyword,pipefile);
+#ifdef G__SECURITY
+	G__security_recover(G__sout);
+#endif
 	return(ignore=2);
       }
-#else
-      G__interactivereturnvalue = G__calc(string);
-      G__pause_return=1;
-      G__unredirectoutput(&store_stdout,&store_stderr,&store_stdin
-		      ,keyword,pipefile);
-      return(ignore=G__PAUSE_NORMAL);
-#endif /* ON630 */
     }
 
     else if(strncmp(">",com,1)==0) {
@@ -1352,6 +1415,9 @@ int  *more;
 	    G__unredirectoutput(&store_stdout,&store_stderr,&store_stdin
 		      ,keyword,pipefile);
 #endif
+#ifdef G__SECURITY
+	    G__security_recover(G__sout);
+#endif
             return(ignore);
          }
       }
@@ -1439,6 +1505,9 @@ int  *more;
 #ifndef G__OLDIMPLEMENTATION464
 	    G__unredirectoutput(&store_stdout,&store_stderr,&store_stdin
 		      ,keyword,pipefile);
+#endif
+#ifdef G__SECURITY
+	    G__security_recover(G__sout);
 #endif
             return(ignore);
          }
@@ -1528,6 +1597,13 @@ int  *more;
       }
     }
 
+#ifndef G__OLDIMPLEMENTATION970
+    else if(strncmp("COPYFLAG",com,1)==0) {
+      fprintf(G__sout,"set source file copy flag '%s'\n",string);
+      G__setcopyflag(atoi(string));
+    }
+#endif
+
     else if(strncmp("help",com,1)==0||strncmp("?",com,1)==0) {
       /*******************************************************
        * Help for break prompt command
@@ -1586,6 +1662,9 @@ int  *more;
 #ifndef G__FONS4
       G__more(G__sout,"Load/Unload: L [file]  : load [file]\n");
       G__more(G__sout,"             U [file]  : unload [file]\n");
+#endif
+#ifndef G__OLDIMPLEMENTATION970
+      G__more(G__sout,"             C [1|0]   : copy source to $TMPDIR (on/off)\n");
 #endif
 #ifndef G__FONS2
       G__more(G__sout,"             reset     : reset interpreter environment\n");
@@ -1837,6 +1916,9 @@ int  *more;
 	G__unredirectoutput(&store_stdout,&store_stderr,&store_stdin
 		      ,keyword,pipefile);
 #endif
+#ifdef G__SECURITY
+	G__security_recover(G__sout);
+#endif
 	return(ignore);
       }
       else if(1<G__findposition(string,view,&line_number,&filenum)) {
@@ -1845,6 +1927,9 @@ int  *more;
 #ifndef G__OLDIMPLEMENTATION464
 	G__unredirectoutput(&store_stdout,&store_stderr,&store_stdin
 		      ,keyword,pipefile);
+#endif
+#ifdef G__SECURITY
+	G__security_recover(G__sout);
 #endif
 	return(ignore);
       }
@@ -1950,6 +2035,9 @@ int  *more;
       G__unredirectoutput(&store_stdout,&store_stderr,&store_stdin
 		      ,keyword,pipefile);
 #endif
+#ifdef G__SECURITY
+      G__security_recover(G__sout);
+#endif
       return(ignore);
     }
 
@@ -1966,6 +2054,9 @@ int  *more;
 #ifndef G__OLDIMPLEMENTATION464
       G__unredirectoutput(&store_stdout,&store_stderr,&store_stdin
 		      ,keyword,pipefile);
+#endif
+#ifdef G__SECURITY
+      G__security_recover(G__sout);
 #endif
       return(ignore);
     }
@@ -1984,6 +2075,9 @@ int  *more;
       G__unredirectoutput(&store_stdout,&store_stderr,&store_stdin
 		      ,keyword,pipefile);
 #endif
+#ifdef G__SECURITY
+      G__security_recover(G__sout);
+#endif
       return(ignore);
     }
 
@@ -2000,6 +2094,9 @@ int  *more;
 #ifndef G__OLDIMPLEMENTATION464
       G__unredirectoutput(&store_stdout,&store_stderr,&store_stdin
 		      ,keyword,pipefile);
+#endif
+#ifdef G__SECURITY
+      G__security_recover(G__sout);
 #endif
       return(ignore);
     }
@@ -2024,6 +2121,9 @@ int  *more;
 	G__unredirectoutput(&store_stdout,&store_stderr,&store_stdin
 		      ,keyword,pipefile);
 #endif
+#ifdef G__SECURITY
+	G__security_recover(G__sout);
+#endif
 	return(0);
       }
     }
@@ -2044,6 +2144,9 @@ int  *more;
       G__unredirectoutput(&store_stdout,&store_stderr,&store_stdin
 			  ,keyword,pipefile);
 #endif
+#ifdef G__SECURITY
+      G__security_recover(G__sout);
+#endif
       return(ignore=2);
     }
 #endif
@@ -2056,6 +2159,9 @@ int  *more;
 #ifndef G__OLDIMPLEMENTATION464
 	G__unredirectoutput(&store_stdout,&store_stderr,&store_stdin
 		      ,keyword,pipefile);
+#endif
+#ifdef G__SECURITY
+	G__security_recover(G__sout);
 #endif
 	return(0);
       }
@@ -2092,6 +2198,9 @@ int  *more;
 #ifndef G__OLDIMPLEMENTATION464
 	G__unredirectoutput(&store_stdout,&store_stderr,&store_stdin
 		      ,keyword,pipefile);
+#endif
+#ifdef G__SECURITY
+	G__security_recover(G__sout);
 #endif
 	return(ignore=2);
       }
@@ -2262,12 +2371,13 @@ int  *more;
 	G__in_pause=1;
 	G__valuemonitor(buf,syscom);
 	G__in_pause=0;
-#ifndef G__OLDIMPLEMENTATION850
 	G__RESET_TEMPENV;
+#ifndef G__OLDIMPLEMENTATION1004
+	if(-1==G__func_now) G__p_local=0;
+#endif
 	if(buf.type && 0==G__atevaluate(buf)) fprintf(G__sout,"%s\n",syscom);
-#else
-	if(buf.type) fprintf(G__sout,"%s\n",syscom);
-	G__RESET_TEMPENV;
+#ifndef G__OLDIMPLEMENTATION1004
+	if(-1==G__func_now) G__p_local=store_local;
 #endif
 #ifdef G__SECURITY
 	G__security_recover(G__sout);
@@ -2487,6 +2597,9 @@ int  *more;
       G__unredirectoutput(&store_stdout,&store_stderr,&store_stdin
 		      ,keyword,pipefile);
 #endif
+#ifdef G__SECURITY
+      G__security_recover(G__sout);
+#endif
       return(ignore);
     }
 
@@ -2496,6 +2609,9 @@ int  *more;
 #ifndef G__OLDIMPLEMENTATION464
       G__unredirectoutput(&store_stdout,&store_stderr,&store_stdin
 		      ,keyword,pipefile);
+#endif
+#ifdef G__SECURITY
+      G__security_recover(G__sout);
 #endif
       return(ignore);
     }
@@ -2507,6 +2623,9 @@ int  *more;
 #ifndef G__OLDIMPLEMENTATION464
     G__unredirectoutput(&store_stdout,&store_stderr,&store_stdin
 		      ,keyword,pipefile);
+#endif
+#ifdef G__SECURITY
+    G__security_recover(G__sout);
 #endif
   return(ignore); /* never happens, avoiding lint error */
 }

@@ -1,3 +1,5 @@
+*CMZ :  2.21/07 22/02/99  15.26.05  by  Fons Rademakers
+*CMZ :  2.21/04 04/02/99  12.28.14  by  Fons Rademakers
 *CMZ :  2.20/04 09/12/98  15.17.22  by  Rene Brun
 *CMZ :  2.20/03 04/12/98  18.45.54  by  Fons Rademakers
 *CMZ :  2.20/01 30/11/98  14.48.35  by  Fons Rademakers
@@ -76,11 +78,11 @@ Define the HOME directory if the last was not defined yet
 +SELF.
 
 On systems using shared libraries you must specify the load path
-before you can run the root module. [NOTE: with version 2.00 this
+before you can run the root module. NOTE: with version 2.00 this
 is not necessary anymore since the front-end program sets the
-load path correctly. However, we leave the information below because
-maybe you will need it when distributing your own ROOT based
-applications.]
+load path correctly. However, it is still needed for running
+rootcint or you'll need it when distributing your own ROOT based
+applications.
 
 On HP-UX do:
    export SHLIB_PATH=$SHLIB_PATH:$ROOTSYS/lib       (in bash or ksh)
@@ -92,6 +94,18 @@ On Solaris, Linux, SGI, Alpha/OSF do:
 On AIX do:
    [ -z "$LIBPATH" ] && export LIBPATH=/lib:/usr/lib
    export LIBPATH=$LIBPATH:$ROOTSYS/lib
+
+
+Using TrueType fonts
+====================
+
+This version of ROOT supports TrueType fonts also on X11 based systems.
+The usage of TrueType fonts increases dramatically the readability at
+small point sizes. On how to get the TrueType fonts see:
+   http://root.cern.ch/root/TrueType.html
+
+The fonts are machines independent and the same fonts can be shared
+between different binary ROOT installations.
 
 
 Running interactive ROOT and the tutorial macros
@@ -170,8 +184,6 @@ links in your $ROOTSYS directory prior to compiling:
    ln -s <pathname>/ttf ttf
    ln -s <pathname>/Mesa-2.2 opengl    (Mesa 2.2 or higher)
 
-on how to set these variable for other shells see the AA_README.
-
 On how to get the TrueType ttf directory see:
    http://root.cern.ch/root/TrueType.html
 
@@ -189,8 +201,11 @@ Compiling
 Once you have the above, do the following:
 
 - cd $ROOTSYS
+- set the LD_LIBRARY_PATH (see AA_README)
 - gtar zxvf root_v2.20.source.tar.gz
      [if you have no gtar, first gunzip, then tar xvf]
+- rm -rf include
+- ln -s src include
 - cd src
 - ln -s Makefile.linux Makefile
      [of course use the makefile for your specific platform]

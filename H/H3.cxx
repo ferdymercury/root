@@ -1,3 +1,6 @@
+//*CMZ :  2.21/07 01/03/99  10.09.26  by  Rene Brun
+//*CMZ :  2.21/05 10/02/99  09.31.56  by  Rene Brun
+//*CMZ :  2.21/01 14/01/99  12.47.35  by  Rene Brun
 //*CMZ :  2.00/12 07/10/98  11.35.46  by  Rene Brun
 //*CMZ :  1.03/09 09/12/97  20.10.38  by  Fons Rademakers
 //*-- Author :    Rene Brun   27/10/95
@@ -130,7 +133,7 @@ void TH3C::Copy(TObject &newth3)
 }
 
 //______________________________________________________________________________
-void TH3C::Fill3(Axis_t x, Axis_t y, Axis_t z, Stat_t w)
+Int_t TH3C::Fill3(Axis_t x, Axis_t y, Axis_t z, Stat_t w)
 {
 //*-*-*-*-*-*-*-*-*-*-*Increment cell defined by x,y,z by a weight w*-*-*-*-*
 //*-*                  =============================================
@@ -148,6 +151,20 @@ void TH3C::Fill3(Axis_t x, Axis_t y, Axis_t z, Stat_t w)
    bin  =  binx + (fXaxis.GetNbins()+2)*(biny + (fYaxis.GetNbins()+2)*binz);
    AddBinContent(bin,w);
    if (fSumw2.fN) fSumw2.fArray[bin] += w*w;
+   if (binx == 0 || binx > fXaxis.GetNbins()) return -1;
+   if (biny == 0 || biny > fYaxis.GetNbins()) return -1;
+   if (binz == 0 || binz > fZaxis.GetNbins()) return -1;
+   return bin;
+}
+
+//______________________________________________________________________________
+void TH3C::Reset(Option_t *option)
+{
+//*-*-*-*-*-*-*-*Reset this histogram: contents, errors, etc*-*-*-*-*-*-*-*
+//*-*            ===========================================
+
+   TH1C::Reset(option);
+   // should also reset statistics once statistics are implemented for TH3
 }
 
 //______________________________________________________________________________
@@ -266,7 +283,7 @@ void TH3S::Copy(TObject &newth3)
 
 
 //______________________________________________________________________________
-void TH3S::Fill3(Axis_t x, Axis_t y, Axis_t z, Stat_t w)
+Int_t TH3S::Fill3(Axis_t x, Axis_t y, Axis_t z, Stat_t w)
 {
 //*-*-*-*-*-*-*-*-*-*-*Increment cell defined by x,y,z by a weight w*-*-*-*-*
 //*-*                  =============================================
@@ -284,6 +301,20 @@ void TH3S::Fill3(Axis_t x, Axis_t y, Axis_t z, Stat_t w)
    bin  =  binx + (fXaxis.GetNbins()+2)*(biny + (fYaxis.GetNbins()+2)*binz);
    AddBinContent(bin,w);
    if (fSumw2.fN) fSumw2.fArray[bin] += w*w;
+   if (binx == 0 || binx > fXaxis.GetNbins()) return -1;
+   if (biny == 0 || biny > fYaxis.GetNbins()) return -1;
+   if (binz == 0 || binz > fZaxis.GetNbins()) return -1;
+   return bin;
+}
+
+//______________________________________________________________________________
+void TH3S::Reset(Option_t *option)
+{
+//*-*-*-*-*-*-*-*Reset this histogram: contents, errors, etc*-*-*-*-*-*-*-*
+//*-*            ===========================================
+
+   TH1S::Reset(option);
+   // should also reset statistics once statistics are implemented for TH3
 }
 
 //______________________________________________________________________________
@@ -396,12 +427,12 @@ void TH3F::Copy(TObject &newth3)
 //*-*-*-*-*-*-*Copy this 3-D histogram structure to newth3*-*-*-*-*-*-*-*-*-*
 //*-*          ===========================================
 
-   TH3F::Copy(newth3);
+   TH1F::Copy(newth3);
    TH3::Copy30((TH3F&)newth3);
 }
 
 //______________________________________________________________________________
-void TH3F::Fill3(Axis_t x, Axis_t y, Axis_t z, Stat_t w)
+Int_t TH3F::Fill3(Axis_t x, Axis_t y, Axis_t z, Stat_t w)
 {
 //*-*-*-*-*-*-*-*-*-*-*Increment cell defined by x,y,z by a weight w*-*-*-*-*
 //*-*                  =============================================
@@ -419,6 +450,20 @@ void TH3F::Fill3(Axis_t x, Axis_t y, Axis_t z, Stat_t w)
    bin  =  binx + (fXaxis.GetNbins()+2)*(biny + (fYaxis.GetNbins()+2)*binz);
    AddBinContent(bin,w);
    if (fSumw2.fN) fSumw2.fArray[bin] += w*w;
+   if (binx == 0 || binx > fXaxis.GetNbins()) return -1;
+   if (biny == 0 || biny > fYaxis.GetNbins()) return -1;
+   if (binz == 0 || binz > fZaxis.GetNbins()) return -1;
+   return bin;
+}
+
+//______________________________________________________________________________
+void TH3F::Reset(Option_t *option)
+{
+//*-*-*-*-*-*-*-*Reset this histogram: contents, errors, etc*-*-*-*-*-*-*-*
+//*-*            ===========================================
+
+   TH1F::Reset(option);
+   // should also reset statistics once statistics are implemented for TH3
 }
 
 //______________________________________________________________________________
@@ -572,7 +617,7 @@ void TH3D::Copy(TObject &newth3)
 }
 
 //______________________________________________________________________________
-void TH3D::Fill3(Axis_t x, Axis_t y, Axis_t z, Stat_t w)
+Int_t TH3D::Fill3(Axis_t x, Axis_t y, Axis_t z, Stat_t w)
 {
 //*-*-*-*-*-*-*-*-*-*-*Increment cell defined by x,y,z by a weight w*-*-*-*-*
 //*-*                  =============================================
@@ -590,6 +635,20 @@ void TH3D::Fill3(Axis_t x, Axis_t y, Axis_t z, Stat_t w)
    bin  =  binx + (fXaxis.GetNbins()+2)*(biny + (fYaxis.GetNbins()+2)*binz);
    AddBinContent(bin,w);
    if (fSumw2.fN) fSumw2.fArray[bin] += w*w;
+   if (binx == 0 || binx > fXaxis.GetNbins()) return -1;
+   if (biny == 0 || biny > fYaxis.GetNbins()) return -1;
+   if (binz == 0 || binz > fZaxis.GetNbins()) return -1;
+   return bin;
+}
+
+//______________________________________________________________________________
+void TH3D::Reset(Option_t *option)
+{
+//*-*-*-*-*-*-*-*Reset this histogram: contents, errors, etc*-*-*-*-*-*-*-*
+//*-*            ===========================================
+
+   TH1D::Reset(option);
+   // should also reset statistics once statistics are implemented for TH3
 }
 
 //______________________________________________________________________________

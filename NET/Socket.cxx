@@ -1,3 +1,4 @@
+//*CMZ :  2.21/01 14/01/99  13.34.42  by  Fons Rademakers
 //*CMZ :  2.00/12 23/09/98  17.30.45  by  Fons Rademakers
 //*CMZ :  1.03/09 04/03/98  01.01.18  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   18/12/96
@@ -229,8 +230,8 @@ Int_t TSocket::GetLocalPort()
 //______________________________________________________________________________
 Int_t TSocket::Send(Int_t kind)
 {
-   // Send a single message op code. Use kind (opcode) is used to set the
-   // TMessage what field. Returns the number of bytes that were sent
+   // Send a single message opcode. Use kind (opcode) to set the
+   // TMessage "what" field. Returns the number of bytes that were sent
    // (always sizeof(Int_t)) and -1 in case of error. In case the kind has
    // been or'ed with kMESS_ACK, the call will only return after having
    // received an acknowledgement, making the sending process synchronous.
@@ -242,7 +243,7 @@ Int_t TSocket::Send(Int_t kind)
 //______________________________________________________________________________
 Int_t TSocket::Send(const char *str, Int_t kind)
 {
-   // Send a character string buffer. Use kind to set the TMessage what field.
+   // Send a character string buffer. Use kind to set the TMessage "what" field.
    // Returns the number of bytes in the string str that were sent and -1 in
    // case of error. In case the kind has been or'ed with kMESS_ACK, the call
    // will only return after having received an acknowledgement, making the
@@ -250,7 +251,12 @@ Int_t TSocket::Send(const char *str, Int_t kind)
 
    TMessage mess(kind);
    if (str) mess.WriteString(str);
-   return Send(mess) - sizeof(Int_t);    // - TMessage::What()
+
+   Int_t nsent;
+   if ((nsent = Send(mess)) < 0)
+      return -1;
+
+   return nsent - sizeof(Int_t);    // - TMessage::What()
 }
 
 //______________________________________________________________________________
@@ -287,6 +293,7 @@ Int_t TSocket::Send(const TMessage &mess)
       fBytesRecv  += 2;
       fgBytesRecv += 2;
    }
+
    return nsent - sizeof(UInt_t);  //length - length header
 }
 
@@ -328,11 +335,15 @@ Int_t TSocket::Recv(char *str, Int_t max)
 {
    // Receive a character string message of maximum max length. The expected
    // message must be of type kMESS_STRING. Returns length of received string
-   // or -1 in case of error.
+   // (can be 0 if otherside of connection is closed) or -1 in case of error
+   // or -4 in case a non-blocking socket would block (i.e. there is nothing
+   // to be read).
 
    Int_t n, kind;
 
-   n = Recv(str, max, kind);
+   if ((n = Recv(str, max, kind)) <= 0)
+      return n;
+
    if (kind != kMESS_STRING) {
       Error("Recv", "got message of wrong kind (expected %d, got %d)",
             kMESS_STRING, kind);
@@ -346,14 +357,15 @@ Int_t TSocket::Recv(char *str, Int_t max)
 Int_t TSocket::Recv(char *str, Int_t max, Int_t &kind)
 {
    // Receive a character string message of maximum max length. Returns in
-   // kind the message type. Returns length of received string or -1 in case
-   // of error.
+   // kind the message type. Returns length of received string (can be 0 if
+   // other side of connection is closed) or -1 in case of error or -4 in
+   // case a non-blocking socket would block (i.e. there is nothing to be read).
 
    Int_t     n;
    TMessage *mess;
 
-   if ((n = Recv(mess)) < 0)
-      return -1;
+   if ((n = Recv(mess)) <= 0)
+      return n;
 
    kind = mess->What();
    if (str) {
@@ -371,8 +383,9 @@ Int_t TSocket::Recv(char *str, Int_t max, Int_t &kind)
 Int_t TSocket::Recv(TMessage *&mess)
 {
    // Receive a TMessage object. The user must delete the TMessage object.
-   // Returns length of message in bytes or -1 in case of error (mess == 0
-   // in that case).
+   // Returns length of message in bytes (can be 0 if other side of connection
+   // is closed) or -1 in case of error or -4 in case a non-blocking socket would
+   // block (i.e. there is nothing to be read). In those case mess == 0.
 
    errno = 0;
 
@@ -381,19 +394,19 @@ Int_t TSocket::Recv(TMessage *&mess)
       return -1;
    }
 
+   Int_t  n;
    UInt_t len;
-   if (gSystem->RecvRaw(fSocket, &len, sizeof(UInt_t), 0) < 0) {
+   if ((n = gSystem->RecvRaw(fSocket, &len, sizeof(UInt_t), 0)) <= 0) {
       mess = 0;
-      return -1;
+      return n;
    }
    len = net2host(len);  //from network to host byte order
 
-   Int_t n;
    char *buf = new char[len];
-   if ((n = gSystem->RecvRaw(fSocket, buf, len, 0)) < 0) {
+   if ((n = gSystem->RecvRaw(fSocket, buf, len, 0)) <= 0) {
       delete [] buf;
       mess = 0;
-      return -1;
+      return n;
    }
 
    fBytesRecv  += n + sizeof(UInt_t);
@@ -422,7 +435,8 @@ Int_t TSocket::RecvRaw(void *buffer, Int_t length, ESendRecvOptions opt)
 {
    // Receive a raw buffer of specified length bytes. Using option kPeek
    // one can peek at incoming data. Returns -1 in case of error. In case
-   // of opt == kOob: -2 means EWOULDBLOCK and -3 EINVAL.
+   // of opt == kOob: -2 means EWOULDBLOCK and -3 EINVAL. In case of non-blocking
+   // mode (kNoBlock) -4 means EWOULDBLOCK.
 
    errno = 0;
 
@@ -430,7 +444,7 @@ Int_t TSocket::RecvRaw(void *buffer, Int_t length, ESendRecvOptions opt)
 
    Int_t n;
 
-   if ((n = gSystem->RecvRaw(fSocket, buffer, length, (int) opt)) < 0)
+   if ((n = gSystem->RecvRaw(fSocket, buffer, length, (int) opt)) <= 0)
       return n;
 
    fBytesRecv  += n;

@@ -1,3 +1,4 @@
+//*CMZ :  2.21/00 04/01/99  07.39.17  by  Rene Brun
 //*CMZ :  2.00/11 24/08/98  16.53.34  by  Rene Brun
 //*CMZ :  2.00/10 13/07/98  19.38.06  by  Fons Rademakers
 //*CMZ :  2.00/08 26/05/98  17.05.07  by  Fons Rademakers
@@ -34,8 +35,8 @@
 //                                                                        //
 ////////////////////////////////////////////////////////////////////////////
 
-#ifndef ROOT_TObject
-#include "TObject.h"
+#ifndef ROOT_TNamed
+#include "TNamed.h"
 #endif
 
 

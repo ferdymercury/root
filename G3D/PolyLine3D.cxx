@@ -1,3 +1,5 @@
+//*CMZ :  2.21/04 29/01/99  23.26.18  by  Valery Fine(fine@mail.cern.ch)
+//*CMZ :  2.21/01 12/01/99  07.55.28  by  Valery Fine(fine@mail.cern.ch)
 //*CMZ :  2.20/05 15/12/98  09.17.22  by  Rene Brun
 //*CMZ :  2.00/13 13/10/98  09.21.28  by  Rene Brun
 //*CMZ :  2.00/11 18/08/98  10.10.01  by  Rene Brun
@@ -81,7 +83,7 @@ TPolyLine3D::TPolyLine3D()
 //*-*                      ================================
 
    fP = 0;
-
+   fLastPoint = -1;
 }
 
 
@@ -229,7 +231,7 @@ Int_t TPolyLine3D::DistancetoPrimitive(Int_t px, Int_t py)
 
    Int_t i, dsegment;
    Float_t x1,y1,x2,y2, xndc[3];
-   for (i=0;i<fN-1;i++) {
+   for (i=0;i<Size()-1;i++) {
       view->WCtoNDC(&fP[3*i], xndc);
       x1 = xndc[0];
       y1 = xndc[1];
@@ -261,9 +263,10 @@ void TPolyLine3D::DrawPolyLine(Int_t n, Float_t *p, Option_t *option)
 //*-*              ============================================
 
    TPolyLine3D *newpolyline = new TPolyLine3D();
+   Int_t size = 3*Size();
    newpolyline->fN =n;
-   newpolyline->fP = new Float_t[3*fN];
-   for (Int_t i=0; i<3*fN;i++) { newpolyline->fP[i] = p[i];}
+   newpolyline->fP = new Float_t[size];
+   for (Int_t i=0; i<size;i++) { newpolyline->fP[i] = p[i];}
    TAttLine::Copy(*newpolyline);
    newpolyline->fOption = fOption;
    newpolyline->fLastPoint = fLastPoint;
@@ -312,14 +315,15 @@ void TPolyLine3D::Paint(Option_t *option)
     //*-* Check if option is 'x3d'.      NOTE: This is a simple checking
     //                                         but since there is no other
     //                                         options yet, this works fine.
+    Int_t size =Size();
     if ((*option != 'x') && (*option != 'X')) {
-        PaintPolyLine(fN, fP, option);
+        PaintPolyLine(size, fP, option);
     }
     else {
         X3DBuffer *buff = new X3DBuffer;
         if (buff) {
-            buff->numPoints = fN;
-            buff->numSegs   = fN-1;
+            buff->numPoints = size;
+            buff->numSegs   = size-1;
             buff->numPolys  = 0;        //NOTE: Because of different structure, our
             buff->polys     = NULL;     //      TPolyLine3D can't use polygons
             buff->points    = fP;
@@ -393,23 +397,27 @@ void TPolyLine3D::SavePrimitive(ofstream &out, Option_t *)
    } else {
        out<<"   TPolyLine3D *";
    }
+   Int_t size=Size();
    out<<"pline3D = new TPolyLine3D("<<fN<<","<<quote<<fOption<<quote<<");"<<endl;
 
    SaveLineAttributes(out,"pline3D",1,1,1);
 
-   for (Int_t i=0;i<fN;i++) {
-      out<<"   pline3D->SetPoint("<<i<<","<<fP[3*i]<<","<<fP[3*i+1]<<","<<fP[3*i+2]<<");"<<endl;
+   if (size > 0) {
+    for (Int_t i=0;i<size;i++) {
+       out<<"   pline3D->SetPoint("<<i<<","<<fP[3*i]<<","<<fP[3*i+1]<<","<<fP[3*i+2]<<");"<<endl;
+    }
    }
    out<<"   pline3D->Draw();"<<endl;
 }
 
 //______________________________________________________________________________
-void TPolyLine3D::SetNextPoint(Float_t x, Float_t y, Float_t z)
+Int_t TPolyLine3D::SetNextPoint(Float_t x, Float_t y, Float_t z)
 {
 // Set point following LastPoint
 
-    SetPoint(fLastPoint, x, y, z);
     fLastPoint++;
+    SetPoint(fLastPoint, x, y, z);
+    return fLastPoint;
 }
 //______________________________________________________________________________
 void TPolyLine3D::SetPoint(Int_t n, Float_t x, Float_t y, Float_t z)
@@ -433,7 +441,7 @@ void TPolyLine3D::SetPoint(Int_t n, Float_t x, Float_t y, Float_t z)
    fP[3*n  ] = x;
    fP[3*n+1] = y;
    fP[3*n+2] = z;
-   fLastPoint = n;
+   fLastPoint = TMath::Max(fLastPoint,n);
 }
 
 
@@ -460,8 +468,8 @@ void TPolyLine3D::Sizeof3D() const
 //*-*-*-*-*-*Return total X3D size of this shape with its attributes*-*-*-*-*-*-*
 //*-*        =======================================================
 
-    gSize3D.numPoints += fN;
-    gSize3D.numSegs   += (fN-1);
+    gSize3D.numPoints += Size();
+    gSize3D.numSegs   += (Size()-1);
     gSize3D.numPolys  += 0;
 
 }
@@ -487,8 +495,9 @@ void TPolyLine3D::Streamer(TBuffer &b)
       b.WriteVersion(TPolyLine3D::IsA());
       TObject::Streamer(b);
       TAttLine::Streamer(b);
-      b << fN;
-      if (fN) b.WriteFastArray(fP, 3*fN);
+      Int_t size = Size();
+      b << size;
+      if (size) b.WriteFastArray(fP, 3*size);
       fOption.Streamer(b);
    }
 }

@@ -1,3 +1,5 @@
+//*CMZ :  2.21/03 19/01/99  18.30.29  by  Fons Rademakers
+//*CMZ :  2.21/01 06/01/99  10.57.53  by  Rene Brun
 //*CMZ :  2.20/05 15/12/98  08.58.09  by  Rene Brun
 //*CMZ :  2.00/11 08/08/98  23.20.37  by  Rene Brun
 //*CMZ :  2.00/10 18/07/98  18.10.05  by  Fons Rademakers
@@ -180,14 +182,14 @@ public:
    Int_t             Macro(const Text_t *filename);
    Bool_t            MustClean() {return fMustClean;}
    void              ProcessLine(const Text_t *line);
-   Int_t             ProcessLineFast(const Text_t *line);
+   Long_t            ProcessLineFast(const Text_t *line);
    void              Proof(const Text_t *cluster = "proof");
    Bool_t            ReadingBasket() {return fReadingBasket;}
    void              Reset(Option_t *option="");
    void              SaveContext();
    void              SetApplication(TApplication *app) { fApplication = app; }
    void              SetBatch(Bool_t batch=kTRUE) { fBatch = batch; }
-   void              SetDefCanvasName(Text_t *name="c1") {fDefCanvasName = name;}
+   void              SetDefCanvasName(const Text_t *name="c1") {fDefCanvasName = name;}
    void              SetEditHistograms(Bool_t flag=kTRUE) {fEditHistograms=flag;}
    void              SetEditorMode(const Text_t *mode="");
    void              SetFromPopUp(Bool_t flag=kTRUE) { fFromPopUp = flag; }

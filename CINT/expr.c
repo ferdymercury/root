@@ -1,5 +1,5 @@
-/*CMZ :  2.20/04 08/12/98  16.25.24  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   08/12/98*/
+/*CMZ :  2.21/08 17/03/99  13.13.40  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   17/03/99*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -106,10 +106,13 @@ char *exprwithspace;
       break;
     case '=':
     case '(':
+#ifndef G__OLDIMPLEMENTATINO994
+    case ')':
+#endif
     case ',':
       ipunct = iout+1;
-      default :
-	exprnospace[iout++] = exprwithspace[iin++] ;
+    default :
+      exprnospace[iout++] = exprwithspace[iin++] ;
       break;
     }
   }
@@ -613,6 +616,7 @@ char *expression;
   G__value defined;
   int store_var_type = G__var_type;
   int explicitdtor = 0;
+  int inew=0; /* ON994 */
 
   /******************************************************************
   * return null for no expression
@@ -657,7 +661,7 @@ char *expression;
     ****************************************************/
     case '(': /* new(arena) type(),  (type)val, (expr) */
       if((nest==0)&&(single_quote==0)&&(double_quote==0)&&
-	 lenbuf==3&&strncmp(expression,"new",3)==0) {
+	 lenbuf==3&&strncmp(expression+inew,"new",3)==0) { /* ON994 */
 	return(G__new_operator(expression+ig1));
       }
       /* no break here */
@@ -666,6 +670,9 @@ char *expression;
       if((double_quote==0)&&(single_quote==0)) {
 	nest++;
 	ebuf[lenbuf++]=c;
+#ifndef G__OLDIMPLEMENTATION994
+	inew=ig1+1;
+#endif
       }
       else ebuf[lenbuf++]=c;
       break;
@@ -676,6 +683,9 @@ char *expression;
       if((double_quote==0)&&(single_quote==0)) {
 	nest--;
 	ebuf[lenbuf++]=c;
+#ifndef G__OLDIMPLEMENTATION994
+	inew=ig1+1;
+#endif
       }
       else ebuf[lenbuf++]=c;
       break;
@@ -685,10 +695,13 @@ char *expression;
     ****************************************************/
     case ' ': /* new type, new (arena) type */
       if((nest==0)&&(single_quote==0)&&(double_quote==0)) {
-	if(lenbuf==3&&strncmp(expression,"new",3)==0) {
+	if(lenbuf-inew==3&&strncmp(expression+inew,"new",3)==0) { /* ON994 */
 	  return(G__new_operator(expression+ig1+1));
 	}
 	/* else ignore c, shoud not happen, but not sure */
+#ifndef G__OLDIMPLEMENTATION994
+	inew=ig1+1;
+#endif
       }
       else ebuf[lenbuf++]=c;
       break;
@@ -956,6 +969,9 @@ char *expression;
 	  G__var_type=store_var_type;
 	  return(G__letvariable(ebuf,defined,&G__global,G__p_local));
 	}
+#ifndef G__OLDIMPLEMENTATION994
+	inew=ig1+1;
+#endif
       }
       else ebuf[lenbuf++]=c;
       break;
@@ -1348,7 +1364,20 @@ char *item;
     }
     else {
 #ifndef G__OLDIMPLEMENTATION918
-      G__letint(&result3,c,strtoul(item,NULL,10));
+      unsigned long xxx=strtoul(item,NULL,10);
+      if(xxx>LONG_MAX && ('i'==c||'l'==c) ) --c;
+      if(xxx==ULONG_MAX) {
+        char ulongmax[100];
+	int ulonglen = strlen(item);
+        sprintf(ulongmax,"%lu",ULONG_MAX);
+	while('u'==tolower(item[ulonglen-1])||'l'==tolower(item[ulonglen-1]))
+	  item[--ulonglen]=0;
+        if(strcmp(ulongmax,item)!=0)
+          G__genericerror("Error: integer literal too large");
+      }
+      G__letint(&result3,c,xxx);
+      result3.obj.i=xxx;
+      /* G__letint(&result3,c,strtoul(item,NULL,10)); */
 #else
       G__letint(&result3,c,atol(item));
 #endif
@@ -2151,7 +2180,7 @@ char *expression2;
 
   if((nest2!=0)||(single_quote!=0)||(double_quote!=0)) {
 #ifdef G__ASM
-    G__asm_noverflow=0;
+    G__abortbytecode();
 #endif
     G__parenthesiserror(expression2,"G__test");
     return(0);

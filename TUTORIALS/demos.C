@@ -1,3 +1,4 @@
+//*CMZ :  2.21/08 11/03/99  14.55.40  by  Rene Brun
 //*CMZ :  2.00/04 07/04/98  11.58.43  by  Rene Brun
 //*CMZ :  2.00/01 12/03/98  18.07.13  by  Fons Rademakers
 //*CMZ :  2.00/00 27/02/98  00.39.41  by  Fons Rademakers
@@ -13,7 +14,7 @@
    bar = new TControlBar("vertical", "Demos");
 
    bar->AddButton("Help on Demos",".x demoshelp.C", "Click Here For Help on Running the Demos");
-   bar->AddButton("browser",     "{b = new TBrowser("Browser");}", "Start the ROOT Browser");
+   bar->AddButton("browser",     "{b = new TBrowser(\"Browser\");}", "Start the ROOT Browser");
    bar->AddButton("framework",   ".x framework.C", "An Example of Object Oriented User Interface");
    bar->AddButton("first",       ".x first.C",     "An Example of Slide with Root");
    bar->AddButton("hsimple",     ".x hsimple.C",   "An Example Creating Histograms/Ntuples on File");
@@ -38,5 +39,4 @@
    bar->Show();
    gROOT->SaveContext();
 }
-
 

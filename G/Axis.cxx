@@ -1,3 +1,4 @@
+//*CMZ :  2.21/02 18/01/99  16.14.21  by  Rene Brun
 //*CMZ :  2.20/02 04/12/98  16.50.13  by  Rene Brun
 //*CMZ :  2.20/01 30/11/98  10.22.36  by  Rene Brun
 //*CMZ :  2.20/00 26/11/98  16.51.06  by  Rene Brun
@@ -243,9 +244,18 @@ void TAxis::ExecuteEvent(Int_t event, Int_t px, Int_t py)
             ratio2 = temp;
          }
          if (ratio2 - ratio1 > 0.05) {
-            bin1 = FindBin(xmin);
-            bin2 = FindBin(xmax);
-            SetRange(bin1, bin2);
+            {
+               char params[30];
+               if (axisNumber == 1) sprintf(params,"%f,%f,\"X\"",xmin,xmax);
+               else                 sprintf(params,"%f,%f,\"Y\"",xmin,xmax);
+               TIter next(gPad->GetListOfPrimitives());
+               TObject *obj;
+               while ((obj = next())) {
+                  if (obj->InheritsFrom("TH1")) {
+                     obj->Execute("SetAxisRange",params);
+                  }
+               }
+            }
             gPad->Modified(kTRUE);
          }
       }
@@ -338,6 +348,22 @@ Axis_t TAxis::GetBinLowEdge(Int_t bin)
   if (fXbins.fN && bin > 0 && bin <=fNbins) return fXbins.fArray[bin-1];
   Axis_t binwidth = (fXmax - fXmin) / Axis_t(fNbins);
   return fXmin + (bin-1) * binwidth;
+}
+
+//______________________________________________________________________________
+Axis_t TAxis::GetBinUpEdge(Int_t bin)
+{
+//*-*-*-*-*-*-*-*-*-*-*Return up edge of bin-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+//*-*                  ======================
+
+  Axis_t binwidth;
+  if (!fXbins.fN || bin<1 || bin>fNbins) {
+     binwidth = (fXmax - fXmin) / Axis_t(fNbins);
+     return fXmin + bin*binwidth;
+  } else {
+     binwidth = fXbins.fArray[bin] - fXbins.fArray[bin-1];
+     return fXbins.fArray[bin-1] + binwidth;
+  }
 }
 
 //______________________________________________________________________________

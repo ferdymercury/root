@@ -1,3 +1,4 @@
+//*CMZ :  2.21/08 11/03/99  14.56.55  by  Rene Brun
 //*CMZ :  2.00/13 22/10/98  08.33.52  by  Rene Brun
 //*CMZ :  1.01/06 16/06/97  12.54.43  by  Valery Fine(fine@mail.cern.ch)
 //*-- Author :    Rene Brun   23/09/96
@@ -26,7 +27,7 @@
    t.DrawText(3,17,"Root >  float x=5; float y=7;");
    t.DrawText(3,16,"Root >  x*sqrt(y)");
    t.DrawText(3,14,"Root >  for (int i=2;i<7;i++) printf(\"sqrt(%d) = %f\",i,sqrt(i));");
-   t.DrawText(3,10,"Root >  TF1 f1("f1",\"sin(x)/x\",0,10)");
+   t.DrawText(3,10,"Root >  TF1 f1(\"f1\",\"sin(x)/x\",0,10)");
    t.DrawText(3, 9,"Root >  f1.Draw()");
    t.SetTextFont(81);
    t.SetTextSize(0.018);

@@ -1,3 +1,4 @@
+//*CMZ :  2.21/01 12/01/99  07.54.04  by  Valery Fine(fine@mail.cern.ch)
 //*CMZ :  2.00/13 13/10/98  09.21.51  by  Rene Brun
 //*CMZ :  2.00/11 18/08/98  10.10.01  by  Rene Brun
 //*CMZ :  2.00/00 11/02/98  12.29.50  by  Rene Brun
@@ -52,7 +53,7 @@ protected:
         Float_t      *fP;           //Array of 3-D coordinates  (x,y,z)
         TString      fOption;       //options
         UInt_t       fGLList;       // The list number for OpenGL view
-        Int_t        fLastPoint;    // The number of the last filled point
+        Int_t        fLastPoint;    // The index of the last filled point
 
 public:
         TPolyLine3D();
@@ -77,11 +78,12 @@ public:
         virtual void      PaintPolyLine(Int_t n, Float_t *p, Option_t *option="");
         virtual void      Print(Option_t *option="");
         virtual void      SavePrimitive(ofstream &out, Option_t *option);
-        virtual void      SetNextPoint(Float_t x, Float_t y, Float_t z); // *MENU*
+        virtual Int_t     SetNextPoint(Float_t x, Float_t y, Float_t z); // *MENU*
         virtual void      SetOption(Option_t *option="") {fOption = option;}
         virtual void      SetPoint(Int_t point, Float_t x, Float_t y, Float_t z); // *MENU*
         virtual void      SetPolyLine(Int_t n, Float_t *p=0, Option_t *option="");
         virtual void      Sizeof3D() const;
+        virtual Int_t     Size() const { return fLastPoint+1;}
 
         ClassDef(TPolyLine3D,1)  //A 3-D PolyLine
 };

@@ -1,5 +1,5 @@
-/*CMZ :  2.20/04 08/12/98  16.25.32  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   08/12/98*/
+/*CMZ :  2.21/08 17/03/99  13.13.44  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   17/03/99*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -96,6 +96,14 @@ typedef void* G__SHLHANDLE;
 G__SHLHANDLE G__sl_handle[G__MAX_SL];
 short G__allsl=0;
 
+#ifdef G__DLL_SYM_UNDERSCORE
+static int G__sym_underscore=1;
+#else
+static int G__sym_underscore=0;
+#endif
+
+void G__set_sym_underscore(x) int x; { G__sym_underscore=x; }
+
 #define G__CALL_SETUP(setupfunc)  \
     sharedlib_func=(int (*)())G__shl_findsym(&G__sl_handle[allsl],setupfunc,TYPE_PROCEDURE);   \
     if(sharedlib_func!=NULL) (*sharedlib_func)()
@@ -126,7 +134,7 @@ char *path;
 * OSF or SunOS
 ****************************************************/
 #if defined(G__OSFDLL)
-#if defined(__alpha) || (defined(G__SUNOS4) && defined(G__NONANSI))
+#if defined(__FreeBSD__) || defined(__alpha) || (defined(G__SUNOS4) && defined(G__NONANSI))
   handle = dlopen(path,RTLD_LAZY);
 #else
   handle = dlopen(path,RTLD_GLOBAL | RTLD_LAZY);
@@ -143,6 +151,31 @@ char *path;
 #  else
   handle = shl_load(path,BIND_DEFERRED,0L);
 #  endif
+#ifndef G__OLDIMPLEMENTATION984
+#  if defined(__GNUC__)
+  {
+     /* find all _GLOBAL__FI_* functions to initialize global static objects */
+     struct shl_symbol *symbols;
+     int nsym;
+     nsym = shl_getsymbols(handle, TYPE_PROCEDURE, EXPORT_SYMBOLS|NO_VALUES,
+                           (void *(*)())malloc, &symbols);
+     if (nsym != -1) {
+        void (*ctor)();
+        int i;
+        for (i = 0; i < nsym; i++) {
+           if (symbols[i].type == TYPE_PROCEDURE) {
+              if (!strncmp(symbols[i].name, "_GLOBAL__FI_", 12)) {
+                 ctor = (void (*)())G__shl_findsym(&handle, symbols[i].name,
+TYPE_PROCEDURE);
+                 if (ctor) (*ctor)();
+              }
+           }
+        }
+        free(symbols);
+     }
+  }
+#  endif
+#endif
 /****************************************************
 * Win32
 ****************************************************/
@@ -186,11 +219,14 @@ short type;
   struct dsc$descriptor_s sym_d;
   struct dsc$descriptor_s phandle_d;
 #endif
-#ifdef G__DLL_SYM_UNDERSCORE
   char sym_underscore[G__ONELINE];
-  sym_underscore[0]='_';
-  strcpy(sym_underscore+1,sym);
-#endif
+  if(G__sym_underscore) {
+    sym_underscore[0]='_';
+    strcpy(sym_underscore+1,sym);
+  }
+  else {
+    strcpy(sym_underscore,sym);
+  }
 
   if(!(*phandle)) return(func);
 
@@ -199,29 +235,17 @@ short type;
 * OSF or SunOS
 ****************************************************/
 #if defined(G__OSFDLL)
-#  ifdef G__DLL_SYM_UNDERSCORE
   func = dlsym(*phandle,sym_underscore);
-#  else
-  func = dlsym(*phandle,sym);
-#  endif
 /****************************************************
 * HP-UX
 ****************************************************/
 # elif defined(__hpux) || defined(_HIUX_SOURCE)
-# ifdef G__DLL_SYM_UNDERSCORE
   shl_findsym(phandle,sym_underscore,type,(void*)(&func));
-# else
-  shl_findsym(phandle,sym,type,(void*)(&func));
-# endif
 /****************************************************
 * Win32
 ****************************************************/
 # elif defined(G__WIN32)
-# ifdef G__DLL_SYM_UNDERSCORE
   func = (void*)GetProcAddress(*phandle,sym_underscore);
-#else
-  func = (void*)GetProcAddress(*phandle,sym);
-#endif
 /****************************************************
 * VMS
 ****************************************************/
@@ -325,6 +349,31 @@ G__SHLHANDLE handle;
 #  else
   return(shl_unload(handle));
 #  endif
+#ifndef G__OLDIMPLEMENTATION984
+#  if defined(__GNUC__)
+  {
+     /* find all _GLOBAL__FD_* functions to destruct global static objects */
+     struct shl_symbol *symbols;
+     int nsym;
+     nsym = shl_getsymbols(handle, TYPE_PROCEDURE, EXPORT_SYMBOLS|NO_VALUES,
+                           (void *(*)())malloc, &symbols);
+     if (nsym != -1) {
+        void (*dtor)();
+        int i;
+        for (i = 0; i < nsym; i++) {
+           if (symbols[i].type == TYPE_PROCEDURE) {
+              if (!strncmp(symbols[i].name, "_GLOBAL__FD_", 12)) {
+                 dtor = (void (*)())G__shl_findsym(&handle, symbols[i].name,
+TYPE_PROCEDURE);
+                 if (dtor) (*dtor)();
+              }
+           }
+        }
+        free(symbols);
+     }
+  }
+#  endif
+#endif
 /****************************************************
 * Win32
 ****************************************************/
@@ -780,7 +829,7 @@ int *known3;
 #endif /* ON679 */
 
 #ifdef G__ASM
-  G__asm_noverflow=0;
+  G__abortbytecode();
   if(G__no_exec_compile) {
     *known3=1;
     return(G__null);

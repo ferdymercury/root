@@ -1,5 +1,5 @@
-//*CMZ :  2.20/05 15/12/98  18.03.17  by  Rene Brun
-//*-- Author :    Rene Brun   15/12/98
+//*CMZ :  2.21/08 15/03/99  08.52.06  by  Rene Brun
+//*-- Author :    Rene Brun   15/03/99
 //*CMZ :  1.00/09 23/04/97  17.59.54  by  Rene Brun
 //*-- Author :    Rene Brun   23/04/97
 #if defined(__hpux) && !defined(__GNUG__)
@@ -93,6 +93,7 @@ extern G__linked_taginfo G__G__Gui1LN_ELayoutHints;
 extern G__linked_taginfo G__G__Gui1LN_TGFrame;
 extern G__linked_taginfo G__G__Gui1LN_TGCompositeFrame;
 extern G__linked_taginfo G__G__Gui1LN_TGLayoutHints;
+extern G__linked_taginfo G__G__Gui1LN_TGFrameElement;
 extern G__linked_taginfo G__G__Gui1LN_TGLayoutManager;
 extern G__linked_taginfo G__G__Gui1LN_TGVerticalLayout;
 extern G__linked_taginfo G__G__Gui1LN_TGHorizontalLayout;
@@ -145,6 +146,7 @@ extern G__linked_taginfo G__G__Gui1LN_TGMenuBar;
 #undef malloc
 #endif
 
+extern "C" void G__cpp_reset_tagtableG__Gui1();
 
 extern "C" void G__set_cpp_environmentG__Gui1() {
   G__add_macro("__MAKECINT__");
@@ -166,6 +168,7 @@ extern "C" void G__set_cpp_environmentG__Gui1() {
   G__add_compiledheader("TGTextEntry.h");
   G__add_compiledheader("TGMsgBox.h");
   G__add_compiledheader("TGMenu.h");
+  G__cpp_reset_tagtableG__Gui1();
 }
 extern "C" int G__cpp_dllrevG__Gui1() { return(51111); }
 
@@ -1255,7 +1258,7 @@ static int G__TGPosition_wATGPosition_3_1(G__value *result7,char *funcname,struc
 
 
 /* TGFrame */
-static int G__TGFrame_TGFrame_2_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGFrame_TGFrame_2_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    TGFrame *p=NULL;
    switch(libp->paran) {
    case 5:
@@ -1282,7 +1285,7 @@ static int G__TGFrame_TGFrame_2_0(G__value *result7,char *funcname,struct G__par
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGFrame_TGFrame_3_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGFrame_TGFrame_3_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    TGFrame *p=NULL;
    switch(libp->paran) {
    case 3:
@@ -1301,115 +1304,115 @@ static int G__TGFrame_TGFrame_3_0(G__value *result7,char *funcname,struct G__par
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGFrame_HandleEvent_4_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGFrame_HandleEvent_4_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,98,(long)((TGFrame*)(G__getstructoffset()))->HandleEvent((Event_t*)G__int(libp->para[0])));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGFrame_HandleConfigureNotify_5_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGFrame_HandleConfigureNotify_5_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,98,(long)((TGFrame*)(G__getstructoffset()))->HandleConfigureNotify((Event_t*)G__int(libp->para[0])));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGFrame_HandleButton_6_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGFrame_HandleButton_6_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,98,(long)((TGFrame*)(G__getstructoffset()))->HandleButton((Event_t*)G__int(libp->para[0])));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGFrame_HandleDoubleClick_7_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGFrame_HandleDoubleClick_7_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,98,(long)((TGFrame*)(G__getstructoffset()))->HandleDoubleClick((Event_t*)G__int(libp->para[0])));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGFrame_HandleCrossing_8_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGFrame_HandleCrossing_8_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,98,(long)((TGFrame*)(G__getstructoffset()))->HandleCrossing((Event_t*)G__int(libp->para[0])));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGFrame_HandleMotion_9_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGFrame_HandleMotion_9_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,98,(long)((TGFrame*)(G__getstructoffset()))->HandleMotion((Event_t*)G__int(libp->para[0])));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGFrame_HandleKey_0_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGFrame_HandleKey_0_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,98,(long)((TGFrame*)(G__getstructoffset()))->HandleKey((Event_t*)G__int(libp->para[0])));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGFrame_HandleFocusChange_1_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGFrame_HandleFocusChange_1_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,98,(long)((TGFrame*)(G__getstructoffset()))->HandleFocusChange((Event_t*)G__int(libp->para[0])));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGFrame_HandleClientMessage_2_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGFrame_HandleClientMessage_2_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,98,(long)((TGFrame*)(G__getstructoffset()))->HandleClientMessage((Event_t*)G__int(libp->para[0])));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGFrame_HandleSelection_3_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGFrame_HandleSelection_3_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,98,(long)((TGFrame*)(G__getstructoffset()))->HandleSelection((Event_t*)G__int(libp->para[0])));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGFrame_HandleSelectionRequest_4_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGFrame_HandleSelectionRequest_4_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,98,(long)((TGFrame*)(G__getstructoffset()))->HandleSelectionRequest((Event_t*)G__int(libp->para[0])));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGFrame_HandleSelectionClear_5_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGFrame_HandleSelectionClear_5_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,98,(long)((TGFrame*)(G__getstructoffset()))->HandleSelectionClear((Event_t*)G__int(libp->para[0])));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGFrame_SendMessage_6_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGFrame_SendMessage_6_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TGFrame*)(G__getstructoffset()))->SendMessage((const TGWindow*)G__int(libp->para[0]),(Long_t)G__int(libp->para[1])
 ,(Long_t)G__int(libp->para[2]),(Long_t)G__int(libp->para[3]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGFrame_ProcessMessage_7_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGFrame_ProcessMessage_7_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,98,(long)((TGFrame*)(G__getstructoffset()))->ProcessMessage((Long_t)G__int(libp->para[0]),(Long_t)G__int(libp->para[1])
 ,(Long_t)G__int(libp->para[2])));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGFrame_Move_8_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGFrame_Move_8_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TGFrame*)(G__getstructoffset()))->Move((Int_t)G__int(libp->para[0]),(Int_t)G__int(libp->para[1]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGFrame_Resize_9_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGFrame_Resize_9_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TGFrame*)(G__getstructoffset()))->Resize((UInt_t)G__int(libp->para[0]),(UInt_t)G__int(libp->para[1]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGFrame_Resize_0_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGFrame_Resize_0_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TGFrame*)(G__getstructoffset()))->Resize(*((TGDimension*)G__int(libp->para[0])));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGFrame_MoveResize_1_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGFrame_MoveResize_1_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TGFrame*)(G__getstructoffset()))->MoveResize((Int_t)G__int(libp->para[0]),(Int_t)G__int(libp->para[1])
 ,(UInt_t)G__int(libp->para[2]),(UInt_t)G__int(libp->para[3]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGFrame_GetDefaultWidth_2_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGFrame_GetDefaultWidth_2_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,104,(long)((TGFrame*)(G__getstructoffset()))->GetDefaultWidth());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGFrame_GetDefaultHeight_3_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGFrame_GetDefaultHeight_3_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,104,(long)((TGFrame*)(G__getstructoffset()))->GetDefaultHeight());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGFrame_GetDefaultSize_4_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGFrame_GetDefaultSize_4_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       {
         TGDimension *pobj,xobj=((TGFrame*)(G__getstructoffset()))->GetDefaultSize();
         pobj=new TGDimension(xobj);
@@ -1419,46 +1422,57 @@ static int G__TGFrame_GetDefaultSize_4_2(G__value *result7,char *funcname,struct
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGFrame_GetOptions_5_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGFrame_GetBackground_5_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,107,(long)((TGFrame*)(G__getstructoffset()))->GetBackground());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TGFrame_ChangeBackground_6_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TGFrame*)(G__getstructoffset()))->ChangeBackground((ULong_t)G__int(libp->para[0]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TGFrame_GetOptions_7_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,104,(long)((TGFrame*)(G__getstructoffset()))->GetOptions());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGFrame_ChangeOptions_6_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGFrame_ChangeOptions_8_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TGFrame*)(G__getstructoffset()))->ChangeOptions((UInt_t)G__int(libp->para[0]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGFrame_Layout_7_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGFrame_Layout_9_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TGFrame*)(G__getstructoffset()))->Layout();
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGFrame_MapSubwindows_8_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGFrame_MapSubwindows_0_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TGFrame*)(G__getstructoffset()))->MapSubwindows();
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGFrame_DrawBorder_9_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGFrame_DrawBorder_1_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TGFrame*)(G__getstructoffset()))->DrawBorder();
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGFrame_GetWidth_0_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGFrame_GetWidth_2_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,104,(long)((TGFrame*)(G__getstructoffset()))->GetWidth());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGFrame_GetHeight_1_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGFrame_GetHeight_3_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,104,(long)((TGFrame*)(G__getstructoffset()))->GetHeight());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGFrame_GetSize_2_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGFrame_GetSize_4_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       {
         TGDimension *pobj,xobj=((TGFrame*)(G__getstructoffset()))->GetSize();
         pobj=new TGDimension(xobj);
@@ -1468,94 +1482,94 @@ static int G__TGFrame_GetSize_2_3(G__value *result7,char *funcname,struct G__par
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGFrame_GetX_3_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGFrame_GetX_5_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TGFrame*)(G__getstructoffset()))->GetX());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGFrame_GetY_4_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGFrame_GetY_6_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TGFrame*)(G__getstructoffset()))->GetY());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGFrame_GetBorderWidth_5_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGFrame_GetBorderWidth_7_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TGFrame*)(G__getstructoffset()))->GetBorderWidth());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGFrame_SetWidth_6_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGFrame_SetWidth_8_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TGFrame*)(G__getstructoffset()))->SetWidth((UInt_t)G__int(libp->para[0]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGFrame_SetHeight_7_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGFrame_SetHeight_9_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TGFrame*)(G__getstructoffset()))->SetHeight((UInt_t)G__int(libp->para[0]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGFrame_SetSize_8_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGFrame_SetSize_0_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TGFrame*)(G__getstructoffset()))->SetSize(*(TGDimension*)libp->para[0].ref);
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGFrame_DeclFileName_9_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGFrame_DeclFileName_1_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,67,(long)((TGFrame*)(G__getstructoffset()))->DeclFileName());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGFrame_DeclFileLine_0_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGFrame_DeclFileLine_2_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TGFrame*)(G__getstructoffset()))->DeclFileLine());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGFrame_ImplFileName_1_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGFrame_ImplFileName_3_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,67,(long)((TGFrame*)(G__getstructoffset()))->ImplFileName());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGFrame_ImplFileLine_2_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGFrame_ImplFileLine_4_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TGFrame*)(G__getstructoffset()))->ImplFileLine());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGFrame_Class_Version_3_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGFrame_Class_Version_5_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,115,(long)((TGFrame*)(G__getstructoffset()))->Class_Version());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGFrame_Class_4_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGFrame_Class_6_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((TGFrame*)(G__getstructoffset()))->Class());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGFrame_Dictionary_5_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGFrame_Dictionary_7_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TGFrame*)(G__getstructoffset()))->Dictionary();
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGFrame_IsA_6_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGFrame_IsA_8_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((TGFrame*)(G__getstructoffset()))->IsA());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGFrame_ShowMembers_7_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGFrame_ShowMembers_9_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TGFrame*)(G__getstructoffset()))->ShowMembers(*(TMemberInspector*)libp->para[0].ref,(char*)G__int(libp->para[1]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGFrame_Streamer_8_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGFrame_Streamer_0_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TGFrame*)(G__getstructoffset()))->Streamer(*(TBuffer*)libp->para[0].ref);
    return(1 || funcname || hash || result7 || libp) ;
 }
 
 // automatic copy constructor
-static int G__TGFrame_TGFrame_9_4(G__value *result7,char *funcname,struct G__param *libp,int hash)
+static int G__TGFrame_TGFrame_1_6(G__value *result7,char *funcname,struct G__param *libp,int hash)
 {
    TGFrame *p;
    if(1!=libp->paran) ;
@@ -1568,7 +1582,7 @@ static int G__TGFrame_TGFrame_9_4(G__value *result7,char *funcname,struct G__par
 }
 
 // automatic destructor
-static int G__TGFrame_wATGFrame_0_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGFrame_wATGFrame_2_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    if(G__getaryconstruct())
      if(G__PVOID==G__getgvp())
        delete[] (TGFrame *)(G__getstructoffset());
@@ -1998,6 +2012,47 @@ static int G__TGLayoutHints_wATGLayoutHints_7_1(G__value *result7,char *funcname
        for(int i=G__getaryconstruct()-1;i>=0;i--)
          delete (TGLayoutHints *)((G__getstructoffset())+sizeof(TGLayoutHints)*i);
    else  delete (TGLayoutHints *)(G__getstructoffset());
+      G__setnull(result7);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+
+/* TGFrameElement */
+// automatic default constructor
+static int G__TGFrameElement_TGFrameElement_0_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   TGFrameElement *p;
+   if(0!=libp->paran) ;
+   if(G__getaryconstruct()) p=new TGFrameElement[G__getaryconstruct()];
+   else                    p=new TGFrameElement;
+   result7->obj.i = (long)p;
+   result7->ref = (long)p;
+   result7->type = 'u';
+   result7->tagnum = G__get_linked_tagnum(&G__G__Gui1LN_TGFrameElement);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+// automatic copy constructor
+static int G__TGFrameElement_TGFrameElement_1_0(G__value *result7,char *funcname,struct G__param *libp,int hash)
+{
+   TGFrameElement *p;
+   if(1!=libp->paran) ;
+   p=new TGFrameElement(*(TGFrameElement*)G__int(libp->para[0]));
+   result7->obj.i = (long)p;
+   result7->ref = (long)p;
+   result7->type = 'u';
+   result7->tagnum = G__get_linked_tagnum(&G__G__Gui1LN_TGFrameElement);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+// automatic destructor
+static int G__TGFrameElement_wATGFrameElement_2_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   if(G__getaryconstruct())
+     if(G__PVOID==G__getgvp())
+       delete[] (TGFrameElement *)(G__getstructoffset());
+     else
+       for(int i=G__getaryconstruct()-1;i>=0;i--)
+         delete (TGFrameElement *)((G__getstructoffset())+sizeof(TGFrameElement)*i);
+   else  delete (TGFrameElement *)(G__getstructoffset());
       G__setnull(result7);
    return(1 || funcname || hash || result7 || libp) ;
 }
@@ -6449,6 +6504,8 @@ static int G___GET_SUBMSG_8_14(G__value *result7,char *funcname,struct G__param 
 
 /* TGLayoutHints */
 
+/* TGFrameElement */
+
 /* TGLayoutManager */
 
 /* TGVerticalLayout */
@@ -6650,6 +6707,14 @@ extern "C" void G__cpp_setup_inheritanceG__Gui1() {
      {
        TObject *G__Lpbase=(TObject*)G__Lderived;
        G__inheritance_setup(G__get_linked_tagnum(&G__G__Gui1LN_TGLayoutHints),G__get_linked_tagnum(&G__G__Gui1LN_TObject),(long)G__Lpbase-(long)G__Lderived,1,1);
+     }
+   }
+   if(0==G__getnumbaseclass(G__get_linked_tagnum(&G__G__Gui1LN_TGFrameElement))) {
+     TGFrameElement *G__Lderived;
+     G__Lderived=(TGFrameElement*)0x1000;
+     {
+       TObject *G__Lpbase=(TObject*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__Gui1LN_TGFrameElement),G__get_linked_tagnum(&G__G__Gui1LN_TObject),(long)G__Lpbase-(long)G__Lderived,1,1);
      }
    }
    if(0==G__getnumbaseclass(G__get_linked_tagnum(&G__G__Gui1LN_TGLayoutManager))) {
@@ -7498,6 +7563,7 @@ static void G__setup_memvarTGFrame(void) {
    G__memvar_setup((void*)NULL,104,0,0,-1,G__defined_typename("UInt_t"),-1,2,"fHeight=",0,"frame height");
    G__memvar_setup((void*)NULL,105,0,0,-1,G__defined_typename("Int_t"),-1,2,"fBorderWidth=",0,"frame border width");
    G__memvar_setup((void*)NULL,104,0,0,-1,G__defined_typename("UInt_t"),-1,2,"fOptions=",0,"frame options");
+   G__memvar_setup((void*)NULL,107,0,0,-1,G__defined_typename("ULong_t"),-1,2,"fBackground=",0,"frame background color");
    G__memvar_setup((void*)NULL,107,0,0,-1,G__defined_typename("ULong_t"),-2,2,"fgDefaultFrameBackground=",0,(char*)NULL);
    G__memvar_setup((void*)NULL,107,0,0,-1,G__defined_typename("ULong_t"),-2,2,"fgDefaultSelectedBackground=",0,(char*)NULL);
    G__memvar_setup((void*)NULL,107,0,0,-1,G__defined_typename("ULong_t"),-2,2,"fgWhitePixel=",0,(char*)NULL);
@@ -7540,6 +7606,18 @@ static void G__setup_memvarTGLayoutHints(void) {
    G__memvar_setup((void*)NULL,104,0,0,-1,G__defined_typename("UInt_t"),-1,2,"fPadleft=",0,"amount of left padding");
    G__memvar_setup((void*)NULL,104,0,0,-1,G__defined_typename("UInt_t"),-1,2,"fPadright=",0,"amount of right padding");
    G__memvar_setup((void*)NULL,85,0,0,G__get_linked_tagnum(&G__G__Gui1LN_TClass),-1,-2,4,"fgIsA=",0,(char*)NULL);
+   }
+   G__tag_memvar_reset();
+}
+
+
+   /* TGFrameElement */
+static void G__setup_memvarTGFrameElement(void) {
+   G__tag_memvar_setup(G__get_linked_tagnum(&G__G__Gui1LN_TGFrameElement));
+   { TGFrameElement *p; p=(TGFrameElement*)0x1000; if (p) { }
+   G__memvar_setup((void*)((long)(&p->fFrame)-(long)(p)),85,0,0,G__get_linked_tagnum(&G__G__Gui1LN_TGFrame),-1,-1,1,"fFrame=",0,(char*)NULL);
+   G__memvar_setup((void*)((long)(&p->fState)-(long)(p)),105,0,0,-1,G__defined_typename("Int_t"),-1,1,"fState=",0,(char*)NULL);
+   G__memvar_setup((void*)((long)(&p->fLayout)-(long)(p)),85,0,0,G__get_linked_tagnum(&G__G__Gui1LN_TGLayoutHints),-1,-1,1,"fLayout=",0,(char*)NULL);
    }
    G__tag_memvar_reset();
 }
@@ -8302,73 +8380,85 @@ static void G__setup_memfuncTGPosition(void) {
 static void G__setup_memfuncTGFrame(void) {
    /* TGFrame */
    G__tag_memfunc_setup(G__get_linked_tagnum(&G__G__Gui1LN_TGFrame));
+   G__memfunc_setup("GetDefaultFrameBackground",2512,(G__InterfaceMethod)NULL,107,-1,G__defined_typename("ULong_t"),0,0,1,2,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetDefaultSelectedBackground",2830,(G__InterfaceMethod)NULL,107,-1,G__defined_typename("ULong_t"),0,0,1,2,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetWhitePixel",1315,(G__InterfaceMethod)NULL,107,-1,G__defined_typename("ULong_t"),0,0,1,2,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetBlackPixel",1279,(G__InterfaceMethod)NULL,107,-1,G__defined_typename("ULong_t"),0,0,1,2,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetBlackGC",903,(G__InterfaceMethod)NULL,107,-1,G__defined_typename("GContext_t"),0,0,1,2,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetWhiteGC",939,(G__InterfaceMethod)NULL,107,-1,G__defined_typename("GContext_t"),0,0,1,2,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetHilightGC",1139,(G__InterfaceMethod)NULL,107,-1,G__defined_typename("GContext_t"),0,0,1,2,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetShadowGC",1040,(G__InterfaceMethod)NULL,107,-1,G__defined_typename("GContext_t"),0,0,1,2,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetBckgndGC",1011,(G__InterfaceMethod)NULL,107,-1,G__defined_typename("GContext_t"),0,0,1,2,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetLastClick",1178,(G__InterfaceMethod)NULL,107,-1,G__defined_typename("Time_t"),0,0,1,2,0,"",(char*)NULL,(void*)NULL,0);
    G__memfunc_setup("DoRedraw",792,(G__InterfaceMethod)NULL,121,-1,-1,0,0,1,2,0,"",(char*)NULL,(void*)NULL,1);
    G__memfunc_setup("GetMainFrame",1168,(G__InterfaceMethod)NULL,85,G__get_linked_tagnum(&G__G__Gui1LN_TGWindow),-1,0,0,1,2,9,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("TGFrame",646,G__TGFrame_TGFrame_2_0,105,G__get_linked_tagnum(&G__G__Gui1LN_TGFrame),-1,0,5,1,1,0,
+   G__memfunc_setup("TGFrame",646,G__TGFrame_TGFrame_2_1,105,G__get_linked_tagnum(&G__G__Gui1LN_TGFrame),-1,0,5,1,1,0,
 "U 'TGWindow' - 0 - p h - 'UInt_t' 0 - w "
 "h - 'UInt_t' 0 - h h - 'UInt_t' 0 0 options "
 "k - 'ULong_t' 0 fgDefaultFrameBackground back",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("TGFrame",646,G__TGFrame_TGFrame_3_0,105,G__get_linked_tagnum(&G__G__Gui1LN_TGFrame),-1,0,3,1,1,0,
+   G__memfunc_setup("TGFrame",646,G__TGFrame_TGFrame_3_1,105,G__get_linked_tagnum(&G__G__Gui1LN_TGFrame),-1,0,3,1,1,0,
 "U 'TGClient' - 0 - c k - 'Window_t' 0 - id "
 "U 'TGWindow' - 0 0 parent",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("HandleEvent",1102,G__TGFrame_HandleEvent_4_0,98,-1,G__defined_typename("Bool_t"),0,1,1,1,0,"U 'Event_t' - 0 - event",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("HandleConfigureNotify",2151,G__TGFrame_HandleConfigureNotify_5_0,98,-1,G__defined_typename("Bool_t"),0,1,1,1,0,"U 'Event_t' - 0 - event",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("HandleButton",1224,G__TGFrame_HandleButton_6_0,98,-1,G__defined_typename("Bool_t"),0,1,1,1,0,"U 'Event_t' - 0 - -",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("HandleDoubleClick",1677,G__TGFrame_HandleDoubleClick_7_0,98,-1,G__defined_typename("Bool_t"),0,1,1,1,0,"U 'Event_t' - 0 - -",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("HandleCrossing",1428,G__TGFrame_HandleCrossing_8_0,98,-1,G__defined_typename("Bool_t"),0,1,1,1,0,"U 'Event_t' - 0 - -",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("HandleMotion",1218,G__TGFrame_HandleMotion_9_0,98,-1,G__defined_typename("Bool_t"),0,1,1,1,0,"U 'Event_t' - 0 - -",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("HandleKey",885,G__TGFrame_HandleKey_0_1,98,-1,G__defined_typename("Bool_t"),0,1,1,1,0,"U 'Event_t' - 0 - -",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("HandleFocusChange",1682,G__TGFrame_HandleFocusChange_1_1,98,-1,G__defined_typename("Bool_t"),0,1,1,1,0,"U 'Event_t' - 0 - -",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("HandleClientMessage",1904,G__TGFrame_HandleClientMessage_2_1,98,-1,G__defined_typename("Bool_t"),0,1,1,1,0,"U 'Event_t' - 0 - event",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("HandleSelection",1522,G__TGFrame_HandleSelection_3_1,98,-1,G__defined_typename("Bool_t"),0,1,1,1,0,"U 'Event_t' - 0 - -",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("HandleSelectionRequest",2267,G__TGFrame_HandleSelectionRequest_4_1,98,-1,G__defined_typename("Bool_t"),0,1,1,1,0,"U 'Event_t' - 0 - -",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("HandleSelectionClear",2009,G__TGFrame_HandleSelectionClear_5_1,98,-1,G__defined_typename("Bool_t"),0,1,1,1,0,"U 'Event_t' - 0 - -",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("SendMessage",1103,G__TGFrame_SendMessage_6_1,121,-1,-1,0,4,1,1,0,
+   G__memfunc_setup("HandleEvent",1102,G__TGFrame_HandleEvent_4_1,98,-1,G__defined_typename("Bool_t"),0,1,1,1,0,"U 'Event_t' - 0 - event",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("HandleConfigureNotify",2151,G__TGFrame_HandleConfigureNotify_5_1,98,-1,G__defined_typename("Bool_t"),0,1,1,1,0,"U 'Event_t' - 0 - event",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("HandleButton",1224,G__TGFrame_HandleButton_6_1,98,-1,G__defined_typename("Bool_t"),0,1,1,1,0,"U 'Event_t' - 0 - -",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("HandleDoubleClick",1677,G__TGFrame_HandleDoubleClick_7_1,98,-1,G__defined_typename("Bool_t"),0,1,1,1,0,"U 'Event_t' - 0 - -",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("HandleCrossing",1428,G__TGFrame_HandleCrossing_8_1,98,-1,G__defined_typename("Bool_t"),0,1,1,1,0,"U 'Event_t' - 0 - -",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("HandleMotion",1218,G__TGFrame_HandleMotion_9_1,98,-1,G__defined_typename("Bool_t"),0,1,1,1,0,"U 'Event_t' - 0 - -",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("HandleKey",885,G__TGFrame_HandleKey_0_2,98,-1,G__defined_typename("Bool_t"),0,1,1,1,0,"U 'Event_t' - 0 - -",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("HandleFocusChange",1682,G__TGFrame_HandleFocusChange_1_2,98,-1,G__defined_typename("Bool_t"),0,1,1,1,0,"U 'Event_t' - 0 - -",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("HandleClientMessage",1904,G__TGFrame_HandleClientMessage_2_2,98,-1,G__defined_typename("Bool_t"),0,1,1,1,0,"U 'Event_t' - 0 - event",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("HandleSelection",1522,G__TGFrame_HandleSelection_3_2,98,-1,G__defined_typename("Bool_t"),0,1,1,1,0,"U 'Event_t' - 0 - -",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("HandleSelectionRequest",2267,G__TGFrame_HandleSelectionRequest_4_2,98,-1,G__defined_typename("Bool_t"),0,1,1,1,0,"U 'Event_t' - 0 - -",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("HandleSelectionClear",2009,G__TGFrame_HandleSelectionClear_5_2,98,-1,G__defined_typename("Bool_t"),0,1,1,1,0,"U 'Event_t' - 0 - -",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SendMessage",1103,G__TGFrame_SendMessage_6_2,121,-1,-1,0,4,1,1,0,
 "U 'TGWindow' - 0 - w l - 'Long_t' 0 - msg "
 "l - 'Long_t' 0 - parm1 l - 'Long_t' 0 - parm2",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("ProcessMessage",1444,G__TGFrame_ProcessMessage_7_1,98,-1,G__defined_typename("Bool_t"),0,3,1,1,0,
+   G__memfunc_setup("ProcessMessage",1444,G__TGFrame_ProcessMessage_7_2,98,-1,G__defined_typename("Bool_t"),0,3,1,1,0,
 "l - 'Long_t' 0 - - l - 'Long_t' 0 - - "
 "l - 'Long_t' 0 - -",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("Move",407,G__TGFrame_Move_8_1,121,-1,-1,0,2,1,1,0,
+   G__memfunc_setup("Move",407,G__TGFrame_Move_8_2,121,-1,-1,0,2,1,1,0,
 "i - 'Int_t' 0 - x i - 'Int_t' 0 - y",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("Resize",626,G__TGFrame_Resize_9_1,121,-1,-1,0,2,1,1,0,
+   G__memfunc_setup("Resize",626,G__TGFrame_Resize_9_2,121,-1,-1,0,2,1,1,0,
 "h - 'UInt_t' 0 - w h - 'UInt_t' 0 - h",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("Resize",626,G__TGFrame_Resize_0_2,121,-1,-1,0,1,1,1,0,"u 'TGDimension' - 0 - size",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("MoveResize",1033,G__TGFrame_MoveResize_1_2,121,-1,-1,0,4,1,1,0,
+   G__memfunc_setup("Resize",626,G__TGFrame_Resize_0_3,121,-1,-1,0,1,1,1,0,"u 'TGDimension' - 0 - size",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("MoveResize",1033,G__TGFrame_MoveResize_1_3,121,-1,-1,0,4,1,1,0,
 "i - 'Int_t' 0 - x i - 'Int_t' 0 - y "
 "h - 'UInt_t' 0 - w h - 'UInt_t' 0 - h",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("GetDefaultWidth",1509,G__TGFrame_GetDefaultWidth_2_2,104,-1,G__defined_typename("UInt_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("GetDefaultHeight",1598,G__TGFrame_GetDefaultHeight_3_2,104,-1,G__defined_typename("UInt_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("GetDefaultSize",1408,G__TGFrame_GetDefaultSize_4_2,117,G__get_linked_tagnum(&G__G__Gui1LN_TGDimension),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("GetOptions",1036,G__TGFrame_GetOptions_5_2,104,-1,G__defined_typename("UInt_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("ChangeOptions",1330,G__TGFrame_ChangeOptions_6_2,121,-1,-1,0,1,1,1,0,"h - 'UInt_t' 0 - options",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("Layout",638,G__TGFrame_Layout_7_2,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("MapSubwindows",1363,G__TGFrame_MapSubwindows_8_2,121,-1,-1,0,0,1,1,0,"","Simple frames do not have subwindows",(void*)NULL,1);
-   G__memfunc_setup("DrawBorder",1004,G__TGFrame_DrawBorder_9_2,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("GetWidth",800,G__TGFrame_GetWidth_0_3,104,-1,G__defined_typename("UInt_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetHeight",889,G__TGFrame_GetHeight_1_3,104,-1,G__defined_typename("UInt_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetSize",699,G__TGFrame_GetSize_2_3,117,G__get_linked_tagnum(&G__G__Gui1LN_TGDimension),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetX",376,G__TGFrame_GetX_3_3,105,-1,G__defined_typename("Int_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetY",377,G__TGFrame_GetY_4_3,105,-1,G__defined_typename("Int_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetBorderWidth",1406,G__TGFrame_GetBorderWidth_5_3,105,-1,G__defined_typename("Int_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("SetWidth",812,G__TGFrame_SetWidth_6_3,121,-1,-1,0,1,1,1,0,"h - 'UInt_t' 0 - w",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("SetHeight",901,G__TGFrame_SetHeight_7_3,121,-1,-1,0,1,1,1,0,"h - 'UInt_t' 0 - h",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("SetSize",711,G__TGFrame_SetSize_8_3,121,-1,-1,0,1,1,1,0,"u 'TGDimension' - 1 - s",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("DeclFileName",1145,G__TGFrame_DeclFileName_9_3,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("DeclFileLine",1152,G__TGFrame_DeclFileLine_0_4,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("ImplFileName",1171,G__TGFrame_ImplFileName_1_4,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("ImplFileLine",1178,G__TGFrame_ImplFileLine_2_4,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Class_Version",1339,G__TGFrame_Class_Version_3_4,115,-1,G__defined_typename("Version_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Class",502,G__TGFrame_Class_4_4,85,G__get_linked_tagnum(&G__G__Gui1LN_TClass),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Dictionary",1046,G__TGFrame_Dictionary_5_4,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("IsA",253,G__TGFrame_IsA_6_4,85,G__get_linked_tagnum(&G__G__Gui1LN_TClass),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("ShowMembers",1132,G__TGFrame_ShowMembers_7_4,121,-1,-1,0,2,1,1,0,
+   G__memfunc_setup("GetDefaultWidth",1509,G__TGFrame_GetDefaultWidth_2_3,104,-1,G__defined_typename("UInt_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetDefaultHeight",1598,G__TGFrame_GetDefaultHeight_3_3,104,-1,G__defined_typename("UInt_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetDefaultSize",1408,G__TGFrame_GetDefaultSize_4_3,117,G__get_linked_tagnum(&G__G__Gui1LN_TGDimension),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetBackground",1312,G__TGFrame_GetBackground_5_3,107,-1,G__defined_typename("ULong_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("ChangeBackground",1606,G__TGFrame_ChangeBackground_6_3,121,-1,-1,0,1,1,1,0,"k - 'ULong_t' 0 - back",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetOptions",1036,G__TGFrame_GetOptions_7_3,104,-1,G__defined_typename("UInt_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("ChangeOptions",1330,G__TGFrame_ChangeOptions_8_3,121,-1,-1,0,1,1,1,0,"h - 'UInt_t' 0 - options",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Layout",638,G__TGFrame_Layout_9_3,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("MapSubwindows",1363,G__TGFrame_MapSubwindows_0_4,121,-1,-1,0,0,1,1,0,"","Simple frames do not have subwindows",(void*)NULL,1);
+   G__memfunc_setup("DrawBorder",1004,G__TGFrame_DrawBorder_1_4,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetWidth",800,G__TGFrame_GetWidth_2_4,104,-1,G__defined_typename("UInt_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetHeight",889,G__TGFrame_GetHeight_3_4,104,-1,G__defined_typename("UInt_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetSize",699,G__TGFrame_GetSize_4_4,117,G__get_linked_tagnum(&G__G__Gui1LN_TGDimension),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetX",376,G__TGFrame_GetX_5_4,105,-1,G__defined_typename("Int_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetY",377,G__TGFrame_GetY_6_4,105,-1,G__defined_typename("Int_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetBorderWidth",1406,G__TGFrame_GetBorderWidth_7_4,105,-1,G__defined_typename("Int_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("SetWidth",812,G__TGFrame_SetWidth_8_4,121,-1,-1,0,1,1,1,0,"h - 'UInt_t' 0 - w",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("SetHeight",901,G__TGFrame_SetHeight_9_4,121,-1,-1,0,1,1,1,0,"h - 'UInt_t' 0 - h",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("SetSize",711,G__TGFrame_SetSize_0_5,121,-1,-1,0,1,1,1,0,"u 'TGDimension' - 1 - s",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("DeclFileName",1145,G__TGFrame_DeclFileName_1_5,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("DeclFileLine",1152,G__TGFrame_DeclFileLine_2_5,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ImplFileName",1171,G__TGFrame_ImplFileName_3_5,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ImplFileLine",1178,G__TGFrame_ImplFileLine_4_5,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Class_Version",1339,G__TGFrame_Class_Version_5_5,115,-1,G__defined_typename("Version_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Class",502,G__TGFrame_Class_6_5,85,G__get_linked_tagnum(&G__G__Gui1LN_TClass),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Dictionary",1046,G__TGFrame_Dictionary_7_5,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("IsA",253,G__TGFrame_IsA_8_5,85,G__get_linked_tagnum(&G__G__Gui1LN_TClass),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("ShowMembers",1132,G__TGFrame_ShowMembers_9_5,121,-1,-1,0,2,1,1,0,
 "u 'TMemberInspector' - 1 - insp C - - 0 - parent",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("Streamer",835,G__TGFrame_Streamer_8_4,121,-1,-1,0,1,1,1,0,"u 'TBuffer' - 1 - b",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Streamer",835,G__TGFrame_Streamer_0_6,121,-1,-1,0,1,1,1,0,"u 'TBuffer' - 1 - b",(char*)NULL,(void*)NULL,1);
    // automatic copy constructor
-   G__memfunc_setup("TGFrame",646,G__TGFrame_TGFrame_9_4,(int)('i'),G__get_linked_tagnum(&G__G__Gui1LN_TGFrame),-1,0,1,1,1,0,"u 'TGFrame' - 1 - -",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("TGFrame",646,G__TGFrame_TGFrame_1_6,(int)('i'),G__get_linked_tagnum(&G__G__Gui1LN_TGFrame),-1,0,1,1,1,0,"u 'TGFrame' - 1 - -",(char*)NULL,(void*)NULL,0);
    // automatic destructor
-   G__memfunc_setup("~TGFrame",772,G__TGFrame_wATGFrame_0_5,(int)('y'),-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("~TGFrame",772,G__TGFrame_wATGFrame_2_6,(int)('y'),-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
    G__tag_memfunc_reset();
 }
 
@@ -8459,10 +8549,22 @@ static void G__setup_memfuncTGLayoutHints(void) {
    G__tag_memfunc_reset();
 }
 
+static void G__setup_memfuncTGFrameElement(void) {
+   /* TGFrameElement */
+   G__tag_memfunc_setup(G__get_linked_tagnum(&G__G__Gui1LN_TGFrameElement));
+   // automatic default constructor
+   G__memfunc_setup("TGFrameElement",1360,G__TGFrameElement_TGFrameElement_0_0,(int)('i'),G__get_linked_tagnum(&G__G__Gui1LN_TGFrameElement),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   // automatic copy constructor
+   G__memfunc_setup("TGFrameElement",1360,G__TGFrameElement_TGFrameElement_1_0,(int)('i'),G__get_linked_tagnum(&G__G__Gui1LN_TGFrameElement),-1,0,1,1,1,0,"u 'TGFrameElement' - 1 - -",(char*)NULL,(void*)NULL,0);
+   // automatic destructor
+   G__memfunc_setup("~TGFrameElement",1486,G__TGFrameElement_wATGFrameElement_2_0,(int)('y'),-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__tag_memfunc_reset();
+}
+
 static void G__setup_memfuncTGLayoutManager(void) {
    /* TGLayoutManager */
    G__tag_memfunc_setup(G__get_linked_tagnum(&G__G__Gui1LN_TGLayoutManager));
-   G__memfunc_setup("Layout",638,G__TGLayoutManager_Layout_0_0,121,-1,-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("Layout",638,G__TGLayoutManager_Layout_0_0,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,3);
    G__memfunc_setup("GetDefaultSize",1408,G__TGLayoutManager_GetDefaultSize_1_0,117,G__get_linked_tagnum(&G__G__Gui1LN_TGDimension),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,3);
    G__memfunc_setup("DeclFileName",1145,G__TGLayoutManager_DeclFileName_2_0,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
    G__memfunc_setup("DeclFileLine",1152,G__TGLayoutManager_DeclFileLine_3_0,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
@@ -9615,6 +9717,7 @@ G__linked_taginfo G__G__Gui1LN_ELayoutHints = { "ELayoutHints" , 101 , -1 };
 G__linked_taginfo G__G__Gui1LN_TGFrame = { "TGFrame" , 99 , -1 };
 G__linked_taginfo G__G__Gui1LN_TGCompositeFrame = { "TGCompositeFrame" , 99 , -1 };
 G__linked_taginfo G__G__Gui1LN_TGLayoutHints = { "TGLayoutHints" , 99 , -1 };
+G__linked_taginfo G__G__Gui1LN_TGFrameElement = { "TGFrameElement" , 99 , -1 };
 G__linked_taginfo G__G__Gui1LN_TGLayoutManager = { "TGLayoutManager" , 99 , -1 };
 G__linked_taginfo G__G__Gui1LN_TGVerticalLayout = { "TGVerticalLayout" , 99 , -1 };
 G__linked_taginfo G__G__Gui1LN_TGHorizontalLayout = { "TGHorizontalLayout" , 99 , -1 };
@@ -9660,6 +9763,78 @@ G__linked_taginfo G__G__Gui1LN_TGMenuEntry = { "TGMenuEntry" , 99 , -1 };
 G__linked_taginfo G__G__Gui1LN_TGMenuTitle = { "TGMenuTitle" , 99 , -1 };
 G__linked_taginfo G__G__Gui1LN_TGMenuBar = { "TGMenuBar" , 99 , -1 };
 
+/* Reset class/struct taginfo */
+extern "C" void G__cpp_reset_tagtableG__Gui1() {
+  G__G__Gui1LN_TClass.tagnum = -1 ;
+  G__G__Gui1LN_TList.tagnum = -1 ;
+  G__G__Gui1LN_TTimer.tagnum = -1 ;
+  G__G__Gui1LN_TObject.tagnum = -1 ;
+  G__G__Gui1LN_TRefCnt.tagnum = -1 ;
+  G__G__Gui1LN_TString.tagnum = -1 ;
+  G__G__Gui1LN_EGEventType.tagnum = -1 ;
+  G__G__Gui1LN_PictureAttributes_t.tagnum = -1 ;
+  G__G__Gui1LN_TGClient.tagnum = -1 ;
+  G__G__Gui1LN_TGObject.tagnum = -1 ;
+  G__G__Gui1LN_THashList.tagnum = -1 ;
+  G__G__Gui1LN_TGWindow.tagnum = -1 ;
+  G__G__Gui1LN_TGPicturePool.tagnum = -1 ;
+  G__G__Gui1LN_TGPicture.tagnum = -1 ;
+  G__G__Gui1LN_TGMimeTypes.tagnum = -1 ;
+  G__G__Gui1LN_THashTable.tagnum = -1 ;
+  G__G__Gui1LN_TGSelectedPicture.tagnum = -1 ;
+  G__G__Gui1LN_TGDimension.tagnum = -1 ;
+  G__G__Gui1LN_TGPosition.tagnum = -1 ;
+  G__G__Gui1LN_ELayoutHints.tagnum = -1 ;
+  G__G__Gui1LN_TGFrame.tagnum = -1 ;
+  G__G__Gui1LN_TGCompositeFrame.tagnum = -1 ;
+  G__G__Gui1LN_TGLayoutHints.tagnum = -1 ;
+  G__G__Gui1LN_TGFrameElement.tagnum = -1 ;
+  G__G__Gui1LN_TGLayoutManager.tagnum = -1 ;
+  G__G__Gui1LN_TGVerticalLayout.tagnum = -1 ;
+  G__G__Gui1LN_TGHorizontalLayout.tagnum = -1 ;
+  G__G__Gui1LN_TGRowLayout.tagnum = -1 ;
+  G__G__Gui1LN_TGColumnLayout.tagnum = -1 ;
+  G__G__Gui1LN_TGMatrixLayout.tagnum = -1 ;
+  G__G__Gui1LN_TGTileLayout.tagnum = -1 ;
+  G__G__Gui1LN_TGListLayout.tagnum = -1 ;
+  G__G__Gui1LN_TGListDetailsLayout.tagnum = -1 ;
+  G__G__Gui1LN_TGString.tagnum = -1 ;
+  G__G__Gui1LN_TGHotString.tagnum = -1 ;
+  G__G__Gui1LN_EFrameState.tagnum = -1 ;
+  G__G__Gui1LN_EFrameType.tagnum = -1 ;
+  G__G__Gui1LN_EMWMHints.tagnum = -1 ;
+  G__G__Gui1LN_TGVerticalFrame.tagnum = -1 ;
+  G__G__Gui1LN_TGHorizontalFrame.tagnum = -1 ;
+  G__G__Gui1LN_TGMainFrame.tagnum = -1 ;
+  G__G__Gui1LN_TGTransientFrame.tagnum = -1 ;
+  G__G__Gui1LN_TGGroupFrame.tagnum = -1 ;
+  G__G__Gui1LN_ETextJustification.tagnum = -1 ;
+  G__G__Gui1LN_EWidgetStatus.tagnum = -1 ;
+  G__G__Gui1LN_EWidgetMessageTypes.tagnum = -1 ;
+  G__G__Gui1LN_TGWidget.tagnum = -1 ;
+  G__G__Gui1LN_TGIcon.tagnum = -1 ;
+  G__G__Gui1LN_TGLabel.tagnum = -1 ;
+  G__G__Gui1LN_EButtonState.tagnum = -1 ;
+  G__G__Gui1LN_TGToolTip.tagnum = -1 ;
+  G__G__Gui1LN_TGButton.tagnum = -1 ;
+  G__G__Gui1LN_TGTextButton.tagnum = -1 ;
+  G__G__Gui1LN_TGPictureButton.tagnum = -1 ;
+  G__G__Gui1LN_TGCheckButton.tagnum = -1 ;
+  G__G__Gui1LN_TGRadioButton.tagnum = -1 ;
+  G__G__Gui1LN_TGTextBuffer.tagnum = -1 ;
+  G__G__Gui1LN_TBlinkTimer.tagnum = -1 ;
+  G__G__Gui1LN_TGTextEntry.tagnum = -1 ;
+  G__G__Gui1LN_EMsgBoxIcon.tagnum = -1 ;
+  G__G__Gui1LN_EMsgBoxButton.tagnum = -1 ;
+  G__G__Gui1LN_TGMsgBox.tagnum = -1 ;
+  G__G__Gui1LN_EMenuEntryState.tagnum = -1 ;
+  G__G__Gui1LN_EMenuEntryType.tagnum = -1 ;
+  G__G__Gui1LN_TGPopupMenu.tagnum = -1 ;
+  G__G__Gui1LN_TGMenuEntry.tagnum = -1 ;
+  G__G__Gui1LN_TGMenuTitle.tagnum = -1 ;
+  G__G__Gui1LN_TGMenuBar.tagnum = -1 ;
+}
+
 extern "C" void G__cpp_setup_tagtableG__Gui1() {
 
    /* Setting up class,struct,union tag entry */
@@ -9675,6 +9850,7 @@ extern "C" void G__cpp_setup_tagtableG__Gui1() {
    G__tagtable_setup(G__get_linked_tagnum(&G__G__Gui1LN_TGFrame),sizeof(TGFrame),-1,0,"Base class for simple widgets (button, etc.)",G__setup_memvarTGFrame,G__setup_memfuncTGFrame);
    G__tagtable_setup(G__get_linked_tagnum(&G__G__Gui1LN_TGCompositeFrame),sizeof(TGCompositeFrame),-1,0,"Base class for composite widgets (menubars, etc.)",G__setup_memvarTGCompositeFrame,G__setup_memfuncTGCompositeFrame);
    G__tagtable_setup(G__get_linked_tagnum(&G__G__Gui1LN_TGLayoutHints),sizeof(TGLayoutHints),-1,0,"Class describing GUI layout hints",G__setup_memvarTGLayoutHints,G__setup_memfuncTGLayoutHints);
+   G__tagtable_setup(G__get_linked_tagnum(&G__G__Gui1LN_TGFrameElement),sizeof(TGFrameElement),-1,0,(char*)NULL,G__setup_memvarTGFrameElement,G__setup_memfuncTGFrameElement);
    G__tagtable_setup(G__get_linked_tagnum(&G__G__Gui1LN_TGLayoutManager),sizeof(TGLayoutManager),-1,2,"Layout manager abstract base class",G__setup_memvarTGLayoutManager,G__setup_memfuncTGLayoutManager);
    G__tagtable_setup(G__get_linked_tagnum(&G__G__Gui1LN_TGVerticalLayout),sizeof(TGVerticalLayout),-1,0,"Vertical layout manager",G__setup_memvarTGVerticalLayout,G__setup_memfuncTGVerticalLayout);
    G__tagtable_setup(G__get_linked_tagnum(&G__G__Gui1LN_TGHorizontalLayout),sizeof(TGHorizontalLayout),-1,0,"Horizontal layout manager",G__setup_memvarTGHorizontalLayout,G__setup_memfuncTGHorizontalLayout);
@@ -9743,7 +9919,7 @@ class G__cpp_setup_initG__Gui1 {
 G__cpp_setup_initG__Gui1 G__cpp_setup_initializerG__Gui1;
 
 //
-// File generated by /user/brun/root/bin/rootcint at Tue Dec 15 18:03:15 1998.
+// File generated by /user/brun/root/bin/rootcint at Mon Mar 15 08:52:05 1999.
 // Do NOT change. Changes will be lost next time file is generated
 //
 
@@ -10036,6 +10212,7 @@ void TGFrame::ShowMembers(TMemberInspector &R__insp, char *R__parent)
    R__insp.Inspect(R__cl, R__parent, "fHeight", &fHeight);
    R__insp.Inspect(R__cl, R__parent, "fBorderWidth", &fBorderWidth);
    R__insp.Inspect(R__cl, R__parent, "fOptions", &fOptions);
+   R__insp.Inspect(R__cl, R__parent, "fBackground", &fBackground);
    TGWindow::ShowMembers(R__insp, R__parent);
 }
 

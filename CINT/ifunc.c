@@ -1,5 +1,5 @@
-/*CMZ :  2.20/04 08/12/98  16.25.26  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   08/12/98*/
+/*CMZ :  2.21/08 17/03/99  13.13.41  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   17/03/99*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -23,6 +23,27 @@
  ************************************************************************/
 
 #include "common.h"
+
+
+#ifndef G__OLDIMPLEMENTATION1003
+/***********************************************************************
+ * G__warn_refpromotion
+***********************************************************************/
+static void G__warn_refpromotion(p_ifunc,ifn,itemp,libp)
+struct G__ifunc_table *p_ifunc;
+int ifn;
+int itemp;
+struct G__param *libp; /* argument buffer */
+{
+  if(G__PARAREFERENCE==p_ifunc->para_reftype[ifn][itemp] &&
+     'u'!=p_ifunc->para_type[ifn][itemp] &&
+     p_ifunc->para_type[ifn][itemp]!=libp->para[itemp].type &&
+     G__VARIABLE==p_ifunc->para_isconst[ifn][itemp]) {
+    fprintf(G__serr,"Warning: implicit type conversion of non-const reference arg %d",itemp);
+    G__printlinenum();
+  }
+}
+#endif
 
 
 #ifdef G__ASM_WHOLEFUNC
@@ -144,9 +165,15 @@ int hash; /* not use */
 #define G__LOCALBUFSIZE 32
   char localbuf[G__LOCALBUFSIZE];
 #endif
+#ifndef G__OLDIMPLEMENTATION1016
+  struct G__var_array *var;
+#endif
 
   /* use funcname as bytecode struct */
   bytecode = (struct G__bytecodefunc*)funcname;
+#ifndef G__OLDIMPLEMENTATION1016
+  var = bytecode->var;
+#endif
 
 #ifdef G__ASM_DBG
   if(G__asm_dbg||G__dispsource) {
@@ -215,13 +242,68 @@ int hash; /* not use */
   /* copy arguments to stack in reverse order */
 #ifndef G__OLDIMPLEMENTATION834
   {
+#ifndef G__OLDIMPLEMENTATION1016
+    struct G__var_array *var = bytecode->var;
+#endif
     struct G__param *mlibp = libp;
     while(mlibp) {
       for(i=0;i<mlibp->paran;i++) {
 	int j=mlibp->paran-i-1; /* THIS IS NOT CORRECT */
 	G__asm_stack[j] = mlibp->para[i];
-	if(0==G__asm_stack[j].ref)
+	if(0==G__asm_stack[j].ref) {
+#ifndef G__OLDIMPLEMENTATION1016
+	  if(var) {
+	    switch(var->type[i]) {
+	    case 'f':
+	      G__Mfloat(mlibp->para[i]);
+	      G__asm_stack[j].ref=(long)(&mlibp->para[i].obj.fl);
+	      break;
+	    case 'd':
+	      G__asm_stack[j].ref=(long)(&mlibp->para[i].obj.d);
+	      break;
+	    case 'c':
+	      G__Mchar(mlibp->para[i]);
+	      G__asm_stack[j].ref=(long)(&mlibp->para[i].obj.ch);
+	      break;
+	    case 's':
+	      G__Mshort(mlibp->para[i]);
+	      G__asm_stack[j].ref=(long)(&mlibp->para[i].obj.sh);
+	      break;
+	    case 'i':
+	      G__Mint(mlibp->para[i]);
+	      G__asm_stack[j].ref=(long)(&mlibp->para[i].obj.in);
+	      break;
+	    case 'l':
+	      G__asm_stack[j].ref=(long)(&mlibp->para[i].obj.l);
+	      break;
+	    case 'b':
+	      G__Muchar(mlibp->para[i]);
+	      G__asm_stack[j].ref=(long)(&mlibp->para[i].obj.uch);
+	      break;
+	    case 'r':
+	      G__Mushort(mlibp->para[i]);
+	      G__asm_stack[j].ref=(long)(&mlibp->para[i].obj.ush);
+	      break;
+	    case 'h':
+	      G__Muint(mlibp->para[i]);
+	      G__asm_stack[j].ref=(long)(&mlibp->para[i].obj.uin);
+	      break;
+	    case 'k':
+	      G__asm_stack[j].ref=(long)(&mlibp->para[i].obj.l);
+	      break;
+	    case 'u':
+	      G__asm_stack[j].ref=mlibp->para[i].obj.l;
+	      break;
+	    default:
+	      G__asm_stack[j].ref=(long)(&mlibp->para[i].obj.l);
+	      break;
+	    }
+	    if(i>=var->allvar) var=var->next;
+	  }
+#else
 	  G__asm_stack[j].ref=(long)(&mlibp->para[i].obj);
+#endif
+	}
       }
       mlibp=mlibp->next;
     }
@@ -230,8 +312,60 @@ int hash; /* not use */
   for(i=0;i<libp->paran;i++) {
     int j=libp->paran-i-1;
     G__asm_stack[j] = libp->para[i];
-    if(0==G__asm_stack[j].ref)
+    if(0==G__asm_stack[j].ref) {
+#ifndef G__OLDIMPLEMENTATION1016
+      if(var) {
+	switch(var->type[i]) {
+	case 'f':
+	  G__Mfloat(libp->para[i]);
+	  G__asm_stack[j].ref=(long)(&libp->para[i].obj.fl);
+	  break;
+	case 'd':
+	  G__asm_stack[j].ref=(long)(&libp->para[i].obj.d);
+	  break;
+	case 'c':
+	  G__Mchar(libp->para[i]);
+	  G__asm_stack[j].ref=(long)(&libp->para[i].obj.ch);
+	  break;
+	case 's':
+	  G__Mshort(libp->para[i]);
+	  G__asm_stack[j].ref=(long)(&libp->para[i].obj.sh);
+	  break;
+	case 'i':
+	  G__Mint(libp->para[i]);
+	  G__asm_stack[j].ref=(long)(&libp->para[i].obj.in);
+	  break;
+	case 'l':
+	  G__asm_stack[j].ref=(long)(&libp->para[i].obj.i);
+	  break;
+	case 'b':
+	  G__Muchar(libp->para[i]);
+	  G__asm_stack[j].ref=(long)(&libp->para[i].obj.uch);
+	  break;
+	case 'r':
+	  G__Mushort(libp->para[i]);
+	  G__asm_stack[j].ref=(long)(&libp->para[i].obj.ush);
+	  break;
+	case 'h':
+	  /* G__Muint(libp->para[i]); */
+	  G__asm_stack[j].ref=(long)(&libp->para[i].obj.i);
+	  break;
+	case 'k':
+	  G__asm_stack[j].ref=(long)(&libp->para[i].obj.i);
+	  break;
+	case 'u':
+	  G__asm_stack[j].ref=libp->para[i].obj.i;
+	  break;
+	default:
+	  G__asm_stack[j].ref=(long)(&libp->para[i].obj.i);
+	  break;
+	}
+	if(i>=var->allvar) var=var->next;
+      }
+#else
       G__asm_stack[j].ref=(long)(&libp->para[i].obj);
+#endif
+    }
   }
 #endif
 
@@ -497,7 +631,7 @@ char* label;
     }
   }
   else {
-    G__asm_noverflow=0;
+    G__abortbytecode();
   }
 }
 
@@ -520,7 +654,7 @@ char* label;
     }
   }
   else {
-    G__asm_noverflow=0;
+    G__abortbytecode();
   }
 }
 
@@ -756,8 +890,8 @@ char *funcheader;   /* funcheader = 'funcname(' */
 
 
   /*************************************************************
-   * check if the function is main(), if so, increment global
-   * variable G__ismain.
+   * check if the function is operator()(), if so, regenerate
+   * hash value
    *************************************************************/
   if(G__HASH_OPERATOR==G__p_ifunc->hash[func_now] &&
      strcmp(G__p_ifunc->funcname[func_now],"operator")==0) {
@@ -964,25 +1098,20 @@ char *funcheader;   /* funcheader = 'funcname(' */
 	break;
       }
     }
-    else if(G__istypename(paraname)
-#ifndef G__OLDIMPLEMENTATION846
-	    || strchr(paraname,'[')
-#endif
-	    ) {
+    else if(G__istypename(paraname) || strchr(paraname,'[')) {
       G__p_ifunc->ansi[func_now]=1;
       isvoid=0;
     }
     else {
+#ifndef G__OLDIMPLEMENTATION976
+      if(G__def_struct_member) G__genericerror("Syntax error");
+#endif
       G__p_ifunc->ansi[func_now]=0;
       isvoid=0;
     }
   }
   else {
-    if(G__def_struct_member
-#ifndef G__OLDIMPLEMENTATION509
-       || G__iscpp
-#endif
-       ) G__p_ifunc->ansi[func_now]=1;
+    if(G__def_struct_member || G__iscpp) G__p_ifunc->ansi[func_now]=1;
     else                     G__p_ifunc->ansi[func_now]=0;
     isvoid=1;
   }
@@ -1059,8 +1188,8 @@ char *funcheader;   /* funcheader = 'funcname(' */
   G__mparen=0;
   if((paraname[0]=='\0'
 #ifndef G__OLDIMPLEMETATION817
-      ||strncmp(paraname,"throw(",6)==0
-      ||strncmp(paraname,"const throw(",12)==0
+      ||((strncmp(paraname,"throw",5)==0
+	 ||strncmp(paraname,"const throw",11)==0)&&0==strchr(paraname,'='))
 #endif
       ) &&((cin==',')||(cin==';'))) {
     /* this is ANSI style func proto without param name */
@@ -1084,7 +1213,13 @@ char *funcheader;   /* funcheader = 'funcname(' */
 
   else if(strncmp(paraname,"=",1)==0 ||
 	  strncmp(paraname,"const =",7)==0 ||
-	  strncmp(paraname,"const=",6)==0) {
+	  strncmp(paraname,"const=",6)==0
+#ifndef G__OLDIMPLEMETATION817
+	  ||((strncmp(paraname,"throw",5)==0
+	      ||strncmp(paraname,"const throw",11)==0)
+	     &&0!=strchr(paraname,'='))
+#endif
+	  ) {
     char *p;
     p=strchr(paraname,'=');
     if(0!=G__int(G__getexpr(p+1))) {
@@ -1110,7 +1245,8 @@ char *funcheader;   /* funcheader = 'funcname(' */
     G__p_ifunc->entry[func_now].line_number = -1;
     G__p_ifunc->ispurevirtual[func_now]=1;
     if(G__tagdefining>=0) ++G__struct.isabstract[G__tagdefining];
-    G__p_ifunc->isconst[func_now]|=G__CONSTFUNC;
+    if(0==strncmp(paraname,"const",5))
+      G__p_ifunc->isconst[func_now]|=G__CONSTFUNC;
   }
 
   else if(strcmp(paraname,"const")==0 ||
@@ -1197,7 +1333,11 @@ char *funcheader;   /* funcheader = 'funcname(' */
       cin = G__fignorestream("{");
     }
     if(G__HASH_MAIN==G__p_ifunc->hash[func_now] &&
-       strcmp(G__p_ifunc->funcname[func_now],"main")==0) {
+       strcmp(G__p_ifunc->funcname[func_now],"main")==0
+#ifndef G__OLDIMPLEMENTATION971
+       && -1==G__def_tagnum
+#endif
+       ) {
       G__ismain=G__MAINEXIST ;
     }
     /* following part is needed to detect inline new/delete in header */
@@ -1710,7 +1850,17 @@ int func_now;
 	  c=G__fgetstream(name+1,"[=,)& \t");
 	  if(strcmp(name,"const")==0) {
 	    ifunc->para_isconst[func_now][iin]|=G__PCONSTVAR;
+#ifndef G__OLDIMPLEMENTATION1009
+	    name[0]=0;
+#endif
 	  }
+#ifndef G__OLDIMPLEMENTATION1009
+	  if(strcmp(name,"const*")==0) {
+	    ifunc->para_isconst[func_now][iin]|=G__PCONSTVAR;
+	    ++pointlevel;
+	    name[0]=0;
+	  }
+#endif
 	  else {
 #ifndef G__OLDIMPLEMENTATION573
 	    while('['==c || ']'==c) {
@@ -2060,6 +2210,10 @@ int memfunc_flag;
 			,libp->para[itemp].tagnum
 			,funcmatch);
 	      }
+#endif
+#ifndef G__OLDIMPLEMENTATION1003
+	      if(G__EXACT!=funcmatch)
+		G__warn_refpromotion(p_ifunc,ifn,itemp,libp);
 #endif
 	      ++itemp; /* next function parameter */
 	      break;
@@ -2854,7 +3008,55 @@ asm_ifunc_start:   /* loop compilation execution label */
       if(ipara<libp->paran) {
 	G__ansipara=libp->para[ipara];
 	/* assigning reference for fundamental type reference argument */
-#ifndef G__OLDIMPLEMENTATION724
+#ifndef G__OLDIMPLEMENTATION1016
+	if(0==G__ansipara.ref) {
+	  switch(p_ifunc->para_type[ifn][ipara]) {
+	  case 'f':
+	    G__Mfloat(libp->para[ipara]);
+	    G__ansipara.ref = (long)(&libp->para[ipara].obj.fl);
+	    break;
+	  case 'd':
+	    G__ansipara.ref = (long)(&libp->para[ipara].obj.d);
+	    break;
+	  case 'c':
+	    G__Mchar(libp->para[ipara]);
+	    G__ansipara.ref = (long)(&libp->para[ipara].obj.ch);
+	    break;
+	  case 's':
+	    G__Mshort(libp->para[ipara]);
+	    G__ansipara.ref = (long)(&libp->para[ipara].obj.sh);
+	    break;
+	  case 'i':
+	    G__Mint(libp->para[ipara]);
+	    G__ansipara.ref = (long)(&libp->para[ipara].obj.in);
+	    break;
+	  case 'l':
+	    G__ansipara.ref = (long)(&libp->para[ipara].obj.i);
+	    break;
+	  case 'b':
+	    G__Muchar(libp->para[ipara]);
+	    G__ansipara.ref = (long)(&libp->para[ipara].obj.uch);
+	    break;
+	  case 'r':
+	    G__Mushort(libp->para[ipara]);
+	    G__ansipara.ref = (long)(&libp->para[ipara].obj.ush);
+	    break;
+	  case 'h':
+	    /* G__Muint(libp->para[ipara]); */
+	    G__ansipara.ref = (long)(&libp->para[ipara].obj.i);
+	    break;
+	  case 'k':
+	    G__ansipara.ref = (long)(&libp->para[ipara].obj.i);
+	    break;
+	  case 'u':
+	    G__ansipara.ref = G__ansipara.obj.i;
+	    break;
+          default:
+	    G__ansipara.ref = (long)(&libp->para[ipara].obj.i);
+	    break;
+	  }
+	}
+#else
 	if(0==G__ansipara.ref)
 	  G__ansipara.ref = (long)(&libp->para[ipara].obj);
 #endif
@@ -2903,7 +3105,7 @@ asm_ifunc_start:   /* loop compilation execution label */
 	G__inc_cp_asm(2,1);
 
 	G__asm_inst[G__asm_wholefunc_default_cp]=G__asm_cp;
-	G__asm_noverflow=0; /* mask default param evaluation */
+	G__abortbytecode(); /* mask default param evaluation */
 	G__exec_statement(); /* Create var entry and ST_LVAR inst */
 	G__asm_wholefunc_default_cp=0;
 	G__asm_noverflow=1;
@@ -3063,7 +3265,13 @@ asm_ifunc_start:   /* loop compilation execution label */
        * which will be destroyed right after this.
        ***************************************************/
     case 'u': /* struct, union, class */
-      if(result7->type=='u' &&
+      if(
+#ifndef G__OLDIMPLEMENTATION1011
+	 (result7->type=='u' || (result7->type=='i'&& -1!=result7->tagnum))
+#else
+	 result7->type=='u'
+#endif
+	 &&
 	 result7->tagnum == p_ifunc->p_tagtable[ifn]) {
 	
 	/* don't call copy constructor if returning reference type */
@@ -3269,7 +3477,7 @@ asm_ifunc_start:   /* loop compilation execution label */
    **************************************************************/
   if(G__ASM_FUNC_COMPILE&G__asm_wholefunction) {
     if(G__NOERROR!=G__security_error) {
-      G__asm_noverflow=0;
+      G__abortbytecode();
     }
     if(G__asm_noverflow) {
       int pc=0;
@@ -3289,7 +3497,7 @@ asm_ifunc_start:   /* loop compilation execution label */
       G__resolve_jumptable_bytecode();
 #endif
       if(G__asm_loopcompile>=2) G__asm_optimize(&pc);
-      G__asm_noverflow=0;
+      G__abortbytecode();
       G__no_exec_compile = store_no_exec_compile;
       G__asm_storebytecodefunc(p_ifunc,ifn,localvar
 			       ,G__asm_stack,G__asm_dt
@@ -3304,7 +3512,7 @@ asm_ifunc_start:   /* loop compilation execution label */
 #ifndef G__OLDIMPLEMENTATION513
       free(G__asm_name);
 #endif
-      G__asm_noverflow=0;
+      G__abortbytecode();
       G__no_exec_compile = store_no_exec_compile;
       /* destroy local memory area */
       G__destroy(localvar,G__BYTECODELOCAL_VAR) ;
@@ -3464,6 +3672,12 @@ int rewind_arg;
       }
 
     }
+#ifndef G__OLDIMPLEMENTATION978
+    else if('I'==param_type&&'U'==formal_type&&param_tagnum==formal_tagnum&&
+	    -1!=formal_tagnum&&'e'==G__struct.type[formal_tagnum]) {
+      match=1;
+    }
+#endif
     else {  /* unmatch */
       match=0;
     }
@@ -3856,12 +4070,51 @@ int rewind_arg;
 #endif
 	}
 	else {
+#ifndef G__OLDIMPLEMENTATION1018
+	  sprintf(conv,"operator %s()",G__fulltagname(formal_tagnum,1));
+	  G__store_struct_offset = param->obj.i;
+	  G__tagnum = param->tagnum;
+	  reg=G__getfunction(conv,&match,G__TRYMEMFUNC);
+	  if(!match) G__store_tempobject(G__null);
+#else
 	  G__store_tempobject(G__null);
+#endif
 	}
       }
       else {
 	/* in case of interpreted class */
 	G__getfunction(conv,&match,G__TRYCONSTRUCTOR);
+#ifndef G__OLDIMPLEMENTATION1018
+	if(match) {
+	  if(G__asm_noverflow) {
+#ifdef G__ASM_DBG
+	    if(G__asm_dbg) fprintf(G__serr,"%3x: POPTEMP\n",G__asm_cp);
+#endif
+	    G__asm_inst[G__asm_cp] = G__POPTEMP;
+	    G__asm_inst[G__asm_cp+1] = formal_tagnum;
+	    G__inc_cp_asm(2,0);
+	  }
+	}
+	else {
+	  if(G__asm_noverflow) G__inc_cp_asm(-3,0);
+	  sprintf(conv,"operator %s()",G__fulltagname(formal_tagnum,1));
+	  G__store_struct_offset = param->obj.i;
+	  G__tagnum = param->tagnum;
+	  reg=G__getfunction(conv,&match,G__TRYMEMFUNC);
+	  if(!match) {
+	    if(G__asm_noverflow) {
+	      if(rewindflag) {
+		G__asm_inst[G__asm_cp-2]=G__REWINDSTACK;
+		G__asm_inst[G__asm_cp-1] = rewind_arg;
+	      }
+#ifdef G__ASM_DBG
+	      if(G__asm_dbg)
+		fprintf(G__serr,"ALLOCTEMP,SETTEMP Cancelled %x\n",G__asm_cp);
+#endif
+	    }
+	  }
+	}
+#else /* ON1018 */
 #ifdef G__ASM
 	if(G__asm_noverflow) {
 	  if(match) {
@@ -3885,6 +4138,7 @@ int rewind_arg;
 	  }
 	}
 #endif
+#endif /* ON1018 */
       }
       --recursive;
 
@@ -4241,6 +4495,10 @@ int funcmatch;
 			,libp->para[itemp].tagnum
 			,funcmatch);
 	      }
+#endif
+#ifndef G__OLDIMPLEMENTATION1003
+	      if(G__EXACT!=funcmatch)
+		G__warn_refpromotion(p_ifunc,ifn,itemp,libp);
 #endif
 	      ++itemp; /* next function parameter */
 	      break;

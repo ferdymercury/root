@@ -1,3 +1,5 @@
+//*CMZ :  2.21/05 09/02/99  02.03.13  by  Fons Rademakers
+//*CMZ :  2.21/00 28/12/98  17.12.49  by  Rene Brun
 //*CMZ :  2.20/05 15/12/98  09.17.19  by  Rene Brun
 //*CMZ :  1.03/09 10/12/97  12.23.42  by  Rene Brun
 //*-- Author :    Rene Brun   12/12/94
@@ -53,15 +55,18 @@ TBox::TBox(): TObject(), TAttLine(), TAttFill()
 //*-*-*-*-*-*-*-*-*-*-*Box default constructor-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 //*-*                  =======================
 
+   fTip = 0;
 }
 
 //______________________________________________________________________________
-TBox::TBox(Coord_t x1, Coord_t y1,Coord_t x2, Coord_t  y2)
-     :TObject(), TAttLine(),  TAttFill()
+TBox::TBox(Coord_t x1, Coord_t y1, Coord_t x2, Coord_t y2)
+     : TObject(), TAttLine(), TAttFill()
 {
 //*-*-*-*-*-*-*-*-*-*-*Box standard constructor-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 //*-*                  ========================
    fX1=x1; fY1=y1; fX2=x2; fY2=y2;
+   fResizing = kFALSE;
+   fTip = 0;
 }
 
 //______________________________________________________________________________
@@ -70,6 +75,10 @@ TBox::~TBox()
 //*-*-*-*-*-*-*-*-*-*-*Box destructor*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 //*-*                  ==============
 
+   if (gPad) {
+      gPad->CloseToolTip(fTip);
+      gPad->DeleteToolTip(fTip);
+   }
 }
 
 //______________________________________________________________________________
@@ -91,6 +100,8 @@ void TBox::Copy(TObject &obj)
    ((TBox&)obj).fY1 = fY1;
    ((TBox&)obj).fX2 = fX2;
    ((TBox&)obj).fY2 = fY2;
+   ((TBox&)obj).fResizing = fResizing;
+   ((TBox&)obj).fTip = 0;   //FIXME
 }
 
 //______________________________________________________________________________
@@ -189,6 +200,8 @@ void TBox::ExecuteEvent(Int_t event, Int_t px, Int_t py)
 //    PD                    B                      PC
 //
 
+   if (!gPad) return;
+
    const Int_t kMaxDiff = 5;
    const Int_t kMinSize = 20;
 
@@ -209,9 +222,20 @@ void TBox::ExecuteEvent(Int_t event, Int_t px, Int_t py)
       parent = gPad;
    }
 
+   HideToolTip(event);
+
 again:
 
    switch (event) {
+
+   case kMouseEnter:
+      if (fTip)
+         gPad->ResetToolTip(fTip);
+      break;
+
+   case kButton1Double:
+      px1 = -1; //used by kButton1Up
+      break;
 
    case kButton1Down:
 
@@ -427,6 +451,7 @@ again:
 
    case kButton1Up:
 
+      if (px1 < 0 ) break;
       if (PA) {
          fX1 = gPad->AbsPixeltoX(px);
          fY1 = gPad->AbsPixeltoY(pyt);
@@ -492,6 +517,17 @@ again:
 }
 
 //______________________________________________________________________________
+void TBox::HideToolTip(Int_t event)
+{
+   // Hide tool tip depending on the event type. Typically tool tips
+   // are hidden when event is not a kMouseEnter and not a kMouseMotion
+   // event.
+
+   if (event != kMouseEnter && event != kMouseMotion && fTip && gPad)
+      gPad->CloseToolTip(fTip);
+}
+
+//______________________________________________________________________________
 void TBox::ls(Option_t *)
 {
 //*-*-*-*-*-*-*-*-*-*-*-*List this box with its attributes*-*-*-*-*-*-*-*-*
@@ -552,4 +588,25 @@ void TBox::SavePrimitive(ofstream &out, Option_t *)
    SaveLineAttributes(out,"box",1,1,1);
 
    out<<"   box->Draw();"<<endl;
+}
+
+//______________________________________________________________________________
+void TBox::SetToolTipText(const char *text, Long_t delayms)
+{
+   // Set tool tip text associated with this box. The delay is in
+   // milliseconds (minimum 250). To remove tool tip call method with
+   // text = 0.
+
+   if (!gPad) {
+      Warning("SetToolTipText", "a canvas must exist before setting the tool tip text");
+      return;
+   }
+
+   if (fTip) {
+      gPad->DeleteToolTip(fTip);
+      fTip = 0;
+   }
+
+   if (text && strlen(text))
+      fTip = gPad->CreateToolTip(this, text, delayms);
 }

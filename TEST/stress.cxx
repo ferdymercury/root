@@ -1,3 +1,7 @@
+//*CMZ :  2.21/07 02/03/99  19.11.59  by  Rene Brun
+//*CMZ :  2.21/06 17/02/99  19.01.48  by  Rene Brun
+//*CMZ :  2.21/04 05/02/99  08.59.52  by  Rene Brun
+//*CMZ :  2.21/03 19/01/99  17.43.26  by  Rene Brun
 //*CMZ :  2.20/05 14/12/98  14.42.43  by  Rene Brun
 //*CMZ :  2.20/00 24/11/98  16.47.10  by  Rene Brun
 //*-- Author :    Rene Brun   05/11/98
@@ -64,6 +68,7 @@
 //
 //_____________________________batch only_____________________
 #ifndef __CINT__
+
 #include <TROOT.h>
 #include <TH1.h>
 #include <TH2.h>
@@ -105,6 +110,7 @@
    void stress14();
    void stress15();
    void stress16();
+   void cleanup();
    Double_t(*func)(double *, double *);
 
    TROOT root("stress","The Root test program");
@@ -113,7 +119,7 @@ int main(int argc, char **argv)
 {
    TApplication theApp("App", &argc, argv);
    gBenchmark = new TBenchmark();
-   Int_t nevent = 1000;     // by default create 1000 events
+   Int_t nevent = 1000;      // by default create 1000 events
    if (argc > 1)  nevent = atoi(argv[1]);
    stress(nevent);
    return 0;
@@ -122,7 +128,7 @@ int main(int argc, char **argv)
 #endif
 //_______________________common part_________________________
 
-   Double_t ntotin=0, ntotout=0;
+Double_t ntotin=0, ntotout=0;
 
 void stress(Int_t nevent)
 {
@@ -153,18 +159,19 @@ void stress(Int_t nevent)
    stress14();
    stress15();
    stress16();
-  gBenchmark->Stop("stress");
+   gBenchmark->Stop("stress");
+
+   cleanup();
 
    //Print table with results
-  Bool_t UNIX = strcmp(gSystem->GetName(), "Unix") == 0;
+   Bool_t UNIX = strcmp(gSystem->GetName(), "Unix") == 0;
    printf("******************************************************************\n");
    if (UNIX) {
-      gSystem->Exec("uname -a >stress.uname");
-      FILE *fp = fopen("stress.uname","r");
+      FILE *fp = gSystem->OpenPipe("uname -a", "r");
       char line[60];
       fgets(line,60,fp); line[59] = 0;
       printf("*  %s\n",line);
-      fclose(fp);
+      gSystem->ClosePipe(fp);
    } else {
       const char *os = gSystem->Getenv("OS");
       if (!os) printf("*  Windows 95\n");
@@ -315,8 +322,8 @@ void stress2()
    Float_t comp = f.GetCompressionFactor();
 
    Bool_t OK = kTRUE;
-   Int_t lastgood = 4099;
-   if (last <lastgood-100 || last > lastgood+100 || comp <1.43 || comp > 1.45) OK = kFALSE;
+   Int_t lastgood = 4176;
+   if (last <lastgood-200 || last > lastgood+200 || comp <1.42 || comp > 1.45) OK = kFALSE;
    if (OK) printf("OK\n");
    else    {
       printf("failed\n");
@@ -345,8 +352,8 @@ void stress3()
    Int_t last = f.GetEND();
    Float_t comp = f.GetCompressionFactor();
    Bool_t OK = kTRUE;
-   Int_t lastgood = 41989;
-   if (last <lastgood-200 || last > lastgood+200 || comp <1.43 || comp > 1.45) OK = kFALSE;
+   Int_t lastgood = 41798;
+   if (last <lastgood-300 || last > lastgood+300 || comp <1.42 || comp > 1.46) OK = kFALSE;
    if (OK) printf("OK\n");
    else    {
       printf("failed\n");
@@ -443,8 +450,8 @@ void stress5()
    FILE *fp = fopen("stress.ps","r");
    char line[200];
    Int_t nlines = 0;
-   Int_t nlinesGood = 1707;
-   while (fgets(line,200,fp)) {
+   Int_t nlinesGood = 1789;
+   while (fgets(line,199,fp)) {
       nlines++;
    }
    fclose(fp);
@@ -693,7 +700,7 @@ Int_t stress8read(Int_t nevent)
 
    TFile *hfile = new TFile("Event.root");
    TTree *tree = (TTree*)hfile->Get("T");
-   Event *event = new Event();
+   Event *event = 0;
    tree->SetBranchAddress("event",&event);
    Int_t nentries = (Int_t)tree->GetEntries();
    Int_t nev = TMath::Max(nevent,nentries);
@@ -703,8 +710,8 @@ Int_t stress8read(Int_t nevent)
    }
    ntotin  += hfile->GetBytesRead();
 
-   delete hfile;
    delete event;
+   delete hfile;
    return nb;
 }
 
@@ -753,8 +760,8 @@ Int_t stress8write(Int_t nevent, Int_t comp, Int_t split)
    }
    hfile->Write();
    ntotout += hfile->GetBytesWritten();
-   delete hfile;
    delete event;
+   delete hfile;
    return nb;
 }
 
@@ -1067,6 +1074,7 @@ void stress10()
       chfile[file]->Write();
       delete chfile[file];
    }
+   event->ResetHistogramPointer(); // fH was deleted above!!
    delete event;
    delete hfile;
    Event::Reset();
@@ -1174,6 +1182,7 @@ void stress13()
 
    chain->Merge("Event.root");
 
+   event->ResetHistogramPointer(); // fH was deleted above!!
    delete event;
    Event::Reset();
    gROOT->GetList()->Delete();
@@ -1211,7 +1220,7 @@ void stress15()
    Bprint(15,"Divert Tree branches to separate files");
 
    //Get old file, old tree and set top branch address
-   //Ww want to copy only a few branches.
+   //We want to copy only a few branches.
    TFile *oldfile = new TFile("Event.root");
    TTree *oldtree = (TTree*)oldfile->Get("T");
    Event *event   = new Event();
@@ -1234,9 +1243,9 @@ void stress15()
    newfile->Write();
    ntotin  += oldfile->GetBytesRead();
    ntotout += newfile->GetBytesWritten();
+   delete event;
    delete newfile;
    delete oldfile;
-   delete event;
    Event::Reset();
    gROOT->GetList()->Delete();
 
@@ -1370,7 +1379,7 @@ void stress16()
    FILE *fp = fopen("stress_lhcb.ps","r");
    char line[200];
    Int_t nlines = 0;
-   Int_t nlinesGood = 7988;
+   Int_t nlinesGood = 8063;
    while (fgets(line,200,fp)) {
       nlines++;
    }
@@ -1383,4 +1392,27 @@ void stress16()
       printf("failed\n");
       printf("%-8s nlines in stress_lhcb.ps file = %d\n"," ",nlines);
    }
+}
+
+void cleanup()
+{
+   gSystem->Unlink("Event.root");
+   gSystem->Unlink("Event_0.root");
+   gSystem->Unlink("Event_1.root");
+   gSystem->Unlink("Event_2.root");
+   gSystem->Unlink("Event_3.root");
+   gSystem->Unlink("Event_4.root");
+   gSystem->Unlink("Event_5.root");
+   gSystem->Unlink("Event_6.root");
+   gSystem->Unlink("Event_7.root");
+   gSystem->Unlink("Event_8.root");
+   gSystem->Unlink("Event_9.root");
+   gSystem->Unlink("stress.ps");
+   gSystem->Unlink("stress.root");
+   gSystem->Unlink("stress_fH.root");
+   gSystem->Unlink("stress_lhcb.ps");
+   gSystem->Unlink("stress_lhcb.root");
+   gSystem->Unlink("stress_small.root");
+   gSystem->Unlink("stress_test9.root");
+   gSystem->Unlink("stress_test11.root");
 }

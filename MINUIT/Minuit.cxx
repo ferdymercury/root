@@ -1,3 +1,8 @@
+//*CMZ :  2.21/08 18/03/99  10.13.13  by  Rene Brun
+//*CMZ :  2.21/06 10/02/99  17.39.17  by  Rene Brun
+//*CMZ :  2.21/05 10/02/99  13.28.01  by  Rene Brun
+//*CMZ :  2.21/03 22/01/99  08.36.40  by  Rene Brun
+//*CMZ :  2.21/01 12/01/99  09.06.04  by  Rene Brun
 //*CMZ :  2.20/05 14/12/98  14.48.17  by  Rene Brun
 //*CMZ :  2.20/00 12/11/98  09.18.25  by  Rene Brun
 //*CMZ :  2.00/13 29/10/98  16.45.19  by  Rene Brun
@@ -292,6 +297,7 @@ some variables.
 TMinuit *gMinuit;
 
 const Int_t kMAXDIM = 100;
+static char charal[29] = " .ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 ClassImp(TMinuit)
 
@@ -394,7 +400,7 @@ void TMinuit::BuildArrays(Int_t maxpar)
    fWord7  = new Double_t[30];
    fXpt    = new Double_t[maxcpt];
    fYpt    = new Double_t[maxcpt];
-   fChpt   = new TString[maxcpt];
+   fChpt   = new char[maxcpt+1];
    fOrigin = new TString[100];
    fWarmes = new TString[100];
 
@@ -403,6 +409,37 @@ void TMinuit::BuildArrays(Int_t maxpar)
       fErn[i] = 0;
    }
 }
+
+//______________________________________________________________________________
+Int_t TMinuit::Command(const char *command)
+{
+// execute a Minuit command
+//     Equivalent to MNEXCM except that the command is given as a
+//     character string.
+// See TMinuit::mnhelp for the full list of available commands
+//
+// Returns the status of the execution:
+//   = 0: command executed normally
+//     1: command is blank, ignored
+//     2: command line unreadable, ignored
+//     3: unknown command, ignored
+//     4: abnormal termination (e.g., MIGRAD not converged)
+//     5: command is a request to read PARAMETER definitions
+//     6: 'SET INPUT' command
+//     7: 'SET TITLE' command
+//     8: 'SET COVAR' command
+//     9: reserved
+//    10: END command
+//    11: EXIT or STOP command
+//    12: RETURN command
+//
+//*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+
+   Int_t status = 0;
+   mncomd(command,status);
+   return status;
+}
+
 //______________________________________________________________________________
 TGraph *TMinuit::Contour(const char *graphname, Int_t npoints, Int_t pa1, Int_t pa2)
 {
@@ -447,6 +484,19 @@ TGraph *TMinuit::Contour(const char *graphname, Int_t npoints, Int_t pa1, Int_t 
   delete [] xcoor;
   delete [] ycoor;
   return gr;
+}
+
+//______________________________________________________________________________
+Int_t TMinuit::DefineParameter( Int_t parNo, const char *name, Double_t initVal, Double_t initErr, Double_t lowerLimit, Double_t upperLimit )
+{
+// Define a parameter
+
+     Int_t err;
+
+     TString sname = name;
+     mnparm( parNo, sname, initVal, initErr, lowerLimit, upperLimit, err);
+
+     return err;
 }
 
 //______________________________________________________________________________
@@ -498,6 +548,66 @@ void TMinuit::DeleteArrays()
 }
 
 //______________________________________________________________________________
+Int_t TMinuit::FixParameter( Int_t parNo)
+{
+// fix a parameter
+
+     Int_t err;
+     Double_t tmp = parNo+1; //set internal Minuit nuumbering
+
+     mnexcm( "FIX", &tmp,  1,  err );
+
+     return err;
+}
+
+//______________________________________________________________________________
+Int_t TMinuit::GetParameter( Int_t parNo, Double_t &currentValue, Double_t &currentError )
+{
+// return parameter value and error
+     Int_t    err;
+     TString  name; // ignored
+     Double_t bnd1, bnd2; // ignored
+
+     mnpout( parNo, name, currentValue, currentError, bnd1, bnd2, err );
+
+     return err;
+}
+
+//______________________________________________________________________________
+Int_t TMinuit::Migrad()
+{
+// invokes the MIGRAD minimizer
+     Int_t err;
+
+     mnexcm( "MIGRAD", NULL, 0, err );
+
+     return err;
+}
+
+//______________________________________________________________________________
+Int_t TMinuit::Release( Int_t parNo)
+{
+// release a parameter
+
+     Int_t err;
+     Double_t tmp = parNo+1; //set internal Minuit numbering
+
+     mnexcm( "RELEASE", &tmp, 1, err );
+
+     return err;
+}
+
+//______________________________________________________________________________
+Int_t TMinuit::SetErrorDef( Double_t up )
+{
+     Int_t err;
+
+     mnexcm( "SET ERRDEF", &up, 1, err );
+
+     return err;
+}
+
+//______________________________________________________________________________
 void TMinuit::SetFCN(void (*fcn)(Int_t &, Double_t *, Double_t &f, Double_t *, Int_t))
 {
 //*-*-*-*-*-*-*To set the address of the minimization function*-*-*-*-*-*-*-*
@@ -520,7 +630,7 @@ void InteractiveFCN(Int_t &npar, Double_t *gin, Double_t &f, Double_t *u, Int_t 
    args[1] = (Long_t)gin;
    args[2] = (Long_t)&f;
    args[3] = (Long_t)u;
-   args[4] = (Long_t)&flag;
+   args[4] = (Long_t)flag;
    m->SetParamPtrs(args);
    Double_t result;
    m->Execute(result);
@@ -542,6 +652,17 @@ void TMinuit::SetFCN(void *fcn)
       fMethodCall->InitWithPrototype(funcname,"Int_t&,Double_t*,Double_t&,Double_t*,Int_t");
     }
    fFCN = InteractiveFCN;
+}
+
+//______________________________________________________________________________
+Int_t TMinuit::SetPrintLevel( Int_t printLevel )
+{
+     Int_t    err;
+     Double_t tmp = printLevel;
+
+     mnexcm( "SET PRINT", &tmp, 1, err );
+
+     return err;
 }
 
 //______________________________________________________________________________
@@ -711,7 +832,7 @@ void TMinuit::mncler()
 } /* mncler_ */
 
 //______________________________________________________________________________
-void TMinuit::mncntr(Int_t ke1, Int_t ke2, Int_t &ierrf)
+void TMinuit::mncntr(Int_t ike1, Int_t ike2, Int_t &ierrf)
 {
 //*-*-*-*-*Print function contours in two variables, on line printer*-*-*-*-*
 //*-*      =========================================================
@@ -729,6 +850,8 @@ void TMinuit::mncntr(Int_t ke1, Int_t ke2, Int_t &ierrf)
     static Int_t i,  ngrid, ixmid, nparx, ix, nx, ny, ki1, ki2, ixzero, iy, ics;
     static TString chmid, chln, chzero;
 
+    Int_t ke1 = ike1+1;
+    Int_t ke2 = ike2+1;
     if (ke1 <= 0 || ke2 <= 0) goto L1350;
     if (ke1 > fNu || ke2 > fNu) goto L1350;
     ki1 = fNiofex[ke1-1];
@@ -870,7 +993,7 @@ L1350:
 } /* mncntr_ */
 
 //______________________________________________________________________________
-void TMinuit::mncomd(TString crdbin, Int_t &icondn)
+void TMinuit::mncomd(const char *crdbin, Int_t &icondn)
 {
 //*-*-*-*-*-*-*-*-*-*-*Reads a command string and executes*-*-*-*-*-*-*-*-*-*
 //*-*                  ===================================
@@ -894,81 +1017,74 @@ void TMinuit::mncomd(TString crdbin, Int_t &icondn)
 //*-*
 //*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 
-    static TString clower = "abcdefghijklmnopqrstuvwxyz";
-    static TString cupper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-
     /* Local variables */
     static Double_t plist[30];
-    static Int_t ierr, ipos, i, llist, ic, lenbuf, lnc;
+    static Int_t ierr, ipos, i, llist, lenbuf, lnc;
     static Bool_t leader;
     static TString comand, crdbuf, ctemp;
 
-    lenbuf = strlen((const char*)crdbin);
     crdbuf = crdbin;
+    crdbuf.ToUpper();
+    lenbuf = crdbuf.Length();
     icondn = 0;
 //*-*-    record not case-sensitive, get upper case, strip leading blanks
     leader = kTRUE;
     ipos = 1;
     for (i = 1; i <= TMath::Min(20,lenbuf); ++i) {
-	if (crdbuf[i-1] == '\'') goto L111;
+	if (crdbuf[i-1] == '\'') break;
 	if (crdbuf[i-1] == ' ') {
 	    if (leader) ++ipos;
 	    continue;
 	}
 	leader = kFALSE;
-	for (ic = 1; ic <= 26; ++ic) {
-	    if (crdbuf[i-1] == clower[ic-1]) crdbuf[i-1] = cupper[ic-1];
-	}
     }
-L111:
+
 //*-*-                    blank or null command
     if (ipos > lenbuf) {
 	Printf(" BLANK COMMAND IGNORED.");
 	icondn = 1;
-	goto L900;
+	return;
     }
 //*-*-                                          . .   preemptive commands
 //*-*-              if command is 'PARAMETER'
     if (crdbuf(ipos-1,3) == "PAR") {
 	icondn = 5;
 	fLphead = kTRUE;
-	goto L900;
+	return;
     }
 //*-*-              if command is 'SET INPUT'
     if (crdbuf(ipos-1,3) == "SET INP") {
 	icondn = 6;
 	fLphead = kTRUE;
-	goto L900;
+	return;
     }
 //*-*-              if command is 'SET TITLE'
     if (crdbuf(ipos-1,7) == "SET TIT") {
 	icondn = 7;
 	fLphead = kTRUE;
-	goto L900;
+	return;
     }
 //*-*-              if command is 'SET COVARIANCE'
     if (crdbuf(ipos-1,7) == "SET COV") {
 	icondn = 8;
 	fLphead = kTRUE;
-	goto L900;
+	return;
     }
 //*-*-              crack the command . . . . . . . . . . . . . . . .
-    ctemp = crdbuf(ipos-1,7);
+    ctemp = crdbuf(ipos-1,lenbuf-ipos+1);
     mncrck(ctemp, 20, comand, lnc, 30, plist, llist, ierr, fIsyswr);
     if (ierr > 0) {
 	Printf(" COMMAND CANNOT BE INTERPRETED");
 	icondn = 2;
-	goto L900;
+	return;
     }
 
     mnexcm(comand, plist, llist, ierr);
     icondn = ierr;
-L900:
-    return;
 } /* mncomd_ */
 
 //______________________________________________________________________________
-void TMinuit::mncont(Int_t ke1, Int_t ke2, Int_t nptu, Double_t *xptu, Double_t *yptu, Int_t &ierrf)
+void TMinuit::mncont(Int_t ike1, Int_t ike2, Int_t nptu, Double_t *xptu, Double_t *yptu, Int_t &ierrf)
 {
 //*-*-*-*-*-*-*Find points along a contour where FCN is minimum*-*-*-*-*-*-*
 //*-*          ================================================
@@ -998,6 +1114,8 @@ void TMinuit::mncont(Int_t ke1, Int_t ke2, Int_t nptu, Double_t *xptu, Double_t 
     static Bool_t ldebug;
 
     /* Function Body */
+    Int_t ke1 = ike1+1;
+    Int_t ke2 = ike2+1;
     ldebug = fIdbg[6] >= 1;
     if (ke1 <= 0 || ke2 <= 0) goto L1350;
     if (ke1 > fNu || ke2 > fNu) goto L1350;
@@ -1082,10 +1200,7 @@ void TMinuit::mncont(Int_t ke1, Int_t ke2, Int_t nptu, Double_t *xptu, Double_t 
 	    fXpt[i-1] = xptu[i-2];
 	    fYpt[i-1] = yptu[i-2];
 	}
-	fChpt[1] = 'A';
-	fChpt[2] = 'B';
-	fChpt[3] = 'C';
-	fChpt[4] = 'D';
+	sprintf(fChpt,"%s"," ABCD");
 	mnplot(fXpt, fYpt, fChpt, nall, fNpagwd, fNpagln);
     }
 
@@ -1184,6 +1299,7 @@ L950:
 	    fYpt[i-1]  = yptu[i-2];
 	    fChpt[i-1] = 'X';
 	}
+        fChpt[nall] = 0;
         Printf(" Y-AXIS: PARAMETER %3d  %s",ke2,(const char*)fCpnam[ke2-1]);
 
 	mnplot(fXpt, fYpt, fChpt, nall, fNpagwd, fNpagln);
@@ -1252,12 +1368,11 @@ L2000:
 } /* mncont_ */
 
 //______________________________________________________________________________
-void TMinuit::mncrck(TString &crdbuf, Int_t maxcwd, TString &comand, Int_t &lnc,
+void TMinuit::mncrck(TString cardbuf, Int_t maxcwd, TString &comand, Int_t &lnc,
         Int_t mxp, Double_t *plist, Int_t &llist, Int_t &ierr, Int_t)
 {
 //*-*-*-*-*-*-*-*-*-*-*-*Cracks the free-format input*-*-*-*-*-*-*-*-*-*-*-*-*
 //*-*                    ============================
-//*-*       Called from MNREAD.
 //*-*       Cracks the free-format input, expecting zero or more
 //*-*         alphanumeric fields (which it joins into COMAND(1:LNC))
 //*-*         followed by one or more numeric fields separated by
@@ -1265,22 +1380,24 @@ void TMinuit::mncrck(TString &crdbuf, Int_t maxcwd, TString &comand, Int_t &lnc,
 //*-*         the LLIST (but at most MXP) elements of PLIST.
 //*-*      IERR = 0 if no errors,
 //*-*           = 1 if error(s).
-//*-*      Diagnostic messages are written to ISYSWR
 //*-*
 //*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
     /* Initialized data */
 
-    static TString cnull  = ")NULL STRING   ";
-    static TString cnumer = "123456789-.0+";
+    char *cnull  = 0;
+    char *cnumer = "123456789-.0+";
 
     /* Local variables */
     static Int_t ifld, iend, lend, left, nreq, ipos, kcmnd, nextb, ic, ibegin, ltoadd;
     static Int_t ielmnt, lelmnt[25], nelmnt;
-    static TString celmnt[25], ctemp;
+    static TString ctemp;
+    char *celmnt[25];
+    char command[25];
 
     /* Function Body */
+    char *crdbuf = (char*)cardbuf.Data();
+    lend   = cardbuf.Length();
     ielmnt = 0;
-    lend   = strlen((const char*)crdbuf);
     nextb  = 1;
     ierr   = 0;
 //*-*-                                  . . . .  loop over words CELMNT
@@ -1302,14 +1419,14 @@ L150:
 L250:
     iend = ipos - 1;
     ++ielmnt;
-    if (iend >= ibegin) celmnt[ielmnt-1] = crdbuf(ibegin-1, iend-ibegin+1);
+    if (iend >= ibegin) celmnt[ielmnt-1] = &crdbuf[ibegin-1];
     else                celmnt[ielmnt-1] = cnull;
     lelmnt[ielmnt-1] = iend - ibegin + 1;
     if (lelmnt[ielmnt-1] > 19) {
 	Printf(" MINUIT WARNING: INPUT DATA WORD TOO LONG.");
-        ctemp = crdbuf(ibegin-1,iend-ibegin+1);
-        Printf("     ORIGINAL:%s",(const char*)ctemp);
-        Printf(" TRUNCATED TO:%s",(const char*)celmnt[ielmnt-1]);
+        ctemp = cardbuf(ibegin-1,iend-ibegin+1);
+        Printf("     ORIGINAL:%s",ctemp.Data());
+        Printf(" TRUNCATED TO:%s",celmnt[ielmnt-1]);
 	lelmnt[ielmnt-1] = 19;
     }
     if (ipos >= lend) goto L300;
@@ -1324,27 +1441,28 @@ L250:
 //*-*-                All elements found, join the alphabetic ones to
 //*-*-                               form a command
 L300:
-    nelmnt   = ielmnt;
-    comand   = " ";
-    lnc      = 1;
-    plist[0] = 0;
-    llist    = 0;
+    nelmnt      = ielmnt;
+    command[0]  = ' '; command[1] = 0;
+    lnc         = 1;
+    plist[0]    = 0;
+    llist       = 0;
     if (ielmnt == 0) goto L900;
     kcmnd = 0;
     for (ielmnt = 1; ielmnt <= nelmnt; ++ielmnt) {
 	if ( celmnt[ielmnt-1] == cnull) goto L450;
 	for (ic = 1; ic <= 13; ++ic) {
-	    if (celmnt[ielmnt-1](0,1) == cnumer(ic-1,1)) goto L450;
+	    if (*celmnt[ielmnt-1] == cnumer[ic-1]) goto L450;
 	}
 	if (kcmnd >= maxcwd) continue;
 	left = maxcwd - kcmnd;
 	ltoadd = lelmnt[ielmnt-1];
 	if (ltoadd > left) ltoadd = left;
-	comand(kcmnd,ltoadd) =  celmnt[ielmnt-1](0,ltoadd);
+	strncpy(&command[kcmnd],celmnt[ielmnt-1],ltoadd);
 	kcmnd += ltoadd;
 	if (kcmnd == maxcwd) continue;
-	comand(kcmnd,1) = ' ';
+	command[kcmnd] = ' ';
 	++kcmnd;
+	command[kcmnd] = 0;
     }
     lnc = kcmnd;
     goto L900;
@@ -1353,7 +1471,7 @@ L450:
 //*-*-                     . . . .  we have come to a numeric field
     llist = 0;
     for (ifld = ielmnt; ifld <= nelmnt; ++ifld) {
-	++(llist);
+	++llist;
 	if (llist > mxp) {
 	    nreq = nelmnt - ielmnt + 1;
 	    Printf(" MINUIT WARNING IN MNCRCK: ");
@@ -1362,12 +1480,13 @@ L450:
 	}
 	if (celmnt[ifld-1] == cnull) plist[llist-1] = 0;
 	else {
-            Printf("Fatal Error: mnerr code not yet implemented.");
+            sscanf(celmnt[ifld-1],"%lf",&plist[llist-1]);
 	}
     }
 //*-*-                                 end loop over numeric fields
 L900:
     if (lnc <= 0) lnc = 1;
+    comand = command;
 } /* mncrck_ */
 
 //______________________________________________________________________________
@@ -1383,8 +1502,6 @@ void TMinuit::mncros(Double_t &aopt, Int_t &iercr)
 //*-*        (U(KE1),U(KE2)) = (XMID,YMID) + AOPT*(XDIR,YDIR)
 //*-*
 //*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
-
-    static TString charal = " .ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
     /* Local variables */
     static Double_t alsb[3], flsb[3], bmin, bmax, zmid, sdev, zdir, zlim;
@@ -1449,7 +1566,7 @@ void TMinuit::mncros(Double_t &aopt, Int_t &iercr)
     ++ipt;
     fXpt[ipt-1]  = anext;
     fYpt[ipt-1]  = fnext;
-    fChpt[ipt-1] = charal(ipt-1,1);
+    fChpt[ipt-1] = charal[ipt-1];
     alsb[0] = anext;
     flsb[0] = fnext;
     fnext   = TMath::Max(fnext,aminsv + fUp*.1);
@@ -1474,7 +1591,7 @@ void TMinuit::mncros(Double_t &aopt, Int_t &iercr)
     ++ipt;
     fXpt[ipt-1]  = alsb[1];
     fYpt[ipt-1]  = fnext;
-    fChpt[ipt-1] = charal(ipt-1,1);
+    fChpt[ipt-1] = charal[ipt-1];
     flsb[1]      = fnext;
     dfda         = (flsb[1] - flsb[0]) / (alsb[1] - alsb[0]);
 //*-*-                  DFDA must be positive on the contour
@@ -1502,7 +1619,7 @@ L300:
 	++ipt;
 	fXpt[ipt-1]  = alsb[1];
 	fYpt[ipt-1]  = fnext;
-	fChpt[ipt-1] = charal(ipt-1,1);
+	fChpt[ipt-1] = charal[ipt-1];
 	flsb[1]      = fnext;
 	dfda         = (flsb[1] - flsb[0]) / (alsb[1] - alsb[0]);
 	if (dfda > 0) goto L450;
@@ -1540,7 +1657,7 @@ L460:
     ++ipt;
     fXpt[ipt-1]  = alsb[2];
     fYpt[ipt-1]  = fnext;
-    fChpt[ipt-1] = charal(ipt-1,1);
+    fChpt[ipt-1] = charal[ipt-1];
     flsb[2]      = fnext;
 //*-*-               now we have three points, ask how many <AIM
     ecarmn = TMath::Abs(fnext-aim);
@@ -1654,7 +1771,7 @@ L500:
     ++ipt;
     fXpt[ipt-1]  = aopt;
     fYpt[ipt-1]  = fnext;
-    fChpt[ipt-1] = charal(ipt-1,1);
+    fChpt[ipt-1] = charal[ipt-1];
 //*-*-               Replace odd point by new one
     alsb[iout-1] = aopt;
     flsb[iout-1] = fnext;
@@ -1693,7 +1810,8 @@ L1000:
 		itoohi     = 1;
 	    }
 	}
-	chsign = "POSI";
+	fChpt[ipt] = 0;
+        chsign = "POSI";
 	if (fXdircr < 0) chsign = "NEGA";
 	if (fKe2cr == 0) {
 	    Printf("  %sTIVE MINOS ERROR, PARAMETER %3d",chsign,fKe1cr);
@@ -2255,7 +2373,7 @@ void TMinuit::mnexcm(TString comand, Double_t *plist, Int_t llist, Int_t &ierflg
 
     static TString clower = "abcdefghijklmnopqrstuvwxyz";
     static TString cupper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    static TString cname[40] = {
+    char *cname[40] = {
       "MINImize  ",
       "SEEk      ",
       "SIMplex   ",
@@ -2312,7 +2430,7 @@ void TMinuit::mnexcm(TString comand, Double_t *plist, Int_t llist, Int_t &ierflg
 
     /* Function Body */
 
-    lk = strlen((const char*)comand);
+    lk = comand.Length();
     if (lk > 20) lk = 20;
     fCword =  comand;
 //*-*-             get upper case
@@ -2372,8 +2490,9 @@ void TMinuit::mnexcm(TString comand, Double_t *plist, Int_t llist, Int_t &ierflg
     fISW[0] = 0;
     ierflg = 0;
 //*-*-               look for command in list CNAME . . . . . . . . . .
+    ctemp = fCword(0,3);
     for (i = 1; i <= nntot; ++i) {
-	if (fCword(0,3) == cname[i-1](0,3)) goto L90;
+	if (strncmp(ctemp.Data(),cname[i-1],3) == 0) goto L90;
     }
     Printf("UNKNOWN COMMAND IGNORED:%s", comand.Data());
     ierflg = 3;
@@ -2580,7 +2699,7 @@ L1300:
 	}
     }
     fNfcnmx = 1000;
-    mncntr(ke1, ke2, ierrf);
+    mncntr(ke1-1, ke2-1, ierrf);
     if (ierrf > 0) ierflg = 3;
     return;
 //*-*-                                       . . . . . . . . . . hesse
@@ -2657,7 +2776,7 @@ L2300:
     }
 L2320:
     if (kcol == 0) comd = "*   ";
-    else           comd = fCword[kcol-1];
+    else           comd = fCword(kcol-1,lk-kcol+1);
     mnhelp(comd);
     return;
 //*-*-                                      . . . . . . . . . . MNContour
@@ -2673,7 +2792,7 @@ L2400:
     if (nptu <= 0)  nptu = 20;
     if (nptu > 101) nptu = 101;
     fNfcnmx = (nptu + 5)*100*(fNpar + 1);
-    mncont(ke1, ke2, nptu, xptu, yptu, ierrf);
+    mncont(ke1-1, ke2-1, nptu, xptu, yptu, ierrf);
     if (ierrf < nptu) ierflg = 4;
     if (ierrf == -1)  ierflg = 3;
     return;
@@ -3036,7 +3155,7 @@ void TMinuit::mnhelp(TString comd)
 //*-*  ====================================
 //*-*
     comd.ToUpper();
-    if( comd=='*' || comd=='?' || comd=="" || comd=="HELP" ) {
+    if( comd[0] == '*' || comd[0] == '?' || comd[0] == 0 || comd=="HELP" ) {
        Printf("   ==>List of MINUIT Interactive commands:");
        Printf(" CLEar     Reset all parameter names and values undefined");
        Printf(" CONtour   Make contour map of the user function");
@@ -4356,15 +4475,14 @@ void TMinuit::mnline(Double_t *start, Double_t fstart, Double_t *step, Double_t 
 //*-*   but cannot be smaller than SLAMBG.
 //*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 
-    const TString charal = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-
     /* Local variables */
     static Double_t xpq[12], ypq[12], slam, sdev, coeff[3], denom, flast;
     static Double_t fvals[3], xvals[3], f1, fvmin, xvmin, ratio, f2, f3, fvmax;
     static Double_t toler8, toler9, overal, undral, slamin, slamax, slopem;
     static Int_t i, nparx, nvmax, nxypt, kk, ipt;
     static Bool_t ldebug;
-    TString cmess, chpq[12];
+    TString cmess;
+    char chpq[13];
     int     l65, l70, l80;
 
     /* Function Body */
@@ -4388,7 +4506,7 @@ void TMinuit::mnline(Double_t *start, Double_t fstart, Double_t *step, Double_t 
     fvmin   = fstart;
     xvmin   = 0;
     nxypt   = 1;
-    chpq[0] = charal(0,1);
+    chpq[0] = charal[0];
     xpq[0]  = 0;
     ypq[0]  = fstart;
 //*-*-              SLAMIN = smallest possible value of ABS(SLAM)
@@ -4408,7 +4526,7 @@ void TMinuit::mnline(Double_t *start, Double_t fstart, Double_t *step, Double_t 
     mninex(fX);
     (*fFCN)(nparx, fGin, f1, fU, 4);    ++fNfcn;
     ++nxypt;
-    chpq[nxypt-1] = charal(nxypt-1,1);
+    chpq[nxypt-1] = charal[nxypt-1];
     xpq[nxypt-1] = 1;
     ypq[nxypt-1] = f1;
     if (f1 < fstart) {
@@ -4444,9 +4562,10 @@ void TMinuit::mnline(Double_t *start, Double_t fstart, Double_t *step, Double_t 
        }
        for (i = 1; i <= fNpar; ++i) { fX[i-1] = start[i-1] + slam*step[i-1]; }
        mninex(fX);
-       (*fFCN)(fNpar, fGin, f2, fU, 4);    ++fNfcn;
+       nparx = fNpar;
+       (*fFCN)(nparx, fGin, f2, fU, 4);    ++fNfcn;
        ++nxypt;
-       chpq[nxypt-1] = charal(nxypt-1,1);
+       chpq[nxypt-1] = charal[nxypt-1];
        xpq[nxypt-1]  = slam;
        ypq[nxypt-1]  = f2;
        if (f2 < fvmin) {
@@ -4504,7 +4623,7 @@ void TMinuit::mnline(Double_t *start, Double_t fstart, Double_t *step, Double_t 
              mninex(fX);
              (*fFCN)(nparx, fGin, f3, fU, 4);    ++fNfcn;
              ++nxypt;
-             chpq[nxypt-1] = charal(nxypt-1,1);
+             chpq[nxypt-1] = charal[nxypt-1];
              xpq[nxypt-1]  = slam;
              ypq[nxypt-1]  = f3;
 //*-*-            find worst previous point out of three
@@ -5669,7 +5788,7 @@ void TMinuit::mnpint(Double_t &pexti, Int_t i1, Double_t &pinti)
 } /* mnpint_ */
 
 //______________________________________________________________________________
-void TMinuit::mnplot(Double_t *xpt, Double_t *ypt, TString *chpt, Int_t nxypt, Int_t npagwd, Int_t npagln)
+void TMinuit::mnplot(Double_t *xpt, Double_t *ypt, char *chpt, Int_t nxypt, Int_t npagwd, Int_t npagln)
 {
  //*-*-*-*Plots points in array xypt onto one page with labelled axes*-*-*-*-*
  //*-*    ===========================================================
@@ -5685,7 +5804,6 @@ void TMinuit::mnplot(Double_t *xpt, Double_t *ypt, TString *chpt, Int_t nxypt, I
 
      static TString cdot   = ".";
      static TString cslash = "/";
-     static TString cblank = " ";
 
      /* Local variables */
      static Double_t xmin, ymin, xmax, ymax, savx, savy, yprt;
@@ -5693,8 +5811,10 @@ void TMinuit::mnplot(Double_t *xpt, Double_t *ypt, TString *chpt, Int_t nxypt, I
      static Double_t xvalus[12], any, dxx, dyy;
      static Int_t iten, i, j, k, maxnx, maxny, iquit, ni, linodd;
      static Int_t nxbest, nybest, km1, ibk, isp1, nx, ny, ks, ix;
-     static TString cline, chsav, chmess, chbest, ctemp;
+     static TString chmess, ctemp;
      static Bool_t overpr;
+     char cline[120];
+     char chsav, chbest;
 
      /* Function Body */
  //*-*  Computing MIN
@@ -5746,7 +5866,7 @@ void TMinuit::mnplot(Double_t *xpt, Double_t *ypt, TString *chpt, Int_t nxypt, I
      mnbins(ymin, ymax, maxny, ymin, ymax, ny, bwidy);
      any = (Double_t) ny;
  //*-*-        if first point is blank, it is an 'origin'
-     if (chbest == cblank) goto L50;
+     if (chbest == ' ') goto L50;
      xbest = (xmax + xmin)*.5;
      ybest = (ymax + ymin)*.5;
  L50:
@@ -5769,14 +5889,14 @@ void TMinuit::mnplot(Double_t *xpt, Double_t *ypt, TString *chpt, Int_t nxypt, I
      linodd = 1;
      overpr = kFALSE;
      for (i = 1; i <= ny; ++i) {
- 	for (ibk = 1; ibk <= nx; ++ibk) { cline(ibk-1) = ' '; }
- 	cline(nx) = '\0';
- 	cline(nx+1) = '\0';
- 	cline(0)        = '.';
- 	cline(nx-1)     = '.';
- 	cline(nxbest-1) = '.';
+ 	for (ibk = 1; ibk <= nx; ++ibk) { cline[ibk-1] = ' '; }
+ 	cline[nx] = '\0';
+ 	cline[nx+1] = '\0';
+ 	cline[0]        = '.';
+ 	cline[nx-1]     = '.';
+ 	cline[nxbest-1] = '.';
  	if (i != 1 && i != nybest && i != ny) goto L320;
- 	for (j = 1; j <= nx; ++j) { cline(j-1) = '.'; }
+ 	for (j = 1; j <= nx; ++j) { cline[j-1] = '.'; }
  L320:
  	yprt = ymax - Double_t(i-1)*bwidy;
  	if (isp1 > nxypt) goto L350;
@@ -5785,16 +5905,16 @@ void TMinuit::mnplot(Double_t *xpt, Double_t *ypt, TString *chpt, Int_t nxypt, I
  	    ks = Int_t(ypt[k-1]);
  	    if (ks > i) goto L345;
  	    ix = Int_t(xpt[k-1]);
- 	    if (cline(ix-1) == '.')   goto L340;
- 	    if (cline(ix-1) == ' ') goto L340;
- 	    if (cline(ix-1) == chpt[k-1](0))   continue;
+ 	    if (cline[ix-1] == '.')   goto L340;
+ 	    if (cline[ix-1] == ' ') goto L340;
+ 	    if (cline[ix-1] == chpt[k-1])   continue;
  	    overpr = kTRUE;
  //*-*-        OVERPR is true if one or more positions contains more than
  //*-*-           one point
- 	    cline(ix-1) = '&';
+ 	    cline[ix-1] = '&';
  	    continue;
  L340:
- 	    cline(ix-1) = chpt[k-1](0);
+ 	    cline[ix-1] = chpt[k-1];
  	}
  	isp1 = nxypt + 1;
  	goto L350;
@@ -5803,11 +5923,11 @@ void TMinuit::mnplot(Double_t *xpt, Double_t *ypt, TString *chpt, Int_t nxypt, I
  L350:
  	if (linodd == 1 || i == ny) goto L380;
  	linodd = 1;
- 	ctemp  = cline(0,nx);
+ 	ctemp  = cline;
  	Printf("                  %s",(const char*)ctemp);
  	goto L400;
  L380:
- 	ctemp = cline(0,nx);
+ 	ctemp = cline;
  	Printf(" %14.7g ..%s",yprt,(const char*)ctemp);
  	linodd = 0;
  L400:
@@ -5815,10 +5935,10 @@ void TMinuit::mnplot(Double_t *xpt, Double_t *ypt, TString *chpt, Int_t nxypt, I
      }
  //*-*-        print labels on x-axis every ten columns
      for (ibk = 1; ibk <= nx; ++ibk) {
- 	cline(ibk-1) = ' ';
- 	if (ibk % 10 == 1) cline(ibk-1) = '/';
+ 	cline[ibk-1] = ' ';
+ 	if (ibk % 10 == 1) cline[ibk-1] = '/';
      }
-     Printf("                  %s",(const char*)cline);
+     Printf("                  %s",cline);
 
      for (ibk = 1; ibk <= 12; ++ibk) {
  	xvalus[ibk-1] = xmin + Double_t(ibk-1)*10*bwidx;
@@ -6376,6 +6496,8 @@ L500:
 	}
 	unext += step;
     }
+    fChpt[nccall] = 0;
+
 //*-*-        finished with scan of parameter IPAR
     fU[ipar-1] = ubest;
     mnexin(fX);
@@ -6504,7 +6626,7 @@ void TMinuit::mnset()
 
     /* Initialized data */
 
-    static TString cname[30] = {
+    static char *cname[30] = {
       "FCN value ",
       "PARameters",
       "LIMits    ",
@@ -6570,18 +6692,20 @@ void TMinuit::mnset()
     static Bool_t lname;
 
     for (i = 1; i <= nntot; ++i) {
-	ctemp  = cname[i-1](0,3);
-	ctemp2 = fCword(3,7);
-	if (strstr((const char*)ctemp2, (const char*)ctemp)) goto L5;
+	ctemp  = cname[i-1];
+	ckind  = ctemp(0,3);
+        ctemp2 = fCword(4,6);
+	if (strstr(ctemp2.Data(),ckind.Data())) goto L5;
     }
     i = 0;
 L5:
     kname = i;
 
 //*-*-          Command could be SET xxx, SHOW xxx,  HELP SET or HELP SHOW
-    if (fCword(0,3) == "HEL")  goto L2000;
-    if (fCword(0,3) == "SHO")  goto L1000;
-    if (fCword(0,3) != "SET")  goto L1900;
+    ctemp2 = fCword(0,3);
+    if ( ctemp2.Contains("HEL"))  goto L2000;
+    if ( ctemp2.Contains("SHO"))  goto L1000;
+    if (!ctemp2.Contains("SET"))  goto L1900;
 //*-*-                          ---
     ckind = "SET ";
 //*-*-                                       . . . . . . . . . . set unknown
@@ -6993,14 +7117,14 @@ L1900:
 //*-*-                   HELP SHOW,  HELP SET,  SHOW SET, or SHOW SHOW
 L2000:
     ckind = "SET ";
-    ctemp = fCword(3,7);
-    if (strcmp((const char*)ctemp, "SHO")) ckind = "SHOW";
+    ctemp2 = fCword(3,7);
+    if (strcmp(ctemp2.Data(), "SHO")) ckind = "SHOW";
 L2100:
     Printf(" THE FORMAT OF THE %4s COMMAND IS:",(const char*)ckind);
     Printf(" %s xxx    [numerical arguments if any]",(const char*)ckind);
     Printf(" WHERE xxx MAY BE ONE OF THE FOLLOWING:");
     for (kk = 1; kk <= nname; ++kk) {
-        Printf(" %s",(const char*)cname[kk-1]);
+        Printf(" %s",cname[kk-1]);
     }
     return;
 //*-*-               -----------------------------------------------------

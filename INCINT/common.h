@@ -1,5 +1,5 @@
-/*CMZ :  2.20/04 08/12/98  16.25.21  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   08/12/98*/
+/*CMZ :  2.21/08 17/03/99  13.13.37  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   17/03/99*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -403,15 +403,9 @@ struct G__breakcontinue_list {
 * loop compiler
 *  limit numbers
 *********************************************/
-#ifdef G__SMALLOBJECT
-#define G__MAXINST     0x100
-#define G__MAXSTACK    0x40
-#define G__MAXSTRSTACK  0x10
-#else
-#define G__MAXINST     0x800
+#define G__MAXINST     0x1000
 #define G__MAXSTACK    0x100
 #define G__MAXSTRSTACK  0x10
-#endif
 
 /*********************************************
 * macros for loop compiler
@@ -535,6 +529,9 @@ struct G__Definedtemplateclass {
   struct G__IntList *instantiatedtagnum;
   int isforwarddecl;
 #endif
+#ifndef G__OLDIMPLEMENTATION972
+  int friendtagnum;
+#endif
 };
 
 
@@ -569,6 +566,9 @@ struct G__Definetemplatefunc {
   struct G__Definetemplatefunc *next;
 #ifndef G__OLDIMPLEMENTATION687
   int parent_tagnum;
+#endif
+#ifndef G__OLDIMPLEMENTATION972
+  int friendtagnum;
 #endif
 };
 

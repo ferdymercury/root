@@ -1,4 +1,5 @@
-//*CMZ :  2.20/00 26/11/98  09.09.13  by  Rene Brun
+//*CMZ :  2.21/07 05/03/99  19.06.42  by  Rene Brun
+//*CMZ :  2.20/00 03/03/99  14.18.31  by  Rene Brun
 //*CMZ :  2.00/12 11/11/98  18.33.33  by  Rene Brun
 //*CMZ :  2.00/11 22/08/98  09.29.32  by  Rene Brun
 //*CMZ :  2.00/09 19/06/98  08.45.26  by  Rene Brun
@@ -150,6 +151,7 @@ Int_t TTreeFormula::DefinedVariable(TString &name)
    }
    TObjArray *lleaves = fTree->GetListOfLeaves();
    Int_t nleaves = lleaves->GetEntriesFast();
+//printf("nleaves=%d, dot=%d, name=%s, lname=%s\n",nleaves,dot,name.Data(),lname);
 
 //*-*- There is a dot. two cases: data member or member function
    if (dot) {
@@ -165,6 +167,7 @@ Int_t TTreeFormula::DefinedVariable(TString &name)
             if (scanindex) fIndex[code] = index;
             else           fIndex[code] = -1;
             if (leaf->InheritsFrom("TLeafC")) return 5000+code;
+//printf("  found code=%d , i=%d in data member\n",code,i);
             return code;
          }
       }
@@ -181,6 +184,7 @@ Int_t TTreeFormula::DefinedVariable(TString &name)
             if (scanindex) fIndex[code] = index;
             else           fIndex[code] = -1;
             if (leaf->InheritsFrom("TLeafC")) return 5000+code;
+//printf("  found code=%d in branchname.leafname\n",code);
             return code;
          }
       }
@@ -198,6 +202,7 @@ Int_t TTreeFormula::DefinedVariable(TString &name)
             fCodes[code] = i;
             fNcodes++;
             fIndex[code] = code-kMETHOD;
+//printf("  found code=%d in member function\n",code);
             return code;
          }
       }
@@ -216,6 +221,7 @@ Int_t TTreeFormula::DefinedVariable(TString &name)
             if (scanindex) fIndex[code] = index;
             else           fIndex[code] = -1;
             if (leaf->InheritsFrom("TLeafC")) return 5000+code;
+//printf("  found code=%d in data member only\n",code);
             return code;
          }
       }
@@ -232,6 +238,7 @@ Int_t TTreeFormula::DefinedVariable(TString &name)
       fIndex[code] = -1;
       return code;
    }
+//printf("  return -1\n");
    return -1;
 }
 

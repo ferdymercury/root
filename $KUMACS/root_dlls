@@ -1,3 +1,5 @@
+*CMZ :  2.21/06 10/02/99  16.37.48  by  Valery Fine(fine@vxcern.cern.ch)
+*CMZ :  2.21/03 20/01/99  18.08.36  by  Fons Rademakers
 *CMZ :  2.00/00 13/01/98  10.44.47  by  Valery Fine(fine@mail.cern.ch)
 *CMZ :  1.03/08 17/11/97  12.42.15  by  Rene Brun
 *-- Author : Valery Fine
@@ -8,6 +10,7 @@ exec bind_dll Clib          C_*.o
 exec bind_dll Cont          CONT_*.o
 exec bind_dll Func          FUNC_*.o
 exec bind_dll Graf          G_*.o
+exec bind_dll Gui           GUI_*.o
 exec bind_dll Gpad          GPAD_*.o
 exec bind_dll Graf3d        G3D_*.o
 exec bind_dll Hist          H_*.o
@@ -18,6 +21,7 @@ exec bind_dll Net           NET_*.o
 exec bind_dll New           NEW_*.o
 exec bind_dll Tree          TREE_*.o
 exec bind_dll X3d           X3D_*.o
+exec bind_dll Physics       PHYS*.o
 exec bind_dll Postscript    POST*.o
 exec bind_dll Rint          RINT_*.o
 exec bind_dll Html          HTML_*.o
@@ -31,7 +35,7 @@ exec bind_dll EGPythia      PYTH*.o   $PYTHIA\pythia.lib
 exec bind_dll EGVenus       VENUS*.o  $VENUS\venus.lib
 +ENDIF
 
-*  Cint DLL is generated with instal_cint macro separately >  exec bind_dll Cint          CINT_*.o
+*  Cint DLL is generated with instal_cint macro separately >  exec bind_dll Cint CINT_*.o
 
 +IF,GL.
 exec bind_dll RGL           GL*.o        Glu32.lib OpenGL32.lib

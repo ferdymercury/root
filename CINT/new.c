@@ -1,5 +1,5 @@
-/*CMZ :  2.20/04 08/12/98  16.25.28  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   08/12/98*/
+/*CMZ :  2.21/08 17/03/99  13.13.42  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   17/03/99*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -24,6 +24,12 @@
 
 #include "common.h"
 
+#ifndef G__OLDIMPLEMENTATION1002
+#ifdef G__ROOT
+extern void* G__new_interpreted_object G__P((int size));
+extern void G__delete_interpreted_object G__P((void* p));
+#endif
+#endif
 
 /****************************************************************
 * G__value G__new_operator()
@@ -114,7 +120,7 @@ char *expression;
     *arrayindex='\0';
     sprintf(construct,"%s()",type);
 #ifndef G__OLDIMPLEMENTATION911
-    if(G__asm_wholefunction) G__asm_noverflow=0;
+    if(G__asm_wholefunction) G__abortbytecode();
 #endif
   }
   else {
@@ -243,12 +249,18 @@ char *expression;
      ) {
     if(G__no_exec_compile) pointer = pinc;
     else {
-#ifndef G__OLDIMPLEMENTATION585
       if(arenaflag) pointer = memarena;
-      else          pointer = (long)malloc( (size_t)(size*pinc) );
+      else {
+#ifndef G__OLDIMPLEMENTATION1002
+#ifdef G__ROOT
+	pointer = (long)G__new_interpreted_object(size*pinc);
 #else
-      pointer = (long)malloc( (size_t)(size*pinc) );
+	pointer = (long)malloc( (size_t)(size*pinc) );
 #endif
+#else
+	pointer = (long)malloc( (size_t)(size*pinc) );
+#endif
+      }
     }
     if(pointer==(long)NULL && 0==G__no_exec_compile) {
       fprintf(G__serr ,"Error: memory allocation for %s %s size=%d pinc=%d FILE:%s LINE:%d\n"
@@ -358,6 +370,10 @@ char *expression;
       if(arrayindex && !G__no_exec_compile) G__alloc_newarraylist(pointer,pinc);
       G__var_type='p';
       for(i=0;i<pinc;i++) {
+#ifndef G__OLDIMPLEMENTATION980
+	G__abortbytecode(); /* Disable bytecode */
+        if(G__no_exec_compile) break;
+#endif
 	G__getfunction(construct,&known,G__TRYCONSTRUCTOR);
 	if(known==0) {
 #ifndef G__OLDIMPLEMENTATION736
@@ -375,7 +391,7 @@ char *expression;
 	    buf = G__getexpr(bp);
 	    G__ASSERT(-1!=buf.tagnum);
 #ifndef G__OLDIMPLEMENTATION843
-	    G__asm_noverflow=0; /* Disable bytecode */
+	    G__abortbytecode(); /* Disable bytecode */
 	    if(-1!=buf.tagnum && 0==G__no_exec_compile)
 #else
 	    if(-1!=buf.tagnum)
@@ -392,7 +408,7 @@ char *expression;
 #ifdef G__ASM_IFUNC
 #ifdef G__ASM
 #ifndef G__OLDIMPLEMENTATION597
-	G__asm_noverflow=0; /* Disable bytecode */
+	G__abortbytecode(); /* Disable bytecode */
 #endif /* ON597 */
 	if(G__asm_noverflow) {
 	  if(pinc>1) {
@@ -763,7 +779,7 @@ int isarray;
 #ifdef G__ASM
 #ifndef G__OLDIMPLEMENTATION597
 	  if(0==done) break;
-	  G__asm_noverflow=0; /* Disable bytecode */
+	  G__abortbytecode(); /* Disable bytecode */
 #endif /* ON597 */
 	  if(G__asm_noverflow) {
 #ifdef G__ASM_DBG
@@ -855,7 +871,17 @@ int isarray;
   /*****************************************************
    * free memory if interpreted object
    *****************************************************/
-  if(G__NOLINK==cpplink && !G__no_exec_compile) free((void *)buf.obj.i);
+  if(G__NOLINK==cpplink && !G__no_exec_compile) {
+#ifndef G__OLDIMPLEMENTATION1002
+#ifdef G__ROOT
+    G__delete_interpreted_object((void*)buf.obj.i);
+#else
+    free((void *)buf.obj.i);
+#endif
+#else
+    free((void *)buf.obj.i);
+#endif
+  }
 
 /* #ifdef G__ROOT */
   /*****************************************************

@@ -1,4 +1,5 @@
-//*CMZ :  2.00/00 20/02/98  16.42.15  by  Valery Fine(fine@mail.cern.ch)
+//*CMZ :  2.21/06 10/02/99  18.39.13  by  Valery Fine(fine@vxcern.cern.ch)
+//*CMZ :  2.00/00 10/02/99  11.58.47  by  Valery Fine(fine@mail.cern.ch)
 //*CMZ :  1.01/04 26/05/97  14.30.07  by  Valery Fine(fine@vxcern.cern.ch)
 //*-- Author :    Valery Fine(fine@vxcern.cern.ch)   31/07/96
 
@@ -17,6 +18,10 @@
  * suitability of this software for any purpose.                         *
  * It is provided "as is" without express or implied warranty.           *
  *************************************************************************/
+
+#ifndef ROOT_Win32Constants
+#include "Win32Constants.h"
+#endif
 
 #ifndef ROOT_TGWin32
 #include "TGWin32.h"
@@ -106,6 +111,7 @@ Bool_t TWin32HookViaThread::ExecuteEvent(void *message,Bool_t synch, UInt_t type
 //*-*      kFALSE  - message was refused
 //*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
     if (!message) return kFALSE;
+    if (type == UInt_t(-1)) type = ROOT_CMD;
 
     MSG *msg = (MSG *)message;
     Bool_t  res = kFALSE;

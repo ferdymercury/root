@@ -1,3 +1,4 @@
+//*CMZ :  2.21/01 12/01/99  11.47.03  by  Fons Rademakers
 //*CMZ :  2.20/00 12/11/98  13.57.41  by  Fons Rademakers
 //*CMZ :  2.00/13 20/10/98  12.33.43  by  Fons Rademakers
 //*CMZ :  2.00/11 17/08/98  15.18.35  by  Rene Brun
@@ -289,7 +290,8 @@ TObject *TList::At(Int_t idx) const
 {
    // Returns the object at position idx. Returns 0 if idx is out of range.
 
-   if (LinkAt(idx)) return LinkAt(idx)->GetObject();
+   TObjLink *lnk = LinkAt(idx);
+   if (lnk) return lnk->GetObject();
    return 0;
 }
 

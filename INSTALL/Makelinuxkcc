@@ -1,3 +1,4 @@
+*CMZ :  2.21/08 18/03/99  15.12.18  by  Fons Rademakers
 *CMZ :  2.20/00 22/11/98  18.43.27  by  Fons Rademakers
 *CMZ :  2.00/12 08/10/98  18.31.56  by  Fons Rademakers
 *CMZ :  2.00/10 14/07/98  21.49.26  by  Fons Rademakers
@@ -5,21 +6,21 @@
 *-- Author :    Fons Rademakers   26/06/98
 # Makefile of ROOT for Linux with glibc and KCC compiler
 
-# When changing OPT to -O you can also change +K0 to +K1
+# When changing OPT to -g you can also change +K1 to +K0
 
 PLATFORM      = linux
 
 CXX           = KCC
 CC            = gcc
 CXXFLAGS      = --signed_chars -D_EXTERN_INLINE=inline --display_error_number \
-                --diag_suppress 191 -fPIC -DR__GLIBC +K0
+                --diag_suppress 191 -fPIC -DR__GLIBC +K1
 CFLAGS        = -Wall -fPIC -DR__GLIBC
 CINTCXXFLAGS  = --signed_chars -D_EXTERN_INLINE=inline --display_error_number \
                 --diag_suppress 191 -fPIC -DG__REGEXP -DG__UNIX -DG__SHAREDLIB \
-                -DG__OSFDLL -DG__ROOT -DG__REDIRECTIO +K0
+                -DG__OSFDLL -DG__ROOT -DG__REDIRECTIO +K1
 CINTCFLAGS    = -Wall -fPIC -DG__REGEXP -DG__UNIX -DG__SHAREDLIB \
                 -DG__OSFDLL -DG__ROOT -DG__REDIRECTIO
-OPT           = -g
+OPT           = -O
 NOOPT         =
 LD            = KCC
 LDFLAGS       = $(OPT)
@@ -29,7 +30,10 @@ SYSLIBS       = -lm -ldl
 SYSXLIBS      = -L/usr/X11R6/lib -lX11 -lm -ldl
 XLIBS         = $(ROOTSYS)/lib/libXpm.a -L/usr/X11R6/lib -lX11
 CILIBS        = -lm -ltermcap -lbsd -ldl
-
+CRYPTLIBS     = -lcrypt
+F77           = f2c
+F77FLAGS      =
+F77LIBS       = -lf2c
 
 ##### MACROS and TARGETS #####
 

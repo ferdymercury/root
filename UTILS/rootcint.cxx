@@ -1,3 +1,5 @@
+//*CMZ :  2.21/07 04/03/99  13.48.07  by  Fons Rademakers
+//*CMZ :  2.21/03 22/01/99  12.33.22  by  Fons Rademakers
 //*CMZ :  2.20/05 14/12/98  15.12.06  by  Fons Rademakers
 //*CMZ :  2.20/00 16/11/98  12.30.43  by  Fons Rademakers
 //*CMZ :  2.00/13 19/10/98  18.22.29  by  Fons Rademakers
@@ -118,12 +120,11 @@
 
 #ifndef __CINT__
 #include "Api.h"
-#include "Rtypes.h"
 
 extern "C" {
-   R__EXTERN short G__othermain;
-   R__EXTERN int   G__globalcomp;
-   int G__main(int argc, char **argv);
+   void G__setothermain(int othermain);
+   void G__setglobalcomp(int globalcomp);
+   int  G__main(int argc, char **argv);
    void G__exit(int rtn);
 }
 
@@ -567,11 +568,17 @@ void GenerateLinkdef(int *argc, char **argv, int iv)
          if (nostr) strcat(trail, "-");
          if (noinp) strcat(trail, "!");
       }
-      if ((s = strrchr(argv[i], '.'))) *s = '\0';
-      if (nostr || noinp)
-         fprintf(fl, "#pragma link C++ class %s%s;\n", argv[i], trail);
+      char *cls = strrchr(argv[i], '/');
+      if (!cls) cls = strrchr(argv[i], '\\');
+      if (cls)
+         cls++;
       else
-         fprintf(fl, "#pragma link C++ class %s;\n", argv[i]);
+         cls = argv[i];
+      if ((s = strrchr(cls, '.'))) *s = '\0';
+      if (nostr || noinp)
+         fprintf(fl, "#pragma link C++ class %s%s;\n", cls, trail);
+      else
+         fprintf(fl, "#pragma link C++ class %s;\n", cls);
       if (s) *s = '.';
    }
    argv[(*argc)++] = autold;
@@ -699,7 +706,8 @@ int main(int argc, char **argv)
          }
          iv = argcc;
       }
-      if (strstr(argv[i],"LinkDef.h") || strstr(argv[i],"linkdef.h")) {
+      if (strstr(argv[i],"LinkDef.h") || strstr(argv[i],"Linkdef.h") ||
+          strstr(argv[i],"linkdef.h")) {
          il++;
          if (i != argc-1) {
             fprintf(stderr, "%s must be last file on command line\n", argv[i]);
@@ -716,12 +724,12 @@ int main(int argc, char **argv)
    if (!il)
       GenerateLinkdef(&argcc, argvv, iv);
 
-   G__othermain = 2;
+   G__setothermain(2);
    if (G__main(argcc, argvv) < 0) {
       fprintf(stderr, "Error loading headers...\n");
       return 1;
    }
-   G__globalcomp = 0;  // G__NOLINK
+   G__setglobalcomp(0);  // G__NOLINK
 
    if (!il) remove(autold);
 #endif
@@ -743,7 +751,8 @@ int main(int argc, char **argv)
    if (ifl && !icc) {
       for (i = ic; i < argc; i++) {
          if (*argv[i] != '-' && *argv[i] != '+' &&
-             !strstr(argv[i],"LinkDef.h") && !strstr(argv[i],"linkdef.h"))
+             !strstr(argv[i],"LinkDef.h") && !strstr(argv[i],"Linkdef.h") &&
+             !strstr(argv[i],"linkdef.h"))
             fprintf(fp, "#include \"%s\"\n", argv[i]);
       }
       fprintf(fp, "\n");
@@ -777,7 +786,7 @@ int main(int argc, char **argv)
 
    fclose(fp);
 
-   G__globalcomp = -1;  // G__CPPLINK
+   G__setglobalcomp(-1);  // G__CPPLINK
    G__exit(0);
 
    return 0;

@@ -1,5 +1,5 @@
-/*CMZ :  2.20/04 08/12/98  16.25.27  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   08/12/98*/
+/*CMZ :  2.21/08 17/03/99  13.13.41  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   17/03/99*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -871,7 +871,7 @@ int basen;
   long (*f) G__P((long));
 #ifndef G__OLDIMPLEMENTATION652
   if(!pobject || G__no_exec_compile) {
-    G__asm_noverflow = 0;
+    G__abortbytecode();
     return(0);
   }
 #else

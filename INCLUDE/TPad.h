@@ -1,3 +1,5 @@
+//*CMZ :  2.21/05 09/02/99  01.10.37  by  Fons Rademakers
+//*CMZ :  2.21/04 05/02/99  13.01.10  by  Fons Rademakers
 //*CMZ :  2.20/05 12/12/98  17.45.20  by  Rene Brun
 //*CMZ :  2.20/04 10/12/98  12.05.25  by  Rene Brun
 //*CMZ :  2.20/00 02/11/98  17.12.03  by  Fons Rademakers
@@ -40,12 +42,7 @@
 #include "TVirtualPad.h"
 #endif
 
-class TObject;     // forward declarations
-class TObjLink;
-class TCanvas;
-class TView;
 class TBrowser;
-class TPadView3D;
 
 
 class TPad : public TVirtualPad {
@@ -153,7 +150,7 @@ public:
    void             DrawTextNDC(Float_t u, Float_t v, const Text_t *text);
    virtual void     ExecuteEvent(Int_t event, Int_t px, Int_t py);
    virtual void     UseCurrentStyle();  // *MENU*
-   virtual Int_t    GetCanvasID();
+   virtual Int_t    GetCanvasID() const;
    TFrame           *GetFrame();
    virtual Int_t    GetEvent() const;
    virtual Int_t    GetEventX() const;
@@ -212,8 +209,8 @@ public:
    void             Modified(Bool_t flag=1) { fModified = flag; }
    virtual Bool_t   OpaqueMoving() const;
    virtual Bool_t   OpaqueResizing() const;
-   Float_t          PadtoX(Float_t x);
-   Float_t          PadtoY(Float_t y);
+   Float_t          PadtoX(Float_t x) const;
+   Float_t          PadtoY(Float_t y) const;
    virtual void     Paint(Option_t *option="");
    void             PaintBox(Float_t x1, Float_t y1, Float_t x2, Float_t y2, Option_t *option="");
    void             PaintFillArea(Int_t n, Float_t *x, Float_t *y, Option_t *option="");
@@ -272,18 +269,23 @@ public:
    virtual void     SetPhi(Float_t phi=30) {fPhi = phi;}
    virtual void     SetView(TView *view) {fView = view;}
    virtual void     Update();
-   Int_t            UtoAbsPixel(Float_t u) {return Int_t(fUtoAbsPixelk + u*fUtoPixel);}
-   Int_t            VtoAbsPixel(Float_t v) {return Int_t(fVtoAbsPixelk + v*fVtoPixel);}
-   Int_t            UtoPixel(Float_t u);
-   Int_t            VtoPixel(Float_t v);
-   Int_t            XtoAbsPixel(Axis_t x) {return Int_t(fXtoAbsPixelk + x*fXtoPixel);}
-   Int_t            YtoAbsPixel(Axis_t y) {return Int_t(fYtoAbsPixelk + y*fYtoPixel);}
-   Float_t          XtoPad(Axis_t x);
-   Int_t            XtoPixel(Axis_t x);
-   Int_t            YtoPixel(Axis_t y);
-   virtual void     XYtoAbsPixel(Axis_t x, Axis_t y, Int_t &xpixel, Int_t &ypixel);
-   virtual void     XYtoPixel(Axis_t x, Axis_t y, Int_t &xpixel, Int_t &ypixel);
-   Float_t          YtoPad(Axis_t y);
+   Int_t            UtoAbsPixel(Float_t u) const {return Int_t(fUtoAbsPixelk + u*fUtoPixel);}
+   Int_t            VtoAbsPixel(Float_t v) const {return Int_t(fVtoAbsPixelk + v*fVtoPixel);}
+   Int_t            UtoPixel(Float_t u) const;
+   Int_t            VtoPixel(Float_t v) const;
+   Int_t            XtoAbsPixel(Axis_t x) const {return Int_t(fXtoAbsPixelk + x*fXtoPixel);}
+   Int_t            YtoAbsPixel(Axis_t y) const {return Int_t(fYtoAbsPixelk + y*fYtoPixel);}
+   Float_t          XtoPad(Axis_t x) const;
+   Float_t          YtoPad(Axis_t y) const;
+   Int_t            XtoPixel(Axis_t x) const;
+   Int_t            YtoPixel(Axis_t y) const;
+   virtual void     XYtoAbsPixel(Axis_t x, Axis_t y, Int_t &xpixel, Int_t &ypixel) const;
+   virtual void     XYtoPixel(Axis_t x, Axis_t y, Int_t &xpixel, Int_t &ypixel) const;
+
+   virtual TGToolTip *CreateToolTip(const TBox *b, const char *text, Long_t delayms);
+   virtual void       DeleteToolTip(TGToolTip *tip);
+   virtual void       ResetToolTip(TGToolTip *tip);
+   virtual void       CloseToolTip(TGToolTip *tip);
 
    virtual void     x3d(Option_t *option=""); // *MENU*
 
@@ -322,42 +324,42 @@ inline void TPad::PixeltoXY(Int_t xpixel, Int_t ypixel, Axis_t &x, Axis_t &y)
 }
 
 //______________________________________________________________________________
-inline Int_t TPad::UtoPixel(Float_t u)
+inline Int_t TPad::UtoPixel(Float_t u) const
 {
    if (fAbsCoord) return Int_t(fUtoAbsPixelk + u*fUtoPixel);
    else           return Int_t(u*fUtoPixel);
 }
 
 //______________________________________________________________________________
-inline Int_t TPad::VtoPixel(Float_t v)
+inline Int_t TPad::VtoPixel(Float_t v) const
 {
    if (fAbsCoord) return Int_t(fVtoAbsPixelk + v*fVtoPixel);
    else           return Int_t(fVtoPixelk    + v*fVtoPixel);
 }
 
 //______________________________________________________________________________
-inline Int_t TPad::XtoPixel(Axis_t x)
+inline Int_t TPad::XtoPixel(Axis_t x) const
 {
    if (fAbsCoord) return Int_t(fXtoAbsPixelk + x*fXtoPixel);
    else           return Int_t(fXtoPixelk    + x*fXtoPixel);
 }
 
 //______________________________________________________________________________
-inline Int_t TPad::YtoPixel(Axis_t y)
+inline Int_t TPad::YtoPixel(Axis_t y) const
 {
    if (fAbsCoord) return Int_t(fYtoAbsPixelk + y*fYtoPixel);
    else           return Int_t(fYtoPixelk    + y*fYtoPixel);
 }
 
 //______________________________________________________________________________
-inline void TPad::XYtoAbsPixel(Axis_t x, Axis_t y, Int_t &xpixel, Int_t &ypixel)
+inline void TPad::XYtoAbsPixel(Axis_t x, Axis_t y, Int_t &xpixel, Int_t &ypixel) const
 {
    xpixel = XtoAbsPixel(x);
    ypixel = YtoAbsPixel(y);
 }
 
 //______________________________________________________________________________
-inline void TPad::XYtoPixel(Axis_t x, Axis_t y, Int_t &xpixel, Int_t &ypixel)
+inline void TPad::XYtoPixel(Axis_t x, Axis_t y, Int_t &xpixel, Int_t &ypixel) const
 {
    xpixel = XtoPixel(x);
    ypixel = YtoPixel(y);

@@ -1,3 +1,6 @@
+*CMZ :  2.21/07 04/03/99  09.31.28  by  Rene Brun
+*CMZ :  2.21/05 08/02/99  12.22.12  by  Fons Rademakers
+*CMZ :  2.21/03 20/01/99  12.54.03  by  Fons Rademakers
 *CMZ :  2.20/00 22/11/98  18.43.27  by  Fons Rademakers
 *CMZ :  2.00/12 07/10/98  13.21.57  by  Fons Rademakers
 *CMZ :  2.00/10 14/07/98  21.49.26  by  Fons Rademakers
@@ -15,23 +18,32 @@ SOFLAGS=$4
 SONAME=$5
 LIB=$6
 OBJS=$7
+EXTRA=$8
 
 rm -f $LIB
 
 if [ $PLATFORM = aix ]; then
    echo this is aix
 elif [ $PLATFORM = hpux ]; then
-   echo $LD $SOFLAGS $LDFLAGS -o $LIB $OBJS
-   $LD $SOFLAGS $LDFLAGS -o $LIB $OBJS
+   echo $LD $SOFLAGS $LDFLAGS -o $LIB $OBJS $EXTRA
+   $LD $SOFLAGS $LDFLAGS -o $LIB $OBJS $EXTRA
 elif [ $PLATFORM = solaris ]; then
-   echo $LD $SOFLAGS $LDFLAGS -o $LIB $OBJS
-   $LD $SOFLAGS $LDFLAGS -o $LIB $OBJS
+   echo $LD $SOFLAGS $LDFLAGS -o $LIB $OBJS $EXTRA
+   $LD $SOFLAGS $LDFLAGS -o $LIB $OBJS $EXTRA
+elif [ $PLATFORM = sgi ]; then
+  echo $LD $SOFLAGS $LDFLAGS -o $LIB $OBJS
+  $LD $SOFLAGS $LDFLAGS -o $LIB $OBJS
+elif [ $PLATFORM = fbsd ]; then
+   echo $PLATFORM: $LD $SOFLAGS $LDFLAGS -o $LIB $OBJS
+   $LD $SOFLAGS $LDFLAGS -o $LIB `lorder $OBJS | tsort -q`
+# for elf:  echo $PLATFORM: $LD $SOFLAGS$SONAME $LDFLAGS -o $LIB $OBJS
+# for elf:  $LD $SOFLAGS$SONAME $LDFLAGS -o $LIB `lorder $OBJS | tsort -q`
 elif [ $LD = KCC ]; then
-   echo $LD $LDFLAGS -o $LIB $OBJS
-   $LD $LDFLAGS -o $LIB $OBJS
+   echo $LD $LDFLAGS -o $LIB $OBJS $EXTRA
+   $LD $LDFLAGS -o $LIB $OBJS $EXTRA
 else
-   echo $LD $SOFLAGS$SONAME $LDFLAGS -o $LIB $OBJS
-   $LD $SOFLAGS$SONAME $LDFLAGS -o $LIB $OBJS
+   echo $LD $SOFLAGS$SONAME $LDFLAGS -o $LIB $OBJS $EXTRA
+   $LD $SOFLAGS$SONAME $LDFLAGS -o $LIB $OBJS $EXTRA
 fi
 
 chmod 555 $LIB

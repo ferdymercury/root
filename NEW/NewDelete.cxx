@@ -1,3 +1,4 @@
+//*CMZ :  2.21/05 08/02/99  12.42.39  by  Fons Rademakers
 //*CMZ :  2.00/12 08/10/98  16.23.35  by  Fons Rademakers
 //*CMZ :  2.00/10 15/07/98  16.44.07  by  Fons Rademakers
 //*CMZ :  2.00/06 23/04/98  11.58.14  by  Fons Rademakers
@@ -36,7 +37,7 @@
 // specified using the resource: Root.MemStat.size, using the resource  //
 // Root.MemStat.cnt one can specify after how many allocations of       //
 // this size the trap should occur.                                     //
-// Set the compile option NOSTATS to de-activate all memory checking    //
+// Set the compile option R__NOSTATS to de-activate all memory checking //
 // statistics gathering in the system.                                  //
 //                                                                      //
 // When memory checking is enabled the following happens during         //
@@ -92,7 +93,7 @@ static ReAllocInit realloc_init;
 
 //---- memory checking macros --------------------------------------------------
 
-#if !defined(NOSTATS)
+#if !defined(R__NOSTATS)
 #   define MEM_DEBUG
 #   define MEM_STAT
 #   define MEM_CHECKOBJECTPOINTERS
@@ -324,6 +325,9 @@ void *CustomReAlloc1(void *ovp, size_t size)
    if (ovp == 0)
       return new char[size];
 
+   if (!newInit)
+      Fatal(where, "space was not allocated via custom new");
+
    size_t oldsize = storage_size(ovp);
    if (oldsize == size)
       return ovp;
@@ -352,6 +356,9 @@ void *CustomReAlloc2(void *ovp, size_t size, size_t oldsize)
 
    if (ovp == 0)
       return new char[size];
+
+   if (!newInit)
+      Fatal(where, "space was not allocated via custom new");
 
 #if defined(MEM_DEBUG)
    if (oldsize != storage_size(ovp))

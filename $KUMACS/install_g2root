@@ -1,3 +1,5 @@
+*CMZ :  2.21/06 11/02/99  08.51.45  by  Rene Brun
+*CMZ :  2.21/05 08/02/99  12.20.48  by  Rene Brun
 *CMZ :  2.00/12 15/09/98  00.16.48  by  Rene Brun
 *CMZ :  2.00/10 07/07/98  17.27.37  by  Rene Brun
 *CMZ :  2.00/09 28/05/98  12.47.32  by  Valery Fine(fine@mail.cern.ch)
@@ -67,29 +69,16 @@ elseif [machine] = 'SOLARIS' .OR. [machine] = 'SOLARISPC' then
           -lM77 -lF77 -lsunmath -lsocket -lnsl -lf2c
    SH /bin/rm -f g2root.*
 elseif [machine] = 'SGI' then
-     mess g2root not yet ready for this system
-     go to END
-   SH f2c -a g2root.f > g2root.c
-   SH cc -c g2root.c
+   SH f77 -o [sysroot]/bin/g2root [main]  _
+          [libcern]/libpacklib.a [libcern]/libkernlib.a _
+          -lI77 -lF77 -lm -lisam
+elseif [machine] = 'ALPHA' then
    SH f77 -o [sysroot]/bin/g2root [main] _
           [libcern]/libpacklib.a [libcern]/libkernlib.a _
-          -lI77 -lF77 -lisam -lf2c
-   SH /bin/rm -f g2root.*
-elseif [machine] = 'ALPHA' then
-   sh cp -r [main] g2root.f
-   SH f2c -a g2root.f > g2root.c
-   SH cc -c g2root.c
-   SH cc -o [sysroot]/bin/g2root g2root.o _
-          [libcern]/libpacklib.a [libcern]/libkernlib.a _
-          /usr/shlib/libFutil.so /usr/shlib/libfor.so /usr/shlib/libots.so -lf2c
-   SH /bin/rm -f g2root.*
+          /usr/shlib/libFutil.so /usr/shlib/libfor.so /usr/shlib/libots.so
 elseif [machine] = 'LINUX' then
-   sh cp -r [main] g2root.f
-   SH f2c -a g2root.f > g2root.c
-   SH gcc -c g2root.c
-   SH fort77 -o [sysroot]/bin/g2root g2root.o _
-          [libcern]/libpacklib.a [libcern]/libkernlib.a
-   SH /bin/rm -f g2root.*
+   SH g77 -g -o [sysroot]/bin/g2root [main] _
+          [libcern]/libpacklib.a
 elseif [machine] = 'WinNT' then
   libcern = $CERNLIB
 

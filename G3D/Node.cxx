@@ -1,3 +1,5 @@
+//*CMZ :  2.21/07 21/02/99  20.17.38  by  Valery Fine(fine@mail.cern.ch)
+//*CMZ :  2.21/04 02/02/99  18.23.24  by  Rene Brun
 //*CMZ :  2.00/11 22/08/98  12.26.40  by  Rene Brun
 //*CMZ :  2.00/00 17/02/98  15.59.00  by  Rene Brun
 //*CMZ :  1.03/09 09/12/97  15.00.39  by  Fons Rademakers
@@ -34,9 +36,12 @@
 
 #include "TPadView3D.h"
 
+#if 0
 const Int_t kMAXLEVELS = 20;
 const Int_t kVectorSize = 3;
 const Int_t kMatrixSize = kVectorSize*kVectorSize;
+#endif
+
 const Int_t kSonsInvisible = BIT(17);
 
 static Double_t gTranslation[kMAXLEVELS][kVectorSize];
@@ -116,10 +121,8 @@ TNode::TNode(const Text_t *name, const Text_t *title, const Text_t *shapename, D
    if (strlen(matrixname)) fMatrix = gGeometry->GetRotMatrix(matrixname);
    else {
      fMatrix = gGeometry->GetRotMatrix("Identity");
-     if (!fMatrix) {
-        new TRotMatrix("Identity","Identity matrix",90,0,90,90,0,0);
-        fMatrix  = gGeometry->GetRotMatrix("Identity");
-     }
+     if (!fMatrix)
+        fMatrix  = new TRotMatrix("Identity","Identity matrix",90,0,90,90,0,0);
    }
 
    if (!fShape) {
@@ -170,10 +173,8 @@ TNode::TNode(const Text_t *name, const Text_t *title, TShape *shape, Double_t x,
    fParent = gGeometry->GetCurrentNode();
    if(!fMatrix) {
      fMatrix =gGeometry->GetRotMatrix("Identity");
-     if (!fMatrix) {
-        new TRotMatrix("Identity","Identity matrix",90,0,90,90,0,0);
-        fMatrix  = gGeometry->GetRotMatrix("Identity");
-     }
+     if (!fMatrix)
+        fMatrix  = new TRotMatrix("Identity","Identity matrix",90,0,90,90,0,0);
    }
 
    if(!shape) {Printf("Illegal referenced shape"); return;}
@@ -247,8 +248,6 @@ Int_t TNode::DistancetoPrimitive(Int_t px, Int_t py)
    const Int_t inaxis = 7;
    const Int_t maxdist = 5;
 
-   Int_t i;
-
    Int_t puxmin = gPad->XtoAbsPixel(gPad->GetUxmin());
    Int_t puymin = gPad->YtoAbsPixel(gPad->GetUymin());
    Int_t puxmax = gPad->XtoAbsPixel(gPad->GetUxmax());
@@ -264,18 +263,9 @@ Int_t TNode::DistancetoPrimitive(Int_t px, Int_t py)
    if (!view) return big;
 
 //*-*- Update translation vector and rotation matrix for new level
-   if (gGeomLevel) {
-      Int_t ig = gGeomLevel;
-      UpdateTempMatrix(&(gTranslation[ig-1][0]),&gRotMatrix[ig-1][0]
-                      ,fX,fY,fZ,fMatrix->GetMatrix()
-                      ,&gTranslation[ig][0],&gRotMatrix[ig][0]);
-
-   } else {
-      for (i=0;i<kVectorSize;i++) gTranslation[0][i] = 0;
-      for (i=0;i<kMatrixSize;i++) gRotMatrix[0][i] = 0;
-      gRotMatrix[0][0] = 1;   gRotMatrix[0][4] = 1;   gRotMatrix[0][8] = 1;
+   if (fMatrix) {
+      gGeometry->UpdateTempMatrix(fX,fY,fZ,fMatrix->GetMatrix(),fMatrix->IsReflection());
    }
-
 //*-*- Paint Referenced shape
    Int_t dist = big;
    if (fVisibility && fShape->GetVisibility()) {
@@ -294,8 +284,7 @@ Int_t TNode::DistancetoPrimitive(Int_t px, Int_t py)
    Int_t dnode = dist;
    if (nsons) {
 
-      Int_t levelsave = gGeomLevel;
-      gGeomLevel++;
+      gGeometry->PushLevel();
       TNode *node;
       TObject *obj;
       TIter  next(fNodes);
@@ -305,10 +294,10 @@ Int_t TNode::DistancetoPrimitive(Int_t px, Int_t py)
          if (dnode <= 0) break;
          if (dnode < dist) dist = dnode;
       }
-      gGeomLevel = levelsave;
+      gGeometry->PopLevel();
    }
 
-   if (gGeomLevel==0 && dnode > maxdist) {
+   if (gGeometry->GeomLevel()==0 && dnode > maxdist) {
       gPad->SetSelected(view);
       return 0;
    } else
@@ -321,7 +310,6 @@ void TNode::Draw(Option_t *option)
 //*-*-*-*-*-*-*-*-*-*-*-*Draw Referenced node with current parameters*-*-*-*
 //*-*                   =============================================
 
-   Int_t i;
    TString opt = option;
    opt.ToLower();
 //*-*- Clear pad if option "same" not given
@@ -332,11 +320,8 @@ void TNode::Draw(Option_t *option)
    if (!opt.Contains("same")) gPad->Clear();
 
 //*-*- Draw Referenced node
-   gGeomLevel = 0;
-   for (i=0;i<kVectorSize;i++) gTranslation[0][i] = 0;
-   for (i=0;i<kMatrixSize;i++) gRotMatrix[0][i] = 0;
-   gRotMatrix[0][0] = 1;   gRotMatrix[0][4] = 1;   gRotMatrix[0][8] = 1;
-
+   gGeometry->SetGeomLevel();
+   gGeometry->UpdateTempMatrix();
 
    AppendPad(option);
 
@@ -345,7 +330,7 @@ void TNode::Draw(Option_t *option)
    if (!view) {
       view = new TView(1);
       view->SetAutoRange(kTRUE);
-      Paint();
+      Paint("range");
       view->SetAutoRange(kFALSE);
    }
 }
@@ -577,13 +562,12 @@ void TNode::Paint(Option_t *option)
 
    TPadView3D *view3D=gPad->GetView3D();
 
+   Int_t level = gGeometry->GeomLevel();
+// restrict the levels for "range" option
+   if (level > 3 && strcmp(option,"range") == 0) return;
 //*-*- Update translation vector and rotation matrix for new level
-   if (gGeomLevel)
-   {
-
-      UpdateTempMatrix(&(gTranslation[gGeomLevel-1][0]),&gRotMatrix[gGeomLevel-1][0]
-                      ,fX,fY,fZ,fMatrix->GetMatrix()
-                      ,&gTranslation[gGeomLevel][0],&gRotMatrix[gGeomLevel][0]);
+   if (level) {
+      gGeometry->UpdateTempMatrix(fX,fY,fZ,fMatrix->GetMatrix(),fMatrix->IsReflection());
       if (view3D)
           view3D->UpdateNodeMatrix(this,option);
    }
@@ -616,7 +600,7 @@ void TNode::Paint(Option_t *option)
 //*-*- Paint all sons
    if(!nsons) return;
 
-   gGeomLevel++;
+   gGeometry->PushLevel();
    TNode *node;
    TObject *obj;
    TIter  next(fNodes);
@@ -629,8 +613,7 @@ void TNode::Paint(Option_t *option)
       if (view3D)
           view3D->PopMatrix();
    }
-   gGeomLevel--;
-
+   gGeometry->PopLevel();
 }
 
 //______________________________________________________________________________

@@ -1,5 +1,5 @@
-/*CMZ :  2.20/04 08/12/98  16.25.33  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   08/12/98*/
+/*CMZ :  2.21/08 17/03/99  13.13.45  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   17/03/99*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -155,7 +155,7 @@ void G__define_type()
   if(G__asm_dbg&&G__asm_noverflow)
     G__genericerror(G__LOOPCOMPILEABORT);
 #endif
-  G__asm_noverflow=0;
+  G__abortbytecode();
 #endif
 
   store_tagnum=G__tagnum;

@@ -1,3 +1,4 @@
+//*CMZ :  2.21/03 21/01/99  19.02.18  by  Rene Brun
 //*CMZ :  0.90/08 02/12/96  12.02.58  by  Rene Brun
 //*-- Author :    Rene Brun   08/03/96
 {
@@ -47,15 +48,19 @@
    link.DrawLine(.43,.25,.43,.075);
    link.DrawLine(.45,.25,.45,.175);
    TPaveLabel branch0(.20,.87,.35,.97,"Branch 0");
+   branch0.SetTextSize(0.35);
    branch0.SetFillColor(branchcolor);
    branch0.Draw();
    TPaveLabel branch1(.40,.87,.55,.97,"Branch 1");
+   branch1.SetTextSize(0.35);
    branch1.SetFillColor(branchcolor);
    branch1.Draw();
    TPaveLabel branch2(.60,.87,.75,.97,"Branch 2");
+   branch2.SetTextSize(0.35);
    branch2.SetFillColor(branchcolor);
    branch2.Draw();
    TPaveLabel branch3(.80,.87,.95,.97,"Branch 3");
+   branch3.SetTextSize(0.35);
    branch3.SetFillColor(branchcolor);
    branch3.Draw();
    TPaveLabel leaf0(.4,.75,.5,.8,"Leaf 0");

@@ -1,3 +1,8 @@
+//*CMZ :  2.21/07 02/03/99  17.04.25  by  Rene Brun
+//*CMZ :  2.21/06 15/02/99  09.00.59  by  Rene Brun
+//*CMZ :  2.21/03 22/01/99  08.42.02  by  Rene Brun
+//*CMZ :  2.21/02 18/01/99  13.51.25  by  Rene Brun
+//*CMZ :  2.21/01 11/01/99  08.34.24  by  Rene Brun
 //*CMZ :  2.20/06 17/12/98  09.41.02  by  Rene Brun
 //*CMZ :  2.20/05 15/12/98  09.17.20  by  Rene Brun
 //*CMZ :  2.20/00 01/12/98  09.22.49  by  Rene Brun
@@ -44,7 +49,8 @@
 #include "TInterpreter.h"
 
 const Int_t NPMAX = 204;
-const Int_t kFitInit = BIT(19);
+const Int_t kClipFrame = BIT(10);
+const Int_t kFitInit   = BIT(19);
 
 static Float_t xwork[NPMAX];
 static Float_t ywork[NPMAX];
@@ -134,6 +140,7 @@ TGraph::TGraph(Int_t n, Float_t *x, Float_t *y)
       fX[i] = x[i];
       fY[i] = y[i];
    }
+   SetBit(kClipFrame);
 }
 
 //______________________________________________________________________________
@@ -466,7 +473,6 @@ void TGraph::Fit(Text_t *fname, Option_t *option, Option_t *)
 //      option = "W"  Set all errors to 1
 //             = "Q" Quiet mode (minimum printing)
 //             = "V" Verbose mode (default is between Q and V)
-//             = "B" Some parameters are bound
 //             = "R" Use the Range specified in the function range
 //             = "N" Do not store the graphics function, do not draw
 //             = "0" Do not plot the result of the fit. By default the fitted function
@@ -485,19 +491,25 @@ void TGraph::Fit(Text_t *fname, Option_t *option, Option_t *)
 //        TF1 *f1 = new TF1("f1","gaus",1,3);
 //        graph->Fit("f1","R");
 //
-//   In a similar way, to use the Bound option, you must set the limits
-//   for the bound parameters:
+//   You can specify boundary limits for some or all parameters via
 //        f1->SetParLimits(p_number, parmin, parmax);
-//   When the Bound option is used, if parmin=parmax, the parameter
-//   is fixed.
+//   if parmin>=parmax, the parameter is fixed
+//   Note that you are not forced to fix the limits for all parameters.
+//   For example, if you fit a function with 6 parameters, you can do:
+//     func->SetParameters(0,3.1,1.e-6,0.1,-8,100);
+//     func->SetParLimits(4,-10,-4);
+//     func->SetParLimits(5, 1,1);
+//   With this setup, parameters 0->3 can vary freely
+//   Parameter 4 has boundaries [-10,-4] with initial value -8
+//   Parameter 5 is fixed to 100.
 //
 
    Int_t i, ierf, npar,nvpar,nparx,icstat;
-   Double_t arglist[10];
    Double_t par, we, al, bl;
    Double_t eplus,eminus,eparab,globcc,amin,edm,errdef,werr;
    TF1 *fnew1;
 
+   Double_t *arglist = new Double_t[100];
 //  Decode string choptin and fill Foption structure
    Foption.Quiet   = 0;
    Foption.Verbose = 0;
@@ -516,7 +528,6 @@ void TGraph::Fit(Text_t *fname, Option_t *option, Option_t *)
 
    if (opt.Contains("Q")) Foption.Quiet   = 1;
    if (opt.Contains("V")){Foption.Verbose = 1; Foption.Quiet   = 0;}
-   if (opt.Contains("B")) Foption.Bound   = 1;
    if (opt.Contains("W")) Foption.W1      = 1;
    if (opt.Contains("E")) Foption.Errors  = 1;
    if (opt.Contains("R")) Foption.Range   = 1;
@@ -588,20 +599,18 @@ void TGraph::Fit(Text_t *fname, Option_t *option, Option_t *)
 //*-*- Transfer names and initial values of parameters to Minuit
    Int_t nfixed = 0;
    for (i=0;i<npar;i++) {
-      Int_t fixp = 0;
       par = gF1->GetParameter(i);
-      if (Foption.Bound) {
-         gF1->GetParLimits(i,al,bl);
-         if (al >= bl) fixp = 1;
-      } else {
-         al  = 0;
-         bl  = 0;
+      gF1->GetParLimits(i,al,bl);
+      if (al*bl != 0 && al >= bl) {
+         al = bl = 0;
+         arglist[nfixed] = i+1;
+         nfixed++;
       }
       we  = 0.3*TMath::Abs(par);
       if (we <= TMath::Abs(par)*1e-6) we = 1;
       gMinuit->mnparm(i,gF1->GetParName(i),par,we,al,bl,ierf);
-      if (fixp) { gMinuit->mnfixp(i-nfixed,ierf); nfixed++;}
    }
+   if(nfixed > 0)gMinuit->mnexcm("FIX",arglist,nfixed,ierf); // Otto
 
 //*-*- Reset Print level
    if (!Foption.Quiet) {
@@ -639,6 +648,7 @@ void TGraph::Fit(Text_t *fname, Option_t *option, Option_t *)
       if (Foption.Errors) gMinuit->mnprin(4,amin);
       else                gMinuit->mnprin(3,amin);
    }
+   delete [] arglist;
 
 //*-*- Store fitted function in histogram functions list and draw
    if (!Foption.Nostore) {
@@ -708,6 +718,9 @@ TH1F *TGraph::GetHistogram()
 
    if (fHistogram) return fHistogram;
    if (!gPad) return 0;
+   gPad->Modified();
+   gPad->Update();
+   if (fHistogram) return fHistogram;
    TH1F *h1 = (TH1F*)gPad->GetPrimitive("hframe");
    return h1;
 }
@@ -760,8 +773,8 @@ void GraphFitChisquare(Int_t &npar, Double_t *gin, Double_t &f, Double_t *u, Int
    Float_t *gx   = gr->GetX();
    Float_t *gy   = gr->GetY();
    npar          = gF1->GetNpar();
-   Float_t cumin = gx[0];
-   Float_t cumax = gx[0];
+   Float_t cumin = gy[0];
+   Float_t cumax = gy[0];
    if (flag == 2) for (k=0;k<npar;k++) dersum[k] = gin[k] = 0;
    nparts = n/3;
    if (nparts == 0)  nparts = 1;
@@ -786,8 +799,11 @@ void GraphFitChisquare(Int_t &npar, Double_t *gin, Double_t &f, Double_t *u, Int
       cu   = gy[bin];
       fu   = gF1->EvalPar(x,u);
       eu   = gr->GetErrorY(bin);
+      if (Foption.W1) eu = 1;
       if (eu < 0) {
          part = Int_t((x[0] - fxmin)/dfx);
+         if (part < 0) part = 0;
+         if (part >= nparts) part = nparts-1;
          if (gr->TestBit(kFitInit)) {
             eysum[part] += (cu-fu)*(cu-fu);
             if (cu < cumin) cumin = cu;
@@ -807,7 +823,6 @@ void GraphFitChisquare(Int_t &npar, Double_t *gin, Double_t &f, Double_t *u, Int
       else    fsum = cu-fu;
       f   += fsum*fsum;
    }
-
 //  make a better error estimate to be used in the next iterations
    if (gr->TestBit(kFitInit)) {
       gr->ResetBit(kFitInit);
@@ -815,6 +830,7 @@ void GraphFitChisquare(Int_t &npar, Double_t *gin, Double_t &f, Double_t *u, Int
       for (part=0;part<nparts;part++) {
          eysum[part] = TMath::Sqrt(eysum[part]);
          if (eysum[part] > errormax) eysum[part] = errormax;
+         if (errormax < 0.2) eysum[part] = 1;
       }
    }
    gF1->SetNumberFitPoints(npfits);
@@ -1089,13 +1105,16 @@ void TGraph::PaintGraph(Int_t npoints, Float_t *x, Float_t *y, Option_t *chopt)
      else   return;
   }
 
-   if (OptionStar) SetMarkerStyle(3);
+  if (OptionStar) SetMarkerStyle(3);
 
   OptionCurveFill = 0;
   if (OptionCurve && OptionFill) {
      OptionCurveFill = 1;
      OptionFill      = 0;
   }
+
+//*-*  Set Clipping option
+  gPad->SetBit(kClipFrame, TestBit(kClipFrame));
 
 //*-*-           Draw the Axis with a fixed number of division: 510
 
@@ -1197,10 +1216,8 @@ void TGraph::PaintGraph(Int_t npoints, Float_t *x, Float_t *y, Option_t *chopt)
         if (i > npoints) {
            xwork[npt] = xwork[0];  ywork[npt] = ywork[0];
         } else {
-           if (y[i-1] >= minimum && y[i-1] <= maximum && x[i-1] >= uxmin && x[i-1] <= uxmax) {
-              xwork[npt] = x[i-1];      ywork[npt] = y[i-1];
-              npt++;
-           }
+           xwork[npt] = x[i-1];      ywork[npt] = y[i-1];
+           npt++;
         }
         if (npt == NPMAX || i == nloop) {
            ComputeLogs(npt, OptionZ);
@@ -1222,7 +1239,7 @@ void TGraph::PaintGraph(Int_t npoints, Float_t *x, Float_t *y, Option_t *chopt)
            xwork[0] = xwork[npt-1];  ywork[0] = ywork[npt-1];
            npt      = 1;
         }
-     } //endfor (i=1;i<=nloop;i++)
+     }
   }
 
 //*-*-           Draw the graph with a smooth Curve. Smoothing via Smooth
@@ -1397,6 +1414,7 @@ void TGraph::PaintGraph(Int_t npoints, Float_t *x, Float_t *y, Option_t *chopt)
         }
      }
   }
+   gPad->ResetBit(kClipFrame);
 }
 
 //______________________________________________________________________________
@@ -1498,6 +1516,9 @@ void TGraph::PaintGrapHist(Int_t npoints, Float_t *x, Float_t *y, Option_t *chop
    if(opt.Contains("P")) OptionMark = 1;  else OptionMark = 0;
    if(opt.Contains("A")) OptionAxis = 1;  else OptionAxis = 0;
 
+
+//*-*  Set Clipping option
+  gPad->SetBit(kClipFrame, TestBit(kClipFrame));
 
 //*-*-           If necessary the adresses of the vectors are saved in
 //*-*-           a link area.
@@ -2075,6 +2096,7 @@ void TGraph::PaintGrapHist(Int_t npoints, Float_t *x, Float_t *y, Option_t *chop
      }
      gStyle->SetDrawBorder(drawbordersav);
   }
+  gPad->ResetBit(kClipFrame);
 }
 
 
@@ -2101,7 +2123,7 @@ void TGraph::ComputeLogs(Int_t npoints, Int_t opt)
         if (yworkl[i] > 0) yworkl[i] = TMath::Log10(yworkl[i]);
         else               yworkl[i] = gPad->GetY1();
      }
-     if (yworkl[i] > gPad->GetUymax()) yworkl[i] = gPad->GetUymax();
+//     if (yworkl[i] > gPad->GetUymax()) yworkl[i] = gPad->GetUymax();
   }
 }
 
@@ -2169,9 +2191,10 @@ void TGraph::SetPoint(Int_t i, Float_t x, Float_t y)
    // re-allocate the object
       Float_t *savex = new Float_t[i+1];
       Float_t *savey = new Float_t[i+1];
-      if (fNpoints > 0)
-        memcpy(savex,fX,fNpoints*sizeof(Float_t));
-        memcpy(savey,fY,fNpoints*sizeof(Float_t));
+      if (fNpoints > 0) {
+         memcpy(savex,fX,fNpoints*sizeof(Float_t));
+         memcpy(savey,fY,fNpoints*sizeof(Float_t));
+      }
       if (fX) delete [] fX;
       if (fY) delete [] fY;
       fX = savex;

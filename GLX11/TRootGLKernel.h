@@ -1,4 +1,4 @@
-//*CMZ :  2.00/00 04/03/98  18.04.59  by  Fons Rademakers
+//*CMZ :  2.00/00 08/02/99  14.42.15  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   04/03/98
 
 #ifndef ROOT_TRootGLKernel

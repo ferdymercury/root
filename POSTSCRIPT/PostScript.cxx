@@ -1,3 +1,8 @@
+//*CMZ :  2.21/07 08/03/99  12.42.06  by  Rene Brun
+//*CMZ :  2.21/06 12/02/99  10.13.55  by  Rene Brun
+//*CMZ :  2.21/05 07/02/99  16.30.29  by  Rene Brun
+//*CMZ :  2.21/01 07/02/99  16.00.08  by  Rene Brun
+//*CMZ :  2.21/00 19/12/98  18.55.09  by  Rene Brun
 //*CMZ :  2.00/13 02/11/98  19.17.55  by  Rene Brun
 //*CMZ :  2.00/12 07/10/98  12.03.13  by  Rene Brun
 //*CMZ :  2.00/10 05/07/98  11.16.50  by  Rene Brun
@@ -272,6 +277,8 @@ void TPostScript::Open(Text_t *fname, Int_t wtype)
 TPostScript::~TPostScript()
 {
 //*-*-*-*-*-*-*-*-*-*-*Default PostScript destructor*-*-*-*-*-*-*-*-*-*-*-*-*
+
+   Close();
 }
 
 //______________________________________________________________________________
@@ -280,6 +287,7 @@ void TPostScript::Close(Option_t *)
 //*-*-*-*-*-*-*-*-*-*-*Close a PostScript file*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 //*-*                  =======================
 
+   if (!gCurrentPS) return;
    if (gPad) gPad->Update();
    if( fMode != 3) {
      SaveRestore(-1);
@@ -392,7 +400,7 @@ void TPostScript::DefineFillPatterns()
   PrintStr("80 > } image } if PT 25 eq {  16 16 1 [ 16 0 0 16 neg0 16 ] { < FF FE FF FC@");
   PrintStr("FF F8 FF F0 F0 00 F0 00 F0 20 F0 60 F0 E0 F1 E0 F3 E0 F0 00 E0 00 C0 00 80 00@");
   PrintStr("00 00 > } image } if gr } def /FA { /PT exch def gsave clip 0 0 translate 1 1@");
-  PrintStr("54 { 1 sub 47.2 mul /Xcurr exch def 1 1 74 { 1 sub 47.2 mul /Ycurr exch def@");
+  PrintStr("74 { 1 sub 47.2 mul /Xcurr exch def 1 1 74 { 1 sub 47.2 mul /Ycurr exch def@");
   PrintStr("gsave Xcurr Ycurr translate PT DP gr } for } for gr newpath } def@");
 }
 
@@ -454,8 +462,8 @@ void TPostScript::DrawBox(Coord_t x1, Coord_t y1, Coord_t x2, Coord_t  y2)
          x[2] = x2;   y[2] = y2;
          x[3] = x1;   y[3] = y2;
          DrawPS(-4, &x[0], &y[0]);
-         WriteInteger(fillsi);
-         PrintFast(3," FA");
+//         WriteInteger(fillsi);
+//         PrintFast(3," FA");
       }
       if (fillsi == -3) {
          SetColor(5);
@@ -847,10 +855,10 @@ void TPostScript::DrawPS(Int_t nn, Float_t *xw, Float_t *yw)
    static Float_t anglehatch[24] = {180, 90,135, 45,150, 30,120, 60,
                                     180, 90,135, 45,150, 30,120, 60,
                                     180, 90,135, 45,150, 30,120, 60};
-  Int_t  n, ixd0, iyd0, idx, idy, ixdi, iydi, ix, iy, lx, ly, fais, fasi;
+  Int_t  n, ixd0, iyd0, idx, idy, ixdi, iydi, ix, iy, fais, fasi;
   fais = fasi = 0;
 
-//printf("in drawPS, nn=%d\n",nn);
+//if (nn <0)printf("in DrawPS, nn=%d\n",nn);
   if (nn > 0) {
      n = nn;
      SetLineStyle(fLineStyle);
@@ -883,9 +891,9 @@ void TPostScript::DrawPS(Int_t nn, Float_t *xw, Float_t *yw)
      return;
   }
 
-//printf("xw[%d]=%f, yw[%d]=%f, ixd0=%d, iyd0=%d\n",0,xw[0],0,yw[0],ixd0,iyd0);
+//if (nn <0)printf("xw[%d]=%f, yw[%d]=%f, ixd0=%d, iyd0=%d\n",0,xw[0],0,yw[0],ixd0,iyd0);
   PrintFast(2," m");
-  idx = idy = lx = ly = 0;
+  idx = idy = 0;
   for (Int_t i=1;i<n;i++) {
      ixdi = XtoPS(xw[i]);
      iydi = YtoPS(yw[i]);
@@ -893,26 +901,21 @@ void TPostScript::DrawPS(Int_t nn, Float_t *xw, Float_t *yw)
      iy   = iydi - iyd0;
      ixd0 = ixdi;
      iyd0 = iydi;
-//printf("xw[%d]=%f, yw[%d]=%f, ixdi=%d, iydi=%d\n",i,xw[i],i,yw[i],ixdi,iydi);
+//if (nn <0)printf("xw[%d]=%f, yw[%d]=%f, ixdi=%d, iydi=%d\n",i,xw[i],i,yw[i],ixdi,iydi);
      if( ix && iy) {
         if( idx ) { MovePS(idx,0); idx = 0; }
         if( idy ) { MovePS(0,idy); idy = 0; }
         MovePS(ix,iy);
-        lx = ixdi; ly = iydi;
-        continue;
-     }
-     if ( ix ) {
-        if( idy )  { MovePS(0,idy); idy = 0; ly = iydi;}
-        if( !idx ) { idx = ix; continue;}
-        if( TMath::Sign(ix,idx) == ix )       idx += ix;
-        else { MovePS(idx,0);  idx  = ix; lx = ixdi;}
-        continue;
-     }
-     if( iy ) {
-        if( idx ) { MovePS(idx,0); idx = 0;  lx = ixdi;}
-        if( !idy) { idy = iy; continue;}
-        if( TMath::Sign(iy,idy) == iy)         idy += iy;
-        else { MovePS(0,idy);    idy  = iy;  ly = iydi;}
+     } else if ( ix ) {
+        if( idy )  { MovePS(0,idy); idy = 0;}
+        if( !idx ) { idx = ix;}
+        else if( TMath::Sign(ix,idx) == ix )       idx += ix;
+        else { MovePS(idx,0);  idx  = ix;}
+     } else if( iy ) {
+        if( idx ) { MovePS(idx,0); idx = 0;}
+        if( !idy) { idy = iy;}
+        else if( TMath::Sign(iy,idy) == iy)         idy += iy;
+        else { MovePS(0,idy);    idy  = iy;}
      }
   }
   if (idx) MovePS(idx,0);
@@ -925,8 +928,10 @@ void TPostScript::DrawPS(Int_t nn, Float_t *xw, Float_t *yw)
      if (fais == 0) {PrintFast(5," cl s"); return;}
      if (fais == 3 || fais == 2) {
         if (fasi > 0 && fasi < 26) {
-//printf("idx=%d, idy=%d, lx=%d, ly=%d, jxd0=%d, jyd0=%d\n",idx,idy,lx,ly,jxd0,jyd0);
-           if (!idy && lx && ly) MovePS(jxd0-lx,jyd0-ly);
+//printf("idx=%d, idy=%d, jxd0=%d, jyd0=%d\n",idx,idy,jxd0,jyd0);
+           WriteInteger(ixd0);
+           WriteInteger(iyd0);
+           PrintFast(2," m");
            WriteInteger(fasi);
            PrintFast(3," FA");
         }
@@ -1940,14 +1945,16 @@ void TPostScript::Text(Float_t xx, Float_t yy, const Text_t *chars)
 //*-*
    Float_t     wh = (Float_t)gPad->XtoPixel(gPad->GetX2());
    Float_t     hh = (Float_t)gPad->YtoPixel(gPad->GetY1());
-   Float_t ftsize = fTextSize*gPad->GetAbsHNDC();
-   if (wh < hh) ftsize *= wh/hh;
+   Float_t ftsize;
 
    Int_t font     = abs(fTextFont)/10;
    if( font > 42 || font < 1) font = 1;
    Float_t fontrap = 75/51;
    if( font <= 14 && font >= 1) fontrap = fontrap*psrap[font-1];
-   Float_t rchh = fYsize*ftsize*fontrap;   //*-* rchh should be the text size in cm
+   if (wh < hh) ftsize = fTextSize*fYsize*gPad->GetAbsWNDC();
+   else         ftsize = fTextSize*fYsize*gPad->GetAbsHNDC();
+
+   Float_t rchh   = ftsize*fontrap;   //*-* rchh should be the text size in cm
    Int_t fontsize = 4*CMtoPS(rchh);
    if( fontsize <= 0) return;
    Float_t tsizex = fTextSize*(gPad->GetX2() - gPad->GetX1());

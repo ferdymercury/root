@@ -1,3 +1,7 @@
+//*CMZ :  2.21/08 18/03/99  10.26.14  by  Rene Brun
+//*CMZ :  2.21/04 05/02/99  12.03.34  by  Rene Brun
+//*CMZ :  2.21/02 15/01/99  12.08.48  by  Rene Brun
+//*CMZ :  2.21/01 12/01/99  09.50.24  by  Rene Brun
 //*CMZ :  2.00/06 25/04/98  09.09.03  by  Rene Brun
 //*CMZ :  1.03/09 10/12/97  16.50.45  by  Rene Brun
 //*-- Author :    Rene Brun   22/08/95
@@ -14,8 +18,13 @@
 //*-*       time distribution expected for interfering K1 and K2,         *
 //*-*       with free parameters Re(X), Im(X), DeltaM, and GammaS.        *
 //*-*                                                                     *
+//*-*   This program can be run in batch mode with the makefile           *
+//*-*   or executed interactively with the command:                       *
+//*-*         Root > .x minexam.cxx                                       *
+//*-*                                                                     *
 //*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 
+#ifndef __CINT__
 #include "TROOT.h"
 #include "TMinuit.h"
 #include "TMath.h"
@@ -23,68 +32,54 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-#include <iostream.h>
+#endif
 
-
-extern void fcnk0(Int_t &npar, Double_t *gin, Double_t &f, Double_t *x, Int_t iflag);
-
-static int ncount = 0;
+void fcnk0(Int_t &npar, Double_t *gin, Double_t &f, Double_t *x, Int_t iflag);
+Int_t minexam();
 
 //______________________________________________________________________________
-main()
+int main()
 {
-   TROOT minexam("TestMinuit","Test of Minuit");
+   TROOT mintest("TestMinuit","Test of Minuit");
+   return minexam();
+}
 
-   static Int_t nprm[5] = { 0   ,    1   ,     4    ,   9     ,  10};
-   static Double_t vstrt[5] = {0.  ,    0.  ,    .535  ,   .892   ,  518.3};
-   static Double_t stp[5] = {0.1 ,    0.1 ,     0.1  ,     0.   ,   0.};
-   static Double_t p0=0;
-   static Double_t p1=1;
-   static Double_t p3=3;
-   static Double_t p5=5;
-   Int_t ierflg = 0;
+Int_t minexam()
+{
    TStopwatch timer;
 
    TMinuit *gMinuit = new TMinuit(5);  //initialize TMinuit with a maximum of 5 params
-   cout<<"Starting timer"<<endl;
+   printf("Starting timer\n");
    timer.Start();
    gMinuit->mninit(5,6,7);
    gMinuit->SetFCN(fcnk0);
 
-   gMinuit->mnparm(nprm[0], "Re(X)",    vstrt[0], stp[0], 0,0,ierflg);
-   gMinuit->mnparm(nprm[1], "Im(X)",    vstrt[1], stp[1], 0,0,ierflg);
-   gMinuit->mnparm(nprm[2], "Delta M",  vstrt[2], stp[2], 0,0,ierflg);
-   gMinuit->mnparm(nprm[3], "T Kshort", vstrt[3], stp[3], 0,0,ierflg);
-   gMinuit->mnparm(nprm[4], "T Klong",  vstrt[4], stp[4], 0,0,ierflg);
-   if (ierflg) {
-      Printf(" UNABLE TO DEFINE PARAMETER NO.");
-      return ierflg;
-   }
+   gMinuit->DefineParameter(0, "Re(X)",    0,     0.1, 0,0);
+   gMinuit->DefineParameter(1, "Im(X)",    0,     0.1, 0,0);
+   gMinuit->DefineParameter(2, "Delta M",  0.535, 0.1, 0,0);
+   gMinuit->DefineParameter(3, "T Kshort", 0.892, 0  , 0,0);
+   gMinuit->DefineParameter(4, "T Klong",  518.3, 0  , 0,0);
 
-//   gMinuit->mnseti("Time Distribution of Leptonic K0 Decays");
 //*-*-       Request FCN to read in (or generate random) data (IFLAG=1)
-   gMinuit->mnexcm("CALL FCN", &p1 ,1,ierflg);
+   gMinuit->Command("CALL FCN 1");
+   gMinuit->FixParameter(2);
+   gMinuit->Command("SET PRINT 0");
+   gMinuit->Migrad();
+   gMinuit->Command("MINOS");
+   gMinuit->Release(2);
+   gMinuit->Migrad();
+   gMinuit->Command("MINOS");
+   gMinuit->Command("CALL FCN 3");
 
-   gMinuit->mnexcm("FIX", &p5 ,1,ierflg);
-   gMinuit->mnexcm("SET PRINT", &p0 ,1,ierflg);
-   gMinuit->mnexcm("MIGRAD", &p0 ,0,ierflg);
-   gMinuit->mnexcm("MINOS", &p0 ,0,ierflg);
-   gMinuit->mnexcm("RELEASE", &p5 ,1,ierflg);
-   gMinuit->mnexcm("MIGRAD", &p0 ,0,ierflg);
-   gMinuit->mnexcm("MINOS",  &p0 ,0,ierflg);
-   gMinuit->mnexcm("CALL FCN", &p3 , 1,ierflg);
-   cout<<"Time at the end of job = "<<timer.CpuTime()<<" seconds"<<endl;
-
+   printf("Time at the end of job = %f seconds\n",timer.CpuTime());
    return 0;
 }
 
 //______________________________________________________________________________
 void fcnk0(Int_t &, Double_t *, Double_t &f, Double_t *x, Int_t iflag)
 {
-   const Int_t MXBIN=50;
-   static Double_t thplu[MXBIN],thmin[MXBIN],t[MXBIN];
-   static Int_t nbins = 30;
-   static Int_t nevtot = 250;
+   static Double_t thplu[50],thmin[50],t[50];
+
    static Double_t evtp[30] = {
               11.,  9., 13., 13., 17.,  9.,  1.,  7.,  8.,  9.,
                6.,  4.,  6.,  3.,  7.,  4.,  7.,  3.,  8.,  4.,
@@ -93,105 +88,102 @@ void fcnk0(Int_t &, Double_t *, Double_t &f, Double_t *x, Int_t iflag)
                0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  1.,  1.,
                0.,  2.,  1.,  4.,  4.,  2.,  4.,  2.,  2.,  0.,
                2.,  3.,  7.,  2.,  3.,  6.,  2.,  4.,  1.,  5.};
+   static Double_t sevtp, sevtm;
 
-   static Int_t i, nevplu, nevmin;
-   static Double_t xre, xim, dm, gams, gaml,gamls,xr1,xr2,em,ep;
-   static Double_t sthplu, sthmin, ehalf, th, sterm, sevtp, sevtm;
-   static Double_t chisq, ti, thp, thm, evp, evm, chi1, chi2;
+   const Int_t nbins = 30;
+   const Int_t nevtot = 250;
+
+   Int_t i, nevplu, nevmin;
+
+   Double_t xre, xim, dm, gams, gaml,gamls,xr1,xr2,em,ep;
+   Double_t chisq, ti, thp, thm, evp, evm, chi1, chi2;
+   Double_t sthplu, sthmin, ehalf, th, sterm;
 
    xre   = x[0];
    xim   = x[1];
-   dm    = x[4];
-   gams  = 1/x[9];
-   gaml  = 1/x[10];
+   dm    = x[2];
+   gams  = 1/x[3];
+   gaml  = 1/x[4];
    gamls = 0.5*(gaml+gams);
-   if (iflag != 1)  goto L300;
-//                        generate random data
-   sthplu = sthmin = 0;
-   for (i=1;i<=nbins; i++) {
-      t[i-1] = 0.1*Double_t(i);
-      ti = t[i-1];
-      ehalf = TMath::Exp(-ti*gamls);
-      xr1 = 1-xre;
-      xr2 = 1+xre;
-      th =      (xr1*xr1 + xim*xim) * TMath::Exp(-ti*gaml);
-      th = th + (xr2*xr2 + xim*xim) * TMath::Exp(-ti*gams);
-      th = th -               4*xim*TMath::Sin(dm*ti) * ehalf;
-      sterm = 2*(1-xre*xre-xim*xim)*TMath::Cos(dm*ti) * ehalf;
-      thplu[i-1] = th + sterm;
-      thmin[i-1] = th - sterm;
-      sthplu += thplu[i-1];
-      sthmin += thmin[i-1];
-   }
-   nevplu = Int_t(Double_t(nevtot)*(sthplu/(sthplu+sthmin)));
-   nevmin = Int_t(Double_t(nevtot)*(sthmin/(sthplu+sthmin)));
-   cout<<"  LEPTONIC K ZERO DECAYS"<<endl;
-   cout<<Form(" PLUS, MINUS, TOTAL=%5d %5d %5d",nevplu,nevmin,nevtot)<<endl;
-   cout<<"0      TIME       THEOR+      EXPTL+      THEOR-      EXPTL-"<<endl;
-   sevtp = sevtm = 0;
-   for (i=1;i<=nbins; i++) {
-      thplu[i-1] = thplu[i-1]*Double_t(nevplu) / sthplu;
-      thmin[i-1] = thmin[i-1]*Double_t(nevmin) / sthmin;
-      sevtp += evtp[i-1];
-      sevtm += evtm[i-1];
-      if (iflag != 4) {
-         cout<<Form("%12.4f%12.4f%12.4f%12.4f%12.4f",t[i-1],thplu[i-1],evtp[i-1],thmin[i-1],evtm[i-1])<<endl;
+      //  generate random data
+   if (iflag == 1) {
+      sthplu = sthmin = 0;
+      for (i=0;i<nbins; i++) {
+         t[i]     = 0.1*(i+1);
+         ti       = t[i];
+         ehalf    = TMath::Exp(-ti*gamls);
+         xr1      = 1-xre;
+         xr2      = 1+xre;
+         th       = (xr1*xr1 + xim*xim)*TMath::Exp(-ti*gaml);
+         th      += (xr2*xr2 + xim*xim)*TMath::Exp(-ti*gams);
+         th      -= 4*ehalf*xim*TMath::Sin(dm*ti);
+         sterm    = 2*ehalf*(1-xre*xre-xim*xim)*TMath::Cos(dm*ti);
+         thplu[i] = th + sterm;
+         thmin[i] = th - sterm;
+         sthplu  += thplu[i];
+         sthmin  += thmin[i];
       }
+      nevplu = Int_t(nevtot*(sthplu/(sthplu+sthmin)));
+      nevmin = Int_t(nevtot*(sthmin/(sthplu+sthmin)));
+      printf("  LEPTONIC K ZERO DECAYS\n");
+      printf(" PLUS, MINUS, TOTAL=%5d %5d %5d\n",nevplu,nevmin,nevtot);
+      printf("0      TIME       THEOR+      EXPTL+      THEOR-      EXPTL-\n");
+      sevtp = sevtm = 0;
+      for (i=0;i<nbins; i++) {
+         thplu[i] = thplu[i]*nevplu/ sthplu;
+         thmin[i] = thmin[i]*nevmin/ sthmin;
+         sevtp   += evtp[i];
+         sevtm   += evtm[i];
+         printf("%12.4f%12.4f%12.4f%12.4f%12.4f\n",t[i],thplu[i],evtp[i],thmin[i],evtm[i]);
+      }
+      printf(" DATA EVTS PLUS, MINUS= %10.2f%10.2f\n", sevtp,sevtm);
    }
-   cout<<Form(" DATA EVTS PLUS, MINUS= %10.2f%10.2f", sevtp,sevtm)<<endl;
-
 //                      calculate chisquared
-L300:
    chisq = sthplu = sthmin = 0;
-   for (i=1;i<=nbins; i++) {
-      ti = t[i-1];
+   for (i=0;i<nbins; i++) {
+      ti    = t[i];
       ehalf = TMath::Exp(-ti*gamls);
-      xr1 = 1-xre;
-      xr2 = 1+xre;
-      th =      (xr1*xr1 + xim*xim) * TMath::Exp(-ti*gaml);
-      th = th + (xr2*xr2 + xim*xim) * TMath::Exp(-ti*gams);
-      th = th -               4*xim*TMath::Sin(dm*ti) * ehalf;
-      sterm = 2*(1-xre*xre-xim*xim)*TMath::Cos(dm*ti) * ehalf;
-      thplu[i-1] = th + sterm;
-      thmin[i-1] = th - sterm;
-      sthplu += thplu[i-1];
-      sthmin += thmin[i-1];
+      xr1   = 1-xre;
+      xr2   = 1+xre;
+      th    = (xr1*xr1 + xim*xim)*TMath::Exp(-ti*gaml);
+      th   += (xr2*xr2 + xim*xim)*TMath::Exp(-ti*gams);
+      th   -= 4*ehalf*xim*TMath::Sin(dm*ti);
+      sterm = 2*ehalf*(1-xre*xre-xim*xim)*TMath::Cos(dm*ti);
+      thplu[i] = th + sterm;
+      thmin[i] = th - sterm;
+      sthplu  += thplu[i];
+      sthmin  += thmin[i];
   }
    thp = thm = evp = evm = 0;
-   if (iflag != 4) cout<<"          POSITIVE LEPTONS                    ,NEGATIVE LEPTONS"<<endl;
-
    if (iflag != 4) {
-      cout<<"      TIME    THEOR    EXPTL    chisq         TIME    THEOR    EXPTL    chisq"<<endl;
+      printf("          POSITIVE LEPTONS                    ,NEGATIVE LEPTONS\n");
+      printf("      TIME    THEOR    EXPTL    chisq         TIME    THEOR    EXPTL    chisq\n");
    }
-   for (i=1;i<=nbins; i++) {
-      thplu[i-1] = thplu[i-1]*sevtp / sthplu;
-      thmin[i-1] = thmin[i-1]*sevtm / sthmin;
-      thp += thplu[i-1];
-      thm += thmin[i-1];
-      evp += evtp[i-1];
-      evm += evtm[i-1];
-//  Sum over bins until at least four events found
+   for (i=0;i<nbins; i++) {
+      thplu[i] = thplu[i]*sevtp / sthplu;
+      thmin[i] = thmin[i]*sevtm / sthmin;
+      thp += thplu[i];
+      thm += thmin[i];
+      evp += evtp[i];
+      evm += evtm[i];
+         //  Sum over bins until at least four events found
       if (evp > 3)  {
-         ep   = evp-thp;
-         chi1 = (ep*ep)/evp;
-         chisq = chisq + chi1;
-         if (iflag != 4) {
-            cout<<Form(" %9.3f%9.3f%9.3f%9.3f",t[i-1],thp,evp,chi1)<<endl;
-         }
+         ep     = evp-thp;
+         chi1   = (ep*ep)/evp;
+         chisq += chi1;
+         if (iflag != 4) printf(" %9.3f%9.3f%9.3f%9.3f\n",t[i],thp,evp,chi1);
          thp = evp = 0;
       }
       if (evm > 3) {
-         em   = evm-thm;
-         chi2 = (em*em)/evm;
-         chisq = chisq + chi2;
+         em     = evm-thm;
+         chi2   = (em*em)/evm;
+         chisq += chi2;
          if (iflag != 4) {
-            cout<<Form("                                          %9.3f%9.3f%9.3f%9.3f"
-                             ,t[i-1],thm,evm,chi2)<<endl;
+            printf("                                          %9.3f%9.3f%9.3f%9.3f\n"
+                             ,t[i],thm,evm,chi2);
          }
          thm = evm = 0;
       }
   }
-      f = chisq;
-      ncount++;
-//      cout<<ncount<< " F= "<<f<<" xre="<<xre<<" xim="<<xim<<" dm="<<dm<<" gams="<<gams<<" gaml="<<gaml<<endl;
+  f = chisq;
 }

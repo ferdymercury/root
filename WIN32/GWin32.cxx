@@ -1,3 +1,4 @@
+//*CMZ :  2.21/06 11/02/99  19.01.46  by  Valery Fine(fine@vxcern.cern.ch)
 //*CMZ :  2.00/12 03/10/98  19.19.24  by  Valery Fine(fine@mail.cern.ch)
 //*CMZ :  2.00/11 19/08/98  08.46.03  by  Rene Brun
 //*CMZ :  2.00/00 22/02/98  17.42.04  by  Valery Fine(fine@mail.cern.ch)
@@ -617,8 +618,8 @@ Int_t TGWin32::InitWindow(ULong_t window){
     TGWin32WindowsObject *winobj = (TGWin32WindowsObject *)window;
     TGWin32Switch *obj = 0;
     if (!winobj) {
-        TGWin32WindowsObject *winobj = new TGWin32WindowsObject(this,0,0);
-        obj =  new TGWin32Switch(winobj);
+        winobj = new TGWin32WindowsObject(this,0,0);
+        obj    = new TGWin32Switch(winobj);
         }
     else
         obj =  new TGWin32Switch(winobj, kFALSE); // kFALSE means winobj is an external object

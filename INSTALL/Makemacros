@@ -1,3 +1,8 @@
+*CMZ :  2.21/08 18/03/99  15.46.56  by  Fons Rademakers
+*CMZ :  2.21/07 04/03/99  15.27.41  by  Rene Brun
+*CMZ :  2.21/06 15/02/99  09.30.27  by  Rene Brun
+*CMZ :  2.21/05 08/02/99  12.14.35  by  Fons Rademakers
+*CMZ :  2.21/03 20/01/99  16.07.10  by  Fons Rademakers
 *CMZ :  2.20/05 14/12/98  00.14.18  by  Fons Rademakers
 *CMZ :  2.20/04 08/12/98  17.03.54  by  Rene Brun
 *CMZ :  2.20/02 04/12/98  15.47.46  by  Fons Rademakers
@@ -11,19 +16,26 @@
 ##### MACROS #####
 
 ROOTLIBS      = -lNew -lBase -lCint -lClib -lCont -lFunc -lGraf -lGraf3d \
-                -lHist -lHtml -lMatrix -lMeta -lMinuit -lNet -lPostscript \
-                -lProof -lTree -lUnix -lZip
+                -lHist -lHtml -lMatrix -lMeta -lMinuit -lNet -lPhysics \
+                -lPostscript -lProof -lTree -lUnix -lZip
 ROOTGLIBS     = -lGpad -lGui -lGX11 -lX3d -lXpm
 RINTLIBS      = -lRint
 EGLIBS        = -lEG -lEGPythia -lEGVenus
 GLLIBS        = -lRGL
 TTFLIBS       = -lGX11TTF
+CERNLIBS      = -lpacklib -lkernlib
 
 LPATH         = $(ROOTSYS)/lib
 
+ifneq ($(CERNLIB),)
+CERNPATH      = $(CERNLIB)
+else
+CERNPATH      =
+endif
+
 ##### utilities #####
 
-MAKEDEP       = $(ROOTSYS)/bin/makedepend
+MAKEDEP       = $(ROOTSYS)/bin/rmkdepend
 MAKELIB       = ./Makelib
 
 ##### libCint #####
@@ -49,6 +61,9 @@ ifeq ($(CXX),KCC)
 CINTS2       += CINT_fakestrm.cxx
 else
 ifeq ($(PLATFORM),linux)
+CINTS2       += CINT_libstrm.cxx
+endif
+ifeq ($(PLATFORM),fbsd)
 CINTS2       += CINT_libstrm.cxx
 endif
 ifeq ($(PLATFORM),hpux)
@@ -125,7 +140,7 @@ BASEH         = TArrayC.h TArrayD.h TArrayF.h TArrayI.h TArrayL.h TArrayS.h \
                 TBrowserImp.h TCanvasImp.h TContextMenuImp.h TControlBarImp.h \
                 TString.h TStringLong.h TObjString.h TSystem.h TRegexp.h \
                 TSysEvtHandler.h TSystemFile.h TSystemDirectory.h TStopwatch.h \
-                TStorage.h TRandom.h TBenchmark.h TTime.h TTimer.h
+                TStorage.h TRandom.h TRandom2.h TBenchmark.h TTime.h TTimer.h
 BASES         = BASE_Application.cxx BASE_ApplicationImp.cxx \
                 BASE_Array.cxx BASE_ArrayC.cxx BASE_ArrayD.cxx \
                 BASE_ArrayF.cxx BASE_ArrayI.cxx BASE_ArrayL.cxx \
@@ -138,7 +153,7 @@ BASES         = BASE_Application.cxx BASE_ApplicationImp.cxx \
                 BASE_MapFile.cxx BASE_Match.cxx BASE_Math.cxx \
                 BASE_MemberInspector.cxx BASE_Named.cxx BASE_ObjPtr.cxx \
                 BASE_ObjString.cxx BASE_Object.cxx BASE_ObjectTable.cxx \
-                BASE_Random.cxx BASE_RealData.cxx BASE_RefCnt.cxx \
+                BASE_Random.cxx BASE_Random2.cxx BASE_RealData.cxx BASE_RefCnt.cxx \
                 BASE_Regexp.cxx BASE_Root.cxx BASE_Stopwatch.cxx \
                 BASE_Storage.cxx BASE_String.cxx BASE_StringLong.cxx \
                 BASE_Stringio.cxx BASE_SysEvtHandler.cxx BASE_System.cxx \
@@ -218,8 +233,8 @@ GPADLIB       = $(LPATH)/libGpad.$(SOEXT)
 ##### libGraf #####
 
 GRAFH         = TAttPad.h TAttCanvas.h TArc.h TArrow.h TBox.h TColor.h \
-                TDiamond.h TEllipse.h TFrame.h TGaxis.h TGraph.h \
-                TGraphErrors.h TLine.h TMarker.h TPolyLine.h TPolyMarker.h \
+                TDiamond.h TEllipse.h TFrame.h TGaxis.h TGraph.h TGraphErrors.h \
+                TGraphAsymmErrors.h TLine.h TMarker.h TPolyLine.h TPolyMarker.h \
                 TText.h TPave.h TPaveLabel.h TPaveText.h TPavesText.h TF1.h \
                 TF2.h TF3.h TWbox.h TBrowser.h TGuiFactory.h TLego.h \
                 TLink.h TPoints.h TVirtualPad.h TPostScript.h TStyle.h \
@@ -228,7 +243,7 @@ GRAFS         = G_Arc.cxx G_AttText.cxx G_PaveText.cxx G_Arrow.cxx \
                 G_Axis.cxx G_PavesText.cxx G_AttAxis.cxx G_Box.cxx \
                 G_Gaxis.cxx G_Points.cxx G_AttCanvas.cxx G_Browser.cxx \
                 G_Graph.cxx G_PolyLine.cxx G_AttFill.cxx G_Color.cxx \
-                G_GraphErrors.cxx G_PolyMarker.cxx G_AttFunc.cxx \
+                G_GraphErrors.cxx G_GraphAsymmErrors.cxx G_PolyMarker.cxx G_AttFunc.cxx \
                 G_ContextMenu.cxx G_GuiFactory.cxx G_Style.cxx \
                 G_AttHist.cxx G_Diamond.cxx G_Lego.cxx G_Text.cxx \
                 G_AttLine.cxx G_Ellipse.cxx G_Line.cxx G_View.cxx \
@@ -326,8 +341,8 @@ GUILIB        = $(LPATH)/libGui.$(SOEXT)
 
 ##### libHist #####
 
-HISTH         = TH1.h TH2.h TH3.h TProfile.h
-HISTS         = H_H2.cxx H_Haxis.cxx H_H1.cxx H_H3.cxx H_Profile.cxx
+HISTH         = TH1.h TH2.h TH3.h TPaveStats.h TProfile.h
+HISTS         = H_H2.cxx H_Haxis.cxx H_H1.cxx H_H3.cxx H_PaveStats.cxx H_Profile.cxx
 
 HISTO         = $(HISTS:.cxx=.o)
 
@@ -416,6 +431,21 @@ NETDH         = $(NETDS:.cxx=.h)
 NETDO         = $(NETDS:.cxx=.o)
 
 NETLIB        = $(LPATH)/libNet.$(SOEXT)
+
+##### libPhysics #####
+
+PHYSICSH      = TLorentzVector.h TVector2.h TVector3.h
+PHYSICSS      = PHYSICS_LorentzVector.cxx PHYSICS_Vector2.cxx \
+                PHYSICS_Vector3.cxx
+
+PHYSICSO      = $(PHYSICSS:.cxx=.o)
+
+PHYSICSL      = PHYSICS_LinkDef.h
+PHYSICSDS     = PHYSICS_G__Physics.cxx
+PHYSICSDH     = $(PHYSICSDS:.cxx=.h)
+PHYSICSDO     = $(PHYSICSDS:.cxx=.o)
+
+PHYSICSLIB    = $(LPATH)/libPhysics.$(SOEXT)
 
 ##### libPostscript #####
 
@@ -593,6 +623,20 @@ X11TTFDO      = $(X11TTFDS:.cxx=.o)
 
 X11TTFLIB     = $(LPATH)/libGX11TTF.$(SOEXT)
 
+##### libRFIO #####
+
+RFIOH         = TRFIOFile.h
+RFIOS         = RFIO_RFIOFile.cxx
+
+RFIOO         = $(RFIOS:.cxx=.o)
+
+RFIOL         = RFIO_LinkDef.h
+RFIODS        = RFIO_G__RFIOFile.cxx
+RFIODH        = $(RFIODS:.cxx=.h)
+RFIODO        = $(RFIODS:.cxx=.o)
+
+RFIOLIB       = $(LPATH)/libRFIO.$(SOEXT)
+
 ##### root.exe #####
 
 ROOTEXES      = MAIN_rmain.cxx
@@ -617,6 +661,38 @@ ROOTCINTS     = UTILS_rootcint.cxx
 ROOTCINTO     = $(ROOTCINTS:.cxx=.o)
 ROOTCINT      = $(ROOTSYS)/bin/rootcint
 
+##### rootd #####
+
+ROOTDS        = ROOTD_daemon.cxx ROOTD_error.cxx ROOTD_net.cxx ROOTD_rootd.cxx
+ROOTDO        = $(ROOTDS:.cxx=.o)
+ROOTD         = $(ROOTSYS)/bin/rootd
+
+##### proofd #####
+
+PROOFDEXES    = PROOF_proofd.cxx
+PROOFDEXEO    = $(PROOFDEXES:.cxx=.o)
+PROOFDEXE     = $(ROOTSYS)/bin/proofd
+
+##### proofserv #####
+
+PROOFSERVS    = MAIN_pmain.cxx
+PROOFSERVO    = $(PROOFSERVS:.cxx=.o)
+PROOFSERV     = $(ROOTSYS)/bin/proofserv
+
+##### h2root #####
+
+H2ROOTS1      = UTILS_hntvar2.f
+H2ROOTS2      = UTILS_h2root.cxx
+
+H2ROOTO       = $(H2ROOTS1:.f=.o) $(H2ROOTS2:.cxx=.o)
+H2ROOT        = $(ROOTSYS)/bin/h2root
+
+##### g2root #####
+
+G2ROOTS       = UTILS_g2root.f
+G2ROOTO       = $(G2ROOTS:.f=.o)
+G2ROOT        = $(ROOTSYS)/bin/g2root
+
 ##### all #####
 
 ALLSRCS       = $(CINTS) $(CLIBS) $(NEWS) $(BASES) $(CONTS) $(FUNCS) $(GRAFS) \
@@ -624,7 +700,8 @@ ALLSRCS       = $(CINTS) $(CLIBS) $(NEWS) $(BASES) $(CONTS) $(FUNCS) $(GRAFS) \
                 $(NETS) $(PSS) $(PROOFS) $(RINTS) $(TREES) $(UNIXS) $(ZIPS) \
                 $(EGS) $(PYTHIAS) $(VENUSS) $(GPADS) $(X11S) $(GUIS) $(X3DS) \
                 $(RGLS) $(ROOTEXES) $(ROOTS) $(CINTEXES) $(ROOTCINTS) \
-                $(X11TTFS)
+                $(X11TTFS) $(RFIOS) $(PHYSICSS) $(ROOTDS) $(PROOFDS) \
+                $(PROOFSERVS)
 
 ALLDICT       = $(BASEDS) $(BASEDH) $(CONTDS) $(CONTDH) $(GRAFDS) $(GRAFDH) \
                 $(GRAF3DDS) $(GRAF3DDH) $(HISTDS) $(HISTDH) $(HTMLDS) \
@@ -633,7 +710,8 @@ ALLDICT       = $(BASEDS) $(BASEDH) $(CONTDS) $(CONTDH) $(GRAFDS) $(GRAFDH) \
                 $(PROOFDH) $(RINTDS) $(RINTDH) $(TREEDS) $(TREEDH) \
                 $(UNIXDS) $(UNIXDH) $(EGDS) $(EGDH) $(PYTHIADS) $(PYTHIADH) \
                 $(VENUSDS) $(VENUSDH) $(GPADDS) $(GPADDH) $(X11DS) \
-                $(X11DH) $(GUIDS) $(GUIDH) $(X11TTFDS) $(X11TTFDH)
+                $(X11DH) $(GUIDS) $(GUIDH) $(X11TTFDS) $(X11TTFDH) \
+                $(RFIODS) $(RFIODH) $(PHYSICSDS) $(PHYSICSDH)
 
 ALLOBJS       = $(CINTO) $(CLIBO) $(NEWO) $(BASEO) $(BASEDO) $(CONTO) \
                 $(CONTDO) $(FUNCO) $(GRAFO) $(GRAFDO) $(GRAF3DO) $(GRAF3DDO) \
@@ -644,13 +722,14 @@ ALLOBJS       = $(CINTO) $(CLIBO) $(NEWO) $(BASEO) $(BASEDO) $(CONTO) \
                 $(PYTHIAO) $(PYTHIADO) $(VENUSO) $(VENUSDO) $(GPADO) \
                 $(GPADDO) $(X11O) $(X11DO) $(GUIO) $(GUIDO) $(X3DO) \
                 $(RGLO) $(ROOTEXEO) $(ROOTO) $(CINTEXEO) $(ROOTCINTO) \
-                $(X11TTFO) $(X11TTFDO)
+                $(X11TTFO) $(X11TTFDO) $(RFIOO) $(RFIODO) $(PHYSICSO) \
+                $(PHYSICSDO) $(ROOTDO) $(PROOFDEXEO) $(PROOFSERVO)
 
 ALLLIBS       = $(CLIBLIB) $(NEWLIB) $(BASELIB) $(CONTLIB) \
                 $(FUNCLIB) $(GRAFLIB) $(GRAF3DLIB) $(HISTLIB) $(HTMLLIB) \
                 $(MATRIXLIB) $(METALIB) $(MINUITLIB) $(NETLIB) $(PSLIB) \
                 $(PROOFLIB) $(RINTLIB) $(TREELIB) $(UNIXLIB) $(ZIPLIB) \
-                $(GPADLIB) $(X11LIB) $(GUILIB) $(X3DLIB) \
+                $(GPADLIB) $(X11LIB) $(GUILIB) $(X3DLIB) $(PHYSICSLIB) \
                 $(EGLIB) $(PYTHIALIB) $(VENUSLIB)
 ifeq ($(shell if test -d $(ROOTSYS)/ttf/include;then echo ok; fi),ok)
 ALLLIBS      += $(X11TTFLIB)
@@ -660,10 +739,18 @@ ifeq ($(shell if test -d $(ROOTSYS)/opengl/include;then echo ok; fi),ok)
 ALLLIBS      += $(RGLLIB)
 CXXFLAGS     += -I$(ROOTSYS)/opengl/include
 endif
+ifneq ($(RFIO),)
+ALLLIBS      += $(RFIOLIB)
+endif
 
 
-ALLEXECS      = $(ROOTEXE) $(ROOT)
+ALLEXECS      = $(ROOTEXE) $(ROOT) $(ROOTD) $(PROOFDEXE) $(PROOFSERV)
 
+ifneq ($(CERNLIB),)
+ALLSRCS      += $(H2ROOTS1) $(H2ROOTS2) $(G2ROOTS)
+ALLOBJS      += $(H2ROOTO) $(G2ROOTO)
+ALLEXECS     += $(H2ROOT) $(G2ROOT)
+endif
 
 ##### RULES #####
 
@@ -680,6 +767,14 @@ CINT_%.o:       CINT_%.c
 
 %.o:            %.c
 		$(CC) $(OPT) $(CFLAGS) -c $<
+
+%.o:            %.f
+ifeq ($(F77),f2c)
+		f2c -a -A $<
+		$(CC) $(OPT) $(CFLAGS) -c $*.c
+else
+		$(F77) $(F77FLAGS) -c $<
+endif
 
 ##### TARGETS #####
 
@@ -713,6 +808,26 @@ $(ROOTCINT):    $(ROOTCINTO) $(CINTLIB)
 		$(LD) $(LDFLAGS) -o $(ROOTCINT) $(ROOTCINTO) \
 		-L$(LPATH) -lCint $(CILIBS)
 
+$(ROOTD):       $(ROOTDO)
+		$(LD) $(LDFLAGS) -o $(ROOTD) $(ROOTDO) $(CRYPTLIBS) $(SYSLIBS)
+
+$(PROOFDEXE):   $(PROOFDEXEO)
+		$(LD) $(LDFLAGS) -o $(PROOFDEXE) $(PROOFDEXEO) \
+		   -L$(LPATH) $(CRYPTLIBS) $(SYSLIBS)
+
+$(PROOFSERV):   $(PROOFSERVO) $(ALLLIBS)
+		$(LD) $(LDFLAGS) -o $(PROOFSERV) $(PROOFSERVO) \
+		   -L$(LPATH) $(ROOTLIBS) $(SYSLIBS)
+
+$(H2ROOT):      $(H2ROOTO) $(ALLLIBS)
+		$(LD) $(LDFLAGS) -o $(H2ROOT) $(H2ROOTO) \
+		  -L$(LPATH)    $(ROOTLIBS)  \
+		  -L$(CERNPATH) $(CERNLIBS)  $(F77LIBS)  $(SYSLIBS)
+
+$(G2ROOT):      $(G2ROOTO) $(ALLLIBS)
+		$(LD) $(LDFLAGS) -o $(G2ROOT) $(G2ROOTO) \
+		  -L$(LPATH)    $(ROOTLIBS) \
+		  -L$(CERNPATH) $(CERNLIBS)  $(F77LIBS)  $(SYSLIBS)
 
 $(CINTLIB):     $(CINTO)
 		@$(MAKELIB) $(PLATFORM) $(LD) "$(LDFLAGS)" \
@@ -898,6 +1013,18 @@ $(NETDO):       $(NETDS)
 		$(CXX) $(NOOPT) $(CXXFLAGS) -c $(NETDS)
 
 
+$(PHYSICSLIB):  $(PHYSICSO) $(PHYSICSDO)
+		@$(MAKELIB) $(PLATFORM) $(LD) "$(LDFLAGS)" \
+		   "$(SOFLAGS)" libPhysics.$(SOEXT) $@ "$(PHYSICSO) $(PHYSICSDO)"
+
+$(PHYSICSDS):   $(PHYSICSH) $(PHYSICSL) $(ROOTCINT)
+		@echo "Generating dictionary $(PHYSICSDS)..."
+		@rootcint -f $(PHYSICSDS) -c $(PHYSICSH) $(PHYSICSL)
+
+$(PHYSICSDO):   $(PHYSICSDS)
+		$(CXX) $(NOOPT) $(CXXFLAGS) -c $(PHYSICSDS)
+
+
 $(PSLIB):       $(PSO)
 		@$(MAKELIB) $(PLATFORM) $(LD) "$(LDFLAGS)" \
 		   "$(SOFLAGS)" libPostscript.$(SOEXT) $@ "$(PSO)"
@@ -973,6 +1100,18 @@ $(X11TTFDS):    $(X11TTFH) $(X11TTFL) $(ROOTCINT)
 
 $(X11TTFDO):    $(X11TTFDS)
 		$(CXX) $(NOOPT) $(CXXFLAGS) -c $(X11TTFDS)
+
+
+$(RFIOLIB):     $(RFIOO) $(RFIODO)
+		@$(MAKELIB) $(PLATFORM) $(LD) "$(LDFLAGS)" \
+		   "$(SOFLAGS)" libRFIO.$(SOEXT) $@ "$(RFIOO) $(RFIODO)" $(RFIO)
+
+$(RFIODS):      $(RFIOH) $(RFIOL) $(ROOTCINT)
+		@echo "Generating dictionary $(RFIODS)..."
+		@rootcint -f $(RFIODS) -c $(RFIOH) $(RFIOL)
+
+$(RFIODO):      $(RFIODS)
+		$(CXX) $(NOOPT) $(CXXFLAGS) -c $(RFIODS)
 
 
 $(X3DLIB):      $(X3DO)

@@ -1,5 +1,5 @@
-/*CMZ :  2.20/04 08/12/98  16.25.21  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   08/12/98*/
+/*CMZ :  2.21/08 17/03/99  13.13.37  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   17/03/99*/
 /* /% C++ %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -31,6 +31,9 @@
 
 class G__MethodInfo;
 class G__DataMemberInfo;
+#ifndef G__OLDIMPLEMENTATION1020
+class G__FriendInfo;
+#endif
 
 /*********************************************************************
 * class G__ClassInfo
@@ -60,6 +63,9 @@ class G__ClassInfo {
   long IsBase(G__ClassInfo& a);
   long Tagnum() { return(tagnum); }
   G__ClassInfo EnclosingClass() ;
+#ifndef G__OLDIMPLEMENTATION1020
+  struct G__friendtag* GetFriendInfo();
+#endif
   int IsValid();
   int SetFilePos(const char *fname);
   int Next();
@@ -118,5 +124,40 @@ class G__ClassInfo {
 #endif
 
 };
+
+
+#ifndef G__OLDIMPLEMENTATION1020
+/*********************************************************************
+* class G__FriendInfo
+*
+*
+*********************************************************************/
+class G__FriendInfo {
+ public:
+  G__FriendInfo(struct G__friendtag *pin=0) { Init(pin); }
+  void operator=(const G__FriendInfo& x) { Init(x.pfriendtag); }
+  void Init(struct G__friendtag* pin) {
+    pfriendtag = pin;
+    if(pfriendtag) cls.Init(pfriendtag->tagnum);
+    else           cls.Init(-1);
+  }
+  G__ClassInfo* FriendOf() { return(&cls); }
+  int Next() {
+    if(pfriendtag) {
+      pfriendtag=pfriendtag->next;
+      Init(pfriendtag);
+      return(IsValid());
+    }
+    else {
+      return(0);
+    }
+  }
+  int IsValid() { if(pfriendtag) return(1); else return(0); }
+ private:
+  G__friendtag *pfriendtag;
+  G__ClassInfo cls;
+};
+
+#endif
 
 #endif

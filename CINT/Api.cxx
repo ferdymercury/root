@@ -1,5 +1,5 @@
-//*CMZ :  2.20/04 08/12/98  16.25.34  by  Masaharu Goto
-//*-- Author :    Masaharu Goto   08/12/98
+//*CMZ :  2.21/08 17/03/99  13.13.46  by  Masaharu Goto
+//*-- Author :    Masaharu Goto   17/03/99
 /* /% C++ %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -167,3 +167,14 @@ extern "C" void G__InitGetSpecialObject(G__pMethodSpecialObject pmethod)
   G__UserSpecificGetSpecialObject = pmethod;
 }
 
+#ifndef G__OLDIMPLEMENTATION1002
+#ifdef G__ROOT
+extern "C" void* G__new_interpreted_object(int size) {
+  char *p = new char[size];
+  return((void*)p);
+}
+extern "C" void G__delete_interpreted_object(void* p) {
+  delete p;
+}
+#endif
+#endif

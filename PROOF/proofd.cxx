@@ -1,3 +1,4 @@
+//*CMZ :  2.21/08 18/03/99  15.13.31  by  Fons Rademakers
 //*CMZ :  2.00/12 08/10/98  17.56.11  by  Fons Rademakers
 //*CMZ :  1.03/09 08/12/97  18.45.13  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   02/02/97
@@ -65,7 +66,7 @@ extern "C" char *crypt(const char *, const char *);
 extern "C" int initgroups(char *name, int basegid);
 #endif
 
-#if defined(__sgi) && !defined(__GNUG__) //should be test for 6.2
+#if defined(__sgi) && !defined(__GNUG__) && (!defined(SGI_REL) || (SGI_REL<62))
 extern "C" {
    int seteuid(int euid);
    int setegid(int egid);

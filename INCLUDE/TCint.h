@@ -1,3 +1,4 @@
+//*CMZ :  2.21/03 19/01/99  18.27.39  by  Fons Rademakers
 //*CMZ :  1.03/09 06/12/97  19.23.29  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   01/03/96
 
@@ -84,7 +85,7 @@ public:
    void    UpdateListOfGlobals();
    void    UpdateListOfGlobalFunctions();
    void    SetClassInfo(TClass *cl);
-   Int_t   Calc(const char *line);
+   Long_t  Calc(const char *line);
    void    CreateListOfBaseClasses(TClass *cl);
    void    CreateListOfDataMembers(TClass *cl);
    void    CreateListOfMethods(TClass *cl);

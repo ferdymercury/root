@@ -1,3 +1,4 @@
+//*CMZ :  2.21/07 05/03/99  11.25.23  by  Rene Brun
 //*CMZ :  2.20/05 15/12/98  09.17.21  by  Rene Brun
 //*CMZ :  2.20/00 02/11/98  15.29.52  by  Fons Rademakers
 //*CMZ :  1.03/09 06/12/97  17.52.34  by  Fons Rademakers
@@ -219,8 +220,9 @@ void TWbox::PaintFrame(Coord_t x1, Coord_t y1,Coord_t x2, Coord_t  y2,
    if (!gCurrentPS || !tops) return;
 
 //*-*- same for PostScript
-   Float_t dx   = (xt - xl) *Float_t(bordersize)/Float_t(pxt - pxl);
-   Int_t border = gCurrentPS->XtoPS(xt) - gCurrentPS->XtoPS(xt-dx);
+//   Float_t dx   = (xt - xl) *Float_t(bordersize)/Float_t(pxt - pxl);
+//   Int_t border = gCurrentPS->XtoPS(xt) - gCurrentPS->XtoPS(xt-dx);
+   Int_t border = bordersize;
    gCurrentPS->DrawFrame(xl, yl, xt, yt, bordermode, border,
                          Int_t(GetDarkColor()), Int_t(GetLightColor()));
 }

@@ -1,3 +1,4 @@
+//*CMZ :  2.21/05 08/02/99  12.32.45  by  Fons Rademakers
 //*CMZ :  2.00/10 14/07/98  18.37.55  by  Fons Rademakers
 //*CMZ :  2.00/06 09/05/98  15.22.42  by  Fons Rademakers
 //*CMZ :  2.00/01 14/03/98  05.58.52  by  Fons Rademakers
@@ -37,7 +38,7 @@
 // Root.MemStat.size, using the resource Root.MemStat.cnt one can       //
 // specify after how many allocations of this size the trap should      //
 // occur.                                                               //
-// Set the compile option NOSTATS to de-activate all memory checking    //
+// Set the compile option R__NOSTATS to de-activate all memory checking //
 // and statistics gathering in the system.                              //
 //                                                                      //
 //////////////////////////////////////////////////////////////////////////
@@ -50,7 +51,7 @@
 #include "TMath.h"
 #include "TString.h"
 
-#if !defined(NOSTATS)
+#if !defined(R__NOSTATS)
 #   define MEM_DEBUG
 #   define MEM_STAT
 #   define MEM_CHECKOBJECTPOINTERS
@@ -151,7 +152,7 @@ void *TStorage::ReAlloc(void *ovp, size_t size)
 {
    // Reallocate (i.e. resize) block of memory.
 
-   if (fgReAllocHook)
+   if (fgReAllocHook && fgHasCustomNewDelete)
       return (*fgReAllocHook)(ovp, size);
 
    static const char *where = "TStorage::ReAlloc";
@@ -178,7 +179,7 @@ void *TStorage::ReAlloc(void *ovp, size_t size, size_t oldsize)
    // Reallocate (i.e. resize) block of memory. Checks if current size is
    // equal to oldsize. If not memory was overwritten.
 
-   if (fgReAllocCHook)
+   if (fgReAllocCHook && fgHasCustomNewDelete)
       return (*fgReAllocCHook)(ovp, size, oldsize);
 
    static const char *where = "TStorage::ReAlloc";

@@ -1,3 +1,4 @@
+//*CMZ :  2.21/04 03/02/99  11.31.17  by  Fons Rademakers
 //*CMZ :  2.00/12 02/10/98  15.14.26  by  Fons Rademakers
 //*CMZ :  2.00/11 03/08/98  12.17.47  by  Fons Rademakers
 //*CMZ :  2.00/00 17/02/98  18.55.16  by  Fons Rademakers
@@ -114,6 +115,22 @@ TGDimension TGTabElement::GetDefaultSize() const
    return TGDimension(TMath::Max(fTWidth+12, (UInt_t)45), fTHeight+6);
 }
 
+//______________________________________________________________________________
+void TGTabElement::SetText(TGString *text)
+{
+   // Set new tab text.
+
+   if (fText) delete fText;
+   fText = text;
+
+   int max_ascent, max_descent;
+   fTWidth = gGXW->TextWidth(fFontStruct, fText->GetString(), fText->GetLength());
+   gGXW->GetFontProperties(fFontStruct, max_ascent, max_descent);
+   fTHeight = max_ascent + max_descent;
+
+   fClient->NeedRedraw(this);
+}
+
 
 //______________________________________________________________________________
 TGTabLayout::TGTabLayout(TGTab *main)
@@ -211,7 +228,7 @@ TGTab::TGTab(const TGWindow *p, UInt_t w, UInt_t h,
    // we need this in order to avoid border blinking when switching tabs...
    fContainer = new TGCompositeFrame(this, fWidth, fHeight - fTabh,
                        kVerticalFrame | kRaisedFrame | kDoubleBorder);
-   TGCompositeFrame::AddFrame(fContainer, 0);
+   AddFrame(fContainer, 0);
 
    gGXW->SelectInput(fId, kButtonPressMask);
 }
@@ -268,7 +285,7 @@ void TGTab::ChangeTab(Int_t tabIndex)
       Int_t  count = 0;
 
       TIter next(fList);
-      next();
+      next();           // skip first container
 
       fCurrent = tabIndex;
       while ((el = (TGFrameElement *) next())) {
@@ -343,4 +360,52 @@ Bool_t TGTab::HandleButton(Event_t *event)
       ChangeTab(c);
    }
    return kTRUE;
+}
+
+//______________________________________________________________________________
+TGCompositeFrame *TGTab::GetTabContainer(Int_t tabIndex) const
+{
+   // Return container of tab with index tabIndex.
+   // Returns 0 in case tabIndex is out of range.
+
+   if (tabIndex < 0) return 0;
+
+   TGFrameElement *el;
+   Int_t  count = 0;
+
+   TIter next(fList);
+   next();           // skip first container
+
+   while (next()) {
+      el = (TGFrameElement *) next();
+      if (count == tabIndex)
+         return (TGCompositeFrame *) el->fFrame;
+      count++;
+   }
+
+   return 0;
+}
+
+//______________________________________________________________________________
+TGTabElement *TGTab::GetTabTab(Int_t tabIndex) const
+{
+   // Return container of tab with index tabIndex.
+   // Returns 0 in case tabIndex is out of range.
+
+   if (tabIndex < 0) return 0;
+
+   TGFrameElement *el;
+   Int_t  count = 0;
+
+   TIter next(fList);
+   next();           // skip first container
+
+   while ((el = (TGFrameElement *) next())) {
+      next();
+      if (count == tabIndex)
+         return (TGTabElement *) el->fFrame;
+      count++;
+   }
+
+   return 0;
 }

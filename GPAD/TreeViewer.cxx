@@ -1,3 +1,5 @@
+//*CMZ :  2.21/06 15/02/99  10.04.00  by  Rene Brun
+//*CMZ :  2.21/04 03/02/99  16.47.16  by  Rene Brun
 //*CMZ :  2.20/06 17/12/98  09.30.48  by  Rene Brun
 //*CMZ :  2.20/05 15/12/98  13.08.11  by  Rene Brun
 //*CMZ :  2.20/04 11/12/98  16.19.08  by  Rene Brun
@@ -446,7 +448,6 @@ void TTreeViewer::ExecuteDraw(Option_t *option)
    Int_t firstEvent = Int_t(nentries*smin);
 
    // find canvas/pad where to draw
-   TCanvas *c1;
    TPaveVar *plcpad = IsUnder(fCpad);
    if (plcpad) {
       TPad *pad = (TPad*)gROOT->FindObject(plcpad->GetLabel());
@@ -454,10 +455,10 @@ void TTreeViewer::ExecuteDraw(Option_t *option)
       if (pad) {
          pad->cd();
       } else {
-         c1 = new TCanvas(plcpad->GetLabel());
+         new TCanvas(plcpad->GetLabel(),plcpad->GetLabel());
       }
    } else {
-      c1 = new TCanvas("c1");
+      new TCanvas("c1");
    }
 
    gROOT->SetInterrupt(kFALSE); // just in case a BREAK had been set

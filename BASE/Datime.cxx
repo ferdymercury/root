@@ -1,3 +1,5 @@
+//*CMZ :  2.21/06 15/02/99  13.14.27  by  Rene Brun
+//*CMZ :  2.21/04 29/01/99  13.55.19  by  Fons Rademakers
 //*CMZ :  2.00/12 15/09/98  00.46.10  by  Rene Brun
 //*CMZ :  2.00/05 19/04/98  03.02.26  by  Fons Rademakers
 //*CMZ :  1.03/09 05/12/97  12.04.17  by  Fons Rademakers
@@ -84,11 +86,6 @@ UInt_t TDatime::Convert() const
    UInt_t min   = (fDatime<<20)>>26;
    UInt_t sec   = (fDatime<<26)>>26;
 
-   if (year > 10) {
-      Error("TDatime::Convert", "fix conversion of ROOT to time_t");
-      return fDatime;  // good till 2005 !!!
-   }
-
    struct tm tp;
    tp.tm_year  = year+95;
    tp.tm_mon   = month-1;
@@ -125,12 +122,12 @@ void TDatime::FillBuffer(char *&buffer)
 //______________________________________________________________________________
 Int_t TDatime::GetDate()
 {
-   // Return date in form of 971224 (i.e. 24/12/97)
+   // Return date in form of 19971224 (i.e. 24/12/1997)
 
    UInt_t year  = fDatime>>26;
    UInt_t month = (fDatime<<6)>>28;
    UInt_t day   = (fDatime<<10)>>27;
-   return 10000*(year+95) + 100*month + day;
+   return 10000*(year+1995) + 100*month + day;
 }
 
 //______________________________________________________________________________
@@ -195,32 +192,27 @@ void TDatime::Set()
 //______________________________________________________________________________
 void TDatime::Set(Int_t date, Int_t time)
 {
-   // Set date and time. Data must be in format 980418 and time in, either
-   // 2246 (min precision) or 224512 (second precision). The date must
+   // Set date and time. Data must be in format 980418 or 19980418 and time in
+   // 224512 (second precision). The date must
    // be >= 950101.
-   // for years >= 2000, date can be given in the form 20001127 or 1001127
+   // For years >= 2000, date can be given in the form 20001127 or 1001127
    // internally the date will be converted to 1001127
+
+   if (date > 19000000) date -= 19000000;
    if (date < 950101) {
       Error("TDatime::Set", "year smaller than 1995");
       return;
    }
 
-   if (date > 20000000) date += 100 - 20000000;
    Int_t year  = date/10000;
    Int_t month = (date-year*10000)/100;
    Int_t day   = date%100;
 
    Int_t hour, min, sec;
 
-   if (time < 9999) {
-      hour  = time/100;
-      min   = time%100;
-      sec   = 0;
-   } else {
-      hour = time/10000;
-      min  = (time-hour*10000)/100;
-      sec  = time%100;
-   }
+   hour = time/10000;
+   min  = (time-hour*10000)/100;
+   sec  = time%100;
 
    fDatime = (year-95)<<26 | month<<22 | day<<17 | hour<<12 | min<<6 | sec;
 }
@@ -229,9 +221,10 @@ void TDatime::Set(Int_t date, Int_t time)
 void TDatime::Set(Int_t year, Int_t month, Int_t day,
                   Int_t hour, Int_t min, Int_t sec)
 {
-   // Set date and time. Year must be 1998 and not 98.
+   // Set date and time. Year may be xx where 95 <= xx <= 99.
    // The year must be >= 1995.
 
+   if (year < 100) year += 1900;
    if (year < 1995) {
       Error("TDatime::Set", "year smaller than 1995");
       return;
@@ -265,6 +258,6 @@ void TDatime::GetDateTime(UInt_t datetime, Int_t &date, Int_t &time)
    UInt_t hour  = (datetime<<15)>>27;
    UInt_t min   = (datetime<<20)>>26;
    UInt_t sec   = (datetime<<26)>>26;
-   date         =  10000*(year+95) + 100*month + day;
+   date         =  10000*(year+1995) + 100*month + day;
    time         =  10000*hour + 100*min + sec;
 }

@@ -1,5 +1,5 @@
-//*CMZ :  2.20/05 15/12/98  18.03.28  by  Rene Brun
-//*-- Author :    Rene Brun   15/12/98
+//*CMZ :  2.21/07 08/03/99  12.35.00  by  Fons Rademakers
+//*-- Author :    Fons Rademakers   08/03/99
 //*CMZ :  1.00/09 23/04/97  17.59.54  by  Rene Brun
 //*-- Author :    Rene Brun   23/04/97
 #if defined(__hpux) && !defined(__GNUG__)
@@ -86,12 +86,14 @@ extern G__linked_taginfo G__G__X11TTFLN_TGX11TTFcLcLEAlign;
 #undef malloc
 #endif
 
+extern "C" void G__cpp_reset_tagtableG__X11TTF();
 
 extern "C" void G__set_cpp_environmentG__X11TTF() {
   G__add_macro("__MAKECINT__");
   G__add_compiledheader("TROOT.h");
   G__add_compiledheader("TMemberInspector.h");
   G__add_compiledheader("TGX11TTF.h");
+  G__cpp_reset_tagtableG__X11TTF();
 }
 extern "C" int G__cpp_dllrevG__X11TTF() { return(51111); }
 
@@ -100,7 +102,7 @@ extern "C" int G__cpp_dllrevG__X11TTF() { return(51111); }
 *********************************************************/
 
 /* TGX11TTF */
-static int G__TGX11TTF_TGX11TTF_5_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGX11TTF_TGX11TTF_6_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    TGX11TTF *p=NULL;
    if(G__getaryconstruct()) p=new TGX11TTF[G__getaryconstruct()];
    else                    p=new TGX11TTF;
@@ -111,7 +113,7 @@ static int G__TGX11TTF_TGX11TTF_5_1(G__value *result7,char *funcname,struct G__p
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGX11TTF_TGX11TTF_6_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGX11TTF_TGX11TTF_7_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    TGX11TTF *p=NULL;
       p = new TGX11TTF(*(TGX11*)libp->para[0].ref);
       result7->obj.i = (long)p;
@@ -121,7 +123,7 @@ static int G__TGX11TTF_TGX11TTF_6_1(G__value *result7,char *funcname,struct G__p
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGX11TTF_DrawText_8_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGX11TTF_DrawText_9_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TGX11TTF*)(G__getstructoffset()))->DrawText((Int_t)G__int(libp->para[0]),(Int_t)G__int(libp->para[1])
 ,(Float_t)G__double(libp->para[2]),(Float_t)G__double(libp->para[3])
@@ -129,122 +131,122 @@ static int G__TGX11TTF_DrawText_8_1(G__value *result7,char *funcname,struct G__p
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGX11TTF_GetTextExtent_9_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGX11TTF_GetTextExtent_0_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TGX11TTF*)(G__getstructoffset()))->GetTextExtent(libp->para[0].ref?*(UInt_t*)libp->para[0].ref:G__Muint(libp->para[0]),libp->para[1].ref?*(UInt_t*)libp->para[1].ref:G__Muint(libp->para[1])
 ,(char*)G__int(libp->para[2]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGX11TTF_SetTextFont_0_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGX11TTF_SetTextFont_1_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TGX11TTF*)(G__getstructoffset()))->SetTextFont((char*)G__int(libp->para[0]),(TGXW::ETextSetMode)G__int(libp->para[1])));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGX11TTF_SetTextFont_1_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGX11TTF_SetTextFont_2_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TGX11TTF*)(G__getstructoffset()))->SetTextFont((Font_t)G__int(libp->para[0]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGX11TTF_SetTextSize_2_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGX11TTF_SetTextSize_3_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TGX11TTF*)(G__getstructoffset()))->SetTextSize((Float_t)G__double(libp->para[0]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGX11TTF_GetCacheCount_3_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGX11TTF_GetCacheCount_4_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TGX11TTF*)(G__getstructoffset()))->GetCacheCount());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGX11TTF_GetCacheHits_4_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGX11TTF_GetCacheHits_5_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TGX11TTF*)(G__getstructoffset()))->GetCacheHits());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGX11TTF_GetCacheMisses_5_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGX11TTF_GetCacheMisses_6_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TGX11TTF*)(G__getstructoffset()))->GetCacheMisses());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGX11TTF_GetHinting_6_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGX11TTF_GetHinting_7_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,98,(long)((TGX11TTF*)(G__getstructoffset()))->GetHinting());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGX11TTF_GetSmoothing_7_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGX11TTF_GetSmoothing_8_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,98,(long)((TGX11TTF*)(G__getstructoffset()))->GetSmoothing());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGX11TTF_SetHinting_8_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGX11TTF_SetHinting_9_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TGX11TTF*)(G__getstructoffset()))->SetHinting((Bool_t)G__int(libp->para[0]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGX11TTF_SetSmoothing_9_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGX11TTF_SetSmoothing_0_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TGX11TTF*)(G__getstructoffset()))->SetSmoothing((Bool_t)G__int(libp->para[0]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGX11TTF_DeclFileName_0_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGX11TTF_DeclFileName_1_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,67,(long)((TGX11TTF*)(G__getstructoffset()))->DeclFileName());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGX11TTF_DeclFileLine_1_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGX11TTF_DeclFileLine_2_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TGX11TTF*)(G__getstructoffset()))->DeclFileLine());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGX11TTF_ImplFileName_2_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGX11TTF_ImplFileName_3_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,67,(long)((TGX11TTF*)(G__getstructoffset()))->ImplFileName());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGX11TTF_ImplFileLine_3_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGX11TTF_ImplFileLine_4_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TGX11TTF*)(G__getstructoffset()))->ImplFileLine());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGX11TTF_Class_Version_4_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGX11TTF_Class_Version_5_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,115,(long)((TGX11TTF*)(G__getstructoffset()))->Class_Version());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGX11TTF_Class_5_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGX11TTF_Class_6_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((TGX11TTF*)(G__getstructoffset()))->Class());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGX11TTF_Dictionary_6_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGX11TTF_Dictionary_7_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TGX11TTF*)(G__getstructoffset()))->Dictionary();
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGX11TTF_IsA_7_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGX11TTF_IsA_8_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((TGX11TTF*)(G__getstructoffset()))->IsA());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGX11TTF_ShowMembers_8_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGX11TTF_ShowMembers_9_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TGX11TTF*)(G__getstructoffset()))->ShowMembers(*(TMemberInspector*)libp->para[0].ref,(char*)G__int(libp->para[1]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGX11TTF_Streamer_9_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGX11TTF_Streamer_0_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TGX11TTF*)(G__getstructoffset()))->Streamer(*(TBuffer*)libp->para[0].ref);
    return(1 || funcname || hash || result7 || libp) ;
 }
 
 // automatic copy constructor
-static int G__TGX11TTF_TGX11TTF_0_4(G__value *result7,char *funcname,struct G__param *libp,int hash)
+static int G__TGX11TTF_TGX11TTF_1_4(G__value *result7,char *funcname,struct G__param *libp,int hash)
 {
    TGX11TTF *p;
    if(1!=libp->paran) ;
@@ -257,7 +259,7 @@ static int G__TGX11TTF_TGX11TTF_0_4(G__value *result7,char *funcname,struct G__p
 }
 
 // automatic destructor
-static int G__TGX11TTF_wATGX11TTF_1_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGX11TTF_wATGX11TTF_2_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    if(G__getaryconstruct())
      if(G__PVOID==G__getgvp())
        delete[] (TGX11TTF *)(G__getstructoffset());
@@ -603,55 +605,59 @@ static void G__setup_memfuncTGX11TTF(void) {
 "i - 'Int_t' 0 - bx i - 'Int_t' 0 - by",(char*)NULL,(void*)NULL,0);
    G__memfunc_setup("GetTextExtent",1341,(G__InterfaceMethod)NULL,121,-1,-1,0,4,1,4,0,
 "h - 'UInt_t' 1 - w h - 'UInt_t' 1 - h "
-"i - 'Int_t' 1 - maxDescent C - - 0 - text",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetRotatedTextExtent",2064,(G__InterfaceMethod)NULL,121,-1,-1,0,5,1,4,0,
+"i - 'Int_t' 1 - maxAscent C - - 0 - text",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetRotatedTextExtent",2064,(G__InterfaceMethod)NULL,121,-1,-1,0,6,1,4,0,
 "h - 'UInt_t' 1 - w h - 'UInt_t' 1 - h "
-"i - 'Int_t' 1 - maxDescent f - 'Float_t' 0 - angle "
-"C - - 0 - text",(char*)NULL,(void*)NULL,0);
+"i - 'Int_t' 1 - xoff i - 'Int_t' 1 - yoff "
+"f - 'Float_t' 0 - angle C - - 0 - text",(char*)NULL,(void*)NULL,0);
    G__memfunc_setup("Align",491,(G__InterfaceMethod)NULL,121,-1,-1,0,5,1,4,0,
 "h - 'UInt_t' 0 - w h - 'UInt_t' 0 - h "
-"i - 'Int_t' 0 - maxDescent i - 'Int_t' 1 - x "
+"i - 'Int_t' 0 - maxAscent i - 'Int_t' 1 - x "
 "i - 'Int_t' 1 - y",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("AlignRotated",1214,(G__InterfaceMethod)NULL,121,-1,-1,0,6,1,4,0,
+"h - 'UInt_t' 0 - w h - 'UInt_t' 0 - h "
+"i - 'Int_t' 0 - xoff i - 'Int_t' 0 - yoff "
+"i - 'Int_t' 1 - x i - 'Int_t' 1 - y",(char*)NULL,(void*)NULL,0);
    G__memfunc_setup("IsVisible",906,(G__InterfaceMethod)NULL,98,-1,G__defined_typename("Bool_t"),0,4,1,4,0,
 "i - 'Int_t' 0 - x i - 'Int_t' 0 - y "
 "h - 'UInt_t' 0 - w h - 'UInt_t' 0 - h",(char*)NULL,(void*)NULL,0);
    G__memfunc_setup("ClearCache",955,(G__InterfaceMethod)NULL,121,-1,-1,0,0,1,4,0,"",(char*)NULL,(void*)NULL,0);
    G__memfunc_setup("SetRotationMatrix",1777,(G__InterfaceMethod)NULL,121,-1,-1,0,1,1,4,0,"f - 'Float_t' 0 - angle",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("TGX11TTF",579,G__TGX11TTF_TGX11TTF_5_1,105,G__get_linked_tagnum(&G__G__X11TTFLN_TGX11TTF),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("TGX11TTF",579,G__TGX11TTF_TGX11TTF_6_1,105,G__get_linked_tagnum(&G__G__X11TTFLN_TGX11TTF),-1,0,1,1,1,0,"u 'TGX11' - 1 - org",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("DrawText",819,G__TGX11TTF_DrawText_8_1,121,-1,-1,0,6,1,1,0,
+   G__memfunc_setup("TGX11TTF",579,G__TGX11TTF_TGX11TTF_6_1,105,G__get_linked_tagnum(&G__G__X11TTFLN_TGX11TTF),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("TGX11TTF",579,G__TGX11TTF_TGX11TTF_7_1,105,G__get_linked_tagnum(&G__G__X11TTFLN_TGX11TTF),-1,0,1,1,1,0,"u 'TGX11' - 1 - org",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("DrawText",819,G__TGX11TTF_DrawText_9_1,121,-1,-1,0,6,1,1,0,
 "i - 'Int_t' 0 - x i - 'Int_t' 0 - y "
 "f - 'Float_t' 0 - angle f - 'Float_t' 0 - mgn "
 "C - - 0 - text i 'TGXW::ETextMode' - 0 - mode",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("GetTextExtent",1341,G__TGX11TTF_GetTextExtent_9_1,121,-1,-1,0,3,1,1,0,
+   G__memfunc_setup("GetTextExtent",1341,G__TGX11TTF_GetTextExtent_0_2,121,-1,-1,0,3,1,1,0,
 "h - 'UInt_t' 1 - w h - 'UInt_t' 1 - h "
 "C - - 0 - text",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("SetTextFont",1128,G__TGX11TTF_SetTextFont_0_2,105,-1,G__defined_typename("Int_t"),0,2,1,1,0,
+   G__memfunc_setup("SetTextFont",1128,G__TGX11TTF_SetTextFont_1_2,105,-1,G__defined_typename("Int_t"),0,2,1,1,0,
 "C - - 0 - fontname i 'TGXW::ETextSetMode' - 0 - mode",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("SetTextFont",1128,G__TGX11TTF_SetTextFont_1_2,121,-1,-1,0,1,1,1,0,"s - 'Font_t' 0 - fontnumber",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("SetTextSize",1132,G__TGX11TTF_SetTextSize_2_2,121,-1,-1,0,1,1,1,0,"f - 'Float_t' 0 - textsize",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("GetCacheCount",1277,G__TGX11TTF_GetCacheCount_3_2,105,-1,G__defined_typename("Int_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetCacheHits",1164,G__TGX11TTF_GetCacheHits_4_2,105,-1,G__defined_typename("Int_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetCacheMisses",1384,G__TGX11TTF_GetCacheMisses_5_2,105,-1,G__defined_typename("Int_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetHinting",1009,G__TGX11TTF_GetHinting_6_2,98,-1,G__defined_typename("Bool_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetSmoothing",1240,G__TGX11TTF_GetSmoothing_7_2,98,-1,G__defined_typename("Bool_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("SetHinting",1021,G__TGX11TTF_SetHinting_8_2,121,-1,-1,0,1,1,1,0,"b - 'Bool_t' 0 - state",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("SetSmoothing",1252,G__TGX11TTF_SetSmoothing_9_2,121,-1,-1,0,1,1,1,0,"b - 'Bool_t' 0 - state",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("DeclFileName",1145,G__TGX11TTF_DeclFileName_0_3,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("DeclFileLine",1152,G__TGX11TTF_DeclFileLine_1_3,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("ImplFileName",1171,G__TGX11TTF_ImplFileName_2_3,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("ImplFileLine",1178,G__TGX11TTF_ImplFileLine_3_3,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Class_Version",1339,G__TGX11TTF_Class_Version_4_3,115,-1,G__defined_typename("Version_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Class",502,G__TGX11TTF_Class_5_3,85,G__get_linked_tagnum(&G__G__X11TTFLN_TClass),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Dictionary",1046,G__TGX11TTF_Dictionary_6_3,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("IsA",253,G__TGX11TTF_IsA_7_3,85,G__get_linked_tagnum(&G__G__X11TTFLN_TClass),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("ShowMembers",1132,G__TGX11TTF_ShowMembers_8_3,121,-1,-1,0,2,1,1,0,
+   G__memfunc_setup("SetTextFont",1128,G__TGX11TTF_SetTextFont_2_2,121,-1,-1,0,1,1,1,0,"s - 'Font_t' 0 - fontnumber",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetTextSize",1132,G__TGX11TTF_SetTextSize_3_2,121,-1,-1,0,1,1,1,0,"f - 'Float_t' 0 - textsize",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetCacheCount",1277,G__TGX11TTF_GetCacheCount_4_2,105,-1,G__defined_typename("Int_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetCacheHits",1164,G__TGX11TTF_GetCacheHits_5_2,105,-1,G__defined_typename("Int_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetCacheMisses",1384,G__TGX11TTF_GetCacheMisses_6_2,105,-1,G__defined_typename("Int_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetHinting",1009,G__TGX11TTF_GetHinting_7_2,98,-1,G__defined_typename("Bool_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetSmoothing",1240,G__TGX11TTF_GetSmoothing_8_2,98,-1,G__defined_typename("Bool_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("SetHinting",1021,G__TGX11TTF_SetHinting_9_2,121,-1,-1,0,1,1,1,0,"b - 'Bool_t' 0 - state",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("SetSmoothing",1252,G__TGX11TTF_SetSmoothing_0_3,121,-1,-1,0,1,1,1,0,"b - 'Bool_t' 0 - state",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("DeclFileName",1145,G__TGX11TTF_DeclFileName_1_3,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("DeclFileLine",1152,G__TGX11TTF_DeclFileLine_2_3,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ImplFileName",1171,G__TGX11TTF_ImplFileName_3_3,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ImplFileLine",1178,G__TGX11TTF_ImplFileLine_4_3,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Class_Version",1339,G__TGX11TTF_Class_Version_5_3,115,-1,G__defined_typename("Version_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Class",502,G__TGX11TTF_Class_6_3,85,G__get_linked_tagnum(&G__G__X11TTFLN_TClass),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Dictionary",1046,G__TGX11TTF_Dictionary_7_3,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("IsA",253,G__TGX11TTF_IsA_8_3,85,G__get_linked_tagnum(&G__G__X11TTFLN_TClass),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("ShowMembers",1132,G__TGX11TTF_ShowMembers_9_3,121,-1,-1,0,2,1,1,0,
 "u 'TMemberInspector' - 1 - insp C - - 0 - parent",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("Streamer",835,G__TGX11TTF_Streamer_9_3,121,-1,-1,0,1,1,1,0,"u 'TBuffer' - 1 - b",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Streamer",835,G__TGX11TTF_Streamer_0_4,121,-1,-1,0,1,1,1,0,"u 'TBuffer' - 1 - b",(char*)NULL,(void*)NULL,1);
    // automatic copy constructor
-   G__memfunc_setup("TGX11TTF",579,G__TGX11TTF_TGX11TTF_0_4,(int)('i'),G__get_linked_tagnum(&G__G__X11TTFLN_TGX11TTF),-1,0,1,1,1,0,"u 'TGX11TTF' - 1 - -",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("TGX11TTF",579,G__TGX11TTF_TGX11TTF_1_4,(int)('i'),G__get_linked_tagnum(&G__G__X11TTFLN_TGX11TTF),-1,0,1,1,1,0,"u 'TGX11TTF' - 1 - -",(char*)NULL,(void*)NULL,0);
    // automatic destructor
-   G__memfunc_setup("~TGX11TTF",705,G__TGX11TTF_wATGX11TTF_1_4,(int)('y'),-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("~TGX11TTF",705,G__TGX11TTF_wATGX11TTF_2_4,(int)('y'),-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
    G__tag_memfunc_reset();
 }
 
@@ -712,6 +718,33 @@ G__linked_taginfo G__G__X11TTFLN_TTChar = { "TTChar" , 99 , -1 };
 G__linked_taginfo G__G__X11TTFLN_TGX11TTF = { "TGX11TTF" , 99 , -1 };
 G__linked_taginfo G__G__X11TTFLN_TGX11TTFcLcLEAlign = { "TGX11TTF::EAlign" , 101 , -1 };
 
+/* Reset class/struct taginfo */
+extern "C" void G__cpp_reset_tagtableG__X11TTF() {
+  G__G__X11TTFLN_TClass.tagnum = -1 ;
+  G__G__X11TTFLN_TList.tagnum = -1 ;
+  G__G__X11TTFLN_TObject.tagnum = -1 ;
+  G__G__X11TTFLN_TNamed.tagnum = -1 ;
+  G__G__X11TTFLN_TAttLine.tagnum = -1 ;
+  G__G__X11TTFLN_TAttFill.tagnum = -1 ;
+  G__G__X11TTFLN_TAttText.tagnum = -1 ;
+  G__G__X11TTFLN_TAttMarker.tagnum = -1 ;
+  G__G__X11TTFLN_dA.tagnum = -1 ;
+  G__G__X11TTFLN_TGXW.tagnum = -1 ;
+  G__G__X11TTFLN_XImage.tagnum = -1 ;
+  G__G__X11TTFLN_TGX11.tagnum = -1 ;
+  G__G__X11TTFLN_TT_Face_Properties.tagnum = -1 ;
+  G__G__X11TTFLN_TT_Face.tagnum = -1 ;
+  G__G__X11TTFLN_TT_Glyph.tagnum = -1 ;
+  G__G__X11TTFLN_TT_Instance.tagnum = -1 ;
+  G__G__X11TTFLN_TT_CharMap.tagnum = -1 ;
+  G__G__X11TTFLN_TT_Engine.tagnum = -1 ;
+  G__G__X11TTFLN_TT_Matrix.tagnum = -1 ;
+  G__G__X11TTFLN_THashTable.tagnum = -1 ;
+  G__G__X11TTFLN_TTChar.tagnum = -1 ;
+  G__G__X11TTFLN_TGX11TTF.tagnum = -1 ;
+  G__G__X11TTFLN_TGX11TTFcLcLEAlign.tagnum = -1 ;
+}
+
 extern "C" void G__cpp_setup_tagtableG__X11TTF() {
 
    /* Setting up class,struct,union tag entry */
@@ -743,7 +776,7 @@ class G__cpp_setup_initG__X11TTF {
 G__cpp_setup_initG__X11TTF G__cpp_setup_initializerG__X11TTF;
 
 //
-// File generated by /user/brun/root/bin/rootcint at Tue Dec 15 18:03:27 1998.
+// File generated by /home/rdm/root/bin/rootcint at Mon Mar  8 12:35:00 1999.
 // Do NOT change. Changes will be lost next time file is generated
 //
 

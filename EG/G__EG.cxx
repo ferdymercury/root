@@ -1,5 +1,5 @@
-//*CMZ :  2.00/12 08/10/98  19.49.34  by  Fons Rademakers
-//*-- Author :    Fons Rademakers   08/10/98
+//*CMZ :  2.21/07 08/03/99  12.34.11  by  Fons Rademakers
+//*-- Author :    Fons Rademakers   08/03/99
 //*CMZ :  1.00/09 23/04/97  17.59.54  by  Rene Brun
 //*-- Author :    Rene Brun   23/04/97
 #if defined(__hpux) && !defined(__GNUG__)
@@ -53,6 +53,8 @@ extern void G__set_cpp_environmentG__EG();
 #include "TGenerator.h"
 #include "TPrimary.h"
 #include "TAttParticle.h"
+#include "TParticlePDG.h"
+#include "TDatabasePDG.h"
 
 #ifndef G__MEMFUNCBODY
 #endif
@@ -69,6 +71,8 @@ extern G__linked_taginfo G__G__EGLN__x3d_data_;
 extern G__linked_taginfo G__G__EGLN__x3d_sizeof_;
 extern G__linked_taginfo G__G__EGLN_TAttParticle;
 extern G__linked_taginfo G__G__EGLN_THashList;
+extern G__linked_taginfo G__G__EGLN_TParticlePDG;
+extern G__linked_taginfo G__G__EGLN_TDatabasePDG;
 /********************************************************
 * G__EG.cxx
 ********************************************************/
@@ -77,6 +81,7 @@ extern G__linked_taginfo G__G__EGLN_THashList;
 #undef malloc
 #endif
 
+extern "C" void G__cpp_reset_tagtableG__EG();
 
 extern "C" void G__set_cpp_environmentG__EG() {
   G__add_macro("__MAKECINT__");
@@ -85,8 +90,11 @@ extern "C" void G__set_cpp_environmentG__EG() {
   G__add_compiledheader("TGenerator.h");
   G__add_compiledheader("TPrimary.h");
   G__add_compiledheader("TAttParticle.h");
+  G__add_compiledheader("TParticlePDG.h");
+  G__add_compiledheader("TDatabasePDG.h");
+  G__cpp_reset_tagtableG__EG();
 }
-int G__cpp_dllrevG__EG() { return(51111); }
+extern "C" int G__cpp_dllrevG__EG() { return(51111); }
 
 /*********************************************************
 * Member function Interface Method
@@ -845,6 +853,362 @@ static int G__TAttParticle_wATAttParticle_1_3(G__value *result7,char *funcname,s
 }
 
 
+/* TParticlePDG */
+static int G__TParticlePDG_TParticlePDG_0_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   TParticlePDG *p=NULL;
+   if(G__getaryconstruct()) p=new TParticlePDG[G__getaryconstruct()];
+   else                    p=new TParticlePDG;
+      result7->obj.i = (long)p;
+      result7->ref = (long)p;
+      result7->type = 'u';
+      result7->tagnum = G__get_linked_tagnum(&G__G__EGLN_TParticlePDG);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TParticlePDG_TParticlePDG_1_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   TParticlePDG *p=NULL;
+      p = new TParticlePDG((int)G__int(libp->para[0]));
+      result7->obj.i = (long)p;
+      result7->ref = (long)p;
+      result7->type = 'u';
+      result7->tagnum = G__get_linked_tagnum(&G__G__EGLN_TParticlePDG);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TParticlePDG_TParticlePDG_2_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   TParticlePDG *p=NULL;
+      p = new TParticlePDG(
+(const char*)G__int(libp->para[0]),(const char*)G__int(libp->para[1])
+,(Double_t)G__double(libp->para[2]),(Bool_t)G__int(libp->para[3])
+,(Double_t)G__double(libp->para[4]),(Double_t)G__double(libp->para[5])
+,(const Text_t*)G__int(libp->para[6]),(Int_t)G__int(libp->para[7]));
+      result7->obj.i = (long)p;
+      result7->ref = (long)p;
+      result7->type = 'u';
+      result7->tagnum = G__get_linked_tagnum(&G__G__EGLN_TParticlePDG);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TParticlePDG_PdgCode_4_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TParticlePDG*)(G__getstructoffset()))->PdgCode());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TParticlePDG_Mass_5_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letdouble(result7,100,(double)((TParticlePDG*)(G__getstructoffset()))->Mass());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TParticlePDG_Charge_6_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letdouble(result7,100,(double)((TParticlePDG*)(G__getstructoffset()))->Charge());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TParticlePDG_Lifetime_7_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letdouble(result7,100,(double)((TParticlePDG*)(G__getstructoffset()))->Lifetime());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TParticlePDG_Width_8_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letdouble(result7,100,(double)((TParticlePDG*)(G__getstructoffset()))->Width());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TParticlePDG_Parity_9_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TParticlePDG*)(G__getstructoffset()))->Parity());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TParticlePDG_Spin_0_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letdouble(result7,100,(double)((TParticlePDG*)(G__getstructoffset()))->Spin());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TParticlePDG_Isospin_1_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letdouble(result7,100,(double)((TParticlePDG*)(G__getstructoffset()))->Isospin());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TParticlePDG_I3_2_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letdouble(result7,100,(double)((TParticlePDG*)(G__getstructoffset()))->I3());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TParticlePDG_Strangeness_3_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TParticlePDG*)(G__getstructoffset()))->Strangeness());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TParticlePDG_Charm_4_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TParticlePDG*)(G__getstructoffset()))->Charm());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TParticlePDG_Beauty_5_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TParticlePDG*)(G__getstructoffset()))->Beauty());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TParticlePDG_Top_6_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TParticlePDG*)(G__getstructoffset()))->Top());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TParticlePDG_X_7_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TParticlePDG*)(G__getstructoffset()))->X());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TParticlePDG_Y_8_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TParticlePDG*)(G__getstructoffset()))->Y());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TParticlePDG_Stable_9_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TParticlePDG*)(G__getstructoffset()))->Stable());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TParticlePDG_DecayList_0_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,85,(long)((TParticlePDG*)(G__getstructoffset()))->DecayList());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TParticlePDG_Print_1_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TParticlePDG*)(G__getstructoffset()))->Print((Option_t*)G__int(libp->para[0]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TParticlePDG_DeclFileName_2_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,67,(long)((TParticlePDG*)(G__getstructoffset()))->DeclFileName());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TParticlePDG_DeclFileLine_3_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TParticlePDG*)(G__getstructoffset()))->DeclFileLine());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TParticlePDG_ImplFileName_4_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,67,(long)((TParticlePDG*)(G__getstructoffset()))->ImplFileName());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TParticlePDG_ImplFileLine_5_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TParticlePDG*)(G__getstructoffset()))->ImplFileLine());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TParticlePDG_Class_Version_6_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,115,(long)((TParticlePDG*)(G__getstructoffset()))->Class_Version());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TParticlePDG_Class_7_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,85,(long)((TParticlePDG*)(G__getstructoffset()))->Class());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TParticlePDG_Dictionary_8_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TParticlePDG*)(G__getstructoffset()))->Dictionary();
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TParticlePDG_IsA_9_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,85,(long)((TParticlePDG*)(G__getstructoffset()))->IsA());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TParticlePDG_ShowMembers_0_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TParticlePDG*)(G__getstructoffset()))->ShowMembers(*(TMemberInspector*)libp->para[0].ref,(char*)G__int(libp->para[1]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TParticlePDG_Streamer_1_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TParticlePDG*)(G__getstructoffset()))->Streamer(*(TBuffer*)libp->para[0].ref);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+// automatic copy constructor
+static int G__TParticlePDG_TParticlePDG_2_3(G__value *result7,char *funcname,struct G__param *libp,int hash)
+{
+   TParticlePDG *p;
+   if(1!=libp->paran) ;
+   p=new TParticlePDG(*(TParticlePDG*)G__int(libp->para[0]));
+   result7->obj.i = (long)p;
+   result7->ref = (long)p;
+   result7->type = 'u';
+   result7->tagnum = G__get_linked_tagnum(&G__G__EGLN_TParticlePDG);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+// automatic destructor
+static int G__TParticlePDG_wATParticlePDG_3_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   if(G__getaryconstruct())
+     if(G__PVOID==G__getgvp())
+       delete[] (TParticlePDG *)(G__getstructoffset());
+     else
+       for(int i=G__getaryconstruct()-1;i>=0;i--)
+         delete (TParticlePDG *)((G__getstructoffset())+sizeof(TParticlePDG)*i);
+   else  delete (TParticlePDG *)(G__getstructoffset());
+      G__setnull(result7);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+
+/* TDatabasePDG */
+static int G__TDatabasePDG_TDatabasePDG_0_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   TDatabasePDG *p=NULL;
+   switch(libp->paran) {
+   case 2:
+      p = new TDatabasePDG((const char*)G__int(libp->para[0]),(const char*)G__int(libp->para[1]));
+      break;
+   case 1:
+      p = new TDatabasePDG((const char*)G__int(libp->para[0]));
+      break;
+   case 0:
+   if(G__getaryconstruct()) p=new TDatabasePDG[G__getaryconstruct()];
+   else                    p=new TDatabasePDG;
+      break;
+   }
+      result7->obj.i = (long)p;
+      result7->ref = (long)p;
+      result7->type = 'u';
+      result7->tagnum = G__get_linked_tagnum(&G__G__EGLN_TDatabasePDG);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TDatabasePDG_Init_2_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TDatabasePDG*)(G__getstructoffset()))->Init();
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TDatabasePDG_Instance_3_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,85,(long)((TDatabasePDG*)(G__getstructoffset()))->Instance());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TDatabasePDG_AddParticle_4_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TDatabasePDG*)(G__getstructoffset()))->AddParticle(
+(const Text_t*)G__int(libp->para[0]),(const Text_t*)G__int(libp->para[1])
+,(Double_t)G__double(libp->para[2]),(Bool_t)G__int(libp->para[3])
+,(Double_t)G__double(libp->para[4]),(Double_t)G__double(libp->para[5])
+,(Text_t*)G__int(libp->para[6]),(Int_t)G__int(libp->para[7]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TDatabasePDG_ConvertIsajetToPdg_5_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TDatabasePDG*)(G__getstructoffset()))->ConvertIsajetToPdg((Int_t)G__int(libp->para[0])));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TDatabasePDG_GetParticle_6_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,85,(long)((TDatabasePDG*)(G__getstructoffset()))->GetParticle((Int_t)G__int(libp->para[0])));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TDatabasePDG_GetParticle_7_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,85,(long)((TDatabasePDG*)(G__getstructoffset()))->GetParticle((const Text_t*)G__int(libp->para[0])));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TDatabasePDG_ParticleList_8_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,85,(long)((TDatabasePDG*)(G__getstructoffset()))->ParticleList());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TDatabasePDG_Print_9_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TDatabasePDG*)(G__getstructoffset()))->Print((Option_t*)G__int(libp->para[0]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TDatabasePDG_DeclFileName_0_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,67,(long)((TDatabasePDG*)(G__getstructoffset()))->DeclFileName());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TDatabasePDG_DeclFileLine_1_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TDatabasePDG*)(G__getstructoffset()))->DeclFileLine());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TDatabasePDG_ImplFileName_2_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,67,(long)((TDatabasePDG*)(G__getstructoffset()))->ImplFileName());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TDatabasePDG_ImplFileLine_3_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TDatabasePDG*)(G__getstructoffset()))->ImplFileLine());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TDatabasePDG_Class_Version_4_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,115,(long)((TDatabasePDG*)(G__getstructoffset()))->Class_Version());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TDatabasePDG_Class_5_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,85,(long)((TDatabasePDG*)(G__getstructoffset()))->Class());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TDatabasePDG_Dictionary_6_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TDatabasePDG*)(G__getstructoffset()))->Dictionary();
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TDatabasePDG_IsA_7_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,85,(long)((TDatabasePDG*)(G__getstructoffset()))->IsA());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TDatabasePDG_ShowMembers_8_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TDatabasePDG*)(G__getstructoffset()))->ShowMembers(*(TMemberInspector*)libp->para[0].ref,(char*)G__int(libp->para[1]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TDatabasePDG_Streamer_9_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TDatabasePDG*)(G__getstructoffset()))->Streamer(*(TBuffer*)libp->para[0].ref);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+// automatic copy constructor
+static int G__TDatabasePDG_TDatabasePDG_0_2(G__value *result7,char *funcname,struct G__param *libp,int hash)
+{
+   TDatabasePDG *p;
+   if(1!=libp->paran) ;
+   p=new TDatabasePDG(*(TDatabasePDG*)G__int(libp->para[0]));
+   result7->obj.i = (long)p;
+   result7->ref = (long)p;
+   result7->type = 'u';
+   result7->tagnum = G__get_linked_tagnum(&G__G__EGLN_TDatabasePDG);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+// automatic destructor
+static int G__TDatabasePDG_wATDatabasePDG_1_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   if(G__getaryconstruct())
+     if(G__PVOID==G__getgvp())
+       delete[] (TDatabasePDG *)(G__getstructoffset());
+     else
+       for(int i=G__getaryconstruct()-1;i>=0;i--)
+         delete (TDatabasePDG *)((G__getstructoffset())+sizeof(TDatabasePDG)*i);
+   else  delete (TDatabasePDG *)(G__getstructoffset());
+      G__setnull(result7);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+
 /* Setting up global function */
 
 /*********************************************************
@@ -856,6 +1220,10 @@ static int G__TAttParticle_wATAttParticle_1_3(G__value *result7,char *funcname,s
 /* TGenerator */
 
 /* TAttParticle */
+
+/* TParticlePDG */
+
+/* TDatabasePDG */
 
 /*********************************************************
 * Global function Stub
@@ -928,6 +1296,30 @@ extern "C" void G__cpp_setup_inheritanceG__EG() {
        G__inheritance_setup(G__get_linked_tagnum(&G__G__EGLN_TAttParticle),G__get_linked_tagnum(&G__G__EGLN_TObject),(long)G__Lpbase-(long)G__Lderived,1,0);
      }
    }
+   if(0==G__getnumbaseclass(G__get_linked_tagnum(&G__G__EGLN_TParticlePDG))) {
+     TParticlePDG *G__Lderived;
+     G__Lderived=(TParticlePDG*)0x1000;
+     {
+       TNamed *G__Lpbase=(TNamed*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__EGLN_TParticlePDG),G__get_linked_tagnum(&G__G__EGLN_TNamed),(long)G__Lpbase-(long)G__Lderived,1,1);
+     }
+     {
+       TObject *G__Lpbase=(TObject*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__EGLN_TParticlePDG),G__get_linked_tagnum(&G__G__EGLN_TObject),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+   }
+   if(0==G__getnumbaseclass(G__get_linked_tagnum(&G__G__EGLN_TDatabasePDG))) {
+     TDatabasePDG *G__Lderived;
+     G__Lderived=(TDatabasePDG*)0x1000;
+     {
+       TNamed *G__Lpbase=(TNamed*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__EGLN_TDatabasePDG),G__get_linked_tagnum(&G__G__EGLN_TNamed),(long)G__Lpbase-(long)G__Lderived,1,1);
+     }
+     {
+       TObject *G__Lpbase=(TObject*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__EGLN_TDatabasePDG),G__get_linked_tagnum(&G__G__EGLN_TObject),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+   }
 }
 
 /*********************************************************
@@ -996,10 +1388,10 @@ extern "C" void G__cpp_setup_typetableG__EG() {
    G__search_typename2("FreeHookFun_t",89,-1,0,
 -1);
    G__setnewtype(-1,NULL,0);
-   G__search_typename2("ReAllocFun_t",81,-1,2,
+   G__search_typename2("ReAllocFun_t",81,-1,0,
 -1);
    G__setnewtype(-1,NULL,0);
-   G__search_typename2("ReAllocCFun_t",81,-1,2,
+   G__search_typename2("ReAllocCFun_t",81,-1,0,
 -1);
    G__setnewtype(-1,NULL,0);
    G__search_typename2("Axis_t",102,-1,0,
@@ -1098,6 +1490,46 @@ static void G__setup_memvarTAttParticle(void) {
    G__memvar_setup((void*)NULL,100,0,0,-1,G__defined_typename("Double_t"),-1,4,"fEnergyLimit=",0,"High energy cut off, the default is 10 TeV");
    G__memvar_setup((void*)NULL,100,0,0,-1,G__defined_typename("Double_t"),-1,4,"fGranularity=",0,"Granularity of the fLogEScale");
    G__memvar_setup((void*)(&TAttParticle::fgList),85,0,0,G__get_linked_tagnum(&G__G__EGLN_THashList),-1,-2,1,"fgList=",0,(char*)NULL);
+   G__memvar_setup((void*)NULL,85,0,0,G__get_linked_tagnum(&G__G__EGLN_TClass),-1,-2,4,"fgIsA=",0,(char*)NULL);
+   }
+   G__tag_memvar_reset();
+}
+
+
+   /* TParticlePDG */
+static void G__setup_memvarTParticlePDG(void) {
+   G__tag_memvar_setup(G__get_linked_tagnum(&G__G__EGLN_TParticlePDG));
+   { TParticlePDG *p; p=(TParticlePDG*)0x1000; if (p) { }
+   G__memvar_setup((void*)NULL,105,0,0,-1,G__defined_typename("Int_t"),-1,2,"fPdgCode=",0,"PDG code of the particle");
+   G__memvar_setup((void*)NULL,100,0,0,-1,G__defined_typename("Double_t"),-1,2,"fMass=",0,"particle mass in GeV");
+   G__memvar_setup((void*)NULL,100,0,0,-1,G__defined_typename("Double_t"),-1,2,"fCharge=",0,"charge in units of |e|");
+   G__memvar_setup((void*)NULL,100,0,0,-1,G__defined_typename("Double_t"),-1,2,"fLifetime=",0,"proper lifetime in nanoseconds");
+   G__memvar_setup((void*)NULL,100,0,0,-1,G__defined_typename("Double_t"),-1,2,"fWidth=",0,"total width in GeV");
+   G__memvar_setup((void*)NULL,105,0,0,-1,G__defined_typename("Int_t"),-1,2,"fParity=",0,(char*)NULL);
+   G__memvar_setup((void*)NULL,100,0,0,-1,G__defined_typename("Double_t"),-1,2,"fSpin=",0,(char*)NULL);
+   G__memvar_setup((void*)NULL,100,0,0,-1,G__defined_typename("Double_t"),-1,2,"fIsospin=",0,"isospin");
+   G__memvar_setup((void*)NULL,100,0,0,-1,G__defined_typename("Double_t"),-1,2,"fI3=",0,"i3");
+   G__memvar_setup((void*)NULL,105,0,0,-1,G__defined_typename("Int_t"),-1,2,"fStrangeness=",0,"flavours are defined if i3 != -1");
+   G__memvar_setup((void*)NULL,105,0,0,-1,G__defined_typename("Int_t"),-1,2,"fCharm=",0,"1 or -1 for C-particles,");
+   G__memvar_setup((void*)NULL,105,0,0,-1,G__defined_typename("Int_t"),-1,2,"fBeauty=",0,(char*)NULL);
+   G__memvar_setup((void*)NULL,105,0,0,-1,G__defined_typename("Int_t"),-1,2,"fTop=",0,(char*)NULL);
+   G__memvar_setup((void*)NULL,105,0,0,-1,G__defined_typename("Int_t"),-1,2,"fY=",0,"X,Y: quantum numbers for the 4-th generation");
+   G__memvar_setup((void*)NULL,105,0,0,-1,G__defined_typename("Int_t"),-1,2,"fX=",0,(char*)NULL);
+   G__memvar_setup((void*)NULL,105,0,0,-1,G__defined_typename("Int_t"),-1,2,"fStable=",0,"1 if stable, 0 otherwise");
+   G__memvar_setup((void*)NULL,85,0,0,G__get_linked_tagnum(&G__G__EGLN_TObjArray),-1,-1,2,"fDecayList=",0,"array of decay channels");
+   G__memvar_setup((void*)NULL,117,0,0,G__get_linked_tagnum(&G__G__EGLN_TString),-1,-1,2,"fType=",0,"particle type  - what is it?");
+   G__memvar_setup((void*)NULL,85,0,0,G__get_linked_tagnum(&G__G__EGLN_TClass),-1,-2,4,"fgIsA=",0,(char*)NULL);
+   }
+   G__tag_memvar_reset();
+}
+
+
+   /* TDatabasePDG */
+static void G__setup_memvarTDatabasePDG(void) {
+   G__tag_memvar_setup(G__get_linked_tagnum(&G__G__EGLN_TDatabasePDG));
+   { TDatabasePDG *p; p=(TDatabasePDG*)0x1000; if (p) { }
+   G__memvar_setup((void*)NULL,85,0,0,G__get_linked_tagnum(&G__G__EGLN_TDatabasePDG),-1,-2,2,"fgInstance=",0,(char*)NULL);
+   G__memvar_setup((void*)NULL,85,0,0,G__get_linked_tagnum(&G__G__EGLN_THashList),-1,-1,2,"fParticleList=",0,(char*)NULL);
    G__memvar_setup((void*)NULL,85,0,0,G__get_linked_tagnum(&G__G__EGLN_TClass),-1,-2,4,"fgIsA=",0,(char*)NULL);
    }
    G__tag_memvar_reset();
@@ -1262,6 +1694,87 @@ static void G__setup_memfuncTAttParticle(void) {
    G__tag_memfunc_reset();
 }
 
+static void G__setup_memfuncTParticlePDG(void) {
+   /* TParticlePDG */
+   G__tag_memfunc_setup(G__get_linked_tagnum(&G__G__EGLN_TParticlePDG));
+   G__memfunc_setup("TParticlePDG",1123,G__TParticlePDG_TParticlePDG_0_0,105,G__get_linked_tagnum(&G__G__EGLN_TParticlePDG),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("TParticlePDG",1123,G__TParticlePDG_TParticlePDG_1_0,105,G__get_linked_tagnum(&G__G__EGLN_TParticlePDG),-1,0,1,1,1,0,"i - - 0 - pdg_code",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("TParticlePDG",1123,G__TParticlePDG_TParticlePDG_2_0,105,G__get_linked_tagnum(&G__G__EGLN_TParticlePDG),-1,0,8,1,1,0,
+"C - - 0 - name C - - 0 - title "
+"d - 'Double_t' 0 - mass b - 'Bool_t' 0 - stable "
+"d - 'Double_t' 0 - decay_width d - 'Double_t' 0 - charge "
+"C - 'Text_t' 0 - type i - 'Int_t' 0 - MCnumber",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("PdgCode",662,G__TParticlePDG_PdgCode_4_0,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Mass",404,G__TParticlePDG_Mass_5_0,100,-1,G__defined_typename("Double_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Charge",586,G__TParticlePDG_Charge_6_0,100,-1,G__defined_typename("Double_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Lifetime",815,G__TParticlePDG_Lifetime_7_0,100,-1,G__defined_typename("Double_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Width",512,G__TParticlePDG_Width_8_0,100,-1,G__defined_typename("Double_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Parity",633,G__TParticlePDG_Parity_9_0,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Spin",410,G__TParticlePDG_Spin_0_1,100,-1,G__defined_typename("Double_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Isospin",741,G__TParticlePDG_Isospin_1_1,100,-1,G__defined_typename("Double_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("I3",124,G__TParticlePDG_I3_2_1,100,-1,G__defined_typename("Double_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Strangeness",1165,G__TParticlePDG_Strangeness_3_1,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Charm",491,G__TParticlePDG_Charm_4_1,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Beauty",618,G__TParticlePDG_Beauty_5_1,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Top",307,G__TParticlePDG_Top_6_1,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("X",88,G__TParticlePDG_X_7_1,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Y",89,G__TParticlePDG_Y_8_1,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Stable",603,G__TParticlePDG_Stable_9_1,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("DecayList",898,G__TParticlePDG_DecayList_0_2,85,G__get_linked_tagnum(&G__G__EGLN_TObjArray),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Print",525,G__TParticlePDG_Print_1_2,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 - opt",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("DeclFileName",1145,G__TParticlePDG_DeclFileName_2_2,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("DeclFileLine",1152,G__TParticlePDG_DeclFileLine_3_2,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ImplFileName",1171,G__TParticlePDG_ImplFileName_4_2,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ImplFileLine",1178,G__TParticlePDG_ImplFileLine_5_2,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Class_Version",1339,G__TParticlePDG_Class_Version_6_2,115,-1,G__defined_typename("Version_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Class",502,G__TParticlePDG_Class_7_2,85,G__get_linked_tagnum(&G__G__EGLN_TClass),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Dictionary",1046,G__TParticlePDG_Dictionary_8_2,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("IsA",253,G__TParticlePDG_IsA_9_2,85,G__get_linked_tagnum(&G__G__EGLN_TClass),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("ShowMembers",1132,G__TParticlePDG_ShowMembers_0_3,121,-1,-1,0,2,1,1,0,
+"u 'TMemberInspector' - 1 - insp C - - 0 - parent",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Streamer",835,G__TParticlePDG_Streamer_1_3,121,-1,-1,0,1,1,1,0,"u 'TBuffer' - 1 - b",(char*)NULL,(void*)NULL,1);
+   // automatic copy constructor
+   G__memfunc_setup("TParticlePDG",1123,G__TParticlePDG_TParticlePDG_2_3,(int)('i'),G__get_linked_tagnum(&G__G__EGLN_TParticlePDG),-1,0,1,1,1,0,"u 'TParticlePDG' - 1 - -",(char*)NULL,(void*)NULL,0);
+   // automatic destructor
+   G__memfunc_setup("~TParticlePDG",1249,G__TParticlePDG_wATParticlePDG_3_3,(int)('y'),-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__tag_memfunc_reset();
+}
+
+static void G__setup_memfuncTDatabasePDG(void) {
+   /* TDatabasePDG */
+   G__tag_memfunc_setup(G__get_linked_tagnum(&G__G__EGLN_TDatabasePDG));
+   G__memfunc_setup("TDatabasePDG",1092,G__TDatabasePDG_TDatabasePDG_0_0,105,G__get_linked_tagnum(&G__G__EGLN_TDatabasePDG),-1,0,2,1,1,0,
+"C - - 0 \"PDGDB\" name C - - 0 \"PDG database\" title",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Init",404,G__TDatabasePDG_Init_2_0,121,-1,-1,0,0,1,1,0,"","function which does the real job of initializing the database",(void*)NULL,0);
+   G__memfunc_setup("Instance",821,G__TDatabasePDG_Instance_3_0,85,G__get_linked_tagnum(&G__G__EGLN_TDatabasePDG),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("AddParticle",1085,G__TDatabasePDG_AddParticle_4_0,121,-1,-1,0,8,1,1,0,
+"C - 'Text_t' 0 - name C - 'Text_t' 0 - title "
+"d - 'Double_t' 0 - Mass b - 'Bool_t' 0 - Stable "
+"d - 'Double_t' 0 - DecayWidth d - 'Double_t' 0 - Charge "
+"C - 'Text_t' 0 - Type i - 'Int_t' 0 - pdgCode",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ConvertIsajetToPdg",1823,G__TDatabasePDG_ConvertIsajetToPdg_5_0,105,-1,G__defined_typename("Int_t"),0,1,1,1,0,"i - 'Int_t' 0 - isaNumber",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetParticle",1108,G__TDatabasePDG_GetParticle_6_0,85,G__get_linked_tagnum(&G__G__EGLN_TParticlePDG),-1,0,1,1,1,0,"i - 'Int_t' 0 - pdgCode",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetParticle",1108,G__TDatabasePDG_GetParticle_7_0,85,G__get_linked_tagnum(&G__G__EGLN_TParticlePDG),-1,0,1,1,1,0,"C - 'Text_t' 0 - name",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ParticleList",1232,G__TDatabasePDG_ParticleList_8_0,85,G__get_linked_tagnum(&G__G__EGLN_THashList),-1,0,0,1,1,9,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Print",525,G__TDatabasePDG_Print_9_0,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 - opt",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("DeclFileName",1145,G__TDatabasePDG_DeclFileName_0_1,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("DeclFileLine",1152,G__TDatabasePDG_DeclFileLine_1_1,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ImplFileName",1171,G__TDatabasePDG_ImplFileName_2_1,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ImplFileLine",1178,G__TDatabasePDG_ImplFileLine_3_1,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Class_Version",1339,G__TDatabasePDG_Class_Version_4_1,115,-1,G__defined_typename("Version_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Class",502,G__TDatabasePDG_Class_5_1,85,G__get_linked_tagnum(&G__G__EGLN_TClass),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Dictionary",1046,G__TDatabasePDG_Dictionary_6_1,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("IsA",253,G__TDatabasePDG_IsA_7_1,85,G__get_linked_tagnum(&G__G__EGLN_TClass),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("ShowMembers",1132,G__TDatabasePDG_ShowMembers_8_1,121,-1,-1,0,2,1,1,0,
+"u 'TMemberInspector' - 1 - insp C - - 0 - parent",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Streamer",835,G__TDatabasePDG_Streamer_9_1,121,-1,-1,0,1,1,1,0,"u 'TBuffer' - 1 - b",(char*)NULL,(void*)NULL,1);
+   // automatic copy constructor
+   G__memfunc_setup("TDatabasePDG",1092,G__TDatabasePDG_TDatabasePDG_0_2,(int)('i'),G__get_linked_tagnum(&G__G__EGLN_TDatabasePDG),-1,0,1,1,1,0,"u 'TDatabasePDG' - 1 - -",(char*)NULL,(void*)NULL,0);
+   // automatic destructor
+   G__memfunc_setup("~TDatabasePDG",1218,G__TDatabasePDG_wATDatabasePDG_1_2,(int)('y'),-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__tag_memfunc_reset();
+}
+
 
 /*********************************************************
 * Member function information setup
@@ -1307,6 +1820,26 @@ G__linked_taginfo G__G__EGLN__x3d_data_ = { "_x3d_data_" , 115 , -1 };
 G__linked_taginfo G__G__EGLN__x3d_sizeof_ = { "_x3d_sizeof_" , 115 , -1 };
 G__linked_taginfo G__G__EGLN_TAttParticle = { "TAttParticle" , 99 , -1 };
 G__linked_taginfo G__G__EGLN_THashList = { "THashList" , 99 , -1 };
+G__linked_taginfo G__G__EGLN_TParticlePDG = { "TParticlePDG" , 99 , -1 };
+G__linked_taginfo G__G__EGLN_TDatabasePDG = { "TDatabasePDG" , 99 , -1 };
+
+/* Reset class/struct taginfo */
+extern "C" void G__cpp_reset_tagtableG__EG() {
+  G__G__EGLN_TClass.tagnum = -1 ;
+  G__G__EGLN_TObjArray.tagnum = -1 ;
+  G__G__EGLN_TObject.tagnum = -1 ;
+  G__G__EGLN_TString.tagnum = -1 ;
+  G__G__EGLN_TNamed.tagnum = -1 ;
+  G__G__EGLN_TPrimary.tagnum = -1 ;
+  G__G__EGLN_TGenerator.tagnum = -1 ;
+  G__G__EGLN_TAttLine.tagnum = -1 ;
+  G__G__EGLN__x3d_data_.tagnum = -1 ;
+  G__G__EGLN__x3d_sizeof_.tagnum = -1 ;
+  G__G__EGLN_TAttParticle.tagnum = -1 ;
+  G__G__EGLN_THashList.tagnum = -1 ;
+  G__G__EGLN_TParticlePDG.tagnum = -1 ;
+  G__G__EGLN_TDatabasePDG.tagnum = -1 ;
+}
 
 extern "C" void G__cpp_setup_tagtableG__EG() {
 
@@ -1314,6 +1847,8 @@ extern "C" void G__cpp_setup_tagtableG__EG() {
    G__tagtable_setup(G__get_linked_tagnum(&G__G__EGLN_TPrimary),sizeof(TPrimary),-1,0,"TPrimary vertex particle information",G__setup_memvarTPrimary,G__setup_memfuncTPrimary);
    G__tagtable_setup(G__get_linked_tagnum(&G__G__EGLN_TGenerator),sizeof(TGenerator),-1,0,"Event generator interface abstract baseclass",G__setup_memvarTGenerator,G__setup_memfuncTGenerator);
    G__tagtable_setup(G__get_linked_tagnum(&G__G__EGLN_TAttParticle),sizeof(TAttParticle),-1,0,"Particle definition",G__setup_memvarTAttParticle,G__setup_memfuncTAttParticle);
+   G__tagtable_setup(G__get_linked_tagnum(&G__G__EGLN_TParticlePDG),sizeof(TParticlePDG),-1,0,(char*)NULL,G__setup_memvarTParticlePDG,G__setup_memfuncTParticlePDG);
+   G__tagtable_setup(G__get_linked_tagnum(&G__G__EGLN_TDatabasePDG),sizeof(TDatabasePDG),-1,0,"PDG particle database",G__setup_memvarTDatabasePDG,G__setup_memfuncTDatabasePDG);
 }
 extern "C" void G__cpp_setupG__EG() {
   G__check_setup_version(51111,"G__cpp_setupG__EG()");
@@ -1341,7 +1876,7 @@ class G__cpp_setup_initG__EG {
 G__cpp_setup_initG__EG G__cpp_setup_initializerG__EG;
 
 //
-// File generated by /home/rdm/root/bin/rootcint at Thu Oct  8 19:49:34 1998.
+// File generated by /home/rdm/root/bin/rootcint at Mon Mar  8 12:34:10 1999.
 // Do NOT change. Changes will be lost next time file is generated
 //
 
@@ -1509,6 +2044,131 @@ void TAttParticle::ShowMembers(TMemberInspector &R__insp, char *R__parent)
    R__insp.Inspect(R__cl, R__parent, "fEnergyCut", &fEnergyCut);
    R__insp.Inspect(R__cl, R__parent, "fEnergyLimit", &fEnergyLimit);
    R__insp.Inspect(R__cl, R__parent, "fGranularity", &fGranularity);
+   TNamed::ShowMembers(R__insp, R__parent);
+}
+
+//______________________________________________________________________________
+TBuffer &operator>>(TBuffer &buf, TParticlePDG *&obj)
+{
+   // Read a pointer to an object of class TParticlePDG.
+
+   obj = (TParticlePDG *) buf.ReadObject(TParticlePDG::Class());
+   return buf;
+}
+
+//______________________________________________________________________________
+void TParticlePDG::Streamer(TBuffer &R__b)
+{
+   // Stream an object of class TParticlePDG.
+
+   if (R__b.IsReading()) {
+      Version_t R__v = R__b.ReadVersion(); if (R__v) { }
+      TNamed::Streamer(R__b);
+      R__b >> fPdgCode;
+      R__b >> fMass;
+      R__b >> fCharge;
+      R__b >> fLifetime;
+      R__b >> fWidth;
+      R__b >> fParity;
+      R__b >> fSpin;
+      R__b >> fIsospin;
+      R__b >> fI3;
+      R__b >> fStrangeness;
+      R__b >> fCharm;
+      R__b >> fBeauty;
+      R__b >> fTop;
+      R__b >> fY;
+      R__b >> fX;
+      R__b >> fStable;
+      R__b >> fDecayList;
+      fType.Streamer(R__b);
+   } else {
+      R__b.WriteVersion(TParticlePDG::IsA());
+      TNamed::Streamer(R__b);
+      R__b << fPdgCode;
+      R__b << fMass;
+      R__b << fCharge;
+      R__b << fLifetime;
+      R__b << fWidth;
+      R__b << fParity;
+      R__b << fSpin;
+      R__b << fIsospin;
+      R__b << fI3;
+      R__b << fStrangeness;
+      R__b << fCharm;
+      R__b << fBeauty;
+      R__b << fTop;
+      R__b << fY;
+      R__b << fX;
+      R__b << fStable;
+      R__b << fDecayList;
+      fType.Streamer(R__b);
+   }
+}
+
+//______________________________________________________________________________
+void TParticlePDG::ShowMembers(TMemberInspector &R__insp, char *R__parent)
+{
+   // Inspect the data members of an object of class TParticlePDG.
+
+   TClass *R__cl  = TParticlePDG::IsA();
+   Int_t   R__ncp = strlen(R__parent);
+   if (R__ncp || R__cl || R__insp.IsA()) { }
+   R__insp.Inspect(R__cl, R__parent, "fPdgCode", &fPdgCode);
+   R__insp.Inspect(R__cl, R__parent, "fMass", &fMass);
+   R__insp.Inspect(R__cl, R__parent, "fCharge", &fCharge);
+   R__insp.Inspect(R__cl, R__parent, "fLifetime", &fLifetime);
+   R__insp.Inspect(R__cl, R__parent, "fWidth", &fWidth);
+   R__insp.Inspect(R__cl, R__parent, "fParity", &fParity);
+   R__insp.Inspect(R__cl, R__parent, "fSpin", &fSpin);
+   R__insp.Inspect(R__cl, R__parent, "fIsospin", &fIsospin);
+   R__insp.Inspect(R__cl, R__parent, "fI3", &fI3);
+   R__insp.Inspect(R__cl, R__parent, "fStrangeness", &fStrangeness);
+   R__insp.Inspect(R__cl, R__parent, "fCharm", &fCharm);
+   R__insp.Inspect(R__cl, R__parent, "fBeauty", &fBeauty);
+   R__insp.Inspect(R__cl, R__parent, "fTop", &fTop);
+   R__insp.Inspect(R__cl, R__parent, "fY", &fY);
+   R__insp.Inspect(R__cl, R__parent, "fX", &fX);
+   R__insp.Inspect(R__cl, R__parent, "fStable", &fStable);
+   R__insp.Inspect(R__cl, R__parent, "*fDecayList", &fDecayList);
+   fType.ShowMembers(R__insp, strcat(R__parent,"fType.")); R__parent[R__ncp] = 0;
+   TNamed::ShowMembers(R__insp, R__parent);
+}
+
+//______________________________________________________________________________
+TBuffer &operator>>(TBuffer &buf, TDatabasePDG *&obj)
+{
+   // Read a pointer to an object of class TDatabasePDG.
+
+   obj = (TDatabasePDG *) buf.ReadObject(TDatabasePDG::Class());
+   return buf;
+}
+
+//______________________________________________________________________________
+void TDatabasePDG::Streamer(TBuffer &R__b)
+{
+   // Stream an object of class TDatabasePDG.
+
+   if (R__b.IsReading()) {
+      Version_t R__v = R__b.ReadVersion(); if (R__v) { }
+      TNamed::Streamer(R__b);
+      R__b >> fParticleList;
+   } else {
+      R__b.WriteVersion(TDatabasePDG::IsA());
+      TNamed::Streamer(R__b);
+      R__b << fParticleList;
+   }
+}
+
+//______________________________________________________________________________
+void TDatabasePDG::ShowMembers(TMemberInspector &R__insp, char *R__parent)
+{
+   // Inspect the data members of an object of class TDatabasePDG.
+
+   TClass *R__cl  = TDatabasePDG::IsA();
+   Int_t   R__ncp = strlen(R__parent);
+   if (R__ncp || R__cl || R__insp.IsA()) { }
+   R__insp.Inspect(R__cl, R__parent, "*fParticleList", &fParticleList);
    TNamed::ShowMembers(R__insp, R__parent);
 }
 

@@ -1,5 +1,5 @@
-/*CMZ :  2.20/04 08/12/98  16.25.24  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   08/12/98*/
+/*CMZ :  2.21/08 17/03/99  13.13.39  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   17/03/99*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -258,7 +258,7 @@ struct G__ifunc_table *ifunc;
 	}
 	fprintf(fp,")");
 	if(ifunc->isconst[i]&G__CONSTFUNC) fprintf(fp," const");
-	if(ifunc->ispurevirtual[i]) fprintf(fp,")=0;");
+	if(ifunc->ispurevirtual[i]) fprintf(fp,"=0");
 	fprintf(fp,";");
 	temp[0] = '\0';
 	G__getcomment(temp,&ifunc->comment[i],ifunc->tagnum);
@@ -1396,7 +1396,18 @@ long offset;
 #endif
     fprintf(fout," ");
     fprintf(fout,"%s",var->varnamebuf[imon1]);
-    if(var->varlabel[imon1][1]) fprintf(fout,"[]");
+    if(var->varlabel[imon1][1]) {
+      int ixxx;
+      for(ixxx=0;ixxx<var->paran[imon1];ixxx++) {
+        if(ixxx) {
+          fprintf(fout,"[%d]",var->varlabel[imon1][ixxx+1]);
+        }
+        else {
+          fprintf(fout,"[%d]"
+                  ,(var->varlabel[imon1][1]+1)/var->varlabel[imon1][0]);
+        }
+      }
+    }
 
 #ifndef G__OLDIMPLEMENTATION401
     if(var->bitfield[imon1]) {
@@ -1554,10 +1565,11 @@ void* G__signal(sgnl,f)
 int sgnl;
 void (*f) G__P((int));
 {
-  if(!G__masksignal) return(signal(sgnl,f));
 #ifndef G__SYMANTEC
+  if(!G__masksignal) return((G__signaltype)signal(sgnl,f));
   else               return((G__signaltype)1);
 #else
+  if(!G__masksignal) return((void*)signal(sgnl,f));
   else               return((void*)1);
 #endif
 }

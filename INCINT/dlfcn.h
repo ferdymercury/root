@@ -1,5 +1,5 @@
-/*CMZ :  2.20/04 08/12/98  16.25.22  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   08/12/98*/
+/*CMZ :  2.21/08 17/03/99  13.13.38  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   17/03/99*/
 /*
  * @(#)dlfcn.h	1.4 revision of 95/04/25  09:36:52
  * This is an unpublished work copyright (c) 1992 HELIOS Software GmbH

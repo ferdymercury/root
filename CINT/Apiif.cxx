@@ -1,5 +1,5 @@
-//*CMZ :  2.20/04 08/12/98  16.25.35  by  Masaharu Goto
-//*-- Author :    Masaharu Goto   08/12/98
+//*CMZ :  2.21/08 17/03/99  13.13.46  by  Masaharu Goto
+//*-- Author :    Masaharu Goto   17/03/99
 /********************************************************
 * Apiif.cxx
 ********************************************************/
@@ -9,16 +9,22 @@
 #undef malloc
 #endif
 
+extern "C" void G__cpp_reset_tagtableG__API();
 
 extern "C" void G__set_cpp_environmentG__API() {
   G__add_ipath("..");
   G__add_compiledheader("Api.h");
+  G__cpp_reset_tagtableG__API();
 }
 static void* operator new(size_t size,void* p) {
   if((long)p==G__getgvp() && G__PVOID!=G__getgvp()) return(p);
+#ifndef G__ROOT
   return(malloc(size));
+#else
+  return new char[size];
+#endif
 }
-int G__cpp_dllrevG__API() { return(51111); }
+extern "C" int G__cpp_dllrevG__API() { return(51111); }
 
 /*********************************************************
 * Member function Interface Method
@@ -198,6 +204,7 @@ static int G__G__MethodInfo_wAG__MethodInfo_7_2(G__value *result7,char *funcname
          ((G__MethodInfo *)((G__getstructoffset())+sizeof(G__MethodInfo)*i))->~G__MethodInfo();
    else if(G__PVOID==G__getgvp()) delete (G__MethodInfo *)(G__getstructoffset());
    else ((G__MethodInfo *)(G__getstructoffset()))->~G__MethodInfo();
+      G__setnull(result7);
    return(1 || funcname || hash || result7 || libp) ;
 }
 
@@ -333,6 +340,88 @@ static int G__G__DataMemberInfo_wAG__DataMemberInfo_9_1(G__value *result7,char *
          ((G__DataMemberInfo *)((G__getstructoffset())+sizeof(G__DataMemberInfo)*i))->~G__DataMemberInfo();
    else if(G__PVOID==G__getgvp()) delete (G__DataMemberInfo *)(G__getstructoffset());
    else ((G__DataMemberInfo *)(G__getstructoffset()))->~G__DataMemberInfo();
+      G__setnull(result7);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+
+/* G__FriendInfo */
+static int G__G__FriendInfo_G__FriendInfo_0_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   G__FriendInfo *p=NULL;
+   switch(libp->paran) {
+   case 1:
+      p = new((void*)G__getgvp()) G__FriendInfo((G__friendtag*)G__int(libp->para[0]));
+      break;
+   case 0:
+   if(G__getaryconstruct())
+     if(G__PVOID==G__getgvp())
+       p=new G__FriendInfo[G__getaryconstruct()];
+     else {
+       for(int i=0;i<G__getaryconstruct();i++)
+         p=new((void*)(G__getgvp()+sizeof(G__FriendInfo)*i)) G__FriendInfo;
+       p=(G__FriendInfo*)G__getgvp();
+     }
+   else p=new((void*)G__getgvp()) G__FriendInfo;
+      break;
+   }
+      result7->obj.i = (long)p;
+      result7->ref = (long)p;
+      result7->type = 'u';
+      result7->tagnum = G__get_linked_tagnum(&G__G__APILN_G__FriendInfo);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__G__FriendInfo_operatoreQ_1_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((G__FriendInfo*)(G__getstructoffset()))->operator=(*(G__FriendInfo*)libp->para[0].ref);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__G__FriendInfo_Init_2_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((G__FriendInfo*)(G__getstructoffset()))->Init((G__friendtag*)G__int(libp->para[0]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__G__FriendInfo_FriendOf_3_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,85,(long)((G__FriendInfo*)(G__getstructoffset()))->FriendOf());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__G__FriendInfo_Next_4_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((G__FriendInfo*)(G__getstructoffset()))->Next());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__G__FriendInfo_IsValid_5_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((G__FriendInfo*)(G__getstructoffset()))->IsValid());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+// automatic copy constructor
+static int G__G__FriendInfo_G__FriendInfo_6_0(G__value *result7,char *funcname,struct G__param *libp,int hash)
+{
+   G__FriendInfo *p;
+   if(1!=libp->paran) ;
+   p=new((void*)G__getgvp()) G__FriendInfo(*(G__FriendInfo*)G__int(libp->para[0]));
+   result7->obj.i = (long)p;
+   result7->ref = (long)p;
+   result7->type = 'u';
+   result7->tagnum = G__get_linked_tagnum(&G__G__APILN_G__FriendInfo);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+// automatic destructor
+static int G__G__FriendInfo_wAG__FriendInfo_7_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   if(G__getaryconstruct())
+     if(G__PVOID==G__getgvp())
+       delete[] (G__FriendInfo *)(G__getstructoffset());
+     else
+       for(int i=G__getaryconstruct()-1;i>=0;i--)
+         ((G__FriendInfo *)((G__getstructoffset())+sizeof(G__FriendInfo)*i))->~G__FriendInfo();
+   else if(G__PVOID==G__getgvp()) delete (G__FriendInfo *)(G__getstructoffset());
+   else ((G__FriendInfo *)(G__getstructoffset()))->~G__FriendInfo();
+      G__setnull(result7);
    return(1 || funcname || hash || result7 || libp) ;
 }
 
@@ -451,8 +540,8 @@ static int G__G__ClassInfo_Tagnum_7_1(G__value *result7,char *funcname,struct G_
 
 static int G__G__ClassInfo_EnclosingClass_8_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       {
-        G__ClassInfo *pobj;
-        pobj=new((void*)G__getgvp()) G__ClassInfo(((G__ClassInfo*)(G__getstructoffset()))->EnclosingClass());
+        G__ClassInfo *pobj,xobj=((G__ClassInfo*)(G__getstructoffset()))->EnclosingClass();
+        pobj=new((void*)G__getgvp()) G__ClassInfo(xobj);
         result7->obj.i=(long)((void*)pobj); result7->ref=result7->obj.i;
         G__store_tempobject(*result7);
       }
@@ -611,9 +700,9 @@ static int G__G__ClassInfo_GetInterfaceMethod_6_4(G__value *result7,char *funcna
 
 static int G__G__ClassInfo_GetMethod_7_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       {
-        G__MethodInfo *pobj;
-        pobj=new((void*)G__getgvp()) G__MethodInfo(((G__ClassInfo*)(G__getstructoffset()))->GetMethod((const char*)G__int(libp->para[0]),(const char*)G__int(libp->para[1])
-,(long*)G__int(libp->para[2])));
+        G__MethodInfo *pobj,xobj=((G__ClassInfo*)(G__getstructoffset()))->GetMethod((const char*)G__int(libp->para[0]),(const char*)G__int(libp->para[1])
+,(long*)G__int(libp->para[2]));
+        pobj=new((void*)G__getgvp()) G__MethodInfo(xobj);
         result7->obj.i=(long)((void*)pobj); result7->ref=result7->obj.i;
         G__store_tempobject(*result7);
       }
@@ -622,8 +711,8 @@ static int G__G__ClassInfo_GetMethod_7_4(G__value *result7,char *funcname,struct
 
 static int G__G__ClassInfo_GetDataMember_8_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       {
-        G__DataMemberInfo *pobj;
-        pobj=new((void*)G__getgvp()) G__DataMemberInfo(((G__ClassInfo*)(G__getstructoffset()))->GetDataMember((const char*)G__int(libp->para[0]),(long*)G__int(libp->para[1])));
+        G__DataMemberInfo *pobj,xobj=((G__ClassInfo*)(G__getstructoffset()))->GetDataMember((const char*)G__int(libp->para[0]),(long*)G__int(libp->para[1]));
+        pobj=new((void*)G__getgvp()) G__DataMemberInfo(xobj);
         result7->obj.i=(long)((void*)pobj); result7->ref=result7->obj.i;
         G__store_tempobject(*result7);
       }
@@ -668,6 +757,7 @@ static int G__G__ClassInfo_wAG__ClassInfo_4_5(G__value *result7,char *funcname,s
          ((G__ClassInfo *)((G__getstructoffset())+sizeof(G__ClassInfo)*i))->~G__ClassInfo();
    else if(G__PVOID==G__getgvp()) delete (G__ClassInfo *)(G__getstructoffset());
    else ((G__ClassInfo *)(G__getstructoffset()))->~G__ClassInfo();
+      G__setnull(result7);
    return(1 || funcname || hash || result7 || libp) ;
 }
 
@@ -732,6 +822,7 @@ static int G__G__BaseClassInfo_wAG__BaseClassInfo_8_0(G__value *result7,char *fu
          ((G__BaseClassInfo *)((G__getstructoffset())+sizeof(G__BaseClassInfo)*i))->~G__BaseClassInfo();
    else if(G__PVOID==G__getgvp()) delete (G__BaseClassInfo *)(G__getstructoffset());
    else ((G__BaseClassInfo *)(G__getstructoffset()))->~G__BaseClassInfo();
+      G__setnull(result7);
    return(1 || funcname || hash || result7 || libp) ;
 }
 
@@ -844,6 +935,7 @@ static int G__G__TypeInfo_wAG__TypeInfo_6_1(G__value *result7,char *funcname,str
          ((G__TypeInfo *)((G__getstructoffset())+sizeof(G__TypeInfo)*i))->~G__TypeInfo();
    else if(G__PVOID==G__getgvp()) delete (G__TypeInfo *)(G__getstructoffset());
    else ((G__TypeInfo *)(G__getstructoffset()))->~G__TypeInfo();
+      G__setnull(result7);
    return(1 || funcname || hash || result7 || libp) ;
 }
 
@@ -941,6 +1033,7 @@ static int G__G__MethodArgInfo_wAG__MethodArgInfo_2_1(G__value *result7,char *fu
          ((G__MethodArgInfo *)((G__getstructoffset())+sizeof(G__MethodArgInfo)*i))->~G__MethodArgInfo();
    else if(G__PVOID==G__getgvp()) delete (G__MethodArgInfo *)(G__getstructoffset());
    else ((G__MethodArgInfo *)(G__getstructoffset()))->~G__MethodArgInfo();
+      G__setnull(result7);
    return(1 || funcname || hash || result7 || libp) ;
 }
 
@@ -1075,6 +1168,7 @@ static int G__G__CallFunc_wAG__CallFunc_9_1(G__value *result7,char *funcname,str
          ((G__CallFunc *)((G__getstructoffset())+sizeof(G__CallFunc)*i))->~G__CallFunc();
    else if(G__PVOID==G__getgvp()) delete (G__CallFunc *)(G__getstructoffset());
    else ((G__CallFunc *)(G__getstructoffset()))->~G__CallFunc();
+      G__setnull(result7);
    return(1 || funcname || hash || result7 || libp) ;
 }
 
@@ -1138,8 +1232,8 @@ static int G__G__TypedefInfo_Init_6_0(G__value *result7,char *funcname,struct G_
 
 static int G__G__TypedefInfo_EnclosingClassOfTypedef_7_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       {
-        G__ClassInfo *pobj;
-        pobj=new((void*)G__getgvp()) G__ClassInfo(((G__TypedefInfo*)(G__getstructoffset()))->EnclosingClassOfTypedef());
+        G__ClassInfo *pobj,xobj=((G__TypedefInfo*)(G__getstructoffset()))->EnclosingClassOfTypedef();
+        pobj=new((void*)G__getgvp()) G__ClassInfo(xobj);
         result7->obj.i=(long)((void*)pobj); result7->ref=result7->obj.i;
         G__store_tempobject(*result7);
       }
@@ -1189,6 +1283,7 @@ static int G__G__TypedefInfo_wAG__TypedefInfo_3_1(G__value *result7,char *funcna
          ((G__TypedefInfo *)((G__getstructoffset())+sizeof(G__TypedefInfo)*i))->~G__TypedefInfo();
    else if(G__PVOID==G__getgvp()) delete (G__TypedefInfo *)(G__getstructoffset());
    else ((G__TypedefInfo *)(G__getstructoffset()))->~G__TypedefInfo();
+      G__setnull(result7);
    return(1 || funcname || hash || result7 || libp) ;
 }
 
@@ -1220,9 +1315,9 @@ static int G__G__TokenInfo_Init_2_0(G__value *result7,char *funcname,struct G__p
 
 static int G__G__TokenInfo_MakeLocalTable_3_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       {
-        G__MethodInfo *pobj;
-        pobj=new((void*)G__getgvp()) G__MethodInfo(((G__TokenInfo*)(G__getstructoffset()))->MakeLocalTable(*(G__ClassInfo*)libp->para[0].ref,(char*)G__int(libp->para[1])
-,(char*)G__int(libp->para[2])));
+        G__MethodInfo *pobj,xobj=((G__TokenInfo*)(G__getstructoffset()))->MakeLocalTable(*(G__ClassInfo*)libp->para[0].ref,(char*)G__int(libp->para[1])
+,(char*)G__int(libp->para[2]));
+        pobj=new((void*)G__getgvp()) G__MethodInfo(xobj);
         result7->obj.i=(long)((void*)pobj); result7->ref=result7->obj.i;
         G__store_tempobject(*result7);
       }
@@ -1238,8 +1333,8 @@ static int G__G__TokenInfo_Query_4_0(G__value *result7,char *funcname,struct G__
 
 static int G__G__TokenInfo_GetNextScope_5_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       {
-        G__ClassInfo *pobj;
-        pobj=new((void*)G__getgvp()) G__ClassInfo(((G__TokenInfo*)(G__getstructoffset()))->GetNextScope());
+        G__ClassInfo *pobj,xobj=((G__TokenInfo*)(G__getstructoffset()))->GetNextScope();
+        pobj=new((void*)G__getgvp()) G__ClassInfo(xobj);
         result7->obj.i=(long)((void*)pobj); result7->ref=result7->obj.i;
         G__store_tempobject(*result7);
       }
@@ -1269,6 +1364,7 @@ static int G__G__TokenInfo_wAG__TokenInfo_4_1(G__value *result7,char *funcname,s
          ((G__TokenInfo *)((G__getstructoffset())+sizeof(G__TokenInfo)*i))->~G__TokenInfo();
    else if(G__PVOID==G__getgvp()) delete (G__TokenInfo *)(G__getstructoffset());
    else ((G__TokenInfo *)(G__getstructoffset()))->~G__TokenInfo();
+      G__setnull(result7);
    return(1 || funcname || hash || result7 || libp) ;
 }
 
@@ -1300,6 +1396,8 @@ static int G___G__InitGetSpecialValue_4_0(G__value *result7,char *funcname,struc
 /* G__MethodInfo */
 
 /* G__DataMemberInfo */
+
+/* G__FriendInfo */
 
 /* G__ClassInfo */
 
@@ -1404,7 +1502,7 @@ extern "C" void G__cpp_setup_typetableG__API() {
    G__search_typename2("G__InterfaceMethod",89,-1,0,
 -1);
    G__setnewtype(-1,NULL,0);
-   G__search_typename2("G__pMethodSpecialObject",81,-1,2,
+   G__search_typename2("G__pMethodSpecialObject",81,-1,0,
 -1);
    G__setnewtype(-1,NULL,0);
    G__search_typename2("G__pMethodSpecialValue",89,-1,0,
@@ -1431,6 +1529,15 @@ static void G__setup_memvarG__MethodInfo(void) {
 static void G__setup_memvarG__DataMemberInfo(void) {
    G__tag_memvar_setup(G__get_linked_tagnum(&G__G__APILN_G__DataMemberInfo));
    { G__DataMemberInfo *p; p=(G__DataMemberInfo*)0x1000; if (p) { }
+   }
+   G__tag_memvar_reset();
+}
+
+
+   /* G__FriendInfo */
+static void G__setup_memvarG__FriendInfo(void) {
+   G__tag_memvar_setup(G__get_linked_tagnum(&G__G__APILN_G__FriendInfo));
+   { G__FriendInfo *p; p=(G__FriendInfo*)0x1000; if (p) { }
    }
    G__tag_memvar_reset();
 }
@@ -1592,6 +1699,22 @@ static void G__setup_memfuncG__DataMemberInfo(void) {
    G__memfunc_setup("G__DataMemberInfo",1635,G__G__DataMemberInfo_G__DataMemberInfo_8_1,(int)('i'),G__get_linked_tagnum(&G__G__APILN_G__DataMemberInfo),-1,0,1,1,1,0,"u 'G__DataMemberInfo' - 1 - -",(char*)NULL,(void*)NULL,0);
    // automatic destructor
    G__memfunc_setup("~G__DataMemberInfo",1761,G__G__DataMemberInfo_wAG__DataMemberInfo_9_1,(int)('y'),-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__tag_memfunc_reset();
+}
+
+static void G__setup_memfuncG__FriendInfo(void) {
+   /* G__FriendInfo */
+   G__tag_memfunc_setup(G__get_linked_tagnum(&G__G__APILN_G__FriendInfo));
+   G__memfunc_setup("G__FriendInfo",1257,G__G__FriendInfo_G__FriendInfo_0_0,105,G__get_linked_tagnum(&G__G__APILN_G__FriendInfo),-1,0,1,1,1,0,"U 'G__friendtag' - 0 0 pin",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("operator=",937,G__G__FriendInfo_operatoreQ_1_0,121,-1,-1,0,1,1,1,0,"u 'G__FriendInfo' - 1 - x",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Init",404,G__G__FriendInfo_Init_2_0,121,-1,-1,0,1,1,1,0,"U 'G__friendtag' - 0 - pin",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("FriendOf",781,G__G__FriendInfo_FriendOf_3_0,85,G__get_linked_tagnum(&G__G__APILN_G__ClassInfo),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Next",415,G__G__FriendInfo_Next_4_0,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("IsValid",684,G__G__FriendInfo_IsValid_5_0,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   // automatic copy constructor
+   G__memfunc_setup("G__FriendInfo",1257,G__G__FriendInfo_G__FriendInfo_6_0,(int)('i'),G__get_linked_tagnum(&G__G__APILN_G__FriendInfo),-1,0,1,1,1,0,"u 'G__FriendInfo' - 1 - -",(char*)NULL,(void*)NULL,0);
+   // automatic destructor
+   G__memfunc_setup("~G__FriendInfo",1383,G__G__FriendInfo_wAG__FriendInfo_7_0,(int)('y'),-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
    G__tag_memfunc_reset();
 }
 
@@ -1813,6 +1936,8 @@ extern "C" void G__cpp_setup_globalG__API() {
    G__memvar_setup((void*)G__PVOID,112,0,0,-1,-1,-1,1,"G__OLDIMPLEMENTATION834=0",1,(char*)NULL);
    G__memvar_setup((void*)G__PVOID,112,0,0,-1,-1,-1,1,"G__ANSIHEADER=0",1,(char*)NULL);
    G__memvar_setup((void*)G__PVOID,112,0,0,-1,-1,-1,1,"G__IF_DUMMY=0",1,(char*)NULL);
+   G__memvar_setup((void*)G__PVOID,112,0,0,-1,-1,-1,1,"G__DLLEXPORT=0",1,(char*)NULL);
+   G__memvar_setup((void*)G__PVOID,112,0,0,-1,-1,-1,1,"G__EXPORT=0",1,(char*)NULL);
    G__memvar_setup((void*)G__PVOID,112,0,0,-1,-1,-1,1,"G__DUMPFILE=0",1,(char*)NULL);
    G__memvar_setup((void*)G__PVOID,112,0,0,-1,-1,-1,1,"G__DOSHUGE=0",1,(char*)NULL);
    G__memvar_setup((void*)G__PVOID,112,0,0,-1,-1,-1,1,"G__FONS_TYPEINFO=0",1,(char*)NULL);
@@ -1879,18 +2004,18 @@ extern "C" void G__cpp_setup_globalG__API() {
    G__memvar_setup((void*)G__PVOID,112,0,0,-1,-1,-1,1,"G__NOLINK=0",1,(char*)NULL);
    G__memvar_setup((void*)G__PVOID,112,0,0,-1,-1,-1,1,"G__LONGLINE=1024",1,(char*)NULL);
    G__memvar_setup((void*)G__PVOID,112,0,0,-1,-1,-1,1,"G__ONELINE=256",1,(char*)NULL);
+   G__memvar_setup((void*)G__PVOID,112,0,0,-1,-1,-1,1,"G__MAXNAME=128",1,(char*)NULL);
    G__memvar_setup((void*)G__PVOID,112,0,0,-1,-1,-1,1,"G__MAXFILE=500",1,(char*)NULL);
    G__memvar_setup((void*)G__PVOID,112,0,0,-1,-1,-1,1,"G__MAXFILENAME=256",1,(char*)NULL);
    G__memvar_setup((void*)G__PVOID,112,0,0,-1,-1,-1,1,"G__MAXPARA=100",1,(char*)NULL);
    G__memvar_setup((void*)G__PVOID,112,0,0,-1,-1,-1,1,"G__MAXARG=100",1,(char*)NULL);
    G__memvar_setup((void*)G__PVOID,112,0,0,-1,-1,-1,1,"G__MAXFUNCPARA=40",1,(char*)NULL);
    G__memvar_setup((void*)G__PVOID,112,0,0,-1,-1,-1,1,"G__MAXVARDIM=10",1,(char*)NULL);
-   G__memvar_setup((void*)G__PVOID,112,0,0,-1,-1,-1,1,"G__MAXNAME=80",1,(char*)NULL);
    G__memvar_setup((void*)G__PVOID,112,0,0,-1,-1,-1,1,"G__LENPOST=10",1,(char*)NULL);
    G__memvar_setup((void*)G__PVOID,112,0,0,-1,-1,-1,1,"G__MAXBASE=30",1,(char*)NULL);
    G__memvar_setup((void*)G__PVOID,112,0,0,-1,-1,-1,1,"G__TAGNEST=20",1,(char*)NULL);
-   G__memvar_setup((void*)G__PVOID,112,0,0,-1,-1,-1,1,"G__MAXSTRUCT=1600",1,(char*)NULL);
-   G__memvar_setup((void*)G__PVOID,112,0,0,-1,-1,-1,1,"G__MAXTYPEDEF=1000",1,(char*)NULL);
+   G__memvar_setup((void*)G__PVOID,112,0,0,-1,-1,-1,1,"G__MAXSTRUCT=4000",1,(char*)NULL);
+   G__memvar_setup((void*)G__PVOID,112,0,0,-1,-1,-1,1,"G__MAXTYPEDEF=4000",1,(char*)NULL);
    G__memvar_setup((void*)G__PVOID,112,0,0,-1,-1,-1,1,"G__MAXIFUNC=10",1,(char*)NULL);
    G__memvar_setup((void*)G__PVOID,112,0,0,-1,-1,-1,1,"G__MEMDEPTH=10",1,(char*)NULL);
    G__memvar_setup((void*)G__PVOID,112,0,0,-1,-1,-1,1,"G__TIMEOUT=10",1,(char*)NULL);
@@ -2022,6 +2147,7 @@ G__linked_taginfo G__G__APILN_G__linked_taginfo = { "G__linked_taginfo" , 115 , 
 G__linked_taginfo G__G__APILN_G__COMPLETIONLIST = { "G__COMPLETIONLIST" , 115 , -1 };
 G__linked_taginfo G__G__APILN_G__MethodInfo = { "G__MethodInfo" , 99 , -1 };
 G__linked_taginfo G__G__APILN_G__DataMemberInfo = { "G__DataMemberInfo" , 99 , -1 };
+G__linked_taginfo G__G__APILN_G__FriendInfo = { "G__FriendInfo" , 99 , -1 };
 G__linked_taginfo G__G__APILN_G__ClassInfo = { "G__ClassInfo" , 99 , -1 };
 G__linked_taginfo G__G__APILN_G__BaseClassInfo = { "G__BaseClassInfo" , 99 , -1 };
 G__linked_taginfo G__G__APILN_G__TypeInfo = { "G__TypeInfo" , 99 , -1 };
@@ -2032,11 +2158,31 @@ G__linked_taginfo G__G__APILN_G__TokenInfo = { "G__TokenInfo" , 99 , -1 };
 G__linked_taginfo G__G__APILN_G__TokenInfocLcLG__TokenType = { "G__TokenInfo::G__TokenType" , 101 , -1 };
 G__linked_taginfo G__G__APILN_G__TokenInfocLcLG__TokenProperty = { "G__TokenInfo::G__TokenProperty" , 101 , -1 };
 
+/* Reset class/struct taginfo */
+extern "C" void G__cpp_reset_tagtableG__API() {
+  G__G__APILN_G__value.tagnum = -1 ;
+  G__G__APILN_G__linked_taginfo.tagnum = -1 ;
+  G__G__APILN_G__COMPLETIONLIST.tagnum = -1 ;
+  G__G__APILN_G__MethodInfo.tagnum = -1 ;
+  G__G__APILN_G__DataMemberInfo.tagnum = -1 ;
+  G__G__APILN_G__FriendInfo.tagnum = -1 ;
+  G__G__APILN_G__ClassInfo.tagnum = -1 ;
+  G__G__APILN_G__BaseClassInfo.tagnum = -1 ;
+  G__G__APILN_G__TypeInfo.tagnum = -1 ;
+  G__G__APILN_G__MethodArgInfo.tagnum = -1 ;
+  G__G__APILN_G__CallFunc.tagnum = -1 ;
+  G__G__APILN_G__TypedefInfo.tagnum = -1 ;
+  G__G__APILN_G__TokenInfo.tagnum = -1 ;
+  G__G__APILN_G__TokenInfocLcLG__TokenType.tagnum = -1 ;
+  G__G__APILN_G__TokenInfocLcLG__TokenProperty.tagnum = -1 ;
+}
+
 extern "C" void G__cpp_setup_tagtableG__API() {
 
    /* Setting up class,struct,union tag entry */
    G__tagtable_setup(G__get_linked_tagnum(&G__G__APILN_G__MethodInfo),sizeof(G__MethodInfo),-1,0,(char*)NULL,G__setup_memvarG__MethodInfo,G__setup_memfuncG__MethodInfo);
    G__tagtable_setup(G__get_linked_tagnum(&G__G__APILN_G__DataMemberInfo),sizeof(G__DataMemberInfo),-1,0,(char*)NULL,G__setup_memvarG__DataMemberInfo,G__setup_memfuncG__DataMemberInfo);
+   G__tagtable_setup(G__get_linked_tagnum(&G__G__APILN_G__FriendInfo),sizeof(G__FriendInfo),-1,0,(char*)NULL,G__setup_memvarG__FriendInfo,G__setup_memfuncG__FriendInfo);
    G__tagtable_setup(G__get_linked_tagnum(&G__G__APILN_G__ClassInfo),sizeof(G__ClassInfo),-1,0,(char*)NULL,G__setup_memvarG__ClassInfo,G__setup_memfuncG__ClassInfo);
    G__tagtable_setup(G__get_linked_tagnum(&G__G__APILN_G__BaseClassInfo),sizeof(G__BaseClassInfo),-1,0,(char*)NULL,G__setup_memvarG__BaseClassInfo,G__setup_memfuncG__BaseClassInfo);
    G__tagtable_setup(G__get_linked_tagnum(&G__G__APILN_G__TypeInfo),sizeof(G__TypeInfo),-1,0,(char*)NULL,G__setup_memvarG__TypeInfo,G__setup_memfuncG__TypeInfo);

@@ -1,5 +1,5 @@
-/*CMZ :  2.20/04 08/12/98  16.25.28  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   08/12/98*/
+/*CMZ :  2.21/08 17/03/99  13.13.42  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   17/03/99*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -36,6 +36,8 @@
 *     src/libstrm.cxx in lib/stream
 *     src/vcstrm.cxx  in lib/vcstream
 *     src/bcstrm.cxx  in lib/bcstream
+*     src/cbstrm.cpp  in lib/cbstream
+*     src/stdstrct.c  in lib/stdstrct
 *     src/Apiif.cxx   in src
 * g++ has a bug of distinguishing 'static operator delete(void* p)' in
 * different file scope. Deleting this macro will avoid this problem.
@@ -93,6 +95,11 @@ static int G__nestedclass = 0;
 #endif
 #ifndef G__OLDIMPLEMENTATION776
 static int G__nestedtypedef = 0;
+#endif
+#ifndef G__OLDIMPLEMENTATION974
+static int G__store_asm_noverflow;
+static int G__store_no_exec_compile;
+static int G__store_asm_exec;
 #endif
 
 
@@ -156,6 +163,14 @@ library=%d cintbody=%d\n\n\
             func, G__cint_version(),version,G__DLLREV);
       exit(1);
    }
+#ifndef G__OLDIMPLEMENTATION974
+   G__store_asm_noverflow = G__asm_noverflow;
+   G__store_no_exec_compile = G__no_exec_compile;
+   G__store_asm_exec = G__asm_exec;
+   G__abortbytecode();
+   G__no_exec_compile =0;
+   G__asm_exec = 0;
+#endif
 }
 #endif
 
@@ -343,6 +358,9 @@ void G__gen_clink()
 #ifndef G__OLDIMPLEMENTATION606
   if(!fp) G__fileerror(G__CLINK_C);
 #endif
+#ifndef G__OLDIMPLEMENTATION1015
+  fprintf(fp,"  G__c_reset_tagtable%s();\n",G__DLLID);
+#endif
   fprintf(fp,"}\n");
 
   hfp = fopen(G__CLINK_H,"a");
@@ -426,6 +444,9 @@ void G__gen_cpplink()
 #ifndef G__OLDIMPLEMENTATION606
   if(!fp) G__fileerror(G__CPPLINK_C);
 #endif
+#ifndef G__OLDIMPLEMENTATION1015
+  fprintf(fp,"  G__cpp_reset_tagtable%s();\n",G__DLLID);
+#endif
   fprintf(fp,"}\n");
 
   hfp=fopen(G__CPPLINK_H,"a");
@@ -454,7 +475,11 @@ void G__gen_cpplink()
     fprintf(fp,"  if((long)p==G__getgvp() && G__PVOID!=G__getgvp()) return(p);\n");
 #endif
     /* fprintf(fp,"  if(G__PVOID!=(long)p) return(p);\n"); */
+    fprintf(fp,"#ifndef G__ROOT\n");
     fprintf(fp,"  return(malloc(size));\n");
+    fprintf(fp,"#else\n");
+    fprintf(fp,"  return new char[size];\n");
+    fprintf(fp,"#endif\n");
     fprintf(fp,"}\n");
   }
   else {
@@ -778,6 +803,29 @@ FILE *hfp;
     }
   }
   fprintf(fp,"\n");
+
+#ifndef G__OLDIMPLEMENTATION1015
+  fprintf(fp,"/* Reset class/struct taginfo */\n");
+  switch(G__globalcomp) {
+  case G__CLINK:
+    fprintf(fp,"void G__c_reset_tagtable%s() {\n",G__DLLID);
+    break;
+  case G__CPPLINK:
+  default:
+    fprintf(fp,"extern \"C\" void G__cpp_reset_tagtable%s() {\n",G__DLLID);
+    break;
+  }
+
+  for(i=0;i<G__struct.alltag;i++) {
+    if(G__NOLINK > G__struct.globalcomp[i] &&
+       (G__struct.hash[i] || -1!=G__struct.parent_tagnum[i])) {
+      fprintf(fp,"  %s.tagnum = -1 ;\n",G__get_link_tagname(i));
+    }
+  }
+
+  fprintf(fp,"}\n\n");
+#endif
+
 }
 
 /**************************************************************************
@@ -789,7 +837,11 @@ int G__get_linked_tagnum(p)
 G__linked_taginfo *p;
 {
   if(!p) return(-1);
+#ifndef G__OLDIMPLEMENTATION1015
+  if(-1==p->tagnum) p->tagnum = G__search_tagname(p->tagname,p->tagtype);
+#else
   p->tagnum = G__search_tagname(p->tagname,p->tagtype);
+#endif
   return(p->tagnum);
 }
 
@@ -1068,6 +1120,10 @@ char *dllid;
     fprintf(fp,"#endif\n");
     fprintf(fp,"\n");
 
+#ifndef G__OLDIMPLEMENTATION1015
+    fprintf(fp,"extern \"C\" void G__cpp_reset_tagtable%s();\n",G__DLLID);
+#endif
+
     fprintf(fp,"\nextern \"C\" void G__set_cpp_environment%s() {\n",G__DLLID);
     fclose(fp);
     break;
@@ -1095,6 +1151,9 @@ char *dllid;
     fprintf(fp,"* %s\n",G__CLINK_C);
     fprintf(fp,"********************************************************/\n");
     fprintf(fp,"#include \"%s\"\n",G__CLINK_H);
+#ifndef G__OLDIMPLEMENTATION1015
+    fprintf(fp,"void G__c_reset_tagtable%s();\n",G__DLLID);
+#endif
     fprintf(fp,"void G__set_c_environment%s() {\n",G__DLLID);
     fclose(fp);
     break;
@@ -3564,6 +3623,9 @@ FILE *fp;
 #ifndef G__OLDIMPLEMENTATION898
 	      virtualdtorflag= ifunc->isvirtual[j]+ifunc->ispurevirtual[j]*2;
 #endif
+#ifndef G__OLDIMPLEMENTATION981
+	      if(G__PUBLIC!=ifunc->access[j]) ++isdestructor;
+#endif
 	      continue;
 	    }
 
@@ -5037,12 +5099,20 @@ int link_stub;
       store_line = G__ifile.line_number;
       fgetpos(G__ifile.fp,&pos);
       buf[9] = G__fgetc();
+#ifndef G__OLDIMPLEMENTATION1000
+      if(buf[9]==c||'='==buf[9]) c = G__fgetstream_template(buf+10,";\n\r");
+#else
       if(buf[9]==c) c = G__fgetstream_template(buf+10,";\n\r");
+#endif
       else {
 	fsetpos(G__ifile.fp,&pos);
 	G__ifile.line_number = store_line;
 	if(G__dispsource) G__disp_mask = 1;
+#ifndef G__OLDIMPLEMENTATION1000
+	c = G__fgetstream_template(buf+9,";\n\r");
+#else
 	c = G__fgetstream_template(buf,";\n\r");
+#endif
       }
     }
     else {
@@ -5525,6 +5595,11 @@ int sizep2memfunc;
 **************************************************************************/
 int G__getsizep2memfunc()
 {
+#ifndef G__OLDIMPLEMENTATION974
+   G__asm_noverflow = G__store_asm_noverflow;
+   G__no_exec_compile = G__store_no_exec_compile;
+   G__asm_exec = G__store_asm_exec;
+#endif
   return(G__sizep2memfunc);
 }
 

@@ -1,5 +1,5 @@
-/*CMZ :  2.20/04 08/12/98  16.25.25  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   08/12/98*/
+/*CMZ :  2.21/08 17/03/99  13.13.40  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   17/03/99*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -447,6 +447,9 @@ char *string,*endmark;
     case ']':
       if((single_quote==0)&&(double_quote==0)) {
 	nest--;
+#ifndef G__OLDIMPLEMENTATION994
+	inew=i+1;
+#endif
       }
       break;
     case '"':
@@ -967,7 +970,11 @@ char *endmark;
     case '\r':
     case '\f':
       if((single_quote==0)&&(double_quote==0)) {
+#ifndef G__OLDIMPLEMENtATION1005
+	if(0==tmpltflag||0==nest) ignoreflag=1;
+#else
 	ignoreflag=1;
+#endif
 	if(nest==0&&spaceflag!=0) {
 	  flag=1;
 	}
@@ -1815,6 +1822,9 @@ char *string,*endmark;
     case ']':
       if((single_quote==0)&&(double_quote==0)) {
 	nest--;
+#ifndef G__OLDIMPLEMENTATION994
+	inew=i+1;
+#endif
       }
       break;
     case '"':

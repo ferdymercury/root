@@ -1,3 +1,4 @@
+//*CMZ :  2.21/01 13/01/99  08.57.49  by  Rene Brun
 //*CMZ :  2.20/05 15/12/98  09.17.20  by  Rene Brun
 //*CMZ :  2.20/00 30/10/98  12.44.23  by  Rene Brun
 //*CMZ :  2.00/13 29/10/98  16.58.54  by  Rene Brun
@@ -36,7 +37,7 @@ ClassImp(TLatex)
 //
 //   TLatex : to draw Mathematical Formula
 //
-//   This class has been implemented by begin_html <a href="http://hpsalo.cern.ch/nicolas">Nicolas Brun</a> end_html.
+//   This class has been implemented by begin_html <a href="http://root.cern.ch/root/nicolas/html/index.html">Nicolas Brun</a> end_html.
 //   ========================================================
 //
 //   TLatex's purpose is to write mathematical equations

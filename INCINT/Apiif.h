@@ -1,5 +1,5 @@
-/*CMZ :  2.20/04 08/12/98  16.25.21  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   08/12/98*/
+/*CMZ :  2.21/08 17/03/99  13.13.37  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   17/03/99*/
 /********************************************************************
 * Apiif.h
 ********************************************************************/
@@ -35,6 +35,7 @@ extern G__linked_taginfo G__G__APILN_G__linked_taginfo;
 extern G__linked_taginfo G__G__APILN_G__COMPLETIONLIST;
 extern G__linked_taginfo G__G__APILN_G__MethodInfo;
 extern G__linked_taginfo G__G__APILN_G__DataMemberInfo;
+extern G__linked_taginfo G__G__APILN_G__FriendInfo;
 extern G__linked_taginfo G__G__APILN_G__ClassInfo;
 extern G__linked_taginfo G__G__APILN_G__BaseClassInfo;
 extern G__linked_taginfo G__G__APILN_G__TypeInfo;

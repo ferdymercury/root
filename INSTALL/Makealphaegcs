@@ -1,3 +1,4 @@
+*CMZ :  2.21/01 07/01/99  13.48.18  by  Rene Brun
 *CMZ :  2.20/06 17/12/98  14.00.40  by  Rene Brun
 *CMZ :  2.20/00 17/12/98  10.43.27  by  Rene Brun
 *-- Author :    Rene Brun   17/12/98
@@ -13,7 +14,7 @@ NOOPT         =
 CXX           = g++
 CC            = gcc
 CXXFLAGS      = -fPIC -fno-rtti -fno-exceptions -mcpu=ev5 -D__osf__ -D__alpha
-CFLAGS        =
+CFLAGS        = -fPIC -mcpu=ev5
 CINTCXXFLAGS  = -fPIC -fno-rtti -fno-exceptions -mcpu=ev5 \
                 -DG__REGEXP -DG__UNIX -DG__SHAREDLIB \
                 -DG__OSFDLL -DG__ROOT -DG__REDIRECTIO

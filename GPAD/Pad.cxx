@@ -1,3 +1,6 @@
+//*CMZ :  2.21/06 15/02/99  09.05.14  by  Rene Brun
+//*CMZ :  2.21/05 09/02/99  01.10.37  by  Fons Rademakers
+//*CMZ :  2.21/02 16/01/99  14.51.35  by  Rene Brun
 //*CMZ :  2.20/05 15/12/98  09.17.21  by  Rene Brun
 //*CMZ :  2.20/00 13/11/98  18.44.00  by  Fons Rademakers
 //*CMZ :  2.00/13 29/10/98  15.10.09  by  Fons Rademakers
@@ -65,12 +68,14 @@
 #include "TMethod.h"
 #include "TDataType.h"
 #include "TRealData.h"
+#include "TGToolTip.h"
 
 #if defined(WIN32)
 #include "TInterpreter.h"
 #include "TSystem.h"
 #endif
 
+const Int_t kClipFrame = BIT(10);
 const Int_t kDistanceMaximum = 5;
 
 // Local scratch buffer for screen points, faster than allocating buffer on heap
@@ -207,10 +212,10 @@ TPad::TPad(const Text_t *name, const Text_t *title, Float_t xlow,
    fPadPointer = 0;
    fTheta      = 30;
    fPhi        = 30;
-   fGridx      = 0;
-   fGridy      = 0;
-   fTickx      = 0;
-   fTicky      = 0;
+   fGridx      = gStyle->GetPadGridX();
+   fGridy      = gStyle->GetPadGridY();
+   fTickx      = gStyle->GetPadTickX();
+   fTicky      = gStyle->GetPadTickY();
    fFrame      = 0;
    fView       = 0;
    fPadPaint   = 0;
@@ -812,6 +817,7 @@ void TPad::CreateNewPolyLine(Int_t event, Int_t px, Int_t py, Int_t mode)
          gPad->Modified(kTRUE);
          if      (mode == kPolyLine) {
             gr = new TGraph(npoints,xline,yline);
+            gr->ResetBit(kClipFrame);
             gr->Draw("L");
          } else {
             xline[npoints] = xline[0];
@@ -1293,7 +1299,9 @@ void TPad::ExecuteEvent(Int_t event, Int_t px, Int_t py)
 
    static Int_t pxorg, pyorg;
 
-      // keep old range and mouse position
+   HideToolTip(event);
+
+   // keep old range and mouse position
    if (event == kButton1Down) {
       xmin = fX1;
       xmax = fX2;
@@ -1365,6 +1373,7 @@ again:
 
    switch (event) {
 
+   case kMouseEnter:
    case kMouseMotion:
 
       TWbox::ExecuteEvent(event, px, py);
@@ -1444,7 +1453,7 @@ again:
 }
 
 //______________________________________________________________________________
-Int_t TPad::GetCanvasID()
+Int_t TPad::GetCanvasID() const
 {
    return fCanvas->GetCanvasID();
 }
@@ -1568,15 +1577,15 @@ TFrame *TPad::GetFrame()
 {
    if (!fFrame) {
       fFrame = new TFrame(0,0,1,1);
-      Int_t framecolor = gStyle->GetFrameFillColor();
+      Int_t framecolor = GetFrameFillColor();
       if (!framecolor) framecolor = GetFillColor();
       fFrame->SetFillColor(framecolor);
-      fFrame->SetFillStyle(gStyle->GetFrameFillStyle());
-      fFrame->SetLineColor(gStyle->GetFrameLineColor());
-      fFrame->SetLineStyle(gStyle->GetFrameLineStyle());
-      fFrame->SetLineWidth(gStyle->GetFrameLineWidth());
-      fFrame->SetBorderSize(gStyle->GetFrameBorderSize());
-      fFrame->SetBorderMode(gStyle->GetFrameBorderMode());
+      fFrame->SetFillStyle(GetFrameFillStyle());
+      fFrame->SetLineColor(GetFrameLineColor());
+      fFrame->SetLineStyle(GetFrameLineStyle());
+      fFrame->SetLineWidth(GetFrameLineWidth());
+      fFrame->SetBorderSize(GetFrameBorderSize());
+      fFrame->SetBorderMode(GetFrameBorderMode());
    }
    return fFrame;
 }
@@ -1845,21 +1854,21 @@ void TPad::ls(Option_t *option)
 }
 
 //______________________________________________________________________________
-Float_t TPad::PadtoX(Axis_t x)
+Float_t TPad::PadtoX(Axis_t x) const
 {
    if (fLogx && x < 50) return Float_t(TMath::Exp(2.302585092994*x));
    return x;
 }
 
 //______________________________________________________________________________
-Float_t TPad::PadtoY(Axis_t y)
+Float_t TPad::PadtoY(Axis_t y) const
 {
    if (fLogy && y < 50) return Float_t(TMath::Exp(2.302585092994*y));
    return y;
 }
 
 //______________________________________________________________________________
-Float_t TPad::XtoPad(Axis_t x)
+Float_t TPad::XtoPad(Axis_t x) const
 {
    if (fLogx) {
       if (x > 0) x = TMath::Log10(x);
@@ -1869,7 +1878,7 @@ Float_t TPad::XtoPad(Axis_t x)
 }
 
 //______________________________________________________________________________
-Float_t TPad::YtoPad(Axis_t y)
+Float_t TPad::YtoPad(Axis_t y) const
 {
    if (fLogy) {
       if (y > 0) y = TMath::Log10(y);
@@ -2110,8 +2119,11 @@ void TPad::PaintLine(Float_t x1, Float_t y1, Float_t x2, Float_t y2)
    x[0] = x1;   x[1] = x2;   y[0] = y1;   y[1] = y2;
 
    //If line is totally clipped, return
-   if (Clip(x,y,fX1,fY1,fX2,fY2) == 0) return;
-
+   if (TestBit(kClipFrame)) {
+      if (Clip(x,y,fUxmin,fUymin,fUxmax,fUymax) == 0) return;
+   } else {
+      if (Clip(x,y,fX1,fY1,fX2,fY2) == 0) return;
+   }
    if (!gPad->IsBatch()) {
       Int_t px1 = XtoPixel(x[0]);
       Int_t px2 = XtoPixel(x[1]);
@@ -2176,6 +2188,11 @@ void TPad::PaintPolyLine(Int_t n, Float_t *x, Float_t *y, Option_t *)
 //*-*-*-*-*-*-*-*-*Paint polyline in CurrentPad World coordinates*-*-*-*-*-*-*
 //*-*              ==============================================
 
+   for (Int_t i=0;i<n-1;i++) {
+      TPad::PaintLine(x[i],y[i],x[i+1],y[i+1]);
+   }
+
+#ifdef NEVER
    TPoint *pxy;
 
 //*-*- Create temporary array to store array in pixel coordinates
@@ -2199,7 +2216,7 @@ void TPad::PaintPolyLine(Int_t n, Float_t *x, Float_t *y, Option_t *)
    }
 
    Modified();
-
+#endif
 }
 
 //______________________________________________________________________________
@@ -2529,26 +2546,17 @@ void TPad::Range(Float_t x1, Float_t y1, Float_t x2, Float_t y2)
       return;
    }
 
-   if (fUxmin == fUxmax) {
-      fUxmin = x1;
-      fUxmax = x2;
-      fUymin = y1;
-      fUymax = y2;
-   }
+   fUxmin = x1;
+   fUxmax = x2;
+   fUymin = y1;
+   fUymax = y2;
+
    if (fX1 == x1 && fY1 == y1 && fX2 == x2 && fY2 == y2) return;
 
    fX1  = x1;
    fY1  = y1;
    fX2  = x2;
    fY2  = y2;
-
-//*-*- By default set axis range keeping 10 per cent on all sides
-   Float_t dx = x2-x1;
-   Float_t dy = y2-y1;
-   fUxmin = x1 + dx*fLeftMargin;
-   fUymin = y1 + dy*fBottomMargin;
-   fUxmax = x2 - dx*fRightMargin;
-   fUymax = y2 - dy*fTopMargin;
 
 //*-*- Compute pad conversion coefficients
    ResizePad();
@@ -2910,25 +2918,25 @@ void TPad::SavePrimitive(ofstream &out, Option_t *)
 
    if (fFrame) {
       if (fFrame->GetFillColor() != GetFillColor()) {
-         out<<"   "<<GetName()<<"->GetFrame()->SetFillColor("<<fFrame->GetFillColor()<<");"<<endl;
+         out<<"   "<<GetName()<<"->SetFrameFillColor("<<fFrame->GetFillColor()<<");"<<endl;
       }
       if (fFrame->GetFillStyle() != 1001) {
-         out<<"   "<<GetName()<<"->GetFrame()->SetFillStyle("<<fFrame->GetFillStyle()<<");"<<endl;
+         out<<"   "<<GetName()<<"->SetFrameFillStyle("<<fFrame->GetFillStyle()<<");"<<endl;
       }
       if (fFrame->GetLineStyle() != 1) {
-         out<<"   "<<GetName()<<"->GetFrame()->SetLineStyle("<<fFrame->GetLineStyle()<<");"<<endl;
+         out<<"   "<<GetName()<<"->SetFrameLineStyle("<<fFrame->GetLineStyle()<<");"<<endl;
       }
       if (fFrame->GetLineColor() != 1) {
-         out<<"   "<<GetName()<<"->GetFrame()->SetLineColor("<<fFrame->GetLineColor()<<");"<<endl;
+         out<<"   "<<GetName()<<"->SetFrameLineColor("<<fFrame->GetLineColor()<<");"<<endl;
       }
       if (fFrame->GetLineWidth() != 1) {
-         out<<"   "<<GetName()<<"->GetFrame()->SetLineWidth("<<fFrame->GetLineWidth()<<");"<<endl;
+         out<<"   "<<GetName()<<"->SetFrameLineWidth("<<fFrame->GetLineWidth()<<");"<<endl;
       }
       if (fFrame->GetBorderMode() != 1) {
-         out<<"   "<<GetName()<<"->GetFrame()->SetBorderMode("<<fFrame->GetBorderMode()<<");"<<endl;
+         out<<"   "<<GetName()<<"->SetFrameBorderMode("<<fFrame->GetBorderMode()<<");"<<endl;
       }
       if (fFrame->GetBorderSize() != 1) {
-         out<<"   "<<GetName()<<"->GetFrame()->SetBorderSize("<<fFrame->GetBorderSize()<<");"<<endl;
+         out<<"   "<<GetName()<<"->SetFrameBorderSize("<<fFrame->GetBorderSize()<<");"<<endl;
       }
    }
 
@@ -3179,6 +3187,10 @@ void TPad::UseCurrentStyle()
    SetRightMargin(gStyle->GetPadRightMargin());
    fBorderSize = gStyle->GetPadBorderSize();
    fBorderMode = gStyle->GetPadBorderMode();
+   fGridx = gStyle->GetPadGridX();
+   fGridy = gStyle->GetPadGridY();
+   fTickx = gStyle->GetPadTickX();
+   fTicky = gStyle->GetPadTickY();
 
    TIter next(GetListOfPrimitives());
    TObject *obj;
@@ -3190,11 +3202,13 @@ void TPad::UseCurrentStyle()
    TPaveText *stats  = (TPaveText*)GetPrimitive("stats");
    if (stats) {
       stats->SetFillColor(gStyle->GetStatColor());
+      stats->SetBorderSize(gStyle->GetStatBorderSize());
    }
 
    TPaveText *title  = (TPaveText*)GetPrimitive("title");
    if (title) {
       title->SetFillColor(gStyle->GetTitleColor());
+      title->SetBorderSize(gStyle->GetTitleBorderSize());
    }
    if (fFrame) {
       fFrame->SetFillColor(gStyle->GetFrameFillColor());
@@ -3207,6 +3221,45 @@ void TPad::UseCurrentStyle()
    }
 
    Modified();
+}
+
+//______________________________________________________________________________
+TGToolTip *TPad::CreateToolTip(const TBox *box, const char *text, Long_t delayms)
+{
+   // Create a tool tip and return its pointer.
+
+   return new TGToolTip(gClient->GetRoot(), box, text, delayms);
+}
+
+//______________________________________________________________________________
+void TPad::DeleteToolTip(TGToolTip *tip)
+{
+   // Delete tool tip object.
+
+#ifndef WIN32
+   delete tip;
+#endif
+}
+
+//______________________________________________________________________________
+void TPad::ResetToolTip(TGToolTip *tip)
+{
+   // Reset tool tip, i.e. within time specified in CreateToolTip the
+   // tool tip will pop up.
+
+#ifndef WIN32
+   if (tip) tip->Reset(this);
+#endif
+}
+
+//______________________________________________________________________________
+void TPad::CloseToolTip(TGToolTip *tip)
+{
+   // Hide tool tip.
+
+#ifndef WIN32
+   if (tip) tip->Hide();
+#endif
 }
 
 //______________________________________________________________________________

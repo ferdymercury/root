@@ -1,3 +1,4 @@
+//*CMZ :  2.21/04 01/02/99  21.05.37  by  Valery Fine(fine@mail.cern.ch)
 //*CMZ :  2.00/13 30/10/98  08.25.09  by  Valery Fine(fine@mail.cern.ch)
 //*CMZ :  1.03/09 07/12/97  14.17.58  by  Fons Rademakers
 //*-- Author :    Valery Fine(fine@vxcern.cern.ch)   30/05/97
@@ -33,15 +34,20 @@
 #ifndef ROOT_TObjectView
 // +SEQ,TObjectView.
 #endif
+
+#include "Gtypes.h"
+
 #ifndef ROOT_TObject
 #include "TObject.h"
 #endif
+
+
 
 class TVirtualPad;
 class TPolyMarker3D;
 class TPolyLine3D;
 class TNode;
-
+class TRotMatrix;
 
 //class TPadView3D : public TObjectView
 class TPadView3D
@@ -59,7 +65,7 @@ class TPadView3D
    Float_t       fScale;             // The scale factor to control the border of the clip box
 
  public:
-   TPadView3D() { fParent = 0; }  //default ctor
+   TPadView3D() { fParent = 0;}  //default ctor
    TPadView3D(TVirtualPad *pad) { SetPad(pad); }
    virtual ~TPadView3D();
    virtual void ExecuteEvent(Int_t event, Int_t px, Int_t py);
@@ -74,8 +80,10 @@ class TPadView3D
    virtual void PushMatrix() { }
    virtual void PopMatrix() { }
    virtual void SetAttNode(TNode *node, Option_t *opt="");
+   virtual void SetLineAttr(Color_t color, Int_t width, Option_t *opt="");
    void SetPad(TVirtualPad *pad=0) { fParent = pad; }
    virtual void UpdateNodeMatrix(TNode *node, Option_t *opt="");
+   virtual void UpdatePosition(Double_t x,Double_t y,Double_t z,TRotMatrix *matrix, Option_t *opt="");
    virtual void UpdateView() { }
 
 //  Getter's / Setter's methods for the data-members
@@ -108,6 +116,8 @@ inline void TPadView3D::PaintScene(Option_t *) { }
 inline void TPadView3D::PaintPolyMarker(TPolyMarker3D *, Option_t *) { }
 inline void TPadView3D::PaintPolyLine(TPolyLine3D *, Option_t *) { }
 inline void TPadView3D::SetAttNode(TNode *, Option_t *) { }
+inline void TPadView3D::SetLineAttr(Color_t ,Int_t ,Option_t *) { }
 inline void TPadView3D::UpdateNodeMatrix(TNode *, Option_t *) { }
+inline void TPadView3D::UpdatePosition(Double_t ,Double_t ,Double_t ,TRotMatrix *, Option_t *){ }
 
 #endif

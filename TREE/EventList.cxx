@@ -1,3 +1,5 @@
+//*CMZ :  2.21/08 17/03/99  18.09.58  by  Rene Brun
+//*CMZ :  2.21/01 03/03/99  14.18.31  by  Rene Brun
 //*CMZ :  2.20/04 09/12/98  19.25.22  by  Rene Brun
 //*CMZ :  2.20/00 04/11/98  12.54.44  by  Rene Brun
 //*CMZ :  2.00/11 23/08/98  18.00.10  by  Rene Brun
@@ -55,6 +57,7 @@
 #include "TEventList.h"
 #include "TTree.h"
 #include "TFile.h"
+#include "TMath.h"
 
 ClassImp(TEventList)
 
@@ -251,7 +254,6 @@ void TEventList::Reset(Option_t *)
 void TEventList::Resize(Int_t delta)
 {
 //          Resize list by delta entries
-//    if delta = 0 , remove unused element from the list;
 
    if (!delta) delta = fDelta;
    fSize += delta;
@@ -279,7 +281,20 @@ void TEventList::Sort()
 {
 //          Sort list entries in increasing order
 
-   printf("WARNING: TEventList::Sort not yet implemented\n");
+   Int_t *index   = new Int_t[fN];
+   Int_t *newlist = new Int_t[fSize];
+   Int_t i,ind;
+   TMath::Sort(fN,fList,index); //sort in decreasing order
+   for (i=0;i<fN;i++) {
+      ind = index[fN-i-1];
+      newlist[i] = fList[ind];
+   }
+   for (i=fN;i<fSize;i++) {
+      newlist[i] = 0;
+   }
+   delete [] index;
+   delete [] fList;
+   fList = newlist;
 }
 
 //______________________________________________________________________________

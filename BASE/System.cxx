@@ -1,3 +1,5 @@
+//*CMZ :  2.21/06 15/02/99  10.16.39  by  Rene Brun
+//*CMZ :  2.21/04 02/02/99  19.17.01  by  Fons Rademakers
 //*CMZ :  2.20/00 25/11/98  18.27.02  by  Fons Rademakers
 //*CMZ :  2.00/13 12/10/98  08.50.57  by  Rene Brun
 //*CMZ :  2.00/12 08/10/98  15.54.29  by  Fons Rademakers
@@ -507,7 +509,7 @@ const char *TSystem::WorkingDirectory()
 }
 
 //______________________________________________________________________________
-const char *TSystem::HomeDirectory()
+const char *TSystem::HomeDirectory(const Char_t*)
 {
    // Return the user's home directory.
 
@@ -579,6 +581,100 @@ char *TSystem::ConcatFileName(const char *, const char *)
 
 
 //---- Paths & Files -----------------------------------------------------------
+
+
+//______________________________________________________________________________
+const char *TSystem::ExpandFileName(const char *fname)
+{
+   // Expand a pathname getting rid of special shell characters like ~.$, etc.
+   // For Unix/Win32 compatibility use $(XXX) instead of $XXX when using
+   // environment variables in a pathname. If compatibility is not an issue
+   // you can use on Unix directly $XXX. This is a protected function called
+   // from the OS specific system classes, like TUnixSystem and TWinNTSystem.
+
+   const int   kBufSize = 512;
+   int         n, ier, iter, lx, ncopy;
+   char       *inp, *out, *c, *b, *e, *x, *t, buff[kBufSize*3];
+   const char *p;
+   static char xname[kBufSize];
+
+   iter = 0; xname[0] = 0; inp = buff + kBufSize; out = inp + kBufSize;
+   inp[-1] = ' '; inp[0] = 0; out[-1] = ' ';
+   c = (char *)fname + strspn(fname, " \t\f\r");
+   if (isalnum(c[0])) { strcpy(inp, WorkingDirectory()); strcat(inp, "/"); } // add $cwd
+
+   strcat(inp, c);
+
+again:
+   iter++; c = inp; ier = 0;
+   x = out; x[0] = 0;
+
+   for ( ; (c[0]) && c[0] != ' ' ; c++) {
+
+      p = 0; e = 0;
+      if (c[0] == '~' && c[1] == '/') { // ~/ case
+         p = HomeDirectory(); e = c + 1; if (!p) ier++;
+      }
+      if (p) {                         // we have smth to copy
+         strcpy(x, p); x += strlen(p); c = e-1; continue;
+      }
+
+      p = 0;
+      if (c[0] == '~' && c[1] != '/') { // ~user case
+         n = strcspn(c+1, "/ "); buff[0] = 0; strncat(buff, c+1, n);
+         p = HomeDirectory(buff); e = c+1+n;
+      }
+      if (p) {                          // we have smth to copy
+         strcpy(x,p); x += strlen(p); c = e-1; continue;
+      }
+
+      p = 0;
+      if (c[0] == '.' && c[1] == '/' && c[-1] == ' ') { // $cwd
+         p = strcpy(buff, WorkingDirectory()); e = c + 1; if (!p) ier++;
+      }
+
+      if (p) {                          // we have smth to copy */
+         strcpy(x,p); x += strlen(p); c = e-1; continue;
+      }
+
+      if (c[0] != '$') {                // not $, simple copy
+         x++[0] = c[0];
+      } else {                          // we have a $
+         b = c+1;
+         if (c[1] == '(') b++;
+         if (c[1] == '{') b++;
+         for (e = b; isalnum(e[0]) || e[0] == '_'; e++) ;
+         buff[0] = 0; strncat(buff, b, e-b);
+         p = Getenv(buff);
+         if (!p) {                      // too bad, try UPPER case
+            for (t = buff; (t[0] = toupper(t[0])); t++) ;
+            p = Getenv(buff);
+         }
+         if (!p) {                      // too bad, try Lower case
+            for (t = buff; (t[0] = tolower(t[0])); t++) ;
+            p = Getenv(buff);
+         }
+         if (!p && !strcmp(buff, "cwd")) { // it is $cwd
+            p = strcpy(buff, WorkingDirectory());
+         }
+         if (!p) {                      // too bad, nothing can help
+           ier++; x++[0] = c[0];
+         } else {                       // It is OK, copy result
+           strcpy(x,p); x += strlen(p); c = (b==c+1) ? e-1 : e;
+         }
+      }
+   }
+
+   x[0] = 0; lx = x - out;
+   if (ier && iter < 3) { strcpy(inp,out); goto again; }
+   ncopy = (lx >= kBufSize) ? kBufSize-1 : lx;
+   xname[0] = 0; strncat(xname,out,ncopy);
+
+   if (ier || ncopy != lx)
+      Error("ExpandFileName", "input: %s, output: %s", fname, xname);
+
+   return xname;
+}
 
 //______________________________________________________________________________
 Bool_t TSystem::ExpandPathName(TString&)

@@ -1,3 +1,4 @@
+//*CMZ :  2.21/03 19/01/99  18.27.58  by  Fons Rademakers
 //*CMZ :  1.03/09 06/12/97  19.23.29  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   01/03/96
 
@@ -76,7 +77,7 @@ public:
    virtual void     UpdateListOfGlobals() = 0;
    virtual void     UpdateListOfGlobalFunctions() = 0;
    virtual void     SetClassInfo(TClass *cl) = 0;
-   virtual Int_t    Calc(const char *line) = 0;
+   virtual Long_t   Calc(const char *line) = 0;
    virtual void     CreateListOfBaseClasses(TClass *cl) = 0;
    virtual void     CreateListOfDataMembers(TClass *cl) = 0;
    virtual void     CreateListOfMethods(TClass *cl) = 0;

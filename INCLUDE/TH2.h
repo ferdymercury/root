@@ -1,3 +1,5 @@
+//*CMZ :  2.21/05 10/02/99  09.24.36  by  Rene Brun
+//*CMZ :  2.21/01 05/01/99  16.09.52  by  Rene Brun
 //*CMZ :  2.00/10 29/07/98  22.28.16  by  Rene Brun
 //*CMZ :  1.03/09 09/12/97  20.29.40  by  Fons Rademakers
 //*-- Author :    Rene Brun   11/12/94
@@ -59,9 +61,9 @@ public:
 class TH2C : public TH1C, public TH2 {
 
 private:
-   void Fill(Axis_t) { MayNotUse("Fill(Axis_t)"); }
-   void Fill(Axis_t, Stat_t) { MayNotUse("Fill(Axis_t, Stat_t)"); }
-   void Fill(Axis_t, Axis_t, Axis_t, Stat_t) { MayNotUse("Fill(Axis_t, Axis_t, Axis_t, Stat_t)"); }
+   Int_t Fill(Axis_t) { MayNotUse("Fill(Axis_t)"); return -1;}
+   Int_t Fill(Axis_t, Stat_t) { MayNotUse("Fill(Axis_t, Stat_t)"); return -1; }
+   Int_t Fill(Axis_t, Axis_t, Axis_t, Stat_t) { MayNotUse("Fill(Axis_t, Axis_t, Axis_t, Stat_t)"); return -1; }
 
 public:
    TH2C();
@@ -77,12 +79,13 @@ public:
    virtual ~TH2C();
    virtual void    Copy(TObject &hnew);
    virtual void    DrawCopy(Option_t *option="");
-   virtual void    Fill(Axis_t x, Axis_t y) {TH1::Fill12(x,y); TH2::Fill20(x,y);}
-   virtual void    Fill(Axis_t x, Axis_t y, Stat_t w) {TH1::Fill(x,y,w); TH2::Fill20(x,y,w);}
+   virtual Int_t   Fill(Axis_t x, Axis_t y);
+   virtual Int_t   Fill(Axis_t x, Axis_t y, Stat_t w);
    virtual Stat_t  GetCorrelationFactor(Int_t axis1=1,Int_t axis2=2);
    virtual Stat_t  GetCovariance(Int_t axis1=1,Int_t axis2=2);
    virtual Stat_t  GetMean(Int_t axis=1);
    virtual Stat_t  GetRMS(Int_t axis=1);
+   virtual void    Reset(Option_t *option="");
            TH2C&   operator=(const TH2C &h1);
    friend  TH2C    operator*(Float_t c1, TH2C &h1);
    friend  TH2C    operator*(TH2C &h1, Float_t c1) {return operator*(c1,h1);}
@@ -100,9 +103,9 @@ public:
 class TH2S : public TH1S, public TH2 {
 
 private:
-   void Fill(Axis_t) { MayNotUse("Fill(Axis_t)"); }
-   void Fill(Axis_t, Stat_t) { MayNotUse("Fill(Axis_t, Stat_t)"); }
-   void Fill(Axis_t, Axis_t, Axis_t, Stat_t) { MayNotUse("Fill(Axis_t, Axis_t, Axis_t, Stat_t)"); }
+   Int_t Fill(Axis_t) { MayNotUse("Fill(Axis_t)"); return -1; }
+   Int_t Fill(Axis_t, Stat_t) { MayNotUse("Fill(Axis_t, Stat_t)"); return -1; }
+   Int_t Fill(Axis_t, Axis_t, Axis_t, Stat_t) { MayNotUse("Fill(Axis_t, Axis_t, Axis_t, Stat_t)"); return -1; }
 
 public:
    TH2S();
@@ -118,12 +121,13 @@ public:
    virtual ~TH2S();
    virtual void    Copy(TObject &hnew);
    virtual void    DrawCopy(Option_t *option="");
-   virtual void    Fill(Axis_t x, Axis_t y) {TH1::Fill12(x,y); TH2::Fill20(x,y);}
-   virtual void    Fill(Axis_t x, Axis_t y, Stat_t w) {TH1::Fill(x,y,w); TH2::Fill20(x,y,w);}
+   virtual Int_t   Fill(Axis_t x, Axis_t y);
+   virtual Int_t   Fill(Axis_t x, Axis_t y, Stat_t w);
    virtual Stat_t  GetCorrelationFactor(Int_t axis1=1,Int_t axis2=2);
    virtual Stat_t  GetCovariance(Int_t axis1=1,Int_t axis2=2);
    virtual Stat_t  GetMean(Int_t axis=1);
    virtual Stat_t  GetRMS(Int_t axis=1);
+   virtual void    Reset(Option_t *option="");
            TH2S&   operator=(const TH2S &h1);
    friend  TH2S    operator*(Float_t c1, TH2S &h1);
    friend  TH2S    operator*(TH2S &h1, Float_t c1) {return operator*(c1,h1);}
@@ -141,9 +145,9 @@ public:
 class TH2F : public TH1F, public TH2 {
 
 private:
-   void Fill(Axis_t) { MayNotUse("Fill(Axis_t)"); }
-   void Fill(Axis_t, Stat_t) { MayNotUse("Fill(Axis_t, Stat_t)"); }
-   void Fill(Axis_t, Axis_t, Axis_t, Stat_t) { MayNotUse("Fill(Axis_t, Axis_t, Axis_t, Stat_t)"); }
+   Int_t Fill(Axis_t) { MayNotUse("Fill(Axis_t)"); return -1; }
+   Int_t Fill(Axis_t, Stat_t) { MayNotUse("Fill(Axis_t, Stat_t)"); return -1; }
+   Int_t Fill(Axis_t, Axis_t, Axis_t, Stat_t) { MayNotUse("Fill(Axis_t, Axis_t, Axis_t, Stat_t)"); return -1; }
 
 public:
    TH2F();
@@ -159,12 +163,13 @@ public:
    virtual ~TH2F();
    virtual void    Copy(TObject &hnew);
    virtual void    DrawCopy(Option_t *option="");
-   virtual void    Fill(Axis_t x, Axis_t y) {TH1::Fill12(x,y); TH2::Fill20(x,y);}
-   virtual void    Fill(Axis_t x, Axis_t y, Stat_t w) {TH1::Fill(x,y,w); TH2::Fill20(x,y,w);}
+   virtual Int_t   Fill(Axis_t x, Axis_t y);
+   virtual Int_t   Fill(Axis_t x, Axis_t y, Stat_t w);
    virtual Stat_t  GetCorrelationFactor(Int_t axis1=1,Int_t axis2=2);
    virtual Stat_t  GetCovariance(Int_t axis1=1,Int_t axis2=2);
    virtual Stat_t  GetMean(Int_t axis=1);
    virtual Stat_t  GetRMS(Int_t axis=1);
+   virtual void    Reset(Option_t *option="");
            TH2F&   operator=(const TH2F &h1);
    friend  TH2F    operator*(Float_t c1, TH2F &h1);
    friend  TH2F    operator*(TH2F &h1, Float_t c1);
@@ -182,9 +187,9 @@ public:
 class TH2D : public TH1D, public TH2 {
 
 private:
-   void Fill(Axis_t) { MayNotUse("Fill(Axis_t)"); }
-   void Fill(Axis_t, Stat_t) { MayNotUse("Fill(Axis_t, Stat_t)"); }
-   void Fill(Axis_t, Axis_t, Axis_t, Stat_t) { MayNotUse("Fill(Axis_t, Axis_t, Axis_t, Stat_t)"); }
+   Int_t Fill(Axis_t) { MayNotUse("Fill(Axis_t)"); return -1; }
+   Int_t Fill(Axis_t, Stat_t) { MayNotUse("Fill(Axis_t, Stat_t)"); return -1; }
+   Int_t Fill(Axis_t, Axis_t, Axis_t, Stat_t) { MayNotUse("Fill(Axis_t, Axis_t, Axis_t, Stat_t)"); return -1; }
 
 public:
    TH2D();
@@ -200,12 +205,13 @@ public:
    virtual ~TH2D();
    virtual void    Copy(TObject &hnew);
    virtual void    DrawCopy(Option_t *option="");
-   virtual void    Fill(Axis_t x, Axis_t y) {TH1::Fill12(x,y); TH2::Fill20(x,y);}
-   virtual void    Fill(Axis_t x, Axis_t y, Stat_t w) {TH1::Fill(x,y,w); TH2::Fill20(x,y,w);}
+   virtual Int_t   Fill(Axis_t x, Axis_t y);
+   virtual Int_t   Fill(Axis_t x, Axis_t y, Stat_t w);
    virtual Stat_t  GetCorrelationFactor(Int_t axis1=1,Int_t axis2=2);
    virtual Stat_t  GetCovariance(Int_t axis1=1,Int_t axis2=2);
    virtual Stat_t  GetMean(Int_t axis=1);
    virtual Stat_t  GetRMS(Int_t axis=1);
+   virtual void    Reset(Option_t *option="");
            TH2D&   operator=(const TH2D &h1);
    friend  TH2D    operator*(Float_t c1, TH2D &h1);
    friend  TH2D    operator*(TH2D &h1, Float_t c1) {return operator*(c1,h1);}

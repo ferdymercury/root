@@ -1,5 +1,5 @@
-/*CMZ :  2.20/04 08/12/98  16.25.27  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   08/12/98*/
+/*CMZ :  2.21/08 17/03/99  13.13.41  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   17/03/99*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -25,6 +25,7 @@
 #include "common.h"
 
 void G__setCINTLIBNAME G__P((char *cintlib));
+void G__setcopyflag G__P((int flag));
 
 /**************************************************************************
 * For C++ dictionary setup
@@ -382,7 +383,6 @@ int G__getcintready()
 }
 #endif
 
-#ifndef G__OLDIMPLEMENTATION408
 /**************************************************************************
 * G__setothermain()
 *
@@ -390,9 +390,18 @@ int G__getcintready()
 void G__setothermain(othermain)
 int othermain;
 {
-  G__othermain = othermain;
+  G__othermain = (short)othermain;
 }
-#endif
+
+/**************************************************************************
+* G__setglobalcomp()
+*
+**************************************************************************/
+void G__setglobalcomp(globalcomp)
+int globalcomp;
+{
+  G__globalcomp = globalcomp;
+}
 
 #ifndef G__OLDIMPLEMENTATION953
 /**************************************************************************
@@ -427,6 +436,9 @@ void G__display_note() {
   G__more(G__sout,"\n");
   G__more(G__sout,"Note2: Regulary check either of /tmp /usr/tmp /temp /windows/temp directory\n");
   G__more(G__sout," and remove temp-files which are accidentally left by cint.\n");
+  G__more(G__sout,"\n");
+  G__more(G__sout,"Note3: Cint reads source file on-the-fly from the file system. Do not change\n");
+  G__more(G__sout," the active source during cint run. Use -C option or C1 command otherwise.\n");
   G__more(G__sout,"\n");
 }
 
@@ -646,7 +658,7 @@ char *argv[] ;
    * Get command options
    *************************************************************/
   while((c=getopt(argc,argv
-       ,"a:b:c:d:ef:gikl:n:pq:rstu:vw:x:y:z:AB:D:EF:G:HI:KM:N:O:P:RSTVW:X:"))
+       ,"a:b:c:d:ef:gikl:n:pq:rstu:vw:x:y:z:AB:CD:EF:G:HI:KM:N:O:P:RSTVW:X:"))
 	!=EOF) {
     switch(c) {
 
@@ -657,6 +669,12 @@ char *argv[] ;
 #ifndef G__OLDIMPLEMENTATION453
     case 'B':
       G__setInitFunc(optarg);
+      break;
+#endif
+
+#ifndef G__OLDIMPLEMENTATION970
+    case 'C':
+      G__setcopyflag(1);
       break;
 #endif
 
@@ -938,6 +956,9 @@ char *argv[] ;
       G__more(G__sout,"  -b [line] : set break line\n");
       G__more(G__sout,"  -c -1: make C++ precompiled interface method files\n");
       G__more(G__sout,"  -c -2: make C precompiled interface method files\n");
+#ifndef G__OLDIMPLEMENTATION970
+      G__more(G__sout,"  -C : copy src to $TMPDIR so that src can be change during cint run\n");
+#endif
 #ifdef G__DUMPFILE
       G__more(G__sout,"  -d [dumpfile] : dump function call history\n");
 #endif
@@ -1103,6 +1124,9 @@ char *argv[] ;
 #if !defined(G__ROOT) && !defined(G__D0)
     G__scratch_all();
 #endif
+#ifndef G__OLDIMPLEMENTATION996
+    if(G__security_error) return(-1);
+#endif
     return(EXIT_SUCCESS);
   }
   else if(G__CLINK == G__globalcomp) { /* C header */
@@ -1110,6 +1134,9 @@ char *argv[] ;
     G__gen_clink();
 #if !defined(G__ROOT) && !defined(G__D0)
     G__scratch_all();
+#endif
+#ifndef G__OLDIMPLEMENTATION996
+    if(G__security_error) return(-1);
 #endif
     return(EXIT_SUCCESS);
   }
@@ -1295,7 +1322,11 @@ char *argv[] ;
      *************************************/
     G__cintrevision(G__sout);
     fprintf(G__sout,"No main() function found in given source file. Interactive interface started.\n");
+#ifdef G__ROOT
+    fprintf(G__sout,"'?' for help, '.q' to quit, '{ statements }' or '.p [expression]' to evaluate\n");
+#else
     fprintf(G__sout,"'h' for help, 'q' to quit, '{ statements }' or 'p [expression]' to evaluate\n");
+#endif
 
 
     /*************************************
@@ -1351,7 +1382,7 @@ int G__init_globals()
 #ifndef G__OLDIMPLEMENTATION517
   G__asm_wholefunc_default_cp=0;
 #endif
-  G__asm_noverflow=0;
+  G__abortbytecode();
   G__asm_dbg=0;
   G__asm_cp=0;               /* compile program counter */
   G__asm_dt=G__MAXSTACK-1;   /* constant data address */
@@ -1708,11 +1739,26 @@ void G__platformMacro()
 #ifdef __linux__
   sprintf(temp,"G__LINUX=%ld",(long)__linux__); G__getexpr(temp);
 #endif
+#ifdef __FreeBSD__
+  sprintf(temp,"G__FBSD=%ld",(long)__FreeBSD__); G__getexpr(temp);
+#endif
 #ifdef __GNUC__
   sprintf(temp,"G__GNUC=%ld",(long)__GNUC__); G__getexpr(temp);
 #endif
 #ifdef __hpux
   sprintf(temp,"G__HPUX=%ld",(long)__hpux); G__getexpr(temp);
+#endif
+#ifdef __sun
+  sprintf(temp,"G__SUN=%ld",(long)__sun); G__getexpr(temp);
+#endif
+#ifdef __sparc
+  sprintf(temp,"G__SPARC=%ld",(long)__sparc); G__getexpr(temp);
+#endif
+#ifdef __SUNPRO_CC
+  sprintf(temp,"G__SUNPRO_CC=%ld",(long)__SUNPRO_CC); G__getexpr(temp);
+#endif
+#ifdef __SUNPRO_C
+  sprintf(temp,"G__SUNPRO_C=%ld",(long)__SUNPRO_C); G__getexpr(temp);
 #endif
 #ifdef _WIN32
   sprintf(temp,"G__WIN32=%ld",(long)_WIN32); G__getexpr(temp);
@@ -1846,7 +1892,7 @@ FILE* sin;
 **************************************************************************/
 char *G__cint_version()
 {
-  return "5.13.83, Dec 2 1998";
+  return "5.13.92, Mar 13 1999";
 }
 #endif
 

@@ -1,3 +1,4 @@
+//*CMZ :  2.21/07 04/03/99  15.17.10  by  Rene Brun
 //*CMZ :  2.20/03 05/12/98  16.13.19  by  Rene Brun
 //*CMZ :  2.20/02 04/12/98  12.17.35  by  Rene Brun
 //*CMZ :  2.20/00 11/11/98  12.32.05  by  Rene Brun
@@ -25,7 +26,7 @@
 //
 // TRandom
 //
-// Random number generator class.
+// basic Random number generator class (periodicity = 10**8).
 //
 // The following basic Random generators are provided:
 // ===================================================
@@ -496,6 +497,7 @@ Float_t TRandom::Rndm(Int_t)
 //  Machine independent random number generator.
 //  Produces uniformly-distributed floating points between 0 and 1.
 //  Identical sequence on all machines of >= 32 bits.
+//  Periodicity = 10**8
 //  Universal version (Fred james 1985).
 
    const Float_t kCONS = 4.6566128730774E-10;

@@ -1,5 +1,5 @@
-/*CMZ :  2.20/04 08/12/98  16.25.30  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   08/12/98*/
+/*CMZ :  2.21/08 17/03/99  13.13.43  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   17/03/99*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -5098,7 +5098,7 @@ int cp_inc,dt_dec;
       G__printlinenum();
     }
 #endif
-    G__asm_noverflow=0;
+    G__abortbytecode();
   }
 
   if(G__asm_dt<30) {
@@ -5108,7 +5108,7 @@ int cp_inc,dt_dec;
       G__printlinenum();
     }
 #endif
-    G__asm_noverflow=0;
+    G__abortbytecode();
   }
   return(0);
 }
@@ -5158,6 +5158,21 @@ int G__asm_clear()
 
 #endif /* G__ASM */
 
+#ifndef G__OLDIMPLEMENTATION988
+/******************************************************************
+* G__abortbytecode()
+******************************************************************/
+void G__abortbytecode()
+{
+  if(G__asm_dbg && G__asm_noverflow) {
+    fprintf(G__serr,"Note: Bytecode compilation flag reset %d->0"
+	    ,G__asm_noverflow);
+    G__printlinenum();
+  }
+  G__asm_noverflow=0;
+}
+#endif
+
 
 #ifdef G__ASM
 /**************************************************************************
@@ -5188,7 +5203,7 @@ void **ppdict;
   G__value buf;
   int i;
 
-  G__asm_noverflow = 0;
+  G__abortbytecode();
 
   if(strcmp(item,"LINE")==0 || strcmp(item,"_LINE__")==0) {
     i = G__RSVD_LINE;
@@ -5316,6 +5331,30 @@ long *inst;
   return(0);
 }
 
+#ifndef G__OLDIMPLEMENTATION1021
+/****************************************************************
+ * G__isInt
+ ****************************************************************/
+int G__isInt(type)
+int type;
+{
+  switch(type) {
+  case 'i':
+    return(1);
+  case 'l':
+    if(G__LONGALLOC==G__INTALLOC) return(1);
+    else return(0);
+    break;
+  case 's':
+    if(G__SHORTALLOC==G__INTALLOC) return(1);
+    else return(0);
+    break;
+  default:
+    return(0);
+  }
+}
+#endif
+
 /****************************************************************
 * G__asm_optimize(start)
 *
@@ -5354,8 +5393,13 @@ int *start;
      G__asm_inst[*start+5]==G__LD      &&
      G__asm_inst[*start+7]==G__CMP2    &&
      G__asm_inst[*start+9]==G__CNDJMP  &&
+#ifndef G__OLDIMPLEMENTATION1021
+     G__isInt(((struct G__var_array*)G__asm_inst[*start+4])->type[G__asm_inst[*start+1]]) && /* 2 */
+     G__isInt(G__asm_stack[G__asm_inst[*start+6]].type) &&
+#else
      ((struct G__var_array*)G__asm_inst[*start+4])->type[G__asm_inst[*start+1]] =='i' && /* 2 */
      G__asm_stack[G__asm_inst[*start+6]].type=='i' &&
+#endif
      G__asm_inst[*start+3]=='p'    /* 3 */
      ) {
 
@@ -5420,9 +5464,15 @@ int *start;
 	   G__asm_inst[*start+5]==G__LD_MSTR) &&  /* 1 */
 	  G__asm_inst[*start+10]==G__CMP2    &&
 	  G__asm_inst[*start+12]==G__CNDJMP  &&
+#ifndef G__OLDIMPLEMENTATION1021
+	  G__isInt(((struct G__var_array*)G__asm_inst[*start+4])->type[G__asm_inst[*start+1]]) && /* 2 */
+	  (G__isInt(((struct G__var_array*)G__asm_inst[*start+9])->type[G__asm_inst[*start+6]]) || /* 2 */
+	   ((struct G__var_array*)G__asm_inst[*start+9])->type[G__asm_inst[*start+6]] =='p' ) && /* 2 */
+#else
 	  ((struct G__var_array*)G__asm_inst[*start+4])->type[G__asm_inst[*start+1]] =='i' && /* 2 */
 	  (((struct G__var_array*)G__asm_inst[*start+9])->type[G__asm_inst[*start+6]] =='i' || /* 2 */
 	   ((struct G__var_array*)G__asm_inst[*start+9])->type[G__asm_inst[*start+6]] =='p' ) && /* 2 */
+#endif
 	  G__asm_inst[*start+3]=='p'  &&  /* 3 */
 	  G__asm_inst[*start+8]=='p'    /* 3 */
 	  ) {
@@ -5490,7 +5540,11 @@ int *start;
 #endif
      (G__LD_VAR==G__asm_inst[G__asm_cp-9]||
       G__LD_MSTR==G__asm_inst[G__asm_cp-9]) &&
-     ((struct G__var_array*)G__asm_inst[G__asm_cp-5])->type[G__asm_inst[G__asm_cp-8]] =='i')  {
+#ifndef G__OLDIMPLEMENTATION1021
+     G__isInt(((struct G__var_array*)G__asm_inst[G__asm_cp-5])->type[G__asm_inst[G__asm_cp-8]])) {
+#else
+     ((struct G__var_array*)G__asm_inst[G__asm_cp-5])->type[G__asm_inst[G__asm_cp-8]] =='i') {
+#endif
 
 #ifdef G__ASM_DBG
     if(G__asm_dbg) fprintf(G__serr,"%3x: INCJMP  i++ optimized\n",G__asm_cp-9);
@@ -5524,8 +5578,10 @@ int *start;
     G__asm_inst[G__asm_cp-5] = G__NOP;
     G__asm_inst[G__asm_cp-4] = G__NOP;
     G__asm_inst[G__asm_cp-3] = G__NOP;
+#ifdef G__OLDIMPLEMENTATION1022
     G__asm_inst[G__asm_cp-2] = G__NOP;
     G__asm_inst[G__asm_cp-1] = G__NOP;
+#endif
 
     /*
       G__asm_inst[G__asm_cp-5]=G__RETURN;
@@ -5564,7 +5620,11 @@ int *start;
 #endif
 	  (G__LD_VAR==G__asm_inst[G__asm_cp-11]||
 	   G__LD_MSTR==G__asm_inst[G__asm_cp-11]) &&
+#ifndef G__OLDIMPLEMENTATION1021
+	  G__isInt(((struct G__var_array*)G__asm_inst[G__asm_cp-7])->type[G__asm_inst[G__asm_cp-10]]))  {
+#else
 	  ((struct G__var_array*)G__asm_inst[G__asm_cp-7])->type[G__asm_inst[G__asm_cp-10]] =='i')  {
+#endif
 
 #ifdef G__ASM_DBG
     if(G__asm_dbg) fprintf(G__serr,"%3x: INCJMP  i+=1 optimized\n",G__asm_cp-11);
@@ -5594,8 +5654,10 @@ int *start;
     G__asm_inst[G__asm_cp-5] = G__NOP;
     G__asm_inst[G__asm_cp-4] = G__NOP;
     G__asm_inst[G__asm_cp-3] = G__NOP;
+#ifdef G__OLDIMPLEMENTATION1022
     G__asm_inst[G__asm_cp-2] = G__NOP;
     G__asm_inst[G__asm_cp-1] = G__NOP;
+#endif
 
     /*
       G__asm_inst[G__asm_cp-7]=G__RETURN;
@@ -5636,7 +5698,11 @@ int *start;
 	  G__asm_inst[G__asm_cp-15]==G__asm_inst[G__asm_cp-6] && /* 2 */
 	  G__asm_inst[G__asm_cp-12]==G__asm_inst[G__asm_cp-3] &&
 	  (G__asm_inst[G__asm_cp-8]=='+'||G__asm_inst[G__asm_cp-8]=='-') &&
+#ifndef G__OLDIMPLEMENTATION1021
+	  G__isInt(((struct G__var_array*)G__asm_inst[G__asm_cp-3])->type[G__asm_inst[G__asm_cp-6]])       &&
+#else
 	  ((struct G__var_array*)G__asm_inst[G__asm_cp-3])->type[G__asm_inst[G__asm_cp-6]] =='i'       &&
+#endif
 	  G__asm_inst[G__asm_cp-14]==0 &&
 	  G__asm_inst[G__asm_cp-13]=='p' &&   /* 3 */
 	  G__asm_inst[G__asm_cp-4]=='p') {
@@ -5668,8 +5734,10 @@ int *start;
     G__asm_inst[G__asm_cp-5] = G__NOP;
     G__asm_inst[G__asm_cp-4] = G__NOP;
     G__asm_inst[G__asm_cp-3] = G__NOP;
+#ifdef G__OLDIMPLEMENTATION1022
     G__asm_inst[G__asm_cp-2] = G__NOP;
     G__asm_inst[G__asm_cp-1] = G__NOP;
+#endif
 
     /*
       G__asm_inst[G__asm_cp-12]=G__RETURN;
@@ -9391,6 +9459,7 @@ FILE *fout;
   return(0);
 }
 #endif
+
 
 /*
  * Local Variables:

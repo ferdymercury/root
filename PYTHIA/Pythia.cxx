@@ -1,3 +1,4 @@
+//*CMZ :  2.21/01 06/01/99  09.29.21  by  Rene Brun
 //*CMZ :  2.00/11 22/08/98  09.48.59  by  Rene Brun
 //*CMZ :  2.00/09 08/06/98  17.57.53  by  Valery Fine(fine@mail.cern.ch)
 //*CMZ :  1.03/09 10/12/97  12.31.04  by  Rene Brun
@@ -123,8 +124,6 @@ extern "C" void type_of_call lulist(Long_t &key);
 extern "C" void type_of_call luexec();
 extern "C" int  type_of_call lucomp(Long_t &kf);
 
-TClonesArray *gPrimaries = 0;
-
 ClassImp(TPythia)
 
 //______________________________________________________________________________
@@ -134,10 +133,9 @@ TPythia::TPythia() : TGenerator("Pythia","Pythia")
 // particles. Note that there may be only one functional TPythia object
 // at a time, so it's not use to create more than one instance of it.
 
-    if (!gPrimaries)
-        gPrimaries = new TClonesArray("TMCParticle",50);
+    delete fPrimaries; // was allocated as TObjArray in TGenerator
 
-    fPrimaries = gPrimaries;
+    fPrimaries = new TClonesArray("TMCParticle",50);
 }
 
 //______________________________________________________________________________
@@ -148,7 +146,7 @@ TPythia::~TPythia()
     if (fPrimaries) {
       fPrimaries->Delete();
       delete fPrimaries;
-      gPrimaries = 0;
+      fPrimaries = 0;
    }
 }
 

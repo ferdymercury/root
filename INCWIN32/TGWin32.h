@@ -1,3 +1,5 @@
+//*CMZ :  2.21/07 19/02/99  18.12.15  by  Valery Fine(fine@mail.cern.ch)
+//*CMZ :  2.21/06 10/02/99  11.58.24  by  Valery Fine(fine@vxcern.cern.ch)
 //*CMZ :  2.20/00 08/11/98  17.36.46  by  Fons Rademakers
 //*CMZ :  2.00/12 02/10/98  21.14.37  by  Valery Fine(fine@mail.cern.ch)
 //*CMZ :  2.00/00 20/02/98  16.27.57  by  Valery Fine(fine@mail.cern.ch)
@@ -126,6 +128,7 @@ protected:
    void  SetWin32Font();
    Int_t CreatROOTThread();
    void  DeleteSelectedObj();
+   void  DeleteObj(TGWin32Switch *id);
 
 public:
 
@@ -140,13 +143,13 @@ public:
     void      CopyPixmap(Int_t wid, Int_t xpos, Int_t ypos);
     void      CreateOpenGLContext(Int_t wid=0);    // Create OpenGL context for win windows (for "selected" Window by default)
     void      DeleteOpenGLContext(Int_t wid=0);    // Create OpenGL context for win windows (for "selected" Window by default)
-    void      DrawBox(Int_t x1, Int_t y1, Int_t x2, Int_t y2, TGXW::EBoxMode mode);
+    void      DrawBox(Int_t x1, Int_t y1, Int_t x2, Int_t y2, TGWin32::EBoxMode mode);
     void      DrawCellArray(Int_t x1, Int_t y1, Int_t x2, Int_t y2, Int_t nx, Int_t ny, Int_t *ic);
     void      DrawFillArea(Int_t n, TPoint *xy);
     void      DrawLine(Int_t x1, Int_t y1, Int_t x2, Int_t y2);
     void      DrawPolyLine(Int_t n, TPoint *xy);
     void      DrawPolyMarker(Int_t n, TPoint *xy);
-    void      DrawText(Int_t x, Int_t y, Float_t angle, Float_t mgn, const char *text, TGXW::ETextMode mode);
+    void      DrawText(Int_t x, Int_t y, Float_t angle, Float_t mgn, const char *text, TGWin32::ETextMode mode);
     COLORREF  ColorIndex(Color_t indx);
     void      GetCharacterUp(Float_t &chupx, Float_t &chupy);
     Int_t     GetDoubleBuffer(Int_t wid);
@@ -181,7 +184,7 @@ public:
     void      SetDoubleBuffer(Int_t wid, Int_t mode);
     void      SetDoubleBufferOFF();
     void      SetDoubleBufferON();
-    void      SetDrawMode(TGXW::EDrawMode mode);
+    void      SetDrawMode(TGWin32::EDrawMode mode);
     void      SetFillColor(Color_t cindex);
     void      SetFillStyle(Style_t style);
     void      SetFillStyleIndex( Int_t style, Int_t fasi);
@@ -196,7 +199,7 @@ public:
     void      SetRGB(Int_t cindex, Float_t r, Float_t g, Float_t b);
     void      SetTextAlign(Short_t talign);
     void      SetTextColor(Color_t cindex);
-    Int_t     SetTextFont(char *fontname, TGXW::ETextSetMode mode);
+    Int_t     SetTextFont(char *fontname, TGWin32::ETextSetMode mode);
     void      SetTextFont(Font_t fontnumber);
     void      SetTextMagnitude(Float_t mgn=1) { fTextMagnitude = mgn;}
     void      SetTextSize(Float_t textsize);
@@ -227,8 +230,127 @@ public:
 
     void      MakePallete(HDC objectDC=0);
 
+    //---- Methods used for GUI -----
+
+   virtual Window_t     GetWindowID(Int_t wid);
+   virtual void         SetOpacity(Int_t percent);
+
+   virtual void         GetWindowAttributes(Window_t id, WindowAttributes_t &attr);
+   virtual void         MapWindow(Window_t id);
+   virtual void         MapSubwindows(Window_t id);
+   virtual void         MapRaised(Window_t id);
+   virtual void         UnmapWindow(Window_t id);
+   virtual void         DestroyWindow(Window_t id);
+   virtual void         RaiseWindow(Window_t id);
+   virtual void         LowerWindow(Window_t id);
+   virtual void         MoveWindow(Window_t id, Int_t x, Int_t y);
+   virtual void         MoveResizeWindow(Window_t id, Int_t x, Int_t y, UInt_t w, UInt_t h);
+   virtual void         ResizeWindow(Window_t id, UInt_t w, UInt_t h);
+   virtual void         SetWindowBackground(Window_t id, ULong_t color);
+   virtual void         SetWindowBackgroundPixmap(Window_t id, Pixmap_t pxm);
+   virtual Window_t     CreateWindow(Window_t parent, Int_t x, Int_t y,
+                                     UInt_t w, UInt_t h, UInt_t border,
+                                     Int_t depth, UInt_t clss,
+                                     void *visual, SetWindowAttributes_t *attr);
+   virtual Int_t        OpenDisplay(const char *dpyName);
+   virtual void         CloseDisplay() { }
+   virtual Display_t    GetDisplay() { return 0; }
+   virtual Atom_t       InternAtom(const char *atom_name, Bool_t only_if_exist);
+   virtual Window_t     GetDefaultRootWindow() { return 0; }
+   virtual Window_t     GetParent(Window_t id);
+   virtual FontStruct_t LoadQueryFont(const char *font_name);
+   virtual FontH_t      GetFontHandle(FontStruct_t fs);
+   virtual void         DeleteFont(FontStruct_t fs);
+   virtual GContext_t   CreateGC(Drawable_t id, GCValues_t *gval);
+   virtual void         ChangeGC(GContext_t gc, GCValues_t *gval);
+   virtual void         CopyGC(GContext_t org, GContext_t dest, Mask_t mask);
+   virtual void         DeleteGC(GContext_t gc);
+   virtual Cursor_t     CreateCursor(ECursor cursor);
+   virtual void         SetCursor(Window_t id, Cursor_t curid);
+   virtual Pixmap_t     CreatePixmap(Drawable_t id, UInt_t w, UInt_t h);
+   virtual Pixmap_t     CreatePixmap(Drawable_t id, const char *bitmap, UInt_t width,
+                                     UInt_t height, ULong_t forecolor, ULong_t backcolor,
+                                     Int_t depth);
+   virtual Pixmap_t     CreateBitmap(Drawable_t id, const char *bitmap,
+                                     UInt_t width, UInt_t height);
+   virtual void         DeletePixmap(Pixmap_t pmap);
+   virtual Bool_t       CreatePictureFromFile(Drawable_t id, const char *filename,
+                                              Pixmap_t &pict, Pixmap_t &pict_mask,
+                                              PictureAttributes_t &attr);
+   virtual Bool_t       CreatePictureFromData(Drawable_t id, char **data,
+                                              Pixmap_t &pict, Pixmap_t &pict_mask,
+                                              PictureAttributes_t &attr);
+   virtual Bool_t       ReadPictureDataFromFile(const char *filename, char ***ret_data);
+   virtual void         DeletePictureData(void *data);
+   virtual void         SetDashes(GContext_t gc, Int_t offset, const char *dash_list,
+                                  Int_t n);
+   virtual Bool_t       ParseColor(Colormap_t cmap, const char *cname, ColorStruct_t &color);
+   virtual Bool_t       AllocColor(Colormap_t cmap, ColorStruct_t &color);
+   virtual void         QueryColor(Colormap_t cmap, ColorStruct_t &color);
+   virtual Int_t        EventsPending();
+   virtual void         NextEvent(Event_t &event);
+   virtual void         Bell(Int_t percent);
+   virtual void         CopyArea(Drawable_t src, Drawable_t dest, GContext_t gc,
+                                 Int_t src_x, Int_t src_y, UInt_t width,
+                                 UInt_t height, Int_t dest_x, Int_t dest_y);
+   virtual void         ChangeWindowAttributes(Window_t id, SetWindowAttributes_t *attr);
+   virtual void         DrawLine(Drawable_t id, GContext_t gc, Int_t x1, Int_t y1, Int_t x2, Int_t y2);
+   virtual void         ClearArea(Window_t id, Int_t x, Int_t y, UInt_t w, UInt_t h);
+   virtual Bool_t       CheckEvent(Window_t id, EGEventType type, Event_t &ev);
+   virtual void         SendEvent(Window_t id, Event_t *ev);
+   virtual void         WMDeleteNotify(Window_t id);
+   virtual void         SetKeyAutoRepeat(Bool_t on = kTRUE);
+   virtual void         GrabKey(Window_t id, Int_t keycode, UInt_t modifier, Bool_t grab = kTRUE);
+   virtual void         GrabButton(Window_t id, EMouseButton button, UInt_t modifier,
+                                   UInt_t evmask, Window_t confine, Cursor_t cursor,
+                                   Bool_t grab = kTRUE);
+   virtual void         GrabPointer(Window_t id, UInt_t evmask, Window_t confine,
+                                    Cursor_t cursor, Bool_t grab = kTRUE);
+   virtual void         SetWindowName(Window_t id, char *name);
+   virtual void         SetIconName(Window_t id, char *name);
+   virtual void         SetClassHints(Window_t id, char *className, char *resourceName);
+   virtual void         SetMWMHints(Window_t id, UInt_t value, UInt_t funcs, UInt_t input);
+   virtual void         SetWMPosition(Window_t id, Int_t x, Int_t y);
+   virtual void         SetWMSize(Window_t id, UInt_t w, UInt_t h);
+   virtual void         SetWMSizeHints(Window_t id, UInt_t wmin, UInt_t hmin,
+                                       UInt_t wmax, UInt_t hmax, UInt_t winc, UInt_t hinc);
+   virtual void         SetWMState(Window_t id, EInitialState state);
+   virtual void         SetWMTransientHint(Window_t id, Window_t main_id);
+   virtual void         DrawString(Drawable_t id, GContext_t gc, Int_t x, Int_t y,
+                                   const char *s, Int_t len);
+   virtual Int_t        TextWidth(FontStruct_t font, const char *s, Int_t len);
+   virtual void         GetFontProperties(FontStruct_t font, Int_t &max_ascent, Int_t &max_descent);
+   virtual void         GetGCValues(GContext_t gc, GCValues_t &gval);
+   virtual FontStruct_t GetFontStruct(FontH_t fh);
+   virtual void         ClearWindow(Window_t id);
+   virtual Int_t        KeysymToKeycode(UInt_t keysym);
+   virtual void         FillRectangle(Drawable_t id, GContext_t gc, Int_t x, Int_t y,
+                                      UInt_t w, UInt_t h);
+   virtual void         DrawRectangle(Drawable_t id, GContext_t gc, Int_t x, Int_t y,
+                                      UInt_t w, UInt_t h);
+   virtual void         DrawSegments(Drawable_t id, GContext_t gc, Segment_t *seg, Int_t nseg);
+   virtual void         SelectInput(Window_t id, UInt_t evmask);
+   virtual void         SetInputFocus(Window_t id);
+   virtual Window_t     GetPrimarySelectionOwner() { return kNone; }
+   virtual void         ConvertPrimarySelection(Window_t id, Time_t when);
+   virtual void         LookupString(Event_t *event, char *buf, Int_t buflen, UInt_t &keysym);
+   virtual void         GetPasteBuffer(Window_t id, Atom_t atom, TString &text, Int_t &nchar,
+                                       Bool_t del);
+   virtual void         TranslateCoordinates(Window_t src, Window_t dest, Int_t src_x,
+                         Int_t src_y, Int_t &dest_x, Int_t &dest_y, Window_t &child);
+   virtual void         GetWindowSize(Drawable_t id, Int_t &x, Int_t &y, UInt_t &w, UInt_t &h);
+   virtual void         FillPolygon(Window_t id, GContext_t gc, Point_t *points, Int_t npnt);
+   virtual void         QueryPointer(Window_t id, Window_t &rootw, Window_t &childw,
+                                     Int_t &root_x, Int_t &root_y, Int_t &win_x,
+                                     Int_t &win_y, UInt_t &mask);
+   virtual void         SetForeground(GContext_t gc, ULong_t foreground);
+   virtual void         SetClipRectangles(GContext_t gc, Int_t x, Int_t y, Rectangle_t *recs, Int_t n);
+   virtual void         Update(Int_t mode = 0);
+
     ClassDef(TGWin32,0)  //Interface to Win32
 
  };
+
+
 
 #endif

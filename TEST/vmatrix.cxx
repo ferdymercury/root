@@ -1,3 +1,4 @@
+//*CMZ :  2.21/02 14/01/99  19.02.13  by  Fons Rademakers
 //*CMZ :  2.20/00 05/11/98  18.55.06  by  Rene Brun
 //*CMZ :  2.00/10 06/07/98  09.34.49  by  Rene Brun
 //*CMZ :  2.00/00 14/01/98  16.00.07  by  Fons Rademakers
@@ -86,6 +87,23 @@ void test_allocation()
 //------------------------------------------------------------------------
 //                Test uniform element operations
 //
+class FillMatrix : public TElementPosAction {
+   int no_elems, no_cols;
+   void Operation(Real_t &element)
+      { element = 4*TMath::Pi()/no_elems * (fI*no_cols+fJ); }
+public:
+   FillMatrix(const TMatrix &m) :
+         no_elems(m.GetNoElements()), no_cols(m.GetNcols()) { }
+};
+
+typedef  double (*dfunc)(double);
+class ApplyFunction : public TElementAction {
+   dfunc fFunc;
+   void Operation(Real_t &element) { element = fFunc(double(element)); }
+public:
+   ApplyFunction(dfunc func) : fFunc(func) { }
+};
+
 void test_element_op(int rsize, int csize)
 {
    const double pattern = 8.625;
@@ -180,24 +198,9 @@ void test_element_op(int rsize, int csize)
    Assert( m == m1 );
 
    cout << "\nCheck out to see that sin^2(x) + cos^2(x) = 1" << endl;
-   class FillMatrix : public TElementPosAction {
-      int no_elems, no_cols;
-      void Operation(Real_t &element)
-         { element = 4*TMath::Pi()/no_elems * (fI*no_cols+fJ); }
-      public:
-      FillMatrix(const TMatrix &m) :
-         no_elems(m.GetNoElements()), no_cols(m.GetNcols()) {}
-   };
    FillMatrix f(m);
    m.Apply(f);
    m1 = m;
-   typedef  double (*dfunc)(double);
-   class ApplyFunction : public TElementAction {
-      dfunc func;
-      void Operation(Real_t &element) { element = func(double(element)); }
-      public:
-      ApplyFunction(dfunc _func) : func(_func) {}
-   };
    ApplyFunction s(&TMath::Sin);
    ApplyFunction c(&TMath::Cos);
    m.Apply(s);
@@ -338,6 +341,21 @@ void test_transposition(int msize)
 //------------------------------------------------------------------------
 //           Test special matrix creation
 //
+class MakeHilbert : public TElementPosAction {
+   void Operation(Real_t &element) { element = 1./(fI+fJ+1); }
+public:
+   MakeHilbert() { }
+};
+
+class TestUnit : public TElementPosAction {
+   int fIsUnit;
+   void Operation(Real_t &element)
+      { if (fIsUnit) fIsUnit = fI==fJ ? element == 1.0 : element == 0; }
+public:
+   TestUnit() : fIsUnit(0==0) { }
+   int is_indeed_unit() const { return fIsUnit; }
+};
+
 void test_special_creation(int dim)
 {
    cout << "\n---> Check creating some special matrices of dimension " <<
@@ -350,11 +368,6 @@ void test_special_creation(int dim)
       m.HilbertMatrix();
       Assert( !(m == m1) );
       Assert( m != 0 );
-      class MakeHilbert : public TElementPosAction
-      {
-         void Operation(Real_t &element) { element = 1./(fI+fJ+1); }
-         public: MakeHilbert() {}
-      };
       MakeHilbert mh;
       m1.Apply(mh);
       Assert( m1 != 0 );
@@ -375,14 +388,6 @@ void test_special_creation(int dim)
 
    {
       cout << "test creating unit matrices" << endl;
-      class TestUnit : public TElementPosAction
-      {
-         int is_unit;
-         void Operation(Real_t &element)
-         { if (is_unit) is_unit = fI==fJ ? element == 1.0 : element == 0; }
-         public: TestUnit() : is_unit(0==0) {}
-         int is_indeed_unit() const  { return is_unit; }
-      };
       TMatrix m(dim,dim);
       {
          TestUnit test_unit;
@@ -446,21 +451,20 @@ void test_special_creation(int dim)
 //------------------------------------------------------------------------
 //           Test matrix promises
 //
+class hilbert_matrix_promise : public TLazyMatrix {
+   void FillIn(TMatrix &m) const { m.HilbertMatrix(); }
+public:
+   hilbert_matrix_promise(int nrows, int ncols)
+      : TLazyMatrix(nrows,ncols) {}
+   hilbert_matrix_promise(int row_lwb, int row_upb,
+                          int col_lwb, int col_upb)
+      : TLazyMatrix(row_lwb,row_upb,col_lwb,col_upb) { }
+};
+
 void test_matrix_promises(int dim)
 {
    cout << "\n---> Check making/forcing promises, (lazy)matrices of dimension " <<
            dim << endl;
-
-   class hilbert_matrix_promise : public TLazyMatrix
-   {
-      void FillIn(TMatrix &m) const { m.HilbertMatrix(); }
-   public:
-      hilbert_matrix_promise(int nrows, int ncols)
-	: TLazyMatrix(nrows,ncols) {}
-      hilbert_matrix_promise(int row_lwb, int row_upb,
-                             int col_lwb, int col_upb)
-        : TLazyMatrix(row_lwb,row_upb,col_lwb,col_upb) {}
-   };
 
    {
       cout << "\nmake a promise and force it by a constructor" << endl;

@@ -1,3 +1,5 @@
+//*CMZ :  2.21/04 03/02/99  11.29.38  by  Rene Brun
+//*CMZ :  2.21/02 16/01/99  12.20.07  by  Rene Brun
 //*CMZ :  2.00/13 29/10/98  18.54.20  by  Rene Brun
 //*CMZ :  2.00/12 30/09/98  10.04.17  by  Rene Brun
 //*CMZ :  2.00/07 18/05/98  15.20.39  by  Rene Brun
@@ -61,27 +63,27 @@ class TBrowser;
 class TStyle : public TNamed, public TAttLine, public TAttFill, public TAttMarker, public TAttText {
 
 private:
-        TAttAxis      fXaxis;       //X axis attributes
-        TAttAxis      fYaxis;       //Y axis attributes
-        TAttAxis      fZaxis;       //Z axis attributes
-        Float_t       fBarWidth;    //width of bar for graphs
-        Float_t       fBarOffset;   //offset of bar for graphs
-        Int_t         fDrawBorder;  //flag to draw border(=1) or not (0)
-        Int_t         fOptLogx;     //=1 if log scale in X
-        Int_t         fOptLogy;     //=1 if log scale in y
-        Int_t         fOptLogz;     //=1 if log scale in z
-        Int_t         fOptDate;     //=1 if date option is selected
-        Int_t         fOptStat;     //=1 if option Stat is selected
-        Int_t         fOptTitle;    //=1 if option Title is selected
-        Int_t         fOptFile;     //=1 if option File is selected
-        Int_t         fOptFit;      //=1 if option Fit is selected
-        Int_t         fErrorMarker; //marker for error bars
-        Int_t         fShowEventStatus; //Show event status panel
-        Float_t       fErrorMsize;  //marker size for error bars
-        Float_t       fErrorX;      //per cent of bin width for errors along X
-        Color_t       fFuncColor;   //function color
-        Style_t       fFuncStyle;   //function style
-        Width_t       fFuncWidth;   //function line width
+        TAttAxis      fXaxis;             //X axis attributes
+        TAttAxis      fYaxis;             //Y axis attributes
+        TAttAxis      fZaxis;             //Z axis attributes
+        Float_t       fBarWidth;          //width of bar for graphs
+        Float_t       fBarOffset;         //offset of bar for graphs
+        Int_t         fDrawBorder;        //flag to draw border(=1) or not (0)
+        Int_t         fOptLogx;           //=1 if log scale in X
+        Int_t         fOptLogy;           //=1 if log scale in y
+        Int_t         fOptLogz;           //=1 if log scale in z
+        Int_t         fOptDate;           //=1 if date option is selected
+        Int_t         fOptStat;           //=1 if option Stat is selected
+        Int_t         fOptTitle;          //=1 if option Title is selected
+        Int_t         fOptFile;           //=1 if option File is selected
+        Int_t         fOptFit;            //=1 if option Fit is selected
+        Int_t         fErrorMarker;       //marker for error bars
+        Int_t         fShowEventStatus;   //Show event status panel
+        Float_t       fErrorMsize;        //marker size for error bars
+        Float_t       fErrorX;            //per cent of bin width for errors along X
+        Color_t       fFuncColor;         //function color
+        Style_t       fFuncStyle;         //function style
+        Width_t       fFuncWidth;         //function line width
         Color_t       fFrameFillColor;    //pad frame fill color
         Color_t       fFrameLineColor;    //pad frame line color
         Style_t       fFrameFillStyle;    //pad frame fill style
@@ -108,29 +110,29 @@ private:
         Float_t       fPadTopMargin;      //pad top margin
         Float_t       fPadLeftMargin;     //pad left margin
         Float_t       fPadRightMargin;    //pad right margin
-        Float_t       fPaperSizeX;  //PostScript paper size along X
-        Float_t       fPaperSizeY;  //PostScript paper size along Y
-        Float_t       fScreenFactor;//Multiplication factor for canvas size and position
-        Color_t       fStatColor;    //stat color
-        Float_t       fStatX;        //X position of top right corner of stat box
-        Float_t       fStatY;        //Y position of top right corner of stat box
-        Float_t       fStatW;        //width of stat box
-        Float_t       fStatH;        //height of stat box
-        Color_t       fTitleColor;   //title color
-        Float_t       fTitleXOffset; //Offset of title to X axis
-        Style_t       fTitleXFont;   //font for X title
-        Float_t       fTitleXSize;   //size of X title
-        Float_t       fTitleYOffset; //Offset of title to Y axis
-        Style_t       fTitleYFont;   //font for Y title
-        Float_t       fTitleYSize;   //size of Y title
-        Float_t       fTitleX;       //X position of top left corner of title box
-        Float_t       fTitleY;       //Y position of top left corner of title box
-        Float_t       fTitleW;       //width of title box
-        Float_t       fTitleH;       //height of title box
-        Float_t       fLegoInnerR;   //Inner radius for cylindrical legos
-        TArrayI       fPalette;      //Color palette
-        TString       fLineStyle[30];   //String describing line style i (for postScript)
-        TString       fHeaderPS;     //User defined additional Postscript header
+        Bool_t        fPadGridX;          //true to get the grid along X
+        Bool_t        fPadGridY;          //true to get the grid along Y
+        Int_t         fPadTickX;          //=1 to set special pad ticks along X
+        Int_t         fPadTickY;          //=1 to set special pad ticks along Y
+        Float_t       fPaperSizeX;        //PostScript paper size along X
+        Float_t       fPaperSizeY;        //PostScript paper size along Y
+        Float_t       fScreenFactor;      //Multiplication factor for canvas size and position
+        Color_t       fStatColor;         //stat color
+        Width_t       fStatBorderSize;    //border size of Stats PavelLabel
+        Float_t       fStatX;             //X position of top right corner of stat box
+        Float_t       fStatY;             //Y position of top right corner of stat box
+        Float_t       fStatW;             //width of stat box
+        Float_t       fStatH;             //height of stat box
+        Color_t       fTitleColor;        //title color
+        Width_t       fTitleBorderSize;   //border size of Title PavelLabel
+        Float_t       fTitleX;            //X position of top left corner of title box
+        Float_t       fTitleY;            //Y position of top left corner of title box
+        Float_t       fTitleW;            //width of title box
+        Float_t       fTitleH;            //height of title box
+        Float_t       fLegoInnerR;        //Inner radius for cylindrical legos
+        TArrayI       fPalette;           //Color palette
+        TString       fLineStyle[30];     //String describing line style i (for postScript)
+        TString       fHeaderPS;          //User defined additional Postscript header
 
 public:
         enum EPaperSize { kA4, kUSLetter };
@@ -150,7 +152,8 @@ public:
         Style_t          GetLabelFont(Option_t *axis="X");
         Float_t          GetLabelOffset(Option_t *axis="X");
         Float_t          GetLabelSize(Option_t *axis="X");
-        Float_t          GetTitleOffset(Option_t *axis="X");
+        Float_t          GetTitleOffset(Option_t *axis="X"); //return axis title offset
+        Float_t          GetTitleSize(Option_t *axis="X");   //return axis title size
         Float_t          GetTickLength(Option_t *axis="X");
 
         Float_t          GetBarOffset() {return fBarOffset;}
@@ -168,16 +171,20 @@ public:
         Int_t            GetCanvasDefY()      {return fCanvasDefY;}
         Int_t            GetColorPalette(Int_t i);
         Int_t            GetNumberOfColors()  {return fPalette.fN;}
-        Color_t          GetPadColor() {return fPadColor;}
+        Color_t          GetPadColor()        {return fPadColor;}
         Width_t          GetPadBorderSize()   {return fPadBorderSize;}
         Int_t            GetPadBorderMode()   {return fPadBorderMode;}
         Float_t          GetPadBottomMargin() {return fPadBottomMargin;}
         Float_t          GetPadTopMargin()    {return fPadTopMargin;}
         Float_t          GetPadLeftMargin()   {return fPadLeftMargin;}
         Float_t          GetPadRightMargin()  {return fPadRightMargin;}
-        Color_t          GetFuncColor() {return fFuncColor;}
-        Style_t          GetFuncStyle() {return fFuncStyle;}
-        Width_t          GetFuncWidth() {return fFuncWidth;}
+        Bool_t           GetPadGridX()        {return fPadGridX;}
+        Bool_t           GetPadGridY()        {return fPadGridY;}
+        Int_t            GetPadTickX()        {return fPadTickX;}
+        Int_t            GetPadTickY()        {return fPadTickY;}
+        Color_t          GetFuncColor()       {return fFuncColor;}
+        Style_t          GetFuncStyle()       {return fFuncStyle;}
+        Width_t          GetFuncWidth()       {return fFuncWidth;}
         Color_t          GetFrameFillColor() {return fFrameFillColor;}
         Color_t          GetFrameLineColor() {return fFrameLineColor;}
         Style_t          GetFrameFillStyle() {return fFrameFillStyle;}
@@ -203,21 +210,21 @@ public:
         Int_t            GetShowEventStatus(){return fShowEventStatus;}
         Float_t          GetScreenFactor() {return fScreenFactor;}
         Color_t          GetStatColor() {return fStatColor;}
+        Width_t          GetStatBorderSize() {return fStatBorderSize;}
         Float_t          GetStatX()     {return fStatX;}
         Float_t          GetStatY()     {return fStatY;}
         Float_t          GetStatW()     {return fStatW;}
         Float_t          GetStatH()     {return fStatH;}
-        Color_t          GetTitleColor() {return fTitleColor;}
-        Float_t          GetTitleXOffset() {return fTitleXOffset;}
-        Style_t          GetTitleXFont()   {return fTitleXFont;}
-        Float_t          GetTitleXSize()   {return fTitleXSize;}
-        Float_t          GetTitleYOffset() {return fTitleYOffset;}
-        Style_t          GetTitleYFont()   {return fTitleYFont;}
-        Float_t          GetTitleYSize()   {return fTitleYSize;}
-        Float_t          GetTitleX()     {return fTitleX;}
-        Float_t          GetTitleY()     {return fTitleY;}
-        Float_t          GetTitleW()     {return fTitleW;}
-        Float_t          GetTitleH()     {return fTitleH;}
+        Color_t          GetTitleColor() {return fTitleColor;}  //return histogram title color
+        Width_t          GetTitleBorderSize() {return fTitleBorderSize;} //return border size of histogram title TPaveLabel
+        Float_t          GetTitleXOffset() {return GetTitleOffset("X");} //return X axis title offset
+        Float_t          GetTitleXSize()   {return GetTitleSize("X");}   //return X axis title size
+        Float_t          GetTitleYOffset() {return GetTitleOffset("Y");} //return Y axis title offset
+        Float_t          GetTitleYSize()   {return GetTitleSize("Y");}   //return Y axis title size
+        Float_t          GetTitleX()     {return fTitleX;}  //return left X position of histogram title TPavelabel
+        Float_t          GetTitleY()     {return fTitleY;}  //return left bottom position of histogram title TPavelabel
+        Float_t          GetTitleW()     {return fTitleW;}  //return width of histogram title TPaveLabel
+        Float_t          GetTitleH()     {return fTitleH;}  //return height of histogram title TPavelabel
         const Text_t     *GetHeaderPS() const {return fHeaderPS.Data();}
         const Text_t     *GetLineStyleString(Int_t i=1) const;
         virtual void     Reset(Option_t *option="");
@@ -233,7 +240,8 @@ public:
         void             SetLegoInnerR(Float_t rad=0.5) {fLegoInnerR = rad;}
         void             SetScreenFactor(Float_t factor=1) {fScreenFactor = factor;}
         void             SetTickLength(Float_t length=0.03, Option_t *axis="X");
-        void             SetTitleOffset(Float_t offset=1, Option_t *axis="X");
+        void             SetTitleOffset(Float_t offset=1, Option_t *axis="X"); //set axis title offset
+        void             SetTitleSize(Float_t size=0.02, Option_t *axis="X");  //set axis title size
         void             SetOptDate(Int_t datefl=1) {fOptDate = datefl;}
         void             SetOptFile(Int_t file=1) {fOptFile = file;}
         void             SetOptFit(Int_t fit=1);
@@ -262,6 +270,10 @@ public:
         void             SetPadTopMargin(Float_t margin=0.1)    {fPadTopMargin=margin;}
         void             SetPadLeftMargin(Float_t margin=0.1)   {fPadLeftMargin=margin;}
         void             SetPadRightMargin(Float_t margin=0.1)  {fPadRightMargin=margin;}
+        void             SetPadGridX(Bool_t gridx) {fPadGridX = gridx;}
+        void             SetPadGridY(Bool_t gridy) {fPadGridY = gridy;}
+        void             SetPadTickX(Int_t tickx)  {fPadTickX = tickx;}
+        void             SetPadTickY(Int_t ticky)  {fPadTickY = ticky;}
         void             SetFuncStyle(Style_t style=1) {fFuncStyle = style;}
         void             SetFuncColor(Color_t color=1) {fFuncColor = color;}
         void             SetFuncWidth(Width_t width=4) {fFuncWidth = width;}
@@ -280,17 +292,17 @@ public:
         void             SetPaperSize(EPaperSize size);
         void             SetPaperSize(Float_t xsize=20, Float_t ysize=26);
         void             SetStatColor(Int_t color=19) {fStatColor=color;}
-        void             SetStatX(Float_t x=0) {fStatX=x;}
-        void             SetStatY(Float_t y=0) {fStatY=y;}
+        void             SetStatBorderSize(Width_t size=2) {fStatBorderSize=size;}
+        void             SetStatX(Float_t x=0)    {fStatX=x;}
+        void             SetStatY(Float_t y=0)    {fStatY=y;}
         void             SetStatW(Float_t w=0.19) {fStatW=w;}
-        void             SetStatH(Float_t h=0.1) {fStatH=h;}
-        void             SetTitleColor(Int_t color=19) {fTitleColor=color;}
-        void             SetTitleXOffset(Float_t offset=1) {fTitleXOffset=offset;}
-        void             SetTitleXFont(Style_t font=62)    {fTitleXFont=font;}
-        void             SetTitleXSize(Float_t size=0.02)  {fTitleXSize=size;}
-        void             SetTitleYOffset(Float_t offset=1) {fTitleYOffset=offset;}
-        void             SetTitleYFont(Style_t font=62)    {fTitleYFont=font;}
-        void             SetTitleYSize(Float_t size=0.02)  {fTitleYSize=size;}
+        void             SetStatH(Float_t h=0.1)  {fStatH=h;}
+        void             SetTitleColor(Int_t color=19)      {fTitleColor=color;}
+        void             SetTitleBorderSize(Width_t size=2) {fTitleBorderSize=size;}
+        void             SetTitleXOffset(Float_t offset=1)  {SetTitleOffset(offset,"X");}
+        void             SetTitleXSize(Float_t size=0.02)   {SetTitleSize(size,"X");}
+        void             SetTitleYOffset(Float_t offset=1)  {SetTitleOffset(offset,"Y");}
+        void             SetTitleYSize(Float_t size=0.02)   {SetTitleSize(size,"Y");}
         void             SetTitleX(Float_t x=0) {fTitleX=x;}
         void             SetTitleY(Float_t y=1) {fTitleY=y;}
         void             SetTitleW(Float_t w=0) {fTitleW=w;}

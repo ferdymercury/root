@@ -1,36 +1,65 @@
+*CMZ :  2.21/08 18/03/99  15.12.18  by  Fons Rademakers
+*CMZ :  2.21/04 05/02/99  11.19.10  by  Fons Rademakers
 *CMZ :  2.20/00 22/11/98  18.43.27  by  Fons Rademakers
 *CMZ :  2.00/11 13/08/98  15.17.00  by  Fons Rademakers
 *-- Author :    Fons Rademakers   26/06/98
 # Makefile of ROOT for SGI IRIX 6.x with KCC compiler
 
-# When changing OPT to -O you can also change +K0 to +K1
+# You can steer the build with the variable ROOTBUILD
+# The following options are supported: debug, exception, n32
+# Do something like: export ROOTBUILD="debug n32"
 
 PLATFORM      = sgi
+SGI_REL      := $(subst .,,$(shell uname -r))
+
+ifeq (debug,$(findstring debug,$(ROOTBUILD)))
+CXXOPT        = +K0
+OPT           = -g -O0
+NOOPT         =
+else
+CXXOPT        = +K1
+OPT           = -O
+NOOPT         =
+endif
+
+ifeq (exception,$(findstring exception,$(ROOTBUILD)))
+EXCEPTION     = --exceptions
+else
+EXCEPTION     = --no_exceptions
+endif
+
+ifeq (n32,$(findstring n32,$(ROOTBUILD)))
+ABI           = -n32
+else
+ABI           = -32 -mips2
+endif
 
 CXX           = KCC
 CC            = cc
-CXXFLAGS      = --signed_chars --display_error_number --diag_suppress 68 \
-                --diag_suppress 191 +K0
-CFLAGS        = -signed
-CINTCXXFLAGS  = --signed_chars --display_error_number --diag_suppress 68 \
-                --diag_suppress 191 -DG__REGEXP1 -DG__UNIX -DG__SHAREDLIB \
-                -DG__OSFDLL -DG__SIGNEDCHAR -DG__DECCXX -DG__ROOT \
-                -DG__REDIRECTIO +K0
-CINTCFLAGS    = -signed -w -DG__REGEXP1 -DG__UNIX -DG__SHAREDLIB \
-                -DG__OSFDLL -DG__SIGNEDCHAR -DG__DECCXX -DG__ROOT \
-                -DG__REDIRECTIO
-OPT           = -g
-NOOPT         =
+CXXFLAGS      = $(ABI) $(EXCEPTION) --signed_chars --display_error_number \
+                --diag_suppress 68 --diag_suppress 191 --diag_suppress 830 \
+                --diag_suppress 837 $(CXXOPT) -DSGI_REL=$(SGI_REL)
+CFLAGS        = $(ABI) -signed
+CINTCXXFLAGS  = $(ABI) $(EXCEPTION) --signed_chars --display_error_number \
+                --diag_suppress 68 --diag_suppress 191 --diag_suppress 830 \
+                --diag_suppress 837 -DG__REGEXP1 -DG__UNIX -DG__SHAREDLIB \
+                -DG__OSFDLL -DG__SIGNEDCHAR -DG__ROOT -DG__REDIRECTIO $(CXXOPT)
+CINTCFLAGS    = $(ABI) -signed -w -DG__REGEXP1 -DG__UNIX -DG__SHAREDLIB \
+                -DG__OSFDLL -DG__SIGNEDCHAR -DG__ROOT -DG__REDIRECTIO
 LD            = KCC
-LDFLAGS       = $(OPT) -Wl,-u,__builtin_new -Wl,-u,__builtin_delete \
-                -Wl,-u,__nw__FUiPv
+LDFLAGS       = $(OPT) $(ABI) $(EXCEPTION)
 SOFLAGS       =
 SOEXT         = so
-SYSLIBS       = -lg++ -lm -ldl
+SYSLIBS       = -lm -ldl
 SYSXLIBS      = -lX11 -lm -lPW -ldl
 XLIBS         = $(ROOTSYS)/lib/libXpm.a -lX11
 CILIBS        = -lm -ltermcap -lbsd -ldl
+CRYPTLIBS     = -lcrypt
+F77           = f77
+F77FLAGS      = $(OPT) $(ABI)
+F77LIBS       = -lI77 -lU77 -lF77 -lisam
 
+VPATH         = $(ROOTSYS)/include
 
 ##### MACROS and TARGETS #####
 

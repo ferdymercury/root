@@ -1,5 +1,5 @@
-/*CMZ :  2.20/04 08/12/98  16.25.24  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   08/12/98*/
+/*CMZ :  2.21/08 17/03/99  13.13.39  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   17/03/99*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -423,7 +423,7 @@ void G__BREAKfgetc()
 {
 #ifdef G__ASM
   if(G__no_exec_compile) {
-    G__asm_noverflow=0;
+    G__abortbytecode();
   }
   else {
     G__break=1;

@@ -1,4 +1,5 @@
-//*CMZ :  1.03/08 13/06/98  23.03.41  by  Rene Brun
+//*CMZ :  2.21/05 09/02/99  02.00.06  by  Fons Rademakers
+//*CMZ :  1.03/08 03/01/99  15.45.38  by  Rene Brun
 //*-- Author :    Nenad Buncic   08/02/96
 
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
@@ -171,8 +172,11 @@ void TContextMenu::Execute( TObject *object, TMethod *method, Char_t *params )
         gROOT->SetFromPopUp( kTRUE );
 //        if (fSelectedCanvas) fSelectedCanvas->GetPadSave()->cd();
         object->Execute( (char *) method->GetName(), params );
-        if (fSelectedCanvas) fSelectedCanvas->GetPadSave()->Modified();
-        if (fSelectedPad) fSelectedPad->Modified();
+        if (fSelectedCanvas &&
+            fSelectedCanvas->GetPadSave()->TestBit(kNotDeleted))
+           fSelectedCanvas->GetPadSave()->Modified();
+        if (fSelectedPad && fSelectedPad->TestBit(kNotDeleted))
+           fSelectedPad->Modified();
         gROOT->SetFromPopUp( kFALSE );
 
         if( fSelectedPad && savedPad ) {
@@ -180,8 +184,11 @@ void TContextMenu::Execute( TObject *object, TMethod *method, Char_t *params )
             if (savedPad->TestBit(kNotDeleted)) savedPad->cd();
         }
 
-        if (fSelectedCanvas) fSelectedCanvas->Update();
-        if (fSelectedCanvas) fSelectedCanvas->GetPadSave()->Update();
+        if (fSelectedCanvas && fSelectedCanvas->TestBit(kNotDeleted))
+           fSelectedCanvas->Update();
+        if (fSelectedCanvas &&
+            fSelectedCanvas->GetPadSave()->TestBit(kNotDeleted))
+           fSelectedCanvas->GetPadSave()->Update();
     }
 }
 
@@ -200,15 +207,18 @@ void TContextMenu::Execute( TObject *object, TMethod *method, TObjArray *params 
         gROOT->SetFromPopUp( kTRUE );
         if (fSelectedCanvas) fSelectedCanvas->GetPadSave()->cd();
         object->Execute( method, params );
-        if (fSelectedCanvas) fSelectedCanvas->GetPadSave()->Modified();
+        if (fSelectedCanvas &&
+            fSelectedCanvas->GetPadSave()->TestBit(kNotDeleted))
+           fSelectedCanvas->GetPadSave()->Modified();
         gROOT->SetFromPopUp( kFALSE );
 
-        if( fSelectedPad && savedPad ) {
+        if (fSelectedPad && savedPad) {
 //            fSelectedPad->Modified();
             if (savedPad->TestBit(kNotDeleted)) savedPad->cd();
         }
 
-        if( fSelectedCanvas ) fSelectedCanvas->Update();
+        if (fSelectedCanvas && fSelectedCanvas->TestBit(kNotDeleted))
+           fSelectedCanvas->Update();
     }
 }
 

@@ -1,3 +1,7 @@
+//*CMZ :  2.21/08 18/03/99  15.14.28  by  Fons Rademakers
+//*CMZ :  2.21/05 09/02/99  11.36.48  by  Fons Rademakers
+//*CMZ :  2.21/04 04/02/99  16.25.45  by  Fons Rademakers
+//*CMZ :  2.21/02 14/01/99  17.49.58  by  Fons Rademakers
 //*CMZ :  2.20/00 08/11/98  12.15.54  by  Rene Brun
 //*CMZ :  2.00/04 07/04/98  15.23.45  by  Fons Rademakers
 //*CMZ :  1.03/09 12/12/97  19.31.05  by  Fons Rademakers
@@ -112,7 +116,15 @@
 #include <sys/stat.h>
 #include <errno.h>
 
-#if defined(__linux) || defined(__sun) || defined(__sgi) || defined(_AIX)
+#if defined(__FreeBSD__)
+#include <sys/file.h>
+#define lockf(fd, op, sz)   flock((fd), (op))
+#define	F_LOCK             (LOCK_EX | LOCK_NB)
+#define	F_ULOCK             LOCK_UN
+#endif
+
+#if defined(__linux) || defined(__sun) || defined(__sgi) || \
+    defined(_AIX) || defined(__FreeBSD__)
 #include <grp.h>
 #include <sys/types.h>
 #endif
@@ -129,7 +141,7 @@ extern "C" char *crypt(const char *, const char *);
 extern "C" int initgroups(char *name, int basegid);
 #endif
 
-#if defined(__sgi) && !defined(__GNUG__) //should be test for 6.2
+#if defined(__sgi) && !defined(__GNUG__) && (SGI_REL<62)
 extern "C" {
    int seteuid(int euid);
    int setegid(int egid);
@@ -329,17 +341,13 @@ needshell:
    // read first argument
    char expPatbuf[kMAXPATHLEN];
    int  ch, i, cnt = 0;
-#if defined(__alpha)
 again:
-#endif
    for (i = 0, ch = fgetc(pf); ch != EOF && ch != ' ' && ch != '\n'; i++, ch = fgetc(pf)) {
       expPatbuf[i] = ch;
       cnt++;
    }
-#if defined(__alpha)
-   // Work around bug in Alpha/OSF popen
+   // this will be true if forked process was not yet ready to be read
    if (cnt == 0 && ch == EOF) goto again;
-#endif
 
    // skip rest of pipe
    while (ch != EOF) {
@@ -488,17 +496,22 @@ again:
          sfile = kRootdTab+4;
          goto again;
       }
-      ErrorFatal(kErrFatal, "RootdCloseTab: file %s does not exist", sfile);
+      ErrorInfo("RootdCloseTab: file %s does not exist", sfile);
+      return;
    }
 
    fid = open(sfile, O_RDWR);
 
-   if (fid == -1)
-      ErrorSys(kErrFatal, "RootdCloseTab: error opening %s", sfile);
+   if (fid == -1) {
+      ErrorInfo("RootdCloseTab: error opening %s", sfile);
+      return;
+   }
 
    // lock the file
-   if (lockf(fid, F_LOCK, (off_t)1) == -1)
-      ErrorSys(kErrFatal, "RootdCloseTab: error locking %s", sfile);
+   if (lockf(fid, F_LOCK, (off_t)1) == -1) {
+      ErrorInfo("RootdCloseTab: error locking %s", sfile);
+      return;
+   }
    if (gDebug > 2)
       ErrorInfo("RootdCloseTab: file %s locked", sfile);
 
@@ -557,8 +570,10 @@ again:
 
    // unlock the file
    lseek(fid, 0, SEEK_SET);
-   if (lockf(fid, F_ULOCK, (off_t)1) == -1)
-      ErrorSys(kErrFatal, "RootdCloseTab: error unlocking %s", sfile);
+   if (lockf(fid, F_ULOCK, (off_t)1) == -1) {
+      ErrorInfo("RootdCloseTab: error unlocking %s", sfile);
+      return;
+   }
    if (gDebug > 2)
       ErrorInfo("RootdCloseTab: file %s unlocked", sfile);
 

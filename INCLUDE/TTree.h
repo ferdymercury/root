@@ -1,3 +1,4 @@
+//*CMZ :  2.21/05 07/02/99  20.37.45  by  Rene Brun
 //*CMZ :  2.20/06 17/12/98  09.27.13  by  Rene Brun
 //*CMZ :  2.00/13 26/10/98  11.10.43  by  Rene Brun
 //*CMZ :  2.00/12 06/09/98  15.37.18  by  Rene Brun
@@ -102,7 +103,7 @@ protected:
     TTreeFormula  *fVar4;           //Pointer to fourth variable formula
     TTreeFormula  *fSelect;         //Pointer to selection formula
     TTreeFormula  *fMultiplicity;   //Pointer to formula giving ndata per event
-    Int_t         fOldEventNumber;  //Number of the previously read event
+    Int_t         fChainOffset;     //Offset of 1st event of this Tree in a TChain
     Int_t         fReadEvent;       //Number of the event being processed
     Int_t         fTotalBuffers;    //Total number of bytes in branch buffers
     Int_t         fEstimate;        //Number of events to estimate histogram limits
@@ -166,6 +167,7 @@ public:
 
             void      FindGoodLimits(Int_t nbins, Int_t &newbins, Float_t &xmin, Float_t &xmax);
     virtual TBranch  *GetBranch(const Text_t *name);
+    virtual Int_t     GetChainOffset() const { return fChainOffset; }
     TFile            *GetCurrentFile();
     TDirectory       *GetDirectory() {return fDirectory;}
     virtual Stat_t    GetEntries()   {return fEntries;}
@@ -184,7 +186,6 @@ public:
     TTreeFormula     *GetMultiplicity()   {return fMultiplicity;}
     virtual Int_t     GetNbranches() {return fBranches.GetEntriesFast();}
     virtual void      GetNextPacket(TSlave *sl, Int_t &nevents, Stat_t &firstevent, Stat_t &processed);
-    virtual Int_t     GetOldEventNumber() {return fOldEventNumber;}
     TPacketGenerator *GetPacketGenerator() const { return fPacketGen; }
     virtual Int_t     GetPacketSize() const {return fPacketSize;}
     virtual Int_t     GetReadEvent() {return fReadEvent;}
@@ -218,6 +219,7 @@ public:
     virtual void      SetAutoSave(Int_t autosave=10000000) {fAutoSave=autosave;}
     virtual void      SetBranchAddress(const Text_t *bname,void *add);
     virtual void      SetBranchStatus(const Text_t *bname,Bool_t status=1);
+    virtual void      SetChainOffset(Int_t offset=0) {fChainOffset=offset;}
     virtual void      SetEstimate(Int_t nevents=10000);
     virtual void      SetEventList(TEventList *list) {fEventList = list;}
     virtual void      SetMaxEventLoop(Int_t maxev=1000000000) {fMaxEventLoop = maxev;} // *MENU*

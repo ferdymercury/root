@@ -1,3 +1,5 @@
+//*CMZ :  2.21/06 15/02/99  15.25.01  by  Fons Rademakers
+//*CMZ :  2.21/04 03/02/99  11.40.18  by  Fons Rademakers
 //*CMZ :  2.00/12 05/10/98  16.07.22  by  Fons Rademakers
 //*CMZ :  2.00/11 07/08/98  17.29.53  by  Fons Rademakers
 //*CMZ :  2.00/10 26/07/98  15.46.41  by  Fons Rademakers
@@ -263,7 +265,7 @@ TestMainFrame::TestMainFrame(const TGWindow *p, UInt_t w, UInt_t h)
    // Create TGCanvas and a canvas container which uses a tile layout manager
    fCanvasWindow = new TGCanvas(this, 400, 240);
    fContainer = new TGCompositeFrame(fCanvasWindow->GetViewPort(), 10, 10,
-                                     kHorizontalFrame, fgWhitePixel);
+                                     kHorizontalFrame, GetWhitePixel());
    fContainer->SetLayoutManager(new TGTileLayout(fContainer, 8));
    fCanvasWindow->SetContainer(fContainer);
 
@@ -502,6 +504,12 @@ TestDialog::TestDialog(const TGWindow *p, const TGWindow *main, UInt_t w,
 
    fEc1->GetCanvas()->SetBorderMode(0);
    fEc2->GetCanvas()->SetBorderMode(0);
+
+   // make tab yellow
+   ULong_t yellow;
+   gClient->GetColorByName("yellow", yellow);
+   TGTabElement *tabel = fTab->GetTabTab(2);
+   tabel->ChangeBackground(yellow);
 
    //-------------- end embedded canvas demo
 
@@ -758,10 +766,9 @@ TestMsgBox::TestMsgBox(const TGWindow *p, const TGWindow *main,
    fTestButton = new TGTextButton(f1, "&Test", 1, fRedTextGC);
 
    // Change background of fTestButton to green
-   SetWindowAttributes_t wattr;
-   wattr.fMask = kWABackPixel;
-   gClient->GetColorByName("green", wattr.fBackgroundPixel);
-   gGXW->ChangeWindowAttributes(fTestButton->GetId(), &wattr);
+   ULong_t green;
+   gClient->GetColorByName("green", green);
+   fTestButton->ChangeBackground(green);
 
    fCloseButton = new TGTextButton(f1, "&Close", 2);
    fPictButton = new TGPictureButton(f1, fClient->GetPicture("mb_stop_s.xpm"));

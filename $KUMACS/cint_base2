@@ -1,3 +1,4 @@
+*CMZ :  2.21/07 04/03/99  15.23.49  by  Rene Brun
 *CMZ :  2.00/09 22/06/98  12.16.15  by  Fons Rademakers
 *CMZ :  2.00/08 03/06/98  23.15.51  by  Fons Rademakers
 *CMZ :  2.00/00 07/03/98  18.01.28  by  Fons Rademakers
@@ -25,7 +26,7 @@ headers=TArrayC.h TArrayD.h TArrayF.h TArrayI.h TArrayL.h TArrayS.h _
         TContextMenuImp.h TControlBarImp.h TRegexp.h _
         TString.h TStringLong.h TObjString.h TSystem.h TSysEvtHandler.h _
         TSystemFile.h TSystemDirectory.h TStopwatch.h TStorage.h TRandom.h _
-        TBenchmark.h TTime.h TTimer.h
+        TRandom2.h TBenchmark.h TTime.h TTimer.h
 
 name=Base2
 patch=BASE

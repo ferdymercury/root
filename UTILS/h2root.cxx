@@ -1,3 +1,5 @@
+//*CMZ :  2.21/05 08/02/99  11.08.46  by  Rene Brun
+//*CMZ :  2.21/01 11/01/99  15.23.35  by  Fons Rademakers
 //*CMZ :  2.00/10 23/07/98  14.24.58  by  akiya miyamoto
 //*CMZ :  2.00/08 28/05/98  18.21.22  by  Rene Brun
 //*CMZ :  2.00/06 15/05/98  09.58.29  by  Rene Brun
@@ -73,6 +75,13 @@ int lcont, lcid, lcdir;
 float xmin,xmax,ymin,ymax;
 const Int_t kMIN1 = 7;
 const Int_t kMAX1 = 8;
+
+#if defined __linux
+//On linux Fortran wants this, so we give to it!
+int xargv=0;
+int xargc=0;
+void MAIN__() {}
+#endif
 
 //  Define the names of the Fortran subroutine and functions for the different OSs
 
@@ -259,7 +268,7 @@ int main(int argc, char **argv)
      else     strcat(file_out,".root");
   }
 
-#ifdef _HIUX_SOURCE
+#if defined(_HIUX_SOURCE) && !defined(__GNUC__)
   hf_fint((char *)NULL);
 #endif
 
@@ -409,9 +418,14 @@ int main(int argc, char **argv)
   hgive(id,chtitl,80,ncx,xmin,xmax,ncy,ymin,ymax,nwt,idb);
 #endif
   chtitl[4*nwt] = 0;
-  TH1F *h1 = new TH1F(idname,chtitl,ncx,xmin,xmax);
+  TH1F *h1;
+  if (hcbits[5]) {
+     Int_t lbins = lq[lcid-2];
+     h1 = new TH1F(idname,chtitl,ncx,&q[lbins+1]);
+  } else {
+     h1 = new TH1F(idname,chtitl,ncx,xmin,xmax);
+  }
   if (hcbits[8]) h1->Sumw2();
-  Float_t offsetx = 0.5*(xmax-xmin)/ncx;
   TGraph *gr = 0;
   if (hcbits[11]) {
      gr = new TGraph(ncx);
@@ -420,10 +434,10 @@ int main(int argc, char **argv)
 
   Float_t x;
   for (Int_t i=0;i<=ncx+1;i++) {
-     hix(id,i,x);
-     h1->Fill(x+offsetx,hi(id,i));
+     x = h1->GetBinCenter(i);
+     h1->Fill(x,hi(id,i));
      if (hcbits[8]) h1->SetBinError(i,hie(id,i));
-     if (gr && i>0 && i<=ncx) gr->SetPoint(i,x+offsetx,hif(id,i));
+     if (gr && i>0 && i<=ncx) gr->SetPoint(i,x,hif(id,i));
   }
   Float_t ymin, ymax;
   if (hcbits[19]) {
@@ -521,7 +535,7 @@ int main(int argc, char **argv)
   const int Nchar=9;
   int nvar;
   int ier=0;
-  int i;
+  int i,j;
   char *chtag_out;
   float *x;
   float rmin[1000], rmax[1000];
@@ -551,10 +565,22 @@ int main(int argc, char **argv)
   char *name = chtag_out;
   for (i=80;i>0;i--) {if (chtitl[i] == ' ') chtitl[i] = 0; }
   TTree *tree = new TTree(idname,chtitl);
+  Int_t first,last;
   for(i=0; i<nvar;i++) {
     name[Nchar-1] = 0;
-    for (Int_t j=Nchar-2;j>0;j--) {if(golower) name[j] = tolower(name[j]); if (name[j] == ' ') name[j] = 0; }
-    tree->Branch(name,&x[i],name,8000);
+    first = last = 0;
+    // suppress traling blanks
+    for (j=Nchar-2;j>0;j--) {
+       if(golower) name[j] = tolower(name[j]);
+       if (name[j] == ' ' && last == 0) name[j] = 0;
+       else last = j;
+    }
+    // suppress heading blanks
+    for (j=0;j<Nchar;j++) {
+       if (name[j] != ' ') break;
+       first = j+1;
+    }
+    tree->Branch(&name[first],&x[i],&name[first],8000);
     name += Nchar;
   }
   for(i=1;i<=nentries;i++) {

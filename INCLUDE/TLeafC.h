@@ -1,3 +1,4 @@
+//*CMZ :  2.21/07 06/03/99  16.27.34  by  Rene Brun
 //*CMZ :  1.03/09 08/12/97  13.28.15  by  Fons Rademakers
 //*-- Author :    Rene Brun   17/03/97
 
@@ -46,7 +47,7 @@ public:
     TLeafC(const Text_t *name, const Text_t *type);
     virtual ~TLeafC();
 
-    virtual void    Export(TClonesArray *list);
+    virtual void    Export(TClonesArray *list, Int_t n);
     virtual void    FillBasket(TBuffer &b);
     virtual Int_t   GetMaximum() {return fMaximum;}
     virtual Int_t   GetMinimum() {return fMinimum;}

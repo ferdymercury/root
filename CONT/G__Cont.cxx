@@ -1,5 +1,5 @@
-//*CMZ :  2.20/02 04/12/98  14.26.21  by  Rene Brun
-//*-- Author :    Rene Brun   04/12/98
+//*CMZ :  2.21/07 08/03/99  12.34.08  by  Fons Rademakers
+//*-- Author :    Fons Rademakers   08/03/99
 //*CMZ :  1.00/09 23/04/97  17.59.54  by  Rene Brun
 //*-- Author :    Rene Brun   23/04/97
 #if defined(__hpux) && !defined(__GNUG__)
@@ -116,6 +116,7 @@ extern G__linked_taginfo G__G__ContLN_TClassTable;
 #undef malloc
 #endif
 
+extern "C" void G__cpp_reset_tagtableG__Cont();
 
 extern "C" void G__set_cpp_environmentG__Cont() {
   G__add_macro("__MAKECINT__");
@@ -141,6 +142,7 @@ extern "C" void G__set_cpp_environmentG__Cont() {
   G__add_compiledheader("TMap.h");
   G__add_compiledheader("TClassTable.h");
   G__add_compiledheader("TObjectTable.h");
+  G__cpp_reset_tagtableG__Cont();
 }
 extern "C" int G__cpp_dllrevG__Cont() { return(51111); }
 
@@ -6046,17 +6048,17 @@ static void G__setup_memfuncTCollection(void) {
    /* TCollection */
    G__tag_memfunc_setup(G__get_linked_tagnum(&G__G__ContLN_TCollection));
    G__memfunc_setup("operator=",937,(G__InterfaceMethod)NULL,121,-1,-1,0,1,1,4,0,"u 'TCollection' - 1 - -","are too sensitive to be automatically copied",(void*)NULL,0);
-   G__memfunc_setup("Add",265,G__TCollection_Add_5_0,121,-1,-1,0,1,1,1,8,"U 'TObject' - 0 - obj",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("Add",265,G__TCollection_Add_5_0,121,-1,-1,0,1,1,1,0,"U 'TObject' - 0 - obj",(char*)NULL,(void*)NULL,3);
    G__memfunc_setup("AddVector",892,G__TCollection_AddVector_6_0,121,-1,-1,0,2,2,1,0,
 "U 'TObject' - 0 - obj1 i - - 0 - -",(char*)NULL,(void*)NULL,0);
    G__memfunc_setup("AddAll",546,G__TCollection_AddAll_7_0,121,-1,-1,0,1,1,1,0,"U 'TCollection' - 0 - col",(char*)NULL,(void*)NULL,1);
    G__memfunc_setup("AssertClass",1128,G__TCollection_AssertClass_8_0,98,-1,G__defined_typename("Bool_t"),0,1,1,1,8,"U 'TClass' - 0 - cl",(char*)NULL,(void*)NULL,0);
    G__memfunc_setup("Browse",626,G__TCollection_Browse_9_0,121,-1,-1,0,1,1,1,0,"U 'TBrowser' - 0 - b",(char*)NULL,(void*)NULL,1);
    G__memfunc_setup("Capacity",814,G__TCollection_Capacity_0_1,105,-1,G__defined_typename("Int_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Clear",487,G__TCollection_Clear_1_1,121,-1,-1,0,1,1,1,8,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("Clear",487,G__TCollection_Clear_1_1,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,3);
    G__memfunc_setup("Contains",831,G__TCollection_Contains_2_1,98,-1,G__defined_typename("Bool_t"),0,1,1,1,8,"C - 'Text_t' 0 - name",(char*)NULL,(void*)NULL,0);
    G__memfunc_setup("Contains",831,G__TCollection_Contains_3_1,98,-1,G__defined_typename("Bool_t"),0,1,1,1,8,"U 'TObject' - 0 - obj",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Delete",595,G__TCollection_Delete_4_1,121,-1,-1,0,1,1,1,8,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("Delete",595,G__TCollection_Delete_4_1,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,3);
    G__memfunc_setup("Draw",398,G__TCollection_Draw_5_1,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,1);
    G__memfunc_setup("Dump",406,G__TCollection_Dump_6_1,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
    G__memfunc_setup("FindObject",984,G__TCollection_FindObject_7_1,85,G__get_linked_tagnum(&G__G__ContLN_TObject),-1,0,1,1,1,8,"C - 'Text_t' 0 - name",(char*)NULL,(void*)NULL,1);
@@ -6075,7 +6077,7 @@ static void G__setup_memfuncTCollection(void) {
    G__memfunc_setup("Paint",508,G__TCollection_Paint_9_2,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,1);
    G__memfunc_setup("Print",525,G__TCollection_Print_0_3,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,1);
    G__memfunc_setup("RecursiveRemove",1574,G__TCollection_RecursiveRemove_1_3,121,-1,-1,0,1,1,1,0,"U 'TObject' - 0 - obj",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("Remove",622,G__TCollection_Remove_2_3,85,G__get_linked_tagnum(&G__G__ContLN_TObject),-1,0,1,1,1,8,"U 'TObject' - 0 - obj",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("Remove",622,G__TCollection_Remove_2_3,85,G__get_linked_tagnum(&G__G__ContLN_TObject),-1,0,1,1,1,0,"U 'TObject' - 0 - obj",(char*)NULL,(void*)NULL,3);
    G__memfunc_setup("RemoveAll",903,G__TCollection_RemoveAll_3_3,121,-1,-1,0,1,1,1,0,"U 'TCollection' - 0 - col",(char*)NULL,(void*)NULL,1);
    G__memfunc_setup("RemoveAll",903,G__TCollection_RemoveAll_4_3,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
    G__memfunc_setup("SetCurrentCollection",2075,G__TCollection_SetCurrentCollection_5_3,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
@@ -6109,8 +6111,8 @@ static void G__setup_memfuncTIterator(void) {
    G__memfunc_setup("operator=",937,(G__InterfaceMethod)NULL,121,-1,-1,0,1,1,4,0,"u 'TIterator' - 1 - -","don't allow copy or assignment of",(void*)NULL,0);
    G__memfunc_setup("GetCollection",1324,G__TIterator_GetCollection_4_0,85,G__get_linked_tagnum(&G__G__ContLN_TCollection),-1,0,0,1,1,9,"",(char*)NULL,(void*)NULL,3);
    G__memfunc_setup("GetOption",921,G__TIterator_GetOption_5_0,67,-1,G__defined_typename("Option_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("Next",415,G__TIterator_Next_6_0,85,G__get_linked_tagnum(&G__G__ContLN_TObject),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("Reset",515,G__TIterator_Reset_7_0,121,-1,-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("Next",415,G__TIterator_Next_6_0,85,G__get_linked_tagnum(&G__G__ContLN_TObject),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("Reset",515,G__TIterator_Reset_7_0,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,3);
    G__memfunc_setup("operator()",957,G__TIterator_operatoroPcP_8_0,85,G__get_linked_tagnum(&G__G__ContLN_TObject),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
    G__memfunc_setup("DeclFileName",1145,G__TIterator_DeclFileName_9_0,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
    G__memfunc_setup("DeclFileLine",1152,G__TIterator_DeclFileLine_0_1,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
@@ -6203,13 +6205,13 @@ static void G__setup_memfuncTSeqCollection(void) {
    G__tag_memfunc_setup(G__get_linked_tagnum(&G__G__ContLN_TSeqCollection));
    G__memfunc_setup("Changed",682,(G__InterfaceMethod)NULL,121,-1,-1,0,0,1,2,0,"",(char*)NULL,(void*)NULL,1);
    G__memfunc_setup("Add",265,G__TSeqCollection_Add_4_0,121,-1,-1,0,1,1,1,0,"U 'TObject' - 0 - obj",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("AddFirst",785,G__TSeqCollection_AddFirst_5_0,121,-1,-1,0,1,1,1,8,"U 'TObject' - 0 - obj",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("AddLast",669,G__TSeqCollection_AddLast_6_0,121,-1,-1,0,1,1,1,8,"U 'TObject' - 0 - obj",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("AddAt",446,G__TSeqCollection_AddAt_7_0,121,-1,-1,0,2,1,1,8,
+   G__memfunc_setup("AddFirst",785,G__TSeqCollection_AddFirst_5_0,121,-1,-1,0,1,1,1,0,"U 'TObject' - 0 - obj",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("AddLast",669,G__TSeqCollection_AddLast_6_0,121,-1,-1,0,1,1,1,0,"U 'TObject' - 0 - obj",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("AddAt",446,G__TSeqCollection_AddAt_7_0,121,-1,-1,0,2,1,1,0,
 "U 'TObject' - 0 - obj i - 'Int_t' 0 - idx",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("AddAfter",763,G__TSeqCollection_AddAfter_8_0,121,-1,-1,0,2,1,1,8,
+   G__memfunc_setup("AddAfter",763,G__TSeqCollection_AddAfter_8_0,121,-1,-1,0,2,1,1,0,
 "U 'TObject' - 0 - after U 'TObject' - 0 - obj",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("AddBefore",860,G__TSeqCollection_AddBefore_9_0,121,-1,-1,0,2,1,1,8,
+   G__memfunc_setup("AddBefore",860,G__TSeqCollection_AddBefore_9_0,121,-1,-1,0,2,1,1,0,
 "U 'TObject' - 0 - before U 'TObject' - 0 - obj",(char*)NULL,(void*)NULL,3);
    G__memfunc_setup("RemoveFirst",1142,G__TSeqCollection_RemoveFirst_0_1,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
    G__memfunc_setup("RemoveLast",1026,G__TSeqCollection_RemoveLast_1_1,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
@@ -6284,7 +6286,7 @@ static void G__setup_memfuncTArray(void) {
 "C - - 0 - where i - 'Int_t' 0 - i",(char*)NULL,(void*)NULL,0);
    G__memfunc_setup("operator=",937,G__TArray_operatoreQ_5_0,117,G__get_linked_tagnum(&G__G__ContLN_TArray),-1,1,1,1,1,0,"u 'TArray' - 1 - rhs",(char*)NULL,(void*)NULL,0);
    G__memfunc_setup("GetSize",699,G__TArray_GetSize_7_0,105,-1,G__defined_typename("Int_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Set",300,G__TArray_Set_8_0,121,-1,-1,0,1,1,1,8,"i - 'Int_t' 0 - n",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("Set",300,G__TArray_Set_8_0,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 - n",(char*)NULL,(void*)NULL,3);
    G__memfunc_setup("ReadArray",891,G__TArray_ReadArray_9_0,85,G__get_linked_tagnum(&G__G__ContLN_TArray),-1,0,2,1,1,0,
 "u 'TBuffer' - 1 - b U 'TClass' - 0 - clReq",(char*)NULL,(void*)NULL,0);
    G__memfunc_setup("WriteArray",1034,G__TArray_WriteArray_0_1,121,-1,-1,0,2,1,1,0,
@@ -7038,6 +7040,44 @@ G__linked_taginfo G__G__ContLN_TMapIter = { "TMapIter" , 99 , -1 };
 G__linked_taginfo G__G__ContLN_ClassRec_t = { "ClassRec_t" , 115 , -1 };
 G__linked_taginfo G__G__ContLN_TClassTable = { "TClassTable" , 99 , -1 };
 
+/* Reset class/struct taginfo */
+extern "C" void G__cpp_reset_tagtableG__Cont() {
+  G__G__ContLN_TClass.tagnum = -1 ;
+  G__G__ContLN_TList.tagnum = -1 ;
+  G__G__ContLN_TObjArray.tagnum = -1 ;
+  G__G__ContLN_TObject.tagnum = -1 ;
+  G__G__ContLN_TObjectcLcLdA.tagnum = -1 ;
+  G__G__ContLN_TMap.tagnum = -1 ;
+  G__G__ContLN_TCollection.tagnum = -1 ;
+  G__G__ContLN_TIterator.tagnum = -1 ;
+  G__G__ContLN_TObjectTable.tagnum = -1 ;
+  G__G__ContLN_TIter.tagnum = -1 ;
+  G__G__ContLN_TSeqCollection.tagnum = -1 ;
+  G__G__ContLN_TObjLink.tagnum = -1 ;
+  G__G__ContLN_TListIter.tagnum = -1 ;
+  G__G__ContLN_TArray.tagnum = -1 ;
+  G__G__ContLN_TArrayC.tagnum = -1 ;
+  G__G__ContLN_TArrayD.tagnum = -1 ;
+  G__G__ContLN_TArrayF.tagnum = -1 ;
+  G__G__ContLN_TArrayI.tagnum = -1 ;
+  G__G__ContLN_TArrayL.tagnum = -1 ;
+  G__G__ContLN_TArrayS.tagnum = -1 ;
+  G__G__ContLN_TSortedList.tagnum = -1 ;
+  G__G__ContLN_THashTable.tagnum = -1 ;
+  G__G__ContLN_THashList.tagnum = -1 ;
+  G__G__ContLN_TObjArrayIter.tagnum = -1 ;
+  G__G__ContLN_TClonesArray.tagnum = -1 ;
+  G__G__ContLN_TOrdCollectionIter.tagnum = -1 ;
+  G__G__ContLN_TOrdCollection.tagnum = -1 ;
+  G__G__ContLN_TBtNode.tagnum = -1 ;
+  G__G__ContLN_TBtree.tagnum = -1 ;
+  G__G__ContLN_TBtreeIter.tagnum = -1 ;
+  G__G__ContLN_THashTableIter.tagnum = -1 ;
+  G__G__ContLN_TMapIter.tagnum = -1 ;
+  G__G__ContLN_ClassRec_t.tagnum = -1 ;
+  G__G__ContLN_TClassTable.tagnum = -1 ;
+}
+
 extern "C" void G__cpp_setup_tagtableG__Cont() {
 
    /* Setting up class,struct,union tag entry */
@@ -7096,7 +7136,7 @@ class G__cpp_setup_initG__Cont {
 G__cpp_setup_initG__Cont G__cpp_setup_initializerG__Cont;
 
 //
-// File generated by /user/brun/root/bin/rootcint at Fri Dec  4 14:26:20 1998.
+// File generated by /home/rdm/root/bin/rootcint at Mon Mar  8 12:34:07 1999.
 // Do NOT change. Changes will be lost next time file is generated
 //
 

@@ -1,3 +1,5 @@
+//*CMZ :  2.21/08 11/03/99  16.29.53  by  Fons Rademakers
+//*CMZ :  2.21/05 09/02/99  15.41.56  by  Fons Rademakers
 //*CMZ :  2.20/05 14/12/98  01.16.26  by  Fons Rademakers
 //*CMZ :  2.20/02 03/12/98  08.20.16  by  Rene Brun
 //*CMZ :  2.20/01 02/12/98  10.42.50  by  Rene Brun
@@ -159,6 +161,8 @@ public:
                 { return fCanvas->HandleContainerMotion(ev); }
    Bool_t  HandleExpose(Event_t *ev)
                 { return fCanvas->HandleContainerExpose(ev); }
+   Bool_t  HandleCrossing(Event_t *ev)
+                { return fCanvas->HandleContainerCrossing(ev); }
 };
 
 //______________________________________________________________________________
@@ -173,8 +177,8 @@ TRootContainer::TRootContainer(TRootCanvas *c, Window_t id, const TGWindow *p)
                     kButtonPressMask | kButtonReleaseMask,
                     kNone, kNone);
 
-   gGXW->SelectInput(fId, kKeyPressMask | kExposureMask | kPointerMotionMask |
-                     kStructureNotifyMask);
+   gGXW->SelectInput(fId, kKeyPressMask | kKeyReleaseMask | kExposureMask |
+                     kPointerMotionMask | kStructureNotifyMask | kLeaveWindowMask);
 }
 
 
@@ -906,9 +910,16 @@ Bool_t TRootCanvas::HandleContainerKey(Event_t *event)
 {
    // Handle keyboard events in the canvas container.
 
-   //printf("key event %d\n", event->fCode);
-   if (event->fCode) { }
-   gROOT->SetInterrupt();
+  if (event->fType == kGKeyPress) {
+      fButton = event->fCode;
+      UInt_t keysym;
+      char str[2];
+      gGXW->LookupString(event, str, sizeof(str), keysym);
+      if (str[0] == 3)   // ctrl-c sets the interrupt flag
+         gROOT->SetInterrupt();
+      fCanvas->HandleInput(kKeyPress, str[0], 0);
+   } else if (event->fType == kKeyRelease)
+      fButton = 0;
 
    return kTRUE;
 }
@@ -940,3 +951,13 @@ Bool_t TRootCanvas::HandleContainerExpose(Event_t *event)
    return kTRUE;
 }
 
+//______________________________________________________________________________
+Bool_t TRootCanvas::HandleContainerCrossing(Event_t *event)
+{
+   // Handle enter/leave events. Only leave is activated at the moment.
+
+   if (event->fType == kLeaveNotify)
+      fCanvas->HandleInput(kMouseLeave, 0, 0);
+
+   return kTRUE;
+}

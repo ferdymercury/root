@@ -1,3 +1,6 @@
+//*CMZ :  2.21/07 19/02/99  11.07.09  by  Fons Rademakers
+//*CMZ :  2.21/03 20/01/99  18.10.03  by  Fons Rademakers
+//*CMZ :  2.21/01 11/01/99  16.37.57  by  Fons Rademakers
 //*CMZ :  2.20/00 08/11/98  11.00.56  by  Rene Brun
 //*CMZ :  2.00/12 02/10/98  22.58.48  by  Rene Brun
 //*CMZ :  2.00/11 01/10/98  11.24.36  by  Rene Brun
@@ -260,9 +263,9 @@ TFile::TFile(const Text_t *fname1, Option_t *option, const Text_t *ftitle, Int_t
 //*-*--------------Connect to file system stream
    if (create || update) {
 #ifndef WIN32
-      fD = open(fname, O_RDWR | O_CREAT, 0644);
+      fD = SysOpen(fname, O_RDWR | O_CREAT, 0644);
 #else
-      fD = open(fname, O_RDWR | O_CREAT | O_BINARY, S_IREAD | S_IWRITE);
+      fD = SysOpen(fname, O_RDWR | O_CREAT | O_BINARY, S_IREAD | S_IWRITE);
 #endif
       if (fD == -1) {
          SysError("TFile", "file %s can not be opened", fname);
@@ -271,9 +274,9 @@ TFile::TFile(const Text_t *fname1, Option_t *option, const Text_t *ftitle, Int_t
       fWritable = kTRUE;
    } else {
 #ifndef WIN32
-      fD = open(fname, O_RDONLY);
+      fD = SysOpen(fname, O_RDONLY, 0644);
 #else
-      fD = open(fname, O_RDONLY | O_BINARY);
+      fD = SysOpen(fname, O_RDONLY | O_BINARY, S_IREAD | S_IWRITE);
 #endif
       if (fD == -1) {
          SysError("TFile", "file %s can not be opened for reading", fname);
@@ -454,7 +457,7 @@ void TFile::Close(Option_t *)
    }
 
    if (IsOpen()) {
-      close(fD);
+      SysClose(fD);
       fD = -1;
    }
 
@@ -472,21 +475,6 @@ void TFile::Close(Option_t *)
       gProof->DisConnectFile(this);
 
    TCollection::EmptyGarbageCollection();
-}
-
-//______________________________________________________________________________
-void TFile::Copy(TObject &obj)
-{
-//*-*-*-*-*-*-*-*-*-*-*Copy content of "this" file onto file-*-*-*-*-*-*-*-*
-//*-*                  =====================================
-
-   TDirectory::Copy(obj);
-   ((TFile&)obj).fOption     = fOption;
-   ((TFile&)obj).fWritable   = fWritable;
-   ((TFile&)obj).fUnits      = fUnits;
-   ((TFile&)obj).fCompress   = fCompress;
-   ((TFile&)obj).fBytesRead  = fBytesRead;
-   ((TFile&)obj).fBytesWrite = fBytesWrite;
 }
 
 //______________________________________________________________________________
@@ -532,10 +520,8 @@ void TFile::Flush() const
    // Synchornize a file's in-core and on-disk states.
 
    if (IsOpen() && fWritable) {
-#ifndef WIN32
-      if (fsync(fD) < 0)
+      if (SysSync(fD) < 0)
          SysError("Flush", "error flushing file %s", GetName());
-#endif
    }
 }
 
@@ -768,7 +754,7 @@ Bool_t TFile::ReadBuffer(char *buf, int len)
 
    if (IsOpen()) {
       ssize_t siz;
-      while ((siz = read(fD, buf, len)) < 0 && errno == EINTR)
+      while ((siz = SysRead(fD, buf, len)) < 0 && errno == EINTR)
          errno = 0;
       if (siz < 0) {
          SysError("ReadBuffer", "error reading from file %s", GetName());
@@ -905,7 +891,7 @@ void TFile::Seek(Seek_t offset, ERelativeTo pos)
       whence = SEEK_END;
       break;
    }
-   if (lseek(fD, offset, whence) < 0)
+   if (SysSeek(fD, offset, whence) < 0)
       SysError("Seek", "cannot seek to position %d in file %s", offset, GetName());
 }
 
@@ -1011,7 +997,7 @@ Bool_t TFile::WriteBuffer(const char *buf, int len)
    if (IsOpen() && fWritable) {
       ssize_t siz;
       gSystem->IgnoreInterrupt();
-      while ((siz = write(fD, buf, len)) < 0 && errno == EINTR)
+      while ((siz = SysWrite(fD, buf, len)) < 0 && errno == EINTR)
          errno = 0;
       gSystem->IgnoreInterrupt(kFALSE);
       if (siz < 0) {
@@ -1108,7 +1094,9 @@ TFile *TFile::Open(const Text_t *name, Option_t *option, const Text_t *ftitle, I
    // of a local file via a TNetFile use either TNetFile directly or specify
    // as host "localhost".
 
-   TFile *f;
+   static Bool_t RFIO_loaded = kFALSE;
+   TFile *f=0;
+
    if (!strncmp(name, "root:", 5)) {
       TUrl url(name);
       TInetAddress a(gSystem->GetHostByName(url.GetHost()));
@@ -1123,6 +1111,24 @@ TFile *TFile::Open(const Text_t *name, Option_t *option, const Text_t *ftitle, I
             f = new TFile(Form("%s%s", gSystem->HomeDirectory(), fname),
                           option, ftitle, compress);
       }
+   } else if (!strncmp(name, "rfio:", 5)) {
+      if (!RFIO_loaded) {
+         char *p, *lib = Form("%s/lib/libRFIO", gRootDir);
+         if ((p = gSystem->DynamicPathName(lib, kTRUE))) {
+            delete [] p;
+            if (gSystem->Load(lib)) {
+               ::Error("TFile::Open", "cannot load RFIO interface library %s", lib);
+               return 0;
+            }
+            RFIO_loaded = kTRUE;
+         } else {
+            ::Error("TFile::Open", "cannot find RFIO interface library %s", lib);
+            return 0;
+         }
+      }
+      f = (TFile*) gROOT->ProcessLineFast(Form("new TRFIOFile(\"%s\")", name));
+   } else if (!strncmp(name, "hpss:", 5)) {
+
    } else if (!strncmp(name, "http:", 5))
       f = new TWebFile(name);
    else if (!strncmp(name, "file:", 5))
@@ -1131,6 +1137,60 @@ TFile *TFile::Open(const Text_t *name, Option_t *option, const Text_t *ftitle, I
       f = new TFile(name, option, ftitle, compress);
 
    return f;
+}
+
+//______________________________________________________________________________
+Int_t TFile::SysOpen(const char *pathname, Int_t flags, UInt_t mode) const
+{
+   // Interface to system open. All arguments like in "man 2 open".
+
+   return ::open(pathname, flags, mode);
+}
+
+//______________________________________________________________________________
+Int_t TFile::SysClose(Int_t fd) const
+{
+   // Interface to system close. All arguments like in "man 2 close".
+
+   return ::close(fd);
+}
+
+//______________________________________________________________________________
+Int_t TFile::SysRead(Int_t fd, void *buf, Int_t len) const
+{
+   // Interface to system read. All arguments like in "man 2 read".
+
+   return ::read(fd, buf, len);
+}
+
+//______________________________________________________________________________
+Int_t TFile::SysWrite(Int_t fd, const void *buf, Int_t len) const
+{
+   // Interface to system write. All arguments like in "man 2 write".
+
+   return ::write(fd, buf, len);
+}
+
+//______________________________________________________________________________
+Seek_t TFile::SysSeek(Int_t fd, Seek_t offset, Int_t whence) const
+{
+   // Interface to system lseek. All arguments like in "man 2 lseek"
+   // except that the offset and return value are Long_t to be able to
+   // handle 64 bit file systems.
+
+   return ::lseek(fd, offset, whence);
+}
+
+//______________________________________________________________________________
+Int_t TFile::SysSync(Int_t fd) const
+{
+   // Interface to system fsync. All arguments like in "man 2 fsync".
+
+#ifndef WIN32
+   return ::fsync(fd);
+#else
+   return 0;
+#endif
 }
 
 //______________________________________________________________________________

@@ -1,3 +1,4 @@
+//*CMZ :  2.21/01 12/01/99  07.53.52  by  Valery Fine(fine@mail.cern.ch)
 //*CMZ :  2.00/11 17/08/98  15.40.44  by  Rene Brun
 //*CMZ :  2.00/00 11/02/98  12.34.08  by  Rene Brun
 //*CMZ :  1.01/04 29/05/97  19.05.17  by  Valery Fine(fine@vxcern.cern.ch)
@@ -48,6 +49,7 @@ protected:
         Float_t         *fP;            //Array of X,Y,Z coordinates
         TString          fOption;       //options
         UInt_t           fGLList;       // The list number for OpenGL view
+        Int_t            fLastPoint;    // The index of the last filled point
 
 public:
                           TPolyMarker3D();
@@ -72,7 +74,9 @@ public:
         virtual void      SavePrimitive(ofstream &out, Option_t *option);
         void              SetPoint(Int_t n, Float_t x, Float_t y, Float_t z); // *MENU*
         virtual void      SetPolyMarker(Int_t n, Float_t *p, Marker_t marker, Option_t *option="");
+        virtual Int_t     SetNextPoint(Float_t x, Float_t y, Float_t z); // *MENU*
         virtual void      Sizeof3D() const;
+        virtual Int_t     Size() const {return fLastPoint+1;}
 
         ClassDef(TPolyMarker3D,1)  //An array of 3-D points with the same marker
 };

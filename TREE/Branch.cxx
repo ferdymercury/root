@@ -1,4 +1,5 @@
-//*CMZ :  2.20/03 05/12/98  16.36.38  by  Rene Brun
+//*CMZ :  2.21/07 06/03/99  17.42.39  by  Rene Brun
+//*CMZ :  2.20/03 03/03/99  14.18.31  by  Rene Brun
 //*CMZ :  2.20/01 01/12/98  11.08.37  by  Rene Brun
 //*CMZ :  2.20/00 04/11/98  08.56.35  by  Rene Brun
 //*CMZ :  2.00/12 19/09/98  17.18.37  by  Rene Brun
@@ -277,16 +278,16 @@ void TBranch::Browse(TBrowser *b)
 //______________________________________________________________________________
 void TBranch::DropBaskets()
 {
-//   Loop on all branch baskets. Drop all except readbasket
+//   Loop on all branch baskets.  Drop all except readbasket
 
    TBasket *basket;
    Int_t nbaskets = GetListOfBaskets()->GetEntriesFast();
    for (Int_t j=0;j<nbaskets-1;j++)  {
       if (j == fReadBasket || j == fWriteBasket) continue;
-      basket = (TBasket*)fBaskets[j];
+      basket = (TBasket*)fBaskets.UncheckedAt(j);
       if (!basket) continue;
       basket->DropBuffers();
-      GetListOfBaskets()->Remove(basket);
+      GetListOfBaskets()->RemoveAt(j);
       delete basket;
       if (!fTree->MemoryFull(0)) break;
    }
@@ -370,13 +371,15 @@ TBasket *TBranch::GetBasket(Int_t basketnumber)
 
       // reference to an existing basket in memory ?
    if (basketnumber <0 || basketnumber > fWriteBasket) return 0;
-   TBasket *basket = (TBasket*)fBaskets[basketnumber];
+   TBasket *basket = (TBasket*)fBaskets.UncheckedAt(basketnumber);
    if (basket) return basket;
 
       // must create a new basket
    gBranch = this;
    Int_t nb = 1000;
-   TBuffer *buffer = new TBuffer(TBuffer::kRead, nb);
+   static TBuffer *buffer = 0;
+   if (buffer) buffer->SetBufferOffset(0);
+   else        buffer = new TBuffer(TBuffer::kRead, nb);
    basket = new TBasket();
    char *buf = buffer->Buffer();
 
@@ -390,7 +393,7 @@ TBasket *TBranch::GetBasket(Int_t basketnumber)
       Warning("GetBasket","Estimated keylen too small=%d",basket->GetKeylen());
    }
    cursav->cd();
-   delete buffer;
+//   delete buffer;
    fBaskets[basketnumber] = basket;
    return basket;
 }

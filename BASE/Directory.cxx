@@ -1,3 +1,4 @@
+//*CMZ :  2.21/01 07/02/99  19.32.56  by  Fons Rademakers
 //*CMZ :  2.20/05 14/12/98  15.00.52  by  Rene Brun
 //*CMZ :  2.20/04 09/12/98  19.25.20  by  Rene Brun
 //*CMZ :  2.20/00 26/11/98  13.22.39  by  Rene Brun
@@ -557,17 +558,6 @@ void TDirectory::Close(Option_t *)
    }
 
    TCollection::EmptyGarbageCollection();
-}
-
-//______________________________________________________________________________
-void TDirectory::Copy(TObject &directory)
-{
-//*-*-*-*-*-*-*-*-*-*-*Copy "this" directory into directory*-*-*-*-*-*-*-*-*
-//*-*                  ====================================
-// The target directory must have been created first
-//
-
-   TNamed::Copy(directory);
 }
 
 //______________________________________________________________________________

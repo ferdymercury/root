@@ -1,3 +1,4 @@
+//*CMZ :  2.21/02 16/01/99  14.36.44  by  Rene Brun
 //*CMZ :  0.80/00 17/07/96  11.35.40  by  Rene Brun
 //*-- Author :    Rene Brun   12/12/94
 
@@ -49,6 +50,13 @@ protected:
         Coord_t     fXstat;           //X position where to draw the statistics
         Coord_t     fYstat;           //X position where to draw the statistics
         Coord_t     fAstat;           //Alignment for the statistics
+        Color_t     fFrameFillColor;  //pad frame fill color
+        Color_t     fFrameLineColor;  //pad frame line color
+        Style_t     fFrameFillStyle;  //pad frame fill style
+        Style_t     fFrameLineStyle;  //pad frame line style
+        Width_t     fFrameLineWidth;  //pad frame line width
+        Width_t     fFrameBorderSize; //pad frame border size
+        Int_t       fFrameBorderMode; //pad frame border mode
 
 public:
         TAttPad();
@@ -64,6 +72,13 @@ public:
         Coord_t          GetAstat() { return fAstat;}
         Coord_t          GetXstat() { return fXstat;}
         Coord_t          GetYstat() { return fYstat;}
+        Color_t          GetFrameFillColor() {return fFrameFillColor;}
+        Color_t          GetFrameLineColor() {return fFrameLineColor;}
+        Style_t          GetFrameFillStyle() {return fFrameFillStyle;}
+        Style_t          GetFrameLineStyle() {return fFrameLineStyle;}
+        Width_t          GetFrameLineWidth() {return fFrameLineWidth;}
+        Width_t          GetFrameBorderSize() {return fFrameBorderSize;}
+        Int_t            GetFrameBorderMode() {return fFrameBorderMode;}
         virtual void     Print(Option_t *option="");
         virtual void     Reset(Option_t *option="");
         virtual void     SetBottomMargin(Coord_t bottommargin);
@@ -76,8 +91,15 @@ public:
         virtual void     SetAstat(Coord_t astat) { fAstat=astat;}
         virtual void     SetXstat(Coord_t xstat) { fXstat=xstat;}
         virtual void     SetYstat(Coord_t ystat) { fYstat=ystat;}
+        void             SetFrameFillColor(Color_t color=1) {fFrameFillColor = color;}
+        void             SetFrameLineColor(Color_t color=1) {fFrameLineColor = color;}
+        void             SetFrameFillStyle(Style_t styl=0)  {fFrameFillStyle = styl;}
+        void             SetFrameLineStyle(Style_t styl=0)  {fFrameLineStyle = styl;}
+        void             SetFrameLineWidth(Width_t width=1) {fFrameLineWidth = width;}
+        void             SetFrameBorderSize(Width_t size=1) {fFrameBorderSize = size;}
+        void             SetFrameBorderMode(Int_t mode=1) {fFrameBorderMode = mode;}
 
-        ClassDef(TAttPad,1)  //Pad attributes
+        ClassDef(TAttPad,2)  //Pad attributes
 };
 
 #endif

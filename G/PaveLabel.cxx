@@ -1,3 +1,6 @@
+//*CMZ :  2.21/05 07/02/99  11.39.40  by  Rene Brun
+//*CMZ :  2.21/03 21/01/99  18.54.32  by  Rene Brun
+//*CMZ :  2.21/00 28/12/98  18.40.32  by  Rene Brun
 //*CMZ :  2.20/05 15/12/98  09.17.21  by  Rene Brun
 //*CMZ :  2.00/11 18/08/98  21.28.58  by  Rene Brun
 //*CMZ :  2.00/04 03/04/98  17.54.31  by  Rene Brun
@@ -150,12 +153,15 @@ void TPaveLabel::PaintPaveLabel(Coord_t x1, Coord_t y1,Coord_t x2, Coord_t  y2,
 
 //*-*- Draw label
    Float_t textsize  = GetTextSize();
-   Float_t labelsize = textsize*(gPad->YtoPixel(y1) - gPad->YtoPixel(y2));
+   Int_t ypixel      = gPad->YtoPixel(y1) - gPad->YtoPixel(y2);
+   Float_t labelsize = textsize*ypixel;
    Float_t wxlabel   = gPad->XtoPixel(x2) - gPad->XtoPixel(x1);
    if (nch*0.5*labelsize > wxlabel) labelsize = wxlabel/(nch*0.5);
-   Float_t ymin = gPad->GetY1();
-   Float_t ymax = gPad->GetY2();
-   labelsize   /= gPad->YtoPixel(ymin) - gPad->YtoPixel(ymax);
+   if (labelsize < 0.5*ypixel && labelsize < 10) labelsize = 0.5*ypixel;
+   Float_t wh   = (Float_t)gPad->XtoPixel(gPad->GetX2());
+   Float_t hh   = (Float_t)gPad->YtoPixel(gPad->GetY1());
+   if (wh < hh)  labelsize   /= wh;
+   else          labelsize   /= hh;
    SetTextSize(labelsize);
    TAttText::Modify();
    Int_t halign = GetTextAlign()/10;

@@ -1,3 +1,6 @@
+//*CMZ :  2.21/03 22/01/99  11.10.51  by  Rene Brun
+//*CMZ :  2.21/02 18/01/99  16.46.09  by  Rene Brun
+//*CMZ :  2.21/01 16/01/99  10.38.56  by  Rene Brun
 //*CMZ :  2.20/05 13/12/98  10.53.59  by  Rene Brun
 //*CMZ :  2.20/03 05/12/98  16.30.31  by  Rene Brun
 //*CMZ :  2.20/01 01/12/98  22.34.08  by  Rene Brun
@@ -26,6 +29,7 @@
 #include "TRandom.h"
 #include "TH2.h"
 #include "TVirtualPad.h"
+#include "TStyle.h"
 
 ClassImp(TF2)
 
@@ -72,8 +76,7 @@ TF2::TF2(const char *name,const char *formula, Float_t xmin, Float_t xmax, Float
    fYmax   = ymax;
    fNpx    = 30;
    fNpy    = 30;
-   fNlevels= 20;
-
+   fContour.Set(0);
 }
 
 //______________________________________________________________________________
@@ -98,7 +101,7 @@ TF2::TF2(const char *name, void *fcn, Float_t xmin, Float_t xmax, Float_t ymin, 
    fYmax   = ymax;
    fNpx    = 30;
    fNpy    = 30;
-   fNlevels= 20;
+   fContour.Set(0);
 
 }
 
@@ -120,7 +123,7 @@ TF2::TF2(const char *name, Double_t (*fcn)(Double_t *, Double_t *), Float_t xmin
    fYmax   = ymax;
    fNpx    = 30;
    fNpy    = 30;
-   fNlevels= 20;
+   fContour.Set(0);
 
 }
 
@@ -148,7 +151,7 @@ void TF2::Copy(TObject &obj)
    ((TF2&)obj).fYmin    = fYmin;
    ((TF2&)obj).fYmax    = fYmax;
    ((TF2&)obj).fNpy     = fNpy;
-   ((TF2&)obj).fNlevels = fNlevels;
+   fContour.Copy(((TF2&)obj).fContour);
 }
 
 //______________________________________________________________________________
@@ -236,6 +239,60 @@ void TF2::ExecuteEvent(Int_t event, Int_t px, Int_t py)
 }
 
 //______________________________________________________________________________
+Int_t TF2::GetContour(Float_t *levels)
+{
+//*-*-*-*-*-*-*-*Return contour values into array levels*-*-*-*-*-*-*-*-*-*
+//*-*            =======================================
+//*-*
+//*-*  The number of contour levels can be returned by getContourLevel
+//*-*
+//*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+  Int_t nlevels = fContour.fN;
+  if (levels) {
+     for (Int_t level=0; level<nlevels; level++) levels[level] = GetContourLevel(level);
+  }
+  return nlevels;
+}
+
+//______________________________________________________________________________
+Float_t TF2::GetContourLevel(Int_t level)
+{
+//*-*-*-*-*-*-*-*Return the number of contour levels*-*-*-*-*-*-*-*-*-*-*-*-*
+//*-*            ===================================
+  if (level <0 || level >= fContour.fN) return 0;
+  if (fContour.fArray[0] != -9999) return fContour.fArray[level];
+  if (fHistogram == 0) return 0;
+  return fHistogram->GetContourLevel(level);
+}
+
+//______________________________________________________________________________
+Text_t *TF2::GetObjectInfo(Int_t px, Int_t py)
+{
+//   Redefines TObject::GetObjectInfo.
+//   Displays the function value
+//   corresponding to cursor position px,py
+//
+   if (!gPad) return "";
+   static char info[64];
+   Float_t x = gPad->PadtoX(gPad->AbsPixeltoX(px));
+   Float_t y = gPad->PadtoY(gPad->AbsPixeltoY(py));
+   const char *drawOption = GetDrawOption();
+   Float_t uxmin,uxmax;
+   Float_t uymin,uymax;
+   if (gPad->GetView() || strncmp(drawOption,"cont",4) == 0
+                       || strncmp(drawOption,"CONT",4) == 0) {
+      uxmin=gPad->GetUxmin();
+      uxmax=gPad->GetUxmax();
+      x = fXmin +(fXmax-fXmin)*(x-uxmin)/(uxmax-uxmin);
+      uymin=gPad->GetUymin();
+      uymax=gPad->GetUymax();
+      y = fYmin +(fYmax-fYmin)*(y-uymin)/(uymax-uymin);
+   }
+   sprintf(info,"(x=%g, y=%g, f=%g)",x,y,Eval(x,y));
+   return info;
+}
+
+//______________________________________________________________________________
 Double_t TF2::GetRandom()
 {
 //*-*-*-*-*-*Return a random number following this function shape*-*-*-*-*-*-*
@@ -265,7 +322,6 @@ void TF2::GetRandom2(Float_t &xrandom, Float_t &yrandom)
    Float_t dx   = (fXmax-fXmin)/fNpx;
    Float_t dy   = (fYmax-fYmin)/fNpy;
    Int_t ncells = fNpx*fNpy;
-   Double_t xx[2];
    if (fIntegral == 0) {
       fIntegral = new Double_t[ncells+1];
       fIntegral[0] = 0;
@@ -273,10 +329,8 @@ void TF2::GetRandom2(Float_t &xrandom, Float_t &yrandom)
       Int_t intNegative = 0;
       cell = 0;
       for (j=0;j<fNpy;j++) {
-         xx[1] = fYmin+(j+0.5)*dy;
          for (i=0;i<fNpx;i++) {
-            xx[0] = fXmin+(i+0.5)*dx;
-            integ = EvalPar(xx,fParams);
+            integ = Integral(fXmin+i*dx,fXmin+i*dx+dx,fYmin+j*dy,fYmin+j*dy+dy);
             if (integ < 0) {intNegative++; integ = -integ;}
             fIntegral[cell+1] = fIntegral[cell] + integ;
             cell++;
@@ -335,6 +389,21 @@ void TF2::GetRange(Float_t &xmin, Float_t &ymin, Float_t &zmin, Float_t &xmax, F
 }
 
 //______________________________________________________________________________
+Double_t TF2::Integral(Float_t ax, Float_t bx, Float_t ay, Float_t by, Float_t epsilon)
+{
+// Return Integral of a 2d function in range [ax,bx],[ay,by]
+//
+   Float_t a[2], b[2];
+   a[0] = ax;
+   b[0] = bx;
+   a[1] = ay;
+   b[1] = by;
+   Float_t relerr  = 0;
+   Double_t result = IntegralMultiple(2,a,b,epsilon,relerr);
+   return result;
+}
+
+//______________________________________________________________________________
 void TF2::Paint(Option_t *option)
 {
 //*-*-*-*-*-*-*-*-*Paint this 2-D function with its current attributes*-*-*-*-*
@@ -368,9 +437,11 @@ void TF2::Paint(Option_t *option)
    fHistogram->Fill(fXmin-1,fYmin-1,0);  //This call to force fNentries non zero
 
 //*-*- Copy Function attributes to histogram attributes
+   Float_t *levels = fContour.GetArray();
+   if (levels && levels[0] == -9999) levels = 0;
    fHistogram->SetMinimum(fMinimum);
    fHistogram->SetMaximum(fMaximum);
-   fHistogram->SetContour(GetContour());
+   fHistogram->SetContour(fContour.fN, levels);
    fHistogram->SetLineColor(GetLineColor());
    fHistogram->SetLineStyle(GetLineStyle());
    fHistogram->SetLineWidth(GetLineWidth());
@@ -381,10 +452,50 @@ void TF2::Paint(Option_t *option)
    fHistogram->SetMarkerSize(GetMarkerSize());
 
 //*-*-  Draw the histogram
+   Int_t optStat = gStyle->GetOptStat();
+   gStyle->SetOptStat(0);
    if (opt.Length() == 0)  fHistogram->Paint("cont3");
    else if (opt == "same") fHistogram->Paint("cont2same");
    else                    fHistogram->Paint(option);
+   gStyle->SetOptStat(optStat);
 
+}
+
+
+//______________________________________________________________________________
+void TF2::SetContour(Int_t  nlevels, Float_t *levels)
+{
+//*-*-*-*-*-*-*-*Set the number and values of contour levels*-*-*-*-*-*-*-*-*
+//*-*            ===========================================
+//
+//  By default the number of contour levels is set to 20.
+//
+//  if argument levels = 0 or missing, equidistant contours are computed
+//
+
+  Int_t level;
+  if (nlevels <=0 ) {
+     fContour.Set(0);
+     return;
+  }
+  fContour.Set(nlevels);
+
+//*-*-  Contour levels are specified
+  if (levels) {
+     for (level=0; level<nlevels; level++) fContour.fArray[level] = levels[level];
+  } else {
+     fContour.fArray[0] = -9999; // means not defined at this point
+  }
+}
+
+
+//______________________________________________________________________________
+void TF2::SetContourLevel(Int_t level, Float_t value)
+{
+//*-*-*-*-*-*-*-*-*-*-*Set value for one contour level*-*-*-*-*-*-*-*-*-*-*-*
+//*-*                  ===============================
+  if (level <0 || level >= fContour.fN) return;
+  fContour.fArray[level] = value;
 }
 
 //______________________________________________________________________________
@@ -408,4 +519,31 @@ void TF2::SetRange(Float_t xmin, Float_t ymin, Float_t xmax, Float_t ymax)
    fYmin = ymin;
    fYmax = ymax;
    Update();
+}
+
+//______________________________________________________________________________
+void TF2::Streamer(TBuffer &R__b)
+{
+   // Stream an object of class TF2.
+
+   Int_t nlevels;
+   if (R__b.IsReading()) {
+      Version_t R__v = R__b.ReadVersion();
+      TF1::Streamer(R__b);
+      R__b >> fYmin;
+      R__b >> fYmax;
+      R__b >> fNpy;
+      R__b >> nlevels;
+      if (R__v > 1) {
+         fContour.Streamer(R__b);
+      }
+   } else {
+      R__b.WriteVersion(TF2::IsA());
+      TF1::Streamer(R__b);
+      R__b << fYmin;
+      R__b << fYmax;
+      R__b << fNpy;
+      R__b << fContour.fN; // must also save fN for backward compatibility
+      fContour.Streamer(R__b);
+   }
 }

@@ -1,5 +1,5 @@
-//*CMZ :  2.20/00 09/11/98  18.43.19  by  Rene Brun
-//*-- Author :    Rene Brun   09/11/98
+//*CMZ :  2.21/08 10/03/99  09.07.52  by  Rene Brun
+//*-- Author :    Rene Brun   10/03/99
 //*CMZ :  1.00/09 23/04/97  17.59.54  by  Rene Brun
 //*-- Author :    Rene Brun   23/04/97
 #if defined(__hpux) && !defined(__GNUG__)
@@ -70,14 +70,16 @@ extern G__linked_taginfo G__G__MinuitLN_TMinuit;
 #undef malloc
 #endif
 
+extern "C" void G__cpp_reset_tagtableG__Minuit();
 
 extern "C" void G__set_cpp_environmentG__Minuit() {
   G__add_macro("__MAKECINT__");
   G__add_compiledheader("TROOT.h");
   G__add_compiledheader("TMemberInspector.h");
   G__add_compiledheader("TMinuit.h");
+  G__cpp_reset_tagtableG__Minuit();
 }
-int G__cpp_dllrevG__Minuit() { return(51111); }
+extern "C" int G__cpp_dllrevG__Minuit() { return(51111); }
 
 /*********************************************************
 * Member function Interface Method
@@ -119,7 +121,12 @@ static int G__TMinuit_BuildArrays_4_0(G__value *result7,char *funcname,struct G_
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TMinuit_Contour_5_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TMinuit_Command_5_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TMinuit*)(G__getstructoffset()))->Command((const char*)G__int(libp->para[0])));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TMinuit_Contour_6_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 4:
       G__letint(result7,85,(long)((TMinuit*)(G__getstructoffset()))->Contour((const char*)G__int(libp->para[0]),(Int_t)G__int(libp->para[1])
@@ -139,57 +146,62 @@ static int G__TMinuit_Contour_5_0(G__value *result7,char *funcname,struct G__par
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TMinuit_DeleteArrays_6_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TMinuit_DefineParameter_7_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TMinuit*)(G__getstructoffset()))->DefineParameter((Int_t)G__int(libp->para[0]),(const char*)G__int(libp->para[1])
+,(Double_t)G__double(libp->para[2]),(Double_t)G__double(libp->para[3])
+,(Double_t)G__double(libp->para[4]),(Double_t)G__double(libp->para[5])));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TMinuit_DeleteArrays_8_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TMinuit*)(G__getstructoffset()))->DeleteArrays();
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TMinuit_GetMethodCall_7_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TMinuit_FixParameter_9_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TMinuit*)(G__getstructoffset()))->FixParameter((Int_t)G__int(libp->para[0])));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TMinuit_GetMethodCall_0_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((TMinuit*)(G__getstructoffset()))->GetMethodCall());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TMinuit_GetObjectFit_8_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TMinuit_GetObjectFit_1_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((TMinuit*)(G__getstructoffset()))->GetObjectFit());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TMinuit_GetMaxIterations_9_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TMinuit_GetMaxIterations_2_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TMinuit*)(G__getstructoffset()))->GetMaxIterations());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TMinuit_GetStatus_0_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TMinuit_GetParameter_3_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TMinuit*)(G__getstructoffset()))->GetParameter((Int_t)G__int(libp->para[0]),libp->para[1].ref?*(Double_t*)libp->para[1].ref:G__Mdouble(libp->para[1])
+,libp->para[2].ref?*(Double_t*)libp->para[2].ref:G__Mdouble(libp->para[2])));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TMinuit_GetStatus_4_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TMinuit*)(G__getstructoffset()))->GetStatus());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TMinuit_SetObjectFit_1_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
-      G__setnull(result7);
-      ((TMinuit*)(G__getstructoffset()))->SetObjectFit((TObject*)G__int(libp->para[0]));
+static int G__TMinuit_Migrad_5_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TMinuit*)(G__getstructoffset()))->Migrad());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TMinuit_SetFCN_2_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
-      G__setnull(result7);
-      ((TMinuit*)(G__getstructoffset()))->SetFCN((void*)G__int(libp->para[0]));
-   return(1 || funcname || hash || result7 || libp) ;
-}
-
-static int G__TMinuit_SetFCN_3_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
-      G__setnull(result7);
-      ((TMinuit*)(G__getstructoffset()))->SetFCN((void (*)(Int_t&, Double_t*, Double_t&f, Double_t*, Int_t))G__int(libp->para[0]));
-   return(1 || funcname || hash || result7 || libp) ;
-}
-
-static int G__TMinuit_mnamin_4_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TMinuit_mnamin_6_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TMinuit*)(G__getstructoffset()))->mnamin();
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TMinuit_mnbins_5_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TMinuit_mnbins_7_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TMinuit*)(G__getstructoffset()))->mnbins(
 (Double_t)G__double(libp->para[0]),(Double_t)G__double(libp->para[1])
@@ -199,32 +211,32 @@ static int G__TMinuit_mnbins_5_1(G__value *result7,char *funcname,struct G__para
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TMinuit_mncalf_6_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TMinuit_mncalf_8_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TMinuit*)(G__getstructoffset()))->mncalf((Double_t*)G__int(libp->para[0]),libp->para[1].ref?*(Double_t*)libp->para[1].ref:G__Mdouble(libp->para[1]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TMinuit_mncler_7_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TMinuit_mncler_9_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TMinuit*)(G__getstructoffset()))->mncler();
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TMinuit_mncntr_8_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TMinuit_mncntr_0_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TMinuit*)(G__getstructoffset()))->mncntr((Int_t)G__int(libp->para[0]),(Int_t)G__int(libp->para[1])
 ,libp->para[2].ref?*(Int_t*)libp->para[2].ref:G__Mint(libp->para[2]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TMinuit_mncomd_9_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TMinuit_mncomd_1_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
-      ((TMinuit*)(G__getstructoffset()))->mncomd(*((TString*)G__int(libp->para[0])),libp->para[1].ref?*(Int_t*)libp->para[1].ref:G__Mint(libp->para[1]));
+      ((TMinuit*)(G__getstructoffset()))->mncomd((const char*)G__int(libp->para[0]),libp->para[1].ref?*(Int_t*)libp->para[1].ref:G__Mint(libp->para[1]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TMinuit_mncont_0_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TMinuit_mncont_2_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TMinuit*)(G__getstructoffset()))->mncont((Int_t)G__int(libp->para[0]),(Int_t)G__int(libp->para[1])
 ,(Int_t)G__int(libp->para[2]),(Double_t*)G__int(libp->para[3])
@@ -232,10 +244,10 @@ static int G__TMinuit_mncont_0_2(G__value *result7,char *funcname,struct G__para
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TMinuit_mncrck_1_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TMinuit_mncrck_3_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TMinuit*)(G__getstructoffset()))->mncrck(
-*(TString*)libp->para[0].ref,(Int_t)G__int(libp->para[1])
+*((TString*)G__int(libp->para[0])),(Int_t)G__int(libp->para[1])
 ,*(TString*)libp->para[2].ref,libp->para[3].ref?*(Int_t*)libp->para[3].ref:G__Mint(libp->para[3])
 ,(Int_t)G__int(libp->para[4]),(Double_t*)G__int(libp->para[5])
 ,libp->para[6].ref?*(Int_t*)libp->para[6].ref:G__Mint(libp->para[6]),libp->para[7].ref?*(Int_t*)libp->para[7].ref:G__Mint(libp->para[7])
@@ -243,32 +255,32 @@ static int G__TMinuit_mncrck_1_2(G__value *result7,char *funcname,struct G__para
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TMinuit_mncros_2_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TMinuit_mncros_4_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TMinuit*)(G__getstructoffset()))->mncros(libp->para[0].ref?*(Double_t*)libp->para[0].ref:G__Mdouble(libp->para[0]),libp->para[1].ref?*(Int_t*)libp->para[1].ref:G__Mint(libp->para[1]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TMinuit_mncuve_3_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TMinuit_mncuve_5_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TMinuit*)(G__getstructoffset()))->mncuve();
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TMinuit_mnderi_4_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TMinuit_mnderi_6_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TMinuit*)(G__getstructoffset()))->mnderi();
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TMinuit_mndxdi_5_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TMinuit_mndxdi_7_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TMinuit*)(G__getstructoffset()))->mndxdi((Double_t)G__double(libp->para[0]),(Int_t)G__int(libp->para[1])
 ,libp->para[2].ref?*(Double_t*)libp->para[2].ref:G__Mdouble(libp->para[2]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TMinuit_mneig_6_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TMinuit_mneig_8_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TMinuit*)(G__getstructoffset()))->mneig(
 (Double_t*)G__int(libp->para[0]),(Int_t)G__int(libp->para[1])
@@ -278,13 +290,13 @@ static int G__TMinuit_mneig_6_2(G__value *result7,char *funcname,struct G__param
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TMinuit_mnemat_7_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TMinuit_mnemat_9_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TMinuit*)(G__getstructoffset()))->mnemat((Double_t*)G__int(libp->para[0]),(Int_t)G__int(libp->para[1]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TMinuit_mnerrs_8_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TMinuit_mnerrs_0_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TMinuit*)(G__getstructoffset()))->mnerrs((Int_t)G__int(libp->para[0]),libp->para[1].ref?*(Double_t*)libp->para[1].ref:G__Mdouble(libp->para[1])
 ,libp->para[2].ref?*(Double_t*)libp->para[2].ref:G__Mdouble(libp->para[2]),libp->para[3].ref?*(Double_t*)libp->para[3].ref:G__Mdouble(libp->para[3])
@@ -292,88 +304,88 @@ static int G__TMinuit_mnerrs_8_2(G__value *result7,char *funcname,struct G__para
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TMinuit_mneval_9_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TMinuit_mneval_1_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TMinuit*)(G__getstructoffset()))->mneval((Double_t)G__double(libp->para[0]),libp->para[1].ref?*(Double_t*)libp->para[1].ref:G__Mdouble(libp->para[1])
 ,libp->para[2].ref?*(Int_t*)libp->para[2].ref:G__Mint(libp->para[2]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TMinuit_mnexcm_0_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TMinuit_mnexcm_2_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TMinuit*)(G__getstructoffset()))->mnexcm(*((TString*)G__int(libp->para[0])),(Double_t*)G__int(libp->para[1])
 ,(Int_t)G__int(libp->para[2]),libp->para[3].ref?*(Int_t*)libp->para[3].ref:G__Mint(libp->para[3]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TMinuit_mnexin_1_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TMinuit_mnexin_3_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TMinuit*)(G__getstructoffset()))->mnexin((Double_t*)G__int(libp->para[0]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TMinuit_mnfixp_2_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TMinuit_mnfixp_4_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TMinuit*)(G__getstructoffset()))->mnfixp((Int_t)G__int(libp->para[0]),libp->para[1].ref?*(Int_t*)libp->para[1].ref:G__Mint(libp->para[1]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TMinuit_mnfree_3_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TMinuit_mnfree_5_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TMinuit*)(G__getstructoffset()))->mnfree((Int_t)G__int(libp->para[0]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TMinuit_mngrad_4_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TMinuit_mngrad_6_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TMinuit*)(G__getstructoffset()))->mngrad();
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TMinuit_mnhelp_5_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TMinuit_mnhelp_7_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TMinuit*)(G__getstructoffset()))->mnhelp(*((TString*)G__int(libp->para[0])));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TMinuit_mnhess_6_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TMinuit_mnhess_8_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TMinuit*)(G__getstructoffset()))->mnhess();
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TMinuit_mnhes1_7_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TMinuit_mnhes1_9_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TMinuit*)(G__getstructoffset()))->mnhes1();
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TMinuit_mnimpr_8_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TMinuit_mnimpr_0_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TMinuit*)(G__getstructoffset()))->mnimpr();
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TMinuit_mninex_9_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TMinuit_mninex_1_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TMinuit*)(G__getstructoffset()))->mninex((Double_t*)G__int(libp->para[0]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TMinuit_mninit_0_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TMinuit_mninit_2_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TMinuit*)(G__getstructoffset()))->mninit((Int_t)G__int(libp->para[0]),(Int_t)G__int(libp->para[1])
 ,(Int_t)G__int(libp->para[2]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TMinuit_mnlims_1_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TMinuit_mnlims_3_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TMinuit*)(G__getstructoffset()))->mnlims();
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TMinuit_mnline_2_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TMinuit_mnline_4_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TMinuit*)(G__getstructoffset()))->mnline((Double_t*)G__int(libp->para[0]),(Double_t)G__double(libp->para[1])
 ,(Double_t*)G__int(libp->para[2]),(Double_t)G__double(libp->para[3])
@@ -381,32 +393,32 @@ static int G__TMinuit_mnline_2_4(G__value *result7,char *funcname,struct G__para
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TMinuit_mnmatu_3_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TMinuit_mnmatu_5_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TMinuit*)(G__getstructoffset()))->mnmatu((Int_t)G__int(libp->para[0]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TMinuit_mnmigr_4_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TMinuit_mnmigr_6_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TMinuit*)(G__getstructoffset()))->mnmigr();
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TMinuit_mnmnos_5_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TMinuit_mnmnos_7_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TMinuit*)(G__getstructoffset()))->mnmnos();
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TMinuit_mnmnot_6_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TMinuit_mnmnot_8_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TMinuit*)(G__getstructoffset()))->mnmnot((Int_t)G__int(libp->para[0]),(Int_t)G__int(libp->para[1])
 ,libp->para[2].ref?*(Double_t*)libp->para[2].ref:G__Mdouble(libp->para[2]),libp->para[3].ref?*(Double_t*)libp->para[3].ref:G__Mdouble(libp->para[3]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TMinuit_mnparm_7_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TMinuit_mnparm_9_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TMinuit*)(G__getstructoffset()))->mnparm(
 (Int_t)G__int(libp->para[0]),*((TString*)G__int(libp->para[1]))
@@ -416,13 +428,13 @@ static int G__TMinuit_mnparm_7_4(G__value *result7,char *funcname,struct G__para
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TMinuit_mnpars_8_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TMinuit_mnpars_0_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TMinuit*)(G__getstructoffset()))->mnpars(*(TString*)libp->para[0].ref,libp->para[1].ref?*(Int_t*)libp->para[1].ref:G__Mint(libp->para[1]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TMinuit_mnpfit_9_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TMinuit_mnpfit_1_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TMinuit*)(G__getstructoffset()))->mnpfit((Double_t*)G__int(libp->para[0]),(Double_t*)G__int(libp->para[1])
 ,(Int_t)G__int(libp->para[2]),(Double_t*)G__int(libp->para[3])
@@ -430,22 +442,22 @@ static int G__TMinuit_mnpfit_9_4(G__value *result7,char *funcname,struct G__para
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TMinuit_mnpint_0_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TMinuit_mnpint_2_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TMinuit*)(G__getstructoffset()))->mnpint(libp->para[0].ref?*(Double_t*)libp->para[0].ref:G__Mdouble(libp->para[0]),(Int_t)G__int(libp->para[1])
 ,libp->para[2].ref?*(Double_t*)libp->para[2].ref:G__Mdouble(libp->para[2]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TMinuit_mnplot_1_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TMinuit_mnplot_3_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TMinuit*)(G__getstructoffset()))->mnplot((Double_t*)G__int(libp->para[0]),(Double_t*)G__int(libp->para[1])
-,(TString*)G__int(libp->para[2]),(Int_t)G__int(libp->para[3])
+,(char*)G__int(libp->para[2]),(Int_t)G__int(libp->para[3])
 ,(Int_t)G__int(libp->para[4]),(Int_t)G__int(libp->para[5]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TMinuit_mnpout_2_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TMinuit_mnpout_4_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TMinuit*)(G__getstructoffset()))->mnpout(
 (Int_t)G__int(libp->para[0]),*((TString*)G__int(libp->para[1]))
@@ -455,19 +467,19 @@ static int G__TMinuit_mnpout_2_5(G__value *result7,char *funcname,struct G__para
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TMinuit_mnprin_3_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TMinuit_mnprin_5_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TMinuit*)(G__getstructoffset()))->mnprin((Int_t)G__int(libp->para[0]),(Double_t)G__double(libp->para[1]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TMinuit_mnpsdf_4_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TMinuit_mnpsdf_6_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TMinuit*)(G__getstructoffset()))->mnpsdf();
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TMinuit_mnrazz_5_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TMinuit_mnrazz_7_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TMinuit*)(G__getstructoffset()))->mnrazz((Double_t)G__double(libp->para[0]),(Double_t*)G__int(libp->para[1])
 ,(Double_t*)G__int(libp->para[2]),libp->para[3].ref?*(Int_t*)libp->para[3].ref:G__Mint(libp->para[3])
@@ -475,49 +487,49 @@ static int G__TMinuit_mnrazz_5_5(G__value *result7,char *funcname,struct G__para
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TMinuit_mnrn15_6_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TMinuit_mnrn15_8_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TMinuit*)(G__getstructoffset()))->mnrn15(libp->para[0].ref?*(Double_t*)libp->para[0].ref:G__Mdouble(libp->para[0]),libp->para[1].ref?*(Int_t*)libp->para[1].ref:G__Mint(libp->para[1]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TMinuit_mnrset_7_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TMinuit_mnrset_9_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TMinuit*)(G__getstructoffset()))->mnrset((Int_t)G__int(libp->para[0]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TMinuit_mnsave_8_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TMinuit_mnsave_0_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TMinuit*)(G__getstructoffset()))->mnsave();
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TMinuit_mnscan_9_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TMinuit_mnscan_1_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TMinuit*)(G__getstructoffset()))->mnscan();
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TMinuit_mnseek_0_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TMinuit_mnseek_2_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TMinuit*)(G__getstructoffset()))->mnseek();
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TMinuit_mnset_1_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TMinuit_mnset_3_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TMinuit*)(G__getstructoffset()))->mnset();
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TMinuit_mnsimp_2_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TMinuit_mnsimp_4_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TMinuit*)(G__getstructoffset()))->mnsimp();
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TMinuit_mnstat_3_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TMinuit_mnstat_5_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TMinuit*)(G__getstructoffset()))->mnstat(libp->para[0].ref?*(Double_t*)libp->para[0].ref:G__Mdouble(libp->para[0]),libp->para[1].ref?*(Double_t*)libp->para[1].ref:G__Mdouble(libp->para[1])
 ,libp->para[2].ref?*(Double_t*)libp->para[2].ref:G__Mdouble(libp->para[2]),libp->para[3].ref?*(Int_t*)libp->para[3].ref:G__Mint(libp->para[3])
@@ -525,18 +537,18 @@ static int G__TMinuit_mnstat_3_6(G__value *result7,char *funcname,struct G__para
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TMinuit_mntiny_4_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TMinuit_mntiny_6_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TMinuit*)(G__getstructoffset()))->mntiny((Double_t)G__double(libp->para[0]),libp->para[1].ref?*(Double_t*)libp->para[1].ref:G__Mdouble(libp->para[1]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TMinuit_mnunpt_5_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TMinuit_mnunpt_7_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,98,(long)((TMinuit*)(G__getstructoffset()))->mnunpt(*(TString*)libp->para[0].ref));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TMinuit_mnvert_6_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TMinuit_mnvert_8_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TMinuit*)(G__getstructoffset()))->mnvert((Double_t*)G__int(libp->para[0]),(Int_t)G__int(libp->para[1])
 ,(Int_t)G__int(libp->para[2]),(Int_t)G__int(libp->para[3])
@@ -544,20 +556,42 @@ static int G__TMinuit_mnvert_6_6(G__value *result7,char *funcname,struct G__para
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TMinuit_mnwarn_7_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TMinuit_mnwarn_9_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TMinuit*)(G__getstructoffset()))->mnwarn((const char*)G__int(libp->para[0]),(const char*)G__int(libp->para[1])
 ,(const char*)G__int(libp->para[2]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TMinuit_mnwerr_8_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TMinuit_mnwerr_0_7(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TMinuit*)(G__getstructoffset()))->mnwerr();
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TMinuit_SetMaxIterations_9_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TMinuit_Release_1_7(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TMinuit*)(G__getstructoffset()))->Release((Int_t)G__int(libp->para[0])));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TMinuit_SetErrorDef_2_7(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TMinuit*)(G__getstructoffset()))->SetErrorDef((Double_t)G__double(libp->para[0])));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TMinuit_SetFCN_3_7(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TMinuit*)(G__getstructoffset()))->SetFCN((void*)G__int(libp->para[0]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TMinuit_SetFCN_4_7(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TMinuit*)(G__getstructoffset()))->SetFCN((void (*)(Int_t&, Double_t*, Double_t&f, Double_t*, Int_t))G__int(libp->para[0]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TMinuit_SetMaxIterations_5_7(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -571,61 +605,79 @@ static int G__TMinuit_SetMaxIterations_9_6(G__value *result7,char *funcname,stru
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TMinuit_DeclFileName_0_7(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TMinuit_SetObjectFit_6_7(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TMinuit*)(G__getstructoffset()))->SetObjectFit((TObject*)G__int(libp->para[0]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TMinuit_SetPrintLevel_7_7(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 1:
+      G__letint(result7,105,(long)((TMinuit*)(G__getstructoffset()))->SetPrintLevel((Int_t)G__int(libp->para[0])));
+      break;
+   case 0:
+      G__letint(result7,105,(long)((TMinuit*)(G__getstructoffset()))->SetPrintLevel());
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TMinuit_DeclFileName_8_7(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,67,(long)((TMinuit*)(G__getstructoffset()))->DeclFileName());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TMinuit_DeclFileLine_1_7(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TMinuit_DeclFileLine_9_7(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TMinuit*)(G__getstructoffset()))->DeclFileLine());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TMinuit_ImplFileName_2_7(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TMinuit_ImplFileName_0_8(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,67,(long)((TMinuit*)(G__getstructoffset()))->ImplFileName());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TMinuit_ImplFileLine_3_7(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TMinuit_ImplFileLine_1_8(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TMinuit*)(G__getstructoffset()))->ImplFileLine());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TMinuit_Class_Version_4_7(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TMinuit_Class_Version_2_8(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,115,(long)((TMinuit*)(G__getstructoffset()))->Class_Version());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TMinuit_Class_5_7(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TMinuit_Class_3_8(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((TMinuit*)(G__getstructoffset()))->Class());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TMinuit_Dictionary_6_7(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TMinuit_Dictionary_4_8(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TMinuit*)(G__getstructoffset()))->Dictionary();
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TMinuit_IsA_7_7(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TMinuit_IsA_5_8(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((TMinuit*)(G__getstructoffset()))->IsA());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TMinuit_ShowMembers_8_7(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TMinuit_ShowMembers_6_8(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TMinuit*)(G__getstructoffset()))->ShowMembers(*(TMemberInspector*)libp->para[0].ref,(char*)G__int(libp->para[1]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TMinuit_Streamer_9_7(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TMinuit_Streamer_7_8(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TMinuit*)(G__getstructoffset()))->Streamer(*(TBuffer*)libp->para[0].ref);
    return(1 || funcname || hash || result7 || libp) ;
 }
 
 // automatic destructor
-static int G__TMinuit_wATMinuit_0_8(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TMinuit_wATMinuit_8_8(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    if(G__getaryconstruct())
      if(G__PVOID==G__getgvp())
        delete[] (TMinuit *)(G__getstructoffset());
@@ -883,7 +935,7 @@ static void G__setup_memvarTMinuit(void) {
    G__memvar_setup((void*)((long)(&p->fUpdflt)-(long)(p)),100,0,0,-1,G__defined_typename("Double_t"),-1,1,"fUpdflt=",0,(char*)NULL);
    G__memvar_setup((void*)((long)(&p->fXpt)-(long)(p)),68,0,0,-1,G__defined_typename("Double_t"),-1,1,"fXpt=",0,"X array of points for contours");
    G__memvar_setup((void*)((long)(&p->fYpt)-(long)(p)),68,0,0,-1,G__defined_typename("Double_t"),-1,1,"fYpt=",0,"Y array of points for contours");
-   G__memvar_setup((void*)((long)(&p->fChpt)-(long)(p)),85,0,0,G__get_linked_tagnum(&G__G__MinuitLN_TString),-1,-1,1,"fChpt=",0,"Character to be plotted at the X,Y contour positions");
+   G__memvar_setup((void*)((long)(&p->fChpt)-(long)(p)),67,0,0,-1,-1,-1,1,"fChpt=",0,"Character to be plotted at the X,Y contour positions");
    G__memvar_setup((void*)((long)(&p->fXmidcr)-(long)(p)),100,0,0,-1,G__defined_typename("Double_t"),-1,1,"fXmidcr=",0,(char*)NULL);
    G__memvar_setup((void*)((long)(&p->fYmidcr)-(long)(p)),100,0,0,-1,G__defined_typename("Double_t"),-1,1,"fYmidcr=",0,(char*)NULL);
    G__memvar_setup((void*)((long)(&p->fXdircr)-(long)(p)),100,0,0,-1,G__defined_typename("Double_t"),-1,1,"fXdircr=",0,(char*)NULL);
@@ -924,156 +976,169 @@ static void G__setup_memfuncTMinuit(void) {
    G__memfunc_setup("TMinuit",714,G__TMinuit_TMinuit_1_0,105,G__get_linked_tagnum(&G__G__MinuitLN_TMinuit),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
    G__memfunc_setup("TMinuit",714,G__TMinuit_TMinuit_2_0,105,G__get_linked_tagnum(&G__G__MinuitLN_TMinuit),-1,0,1,1,1,0,"i - 'Int_t' 0 - maxpar",(char*)NULL,(void*)NULL,0);
    G__memfunc_setup("BuildArrays",1122,G__TMinuit_BuildArrays_4_0,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 15 maxpar",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("Contour",746,G__TMinuit_Contour_5_0,85,G__get_linked_tagnum(&G__G__MinuitLN_TGraph),-1,0,4,1,1,0,
+   G__memfunc_setup("Command",703,G__TMinuit_Command_5_0,105,-1,G__defined_typename("Int_t"),0,1,1,1,0,"C - - 0 - command",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Contour",746,G__TMinuit_Contour_6_0,85,G__get_linked_tagnum(&G__G__MinuitLN_TGraph),-1,0,4,1,1,0,
 "C - - 0 - graphname i - 'Int_t' 0 10 npoints "
 "i - 'Int_t' 0 1 pa1 i - 'Int_t' 0 2 pa2",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("DeleteArrays",1221,G__TMinuit_DeleteArrays_6_0,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("GetMethodCall",1277,G__TMinuit_GetMethodCall_7_0,85,G__get_linked_tagnum(&G__G__MinuitLN_TMethodCall),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetObjectFit",1178,G__TMinuit_GetObjectFit_8_0,85,G__get_linked_tagnum(&G__G__MinuitLN_TObject),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetMaxIterations",1640,G__TMinuit_GetMaxIterations_9_0,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetStatus",932,G__TMinuit_GetStatus_0_1,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("SetObjectFit",1190,G__TMinuit_SetObjectFit_1_1,121,-1,-1,0,1,1,1,0,"U 'TObject' - 0 - obj",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("SetFCN",515,G__TMinuit_SetFCN_2_1,121,-1,-1,0,1,1,1,0,"Y - - 0 - fcn",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("SetFCN",515,G__TMinuit_SetFCN_3_1,121,-1,-1,0,1,1,1,0,"Q - 'void (*)(Int_t&, Double_t*, Double_t&f, Double_t*, Int_t)' 0 - fcn",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("mnamin",640,G__TMinuit_mnamin_4_1,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("mnbins",647,G__TMinuit_mnbins_5_1,121,-1,-1,0,7,1,1,0,
+   G__memfunc_setup("DefineParameter",1516,G__TMinuit_DefineParameter_7_0,105,-1,G__defined_typename("Int_t"),0,6,1,1,0,
+"i - 'Int_t' 0 - parNo C - - 0 - name "
+"d - 'Double_t' 0 - initVal d - 'Double_t' 0 - initErr "
+"d - 'Double_t' 0 - lowerLimit d - 'Double_t' 0 - upperLimit",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("DeleteArrays",1221,G__TMinuit_DeleteArrays_8_0,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("FixParameter",1224,G__TMinuit_FixParameter_9_0,105,-1,G__defined_typename("Int_t"),0,1,1,1,0,"i - 'Int_t' 0 - parNo",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetMethodCall",1277,G__TMinuit_GetMethodCall_0_1,85,G__get_linked_tagnum(&G__G__MinuitLN_TMethodCall),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetObjectFit",1178,G__TMinuit_GetObjectFit_1_1,85,G__get_linked_tagnum(&G__G__MinuitLN_TObject),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetMaxIterations",1640,G__TMinuit_GetMaxIterations_2_1,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetParameter",1217,G__TMinuit_GetParameter_3_1,105,-1,G__defined_typename("Int_t"),0,3,1,1,0,
+"i - 'Int_t' 0 - parNo d - 'Double_t' 1 - currentValue "
+"d - 'Double_t' 1 - currentError",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetStatus",932,G__TMinuit_GetStatus_4_1,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Migrad",596,G__TMinuit_Migrad_5_1,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("mnamin",640,G__TMinuit_mnamin_6_1,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("mnbins",647,G__TMinuit_mnbins_7_1,121,-1,-1,0,7,1,1,0,
 "d - 'Double_t' 0 - a1 d - 'Double_t' 0 - a2 "
 "i - 'Int_t' 0 - naa d - 'Double_t' 1 - bl "
 "d - 'Double_t' 1 - bh i - 'Int_t' 1 - nb "
 "d - 'Double_t' 1 - bwid",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("mncalf",625,G__TMinuit_mncalf_6_1,121,-1,-1,0,2,1,1,0,
+   G__memfunc_setup("mncalf",625,G__TMinuit_mncalf_8_1,121,-1,-1,0,2,1,1,0,
 "D - 'Double_t' 0 - pvec d - 'Double_t' 1 - ycalf",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("mncler",641,G__TMinuit_mncler_7_1,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("mncntr",658,G__TMinuit_mncntr_8_1,121,-1,-1,0,3,1,1,0,
+   G__memfunc_setup("mncler",641,G__TMinuit_mncler_9_1,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("mncntr",658,G__TMinuit_mncntr_0_2,121,-1,-1,0,3,1,1,0,
 "i - 'Int_t' 0 - ke1 i - 'Int_t' 0 - ke2 "
 "i - 'Int_t' 1 - ierrf",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("mncomd",638,G__TMinuit_mncomd_9_1,121,-1,-1,0,2,1,1,0,
-"u 'TString' - 0 - crdbin i - 'Int_t' 1 - icondn",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("mncont",655,G__TMinuit_mncont_0_2,121,-1,-1,0,6,1,1,0,
+   G__memfunc_setup("mncomd",638,G__TMinuit_mncomd_1_2,121,-1,-1,0,2,1,1,0,
+"C - - 0 - crdbin i - 'Int_t' 1 - icondn",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("mncont",655,G__TMinuit_mncont_2_2,121,-1,-1,0,6,1,1,0,
 "i - 'Int_t' 0 - ke1 i - 'Int_t' 0 - ke2 "
 "i - 'Int_t' 0 - nptu D - 'Double_t' 0 - xptu "
 "D - 'Double_t' 0 - yptu i - 'Int_t' 1 - ierrf",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("mncrck",638,G__TMinuit_mncrck_1_2,121,-1,-1,0,9,1,1,0,
-"u 'TString' - 1 - crdbuf i - 'Int_t' 0 - maxcwd "
+   G__memfunc_setup("mncrck",638,G__TMinuit_mncrck_3_2,121,-1,-1,0,9,1,1,0,
+"u 'TString' - 0 - crdbuf i - 'Int_t' 0 - maxcwd "
 "u 'TString' - 1 - comand i - 'Int_t' 1 - lnc "
 "i - 'Int_t' 0 - mxp D - 'Double_t' 0 - plist "
 "i - 'Int_t' 1 - llist i - 'Int_t' 1 - ierr "
 "i - 'Int_t' 0 - isyswr",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("mncros",658,G__TMinuit_mncros_2_2,121,-1,-1,0,2,1,1,0,
+   G__memfunc_setup("mncros",658,G__TMinuit_mncros_4_2,121,-1,-1,0,2,1,1,0,
 "d - 'Double_t' 1 - aopt i - 'Int_t' 1 - iercr",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("mncuve",654,G__TMinuit_mncuve_3_2,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("mnderi",639,G__TMinuit_mnderi_4_2,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("mndxdi",644,G__TMinuit_mndxdi_5_2,121,-1,-1,0,3,1,1,0,
+   G__memfunc_setup("mncuve",654,G__TMinuit_mncuve_5_2,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("mnderi",639,G__TMinuit_mnderi_6_2,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("mndxdi",644,G__TMinuit_mndxdi_7_2,121,-1,-1,0,3,1,1,0,
 "d - 'Double_t' 0 - pint i - 'Int_t' 0 - ipar "
 "d - 'Double_t' 1 - dxdi",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("mneig",528,G__TMinuit_mneig_6_2,121,-1,-1,0,7,1,1,0,
+   G__memfunc_setup("mneig",528,G__TMinuit_mneig_8_2,121,-1,-1,0,7,1,1,0,
 "D - 'Double_t' 0 - a i - 'Int_t' 0 - ndima "
 "i - 'Int_t' 0 - n i - 'Int_t' 0 - mits "
 "D - 'Double_t' 0 - work d - 'Double_t' 0 - precis "
 "i - 'Int_t' 1 - ifault",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("mnemat",642,G__TMinuit_mnemat_7_2,121,-1,-1,0,2,1,1,0,
+   G__memfunc_setup("mnemat",642,G__TMinuit_mnemat_9_2,121,-1,-1,0,2,1,1,0,
 "D - 'Double_t' 0 - emat i - 'Int_t' 0 - ndim",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("mnerrs",663,G__TMinuit_mnerrs_8_2,121,-1,-1,0,5,1,1,0,
+   G__memfunc_setup("mnerrs",663,G__TMinuit_mnerrs_0_3,121,-1,-1,0,5,1,1,0,
 "i - 'Int_t' 0 - number d - 'Double_t' 1 - eplus "
 "d - 'Double_t' 1 - eminus d - 'Double_t' 1 - eparab "
 "d - 'Double_t' 1 - gcc",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("mneval",643,G__TMinuit_mneval_9_2,121,-1,-1,0,3,1,1,0,
+   G__memfunc_setup("mneval",643,G__TMinuit_mneval_1_3,121,-1,-1,0,3,1,1,0,
 "d - 'Double_t' 0 - anext d - 'Double_t' 1 - fnext "
 "i - 'Int_t' 1 - ierev",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("mnexcm",648,G__TMinuit_mnexcm_0_3,121,-1,-1,0,4,1,1,0,
+   G__memfunc_setup("mnexcm",648,G__TMinuit_mnexcm_2_3,121,-1,-1,0,4,1,1,0,
 "u 'TString' - 0 - comand D - 'Double_t' 0 - plist "
 "i - 'Int_t' 0 - llist i - 'Int_t' 1 - ierflg",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("mnexin",655,G__TMinuit_mnexin_1_3,121,-1,-1,0,1,1,1,0,"D - 'Double_t' 0 - pint",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("mnfixp",658,G__TMinuit_mnfixp_2_3,121,-1,-1,0,2,1,1,0,
+   G__memfunc_setup("mnexin",655,G__TMinuit_mnexin_3_3,121,-1,-1,0,1,1,1,0,"D - 'Double_t' 0 - pint",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("mnfixp",658,G__TMinuit_mnfixp_4_3,121,-1,-1,0,2,1,1,0,
 "i - 'Int_t' 0 - iint i - 'Int_t' 1 - ierr",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("mnfree",637,G__TMinuit_mnfree_3_3,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 - k",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("mngrad",633,G__TMinuit_mngrad_4_3,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("mnhelp",644,G__TMinuit_mnhelp_5_3,121,-1,-1,0,1,1,1,0,"u 'TString' - 0 - comd",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("mnhess",654,G__TMinuit_mnhess_6_3,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("mnhes1",588,G__TMinuit_mnhes1_7_3,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("mnimpr",659,G__TMinuit_mnimpr_8_3,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("mninex",655,G__TMinuit_mninex_9_3,121,-1,-1,0,1,1,1,0,"D - 'Double_t' 0 - pint",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("mninit",655,G__TMinuit_mninit_0_4,121,-1,-1,0,3,1,1,0,
+   G__memfunc_setup("mnfree",637,G__TMinuit_mnfree_5_3,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 - k",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("mngrad",633,G__TMinuit_mngrad_6_3,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("mnhelp",644,G__TMinuit_mnhelp_7_3,121,-1,-1,0,1,1,1,0,"u 'TString' - 0 - comd",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("mnhess",654,G__TMinuit_mnhess_8_3,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("mnhes1",588,G__TMinuit_mnhes1_9_3,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("mnimpr",659,G__TMinuit_mnimpr_0_4,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("mninex",655,G__TMinuit_mninex_1_4,121,-1,-1,0,1,1,1,0,"D - 'Double_t' 0 - pint",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("mninit",655,G__TMinuit_mninit_2_4,121,-1,-1,0,3,1,1,0,
 "i - 'Int_t' 0 - i1 i - 'Int_t' 0 - i2 "
 "i - 'Int_t' 0 - i3",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("mnlims",656,G__TMinuit_mnlims_1_4,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("mnline",643,G__TMinuit_mnline_2_4,121,-1,-1,0,5,1,1,0,
+   G__memfunc_setup("mnlims",656,G__TMinuit_mnlims_3_4,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("mnline",643,G__TMinuit_mnline_4_4,121,-1,-1,0,5,1,1,0,
 "D - 'Double_t' 0 - start d - 'Double_t' 0 - fstart "
 "D - 'Double_t' 0 - step d - 'Double_t' 0 - slope "
 "d - 'Double_t' 0 - toler",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("mnmatu",658,G__TMinuit_mnmatu_3_4,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 - kode",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("mnmigr",650,G__TMinuit_mnmigr_4_4,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("mnmnos",664,G__TMinuit_mnmnos_5_4,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("mnmnot",665,G__TMinuit_mnmnot_6_4,121,-1,-1,0,4,1,1,0,
+   G__memfunc_setup("mnmatu",658,G__TMinuit_mnmatu_5_4,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 - kode",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("mnmigr",650,G__TMinuit_mnmigr_6_4,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("mnmnos",664,G__TMinuit_mnmnos_7_4,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("mnmnot",665,G__TMinuit_mnmnot_8_4,121,-1,-1,0,4,1,1,0,
 "i - 'Int_t' 0 - ilax i - 'Int_t' 0 - ilax2 "
 "d - 'Double_t' 1 - val2pl d - 'Double_t' 1 - val2mi",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("mnparm",651,G__TMinuit_mnparm_7_4,121,-1,-1,0,7,1,1,0,
+   G__memfunc_setup("mnparm",651,G__TMinuit_mnparm_9_4,121,-1,-1,0,7,1,1,0,
 "i - 'Int_t' 0 - k u 'TString' - 0 - cnamj "
 "d - 'Double_t' 0 - uk d - 'Double_t' 0 - wk "
 "d - 'Double_t' 0 - a d - 'Double_t' 0 - b "
 "i - 'Int_t' 1 - ierflg",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("mnpars",657,G__TMinuit_mnpars_8_4,121,-1,-1,0,2,1,1,0,
+   G__memfunc_setup("mnpars",657,G__TMinuit_mnpars_0_5,121,-1,-1,0,2,1,1,0,
 "u 'TString' - 1 - crdbuf i - 'Int_t' 1 - icondn",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("mnpfit",654,G__TMinuit_mnpfit_9_4,121,-1,-1,0,5,1,1,0,
+   G__memfunc_setup("mnpfit",654,G__TMinuit_mnpfit_1_5,121,-1,-1,0,5,1,1,0,
 "D - 'Double_t' 0 - parx2p D - 'Double_t' 0 - pary2p "
 "i - 'Int_t' 0 - npar2p D - 'Double_t' 0 - coef2p "
 "d - 'Double_t' 1 - sdev2p",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("mnpint",662,G__TMinuit_mnpint_0_5,121,-1,-1,0,3,1,1,0,
+   G__memfunc_setup("mnpint",662,G__TMinuit_mnpint_2_5,121,-1,-1,0,3,1,1,0,
 "d - 'Double_t' 1 - pexti i - 'Int_t' 0 - i "
 "d - 'Double_t' 1 - pinti",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("mnplot",666,G__TMinuit_mnplot_1_5,121,-1,-1,0,6,1,1,0,
+   G__memfunc_setup("mnplot",666,G__TMinuit_mnplot_3_5,121,-1,-1,0,6,1,1,0,
 "D - 'Double_t' 0 - xpt D - 'Double_t' 0 - ypt "
-"U 'TString' - 0 - chpt i - 'Int_t' 0 - nxypt "
+"C - - 0 - chpt i - 'Int_t' 0 - nxypt "
 "i - 'Int_t' 0 - npagwd i - 'Int_t' 0 - npagln",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("mnpout",675,G__TMinuit_mnpout_2_5,121,-1,-1,0,7,1,1,0,
+   G__memfunc_setup("mnpout",675,G__TMinuit_mnpout_4_5,121,-1,-1,0,7,1,1,0,
 "i - 'Int_t' 0 - iuext u 'TString' - 0 - chnam "
 "d - 'Double_t' 1 - val d - 'Double_t' 1 - err "
 "d - 'Double_t' 1 - xlolim d - 'Double_t' 1 - xuplim "
 "i - 'Int_t' 1 - iuint",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("mnprin",660,G__TMinuit_mnprin_3_5,121,-1,-1,0,2,1,1,0,
+   G__memfunc_setup("mnprin",660,G__TMinuit_mnprin_5_5,121,-1,-1,0,2,1,1,0,
 "i - 'Int_t' 0 - inkode d - 'Double_t' 0 - fval",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("mnpsdf",648,G__TMinuit_mnpsdf_4_5,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("mnrazz",674,G__TMinuit_mnrazz_5_5,121,-1,-1,0,5,1,1,0,
+   G__memfunc_setup("mnpsdf",648,G__TMinuit_mnpsdf_6_5,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("mnrazz",674,G__TMinuit_mnrazz_7_5,121,-1,-1,0,5,1,1,0,
 "d - 'Double_t' 0 - ynew D - 'Double_t' 0 - pnew "
 "D - 'Double_t' 0 - y i - 'Int_t' 1 - jh "
 "i - 'Int_t' 1 - jl",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("mnrn15",545,G__TMinuit_mnrn15_6_5,121,-1,-1,0,2,1,1,0,
+   G__memfunc_setup("mnrn15",545,G__TMinuit_mnrn15_8_5,121,-1,-1,0,2,1,1,0,
 "d - 'Double_t' 1 - val i - 'Int_t' 1 - inseed",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("mnrset",665,G__TMinuit_mnrset_7_5,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 - iopt",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("mnsave",650,G__TMinuit_mnsave_8_5,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("mnscan",640,G__TMinuit_mnscan_9_5,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("mnseek",643,G__TMinuit_mnseek_0_6,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("mnset",551,G__TMinuit_mnset_1_6,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("mnsimp",660,G__TMinuit_mnsimp_2_6,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("mnstat",663,G__TMinuit_mnstat_3_6,121,-1,-1,0,6,1,1,0,
+   G__memfunc_setup("mnrset",665,G__TMinuit_mnrset_9_5,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 - iopt",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("mnsave",650,G__TMinuit_mnsave_0_6,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("mnscan",640,G__TMinuit_mnscan_1_6,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("mnseek",643,G__TMinuit_mnseek_2_6,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("mnset",551,G__TMinuit_mnset_3_6,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("mnsimp",660,G__TMinuit_mnsimp_4_6,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("mnstat",663,G__TMinuit_mnstat_5_6,121,-1,-1,0,6,1,1,0,
 "d - 'Double_t' 1 - fmin d - 'Double_t' 1 - fedm "
 "d - 'Double_t' 1 - errdef i - 'Int_t' 1 - npari "
 "i - 'Int_t' 1 - nparx i - 'Int_t' 1 - istat",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("mntiny",671,G__TMinuit_mntiny_4_6,121,-1,-1,0,2,1,1,0,
+   G__memfunc_setup("mntiny",671,G__TMinuit_mntiny_6_6,121,-1,-1,0,2,1,1,0,
 "d - 'Double_t' 0 - epsp1 d - 'Double_t' 1 - epsbak",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("mnunpt",674,G__TMinuit_mnunpt_5_6,98,-1,G__defined_typename("Bool_t"),0,1,1,1,0,"u 'TString' - 1 - cfname",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("mnvert",668,G__TMinuit_mnvert_6_6,121,-1,-1,0,5,1,1,0,
+   G__memfunc_setup("mnunpt",674,G__TMinuit_mnunpt_7_6,98,-1,G__defined_typename("Bool_t"),0,1,1,1,0,"u 'TString' - 1 - cfname",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("mnvert",668,G__TMinuit_mnvert_8_6,121,-1,-1,0,5,1,1,0,
 "D - 'Double_t' 0 - a i - 'Int_t' 0 - l "
 "i - 'Int_t' 0 - m i - 'Int_t' 0 - n "
 "i - 'Int_t' 1 - ifail",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("mnwarn",659,G__TMinuit_mnwarn_7_6,121,-1,-1,0,3,1,1,0,
+   G__memfunc_setup("mnwarn",659,G__TMinuit_mnwarn_9_6,121,-1,-1,0,3,1,1,0,
 "C - - 0 - copt C - - 0 - corg "
 "C - - 0 - cmes",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("mnwerr",667,G__TMinuit_mnwerr_8_6,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("SetMaxIterations",1652,G__TMinuit_SetMaxIterations_9_6,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 500 maxiter",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("DeclFileName",1145,G__TMinuit_DeclFileName_0_7,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("DeclFileLine",1152,G__TMinuit_DeclFileLine_1_7,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("ImplFileName",1171,G__TMinuit_ImplFileName_2_7,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("ImplFileLine",1178,G__TMinuit_ImplFileLine_3_7,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Class_Version",1339,G__TMinuit_Class_Version_4_7,115,-1,G__defined_typename("Version_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Class",502,G__TMinuit_Class_5_7,85,G__get_linked_tagnum(&G__G__MinuitLN_TClass),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Dictionary",1046,G__TMinuit_Dictionary_6_7,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("IsA",253,G__TMinuit_IsA_7_7,85,G__get_linked_tagnum(&G__G__MinuitLN_TClass),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("ShowMembers",1132,G__TMinuit_ShowMembers_8_7,121,-1,-1,0,2,1,1,0,
+   G__memfunc_setup("mnwerr",667,G__TMinuit_mnwerr_0_7,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Release",705,G__TMinuit_Release_1_7,105,-1,G__defined_typename("Int_t"),0,1,1,1,0,"i - 'Int_t' 0 - parNo",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetErrorDef",1093,G__TMinuit_SetErrorDef_2_7,105,-1,G__defined_typename("Int_t"),0,1,1,1,0,"d - 'Double_t' 0 - up",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetFCN",515,G__TMinuit_SetFCN_3_7,121,-1,-1,0,1,1,1,0,"Y - - 0 - fcn",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetFCN",515,G__TMinuit_SetFCN_4_7,121,-1,-1,0,1,1,1,0,"Q - 'void (*)(Int_t&, Double_t*, Double_t&f, Double_t*, Int_t)' 0 - fcn",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetMaxIterations",1652,G__TMinuit_SetMaxIterations_5_7,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 500 maxiter",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetObjectFit",1190,G__TMinuit_SetObjectFit_6_7,121,-1,-1,0,1,1,1,0,"U 'TObject' - 0 - obj",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetPrintLevel",1329,G__TMinuit_SetPrintLevel_7_7,105,-1,G__defined_typename("Int_t"),0,1,1,1,0,"i - 'Int_t' 0 0 printLevel",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("DeclFileName",1145,G__TMinuit_DeclFileName_8_7,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("DeclFileLine",1152,G__TMinuit_DeclFileLine_9_7,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ImplFileName",1171,G__TMinuit_ImplFileName_0_8,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ImplFileLine",1178,G__TMinuit_ImplFileLine_1_8,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Class_Version",1339,G__TMinuit_Class_Version_2_8,115,-1,G__defined_typename("Version_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Class",502,G__TMinuit_Class_3_8,85,G__get_linked_tagnum(&G__G__MinuitLN_TClass),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Dictionary",1046,G__TMinuit_Dictionary_4_8,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("IsA",253,G__TMinuit_IsA_5_8,85,G__get_linked_tagnum(&G__G__MinuitLN_TClass),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("ShowMembers",1132,G__TMinuit_ShowMembers_6_8,121,-1,-1,0,2,1,1,0,
 "u 'TMemberInspector' - 1 - insp C - - 0 - parent",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("Streamer",835,G__TMinuit_Streamer_9_7,121,-1,-1,0,1,1,1,0,"u 'TBuffer' - 1 - b",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Streamer",835,G__TMinuit_Streamer_7_8,121,-1,-1,0,1,1,1,0,"u 'TBuffer' - 1 - b",(char*)NULL,(void*)NULL,1);
    // automatic destructor
-   G__memfunc_setup("~TMinuit",840,G__TMinuit_wATMinuit_0_8,(int)('y'),-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("~TMinuit",840,G__TMinuit_wATMinuit_8_8,(int)('y'),-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
    G__tag_memfunc_reset();
 }
 
@@ -1119,6 +1184,17 @@ G__linked_taginfo G__G__MinuitLN_TMethodCall = { "TMethodCall" , 99 , -1 };
 G__linked_taginfo G__G__MinuitLN_TGraph = { "TGraph" , 99 , -1 };
 G__linked_taginfo G__G__MinuitLN_TMinuit = { "TMinuit" , 99 , -1 };
 
+/* Reset class/struct taginfo */
+extern "C" void G__cpp_reset_tagtableG__Minuit() {
+  G__G__MinuitLN_TClass.tagnum = -1 ;
+  G__G__MinuitLN_TObject.tagnum = -1 ;
+  G__G__MinuitLN_TString.tagnum = -1 ;
+  G__G__MinuitLN_TNamed.tagnum = -1 ;
+  G__G__MinuitLN_TMethodCall.tagnum = -1 ;
+  G__G__MinuitLN_TGraph.tagnum = -1 ;
+  G__G__MinuitLN_TMinuit.tagnum = -1 ;
+}
+
 extern "C" void G__cpp_setup_tagtableG__Minuit() {
 
    /* Setting up class,struct,union tag entry */
@@ -1150,7 +1226,7 @@ class G__cpp_setup_initG__Minuit {
 G__cpp_setup_initG__Minuit G__cpp_setup_initializerG__Minuit;
 
 //
-// File generated by /user/brun/root/bin/rootcint at Mon Nov  9 18:43:18 1998.
+// File generated by /user/brun/root/bin/rootcint at Wed Mar 10 09:07:52 1999.
 // Do NOT change. Changes will be lost next time file is generated
 //
 

@@ -1,3 +1,4 @@
+//*CMZ :  2.21/03 19/01/99  16.19.23  by  Fons Rademakers
 //*CMZ :  1.03/05 09/10/97  13.32.40  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   17/01/97
 
@@ -42,7 +43,7 @@ class TUrl : public TObject {
 
 private:
    TString fUrl;         // full URL
-   TString fProtocol;    // protocol: http, ftp, news, root
+   TString fProtocol;    // protocol: http, ftp, news, root, rfio, hpss
    TString fHost;        // remote host
    TString fFile;        // remote object
    TString fAnchor;      // anchor in object

@@ -1,5 +1,5 @@
-/*CMZ :  2.20/04 08/12/98  16.25.21  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   08/12/98*/
+/*CMZ :  2.21/08 17/03/99  13.13.37  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   17/03/99*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -232,6 +232,7 @@ void G__set_stdio G__P((void));
 int G__cintrevision G__P((FILE *fp));
 char *G__input G__P((char *prompt));
 char *G__strrstr G__P((char *string1,char *string2));
+void G__set_sym_underscore G__P((int x));
 
 void G__breakkey G__P((int signame));
 void G__floatexception G__P((int signame));
@@ -447,6 +448,7 @@ int G__asm_optimize G__P((int *start));
 int G__inc_cp_asm G__P((int cp_inc,int dt_dec));
 int G__clear_asm G__P((void));
 int G__asm_clear G__P((void));
+void G__abortbytecode G__P((void));
 int G__asm_putint G__P((int i));
 G__value G__getreserved G__P((char *item,void** ptr,void** ppdict));
 /*
@@ -571,8 +573,13 @@ G__value G__letPvalue G__P((G__value *p,G__value result));
 G__value G__letvalue G__P((G__value *p,G__value result));
 G__value G__letvariable G__P((char *item,G__value expression,struct G__var_array *varglobal,struct G__var_array *varlocal));
 G__value G__getvariable G__P((char *item,int *known2,struct G__var_array *varglobal,struct G__var_array *varlocal));
+#ifndef G__OLDIMPLEMENTATION1013
+G__value G__getstructmem G__P((int store_var_type,char *varname,char *membername,char *tagname,int *known2,struct G__var_array *varglobal,int objptr));
+G__value G__letstructmem G__P((int store_var_type,char *varname,char *membername,char *tagname,struct G__var_array *varglobal,G__value expression,int objptr));
+#else
 G__value G__getstructmem G__P((int store_var_type,char *varname,char *membername,char *tagname,int *known2,struct G__var_array *varglobal));
 G__value G__letstructmem G__P((int store_var_type,char *varname,char *membername,char *tagname,struct G__var_array *varglobal,G__value expression));
+#endif
 void G__letstruct G__P((G__value *result,int p_inc,struct G__var_array *var,int ig15,char *item,int paran,long G__struct_offset));
 void G__letstructp G__P((G__value result,long G__struct_offset,int ig15,int p_inc,struct G__var_array *var,int paran,char *item,G__value *para,int pp_inc));
 void G__returnvartype G__P((G__value* presult,struct G__var_array *var,int ig15,int paran));
@@ -581,6 +588,7 @@ struct G__var_array *G__getvarentry G__P((char *varname,int varhash,int *pi,stru
 int G__getthis G__P((G__value *result7,char *varname,char *item));
 void G__letpointer2memfunc G__P((struct G__var_array *var,int paran,int ig15,char *item,int p_inc,G__value *presult,long G__struct_offset));
 void G__letautomatic G__P((struct G__var_array *var,int ig15,long G__struct_offset,int p_inc,G__value result));
+void G__display_classkeyword G__P((FILE *fout,char *classnamein,char *keyword,int base));
 #ifdef G__FRIEND
 int G__isfriend G__P((int tagnum));
 #endif

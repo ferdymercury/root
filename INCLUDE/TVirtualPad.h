@@ -1,3 +1,6 @@
+//*CMZ :  2.21/08 11/03/99  08.15.07  by  Rene Brun
+//*CMZ :  2.21/05 09/02/99  01.03.04  by  Fons Rademakers
+//*CMZ :  2.21/04 05/02/99  13.03.01  by  Fons Rademakers
 //*CMZ :  2.20/00 02/11/98  17.11.17  by  Fons Rademakers
 //*CMZ :  2.00/13 29/10/98  15.08.17  by  Fons Rademakers
 //*CMZ :  2.00/12 28/09/98  10.56.07  by  Rene Brun
@@ -54,11 +57,13 @@
 #include "Buttons.h"
 #endif
 
-class TObject;     // forward declarations
+// forward declarations
+class TObject;
 class TObjLink;
 class TView;
 class TCanvas;
 class TPadView3D;
+class TGToolTip;
 
 
 class TVirtualPad : public TWbox, public TAttPad {
@@ -86,7 +91,7 @@ public:
    virtual void     DrawText(Float_t x, Float_t y, const Text_t *text) = 0;
    virtual void     DrawTextNDC(Float_t u, Float_t v, const Text_t *text) = 0;
    virtual void     ExecuteEvent(Int_t event, Int_t px, Int_t py) = 0;
-   virtual Int_t    GetCanvasID() = 0;
+   virtual Int_t    GetCanvasID() const = 0;
    virtual TCanvas  *GetCanvas() = 0;
    virtual TVirtualPad *GetVirtCanvas() = 0;
    virtual Int_t    GetEvent() const  = 0;
@@ -142,8 +147,8 @@ public:
    virtual void     Modified(Bool_t flag=1) = 0;
    virtual Bool_t   OpaqueMoving() const = 0;
    virtual Bool_t   OpaqueResizing() const = 0;
-   virtual Float_t  PadtoX(Axis_t x) = 0;
-   virtual Float_t  PadtoY(Axis_t y) = 0;
+   virtual Float_t  PadtoX(Axis_t x) const = 0;
+   virtual Float_t  PadtoY(Axis_t y) const = 0;
    virtual void     Paint(Option_t *option="") = 0;
    virtual void     PaintBox(Float_t x1, Float_t y1, Float_t x2, Float_t y2, Option_t *option="") = 0;
    virtual void     PaintFillArea(Int_t n, Float_t *x, Float_t *y, Option_t *option="") = 0;
@@ -197,34 +202,38 @@ public:
    virtual void     SetPhi(Float_t phi=30) = 0;
    virtual void     SetView(TView *view) = 0;
    virtual void     Update() = 0;
-   virtual Int_t    UtoAbsPixel(Float_t u) = 0;
-   virtual Int_t    VtoAbsPixel(Float_t v) = 0;
-   virtual Int_t    UtoPixel(Float_t u) = 0;
-   virtual Int_t    VtoPixel(Float_t v) = 0;
-   virtual Int_t    XtoAbsPixel(Axis_t x) = 0;
-   virtual Int_t    YtoAbsPixel(Axis_t y) = 0;
-   virtual Float_t  XtoPad(Axis_t x) = 0;
-   virtual Int_t    XtoPixel(Axis_t x) = 0;
-   virtual Int_t    YtoPixel(Axis_t y) = 0;
-   virtual Float_t  YtoPad(Axis_t y) = 0;
+   virtual Int_t    UtoAbsPixel(Float_t u) const = 0;
+   virtual Int_t    VtoAbsPixel(Float_t v) const = 0;
+   virtual Int_t    UtoPixel(Float_t u) const = 0;
+   virtual Int_t    VtoPixel(Float_t v) const = 0;
+   virtual Int_t    XtoAbsPixel(Axis_t x) const = 0;
+   virtual Int_t    YtoAbsPixel(Axis_t y) const = 0;
+   virtual Float_t  XtoPad(Axis_t x) const = 0;
+   virtual Float_t  YtoPad(Axis_t y) const = 0;
+   virtual Int_t    XtoPixel(Axis_t x) const = 0;
+   virtual Int_t    YtoPixel(Axis_t y) const = 0;
+
+   virtual TGToolTip *CreateToolTip(const TBox *b, const char *text, Long_t delayms) = 0;
+   virtual void       DeleteToolTip(TGToolTip *tip) = 0;
+   virtual void       ResetToolTip(TGToolTip *tip) = 0;
+   virtual void       CloseToolTip(TGToolTip *tip) = 0;
 
    virtual void     x3d(Option_t *option="") = 0;
 
    ClassDef(TVirtualPad,1)  //Abstract base class for Pads and Canvases
 };
 
-+IF,THREAD.
+#ifdef R__THREAD
 
 R__EXTERN TVirtualPad *gPadMain;
 R__EXTERN void **(*gThreadTsd)(void*,Int_t);
 R__EXTERN int (*gThreadXAR)(char *xact, Int_t nb, void **ar, Int_t *iret);
 #define gPad (*((!gThreadTsd)? &gPadMain:(TVirtualPad**)(*gThreadTsd)(&gPadMain,0)))
 
-+ELSE
-
+#else
 R__EXTERN TVirtualPad *gPad;
+#endif
 
-+ENDIF.
 #endif
 
 

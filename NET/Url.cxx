@@ -1,3 +1,4 @@
+//*CMZ :  2.21/03 19/01/99  16.19.07  by  Fons Rademakers
 //*CMZ :  1.03/08 17/11/97  16.21.41  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   17/01/97
 
@@ -40,7 +41,7 @@ TUrl::TUrl(const char *url)
    //
    // url: [proto://]host[:port][/file.ext][#anchor][?options]
    //
-   // Allowed protocols: http, root, ftp, news, file (default http)
+   // Allowed protocols: http, root, ftp, news, file, rfio, hpss (default http)
    // Default ports: http=80, root=432, ftp=20, news=119.
 
    if (!url || !strlen(url)) {
@@ -64,6 +65,22 @@ TUrl::TUrl(const char *url)
    // Special case for "file:"
    if (!strncmp(u, "file:", 5)) {
       fProtocol = "file";
+      fFile = u+5;
+      fPort = 0;
+      return;
+   }
+
+   // Special case for "rfio:"
+   if (!strncmp(u, "rfio:", 5)) {
+      fProtocol = "rfio";
+      fFile = u+5;
+      fPort = 0;
+      return;
+   }
+
+   // Special case for "hpss:"
+   if (!strncmp(u, "hpss:", 5)) {
+      fProtocol = "hpss";
       fFile = u+5;
       fPort = 0;
       return;

@@ -1,5 +1,5 @@
-/*CMZ :  2.20/04 08/12/98  16.25.42  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   08/12/98*/
+/*CMZ :  2.21/08 17/03/99  13.13.52  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   17/03/99*/
 /* /% C++ %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -50,21 +50,67 @@
 *********************************************************************/
 typedef long streamoff;
 typedef long streampos;
-class io_state;
+//class io_state;
 class streambuf;
 class fstreambase;
-enum seek_dir{ };
+typedef long         SZ_T;
+typedef SZ_T         streamsize;
+
 class ios {
-      public:
-	// enum seek_dir { };
-	static int in ;
-	static int out ;
-	static int app ;
-	static int ate ;
-	static int goodbit ;
-	static int badbit ;
-	static int failbit ;
-	static int eofbit ;
+ public:
+  typedef int      iostate;
+  enum io_state {
+    goodbit     = 0x00,
+    badbit      = 0x01,
+    eofbit      = 0x02,
+    failbit     = 0x04
+  };
+  typedef int      openmode;
+  enum open_mode {
+    app         = 0x01,
+    binary      = 0x02,
+    in          = 0x04,
+    out         = 0x08,
+    trunc       = 0x10,
+    ate         = 0x20
+  };
+  typedef int      seekdir;
+  enum seek_dir {
+    beg         = 0x0,
+    cur         = 0x1,
+    end         = 0x2
+  };
+  typedef int      fmtflags;
+  enum fmt_flags {
+    boolalpha   = 0x0001,
+    dec         = 0x0002,
+    fixed       = 0x0004,
+    hex         = 0x0008,
+    internal    = 0x0010,
+    left        = 0x0020,
+    oct         = 0x0040,
+    right       = 0x0080,
+    scientific  = 0x0100,
+    showbase    = 0x0200,
+    showpoint   = 0x0400,
+    showpos     = 0x0800,
+    skipws      = 0x1000,
+    unitbuf     = 0x2000,
+    uppercase   = 0x4000,
+    adjustfield = left | right | internal,
+    basefield   = dec | oct | hex,
+    floatfield  = scientific | fixed
+  };
+  enum event {
+    erase_event   = 0x0001,
+    imbue_event   = 0x0002,
+    copyfmt_event = 0x0004
+  };
+
+  ios() { x_width=0; }
+  streamsize width(streamsize wide) { x_width=wide; }
+ protected:
+  int x_width;
 };
 
 
@@ -73,7 +119,7 @@ class ios {
 *
 *********************************************************************/
 
-class ostream {
+class ostream : /* virtual */ public ios {
 	FILE *fout;
       public:
 	ostream(FILE *setfout) { fout=setfout; }
@@ -94,53 +140,92 @@ class ostream {
 
 ostream::~ostream()
 {
-	if(fout!=stderr && fout!=stdout && fout!=NULL) {
-		fclose(fout);
-	}
+  if(fout!=stderr && fout!=stdout && fout!=NULL) {
+    fclose(fout);
+  }
 }
 
 ostream::ostream(char *fname)
 {
-	fout = fopen(fname,"w");
-	if(fout==NULL) {
-		fprintf(stderr,"%s can not open\n",fname);
-	}
+  fout = fopen(fname,"w");
+  if(fout==NULL) {
+    fprintf(stderr,"%s can not open\n",fname);
+  }
 }
 
 ostream& ostream::operator <<(char c)
 {
-	fprintf(fout,"%c",c);
-	return(*this);
+  if(x_width) {
+    int init=0;
+    if(isprint(c)) init=1;
+    for(int i=init;i<x_width;i++) fputc(' ',fout);
+    x_width=0;
+  }
+  fprintf(fout,"%c",c);
+  return(*this);
 }
 
 ostream& ostream::operator <<(char *s)
 {
-	fprintf(fout,"%s",s);
-	return(*this);
+  if(x_width &&(!s || x_width>strlen(s))) {
+    if(s) for(int i=strlen(s);i<x_width;i++) fputc(' ',fout);
+    else  for(int i=0;i<x_width;i++) fputc(' ',fout);
+    x_width=0;
+  }
+  fprintf(fout,"%s",s);
+  return(*this);
 }
 
-ostream& ostream::operator <<(long i)
+ostream& ostream::operator <<(long x)
 {
-	fprintf(fout,"%d",i);
-	return(*this);
+  if(x_width) {
+    char buf[50];
+    sprintf(buf,"%d",x);
+    if(x_width>strlen(buf))
+      for(int i=strlen(buf);i<x_width;i++) fputc(' ',fout);
+    x_width=0;
+  }
+  fprintf(fout,"%d",x);
+  return(*this);
 }
 
-ostream& ostream::operator <<(unsigned long i)
+ostream& ostream::operator <<(unsigned long x)
 {
-	fprintf(fout,"%u",i);
-	return(*this);
+  if(x_width) {
+    char buf[50];
+    sprintf(buf,"%u",x);
+    if(x_width>strlen(buf))
+      for(int i=strlen(buf);i<x_width;i++) fputc(' ',fout);
+    x_width=0;
+  }
+  fprintf(fout,"%u",x);
+  return(*this);
 }
 
 ostream& ostream::operator <<(double d)
 {
-	fprintf(fout,"%g",d);
-	return(*this);
+  if(x_width) {
+    char buf[50];
+    sprintf(buf,"%g",d);
+    if(x_width>strlen(buf))
+      for(int i=strlen(buf);i<x_width;i++) fputc(' ',fout);
+    x_width=0;
+  }
+  fprintf(fout,"%g",d);
+  return(*this);
 }
 
 ostream& ostream::operator <<(void *p)
 {
-	printf("0x%x",p);
-	return(*this);
+  if(x_width) {
+    char buf[50];
+    sprintf(buf,"0x%x",p);
+    if(x_width>strlen(buf))
+      for(int i=strlen(buf);i<x_width;i++) fputc(' ',fout);
+    x_width=0;
+  }
+  printf("0x%x",p);
+  return(*this);
 }
 
 /* instanciation of cout,cerr */
@@ -153,130 +238,130 @@ ostream cerr=ostream(stderr);
 *
 *********************************************************************/
 
-class istream {
-	FILE *fin;
-	ostream *tie;
-      public:
-	istream(FILE *setfin) { fin = setfin; tie=(ostream*)NULL; }
-	istream(char *fname);
-	~istream();
-	void close() { if(fin) fclose(fin); fin=NULL;}
-	ostream& tie(ostream& cx);
-	FILE *fp() { return(fin); }
+class istream : /* virtual */ public ios {
+  FILE *fin;
+  ostream *tie;
+public:
+  istream(FILE *setfin) { fin = setfin; tie=(ostream*)NULL; }
+  istream(char *fname);
+  ~istream();
+  void close() { if(fin) fclose(fin); fin=NULL;}
+  ostream& tie(ostream& cx);
+  FILE *fp() { return(fin); }
 
-	istream& operator >>(char& c);
-	istream& operator >>(char *s);
-	istream& operator >>(short& s);
-	istream& operator >>(int& i);
-	istream& operator >>(long& i);
-	istream& operator >>(unsigned char& c);
-	istream& operator >>(unsigned short& s);
-	istream& operator >>(unsigned int& i);
-	istream& operator >>(unsigned long& i);
-	istream& operator >>(double& d);
-	istream& operator >>(float& d);
+  istream& operator >>(char& c);
+  istream& operator >>(char *s);
+  istream& operator >>(short& s);
+  istream& operator >>(int& i);
+  istream& operator >>(long& i);
+  istream& operator >>(unsigned char& c);
+  istream& operator >>(unsigned short& s);
+  istream& operator >>(unsigned int& i);
+  istream& operator >>(unsigned long& i);
+  istream& operator >>(double& d);
+  istream& operator >>(float& d);
 };
 
 istream::~istream()
 {
-	if(fin!=stdin && fin!=NULL) {
-		fclose(fin);
-	}
+  if(fin!=stdin && fin!=NULL) {
+    fclose(fin);
+  }
 }
 
 istream::istream(char *fname)
 {
-	fin = fopen(fname,"r");
-	if(fin==NULL) {
-		fprintf(stderr,"%s can not open\n",fname);
-	}
-	tie=(ostream*)NULL;
+  fin = fopen(fname,"r");
+  if(fin==NULL) {
+    fprintf(stderr,"%s can not open\n",fname);
+  }
+  tie=(ostream*)NULL;
 }
 
 
 ostream& istream::tie(ostream& cx)
 
 {
-	ostream *tmp;
-	tmp=tie;
-	tie = &cx;
-	return(*tmp);
+  ostream *tmp;
+  tmp=tie;
+  tie = &cx;
+  return(*tmp);
 }
 
 istream& istream::operator >>(char& c)
 {
-	if(tie) tie->flush();
-	c=fgetc(fin);
-	return(*this);
+  if(tie) tie->flush();
+  c=fgetc(fin);
+  return(*this);
 }
 
 istream& istream::operator >>(char *s)
 {
-	if(tie) tie->flush();
-	fscanf(fin,"%s",s);
-	return(*this);
+  if(tie) tie->flush();
+  fscanf(fin,"%s",s);
+  return(*this);
 }
 
 istream& istream::operator >>(short& s)
 {
-	if(tie) tie->flush();
-	fscanf(fin,"%hd",&s);
-	return(*this);
+  if(tie) tie->flush();
+  fscanf(fin,"%hd",&s);
+  return(*this);
 }
 
 istream& istream::operator >>(int& i)
 {
-	if(tie) tie->flush();
-	fscanf(fin,"%d",&i);
-	return(*this);
+  if(tie) tie->flush();
+  fscanf(fin,"%d",&i);
+  return(*this);
 }
 
 istream& istream::operator >>(long& i)
 {
-	if(tie) tie->flush();
-	fscanf(fin,"%ld",&i);
-	return(*this);
+  if(tie) tie->flush();
+  fscanf(fin,"%ld",&i);
+  return(*this);
 }
 
 istream& istream::operator >>(unsigned char& c)
 {
-	int i;
-	if(tie) tie->flush();
-	fscanf(fin,"%u",&i);
-	c = i;
-	return(*this);
+  int i;
+  if(tie) tie->flush();
+  fscanf(fin,"%u",&i);
+  c = i;
+  return(*this);
 }
 istream& istream::operator >>(unsigned short& s)
 {
-	if(tie) tie->flush();
-	fscanf(fin,"%hu",&s);
-	return(*this);
+  if(tie) tie->flush();
+  fscanf(fin,"%hu",&s);
+  return(*this);
 }
 istream& istream::operator >>(unsigned int& i)
 {
-	if(tie) tie->flush();
-	fscanf(fin,"%u",&i);
-	return(*this);
+  if(tie) tie->flush();
+  fscanf(fin,"%u",&i);
+  return(*this);
 }
 istream& istream::operator >>(unsigned long& i)
 {
-	if(tie) tie->flush();
-	fscanf(fin,"%lu",&i);
-	return(*this);
+  if(tie) tie->flush();
+  fscanf(fin,"%lu",&i);
+  return(*this);
 }
 
 istream& istream::operator >>(float& f)
 {
-	if(tie) tie->flush();
-	fscanf(fin,"%g",&f);
-	return(*this);
+  if(tie) tie->flush();
+  fscanf(fin,"%g",&f);
+  return(*this);
 }
 
 istream& istream::operator >>(double& d)
 {
-	if(tie) tie->flush();
-	fscanf(fin,"%lg",&d);
-	return(*this);
+  if(tie) tie->flush();
+  fscanf(fin,"%lg",&d);
+  return(*this);
 }
 
 /* instanciation of cin */
@@ -400,11 +485,18 @@ istream& operator<<(istream& istr,G__CINT_NOSUPPORT& i) {
 }
 
 // Value evaluation
-//#include <ertti>
-template<class T>
-int G__ateval(const T& x) {
-  //cout << "(" << typeid(x).name() << ")" << x << endl;
-  return(0);
-}
+template<class T> int G__ateval(const T& x) {return(0);}
+int G__ateval(const char* x) {return(0);}
+int G__ateval(const void* x) {return(0);}
+int G__ateval(const double x) {return(0);}
+int G__ateval(const float x) {return(0);}
+int G__ateval(const char x) {return(0);}
+int G__ateval(const short x) {return(0);}
+int G__ateval(const int x) {return(0);}
+int G__ateval(const long x) {return(0);}
+int G__ateval(const unsigned char x) {return(0);}
+int G__ateval(const unsigned short x) {return(0);}
+int G__ateval(const unsigned int x) {return(0);}
+int G__ateval(const unsigned long x) {return(0);}
 
 #endif

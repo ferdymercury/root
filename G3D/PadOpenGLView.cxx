@@ -1,3 +1,5 @@
+//*CMZ :  2.21/06 12/02/99  17.23.30  by  Rene Brun
+//*CMZ :  2.21/04 01/02/99  21.02.14  by  Valery Fine(fine@mail.cern.ch)
 //*CMZ :  1.03/09 10/12/97  09.38.29  by  Rene Brun
 //*-- Author :    Valery Fine(fine@vxcern.cern.ch)   08/05/97
 
@@ -176,35 +178,48 @@ void TPadOpenGLView::PopMatrix()
 }
 
 //______________________________________________________________________________
-void TPadOpenGLView::SetAttNode(TNode *node, Option_t *)
+void TPadOpenGLView::SetAttNode(TNode *node, Option_t *opt)
 {
-    gGLKernel->SetLineAttr(node->GetLineColor(),node->GetLineWidth());
+  if (node) SetLineAttr(node->GetLineColor(),node->GetLineWidth(),opt);
+}
+//______________________________________________________________________________
+void TPadOpenGLView::SetLineAttr(Color_t color, Int_t width, Option_t *)
+{
+    gGLKernel->SetLineAttr(color,width);
 }
 //______________________________________________________________________________
 void TPadOpenGLView::UpdateNodeMatrix(TNode *node,Option_t *)
+{
+    if (node)
+       UpdatePosition(node->GetX(),node->GetY(),node->GetZ(),node->GetMatrix());
+}
+//______________________________________________________________________________
+void TPadOpenGLView::UpdatePosition(Double_t x,Double_t y,Double_t z,TRotMatrix *matrix,Option_t *)
 {
     Float_t bomb = gGeometry->GetBomb();
 
 //*-*  Create a translation matrix
 
     Double_t translate[3];
-    translate[0] = bomb*node->GetX();
-    translate[1] = bomb*node->GetY();
-    translate[2] = bomb*node->GetZ();
+    translate[0] = bomb*x;
+    translate[1] = bomb*y;
+    translate[2] = bomb*z;
 
 //*-*  Create a rotation/reflection matrix
 
-    TRotMatrix *matrix = node->GetMatrix();
-    Bool_t isreflection = matrix->IsReflection();
-
-    Double_t rotate[16];
-    matrix->GetGLMatrix(rotate);
+    Double_t rotate[16] = {1,0,0,0,
+                           0,1,0,0,
+                           0,0,1,0,
+                           0,0,0,1
+                          };
+    if (matrix)
+       matrix->GetGLMatrix(rotate);
 
 //*-* Update the OpenGL matrix
 
-    gGLKernel->UpdateMatrix(translate,rotate,isreflection);
-
+    gGLKernel->UpdateMatrix(translate,rotate,gGeometry->GetCurrentReflection());
 }
+
 #if 0
 //______________________________________________________________________________
 void TPadOpenGLView::PaintBrik(TShape *shape,Option_t *opt)

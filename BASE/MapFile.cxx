@@ -1,3 +1,8 @@
+//*CMZ :  2.21/08 11/03/99  19.58.32  by  Fons Rademakers
+//*CMZ :  2.21/07 05/03/99  15.21.25  by  Fons Rademakers
+//*CMZ :  2.21/06 15/02/99  19.22.13  by  Fons Rademakers
+//*CMZ :  2.21/05 08/02/99  11.48.30  by  Fons Rademakers
+//*CMZ :  2.21/04 29/01/99  12.53.31  by  Fons Rademakers
 //*CMZ :  2.00/12 02/10/98  12.45.22  by  Fons Rademakers
 //*CMZ :  2.00/10 29/07/98  11.24.27  by  Rene Brun
 //*CMZ :  2.00/09 22/06/98  08.29.53  by  Rene Brun
@@ -54,8 +59,9 @@
 //                                                                      //
 // This class implements a shared memory region mapped to a file.       //
 // Objects can be placed into this shared memory area using the Add()   //
-// member function. Whenever the mapped object(s) change(s) call        //
-// Update() to put a fresh copy in the shared memory. This extra        //
+// member function. To actually place a copy of the object is shared    //
+// memory call Update() also whenever the mapped object(s) change(s)    //
+// call Update() to put a fresh copy in the shared memory. This extra   //
 // step is necessary since it is not possible to share objects with     //
 // virtual pointers between processes (the vtbl ptr points to the       //
 // originators unique address space and can not be used by the          //
@@ -64,6 +70,29 @@
 // method (which returns a copy of the object stored in the shared      //
 // memory with correct vtbl ptr set). Only objects of classes with a    //
 // Streamer() member function defined can be shared.                    //
+//                                                                      //
+// I know the current implementation is not ideal (you need to copy to  //
+// and from the shared memory file) but the main problem is with the    //
+// class' virtual_table pointer. This pointer points to a table unique  //
+// for every process. Therefore, different options are:                 //
+//   1) One could allocate an object directly in shared memory in the   //
+//      producer, but the consumer still has to copy the object from    //
+//      shared memory into a local object which has the correct vtbl    //
+//      pointer for that process (copy ctor's can be used for creating  //
+//      the local copy).                                                //
+//   2) Another possibility is to only allow objects without virtual    //
+//      functions in shared memory (like simple C structs), or to       //
+//      forbid (how?) the consumer from calling any virtual functions   //
+//      of the objects in shared memory.                                //
+//   3) A last option is to copy the object internals to shared memory  //
+//      and copy them again from there. This is what is done in the     //
+//      TMapFile (using the object Streamer() to make a deep copy).     //
+// Option 1) saves one copy, but requires solid copy ctor's (along the  //
+// full inheritance chain) to rebuild the object in the consumer. Most  //
+// classes don't provide these copy ctor's, especially not when objects //
+// contain collections, etc. 2) is too limiting or dangerous (calling   //
+// accidentally a virtual function will segv). So since we have a       //
+// robust Streamer mechanism I opted for 3).                            //
 //                                                                      //
 //////////////////////////////////////////////////////////////////////////
 
@@ -75,6 +104,23 @@
 #    undef GetObject
 #  endif
 #  define HAVE_SEMOP
+
+# ifdef CreateSemaphore
+#   undef CreateSemaphore
+# endif
+
+# ifdef AcquireSemaphore
+#   undef AcquireSemaphore;
+# endif
+
+# ifdef ReleaseSemaphore
+#   undef ReleaseSemaphore
+# endif
+
+# ifdef DeleteSemaphore
+#   undef DeleteSemaphore
+# endif
+
 #else
 #  define INVALID_HANDLE_VALUE -1
 #endif
@@ -96,7 +142,8 @@
 #include <sys/types.h>
 #include <sys/ipc.h>
 #include <sys/sem.h>
-#if defined(R__HPUX) || defined (R__ALPHA) || defined (R__SOLARIS) || defined(R__AIX) || defined(R__HIUX)
+#if defined(R__HPUX) || defined (R__ALPHA) || defined (R__SOLARIS) || \
+    defined(R__AIX) || defined(R__HIUX) || defined (R__MKLINUX)
 union semun {
    int val;                      // value for SETVAL
    struct semid_ds *buf;         // buffer for IPC_STAT & IPC_SET
@@ -116,28 +163,8 @@ void  *TMapFile::fgMmallocDesc = 0;
 void *gMmallocDesc = 0;
 
 
-class TMapRec {
 
-friend class TMapFile;
-
-private:
-   char            *fName;       // object name
-   char            *fClassName;  // class name
-   TObject         *fObject;     // pointer to original object
-   void            *fBuffer;     // buffer containing object of class name
-   Int_t            fBufSize;    // buffer size
-   TMapRec         *fNext;       // next MapRec in list
-
-public:
-   TMapRec(const char *name, TObject *obj, Int_t size, void *buf);
-   ~TMapRec();
-   const char   *GetName(Long_t offset = 0) const { return (char *)((Long_t) fName + offset); }
-   const char   *GetClassName(Long_t offset = 0) const { return (char *)((Long_t) fClassName + offset); }
-   void         *GetBuffer(Long_t offset = 0) const { return (void *)((Long_t) fBuffer + offset); }
-   Int_t         GetBufSize() const { return fBufSize; }
-   TMapRec      *GetNext(Long_t offset = 0) const { return (TMapRec *)((Long_t) fNext + offset); }
-};
-
+//______________________________________________________________________________
 TMapRec::TMapRec(const char *name, TObject *obj, Int_t size, void *buf)
 {
    fName      = StrDup(name);
@@ -148,11 +175,24 @@ TMapRec::TMapRec(const char *name, TObject *obj, Int_t size, void *buf)
    fNext      = 0;
 }
 
+//______________________________________________________________________________
 TMapRec::~TMapRec()
 {
    delete [] fName;
    delete [] fClassName;
 }
+
+//______________________________________________________________________________
+TObject *TMapRec::GetObject() const
+{
+   // This method returns a pointer to the original object. NOTE: this pointer
+   // is only valid in the process that produces the shared memory file. In a
+   // consumer process this pointer is illegal! Be careful.
+
+   return fObject;
+}
+
+
 
 
 ClassImp(TMapFile)
@@ -194,8 +234,10 @@ TMapFile::TMapFile(const Text_t *name, const Text_t *title, Option_t *option,
    fOption      = StrDup(option);
    fDirectory   = 0;
    fBrowseList  = 0;
+   fGetting     = 0;
 
-   Bool_t create = kFALSE;
+   char  *cleanup = 0;
+   Bool_t create  = kFALSE;
    Bool_t recreate, update, read;
 
    {
@@ -358,6 +400,9 @@ TMapFile::TMapFile(const Text_t *name, const Text_t *title, Option_t *option,
          gMmallocDesc = fMmallocDesc;
          TMapFile *mf = new TMapFile(*mapfil);
          mf->fFd        = fFd;
+         mf->fWritable  = kTRUE;
+         cleanup        = mf->fOption;
+         mf->fOption    = StrDup(fOption);
          mf->fSemaphore = fSemaphore;
 #ifdef WIN32
          mf->CreateSemaphore(fSemaphore);
@@ -419,6 +464,8 @@ TMapFile::TMapFile(const Text_t *name, const Text_t *title, Option_t *option,
    mapfil->InitDirectory();
    gROOT->GetListOfMappedFiles()->AddFirst(mapfil);
 
+   delete [] cleanup;
+
    newMapFile = mapfil;
 
    return;
@@ -446,11 +493,13 @@ TMapFile::TMapFile(const TMapFile &f, Long_t offset)
    fBaseAddr    = f.fBaseAddr;
    fSize        = f.fSize;
    fFirst       = f.fFirst;
+   fLast        = f.fLast;
    fWritable    = f.fWritable;
    fSemaphore   = f.fSemaphore;
    fOffset      = offset;
    fDirectory   = 0;
    fBrowseList  = 0;
+   fGetting     = 0;
 #ifdef WIN32
    CreateSemaphore(fSemaphore);
 #endif
@@ -501,12 +550,15 @@ void TMapFile::InitDirectory()
 //______________________________________________________________________________
 void TMapFile::Add(TObject *obj, const char *name)
 {
-   // Add an object to the list of objects to be stored in shared memory
-   // and copy it to shared memory.
+   // Add an object to the list of objects to be stored in shared memory.
+   // To place the object actually into shared memory call Update().
 
    if (!fWritable || !fMmallocDesc) return;
 
-   AcquireSemaphore();
+   Bool_t lock = fGetting != obj ? kTRUE : kFALSE;
+
+   if (lock)
+      AcquireSemaphore();
 
    gMmallocDesc = fMmallocDesc;
 
@@ -515,6 +567,10 @@ void TMapFile::Add(TObject *obj, const char *name)
       n = obj->GetName();
    else
       n = name;
+
+   if (Remove(n, kFALSE))
+      ; //Warning("Add", "replaced object with same name %s", n);
+
    TMapRec *mr = new TMapRec(n, obj, 0, 0);
    if (!fFirst) {
       fFirst = mr;
@@ -526,7 +582,8 @@ void TMapFile::Add(TObject *obj, const char *name)
 
    gMmallocDesc = 0;
 
-   ReleaseSemaphore();
+   if (lock)
+      ReleaseSemaphore();
 }
 
 //______________________________________________________________________________
@@ -567,14 +624,17 @@ void TMapFile::Update(TObject *obj)
 }
 
 //______________________________________________________________________________
-void TMapFile::Remove(TObject *obj)
+TObject *TMapFile::Remove(TObject *obj, Bool_t lock)
 {
-   // Remove object from shared memory.
+   // Remove object from shared memory. Returns pointer to removed
+   // object if successful, 0 otherwise.
 
-   if (!fWritable || !fMmallocDesc) return;
+   if (!fWritable || !fMmallocDesc) return 0;
 
-   AcquireSemaphore();
+   if (lock)
+      AcquireSemaphore();
 
+   TObject *retObj = 0;
    TMapRec *prev = 0, *mr = fFirst;
    while (mr) {
       if (mr->fObject == obj) {
@@ -587,6 +647,7 @@ void TMapFile::Remove(TObject *obj)
             if (mr == fLast)
                fLast = prev;
          }
+         retObj = obj;
          delete mr;
          break;
       }
@@ -594,7 +655,48 @@ void TMapFile::Remove(TObject *obj)
       mr   = mr->fNext;
    }
 
-   ReleaseSemaphore();
+   if (lock)
+      ReleaseSemaphore();
+
+   return retObj;
+}
+
+//______________________________________________________________________________
+TObject *TMapFile::Remove(const char *name, Bool_t lock)
+{
+   // Remove object by name from shared memory. Returns pointer to removed
+   // object if successful, 0 otherwise.
+
+   if (!fWritable || !fMmallocDesc) return 0;
+
+   if (lock)
+      AcquireSemaphore();
+
+   TObject *retObj = 0;
+   TMapRec *prev = 0, *mr = fFirst;
+   while (mr) {
+      if (!strcmp(mr->fName, name)) {
+         if (mr == fFirst) {
+            fFirst = mr->fNext;
+            if (mr == fLast)
+               fLast = 0;
+         } else {
+            prev->fNext = mr->fNext;
+            if (mr == fLast)
+               fLast = prev;
+         }
+         retObj = mr->fObject;
+         delete mr;
+         break;
+      }
+      prev = mr;
+      mr   = mr->fNext;
+   }
+
+   if (lock)
+      ReleaseSemaphore();
+
+   return retObj;
 }
 
 //______________________________________________________________________________
@@ -648,11 +750,13 @@ TObject *TMapFile::Get(const char *name, TObject *delObj)
             goto release;
          }
 
+         fGetting = obj;
          TBuffer *b = new TBuffer(TBuffer::kRead, mr->fBufSize, mr->GetBuffer(fOffset));
          b->MapObject(obj);  //register obj in map to handle self reference
          obj->Streamer(*b);
          b->DetachBuffer();
          delete b;
+         fGetting = 0;
          goto release;
       }
       mr = mr->GetNext(fOffset);
@@ -699,8 +803,8 @@ void TMapFile::CreateSemaphore(int pid)
    char buffer[] ="ROOT_Semaphore_xxxxxxxx";
    int lbuf = strlen(buffer);
    if (!pid) fSemaphore = getpid();
-   fhSemaphore = CreateMutex(NULL,FALSE,itoa(fSemaphore,&buffer[lbuf-8],16));
-   if (fhSemaphore == NULL) fSemaphore = (Int_t)INVALID_HANDLE_VALUE;
+   fhSemaphore = (ULong_t)CreateMutex(NULL,FALSE,itoa(fSemaphore,&buffer[lbuf-8],16));
+   if (fhSemaphore == 0) fSemaphore = (Int_t)INVALID_HANDLE_VALUE;
 #endif
 #endif
 }
@@ -722,8 +826,8 @@ void TMapFile::DeleteSemaphore()
    }
 #else
    if (fSemaphore != (Int_t)INVALID_HANDLE_VALUE) {
-      CloseHandle(fhSemaphore);
-      fhSemaphore = 0;;
+      CloseHandle((HANDLE)fhSemaphore);
+      fhSemaphore = 0;
       fSemaphore  = (Int_t)INVALID_HANDLE_VALUE;
    }
 #endif
@@ -733,23 +837,36 @@ void TMapFile::DeleteSemaphore()
 //______________________________________________________________________________
 Int_t TMapFile::AcquireSemaphore()
 {
-   // Acquire semaphore. Returns 0 of OK, -1 on error.
+   // Acquire semaphore. Returns 0 if OK, -1 on error.
 
 #ifdef HAVE_SEMOP
 #ifndef WIN32
    if (fSemaphore != -1) {
       struct sembuf buf = { 0, -1, SEM_UNDO };
+      int intr = 0;
+again:
       if (semop(fSemaphore, &buf, 1) == -1) {
+#if defined(R__FBSD)
+         if (errno == EINVAL)
+#else
          if (errno == EIDRM)
+#endif
             fSemaphore = -1;
-         if (errno == EINTR)
-            return -1;
+#if !defined(R__FBSD)
+         if (errno == EINTR) {
+            if (intr > 2)
+               return -1;
+            errno = 0;
+            intr++;
+            goto again;
+         }
+#endif
       }
    }
 #else
    // Enter Critical section to "write" lock
    if (fSemaphore != (Int_t)INVALID_HANDLE_VALUE)
-      WaitForSingleObject(fhSemaphore,INFINITE);
+      WaitForSingleObject((HANDLE)fhSemaphore,INFINITE);
 #endif
 #endif
    return 0;
@@ -758,20 +875,24 @@ Int_t TMapFile::AcquireSemaphore()
 //______________________________________________________________________________
 Int_t TMapFile::ReleaseSemaphore()
 {
-   // Release semaphore. Reutnrs 0 if OK, -1 on error.
+   // Release semaphore. Returns 0 if OK, -1 on error.
 
 #ifdef HAVE_SEMOP
 #ifndef WIN32
    if (fSemaphore != -1) {
       struct sembuf buf = { 0, 1, SEM_UNDO };
       if (semop(fSemaphore, &buf, 1) == -1) {
+#if defined(R__FBSD)
+         if (errno == EINVAL)
+#else
          if (errno == EIDRM)
+#endif
             fSemaphore = -1;
       }
    }
 #else
    if (fSemaphore != (Int_t)INVALID_HANDLE_VALUE)
-      ReleaseMutex(fhSemaphore);
+      ReleaseMutex((HANDLE)fhSemaphore);
 #endif
 #endif
    return 0;

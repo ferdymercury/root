@@ -1,3 +1,4 @@
+//*CMZ :  2.21/07 08/03/99  12.52.33  by  Fons Rademakers
 //*CMZ :  0.90/02 08/11/96  15.54.23  by  Rene Brun
 //*-- Author :    Rene Brun   22/03/96
 {
@@ -58,6 +59,6 @@
     text->SetFillColor( 42 );
     text->AddText("ROOT example: tornado.C");
     text->AddText(timeStr);
-    text.Draw();
+    text->Draw();
     sky->Update();
 }

@@ -1,10 +1,12 @@
+//*CMZ :  2.21/07 02/03/99  16.03.20  by  Rene Brun
+//*CMZ :  2.21/06 10/02/99  17.20.18  by  Valery Fine(fine@vxcern.cern.ch)
 //*CMZ :  2.20/01 30/11/98  09.57.38  by  Rene Brun
 //*CMZ :  1.03/00 28/07/97  11.37.59  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   28/07/97
 
 #include "HelpText.h"
 
-
+#ifndef WIN32
 const char gHelpAbout[] = "\
 ROOT is an OO framework for large scale scientific data\n\
 analysis and data mining. It has been developed at CERN with the\n\
@@ -166,8 +168,9 @@ You can create the following graphics objects:\n\
   and select the option AddText.\n\n\
  -A PolyLine. Click with the left button for the first point,\n\
   move the mouse, click again with the left button for a new point. Close\n\
-  the polyline with a double-click. To edit one vertex point, pick it with \n\
-  the left button and drag to the new point position.\n\n\
+  the polyline by clicking twice at the same position.\n\
+  To edit one vertex point, pick it with the left button and drag to the \n\
+  new point position.\n\n\
  -A Text string. Click with the left button where you want to draw the text, \n\
   then type the text terminated by carriage return. To move the text, point\n\
   on it keeping the left mouse button pressed and drag the text to its new \n\
@@ -176,7 +179,8 @@ You can create the following graphics objects:\n\
   shrink the text respectively. If you position near the bottom-end of the text,\n\
   you can rotate it.\n\n\
  -A Graphical Cut. Click with the left button on each point of a polygone\n\
-  delimiting the selected area. A TCutG object is created. It can be used\n\
+  delimiting the selected area. Close the cut by clicking twice at the\n\
+  same position. A TCutG object is created. It can be used\n\
   as a selection for TTree::Draw. You can get a pointer to this object with\n\
   TCutG *cut = (TCutG*)gPad->GetPrimitive(\"CUTG\").\n\n\
   ";
@@ -265,3 +269,15 @@ All objects context menus contain the following items:\n\
  on the pointer and, in turn, inspect the pointed object,etc.\n\n\
  -Dump. Same as Inspect, except that the output is on stdout.\n\n\
 ";
+#else
+const char gHelpAbout[]         = "empty";
+const char gHelpBrowser[]       = "empry";
+const char gHelpGLViewer[]      = "empty";
+const char gHelpPostscript[]    = "empty";
+const char gHelpButtons[]       = "empty";
+const char gHelpGraphicsEditor[]= "empty";
+const char gHelpPullDownMenus[] = "empty";
+const char gHelpCanvas[]        = "empty";
+const char gHelpObjects[]       = "empty";
+
+#endif

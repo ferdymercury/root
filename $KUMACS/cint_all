@@ -1,3 +1,4 @@
+*CMZ :  2.21/07 08/03/99  12.40.32  by  Fons Rademakers
 *CMZ :  2.20/00 21/11/98  13.52.50  by  Fons Rademakers
 *CMZ :  2.00/10 27/06/98  19.18.40  by  Fons Rademakers
 *CMZ :  2.00/00 05/03/98  17.08.07  by  Fons Rademakers
@@ -18,6 +19,7 @@ exec cint_matrix
 exec cint_meta
 exec cint_minuit
 exec cint_rint
+exec cint_rfio
 exec cint_tree
 exec cint_unix
 exec cint_x11
@@ -25,6 +27,7 @@ exec cint_x11ttf
 exec cint_net
 exec cint_proof
 exec cint_pythia
+exec cint_physics
 exec cint_venus
 +IF,THREAD.
 exec cint_thread

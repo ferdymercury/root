@@ -1,3 +1,4 @@
+//*CMZ :  2.21/06 10/02/99  19.01.39  by  Rene Brun
 //*CMZ :  1.01/00 30/04/97  10.40.37  by  Valery Fine(fine@vxcern.cern.ch)
 //*-- Author :    Valery Fine(fine@vxcern.cern.ch)   16/08/96
 //  This class is used to synchonize threads
@@ -6,10 +7,6 @@
 
 #ifndef ROOT_TWin32HookViaThread
 #define ROOT_TWin32HookViaThread
-
-#ifndef ROOT_Win32Constants
-#include "Win32Constants.h"
-#endif
 
 #ifndef ROOT_RTypes
 #include "RTypes.h"
@@ -22,7 +19,6 @@ class TWin32SendWaitClass;
 class TWin32HookViaThread {
 
 protected:
-//   TWin32SendClass *fWin32Command;
    int             fSendFlag;     // = 0 - No message
                                   //   1 - Message is about to be sent
                                   //   2 - Message is about to be destroyed
@@ -33,7 +29,7 @@ public:
    virtual void ExecWindowThread(TGWin32Command *command=0);                         // Pass the command to the altrenative "window" thread
    virtual void ExecThreadCB(TWin32SendClass *command=0) = 0;                        // Perform the command
    virtual void ExecThreadCB(TWin32SendWaitClass *command=0){;}                       // Perform the command then release the origin thread
-   static  Bool_t ExecuteEvent(void *msg,Bool_t synch=kTRUE,UInt_t msgtype=ROOT_CMD); // Indirect call ExecThreadCB method
+   static  Bool_t ExecuteEvent(void *msg,Bool_t synch=kTRUE,UInt_t msgtype=UInt_t(-1)); // Indirect call ExecThreadCB method
 };
 
 #endif

@@ -1,3 +1,4 @@
+//*CMZ :  2.21/04 05/02/99  14.52.21  by  Fons Rademakers
 //*CMZ :  2.20/05 14/12/98  15.16.42  by  Fons Rademakers
 //*CMZ :  1.01/05 06/06/97  14.39.11  by  Fons Rademakers
 //*-- Author :    Rene Brun   08/12/95
@@ -26,7 +27,8 @@ enum EEventType {
    kButton1Down   =  1, kButton2Down   =  2, kButton3Down   =  3, kKeyDown  =  4,
    kButton1Up     = 11, kButton2Up     = 12, kButton3Up     = 13, kKeyUp    = 14,
    kButton1Motion = 21, kButton2Motion = 22, kButton3Motion = 23, kKeyPress = 24,
-   kButton1Locate = 41, kButton2Locate = 42, kButton3Locate = 43, kMouseMotion = 51,
+   kButton1Locate = 41, kButton2Locate = 42, kButton3Locate = 43,
+   kMouseMotion   = 51, kMouseEnter    = 52, kMouseLeave    = 53,
    kButton1Double = 61, kButton2Double = 62, kButton3Double = 63
 };
 

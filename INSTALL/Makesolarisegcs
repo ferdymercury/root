@@ -1,3 +1,4 @@
+*CMZ :  2.21/01 14/01/99  13.39.48  by  Rene Brun
 *CMZ :  2.20/06 17/12/98  13.59.05  by  Rene Brun
 *CMZ :  2.20/00 17/12/98  10.43.27  by  Rene Brun
 *-- Author :    Rene Brun   17/12/98
@@ -29,7 +30,7 @@ SOEXT         = so
 # System libraries:
 SYSLIBS       = -lm -ldl
 SYSXLIBS      = -L/usr/openwin/lib -lX11 -lm -lgen -ldl -lsocket
-XLIBS         = $(ROOTSYS)/lib/libXpm.a -L/usr/openwin/lib -lX11 -lsunmath
+XLIBS         = $(ROOTSYS)/lib/libXpm.a -L/usr/openwin/lib -lX11
 CILIBS        = -lm -ltermcap -ldl -L/usr/ccs/lib -lgen
 
 

@@ -1,3 +1,5 @@
+//*CMZ :  2.21/06 15/02/99  15.31.41  by  Fons Rademakers
+//*CMZ :  2.21/04 03/02/99  10.35.20  by  Fons Rademakers
 //*CMZ :  2.20/05 13/12/98  17.48.50  by  Rene Brun
 //*CMZ :  2.20/00 02/11/98  18.09.31  by  Fons Rademakers
 //*CMZ :  2.00/13 28/10/98  12.45.09  by  Fons Rademakers
@@ -106,7 +108,8 @@ TGFrame::TGFrame(const TGWindow *p, UInt_t w, UInt_t h,
 
    SetWindowAttributes_t wattr;
 
-   fOptions = options;
+   fBackground = back;
+   fOptions    = options;
    fWidth = w; fHeight = h; fX = fY = fBorderWidth = 0;
 
    if (fOptions & (kSunkenFrame | kRaisedFrame))
@@ -134,7 +137,17 @@ TGFrame::TGFrame(TGClient *c, Window_t id, const TGWindow *parent)
    fWidth       = attributes.fWidth;
    fHeight      = attributes.fHeight;
    fBorderWidth = attributes.fBorderWidth;
+   fBackground  = 0;
    fOptions     = 0;
+}
+
+//______________________________________________________________________________
+void TGFrame::ChangeBackground(ULong_t back)
+{
+   // Change frame background color.
+
+   fBackground = back;
+   gGXW->SetWindowBackground(fId, back);
 }
 
 //______________________________________________________________________________
@@ -398,6 +411,39 @@ Bool_t TGFrame::HandleClientMessage(Event_t *event)
 
    return kTRUE;
 }
+
+//-- static methods, needed because Win32 DLL's cannot export static data members
+
+ULong_t TGFrame::GetDefaultFrameBackground()
+{ return fgDefaultFrameBackground; }
+
+ULong_t TGFrame::GetDefaultSelectedBackground()
+{ return fgDefaultSelectedBackground; }
+
+ULong_t TGFrame::GetWhitePixel()
+{ return fgWhitePixel; }
+
+ULong_t TGFrame::GetBlackPixel()
+{ return fgBlackPixel; }
+
+GContext_t TGFrame::GetBlackGC()
+{ return fgBlackGC; }
+
+GContext_t TGFrame::GetWhiteGC()
+{ return fgWhiteGC; }
+
+GContext_t TGFrame::GetHilightGC()
+{ return fgHilightGC; }
+
+GContext_t TGFrame::GetShadowGC()
+{ return fgShadowGC; }
+
+GContext_t TGFrame::GetBckgndGC()
+{ return fgBckgndGC; }
+
+Time_t TGFrame::GetLastClick()
+{ return fgLastClick; }
+
 
 //______________________________________________________________________________
 TGCompositeFrame::TGCompositeFrame(const TGWindow *p, UInt_t w, UInt_t h,

@@ -1,5 +1,5 @@
-//*CMZ :  2.20/04 08/12/98  09.36.55  by  Rene Brun
-//*-- Author :    Rene Brun   08/12/98
+//*CMZ :  2.21/07 08/03/99  12.34.22  by  Fons Rademakers
+//*-- Author :    Fons Rademakers   08/03/99
 //*CMZ :  1.00/09 23/04/97  17.59.54  by  Rene Brun
 //*-- Author :    Rene Brun   23/04/97
 #if defined(__hpux) && !defined(__GNUG__)
@@ -138,6 +138,7 @@ extern G__linked_taginfo G__G__G3DLN_THYPE;
 #undef malloc
 #endif
 
+extern "C" void G__cpp_reset_tagtableG__G3D();
 
 extern "C" void G__set_cpp_environmentG__G3D() {
   G__add_macro("__MAKECINT__");
@@ -173,6 +174,7 @@ extern "C" void G__set_cpp_environmentG__G3D() {
   G__add_compiledheader("TMarker3DBox.h");
   G__add_compiledheader("THelix.h");
   G__add_compiledheader("THYPE.h");
+  G__cpp_reset_tagtableG__G3D();
 }
 extern "C" int G__cpp_dllrevG__G3D() { return(51111); }
 
@@ -241,72 +243,111 @@ static int G__TGeometry_GetBomb_6_0(G__value *result7,char *funcname,struct G__p
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGeometry_GetListOfShapes_7_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGeometry_GeomLevel_7_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TGeometry*)(G__getstructoffset()))->GeomLevel());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TGeometry_GetListOfShapes_8_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((TGeometry*)(G__getstructoffset()))->GetListOfShapes());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGeometry_GetListOfNodes_8_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGeometry_GetListOfNodes_9_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((TGeometry*)(G__getstructoffset()))->GetListOfNodes());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGeometry_GetListOfMaterials_9_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGeometry_GetListOfMaterials_0_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((TGeometry*)(G__getstructoffset()))->GetListOfMaterials());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGeometry_GetListOfMatrices_0_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGeometry_GetListOfMatrices_1_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((TGeometry*)(G__getstructoffset()))->GetListOfMatrices());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGeometry_GetCurrentNode_1_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGeometry_GetCurrentNode_2_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((TGeometry*)(G__getstructoffset()))->GetCurrentNode());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGeometry_GetMaterial_2_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGeometry_GetMaterial_3_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((TGeometry*)(G__getstructoffset()))->GetMaterial((const Text_t*)G__int(libp->para[0])));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGeometry_GetMaterialByNumber_3_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGeometry_GetMaterialByNumber_4_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((TGeometry*)(G__getstructoffset()))->GetMaterialByNumber((Int_t)G__int(libp->para[0])));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGeometry_GetNode_4_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGeometry_GetNode_5_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((TGeometry*)(G__getstructoffset()))->GetNode((const Text_t*)G__int(libp->para[0])));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGeometry_GetShape_5_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGeometry_GetShape_6_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((TGeometry*)(G__getstructoffset()))->GetShape((const Text_t*)G__int(libp->para[0])));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGeometry_GetShapeByNumber_6_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGeometry_GetShapeByNumber_7_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((TGeometry*)(G__getstructoffset()))->GetShapeByNumber((Int_t)G__int(libp->para[0])));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGeometry_GetRotMatrix_7_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGeometry_GetRotMatrix_8_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((TGeometry*)(G__getstructoffset()))->GetRotMatrix((const Text_t*)G__int(libp->para[0])));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGeometry_GetRotMatrixByNumber_8_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGeometry_GetRotMatrixByNumber_9_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((TGeometry*)(G__getstructoffset()))->GetRotMatrixByNumber((Int_t)G__int(libp->para[0])));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGeometry_IsFolder_9_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGeometry_GetCurrentMatrix_0_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,85,(long)((TGeometry*)(G__getstructoffset()))->GetCurrentMatrix());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TGeometry_GetCurrentPosition_1_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,85,(long)((TGeometry*)(G__getstructoffset()))->GetCurrentPosition((Double_t*)G__int(libp->para[0]),(Double_t*)G__int(libp->para[1])
+,(Double_t*)G__int(libp->para[2])));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TGeometry_GetCurrentPosition_2_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,85,(long)((TGeometry*)(G__getstructoffset()))->GetCurrentPosition((Float_t*)G__int(libp->para[0]),(Float_t*)G__int(libp->para[1])
+,(Float_t*)G__int(libp->para[2])));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TGeometry_GetCurrentReflection_3_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,98,(long)((TGeometry*)(G__getstructoffset()))->GetCurrentReflection());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TGeometry_IsFolder_4_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,98,(long)((TGeometry*)(G__getstructoffset()))->IsFolder());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGeometry_ls_0_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGeometry_Local2Master_5_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TGeometry*)(G__getstructoffset()))->Local2Master((Double_t*)G__int(libp->para[0]),(Double_t*)G__int(libp->para[1]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TGeometry_Local2Master_6_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TGeometry*)(G__getstructoffset()))->Local2Master((Float_t*)G__int(libp->para[0]),(Float_t*)G__int(libp->para[1]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TGeometry_ls_7_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -320,7 +361,7 @@ static int G__TGeometry_ls_0_2(G__value *result7,char *funcname,struct G__param 
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGeometry_Node_1_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGeometry_Node_8_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 8:
       G__setnull(result7);
@@ -364,13 +405,23 @@ static int G__TGeometry_Node_1_2(G__value *result7,char *funcname,struct G__para
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGeometry_RecursiveRemove_2_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGeometry_PushLevel_9_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TGeometry*)(G__getstructoffset()))->PushLevel());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TGeometry_PopLevel_0_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TGeometry*)(G__getstructoffset()))->PopLevel());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TGeometry_RecursiveRemove_1_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TGeometry*)(G__getstructoffset()))->RecursiveRemove((TObject*)G__int(libp->para[0]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGeometry_SetBomb_3_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGeometry_SetBomb_2_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -384,67 +435,201 @@ static int G__TGeometry_SetBomb_3_2(G__value *result7,char *funcname,struct G__p
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGeometry_SetCurrentNode_4_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGeometry_SetCurrentNode_3_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TGeometry*)(G__getstructoffset()))->SetCurrentNode((TNode*)G__int(libp->para[0]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGeometry_DeclFileName_5_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGeometry_SetGeomLevel_4_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 1:
+      G__setnull(result7);
+      ((TGeometry*)(G__getstructoffset()))->SetGeomLevel((Int_t)G__int(libp->para[0]));
+      break;
+   case 0:
+      G__setnull(result7);
+      ((TGeometry*)(G__getstructoffset()))->SetGeomLevel();
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TGeometry_SetMatrix_5_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 1:
+      G__setnull(result7);
+      ((TGeometry*)(G__getstructoffset()))->SetMatrix((TRotMatrix*)G__int(libp->para[0]));
+      break;
+   case 0:
+      G__setnull(result7);
+      ((TGeometry*)(G__getstructoffset()))->SetMatrix();
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TGeometry_SetPosition_6_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 4:
+      G__setnull(result7);
+      ((TGeometry*)(G__getstructoffset()))->SetPosition((TRotMatrix*)G__int(libp->para[0]),(Double_t)G__double(libp->para[1])
+,(Double_t)G__double(libp->para[2]),(Double_t)G__double(libp->para[3]));
+      break;
+   case 3:
+      G__setnull(result7);
+      ((TGeometry*)(G__getstructoffset()))->SetPosition((TRotMatrix*)G__int(libp->para[0]),(Double_t)G__double(libp->para[1])
+,(Double_t)G__double(libp->para[2]));
+      break;
+   case 2:
+      G__setnull(result7);
+      ((TGeometry*)(G__getstructoffset()))->SetPosition((TRotMatrix*)G__int(libp->para[0]),(Double_t)G__double(libp->para[1]));
+      break;
+   case 1:
+      G__setnull(result7);
+      ((TGeometry*)(G__getstructoffset()))->SetPosition((TRotMatrix*)G__int(libp->para[0]));
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TGeometry_SetPosition_7_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TGeometry*)(G__getstructoffset()))->SetPosition((TRotMatrix*)G__int(libp->para[0]),(Float_t)G__double(libp->para[1])
+,(Float_t)G__double(libp->para[2]),(Float_t)G__double(libp->para[3]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TGeometry_SetPosition_8_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TGeometry*)(G__getstructoffset()))->SetPosition((Double_t)G__double(libp->para[0]),(Double_t)G__double(libp->para[1])
+,(Double_t)G__double(libp->para[2]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TGeometry_SetPosition_9_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TGeometry*)(G__getstructoffset()))->SetPosition((Float_t)G__double(libp->para[0]),(Float_t)G__double(libp->para[1])
+,(Float_t)G__double(libp->para[2]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TGeometry_UpdateMatrix_0_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TGeometry*)(G__getstructoffset()))->UpdateMatrix((TNode*)G__int(libp->para[0]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TGeometry_UpdateTempMatrix_1_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 4:
+      G__setnull(result7);
+      ((TGeometry*)(G__getstructoffset()))->UpdateTempMatrix((Double_t)G__double(libp->para[0]),(Double_t)G__double(libp->para[1])
+,(Double_t)G__double(libp->para[2]),(TRotMatrix*)G__int(libp->para[3]));
+      break;
+   case 3:
+      G__setnull(result7);
+      ((TGeometry*)(G__getstructoffset()))->UpdateTempMatrix((Double_t)G__double(libp->para[0]),(Double_t)G__double(libp->para[1])
+,(Double_t)G__double(libp->para[2]));
+      break;
+   case 2:
+      G__setnull(result7);
+      ((TGeometry*)(G__getstructoffset()))->UpdateTempMatrix((Double_t)G__double(libp->para[0]),(Double_t)G__double(libp->para[1]));
+      break;
+   case 1:
+      G__setnull(result7);
+      ((TGeometry*)(G__getstructoffset()))->UpdateTempMatrix((Double_t)G__double(libp->para[0]));
+      break;
+   case 0:
+      G__setnull(result7);
+      ((TGeometry*)(G__getstructoffset()))->UpdateTempMatrix();
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TGeometry_UpdateTempMatrix_2_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 5:
+      G__setnull(result7);
+      ((TGeometry*)(G__getstructoffset()))->UpdateTempMatrix((Double_t)G__double(libp->para[0]),(Double_t)G__double(libp->para[1])
+,(Double_t)G__double(libp->para[2]),(Double_t*)G__int(libp->para[3])
+,(Bool_t)G__int(libp->para[4]));
+      break;
+   case 4:
+      G__setnull(result7);
+      ((TGeometry*)(G__getstructoffset()))->UpdateTempMatrix((Double_t)G__double(libp->para[0]),(Double_t)G__double(libp->para[1])
+,(Double_t)G__double(libp->para[2]),(Double_t*)G__int(libp->para[3]));
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TGeometry_UpdateTempMatrix_3_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TGeometry*)(G__getstructoffset()))->UpdateTempMatrix(
+(Double_t*)G__int(libp->para[0]),(Double_t*)G__int(libp->para[1])
+,(Double_t)G__double(libp->para[2]),(Double_t)G__double(libp->para[3])
+,(Double_t)G__double(libp->para[4]),(Double_t*)G__int(libp->para[5])
+,(Double_t*)G__int(libp->para[6]),(Double_t*)G__int(libp->para[7]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TGeometry_DeclFileName_4_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,67,(long)((TGeometry*)(G__getstructoffset()))->DeclFileName());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGeometry_DeclFileLine_6_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGeometry_DeclFileLine_5_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TGeometry*)(G__getstructoffset()))->DeclFileLine());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGeometry_ImplFileName_7_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGeometry_ImplFileName_6_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,67,(long)((TGeometry*)(G__getstructoffset()))->ImplFileName());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGeometry_ImplFileLine_8_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGeometry_ImplFileLine_7_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TGeometry*)(G__getstructoffset()))->ImplFileLine());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGeometry_Class_Version_9_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGeometry_Class_Version_8_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,115,(long)((TGeometry*)(G__getstructoffset()))->Class_Version());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGeometry_Class_0_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGeometry_Class_9_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((TGeometry*)(G__getstructoffset()))->Class());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGeometry_Dictionary_1_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGeometry_Dictionary_0_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TGeometry*)(G__getstructoffset()))->Dictionary();
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGeometry_IsA_2_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGeometry_IsA_1_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((TGeometry*)(G__getstructoffset()))->IsA());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGeometry_ShowMembers_3_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGeometry_ShowMembers_2_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TGeometry*)(G__getstructoffset()))->ShowMembers(*(TMemberInspector*)libp->para[0].ref,(char*)G__int(libp->para[1]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGeometry_Streamer_4_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGeometry_Streamer_3_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TGeometry*)(G__getstructoffset()))->Streamer(*(TBuffer*)libp->para[0].ref);
    return(1 || funcname || hash || result7 || libp) ;
 }
 
 // automatic copy constructor
-static int G__TGeometry_TGeometry_5_3(G__value *result7,char *funcname,struct G__param *libp,int hash)
+static int G__TGeometry_TGeometry_4_5(G__value *result7,char *funcname,struct G__param *libp,int hash)
 {
    TGeometry *p;
    if(1!=libp->paran) ;
@@ -457,7 +642,7 @@ static int G__TGeometry_TGeometry_5_3(G__value *result7,char *funcname,struct G_
 }
 
 // automatic destructor
-static int G__TGeometry_wATGeometry_6_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGeometry_wATGeometry_5_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    if(G__getaryconstruct())
      if(G__PVOID==G__getgvp())
        delete[] (TGeometry *)(G__getstructoffset());
@@ -686,9 +871,8 @@ static int G__TPolyLine3D_SavePrimitive_0_2(G__value *result7,char *funcname,str
 }
 
 static int G__TPolyLine3D_SetNextPoint_1_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
-      G__setnull(result7);
-      ((TPolyLine3D*)(G__getstructoffset()))->SetNextPoint((Float_t)G__double(libp->para[0]),(Float_t)G__double(libp->para[1])
-,(Float_t)G__double(libp->para[2]));
+      G__letint(result7,105,(long)((TPolyLine3D*)(G__getstructoffset()))->SetNextPoint((Float_t)G__double(libp->para[0]),(Float_t)G__double(libp->para[1])
+,(Float_t)G__double(libp->para[2])));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
@@ -738,61 +922,66 @@ static int G__TPolyLine3D_Sizeof3D_5_2(G__value *result7,char *funcname,struct G
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TPolyLine3D_DeclFileName_6_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TPolyLine3D_Size_6_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TPolyLine3D*)(G__getstructoffset()))->Size());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPolyLine3D_DeclFileName_7_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,67,(long)((TPolyLine3D*)(G__getstructoffset()))->DeclFileName());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TPolyLine3D_DeclFileLine_7_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TPolyLine3D_DeclFileLine_8_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TPolyLine3D*)(G__getstructoffset()))->DeclFileLine());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TPolyLine3D_ImplFileName_8_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TPolyLine3D_ImplFileName_9_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,67,(long)((TPolyLine3D*)(G__getstructoffset()))->ImplFileName());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TPolyLine3D_ImplFileLine_9_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TPolyLine3D_ImplFileLine_0_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TPolyLine3D*)(G__getstructoffset()))->ImplFileLine());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TPolyLine3D_Class_Version_0_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TPolyLine3D_Class_Version_1_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,115,(long)((TPolyLine3D*)(G__getstructoffset()))->Class_Version());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TPolyLine3D_Class_1_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TPolyLine3D_Class_2_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((TPolyLine3D*)(G__getstructoffset()))->Class());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TPolyLine3D_Dictionary_2_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TPolyLine3D_Dictionary_3_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TPolyLine3D*)(G__getstructoffset()))->Dictionary();
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TPolyLine3D_IsA_3_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TPolyLine3D_IsA_4_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((TPolyLine3D*)(G__getstructoffset()))->IsA());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TPolyLine3D_ShowMembers_4_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TPolyLine3D_ShowMembers_5_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TPolyLine3D*)(G__getstructoffset()))->ShowMembers(*(TMemberInspector*)libp->para[0].ref,(char*)G__int(libp->para[1]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TPolyLine3D_Streamer_5_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TPolyLine3D_Streamer_6_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TPolyLine3D*)(G__getstructoffset()))->Streamer(*(TBuffer*)libp->para[0].ref);
    return(1 || funcname || hash || result7 || libp) ;
 }
 
 // automatic destructor
-static int G__TPolyLine3D_wATPolyLine3D_6_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TPolyLine3D_wATPolyLine3D_7_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    if(G__getaryconstruct())
      if(G__PVOID==G__getgvp())
        delete[] (TPolyLine3D *)(G__getstructoffset());
@@ -1028,67 +1217,78 @@ static int G__TPolyMarker3D_SetPolyMarker_0_2(G__value *result7,char *funcname,s
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TPolyMarker3D_Sizeof3D_1_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TPolyMarker3D_SetNextPoint_1_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TPolyMarker3D*)(G__getstructoffset()))->SetNextPoint((Float_t)G__double(libp->para[0]),(Float_t)G__double(libp->para[1])
+,(Float_t)G__double(libp->para[2])));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPolyMarker3D_Sizeof3D_2_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TPolyMarker3D*)(G__getstructoffset()))->Sizeof3D();
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TPolyMarker3D_DeclFileName_2_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TPolyMarker3D_Size_3_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TPolyMarker3D*)(G__getstructoffset()))->Size());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPolyMarker3D_DeclFileName_4_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,67,(long)((TPolyMarker3D*)(G__getstructoffset()))->DeclFileName());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TPolyMarker3D_DeclFileLine_3_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TPolyMarker3D_DeclFileLine_5_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TPolyMarker3D*)(G__getstructoffset()))->DeclFileLine());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TPolyMarker3D_ImplFileName_4_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TPolyMarker3D_ImplFileName_6_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,67,(long)((TPolyMarker3D*)(G__getstructoffset()))->ImplFileName());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TPolyMarker3D_ImplFileLine_5_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TPolyMarker3D_ImplFileLine_7_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TPolyMarker3D*)(G__getstructoffset()))->ImplFileLine());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TPolyMarker3D_Class_Version_6_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TPolyMarker3D_Class_Version_8_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,115,(long)((TPolyMarker3D*)(G__getstructoffset()))->Class_Version());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TPolyMarker3D_Class_7_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TPolyMarker3D_Class_9_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((TPolyMarker3D*)(G__getstructoffset()))->Class());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TPolyMarker3D_Dictionary_8_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TPolyMarker3D_Dictionary_0_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TPolyMarker3D*)(G__getstructoffset()))->Dictionary();
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TPolyMarker3D_IsA_9_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TPolyMarker3D_IsA_1_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((TPolyMarker3D*)(G__getstructoffset()))->IsA());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TPolyMarker3D_ShowMembers_0_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TPolyMarker3D_ShowMembers_2_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TPolyMarker3D*)(G__getstructoffset()))->ShowMembers(*(TMemberInspector*)libp->para[0].ref,(char*)G__int(libp->para[1]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TPolyMarker3D_Streamer_1_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TPolyMarker3D_Streamer_3_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TPolyMarker3D*)(G__getstructoffset()))->Streamer(*(TBuffer*)libp->para[0].ref);
    return(1 || funcname || hash || result7 || libp) ;
 }
 
 // automatic destructor
-static int G__TPolyMarker3D_wATPolyMarker3D_2_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TPolyMarker3D_wATPolyMarker3D_4_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    if(G__getaryconstruct())
      if(G__PVOID==G__getgvp())
        delete[] (TPolyMarker3D *)(G__getstructoffset());
@@ -1893,7 +2093,7 @@ static int G__TRotMatrix_wATRotMatrix_8_2(G__value *result7,char *funcname,struc
 
 
 /* TShape */
-static int G__TShape_TShape_0_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TShape_TShape_1_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    TShape *p=NULL;
    if(G__getaryconstruct()) p=new TShape[G__getaryconstruct()];
    else                    p=new TShape;
@@ -1904,7 +2104,7 @@ static int G__TShape_TShape_0_0(G__value *result7,char *funcname,struct G__param
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TShape_TShape_1_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TShape_TShape_2_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    TShape *p=NULL;
       p = new TShape(
 (Text_t*)G__int(libp->para[0]),(Text_t*)G__int(libp->para[1])
@@ -1916,27 +2116,27 @@ static int G__TShape_TShape_1_0(G__value *result7,char *funcname,struct G__param
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TShape_Is3D_3_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TShape_Is3D_4_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,98,(long)((TShape*)(G__getstructoffset()))->Is3D());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TShape_GetMaterial_4_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TShape_GetMaterial_5_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((TShape*)(G__getstructoffset()))->GetMaterial());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TShape_GetNumber_5_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TShape_GetNumber_6_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TShape*)(G__getstructoffset()))->GetNumber());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TShape_GetVisibility_6_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TShape_GetVisibility_7_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TShape*)(G__getstructoffset()))->GetVisibility());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TShape_Paint_7_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TShape_Paint_8_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -1950,85 +2150,99 @@ static int G__TShape_Paint_7_0(G__value *result7,char *funcname,struct G__param 
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TShape_PaintGLPoints_8_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TShape_PaintGLPoints_9_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TShape*)(G__getstructoffset()))->PaintGLPoints((Float_t*)G__int(libp->para[0]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TShape_PaintShape_9_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TShape_PaintShape_0_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 2:
+      G__setnull(result7);
+      ((TShape*)(G__getstructoffset()))->PaintShape((X3DBuffer*)G__int(libp->para[0]),(Bool_t)G__int(libp->para[1]));
+      break;
+   case 1:
       G__setnull(result7);
       ((TShape*)(G__getstructoffset()))->PaintShape((X3DBuffer*)G__int(libp->para[0]));
+      break;
+   }
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TShape_SetName_0_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TShape_SetName_1_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TShape*)(G__getstructoffset()))->SetName((const Text_t*)G__int(libp->para[0]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TShape_SetVisibility_1_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TShape_SetPoints_2_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TShape*)(G__getstructoffset()))->SetPoints((Float_t*)G__int(libp->para[0]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TShape_SetVisibility_3_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TShape*)(G__getstructoffset()))->SetVisibility((Int_t)G__int(libp->para[0]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TShape_DeclFileName_2_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TShape_DeclFileName_4_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,67,(long)((TShape*)(G__getstructoffset()))->DeclFileName());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TShape_DeclFileLine_3_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TShape_DeclFileLine_5_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TShape*)(G__getstructoffset()))->DeclFileLine());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TShape_ImplFileName_4_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TShape_ImplFileName_6_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,67,(long)((TShape*)(G__getstructoffset()))->ImplFileName());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TShape_ImplFileLine_5_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TShape_ImplFileLine_7_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TShape*)(G__getstructoffset()))->ImplFileLine());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TShape_Class_Version_6_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TShape_Class_Version_8_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,115,(long)((TShape*)(G__getstructoffset()))->Class_Version());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TShape_Class_7_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TShape_Class_9_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((TShape*)(G__getstructoffset()))->Class());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TShape_Dictionary_8_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TShape_Dictionary_0_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TShape*)(G__getstructoffset()))->Dictionary();
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TShape_IsA_9_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TShape_IsA_1_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((TShape*)(G__getstructoffset()))->IsA());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TShape_ShowMembers_0_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TShape_ShowMembers_2_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TShape*)(G__getstructoffset()))->ShowMembers(*(TMemberInspector*)libp->para[0].ref,(char*)G__int(libp->para[1]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TShape_Streamer_1_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TShape_Streamer_3_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TShape*)(G__getstructoffset()))->Streamer(*(TBuffer*)libp->para[0].ref);
    return(1 || funcname || hash || result7 || libp) ;
 }
 
 // automatic copy constructor
-static int G__TShape_TShape_2_2(G__value *result7,char *funcname,struct G__param *libp,int hash)
+static int G__TShape_TShape_4_2(G__value *result7,char *funcname,struct G__param *libp,int hash)
 {
    TShape *p;
    if(1!=libp->paran) ;
@@ -2041,7 +2255,7 @@ static int G__TShape_TShape_2_2(G__value *result7,char *funcname,struct G__param
 }
 
 // automatic destructor
-static int G__TShape_wATShape_3_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TShape_wATShape_5_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    if(G__getaryconstruct())
      if(G__PVOID==G__getgvp())
        delete[] (TShape *)(G__getstructoffset());
@@ -5095,7 +5309,22 @@ static int G__TPadView3D_SetAttNode_4_1(G__value *result7,char *funcname,struct 
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TPadView3D_SetPad_5_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TPadView3D_SetLineAttr_5_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 3:
+      G__setnull(result7);
+      ((TPadView3D*)(G__getstructoffset()))->SetLineAttr((Color_t)G__int(libp->para[0]),(Int_t)G__int(libp->para[1])
+,(Option_t*)G__int(libp->para[2]));
+      break;
+   case 2:
+      G__setnull(result7);
+      ((TPadView3D*)(G__getstructoffset()))->SetLineAttr((Color_t)G__int(libp->para[0]),(Int_t)G__int(libp->para[1]));
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPadView3D_SetPad_6_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -5109,7 +5338,7 @@ static int G__TPadView3D_SetPad_5_1(G__value *result7,char *funcname,struct G__p
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TPadView3D_UpdateNodeMatrix_6_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TPadView3D_UpdateNodeMatrix_7_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 2:
       G__setnull(result7);
@@ -5123,73 +5352,90 @@ static int G__TPadView3D_UpdateNodeMatrix_6_1(G__value *result7,char *funcname,s
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TPadView3D_UpdateView_7_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TPadView3D_UpdatePosition_8_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 5:
+      G__setnull(result7);
+      ((TPadView3D*)(G__getstructoffset()))->UpdatePosition((Double_t)G__double(libp->para[0]),(Double_t)G__double(libp->para[1])
+,(Double_t)G__double(libp->para[2]),(TRotMatrix*)G__int(libp->para[3])
+,(Option_t*)G__int(libp->para[4]));
+      break;
+   case 4:
+      G__setnull(result7);
+      ((TPadView3D*)(G__getstructoffset()))->UpdatePosition((Double_t)G__double(libp->para[0]),(Double_t)G__double(libp->para[1])
+,(Double_t)G__double(libp->para[2]),(TRotMatrix*)G__int(libp->para[3]));
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPadView3D_UpdateView_9_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TPadView3D*)(G__getstructoffset()))->UpdateView();
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TPadView3D_GetRange_8_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TPadView3D_GetRange_0_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TPadView3D*)(G__getstructoffset()))->GetRange((Double_t*)G__int(libp->para[0]),(Double_t*)G__int(libp->para[1]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TPadView3D_SetRange_9_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TPadView3D_SetRange_1_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TPadView3D*)(G__getstructoffset()))->SetRange((Double_t*)G__int(libp->para[0]),(Double_t*)G__int(libp->para[1]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TPadView3D_GetShift_0_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TPadView3D_GetShift_2_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TPadView3D*)(G__getstructoffset()))->GetShift((Double_t*)G__int(libp->para[0]),(Double_t*)G__int(libp->para[1]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TPadView3D_SetShift_1_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TPadView3D_SetShift_3_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TPadView3D*)(G__getstructoffset()))->SetShift((Double_t*)G__int(libp->para[0]),(Double_t*)G__int(libp->para[1]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TPadView3D_GetAngles_2_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TPadView3D_GetAngles_4_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TPadView3D*)(G__getstructoffset()))->GetAngles((Double_t*)G__int(libp->para[0]),(Double_t*)G__int(libp->para[1]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TPadView3D_SetAngles_3_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TPadView3D_SetAngles_5_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TPadView3D*)(G__getstructoffset()))->SetAngles((Double_t*)G__int(libp->para[0]),(Double_t*)G__int(libp->para[1]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TPadView3D_GetAnglesFactors_4_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TPadView3D_GetAnglesFactors_6_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TPadView3D*)(G__getstructoffset()))->GetAnglesFactors((Double_t*)G__int(libp->para[0]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TPadView3D_SetAnglesFactors_5_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TPadView3D_SetAnglesFactors_7_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TPadView3D*)(G__getstructoffset()))->SetAnglesFactors((Double_t*)G__int(libp->para[0]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TPadView3D_GetScale_6_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TPadView3D_GetScale_8_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letdouble(result7,102,(double)((TPadView3D*)(G__getstructoffset()))->GetScale());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TPadView3D_SetScale_7_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TPadView3D_SetScale_9_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TPadView3D*)(G__getstructoffset()))->SetScale((Float_t)G__double(libp->para[0]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
 // automatic copy constructor
-static int G__TPadView3D_TPadView3D_8_2(G__value *result7,char *funcname,struct G__param *libp,int hash)
+static int G__TPadView3D_TPadView3D_0_3(G__value *result7,char *funcname,struct G__param *libp,int hash)
 {
    TPadView3D *p;
    if(1!=libp->paran) ;
@@ -5202,7 +5448,7 @@ static int G__TPadView3D_TPadView3D_8_2(G__value *result7,char *funcname,struct 
 }
 
 // automatic destructor
-static int G__TPadView3D_wATPadView3D_9_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TPadView3D_wATPadView3D_1_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    if(G__getaryconstruct())
      if(G__PVOID==G__getgvp())
        delete[] (TPadView3D *)(G__getstructoffset());
@@ -5452,19 +5698,34 @@ static int G__TPadOpenGLView_SetAttNode_5_2(G__value *result7,char *funcname,str
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TPadOpenGLView_SetSpeedMove_6_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TPadOpenGLView_SetLineAttr_6_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 3:
+      G__setnull(result7);
+      ((TPadOpenGLView*)(G__getstructoffset()))->SetLineAttr((Color_t)G__int(libp->para[0]),(Int_t)G__int(libp->para[1])
+,(Option_t*)G__int(libp->para[2]));
+      break;
+   case 2:
+      G__setnull(result7);
+      ((TPadOpenGLView*)(G__getstructoffset()))->SetLineAttr((Color_t)G__int(libp->para[0]),(Int_t)G__int(libp->para[1]));
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPadOpenGLView_SetSpeedMove_7_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TPadOpenGLView*)(G__getstructoffset()))->SetSpeedMove((Float_t)G__double(libp->para[0]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TPadOpenGLView_SetSteps_7_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TPadOpenGLView_SetSteps_8_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TPadOpenGLView*)(G__getstructoffset()))->SetSteps((Float_t*)G__int(libp->para[0]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TPadOpenGLView_UpdateNodeMatrix_8_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TPadOpenGLView_UpdateNodeMatrix_9_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 2:
       G__setnull(result7);
@@ -5478,14 +5739,31 @@ static int G__TPadOpenGLView_UpdateNodeMatrix_8_2(G__value *result7,char *funcna
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TPadOpenGLView_UpdateProjectView_9_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TPadOpenGLView_UpdatePosition_0_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 5:
+      G__setnull(result7);
+      ((TPadOpenGLView*)(G__getstructoffset()))->UpdatePosition((Double_t)G__double(libp->para[0]),(Double_t)G__double(libp->para[1])
+,(Double_t)G__double(libp->para[2]),(TRotMatrix*)G__int(libp->para[3])
+,(Option_t*)G__int(libp->para[4]));
+      break;
+   case 4:
+      G__setnull(result7);
+      ((TPadOpenGLView*)(G__getstructoffset()))->UpdatePosition((Double_t)G__double(libp->para[0]),(Double_t)G__double(libp->para[1])
+,(Double_t)G__double(libp->para[2]),(TRotMatrix*)G__int(libp->para[3]));
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPadOpenGLView_UpdateProjectView_1_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TPadOpenGLView*)(G__getstructoffset()))->UpdateProjectView();
    return(1 || funcname || hash || result7 || libp) ;
 }
 
 // automatic copy constructor
-static int G__TPadOpenGLView_TPadOpenGLView_0_3(G__value *result7,char *funcname,struct G__param *libp,int hash)
+static int G__TPadOpenGLView_TPadOpenGLView_2_3(G__value *result7,char *funcname,struct G__param *libp,int hash)
 {
    TPadOpenGLView *p;
    if(1!=libp->paran) ;
@@ -5498,7 +5776,7 @@ static int G__TPadOpenGLView_TPadOpenGLView_0_3(G__value *result7,char *funcname
 }
 
 // automatic destructor
-static int G__TPadOpenGLView_wATPadOpenGLView_1_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TPadOpenGLView_wATPadOpenGLView_3_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    if(G__getaryconstruct())
      if(G__PVOID==G__getgvp())
        delete[] (TPadOpenGLView *)(G__getstructoffset());
@@ -5574,8 +5852,16 @@ static int G__TMarker3DBox_Paint_0_1(G__value *result7,char *funcname,struct G__
 }
 
 static int G__TMarker3DBox_PaintShape_1_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 2:
+      G__setnull(result7);
+      ((TMarker3DBox*)(G__getstructoffset()))->PaintShape((X3DBuffer*)G__int(libp->para[0]),(Bool_t)G__int(libp->para[1]));
+      break;
+   case 1:
       G__setnull(result7);
       ((TMarker3DBox*)(G__getstructoffset()))->PaintShape((X3DBuffer*)G__int(libp->para[0]));
+      break;
+   }
    return(1 || funcname || hash || result7 || libp) ;
 }
 
@@ -6973,6 +7259,14 @@ static void G__setup_memvarTGeometry(void) {
    G__memvar_setup((void*)NULL,85,2,0,G__get_linked_tagnum(&G__G__G3DLN_TRotMatrix),-1,-1,4,"fMatrixPointer=",0,"Pointers to rotation matrices");
    G__memvar_setup((void*)NULL,85,2,0,G__get_linked_tagnum(&G__G__G3DLN_TShape),-1,-1,4,"fShapePointer=",0,"Pointers to shapes");
    G__memvar_setup((void*)NULL,102,0,0,-1,G__defined_typename("Float_t"),-1,4,"fBomb=",0,"Bomb factor for exploded geometry");
+   G__memvar_setup((void*)NULL,85,0,0,G__get_linked_tagnum(&G__G__G3DLN_TRotMatrix),-1,-1,4,"fMatrix=",0,"! Pointers to current rotation matrices");
+   G__memvar_setup((void*)NULL,100,0,0,-1,G__defined_typename("Double_t"),-1,4,"fX=",0,"!");
+   G__memvar_setup((void*)NULL,100,0,0,-1,G__defined_typename("Double_t"),-1,4,"fY=",0,"! The global translation of the current node");
+   G__memvar_setup((void*)NULL,100,0,0,-1,G__defined_typename("Double_t"),-1,4,"fZ=",0,"!");
+   G__memvar_setup((void*)NULL,100,0,0,-1,G__defined_typename("Double_t"),-1,4,"fTranslation[20][3]=",0,"!");
+   G__memvar_setup((void*)NULL,100,0,0,-1,G__defined_typename("Double_t"),-1,4,"fRotMatrix[20][9]=",0,"!");
+   G__memvar_setup((void*)NULL,98,0,0,-1,G__defined_typename("Bool_t"),-1,4,"fIsReflection[20]=",0,"!");
+   G__memvar_setup((void*)NULL,105,0,0,-1,G__defined_typename("Int_t"),-1,4,"fGeomLevel=",0,"!");
    G__memvar_setup((void*)NULL,85,0,0,G__get_linked_tagnum(&G__G__G3DLN_TClass),-1,-2,4,"fgIsA=",0,(char*)NULL);
    }
    G__tag_memvar_reset();
@@ -6987,7 +7281,7 @@ static void G__setup_memvarTPolyLine3D(void) {
    G__memvar_setup((void*)NULL,70,0,0,-1,G__defined_typename("Float_t"),-1,2,"fP=",0,"Array of 3-D coordinates  (x,y,z)");
    G__memvar_setup((void*)NULL,117,0,0,G__get_linked_tagnum(&G__G__G3DLN_TString),-1,-1,2,"fOption=",0,"options");
    G__memvar_setup((void*)NULL,104,0,0,-1,G__defined_typename("UInt_t"),-1,2,"fGLList=",0,"The list number for OpenGL view");
-   G__memvar_setup((void*)NULL,105,0,0,-1,G__defined_typename("Int_t"),-1,2,"fLastPoint=",0,"The number of the last filled point");
+   G__memvar_setup((void*)NULL,105,0,0,-1,G__defined_typename("Int_t"),-1,2,"fLastPoint=",0,"The index of the last filled point");
    G__memvar_setup((void*)NULL,85,0,0,G__get_linked_tagnum(&G__G__G3DLN_TClass),-1,-2,4,"fgIsA=",0,(char*)NULL);
    }
    G__tag_memvar_reset();
@@ -7002,6 +7296,7 @@ static void G__setup_memvarTPolyMarker3D(void) {
    G__memvar_setup((void*)NULL,70,0,0,-1,G__defined_typename("Float_t"),-1,2,"fP=",0,"Array of X,Y,Z coordinates");
    G__memvar_setup((void*)NULL,117,0,0,G__get_linked_tagnum(&G__G__G3DLN_TString),-1,-1,2,"fOption=",0,"options");
    G__memvar_setup((void*)NULL,104,0,0,-1,G__defined_typename("UInt_t"),-1,2,"fGLList=",0,"The list number for OpenGL view");
+   G__memvar_setup((void*)NULL,105,0,0,-1,G__defined_typename("Int_t"),-1,2,"fLastPoint=",0,"The index of the last filled point");
    G__memvar_setup((void*)NULL,85,0,0,G__get_linked_tagnum(&G__G__G3DLN_TClass),-1,-2,4,"fgIsA=",0,(char*)NULL);
    }
    G__tag_memvar_reset();
@@ -7449,44 +7744,86 @@ static void G__setup_memfuncTGeometry(void) {
    G__memfunc_setup("Browse",626,G__TGeometry_Browse_3_0,121,-1,-1,0,1,1,1,0,"U 'TBrowser' - 0 - b",(char*)NULL,(void*)NULL,1);
    G__memfunc_setup("cd",199,G__TGeometry_cd_4_0,121,-1,-1,0,1,1,1,0,"C - 'Text_t' 0 0 path",(char*)NULL,(void*)NULL,1);
    G__memfunc_setup("Draw",398,G__TGeometry_Draw_5_0,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("GetBomb",672,G__TGeometry_GetBomb_6_0,102,-1,G__defined_typename("Float_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetListOfShapes",1493,G__TGeometry_GetListOfShapes_7_0,85,G__get_linked_tagnum(&G__G__G3DLN_THashList),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetListOfNodes",1386,G__TGeometry_GetListOfNodes_8_0,85,G__get_linked_tagnum(&G__G__G3DLN_TList),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetListOfMaterials",1811,G__TGeometry_GetListOfMaterials_9_0,85,G__get_linked_tagnum(&G__G__G3DLN_THashList),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetListOfMatrices",1705,G__TGeometry_GetListOfMatrices_0_1,85,G__get_linked_tagnum(&G__G__G3DLN_THashList),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetCurrentNode",1417,G__TGeometry_GetCurrentNode_1_1,85,G__get_linked_tagnum(&G__G__G3DLN_TNode),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetMaterial",1103,G__TGeometry_GetMaterial_2_1,85,G__get_linked_tagnum(&G__G__G3DLN_TMaterial),-1,0,1,1,1,0,"C - 'Text_t' 0 - name",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetMaterialByNumber",1907,G__TGeometry_GetMaterialByNumber_3_1,85,G__get_linked_tagnum(&G__G__G3DLN_TMaterial),-1,0,1,1,1,0,"i - 'Int_t' 0 - number",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetNode",678,G__TGeometry_GetNode_4_1,85,G__get_linked_tagnum(&G__G__G3DLN_TNode),-1,0,1,1,1,0,"C - 'Text_t' 0 - name",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetShape",785,G__TGeometry_GetShape_5_1,85,G__get_linked_tagnum(&G__G__G3DLN_TShape),-1,0,1,1,1,0,"C - 'Text_t' 0 - name",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetShapeByNumber",1589,G__TGeometry_GetShapeByNumber_6_1,85,G__get_linked_tagnum(&G__G__G3DLN_TShape),-1,0,1,1,1,0,"i - 'Int_t' 0 - number",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetRotMatrix",1226,G__TGeometry_GetRotMatrix_7_1,85,G__get_linked_tagnum(&G__G__G3DLN_TRotMatrix),-1,0,1,1,1,0,"C - 'Text_t' 0 - name",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetRotMatrixByNumber",2030,G__TGeometry_GetRotMatrixByNumber_8_1,85,G__get_linked_tagnum(&G__G__G3DLN_TRotMatrix),-1,0,1,1,1,0,"i - 'Int_t' 0 - number",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("IsFolder",792,G__TGeometry_IsFolder_9_1,98,-1,G__defined_typename("Bool_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("ls",223,G__TGeometry_ls_0_2,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"rsn2\" option",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("Node",390,G__TGeometry_Node_1_2,121,-1,-1,0,8,1,1,0,
+   G__memfunc_setup("GetBomb",672,G__TGeometry_GetBomb_6_0,102,-1,G__defined_typename("Float_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GeomLevel",896,G__TGeometry_GeomLevel_7_0,105,-1,G__defined_typename("Int_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetListOfShapes",1493,G__TGeometry_GetListOfShapes_8_0,85,G__get_linked_tagnum(&G__G__G3DLN_THashList),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetListOfNodes",1386,G__TGeometry_GetListOfNodes_9_0,85,G__get_linked_tagnum(&G__G__G3DLN_TList),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetListOfMaterials",1811,G__TGeometry_GetListOfMaterials_0_1,85,G__get_linked_tagnum(&G__G__G3DLN_THashList),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetListOfMatrices",1705,G__TGeometry_GetListOfMatrices_1_1,85,G__get_linked_tagnum(&G__G__G3DLN_THashList),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetCurrentNode",1417,G__TGeometry_GetCurrentNode_2_1,85,G__get_linked_tagnum(&G__G__G3DLN_TNode),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetMaterial",1103,G__TGeometry_GetMaterial_3_1,85,G__get_linked_tagnum(&G__G__G3DLN_TMaterial),-1,0,1,1,1,0,"C - 'Text_t' 0 - name",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetMaterialByNumber",1907,G__TGeometry_GetMaterialByNumber_4_1,85,G__get_linked_tagnum(&G__G__G3DLN_TMaterial),-1,0,1,1,1,0,"i - 'Int_t' 0 - number",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetNode",678,G__TGeometry_GetNode_5_1,85,G__get_linked_tagnum(&G__G__G3DLN_TNode),-1,0,1,1,1,0,"C - 'Text_t' 0 - name",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetShape",785,G__TGeometry_GetShape_6_1,85,G__get_linked_tagnum(&G__G__G3DLN_TShape),-1,0,1,1,1,0,"C - 'Text_t' 0 - name",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetShapeByNumber",1589,G__TGeometry_GetShapeByNumber_7_1,85,G__get_linked_tagnum(&G__G__G3DLN_TShape),-1,0,1,1,1,0,"i - 'Int_t' 0 - number",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetRotMatrix",1226,G__TGeometry_GetRotMatrix_8_1,85,G__get_linked_tagnum(&G__G__G3DLN_TRotMatrix),-1,0,1,1,1,0,"C - 'Text_t' 0 - name",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetRotMatrixByNumber",2030,G__TGeometry_GetRotMatrixByNumber_9_1,85,G__get_linked_tagnum(&G__G__G3DLN_TRotMatrix),-1,0,1,1,1,0,"i - 'Int_t' 0 - number",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetCurrentMatrix",1656,G__TGeometry_GetCurrentMatrix_0_2,85,G__get_linked_tagnum(&G__G__G3DLN_TRotMatrix),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetCurrentPosition",1880,G__TGeometry_GetCurrentPosition_1_2,85,G__get_linked_tagnum(&G__G__G3DLN_TRotMatrix),-1,0,3,1,1,8,
+"D - 'Double_t' 0 - x D - 'Double_t' 0 - y "
+"D - 'Double_t' 0 - z",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetCurrentPosition",1880,G__TGeometry_GetCurrentPosition_2_2,85,G__get_linked_tagnum(&G__G__G3DLN_TRotMatrix),-1,0,3,1,1,8,
+"F - 'Float_t' 0 - x F - 'Float_t' 0 - y "
+"F - 'Float_t' 0 - z",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetCurrentReflection",2062,G__TGeometry_GetCurrentReflection_3_2,98,-1,G__defined_typename("Bool_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("IsFolder",792,G__TGeometry_IsFolder_4_2,98,-1,G__defined_typename("Bool_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Local2Master",1161,G__TGeometry_Local2Master_5_2,121,-1,-1,0,2,1,1,0,
+"D - 'Double_t' 0 - local D - 'Double_t' 0 - master",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Local2Master",1161,G__TGeometry_Local2Master_6_2,121,-1,-1,0,2,1,1,0,
+"F - 'Float_t' 0 - local F - 'Float_t' 0 - master",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("ls",223,G__TGeometry_ls_7_2,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"rsn2\" option",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Node",390,G__TGeometry_Node_8_2,121,-1,-1,0,8,1,1,0,
 "C - 'Text_t' 0 - name C - 'Text_t' 0 - title "
 "C - 'Text_t' 0 - shapename d - 'Double_t' 0 0 x "
 "d - 'Double_t' 0 0 y d - 'Double_t' 0 0 z "
 "C - 'Text_t' 0 \"\" matrixname C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("RecursiveRemove",1574,G__TGeometry_RecursiveRemove_2_2,121,-1,-1,0,1,1,1,0,"U 'TObject' - 0 - obj",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("SetBomb",684,G__TGeometry_SetBomb_3_2,121,-1,-1,0,1,1,1,0,"f - 'Float_t' 0 1.4 bomb",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("SetCurrentNode",1429,G__TGeometry_SetCurrentNode_4_2,121,-1,-1,0,1,1,1,0,"U 'TNode' - 0 - node",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("DeclFileName",1145,G__TGeometry_DeclFileName_5_2,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("DeclFileLine",1152,G__TGeometry_DeclFileLine_6_2,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("ImplFileName",1171,G__TGeometry_ImplFileName_7_2,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("ImplFileLine",1178,G__TGeometry_ImplFileLine_8_2,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Class_Version",1339,G__TGeometry_Class_Version_9_2,115,-1,G__defined_typename("Version_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Class",502,G__TGeometry_Class_0_3,85,G__get_linked_tagnum(&G__G__G3DLN_TClass),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Dictionary",1046,G__TGeometry_Dictionary_1_3,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("IsA",253,G__TGeometry_IsA_2_3,85,G__get_linked_tagnum(&G__G__G3DLN_TClass),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("ShowMembers",1132,G__TGeometry_ShowMembers_3_3,121,-1,-1,0,2,1,1,0,
+   G__memfunc_setup("PushLevel",920,G__TGeometry_PushLevel_9_2,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("PopLevel",807,G__TGeometry_PopLevel_0_3,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("RecursiveRemove",1574,G__TGeometry_RecursiveRemove_1_3,121,-1,-1,0,1,1,1,0,"U 'TObject' - 0 - obj",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetBomb",684,G__TGeometry_SetBomb_2_3,121,-1,-1,0,1,1,1,0,"f - 'Float_t' 0 1.4 bomb",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetCurrentNode",1429,G__TGeometry_SetCurrentNode_3_3,121,-1,-1,0,1,1,1,0,"U 'TNode' - 0 - node",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetGeomLevel",1196,G__TGeometry_SetGeomLevel_4_3,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 0 level",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetMatrix",929,G__TGeometry_SetMatrix_5_3,121,-1,-1,0,1,1,1,0,"U 'TRotMatrix' - 0 0 matrix",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetPosition",1153,G__TGeometry_SetPosition_6_3,121,-1,-1,0,4,1,1,0,
+"U 'TRotMatrix' - 0 - matrix d - 'Double_t' 0 0 x "
+"d - 'Double_t' 0 0 y d - 'Double_t' 0 0 z",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetPosition",1153,G__TGeometry_SetPosition_7_3,121,-1,-1,0,4,1,1,0,
+"U 'TRotMatrix' - 0 - matrix f - 'Float_t' 0 - x "
+"f - 'Float_t' 0 - y f - 'Float_t' 0 - z",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetPosition",1153,G__TGeometry_SetPosition_8_3,121,-1,-1,0,3,1,1,0,
+"d - 'Double_t' 0 - x d - 'Double_t' 0 - y "
+"d - 'Double_t' 0 - z",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetPosition",1153,G__TGeometry_SetPosition_9_3,121,-1,-1,0,3,1,1,0,
+"f - 'Float_t' 0 - x f - 'Float_t' 0 - y "
+"f - 'Float_t' 0 - z",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("UpdateMatrix",1240,G__TGeometry_UpdateMatrix_0_4,121,-1,-1,0,1,1,1,0,"U 'TNode' - 0 - node",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("UpdateTempMatrix",1646,G__TGeometry_UpdateTempMatrix_1_4,121,-1,-1,0,4,1,1,0,
+"d - 'Double_t' 0 0 x d - 'Double_t' 0 0 y "
+"d - 'Double_t' 0 0 z U 'TRotMatrix' - 0 0 matrix",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("UpdateTempMatrix",1646,G__TGeometry_UpdateTempMatrix_2_4,121,-1,-1,0,5,1,1,0,
+"d - 'Double_t' 0 - x d - 'Double_t' 0 - y "
+"d - 'Double_t' 0 - z D - 'Double_t' 0 - matrix "
+"b - 'Bool_t' 0 kFALSE isReflection",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("UpdateTempMatrix",1646,G__TGeometry_UpdateTempMatrix_3_4,121,-1,-1,0,8,1,1,0,
+"D - 'Double_t' 0 - dx1 D - 'Double_t' 0 - rmat1 "
+"d - 'Double_t' 0 - x d - 'Double_t' 0 - y "
+"d - 'Double_t' 0 - z D - 'Double_t' 0 - matrix "
+"D - 'Double_t' 0 - dxnew D - 'Double_t' 0 - rmatnew",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("DeclFileName",1145,G__TGeometry_DeclFileName_4_4,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("DeclFileLine",1152,G__TGeometry_DeclFileLine_5_4,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ImplFileName",1171,G__TGeometry_ImplFileName_6_4,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ImplFileLine",1178,G__TGeometry_ImplFileLine_7_4,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Class_Version",1339,G__TGeometry_Class_Version_8_4,115,-1,G__defined_typename("Version_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Class",502,G__TGeometry_Class_9_4,85,G__get_linked_tagnum(&G__G__G3DLN_TClass),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Dictionary",1046,G__TGeometry_Dictionary_0_5,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("IsA",253,G__TGeometry_IsA_1_5,85,G__get_linked_tagnum(&G__G__G3DLN_TClass),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("ShowMembers",1132,G__TGeometry_ShowMembers_2_5,121,-1,-1,0,2,1,1,0,
 "u 'TMemberInspector' - 1 - insp C - - 0 - parent",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("Streamer",835,G__TGeometry_Streamer_4_3,121,-1,-1,0,1,1,1,0,"u 'TBuffer' - 1 - b",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Streamer",835,G__TGeometry_Streamer_3_5,121,-1,-1,0,1,1,1,0,"u 'TBuffer' - 1 - b",(char*)NULL,(void*)NULL,1);
    // automatic copy constructor
-   G__memfunc_setup("TGeometry",928,G__TGeometry_TGeometry_5_3,(int)('i'),G__get_linked_tagnum(&G__G__G3DLN_TGeometry),-1,0,1,1,1,0,"u 'TGeometry' - 1 - -",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("TGeometry",928,G__TGeometry_TGeometry_4_5,(int)('i'),G__get_linked_tagnum(&G__G__G3DLN_TGeometry),-1,0,1,1,1,0,"u 'TGeometry' - 1 - -",(char*)NULL,(void*)NULL,0);
    // automatic destructor
-   G__memfunc_setup("~TGeometry",1054,G__TGeometry_wATGeometry_6_3,(int)('y'),-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("~TGeometry",1054,G__TGeometry_wATGeometry_5_5,(int)('y'),-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
    G__tag_memfunc_reset();
 }
 
@@ -7527,7 +7864,7 @@ static void G__setup_memfuncTPolyLine3D(void) {
    G__memfunc_setup("Print",525,G__TPolyLine3D_Print_9_1,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,1);
    G__memfunc_setup("SavePrimitive",1352,G__TPolyLine3D_SavePrimitive_0_2,121,-1,-1,0,2,1,1,0,
 "u 'ofstream' - 1 - out C - 'Option_t' 0 - option",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("SetNextPoint",1237,G__TPolyLine3D_SetNextPoint_1_2,121,-1,-1,0,3,1,1,0,
+   G__memfunc_setup("SetNextPoint",1237,G__TPolyLine3D_SetNextPoint_1_2,105,-1,G__defined_typename("Int_t"),0,3,1,1,0,
 "f - 'Float_t' 0 - x f - 'Float_t' 0 - y "
 "f - 'Float_t' 0 - z","*MENU*",(void*)NULL,1);
    G__memfunc_setup("SetOption",933,G__TPolyLine3D_SetOption_2_2,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,1);
@@ -7538,19 +7875,20 @@ static void G__setup_memfuncTPolyLine3D(void) {
 "i - 'Int_t' 0 - n F - 'Float_t' 0 0 p "
 "C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,1);
    G__memfunc_setup("Sizeof3D",743,G__TPolyLine3D_Sizeof3D_5_2,121,-1,-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("DeclFileName",1145,G__TPolyLine3D_DeclFileName_6_2,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("DeclFileLine",1152,G__TPolyLine3D_DeclFileLine_7_2,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("ImplFileName",1171,G__TPolyLine3D_ImplFileName_8_2,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("ImplFileLine",1178,G__TPolyLine3D_ImplFileLine_9_2,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Class_Version",1339,G__TPolyLine3D_Class_Version_0_3,115,-1,G__defined_typename("Version_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Class",502,G__TPolyLine3D_Class_1_3,85,G__get_linked_tagnum(&G__G__G3DLN_TClass),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Dictionary",1046,G__TPolyLine3D_Dictionary_2_3,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("IsA",253,G__TPolyLine3D_IsA_3_3,85,G__get_linked_tagnum(&G__G__G3DLN_TClass),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("ShowMembers",1132,G__TPolyLine3D_ShowMembers_4_3,121,-1,-1,0,2,1,1,0,
+   G__memfunc_setup("Size",411,G__TPolyLine3D_Size_6_2,105,-1,G__defined_typename("Int_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("DeclFileName",1145,G__TPolyLine3D_DeclFileName_7_2,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("DeclFileLine",1152,G__TPolyLine3D_DeclFileLine_8_2,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ImplFileName",1171,G__TPolyLine3D_ImplFileName_9_2,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ImplFileLine",1178,G__TPolyLine3D_ImplFileLine_0_3,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Class_Version",1339,G__TPolyLine3D_Class_Version_1_3,115,-1,G__defined_typename("Version_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Class",502,G__TPolyLine3D_Class_2_3,85,G__get_linked_tagnum(&G__G__G3DLN_TClass),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Dictionary",1046,G__TPolyLine3D_Dictionary_3_3,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("IsA",253,G__TPolyLine3D_IsA_4_3,85,G__get_linked_tagnum(&G__G__G3DLN_TClass),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("ShowMembers",1132,G__TPolyLine3D_ShowMembers_5_3,121,-1,-1,0,2,1,1,0,
 "u 'TMemberInspector' - 1 - insp C - - 0 - parent",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("Streamer",835,G__TPolyLine3D_Streamer_5_3,121,-1,-1,0,1,1,1,0,"u 'TBuffer' - 1 - b",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Streamer",835,G__TPolyLine3D_Streamer_6_3,121,-1,-1,0,1,1,1,0,"u 'TBuffer' - 1 - b",(char*)NULL,(void*)NULL,1);
    // automatic destructor
-   G__memfunc_setup("~TPolyLine3D",1141,G__TPolyLine3D_wATPolyLine3D_6_3,(int)('y'),-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("~TPolyLine3D",1141,G__TPolyLine3D_wATPolyLine3D_7_3,(int)('y'),-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
    G__tag_memfunc_reset();
 }
 
@@ -7593,20 +7931,24 @@ static void G__setup_memfuncTPolyMarker3D(void) {
    G__memfunc_setup("SetPolyMarker",1330,G__TPolyMarker3D_SetPolyMarker_0_2,121,-1,-1,0,4,1,1,0,
 "i - 'Int_t' 0 - n F - 'Float_t' 0 - p "
 "s - 'Marker_t' 0 - marker C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("Sizeof3D",743,G__TPolyMarker3D_Sizeof3D_1_2,121,-1,-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("DeclFileName",1145,G__TPolyMarker3D_DeclFileName_2_2,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("DeclFileLine",1152,G__TPolyMarker3D_DeclFileLine_3_2,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("ImplFileName",1171,G__TPolyMarker3D_ImplFileName_4_2,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("ImplFileLine",1178,G__TPolyMarker3D_ImplFileLine_5_2,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Class_Version",1339,G__TPolyMarker3D_Class_Version_6_2,115,-1,G__defined_typename("Version_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Class",502,G__TPolyMarker3D_Class_7_2,85,G__get_linked_tagnum(&G__G__G3DLN_TClass),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Dictionary",1046,G__TPolyMarker3D_Dictionary_8_2,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("IsA",253,G__TPolyMarker3D_IsA_9_2,85,G__get_linked_tagnum(&G__G__G3DLN_TClass),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("ShowMembers",1132,G__TPolyMarker3D_ShowMembers_0_3,121,-1,-1,0,2,1,1,0,
+   G__memfunc_setup("SetNextPoint",1237,G__TPolyMarker3D_SetNextPoint_1_2,105,-1,G__defined_typename("Int_t"),0,3,1,1,0,
+"f - 'Float_t' 0 - x f - 'Float_t' 0 - y "
+"f - 'Float_t' 0 - z","*MENU*",(void*)NULL,1);
+   G__memfunc_setup("Sizeof3D",743,G__TPolyMarker3D_Sizeof3D_2_2,121,-1,-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Size",411,G__TPolyMarker3D_Size_3_2,105,-1,G__defined_typename("Int_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("DeclFileName",1145,G__TPolyMarker3D_DeclFileName_4_2,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("DeclFileLine",1152,G__TPolyMarker3D_DeclFileLine_5_2,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ImplFileName",1171,G__TPolyMarker3D_ImplFileName_6_2,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ImplFileLine",1178,G__TPolyMarker3D_ImplFileLine_7_2,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Class_Version",1339,G__TPolyMarker3D_Class_Version_8_2,115,-1,G__defined_typename("Version_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Class",502,G__TPolyMarker3D_Class_9_2,85,G__get_linked_tagnum(&G__G__G3DLN_TClass),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Dictionary",1046,G__TPolyMarker3D_Dictionary_0_3,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("IsA",253,G__TPolyMarker3D_IsA_1_3,85,G__get_linked_tagnum(&G__G__G3DLN_TClass),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("ShowMembers",1132,G__TPolyMarker3D_ShowMembers_2_3,121,-1,-1,0,2,1,1,0,
 "u 'TMemberInspector' - 1 - insp C - - 0 - parent",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("Streamer",835,G__TPolyMarker3D_Streamer_1_3,121,-1,-1,0,1,1,1,0,"u 'TBuffer' - 1 - b",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Streamer",835,G__TPolyMarker3D_Streamer_3_3,121,-1,-1,0,1,1,1,0,"u 'TBuffer' - 1 - b",(char*)NULL,(void*)NULL,1);
    // automatic destructor
-   G__memfunc_setup("~TPolyMarker3D",1359,G__TPolyMarker3D_wATPolyMarker3D_2_3,(int)('y'),-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("~TPolyMarker3D",1359,G__TPolyMarker3D_wATPolyMarker3D_4_3,(int)('y'),-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
    G__tag_memfunc_reset();
 }
 
@@ -7742,15 +8084,15 @@ static void G__setup_memfuncTRotMatrix(void) {
 "d - 'Double_t' 0 - theta1 d - 'Double_t' 0 - phi1 "
 "d - 'Double_t' 0 - theta2 d - 'Double_t' 0 - phi2 "
 "d - 'Double_t' 0 - theta3 d - 'Double_t' 0 - phi3",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Determinant",1147,G__TRotMatrix_Determinant_6_0,100,-1,G__defined_typename("Double_t"),0,0,1,1,0,"","returns the determinant of this matrix",(void*)NULL,1);
+   G__memfunc_setup("Determinant",1147,G__TRotMatrix_Determinant_6_0,100,-1,G__defined_typename("Double_t"),0,0,1,1,8,"","returns the determinant of this matrix",(void*)NULL,1);
    G__memfunc_setup("GetMatrix",917,G__TRotMatrix_GetMatrix_7_0,68,-1,G__defined_typename("Double_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("GetNumber",905,G__TRotMatrix_GetNumber_8_0,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("GetType",706,G__TRotMatrix_GetType_9_0,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("GetTheta",790,G__TRotMatrix_GetTheta_0_1,100,-1,G__defined_typename("Double_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("GetPhi",577,G__TRotMatrix_GetPhi_1_1,100,-1,G__defined_typename("Double_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("GetPsi",588,G__TRotMatrix_GetPsi_2_1,100,-1,G__defined_typename("Double_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("GetGLMatrix",1064,G__TRotMatrix_GetGLMatrix_3_1,68,-1,G__defined_typename("Double_t"),0,1,1,1,0,"D - 'Double_t' 0 - rGLMatrix","Convert this matrix to the OpenGL [4x4]",(void*)NULL,1);
-   G__memfunc_setup("IsReflection",1223,G__TRotMatrix_IsReflection_4_1,98,-1,G__defined_typename("Bool_t"),0,0,1,1,0,"","Return kTRUE if this matrix defines the reflection",(void*)NULL,1);
+   G__memfunc_setup("GetNumber",905,G__TRotMatrix_GetNumber_8_0,105,-1,G__defined_typename("Int_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetType",706,G__TRotMatrix_GetType_9_0,105,-1,G__defined_typename("Int_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetTheta",790,G__TRotMatrix_GetTheta_0_1,100,-1,G__defined_typename("Double_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetPhi",577,G__TRotMatrix_GetPhi_1_1,100,-1,G__defined_typename("Double_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetPsi",588,G__TRotMatrix_GetPsi_2_1,100,-1,G__defined_typename("Double_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetGLMatrix",1064,G__TRotMatrix_GetGLMatrix_3_1,68,-1,G__defined_typename("Double_t"),0,1,1,1,8,"D - 'Double_t' 0 - rGLMatrix","Convert this matrix to the OpenGL [4x4]",(void*)NULL,1);
+   G__memfunc_setup("IsReflection",1223,G__TRotMatrix_IsReflection_4_1,98,-1,G__defined_typename("Bool_t"),0,0,1,1,8,"","Return kTRUE if this matrix defines the reflection",(void*)NULL,1);
    G__memfunc_setup("SetMatrix",929,G__TRotMatrix_SetMatrix_5_1,121,-1,-1,0,1,1,1,0,"D - 'Double_t' 0 - matrix",(char*)NULL,(void*)NULL,1);
    G__memfunc_setup("SetName",685,G__TRotMatrix_SetName_6_1,121,-1,-1,0,1,1,1,0,"C - 'Text_t' 0 - name",(char*)NULL,(void*)NULL,1);
    G__memfunc_setup("DeclFileName",1145,G__TRotMatrix_DeclFileName_7_1,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
@@ -7774,34 +8116,39 @@ static void G__setup_memfuncTRotMatrix(void) {
 static void G__setup_memfuncTShape(void) {
    /* TShape */
    G__tag_memfunc_setup(G__get_linked_tagnum(&G__G__G3DLN_TShape));
-   G__memfunc_setup("TShape",581,G__TShape_TShape_0_0,105,G__get_linked_tagnum(&G__G__G3DLN_TShape),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("TShape",581,G__TShape_TShape_1_0,105,G__get_linked_tagnum(&G__G__G3DLN_TShape),-1,0,3,1,1,0,
+   G__memfunc_setup("ShapeDistancetoPrimitive",2488,(G__InterfaceMethod)NULL,105,-1,G__defined_typename("Int_t"),0,3,1,2,0,
+"i - 'Int_t' 0 - numPoints i - 'Int_t' 0 - px "
+"i - 'Int_t' 0 - py",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("TShape",581,G__TShape_TShape_1_0,105,G__get_linked_tagnum(&G__G__G3DLN_TShape),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("TShape",581,G__TShape_TShape_2_0,105,G__get_linked_tagnum(&G__G__G3DLN_TShape),-1,0,3,1,1,0,
 "C - 'Text_t' 0 - name C - 'Text_t' 0 - title "
 "C - 'Text_t' 0 - material",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Is3D",307,G__TShape_Is3D_3_0,98,-1,G__defined_typename("Bool_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("GetMaterial",1103,G__TShape_GetMaterial_4_0,85,G__get_linked_tagnum(&G__G__G3DLN_TMaterial),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetNumber",905,G__TShape_GetNumber_5_0,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("GetVisibility",1352,G__TShape_GetVisibility_6_0,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Paint",508,G__TShape_Paint_7_0,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("PaintGLPoints",1292,G__TShape_PaintGLPoints_8_0,121,-1,-1,0,1,1,1,0,"F - 'Float_t' 0 - vertex",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("PaintShape",1005,G__TShape_PaintShape_9_0,121,-1,-1,0,1,1,1,0,"U '_x3d_data_' 'X3DBuffer' 0 - buff",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("SetName",685,G__TShape_SetName_0_1,121,-1,-1,0,1,1,1,0,"C - 'Text_t' 0 - name",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("SetVisibility",1364,G__TShape_SetVisibility_1_1,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 - vis","*MENU*",(void*)NULL,1);
-   G__memfunc_setup("DeclFileName",1145,G__TShape_DeclFileName_2_1,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("DeclFileLine",1152,G__TShape_DeclFileLine_3_1,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("ImplFileName",1171,G__TShape_ImplFileName_4_1,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("ImplFileLine",1178,G__TShape_ImplFileLine_5_1,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Class_Version",1339,G__TShape_Class_Version_6_1,115,-1,G__defined_typename("Version_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Class",502,G__TShape_Class_7_1,85,G__get_linked_tagnum(&G__G__G3DLN_TClass),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Dictionary",1046,G__TShape_Dictionary_8_1,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("IsA",253,G__TShape_IsA_9_1,85,G__get_linked_tagnum(&G__G__G3DLN_TClass),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("ShowMembers",1132,G__TShape_ShowMembers_0_2,121,-1,-1,0,2,1,1,0,
+   G__memfunc_setup("Is3D",307,G__TShape_Is3D_4_0,98,-1,G__defined_typename("Bool_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetMaterial",1103,G__TShape_GetMaterial_5_0,85,G__get_linked_tagnum(&G__G__G3DLN_TMaterial),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetNumber",905,G__TShape_GetNumber_6_0,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetVisibility",1352,G__TShape_GetVisibility_7_0,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Paint",508,G__TShape_Paint_8_0,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("PaintGLPoints",1292,G__TShape_PaintGLPoints_9_0,121,-1,-1,0,1,1,1,0,"F - 'Float_t' 0 - vertex",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("PaintShape",1005,G__TShape_PaintShape_0_1,121,-1,-1,0,2,1,1,0,
+"U '_x3d_data_' 'X3DBuffer' 0 - buff b - 'Bool_t' 0 kFALSE rangeView",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetName",685,G__TShape_SetName_1_1,121,-1,-1,0,1,1,1,0,"C - 'Text_t' 0 - name",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetPoints",937,G__TShape_SetPoints_2_1,121,-1,-1,0,1,1,1,0,"F - 'Float_t' 0 - buffer",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetVisibility",1364,G__TShape_SetVisibility_3_1,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 - vis","*MENU*",(void*)NULL,1);
+   G__memfunc_setup("DeclFileName",1145,G__TShape_DeclFileName_4_1,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("DeclFileLine",1152,G__TShape_DeclFileLine_5_1,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ImplFileName",1171,G__TShape_ImplFileName_6_1,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ImplFileLine",1178,G__TShape_ImplFileLine_7_1,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Class_Version",1339,G__TShape_Class_Version_8_1,115,-1,G__defined_typename("Version_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Class",502,G__TShape_Class_9_1,85,G__get_linked_tagnum(&G__G__G3DLN_TClass),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Dictionary",1046,G__TShape_Dictionary_0_2,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("IsA",253,G__TShape_IsA_1_2,85,G__get_linked_tagnum(&G__G__G3DLN_TClass),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("ShowMembers",1132,G__TShape_ShowMembers_2_2,121,-1,-1,0,2,1,1,0,
 "u 'TMemberInspector' - 1 - insp C - - 0 - parent",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("Streamer",835,G__TShape_Streamer_1_2,121,-1,-1,0,1,1,1,0,"u 'TBuffer' - 1 - b",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Streamer",835,G__TShape_Streamer_3_2,121,-1,-1,0,1,1,1,0,"u 'TBuffer' - 1 - b",(char*)NULL,(void*)NULL,1);
    // automatic copy constructor
-   G__memfunc_setup("TShape",581,G__TShape_TShape_2_2,(int)('i'),G__get_linked_tagnum(&G__G__G3DLN_TShape),-1,0,1,1,1,0,"u 'TShape' - 1 - -",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("TShape",581,G__TShape_TShape_4_2,(int)('i'),G__get_linked_tagnum(&G__G__G3DLN_TShape),-1,0,1,1,1,0,"u 'TShape' - 1 - -",(char*)NULL,(void*)NULL,0);
    // automatic destructor
-   G__memfunc_setup("~TShape",707,G__TShape_wATShape_3_2,(int)('y'),-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("~TShape",707,G__TShape_wATShape_5_2,(int)('y'),-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
    G__tag_memfunc_reset();
 }
 
@@ -8523,30 +8870,37 @@ static void G__setup_memfuncTPadView3D(void) {
    G__memfunc_setup("PopMatrix",932,G__TPadView3D_PopMatrix_3_1,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
    G__memfunc_setup("SetAttNode",987,G__TPadView3D_SetAttNode_4_1,121,-1,-1,0,2,1,1,0,
 "U 'TNode' - 0 - node C - 'Option_t' 0 \"\" opt",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("SetPad",577,G__TPadView3D_SetPad_5_1,121,-1,-1,0,1,1,1,0,"U 'TVirtualPad' - 0 0 pad",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("UpdateNodeMatrix",1630,G__TPadView3D_UpdateNodeMatrix_6_1,121,-1,-1,0,2,1,1,0,
+   G__memfunc_setup("SetLineAttr",1103,G__TPadView3D_SetLineAttr_5_1,121,-1,-1,0,3,1,1,0,
+"s - 'Color_t' 0 - color i - 'Int_t' 0 - width "
+"C - 'Option_t' 0 \"\" opt",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetPad",577,G__TPadView3D_SetPad_6_1,121,-1,-1,0,1,1,1,0,"U 'TVirtualPad' - 0 0 pad",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("UpdateNodeMatrix",1630,G__TPadView3D_UpdateNodeMatrix_7_1,121,-1,-1,0,2,1,1,0,
 "U 'TNode' - 0 - node C - 'Option_t' 0 \"\" opt",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("UpdateView",1022,G__TPadView3D_UpdateView_7_1,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("GetRange",781,G__TPadView3D_GetRange_8_1,121,-1,-1,0,2,1,1,8,
+   G__memfunc_setup("UpdatePosition",1464,G__TPadView3D_UpdatePosition_8_1,121,-1,-1,0,5,1,1,0,
+"d - 'Double_t' 0 - x d - 'Double_t' 0 - y "
+"d - 'Double_t' 0 - z U 'TRotMatrix' - 0 - matrix "
+"C - 'Option_t' 0 \"\" opt",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("UpdateView",1022,G__TPadView3D_UpdateView_9_1,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetRange",781,G__TPadView3D_GetRange_0_2,121,-1,-1,0,2,1,1,8,
 "D - 'Double_t' 0 - min D - 'Double_t' 0 - max",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("SetRange",793,G__TPadView3D_SetRange_9_1,121,-1,-1,0,2,1,1,0,
+   G__memfunc_setup("SetRange",793,G__TPadView3D_SetRange_1_2,121,-1,-1,0,2,1,1,0,
 "D - 'Double_t' 0 - min D - 'Double_t' 0 - max",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("GetShift",798,G__TPadView3D_GetShift_0_2,121,-1,-1,0,2,1,1,8,
+   G__memfunc_setup("GetShift",798,G__TPadView3D_GetShift_2_2,121,-1,-1,0,2,1,1,8,
 "D - 'Double_t' 0 - main_shift D - 'Double_t' 0 - extra_shift",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("SetShift",810,G__TPadView3D_SetShift_1_2,121,-1,-1,0,2,1,1,0,
+   G__memfunc_setup("SetShift",810,G__TPadView3D_SetShift_3_2,121,-1,-1,0,2,1,1,0,
 "D - 'Double_t' 0 - main_shift D - 'Double_t' 0 - extra_shift",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("GetAngles",890,G__TPadView3D_GetAngles_2_2,121,-1,-1,0,2,1,1,8,
+   G__memfunc_setup("GetAngles",890,G__TPadView3D_GetAngles_4_2,121,-1,-1,0,2,1,1,8,
 "D - 'Double_t' 0 - main_angles D - 'Double_t' 0 - extra_angles",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("SetAngles",902,G__TPadView3D_SetAngles_3_2,121,-1,-1,0,2,1,1,0,
+   G__memfunc_setup("SetAngles",902,G__TPadView3D_SetAngles_5_2,121,-1,-1,0,2,1,1,0,
 "D - 'Double_t' 0 - main_angles D - 'Double_t' 0 - extra_angles",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("GetAnglesFactors",1612,G__TPadView3D_GetAnglesFactors_4_2,121,-1,-1,0,1,1,1,8,"D - 'Double_t' 0 - factors",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("SetAnglesFactors",1624,G__TPadView3D_SetAnglesFactors_5_2,121,-1,-1,0,1,1,1,0,"D - 'Double_t' 0 - factors",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("GetScale",776,G__TPadView3D_GetScale_6_2,102,-1,G__defined_typename("Float_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("SetScale",788,G__TPadView3D_SetScale_7_2,121,-1,-1,0,1,1,1,0,"f - 'Float_t' 0 - scale",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetAnglesFactors",1612,G__TPadView3D_GetAnglesFactors_6_2,121,-1,-1,0,1,1,1,8,"D - 'Double_t' 0 - factors",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetAnglesFactors",1624,G__TPadView3D_SetAnglesFactors_7_2,121,-1,-1,0,1,1,1,0,"D - 'Double_t' 0 - factors",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetScale",776,G__TPadView3D_GetScale_8_2,102,-1,G__defined_typename("Float_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetScale",788,G__TPadView3D_SetScale_9_2,121,-1,-1,0,1,1,1,0,"f - 'Float_t' 0 - scale",(char*)NULL,(void*)NULL,1);
    // automatic copy constructor
-   G__memfunc_setup("TPadView3D",891,G__TPadView3D_TPadView3D_8_2,(int)('i'),G__get_linked_tagnum(&G__G__G3DLN_TPadView3D),-1,0,1,1,1,0,"u 'TPadView3D' - 1 - -",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("TPadView3D",891,G__TPadView3D_TPadView3D_0_3,(int)('i'),G__get_linked_tagnum(&G__G__G3DLN_TPadView3D),-1,0,1,1,1,0,"u 'TPadView3D' - 1 - -",(char*)NULL,(void*)NULL,0);
    // automatic destructor
-   G__memfunc_setup("~TPadView3D",1017,G__TPadView3D_wATPadView3D_9_2,(int)('y'),-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("~TPadView3D",1017,G__TPadView3D_wATPadView3D_1_3,(int)('y'),-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
    G__tag_memfunc_reset();
 }
 
@@ -8587,15 +8941,22 @@ static void G__setup_memfuncTPadOpenGLView(void) {
    G__memfunc_setup("ResetView",926,G__TPadOpenGLView_ResetView_4_2,121,-1,-1,0,1,1,1,0,"b - 'Bool_t' 0 kTRUE flag",(char*)NULL,(void*)NULL,1);
    G__memfunc_setup("SetAttNode",987,G__TPadOpenGLView_SetAttNode_5_2,121,-1,-1,0,2,1,1,0,
 "U 'TNode' - 0 - node C - 'Option_t' 0 \"\" opt",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("SetSpeedMove",1204,G__TPadOpenGLView_SetSpeedMove_6_2,121,-1,-1,0,1,1,1,0,"f - 'Float_t' 0 - speed",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("SetSteps",827,G__TPadOpenGLView_SetSteps_7_2,121,-1,-1,0,1,1,1,0,"F - 'Float_t' 0 - steps",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("UpdateNodeMatrix",1630,G__TPadOpenGLView_UpdateNodeMatrix_8_2,121,-1,-1,0,2,1,1,0,
+   G__memfunc_setup("SetLineAttr",1103,G__TPadOpenGLView_SetLineAttr_6_2,121,-1,-1,0,3,1,1,0,
+"s - 'Color_t' 0 - color i - 'Int_t' 0 - width "
+"C - 'Option_t' 0 \"\" opt",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetSpeedMove",1204,G__TPadOpenGLView_SetSpeedMove_7_2,121,-1,-1,0,1,1,1,0,"f - 'Float_t' 0 - speed",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetSteps",827,G__TPadOpenGLView_SetSteps_8_2,121,-1,-1,0,1,1,1,0,"F - 'Float_t' 0 - steps",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("UpdateNodeMatrix",1630,G__TPadOpenGLView_UpdateNodeMatrix_9_2,121,-1,-1,0,2,1,1,0,
 "U 'TNode' - 0 - node C - 'Option_t' 0 \"\" opt",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("UpdateProjectView",1749,G__TPadOpenGLView_UpdateProjectView_9_2,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("UpdatePosition",1464,G__TPadOpenGLView_UpdatePosition_0_3,121,-1,-1,0,5,1,1,0,
+"d - 'Double_t' 0 - x d - 'Double_t' 0 - y "
+"d - 'Double_t' 0 - z U 'TRotMatrix' - 0 - matrix "
+"C - 'Option_t' 0 \"\" opt",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("UpdateProjectView",1749,G__TPadOpenGLView_UpdateProjectView_1_3,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
    // automatic copy constructor
-   G__memfunc_setup("TPadOpenGLView",1321,G__TPadOpenGLView_TPadOpenGLView_0_3,(int)('i'),G__get_linked_tagnum(&G__G__G3DLN_TPadOpenGLView),-1,0,1,1,1,0,"u 'TPadOpenGLView' - 1 - -",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("TPadOpenGLView",1321,G__TPadOpenGLView_TPadOpenGLView_2_3,(int)('i'),G__get_linked_tagnum(&G__G__G3DLN_TPadOpenGLView),-1,0,1,1,1,0,"u 'TPadOpenGLView' - 1 - -",(char*)NULL,(void*)NULL,0);
    // automatic destructor
-   G__memfunc_setup("~TPadOpenGLView",1447,G__TPadOpenGLView_wATPadOpenGLView_1_3,(int)('y'),-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("~TPadOpenGLView",1447,G__TPadOpenGLView_wATPadOpenGLView_3_3,(int)('y'),-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
    G__tag_memfunc_reset();
 }
 
@@ -8622,7 +8983,8 @@ static void G__setup_memfuncTMarker3DBox(void) {
 "f - 'Float_t' 1 - dz",(char*)NULL,(void*)NULL,1);
    G__memfunc_setup("Is3D",307,G__TMarker3DBox_Is3D_9_0,98,-1,G__defined_typename("Bool_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
    G__memfunc_setup("Paint",508,G__TMarker3DBox_Paint_0_1,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 - option",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("PaintShape",1005,G__TMarker3DBox_PaintShape_1_1,121,-1,-1,0,1,1,1,0,"U '_x3d_data_' 'X3DBuffer' 0 - buff",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("PaintShape",1005,G__TMarker3DBox_PaintShape_1_1,121,-1,-1,0,2,1,1,0,
+"U '_x3d_data_' 'X3DBuffer' 0 - buff b - 'Bool_t' 0 kFALSE rangeView",(char*)NULL,(void*)NULL,1);
    G__memfunc_setup("SavePrimitive",1352,G__TMarker3DBox_SavePrimitive_2_1,121,-1,-1,0,2,1,1,0,
 "u 'ofstream' - 1 - out C - 'Option_t' 0 - option",(char*)NULL,(void*)NULL,1);
    G__memfunc_setup("SetPoints",937,G__TMarker3DBox_SetPoints_3_1,121,-1,-1,0,1,1,1,0,"F - 'Float_t' 0 - buff",(char*)NULL,(void*)NULL,1);
@@ -8819,6 +9181,56 @@ G__linked_taginfo G__G__G3DLN_TMarker3DBox = { "TMarker3DBox" , 99 , -1 };
 G__linked_taginfo G__G__G3DLN_THelix = { "THelix" , 99 , -1 };
 G__linked_taginfo G__G__G3DLN_THYPE = { "THYPE" , 99 , -1 };
 
+/* Reset class/struct taginfo */
+extern "C" void G__cpp_reset_tagtableG__G3D() {
+  G__G__G3DLN_TClass.tagnum = -1 ;
+  G__G__G3DLN_TList.tagnum = -1 ;
+  G__G__G3DLN_TObject.tagnum = -1 ;
+  G__G__G3DLN_TString.tagnum = -1 ;
+  G__G__G3DLN_TNamed.tagnum = -1 ;
+  G__G__G3DLN_TVirtualPad.tagnum = -1 ;
+  G__G__G3DLN_TGeometry.tagnum = -1 ;
+  G__G__G3DLN_TAttLine.tagnum = -1 ;
+  G__G__G3DLN__x3d_data_.tagnum = -1 ;
+  G__G__G3DLN__x3d_sizeof_.tagnum = -1 ;
+  G__G__G3DLN_TPolyLine3D.tagnum = -1 ;
+  G__G__G3DLN_TAttMarker.tagnum = -1 ;
+  G__G__G3DLN_TPolyMarker3D.tagnum = -1 ;
+  G__G__G3DLN_THashList.tagnum = -1 ;
+  G__G__G3DLN_TNode.tagnum = -1 ;
+  G__G__G3DLN_TMaterial.tagnum = -1 ;
+  G__G__G3DLN_TRotMatrix.tagnum = -1 ;
+  G__G__G3DLN_TShape.tagnum = -1 ;
+  G__G__G3DLN_TAttFill.tagnum = -1 ;
+  G__G__G3DLN_TMixture.tagnum = -1 ;
+  G__G__G3DLN_dA.tagnum = -1 ;
+  G__G__G3DLN_TNodeDiv.tagnum = -1 ;
+  G__G__G3DLN_TBRIK.tagnum = -1 ;
+  G__G__G3DLN_TTRD1.tagnum = -1 ;
+  G__G__G3DLN_TTRD2.tagnum = -1 ;
+  G__G__G3DLN_TTUBE.tagnum = -1 ;
+  G__G__G3DLN_TCONE.tagnum = -1 ;
+  G__G__G3DLN_TTUBS.tagnum = -1 ;
+  G__G__G3DLN_TCTUB.tagnum = -1 ;
+  G__G__G3DLN_TELTU.tagnum = -1 ;
+  G__G__G3DLN_TCONS.tagnum = -1 ;
+  G__G__G3DLN_TTRAP.tagnum = -1 ;
+  G__G__G3DLN_TPARA.tagnum = -1 ;
+  G__G__G3DLN_TGTRA.tagnum = -1 ;
+  G__G__G3DLN_TPCON.tagnum = -1 ;
+  G__G__G3DLN_TPGON.tagnum = -1 ;
+  G__G__G3DLN_TSPHE.tagnum = -1 ;
+  G__G__G3DLN_TGLKernelABC.tagnum = -1 ;
+  G__G__G3DLN_TGLViewerImp.tagnum = -1 ;
+  G__G__G3DLN_TPadView3D.tagnum = -1 ;
+  G__G__G3DLN_TPadOpenGLView.tagnum = -1 ;
+  G__G__G3DLN_EG3D2GLmode.tagnum = -1 ;
+  G__G__G3DLN_TPadOpenGLViewcLcLEDrawMode.tagnum = -1 ;
+  G__G__G3DLN_TMarker3DBox.tagnum = -1 ;
+  G__G__G3DLN_THelix.tagnum = -1 ;
+  G__G__G3DLN_THYPE.tagnum = -1 ;
+}
+
 extern "C" void G__cpp_setup_tagtableG__G3D() {
 
    /* Setting up class,struct,union tag entry */
@@ -8879,7 +9291,7 @@ class G__cpp_setup_initG__G3D {
 G__cpp_setup_initG__G3D G__cpp_setup_initializerG__G3D;
 
 //
-// File generated by /user/brun/root/bin/rootcint at Tue Dec  8 09:36:53 1998.
+// File generated by /home/rdm/root/bin/rootcint at Mon Mar  8 12:34:21 1999.
 // Do NOT change. Changes will be lost next time file is generated
 //
 
@@ -8913,6 +9325,14 @@ void TGeometry::ShowMembers(TMemberInspector &R__insp, char *R__parent)
    R__insp.Inspect(R__cl, R__parent, "*fMatrixPointer", &fMatrixPointer);
    R__insp.Inspect(R__cl, R__parent, "*fShapePointer", &fShapePointer);
    R__insp.Inspect(R__cl, R__parent, "fBomb", &fBomb);
+   R__insp.Inspect(R__cl, R__parent, "*fMatrix", &fMatrix);
+   R__insp.Inspect(R__cl, R__parent, "fX", &fX);
+   R__insp.Inspect(R__cl, R__parent, "fY", &fY);
+   R__insp.Inspect(R__cl, R__parent, "fZ", &fZ);
+   R__insp.Inspect(R__cl, R__parent, "fTranslation[20][3]", fTranslation);
+   R__insp.Inspect(R__cl, R__parent, "fRotMatrix[20][9]", fRotMatrix);
+   R__insp.Inspect(R__cl, R__parent, "fIsReflection[20]", fIsReflection);
+   R__insp.Inspect(R__cl, R__parent, "fGeomLevel", &fGeomLevel);
    TNamed::ShowMembers(R__insp, R__parent);
 }
 
@@ -8963,6 +9383,7 @@ void TPolyMarker3D::ShowMembers(TMemberInspector &R__insp, char *R__parent)
    R__insp.Inspect(R__cl, R__parent, "*fP", &fP);
    fOption.ShowMembers(R__insp, strcat(R__parent,"fOption.")); R__parent[R__ncp] = 0;
    R__insp.Inspect(R__cl, R__parent, "fGLList", &fGLList);
+   R__insp.Inspect(R__cl, R__parent, "fLastPoint", &fLastPoint);
    TObject::ShowMembers(R__insp, R__parent);
    TAttMarker::ShowMembers(R__insp, R__parent);
 }

@@ -1,3 +1,4 @@
+//*CMZ :  2.21/05 06/02/99  01.30.42  by  Fons Rademakers
 //*CMZ :  2.20/05 14/12/98  17.11.47  by  Fons Rademakers
 //*CMZ :  2.00/11 03/08/98  11.57.53  by  Fons Rademakers
 //*CMZ :  2.00/00 23/02/98  16.03.43  by  Fons Rademakers
@@ -177,7 +178,6 @@ Bool_t TGButton::HandleCrossing(Event_t *event)
          fTip->Reset();
       else
          fTip->Hide();
-
    }
    if (!(event->fState & (kButton1Mask | kButton2Mask | kButton3Mask)))
       return kTRUE;

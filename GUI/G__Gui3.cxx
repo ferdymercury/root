@@ -1,5 +1,5 @@
-//*CMZ :  2.20/05 14/12/98  15.17.44  by  Rene Brun
-//*-- Author :    Rene Brun   14/12/98
+//*CMZ :  2.21/08 15/03/99  08.52.12  by  Rene Brun
+//*-- Author :    Rene Brun   15/03/99
 //*CMZ :  1.00/09 23/04/97  17.59.54  by  Rene Brun
 //*-- Author :    Rene Brun   23/04/97
 #if defined(__hpux) && !defined(__GNUG__)
@@ -117,6 +117,7 @@ extern G__linked_taginfo G__G__Gui3LN_TRootEmbeddedContainer;
 #undef malloc
 #endif
 
+extern "C" void G__cpp_reset_tagtableG__Gui3();
 
 extern "C" void G__set_cpp_environmentG__Gui3() {
   G__add_macro("__MAKECINT__");
@@ -131,6 +132,7 @@ extern "C" void G__set_cpp_environmentG__Gui3() {
   G__add_compiledheader("TRootControlBar.h");
   G__add_compiledheader("TRootHelpDialog.h");
   G__add_compiledheader("TRootEmbeddedCanvas.h");
+  G__cpp_reset_tagtableG__Gui3();
 }
 extern "C" int G__cpp_dllrevG__Gui3() { return(51111); }
 
@@ -456,7 +458,7 @@ static int G__TRootApplication_wATRootApplication_5_2(G__value *result7,char *fu
 
 
 /* TRootCanvas */
-static int G__TRootCanvas_TRootCanvas_7_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TRootCanvas_TRootCanvas_8_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    TRootCanvas *p=NULL;
       p = new TRootCanvas(
 (TCanvas*)G__int(libp->para[0]),(const char*)G__int(libp->para[1])
@@ -468,7 +470,7 @@ static int G__TRootCanvas_TRootCanvas_7_0(G__value *result7,char *funcname,struc
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TRootCanvas_TRootCanvas_8_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TRootCanvas_TRootCanvas_9_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    TRootCanvas *p=NULL;
       p = new TRootCanvas(
 (TCanvas*)G__int(libp->para[0]),(const char*)G__int(libp->para[1])
@@ -481,71 +483,71 @@ static int G__TRootCanvas_TRootCanvas_8_0(G__value *result7,char *funcname,struc
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TRootCanvas_ForceUpdate_0_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TRootCanvas_ForceUpdate_1_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TRootCanvas*)(G__getstructoffset()))->ForceUpdate();
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TRootCanvas_FitCanvas_1_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TRootCanvas_FitCanvas_2_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TRootCanvas*)(G__getstructoffset()))->FitCanvas();
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TRootCanvas_GetWindowGeometry_2_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TRootCanvas_GetWindowGeometry_3_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TRootCanvas*)(G__getstructoffset()))->GetWindowGeometry(libp->para[0].ref?*(Int_t*)libp->para[0].ref:G__Mint(libp->para[0]),libp->para[1].ref?*(Int_t*)libp->para[1].ref:G__Mint(libp->para[1])
 ,libp->para[2].ref?*(UInt_t*)libp->para[2].ref:G__Muint(libp->para[2]),libp->para[3].ref?*(UInt_t*)libp->para[3].ref:G__Muint(libp->para[3]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TRootCanvas_GetCwidth_3_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TRootCanvas_GetCwidth_4_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,104,(long)((TRootCanvas*)(G__getstructoffset()))->GetCwidth());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TRootCanvas_GetCheight_4_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TRootCanvas_GetCheight_5_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,104,(long)((TRootCanvas*)(G__getstructoffset()))->GetCheight());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TRootCanvas_Iconify_5_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TRootCanvas_Iconify_6_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TRootCanvas*)(G__getstructoffset()))->Iconify();
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TRootCanvas_InitWindow_6_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TRootCanvas_InitWindow_7_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TRootCanvas*)(G__getstructoffset()))->InitWindow());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TRootCanvas_SetWindowPosition_7_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TRootCanvas_SetWindowPosition_8_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TRootCanvas*)(G__getstructoffset()))->SetWindowPosition((Int_t)G__int(libp->para[0]),(Int_t)G__int(libp->para[1]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TRootCanvas_SetWindowSize_8_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TRootCanvas_SetWindowSize_9_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TRootCanvas*)(G__getstructoffset()))->SetWindowSize((UInt_t)G__int(libp->para[0]),(UInt_t)G__int(libp->para[1]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TRootCanvas_SetWindowTitle_9_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TRootCanvas_SetWindowTitle_0_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TRootCanvas*)(G__getstructoffset()))->SetWindowTitle((const Text_t*)G__int(libp->para[0]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TRootCanvas_SetCanvasSize_0_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TRootCanvas_SetCanvasSize_1_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TRootCanvas*)(G__getstructoffset()))->SetCanvasSize((UInt_t)G__int(libp->para[0]),(UInt_t)G__int(libp->para[1]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TRootCanvas_SetStatusText_1_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TRootCanvas_SetStatusText_2_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 2:
       G__setnull(result7);
@@ -563,7 +565,7 @@ static int G__TRootCanvas_SetStatusText_1_2(G__value *result7,char *funcname,str
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TRootCanvas_ShowMenuBar_2_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TRootCanvas_ShowMenuBar_3_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -577,7 +579,7 @@ static int G__TRootCanvas_ShowMenuBar_2_2(G__value *result7,char *funcname,struc
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TRootCanvas_ShowStatusBar_3_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TRootCanvas_ShowStatusBar_4_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -591,79 +593,79 @@ static int G__TRootCanvas_ShowStatusBar_3_2(G__value *result7,char *funcname,str
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TRootCanvas_Show_4_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TRootCanvas_Show_5_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TRootCanvas*)(G__getstructoffset()))->Show();
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TRootCanvas_CloseWindow_5_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TRootCanvas_CloseWindow_6_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TRootCanvas*)(G__getstructoffset()))->CloseWindow();
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TRootCanvas_ProcessMessage_6_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TRootCanvas_ProcessMessage_7_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,98,(long)((TRootCanvas*)(G__getstructoffset()))->ProcessMessage((Long_t)G__int(libp->para[0]),(Long_t)G__int(libp->para[1])
 ,(Long_t)G__int(libp->para[2])));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TRootCanvas_DeclFileName_7_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TRootCanvas_DeclFileName_8_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,67,(long)((TRootCanvas*)(G__getstructoffset()))->DeclFileName());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TRootCanvas_DeclFileLine_8_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TRootCanvas_DeclFileLine_9_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TRootCanvas*)(G__getstructoffset()))->DeclFileLine());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TRootCanvas_ImplFileName_9_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TRootCanvas_ImplFileName_0_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,67,(long)((TRootCanvas*)(G__getstructoffset()))->ImplFileName());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TRootCanvas_ImplFileLine_0_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TRootCanvas_ImplFileLine_1_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TRootCanvas*)(G__getstructoffset()))->ImplFileLine());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TRootCanvas_Class_Version_1_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TRootCanvas_Class_Version_2_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,115,(long)((TRootCanvas*)(G__getstructoffset()))->Class_Version());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TRootCanvas_Class_2_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TRootCanvas_Class_3_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((TRootCanvas*)(G__getstructoffset()))->Class());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TRootCanvas_Dictionary_3_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TRootCanvas_Dictionary_4_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TRootCanvas*)(G__getstructoffset()))->Dictionary();
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TRootCanvas_IsA_4_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TRootCanvas_IsA_5_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((TRootCanvas*)(G__getstructoffset()))->IsA());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TRootCanvas_ShowMembers_5_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TRootCanvas_ShowMembers_6_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TRootCanvas*)(G__getstructoffset()))->ShowMembers(*(TMemberInspector*)libp->para[0].ref,(char*)G__int(libp->para[1]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TRootCanvas_Streamer_6_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TRootCanvas_Streamer_7_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TRootCanvas*)(G__getstructoffset()))->Streamer(*(TBuffer*)libp->para[0].ref);
    return(1 || funcname || hash || result7 || libp) ;
 }
 
 // automatic copy constructor
-static int G__TRootCanvas_TRootCanvas_7_3(G__value *result7,char *funcname,struct G__param *libp,int hash)
+static int G__TRootCanvas_TRootCanvas_8_3(G__value *result7,char *funcname,struct G__param *libp,int hash)
 {
    TRootCanvas *p;
    if(1!=libp->paran) ;
@@ -676,7 +678,7 @@ static int G__TRootCanvas_TRootCanvas_7_3(G__value *result7,char *funcname,struc
 }
 
 // automatic destructor
-static int G__TRootCanvas_wATRootCanvas_8_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TRootCanvas_wATRootCanvas_9_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    if(G__getaryconstruct())
      if(G__PVOID==G__getgvp())
        delete[] (TRootCanvas *)(G__getstructoffset());
@@ -1422,7 +1424,7 @@ static int G__TRootHelpDialog_wATRootHelpDialog_8_1(G__value *result7,char *func
 
 
 /* TRootEmbeddedCanvas */
-static int G__TRootEmbeddedCanvas_TRootEmbeddedCanvas_5_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TRootEmbeddedCanvas_TRootEmbeddedCanvas_7_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    TRootEmbeddedCanvas *p=NULL;
    switch(libp->paran) {
    case 6:
@@ -1450,66 +1452,66 @@ static int G__TRootEmbeddedCanvas_TRootEmbeddedCanvas_5_0(G__value *result7,char
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TRootEmbeddedCanvas_GetCanvas_7_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TRootEmbeddedCanvas_GetCanvas_9_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((TRootEmbeddedCanvas*)(G__getstructoffset()))->GetCanvas());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TRootEmbeddedCanvas_DeclFileName_8_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TRootEmbeddedCanvas_DeclFileName_0_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,67,(long)((TRootEmbeddedCanvas*)(G__getstructoffset()))->DeclFileName());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TRootEmbeddedCanvas_DeclFileLine_9_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TRootEmbeddedCanvas_DeclFileLine_1_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TRootEmbeddedCanvas*)(G__getstructoffset()))->DeclFileLine());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TRootEmbeddedCanvas_ImplFileName_0_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TRootEmbeddedCanvas_ImplFileName_2_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,67,(long)((TRootEmbeddedCanvas*)(G__getstructoffset()))->ImplFileName());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TRootEmbeddedCanvas_ImplFileLine_1_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TRootEmbeddedCanvas_ImplFileLine_3_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TRootEmbeddedCanvas*)(G__getstructoffset()))->ImplFileLine());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TRootEmbeddedCanvas_Class_Version_2_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TRootEmbeddedCanvas_Class_Version_4_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,115,(long)((TRootEmbeddedCanvas*)(G__getstructoffset()))->Class_Version());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TRootEmbeddedCanvas_Class_3_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TRootEmbeddedCanvas_Class_5_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((TRootEmbeddedCanvas*)(G__getstructoffset()))->Class());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TRootEmbeddedCanvas_Dictionary_4_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TRootEmbeddedCanvas_Dictionary_6_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TRootEmbeddedCanvas*)(G__getstructoffset()))->Dictionary();
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TRootEmbeddedCanvas_IsA_5_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TRootEmbeddedCanvas_IsA_7_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((TRootEmbeddedCanvas*)(G__getstructoffset()))->IsA());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TRootEmbeddedCanvas_ShowMembers_6_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TRootEmbeddedCanvas_ShowMembers_8_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TRootEmbeddedCanvas*)(G__getstructoffset()))->ShowMembers(*(TMemberInspector*)libp->para[0].ref,(char*)G__int(libp->para[1]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TRootEmbeddedCanvas_Streamer_7_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TRootEmbeddedCanvas_Streamer_9_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TRootEmbeddedCanvas*)(G__getstructoffset()))->Streamer(*(TBuffer*)libp->para[0].ref);
    return(1 || funcname || hash || result7 || libp) ;
 }
 
 // automatic copy constructor
-static int G__TRootEmbeddedCanvas_TRootEmbeddedCanvas_8_1(G__value *result7,char *funcname,struct G__param *libp,int hash)
+static int G__TRootEmbeddedCanvas_TRootEmbeddedCanvas_0_2(G__value *result7,char *funcname,struct G__param *libp,int hash)
 {
    TRootEmbeddedCanvas *p;
    if(1!=libp->paran) ;
@@ -1522,7 +1524,7 @@ static int G__TRootEmbeddedCanvas_TRootEmbeddedCanvas_8_1(G__value *result7,char
 }
 
 // automatic destructor
-static int G__TRootEmbeddedCanvas_wATRootEmbeddedCanvas_9_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TRootEmbeddedCanvas_wATRootEmbeddedCanvas_1_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    if(G__getaryconstruct())
      if(G__PVOID==G__getgvp())
        delete[] (TRootEmbeddedCanvas *)(G__getstructoffset());
@@ -2263,53 +2265,54 @@ static void G__setup_memfuncTRootCanvas(void) {
    G__memfunc_setup("HandleContainerKey",1816,(G__InterfaceMethod)NULL,98,-1,G__defined_typename("Bool_t"),0,1,1,4,0,"U 'Event_t' - 0 - ev",(char*)NULL,(void*)NULL,0);
    G__memfunc_setup("HandleContainerMotion",2149,(G__InterfaceMethod)NULL,98,-1,G__defined_typename("Bool_t"),0,1,1,4,0,"U 'Event_t' - 0 - ev",(char*)NULL,(void*)NULL,0);
    G__memfunc_setup("HandleContainerExpose",2147,(G__InterfaceMethod)NULL,98,-1,G__defined_typename("Bool_t"),0,1,1,4,0,"U 'Event_t' - 0 - ev",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("TRootCanvas",1108,G__TRootCanvas_TRootCanvas_7_0,105,G__get_linked_tagnum(&G__G__Gui3LN_TRootCanvas),-1,0,4,1,1,0,
+   G__memfunc_setup("HandleContainerCrossing",2359,(G__InterfaceMethod)NULL,98,-1,G__defined_typename("Bool_t"),0,1,1,4,0,"U 'Event_t' - 0 - ev",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("TRootCanvas",1108,G__TRootCanvas_TRootCanvas_8_0,105,G__get_linked_tagnum(&G__G__Gui3LN_TRootCanvas),-1,0,4,1,1,0,
 "U 'TCanvas' - 0 - c C - - 0 - name "
 "h - 'UInt_t' 0 - width h - 'UInt_t' 0 - height",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("TRootCanvas",1108,G__TRootCanvas_TRootCanvas_8_0,105,G__get_linked_tagnum(&G__G__Gui3LN_TRootCanvas),-1,0,6,1,1,0,
+   G__memfunc_setup("TRootCanvas",1108,G__TRootCanvas_TRootCanvas_9_0,105,G__get_linked_tagnum(&G__G__Gui3LN_TRootCanvas),-1,0,6,1,1,0,
 "U 'TCanvas' - 0 - c C - - 0 - name "
 "i - 'Int_t' 0 - x i - 'Int_t' 0 - y "
 "h - 'UInt_t' 0 - width h - 'UInt_t' 0 - height",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("ForceUpdate",1106,G__TRootCanvas_ForceUpdate_0_1,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("FitCanvas",895,G__TRootCanvas_FitCanvas_1_1,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetWindowGeometry",1764,G__TRootCanvas_GetWindowGeometry_2_1,121,-1,-1,0,4,1,1,0,
+   G__memfunc_setup("ForceUpdate",1106,G__TRootCanvas_ForceUpdate_1_1,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("FitCanvas",895,G__TRootCanvas_FitCanvas_2_1,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetWindowGeometry",1764,G__TRootCanvas_GetWindowGeometry_3_1,121,-1,-1,0,4,1,1,0,
 "i - 'Int_t' 1 - x i - 'Int_t' 1 - y "
 "h - 'UInt_t' 1 - w h - 'UInt_t' 1 - h",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("GetCwidth",899,G__TRootCanvas_GetCwidth_3_1,104,-1,G__defined_typename("UInt_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetCheight",988,G__TRootCanvas_GetCheight_4_1,104,-1,G__defined_typename("UInt_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Iconify",721,G__TRootCanvas_Iconify_5_1,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("InitWindow",1036,G__TRootCanvas_InitWindow_6_1,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("SetWindowPosition",1785,G__TRootCanvas_SetWindowPosition_7_1,121,-1,-1,0,2,1,1,0,
+   G__memfunc_setup("GetCwidth",899,G__TRootCanvas_GetCwidth_4_1,104,-1,G__defined_typename("UInt_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetCheight",988,G__TRootCanvas_GetCheight_5_1,104,-1,G__defined_typename("UInt_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Iconify",721,G__TRootCanvas_Iconify_6_1,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("InitWindow",1036,G__TRootCanvas_InitWindow_7_1,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetWindowPosition",1785,G__TRootCanvas_SetWindowPosition_8_1,121,-1,-1,0,2,1,1,0,
 "i - 'Int_t' 0 - x i - 'Int_t' 0 - y",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("SetWindowSize",1343,G__TRootCanvas_SetWindowSize_8_1,121,-1,-1,0,2,1,1,0,
+   G__memfunc_setup("SetWindowSize",1343,G__TRootCanvas_SetWindowSize_9_1,121,-1,-1,0,2,1,1,0,
 "h - 'UInt_t' 0 - w h - 'UInt_t' 0 - h",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("SetWindowTitle",1446,G__TRootCanvas_SetWindowTitle_9_1,121,-1,-1,0,1,1,1,0,"C - 'Text_t' 0 - newTitle",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("SetCanvasSize",1315,G__TRootCanvas_SetCanvasSize_0_2,121,-1,-1,0,2,1,1,0,
+   G__memfunc_setup("SetWindowTitle",1446,G__TRootCanvas_SetWindowTitle_0_2,121,-1,-1,0,1,1,1,0,"C - 'Text_t' 0 - newTitle",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetCanvasSize",1315,G__TRootCanvas_SetCanvasSize_1_2,121,-1,-1,0,2,1,1,0,
 "h - 'UInt_t' 0 - w h - 'UInt_t' 0 - h",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("SetStatusText",1365,G__TRootCanvas_SetStatusText_1_2,121,-1,-1,0,2,1,1,0,
+   G__memfunc_setup("SetStatusText",1365,G__TRootCanvas_SetStatusText_2_2,121,-1,-1,0,2,1,1,0,
 "C - 'Text_t' 0 0 txt i - 'Int_t' 0 0 partidx",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("ShowMenuBar",1099,G__TRootCanvas_ShowMenuBar_2_2,121,-1,-1,0,1,1,1,0,"b - 'Bool_t' 0 kTRUE show",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("ShowStatusBar",1338,G__TRootCanvas_ShowStatusBar_3_2,121,-1,-1,0,1,1,1,0,"b - 'Bool_t' 0 kTRUE show",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("Show",417,G__TRootCanvas_Show_4_2,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("CloseWindow",1134,G__TRootCanvas_CloseWindow_5_2,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("ProcessMessage",1444,G__TRootCanvas_ProcessMessage_6_2,98,-1,G__defined_typename("Bool_t"),0,3,1,1,0,
+   G__memfunc_setup("ShowMenuBar",1099,G__TRootCanvas_ShowMenuBar_3_2,121,-1,-1,0,1,1,1,0,"b - 'Bool_t' 0 kTRUE show",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("ShowStatusBar",1338,G__TRootCanvas_ShowStatusBar_4_2,121,-1,-1,0,1,1,1,0,"b - 'Bool_t' 0 kTRUE show",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Show",417,G__TRootCanvas_Show_5_2,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("CloseWindow",1134,G__TRootCanvas_CloseWindow_6_2,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("ProcessMessage",1444,G__TRootCanvas_ProcessMessage_7_2,98,-1,G__defined_typename("Bool_t"),0,3,1,1,0,
 "l - 'Long_t' 0 - msg l - 'Long_t' 0 - parm1 "
 "l - 'Long_t' 0 - parm2",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("DeclFileName",1145,G__TRootCanvas_DeclFileName_7_2,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("DeclFileLine",1152,G__TRootCanvas_DeclFileLine_8_2,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("ImplFileName",1171,G__TRootCanvas_ImplFileName_9_2,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("ImplFileLine",1178,G__TRootCanvas_ImplFileLine_0_3,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Class_Version",1339,G__TRootCanvas_Class_Version_1_3,115,-1,G__defined_typename("Version_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Class",502,G__TRootCanvas_Class_2_3,85,G__get_linked_tagnum(&G__G__Gui3LN_TClass),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Dictionary",1046,G__TRootCanvas_Dictionary_3_3,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("IsA",253,G__TRootCanvas_IsA_4_3,85,G__get_linked_tagnum(&G__G__Gui3LN_TClass),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("ShowMembers",1132,G__TRootCanvas_ShowMembers_5_3,121,-1,-1,0,2,1,1,0,
+   G__memfunc_setup("DeclFileName",1145,G__TRootCanvas_DeclFileName_8_2,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("DeclFileLine",1152,G__TRootCanvas_DeclFileLine_9_2,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ImplFileName",1171,G__TRootCanvas_ImplFileName_0_3,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ImplFileLine",1178,G__TRootCanvas_ImplFileLine_1_3,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Class_Version",1339,G__TRootCanvas_Class_Version_2_3,115,-1,G__defined_typename("Version_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Class",502,G__TRootCanvas_Class_3_3,85,G__get_linked_tagnum(&G__G__Gui3LN_TClass),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Dictionary",1046,G__TRootCanvas_Dictionary_4_3,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("IsA",253,G__TRootCanvas_IsA_5_3,85,G__get_linked_tagnum(&G__G__Gui3LN_TClass),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("ShowMembers",1132,G__TRootCanvas_ShowMembers_6_3,121,-1,-1,0,2,1,1,0,
 "u 'TMemberInspector' - 1 - insp C - - 0 - parent",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("Streamer",835,G__TRootCanvas_Streamer_6_3,121,-1,-1,0,1,1,1,0,"u 'TBuffer' - 1 - b",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Streamer",835,G__TRootCanvas_Streamer_7_3,121,-1,-1,0,1,1,1,0,"u 'TBuffer' - 1 - b",(char*)NULL,(void*)NULL,1);
    // automatic copy constructor
-   G__memfunc_setup("TRootCanvas",1108,G__TRootCanvas_TRootCanvas_7_3,(int)('i'),G__get_linked_tagnum(&G__G__Gui3LN_TRootCanvas),-1,0,1,1,1,0,"u 'TRootCanvas' - 1 - -",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("TRootCanvas",1108,G__TRootCanvas_TRootCanvas_8_3,(int)('i'),G__get_linked_tagnum(&G__G__Gui3LN_TRootCanvas),-1,0,1,1,1,0,"u 'TRootCanvas' - 1 - -",(char*)NULL,(void*)NULL,0);
    // automatic destructor
-   G__memfunc_setup("~TRootCanvas",1234,G__TRootCanvas_wATRootCanvas_8_3,(int)('y'),-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("~TRootCanvas",1234,G__TRootCanvas_wATRootCanvas_9_3,(int)('y'),-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
    G__tag_memfunc_reset();
 }
 
@@ -2500,30 +2503,32 @@ static void G__setup_memfuncTRootEmbeddedCanvas(void) {
    /* TRootEmbeddedCanvas */
    G__tag_memfunc_setup(G__get_linked_tagnum(&G__G__Gui3LN_TRootEmbeddedCanvas));
    G__memfunc_setup("HandleContainerButton",2155,(G__InterfaceMethod)NULL,98,-1,G__defined_typename("Bool_t"),0,1,1,4,0,"U 'Event_t' - 0 - ev",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("HandleContainerDoubleClick",2608,(G__InterfaceMethod)NULL,98,-1,G__defined_typename("Bool_t"),0,1,1,4,0,"U 'Event_t' - 0 - ev",(char*)NULL,(void*)NULL,0);
    G__memfunc_setup("HandleContainerConfigure",2449,(G__InterfaceMethod)NULL,98,-1,G__defined_typename("Bool_t"),0,1,1,4,0,"U 'Event_t' - 0 - ev",(char*)NULL,(void*)NULL,0);
    G__memfunc_setup("HandleContainerKey",1816,(G__InterfaceMethod)NULL,98,-1,G__defined_typename("Bool_t"),0,1,1,4,0,"U 'Event_t' - 0 - ev",(char*)NULL,(void*)NULL,0);
    G__memfunc_setup("HandleContainerMotion",2149,(G__InterfaceMethod)NULL,98,-1,G__defined_typename("Bool_t"),0,1,1,4,0,"U 'Event_t' - 0 - ev",(char*)NULL,(void*)NULL,0);
    G__memfunc_setup("HandleContainerExpose",2147,(G__InterfaceMethod)NULL,98,-1,G__defined_typename("Bool_t"),0,1,1,4,0,"U 'Event_t' - 0 - ev",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("TRootEmbeddedCanvas",1886,G__TRootEmbeddedCanvas_TRootEmbeddedCanvas_5_0,105,G__get_linked_tagnum(&G__G__Gui3LN_TRootEmbeddedCanvas),-1,0,6,1,1,0,
+   G__memfunc_setup("HandleContainerCrossing",2359,(G__InterfaceMethod)NULL,98,-1,G__defined_typename("Bool_t"),0,1,1,4,0,"U 'Event_t' - 0 - ev",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("TRootEmbeddedCanvas",1886,G__TRootEmbeddedCanvas_TRootEmbeddedCanvas_7_0,105,G__get_linked_tagnum(&G__G__Gui3LN_TRootEmbeddedCanvas),-1,0,6,1,1,0,
 "C - - 0 - name U 'TGWindow' - 0 - p "
 "h - 'UInt_t' 0 - w h - 'UInt_t' 0 - h "
 "h - 'UInt_t' 0 kSunkenFrame|kDoubleBorder options k - 'ULong_t' 0 fgDefaultFrameBackground back",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetCanvas",892,G__TRootEmbeddedCanvas_GetCanvas_7_0,85,G__get_linked_tagnum(&G__G__Gui3LN_TCanvas),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("DeclFileName",1145,G__TRootEmbeddedCanvas_DeclFileName_8_0,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("DeclFileLine",1152,G__TRootEmbeddedCanvas_DeclFileLine_9_0,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("ImplFileName",1171,G__TRootEmbeddedCanvas_ImplFileName_0_1,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("ImplFileLine",1178,G__TRootEmbeddedCanvas_ImplFileLine_1_1,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Class_Version",1339,G__TRootEmbeddedCanvas_Class_Version_2_1,115,-1,G__defined_typename("Version_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Class",502,G__TRootEmbeddedCanvas_Class_3_1,85,G__get_linked_tagnum(&G__G__Gui3LN_TClass),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Dictionary",1046,G__TRootEmbeddedCanvas_Dictionary_4_1,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("IsA",253,G__TRootEmbeddedCanvas_IsA_5_1,85,G__get_linked_tagnum(&G__G__Gui3LN_TClass),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("ShowMembers",1132,G__TRootEmbeddedCanvas_ShowMembers_6_1,121,-1,-1,0,2,1,1,0,
+   G__memfunc_setup("GetCanvas",892,G__TRootEmbeddedCanvas_GetCanvas_9_0,85,G__get_linked_tagnum(&G__G__Gui3LN_TCanvas),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("DeclFileName",1145,G__TRootEmbeddedCanvas_DeclFileName_0_1,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("DeclFileLine",1152,G__TRootEmbeddedCanvas_DeclFileLine_1_1,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ImplFileName",1171,G__TRootEmbeddedCanvas_ImplFileName_2_1,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ImplFileLine",1178,G__TRootEmbeddedCanvas_ImplFileLine_3_1,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Class_Version",1339,G__TRootEmbeddedCanvas_Class_Version_4_1,115,-1,G__defined_typename("Version_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Class",502,G__TRootEmbeddedCanvas_Class_5_1,85,G__get_linked_tagnum(&G__G__Gui3LN_TClass),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Dictionary",1046,G__TRootEmbeddedCanvas_Dictionary_6_1,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("IsA",253,G__TRootEmbeddedCanvas_IsA_7_1,85,G__get_linked_tagnum(&G__G__Gui3LN_TClass),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("ShowMembers",1132,G__TRootEmbeddedCanvas_ShowMembers_8_1,121,-1,-1,0,2,1,1,0,
 "u 'TMemberInspector' - 1 - insp C - - 0 - parent",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("Streamer",835,G__TRootEmbeddedCanvas_Streamer_7_1,121,-1,-1,0,1,1,1,0,"u 'TBuffer' - 1 - b",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Streamer",835,G__TRootEmbeddedCanvas_Streamer_9_1,121,-1,-1,0,1,1,1,0,"u 'TBuffer' - 1 - b",(char*)NULL,(void*)NULL,1);
    // automatic copy constructor
-   G__memfunc_setup("TRootEmbeddedCanvas",1886,G__TRootEmbeddedCanvas_TRootEmbeddedCanvas_8_1,(int)('i'),G__get_linked_tagnum(&G__G__Gui3LN_TRootEmbeddedCanvas),-1,0,1,1,1,0,"u 'TRootEmbeddedCanvas' - 1 - -",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("TRootEmbeddedCanvas",1886,G__TRootEmbeddedCanvas_TRootEmbeddedCanvas_0_2,(int)('i'),G__get_linked_tagnum(&G__G__Gui3LN_TRootEmbeddedCanvas),-1,0,1,1,1,0,"u 'TRootEmbeddedCanvas' - 1 - -",(char*)NULL,(void*)NULL,0);
    // automatic destructor
-   G__memfunc_setup("~TRootEmbeddedCanvas",2012,G__TRootEmbeddedCanvas_wATRootEmbeddedCanvas_9_1,(int)('y'),-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("~TRootEmbeddedCanvas",2012,G__TRootEmbeddedCanvas_wATRootEmbeddedCanvas_1_2,(int)('y'),-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
    G__tag_memfunc_reset();
 }
 
@@ -2607,6 +2612,56 @@ G__linked_taginfo G__G__Gui3LN_TRootHelpDialog = { "TRootHelpDialog" , 99 , -1 }
 G__linked_taginfo G__G__Gui3LN_TRootEmbeddedCanvas = { "TRootEmbeddedCanvas" , 99 , -1 };
 G__linked_taginfo G__G__Gui3LN_TRootEmbeddedContainer = { "TRootEmbeddedContainer" , 99 , -1 };
 
+/* Reset class/struct taginfo */
+extern "C" void G__cpp_reset_tagtableG__Gui3() {
+  G__G__Gui3LN_TClass.tagnum = -1 ;
+  G__G__Gui3LN_TList.tagnum = -1 ;
+  G__G__Gui3LN_TObject.tagnum = -1 ;
+  G__G__Gui3LN_TNamed.tagnum = -1 ;
+  G__G__Gui3LN_TApplicationImp.tagnum = -1 ;
+  G__G__Gui3LN_TCanvasImp.tagnum = -1 ;
+  G__G__Gui3LN_TCanvas.tagnum = -1 ;
+  G__G__Gui3LN_TBrowserImp.tagnum = -1 ;
+  G__G__Gui3LN_TContextMenuImp.tagnum = -1 ;
+  G__G__Gui3LN_TControlBarImp.tagnum = -1 ;
+  G__G__Gui3LN_TGuiFactory.tagnum = -1 ;
+  G__G__Gui3LN_TRootGuiFactory.tagnum = -1 ;
+  G__G__Gui3LN_TGClient.tagnum = -1 ;
+  G__G__Gui3LN_TRootApplication.tagnum = -1 ;
+  G__G__Gui3LN_TGObject.tagnum = -1 ;
+  G__G__Gui3LN_TGWindow.tagnum = -1 ;
+  G__G__Gui3LN_TGFrame.tagnum = -1 ;
+  G__G__Gui3LN_TGCompositeFrame.tagnum = -1 ;
+  G__G__Gui3LN_TGLayoutHints.tagnum = -1 ;
+  G__G__Gui3LN_TGVerticalFrame.tagnum = -1 ;
+  G__G__Gui3LN_TGHorizontalFrame.tagnum = -1 ;
+  G__G__Gui3LN_TGMainFrame.tagnum = -1 ;
+  G__G__Gui3LN_TGTransientFrame.tagnum = -1 ;
+  G__G__Gui3LN_TGCanvas.tagnum = -1 ;
+  G__G__Gui3LN_TGMenuBar.tagnum = -1 ;
+  G__G__Gui3LN_TGPopupMenu.tagnum = -1 ;
+  G__G__Gui3LN_TGStatusBar.tagnum = -1 ;
+  G__G__Gui3LN_TRootCanvas.tagnum = -1 ;
+  G__G__Gui3LN_TRootContainer.tagnum = -1 ;
+  G__G__Gui3LN_TGHorizontal3DLine.tagnum = -1 ;
+  G__G__Gui3LN_TGToolBar.tagnum = -1 ;
+  G__G__Gui3LN_TGFSComboBox.tagnum = -1 ;
+  G__G__Gui3LN_TGLabel.tagnum = -1 ;
+  G__G__Gui3LN_TGListView.tagnum = -1 ;
+  G__G__Gui3LN_TRootIconBox.tagnum = -1 ;
+  G__G__Gui3LN_TGListTree.tagnum = -1 ;
+  G__G__Gui3LN_TGListTreeItem.tagnum = -1 ;
+  G__G__Gui3LN_TRootBrowser.tagnum = -1 ;
+  G__G__Gui3LN_TRootDialog.tagnum = -1 ;
+  G__G__Gui3LN_TRootContextMenu.tagnum = -1 ;
+  G__G__Gui3LN_TRootControlBar.tagnum = -1 ;
+  G__G__Gui3LN_TGTextView.tagnum = -1 ;
+  G__G__Gui3LN_TGTextButton.tagnum = -1 ;
+  G__G__Gui3LN_TRootHelpDialog.tagnum = -1 ;
+  G__G__Gui3LN_TRootEmbeddedCanvas.tagnum = -1 ;
+  G__G__Gui3LN_TRootEmbeddedContainer.tagnum = -1 ;
+}
+
 extern "C" void G__cpp_setup_tagtableG__Gui3() {
 
    /* Setting up class,struct,union tag entry */
@@ -2646,7 +2701,7 @@ class G__cpp_setup_initG__Gui3 {
 G__cpp_setup_initG__Gui3 G__cpp_setup_initializerG__Gui3;
 
 //
-// File generated by /user/brun/root/bin/rootcint at Mon Dec 14 15:17:43 1998.
+// File generated by /user/brun/root/bin/rootcint at Mon Mar 15 08:52:11 1999.
 // Do NOT change. Changes will be lost next time file is generated
 //
 

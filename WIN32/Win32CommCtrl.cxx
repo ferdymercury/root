@@ -1,3 +1,4 @@
+//*CMZ :  2.21/08 18/03/99  16.41.40  by  Rene Brun
 //*CMZ :  2.00/11 21/09/98  11.00.02  by  Valery Fine(fine@mail.cern.ch)
 //*CMZ :  1.03/01 30/07/97  21.06.10  by  Valery Fine(fine@vxcern.cern.ch)
 //*-- Author :    Valery Fine(fine@vxcern.cern.ch)   01/11/96
@@ -42,9 +43,16 @@ LRESULT APIENTRY TWin32CommCtrl::HookClass(HWND hwnd, UINT uMsg, WPARAM wParam, 
  TWin32CommCtrl *obj = 0;
  obj = (TWin32CommCtrl *)GetWindowLong(hwnd,GWL_USERDATA);
 
+// following comments from Valery
+//   The STRICT macro symbol is defined by VC++ v.6.0 It is only correction I
+//   did to compile ROOT with VC++ v.6.0
  if (obj) {
      obj->OnSubClassCtrl(hwnd,uMsg,wParam,lParam);
+#ifdef STRICT
+     return ::CallWindowProc(obj->fPrevWndFunc, hwnd, uMsg, wParam, lParam);
+#else
      return ::CallWindowProc((FARPROC)(obj->fPrevWndFunc), hwnd, uMsg, wParam, lParam);
+#endif
  }
  return 0;
 

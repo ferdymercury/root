@@ -1,3 +1,4 @@
+//*CMZ :  2.21/07 21/02/99  19.51.28  by  Valery Fine(fine@mail.cern.ch)
 //*CMZ :  2.00/00 05/03/98  20.12.17  by  Fons Rademakers
 //*CMZ :  1.03/09 07/12/97  16.25.35  by  Fons Rademakers
 //*-- Author :    Valery Fine      23/05/97
@@ -92,7 +93,7 @@ void TGLViewerImp::HandleInput(EEventType button, Int_t x, Int_t y)
 //______________________________________________________________________________
 void TGLViewerImp::Paint(Option_t *)
 {
-    if (fPaint)
+ //   if (fPaint)
     {
         MakeCurrent();
         if (fGLView) fGLView->Paint();

@@ -1,3 +1,6 @@
+//*CMZ :  2.21/07 21/02/99  19.09.03  by  Valery Fine(fine@mail.cern.ch)
+//*CMZ :  2.21/06 10/02/99  19.10.56  by  Rene Brun
+//*CMZ :  2.21/00 03/01/99  23.12.57  by  Valery Fine(fine@mail.cern.ch)
 //*CMZ :  2.00/12 07/10/98  10.33.31  by  Rene Brun
 //*CMZ :  2.00/10 03/07/98  21.20.44  by  Rene Brun
 //*CMZ :  2.00/09 20/06/98  19.16.57  by  Valery Fine(fine@mail.cern.ch)
@@ -130,15 +133,11 @@ void TTUBE::MakeTableOfCoSin()
     Double_t angstep = range/n;
 
     Double_t ph = 0;
-    Double_t si,co;
     for (j = 0; j < n; j++)
     {
-        co = TMath::Cos(ph);
-        fCoTab[j] = co;
-        si = TMath::Sqrt(TMath::Abs(1.0 - co*co));
-        if (ph > PI) si = -si;
-        fSiTab[j] = si;
-        ph += angstep;
+        ph = j*angstep;
+        fCoTab[j] = TMath::Cos(ph);
+        fSiTab[j] = TMath::Sin(ph);
     }
 
 }
@@ -162,28 +161,9 @@ Int_t TTUBE::DistancetoPrimitive(Int_t px, Int_t py)
 //*-*  Compute the closest distance of approach from point px,py to each
 //*-*  computed outline point of the TUBE.
 //*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
-
-   Int_t dist = 9999;
-
-   TView *view = gPad->GetView();
-   if (!view) return dist;
-
    Int_t n = GetNumberOfDivisions();
    Int_t numPoints = n*4;
-   Float_t *points = new Float_t[3*numPoints];
-   SetPoints(points);
-   Float_t dpoint, dpoint2, x1, y1, xndc[3];
-   for (Int_t i = 0; i < numPoints; i++) {
-      gNode->Local2Master(&points[3*i],&points[3*i]);
-      view->WCtoNDC(&points[3*i], xndc);
-      x1     = gPad->XtoAbsPixel(xndc[0]);
-      y1     = gPad->YtoAbsPixel(xndc[1]);
-      dpoint2= (px-x1)*(px-x1) + (py-y1)*(py-y1);
-      dpoint = TMath::Sqrt(dpoint2);
-      if (dpoint < dist) dist = (Int_t)dpoint;
-   }
-   delete [] points;
-   return dist;
+   return ShapeDistancetoPrimitive(numPoints,px,py);
 }
 
 //______________________________________________________________________________
@@ -205,8 +185,8 @@ void TTUBE::Paint(Option_t *option)
 
    if (gPad->GetView3D()) PaintGLPoints(points);
 
-   for (i = 0; i < numpoints; i++)
-            gNode->Local2Master(&points[3*i],&points[3*i]);
+//==   for (i = 0; i < numpoints; i++)
+//==            gNode->Local2Master(&points[3*i],&points[3*i]);
 
     X3DBuffer *buff = new X3DBuffer;
     if (buff) {
@@ -284,7 +264,8 @@ void TTUBE::Paint(Option_t *option)
     }
 
     //*-* Paint in the pad
-    PaintShape(buff);
+    Bool_t rangeView = strcmp(option,"range")==0 ? kTRUE : kFALSE;
+    PaintShape(buff,rangeView);
 
     if (strstr(option, "x3d")) {
         if(buff && buff->points && buff->segs)

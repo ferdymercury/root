@@ -1,3 +1,5 @@
+//*CMZ :  2.21/05 10/02/99  09.25.11  by  Rene Brun
+//*CMZ :  2.21/01 05/01/99  16.19.36  by  Rene Brun
 //*CMZ :  1.03/09 09/12/97  20.31.35  by  Fons Rademakers
 //*-- Author :    Rene Brun   27/10/95
 
@@ -59,8 +61,9 @@ public:
    TH3C(const TH3C &h3c);
    virtual ~TH3C();
    virtual void    Copy(TObject &hnew);
-   virtual void    Fill3(Axis_t x, Axis_t y, Axis_t z, Stat_t w);
+   virtual Int_t   Fill3(Axis_t x, Axis_t y, Axis_t z, Stat_t w);
    virtual Bool_t  Is3D() {return kTRUE;}
+   virtual void    Reset(Option_t *option="");
            TH3C&   operator=(const TH3C &h1);
    friend  TH3C    operator*(Float_t c1, TH3C &h1);
    friend  TH3C    operator*(TH3C &h1, Float_t c1) {return operator*(c1,h1);}
@@ -86,8 +89,9 @@ public:
    TH3S(const TH3S &h3s);
    virtual ~TH3S();
    virtual void    Copy(TObject &hnew);
-   virtual void    Fill3(Axis_t x, Axis_t y, Axis_t z, Stat_t w);
+   virtual Int_t   Fill3(Axis_t x, Axis_t y, Axis_t z, Stat_t w);
    virtual Bool_t  Is3D() {return kTRUE;}
+   virtual void    Reset(Option_t *option="");
            TH3S&   operator=(const TH3S &h1);
    friend  TH3S    operator*(Float_t c1, TH3S &h1);
    friend  TH3S    operator*(TH3S &h1, Float_t c1) {return operator*(c1,h1);}
@@ -114,9 +118,10 @@ public:
    TH3F(const TH3F &h3f);
    virtual ~TH3F();
    virtual void    Copy(TObject &hnew);
-   virtual void    Fill3(Axis_t x, Axis_t y, Axis_t z, Stat_t w);
+   virtual Int_t   Fill3(Axis_t x, Axis_t y, Axis_t z, Stat_t w);
    virtual Bool_t  Is3D() {return kTRUE;}
    virtual void    Sizeof3D() const;
+   virtual void    Reset(Option_t *option="");
            TH3F&   operator=(const TH3F &h1);
    friend  TH3F    operator*(Float_t c1, TH3F &h1);
    friend  TH3F    operator*(TH3F &h1, Float_t c1) {return operator*(c1,h1);}
@@ -142,8 +147,9 @@ public:
    TH3D(const TH3D &h3d);
    virtual ~TH3D();
    virtual void    Copy(TObject &hnew);
-   virtual void    Fill3(Axis_t x, Axis_t y, Axis_t z, Stat_t w);
+   virtual Int_t   Fill3(Axis_t x, Axis_t y, Axis_t z, Stat_t w);
    virtual Bool_t  Is3D() {return kTRUE;}
+   virtual void    Reset(Option_t *option="");
            TH3D&   operator=(const TH3D &h1);
    friend  TH3D    operator*(Float_t c1, TH3D &h1);
    friend  TH3D    operator*(TH3D &h1, Float_t c1) {return operator*(c1,h1);}

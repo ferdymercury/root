@@ -1,3 +1,4 @@
+//*CMZ :  2.21/02 15/01/99  18.00.26  by  Rene Brun
 //*CMZ :  0.03/01 07/12/95  11.51.20  by  Fons Rademakers
 //*-- Author :    Rene Brun   18/05/95
 // ---------------------------------- haxis.C
@@ -115,6 +116,19 @@ void TH1::SetAxisColor(Color_t color, Option_t *axis)
    if (ax == 1) fXaxis.SetAxisColor(color);
    if (ax == 2) fYaxis.SetAxisColor(color);
    if (ax == 3) fZaxis.SetAxisColor(color);
+}
+
+//______________________________________________________________________________
+void TH1::SetAxisRange(Float_t xmin, Float_t xmax, Option_t *axis)
+{
+   Int_t ax = AxisChoice(axis);
+   TAxis *theAxis = 0;
+   if (ax == 1) theAxis = GetXaxis();
+   if (ax == 2) theAxis = GetYaxis();
+   if (ax == 3) theAxis = GetZaxis();
+   Int_t bin1 = theAxis->FindBin(xmin);
+   Int_t bin2 = theAxis->FindBin(xmax);
+   theAxis->SetRange(bin1, bin2);
 }
 
 //______________________________________________________________________________

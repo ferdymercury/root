@@ -1,5 +1,5 @@
-/*CMZ :  2.20/04 08/12/98  16.25.21  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   08/12/98*/
+/*CMZ :  2.21/08 17/03/99  13.13.37  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   17/03/99*/
 /* /% C++ %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -65,6 +65,15 @@ class G__MethodInfo {
   void* PointerToFunc();
 #endif
   G__ClassInfo* MemberOf() { return(belongingclass); }
+#ifndef G__OLDIMPLEMENTATION1020
+  struct G__friendtag* GetFriendInfo() {
+    if(IsValid()) {
+      struct G__ifunc_table *ifunc=(struct G__ifunc_table*)handle;
+      return(ifunc->friendtag[index]);
+    }
+    else return 0;
+  }
+#endif
   void SetGlobalcomp(int globalcomp);
   int IsValid();
   int SetFilePos(const char* fname);

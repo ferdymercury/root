@@ -1,5 +1,5 @@
-/*CMZ :  2.20/04 08/12/98  16.25.22  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   08/12/98*/
+/*CMZ :  2.21/08 17/03/99  13.13.38  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   17/03/99*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -110,6 +110,27 @@ typedef long fpos_tt; /* pos_t is defined to be a struct{32,32} in VMS.
 #define G__EXPORT __declspec(dllexport)
 #else
 #define G__EXPORT
+#endif
+
+#if 0
+#ifdef G__ROOT
+# ifndef __CINT__
+#  if defined(WIN32) && defined(_DLL)
+#   define DllImport   __declspec(dllimport)
+#   define DllExport   __declspec(dllexport)
+#  else
+#   define DllImport
+#   define DllExport
+#  endif
+#  ifdef G__CINTBODY
+#   define G__EXTERN   DllExport extern
+#  else
+#   define G__EXTERN   DllImport extern
+#  endif
+# endif
+G__EXTERN short G__othermain;
+G__EXTERN int G__globalcomp;
+#endif
 #endif
 
 #if defined(G__SIGNEDCHAR)
@@ -409,8 +430,15 @@ extern "C" {
 * It would be nice if G__MAXFUNCPARA, G__MAXSTRUCT and G__MAXTYPEDEF
 * are improved.
 **************************************************************************/
+#ifdef G__LONGBUF
+#define G__LONGLINE    4096  /* Length of expression */
+#define G__ONELINE     4096  /* Length of subexpression,parameter,argument */
+#define G__MAXNAME     4096  /* Variable name */
+#else
 #define G__LONGLINE    1024  /* Length of expression */
 #define G__ONELINE      256  /* Length of subexpression,parameter,argument */
+#define G__MAXNAME      128  /* Variable name */
+#endif
 #define G__MAXFILE      500  /* Max interpreted source file */
 #define G__MAXFILENAME  256  /* Max interpreted source file name length */
 #define G__MAXPARA      100  /* Number of argument for G__main(argc,argv)   */
@@ -420,7 +448,6 @@ extern "C" {
 #define G__MAXFUNCPARA2  85  /* Function argument */
 #endif
 #define G__MAXVARDIM     10  /* Array dimention */
-#define G__MAXNAME      128  /* Variable name */
 #define G__LENPOST       10  /* length of file name extention */
 #define G__MAXBASE       30  /* maximum inheritable class */
 #define G__TAGNEST       20  /* depth of nested class */
@@ -531,7 +558,7 @@ typedef void (*G__incsetup)();
 /**************************************************************************
 * reference type argument for precompiled function
 **************************************************************************/
-#define G__Mfloat(buf)   (buf.obj.fl=(float)buf.obj.i)
+#define G__Mfloat(buf)   (buf.obj.fl=(float)G__double(buf))
 #define G__Mdouble(buf)  buf.obj.d
 #define G__Mchar(buf)    (buf.obj.ch=(char)buf.obj.i)
 #define G__Mshort(buf)   (buf.obj.sh=(short)buf.obj.i)
@@ -1235,6 +1262,7 @@ extern G__EXPORT void G__setdebugcond G__P((void));
 extern G__EXPORT int G__init_process_cmd G__P((void));
 extern G__EXPORT int G__process_cmd G__P((char *line,char *prompt,int *more));
 extern G__EXPORT void G__setothermain G__P((int othermain));
+extern G__EXPORT void G__setglobalcomp G__P((int globalcomp));
 extern G__EXPORT int G__main G__P((int argc,char **argv));
 extern G__EXPORT int G__readline G__P((FILE *fp,char *line,char *argbuf,int *argn,char *arg[]));
 extern int G__fgetline G__P((char *string));

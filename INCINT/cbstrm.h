@@ -1,5 +1,5 @@
-/*CMZ :  2.20/04 08/12/98  16.25.21  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   08/12/98*/
+/*CMZ :  2.21/08 17/03/99  13.13.37  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   17/03/99*/
 /********************************************************************
 * cbstrm.h
 ********************************************************************/
@@ -14,16 +14,14 @@
 extern "C" {
 #define G__ANSIHEADER
 #include "G__ci.h"
-extern G__DLLEXPORT int G__cpp_dllrevG__stream();
-extern G__DLLEXPORT void G__set_cpp_environmentG__stream();
-extern G__DLLEXPORT void G__cpp_setup_tagtableG__stream();
-extern G__DLLEXPORT void G__cpp_setup_inheritanceG__stream();
-extern G__DLLEXPORT void G__cpp_setup_typetableG__stream();
-extern G__DLLEXPORT void G__cpp_setup_memvarG__stream();
-extern G__DLLEXPORT void G__cpp_setup_globalG__stream();
-extern G__DLLEXPORT void G__cpp_setup_memfuncG__stream();
-extern G__DLLEXPORT void G__cpp_setup_funcG__stream();
-extern G__DLLEXPORT void G__cpp_setupG__stream();
+extern void G__cpp_setup_tagtableG__stream();
+extern void G__cpp_setup_inheritanceG__stream();
+extern void G__cpp_setup_typetableG__stream();
+extern void G__cpp_setup_memvarG__stream();
+extern void G__cpp_setup_globalG__stream();
+extern void G__cpp_setup_memfuncG__stream();
+extern void G__cpp_setup_funcG__stream();
+extern void G__set_cpp_environmentG__stream();
 }
 
 

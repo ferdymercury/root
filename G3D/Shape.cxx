@@ -1,3 +1,6 @@
+//*CMZ :  2.21/07 21/02/99  19.02.44  by  Valery Fine(fine@mail.cern.ch)
+//*CMZ :  2.21/01 06/01/99  13.57.19  by  Rene Brun
+//*CMZ :  2.21/00 03/01/99  23.34.38  by  Valery Fine(fine@mail.cern.ch)
 //*CMZ :  2.20/05 13/12/98  17.45.30  by  Rene Brun
 //*CMZ :  2.00/05 15/04/98  09.27.11  by  Rene Brun
 //*CMZ :  1.03/08 18/11/97  15.52.24  by  Rene Brun
@@ -19,6 +22,7 @@
  * It is provided "as is" without express or implied warranty.           *
  *************************************************************************/
 
+#include "TNode.h"
 #include "TShape.h"
 #include "TView.h"
 #include "TVirtualPad.h"
@@ -92,6 +96,28 @@ TShape::~TShape()
 }
 
 //______________________________________________________________________________
+Int_t TShape::ShapeDistancetoPrimitive(Int_t numPoints, Int_t px, Int_t py)
+{
+  Int_t dist = 9999;
+  TView *view = gPad->GetView();
+  if (!(numPoints && view)) return dist;
+
+  Float_t *points =  new Float_t[3*numPoints];
+  SetPoints(points);
+  Float_t dpoint, dpoint2, x1, y1, xndc[3];
+  for (Int_t i = 0; i < numPoints; i++) {
+     gGeometry->Local2Master(&points[3*i],&points[3*i]);
+     view->WCtoNDC(&points[3*i], xndc);
+     x1     = gPad->XtoAbsPixel(xndc[0]);
+     y1     = gPad->YtoAbsPixel(xndc[1]);
+     dpoint2= (px-x1)*(px-x1) + (py-y1)*(py-y1);
+     dpoint = TMath::Sqrt(dpoint2);
+     if (dpoint < dist) dist = (Int_t)dpoint;
+  }
+  delete [] points;
+  return dist;
+}
+//______________________________________________________________________________
 void TShape::Paint(Option_t *)
 {
    // This method must be overridden by the real shape implementation.
@@ -100,12 +126,23 @@ void TShape::Paint(Option_t *)
 }
 
 //______________________________________________________________________________
-void TShape::PaintShape(X3DBuffer *buff)
+void TShape::PaintShape(X3DBuffer *buff, Bool_t rangeView)
 {
 //*-*-*-*-*Paint 3-D shape in current pad with its current attributes*-*-*-*-*
 //*-*      ==========================================================
 
+// rangeView = kTRUE - means no real painting
+//                     just estimate the tange
+//                     of this shape only
+
     //*-* Paint in the pad
+    //*-* Convert yo the master system
+
+    if (!buff) return;
+
+    Float_t *point = &(buff->points[0]);
+    for (Int_t j = 0; j < buff->numPoints; j++)
+           gGeometry->Local2Master(&point[3*j],&point[3*j]);
 
     Float_t points[6], x0, y0, z0, x1, y1, z1;
     const Int_t kExpandView = 2;
@@ -137,10 +174,16 @@ void TShape::PaintShape(X3DBuffer *buff)
         Float_t *ptpoints_0 = &points[0];
         Float_t *ptpoints_3 = &points[3];
 
-        gPad->PaintLine3D(ptpoints_0, ptpoints_3);
+        if (!rangeView) gPad->PaintLine3D(ptpoints_0, ptpoints_3);
 //        gPad->PaintLine3D(&points[0], &points[3]);
-
     }
-    TView *view = gPad->GetView();
-    if (view->GetAutoRange()) view->SetRange(x0,y0,z0,x1,y1,z1,kExpandView);
+    if (rangeView)
+    {
+      TView *view = gPad->GetView();
+      if (view->GetAutoRange()) view->SetRange(x0,y0,z0,x1,y1,z1,kExpandView);
+    }
+}
+//______________________________________________________________________________
+void TShape::SetPoints(Float_t *){
+   AbstractMethod("SetPoints(Float_t *buffer)");
 }

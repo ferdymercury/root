@@ -1,5 +1,5 @@
-//*CMZ :  2.20/02 04/12/98  14.25.35  by  Rene Brun
-//*-- Author :    Rene Brun   04/12/98
+//*CMZ :  2.21/07 08/03/99  12.34.18  by  Fons Rademakers
+//*-- Author :    Fons Rademakers   08/03/99
 //*CMZ :  1.00/09 23/04/97  17.59.54  by  Rene Brun
 //*-- Author :    Rene Brun   23/04/97
 #if defined(__hpux) && !defined(__GNUG__)
@@ -94,6 +94,7 @@ extern G__linked_taginfo G__G__Graf2LN_TText;
 extern G__linked_taginfo G__G__Graf2LN_TLink;
 extern G__linked_taginfo G__G__Graf2LN_TPoints;
 extern G__linked_taginfo G__G__Graf2LN_TAttPad;
+extern G__linked_taginfo G__G__Graf2LN_TGToolTip;
 extern G__linked_taginfo G__G__Graf2LN_TBox;
 extern G__linked_taginfo G__G__Graf2LN_TWbox;
 extern G__linked_taginfo G__G__Graf2LN_TFrame;
@@ -120,6 +121,7 @@ extern G__linked_taginfo G__G__Graf2LN_TGXClient;
 #undef malloc
 #endif
 
+extern "C" void G__cpp_reset_tagtableG__Graf2();
 
 extern "C" void G__set_cpp_environmentG__Graf2() {
   G__add_macro("__MAKECINT__");
@@ -137,6 +139,7 @@ extern "C" void G__set_cpp_environmentG__Graf2() {
   G__add_compiledheader("TGXW.h");
   G__add_compiledheader("TGXClient.h");
   G__add_compiledheader("TContextMenu.h");
+  G__cpp_reset_tagtableG__Graf2();
 }
 extern "C" int G__cpp_dllrevG__Graf2() { return(51111); }
 
@@ -286,91 +289,102 @@ static int G__TBrowser_GetRefreshFlag_2_1(G__value *result7,char *funcname,struc
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TBrowser_SetRefreshFlag_3_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TBrowser_GetSelected_3_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,85,(long)((TBrowser*)(G__getstructoffset()))->GetSelected());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TBrowser_SetRefreshFlag_4_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TBrowser*)(G__getstructoffset()))->SetRefreshFlag((Bool_t)G__int(libp->para[0]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TBrowser_Iconify_4_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TBrowser_Iconify_5_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TBrowser*)(G__getstructoffset()))->Iconify();
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TBrowser_RecursiveRemove_5_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TBrowser_RecursiveRemove_6_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TBrowser*)(G__getstructoffset()))->RecursiveRemove((TObject*)G__int(libp->para[0]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TBrowser_Refresh_6_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TBrowser_Refresh_7_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TBrowser*)(G__getstructoffset()))->Refresh();
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TBrowser_Show_7_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TBrowser_SetSelected_8_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TBrowser*)(G__getstructoffset()))->SetSelected((TObject*)G__int(libp->para[0]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TBrowser_Show_9_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TBrowser*)(G__getstructoffset()))->Show();
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TBrowser_DeclFileName_8_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TBrowser_DeclFileName_0_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,67,(long)((TBrowser*)(G__getstructoffset()))->DeclFileName());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TBrowser_DeclFileLine_9_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TBrowser_DeclFileLine_1_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TBrowser*)(G__getstructoffset()))->DeclFileLine());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TBrowser_ImplFileName_0_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TBrowser_ImplFileName_2_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,67,(long)((TBrowser*)(G__getstructoffset()))->ImplFileName());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TBrowser_ImplFileLine_1_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TBrowser_ImplFileLine_3_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TBrowser*)(G__getstructoffset()))->ImplFileLine());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TBrowser_Class_Version_2_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TBrowser_Class_Version_4_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,115,(long)((TBrowser*)(G__getstructoffset()))->Class_Version());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TBrowser_Class_3_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TBrowser_Class_5_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((TBrowser*)(G__getstructoffset()))->Class());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TBrowser_Dictionary_4_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TBrowser_Dictionary_6_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TBrowser*)(G__getstructoffset()))->Dictionary();
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TBrowser_IsA_5_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TBrowser_IsA_7_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((TBrowser*)(G__getstructoffset()))->IsA());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TBrowser_ShowMembers_6_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TBrowser_ShowMembers_8_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TBrowser*)(G__getstructoffset()))->ShowMembers(*(TMemberInspector*)libp->para[0].ref,(char*)G__int(libp->para[1]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TBrowser_Streamer_7_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TBrowser_Streamer_9_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TBrowser*)(G__getstructoffset()))->Streamer(*(TBuffer*)libp->para[0].ref);
    return(1 || funcname || hash || result7 || libp) ;
 }
 
 // automatic copy constructor
-static int G__TBrowser_TBrowser_8_2(G__value *result7,char *funcname,struct G__param *libp,int hash)
+static int G__TBrowser_TBrowser_0_3(G__value *result7,char *funcname,struct G__param *libp,int hash)
 {
    TBrowser *p;
    if(1!=libp->paran) ;
@@ -383,7 +397,7 @@ static int G__TBrowser_TBrowser_8_2(G__value *result7,char *funcname,struct G__p
 }
 
 // automatic destructor
-static int G__TBrowser_wATBrowser_9_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TBrowser_wATBrowser_1_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    if(G__getaryconstruct())
      if(G__PVOID==G__getgvp())
        delete[] (TBrowser *)(G__getstructoffset());
@@ -535,7 +549,19 @@ static int G__TStyle_GetTitleOffset_4_1(G__value *result7,char *funcname,struct 
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_GetTickLength_5_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_GetTitleSize_5_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 1:
+      G__letdouble(result7,102,(double)((TStyle*)(G__getstructoffset()))->GetTitleSize((Option_t*)G__int(libp->para[0])));
+      break;
+   case 0:
+      G__letdouble(result7,102,(double)((TStyle*)(G__getstructoffset()))->GetTitleSize());
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TStyle_GetTickLength_6_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__letdouble(result7,102,(double)((TStyle*)(G__getstructoffset()))->GetTickLength((Option_t*)G__int(libp->para[0])));
@@ -547,338 +573,358 @@ static int G__TStyle_GetTickLength_5_1(G__value *result7,char *funcname,struct G
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_GetBarOffset_6_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_GetBarOffset_7_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letdouble(result7,102,(double)((TStyle*)(G__getstructoffset()))->GetBarOffset());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_GetBarWidth_7_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_GetBarWidth_8_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letdouble(result7,102,(double)((TStyle*)(G__getstructoffset()))->GetBarWidth());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_GetDrawBorder_8_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_GetDrawBorder_9_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TStyle*)(G__getstructoffset()))->GetDrawBorder());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_GetErrorMarker_9_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_GetErrorMarker_0_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TStyle*)(G__getstructoffset()))->GetErrorMarker());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_GetErrorMsize_0_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_GetErrorMsize_1_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letdouble(result7,102,(double)((TStyle*)(G__getstructoffset()))->GetErrorMsize());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_GetErrorX_1_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_GetErrorX_2_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letdouble(result7,102,(double)((TStyle*)(G__getstructoffset()))->GetErrorX());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_GetCanvasColor_2_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_GetCanvasColor_3_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,115,(long)((TStyle*)(G__getstructoffset()))->GetCanvasColor());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_GetCanvasBorderSize_3_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_GetCanvasBorderSize_4_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,115,(long)((TStyle*)(G__getstructoffset()))->GetCanvasBorderSize());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_GetCanvasBorderMode_4_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_GetCanvasBorderMode_5_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TStyle*)(G__getstructoffset()))->GetCanvasBorderMode());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_GetCanvasDefH_5_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_GetCanvasDefH_6_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TStyle*)(G__getstructoffset()))->GetCanvasDefH());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_GetCanvasDefW_6_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_GetCanvasDefW_7_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TStyle*)(G__getstructoffset()))->GetCanvasDefW());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_GetCanvasDefX_7_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_GetCanvasDefX_8_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TStyle*)(G__getstructoffset()))->GetCanvasDefX());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_GetCanvasDefY_8_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_GetCanvasDefY_9_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TStyle*)(G__getstructoffset()))->GetCanvasDefY());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_GetColorPalette_9_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_GetColorPalette_0_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TStyle*)(G__getstructoffset()))->GetColorPalette((Int_t)G__int(libp->para[0])));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_GetNumberOfColors_0_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_GetNumberOfColors_1_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TStyle*)(G__getstructoffset()))->GetNumberOfColors());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_GetPadColor_1_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_GetPadColor_2_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,115,(long)((TStyle*)(G__getstructoffset()))->GetPadColor());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_GetPadBorderSize_2_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_GetPadBorderSize_3_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,115,(long)((TStyle*)(G__getstructoffset()))->GetPadBorderSize());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_GetPadBorderMode_3_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_GetPadBorderMode_4_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TStyle*)(G__getstructoffset()))->GetPadBorderMode());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_GetPadBottomMargin_4_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_GetPadBottomMargin_5_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letdouble(result7,102,(double)((TStyle*)(G__getstructoffset()))->GetPadBottomMargin());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_GetPadTopMargin_5_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_GetPadTopMargin_6_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letdouble(result7,102,(double)((TStyle*)(G__getstructoffset()))->GetPadTopMargin());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_GetPadLeftMargin_6_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_GetPadLeftMargin_7_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letdouble(result7,102,(double)((TStyle*)(G__getstructoffset()))->GetPadLeftMargin());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_GetPadRightMargin_7_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_GetPadRightMargin_8_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letdouble(result7,102,(double)((TStyle*)(G__getstructoffset()))->GetPadRightMargin());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_GetFuncColor_8_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_GetPadGridX_9_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,98,(long)((TStyle*)(G__getstructoffset()))->GetPadGridX());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TStyle_GetPadGridY_0_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,98,(long)((TStyle*)(G__getstructoffset()))->GetPadGridY());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TStyle_GetPadTickX_1_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TStyle*)(G__getstructoffset()))->GetPadTickX());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TStyle_GetPadTickY_2_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TStyle*)(G__getstructoffset()))->GetPadTickY());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TStyle_GetFuncColor_3_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,115,(long)((TStyle*)(G__getstructoffset()))->GetFuncColor());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_GetFuncStyle_9_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_GetFuncStyle_4_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,115,(long)((TStyle*)(G__getstructoffset()))->GetFuncStyle());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_GetFuncWidth_0_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_GetFuncWidth_5_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,115,(long)((TStyle*)(G__getstructoffset()))->GetFuncWidth());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_GetFrameFillColor_1_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_GetFrameFillColor_6_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,115,(long)((TStyle*)(G__getstructoffset()))->GetFrameFillColor());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_GetFrameLineColor_2_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_GetFrameLineColor_7_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,115,(long)((TStyle*)(G__getstructoffset()))->GetFrameLineColor());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_GetFrameFillStyle_3_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_GetFrameFillStyle_8_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,115,(long)((TStyle*)(G__getstructoffset()))->GetFrameFillStyle());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_GetFrameLineStyle_4_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_GetFrameLineStyle_9_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,115,(long)((TStyle*)(G__getstructoffset()))->GetFrameLineStyle());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_GetFrameLineWidth_5_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_GetFrameLineWidth_0_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,115,(long)((TStyle*)(G__getstructoffset()))->GetFrameLineWidth());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_GetFrameBorderSize_6_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_GetFrameBorderSize_1_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,115,(long)((TStyle*)(G__getstructoffset()))->GetFrameBorderSize());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_GetFrameBorderMode_7_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_GetFrameBorderMode_2_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TStyle*)(G__getstructoffset()))->GetFrameBorderMode());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_GetHistFillColor_8_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_GetHistFillColor_3_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,115,(long)((TStyle*)(G__getstructoffset()))->GetHistFillColor());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_GetHistLineColor_9_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_GetHistLineColor_4_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,115,(long)((TStyle*)(G__getstructoffset()))->GetHistLineColor());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_GetHistFillStyle_0_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_GetHistFillStyle_5_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,115,(long)((TStyle*)(G__getstructoffset()))->GetHistFillStyle());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_GetHistLineStyle_1_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_GetHistLineStyle_6_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,115,(long)((TStyle*)(G__getstructoffset()))->GetHistLineStyle());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_GetHistLineWidth_2_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_GetHistLineWidth_7_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,115,(long)((TStyle*)(G__getstructoffset()))->GetHistLineWidth());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_GetLegoInnerR_3_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_GetLegoInnerR_8_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letdouble(result7,102,(double)((TStyle*)(G__getstructoffset()))->GetLegoInnerR());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_GetOptDate_4_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_GetOptDate_9_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TStyle*)(G__getstructoffset()))->GetOptDate());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_GetOptFile_5_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_GetOptFile_0_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TStyle*)(G__getstructoffset()))->GetOptFile());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_GetOptFit_6_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_GetOptFit_1_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TStyle*)(G__getstructoffset()))->GetOptFit());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_GetOptStat_7_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_GetOptStat_2_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TStyle*)(G__getstructoffset()))->GetOptStat());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_GetOptTitle_8_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_GetOptTitle_3_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TStyle*)(G__getstructoffset()))->GetOptTitle());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_GetOptLogx_9_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_GetOptLogx_4_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TStyle*)(G__getstructoffset()))->GetOptLogx());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_GetOptLogy_0_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_GetOptLogy_5_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TStyle*)(G__getstructoffset()))->GetOptLogy());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_GetOptLogz_1_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_GetOptLogz_6_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TStyle*)(G__getstructoffset()))->GetOptLogz());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_GetPaperSize_2_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_GetPaperSize_7_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TStyle*)(G__getstructoffset()))->GetPaperSize(libp->para[0].ref?*(Float_t*)libp->para[0].ref:G__Mfloat(libp->para[0]),libp->para[1].ref?*(Float_t*)libp->para[1].ref:G__Mfloat(libp->para[1]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_GetShowEventStatus_3_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_GetShowEventStatus_8_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TStyle*)(G__getstructoffset()))->GetShowEventStatus());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_GetScreenFactor_4_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_GetScreenFactor_9_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letdouble(result7,102,(double)((TStyle*)(G__getstructoffset()))->GetScreenFactor());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_GetStatColor_5_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_GetStatColor_0_7(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,115,(long)((TStyle*)(G__getstructoffset()))->GetStatColor());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_GetStatX_6_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_GetStatBorderSize_1_7(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,115,(long)((TStyle*)(G__getstructoffset()))->GetStatBorderSize());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TStyle_GetStatX_2_7(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letdouble(result7,102,(double)((TStyle*)(G__getstructoffset()))->GetStatX());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_GetStatY_7_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_GetStatY_3_7(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letdouble(result7,102,(double)((TStyle*)(G__getstructoffset()))->GetStatY());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_GetStatW_8_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_GetStatW_4_7(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letdouble(result7,102,(double)((TStyle*)(G__getstructoffset()))->GetStatW());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_GetStatH_9_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_GetStatH_5_7(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letdouble(result7,102,(double)((TStyle*)(G__getstructoffset()))->GetStatH());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_GetTitleColor_0_7(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_GetTitleColor_6_7(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,115,(long)((TStyle*)(G__getstructoffset()))->GetTitleColor());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_GetTitleXOffset_1_7(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_GetTitleBorderSize_7_7(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,115,(long)((TStyle*)(G__getstructoffset()))->GetTitleBorderSize());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TStyle_GetTitleXOffset_8_7(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letdouble(result7,102,(double)((TStyle*)(G__getstructoffset()))->GetTitleXOffset());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_GetTitleXFont_2_7(G__value *result7,char *funcname,struct G__param *libp,int hash) {
-      G__letint(result7,115,(long)((TStyle*)(G__getstructoffset()))->GetTitleXFont());
-   return(1 || funcname || hash || result7 || libp) ;
-}
-
-static int G__TStyle_GetTitleXSize_3_7(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_GetTitleXSize_9_7(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letdouble(result7,102,(double)((TStyle*)(G__getstructoffset()))->GetTitleXSize());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_GetTitleYOffset_4_7(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_GetTitleYOffset_0_8(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letdouble(result7,102,(double)((TStyle*)(G__getstructoffset()))->GetTitleYOffset());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_GetTitleYFont_5_7(G__value *result7,char *funcname,struct G__param *libp,int hash) {
-      G__letint(result7,115,(long)((TStyle*)(G__getstructoffset()))->GetTitleYFont());
-   return(1 || funcname || hash || result7 || libp) ;
-}
-
-static int G__TStyle_GetTitleYSize_6_7(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_GetTitleYSize_1_8(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letdouble(result7,102,(double)((TStyle*)(G__getstructoffset()))->GetTitleYSize());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_GetTitleX_7_7(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_GetTitleX_2_8(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letdouble(result7,102,(double)((TStyle*)(G__getstructoffset()))->GetTitleX());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_GetTitleY_8_7(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_GetTitleY_3_8(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letdouble(result7,102,(double)((TStyle*)(G__getstructoffset()))->GetTitleY());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_GetTitleW_9_7(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_GetTitleW_4_8(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letdouble(result7,102,(double)((TStyle*)(G__getstructoffset()))->GetTitleW());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_GetTitleH_0_8(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_GetTitleH_5_8(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letdouble(result7,102,(double)((TStyle*)(G__getstructoffset()))->GetTitleH());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_GetHeaderPS_1_8(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_GetHeaderPS_6_8(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,67,(long)((TStyle*)(G__getstructoffset()))->GetHeaderPS());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_GetLineStyleString_2_8(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_GetLineStyleString_7_8(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__letint(result7,67,(long)((TStyle*)(G__getstructoffset()))->GetLineStyleString((Int_t)G__int(libp->para[0])));
@@ -890,7 +936,7 @@ static int G__TStyle_GetLineStyleString_2_8(G__value *result7,char *funcname,str
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_Reset_3_8(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_Reset_8_8(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -904,19 +950,19 @@ static int G__TStyle_Reset_3_8(G__value *result7,char *funcname,struct G__param 
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_SetHeaderPS_4_8(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_SetHeaderPS_9_8(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TStyle*)(G__getstructoffset()))->SetHeaderPS((const Text_t*)G__int(libp->para[0]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_SetLineStyleString_5_8(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_SetLineStyleString_0_9(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TStyle*)(G__getstructoffset()))->SetLineStyleString((Int_t)G__int(libp->para[0]),(const char*)G__int(libp->para[1]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_SetNdivisions_6_8(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_SetNdivisions_1_9(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 2:
       G__setnull(result7);
@@ -934,7 +980,7 @@ static int G__TStyle_SetNdivisions_6_8(G__value *result7,char *funcname,struct G
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_SetAxisColor_7_8(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_SetAxisColor_2_9(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 2:
       G__setnull(result7);
@@ -952,7 +998,7 @@ static int G__TStyle_SetAxisColor_7_8(G__value *result7,char *funcname,struct G_
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_SetLabelColor_8_8(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_SetLabelColor_3_9(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 2:
       G__setnull(result7);
@@ -970,7 +1016,7 @@ static int G__TStyle_SetLabelColor_8_8(G__value *result7,char *funcname,struct G
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_SetLabelFont_9_8(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_SetLabelFont_4_9(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 2:
       G__setnull(result7);
@@ -988,7 +1034,7 @@ static int G__TStyle_SetLabelFont_9_8(G__value *result7,char *funcname,struct G_
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_SetLabelOffset_0_9(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_SetLabelOffset_5_9(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 2:
       G__setnull(result7);
@@ -1006,7 +1052,7 @@ static int G__TStyle_SetLabelOffset_0_9(G__value *result7,char *funcname,struct 
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_SetLabelSize_1_9(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_SetLabelSize_6_9(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 2:
       G__setnull(result7);
@@ -1024,7 +1070,7 @@ static int G__TStyle_SetLabelSize_1_9(G__value *result7,char *funcname,struct G_
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_SetLegoInnerR_2_9(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_SetLegoInnerR_7_9(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -1038,7 +1084,7 @@ static int G__TStyle_SetLegoInnerR_2_9(G__value *result7,char *funcname,struct G
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_SetScreenFactor_3_9(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_SetScreenFactor_8_9(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -1052,7 +1098,7 @@ static int G__TStyle_SetScreenFactor_3_9(G__value *result7,char *funcname,struct
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_SetTickLength_4_9(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_SetTickLength_9_9(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 2:
       G__setnull(result7);
@@ -1070,7 +1116,7 @@ static int G__TStyle_SetTickLength_4_9(G__value *result7,char *funcname,struct G
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_SetTitleOffset_5_9(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_SetTitleOffset_0_10(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 2:
       G__setnull(result7);
@@ -1088,7 +1134,25 @@ static int G__TStyle_SetTitleOffset_5_9(G__value *result7,char *funcname,struct 
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_SetOptDate_6_9(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_SetTitleSize_1_10(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 2:
+      G__setnull(result7);
+      ((TStyle*)(G__getstructoffset()))->SetTitleSize((Float_t)G__double(libp->para[0]),(Option_t*)G__int(libp->para[1]));
+      break;
+   case 1:
+      G__setnull(result7);
+      ((TStyle*)(G__getstructoffset()))->SetTitleSize((Float_t)G__double(libp->para[0]));
+      break;
+   case 0:
+      G__setnull(result7);
+      ((TStyle*)(G__getstructoffset()))->SetTitleSize();
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TStyle_SetOptDate_2_10(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -1102,7 +1166,7 @@ static int G__TStyle_SetOptDate_6_9(G__value *result7,char *funcname,struct G__p
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_SetOptFile_7_9(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_SetOptFile_3_10(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -1116,7 +1180,7 @@ static int G__TStyle_SetOptFile_7_9(G__value *result7,char *funcname,struct G__p
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_SetOptFit_8_9(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_SetOptFit_4_10(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -1130,7 +1194,7 @@ static int G__TStyle_SetOptFit_8_9(G__value *result7,char *funcname,struct G__pa
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_SetOptLogx_9_9(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_SetOptLogx_5_10(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -1144,7 +1208,7 @@ static int G__TStyle_SetOptLogx_9_9(G__value *result7,char *funcname,struct G__p
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_SetOptLogy_0_10(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_SetOptLogy_6_10(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -1158,7 +1222,7 @@ static int G__TStyle_SetOptLogy_0_10(G__value *result7,char *funcname,struct G__
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_SetOptLogz_1_10(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_SetOptLogz_7_10(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -1172,7 +1236,7 @@ static int G__TStyle_SetOptLogz_1_10(G__value *result7,char *funcname,struct G__
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_SetOptStat_2_10(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_SetOptStat_8_10(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -1186,7 +1250,7 @@ static int G__TStyle_SetOptStat_2_10(G__value *result7,char *funcname,struct G__
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_SetOptTitle_3_10(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_SetOptTitle_9_10(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -1200,7 +1264,7 @@ static int G__TStyle_SetOptTitle_3_10(G__value *result7,char *funcname,struct G_
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_SetBarOffset_4_10(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_SetBarOffset_0_11(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -1214,7 +1278,7 @@ static int G__TStyle_SetBarOffset_4_10(G__value *result7,char *funcname,struct G
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_SetBarWidth_5_10(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_SetBarWidth_1_11(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -1228,7 +1292,7 @@ static int G__TStyle_SetBarWidth_5_10(G__value *result7,char *funcname,struct G_
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_SetErrorMarker_6_10(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_SetErrorMarker_2_11(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -1242,7 +1306,7 @@ static int G__TStyle_SetErrorMarker_6_10(G__value *result7,char *funcname,struct
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_SetErrorMsize_7_10(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_SetErrorMsize_3_11(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -1256,7 +1320,7 @@ static int G__TStyle_SetErrorMsize_7_10(G__value *result7,char *funcname,struct 
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_SetErrorX_8_10(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_SetErrorX_4_11(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -1270,7 +1334,7 @@ static int G__TStyle_SetErrorX_8_10(G__value *result7,char *funcname,struct G__p
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_SetDrawBorder_9_10(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_SetDrawBorder_5_11(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -1284,7 +1348,7 @@ static int G__TStyle_SetDrawBorder_9_10(G__value *result7,char *funcname,struct 
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_SetCanvasColor_0_11(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_SetCanvasColor_6_11(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -1298,7 +1362,7 @@ static int G__TStyle_SetCanvasColor_0_11(G__value *result7,char *funcname,struct
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_SetCanvasBorderSize_1_11(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_SetCanvasBorderSize_7_11(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -1312,7 +1376,7 @@ static int G__TStyle_SetCanvasBorderSize_1_11(G__value *result7,char *funcname,s
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_SetCanvasBorderMode_2_11(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_SetCanvasBorderMode_8_11(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -1326,7 +1390,7 @@ static int G__TStyle_SetCanvasBorderMode_2_11(G__value *result7,char *funcname,s
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_SetCanvasDefH_3_11(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_SetCanvasDefH_9_11(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -1340,7 +1404,7 @@ static int G__TStyle_SetCanvasDefH_3_11(G__value *result7,char *funcname,struct 
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_SetCanvasDefW_4_11(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_SetCanvasDefW_0_12(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -1354,7 +1418,7 @@ static int G__TStyle_SetCanvasDefW_4_11(G__value *result7,char *funcname,struct 
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_SetCanvasDefX_5_11(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_SetCanvasDefX_1_12(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -1368,7 +1432,7 @@ static int G__TStyle_SetCanvasDefX_5_11(G__value *result7,char *funcname,struct 
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_SetCanvasDefY_6_11(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_SetCanvasDefY_2_12(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -1382,7 +1446,7 @@ static int G__TStyle_SetCanvasDefY_6_11(G__value *result7,char *funcname,struct 
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_SetPadColor_7_11(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_SetPadColor_3_12(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -1396,7 +1460,7 @@ static int G__TStyle_SetPadColor_7_11(G__value *result7,char *funcname,struct G_
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_SetPadBorderSize_8_11(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_SetPadBorderSize_4_12(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -1410,7 +1474,7 @@ static int G__TStyle_SetPadBorderSize_8_11(G__value *result7,char *funcname,stru
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_SetPadBorderMode_9_11(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_SetPadBorderMode_5_12(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -1424,7 +1488,7 @@ static int G__TStyle_SetPadBorderMode_9_11(G__value *result7,char *funcname,stru
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_SetPadBottomMargin_0_12(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_SetPadBottomMargin_6_12(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -1438,7 +1502,7 @@ static int G__TStyle_SetPadBottomMargin_0_12(G__value *result7,char *funcname,st
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_SetPadTopMargin_1_12(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_SetPadTopMargin_7_12(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -1452,7 +1516,7 @@ static int G__TStyle_SetPadTopMargin_1_12(G__value *result7,char *funcname,struc
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_SetPadLeftMargin_2_12(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_SetPadLeftMargin_8_12(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -1466,7 +1530,7 @@ static int G__TStyle_SetPadLeftMargin_2_12(G__value *result7,char *funcname,stru
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_SetPadRightMargin_3_12(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_SetPadRightMargin_9_12(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -1480,7 +1544,31 @@ static int G__TStyle_SetPadRightMargin_3_12(G__value *result7,char *funcname,str
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_SetFuncStyle_4_12(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_SetPadGridX_0_13(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TStyle*)(G__getstructoffset()))->SetPadGridX((Bool_t)G__int(libp->para[0]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TStyle_SetPadGridY_1_13(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TStyle*)(G__getstructoffset()))->SetPadGridY((Bool_t)G__int(libp->para[0]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TStyle_SetPadTickX_2_13(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TStyle*)(G__getstructoffset()))->SetPadTickX((Int_t)G__int(libp->para[0]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TStyle_SetPadTickY_3_13(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TStyle*)(G__getstructoffset()))->SetPadTickY((Int_t)G__int(libp->para[0]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TStyle_SetFuncStyle_4_13(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -1494,7 +1582,7 @@ static int G__TStyle_SetFuncStyle_4_12(G__value *result7,char *funcname,struct G
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_SetFuncColor_5_12(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_SetFuncColor_5_13(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -1508,7 +1596,7 @@ static int G__TStyle_SetFuncColor_5_12(G__value *result7,char *funcname,struct G
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_SetFuncWidth_6_12(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_SetFuncWidth_6_13(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -1522,7 +1610,7 @@ static int G__TStyle_SetFuncWidth_6_12(G__value *result7,char *funcname,struct G
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_SetFrameFillColor_7_12(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_SetFrameFillColor_7_13(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -1536,7 +1624,7 @@ static int G__TStyle_SetFrameFillColor_7_12(G__value *result7,char *funcname,str
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_SetFrameLineColor_8_12(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_SetFrameLineColor_8_13(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -1550,7 +1638,7 @@ static int G__TStyle_SetFrameLineColor_8_12(G__value *result7,char *funcname,str
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_SetFrameFillStyle_9_12(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_SetFrameFillStyle_9_13(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -1564,7 +1652,7 @@ static int G__TStyle_SetFrameFillStyle_9_12(G__value *result7,char *funcname,str
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_SetFrameLineStyle_0_13(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_SetFrameLineStyle_0_14(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -1578,7 +1666,7 @@ static int G__TStyle_SetFrameLineStyle_0_13(G__value *result7,char *funcname,str
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_SetFrameLineWidth_1_13(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_SetFrameLineWidth_1_14(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -1592,7 +1680,7 @@ static int G__TStyle_SetFrameLineWidth_1_13(G__value *result7,char *funcname,str
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_SetFrameBorderSize_2_13(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_SetFrameBorderSize_2_14(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -1606,7 +1694,7 @@ static int G__TStyle_SetFrameBorderSize_2_13(G__value *result7,char *funcname,st
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_SetFrameBorderMode_3_13(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_SetFrameBorderMode_3_14(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -1620,7 +1708,7 @@ static int G__TStyle_SetFrameBorderMode_3_13(G__value *result7,char *funcname,st
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_SetHistFillColor_4_13(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_SetHistFillColor_4_14(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -1634,7 +1722,7 @@ static int G__TStyle_SetHistFillColor_4_13(G__value *result7,char *funcname,stru
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_SetHistLineColor_5_13(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_SetHistLineColor_5_14(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -1648,7 +1736,7 @@ static int G__TStyle_SetHistLineColor_5_13(G__value *result7,char *funcname,stru
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_SetHistFillStyle_6_13(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_SetHistFillStyle_6_14(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -1662,7 +1750,7 @@ static int G__TStyle_SetHistFillStyle_6_13(G__value *result7,char *funcname,stru
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_SetHistLineStyle_7_13(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_SetHistLineStyle_7_14(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -1676,7 +1764,7 @@ static int G__TStyle_SetHistLineStyle_7_13(G__value *result7,char *funcname,stru
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_SetHistLineWidth_8_13(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_SetHistLineWidth_8_14(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -1690,13 +1778,13 @@ static int G__TStyle_SetHistLineWidth_8_13(G__value *result7,char *funcname,stru
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_SetPaperSize_9_13(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_SetPaperSize_9_14(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TStyle*)(G__getstructoffset()))->SetPaperSize((TStyle::EPaperSize)G__int(libp->para[0]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_SetPaperSize_0_14(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_SetPaperSize_0_15(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 2:
       G__setnull(result7);
@@ -1714,7 +1802,7 @@ static int G__TStyle_SetPaperSize_0_14(G__value *result7,char *funcname,struct G
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_SetStatColor_1_14(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_SetStatColor_1_15(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -1728,7 +1816,21 @@ static int G__TStyle_SetStatColor_1_14(G__value *result7,char *funcname,struct G
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_SetStatX_2_14(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_SetStatBorderSize_2_15(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 1:
+      G__setnull(result7);
+      ((TStyle*)(G__getstructoffset()))->SetStatBorderSize((Width_t)G__int(libp->para[0]));
+      break;
+   case 0:
+      G__setnull(result7);
+      ((TStyle*)(G__getstructoffset()))->SetStatBorderSize();
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TStyle_SetStatX_3_15(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -1742,7 +1844,7 @@ static int G__TStyle_SetStatX_2_14(G__value *result7,char *funcname,struct G__pa
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_SetStatY_3_14(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_SetStatY_4_15(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -1756,7 +1858,7 @@ static int G__TStyle_SetStatY_3_14(G__value *result7,char *funcname,struct G__pa
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_SetStatW_4_14(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_SetStatW_5_15(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -1770,7 +1872,7 @@ static int G__TStyle_SetStatW_4_14(G__value *result7,char *funcname,struct G__pa
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_SetStatH_5_14(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_SetStatH_6_15(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -1784,7 +1886,7 @@ static int G__TStyle_SetStatH_5_14(G__value *result7,char *funcname,struct G__pa
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_SetTitleColor_6_14(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_SetTitleColor_7_15(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -1798,7 +1900,21 @@ static int G__TStyle_SetTitleColor_6_14(G__value *result7,char *funcname,struct 
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_SetTitleXOffset_7_14(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_SetTitleBorderSize_8_15(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 1:
+      G__setnull(result7);
+      ((TStyle*)(G__getstructoffset()))->SetTitleBorderSize((Width_t)G__int(libp->para[0]));
+      break;
+   case 0:
+      G__setnull(result7);
+      ((TStyle*)(G__getstructoffset()))->SetTitleBorderSize();
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TStyle_SetTitleXOffset_9_15(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -1812,21 +1928,7 @@ static int G__TStyle_SetTitleXOffset_7_14(G__value *result7,char *funcname,struc
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_SetTitleXFont_8_14(G__value *result7,char *funcname,struct G__param *libp,int hash) {
-   switch(libp->paran) {
-   case 1:
-      G__setnull(result7);
-      ((TStyle*)(G__getstructoffset()))->SetTitleXFont((Style_t)G__int(libp->para[0]));
-      break;
-   case 0:
-      G__setnull(result7);
-      ((TStyle*)(G__getstructoffset()))->SetTitleXFont();
-      break;
-   }
-   return(1 || funcname || hash || result7 || libp) ;
-}
-
-static int G__TStyle_SetTitleXSize_9_14(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_SetTitleXSize_0_16(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -1840,7 +1942,7 @@ static int G__TStyle_SetTitleXSize_9_14(G__value *result7,char *funcname,struct 
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_SetTitleYOffset_0_15(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_SetTitleYOffset_1_16(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -1854,21 +1956,7 @@ static int G__TStyle_SetTitleYOffset_0_15(G__value *result7,char *funcname,struc
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_SetTitleYFont_1_15(G__value *result7,char *funcname,struct G__param *libp,int hash) {
-   switch(libp->paran) {
-   case 1:
-      G__setnull(result7);
-      ((TStyle*)(G__getstructoffset()))->SetTitleYFont((Style_t)G__int(libp->para[0]));
-      break;
-   case 0:
-      G__setnull(result7);
-      ((TStyle*)(G__getstructoffset()))->SetTitleYFont();
-      break;
-   }
-   return(1 || funcname || hash || result7 || libp) ;
-}
-
-static int G__TStyle_SetTitleYSize_2_15(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_SetTitleYSize_2_16(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -1882,7 +1970,7 @@ static int G__TStyle_SetTitleYSize_2_15(G__value *result7,char *funcname,struct 
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_SetTitleX_3_15(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_SetTitleX_3_16(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -1896,7 +1984,7 @@ static int G__TStyle_SetTitleX_3_15(G__value *result7,char *funcname,struct G__p
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_SetTitleY_4_15(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_SetTitleY_4_16(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -1910,7 +1998,7 @@ static int G__TStyle_SetTitleY_4_15(G__value *result7,char *funcname,struct G__p
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_SetTitleW_5_15(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_SetTitleW_5_16(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -1924,7 +2012,7 @@ static int G__TStyle_SetTitleW_5_15(G__value *result7,char *funcname,struct G__p
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_SetTitleH_6_15(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_SetTitleH_6_16(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -1938,13 +2026,13 @@ static int G__TStyle_SetTitleH_6_15(G__value *result7,char *funcname,struct G__p
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_ToggleEventStatus_7_15(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_ToggleEventStatus_7_16(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TStyle*)(G__getstructoffset()))->ToggleEventStatus();
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_SetPalette_8_15(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_SetPalette_8_16(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 2:
       G__setnull(result7);
@@ -1962,61 +2050,61 @@ static int G__TStyle_SetPalette_8_15(G__value *result7,char *funcname,struct G__
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_DeclFileName_9_15(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_DeclFileName_9_16(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,67,(long)((TStyle*)(G__getstructoffset()))->DeclFileName());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_DeclFileLine_0_16(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_DeclFileLine_0_17(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TStyle*)(G__getstructoffset()))->DeclFileLine());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_ImplFileName_1_16(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_ImplFileName_1_17(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,67,(long)((TStyle*)(G__getstructoffset()))->ImplFileName());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_ImplFileLine_2_16(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_ImplFileLine_2_17(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TStyle*)(G__getstructoffset()))->ImplFileLine());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_Class_Version_3_16(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_Class_Version_3_17(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,115,(long)((TStyle*)(G__getstructoffset()))->Class_Version());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_Class_4_16(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_Class_4_17(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((TStyle*)(G__getstructoffset()))->Class());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_Dictionary_5_16(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_Dictionary_5_17(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TStyle*)(G__getstructoffset()))->Dictionary();
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_IsA_6_16(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_IsA_6_17(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((TStyle*)(G__getstructoffset()))->IsA());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_ShowMembers_7_16(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_ShowMembers_7_17(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TStyle*)(G__getstructoffset()))->ShowMembers(*(TMemberInspector*)libp->para[0].ref,(char*)G__int(libp->para[1]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TStyle_Streamer_8_16(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_Streamer_8_17(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TStyle*)(G__getstructoffset()))->Streamer(*(TBuffer*)libp->para[0].ref);
    return(1 || funcname || hash || result7 || libp) ;
 }
 
 // automatic destructor
-static int G__TStyle_wATStyle_9_16(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TStyle_wATStyle_9_17(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    if(G__getaryconstruct())
      if(G__PVOID==G__getgvp())
        delete[] (TStyle *)(G__getstructoffset());
@@ -3117,22 +3205,46 @@ static int G__TVirtualPad_XtoPad_4_13(G__value *result7,char *funcname,struct G_
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TVirtualPad_XtoPixel_5_13(G__value *result7,char *funcname,struct G__param *libp,int hash) {
-      G__letint(result7,105,(long)((TVirtualPad*)(G__getstructoffset()))->XtoPixel((Axis_t)G__double(libp->para[0])));
-   return(1 || funcname || hash || result7 || libp) ;
-}
-
-static int G__TVirtualPad_YtoPixel_6_13(G__value *result7,char *funcname,struct G__param *libp,int hash) {
-      G__letint(result7,105,(long)((TVirtualPad*)(G__getstructoffset()))->YtoPixel((Axis_t)G__double(libp->para[0])));
-   return(1 || funcname || hash || result7 || libp) ;
-}
-
-static int G__TVirtualPad_YtoPad_7_13(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TVirtualPad_YtoPad_5_13(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letdouble(result7,102,(double)((TVirtualPad*)(G__getstructoffset()))->YtoPad((Axis_t)G__double(libp->para[0])));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TVirtualPad_x3d_8_13(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TVirtualPad_XtoPixel_6_13(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TVirtualPad*)(G__getstructoffset()))->XtoPixel((Axis_t)G__double(libp->para[0])));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TVirtualPad_YtoPixel_7_13(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TVirtualPad*)(G__getstructoffset()))->YtoPixel((Axis_t)G__double(libp->para[0])));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TVirtualPad_CreateToolTip_8_13(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,85,(long)((TVirtualPad*)(G__getstructoffset()))->CreateToolTip((const TBox*)G__int(libp->para[0]),(const char*)G__int(libp->para[1])
+,(Long_t)G__int(libp->para[2])));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TVirtualPad_DeleteToolTip_9_13(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TVirtualPad*)(G__getstructoffset()))->DeleteToolTip((TGToolTip*)G__int(libp->para[0]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TVirtualPad_ResetToolTip_0_14(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TVirtualPad*)(G__getstructoffset()))->ResetToolTip((TGToolTip*)G__int(libp->para[0]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TVirtualPad_CloseToolTip_1_14(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TVirtualPad*)(G__getstructoffset()))->CloseToolTip((TGToolTip*)G__int(libp->para[0]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TVirtualPad_x3d_2_14(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -3146,61 +3258,61 @@ static int G__TVirtualPad_x3d_8_13(G__value *result7,char *funcname,struct G__pa
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TVirtualPad_DeclFileName_9_13(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TVirtualPad_DeclFileName_3_14(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,67,(long)((TVirtualPad*)(G__getstructoffset()))->DeclFileName());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TVirtualPad_DeclFileLine_0_14(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TVirtualPad_DeclFileLine_4_14(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TVirtualPad*)(G__getstructoffset()))->DeclFileLine());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TVirtualPad_ImplFileName_1_14(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TVirtualPad_ImplFileName_5_14(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,67,(long)((TVirtualPad*)(G__getstructoffset()))->ImplFileName());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TVirtualPad_ImplFileLine_2_14(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TVirtualPad_ImplFileLine_6_14(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TVirtualPad*)(G__getstructoffset()))->ImplFileLine());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TVirtualPad_Class_Version_3_14(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TVirtualPad_Class_Version_7_14(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,115,(long)((TVirtualPad*)(G__getstructoffset()))->Class_Version());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TVirtualPad_Class_4_14(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TVirtualPad_Class_8_14(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((TVirtualPad*)(G__getstructoffset()))->Class());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TVirtualPad_Dictionary_5_14(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TVirtualPad_Dictionary_9_14(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TVirtualPad*)(G__getstructoffset()))->Dictionary();
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TVirtualPad_IsA_6_14(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TVirtualPad_IsA_0_15(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((TVirtualPad*)(G__getstructoffset()))->IsA());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TVirtualPad_ShowMembers_7_14(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TVirtualPad_ShowMembers_1_15(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TVirtualPad*)(G__getstructoffset()))->ShowMembers(*(TMemberInspector*)libp->para[0].ref,(char*)G__int(libp->para[1]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TVirtualPad_Streamer_8_14(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TVirtualPad_Streamer_2_15(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TVirtualPad*)(G__getstructoffset()))->Streamer(*(TBuffer*)libp->para[0].ref);
    return(1 || funcname || hash || result7 || libp) ;
 }
 
 // automatic destructor
-static int G__TVirtualPad_wATVirtualPad_9_14(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TVirtualPad_wATVirtualPad_3_15(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    if(G__getaryconstruct())
      if(G__PVOID==G__getgvp())
        delete[] (TVirtualPad *)(G__getstructoffset());
@@ -7940,6 +8052,7 @@ static void G__setup_memvarTBrowser(void) {
    { TBrowser *p; p=(TBrowser*)0x1000; if (p) { }
    G__memvar_setup((void*)NULL,85,0,0,G__get_linked_tagnum(&G__G__Graf2LN_TBrowserImp),-1,-1,4,"fImp=",0,"Window system specific browser implementation");
    G__memvar_setup((void*)NULL,85,0,0,G__get_linked_tagnum(&G__G__Graf2LN_TBrowserTimer),-1,-1,4,"fTimer=",0,"Browser's timer");
+   G__memvar_setup((void*)NULL,85,0,0,G__get_linked_tagnum(&G__G__Graf2LN_TObject),-1,-1,4,"fLastSelectedObject=",0,"The last TObject selected by user");
    G__memvar_setup((void*)NULL,85,0,0,G__get_linked_tagnum(&G__G__Graf2LN_TContextMenu),-1,-1,2,"fContextMenu=",0,"Context menu pointer");
    G__memvar_setup((void*)NULL,98,0,0,-1,G__defined_typename("Bool_t"),-1,2,"fNeedRefresh=",0,"True if the browser needs refresh");
    G__memvar_setup((void*)NULL,85,0,0,G__get_linked_tagnum(&G__G__Graf2LN_TClass),-1,-2,4,"fgIsA=",0,(char*)NULL);
@@ -7999,21 +8112,21 @@ static void G__setup_memvarTStyle(void) {
    G__memvar_setup((void*)NULL,102,0,0,-1,G__defined_typename("Float_t"),-1,4,"fPadTopMargin=",0,"pad top margin");
    G__memvar_setup((void*)NULL,102,0,0,-1,G__defined_typename("Float_t"),-1,4,"fPadLeftMargin=",0,"pad left margin");
    G__memvar_setup((void*)NULL,102,0,0,-1,G__defined_typename("Float_t"),-1,4,"fPadRightMargin=",0,"pad right margin");
+   G__memvar_setup((void*)NULL,98,0,0,-1,G__defined_typename("Bool_t"),-1,4,"fPadGridX=",0,"true to get the grid along X");
+   G__memvar_setup((void*)NULL,98,0,0,-1,G__defined_typename("Bool_t"),-1,4,"fPadGridY=",0,"true to get the grid along Y");
+   G__memvar_setup((void*)NULL,105,0,0,-1,G__defined_typename("Int_t"),-1,4,"fPadTickX=",0,"=1 to set special pad ticks along X");
+   G__memvar_setup((void*)NULL,105,0,0,-1,G__defined_typename("Int_t"),-1,4,"fPadTickY=",0,"=1 to set special pad ticks along Y");
    G__memvar_setup((void*)NULL,102,0,0,-1,G__defined_typename("Float_t"),-1,4,"fPaperSizeX=",0,"PostScript paper size along X");
    G__memvar_setup((void*)NULL,102,0,0,-1,G__defined_typename("Float_t"),-1,4,"fPaperSizeY=",0,"PostScript paper size along Y");
    G__memvar_setup((void*)NULL,102,0,0,-1,G__defined_typename("Float_t"),-1,4,"fScreenFactor=",0,"Multiplication factor for canvas size and position");
    G__memvar_setup((void*)NULL,115,0,0,-1,G__defined_typename("Color_t"),-1,4,"fStatColor=",0,"stat color");
+   G__memvar_setup((void*)NULL,115,0,0,-1,G__defined_typename("Width_t"),-1,4,"fStatBorderSize=",0,"border size of Stats PavelLabel");
    G__memvar_setup((void*)NULL,102,0,0,-1,G__defined_typename("Float_t"),-1,4,"fStatX=",0,"X position of top right corner of stat box");
    G__memvar_setup((void*)NULL,102,0,0,-1,G__defined_typename("Float_t"),-1,4,"fStatY=",0,"Y position of top right corner of stat box");
    G__memvar_setup((void*)NULL,102,0,0,-1,G__defined_typename("Float_t"),-1,4,"fStatW=",0,"width of stat box");
    G__memvar_setup((void*)NULL,102,0,0,-1,G__defined_typename("Float_t"),-1,4,"fStatH=",0,"height of stat box");
    G__memvar_setup((void*)NULL,115,0,0,-1,G__defined_typename("Color_t"),-1,4,"fTitleColor=",0,"title color");
-   G__memvar_setup((void*)NULL,102,0,0,-1,G__defined_typename("Float_t"),-1,4,"fTitleXOffset=",0,"Offset of title to X axis");
-   G__memvar_setup((void*)NULL,115,0,0,-1,G__defined_typename("Style_t"),-1,4,"fTitleXFont=",0,"font for X title");
-   G__memvar_setup((void*)NULL,102,0,0,-1,G__defined_typename("Float_t"),-1,4,"fTitleXSize=",0,"size of X title");
-   G__memvar_setup((void*)NULL,102,0,0,-1,G__defined_typename("Float_t"),-1,4,"fTitleYOffset=",0,"Offset of title to Y axis");
-   G__memvar_setup((void*)NULL,115,0,0,-1,G__defined_typename("Style_t"),-1,4,"fTitleYFont=",0,"font for Y title");
-   G__memvar_setup((void*)NULL,102,0,0,-1,G__defined_typename("Float_t"),-1,4,"fTitleYSize=",0,"size of Y title");
+   G__memvar_setup((void*)NULL,115,0,0,-1,G__defined_typename("Width_t"),-1,4,"fTitleBorderSize=",0,"border size of Title PavelLabel");
    G__memvar_setup((void*)NULL,102,0,0,-1,G__defined_typename("Float_t"),-1,4,"fTitleX=",0,"X position of top left corner of title box");
    G__memvar_setup((void*)NULL,102,0,0,-1,G__defined_typename("Float_t"),-1,4,"fTitleY=",0,"Y position of top left corner of title box");
    G__memvar_setup((void*)NULL,102,0,0,-1,G__defined_typename("Float_t"),-1,4,"fTitleW=",0,"width of title box");
@@ -8312,26 +8425,28 @@ static void G__setup_memfuncTBrowser(void) {
    G__memfunc_setup("GetBrowserImp",1322,G__TBrowser_GetBrowserImp_0_1,85,G__get_linked_tagnum(&G__G__Graf2LN_TBrowserImp),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
    G__memfunc_setup("GetContextMenu",1434,G__TBrowser_GetContextMenu_1_1,85,G__get_linked_tagnum(&G__G__Graf2LN_TContextMenu),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
    G__memfunc_setup("GetRefreshFlag",1385,G__TBrowser_GetRefreshFlag_2_1,98,-1,G__defined_typename("Bool_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("SetRefreshFlag",1397,G__TBrowser_SetRefreshFlag_3_1,121,-1,-1,0,1,1,1,0,"b - 'Bool_t' 0 - flag",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Iconify",721,G__TBrowser_Iconify_4_1,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("RecursiveRemove",1574,G__TBrowser_RecursiveRemove_5_1,121,-1,-1,0,1,1,1,0,"U 'TObject' - 0 - obj",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("Refresh",719,G__TBrowser_Refresh_6_1,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Show",417,G__TBrowser_Show_7_1,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("DeclFileName",1145,G__TBrowser_DeclFileName_8_1,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("DeclFileLine",1152,G__TBrowser_DeclFileLine_9_1,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("ImplFileName",1171,G__TBrowser_ImplFileName_0_2,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("ImplFileLine",1178,G__TBrowser_ImplFileLine_1_2,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Class_Version",1339,G__TBrowser_Class_Version_2_2,115,-1,G__defined_typename("Version_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Class",502,G__TBrowser_Class_3_2,85,G__get_linked_tagnum(&G__G__Graf2LN_TClass),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Dictionary",1046,G__TBrowser_Dictionary_4_2,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("IsA",253,G__TBrowser_IsA_5_2,85,G__get_linked_tagnum(&G__G__Graf2LN_TClass),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("ShowMembers",1132,G__TBrowser_ShowMembers_6_2,121,-1,-1,0,2,1,1,0,
+   G__memfunc_setup("GetSelected",1097,G__TBrowser_GetSelected_3_1,85,G__get_linked_tagnum(&G__G__Graf2LN_TObject),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("SetRefreshFlag",1397,G__TBrowser_SetRefreshFlag_4_1,121,-1,-1,0,1,1,1,0,"b - 'Bool_t' 0 - flag",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Iconify",721,G__TBrowser_Iconify_5_1,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("RecursiveRemove",1574,G__TBrowser_RecursiveRemove_6_1,121,-1,-1,0,1,1,1,0,"U 'TObject' - 0 - obj",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Refresh",719,G__TBrowser_Refresh_7_1,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("SetSelected",1109,G__TBrowser_SetSelected_8_1,121,-1,-1,0,1,1,1,0,"U 'TObject' - 0 - clickedObject",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Show",417,G__TBrowser_Show_9_1,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("DeclFileName",1145,G__TBrowser_DeclFileName_0_2,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("DeclFileLine",1152,G__TBrowser_DeclFileLine_1_2,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ImplFileName",1171,G__TBrowser_ImplFileName_2_2,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ImplFileLine",1178,G__TBrowser_ImplFileLine_3_2,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Class_Version",1339,G__TBrowser_Class_Version_4_2,115,-1,G__defined_typename("Version_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Class",502,G__TBrowser_Class_5_2,85,G__get_linked_tagnum(&G__G__Graf2LN_TClass),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Dictionary",1046,G__TBrowser_Dictionary_6_2,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("IsA",253,G__TBrowser_IsA_7_2,85,G__get_linked_tagnum(&G__G__Graf2LN_TClass),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("ShowMembers",1132,G__TBrowser_ShowMembers_8_2,121,-1,-1,0,2,1,1,0,
 "u 'TMemberInspector' - 1 - insp C - - 0 - parent",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("Streamer",835,G__TBrowser_Streamer_7_2,121,-1,-1,0,1,1,1,0,"u 'TBuffer' - 1 - b",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Streamer",835,G__TBrowser_Streamer_9_2,121,-1,-1,0,1,1,1,0,"u 'TBuffer' - 1 - b",(char*)NULL,(void*)NULL,1);
    // automatic copy constructor
-   G__memfunc_setup("TBrowser",824,G__TBrowser_TBrowser_8_2,(int)('i'),G__get_linked_tagnum(&G__G__Graf2LN_TBrowser),-1,0,1,1,1,0,"u 'TBrowser' - 1 - -",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("TBrowser",824,G__TBrowser_TBrowser_0_3,(int)('i'),G__get_linked_tagnum(&G__G__Graf2LN_TBrowser),-1,0,1,1,1,0,"u 'TBrowser' - 1 - -",(char*)NULL,(void*)NULL,0);
    // automatic destructor
-   G__memfunc_setup("~TBrowser",950,G__TBrowser_wATBrowser_9_2,(int)('y'),-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("~TBrowser",950,G__TBrowser_wATBrowser_1_3,(int)('y'),-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
    G__tag_memfunc_reset();
 }
 
@@ -8352,369 +8467,380 @@ static void G__setup_memfuncTStyle(void) {
    G__memfunc_setup("GetLabelFont",1175,G__TStyle_GetLabelFont_1_1,115,-1,G__defined_typename("Style_t"),0,1,1,1,0,"C - 'Option_t' 0 \"X\" axis",(char*)NULL,(void*)NULL,0);
    G__memfunc_setup("GetLabelOffset",1383,G__TStyle_GetLabelOffset_2_1,102,-1,G__defined_typename("Float_t"),0,1,1,1,0,"C - 'Option_t' 0 \"X\" axis",(char*)NULL,(void*)NULL,0);
    G__memfunc_setup("GetLabelSize",1179,G__TStyle_GetLabelSize_3_1,102,-1,G__defined_typename("Float_t"),0,1,1,1,0,"C - 'Option_t' 0 \"X\" axis",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetTitleOffset",1417,G__TStyle_GetTitleOffset_4_1,102,-1,G__defined_typename("Float_t"),0,1,1,1,0,"C - 'Option_t' 0 \"X\" axis",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetTickLength",1293,G__TStyle_GetTickLength_5_1,102,-1,G__defined_typename("Float_t"),0,1,1,1,0,"C - 'Option_t' 0 \"X\" axis",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetBarOffset",1180,G__TStyle_GetBarOffset_6_1,102,-1,G__defined_typename("Float_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetBarWidth",1077,G__TStyle_GetBarWidth_7_1,102,-1,G__defined_typename("Float_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetDrawBorder",1292,G__TStyle_GetDrawBorder_8_1,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetErrorMarker",1420,G__TStyle_GetErrorMarker_9_1,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetErrorMsize",1330,G__TStyle_GetErrorMsize_0_2,102,-1,G__defined_typename("Float_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetErrorX",898,G__TStyle_GetErrorX_1_2,102,-1,G__defined_typename("Float_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetCanvasColor",1403,G__TStyle_GetCanvasColor_2_2,115,-1,G__defined_typename("Color_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetCanvasBorderSize",1909,G__TStyle_GetCanvasBorderSize_3_2,115,-1,G__defined_typename("Width_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetCanvasBorderMode",1887,G__TStyle_GetCanvasBorderMode_4_2,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetCanvasDefH",1235,G__TStyle_GetCanvasDefH_5_2,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetCanvasDefW",1250,G__TStyle_GetCanvasDefW_6_2,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetCanvasDefX",1251,G__TStyle_GetCanvasDefX_7_2,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetCanvasDefY",1252,G__TStyle_GetCanvasDefY_8_2,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetColorPalette",1518,G__TStyle_GetColorPalette_9_2,105,-1,G__defined_typename("Int_t"),0,1,1,1,0,"i - 'Int_t' 0 - i",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetNumberOfColors",1712,G__TStyle_GetNumberOfColors_0_3,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetPadColor",1076,G__TStyle_GetPadColor_1_3,115,-1,G__defined_typename("Color_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetPadBorderSize",1582,G__TStyle_GetPadBorderSize_2_3,115,-1,G__defined_typename("Width_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetPadBorderMode",1560,G__TStyle_GetPadBorderMode_3_3,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetPadBottomMargin",1800,G__TStyle_GetPadBottomMargin_4_3,102,-1,G__defined_typename("Float_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetPadTopMargin",1478,G__TStyle_GetPadTopMargin_5_3,102,-1,G__defined_typename("Float_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetPadLeftMargin",1566,G__TStyle_GetPadLeftMargin_6_3,102,-1,G__defined_typename("Float_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetPadRightMargin",1681,G__TStyle_GetPadRightMargin_7_3,102,-1,G__defined_typename("Float_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetFuncColor",1195,G__TStyle_GetFuncColor_8_3,115,-1,G__defined_typename("Color_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetFuncStyle",1213,G__TStyle_GetFuncStyle_9_3,115,-1,G__defined_typename("Style_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetFuncWidth",1196,G__TStyle_GetFuncWidth_0_4,115,-1,G__defined_typename("Width_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetFrameFillColor",1681,G__TStyle_GetFrameFillColor_1_4,115,-1,G__defined_typename("Color_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetFrameLineColor",1682,G__TStyle_GetFrameLineColor_2_4,115,-1,G__defined_typename("Color_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetFrameFillStyle",1699,G__TStyle_GetFrameFillStyle_3_4,115,-1,G__defined_typename("Style_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetFrameLineStyle",1700,G__TStyle_GetFrameLineStyle_4_4,115,-1,G__defined_typename("Style_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetFrameLineWidth",1683,G__TStyle_GetFrameLineWidth_5_4,115,-1,G__defined_typename("Width_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetFrameBorderSize",1796,G__TStyle_GetFrameBorderSize_6_4,115,-1,G__defined_typename("Width_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetFrameBorderMode",1774,G__TStyle_GetFrameBorderMode_7_4,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetHistFillColor",1598,G__TStyle_GetHistFillColor_8_4,115,-1,G__defined_typename("Color_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetHistLineColor",1599,G__TStyle_GetHistLineColor_9_4,115,-1,G__defined_typename("Color_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetHistFillStyle",1616,G__TStyle_GetHistFillStyle_0_5,115,-1,G__defined_typename("Style_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetHistLineStyle",1617,G__TStyle_GetHistLineStyle_1_5,115,-1,G__defined_typename("Style_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetHistLineWidth",1600,G__TStyle_GetHistLineWidth_2_5,115,-1,G__defined_typename("Width_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetLegoInnerR",1269,G__TStyle_GetLegoInnerR_3_5,102,-1,G__defined_typename("Float_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetOptDate",977,G__TStyle_GetOptDate_4_5,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetOptFile",979,G__TStyle_GetOptFile_5_5,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetOptFit",886,G__TStyle_GetOptFit_6_5,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetOptStat",1007,G__TStyle_GetOptStat_7_5,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetOptTitle",1109,G__TStyle_GetOptTitle_8_5,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetOptLogx",1005,G__TStyle_GetOptLogx_9_5,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetOptLogy",1006,G__TStyle_GetOptLogy_0_6,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetOptLogz",1007,G__TStyle_GetOptLogz_1_6,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetPaperSize",1203,G__TStyle_GetPaperSize_2_6,121,-1,-1,0,2,1,1,0,
+   G__memfunc_setup("GetTitleOffset",1417,G__TStyle_GetTitleOffset_4_1,102,-1,G__defined_typename("Float_t"),0,1,1,1,0,"C - 'Option_t' 0 \"X\" axis","return axis title offset",(void*)NULL,0);
+   G__memfunc_setup("GetTitleSize",1213,G__TStyle_GetTitleSize_5_1,102,-1,G__defined_typename("Float_t"),0,1,1,1,0,"C - 'Option_t' 0 \"X\" axis","return axis title size",(void*)NULL,0);
+   G__memfunc_setup("GetTickLength",1293,G__TStyle_GetTickLength_6_1,102,-1,G__defined_typename("Float_t"),0,1,1,1,0,"C - 'Option_t' 0 \"X\" axis",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetBarOffset",1180,G__TStyle_GetBarOffset_7_1,102,-1,G__defined_typename("Float_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetBarWidth",1077,G__TStyle_GetBarWidth_8_1,102,-1,G__defined_typename("Float_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetDrawBorder",1292,G__TStyle_GetDrawBorder_9_1,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetErrorMarker",1420,G__TStyle_GetErrorMarker_0_2,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetErrorMsize",1330,G__TStyle_GetErrorMsize_1_2,102,-1,G__defined_typename("Float_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetErrorX",898,G__TStyle_GetErrorX_2_2,102,-1,G__defined_typename("Float_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetCanvasColor",1403,G__TStyle_GetCanvasColor_3_2,115,-1,G__defined_typename("Color_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetCanvasBorderSize",1909,G__TStyle_GetCanvasBorderSize_4_2,115,-1,G__defined_typename("Width_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetCanvasBorderMode",1887,G__TStyle_GetCanvasBorderMode_5_2,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetCanvasDefH",1235,G__TStyle_GetCanvasDefH_6_2,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetCanvasDefW",1250,G__TStyle_GetCanvasDefW_7_2,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetCanvasDefX",1251,G__TStyle_GetCanvasDefX_8_2,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetCanvasDefY",1252,G__TStyle_GetCanvasDefY_9_2,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetColorPalette",1518,G__TStyle_GetColorPalette_0_3,105,-1,G__defined_typename("Int_t"),0,1,1,1,0,"i - 'Int_t' 0 - i",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetNumberOfColors",1712,G__TStyle_GetNumberOfColors_1_3,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetPadColor",1076,G__TStyle_GetPadColor_2_3,115,-1,G__defined_typename("Color_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetPadBorderSize",1582,G__TStyle_GetPadBorderSize_3_3,115,-1,G__defined_typename("Width_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetPadBorderMode",1560,G__TStyle_GetPadBorderMode_4_3,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetPadBottomMargin",1800,G__TStyle_GetPadBottomMargin_5_3,102,-1,G__defined_typename("Float_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetPadTopMargin",1478,G__TStyle_GetPadTopMargin_6_3,102,-1,G__defined_typename("Float_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetPadLeftMargin",1566,G__TStyle_GetPadLeftMargin_7_3,102,-1,G__defined_typename("Float_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetPadRightMargin",1681,G__TStyle_GetPadRightMargin_8_3,102,-1,G__defined_typename("Float_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetPadGridX",1043,G__TStyle_GetPadGridX_9_3,98,-1,G__defined_typename("Bool_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetPadGridY",1044,G__TStyle_GetPadGridY_0_4,98,-1,G__defined_typename("Bool_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetPadTickX",1048,G__TStyle_GetPadTickX_1_4,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetPadTickY",1049,G__TStyle_GetPadTickY_2_4,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetFuncColor",1195,G__TStyle_GetFuncColor_3_4,115,-1,G__defined_typename("Color_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetFuncStyle",1213,G__TStyle_GetFuncStyle_4_4,115,-1,G__defined_typename("Style_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetFuncWidth",1196,G__TStyle_GetFuncWidth_5_4,115,-1,G__defined_typename("Width_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetFrameFillColor",1681,G__TStyle_GetFrameFillColor_6_4,115,-1,G__defined_typename("Color_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetFrameLineColor",1682,G__TStyle_GetFrameLineColor_7_4,115,-1,G__defined_typename("Color_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetFrameFillStyle",1699,G__TStyle_GetFrameFillStyle_8_4,115,-1,G__defined_typename("Style_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetFrameLineStyle",1700,G__TStyle_GetFrameLineStyle_9_4,115,-1,G__defined_typename("Style_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetFrameLineWidth",1683,G__TStyle_GetFrameLineWidth_0_5,115,-1,G__defined_typename("Width_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetFrameBorderSize",1796,G__TStyle_GetFrameBorderSize_1_5,115,-1,G__defined_typename("Width_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetFrameBorderMode",1774,G__TStyle_GetFrameBorderMode_2_5,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetHistFillColor",1598,G__TStyle_GetHistFillColor_3_5,115,-1,G__defined_typename("Color_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetHistLineColor",1599,G__TStyle_GetHistLineColor_4_5,115,-1,G__defined_typename("Color_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetHistFillStyle",1616,G__TStyle_GetHistFillStyle_5_5,115,-1,G__defined_typename("Style_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetHistLineStyle",1617,G__TStyle_GetHistLineStyle_6_5,115,-1,G__defined_typename("Style_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetHistLineWidth",1600,G__TStyle_GetHistLineWidth_7_5,115,-1,G__defined_typename("Width_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetLegoInnerR",1269,G__TStyle_GetLegoInnerR_8_5,102,-1,G__defined_typename("Float_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetOptDate",977,G__TStyle_GetOptDate_9_5,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetOptFile",979,G__TStyle_GetOptFile_0_6,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetOptFit",886,G__TStyle_GetOptFit_1_6,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetOptStat",1007,G__TStyle_GetOptStat_2_6,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetOptTitle",1109,G__TStyle_GetOptTitle_3_6,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetOptLogx",1005,G__TStyle_GetOptLogx_4_6,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetOptLogy",1006,G__TStyle_GetOptLogy_5_6,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetOptLogz",1007,G__TStyle_GetOptLogz_6_6,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetPaperSize",1203,G__TStyle_GetPaperSize_7_6,121,-1,-1,0,2,1,1,0,
 "f - 'Float_t' 1 - xsize f - 'Float_t' 1 - ysize",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetShowEventStatus",1863,G__TStyle_GetShowEventStatus_3_6,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetScreenFactor",1503,G__TStyle_GetScreenFactor_4_6,102,-1,G__defined_typename("Float_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetStatColor",1211,G__TStyle_GetStatColor_5_6,115,-1,G__defined_typename("Color_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetStatX",788,G__TStyle_GetStatX_6_6,102,-1,G__defined_typename("Float_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetStatY",789,G__TStyle_GetStatY_7_6,102,-1,G__defined_typename("Float_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetStatW",787,G__TStyle_GetStatW_8_6,102,-1,G__defined_typename("Float_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetStatH",772,G__TStyle_GetStatH_9_6,102,-1,G__defined_typename("Float_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetTitleColor",1313,G__TStyle_GetTitleColor_0_7,115,-1,G__defined_typename("Color_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetTitleXOffset",1505,G__TStyle_GetTitleXOffset_1_7,102,-1,G__defined_typename("Float_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetTitleXFont",1297,G__TStyle_GetTitleXFont_2_7,115,-1,G__defined_typename("Style_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetTitleXSize",1301,G__TStyle_GetTitleXSize_3_7,102,-1,G__defined_typename("Float_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetTitleYOffset",1506,G__TStyle_GetTitleYOffset_4_7,102,-1,G__defined_typename("Float_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetTitleYFont",1298,G__TStyle_GetTitleYFont_5_7,115,-1,G__defined_typename("Style_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetTitleYSize",1302,G__TStyle_GetTitleYSize_6_7,102,-1,G__defined_typename("Float_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetTitleX",890,G__TStyle_GetTitleX_7_7,102,-1,G__defined_typename("Float_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetTitleY",891,G__TStyle_GetTitleY_8_7,102,-1,G__defined_typename("Float_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetTitleW",889,G__TStyle_GetTitleW_9_7,102,-1,G__defined_typename("Float_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetTitleH",874,G__TStyle_GetTitleH_0_8,102,-1,G__defined_typename("Float_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetHeaderPS",1036,G__TStyle_GetHeaderPS_1_8,67,-1,G__defined_typename("Text_t"),0,0,1,1,9,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetLineStyleString",1840,G__TStyle_GetLineStyleString_2_8,67,-1,G__defined_typename("Text_t"),0,1,1,1,9,"i - 'Int_t' 0 1 i",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Reset",515,G__TStyle_Reset_3_8,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("SetHeaderPS",1048,G__TStyle_SetHeaderPS_4_8,121,-1,-1,0,1,1,1,0,"C - 'Text_t' 0 - header",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("SetLineStyleString",1852,G__TStyle_SetLineStyleString_5_8,121,-1,-1,0,2,1,1,0,
+   G__memfunc_setup("GetShowEventStatus",1863,G__TStyle_GetShowEventStatus_8_6,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetScreenFactor",1503,G__TStyle_GetScreenFactor_9_6,102,-1,G__defined_typename("Float_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetStatColor",1211,G__TStyle_GetStatColor_0_7,115,-1,G__defined_typename("Color_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetStatBorderSize",1717,G__TStyle_GetStatBorderSize_1_7,115,-1,G__defined_typename("Width_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetStatX",788,G__TStyle_GetStatX_2_7,102,-1,G__defined_typename("Float_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetStatY",789,G__TStyle_GetStatY_3_7,102,-1,G__defined_typename("Float_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetStatW",787,G__TStyle_GetStatW_4_7,102,-1,G__defined_typename("Float_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetStatH",772,G__TStyle_GetStatH_5_7,102,-1,G__defined_typename("Float_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetTitleColor",1313,G__TStyle_GetTitleColor_6_7,115,-1,G__defined_typename("Color_t"),0,0,1,1,0,"","return histogram title color",(void*)NULL,0);
+   G__memfunc_setup("GetTitleBorderSize",1819,G__TStyle_GetTitleBorderSize_7_7,115,-1,G__defined_typename("Width_t"),0,0,1,1,0,"","return border size of histogram title TPaveLabel",(void*)NULL,0);
+   G__memfunc_setup("GetTitleXOffset",1505,G__TStyle_GetTitleXOffset_8_7,102,-1,G__defined_typename("Float_t"),0,0,1,1,0,"","return X axis title offset",(void*)NULL,0);
+   G__memfunc_setup("GetTitleXSize",1301,G__TStyle_GetTitleXSize_9_7,102,-1,G__defined_typename("Float_t"),0,0,1,1,0,"","return X axis title size",(void*)NULL,0);
+   G__memfunc_setup("GetTitleYOffset",1506,G__TStyle_GetTitleYOffset_0_8,102,-1,G__defined_typename("Float_t"),0,0,1,1,0,"","return Y axis title offset",(void*)NULL,0);
+   G__memfunc_setup("GetTitleYSize",1302,G__TStyle_GetTitleYSize_1_8,102,-1,G__defined_typename("Float_t"),0,0,1,1,0,"","return Y axis title size",(void*)NULL,0);
+   G__memfunc_setup("GetTitleX",890,G__TStyle_GetTitleX_2_8,102,-1,G__defined_typename("Float_t"),0,0,1,1,0,"","return left X position of histogram title TPavelabel",(void*)NULL,0);
+   G__memfunc_setup("GetTitleY",891,G__TStyle_GetTitleY_3_8,102,-1,G__defined_typename("Float_t"),0,0,1,1,0,"","return left bottom position of histogram title TPavelabel",(void*)NULL,0);
+   G__memfunc_setup("GetTitleW",889,G__TStyle_GetTitleW_4_8,102,-1,G__defined_typename("Float_t"),0,0,1,1,0,"","return width of histogram title TPaveLabel",(void*)NULL,0);
+   G__memfunc_setup("GetTitleH",874,G__TStyle_GetTitleH_5_8,102,-1,G__defined_typename("Float_t"),0,0,1,1,0,"","return height of histogram title TPavelabel",(void*)NULL,0);
+   G__memfunc_setup("GetHeaderPS",1036,G__TStyle_GetHeaderPS_6_8,67,-1,G__defined_typename("Text_t"),0,0,1,1,9,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetLineStyleString",1840,G__TStyle_GetLineStyleString_7_8,67,-1,G__defined_typename("Text_t"),0,1,1,1,9,"i - 'Int_t' 0 1 i",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Reset",515,G__TStyle_Reset_8_8,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetHeaderPS",1048,G__TStyle_SetHeaderPS_9_8,121,-1,-1,0,1,1,1,0,"C - 'Text_t' 0 - header",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("SetLineStyleString",1852,G__TStyle_SetLineStyleString_0_9,121,-1,-1,0,2,1,1,0,
 "i - 'Int_t' 0 - i C - - 0 - text",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("SetNdivisions",1362,G__TStyle_SetNdivisions_6_8,121,-1,-1,0,2,1,1,0,
+   G__memfunc_setup("SetNdivisions",1362,G__TStyle_SetNdivisions_1_9,121,-1,-1,0,2,1,1,0,
 "i - 'Int_t' 0 510 n C - 'Option_t' 0 \"X\" axis",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("SetAxisColor",1216,G__TStyle_SetAxisColor_7_8,121,-1,-1,0,2,1,1,0,
+   G__memfunc_setup("SetAxisColor",1216,G__TStyle_SetAxisColor_2_9,121,-1,-1,0,2,1,1,0,
 "s - 'Color_t' 0 1 color C - 'Option_t' 0 \"X\" axis",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("SetLabelColor",1291,G__TStyle_SetLabelColor_8_8,121,-1,-1,0,2,1,1,0,
+   G__memfunc_setup("SetLabelColor",1291,G__TStyle_SetLabelColor_3_9,121,-1,-1,0,2,1,1,0,
 "s - 'Color_t' 0 1 color C - 'Option_t' 0 \"X\" axis",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("SetLabelFont",1187,G__TStyle_SetLabelFont_9_8,121,-1,-1,0,2,1,1,0,
+   G__memfunc_setup("SetLabelFont",1187,G__TStyle_SetLabelFont_4_9,121,-1,-1,0,2,1,1,0,
 "s - 'Style_t' 0 62 font C - 'Option_t' 0 \"X\" axis",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("SetLabelOffset",1395,G__TStyle_SetLabelOffset_0_9,121,-1,-1,0,2,1,1,0,
+   G__memfunc_setup("SetLabelOffset",1395,G__TStyle_SetLabelOffset_5_9,121,-1,-1,0,2,1,1,0,
 "f - 'Float_t' 0 0.005 offset C - 'Option_t' 0 \"X\" axis",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("SetLabelSize",1191,G__TStyle_SetLabelSize_1_9,121,-1,-1,0,2,1,1,0,
+   G__memfunc_setup("SetLabelSize",1191,G__TStyle_SetLabelSize_6_9,121,-1,-1,0,2,1,1,0,
 "f - 'Float_t' 0 0.04 size C - 'Option_t' 0 \"X\" axis",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("SetLegoInnerR",1281,G__TStyle_SetLegoInnerR_2_9,121,-1,-1,0,1,1,1,0,"f - 'Float_t' 0 0.5 rad",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("SetScreenFactor",1515,G__TStyle_SetScreenFactor_3_9,121,-1,-1,0,1,1,1,0,"f - 'Float_t' 0 1 factor",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("SetTickLength",1305,G__TStyle_SetTickLength_4_9,121,-1,-1,0,2,1,1,0,
+   G__memfunc_setup("SetLegoInnerR",1281,G__TStyle_SetLegoInnerR_7_9,121,-1,-1,0,1,1,1,0,"f - 'Float_t' 0 0.5 rad",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("SetScreenFactor",1515,G__TStyle_SetScreenFactor_8_9,121,-1,-1,0,1,1,1,0,"f - 'Float_t' 0 1 factor",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("SetTickLength",1305,G__TStyle_SetTickLength_9_9,121,-1,-1,0,2,1,1,0,
 "f - 'Float_t' 0 0.03 length C - 'Option_t' 0 \"X\" axis",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("SetTitleOffset",1429,G__TStyle_SetTitleOffset_5_9,121,-1,-1,0,2,1,1,0,
-"f - 'Float_t' 0 1 offset C - 'Option_t' 0 \"X\" axis",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("SetOptDate",989,G__TStyle_SetOptDate_6_9,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 1 datefl",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("SetOptFile",991,G__TStyle_SetOptFile_7_9,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 1 file",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("SetOptFit",898,G__TStyle_SetOptFit_8_9,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 1 fit",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("SetOptLogx",1017,G__TStyle_SetOptLogx_9_9,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 1 logx",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("SetOptLogy",1018,G__TStyle_SetOptLogy_0_10,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 1 logy",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("SetOptLogz",1019,G__TStyle_SetOptLogz_1_10,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 1 logz",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("SetOptStat",1019,G__TStyle_SetOptStat_2_10,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 1 stat",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("SetOptTitle",1121,G__TStyle_SetOptTitle_3_10,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 1 tit",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("SetBarOffset",1192,G__TStyle_SetBarOffset_4_10,121,-1,-1,0,1,1,1,0,"f - 'Float_t' 0 0.5 baroff",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("SetBarWidth",1089,G__TStyle_SetBarWidth_5_10,121,-1,-1,0,1,1,1,0,"f - 'Float_t' 0 0.5 barwidth",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("SetErrorMarker",1432,G__TStyle_SetErrorMarker_6_10,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 21 marker",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("SetErrorMsize",1342,G__TStyle_SetErrorMsize_7_10,121,-1,-1,0,1,1,1,0,"f - 'Float_t' 0 0.05 msize",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("SetErrorX",910,G__TStyle_SetErrorX_8_10,121,-1,-1,0,1,1,1,0,"f - 'Float_t' 0 0.5 errorx",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("SetDrawBorder",1304,G__TStyle_SetDrawBorder_9_10,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 1 drawborder",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("SetCanvasColor",1415,G__TStyle_SetCanvasColor_0_11,121,-1,-1,0,1,1,1,0,"s - 'Color_t' 0 19 color",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("SetCanvasBorderSize",1921,G__TStyle_SetCanvasBorderSize_1_11,121,-1,-1,0,1,1,1,0,"s - 'Width_t' 0 1 size",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("SetCanvasBorderMode",1899,G__TStyle_SetCanvasBorderMode_2_11,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 1 mode",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("SetCanvasDefH",1247,G__TStyle_SetCanvasDefH_3_11,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 500 h",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("SetCanvasDefW",1262,G__TStyle_SetCanvasDefW_4_11,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 700 w",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("SetCanvasDefX",1263,G__TStyle_SetCanvasDefX_5_11,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 10 topx",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("SetCanvasDefY",1264,G__TStyle_SetCanvasDefY_6_11,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 10 topy",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("SetPadColor",1088,G__TStyle_SetPadColor_7_11,121,-1,-1,0,1,1,1,0,"s - 'Color_t' 0 19 color",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("SetPadBorderSize",1594,G__TStyle_SetPadBorderSize_8_11,121,-1,-1,0,1,1,1,0,"s - 'Width_t' 0 1 size",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("SetPadBorderMode",1572,G__TStyle_SetPadBorderMode_9_11,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 1 mode",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("SetPadBottomMargin",1812,G__TStyle_SetPadBottomMargin_0_12,121,-1,-1,0,1,1,1,0,"f - 'Float_t' 0 0.1 margin",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("SetPadTopMargin",1490,G__TStyle_SetPadTopMargin_1_12,121,-1,-1,0,1,1,1,0,"f - 'Float_t' 0 0.1 margin",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("SetPadLeftMargin",1578,G__TStyle_SetPadLeftMargin_2_12,121,-1,-1,0,1,1,1,0,"f - 'Float_t' 0 0.1 margin",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("SetPadRightMargin",1693,G__TStyle_SetPadRightMargin_3_12,121,-1,-1,0,1,1,1,0,"f - 'Float_t' 0 0.1 margin",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("SetFuncStyle",1225,G__TStyle_SetFuncStyle_4_12,121,-1,-1,0,1,1,1,0,"s - 'Style_t' 0 1 style",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("SetFuncColor",1207,G__TStyle_SetFuncColor_5_12,121,-1,-1,0,1,1,1,0,"s - 'Color_t' 0 1 color",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("SetFuncWidth",1208,G__TStyle_SetFuncWidth_6_12,121,-1,-1,0,1,1,1,0,"s - 'Width_t' 0 4 width",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("SetFrameFillColor",1693,G__TStyle_SetFrameFillColor_7_12,121,-1,-1,0,1,1,1,0,"s - 'Color_t' 0 1 color",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("SetFrameLineColor",1694,G__TStyle_SetFrameLineColor_8_12,121,-1,-1,0,1,1,1,0,"s - 'Color_t' 0 1 color",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("SetFrameFillStyle",1711,G__TStyle_SetFrameFillStyle_9_12,121,-1,-1,0,1,1,1,0,"s - 'Style_t' 0 0 styl",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("SetFrameLineStyle",1712,G__TStyle_SetFrameLineStyle_0_13,121,-1,-1,0,1,1,1,0,"s - 'Style_t' 0 0 styl",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("SetFrameLineWidth",1695,G__TStyle_SetFrameLineWidth_1_13,121,-1,-1,0,1,1,1,0,"s - 'Width_t' 0 1 width",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("SetFrameBorderSize",1808,G__TStyle_SetFrameBorderSize_2_13,121,-1,-1,0,1,1,1,0,"s - 'Width_t' 0 1 size",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("SetFrameBorderMode",1786,G__TStyle_SetFrameBorderMode_3_13,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 1 mode",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("SetHistFillColor",1610,G__TStyle_SetHistFillColor_4_13,121,-1,-1,0,1,1,1,0,"s - 'Color_t' 0 1 color",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("SetHistLineColor",1611,G__TStyle_SetHistLineColor_5_13,121,-1,-1,0,1,1,1,0,"s - 'Color_t' 0 1 color",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("SetHistFillStyle",1628,G__TStyle_SetHistFillStyle_6_13,121,-1,-1,0,1,1,1,0,"s - 'Style_t' 0 0 styl",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("SetHistLineStyle",1629,G__TStyle_SetHistLineStyle_7_13,121,-1,-1,0,1,1,1,0,"s - 'Style_t' 0 0 styl",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("SetHistLineWidth",1612,G__TStyle_SetHistLineWidth_8_13,121,-1,-1,0,1,1,1,0,"s - 'Width_t' 0 1 width",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("SetPaperSize",1215,G__TStyle_SetPaperSize_9_13,121,-1,-1,0,1,1,1,0,"i 'TStyle::EPaperSize' - 0 - size",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("SetPaperSize",1215,G__TStyle_SetPaperSize_0_14,121,-1,-1,0,2,1,1,0,
+   G__memfunc_setup("SetTitleOffset",1429,G__TStyle_SetTitleOffset_0_10,121,-1,-1,0,2,1,1,0,
+"f - 'Float_t' 0 1 offset C - 'Option_t' 0 \"X\" axis","set axis title offset",(void*)NULL,0);
+   G__memfunc_setup("SetTitleSize",1225,G__TStyle_SetTitleSize_1_10,121,-1,-1,0,2,1,1,0,
+"f - 'Float_t' 0 0.02 size C - 'Option_t' 0 \"X\" axis","set axis title size",(void*)NULL,0);
+   G__memfunc_setup("SetOptDate",989,G__TStyle_SetOptDate_2_10,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 1 datefl",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("SetOptFile",991,G__TStyle_SetOptFile_3_10,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 1 file",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("SetOptFit",898,G__TStyle_SetOptFit_4_10,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 1 fit",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("SetOptLogx",1017,G__TStyle_SetOptLogx_5_10,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 1 logx",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("SetOptLogy",1018,G__TStyle_SetOptLogy_6_10,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 1 logy",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("SetOptLogz",1019,G__TStyle_SetOptLogz_7_10,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 1 logz",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("SetOptStat",1019,G__TStyle_SetOptStat_8_10,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 1 stat",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("SetOptTitle",1121,G__TStyle_SetOptTitle_9_10,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 1 tit",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("SetBarOffset",1192,G__TStyle_SetBarOffset_0_11,121,-1,-1,0,1,1,1,0,"f - 'Float_t' 0 0.5 baroff",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("SetBarWidth",1089,G__TStyle_SetBarWidth_1_11,121,-1,-1,0,1,1,1,0,"f - 'Float_t' 0 0.5 barwidth",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("SetErrorMarker",1432,G__TStyle_SetErrorMarker_2_11,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 21 marker",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("SetErrorMsize",1342,G__TStyle_SetErrorMsize_3_11,121,-1,-1,0,1,1,1,0,"f - 'Float_t' 0 0.05 msize",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("SetErrorX",910,G__TStyle_SetErrorX_4_11,121,-1,-1,0,1,1,1,0,"f - 'Float_t' 0 0.5 errorx",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("SetDrawBorder",1304,G__TStyle_SetDrawBorder_5_11,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 1 drawborder",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("SetCanvasColor",1415,G__TStyle_SetCanvasColor_6_11,121,-1,-1,0,1,1,1,0,"s - 'Color_t' 0 19 color",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("SetCanvasBorderSize",1921,G__TStyle_SetCanvasBorderSize_7_11,121,-1,-1,0,1,1,1,0,"s - 'Width_t' 0 1 size",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("SetCanvasBorderMode",1899,G__TStyle_SetCanvasBorderMode_8_11,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 1 mode",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("SetCanvasDefH",1247,G__TStyle_SetCanvasDefH_9_11,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 500 h",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("SetCanvasDefW",1262,G__TStyle_SetCanvasDefW_0_12,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 700 w",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("SetCanvasDefX",1263,G__TStyle_SetCanvasDefX_1_12,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 10 topx",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("SetCanvasDefY",1264,G__TStyle_SetCanvasDefY_2_12,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 10 topy",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("SetPadColor",1088,G__TStyle_SetPadColor_3_12,121,-1,-1,0,1,1,1,0,"s - 'Color_t' 0 19 color",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("SetPadBorderSize",1594,G__TStyle_SetPadBorderSize_4_12,121,-1,-1,0,1,1,1,0,"s - 'Width_t' 0 1 size",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("SetPadBorderMode",1572,G__TStyle_SetPadBorderMode_5_12,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 1 mode",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("SetPadBottomMargin",1812,G__TStyle_SetPadBottomMargin_6_12,121,-1,-1,0,1,1,1,0,"f - 'Float_t' 0 0.1 margin",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("SetPadTopMargin",1490,G__TStyle_SetPadTopMargin_7_12,121,-1,-1,0,1,1,1,0,"f - 'Float_t' 0 0.1 margin",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("SetPadLeftMargin",1578,G__TStyle_SetPadLeftMargin_8_12,121,-1,-1,0,1,1,1,0,"f - 'Float_t' 0 0.1 margin",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("SetPadRightMargin",1693,G__TStyle_SetPadRightMargin_9_12,121,-1,-1,0,1,1,1,0,"f - 'Float_t' 0 0.1 margin",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("SetPadGridX",1055,G__TStyle_SetPadGridX_0_13,121,-1,-1,0,1,1,1,0,"b - 'Bool_t' 0 - gridx",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("SetPadGridY",1056,G__TStyle_SetPadGridY_1_13,121,-1,-1,0,1,1,1,0,"b - 'Bool_t' 0 - gridy",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("SetPadTickX",1060,G__TStyle_SetPadTickX_2_13,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 - tickx",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("SetPadTickY",1061,G__TStyle_SetPadTickY_3_13,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 - ticky",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("SetFuncStyle",1225,G__TStyle_SetFuncStyle_4_13,121,-1,-1,0,1,1,1,0,"s - 'Style_t' 0 1 style",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("SetFuncColor",1207,G__TStyle_SetFuncColor_5_13,121,-1,-1,0,1,1,1,0,"s - 'Color_t' 0 1 color",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("SetFuncWidth",1208,G__TStyle_SetFuncWidth_6_13,121,-1,-1,0,1,1,1,0,"s - 'Width_t' 0 4 width",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("SetFrameFillColor",1693,G__TStyle_SetFrameFillColor_7_13,121,-1,-1,0,1,1,1,0,"s - 'Color_t' 0 1 color",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("SetFrameLineColor",1694,G__TStyle_SetFrameLineColor_8_13,121,-1,-1,0,1,1,1,0,"s - 'Color_t' 0 1 color",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("SetFrameFillStyle",1711,G__TStyle_SetFrameFillStyle_9_13,121,-1,-1,0,1,1,1,0,"s - 'Style_t' 0 0 styl",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("SetFrameLineStyle",1712,G__TStyle_SetFrameLineStyle_0_14,121,-1,-1,0,1,1,1,0,"s - 'Style_t' 0 0 styl",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("SetFrameLineWidth",1695,G__TStyle_SetFrameLineWidth_1_14,121,-1,-1,0,1,1,1,0,"s - 'Width_t' 0 1 width",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("SetFrameBorderSize",1808,G__TStyle_SetFrameBorderSize_2_14,121,-1,-1,0,1,1,1,0,"s - 'Width_t' 0 1 size",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("SetFrameBorderMode",1786,G__TStyle_SetFrameBorderMode_3_14,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 1 mode",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("SetHistFillColor",1610,G__TStyle_SetHistFillColor_4_14,121,-1,-1,0,1,1,1,0,"s - 'Color_t' 0 1 color",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("SetHistLineColor",1611,G__TStyle_SetHistLineColor_5_14,121,-1,-1,0,1,1,1,0,"s - 'Color_t' 0 1 color",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("SetHistFillStyle",1628,G__TStyle_SetHistFillStyle_6_14,121,-1,-1,0,1,1,1,0,"s - 'Style_t' 0 0 styl",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("SetHistLineStyle",1629,G__TStyle_SetHistLineStyle_7_14,121,-1,-1,0,1,1,1,0,"s - 'Style_t' 0 0 styl",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("SetHistLineWidth",1612,G__TStyle_SetHistLineWidth_8_14,121,-1,-1,0,1,1,1,0,"s - 'Width_t' 0 1 width",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("SetPaperSize",1215,G__TStyle_SetPaperSize_9_14,121,-1,-1,0,1,1,1,0,"i 'TStyle::EPaperSize' - 0 - size",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("SetPaperSize",1215,G__TStyle_SetPaperSize_0_15,121,-1,-1,0,2,1,1,0,
 "f - 'Float_t' 0 20 xsize f - 'Float_t' 0 26 ysize",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("SetStatColor",1223,G__TStyle_SetStatColor_1_14,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 19 color",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("SetStatX",800,G__TStyle_SetStatX_2_14,121,-1,-1,0,1,1,1,0,"f - 'Float_t' 0 0 x",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("SetStatY",801,G__TStyle_SetStatY_3_14,121,-1,-1,0,1,1,1,0,"f - 'Float_t' 0 0 y",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("SetStatW",799,G__TStyle_SetStatW_4_14,121,-1,-1,0,1,1,1,0,"f - 'Float_t' 0 0.19 w",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("SetStatH",784,G__TStyle_SetStatH_5_14,121,-1,-1,0,1,1,1,0,"f - 'Float_t' 0 0.1 h",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("SetTitleColor",1325,G__TStyle_SetTitleColor_6_14,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 19 color",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("SetTitleXOffset",1517,G__TStyle_SetTitleXOffset_7_14,121,-1,-1,0,1,1,1,0,"f - 'Float_t' 0 1 offset",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("SetTitleXFont",1309,G__TStyle_SetTitleXFont_8_14,121,-1,-1,0,1,1,1,0,"s - 'Style_t' 0 62 font",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("SetTitleXSize",1313,G__TStyle_SetTitleXSize_9_14,121,-1,-1,0,1,1,1,0,"f - 'Float_t' 0 0.02 size",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("SetTitleYOffset",1518,G__TStyle_SetTitleYOffset_0_15,121,-1,-1,0,1,1,1,0,"f - 'Float_t' 0 1 offset",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("SetTitleYFont",1310,G__TStyle_SetTitleYFont_1_15,121,-1,-1,0,1,1,1,0,"s - 'Style_t' 0 62 font",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("SetTitleYSize",1314,G__TStyle_SetTitleYSize_2_15,121,-1,-1,0,1,1,1,0,"f - 'Float_t' 0 0.02 size",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("SetTitleX",902,G__TStyle_SetTitleX_3_15,121,-1,-1,0,1,1,1,0,"f - 'Float_t' 0 0 x",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("SetTitleY",903,G__TStyle_SetTitleY_4_15,121,-1,-1,0,1,1,1,0,"f - 'Float_t' 0 1 y",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("SetTitleW",901,G__TStyle_SetTitleW_5_15,121,-1,-1,0,1,1,1,0,"f - 'Float_t' 0 0 w",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("SetTitleH",886,G__TStyle_SetTitleH_6_15,121,-1,-1,0,1,1,1,0,"f - 'Float_t' 0 0 h",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("ToggleEventStatus",1768,G__TStyle_ToggleEventStatus_7_15,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("SetPalette",1019,G__TStyle_SetPalette_8_15,121,-1,-1,0,2,1,1,0,
+   G__memfunc_setup("SetStatColor",1223,G__TStyle_SetStatColor_1_15,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 19 color",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("SetStatBorderSize",1729,G__TStyle_SetStatBorderSize_2_15,121,-1,-1,0,1,1,1,0,"s - 'Width_t' 0 2 size",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("SetStatX",800,G__TStyle_SetStatX_3_15,121,-1,-1,0,1,1,1,0,"f - 'Float_t' 0 0 x",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("SetStatY",801,G__TStyle_SetStatY_4_15,121,-1,-1,0,1,1,1,0,"f - 'Float_t' 0 0 y",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("SetStatW",799,G__TStyle_SetStatW_5_15,121,-1,-1,0,1,1,1,0,"f - 'Float_t' 0 0.19 w",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("SetStatH",784,G__TStyle_SetStatH_6_15,121,-1,-1,0,1,1,1,0,"f - 'Float_t' 0 0.1 h",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("SetTitleColor",1325,G__TStyle_SetTitleColor_7_15,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 19 color",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("SetTitleBorderSize",1831,G__TStyle_SetTitleBorderSize_8_15,121,-1,-1,0,1,1,1,0,"s - 'Width_t' 0 2 size",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("SetTitleXOffset",1517,G__TStyle_SetTitleXOffset_9_15,121,-1,-1,0,1,1,1,0,"f - 'Float_t' 0 1 offset",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("SetTitleXSize",1313,G__TStyle_SetTitleXSize_0_16,121,-1,-1,0,1,1,1,0,"f - 'Float_t' 0 0.02 size",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("SetTitleYOffset",1518,G__TStyle_SetTitleYOffset_1_16,121,-1,-1,0,1,1,1,0,"f - 'Float_t' 0 1 offset",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("SetTitleYSize",1314,G__TStyle_SetTitleYSize_2_16,121,-1,-1,0,1,1,1,0,"f - 'Float_t' 0 0.02 size",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("SetTitleX",902,G__TStyle_SetTitleX_3_16,121,-1,-1,0,1,1,1,0,"f - 'Float_t' 0 0 x",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("SetTitleY",903,G__TStyle_SetTitleY_4_16,121,-1,-1,0,1,1,1,0,"f - 'Float_t' 0 1 y",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("SetTitleW",901,G__TStyle_SetTitleW_5_16,121,-1,-1,0,1,1,1,0,"f - 'Float_t' 0 0 w",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("SetTitleH",886,G__TStyle_SetTitleH_6_16,121,-1,-1,0,1,1,1,0,"f - 'Float_t' 0 0 h",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ToggleEventStatus",1768,G__TStyle_ToggleEventStatus_7_16,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("SetPalette",1019,G__TStyle_SetPalette_8_16,121,-1,-1,0,2,1,1,0,
 "i - 'Int_t' 0 0 ncolors I - 'Int_t' 0 0 colors",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("DeclFileName",1145,G__TStyle_DeclFileName_9_15,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("DeclFileLine",1152,G__TStyle_DeclFileLine_0_16,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("ImplFileName",1171,G__TStyle_ImplFileName_1_16,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("ImplFileLine",1178,G__TStyle_ImplFileLine_2_16,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Class_Version",1339,G__TStyle_Class_Version_3_16,115,-1,G__defined_typename("Version_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Class",502,G__TStyle_Class_4_16,85,G__get_linked_tagnum(&G__G__Graf2LN_TClass),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Dictionary",1046,G__TStyle_Dictionary_5_16,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("IsA",253,G__TStyle_IsA_6_16,85,G__get_linked_tagnum(&G__G__Graf2LN_TClass),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("ShowMembers",1132,G__TStyle_ShowMembers_7_16,121,-1,-1,0,2,1,1,0,
+   G__memfunc_setup("DeclFileName",1145,G__TStyle_DeclFileName_9_16,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("DeclFileLine",1152,G__TStyle_DeclFileLine_0_17,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ImplFileName",1171,G__TStyle_ImplFileName_1_17,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ImplFileLine",1178,G__TStyle_ImplFileLine_2_17,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Class_Version",1339,G__TStyle_Class_Version_3_17,115,-1,G__defined_typename("Version_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Class",502,G__TStyle_Class_4_17,85,G__get_linked_tagnum(&G__G__Graf2LN_TClass),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Dictionary",1046,G__TStyle_Dictionary_5_17,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("IsA",253,G__TStyle_IsA_6_17,85,G__get_linked_tagnum(&G__G__Graf2LN_TClass),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("ShowMembers",1132,G__TStyle_ShowMembers_7_17,121,-1,-1,0,2,1,1,0,
 "u 'TMemberInspector' - 1 - insp C - - 0 - parent",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("Streamer",835,G__TStyle_Streamer_8_16,121,-1,-1,0,1,1,1,0,"u 'TBuffer' - 1 - b",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Streamer",835,G__TStyle_Streamer_8_17,121,-1,-1,0,1,1,1,0,"u 'TBuffer' - 1 - b",(char*)NULL,(void*)NULL,1);
    // automatic destructor
-   G__memfunc_setup("~TStyle",739,G__TStyle_wATStyle_9_16,(int)('y'),-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("~TStyle",739,G__TStyle_wATStyle_9_17,(int)('y'),-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
    G__tag_memfunc_reset();
 }
 
 static void G__setup_memfuncTVirtualPad(void) {
    /* TVirtualPad */
    G__tag_memfunc_setup(G__get_linked_tagnum(&G__G__Graf2LN_TVirtualPad));
-   G__memfunc_setup("AbsCoordinates",1425,G__TVirtualPad_AbsCoordinates_3_0,121,-1,-1,0,1,1,1,8,"b - 'Bool_t' 0 - set",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("AbsPixeltoX",1107,G__TVirtualPad_AbsPixeltoX_4_0,102,-1,G__defined_typename("Float_t"),0,1,1,1,8,"i - 'Int_t' 0 - px",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("AbsPixeltoY",1108,G__TVirtualPad_AbsPixeltoY_5_0,102,-1,G__defined_typename("Float_t"),0,1,1,1,8,"i - 'Int_t' 0 - py",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("cd",199,G__TVirtualPad_cd_6_0,121,-1,-1,0,1,1,1,8,"i - 'Int_t' 0 0 subpadnumber",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("Clear",487,G__TVirtualPad_Clear_7_0,121,-1,-1,0,1,1,1,8,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("Close",502,G__TVirtualPad_Close_8_0,121,-1,-1,0,1,1,1,8,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("CopyPixmap",1034,G__TVirtualPad_CopyPixmap_9_0,121,-1,-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("CopyPixmaps",1149,G__TVirtualPad_CopyPixmaps_0_1,121,-1,-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("Divide",597,G__TVirtualPad_Divide_1_1,121,-1,-1,0,5,1,1,8,
+   G__memfunc_setup("AbsCoordinates",1425,G__TVirtualPad_AbsCoordinates_3_0,121,-1,-1,0,1,1,1,0,"b - 'Bool_t' 0 - set",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("AbsPixeltoX",1107,G__TVirtualPad_AbsPixeltoX_4_0,102,-1,G__defined_typename("Float_t"),0,1,1,1,0,"i - 'Int_t' 0 - px",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("AbsPixeltoY",1108,G__TVirtualPad_AbsPixeltoY_5_0,102,-1,G__defined_typename("Float_t"),0,1,1,1,0,"i - 'Int_t' 0 - py",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("cd",199,G__TVirtualPad_cd_6_0,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 0 subpadnumber",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("Clear",487,G__TVirtualPad_Clear_7_0,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("Close",502,G__TVirtualPad_Close_8_0,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("CopyPixmap",1034,G__TVirtualPad_CopyPixmap_9_0,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("CopyPixmaps",1149,G__TVirtualPad_CopyPixmaps_0_1,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("Divide",597,G__TVirtualPad_Divide_1_1,121,-1,-1,0,5,1,1,0,
 "i - 'Int_t' 0 1 nx i - 'Int_t' 0 1 ny "
 "f - 'Float_t' 0 0.01 xmargin f - 'Float_t' 0 0.01 ymargin "
 "i - 'Int_t' 0 0 color",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("Draw",398,G__TVirtualPad_Draw_2_1,121,-1,-1,0,1,1,1,8,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("DrawClassObject",1499,G__TVirtualPad_DrawClassObject_3_1,121,-1,-1,0,2,1,1,8,
+   G__memfunc_setup("Draw",398,G__TVirtualPad_Draw_2_1,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("DrawClassObject",1499,G__TVirtualPad_DrawClassObject_3_1,121,-1,-1,0,2,1,1,0,
 "U 'TObject' - 0 - obj C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("DrawFrame",889,G__TVirtualPad_DrawFrame_4_1,121,-1,-1,0,5,1,1,8,
+   G__memfunc_setup("DrawFrame",889,G__TVirtualPad_DrawFrame_4_1,121,-1,-1,0,5,1,1,0,
 "f - 'Float_t' 0 - xmin f - 'Float_t' 0 - ymin "
 "f - 'Float_t' 0 - xmax f - 'Float_t' 0 - ymax "
 "C - 'Text_t' 0 \"\" title",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("DrawLine",790,G__TVirtualPad_DrawLine_5_1,121,-1,-1,0,4,1,1,8,
+   G__memfunc_setup("DrawLine",790,G__TVirtualPad_DrawLine_5_1,121,-1,-1,0,4,1,1,0,
 "f - 'Float_t' 0 - x1 f - 'Float_t' 0 - y1 "
 "f - 'Float_t' 0 - x2 f - 'Float_t' 0 - y2",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("DrawLineNDC",1003,G__TVirtualPad_DrawLineNDC_6_1,121,-1,-1,0,4,1,1,8,
+   G__memfunc_setup("DrawLineNDC",1003,G__TVirtualPad_DrawLineNDC_6_1,121,-1,-1,0,4,1,1,0,
 "f - 'Float_t' 0 - u1 f - 'Float_t' 0 - v1 "
 "f - 'Float_t' 0 - u2 f - 'Float_t' 0 - v2",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("DrawText",819,G__TVirtualPad_DrawText_7_1,121,-1,-1,0,3,1,1,8,
+   G__memfunc_setup("DrawText",819,G__TVirtualPad_DrawText_7_1,121,-1,-1,0,3,1,1,0,
 "f - 'Float_t' 0 - x f - 'Float_t' 0 - y "
 "C - 'Text_t' 0 - text",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("DrawTextNDC",1032,G__TVirtualPad_DrawTextNDC_8_1,121,-1,-1,0,3,1,1,8,
+   G__memfunc_setup("DrawTextNDC",1032,G__TVirtualPad_DrawTextNDC_8_1,121,-1,-1,0,3,1,1,0,
 "f - 'Float_t' 0 - u f - 'Float_t' 0 - v "
 "C - 'Text_t' 0 - text",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("ExecuteEvent",1237,G__TVirtualPad_ExecuteEvent_9_1,121,-1,-1,0,3,1,1,8,
+   G__memfunc_setup("ExecuteEvent",1237,G__TVirtualPad_ExecuteEvent_9_1,121,-1,-1,0,3,1,1,0,
 "i - 'Int_t' 0 - event i - 'Int_t' 0 - px "
 "i - 'Int_t' 0 - py",(char*)NULL,(void*)NULL,3);
    G__memfunc_setup("GetCanvasID",1033,G__TVirtualPad_GetCanvasID_0_2,105,-1,G__defined_typename("Int_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("GetCanvas",892,G__TVirtualPad_GetCanvas_1_2,85,G__get_linked_tagnum(&G__G__Graf2LN_TCanvas),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("GetVirtCanvas",1313,G__TVirtualPad_GetVirtCanvas_2_2,85,G__get_linked_tagnum(&G__G__Graf2LN_TVirtualPad),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("GetCanvas",892,G__TVirtualPad_GetCanvas_1_2,85,G__get_linked_tagnum(&G__G__Graf2LN_TCanvas),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("GetVirtCanvas",1313,G__TVirtualPad_GetVirtCanvas_2_2,85,G__get_linked_tagnum(&G__G__Graf2LN_TVirtualPad),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,3);
    G__memfunc_setup("GetEvent",802,G__TVirtualPad_GetEvent_3_2,105,-1,G__defined_typename("Int_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,3);
    G__memfunc_setup("GetEventX",890,G__TVirtualPad_GetEventX_4_2,105,-1,G__defined_typename("Int_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,3);
    G__memfunc_setup("GetEventY",891,G__TVirtualPad_GetEventY_5_2,105,-1,G__defined_typename("Int_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("GetFrame",779,G__TVirtualPad_GetFrame_6_2,85,G__get_linked_tagnum(&G__G__Graf2LN_TFrame),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("GetFrame",779,G__TVirtualPad_GetFrame_6_2,85,G__get_linked_tagnum(&G__G__Graf2LN_TFrame),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,3);
    G__memfunc_setup("GetHighLightColor",1687,G__TVirtualPad_GetHighLightColor_7_2,115,-1,G__defined_typename("Color_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("GetRange",781,G__TVirtualPad_GetRange_8_2,121,-1,-1,0,4,1,1,8,
+   G__memfunc_setup("GetRange",781,G__TVirtualPad_GetRange_8_2,121,-1,-1,0,4,1,1,0,
 "f - 'Float_t' 1 - x1 f - 'Float_t' 1 - y1 "
 "f - 'Float_t' 1 - x2 f - 'Float_t' 1 - y2",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("GetRangeAxis",1186,G__TVirtualPad_GetRangeAxis_9_2,121,-1,-1,0,4,1,1,8,
+   G__memfunc_setup("GetRangeAxis",1186,G__TVirtualPad_GetRangeAxis_9_2,121,-1,-1,0,4,1,1,0,
 "f - 'Axis_t' 1 - xmin f - 'Axis_t' 1 - ymin "
 "f - 'Axis_t' 1 - xmax f - 'Axis_t' 1 - ymax",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("GetPadPar",856,G__TVirtualPad_GetPadPar_0_3,121,-1,-1,0,4,1,1,8,
+   G__memfunc_setup("GetPadPar",856,G__TVirtualPad_GetPadPar_0_3,121,-1,-1,0,4,1,1,0,
 "f - 'Float_t' 1 - xlow f - 'Float_t' 1 - ylow "
 "f - 'Float_t' 1 - xup f - 'Float_t' 1 - yup",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("GetXlowNDC",927,G__TVirtualPad_GetXlowNDC_1_3,102,-1,G__defined_typename("Float_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("GetYlowNDC",928,G__TVirtualPad_GetYlowNDC_2_3,102,-1,G__defined_typename("Float_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("GetWNDC",588,G__TVirtualPad_GetWNDC_3_3,102,-1,G__defined_typename("Float_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("GetHNDC",573,G__TVirtualPad_GetHNDC_4_3,102,-1,G__defined_typename("Float_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("GetWw",494,G__TVirtualPad_GetWw_5_3,104,-1,G__defined_typename("UInt_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("GetWh",479,G__TVirtualPad_GetWh_6_3,104,-1,G__defined_typename("UInt_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("GetAbsXlowNDC",1205,G__TVirtualPad_GetAbsXlowNDC_7_3,102,-1,G__defined_typename("Float_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("GetAbsYlowNDC",1206,G__TVirtualPad_GetAbsYlowNDC_8_3,102,-1,G__defined_typename("Float_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("GetAbsWNDC",866,G__TVirtualPad_GetAbsWNDC_9_3,102,-1,G__defined_typename("Float_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("GetAbsHNDC",851,G__TVirtualPad_GetAbsHNDC_0_4,102,-1,G__defined_typename("Float_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("GetPhi",577,G__TVirtualPad_GetPhi_1_4,102,-1,G__defined_typename("Float_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("GetTheta",790,G__TVirtualPad_GetTheta_2_4,102,-1,G__defined_typename("Float_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("GetUxmin",817,G__TVirtualPad_GetUxmin_3_4,102,-1,G__defined_typename("Float_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("GetUymin",818,G__TVirtualPad_GetUymin_4_4,102,-1,G__defined_typename("Float_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("GetUxmax",819,G__TVirtualPad_GetUxmax_5_4,102,-1,G__defined_typename("Float_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("GetUymax",820,G__TVirtualPad_GetUymax_6_4,102,-1,G__defined_typename("Float_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("GetGridx",798,G__TVirtualPad_GetGridx_7_4,98,-1,G__defined_typename("Bool_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("GetGridy",799,G__TVirtualPad_GetGridy_8_4,98,-1,G__defined_typename("Bool_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("GetTickx",803,G__TVirtualPad_GetTickx_9_4,105,-1,G__defined_typename("Int_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("GetTicky",804,G__TVirtualPad_GetTicky_0_5,105,-1,G__defined_typename("Int_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("GetListOfPrimitives",1949,G__TVirtualPad_GetListOfPrimitives_1_5,85,G__get_linked_tagnum(&G__G__Graf2LN_TList),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("GetPrimitive",1241,G__TVirtualPad_GetPrimitive_2_5,85,G__get_linked_tagnum(&G__G__Graf2LN_TObject),-1,0,1,1,1,8,"C - 'Text_t' 0 - name",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("GetSelected",1097,G__TVirtualPad_GetSelected_3_5,85,G__get_linked_tagnum(&G__G__Graf2LN_TObject),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("GetPadPointer",1302,G__TVirtualPad_GetPadPointer_4_5,85,G__get_linked_tagnum(&G__G__Graf2LN_TObject),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("GetXlowNDC",927,G__TVirtualPad_GetXlowNDC_1_3,102,-1,G__defined_typename("Float_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("GetYlowNDC",928,G__TVirtualPad_GetYlowNDC_2_3,102,-1,G__defined_typename("Float_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("GetWNDC",588,G__TVirtualPad_GetWNDC_3_3,102,-1,G__defined_typename("Float_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("GetHNDC",573,G__TVirtualPad_GetHNDC_4_3,102,-1,G__defined_typename("Float_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("GetWw",494,G__TVirtualPad_GetWw_5_3,104,-1,G__defined_typename("UInt_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("GetWh",479,G__TVirtualPad_GetWh_6_3,104,-1,G__defined_typename("UInt_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("GetAbsXlowNDC",1205,G__TVirtualPad_GetAbsXlowNDC_7_3,102,-1,G__defined_typename("Float_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("GetAbsYlowNDC",1206,G__TVirtualPad_GetAbsYlowNDC_8_3,102,-1,G__defined_typename("Float_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("GetAbsWNDC",866,G__TVirtualPad_GetAbsWNDC_9_3,102,-1,G__defined_typename("Float_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("GetAbsHNDC",851,G__TVirtualPad_GetAbsHNDC_0_4,102,-1,G__defined_typename("Float_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("GetPhi",577,G__TVirtualPad_GetPhi_1_4,102,-1,G__defined_typename("Float_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("GetTheta",790,G__TVirtualPad_GetTheta_2_4,102,-1,G__defined_typename("Float_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("GetUxmin",817,G__TVirtualPad_GetUxmin_3_4,102,-1,G__defined_typename("Float_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("GetUymin",818,G__TVirtualPad_GetUymin_4_4,102,-1,G__defined_typename("Float_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("GetUxmax",819,G__TVirtualPad_GetUxmax_5_4,102,-1,G__defined_typename("Float_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("GetUymax",820,G__TVirtualPad_GetUymax_6_4,102,-1,G__defined_typename("Float_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("GetGridx",798,G__TVirtualPad_GetGridx_7_4,98,-1,G__defined_typename("Bool_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("GetGridy",799,G__TVirtualPad_GetGridy_8_4,98,-1,G__defined_typename("Bool_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("GetTickx",803,G__TVirtualPad_GetTickx_9_4,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("GetTicky",804,G__TVirtualPad_GetTicky_0_5,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("GetListOfPrimitives",1949,G__TVirtualPad_GetListOfPrimitives_1_5,85,G__get_linked_tagnum(&G__G__Graf2LN_TList),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("GetPrimitive",1241,G__TVirtualPad_GetPrimitive_2_5,85,G__get_linked_tagnum(&G__G__Graf2LN_TObject),-1,0,1,1,1,0,"C - 'Text_t' 0 - name",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("GetSelected",1097,G__TVirtualPad_GetSelected_3_5,85,G__get_linked_tagnum(&G__G__Graf2LN_TObject),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("GetPadPointer",1302,G__TVirtualPad_GetPadPointer_4_5,85,G__get_linked_tagnum(&G__G__Graf2LN_TObject),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,3);
    G__memfunc_setup("GetPadSave",964,G__TVirtualPad_GetPadSave_5_5,85,G__get_linked_tagnum(&G__G__Graf2LN_TVirtualPad),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,3);
    G__memfunc_setup("GetSelectedPad",1374,G__TVirtualPad_GetSelectedPad_6_5,85,G__get_linked_tagnum(&G__G__Graf2LN_TVirtualPad),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("GetView",699,G__TVirtualPad_GetView_7_5,85,G__get_linked_tagnum(&G__G__Graf2LN_TView),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("GetLogx",698,G__TVirtualPad_GetLogx_8_5,105,-1,G__defined_typename("Int_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("GetLogy",699,G__TVirtualPad_GetLogy_9_5,105,-1,G__defined_typename("Int_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("GetLogz",700,G__TVirtualPad_GetLogz_0_6,105,-1,G__defined_typename("Int_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("GetMother",911,G__TVirtualPad_GetMother_1_6,85,G__get_linked_tagnum(&G__G__Graf2LN_TVirtualPad),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("GetView",699,G__TVirtualPad_GetView_7_5,85,G__get_linked_tagnum(&G__G__Graf2LN_TView),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("GetLogx",698,G__TVirtualPad_GetLogx_8_5,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("GetLogy",699,G__TVirtualPad_GetLogy_9_5,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("GetLogz",700,G__TVirtualPad_GetLogz_0_6,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("GetMother",911,G__TVirtualPad_GetMother_1_6,85,G__get_linked_tagnum(&G__G__Graf2LN_TVirtualPad),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,3);
    G__memfunc_setup("GetName",673,G__TVirtualPad_GetName_2_6,67,-1,G__defined_typename("Text_t"),0,0,1,1,9,"",(char*)NULL,(void*)NULL,3);
    G__memfunc_setup("GetTitle",802,G__TVirtualPad_GetTitle_3_6,67,-1,G__defined_typename("Text_t"),0,0,1,1,9,"",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("GetPadPaint",1073,G__TVirtualPad_GetPadPaint_4_6,105,-1,G__defined_typename("Int_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("GetPixmapID",1052,G__TVirtualPad_GetPixmapID_5_6,105,-1,G__defined_typename("Int_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("GetView3D",818,G__TVirtualPad_GetView3D_6_6,85,G__get_linked_tagnum(&G__G__Graf2LN_TPadView3D),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("HighLight",888,G__TVirtualPad_HighLight_7_6,121,-1,-1,0,2,1,1,8,
+   G__memfunc_setup("GetPadPaint",1073,G__TVirtualPad_GetPadPaint_4_6,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("GetPixmapID",1052,G__TVirtualPad_GetPixmapID_5_6,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("GetView3D",818,G__TVirtualPad_GetView3D_6_6,85,G__get_linked_tagnum(&G__G__Graf2LN_TPadView3D),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("HighLight",888,G__TVirtualPad_HighLight_7_6,121,-1,-1,0,2,1,1,0,
 "s - 'Color_t' 0 kRed col b - 'Bool_t' 0 kTRUE set",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("InspectObject",1325,G__TVirtualPad_InspectObject_8_6,121,-1,-1,0,1,1,1,8,"U 'TObject' - 0 - obj",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("IsBatch",670,G__TVirtualPad_IsBatch_9_6,98,-1,G__defined_typename("Bool_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("IsModified",989,G__TVirtualPad_IsModified_0_7,98,-1,G__defined_typename("Bool_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("IsRetained",1000,G__TVirtualPad_IsRetained_1_7,98,-1,G__defined_typename("Bool_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("ls",223,G__TVirtualPad_ls_2_7,121,-1,-1,0,1,1,1,8,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("Modified",801,G__TVirtualPad_Modified_3_7,121,-1,-1,0,1,1,1,8,"b - 'Bool_t' 0 1 flag",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("InspectObject",1325,G__TVirtualPad_InspectObject_8_6,121,-1,-1,0,1,1,1,0,"U 'TObject' - 0 - obj",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("IsBatch",670,G__TVirtualPad_IsBatch_9_6,98,-1,G__defined_typename("Bool_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("IsModified",989,G__TVirtualPad_IsModified_0_7,98,-1,G__defined_typename("Bool_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("IsRetained",1000,G__TVirtualPad_IsRetained_1_7,98,-1,G__defined_typename("Bool_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("ls",223,G__TVirtualPad_ls_2_7,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("Modified",801,G__TVirtualPad_Modified_3_7,121,-1,-1,0,1,1,1,0,"b - 'Bool_t' 0 1 flag",(char*)NULL,(void*)NULL,3);
    G__memfunc_setup("OpaqueMoving",1243,G__TVirtualPad_OpaqueMoving_4_7,98,-1,G__defined_typename("Bool_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,3);
    G__memfunc_setup("OpaqueResizing",1462,G__TVirtualPad_OpaqueResizing_5_7,98,-1,G__defined_typename("Bool_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,3);
    G__memfunc_setup("PadtoX",592,G__TVirtualPad_PadtoX_6_7,102,-1,G__defined_typename("Float_t"),0,1,1,1,8,"f - 'Axis_t' 0 - x",(char*)NULL,(void*)NULL,3);
    G__memfunc_setup("PadtoY",593,G__TVirtualPad_PadtoY_7_7,102,-1,G__defined_typename("Float_t"),0,1,1,1,8,"f - 'Axis_t' 0 - y",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("Paint",508,G__TVirtualPad_Paint_8_7,121,-1,-1,0,1,1,1,8,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("PaintBox",805,G__TVirtualPad_PaintBox_9_7,121,-1,-1,0,5,1,1,8,
+   G__memfunc_setup("Paint",508,G__TVirtualPad_Paint_8_7,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("PaintBox",805,G__TVirtualPad_PaintBox_9_7,121,-1,-1,0,5,1,1,0,
 "f - 'Float_t' 0 - x1 f - 'Float_t' 0 - y1 "
 "f - 'Float_t' 0 - x2 f - 'Float_t' 0 - y2 "
 "C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("PaintFillArea",1276,G__TVirtualPad_PaintFillArea_0_8,121,-1,-1,0,4,1,1,8,
+   G__memfunc_setup("PaintFillArea",1276,G__TVirtualPad_PaintFillArea_0_8,121,-1,-1,0,4,1,1,0,
 "i - 'Int_t' 0 - n F - 'Float_t' 0 - x "
 "F - 'Float_t' 0 - y C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("PaintPadFrame",1276,G__TVirtualPad_PaintPadFrame_1_8,121,-1,-1,0,4,1,1,8,
+   G__memfunc_setup("PaintPadFrame",1276,G__TVirtualPad_PaintPadFrame_1_8,121,-1,-1,0,4,1,1,0,
 "f - 'Float_t' 0 - xmin f - 'Float_t' 0 - ymin "
 "f - 'Float_t' 0 - xmax f - 'Float_t' 0 - ymax",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("PaintLine",900,G__TVirtualPad_PaintLine_2_8,121,-1,-1,0,4,1,1,8,
+   G__memfunc_setup("PaintLine",900,G__TVirtualPad_PaintLine_2_8,121,-1,-1,0,4,1,1,0,
 "f - 'Float_t' 0 - x1 f - 'Float_t' 0 - y1 "
 "f - 'Float_t' 0 - x2 f - 'Float_t' 0 - y2",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("PaintLineNDC",1113,G__TVirtualPad_PaintLineNDC_3_8,121,-1,-1,0,4,1,1,8,
+   G__memfunc_setup("PaintLineNDC",1113,G__TVirtualPad_PaintLineNDC_3_8,121,-1,-1,0,4,1,1,0,
 "f - 'Coord_t' 0 - u1 f - 'Coord_t' 0 - v1 "
 "f - 'Coord_t' 0 - u2 f - 'Coord_t' 0 - v2",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("PaintLine3D",1019,G__TVirtualPad_PaintLine3D_4_8,121,-1,-1,0,2,1,1,8,
+   G__memfunc_setup("PaintLine3D",1019,G__TVirtualPad_PaintLine3D_4_8,121,-1,-1,0,2,1,1,0,
 "F - 'Float_t' 0 - p1 F - 'Float_t' 0 - p2",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("PaintPolyLine",1320,G__TVirtualPad_PaintPolyLine_5_8,121,-1,-1,0,4,1,1,8,
+   G__memfunc_setup("PaintPolyLine",1320,G__TVirtualPad_PaintPolyLine_5_8,121,-1,-1,0,4,1,1,0,
 "i - 'Int_t' 0 - n F - 'Float_t' 0 - x "
 "F - 'Float_t' 0 - y C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("PaintPolyLine3D",1439,G__TVirtualPad_PaintPolyLine3D_6_8,121,-1,-1,0,2,1,1,8,
+   G__memfunc_setup("PaintPolyLine3D",1439,G__TVirtualPad_PaintPolyLine3D_6_8,121,-1,-1,0,2,1,1,0,
 "i - 'Int_t' 0 - n F - 'Float_t' 0 - p",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("PaintPolyLineNDC",1533,G__TVirtualPad_PaintPolyLineNDC_7_8,121,-1,-1,0,4,1,1,8,
+   G__memfunc_setup("PaintPolyLineNDC",1533,G__TVirtualPad_PaintPolyLineNDC_7_8,121,-1,-1,0,4,1,1,0,
 "i - 'Int_t' 0 - n F - 'Float_t' 0 - x "
 "F - 'Float_t' 0 - y C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("PaintPolyMarker",1538,G__TVirtualPad_PaintPolyMarker_8_8,121,-1,-1,0,4,1,1,8,
+   G__memfunc_setup("PaintPolyMarker",1538,G__TVirtualPad_PaintPolyMarker_8_8,121,-1,-1,0,4,1,1,0,
 "i - 'Int_t' 0 - n F - 'Float_t' 0 - x "
 "F - 'Float_t' 0 - y C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("PaintModified",1309,G__TVirtualPad_PaintModified_9_8,121,-1,-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("PaintText",929,G__TVirtualPad_PaintText_0_9,121,-1,-1,0,3,1,1,8,
+   G__memfunc_setup("PaintModified",1309,G__TVirtualPad_PaintModified_9_8,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("PaintText",929,G__TVirtualPad_PaintText_0_9,121,-1,-1,0,3,1,1,0,
 "f - 'Float_t' 0 - x f - 'Float_t' 0 - y "
 "C - 'Text_t' 0 - text",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("PaintTextNDC",1142,G__TVirtualPad_PaintTextNDC_1_9,121,-1,-1,0,3,1,1,8,
+   G__memfunc_setup("PaintTextNDC",1142,G__TVirtualPad_PaintTextNDC_1_9,121,-1,-1,0,3,1,1,0,
 "f - 'Float_t' 0 - u f - 'Float_t' 0 - v "
 "C - 'Text_t' 0 - text",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("PixeltoX",829,G__TVirtualPad_PixeltoX_2_9,102,-1,G__defined_typename("Float_t"),0,1,1,1,8,"i - 'Int_t' 0 - px",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("PixeltoY",830,G__TVirtualPad_PixeltoY_3_9,102,-1,G__defined_typename("Float_t"),0,1,1,1,8,"i - 'Int_t' 0 - py",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("Pop",303,G__TVirtualPad_Pop_4_9,121,-1,-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("Print",525,G__TVirtualPad_Print_5_9,121,-1,-1,0,1,1,1,8,"C - 'Text_t' 0 \"\" filename",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("Print",525,G__TVirtualPad_Print_6_9,121,-1,-1,0,2,1,1,8,
+   G__memfunc_setup("PixeltoX",829,G__TVirtualPad_PixeltoX_2_9,102,-1,G__defined_typename("Float_t"),0,1,1,1,0,"i - 'Int_t' 0 - px",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("PixeltoY",830,G__TVirtualPad_PixeltoY_3_9,102,-1,G__defined_typename("Float_t"),0,1,1,1,0,"i - 'Int_t' 0 - py",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("Pop",303,G__TVirtualPad_Pop_4_9,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("Print",525,G__TVirtualPad_Print_5_9,121,-1,-1,0,1,1,1,0,"C - 'Text_t' 0 \"\" filename",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("Print",525,G__TVirtualPad_Print_6_9,121,-1,-1,0,2,1,1,0,
 "C - 'Text_t' 0 - filename C - 'Option_t' 0 - option",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("Range",493,G__TVirtualPad_Range_7_9,121,-1,-1,0,4,1,1,8,
+   G__memfunc_setup("Range",493,G__TVirtualPad_Range_7_9,121,-1,-1,0,4,1,1,0,
 "f - 'Float_t' 0 - x1 f - 'Float_t' 0 - y1 "
 "f - 'Float_t' 0 - x2 f - 'Float_t' 0 - y2",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("RangeAxis",898,G__TVirtualPad_RangeAxis_8_9,121,-1,-1,0,4,1,1,8,
+   G__memfunc_setup("RangeAxis",898,G__TVirtualPad_RangeAxis_8_9,121,-1,-1,0,4,1,1,0,
 "f - 'Axis_t' 0 - xmin f - 'Axis_t' 0 - ymin "
 "f - 'Axis_t' 0 - xmax f - 'Axis_t' 0 - ymax",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("RecursiveRemove",1574,G__TVirtualPad_RecursiveRemove_9_9,121,-1,-1,0,1,1,1,8,"U 'TObject' - 0 - obj",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("RedrawAxis",1018,G__TVirtualPad_RedrawAxis_0_10,121,-1,-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("ResetView3D",1045,G__TVirtualPad_ResetView3D_1_10,121,-1,-1,0,1,1,1,8,"U 'TPadView3D' - 0 0 view",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("ResizePad",903,G__TVirtualPad_ResizePad_2_10,121,-1,-1,0,1,1,1,8,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("SaveAs",579,G__TVirtualPad_SaveAs_3_10,121,-1,-1,0,1,1,1,8,"C - 'Text_t' 0 \"\" filename",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("SetBorderMode",1295,G__TVirtualPad_SetBorderMode_4_10,121,-1,-1,0,1,1,1,8,"s - 'Short_t' 0 - bordermode",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("SetBorderSize",1317,G__TVirtualPad_SetBorderSize_5_10,121,-1,-1,0,1,1,1,8,"s - 'Short_t' 0 - bordersize",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("SetCanvasSize",1315,G__TVirtualPad_SetCanvasSize_6_10,121,-1,-1,0,2,1,1,8,
+   G__memfunc_setup("RecursiveRemove",1574,G__TVirtualPad_RecursiveRemove_9_9,121,-1,-1,0,1,1,1,0,"U 'TObject' - 0 - obj",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("RedrawAxis",1018,G__TVirtualPad_RedrawAxis_0_10,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("ResetView3D",1045,G__TVirtualPad_ResetView3D_1_10,121,-1,-1,0,1,1,1,0,"U 'TPadView3D' - 0 0 view",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("ResizePad",903,G__TVirtualPad_ResizePad_2_10,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("SaveAs",579,G__TVirtualPad_SaveAs_3_10,121,-1,-1,0,1,1,1,0,"C - 'Text_t' 0 \"\" filename",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("SetBorderMode",1295,G__TVirtualPad_SetBorderMode_4_10,121,-1,-1,0,1,1,1,0,"s - 'Short_t' 0 - bordermode",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("SetBorderSize",1317,G__TVirtualPad_SetBorderSize_5_10,121,-1,-1,0,1,1,1,0,"s - 'Short_t' 0 - bordersize",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("SetCanvasSize",1315,G__TVirtualPad_SetCanvasSize_6_10,121,-1,-1,0,2,1,1,0,
 "h - 'UInt_t' 0 - ww h - 'UInt_t' 0 - wh",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("SetCursor",938,G__TVirtualPad_SetCursor_7_10,121,-1,-1,0,1,1,1,8,"i 'ECursor' - 0 - cursor",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("SetDoubleBuffer",1505,G__TVirtualPad_SetDoubleBuffer_8_10,121,-1,-1,0,1,1,1,8,"i - 'Int_t' 0 1 mode",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("SetGrid",690,G__TVirtualPad_SetGrid_9_10,121,-1,-1,0,2,1,1,8,
+   G__memfunc_setup("SetCursor",938,G__TVirtualPad_SetCursor_7_10,121,-1,-1,0,1,1,1,0,"i 'ECursor' - 0 - cursor",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("SetDoubleBuffer",1505,G__TVirtualPad_SetDoubleBuffer_8_10,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 1 mode",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("SetGrid",690,G__TVirtualPad_SetGrid_9_10,121,-1,-1,0,2,1,1,0,
 "i - 'Int_t' 0 1 valuex i - 'Int_t' 0 1 valuey",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("SetGridx",810,G__TVirtualPad_SetGridx_0_11,121,-1,-1,0,1,1,1,8,"i - 'Int_t' 0 1 value",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("SetGridy",811,G__TVirtualPad_SetGridy_1_11,121,-1,-1,0,1,1,1,8,"i - 'Int_t' 0 1 value",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("SetFillStyle",1220,G__TVirtualPad_SetFillStyle_2_11,121,-1,-1,0,1,1,1,8,"s - 'Style_t' 0 - fstyle",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("SetLogx",710,G__TVirtualPad_SetLogx_3_11,121,-1,-1,0,1,1,1,8,"i - 'Int_t' 0 1 value",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("SetLogy",711,G__TVirtualPad_SetLogy_4_11,121,-1,-1,0,1,1,1,8,"i - 'Int_t' 0 1 value",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("SetLogz",712,G__TVirtualPad_SetLogz_5_11,121,-1,-1,0,1,1,1,8,"i - 'Int_t' 0 1 value",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("SetPad",577,G__TVirtualPad_SetPad_6_11,121,-1,-1,0,9,1,1,8,
+   G__memfunc_setup("SetGridx",810,G__TVirtualPad_SetGridx_0_11,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 1 value",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("SetGridy",811,G__TVirtualPad_SetGridy_1_11,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 1 value",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("SetFillStyle",1220,G__TVirtualPad_SetFillStyle_2_11,121,-1,-1,0,1,1,1,0,"s - 'Style_t' 0 - fstyle",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("SetLogx",710,G__TVirtualPad_SetLogx_3_11,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 1 value",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("SetLogy",711,G__TVirtualPad_SetLogy_4_11,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 1 value",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("SetLogz",712,G__TVirtualPad_SetLogz_5_11,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 1 value",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("SetPad",577,G__TVirtualPad_SetPad_6_11,121,-1,-1,0,9,1,1,0,
 "C - 'Text_t' 0 - name C - 'Text_t' 0 - title "
 "f - 'Float_t' 0 - xlow f - 'Float_t' 0 - ylow "
 "f - 'Float_t' 0 - xup f - 'Float_t' 0 - yup "
 "s - 'Color_t' 0 35 color s - 'Short_t' 0 5 bordersize "
 "s - 'Short_t' 0 -1 bordermode",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("SetPad",577,G__TVirtualPad_SetPad_7_11,121,-1,-1,0,4,1,1,8,
+   G__memfunc_setup("SetPad",577,G__TVirtualPad_SetPad_7_11,121,-1,-1,0,4,1,1,0,
 "f - 'Float_t' 0 - xlow f - 'Float_t' 0 - ylow "
 "f - 'Float_t' 0 - xup f - 'Float_t' 0 - yup",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("SetName",685,G__TVirtualPad_SetName_8_11,121,-1,-1,0,1,1,1,8,"C - 'Text_t' 0 - name",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("SetSelected",1109,G__TVirtualPad_SetSelected_9_11,121,-1,-1,0,1,1,1,8,"U 'TObject' - 0 - obj",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("SetTicks",810,G__TVirtualPad_SetTicks_0_12,121,-1,-1,0,2,1,1,8,
+   G__memfunc_setup("SetName",685,G__TVirtualPad_SetName_8_11,121,-1,-1,0,1,1,1,0,"C - 'Text_t' 0 - name",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("SetSelected",1109,G__TVirtualPad_SetSelected_9_11,121,-1,-1,0,1,1,1,0,"U 'TObject' - 0 - obj",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("SetTicks",810,G__TVirtualPad_SetTicks_0_12,121,-1,-1,0,2,1,1,0,
 "i - 'Int_t' 0 1 valuex i - 'Int_t' 0 1 valuey",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("SetTickx",815,G__TVirtualPad_SetTickx_1_12,121,-1,-1,0,1,1,1,8,"i - 'Int_t' 0 1 value",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("SetTicky",816,G__TVirtualPad_SetTicky_2_12,121,-1,-1,0,1,1,1,8,"i - 'Int_t' 0 1 value",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("SetTitle",814,G__TVirtualPad_SetTitle_3_12,121,-1,-1,0,1,1,1,8,"C - 'Text_t' 0 \"\" title",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("SetTheta",802,G__TVirtualPad_SetTheta_4_12,121,-1,-1,0,1,1,1,8,"f - 'Float_t' 0 30 theta",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("SetPhi",589,G__TVirtualPad_SetPhi_5_12,121,-1,-1,0,1,1,1,8,"f - 'Float_t' 0 30 phi",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("SetView",711,G__TVirtualPad_SetView_6_12,121,-1,-1,0,1,1,1,8,"U 'TView' - 0 - view",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("Update",611,G__TVirtualPad_Update_7_12,121,-1,-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("SetTickx",815,G__TVirtualPad_SetTickx_1_12,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 1 value",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("SetTicky",816,G__TVirtualPad_SetTicky_2_12,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 1 value",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("SetTitle",814,G__TVirtualPad_SetTitle_3_12,121,-1,-1,0,1,1,1,0,"C - 'Text_t' 0 \"\" title",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("SetTheta",802,G__TVirtualPad_SetTheta_4_12,121,-1,-1,0,1,1,1,0,"f - 'Float_t' 0 30 theta",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("SetPhi",589,G__TVirtualPad_SetPhi_5_12,121,-1,-1,0,1,1,1,0,"f - 'Float_t' 0 30 phi",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("SetView",711,G__TVirtualPad_SetView_6_12,121,-1,-1,0,1,1,1,0,"U 'TView' - 0 - view",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("Update",611,G__TVirtualPad_Update_7_12,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,3);
    G__memfunc_setup("UtoAbsPixel",1104,G__TVirtualPad_UtoAbsPixel_8_12,105,-1,G__defined_typename("Int_t"),0,1,1,1,8,"f - 'Float_t' 0 - u",(char*)NULL,(void*)NULL,3);
    G__memfunc_setup("VtoAbsPixel",1105,G__TVirtualPad_VtoAbsPixel_9_12,105,-1,G__defined_typename("Int_t"),0,1,1,1,8,"f - 'Float_t' 0 - v",(char*)NULL,(void*)NULL,3);
    G__memfunc_setup("UtoPixel",826,G__TVirtualPad_UtoPixel_0_13,105,-1,G__defined_typename("Int_t"),0,1,1,1,8,"f - 'Float_t' 0 - u",(char*)NULL,(void*)NULL,3);
@@ -8722,23 +8848,29 @@ static void G__setup_memfuncTVirtualPad(void) {
    G__memfunc_setup("XtoAbsPixel",1107,G__TVirtualPad_XtoAbsPixel_2_13,105,-1,G__defined_typename("Int_t"),0,1,1,1,8,"f - 'Axis_t' 0 - x",(char*)NULL,(void*)NULL,3);
    G__memfunc_setup("YtoAbsPixel",1108,G__TVirtualPad_YtoAbsPixel_3_13,105,-1,G__defined_typename("Int_t"),0,1,1,1,8,"f - 'Axis_t' 0 - y",(char*)NULL,(void*)NULL,3);
    G__memfunc_setup("XtoPad",592,G__TVirtualPad_XtoPad_4_13,102,-1,G__defined_typename("Float_t"),0,1,1,1,8,"f - 'Axis_t' 0 - x",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("XtoPixel",829,G__TVirtualPad_XtoPixel_5_13,105,-1,G__defined_typename("Int_t"),0,1,1,1,8,"f - 'Axis_t' 0 - x",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("YtoPixel",830,G__TVirtualPad_YtoPixel_6_13,105,-1,G__defined_typename("Int_t"),0,1,1,1,8,"f - 'Axis_t' 0 - y",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("YtoPad",593,G__TVirtualPad_YtoPad_7_13,102,-1,G__defined_typename("Float_t"),0,1,1,1,8,"f - 'Axis_t' 0 - y",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("x3d",271,G__TVirtualPad_x3d_8_13,121,-1,-1,0,1,1,1,8,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("DeclFileName",1145,G__TVirtualPad_DeclFileName_9_13,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("DeclFileLine",1152,G__TVirtualPad_DeclFileLine_0_14,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("ImplFileName",1171,G__TVirtualPad_ImplFileName_1_14,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("ImplFileLine",1178,G__TVirtualPad_ImplFileLine_2_14,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Class_Version",1339,G__TVirtualPad_Class_Version_3_14,115,-1,G__defined_typename("Version_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Class",502,G__TVirtualPad_Class_4_14,85,G__get_linked_tagnum(&G__G__Graf2LN_TClass),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Dictionary",1046,G__TVirtualPad_Dictionary_5_14,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("IsA",253,G__TVirtualPad_IsA_6_14,85,G__get_linked_tagnum(&G__G__Graf2LN_TClass),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("ShowMembers",1132,G__TVirtualPad_ShowMembers_7_14,121,-1,-1,0,2,1,1,0,
+   G__memfunc_setup("YtoPad",593,G__TVirtualPad_YtoPad_5_13,102,-1,G__defined_typename("Float_t"),0,1,1,1,8,"f - 'Axis_t' 0 - y",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("XtoPixel",829,G__TVirtualPad_XtoPixel_6_13,105,-1,G__defined_typename("Int_t"),0,1,1,1,8,"f - 'Axis_t' 0 - x",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("YtoPixel",830,G__TVirtualPad_YtoPixel_7_13,105,-1,G__defined_typename("Int_t"),0,1,1,1,8,"f - 'Axis_t' 0 - y",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("CreateToolTip",1311,G__TVirtualPad_CreateToolTip_8_13,85,G__get_linked_tagnum(&G__G__Graf2LN_TGToolTip),-1,0,3,1,1,0,
+"U 'TBox' - 0 - b C - - 0 - text "
+"l - 'Long_t' 0 - delayms",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("DeleteToolTip",1310,G__TVirtualPad_DeleteToolTip_9_13,121,-1,-1,0,1,1,1,0,"U 'TGToolTip' - 0 - tip",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("ResetToolTip",1230,G__TVirtualPad_ResetToolTip_0_14,121,-1,-1,0,1,1,1,0,"U 'TGToolTip' - 0 - tip",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("CloseToolTip",1217,G__TVirtualPad_CloseToolTip_1_14,121,-1,-1,0,1,1,1,0,"U 'TGToolTip' - 0 - tip",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("x3d",271,G__TVirtualPad_x3d_2_14,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("DeclFileName",1145,G__TVirtualPad_DeclFileName_3_14,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("DeclFileLine",1152,G__TVirtualPad_DeclFileLine_4_14,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ImplFileName",1171,G__TVirtualPad_ImplFileName_5_14,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ImplFileLine",1178,G__TVirtualPad_ImplFileLine_6_14,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Class_Version",1339,G__TVirtualPad_Class_Version_7_14,115,-1,G__defined_typename("Version_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Class",502,G__TVirtualPad_Class_8_14,85,G__get_linked_tagnum(&G__G__Graf2LN_TClass),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Dictionary",1046,G__TVirtualPad_Dictionary_9_14,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("IsA",253,G__TVirtualPad_IsA_0_15,85,G__get_linked_tagnum(&G__G__Graf2LN_TClass),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("ShowMembers",1132,G__TVirtualPad_ShowMembers_1_15,121,-1,-1,0,2,1,1,0,
 "u 'TMemberInspector' - 1 - insp C - - 0 - parent",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("Streamer",835,G__TVirtualPad_Streamer_8_14,121,-1,-1,0,1,1,1,0,"u 'TBuffer' - 1 - b",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Streamer",835,G__TVirtualPad_Streamer_2_15,121,-1,-1,0,1,1,1,0,"u 'TBuffer' - 1 - b",(char*)NULL,(void*)NULL,1);
    // automatic destructor
-   G__memfunc_setup("~TVirtualPad",1230,G__TVirtualPad_wATVirtualPad_9_14,(int)('y'),-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("~TVirtualPad",1230,G__TVirtualPad_wATVirtualPad_3_15,(int)('y'),-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
    G__tag_memfunc_reset();
 }
 
@@ -9999,6 +10131,7 @@ G__linked_taginfo G__G__Graf2LN_TText = { "TText" , 99 , -1 };
 G__linked_taginfo G__G__Graf2LN_TLink = { "TLink" , 99 , -1 };
 G__linked_taginfo G__G__Graf2LN_TPoints = { "TPoints" , 99 , -1 };
 G__linked_taginfo G__G__Graf2LN_TAttPad = { "TAttPad" , 99 , -1 };
+G__linked_taginfo G__G__Graf2LN_TGToolTip = { "TGToolTip" , 99 , -1 };
 G__linked_taginfo G__G__Graf2LN_TBox = { "TBox" , 99 , -1 };
 G__linked_taginfo G__G__Graf2LN_TWbox = { "TWbox" , 99 , -1 };
 G__linked_taginfo G__G__Graf2LN_TFrame = { "TFrame" , 99 , -1 };
@@ -10018,12 +10151,63 @@ G__linked_taginfo G__G__Graf2LN_TMessage = { "TMessage" , 99 , -1 };
 G__linked_taginfo G__G__Graf2LN_TSocket = { "TSocket" , 99 , -1 };
 G__linked_taginfo G__G__Graf2LN_TGXClient = { "TGXClient" , 99 , -1 };
 
+/* Reset class/struct taginfo */
+extern "C" void G__cpp_reset_tagtableG__Graf2() {
+  G__G__Graf2LN_TClass.tagnum = -1 ;
+  G__G__Graf2LN_ofstream.tagnum = -1 ;
+  G__G__Graf2LN_TList.tagnum = -1 ;
+  G__G__Graf2LN_TBrowser.tagnum = -1 ;
+  G__G__Graf2LN_TMethod.tagnum = -1 ;
+  G__G__Graf2LN_TObject.tagnum = -1 ;
+  G__G__Graf2LN_TSeqCollection.tagnum = -1 ;
+  G__G__Graf2LN_TString.tagnum = -1 ;
+  G__G__Graf2LN_TNamed.tagnum = -1 ;
+  G__G__Graf2LN_TStyle.tagnum = -1 ;
+  G__G__Graf2LN_TVirtualPad.tagnum = -1 ;
+  G__G__Graf2LN_TBrowserImp.tagnum = -1 ;
+  G__G__Graf2LN_TContextMenu.tagnum = -1 ;
+  G__G__Graf2LN_TBrowserTimer.tagnum = -1 ;
+  G__G__Graf2LN_TApplicationImp.tagnum = -1 ;
+  G__G__Graf2LN_TCanvasImp.tagnum = -1 ;
+  G__G__Graf2LN_TCanvas.tagnum = -1 ;
+  G__G__Graf2LN_TContextMenuImp.tagnum = -1 ;
+  G__G__Graf2LN_TControlBarImp.tagnum = -1 ;
+  G__G__Graf2LN_TGuiFactory.tagnum = -1 ;
+  G__G__Graf2LN_TAttLine.tagnum = -1 ;
+  G__G__Graf2LN_TAttFill.tagnum = -1 ;
+  G__G__Graf2LN_TLego.tagnum = -1 ;
+  G__G__Graf2LN_TAttText.tagnum = -1 ;
+  G__G__Graf2LN_TText.tagnum = -1 ;
+  G__G__Graf2LN_TLink.tagnum = -1 ;
+  G__G__Graf2LN_TPoints.tagnum = -1 ;
+  G__G__Graf2LN_TAttPad.tagnum = -1 ;
+  G__G__Graf2LN_TGToolTip.tagnum = -1 ;
+  G__G__Graf2LN_TBox.tagnum = -1 ;
+  G__G__Graf2LN_TWbox.tagnum = -1 ;
+  G__G__Graf2LN_TFrame.tagnum = -1 ;
+  G__G__Graf2LN_TAttMarker.tagnum = -1 ;
+  G__G__Graf2LN_TGXW.tagnum = -1 ;
+  G__G__Graf2LN_TGXWcLcLEDrawMode.tagnum = -1 ;
+  G__G__Graf2LN_TGXWcLcLEBoxMode.tagnum = -1 ;
+  G__G__Graf2LN_TGXWcLcLETextMode.tagnum = -1 ;
+  G__G__Graf2LN_TGXWcLcLETextSetMode.tagnum = -1 ;
+  G__G__Graf2LN_TView.tagnum = -1 ;
+  G__G__Graf2LN_TPadView3D.tagnum = -1 ;
+  G__G__Graf2LN_TPostScript.tagnum = -1 ;
+  G__G__Graf2LN_TAttAxis.tagnum = -1 ;
+  G__G__Graf2LN_TArrayI.tagnum = -1 ;
+  G__G__Graf2LN_TStylecLcLEPaperSize.tagnum = -1 ;
+  G__G__Graf2LN_TMessage.tagnum = -1 ;
+  G__G__Graf2LN_TSocket.tagnum = -1 ;
+  G__G__Graf2LN_TGXClient.tagnum = -1 ;
+}
+
 extern "C" void G__cpp_setup_tagtableG__Graf2() {
 
    /* Setting up class,struct,union tag entry */
    G__tagtable_setup(G__get_linked_tagnum(&G__G__Graf2LN_TBrowser),sizeof(TBrowser),-1,0,"ROOT Object Browser",G__setup_memvarTBrowser,G__setup_memfuncTBrowser);
    G__tagtable_setup(G__get_linked_tagnum(&G__G__Graf2LN_TStyle),sizeof(TStyle),-1,0,"A collection of all graphics attributes",G__setup_memvarTStyle,G__setup_memfuncTStyle);
-   G__tagtable_setup(G__get_linked_tagnum(&G__G__Graf2LN_TVirtualPad),sizeof(TVirtualPad),-1,-120,"Abstract base class for Pads and Canvases",G__setup_memvarTVirtualPad,G__setup_memfuncTVirtualPad);
+   G__tagtable_setup(G__get_linked_tagnum(&G__G__Graf2LN_TVirtualPad),sizeof(TVirtualPad),-1,-116,"Abstract base class for Pads and Canvases",G__setup_memvarTVirtualPad,G__setup_memfuncTVirtualPad);
    G__tagtable_setup(G__get_linked_tagnum(&G__G__Graf2LN_TContextMenu),sizeof(TContextMenu),-1,0,"Context sensitive popup menu",G__setup_memvarTContextMenu,G__setup_memfuncTContextMenu);
    G__tagtable_setup(G__get_linked_tagnum(&G__G__Graf2LN_TGuiFactory),sizeof(TGuiFactory),-1,0,"Abstract factory for GUI components",G__setup_memvarTGuiFactory,G__setup_memfuncTGuiFactory);
    G__tagtable_setup(G__get_linked_tagnum(&G__G__Graf2LN_TLego),sizeof(TLego),-1,0,"Hidden line removal package",G__setup_memvarTLego,G__setup_memfuncTLego);
@@ -10060,7 +10244,7 @@ class G__cpp_setup_initG__Graf2 {
 G__cpp_setup_initG__Graf2 G__cpp_setup_initializerG__Graf2;
 
 //
-// File generated by /user/brun/root/bin/rootcint at Fri Dec  4 14:25:33 1998.
+// File generated by /home/rdm/root/bin/rootcint at Mon Mar  8 12:34:17 1999.
 // Do NOT change. Changes will be lost next time file is generated
 //
 
@@ -10095,6 +10279,7 @@ void TBrowser::ShowMembers(TMemberInspector &R__insp, char *R__parent)
    if (R__ncp || R__cl || R__insp.IsA()) { }
    R__insp.Inspect(R__cl, R__parent, "*fImp", &fImp);
    R__insp.Inspect(R__cl, R__parent, "*fTimer", &fTimer);
+   R__insp.Inspect(R__cl, R__parent, "*fLastSelectedObject", &fLastSelectedObject);
    R__insp.Inspect(R__cl, R__parent, "*fContextMenu", &fContextMenu);
    R__insp.Inspect(R__cl, R__parent, "fNeedRefresh", &fNeedRefresh);
    TNamed::ShowMembers(R__insp, R__parent);
@@ -10168,21 +10353,21 @@ void TStyle::Streamer(TBuffer &R__b)
       R__b >> fPadTopMargin;
       R__b >> fPadLeftMargin;
       R__b >> fPadRightMargin;
+      R__b >> fPadGridX;
+      R__b >> fPadGridY;
+      R__b >> fPadTickX;
+      R__b >> fPadTickY;
       R__b >> fPaperSizeX;
       R__b >> fPaperSizeY;
       R__b >> fScreenFactor;
       R__b >> fStatColor;
+      R__b >> fStatBorderSize;
       R__b >> fStatX;
       R__b >> fStatY;
       R__b >> fStatW;
       R__b >> fStatH;
       R__b >> fTitleColor;
-      R__b >> fTitleXOffset;
-      R__b >> fTitleXFont;
-      R__b >> fTitleXSize;
-      R__b >> fTitleYOffset;
-      R__b >> fTitleYFont;
-      R__b >> fTitleYSize;
+      R__b >> fTitleBorderSize;
       R__b >> fTitleX;
       R__b >> fTitleY;
       R__b >> fTitleW;
@@ -10247,21 +10432,21 @@ void TStyle::Streamer(TBuffer &R__b)
       R__b << fPadTopMargin;
       R__b << fPadLeftMargin;
       R__b << fPadRightMargin;
+      R__b << fPadGridX;
+      R__b << fPadGridY;
+      R__b << fPadTickX;
+      R__b << fPadTickY;
       R__b << fPaperSizeX;
       R__b << fPaperSizeY;
       R__b << fScreenFactor;
       R__b << fStatColor;
+      R__b << fStatBorderSize;
       R__b << fStatX;
       R__b << fStatY;
       R__b << fStatW;
       R__b << fStatH;
       R__b << fTitleColor;
-      R__b << fTitleXOffset;
-      R__b << fTitleXFont;
-      R__b << fTitleXSize;
-      R__b << fTitleYOffset;
-      R__b << fTitleYFont;
-      R__b << fTitleYSize;
+      R__b << fTitleBorderSize;
       R__b << fTitleX;
       R__b << fTitleY;
       R__b << fTitleW;
@@ -10330,21 +10515,21 @@ void TStyle::ShowMembers(TMemberInspector &R__insp, char *R__parent)
    R__insp.Inspect(R__cl, R__parent, "fPadTopMargin", &fPadTopMargin);
    R__insp.Inspect(R__cl, R__parent, "fPadLeftMargin", &fPadLeftMargin);
    R__insp.Inspect(R__cl, R__parent, "fPadRightMargin", &fPadRightMargin);
+   R__insp.Inspect(R__cl, R__parent, "fPadGridX", &fPadGridX);
+   R__insp.Inspect(R__cl, R__parent, "fPadGridY", &fPadGridY);
+   R__insp.Inspect(R__cl, R__parent, "fPadTickX", &fPadTickX);
+   R__insp.Inspect(R__cl, R__parent, "fPadTickY", &fPadTickY);
    R__insp.Inspect(R__cl, R__parent, "fPaperSizeX", &fPaperSizeX);
    R__insp.Inspect(R__cl, R__parent, "fPaperSizeY", &fPaperSizeY);
    R__insp.Inspect(R__cl, R__parent, "fScreenFactor", &fScreenFactor);
    R__insp.Inspect(R__cl, R__parent, "fStatColor", &fStatColor);
+   R__insp.Inspect(R__cl, R__parent, "fStatBorderSize", &fStatBorderSize);
    R__insp.Inspect(R__cl, R__parent, "fStatX", &fStatX);
    R__insp.Inspect(R__cl, R__parent, "fStatY", &fStatY);
    R__insp.Inspect(R__cl, R__parent, "fStatW", &fStatW);
    R__insp.Inspect(R__cl, R__parent, "fStatH", &fStatH);
    R__insp.Inspect(R__cl, R__parent, "fTitleColor", &fTitleColor);
-   R__insp.Inspect(R__cl, R__parent, "fTitleXOffset", &fTitleXOffset);
-   R__insp.Inspect(R__cl, R__parent, "fTitleXFont", &fTitleXFont);
-   R__insp.Inspect(R__cl, R__parent, "fTitleXSize", &fTitleXSize);
-   R__insp.Inspect(R__cl, R__parent, "fTitleYOffset", &fTitleYOffset);
-   R__insp.Inspect(R__cl, R__parent, "fTitleYFont", &fTitleYFont);
-   R__insp.Inspect(R__cl, R__parent, "fTitleYSize", &fTitleYSize);
+   R__insp.Inspect(R__cl, R__parent, "fTitleBorderSize", &fTitleBorderSize);
    R__insp.Inspect(R__cl, R__parent, "fTitleX", &fTitleX);
    R__insp.Inspect(R__cl, R__parent, "fTitleY", &fTitleY);
    R__insp.Inspect(R__cl, R__parent, "fTitleW", &fTitleW);

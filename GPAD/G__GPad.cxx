@@ -1,5 +1,5 @@
-//*CMZ :  2.20/06 17/12/98  09.30.56  by  Rene Brun
-//*-- Author :    Rene Brun   17/12/98
+//*CMZ :  2.21/07 08/03/99  12.34.26  by  Fons Rademakers
+//*-- Author :    Fons Rademakers   08/03/99
 //*CMZ :  1.00/09 23/04/97  17.59.54  by  Rene Brun
 //*-- Author :    Rene Brun   23/04/97
 #if defined(__hpux) && !defined(__GNUG__)
@@ -85,6 +85,7 @@ extern G__linked_taginfo G__G__GPadLN_ELineStyle;
 extern G__linked_taginfo G__G__GPadLN_TAttPad;
 extern G__linked_taginfo G__G__GPadLN_TAttLine;
 extern G__linked_taginfo G__G__GPadLN_TAttFill;
+extern G__linked_taginfo G__G__GPadLN_TGToolTip;
 extern G__linked_taginfo G__G__GPadLN_TBox;
 extern G__linked_taginfo G__G__GPadLN_TWbox;
 extern G__linked_taginfo G__G__GPadLN_TFrame;
@@ -127,6 +128,7 @@ extern G__linked_taginfo G__G__GPadLN_TPaveLabel;
 #undef malloc
 #endif
 
+extern "C" void G__cpp_reset_tagtableG__GPad();
 
 extern "C" void G__set_cpp_environmentG__GPad() {
   G__add_macro("__MAKECINT__");
@@ -151,6 +153,7 @@ extern "C" void G__set_cpp_environmentG__GPad() {
   G__add_compiledheader("TSlider.h");
   G__add_compiledheader("TTreeViewer.h");
   G__add_compiledheader("TPaveVar.h");
+  G__cpp_reset_tagtableG__GPad();
 }
 extern "C" int G__cpp_dllrevG__GPad() { return(51111); }
 
@@ -291,71 +294,77 @@ static int G__TCanvas_EditorBar_6_1(G__value *result7,char *funcname,struct G__p
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TCanvas_FeedbackMode_7_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TCanvas_EnterLeave_7_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TCanvas*)(G__getstructoffset()))->EnterLeave((TPad*)G__int(libp->para[0]),(TObject*)G__int(libp->para[1]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TCanvas_FeedbackMode_8_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TCanvas*)(G__getstructoffset()))->FeedbackMode((Bool_t)G__int(libp->para[0]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TCanvas_Flush_8_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TCanvas_Flush_9_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TCanvas*)(G__getstructoffset()))->Flush();
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TCanvas_UseCurrentStyle_9_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TCanvas_UseCurrentStyle_0_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TCanvas*)(G__getstructoffset()))->UseCurrentStyle();
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TCanvas_ForceUpdate_0_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TCanvas_ForceUpdate_1_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TCanvas*)(G__getstructoffset()))->ForceUpdate();
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TCanvas_GetDISPLAY_1_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TCanvas_GetDISPLAY_2_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,67,(long)((TCanvas*)(G__getstructoffset()))->GetDISPLAY());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TCanvas_GetContextMenu_2_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TCanvas_GetContextMenu_3_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((TCanvas*)(G__getstructoffset()))->GetContextMenu());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TCanvas_GetDoubleBuffer_3_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TCanvas_GetDoubleBuffer_4_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TCanvas*)(G__getstructoffset()))->GetDoubleBuffer());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TCanvas_GetEditorBar_4_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TCanvas_GetEditorBar_5_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((TCanvas*)(G__getstructoffset()))->GetEditorBar());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TCanvas_GetEvent_5_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TCanvas_GetEvent_6_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TCanvas*)(G__getstructoffset()))->GetEvent());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TCanvas_GetEventX_6_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TCanvas_GetEventX_7_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TCanvas*)(G__getstructoffset()))->GetEventX());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TCanvas_GetEventY_7_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TCanvas_GetEventY_8_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TCanvas*)(G__getstructoffset()))->GetEventY());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TCanvas_GetHighLightColor_8_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TCanvas_GetHighLightColor_9_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,115,(long)((TCanvas*)(G__getstructoffset()))->GetHighLightColor());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TCanvas_GetPadDivision_9_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TCanvas_GetPadDivision_0_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 2:
       G__letint(result7,89,(long)((TCanvas*)(G__getstructoffset()))->GetPadDivision((Int_t)G__int(libp->para[0]),(Int_t)G__int(libp->para[1])));
@@ -370,132 +379,132 @@ static int G__TCanvas_GetPadDivision_9_2(G__value *result7,char *funcname,struct
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TCanvas_GetPadSave_0_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TCanvas_GetPadSave_1_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((TCanvas*)(G__getstructoffset()))->GetPadSave());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TCanvas_GetSelected_1_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TCanvas_GetSelected_2_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((TCanvas*)(G__getstructoffset()))->GetSelected());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TCanvas_GetSelectedOpt_2_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TCanvas_GetSelectedOpt_3_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,67,(long)((TCanvas*)(G__getstructoffset()))->GetSelectedOpt());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TCanvas_GetSelectedPad_3_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TCanvas_GetSelectedPad_4_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((TCanvas*)(G__getstructoffset()))->GetSelectedPad());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TCanvas_GetShowEventStatus_4_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TCanvas_GetShowEventStatus_5_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,98,(long)((TCanvas*)(G__getstructoffset()))->GetShowEventStatus());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TCanvas_GetXsizeUser_5_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TCanvas_GetXsizeUser_6_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letdouble(result7,102,(double)((TCanvas*)(G__getstructoffset()))->GetXsizeUser());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TCanvas_GetYsizeUser_6_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TCanvas_GetYsizeUser_7_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letdouble(result7,102,(double)((TCanvas*)(G__getstructoffset()))->GetYsizeUser());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TCanvas_GetXsizeReal_7_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TCanvas_GetXsizeReal_8_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letdouble(result7,102,(double)((TCanvas*)(G__getstructoffset()))->GetXsizeReal());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TCanvas_GetYsizeReal_8_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TCanvas_GetYsizeReal_9_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letdouble(result7,102,(double)((TCanvas*)(G__getstructoffset()))->GetYsizeReal());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TCanvas_GetCanvasID_9_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TCanvas_GetCanvasID_0_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TCanvas*)(G__getstructoffset()))->GetCanvasID());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TCanvas_GetCanvasImp_0_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TCanvas_GetCanvasImp_1_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((TCanvas*)(G__getstructoffset()))->GetCanvasImp());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TCanvas_GetWindowTopX_1_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TCanvas_GetWindowTopX_2_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TCanvas*)(G__getstructoffset()))->GetWindowTopX());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TCanvas_GetWindowTopY_2_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TCanvas_GetWindowTopY_3_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TCanvas*)(G__getstructoffset()))->GetWindowTopY());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TCanvas_GetWindowWidth_3_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TCanvas_GetWindowWidth_4_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,104,(long)((TCanvas*)(G__getstructoffset()))->GetWindowWidth());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TCanvas_GetWindowHeight_4_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TCanvas_GetWindowHeight_5_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,104,(long)((TCanvas*)(G__getstructoffset()))->GetWindowHeight());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TCanvas_GetWw_5_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TCanvas_GetWw_6_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,104,(long)((TCanvas*)(G__getstructoffset()))->GetWw());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TCanvas_GetWh_6_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TCanvas_GetWh_7_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,104,(long)((TCanvas*)(G__getstructoffset()))->GetWh());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TCanvas_GetCanvasPar_7_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TCanvas_GetCanvasPar_8_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TCanvas*)(G__getstructoffset()))->GetCanvasPar(libp->para[0].ref?*(Int_t*)libp->para[0].ref:G__Mint(libp->para[0]),libp->para[1].ref?*(Int_t*)libp->para[1].ref:G__Mint(libp->para[1])
 ,libp->para[2].ref?*(UInt_t*)libp->para[2].ref:G__Muint(libp->para[2]),libp->para[3].ref?*(UInt_t*)libp->para[3].ref:G__Muint(libp->para[3]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TCanvas_HandleInput_8_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TCanvas_HandleInput_9_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TCanvas*)(G__getstructoffset()))->HandleInput((EEventType)G__int(libp->para[0]),(Int_t)G__int(libp->para[1])
 ,(Int_t)G__int(libp->para[2]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TCanvas_HasMenuBar_9_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TCanvas_HasMenuBar_0_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,98,(long)((TCanvas*)(G__getstructoffset()))->HasMenuBar());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TCanvas_Iconify_0_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TCanvas_Iconify_1_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TCanvas*)(G__getstructoffset()))->Iconify();
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TCanvas_IsBatch_1_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TCanvas_IsBatch_2_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,98,(long)((TCanvas*)(G__getstructoffset()))->IsBatch());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TCanvas_IsEditable_2_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TCanvas_IsEditable_3_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TCanvas*)(G__getstructoffset()))->IsEditable());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TCanvas_IsRetained_3_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TCanvas_IsRetained_4_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,98,(long)((TCanvas*)(G__getstructoffset()))->IsRetained());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TCanvas_ls_4_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TCanvas_ls_5_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -509,7 +518,7 @@ static int G__TCanvas_ls_4_5(G__value *result7,char *funcname,struct G__param *l
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TCanvas_MoveOpaque_5_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TCanvas_MoveOpaque_6_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -523,17 +532,17 @@ static int G__TCanvas_MoveOpaque_5_5(G__value *result7,char *funcname,struct G__
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TCanvas_OpaqueMoving_6_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TCanvas_OpaqueMoving_7_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,98,(long)((TCanvas*)(G__getstructoffset()))->OpaqueMoving());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TCanvas_OpaqueResizing_7_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TCanvas_OpaqueResizing_8_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,98,(long)((TCanvas*)(G__getstructoffset()))->OpaqueResizing());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TCanvas_Paint_8_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TCanvas_Paint_9_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -547,7 +556,7 @@ static int G__TCanvas_Paint_8_5(G__value *result7,char *funcname,struct G__param
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TCanvas_Resize_9_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TCanvas_Resize_0_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -561,7 +570,7 @@ static int G__TCanvas_Resize_9_5(G__value *result7,char *funcname,struct G__para
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TCanvas_ResizeOpaque_0_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TCanvas_ResizeOpaque_1_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -575,7 +584,7 @@ static int G__TCanvas_ResizeOpaque_0_6(G__value *result7,char *funcname,struct G
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TCanvas_SaveSource_1_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TCanvas_SaveSource_2_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 2:
       G__setnull(result7);
@@ -593,13 +602,13 @@ static int G__TCanvas_SaveSource_1_6(G__value *result7,char *funcname,struct G__
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TCanvas_SetCursor_2_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TCanvas_SetCursor_3_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TCanvas*)(G__getstructoffset()))->SetCursor((ECursor)G__int(libp->para[0]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TCanvas_SetDoubleBuffer_3_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TCanvas_SetDoubleBuffer_4_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -613,25 +622,25 @@ static int G__TCanvas_SetDoubleBuffer_3_6(G__value *result7,char *funcname,struc
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TCanvas_SetWindowPosition_4_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TCanvas_SetWindowPosition_5_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TCanvas*)(G__getstructoffset()))->SetWindowPosition((Int_t)G__int(libp->para[0]),(Int_t)G__int(libp->para[1]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TCanvas_SetWindowSize_5_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TCanvas_SetWindowSize_6_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TCanvas*)(G__getstructoffset()))->SetWindowSize((UInt_t)G__int(libp->para[0]),(UInt_t)G__int(libp->para[1]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TCanvas_SetCanvasSize_6_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TCanvas_SetCanvasSize_7_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TCanvas*)(G__getstructoffset()))->SetCanvasSize((UInt_t)G__int(libp->para[0]),(UInt_t)G__int(libp->para[1]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TCanvas_SetEditable_7_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TCanvas_SetEditable_8_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -645,25 +654,25 @@ static int G__TCanvas_SetEditable_7_6(G__value *result7,char *funcname,struct G_
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TCanvas_SetHighLightColor_8_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TCanvas_SetHighLightColor_9_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TCanvas*)(G__getstructoffset()))->SetHighLightColor((Color_t)G__int(libp->para[0]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TCanvas_SetSelected_9_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TCanvas_SetSelected_0_7(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TCanvas*)(G__getstructoffset()))->SetSelected((TObject*)G__int(libp->para[0]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TCanvas_Show_0_7(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TCanvas_Show_1_7(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TCanvas*)(G__getstructoffset()))->Show();
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TCanvas_Size_1_7(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TCanvas_Size_2_7(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 2:
       G__setnull(result7);
@@ -681,7 +690,7 @@ static int G__TCanvas_Size_1_7(G__value *result7,char *funcname,struct G__param 
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TCanvas_SetBatch_2_7(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TCanvas_SetBatch_3_7(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -695,7 +704,7 @@ static int G__TCanvas_SetBatch_2_7(G__value *result7,char *funcname,struct G__pa
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TCanvas_SetRetained_3_7(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TCanvas_SetRetained_4_7(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -709,7 +718,7 @@ static int G__TCanvas_SetRetained_3_7(G__value *result7,char *funcname,struct G_
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TCanvas_SetTitle_4_7(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TCanvas_SetTitle_5_7(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -723,79 +732,79 @@ static int G__TCanvas_SetTitle_4_7(G__value *result7,char *funcname,struct G__pa
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TCanvas_ToggleEventStatus_5_7(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TCanvas_ToggleEventStatus_6_7(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TCanvas*)(G__getstructoffset()))->ToggleEventStatus();
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TCanvas_Update_6_7(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TCanvas_Update_7_7(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TCanvas*)(G__getstructoffset()))->Update();
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TCanvas_MakeDefCanvas_7_7(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TCanvas_MakeDefCanvas_8_7(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TCanvas*)(G__getstructoffset()))->MakeDefCanvas();
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TCanvas_DeclFileName_8_7(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TCanvas_DeclFileName_9_7(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,67,(long)((TCanvas*)(G__getstructoffset()))->DeclFileName());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TCanvas_DeclFileLine_9_7(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TCanvas_DeclFileLine_0_8(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TCanvas*)(G__getstructoffset()))->DeclFileLine());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TCanvas_ImplFileName_0_8(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TCanvas_ImplFileName_1_8(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,67,(long)((TCanvas*)(G__getstructoffset()))->ImplFileName());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TCanvas_ImplFileLine_1_8(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TCanvas_ImplFileLine_2_8(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TCanvas*)(G__getstructoffset()))->ImplFileLine());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TCanvas_Class_Version_2_8(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TCanvas_Class_Version_3_8(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,115,(long)((TCanvas*)(G__getstructoffset()))->Class_Version());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TCanvas_Class_3_8(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TCanvas_Class_4_8(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((TCanvas*)(G__getstructoffset()))->Class());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TCanvas_Dictionary_4_8(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TCanvas_Dictionary_5_8(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TCanvas*)(G__getstructoffset()))->Dictionary();
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TCanvas_IsA_5_8(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TCanvas_IsA_6_8(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((TCanvas*)(G__getstructoffset()))->IsA());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TCanvas_ShowMembers_6_8(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TCanvas_ShowMembers_7_8(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TCanvas*)(G__getstructoffset()))->ShowMembers(*(TMemberInspector*)libp->para[0].ref,(char*)G__int(libp->para[1]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TCanvas_Streamer_7_8(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TCanvas_Streamer_8_8(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TCanvas*)(G__getstructoffset()))->Streamer(*(TBuffer*)libp->para[0].ref);
    return(1 || funcname || hash || result7 || libp) ;
 }
 
 // automatic destructor
-static int G__TCanvas_wATCanvas_8_8(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TCanvas_wATCanvas_9_8(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    if(G__getaryconstruct())
      if(G__PVOID==G__getgvp())
        delete[] (TCanvas *)(G__getstructoffset());
@@ -2070,36 +2079,60 @@ static int G__TPad_XtoPad_6_15(G__value *result7,char *funcname,struct G__param 
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TPad_XtoPixel_7_15(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TPad_YtoPad_7_15(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letdouble(result7,102,(double)((TPad*)(G__getstructoffset()))->YtoPad((Axis_t)G__double(libp->para[0])));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPad_XtoPixel_8_15(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TPad*)(G__getstructoffset()))->XtoPixel((Axis_t)G__double(libp->para[0])));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TPad_YtoPixel_8_15(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TPad_YtoPixel_9_15(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TPad*)(G__getstructoffset()))->YtoPixel((Axis_t)G__double(libp->para[0])));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TPad_XYtoAbsPixel_9_15(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TPad_XYtoAbsPixel_0_16(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TPad*)(G__getstructoffset()))->XYtoAbsPixel((Axis_t)G__double(libp->para[0]),(Axis_t)G__double(libp->para[1])
 ,libp->para[2].ref?*(Int_t*)libp->para[2].ref:G__Mint(libp->para[2]),libp->para[3].ref?*(Int_t*)libp->para[3].ref:G__Mint(libp->para[3]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TPad_XYtoPixel_0_16(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TPad_XYtoPixel_1_16(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TPad*)(G__getstructoffset()))->XYtoPixel((Axis_t)G__double(libp->para[0]),(Axis_t)G__double(libp->para[1])
 ,libp->para[2].ref?*(Int_t*)libp->para[2].ref:G__Mint(libp->para[2]),libp->para[3].ref?*(Int_t*)libp->para[3].ref:G__Mint(libp->para[3]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TPad_YtoPad_1_16(G__value *result7,char *funcname,struct G__param *libp,int hash) {
-      G__letdouble(result7,102,(double)((TPad*)(G__getstructoffset()))->YtoPad((Axis_t)G__double(libp->para[0])));
+static int G__TPad_CreateToolTip_2_16(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,85,(long)((TPad*)(G__getstructoffset()))->CreateToolTip((const TBox*)G__int(libp->para[0]),(const char*)G__int(libp->para[1])
+,(Long_t)G__int(libp->para[2])));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TPad_x3d_2_16(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TPad_DeleteToolTip_3_16(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TPad*)(G__getstructoffset()))->DeleteToolTip((TGToolTip*)G__int(libp->para[0]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPad_ResetToolTip_4_16(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TPad*)(G__getstructoffset()))->ResetToolTip((TGToolTip*)G__int(libp->para[0]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPad_CloseToolTip_5_16(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TPad*)(G__getstructoffset()))->CloseToolTip((TGToolTip*)G__int(libp->para[0]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPad_x3d_6_16(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -2113,61 +2146,61 @@ static int G__TPad_x3d_2_16(G__value *result7,char *funcname,struct G__param *li
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TPad_DeclFileName_3_16(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TPad_DeclFileName_7_16(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,67,(long)((TPad*)(G__getstructoffset()))->DeclFileName());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TPad_DeclFileLine_4_16(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TPad_DeclFileLine_8_16(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TPad*)(G__getstructoffset()))->DeclFileLine());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TPad_ImplFileName_5_16(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TPad_ImplFileName_9_16(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,67,(long)((TPad*)(G__getstructoffset()))->ImplFileName());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TPad_ImplFileLine_6_16(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TPad_ImplFileLine_0_17(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TPad*)(G__getstructoffset()))->ImplFileLine());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TPad_Class_Version_7_16(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TPad_Class_Version_1_17(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,115,(long)((TPad*)(G__getstructoffset()))->Class_Version());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TPad_Class_8_16(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TPad_Class_2_17(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((TPad*)(G__getstructoffset()))->Class());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TPad_Dictionary_9_16(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TPad_Dictionary_3_17(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TPad*)(G__getstructoffset()))->Dictionary();
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TPad_IsA_0_17(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TPad_IsA_4_17(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((TPad*)(G__getstructoffset()))->IsA());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TPad_ShowMembers_1_17(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TPad_ShowMembers_5_17(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TPad*)(G__getstructoffset()))->ShowMembers(*(TMemberInspector*)libp->para[0].ref,(char*)G__int(libp->para[1]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TPad_Streamer_2_17(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TPad_Streamer_6_17(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TPad*)(G__getstructoffset()))->Streamer(*(TBuffer*)libp->para[0].ref);
    return(1 || funcname || hash || result7 || libp) ;
 }
 
 // automatic destructor
-static int G__TPad_wATPad_3_17(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TPad_wATPad_7_17(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    if(G__getaryconstruct())
      if(G__PVOID==G__getgvp())
        delete[] (TPad *)(G__getstructoffset());
@@ -6854,90 +6887,92 @@ static void G__setup_memfuncTCanvas(void) {
    G__memfunc_setup("Close",502,G__TCanvas_Close_4_1,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,1);
    G__memfunc_setup("Draw",398,G__TCanvas_Draw_5_1,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,1);
    G__memfunc_setup("EditorBar",892,G__TCanvas_EditorBar_6_1,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("FeedbackMode",1162,G__TCanvas_FeedbackMode_7_1,121,-1,-1,0,1,1,1,0,"b - 'Bool_t' 0 - set",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Flush",514,G__TCanvas_Flush_8_1,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("UseCurrentStyle",1569,G__TCanvas_UseCurrentStyle_9_1,121,-1,-1,0,0,1,1,0,"","*MENU*",(void*)NULL,1);
-   G__memfunc_setup("ForceUpdate",1106,G__TCanvas_ForceUpdate_0_2,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetDISPLAY",822,G__TCanvas_GetDISPLAY_1_2,67,-1,G__defined_typename("Text_t"),0,0,1,1,9,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetContextMenu",1434,G__TCanvas_GetContextMenu_2_2,85,G__get_linked_tagnum(&G__G__GPadLN_TContextMenu),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetDoubleBuffer",1493,G__TCanvas_GetDoubleBuffer_3_2,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetEditorBar",1180,G__TCanvas_GetEditorBar_4_2,85,G__get_linked_tagnum(&G__G__GPadLN_TControlBar),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetEvent",802,G__TCanvas_GetEvent_5_2,105,-1,G__defined_typename("Int_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("GetEventX",890,G__TCanvas_GetEventX_6_2,105,-1,G__defined_typename("Int_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("GetEventY",891,G__TCanvas_GetEventY_7_2,105,-1,G__defined_typename("Int_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("GetHighLightColor",1687,G__TCanvas_GetHighLightColor_8_2,115,-1,G__defined_typename("Color_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("GetPadDivision",1402,G__TCanvas_GetPadDivision_9_2,89,-1,-1,0,2,1,1,0,
+   G__memfunc_setup("EnterLeave",1003,G__TCanvas_EnterLeave_7_1,121,-1,-1,0,2,1,1,0,
+"U 'TPad' - 0 - prevSelPad U 'TObject' - 0 - prevSelObj",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("FeedbackMode",1162,G__TCanvas_FeedbackMode_8_1,121,-1,-1,0,1,1,1,0,"b - 'Bool_t' 0 - set",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Flush",514,G__TCanvas_Flush_9_1,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("UseCurrentStyle",1569,G__TCanvas_UseCurrentStyle_0_2,121,-1,-1,0,0,1,1,0,"","*MENU*",(void*)NULL,1);
+   G__memfunc_setup("ForceUpdate",1106,G__TCanvas_ForceUpdate_1_2,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetDISPLAY",822,G__TCanvas_GetDISPLAY_2_2,67,-1,G__defined_typename("Text_t"),0,0,1,1,9,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetContextMenu",1434,G__TCanvas_GetContextMenu_3_2,85,G__get_linked_tagnum(&G__G__GPadLN_TContextMenu),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetDoubleBuffer",1493,G__TCanvas_GetDoubleBuffer_4_2,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetEditorBar",1180,G__TCanvas_GetEditorBar_5_2,85,G__get_linked_tagnum(&G__G__GPadLN_TControlBar),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetEvent",802,G__TCanvas_GetEvent_6_2,105,-1,G__defined_typename("Int_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetEventX",890,G__TCanvas_GetEventX_7_2,105,-1,G__defined_typename("Int_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetEventY",891,G__TCanvas_GetEventY_8_2,105,-1,G__defined_typename("Int_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetHighLightColor",1687,G__TCanvas_GetHighLightColor_9_2,115,-1,G__defined_typename("Color_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetPadDivision",1402,G__TCanvas_GetPadDivision_0_3,89,-1,-1,0,2,1,1,0,
 "i - 'Int_t' 0 1 xdivision i - 'Int_t' 0 1 ydivision",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("GetPadSave",964,G__TCanvas_GetPadSave_0_3,85,G__get_linked_tagnum(&G__G__GPadLN_TVirtualPad),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("GetSelected",1097,G__TCanvas_GetSelected_1_3,85,G__get_linked_tagnum(&G__G__GPadLN_TObject),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("GetSelectedOpt",1404,G__TCanvas_GetSelectedOpt_2_3,67,-1,G__defined_typename("Option_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetSelectedPad",1374,G__TCanvas_GetSelectedPad_3_3,85,G__get_linked_tagnum(&G__G__GPadLN_TVirtualPad),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("GetShowEventStatus",1863,G__TCanvas_GetShowEventStatus_4_3,98,-1,G__defined_typename("Bool_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetXsizeUser",1234,G__TCanvas_GetXsizeUser_5_3,102,-1,G__defined_typename("Size_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetYsizeUser",1235,G__TCanvas_GetYsizeUser_6_3,102,-1,G__defined_typename("Size_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetXsizeReal",1207,G__TCanvas_GetXsizeReal_7_3,102,-1,G__defined_typename("Size_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetYsizeReal",1208,G__TCanvas_GetYsizeReal_8_3,102,-1,G__defined_typename("Size_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetCanvasID",1033,G__TCanvas_GetCanvasID_9_3,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("GetCanvasImp",1186,G__TCanvas_GetCanvasImp_0_4,85,G__get_linked_tagnum(&G__G__GPadLN_TCanvasImp),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetWindowTopX",1315,G__TCanvas_GetWindowTopX_1_4,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetWindowTopY",1316,G__TCanvas_GetWindowTopY_2_4,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetWindowWidth",1432,G__TCanvas_GetWindowWidth_3_4,104,-1,G__defined_typename("UInt_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetWindowHeight",1521,G__TCanvas_GetWindowHeight_4_4,104,-1,G__defined_typename("UInt_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetWw",494,G__TCanvas_GetWw_5_4,104,-1,G__defined_typename("UInt_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("GetWh",479,G__TCanvas_GetWh_6_4,104,-1,G__defined_typename("UInt_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("GetCanvasPar",1183,G__TCanvas_GetCanvasPar_7_4,121,-1,-1,0,4,1,1,0,
+   G__memfunc_setup("GetPadSave",964,G__TCanvas_GetPadSave_1_3,85,G__get_linked_tagnum(&G__G__GPadLN_TVirtualPad),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetSelected",1097,G__TCanvas_GetSelected_2_3,85,G__get_linked_tagnum(&G__G__GPadLN_TObject),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetSelectedOpt",1404,G__TCanvas_GetSelectedOpt_3_3,67,-1,G__defined_typename("Option_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetSelectedPad",1374,G__TCanvas_GetSelectedPad_4_3,85,G__get_linked_tagnum(&G__G__GPadLN_TVirtualPad),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetShowEventStatus",1863,G__TCanvas_GetShowEventStatus_5_3,98,-1,G__defined_typename("Bool_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetXsizeUser",1234,G__TCanvas_GetXsizeUser_6_3,102,-1,G__defined_typename("Size_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetYsizeUser",1235,G__TCanvas_GetYsizeUser_7_3,102,-1,G__defined_typename("Size_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetXsizeReal",1207,G__TCanvas_GetXsizeReal_8_3,102,-1,G__defined_typename("Size_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetYsizeReal",1208,G__TCanvas_GetYsizeReal_9_3,102,-1,G__defined_typename("Size_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetCanvasID",1033,G__TCanvas_GetCanvasID_0_4,105,-1,G__defined_typename("Int_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetCanvasImp",1186,G__TCanvas_GetCanvasImp_1_4,85,G__get_linked_tagnum(&G__G__GPadLN_TCanvasImp),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetWindowTopX",1315,G__TCanvas_GetWindowTopX_2_4,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetWindowTopY",1316,G__TCanvas_GetWindowTopY_3_4,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetWindowWidth",1432,G__TCanvas_GetWindowWidth_4_4,104,-1,G__defined_typename("UInt_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetWindowHeight",1521,G__TCanvas_GetWindowHeight_5_4,104,-1,G__defined_typename("UInt_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetWw",494,G__TCanvas_GetWw_6_4,104,-1,G__defined_typename("UInt_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetWh",479,G__TCanvas_GetWh_7_4,104,-1,G__defined_typename("UInt_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetCanvasPar",1183,G__TCanvas_GetCanvasPar_8_4,121,-1,-1,0,4,1,1,0,
 "i - 'Int_t' 1 - wtopx i - 'Int_t' 1 - wtopy "
 "h - 'UInt_t' 1 - ww h - 'UInt_t' 1 - wh",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("HandleInput",1116,G__TCanvas_HandleInput_8_4,121,-1,-1,0,3,1,1,0,
+   G__memfunc_setup("HandleInput",1116,G__TCanvas_HandleInput_9_4,121,-1,-1,0,3,1,1,0,
 "i 'EEventType' - 0 - button i - 'Int_t' 0 - x "
 "i - 'Int_t' 0 - y",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("HasMenuBar",966,G__TCanvas_HasMenuBar_9_4,98,-1,G__defined_typename("Bool_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Iconify",721,G__TCanvas_Iconify_0_5,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("IsBatch",670,G__TCanvas_IsBatch_1_5,98,-1,G__defined_typename("Bool_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("IsEditable",982,G__TCanvas_IsEditable_2_5,105,G__get_linked_tagnum(&G__G__GPadLN_ECanvasEditMode),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("IsRetained",1000,G__TCanvas_IsRetained_3_5,98,-1,G__defined_typename("Bool_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("ls",223,G__TCanvas_ls_4_5,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("MoveOpaque",1026,G__TCanvas_MoveOpaque_5_5,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 1 set",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("OpaqueMoving",1243,G__TCanvas_OpaqueMoving_6_5,98,-1,G__defined_typename("Bool_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("OpaqueResizing",1462,G__TCanvas_OpaqueResizing_7_5,98,-1,G__defined_typename("Bool_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("Paint",508,G__TCanvas_Paint_8_5,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("Resize",626,G__TCanvas_Resize_9_5,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("ResizeOpaque",1245,G__TCanvas_ResizeOpaque_0_6,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 1 set",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("SaveSource",1024,G__TCanvas_SaveSource_1_6,121,-1,-1,0,2,1,1,0,
+   G__memfunc_setup("HasMenuBar",966,G__TCanvas_HasMenuBar_0_5,98,-1,G__defined_typename("Bool_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Iconify",721,G__TCanvas_Iconify_1_5,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("IsBatch",670,G__TCanvas_IsBatch_2_5,98,-1,G__defined_typename("Bool_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("IsEditable",982,G__TCanvas_IsEditable_3_5,105,G__get_linked_tagnum(&G__G__GPadLN_ECanvasEditMode),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("IsRetained",1000,G__TCanvas_IsRetained_4_5,98,-1,G__defined_typename("Bool_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("ls",223,G__TCanvas_ls_5_5,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("MoveOpaque",1026,G__TCanvas_MoveOpaque_6_5,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 1 set",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("OpaqueMoving",1243,G__TCanvas_OpaqueMoving_7_5,98,-1,G__defined_typename("Bool_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("OpaqueResizing",1462,G__TCanvas_OpaqueResizing_8_5,98,-1,G__defined_typename("Bool_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Paint",508,G__TCanvas_Paint_9_5,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Resize",626,G__TCanvas_Resize_0_6,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("ResizeOpaque",1245,G__TCanvas_ResizeOpaque_1_6,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 1 set",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("SaveSource",1024,G__TCanvas_SaveSource_2_6,121,-1,-1,0,2,1,1,0,
 "C - 'Text_t' 0 \"\" filename C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("SetCursor",938,G__TCanvas_SetCursor_2_6,121,-1,-1,0,1,1,1,0,"i 'ECursor' - 0 - cursor",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("SetDoubleBuffer",1505,G__TCanvas_SetDoubleBuffer_3_6,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 1 mode",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("SetWindowPosition",1785,G__TCanvas_SetWindowPosition_4_6,121,-1,-1,0,2,1,1,0,
+   G__memfunc_setup("SetCursor",938,G__TCanvas_SetCursor_3_6,121,-1,-1,0,1,1,1,0,"i 'ECursor' - 0 - cursor",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetDoubleBuffer",1505,G__TCanvas_SetDoubleBuffer_4_6,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 1 mode",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetWindowPosition",1785,G__TCanvas_SetWindowPosition_5_6,121,-1,-1,0,2,1,1,0,
 "i - 'Int_t' 0 - x i - 'Int_t' 0 - y",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("SetWindowSize",1343,G__TCanvas_SetWindowSize_5_6,121,-1,-1,0,2,1,1,0,
+   G__memfunc_setup("SetWindowSize",1343,G__TCanvas_SetWindowSize_6_6,121,-1,-1,0,2,1,1,0,
 "h - 'UInt_t' 0 - ww h - 'UInt_t' 0 - wh",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("SetCanvasSize",1315,G__TCanvas_SetCanvasSize_6_6,121,-1,-1,0,2,1,1,0,
+   G__memfunc_setup("SetCanvasSize",1315,G__TCanvas_SetCanvasSize_7_6,121,-1,-1,0,2,1,1,0,
 "h - 'UInt_t' 0 - ww h - 'UInt_t' 0 - wh","*MENU*",(void*)NULL,1);
-   G__memfunc_setup("SetEditable",1094,G__TCanvas_SetEditable_7_6,121,-1,-1,0,1,1,1,0,"i 'ECanvasEditMode' - 0 kIsEditable mode","*TOGGLE*",(void*)NULL,1);
-   G__memfunc_setup("SetHighLightColor",1699,G__TCanvas_SetHighLightColor_8_6,121,-1,-1,0,1,1,1,0,"s - 'Color_t' 0 - col",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("SetSelected",1109,G__TCanvas_SetSelected_9_6,121,-1,-1,0,1,1,1,0,"U 'TObject' - 0 - obj",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("Show",417,G__TCanvas_Show_0_7,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Size",411,G__TCanvas_Size_1_7,121,-1,-1,0,2,1,1,0,
+   G__memfunc_setup("SetEditable",1094,G__TCanvas_SetEditable_8_6,121,-1,-1,0,1,1,1,0,"i 'ECanvasEditMode' - 0 kIsEditable mode","*TOGGLE*",(void*)NULL,1);
+   G__memfunc_setup("SetHighLightColor",1699,G__TCanvas_SetHighLightColor_9_6,121,-1,-1,0,1,1,1,0,"s - 'Color_t' 0 - col",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("SetSelected",1109,G__TCanvas_SetSelected_0_7,121,-1,-1,0,1,1,1,0,"U 'TObject' - 0 - obj",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Show",417,G__TCanvas_Show_1_7,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Size",411,G__TCanvas_Size_2_7,121,-1,-1,0,2,1,1,0,
 "f - 'Float_t' 0 0 xsizeuser f - 'Float_t' 0 0 ysizeuser",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("SetBatch",782,G__TCanvas_SetBatch_2_7,121,-1,-1,0,1,1,1,0,"b - 'Bool_t' 0 kTRUE batch",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("SetRetained",1112,G__TCanvas_SetRetained_3_7,121,-1,-1,0,1,1,1,0,"b - 'Bool_t' 0 kTRUE retained",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("SetTitle",814,G__TCanvas_SetTitle_4_7,121,-1,-1,0,1,1,1,0,"C - 'Text_t' 0 \"\" title",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("ToggleEventStatus",1768,G__TCanvas_ToggleEventStatus_5_7,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("Update",611,G__TCanvas_Update_6_7,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("MakeDefCanvas",1257,G__TCanvas_MakeDefCanvas_7_7,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("DeclFileName",1145,G__TCanvas_DeclFileName_8_7,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("DeclFileLine",1152,G__TCanvas_DeclFileLine_9_7,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("ImplFileName",1171,G__TCanvas_ImplFileName_0_8,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("ImplFileLine",1178,G__TCanvas_ImplFileLine_1_8,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Class_Version",1339,G__TCanvas_Class_Version_2_8,115,-1,G__defined_typename("Version_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Class",502,G__TCanvas_Class_3_8,85,G__get_linked_tagnum(&G__G__GPadLN_TClass),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Dictionary",1046,G__TCanvas_Dictionary_4_8,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("IsA",253,G__TCanvas_IsA_5_8,85,G__get_linked_tagnum(&G__G__GPadLN_TClass),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("ShowMembers",1132,G__TCanvas_ShowMembers_6_8,121,-1,-1,0,2,1,1,0,
+   G__memfunc_setup("SetBatch",782,G__TCanvas_SetBatch_3_7,121,-1,-1,0,1,1,1,0,"b - 'Bool_t' 0 kTRUE batch",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("SetRetained",1112,G__TCanvas_SetRetained_4_7,121,-1,-1,0,1,1,1,0,"b - 'Bool_t' 0 kTRUE retained",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("SetTitle",814,G__TCanvas_SetTitle_5_7,121,-1,-1,0,1,1,1,0,"C - 'Text_t' 0 \"\" title",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("ToggleEventStatus",1768,G__TCanvas_ToggleEventStatus_6_7,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Update",611,G__TCanvas_Update_7_7,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("MakeDefCanvas",1257,G__TCanvas_MakeDefCanvas_8_7,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("DeclFileName",1145,G__TCanvas_DeclFileName_9_7,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("DeclFileLine",1152,G__TCanvas_DeclFileLine_0_8,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ImplFileName",1171,G__TCanvas_ImplFileName_1_8,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ImplFileLine",1178,G__TCanvas_ImplFileLine_2_8,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Class_Version",1339,G__TCanvas_Class_Version_3_8,115,-1,G__defined_typename("Version_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Class",502,G__TCanvas_Class_4_8,85,G__get_linked_tagnum(&G__G__GPadLN_TClass),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Dictionary",1046,G__TCanvas_Dictionary_5_8,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("IsA",253,G__TCanvas_IsA_6_8,85,G__get_linked_tagnum(&G__G__GPadLN_TClass),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("ShowMembers",1132,G__TCanvas_ShowMembers_7_8,121,-1,-1,0,2,1,1,0,
 "u 'TMemberInspector' - 1 - insp C - - 0 - parent",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("Streamer",835,G__TCanvas_Streamer_7_8,121,-1,-1,0,1,1,1,0,"u 'TBuffer' - 1 - b",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Streamer",835,G__TCanvas_Streamer_8_8,121,-1,-1,0,1,1,1,0,"u 'TBuffer' - 1 - b",(char*)NULL,(void*)NULL,1);
    // automatic destructor
-   G__memfunc_setup("~TCanvas",814,G__TCanvas_wATCanvas_8_8,(int)('y'),-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("~TCanvas",814,G__TCanvas_wATCanvas_9_8,(int)('y'),-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
    G__tag_memfunc_reset();
 }
 
@@ -7023,7 +7058,7 @@ static void G__setup_memfuncTPad(void) {
 "i - 'Int_t' 0 - event i - 'Int_t' 0 - px "
 "i - 'Int_t' 0 - py",(char*)NULL,(void*)NULL,1);
    G__memfunc_setup("UseCurrentStyle",1569,G__TPad_UseCurrentStyle_4_3,121,-1,-1,0,0,1,1,0,"","*MENU*",(void*)NULL,1);
-   G__memfunc_setup("GetCanvasID",1033,G__TPad_GetCanvasID_5_3,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetCanvasID",1033,G__TPad_GetCanvasID_5_3,105,-1,G__defined_typename("Int_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
    G__memfunc_setup("GetFrame",779,G__TPad_GetFrame_6_3,85,G__get_linked_tagnum(&G__G__GPadLN_TFrame),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
    G__memfunc_setup("GetEvent",802,G__TPad_GetEvent_7_3,105,-1,G__defined_typename("Int_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
    G__memfunc_setup("GetEventX",890,G__TPad_GetEventX_8_3,105,-1,G__defined_typename("Int_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
@@ -7088,8 +7123,8 @@ static void G__setup_memfuncTPad(void) {
    G__memfunc_setup("Modified",801,G__TPad_Modified_0_9,121,-1,-1,0,1,1,1,0,"b - 'Bool_t' 0 1 flag",(char*)NULL,(void*)NULL,1);
    G__memfunc_setup("OpaqueMoving",1243,G__TPad_OpaqueMoving_1_9,98,-1,G__defined_typename("Bool_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
    G__memfunc_setup("OpaqueResizing",1462,G__TPad_OpaqueResizing_2_9,98,-1,G__defined_typename("Bool_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("PadtoX",592,G__TPad_PadtoX_3_9,102,-1,G__defined_typename("Float_t"),0,1,1,1,0,"f - 'Float_t' 0 - x",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("PadtoY",593,G__TPad_PadtoY_4_9,102,-1,G__defined_typename("Float_t"),0,1,1,1,0,"f - 'Float_t' 0 - y",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("PadtoX",592,G__TPad_PadtoX_3_9,102,-1,G__defined_typename("Float_t"),0,1,1,1,8,"f - 'Float_t' 0 - x",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("PadtoY",593,G__TPad_PadtoY_4_9,102,-1,G__defined_typename("Float_t"),0,1,1,1,8,"f - 'Float_t' 0 - y",(char*)NULL,(void*)NULL,1);
    G__memfunc_setup("Paint",508,G__TPad_Paint_5_9,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,1);
    G__memfunc_setup("PaintBox",805,G__TPad_PaintBox_6_9,121,-1,-1,0,5,1,1,0,
 "f - 'Float_t' 0 - x1 f - 'Float_t' 0 - y1 "
@@ -7188,36 +7223,42 @@ static void G__setup_memfuncTPad(void) {
    G__memfunc_setup("SetPhi",589,G__TPad_SetPhi_7_14,121,-1,-1,0,1,1,1,0,"f - 'Float_t' 0 30 phi",(char*)NULL,(void*)NULL,1);
    G__memfunc_setup("SetView",711,G__TPad_SetView_8_14,121,-1,-1,0,1,1,1,0,"U 'TView' - 0 - view",(char*)NULL,(void*)NULL,1);
    G__memfunc_setup("Update",611,G__TPad_Update_9_14,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("UtoAbsPixel",1104,G__TPad_UtoAbsPixel_0_15,105,-1,G__defined_typename("Int_t"),0,1,1,1,0,"f - 'Float_t' 0 - u",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("VtoAbsPixel",1105,G__TPad_VtoAbsPixel_1_15,105,-1,G__defined_typename("Int_t"),0,1,1,1,0,"f - 'Float_t' 0 - v",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("UtoPixel",826,G__TPad_UtoPixel_2_15,105,-1,G__defined_typename("Int_t"),0,1,1,1,0,"f - 'Float_t' 0 - u",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("VtoPixel",827,G__TPad_VtoPixel_3_15,105,-1,G__defined_typename("Int_t"),0,1,1,1,0,"f - 'Float_t' 0 - v",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("XtoAbsPixel",1107,G__TPad_XtoAbsPixel_4_15,105,-1,G__defined_typename("Int_t"),0,1,1,1,0,"f - 'Axis_t' 0 - x",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("YtoAbsPixel",1108,G__TPad_YtoAbsPixel_5_15,105,-1,G__defined_typename("Int_t"),0,1,1,1,0,"f - 'Axis_t' 0 - y",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("XtoPad",592,G__TPad_XtoPad_6_15,102,-1,G__defined_typename("Float_t"),0,1,1,1,0,"f - 'Axis_t' 0 - x",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("XtoPixel",829,G__TPad_XtoPixel_7_15,105,-1,G__defined_typename("Int_t"),0,1,1,1,0,"f - 'Axis_t' 0 - x",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("YtoPixel",830,G__TPad_YtoPixel_8_15,105,-1,G__defined_typename("Int_t"),0,1,1,1,0,"f - 'Axis_t' 0 - y",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("XYtoAbsPixel",1196,G__TPad_XYtoAbsPixel_9_15,121,-1,-1,0,4,1,1,0,
+   G__memfunc_setup("UtoAbsPixel",1104,G__TPad_UtoAbsPixel_0_15,105,-1,G__defined_typename("Int_t"),0,1,1,1,8,"f - 'Float_t' 0 - u",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("VtoAbsPixel",1105,G__TPad_VtoAbsPixel_1_15,105,-1,G__defined_typename("Int_t"),0,1,1,1,8,"f - 'Float_t' 0 - v",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("UtoPixel",826,G__TPad_UtoPixel_2_15,105,-1,G__defined_typename("Int_t"),0,1,1,1,8,"f - 'Float_t' 0 - u",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("VtoPixel",827,G__TPad_VtoPixel_3_15,105,-1,G__defined_typename("Int_t"),0,1,1,1,8,"f - 'Float_t' 0 - v",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("XtoAbsPixel",1107,G__TPad_XtoAbsPixel_4_15,105,-1,G__defined_typename("Int_t"),0,1,1,1,8,"f - 'Axis_t' 0 - x",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("YtoAbsPixel",1108,G__TPad_YtoAbsPixel_5_15,105,-1,G__defined_typename("Int_t"),0,1,1,1,8,"f - 'Axis_t' 0 - y",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("XtoPad",592,G__TPad_XtoPad_6_15,102,-1,G__defined_typename("Float_t"),0,1,1,1,8,"f - 'Axis_t' 0 - x",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("YtoPad",593,G__TPad_YtoPad_7_15,102,-1,G__defined_typename("Float_t"),0,1,1,1,8,"f - 'Axis_t' 0 - y",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("XtoPixel",829,G__TPad_XtoPixel_8_15,105,-1,G__defined_typename("Int_t"),0,1,1,1,8,"f - 'Axis_t' 0 - x",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("YtoPixel",830,G__TPad_YtoPixel_9_15,105,-1,G__defined_typename("Int_t"),0,1,1,1,8,"f - 'Axis_t' 0 - y",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("XYtoAbsPixel",1196,G__TPad_XYtoAbsPixel_0_16,121,-1,-1,0,4,1,1,8,
 "f - 'Axis_t' 0 - x f - 'Axis_t' 0 - y "
 "i - 'Int_t' 1 - xpixel i - 'Int_t' 1 - ypixel",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("XYtoPixel",918,G__TPad_XYtoPixel_0_16,121,-1,-1,0,4,1,1,0,
+   G__memfunc_setup("XYtoPixel",918,G__TPad_XYtoPixel_1_16,121,-1,-1,0,4,1,1,8,
 "f - 'Axis_t' 0 - x f - 'Axis_t' 0 - y "
 "i - 'Int_t' 1 - xpixel i - 'Int_t' 1 - ypixel",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("YtoPad",593,G__TPad_YtoPad_1_16,102,-1,G__defined_typename("Float_t"),0,1,1,1,0,"f - 'Axis_t' 0 - y",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("x3d",271,G__TPad_x3d_2_16,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option","*MENU*",(void*)NULL,1);
-   G__memfunc_setup("DeclFileName",1145,G__TPad_DeclFileName_3_16,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("DeclFileLine",1152,G__TPad_DeclFileLine_4_16,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("ImplFileName",1171,G__TPad_ImplFileName_5_16,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("ImplFileLine",1178,G__TPad_ImplFileLine_6_16,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Class_Version",1339,G__TPad_Class_Version_7_16,115,-1,G__defined_typename("Version_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Class",502,G__TPad_Class_8_16,85,G__get_linked_tagnum(&G__G__GPadLN_TClass),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Dictionary",1046,G__TPad_Dictionary_9_16,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("IsA",253,G__TPad_IsA_0_17,85,G__get_linked_tagnum(&G__G__GPadLN_TClass),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("ShowMembers",1132,G__TPad_ShowMembers_1_17,121,-1,-1,0,2,1,1,0,
+   G__memfunc_setup("CreateToolTip",1311,G__TPad_CreateToolTip_2_16,85,G__get_linked_tagnum(&G__G__GPadLN_TGToolTip),-1,0,3,1,1,0,
+"U 'TBox' - 0 - b C - - 0 - text "
+"l - 'Long_t' 0 - delayms",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("DeleteToolTip",1310,G__TPad_DeleteToolTip_3_16,121,-1,-1,0,1,1,1,0,"U 'TGToolTip' - 0 - tip",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("ResetToolTip",1230,G__TPad_ResetToolTip_4_16,121,-1,-1,0,1,1,1,0,"U 'TGToolTip' - 0 - tip",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("CloseToolTip",1217,G__TPad_CloseToolTip_5_16,121,-1,-1,0,1,1,1,0,"U 'TGToolTip' - 0 - tip",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("x3d",271,G__TPad_x3d_6_16,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option","*MENU*",(void*)NULL,1);
+   G__memfunc_setup("DeclFileName",1145,G__TPad_DeclFileName_7_16,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("DeclFileLine",1152,G__TPad_DeclFileLine_8_16,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ImplFileName",1171,G__TPad_ImplFileName_9_16,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ImplFileLine",1178,G__TPad_ImplFileLine_0_17,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Class_Version",1339,G__TPad_Class_Version_1_17,115,-1,G__defined_typename("Version_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Class",502,G__TPad_Class_2_17,85,G__get_linked_tagnum(&G__G__GPadLN_TClass),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Dictionary",1046,G__TPad_Dictionary_3_17,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("IsA",253,G__TPad_IsA_4_17,85,G__get_linked_tagnum(&G__G__GPadLN_TClass),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("ShowMembers",1132,G__TPad_ShowMembers_5_17,121,-1,-1,0,2,1,1,0,
 "u 'TMemberInspector' - 1 - insp C - - 0 - parent",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("Streamer",835,G__TPad_Streamer_2_17,121,-1,-1,0,1,1,1,0,"u 'TBuffer' - 1 - b",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Streamer",835,G__TPad_Streamer_6_17,121,-1,-1,0,1,1,1,0,"u 'TBuffer' - 1 - b",(char*)NULL,(void*)NULL,1);
    // automatic destructor
-   G__memfunc_setup("~TPad",487,G__TPad_wATPad_3_17,(int)('y'),-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("~TPad",487,G__TPad_wATPad_7_17,(int)('y'),-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
    G__tag_memfunc_reset();
 }
 
@@ -7921,6 +7962,7 @@ G__linked_taginfo G__G__GPadLN_ELineStyle = { "ELineStyle" , 101 , -1 };
 G__linked_taginfo G__G__GPadLN_TAttPad = { "TAttPad" , 99 , -1 };
 G__linked_taginfo G__G__GPadLN_TAttLine = { "TAttLine" , 99 , -1 };
 G__linked_taginfo G__G__GPadLN_TAttFill = { "TAttFill" , 99 , -1 };
+G__linked_taginfo G__G__GPadLN_TGToolTip = { "TGToolTip" , 99 , -1 };
 G__linked_taginfo G__G__GPadLN_TBox = { "TBox" , 99 , -1 };
 G__linked_taginfo G__G__GPadLN_TWbox = { "TWbox" , 99 , -1 };
 G__linked_taginfo G__G__GPadLN_TFrame = { "TFrame" , 99 , -1 };
@@ -7955,6 +7997,57 @@ G__linked_taginfo G__G__GPadLN_TPaveVar = { "TPaveVar" , 99 , -1 };
 G__linked_taginfo G__G__GPadLN_TTreeViewer = { "TTreeViewer" , 99 , -1 };
 G__linked_taginfo G__G__GPadLN_TPave = { "TPave" , 99 , -1 };
 G__linked_taginfo G__G__GPadLN_TPaveLabel = { "TPaveLabel" , 99 , -1 };
+
+/* Reset class/struct taginfo */
+extern "C" void G__cpp_reset_tagtableG__GPad() {
+  G__G__GPadLN_TClass.tagnum = -1 ;
+  G__G__GPadLN_TList.tagnum = -1 ;
+  G__G__GPadLN_TTimer.tagnum = -1 ;
+  G__G__GPadLN_TObject.tagnum = -1 ;
+  G__G__GPadLN_TString.tagnum = -1 ;
+  G__G__GPadLN_TNamed.tagnum = -1 ;
+  G__G__GPadLN_TVirtualPad.tagnum = -1 ;
+  G__G__GPadLN_EColor.tagnum = -1 ;
+  G__G__GPadLN_ELineStyle.tagnum = -1 ;
+  G__G__GPadLN_TAttPad.tagnum = -1 ;
+  G__G__GPadLN_TAttLine.tagnum = -1 ;
+  G__G__GPadLN_TAttFill.tagnum = -1 ;
+  G__G__GPadLN_TGToolTip.tagnum = -1 ;
+  G__G__GPadLN_TBox.tagnum = -1 ;
+  G__G__GPadLN_TWbox.tagnum = -1 ;
+  G__G__GPadLN_TFrame.tagnum = -1 ;
+  G__G__GPadLN_TAttText.tagnum = -1 ;
+  G__G__GPadLN_dA.tagnum = -1 ;
+  G__G__GPadLN_TView.tagnum = -1 ;
+  G__G__GPadLN_TCanvas.tagnum = -1 ;
+  G__G__GPadLN_TPadView3D.tagnum = -1 ;
+  G__G__GPadLN_TPad.tagnum = -1 ;
+  G__G__GPadLN_TAttCanvas.tagnum = -1 ;
+  G__G__GPadLN_TCanvasImp.tagnum = -1 ;
+  G__G__GPadLN_ECanvasEditMode.tagnum = -1 ;
+  G__G__GPadLN_TContextMenu.tagnum = -1 ;
+  G__G__GPadLN_TControlBar.tagnum = -1 ;
+  G__G__GPadLN_TControlBarButton.tagnum = -1 ;
+  G__G__GPadLN_TControlBarImp.tagnum = -1 ;
+  G__G__GPadLN_TSlider.tagnum = -1 ;
+  G__G__GPadLN_TSliderBox.tagnum = -1 ;
+  G__G__GPadLN_TClassTree.tagnum = -1 ;
+  G__G__GPadLN_TDialogCanvas.tagnum = -1 ;
+  G__G__GPadLN_TFitPanel.tagnum = -1 ;
+  G__G__GPadLN_TFitPanelGraph.tagnum = -1 ;
+  G__G__GPadLN_TDrawPanelHist.tagnum = -1 ;
+  G__G__GPadLN_TButton.tagnum = -1 ;
+  G__G__GPadLN_TGroupButton.tagnum = -1 ;
+  G__G__GPadLN_TAttLineCanvas.tagnum = -1 ;
+  G__G__GPadLN_TAttFillCanvas.tagnum = -1 ;
+  G__G__GPadLN_TAttTextCanvas.tagnum = -1 ;
+  G__G__GPadLN_TAttMarkerCanvas.tagnum = -1 ;
+  G__G__GPadLN_TTree.tagnum = -1 ;
+  G__G__GPadLN_TPaveVar.tagnum = -1 ;
+  G__G__GPadLN_TTreeViewer.tagnum = -1 ;
+  G__G__GPadLN_TPave.tagnum = -1 ;
+  G__G__GPadLN_TPaveLabel.tagnum = -1 ;
+}
 
 extern "C" void G__cpp_setup_tagtableG__GPad() {
 
@@ -8005,7 +8098,7 @@ class G__cpp_setup_initG__GPad {
 G__cpp_setup_initG__GPad G__cpp_setup_initializerG__GPad;
 
 //
-// File generated by /user/brun/root/bin/rootcint at Thu Dec 17 09:30:54 1998.
+// File generated by /home/rdm/root/bin/rootcint at Mon Mar  8 12:34:25 1999.
 // Do NOT change. Changes will be lost next time file is generated
 //
 

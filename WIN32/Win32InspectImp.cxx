@@ -1,3 +1,4 @@
+//*CMZ :  2.21/00 26/12/98  22.00.07  by  Valery Fine(fine@mail.cern.ch)
 //*CMZ :  2.00/11 19/07/98  16.01.04  by  Valery Fine(fine@mail.cern.ch)
 //*CMZ :  1.03/09 07/12/97  12.33.25  by  Fons Rademakers
 //*-- Author :    Valery Fine(fine@vxcern.cern.ch)   09/12/96
@@ -118,7 +119,9 @@ void TWin32InspectImp::MakeHeaders()
   headers[2] = "Title";
 
   Int_t widths[]  = {96,120,320};
-  ((TWin32ListViewCtrl *)GetCommCtrl())->AddColumns((const char **)headers,3,widths);
+  TWin32ListViewCtrl *ctrl = ( TWin32ListViewCtrl *)GetCommCtrl();
+  if (!ctrl) return;
+  ctrl->AddColumns((const char **)headers,3,widths);
 }
 
 //______________________________________________________________________________

@@ -1,5 +1,5 @@
-/*CMZ :  2.20/05 09/12/98  15.15.15  by  Rene Brun*/
-/*-- Author :    Masaharu Goto   08/12/98*/
+/*CMZ :  2.21/08 17/03/99  13.13.42  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   17/03/99*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -673,12 +673,27 @@ int nosemic;
       if('\n'==c || '\r'==c) break;
       if('\\'==c) {
 	c=G__fgetc();
+#ifndef G__OLDIMPLEMENTATION973
+	/* Things got very complicated here, No one is sure which of
+	 * 973, 969, 948 is good */
+	if('\n'==c) continue;
+	if('\r'==c) c=G__fgetc();
+#else /* ON973 */
+#ifndef G__OLDIMPLEMENTATION969
+	if('\r'==c) {
+	  c=G__fgetc();
+	  if('\n'!=c) fseek(G__ifile.fp,-1,SEEK_CUR);
+	  continue;
+	}
+	if('\n'==c) continue;
+#else /* ON969 */
 #ifndef G__OLDIMPLEMENTATION948
-        if('\n'==c) continue;
-        if('\r'==c) c=G__fgetc();
-#else
+	if('\r'==c||'\n'==c) continue;
+#else /* ON948 */
 	if('\r'==c||'\n'==c) c=G__fgetc();
-#endif
+#endif /* ON948 */
+#endif /* ON969 */
+#endif /* ON973 */
       }
 
       if(';'==c) {

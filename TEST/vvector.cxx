@@ -1,3 +1,4 @@
+//*CMZ :  2.21/02 14/01/99  17.50.27  by  Fons Rademakers
 //*CMZ :  2.00/00 17/02/98  11.46.12  by  Fons Rademakers
 //*CMZ :  1.03/09 10/12/97  11.58.49  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   14/11/97
@@ -96,6 +97,19 @@ void test_allocation()
 //------------------------------------------------------------------------
 //                Test uniform element operations
 //
+class SinAction : public TElementAction {
+   void Operation(Real_t &element) { element = TMath::Sin(element); }
+   public:
+      SinAction() { }
+};
+
+class CosAction : public TElementPosAction {
+   Double_t factor;
+   void Operation(Real_t &element) { element = TMath::Cos(factor*fI); }
+   public:
+      CosAction(Int_t no_elems): factor(2*TMath::Pi()/no_elems) { }
+};
+
 void test_element_op(int vsize)
 {
    const double pattern = TMath::Pi();
@@ -181,20 +195,10 @@ void test_element_op(int vsize)
       cout << "\nCheck out to see that sin^2(x) + cos^2(x) = 1" << endl;
       for (i = v.GetLwb(); i <= v.GetUpb(); i++)
          v(i) = 2*TMath::Pi()/v.GetNoElements() * i;
-      class SinAction : public TElementAction {
-         void Operation(Real_t &element) { element = TMath::Sin(element); }
-         public: SinAction() {}
-      };
       SinAction s;
       v.Apply(s);
       TVector v2 = v;
 
-      class CosAction : public TElementPosAction {
-         Double_t factor;
-         void Operation(Real_t &element) { element = TMath::Cos(factor*fI); }
-         public:
-         CosAction(Int_t no_elems): factor(2*TMath::Pi()/no_elems) {}
-      };
       CosAction c(v.GetNoElements());
       v1.Apply(c);
       TVector v3 = v1;

@@ -1,5 +1,5 @@
-/*CMZ :  2.20/04 08/12/98  16.25.24  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   08/12/98*/
+/*CMZ :  2.21/08 17/03/99  13.13.39  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   17/03/99*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -575,7 +575,7 @@ int tagnum,typenum;      /* overrides global variables */
 	char *pwf=strchr(new_name,'[');
 	if(pwf) {
 	  char *pwf2=strchr(pwf+1,'[');
-	  if(pwf2) G__asm_noverflow=0; /* f(T a[][10]) */
+	  if(pwf2) G__abortbytecode(); /* f(T a[][10]) */
 	  else if(']' != *(++pwf)) {   /* f(T a[10]) -> f(T a[]) */
 	    *(pwf++) = ']';
 	    *pwf = 0;
@@ -725,7 +725,22 @@ int tagnum,typenum;      /* overrides global variables */
 	  else
 	    sprintf(temp1,"%s((%s)%ld)",G__struct.name[tagnum]
 		    ,G__struct.name[tagnum],reg.obj.i);
+#ifndef G__OLDIMPLEMENTATION979
+	  if(-1!=G__struct.parent_tagnum[tagnum]) {
+            int store_exec_memberfunc=G__exec_memberfunc;
+            int store_memberfunc_tagnum=G__memberfunc_tagnum;
+            G__exec_memberfunc=1;
+            G__memberfunc_tagnum=G__struct.parent_tagnum[tagnum];
+	    reg = G__getfunction(temp1,&known,G__CALLCONSTRUCTOR);
+            G__exec_memberfunc=store_exec_memberfunc;
+            G__memberfunc_tagnum=store_memberfunc_tagnum;
+	  }
+          else {
+	    reg = G__getfunction(temp1,&known,G__CALLCONSTRUCTOR);
+          }
+#else
 	  reg = G__getfunction(temp1,&known,G__CALLCONSTRUCTOR);
+#endif
 	  G__globalvarpointer = G__int(reg);
 	  G__cppconstruct = 1;
 	  G__letvariable(new_name,G__null,&G__global,G__p_local);
@@ -746,6 +761,18 @@ int tagnum,typenum;      /* overrides global variables */
       G__ansiheader=1;
 
       G__globalvarpointer = G__PVOID;
+
+#ifndef G__OLDIMPLEMENTATION989
+#ifdef G__ASM
+      if(0==new_name[0]) {
+#ifdef G__ASM_DBG
+        if(G__asm_dbg) fprintf(G__serr,"%3x: POP\n",G__asm_cp);
+#endif
+	G__asm_inst[G__asm_cp] = G__POP;
+	G__inc_cp_asm(1,0);
+#endif
+#endif
+      }
 
       /* end of ANSI parameter header if cin==')'
        *   funcname(type var1 , type var2,...)
@@ -842,6 +869,9 @@ int tagnum,typenum;      /* overrides global variables */
 	 * a funciton definition */
 	if(G__def_struct_member!=0  || 	
 	   ((!isdigit(cin))&&cin!='"'&&cin!='\''&&cin!='.'&&cin!='-'&&
+#ifndef G__OLDIMPLEMENTATION990
+	    cin!='+'&&
+#endif
 	    cin!='*'&&cin!='&')) {
 	
 	  /* It is clear that above check is not sufficient to distinguish
@@ -908,7 +938,11 @@ int tagnum,typenum;      /* overrides global variables */
 	}
 #endif
 
+#ifndef G__OLDIMPLEMENTATION992
+	if(-1==G__tagnum||'u'!=var_type||'*'==new_name[0]) {
+#else
 	if(-1==G__tagnum) {
+#endif
 #ifndef G__OLDIMPLEMENTATION838
 	  if(tolower(G__var_type)!='c' && strchr(temp,',')) {
 	    reg = G__null;
@@ -1019,11 +1053,17 @@ int tagnum,typenum;      /* overrides global variables */
 	  G__prerun = store_prerun;
 #endif
 	  G__cppconstruct = 1;
+#ifndef G__OLDIMPLEMENTATION991
+	  if(G__globalvarpointer||G__no_exec_compile)
+#else
 	  if(G__globalvarpointer)
+#endif
+	  {
 	    G__letvariable(new_name,G__null,&G__global,G__p_local);
+	  }
 #ifndef G__OLDIMPLEMENTATION831
 	  else if(G__asm_wholefunction) {
-	    G__asm_noverflow=0;
+	    G__abortbytecode();
 	    G__asm_wholefunc_default_cp=0;
 	    G__no_exec=1;
 	    G__return=G__RETURN_NORMAL;
@@ -1255,9 +1295,22 @@ int tagnum,typenum;      /* overrides global variables */
 	}
 	else if('u'==var_type&&'*'==new_name[0]&&0==strncmp(temp,"new ",4)){
 	  reg = G__getpower(temp);
+#ifndef G__OLDIMPLEMENTATION1006
+	  if('U'!=reg.type && 'Y'!=reg.type && 0!=reg.obj.i) {
+	    G__assign_error(new_name+1);
+	    reg = G__null;
+	  }
+#endif
 	}
 	else {
 	  reg = G__getexpr(temp);
+#ifndef G__OLDIMPLEMENTATION1006
+	  if('u'==var_type&&'*'==new_name[0]&&'U'!=reg.type&&0!=reg.obj.i
+	     && 'Y'!=reg.type) {
+	    G__assign_error(new_name+1);
+	    reg = G__null;
+	  }
+#endif
 	}	
       }
 #ifndef G__OLDIMPLEMENTATION737
@@ -1519,7 +1572,16 @@ int tagnum,typenum;      /* overrides global variables */
 		G__globalvarpointer=G__PVOID;
 	      }
 	      else {
+#ifndef G__OLDIMPLEMENTATION986
+		/* There are similar cases above, but they are either
+                 * default ctor or precompiled class which should be fine */
+                int store_static_alloc3=G__static_alloc;
+		G__static_alloc=0;
+#endif
 		G__getfunction(temp,&known,G__CALLCONSTRUCTOR);
+#ifndef G__OLDIMPLEMENTATION986
+                G__static_alloc=store_static_alloc3;
+#endif
 	      }
 	      G__decl=1;
 	      if(G__return>G__RETURN_NORMAL) {
@@ -1560,7 +1622,11 @@ int tagnum,typenum;      /* overrides global variables */
 	      G__tagnum = store_tagnumB;
 	      G__typenum = store_typenumB;
 	      if(-1==G__struct.iscpplink[tagnum]) {
+#ifndef G__OLDIMPLEMENTATION983
+		if(reg.tagnum==tagnum && 'u'==reg.type) {
+#else
 		if(reg.tagnum>=0) {
+#endif
 		  if(reg.obj.i<0)
 		    sprintf(temp,"%s((%s)(%ld))" ,G__struct.name[tagnum]
 			    ,G__struct.name[tagnum] ,G__int(reg));
@@ -1573,7 +1639,22 @@ int tagnum,typenum;      /* overrides global variables */
 		  G__valuemonitor(reg,tttt);
 		  sprintf(temp,"%s(%s)",G__struct.name[tagnum],tttt);
 		}
+#ifndef G__OLDIMPLEMENTATION979
+		if(-1!=G__struct.parent_tagnum[tagnum]) {
+                  int store_exec_memberfunc=G__exec_memberfunc;
+                  int store_memberfunc_tagnum=G__memberfunc_tagnum;
+                  G__exec_memberfunc=1;
+                  G__memberfunc_tagnum=G__struct.parent_tagnum[tagnum];
+		  reg=G__getfunction(temp,&known,G__CALLCONSTRUCTOR);
+                  G__exec_memberfunc=store_exec_memberfunc;
+                  G__memberfunc_tagnum=store_memberfunc_tagnum;
+		}
+                else {
+		  reg=G__getfunction(temp,&known,G__CALLCONSTRUCTOR);
+                }
+#else
 		reg=G__getfunction(temp,&known,G__CALLCONSTRUCTOR);
+#endif
 		G__globalvarpointer=G__int(reg);
 		G__cppconstruct=1;
 		G__letvariable(new_name,G__null,&G__global,G__p_local);
@@ -1753,8 +1834,10 @@ char *new_name;
 
   /* G__ASSERT(0==G__store_struct_offset); */
 
+#ifdef G__OLDIMPLEMENTATION987
 #ifdef G__ASM
-  G__asm_noverflow=0;
+  G__abortbytecode();
+#endif
 #endif
 
   /* separate variable name header */
@@ -1780,6 +1863,12 @@ char *new_name;
       strcpy(name,expr);
     }
   }
+
+#ifndef G__OLDIMPLEMENTATION987
+#ifdef G__ASM
+  G__abortbytecode();
+#endif
+#endif
 
   /* calculate hash */
   G__hash(name,hash,i)
@@ -2039,7 +2128,7 @@ char *new_name;
   /* G__ASSERT(0==G__store_struct_offset); */
 
 #ifdef G__ASM
-  G__asm_noverflow=0;
+  G__abortbytecode();
 #endif
 
   /* separate variable name header */
@@ -2143,7 +2232,7 @@ char *new_name;
     /* set isauto flag and reset varlabel[ig15][1] */
 #ifndef G__OLDIMPLEMENTATION877
     if(G__asm_wholefunction) {
-      G__asm_noverflow=0;
+      G__abortbytecode();
       G__genericerror((char*)NULL);
     }
 #endif

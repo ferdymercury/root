@@ -1,3 +1,4 @@
+//*CMZ :  2.21/06 14/02/99  18.23.35  by  Fons Rademakers
 //*CMZ :  2.20/00 22/11/98  19.29.37  by  Fons Rademakers
 //*CMZ :  2.00/13 29/10/98  08.32.56  by  Fons Rademakers
 //*CMZ :  2.00/10 10/07/98  09.59.46  by  Rene Brun
@@ -194,9 +195,18 @@ void TRint::Run(Bool_t retrn)
       RETRY {
          while ((file = (TObjString *)next())) {
             char cmd[256];
-            Printf("\nProcessing %s...",(const char*)file->String());
+            if (file->String().Contains(".root")) {
+               const char *rfile = (const char*)file->String();
+               Printf("\nAttaching file %s...", rfile);
+               char *base = StrDup(gSystem->BaseName(rfile));
+               char *s = strchr(base, '.'); *s = 0;
+               sprintf(cmd, "TFile *%s = TFile::Open(\"%s\")", base, rfile);
+               delete [] base;
+            } else {
+               Printf("\nProcessing %s...", (const char*)file->String());
+               sprintf(cmd, ".x %s", (const char*)file->String());
+            }
             Getlinem(kCleanUp, 0);
-            sprintf(cmd, ".x %s", (const char*)file->String());
             Gl_histadd(cmd);
             fNcmd++;
             ProcessLine(cmd);

@@ -1,3 +1,6 @@
+//*CMZ :  2.21/05 09/02/99  11.46.45  by  Rene Brun
+//*CMZ :  2.21/04 02/02/99  17.49.32  by  Rene Brun
+//*CMZ :  2.21/01 14/01/99  13.35.40  by  Fons Rademakers
 //*CMZ :  2.20/00 25/11/98  18.30.31  by  Fons Rademakers
 //*CMZ :  2.00/13 16/10/98  12.40.04  by  Valery Fine(fine@mail.cern.ch)
 //*CMZ :  2.00/11 26/08/98  12.31.36  by  Valery Fine(fine@mail.cern.ch)
@@ -894,11 +897,11 @@ const char *TWinNTSystem::WorkingDirectory(char driveletter)
 }
 
 //______________________________________________________________________________
-const char *TWinNTSystem::HomeDirectory()
+const char *TWinNTSystem::HomeDirectory(const Char_t *userName)
 {
    // Return the user's home directory.
 
-   return WinNTHomedirectory(0);
+   return WinNTHomedirectory(userName);
 }
 
 //---- Paths & Files -----------------------------------------------------------
@@ -1155,10 +1158,7 @@ needshell:
 
    // escape shell quote characters
    //  EscChar(patbuf, stuffedPat, sizeof(stuffedPat), shellStuff, shellEscape);
-
-   // replace all $( and ) with %
-     patbuf0.ReplaceAll("$(","%");
-     patbuf0.ReplaceAll(")","%");
+     patbuf0 = ExpandFileName(patbuf0.Data());
      Int_t lbuf = ExpandEnvironmentStrings(
                                  patbuf0.Data(), // pointer to string with environment variables
                                  cmd,            // pointer to string with expanded environment variables
@@ -1822,9 +1822,10 @@ int TWinNTSystem::RecvRaw(int sock, void *buf, int length, int opt)
    // Receive exactly length bytes into buffer. Use opt to receive out-of-band
    // data or to have a peek at what is in the buffer (see TSocket). Buffer
    // must be able to store at least lenght bytes. Returns the number of
-   // bytes received or -1 in case of error, -2 in case of MSG_OOB
-   // and errno == EWOULDBLOCK, -3 in case of MSG_OOB and errno == EINVAL
-   // and -4 in case of kNonBlock and errno == EWOULDBLOCK.
+   // bytes received (can be 0 if other side of connection was closed) or -1
+   // in case of error, -2 in case of MSG_OOB and errno == EWOULDBLOCK, -3
+   // in case of MSG_OOB and errno == EINVAL and -4 in case of kNoBlock and
+   // errno == EWOULDBLOCK.
 
    int flag;
 
@@ -1844,7 +1845,7 @@ int TWinNTSystem::RecvRaw(int sock, void *buf, int length, int opt)
    }
 
    int n;
-   if ((n = WinNTRecv(sock, buf, length, flag)) < 0) {
+   if ((n = WinNTRecv(sock, buf, length, flag)) <= 0) {
       if (n == -1)
          Error("RecvRaw", "cannot receive buffer");
       return n;
@@ -2164,7 +2165,7 @@ if (signal_map[sig].handler != handler) {
       sigact.sa_flags = 0;
 #endif
       if (sigaction(signal_map[sig].code, &sigact, NULL) < 0)
-         ::SysError("WinNTSignal", "sigaction");
+         ::SysError("TWinNTSystem::WinNTSignal", "sigaction");
    }
 #endif
 }
@@ -2261,7 +2262,7 @@ int TWinNTSystem::WinNTNonblock(int fd)
       return -1;
 
 //   if ((val = fcntl(fd, F_GETFL, 0)) < 0) {
-//      ::SysError("WinNTNonblock", "fcntl F_GETFL");
+//      ::SysError("TWinNTSystem::WinNTNonblock", "fcntl F_GETFL");
 //      return val;
 //   }
 //#if 1 || defined(R__SUN)
@@ -2270,7 +2271,7 @@ int TWinNTSystem::WinNTNonblock(int fd)
 //   val |= O_NONBLOCK;
 //#endif
 //   if ((val = fcntl(fd, F_SETFL, val)) < 0) {
-//     // ::SysError("WinNTNonblock:", "fcntl F_SETFL");
+//     // ::SysError("TWinNTSystem::WinNTNonblock:", "fcntl F_SETFL");
 //      return val;
 //   }
    return 0;
@@ -2288,7 +2289,7 @@ int TWinNTSystem::WinNTIoctl(int fd, int code, void *vp)
 #if 0
 //   rc = ioctl(fd, code, vp);
    if (rc == -1)
-      ::SysError("WinNTIoctl", "ioctl");
+      ::SysError("TWinNTSystem::WinNTIoctl", "ioctl");
    return rc;
 #endif
 }
@@ -2433,12 +2434,12 @@ int TWinNTSystem::WinNTTcpConnect(const char *hostname, int port)
    // Create socket
    SOCKET sock;
    if ((sock = socket(AF_INET, SOCK_STREAM, 0)) == INVALID_SOCKET) {
-      ::SysError("WinNTConnectTcp", "socket");
+      ::SysError("TWinNTSystem::WinNTConnectTcp", "socket");
       return -1;
    }
 
    if (connect(sock, (struct sockaddr*) &server, sizeof(server)) == INVALID_SOCKET) {
-      //::SysError("UnixConnectTcp", "connect");
+      //::SysError("TWinNTSystem::UnixConnectTcp", "connect");
       closesocket(sock);
       return -1;
    }
@@ -2467,7 +2468,7 @@ int TWinNTSystem::WinNTWinNTConnect(int port)
    }
 
    if (connect(sock, (struct sockaddr*) &unserver, strlen(unserver.sun_path)+2) < 0) {
-      // ::SysError("UnixUnixConnect", "connect");
+      // ::SysError("TWinNTSystem::UnixUnixConnect", "connect");
       close(sock);
       return -1;
    }
@@ -2493,7 +2494,7 @@ int TWinNTSystem::WinNTTcpService(int port, Bool_t reuse, int backlog)
    // Create tcp socket
    SOCKET sock;
    if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
-      ::SysError("WinNTTcpService", "socket");
+      ::SysError("TWinNTSystem::WinNTTcpService", "socket");
       return -1;
    }
 
@@ -2508,13 +2509,13 @@ int TWinNTSystem::WinNTTcpService(int port, Bool_t reuse, int backlog)
 
    // Bind socket
    if (bind(sock, (struct sockaddr*) &inserver, sizeof(inserver)) == SOCKET_ERROR) {
-      ::SysError("WinNTTcpService", "bind");
+      ::SysError("TWinNTSystem::WinNTTcpService", "bind");
       return -2;
    }
 
    // Start accepting connections
    if (listen(sock, backlog)==SOCKET_ERROR) {
-      ::SysError("WinNTTcpService", "listen");
+      ::SysError("TWinNTSystem::WinNTTcpService", "listen");
       return -3;
    }
 
@@ -2546,21 +2547,21 @@ int TWinNTSystem::WinNTWinNTService(int port, int backlog)
 #endif
    // Create socket
    if ((sock = socket(AF_UNIX, SOCK_STREAM, 0)) == INVALID_SOCKET) {
-      ::SysError("WinNTWinNTService", "socket");
+      ::SysError("TWinNTSystem::WinNTWinNTService", "socket");
       return -1;
    }
 #if 0
    //*-* Winsocket defines the sockaddr_in type sockaddr
 
    if (bind(sock, (struct sockaddr*) &unserver, strlen(unserver.sun_path)+2)) {
-      ::SysError("WinNTWinNTService", "bind");
+      ::SysError("TWinNTSystem::WinNTWinNTService", "bind");
       return -1;
    }
 #endif
 
    // Start accepting connections
    if (listen(sock, backlog)) {
-      ::SysError("WinNT WInNTService", "listen");
+      ::SysError("TWinNTSystem::WinNTWInNTService", "listen");
       return -1;
    }
 
@@ -2583,6 +2584,8 @@ int TWinNTSystem::WinNTRecv(int socket, void *buffer, int length, int flag)
 
    for (n = 0; n < length; n += nrecv) {
       if ((nrecv = recv(sock, buf+n, length-n, flag)) <= 0) {
+         if (nrecv == 0)
+            break;        // EOF
          if (flag == MSG_OOB) {
             if (WSAGetLastError() == WSAEWOULDBLOCK)
                return -2;
@@ -2592,7 +2595,7 @@ int TWinNTSystem::WinNTRecv(int socket, void *buffer, int length, int flag)
          if (WSAGetLastError() == WSAEWOULDBLOCK)
             return -4;
          else {
-            ::SysError("WinNTRecv", "recv");
+            ::SysError("TWinNTSystem::WinNTRecv", "recv");
             return -1;
          }
       }
@@ -2613,7 +2616,7 @@ int TWinNTSystem::WinNTSend(int socket, const void *buffer, int length, int flag
 
    for (n = 0; n < length; n += nsent) {
       if ((nsent = send(sock, buf+n, length-n, flag)) < 0) {
-         ::SysError("WinNTSend", "send");
+         ::SysError("TWinNTSystem::WinNTSend", "send");
          return -1;
       }
    }
@@ -2700,7 +2703,7 @@ Func_t TWinNTSystem::WinNTDynFindSymbol(const char *lib, const char *entry)
    if (handle = FindDynLib(lib)) {
       Func_t addr;
       if (shl_findsym(&handle, entry, TYPE_PROCEDURE, addr) == -1)
-         ::SysError("WinNTDynFindSymbol", "shl_findsym");
+         ::SysError("TWinNTSystem::WinNTDynFindSymbol", "shl_findsym");
       return addr;
    }
    return 0;
@@ -2793,6 +2796,5 @@ void TWinNTSystem::WinNTDynUnload(const char *lib)
 
    if (handle = FindDynLib(lib))
       if (cxxshl_unload(handle) == -1)
-         ::SysError("WinNTDynUnLoad", "could not unload library %s", lib);
+         ::SysError("TWinNTSystem::WinNTDynUnLoad", "could not unload library %s", lib);
 #endif
-}

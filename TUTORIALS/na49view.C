@@ -1,3 +1,4 @@
+//*CMZ :  2.21/01 12/01/99  18.33.29  by  Fons Rademakers
 //*CMZ :  0.90/08 02/12/96  12.02.58  by  Rene Brun
 //*-- Author :  Rene Brun
 {
@@ -15,7 +16,7 @@
    tof = new TPad("tof","One Time Of Flight element",0.52,0.02,0.98,0.82,28);
    all->Draw();
    tof->Draw();
-   na49title = new TPaveLabel(0.1,0.86,0.9,0.98,"Two views of the NA49 detector");
+   na49title = new TPaveLabel(0.04,0.86,0.96,0.98,"Two views of the NA49 detector");
    na49title->SetFillColor(32);
    na49title->Draw();
    //

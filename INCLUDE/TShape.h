@@ -1,3 +1,5 @@
+//*CMZ :  2.21/07 21/02/99  19.03.15  by  Valery Fine(fine@mail.cern.ch)
+//*CMZ :  2.21/00 03/01/99  23.00.14  by  Valery Fine(fine@mail.cern.ch)
 //*CMZ :  2.00/05 15/04/98  09.27.11  by  Rene Brun
 //*CMZ :  1.03/09 05/12/97  13.23.55  by  Fons Rademakers
 //*-- Author :    Nenad Buncic   17/09/95
@@ -65,7 +67,7 @@ protected:
    Int_t           fNumber;      //Shape number
    Int_t           fVisibility;  //Visibility flag
    TMaterial       *fMaterial;   //Pointer to material
-
+   Int_t           ShapeDistancetoPrimitive(Int_t numPoints, Int_t px, Int_t py);
 public:
                    TShape();
                    TShape(Text_t *name, Text_t *title, Text_t *material);
@@ -76,8 +78,9 @@ public:
            Int_t   GetVisibility() {return fVisibility;}
    virtual void    Paint(Option_t *option="");
    virtual void    PaintGLPoints(Float_t *vertex);
-   virtual void    PaintShape(X3DBuffer *buff);
+   virtual void    PaintShape(X3DBuffer *buff, Bool_t rangeView=kFALSE);
    virtual void    SetName(const Text_t *name);
+   virtual void    SetPoints(Float_t *buffer);
    virtual void    SetVisibility(Int_t vis) {fVisibility = vis;} // *MENU*
 
    ClassDef(TShape,1)  //Basic shape

@@ -1,3 +1,4 @@
+//*CMZ :  2.21/03 15/01/99  18.28.11  by  Fons Rademakers
 //*CMZ :  1.03/09 16/12/97  16.17.47  by  Rene Brun
 //*-- Author :    Fons Rademakers   04/11/97
 
@@ -86,7 +87,9 @@ public:
    TVector(Int_t n);
    TVector(Int_t lwb, Int_t upb);
    TVector(const TVector &another);
+#ifndef __CINT__
    TVector(Int_t lwb, Int_t upb, Double_t iv1, ...);
+#endif
 
    virtual ~TVector();
 

@@ -1,3 +1,5 @@
+//*CMZ :  2.21/05 08/02/99  12.42.39  by  Fons Rademakers
+//*CMZ :  2.21/04 27/01/99  09.57.44  by  Fons Rademakers
 //*CMZ :  2.00/10 23/07/98  14.34.20  by  akiya miyamoto
 //*CMZ :  2.00/07 15/05/98  16.46.09  by  Rene Brun
 //*CMZ :  2.00/06 12/05/98  16.28.21  by  Rene Brun
@@ -34,7 +36,7 @@
 #define HAVE_UTMPX_H
 #define UTMP_NO_ADDR
 #endif
-#if defined(__alpha) || defined(_AIX)
+#if defined(__alpha) || defined(_AIX) || defined(__FreeBSD__)
 #define UTMP_NO_ADDR
 #endif
 
@@ -43,8 +45,8 @@
 # include <utmpx.h>
 # define STRUCT_UTMP struct utmpx
 # else
-# if defined(__linux) && defined(__powerpc)
-        extern "C" {
+# if defined(__linux) && defined(__powerpc) && (__GNUC_MINOR__ < 90)
+   extern "C" {
 # endif
 # include <utmp.h>
 # define STRUCT_UTMP struct utmp
@@ -162,7 +164,8 @@ static void SetLibraryPath()
 
    static char msg[512];
 
-#if defined(__linux) || defined(__alpha) || defined(__sgi) || defined(__sun)
+#if defined(__linux) || defined(__alpha) || defined(__sgi) || defined(__sun) || \
+    defined(__FreeBSD__)
    if (getenv("LD_LIBRARY_PATH"))
       sprintf(msg, "LD_LIBRARY_PATH=%s/lib:%s", getenv("ROOTSYS"),
                                                 getenv("LD_LIBRARY_PATH"));

@@ -1,3 +1,4 @@
+//*CMZ :  2.21/06 15/02/99  10.06.27  by  Rene Brun
 //*CMZ :  2.00/06 13/05/98  09.21.08  by  Kaori Wada
 //*-- Author :    Fons Rademakers   26/04/98
 
@@ -587,8 +588,6 @@ Int_t TGText::UpSearchBM(const TString &s, const char *searchPattern, Bool_t cs)
       if (iret == kNPOS && ibeg != 0) return ibeg-1;
       ibeg = iret + 1;
    }
-
-   return kNPOS;
 }
 
 //______________________________________________________________________________

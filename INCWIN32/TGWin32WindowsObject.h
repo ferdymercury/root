@@ -1,3 +1,4 @@
+//*CMZ :  2.21/06 12/02/99  17.18.10  by  Valery Fine(fine@vxcern.cern.ch)
 //*CMZ :  1.03/09 16/12/97  11.11.14  by  Valery Fine(fine@mail.cern.ch)
 //*-- Author :    Valery Fine(fine@vxcern.cern.ch)   16/08/96
 #ifndef ROOT_TGWin32WindowsObject
@@ -20,7 +21,7 @@ typedef enum { kS1,       kSMenuBreak,kSMenuBarBreak,
                kMFile,    kMEdit,     kMView, kMOptions,   kHelp,  kMInspector, kMClasses,
                kMNew,     kMOpen,kS12,kMSave, kMSaveAs,    kS2,kMPrint,kS3, kMClose, kS4, kMQuit, kMExit,
                kMUnDo,kS5,kMEdtor,kS6,kMClearPad,  kMClearCanvas,
-               kMColors, kMFonts,     kMMarkers,   kMIconify,     kMX3D,
+               kMColors, kMFonts,     kMMarkers,   kMIconify,     kMX3D, kS7, kMInterrupt,
                kMEventStatus, kS9,  kMAutoFit,kMFitCanvas,kS10,kMRefresh,kS11,kMOptStat,kMOptHTitle,kMOptFit,kMEditHist,
                kEndOfMenu
                } EMenuItems;

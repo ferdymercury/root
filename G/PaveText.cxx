@@ -1,3 +1,4 @@
+//*CMZ :  2.21/05 07/02/99  11.37.56  by  Rene Brun
 //*CMZ :  2.20/05 15/12/98  09.17.21  by  Rene Brun
 //*CMZ :  2.00/13 30/10/98  09.17.34  by  Valery Fine
 //*CMZ :  2.00/11 18/08/98  21.32.38  by  Rene Brun
@@ -377,7 +378,7 @@ void TPaveText::PaintPrimitives(Int_t mode)
       textsize = 0.85*yspace/(y2 - y1);
       textsize        *= gPad->YtoPixel(y1) - gPad->YtoPixel(y2);
       if (fLongest*0.5*textsize > wxlabel) textsize = wxlabel/(fLongest*0.5);
-      if (textsize < 8) textsize = 8;
+      if (textsize < 6) textsize = 6;
       textsize        /= wpixels;
       if (mode == kDiamond) textsize *= 0.66;
       SetTextSize(textsize);

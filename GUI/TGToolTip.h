@@ -1,3 +1,4 @@
+//*CMZ :  2.21/05 08/02/99  10.40.15  by  Fons Rademakers
 //*CMZ :  2.00/01 13/03/98  11.39.22  by  Fons Rademakers
 //*CMZ :  2.00/00 22/02/98  20.04.03  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   22/02/98
@@ -37,6 +38,8 @@
 
 class TGLabel;
 class TTimer;
+class TVirtualPad;
+class TBox;
 
 
 class TGToolTip : public TGCompositeFrame {
@@ -44,15 +47,18 @@ class TGToolTip : public TGCompositeFrame {
 friend class TGClient;
 
 private:
-   TGLabel       *fLabel;   // help text
-   TGLayoutHints *fL1;      // layout used to place text in frame
-   TTimer        *fDelay;   // popup delay timer
-   const TGFrame *fWindow;  // frame to which tool tip is associated
+   TGLabel           *fLabel;   // help text
+   TGLayoutHints     *fL1;      // layout used to place text in frame
+   TTimer            *fDelay;   // popup delay timer
+   const TGFrame     *fWindow;  // frame to which tool tip is associated
+   const TVirtualPad *fPad;     // pad to which tooltip is associated
+   const TBox        *fBox;     // box in pad to which tooltip is associated
 
    static ULong_t fgLightYellowPixel;
 
 public:
    TGToolTip(const TGWindow *p, const TGFrame *f, const char *text, Long_t delayms);
+   TGToolTip(const TGWindow *p, const TBox *b, const char *text, Long_t delayms);
    virtual ~TGToolTip();
 
    virtual void DrawBorder();
@@ -61,6 +67,7 @@ public:
    void   Show(Int_t x, Int_t y);
    void   Hide();
    void   Reset();
+   void   Reset(const TVirtualPad *parent);
 
    ClassDef(TGToolTip,0)  //One line help text
 };

@@ -1,3 +1,4 @@
+//*CMZ :  2.21/07 28/02/99  13.13.36  by  Valery Fine(fine@mail.cern.ch)
 //*CMZ :  2.00/11 19/07/98  16.05.13  by  Valery Fine(fine@mail.cern.ch)
 //*CMZ :  1.03/09 16/12/97  11.50.10  by  Valery Fine(fine@mail.cern.ch)
 //*-- Author :    Valery Fine(fine@vxcern.cern.ch)   21/10/96
@@ -482,6 +483,7 @@ LRESULT APIENTRY TWin32BrowserImp::OnNotify(HWND hwnd, UINT uMsg, WPARAM wParam,
    RECT prc;
 //*-*  Get ctrl coordinat
    TObject *obj = (TObject *)ctrl->GetItemObject(&prc);
+   fBrowser->SetSelected(obj);
 //*-* Convert the ctrl coordinat to the Browser windows coordinats
    MapWindowPoints(ctrl->GetWindow(),hwnd,(POINT *)(&prc),2);
 //*-*     The TObject has been detected, create PopUp menu

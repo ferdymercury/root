@@ -1,5 +1,5 @@
-/*CMZ :  2.20/04 08/12/98  16.25.32  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   08/12/98*/
+/*CMZ :  2.21/08 17/03/99  13.13.45  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   17/03/99*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -1249,7 +1249,7 @@ char *tagnamein;
 #endif
 
 #ifdef G__ASM
-  G__asm_noverflow=0;
+  G__abortbytecode();
 #endif
 
   call_para.string=(char*)NULL;
@@ -1800,7 +1800,7 @@ int parent_tagnum;
 #endif /* ON682 */
   G__var_type = 'p';
   G__breaksignal=0;
-  G__asm_noverflow=0;
+  G__abortbytecode();
   G__no_exec_compile=0;
   G__func_now = -1;
   G__func_page = 0;
@@ -2371,6 +2371,9 @@ int funcmatch;
 #ifndef G__OLDIMPLEMENTATION687
   int env_tagnum=G__get_envtagnum();
   struct G__inheritance *baseclass;
+#ifndef G__OLDIMPLEMENTATION972
+  int store_friendtagnum = G__friendtagnum;
+#endif
 
   if(-1!=env_tagnum) baseclass = G__struct.baseclass[env_tagnum];
   else               baseclass = &G__globalusingnamespace;
@@ -2404,6 +2407,10 @@ int funcmatch;
     match_found:
 #endif
 
+#ifndef G__OLDIMPLEMENTATION972
+      G__friendtagnum = deftmpfunc->friendtagnum;
+#endif
+
       /* matches funcname and parameter,
        * then expand the template and parse as prerun */
       G__replacetemplate("",funcname
@@ -2419,6 +2426,10 @@ int funcmatch;
 			 ,deftmpfunc->parent_tagnum
 #endif
 			 );
+
+#ifndef G__OLDIMPLEMENTATION972
+      G__friendtagnum = store_friendtagnum;
+#endif
 
       /* call the expanded template function */
 #ifndef G__OLDIMPLEMENTATION712
@@ -2522,6 +2533,9 @@ fpos_t *ppos;
   G__hash(funcname,deftmpfunc->hash,tmp);
 #ifndef G__OLDIMPLEMENTATION687
   deftmpfunc->parent_tagnum = G__get_envtagnum();
+#endif
+#ifndef G__OLDIMPLEMENTATION972
+  deftmpfunc->friendtagnum = G__friendtagnum;
 #endif
 
   /**************************************************************

@@ -1,3 +1,4 @@
+*CMZ :  2.21/07 05/03/99  12.23.01  by  Rene Brun
 *CMZ :  0.80/00 23/07/96  19.41.41  by  Rene Brun
 *-- Author :    Rene Brun   04/12/95
 macro aliascreate
@@ -17,6 +18,7 @@ ALIAS/CREATE MAKE             'EXEC ROOT_MAKE'         C
 ALIAS/CREATE LIBS             'EXEC ROOT_LIBS'         C
 ALIAS/CREATE HTML             'EXEC ROOT_HTML'         C
 ALIAS/CREATE CCDEBUG          'EXEC compiler - g'      C
+ALIAS/CREATE CCPROF           'EXEC compiler - pg'     C
 ALIAS/CREATE CCOPT            'EXEC compiler - O'      C
 ALIAS/CREATE REMOVE           'EXEC remove'            C
 

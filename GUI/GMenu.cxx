@@ -1,4 +1,5 @@
-//*CMZ :  2.00/00 23/02/98  16.04.22  by  Fons Rademakers
+//*CMZ :  2.21/08 11/03/99  15.41.50  by  Fons Rademakers
+//*CMZ :  2.00/00 08/02/99  14.42.01  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   09/01/98
 
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
@@ -248,7 +249,7 @@ Bool_t TGMenuBar::HandleKey(Event_t *event)
 {
    // Handle keyboard events in a menu bar.
 
-   TGMenuTitle *target;
+   TGMenuTitle *target = 0;
 
    if (event->fType == kGKeyPress) {
 

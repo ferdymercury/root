@@ -1,3 +1,4 @@
+//*CMZ :  2.21/04 03/02/99  11.31.17  by  Fons Rademakers
 //*CMZ :  2.00/12 02/10/98  15.14.26  by  Fons Rademakers
 //*CMZ :  2.00/11 02/08/98  19.08.57  by  Fons Rademakers
 //*CMZ :  2.00/00 14/01/98  00.44.14  by  Fons Rademakers
@@ -69,6 +70,7 @@ public:
    virtual void DrawBorder();
    virtual TGDimension GetDefaultSize() const;
    const TGString *GetText() const { return fText; }
+   void SetText(TGString *text);
 
    ClassDef(TGTabElement,0)  // Little tab on tab widget
 };
@@ -98,7 +100,7 @@ friend class TGClient;
 protected:
    Int_t               fCurrent;        // index of current tab
    UInt_t              fTabh;           // tab height
-   TGCompositeFrame   *fContainer;      // current container
+   TGCompositeFrame   *fContainer;      // main container
    FontStruct_t        fFontStruct;     // font
    GContext_t          fNormGC;         // drawing context
 
@@ -120,9 +122,13 @@ public:
    virtual void              DrawBorder() { }
    virtual Bool_t            HandleButton(Event_t *event);
 
-   TGCompositeFrame *GetContainer() { return fContainer; }
-   Int_t             GetCurrent() { return fCurrent; }
-   UInt_t            GetTabHeight() { return fTabh; }
+   TGCompositeFrame *GetContainer() const { return fContainer; }
+   Int_t             GetCurrent() const { return fCurrent; }
+   TGCompositeFrame *GetTabContainer(Int_t tabIndex) const;
+   TGTabElement     *GetTabTab(Int_t tabIndex) const;
+   TGCompositeFrame *GetCurrentContainer() const { return GetTabContainer(fCurrent); }
+   TGTabElement     *GetCurrentTab() const { return GetTabTab(fCurrent); }
+   UInt_t            GetTabHeight() const { return fTabh; }
 
    ClassDef(TGTab,0)  // Tab widget
 };

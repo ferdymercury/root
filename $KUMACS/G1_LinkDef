@@ -1,3 +1,5 @@
+*CMZ :  2.21/07 03/03/99  10.26.04  by  Rene Brun
+*CMZ :  2.21/02 17/01/99  09.27.40  by  Rene Brun
 *CMZ :  2.00/11 07/08/98  21.59.00  by  Rene Brun
 *CMZ :  2.00/09 25/06/98  15.08.48  by  Fons Rademakers
 *-- Author :    Fons Rademakers   25/06/98
@@ -11,18 +13,19 @@
 #pragma link C++ class TArc;
 #pragma link C++ class TArrow;
 #pragma link C++ class TAttCanvas;
-#pragma link C++ class TAttPad;
+#pragma link C++ class TAttPad-;
 #pragma link C++ class TBox;
 #pragma link C++ class TColor;
 #pragma link C++ class TDiamond;
 #pragma link C++ class TEllipse;
 #pragma link C++ class TF1-;
-#pragma link C++ class TF2;
+#pragma link C++ class TF2-;
 #pragma link C++ class TF3;
 #pragma link C++ class TFrame;
 #pragma link C++ class TGaxis;
 #pragma link C++ class TGraph-;
 #pragma link C++ class TGraphErrors-;
+#pragma link C++ class TGraphAsymmErrors-;
 #pragma link C++ class TLatex;
 #pragma link C++ class TLine;
 #pragma link C++ class TMarker;

@@ -1,5 +1,5 @@
-//*CMZ :  2.20/04 08/12/98  16.25.35  by  Masaharu Goto
-//*-- Author :    Masaharu Goto   08/12/98
+//*CMZ :  2.21/08 17/03/99  13.13.46  by  Masaharu Goto
+//*-- Author :    Masaharu Goto   17/03/99
 /* /% C++ %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -609,7 +609,7 @@ void* G__ClassInfo::New()
   if(IsValid()) {
     long property;
     void *p;
-    G__value buf;
+    G__value buf=G__null;
     property = Property();
     if(property&G__BIT_ISCPPCOMPILED) {
       // C++ precompiled class,struct
@@ -762,6 +762,11 @@ long G__ClassInfo::ClassProperty()
   else {
     return(0);
   }
+}
+///////////////////////////////////////////////////////////////////////////
+struct G__friendtag* G__ClassInfo::GetFriendInfo() {
+  if(IsValid()) return(G__struct.friendtag[tagnum]);
+  else return 0;
 }
 ///////////////////////////////////////////////////////////////////////////
 #endif /* ON644 */

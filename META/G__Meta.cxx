@@ -1,5 +1,5 @@
-//*CMZ :  2.00/12 08/10/98  19.50.22  by  Fons Rademakers
-//*-- Author :    Fons Rademakers   08/10/98
+//*CMZ :  2.21/07 08/03/99  12.34.48  by  Fons Rademakers
+//*-- Author :    Fons Rademakers   08/03/99
 //*CMZ :  1.00/09 23/04/97  17.59.54  by  Rene Brun
 //*-- Author :    Rene Brun   23/04/97
 #if defined(__hpux) && !defined(__GNUG__)
@@ -109,6 +109,7 @@ extern G__linked_taginfo G__G__MetaLN_TToggleGroup;
 #undef malloc
 #endif
 
+extern "C" void G__cpp_reset_tagtableG__Meta();
 
 extern "C" void G__set_cpp_environmentG__Meta() {
   G__add_macro("__MAKECINT__");
@@ -127,8 +128,9 @@ extern "C" void G__set_cpp_environmentG__Meta() {
   G__add_compiledheader("TInterpreter.h");
   G__add_compiledheader("TToggle.h");
   G__add_compiledheader("TToggleGroup.h");
+  G__cpp_reset_tagtableG__Meta();
 }
-int G__cpp_dllrevG__Meta() { return(51111); }
+extern "C" int G__cpp_dllrevG__Meta() { return(51111); }
 
 /*********************************************************
 * Member function Interface Method
@@ -883,7 +885,7 @@ static int G__TInterpreter_SetClassInfo_0_2(G__value *result7,char *funcname,str
 }
 
 static int G__TInterpreter_Calc_1_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
-      G__letint(result7,105,(long)((TInterpreter*)(G__getstructoffset()))->Calc((const char*)G__int(libp->para[0])));
+      G__letint(result7,108,(long)((TInterpreter*)(G__getstructoffset()))->Calc((const char*)G__int(libp->para[0])));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
@@ -1442,7 +1444,7 @@ static int G__TCint_SetClassInfo_2_2(G__value *result7,char *funcname,struct G__
 }
 
 static int G__TCint_Calc_3_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
-      G__letint(result7,105,(long)((TCint*)(G__getstructoffset()))->Calc((const char*)G__int(libp->para[0])));
+      G__letint(result7,108,(long)((TCint*)(G__getstructoffset()))->Calc((const char*)G__int(libp->para[0])));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
@@ -3112,10 +3114,10 @@ extern "C" void G__cpp_setup_typetableG__Meta() {
    G__search_typename2("FreeHookFun_t",89,-1,0,
 -1);
    G__setnewtype(-1,NULL,0);
-   G__search_typename2("ReAllocFun_t",81,-1,2,
+   G__search_typename2("ReAllocFun_t",81,-1,0,
 -1);
    G__setnewtype(-1,NULL,0);
-   G__search_typename2("ReAllocCFun_t",81,-1,2,
+   G__search_typename2("ReAllocCFun_t",81,-1,0,
 -1);
    G__setnewtype(-1,NULL,0);
    G__search_typename2("Axis_t",102,-1,0,
@@ -3505,47 +3507,47 @@ static void G__setup_memfuncTDataType(void) {
 static void G__setup_memfuncTInterpreter(void) {
    /* TInterpreter */
    G__tag_memfunc_setup(G__get_linked_tagnum(&G__G__MetaLN_TInterpreter));
-   G__memfunc_setup("Execute",723,(G__InterfaceMethod)NULL,121,-1,-1,0,2,1,2,8,
+   G__memfunc_setup("Execute",723,(G__InterfaceMethod)NULL,121,-1,-1,0,2,1,2,0,
 "U 'TMethod' - 0 - method U 'TObjArray' - 0 - params",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("EndOfLineAction",1458,G__TInterpreter_EndOfLineAction_4_0,121,-1,-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("EndOfLineAction",1458,G__TInterpreter_EndOfLineAction_4_0,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,3);
    G__memfunc_setup("GetMore",691,G__TInterpreter_GetMore_5_0,105,-1,G__defined_typename("Int_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("GetPrompt",930,G__TInterpreter_GetPrompt_6_0,67,-1,-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("InitializeDictionaries",2288,G__TInterpreter_InitializeDictionaries_7_0,105,-1,G__defined_typename("Int_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("LoadMacro",882,G__TInterpreter_LoadMacro_8_0,121,-1,-1,0,1,1,1,8,"C - - 0 - filename",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("ProcessLine",1127,G__TInterpreter_ProcessLine_9_0,105,-1,G__defined_typename("Int_t"),0,1,1,1,8,"C - - 0 - line",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("ProcessLineSynch",1644,G__TInterpreter_ProcessLineSynch_0_1,105,-1,G__defined_typename("Int_t"),0,1,1,1,8,"C - - 0 - line",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("PrintIntro",1049,G__TInterpreter_PrintIntro_1_1,121,-1,-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("Reset",515,G__TInterpreter_Reset_2_1,121,-1,-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("ResetAll",796,G__TInterpreter_ResetAll_3_1,121,-1,-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("ResetGlobals",1223,G__TInterpreter_ResetGlobals_4_1,121,-1,-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("DeleteGlobal",1188,G__TInterpreter_DeleteGlobal_5_1,105,-1,G__defined_typename("Int_t"),0,1,1,1,8,"Y - - 0 - obj",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("SaveContext",1140,G__TInterpreter_SaveContext_6_1,121,-1,-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("SaveGlobalsContext",1848,G__TInterpreter_SaveGlobalsContext_7_1,121,-1,-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("UpdateListOfGlobals",1912,G__TInterpreter_UpdateListOfGlobals_8_1,121,-1,-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("UpdateListOfGlobalFunctions",2750,G__TInterpreter_UpdateListOfGlobalFunctions_9_1,121,-1,-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("SetClassInfo",1198,G__TInterpreter_SetClassInfo_0_2,121,-1,-1,0,1,1,1,8,"U 'TClass' - 0 - cl",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("Calc",371,G__TInterpreter_Calc_1_2,105,-1,G__defined_typename("Int_t"),0,1,1,1,8,"C - - 0 - line",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("CreateListOfBaseClasses",2286,G__TInterpreter_CreateListOfBaseClasses_2_2,121,-1,-1,0,1,1,1,8,"U 'TClass' - 0 - cl",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("CreateListOfDataMembers",2282,G__TInterpreter_CreateListOfDataMembers_3_2,121,-1,-1,0,1,1,1,8,"U 'TClass' - 0 - cl",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("CreateListOfMethods",1913,G__TInterpreter_CreateListOfMethods_4_2,121,-1,-1,0,1,1,1,8,"U 'TClass' - 0 - cl",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("CreateListOfMethodArgs",2195,G__TInterpreter_CreateListOfMethodArgs_5_2,121,-1,-1,0,1,1,1,8,"U 'TFunction' - 0 - m",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("CreateListOfTypes",1722,G__TInterpreter_CreateListOfTypes_6_2,121,-1,-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("GetInterfaceMethod",1810,G__TInterpreter_GetInterfaceMethod_7_2,89,-1,-1,0,3,1,1,8,
+   G__memfunc_setup("GetPrompt",930,G__TInterpreter_GetPrompt_6_0,67,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("InitializeDictionaries",2288,G__TInterpreter_InitializeDictionaries_7_0,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("LoadMacro",882,G__TInterpreter_LoadMacro_8_0,121,-1,-1,0,1,1,1,0,"C - - 0 - filename",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("ProcessLine",1127,G__TInterpreter_ProcessLine_9_0,105,-1,G__defined_typename("Int_t"),0,1,1,1,0,"C - - 0 - line",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("ProcessLineSynch",1644,G__TInterpreter_ProcessLineSynch_0_1,105,-1,G__defined_typename("Int_t"),0,1,1,1,0,"C - - 0 - line",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("PrintIntro",1049,G__TInterpreter_PrintIntro_1_1,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("Reset",515,G__TInterpreter_Reset_2_1,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("ResetAll",796,G__TInterpreter_ResetAll_3_1,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("ResetGlobals",1223,G__TInterpreter_ResetGlobals_4_1,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("DeleteGlobal",1188,G__TInterpreter_DeleteGlobal_5_1,105,-1,G__defined_typename("Int_t"),0,1,1,1,0,"Y - - 0 - obj",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("SaveContext",1140,G__TInterpreter_SaveContext_6_1,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("SaveGlobalsContext",1848,G__TInterpreter_SaveGlobalsContext_7_1,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("UpdateListOfGlobals",1912,G__TInterpreter_UpdateListOfGlobals_8_1,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("UpdateListOfGlobalFunctions",2750,G__TInterpreter_UpdateListOfGlobalFunctions_9_1,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("SetClassInfo",1198,G__TInterpreter_SetClassInfo_0_2,121,-1,-1,0,1,1,1,0,"U 'TClass' - 0 - cl",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("Calc",371,G__TInterpreter_Calc_1_2,108,-1,G__defined_typename("Long_t"),0,1,1,1,0,"C - - 0 - line",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("CreateListOfBaseClasses",2286,G__TInterpreter_CreateListOfBaseClasses_2_2,121,-1,-1,0,1,1,1,0,"U 'TClass' - 0 - cl",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("CreateListOfDataMembers",2282,G__TInterpreter_CreateListOfDataMembers_3_2,121,-1,-1,0,1,1,1,0,"U 'TClass' - 0 - cl",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("CreateListOfMethods",1913,G__TInterpreter_CreateListOfMethods_4_2,121,-1,-1,0,1,1,1,0,"U 'TClass' - 0 - cl",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("CreateListOfMethodArgs",2195,G__TInterpreter_CreateListOfMethodArgs_5_2,121,-1,-1,0,1,1,1,0,"U 'TFunction' - 0 - m",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("CreateListOfTypes",1722,G__TInterpreter_CreateListOfTypes_6_2,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("GetInterfaceMethod",1810,G__TInterpreter_GetInterfaceMethod_7_2,89,-1,-1,0,3,1,1,0,
 "U 'TClass' - 0 - cl C - 'Text_t' 0 - method "
 "C - 'Text_t' 0 - params",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("GetInterfaceMethodWithPrototype",3204,G__TInterpreter_GetInterfaceMethodWithPrototype_8_2,89,-1,-1,0,3,1,1,8,
+   G__memfunc_setup("GetInterfaceMethodWithPrototype",3204,G__TInterpreter_GetInterfaceMethodWithPrototype_8_2,89,-1,-1,0,3,1,1,0,
 "U 'TClass' - 0 - cl C - 'Text_t' 0 - method "
 "C - 'Text_t' 0 - proto",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("Execute",723,G__TInterpreter_Execute_9_2,121,-1,-1,0,2,1,1,8,
+   G__memfunc_setup("Execute",723,G__TInterpreter_Execute_9_2,121,-1,-1,0,2,1,1,0,
 "C - 'Text_t' 0 - function C - 'Text_t' 0 - params",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("Execute",723,G__TInterpreter_Execute_0_3,121,-1,-1,0,4,1,1,8,
+   G__memfunc_setup("Execute",723,G__TInterpreter_Execute_0_3,121,-1,-1,0,4,1,1,0,
 "U 'TObject' - 0 - obj U 'TClass' - 0 - cl "
 "C - 'Text_t' 0 - method C - 'Text_t' 0 - params",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("Execute",723,G__TInterpreter_Execute_1_3,121,-1,-1,0,4,1,1,8,
+   G__memfunc_setup("Execute",723,G__TInterpreter_Execute_1_3,121,-1,-1,0,4,1,1,0,
 "U 'TObject' - 0 - obj U 'TClass' - 0 - cl "
 "U 'TMethod' - 0 - method U 'TObjArray' - 0 - params",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("ExecuteMacro",1221,G__TInterpreter_ExecuteMacro_2_3,105,-1,G__defined_typename("Int_t"),0,1,1,1,8,"C - - 0 - filename",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("TypeName",803,G__TInterpreter_TypeName_3_3,67,-1,-1,0,1,1,1,9,"C - - 0 - s",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("ExecuteMacro",1221,G__TInterpreter_ExecuteMacro_2_3,105,-1,G__defined_typename("Int_t"),0,1,1,1,0,"C - - 0 - filename",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("TypeName",803,G__TInterpreter_TypeName_3_3,67,-1,-1,0,1,1,1,1,"C - - 0 - s",(char*)NULL,(void*)NULL,3);
    G__memfunc_setup("DeclFileName",1145,G__TInterpreter_DeclFileName_4_3,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
    G__memfunc_setup("DeclFileLine",1152,G__TInterpreter_DeclFileLine_5_3,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
    G__memfunc_setup("ImplFileName",1171,G__TInterpreter_ImplFileName_6_3,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
@@ -3655,7 +3657,7 @@ static void G__setup_memfuncTCint(void) {
    G__memfunc_setup("UpdateListOfGlobals",1912,G__TCint_UpdateListOfGlobals_0_2,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
    G__memfunc_setup("UpdateListOfGlobalFunctions",2750,G__TCint_UpdateListOfGlobalFunctions_1_2,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
    G__memfunc_setup("SetClassInfo",1198,G__TCint_SetClassInfo_2_2,121,-1,-1,0,1,1,1,0,"U 'TClass' - 0 - cl",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("Calc",371,G__TCint_Calc_3_2,105,-1,G__defined_typename("Int_t"),0,1,1,1,0,"C - - 0 - line",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Calc",371,G__TCint_Calc_3_2,108,-1,G__defined_typename("Long_t"),0,1,1,1,0,"C - - 0 - line",(char*)NULL,(void*)NULL,1);
    G__memfunc_setup("CreateListOfBaseClasses",2286,G__TCint_CreateListOfBaseClasses_4_2,121,-1,-1,0,1,1,1,0,"U 'TClass' - 0 - cl",(char*)NULL,(void*)NULL,1);
    G__memfunc_setup("CreateListOfDataMembers",2282,G__TCint_CreateListOfDataMembers_5_2,121,-1,-1,0,1,1,1,0,"U 'TClass' - 0 - cl",(char*)NULL,(void*)NULL,1);
    G__memfunc_setup("CreateListOfMethods",1913,G__TCint_CreateListOfMethods_6_2,121,-1,-1,0,1,1,1,0,"U 'TClass' - 0 - cl",(char*)NULL,(void*)NULL,1);
@@ -3705,9 +3707,9 @@ static void G__setup_memfuncTDictionary(void) {
    G__memfunc_setup("GetName",673,G__TDictionary_GetName_2_0,67,-1,-1,0,0,1,1,9,"",(char*)NULL,(void*)NULL,3);
    G__memfunc_setup("GetTitle",802,G__TDictionary_GetTitle_3_0,67,-1,-1,0,0,1,1,9,"",(char*)NULL,(void*)NULL,3);
    G__memfunc_setup("Property",869,G__TDictionary_Property_4_0,108,-1,G__defined_typename("Long_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("Hash",388,G__TDictionary_Hash_5_0,107,-1,G__defined_typename("ULong_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("Hash",388,G__TDictionary_Hash_5_0,107,-1,G__defined_typename("ULong_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,3);
    G__memfunc_setup("IsSortable",1016,G__TDictionary_IsSortable_6_0,98,-1,G__defined_typename("Bool_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("Compare",711,G__TDictionary_Compare_7_0,105,-1,G__defined_typename("Int_t"),0,1,1,1,8,"U 'TObject' - 0 - obj",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("Compare",711,G__TDictionary_Compare_7_0,105,-1,G__defined_typename("Int_t"),0,1,1,1,0,"U 'TObject' - 0 - obj",(char*)NULL,(void*)NULL,3);
    G__memfunc_setup("DeclFileName",1145,G__TDictionary_DeclFileName_8_0,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
    G__memfunc_setup("DeclFileLine",1152,G__TDictionary_DeclFileLine_9_0,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
    G__memfunc_setup("ImplFileName",1171,G__TDictionary_ImplFileName_0_1,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
@@ -4063,6 +4065,44 @@ G__linked_taginfo G__G__MetaLN_TToggle = { "TToggle" , 99 , -1 };
 G__linked_taginfo G__G__MetaLN_TOrdCollection = { "TOrdCollection" , 99 , -1 };
 G__linked_taginfo G__G__MetaLN_TToggleGroup = { "TToggleGroup" , 99 , -1 };
 
+/* Reset class/struct taginfo */
+extern "C" void G__cpp_reset_tagtableG__Meta() {
+  G__G__MetaLN_TClass.tagnum = -1 ;
+  G__G__MetaLN_TList.tagnum = -1 ;
+  G__G__MetaLN_TMethod.tagnum = -1 ;
+  G__G__MetaLN_TObject.tagnum = -1 ;
+  G__G__MetaLN_TString.tagnum = -1 ;
+  G__G__MetaLN_TNamed.tagnum = -1 ;
+  G__G__MetaLN_TDataType.tagnum = -1 ;
+  G__G__MetaLN_TInterpreter.tagnum = -1 ;
+  G__G__MetaLN_TGlobal.tagnum = -1 ;
+  G__G__MetaLN_TFunction.tagnum = -1 ;
+  G__G__MetaLN_TCint.tagnum = -1 ;
+  G__G__MetaLN_EProperty.tagnum = -1 ;
+  G__G__MetaLN_TDictionary.tagnum = -1 ;
+  G__G__MetaLN_G__BaseClassInfo.tagnum = -1 ;
+  G__G__MetaLN_TBaseClass.tagnum = -1 ;
+  G__G__MetaLN_TDataMember.tagnum = -1 ;
+  G__G__MetaLN_G__ClassInfo.tagnum = -1 ;
+  G__G__MetaLN_G__DataMemberInfo.tagnum = -1 ;
+  G__G__MetaLN_TMethodCall.tagnum = -1 ;
+  G__G__MetaLN_EDataType.tagnum = -1 ;
+  G__G__MetaLN_G__TypedefInfo.tagnum = -1 ;
+  G__G__MetaLN_G__MethodInfo.tagnum = -1 ;
+  G__G__MetaLN_EMenuItemKind.tagnum = -1 ;
+  G__G__MetaLN_G__MethodArgInfo.tagnum = -1 ;
+  G__G__MetaLN_TMethodArg.tagnum = -1 ;
+  G__G__MetaLN_G__CallFunc.tagnum = -1 ;
+  G__G__MetaLN_EReturnType.tagnum = -1 ;
+  G__G__MetaLN_G__value.tagnum = -1 ;
+  G__G__MetaLN_G__linked_taginfo.tagnum = -1 ;
+  G__G__MetaLN_G__COMPLETIONLIST.tagnum = -1 ;
+  G__G__MetaLN_G__dictposition.tagnum = -1 ;
+  G__G__MetaLN_TToggle.tagnum = -1 ;
+  G__G__MetaLN_TOrdCollection.tagnum = -1 ;
+  G__G__MetaLN_TToggleGroup.tagnum = -1 ;
+}
+
 extern "C" void G__cpp_setup_tagtableG__Meta() {
 
    /* Setting up class,struct,union tag entry */
@@ -4107,7 +4147,7 @@ class G__cpp_setup_initG__Meta {
 G__cpp_setup_initG__Meta G__cpp_setup_initializerG__Meta;
 
 //
-// File generated by /home/rdm/root/bin/rootcint at Thu Oct  8 19:50:21 1998.
+// File generated by /home/rdm/root/bin/rootcint at Mon Mar  8 12:34:47 1999.
 // Do NOT change. Changes will be lost next time file is generated
 //
 

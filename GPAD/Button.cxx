@@ -1,3 +1,4 @@
+//*CMZ :  2.21/05 07/02/99  16.47.39  by  Fons Rademakers
 //*CMZ :  2.20/05 15/12/98  09.17.21  by  Rene Brun
 //*CMZ :  2.20/03 06/12/98  11.01.00  by  Rene Brun
 //*CMZ :  2.00/09 23/06/98  17.18.36  by  Rene Brun
@@ -156,7 +157,14 @@ void TButton::ExecuteEvent(Int_t event, Int_t px, Int_t py)
       return;
    }
 
+   HideToolTip(event);
+
    switch (event) {
+
+   case kMouseEnter:
+      TPad::ExecuteEvent(event,px,py);
+      break;
+
    case kButton1Down:
       SetBorderMode(-1);
       fFocused=1;

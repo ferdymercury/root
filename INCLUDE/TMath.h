@@ -1,3 +1,5 @@
+//*CMZ :  2.21/07 02/03/99  14.31.56  by  Rene Brun
+//*CMZ :  2.21/04 28/01/99  16.36.17  by  Valery Fine(fine@mail.cern.ch)
 //*CMZ :  2.20/03 05/12/98  16.28.27  by  Rene Brun
 //*CMZ :  2.20/01 02/12/98  16.22.47  by  Rene Brun
 //*CMZ :  2.20/00 22/11/98  16.55.45  by  Rene Brun
@@ -130,9 +132,19 @@ public:
 
    // Binary search
    static Int_t BinarySearch(Int_t n, Short_t *array, Short_t value);
+   static Int_t BinarySearch(Int_t n, Short_t **array, Short_t value);
    static Int_t BinarySearch(Int_t n, Int_t *array, Int_t value);
+   static Int_t BinarySearch(Int_t n, Int_t **array, Int_t value);
    static Int_t BinarySearch(Int_t n, Float_t *array, Float_t value);
+   static Int_t BinarySearch(Int_t n, Float_t **array, Float_t value);
    static Int_t BinarySearch(Int_t n, Double_t *array, Double_t value);
+   static Int_t BinarySearch(Int_t n, Double_t **array, Double_t value);
+
+   // Sorting
+   static void  Sort(Int_t n, Short_t *a,  Int_t *index, Bool_t down=kTRUE);
+   static void  Sort(Int_t n, Int_t *a,    Int_t *index, Bool_t down=kTRUE);
+   static void  Sort(Int_t n, Float_t *a,  Int_t *index, Bool_t down=kTRUE);
+   static void  Sort(Int_t n, Double_t *a, Int_t *index, Bool_t down=kTRUE);
 
    // Advanced
    static Float_t *Cross(Float_t v1[3],Float_t v2[3],Float_t out[3]);     // Calculate the Cross Product of two vectors

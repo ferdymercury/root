@@ -1,5 +1,5 @@
-/*CMZ :  2.20/04 08/12/98  16.25.33  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   08/12/98*/
+/*CMZ :  2.21/08 17/03/99  13.13.45  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   17/03/99*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -408,7 +408,7 @@ G__value *p,result;
   if(G__asm_dbg&&G__asm_noverflow)
     G__genericerror(G__LOOPCOMPILEABORT);
 #endif
-  G__asm_noverflow=0;
+  G__abortbytecode();
 #endif /* G__ASM */
 
   return(result);
@@ -490,7 +490,7 @@ G__value *p,result;
     if(G__asm_dbg&&G__asm_noverflow)
       G__genericerror(G__LOOPCOMPILEABORT);
 #endif
-    G__asm_noverflow=0;
+    G__abortbytecode();
 #endif /* G__ASM */
     G__genericerror("Error: Illegal pointer operation (letvalue)");
     break;

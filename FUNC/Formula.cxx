@@ -1,3 +1,5 @@
+//*CMZ :  2.21/08 12/03/99  15.41.43  by  Rene Brun
+//*CMZ :  2.21/01 13/01/99  09.24.10  by  Rene Brun
 //*CMZ :  2.20/05 14/12/98  15.30.58  by  Rene Brun
 //*CMZ :  2.20/00 12/11/98  15.25.49  by  Rene Brun
 //*CMZ :  2.00/12 29/10/98  16.07.19  by  Rene Brun
@@ -41,21 +43,19 @@ static Int_t MAXOP,MAXPAR,MAXCONST;
 const Int_t kMAXFOUND = 50;
 const Int_t kMAXSTRINGFOUND = 10;
 
-//______________________________________________________________________________
-//Begin_Html
-/*
-<img src="gif/tformula_classtree.gif">
-*/
-//End_Html
-
 ClassImp(TFormula)
 
 //______________________________________________________________________________
 //*-*-*-*-*-*-*-*-*-*-*The  F O R M U L A  class*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 //*-*                  =========================
 //*-*
-//*-*   This class has been implemented by begin_html <a href="http://hpsalo.cern.ch/nicolas">Nicolas Brun</a> end_html(age 18).
+//*-*   This class has been implemented by begin_html <a href="http://root.cern.ch/root/nicolas/html/index.html">Nicolas Brun</a> end_html(age 18).
 //*-*   ========================================================
+//Begin_Html
+/*
+<img src="gif/tformula_classtree.gif">
+*/
+//End_Html
 //*-*
 //*-*  Example of valid expressions:
 //*-*     -  sin(x)/x
@@ -1747,7 +1747,7 @@ const char *TFormula::GetParName(Int_t ipar) const
 //*-*            ============================
 
    if (ipar <0 && ipar >= fNpar) return "";
-   if (fNames[ipar].Length() > 1) return (const char*)fNames[ipar];
+   if (fNames[ipar].Length() > 0) return (const char*)fNames[ipar];
    return Form("p%d",ipar);
 }
 

@@ -1,3 +1,4 @@
+//*CMZ :  2.21/07 24/02/99  12.40.09  by  Fons Rademakers
 //*CMZ :  2.00/11 17/08/98  12.24.23  by  Rene Brun
 //*CMZ :  1.03/08 17/11/97  17.44.55  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   13/06/96
@@ -291,7 +292,6 @@ void TMethodCall::Execute(void *object, const char *params, Double_t &retDouble)
    retDouble = fFunc->ExecDouble(address);
 }
 
-
 //______________________________________________________________________________
 void TMethodCall::Execute(void *object, Text_t **retText)
 {
@@ -313,9 +313,6 @@ void TMethodCall::Execute(void *object, const char *params, Text_t **retText)
    if (object) address = (void*)((Long_t)object + fOffset);
    *retText =(Text_t*)( fFunc->ExecInt(address));
 }
-
-
-
 
 //______________________________________________________________________________
 EReturnType TMethodCall::ReturnType()

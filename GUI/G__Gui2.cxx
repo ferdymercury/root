@@ -1,5 +1,5 @@
-//*CMZ :  2.20/02 04/12/98  14.24.03  by  Rene Brun
-//*-- Author :    Rene Brun   04/12/98
+//*CMZ :  2.21/08 15/03/99  08.52.09  by  Rene Brun
+//*-- Author :    Rene Brun   15/03/99
 //*CMZ :  1.00/09 23/04/97  17.59.54  by  Rene Brun
 //*-- Author :    Rene Brun   23/04/97
 #if defined(__hpux) && !defined(__GNUG__)
@@ -75,15 +75,16 @@ extern void G__set_cpp_environmentG__Gui2();
 
 extern G__linked_taginfo G__G__Gui2LN_TClass;
 extern G__linked_taginfo G__G__Gui2LN_TList;
+extern G__linked_taginfo G__G__Gui2LN_TTimer;
 extern G__linked_taginfo G__G__Gui2LN_TObject;
 extern G__linked_taginfo G__G__Gui2LN_TRegexp;
 extern G__linked_taginfo G__G__Gui2LN_TString;
+extern G__linked_taginfo G__G__Gui2LN_TVirtualPad;
 extern G__linked_taginfo G__G__Gui2LN_TGClient;
 extern G__linked_taginfo G__G__Gui2LN_TGObject;
 extern G__linked_taginfo G__G__Gui2LN_TGWindow;
 extern G__linked_taginfo G__G__Gui2LN_TGPicture;
 extern G__linked_taginfo G__G__Gui2LN_TGMimeTypes;
-extern G__linked_taginfo G__G__Gui2LN_TTimer;
 extern G__linked_taginfo G__G__Gui2LN_TGDimension;
 extern G__linked_taginfo G__G__Gui2LN_TGFrame;
 extern G__linked_taginfo G__G__Gui2LN_TGCompositeFrame;
@@ -138,6 +139,7 @@ extern G__linked_taginfo G__G__Gui2LN_TGFileInfo;
 extern G__linked_taginfo G__G__Gui2LN_TGFileDialog;
 extern G__linked_taginfo G__G__Gui2LN_TGStatusBar;
 extern G__linked_taginfo G__G__Gui2LN_TGStatusBarPart;
+extern G__linked_taginfo G__G__Gui2LN_TBox;
 extern G__linked_taginfo G__G__Gui2LN_TGTextFrame;
 extern G__linked_taginfo G__G__Gui2LN_TGTextView;
 extern G__linked_taginfo G__G__Gui2LN_TGToolBar;
@@ -157,6 +159,7 @@ extern G__linked_taginfo G__G__Gui2LN_TGDoubleHSlider;
 #undef malloc
 #endif
 
+extern "C" void G__cpp_reset_tagtableG__Gui2();
 
 extern "C" void G__set_cpp_environmentG__Gui2() {
   G__add_macro("__MAKECINT__");
@@ -181,6 +184,7 @@ extern "C" void G__set_cpp_environmentG__Gui2() {
   G__add_compiledheader("TGListTree.h");
   G__add_compiledheader("TGText.h");
   G__add_compiledheader("TGDoubleSlider.h");
+  G__cpp_reset_tagtableG__Gui2();
 }
 extern "C" int G__cpp_dllrevG__Gui2() { return(51111); }
 
@@ -339,90 +343,108 @@ static int G__TGToolTip_TGToolTip_0_0(G__value *result7,char *funcname,struct G_
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGToolTip_DrawBorder_2_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGToolTip_TGToolTip_1_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   TGToolTip *p=NULL;
+      p = new TGToolTip(
+(const TGWindow*)G__int(libp->para[0]),(const TBox*)G__int(libp->para[1])
+,(const char*)G__int(libp->para[2]),(Long_t)G__int(libp->para[3]));
+      result7->obj.i = (long)p;
+      result7->ref = (long)p;
+      result7->type = 'u';
+      result7->tagnum = G__get_linked_tagnum(&G__G__Gui2LN_TGToolTip);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TGToolTip_DrawBorder_3_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TGToolTip*)(G__getstructoffset()))->DrawBorder();
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGToolTip_HandleTimer_3_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGToolTip_HandleTimer_4_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,98,(long)((TGToolTip*)(G__getstructoffset()))->HandleTimer((TTimer*)G__int(libp->para[0])));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGToolTip_Show_4_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGToolTip_Show_5_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TGToolTip*)(G__getstructoffset()))->Show((Int_t)G__int(libp->para[0]),(Int_t)G__int(libp->para[1]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGToolTip_Hide_5_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGToolTip_Hide_6_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TGToolTip*)(G__getstructoffset()))->Hide();
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGToolTip_Reset_6_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGToolTip_Reset_7_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TGToolTip*)(G__getstructoffset()))->Reset();
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGToolTip_DeclFileName_7_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGToolTip_Reset_8_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TGToolTip*)(G__getstructoffset()))->Reset((const TVirtualPad*)G__int(libp->para[0]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TGToolTip_DeclFileName_9_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,67,(long)((TGToolTip*)(G__getstructoffset()))->DeclFileName());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGToolTip_DeclFileLine_8_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGToolTip_DeclFileLine_0_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TGToolTip*)(G__getstructoffset()))->DeclFileLine());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGToolTip_ImplFileName_9_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGToolTip_ImplFileName_1_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,67,(long)((TGToolTip*)(G__getstructoffset()))->ImplFileName());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGToolTip_ImplFileLine_0_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGToolTip_ImplFileLine_2_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TGToolTip*)(G__getstructoffset()))->ImplFileLine());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGToolTip_Class_Version_1_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGToolTip_Class_Version_3_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,115,(long)((TGToolTip*)(G__getstructoffset()))->Class_Version());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGToolTip_Class_2_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGToolTip_Class_4_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((TGToolTip*)(G__getstructoffset()))->Class());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGToolTip_Dictionary_3_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGToolTip_Dictionary_5_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TGToolTip*)(G__getstructoffset()))->Dictionary();
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGToolTip_IsA_4_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGToolTip_IsA_6_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((TGToolTip*)(G__getstructoffset()))->IsA());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGToolTip_ShowMembers_5_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGToolTip_ShowMembers_7_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TGToolTip*)(G__getstructoffset()))->ShowMembers(*(TMemberInspector*)libp->para[0].ref,(char*)G__int(libp->para[1]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGToolTip_Streamer_6_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGToolTip_Streamer_8_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TGToolTip*)(G__getstructoffset()))->Streamer(*(TBuffer*)libp->para[0].ref);
    return(1 || funcname || hash || result7 || libp) ;
 }
 
 // automatic copy constructor
-static int G__TGToolTip_TGToolTip_7_1(G__value *result7,char *funcname,struct G__param *libp,int hash)
+static int G__TGToolTip_TGToolTip_9_1(G__value *result7,char *funcname,struct G__param *libp,int hash)
 {
    TGToolTip *p;
    if(1!=libp->paran) ;
@@ -435,7 +457,7 @@ static int G__TGToolTip_TGToolTip_7_1(G__value *result7,char *funcname,struct G_
 }
 
 // automatic destructor
-static int G__TGToolTip_wATGToolTip_8_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGToolTip_wATGToolTip_0_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    if(G__getaryconstruct())
      if(G__PVOID==G__getgvp())
        delete[] (TGToolTip *)(G__getstructoffset());
@@ -2485,66 +2507,86 @@ static int G__TGTab_GetCurrent_9_0(G__value *result7,char *funcname,struct G__pa
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGTab_GetTabHeight_0_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGTab_GetTabContainer_0_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,85,(long)((TGTab*)(G__getstructoffset()))->GetTabContainer((Int_t)G__int(libp->para[0])));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TGTab_GetTabTab_1_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,85,(long)((TGTab*)(G__getstructoffset()))->GetTabTab((Int_t)G__int(libp->para[0])));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TGTab_GetCurrentContainer_2_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,85,(long)((TGTab*)(G__getstructoffset()))->GetCurrentContainer());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TGTab_GetCurrentTab_3_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,85,(long)((TGTab*)(G__getstructoffset()))->GetCurrentTab());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TGTab_GetTabHeight_4_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,104,(long)((TGTab*)(G__getstructoffset()))->GetTabHeight());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGTab_DeclFileName_1_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGTab_DeclFileName_5_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,67,(long)((TGTab*)(G__getstructoffset()))->DeclFileName());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGTab_DeclFileLine_2_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGTab_DeclFileLine_6_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TGTab*)(G__getstructoffset()))->DeclFileLine());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGTab_ImplFileName_3_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGTab_ImplFileName_7_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,67,(long)((TGTab*)(G__getstructoffset()))->ImplFileName());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGTab_ImplFileLine_4_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGTab_ImplFileLine_8_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TGTab*)(G__getstructoffset()))->ImplFileLine());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGTab_Class_Version_5_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGTab_Class_Version_9_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,115,(long)((TGTab*)(G__getstructoffset()))->Class_Version());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGTab_Class_6_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGTab_Class_0_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((TGTab*)(G__getstructoffset()))->Class());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGTab_Dictionary_7_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGTab_Dictionary_1_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TGTab*)(G__getstructoffset()))->Dictionary();
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGTab_IsA_8_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGTab_IsA_2_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((TGTab*)(G__getstructoffset()))->IsA());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGTab_ShowMembers_9_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGTab_ShowMembers_3_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TGTab*)(G__getstructoffset()))->ShowMembers(*(TMemberInspector*)libp->para[0].ref,(char*)G__int(libp->para[1]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGTab_Streamer_0_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGTab_Streamer_4_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TGTab*)(G__getstructoffset()))->Streamer(*(TBuffer*)libp->para[0].ref);
    return(1 || funcname || hash || result7 || libp) ;
 }
 
 // automatic copy constructor
-static int G__TGTab_TGTab_1_2(G__value *result7,char *funcname,struct G__param *libp,int hash)
+static int G__TGTab_TGTab_5_2(G__value *result7,char *funcname,struct G__param *libp,int hash)
 {
    TGTab *p;
    if(1!=libp->paran) ;
@@ -2557,7 +2599,7 @@ static int G__TGTab_TGTab_1_2(G__value *result7,char *funcname,struct G__param *
 }
 
 // automatic destructor
-static int G__TGTab_wATGTab_2_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGTab_wATGTab_6_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    if(G__getaryconstruct())
      if(G__PVOID==G__getgvp())
        delete[] (TGTab *)(G__getstructoffset());
@@ -2623,61 +2665,67 @@ static int G__TGTabElement_GetText_4_0(G__value *result7,char *funcname,struct G
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGTabElement_DeclFileName_5_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGTabElement_SetText_5_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TGTabElement*)(G__getstructoffset()))->SetText((TGString*)G__int(libp->para[0]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TGTabElement_DeclFileName_6_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,67,(long)((TGTabElement*)(G__getstructoffset()))->DeclFileName());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGTabElement_DeclFileLine_6_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGTabElement_DeclFileLine_7_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TGTabElement*)(G__getstructoffset()))->DeclFileLine());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGTabElement_ImplFileName_7_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGTabElement_ImplFileName_8_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,67,(long)((TGTabElement*)(G__getstructoffset()))->ImplFileName());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGTabElement_ImplFileLine_8_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGTabElement_ImplFileLine_9_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((TGTabElement*)(G__getstructoffset()))->ImplFileLine());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGTabElement_Class_Version_9_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGTabElement_Class_Version_0_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,115,(long)((TGTabElement*)(G__getstructoffset()))->Class_Version());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGTabElement_Class_0_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGTabElement_Class_1_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((TGTabElement*)(G__getstructoffset()))->Class());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGTabElement_Dictionary_1_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGTabElement_Dictionary_2_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TGTabElement*)(G__getstructoffset()))->Dictionary();
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGTabElement_IsA_2_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGTabElement_IsA_3_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((TGTabElement*)(G__getstructoffset()))->IsA());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGTabElement_ShowMembers_3_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGTabElement_ShowMembers_4_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TGTabElement*)(G__getstructoffset()))->ShowMembers(*(TMemberInspector*)libp->para[0].ref,(char*)G__int(libp->para[1]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__TGTabElement_Streamer_4_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGTabElement_Streamer_5_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((TGTabElement*)(G__getstructoffset()))->Streamer(*(TBuffer*)libp->para[0].ref);
    return(1 || funcname || hash || result7 || libp) ;
 }
 
 // automatic copy constructor
-static int G__TGTabElement_TGTabElement_5_1(G__value *result7,char *funcname,struct G__param *libp,int hash)
+static int G__TGTabElement_TGTabElement_6_1(G__value *result7,char *funcname,struct G__param *libp,int hash)
 {
    TGTabElement *p;
    if(1!=libp->paran) ;
@@ -2690,7 +2738,7 @@ static int G__TGTabElement_TGTabElement_5_1(G__value *result7,char *funcname,str
 }
 
 // automatic destructor
-static int G__TGTabElement_wATGTabElement_6_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TGTabElement_wATGTabElement_7_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    if(G__getaryconstruct())
      if(G__PVOID==G__getgvp())
        delete[] (TGTabElement *)(G__getstructoffset());
@@ -6848,6 +6896,8 @@ static void G__setup_memvarTGToolTip(void) {
    G__memvar_setup((void*)NULL,85,0,0,G__get_linked_tagnum(&G__G__Gui2LN_TGLayoutHints),-1,-1,4,"fL1=",0,"layout used to place text in frame");
    G__memvar_setup((void*)NULL,85,0,0,G__get_linked_tagnum(&G__G__Gui2LN_TTimer),-1,-1,4,"fDelay=",0,"popup delay timer");
    G__memvar_setup((void*)NULL,85,0,1,G__get_linked_tagnum(&G__G__Gui2LN_TGFrame),-1,-1,4,"fWindow=",0,"frame to which tool tip is associated");
+   G__memvar_setup((void*)NULL,85,0,1,G__get_linked_tagnum(&G__G__Gui2LN_TVirtualPad),-1,-1,4,"fPad=",0,"pad to which tooltip is associated");
+   G__memvar_setup((void*)NULL,85,0,1,G__get_linked_tagnum(&G__G__Gui2LN_TBox),-1,-1,4,"fBox=",0,"box in pad to which tooltip is associated");
    G__memvar_setup((void*)NULL,107,0,0,-1,G__defined_typename("ULong_t"),-2,4,"fgLightYellowPixel=",0,(char*)NULL);
    G__memvar_setup((void*)NULL,85,0,0,G__get_linked_tagnum(&G__G__Gui2LN_TClass),-1,-2,4,"fgIsA=",0,(char*)NULL);
    }
@@ -7044,7 +7094,7 @@ static void G__setup_memvarTGTab(void) {
    { TGTab *p; p=(TGTab*)0x1000; if (p) { }
    G__memvar_setup((void*)NULL,105,0,0,-1,G__defined_typename("Int_t"),-1,2,"fCurrent=",0,"index of current tab");
    G__memvar_setup((void*)NULL,104,0,0,-1,G__defined_typename("UInt_t"),-1,2,"fTabh=",0,"tab height");
-   G__memvar_setup((void*)NULL,85,0,0,G__get_linked_tagnum(&G__G__Gui2LN_TGCompositeFrame),-1,-1,2,"fContainer=",0,"current container");
+   G__memvar_setup((void*)NULL,85,0,0,G__get_linked_tagnum(&G__G__Gui2LN_TGCompositeFrame),-1,-1,2,"fContainer=",0,"main container");
    G__memvar_setup((void*)NULL,107,0,0,-1,G__defined_typename("FontStruct_t"),-1,2,"fFontStruct=",0,"font");
    G__memvar_setup((void*)NULL,107,0,0,-1,G__defined_typename("GContext_t"),-1,2,"fNormGC=",0,"drawing context");
    G__memvar_setup((void*)NULL,107,0,0,-1,G__defined_typename("FontStruct_t"),-2,2,"fgDefaultFontStruct=",0,(char*)NULL);
@@ -7525,27 +7575,31 @@ static void G__setup_memfuncTGToolTip(void) {
    G__memfunc_setup("TGToolTip",870,G__TGToolTip_TGToolTip_0_0,105,G__get_linked_tagnum(&G__G__Gui2LN_TGToolTip),-1,0,4,1,1,0,
 "U 'TGWindow' - 0 - p U 'TGFrame' - 0 - f "
 "C - - 0 - text l - 'Long_t' 0 - delayms",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("DrawBorder",1004,G__TGToolTip_DrawBorder_2_0,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("HandleTimer",1101,G__TGToolTip_HandleTimer_3_0,98,-1,G__defined_typename("Bool_t"),0,1,1,1,0,"U 'TTimer' - 0 - t",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("Show",417,G__TGToolTip_Show_4_0,121,-1,-1,0,2,1,1,0,
+   G__memfunc_setup("TGToolTip",870,G__TGToolTip_TGToolTip_1_0,105,G__get_linked_tagnum(&G__G__Gui2LN_TGToolTip),-1,0,4,1,1,0,
+"U 'TGWindow' - 0 - p U 'TBox' - 0 - b "
+"C - - 0 - text l - 'Long_t' 0 - delayms",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("DrawBorder",1004,G__TGToolTip_DrawBorder_3_0,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("HandleTimer",1101,G__TGToolTip_HandleTimer_4_0,98,-1,G__defined_typename("Bool_t"),0,1,1,1,0,"U 'TTimer' - 0 - t",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Show",417,G__TGToolTip_Show_5_0,121,-1,-1,0,2,1,1,0,
 "i - 'Int_t' 0 - x i - 'Int_t' 0 - y",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Hide",378,G__TGToolTip_Hide_5_0,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Reset",515,G__TGToolTip_Reset_6_0,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("DeclFileName",1145,G__TGToolTip_DeclFileName_7_0,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("DeclFileLine",1152,G__TGToolTip_DeclFileLine_8_0,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("ImplFileName",1171,G__TGToolTip_ImplFileName_9_0,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("ImplFileLine",1178,G__TGToolTip_ImplFileLine_0_1,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Class_Version",1339,G__TGToolTip_Class_Version_1_1,115,-1,G__defined_typename("Version_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Class",502,G__TGToolTip_Class_2_1,85,G__get_linked_tagnum(&G__G__Gui2LN_TClass),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Dictionary",1046,G__TGToolTip_Dictionary_3_1,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("IsA",253,G__TGToolTip_IsA_4_1,85,G__get_linked_tagnum(&G__G__Gui2LN_TClass),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("ShowMembers",1132,G__TGToolTip_ShowMembers_5_1,121,-1,-1,0,2,1,1,0,
+   G__memfunc_setup("Hide",378,G__TGToolTip_Hide_6_0,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Reset",515,G__TGToolTip_Reset_7_0,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Reset",515,G__TGToolTip_Reset_8_0,121,-1,-1,0,1,1,1,0,"U 'TVirtualPad' - 0 - parent",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("DeclFileName",1145,G__TGToolTip_DeclFileName_9_0,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("DeclFileLine",1152,G__TGToolTip_DeclFileLine_0_1,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ImplFileName",1171,G__TGToolTip_ImplFileName_1_1,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ImplFileLine",1178,G__TGToolTip_ImplFileLine_2_1,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Class_Version",1339,G__TGToolTip_Class_Version_3_1,115,-1,G__defined_typename("Version_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Class",502,G__TGToolTip_Class_4_1,85,G__get_linked_tagnum(&G__G__Gui2LN_TClass),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Dictionary",1046,G__TGToolTip_Dictionary_5_1,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("IsA",253,G__TGToolTip_IsA_6_1,85,G__get_linked_tagnum(&G__G__Gui2LN_TClass),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("ShowMembers",1132,G__TGToolTip_ShowMembers_7_1,121,-1,-1,0,2,1,1,0,
 "u 'TMemberInspector' - 1 - insp C - - 0 - parent",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("Streamer",835,G__TGToolTip_Streamer_6_1,121,-1,-1,0,1,1,1,0,"u 'TBuffer' - 1 - b",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Streamer",835,G__TGToolTip_Streamer_8_1,121,-1,-1,0,1,1,1,0,"u 'TBuffer' - 1 - b",(char*)NULL,(void*)NULL,1);
    // automatic copy constructor
-   G__memfunc_setup("TGToolTip",870,G__TGToolTip_TGToolTip_7_1,(int)('i'),G__get_linked_tagnum(&G__G__Gui2LN_TGToolTip),-1,0,1,1,1,0,"u 'TGToolTip' - 1 - -",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("TGToolTip",870,G__TGToolTip_TGToolTip_9_1,(int)('i'),G__get_linked_tagnum(&G__G__Gui2LN_TGToolTip),-1,0,1,1,1,0,"u 'TGToolTip' - 1 - -",(char*)NULL,(void*)NULL,0);
    // automatic destructor
-   G__memfunc_setup("~TGToolTip",996,G__TGToolTip_wATGToolTip_8_1,(int)('y'),-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("~TGToolTip",996,G__TGToolTip_wATGToolTip_0_2,(int)('y'),-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
    G__tag_memfunc_reset();
 }
 
@@ -7580,13 +7634,13 @@ static void G__setup_memfuncTGScrollBar(void) {
    /* TGScrollBar */
    G__tag_memfunc_setup(G__get_linked_tagnum(&G__G__Gui2LN_TGScrollBar));
    G__memfunc_setup("DrawBorder",1004,G__TGScrollBar_DrawBorder_2_0,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("HandleButton",1224,G__TGScrollBar_HandleButton_3_0,98,-1,G__defined_typename("Bool_t"),0,1,1,1,8,"U 'Event_t' - 0 - event",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("HandleMotion",1218,G__TGScrollBar_HandleMotion_4_0,98,-1,G__defined_typename("Bool_t"),0,1,1,1,8,"U 'Event_t' - 0 - event",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("HandleButton",1224,G__TGScrollBar_HandleButton_3_0,98,-1,G__defined_typename("Bool_t"),0,1,1,1,0,"U 'Event_t' - 0 - event",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("HandleMotion",1218,G__TGScrollBar_HandleMotion_4_0,98,-1,G__defined_typename("Bool_t"),0,1,1,1,0,"U 'Event_t' - 0 - event",(char*)NULL,(void*)NULL,3);
    G__memfunc_setup("HandleTimer",1101,G__TGScrollBar_HandleTimer_5_0,98,-1,G__defined_typename("Bool_t"),0,1,1,1,0,"U 'TTimer' - 0 - t",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("Layout",638,G__TGScrollBar_Layout_6_0,121,-1,-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("SetRange",793,G__TGScrollBar_SetRange_7_0,121,-1,-1,0,2,1,1,8,
+   G__memfunc_setup("Layout",638,G__TGScrollBar_Layout_6_0,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("SetRange",793,G__TGScrollBar_SetRange_7_0,121,-1,-1,0,2,1,1,0,
 "i - 'Int_t' 0 - range i - 'Int_t' 0 - page_size",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("SetPosition",1153,G__TGScrollBar_SetPosition_8_0,121,-1,-1,0,1,1,1,8,"i - 'Int_t' 0 - pos",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("SetPosition",1153,G__TGScrollBar_SetPosition_8_0,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 - pos",(char*)NULL,(void*)NULL,3);
    G__memfunc_setup("GetPosition",1141,G__TGScrollBar_GetPosition_9_0,105,-1,G__defined_typename("Int_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
    G__memfunc_setup("MapSubwindows",1363,G__TGScrollBar_MapSubwindows_0_1,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
    G__memfunc_setup("DeclFileName",1145,G__TGScrollBar_DeclFileName_1_1,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
@@ -8021,24 +8075,28 @@ static void G__setup_memfuncTGTab(void) {
    G__memfunc_setup("SetTab",579,G__TGTab_SetTab_5_0,98,-1,G__defined_typename("Bool_t"),0,1,1,1,0,"i - 'Int_t' 0 - tabIndex",(char*)NULL,(void*)NULL,1);
    G__memfunc_setup("DrawBorder",1004,G__TGTab_DrawBorder_6_0,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
    G__memfunc_setup("HandleButton",1224,G__TGTab_HandleButton_7_0,98,-1,G__defined_typename("Bool_t"),0,1,1,1,0,"U 'Event_t' - 0 - event",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("GetContainer",1219,G__TGTab_GetContainer_8_0,85,G__get_linked_tagnum(&G__G__Gui2LN_TGCompositeFrame),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetCurrent",1027,G__TGTab_GetCurrent_9_0,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("GetTabHeight",1168,G__TGTab_GetTabHeight_0_1,104,-1,G__defined_typename("UInt_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("DeclFileName",1145,G__TGTab_DeclFileName_1_1,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("DeclFileLine",1152,G__TGTab_DeclFileLine_2_1,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("ImplFileName",1171,G__TGTab_ImplFileName_3_1,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("ImplFileLine",1178,G__TGTab_ImplFileLine_4_1,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Class_Version",1339,G__TGTab_Class_Version_5_1,115,-1,G__defined_typename("Version_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Class",502,G__TGTab_Class_6_1,85,G__get_linked_tagnum(&G__G__Gui2LN_TClass),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Dictionary",1046,G__TGTab_Dictionary_7_1,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("IsA",253,G__TGTab_IsA_8_1,85,G__get_linked_tagnum(&G__G__Gui2LN_TClass),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("ShowMembers",1132,G__TGTab_ShowMembers_9_1,121,-1,-1,0,2,1,1,0,
+   G__memfunc_setup("GetContainer",1219,G__TGTab_GetContainer_8_0,85,G__get_linked_tagnum(&G__G__Gui2LN_TGCompositeFrame),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetCurrent",1027,G__TGTab_GetCurrent_9_0,105,-1,G__defined_typename("Int_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetTabContainer",1498,G__TGTab_GetTabContainer_0_1,85,G__get_linked_tagnum(&G__G__Gui2LN_TGCompositeFrame),-1,0,1,1,1,8,"i - 'Int_t' 0 - tabIndex",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetTabTab",846,G__TGTab_GetTabTab_1_1,85,G__get_linked_tagnum(&G__G__Gui2LN_TGTabElement),-1,0,1,1,1,8,"i - 'Int_t' 0 - tabIndex",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetCurrentContainer",1958,G__TGTab_GetCurrentContainer_2_1,85,G__get_linked_tagnum(&G__G__Gui2LN_TGCompositeFrame),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetCurrentTab",1306,G__TGTab_GetCurrentTab_3_1,85,G__get_linked_tagnum(&G__G__Gui2LN_TGTabElement),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetTabHeight",1168,G__TGTab_GetTabHeight_4_1,104,-1,G__defined_typename("UInt_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("DeclFileName",1145,G__TGTab_DeclFileName_5_1,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("DeclFileLine",1152,G__TGTab_DeclFileLine_6_1,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ImplFileName",1171,G__TGTab_ImplFileName_7_1,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ImplFileLine",1178,G__TGTab_ImplFileLine_8_1,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Class_Version",1339,G__TGTab_Class_Version_9_1,115,-1,G__defined_typename("Version_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Class",502,G__TGTab_Class_0_2,85,G__get_linked_tagnum(&G__G__Gui2LN_TClass),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Dictionary",1046,G__TGTab_Dictionary_1_2,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("IsA",253,G__TGTab_IsA_2_2,85,G__get_linked_tagnum(&G__G__Gui2LN_TClass),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("ShowMembers",1132,G__TGTab_ShowMembers_3_2,121,-1,-1,0,2,1,1,0,
 "u 'TMemberInspector' - 1 - insp C - - 0 - parent",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("Streamer",835,G__TGTab_Streamer_0_2,121,-1,-1,0,1,1,1,0,"u 'TBuffer' - 1 - b",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Streamer",835,G__TGTab_Streamer_4_2,121,-1,-1,0,1,1,1,0,"u 'TBuffer' - 1 - b",(char*)NULL,(void*)NULL,1);
    // automatic copy constructor
-   G__memfunc_setup("TGTab",434,G__TGTab_TGTab_1_2,(int)('i'),G__get_linked_tagnum(&G__G__Gui2LN_TGTab),-1,0,1,1,1,0,"u 'TGTab' - 1 - -",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("TGTab",434,G__TGTab_TGTab_5_2,(int)('i'),G__get_linked_tagnum(&G__G__Gui2LN_TGTab),-1,0,1,1,1,0,"u 'TGTab' - 1 - -",(char*)NULL,(void*)NULL,0);
    // automatic destructor
-   G__memfunc_setup("~TGTab",560,G__TGTab_wATGTab_2_2,(int)('y'),-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("~TGTab",560,G__TGTab_wATGTab_6_2,(int)('y'),-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
    G__tag_memfunc_reset();
 }
 
@@ -8053,21 +8111,22 @@ static void G__setup_memfuncTGTabElement(void) {
    G__memfunc_setup("DrawBorder",1004,G__TGTabElement_DrawBorder_2_0,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
    G__memfunc_setup("GetDefaultSize",1408,G__TGTabElement_GetDefaultSize_3_0,117,G__get_linked_tagnum(&G__G__Gui2LN_TGDimension),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
    G__memfunc_setup("GetText",709,G__TGTabElement_GetText_4_0,85,G__get_linked_tagnum(&G__G__Gui2LN_TGString),-1,0,0,1,1,9,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("DeclFileName",1145,G__TGTabElement_DeclFileName_5_0,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("DeclFileLine",1152,G__TGTabElement_DeclFileLine_6_0,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("ImplFileName",1171,G__TGTabElement_ImplFileName_7_0,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("ImplFileLine",1178,G__TGTabElement_ImplFileLine_8_0,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Class_Version",1339,G__TGTabElement_Class_Version_9_0,115,-1,G__defined_typename("Version_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Class",502,G__TGTabElement_Class_0_1,85,G__get_linked_tagnum(&G__G__Gui2LN_TClass),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("Dictionary",1046,G__TGTabElement_Dictionary_1_1,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("IsA",253,G__TGTabElement_IsA_2_1,85,G__get_linked_tagnum(&G__G__Gui2LN_TClass),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("ShowMembers",1132,G__TGTabElement_ShowMembers_3_1,121,-1,-1,0,2,1,1,0,
+   G__memfunc_setup("SetText",721,G__TGTabElement_SetText_5_0,121,-1,-1,0,1,1,1,0,"U 'TGString' - 0 - text",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("DeclFileName",1145,G__TGTabElement_DeclFileName_6_0,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("DeclFileLine",1152,G__TGTabElement_DeclFileLine_7_0,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ImplFileName",1171,G__TGTabElement_ImplFileName_8_0,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ImplFileLine",1178,G__TGTabElement_ImplFileLine_9_0,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Class_Version",1339,G__TGTabElement_Class_Version_0_1,115,-1,G__defined_typename("Version_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Class",502,G__TGTabElement_Class_1_1,85,G__get_linked_tagnum(&G__G__Gui2LN_TClass),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Dictionary",1046,G__TGTabElement_Dictionary_2_1,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("IsA",253,G__TGTabElement_IsA_3_1,85,G__get_linked_tagnum(&G__G__Gui2LN_TClass),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("ShowMembers",1132,G__TGTabElement_ShowMembers_4_1,121,-1,-1,0,2,1,1,0,
 "u 'TMemberInspector' - 1 - insp C - - 0 - parent",(char*)NULL,(void*)NULL,1);
-   G__memfunc_setup("Streamer",835,G__TGTabElement_Streamer_4_1,121,-1,-1,0,1,1,1,0,"u 'TBuffer' - 1 - b",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Streamer",835,G__TGTabElement_Streamer_5_1,121,-1,-1,0,1,1,1,0,"u 'TBuffer' - 1 - b",(char*)NULL,(void*)NULL,1);
    // automatic copy constructor
-   G__memfunc_setup("TGTabElement",1148,G__TGTabElement_TGTabElement_5_1,(int)('i'),G__get_linked_tagnum(&G__G__Gui2LN_TGTabElement),-1,0,1,1,1,0,"u 'TGTabElement' - 1 - -",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("TGTabElement",1148,G__TGTabElement_TGTabElement_6_1,(int)('i'),G__get_linked_tagnum(&G__G__Gui2LN_TGTabElement),-1,0,1,1,1,0,"u 'TGTabElement' - 1 - -",(char*)NULL,(void*)NULL,0);
    // automatic destructor
-   G__memfunc_setup("~TGTabElement",1274,G__TGTabElement_wATGTabElement_6_1,(int)('y'),-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("~TGTabElement",1274,G__TGTabElement_wATGTabElement_7_1,(int)('y'),-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
    G__tag_memfunc_reset();
 }
 
@@ -8098,8 +8157,8 @@ static void G__setup_memfuncTGTabLayout(void) {
 static void G__setup_memfuncTGSlider(void) {
    /* TGSlider */
    G__tag_memfunc_setup(G__get_linked_tagnum(&G__G__Gui2LN_TGSlider));
-   G__memfunc_setup("HandleButton",1224,G__TGSlider_HandleButton_2_0,98,-1,G__defined_typename("Bool_t"),0,1,1,1,8,"U 'Event_t' - 0 - event",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("HandleMotion",1218,G__TGSlider_HandleMotion_3_0,98,-1,G__defined_typename("Bool_t"),0,1,1,1,8,"U 'Event_t' - 0 - event",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("HandleButton",1224,G__TGSlider_HandleButton_2_0,98,-1,G__defined_typename("Bool_t"),0,1,1,1,0,"U 'Event_t' - 0 - event",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("HandleMotion",1218,G__TGSlider_HandleMotion_3_0,98,-1,G__defined_typename("Bool_t"),0,1,1,1,0,"U 'Event_t' - 0 - event",(char*)NULL,(void*)NULL,3);
    G__memfunc_setup("SetScale",788,G__TGSlider_SetScale_4_0,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 - scale",(char*)NULL,(void*)NULL,1);
    G__memfunc_setup("SetRange",793,G__TGSlider_SetRange_5_0,121,-1,-1,0,2,1,1,0,
 "i - 'Int_t' 0 - min i - 'Int_t' 0 - max",(char*)NULL,(void*)NULL,1);
@@ -8734,8 +8793,8 @@ static void G__setup_memfuncTGText(void) {
 static void G__setup_memfuncTGDoubleSlider(void) {
    /* TGDoubleSlider */
    G__tag_memfunc_setup(G__get_linked_tagnum(&G__G__Gui2LN_TGDoubleSlider));
-   G__memfunc_setup("HandleButton",1224,G__TGDoubleSlider_HandleButton_2_0,98,-1,G__defined_typename("Bool_t"),0,1,1,1,8,"U 'Event_t' - 0 - event",(char*)NULL,(void*)NULL,3);
-   G__memfunc_setup("HandleMotion",1218,G__TGDoubleSlider_HandleMotion_3_0,98,-1,G__defined_typename("Bool_t"),0,1,1,1,8,"U 'Event_t' - 0 - event",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("HandleButton",1224,G__TGDoubleSlider_HandleButton_2_0,98,-1,G__defined_typename("Bool_t"),0,1,1,1,0,"U 'Event_t' - 0 - event",(char*)NULL,(void*)NULL,3);
+   G__memfunc_setup("HandleMotion",1218,G__TGDoubleSlider_HandleMotion_3_0,98,-1,G__defined_typename("Bool_t"),0,1,1,1,0,"U 'Event_t' - 0 - event",(char*)NULL,(void*)NULL,3);
    G__memfunc_setup("SetScale",788,G__TGDoubleSlider_SetScale_4_0,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 - scale",(char*)NULL,(void*)NULL,1);
    G__memfunc_setup("SetRange",793,G__TGDoubleSlider_SetRange_5_0,121,-1,-1,0,2,1,1,0,
 "f - 'Float_t' 0 - min f - 'Float_t' 0 - max",(char*)NULL,(void*)NULL,1);
@@ -8874,15 +8933,16 @@ extern "C" void G__cpp_setup_funcG__Gui2() {
 /* Setup class/struct taginfo */
 G__linked_taginfo G__G__Gui2LN_TClass = { "TClass" , 99 , -1 };
 G__linked_taginfo G__G__Gui2LN_TList = { "TList" , 99 , -1 };
+G__linked_taginfo G__G__Gui2LN_TTimer = { "TTimer" , 99 , -1 };
 G__linked_taginfo G__G__Gui2LN_TObject = { "TObject" , 99 , -1 };
 G__linked_taginfo G__G__Gui2LN_TRegexp = { "TRegexp" , 99 , -1 };
 G__linked_taginfo G__G__Gui2LN_TString = { "TString" , 99 , -1 };
+G__linked_taginfo G__G__Gui2LN_TVirtualPad = { "TVirtualPad" , 99 , -1 };
 G__linked_taginfo G__G__Gui2LN_TGClient = { "TGClient" , 99 , -1 };
 G__linked_taginfo G__G__Gui2LN_TGObject = { "TGObject" , 99 , -1 };
 G__linked_taginfo G__G__Gui2LN_TGWindow = { "TGWindow" , 99 , -1 };
 G__linked_taginfo G__G__Gui2LN_TGPicture = { "TGPicture" , 99 , -1 };
 G__linked_taginfo G__G__Gui2LN_TGMimeTypes = { "TGMimeTypes" , 99 , -1 };
-G__linked_taginfo G__G__Gui2LN_TTimer = { "TTimer" , 99 , -1 };
 G__linked_taginfo G__G__Gui2LN_TGDimension = { "TGDimension" , 99 , -1 };
 G__linked_taginfo G__G__Gui2LN_TGFrame = { "TGFrame" , 99 , -1 };
 G__linked_taginfo G__G__Gui2LN_TGCompositeFrame = { "TGCompositeFrame" , 99 , -1 };
@@ -8937,6 +8997,7 @@ G__linked_taginfo G__G__Gui2LN_TGFileInfo = { "TGFileInfo" , 99 , -1 };
 G__linked_taginfo G__G__Gui2LN_TGFileDialog = { "TGFileDialog" , 99 , -1 };
 G__linked_taginfo G__G__Gui2LN_TGStatusBar = { "TGStatusBar" , 99 , -1 };
 G__linked_taginfo G__G__Gui2LN_TGStatusBarPart = { "TGStatusBarPart" , 99 , -1 };
+G__linked_taginfo G__G__Gui2LN_TBox = { "TBox" , 99 , -1 };
 G__linked_taginfo G__G__Gui2LN_TGTextFrame = { "TGTextFrame" , 99 , -1 };
 G__linked_taginfo G__G__Gui2LN_TGTextView = { "TGTextView" , 99 , -1 };
 G__linked_taginfo G__G__Gui2LN_TGToolBar = { "TGToolBar" , 99 , -1 };
@@ -8948,6 +9009,88 @@ G__linked_taginfo G__G__Gui2LN_TGText = { "TGText" , 99 , -1 };
 G__linked_taginfo G__G__Gui2LN_TGDoubleSlider = { "TGDoubleSlider" , 99 , -1 };
 G__linked_taginfo G__G__Gui2LN_TGDoubleVSlider = { "TGDoubleVSlider" , 99 , -1 };
 G__linked_taginfo G__G__Gui2LN_TGDoubleHSlider = { "TGDoubleHSlider" , 99 , -1 };
+
+/* Reset class/struct taginfo */
+extern "C" void G__cpp_reset_tagtableG__Gui2() {
+  G__G__Gui2LN_TClass.tagnum = -1 ;
+  G__G__Gui2LN_TList.tagnum = -1 ;
+  G__G__Gui2LN_TTimer.tagnum = -1 ;
+  G__G__Gui2LN_TObject.tagnum = -1 ;
+  G__G__Gui2LN_TRegexp.tagnum = -1 ;
+  G__G__Gui2LN_TString.tagnum = -1 ;
+  G__G__Gui2LN_TVirtualPad.tagnum = -1 ;
+  G__G__Gui2LN_TGClient.tagnum = -1 ;
+  G__G__Gui2LN_TGObject.tagnum = -1 ;
+  G__G__Gui2LN_TGWindow.tagnum = -1 ;
+  G__G__Gui2LN_TGPicture.tagnum = -1 ;
+  G__G__Gui2LN_TGMimeTypes.tagnum = -1 ;
+  G__G__Gui2LN_TGDimension.tagnum = -1 ;
+  G__G__Gui2LN_TGFrame.tagnum = -1 ;
+  G__G__Gui2LN_TGCompositeFrame.tagnum = -1 ;
+  G__G__Gui2LN_TGLayoutHints.tagnum = -1 ;
+  G__G__Gui2LN_TGLayoutManager.tagnum = -1 ;
+  G__G__Gui2LN_TGString.tagnum = -1 ;
+  G__G__Gui2LN_TGVerticalFrame.tagnum = -1 ;
+  G__G__Gui2LN_TGHorizontalFrame.tagnum = -1 ;
+  G__G__Gui2LN_TGMainFrame.tagnum = -1 ;
+  G__G__Gui2LN_TGTransientFrame.tagnum = -1 ;
+  G__G__Gui2LN_TGWidget.tagnum = -1 ;
+  G__G__Gui2LN_TGToolTip.tagnum = -1 ;
+  G__G__Gui2LN_TGTextButton.tagnum = -1 ;
+  G__G__Gui2LN_TGPictureButton.tagnum = -1 ;
+  G__G__Gui2LN_EScrollBarMode.tagnum = -1 ;
+  G__G__Gui2LN_TGScrollBarElement.tagnum = -1 ;
+  G__G__Gui2LN_TGScrollBar.tagnum = -1 ;
+  G__G__Gui2LN_TGHScrollBar.tagnum = -1 ;
+  G__G__Gui2LN_TGVScrollBar.tagnum = -1 ;
+  G__G__Gui2LN_TGViewPort.tagnum = -1 ;
+  G__G__Gui2LN_TGCanvas.tagnum = -1 ;
+  G__G__Gui2LN_TGLBEntry.tagnum = -1 ;
+  G__G__Gui2LN_TGTextLBEntry.tagnum = -1 ;
+  G__G__Gui2LN_TGLBContainer.tagnum = -1 ;
+  G__G__Gui2LN_TGListBox.tagnum = -1 ;
+  G__G__Gui2LN_TGComboBoxPopup.tagnum = -1 ;
+  G__G__Gui2LN_TGComboBox.tagnum = -1 ;
+  G__G__Gui2LN_TGTab.tagnum = -1 ;
+  G__G__Gui2LN_TGTabElement.tagnum = -1 ;
+  G__G__Gui2LN_TGTabLayout.tagnum = -1 ;
+  G__G__Gui2LN_ESliderType.tagnum = -1 ;
+  G__G__Gui2LN_TGSlider.tagnum = -1 ;
+  G__G__Gui2LN_TGVSlider.tagnum = -1 ;
+  G__G__Gui2LN_TGHSlider.tagnum = -1 ;
+  G__G__Gui2LN_TGSelectedPicture.tagnum = -1 ;
+  G__G__Gui2LN_EListViewMode.tagnum = -1 ;
+  G__G__Gui2LN_TGLVEntry.tagnum = -1 ;
+  G__G__Gui2LN_TGLVContainer.tagnum = -1 ;
+  G__G__Gui2LN_TGListView.tagnum = -1 ;
+  G__G__Gui2LN_TOrdCollection.tagnum = -1 ;
+  G__G__Gui2LN_TGMime.tagnum = -1 ;
+  G__G__Gui2LN_EFSSortMode.tagnum = -1 ;
+  G__G__Gui2LN_TGFileContainer.tagnum = -1 ;
+  G__G__Gui2LN_TViewUpdateTimer.tagnum = -1 ;
+  G__G__Gui2LN_TGFileItem.tagnum = -1 ;
+  G__G__Gui2LN_EFileDialogMode.tagnum = -1 ;
+  G__G__Gui2LN_TGLabel.tagnum = -1 ;
+  G__G__Gui2LN_TGTextBuffer.tagnum = -1 ;
+  G__G__Gui2LN_TGTextEntry.tagnum = -1 ;
+  G__G__Gui2LN_TGFSComboBox.tagnum = -1 ;
+  G__G__Gui2LN_TGFileInfo.tagnum = -1 ;
+  G__G__Gui2LN_TGFileDialog.tagnum = -1 ;
+  G__G__Gui2LN_TGStatusBar.tagnum = -1 ;
+  G__G__Gui2LN_TGStatusBarPart.tagnum = -1 ;
+  G__G__Gui2LN_TBox.tagnum = -1 ;
+  G__G__Gui2LN_TGTextFrame.tagnum = -1 ;
+  G__G__Gui2LN_TGTextView.tagnum = -1 ;
+  G__G__Gui2LN_TGToolBar.tagnum = -1 ;
+  G__G__Gui2LN_TGHorizontal3DLine.tagnum = -1 ;
+  G__G__Gui2LN_TGListTreeItem.tagnum = -1 ;
+  G__G__Gui2LN_TGListTree.tagnum = -1 ;
+  G__G__Gui2LN_TObjString.tagnum = -1 ;
+  G__G__Gui2LN_TGText.tagnum = -1 ;
+  G__G__Gui2LN_TGDoubleSlider.tagnum = -1 ;
+  G__G__Gui2LN_TGDoubleVSlider.tagnum = -1 ;
+  G__G__Gui2LN_TGDoubleHSlider.tagnum = -1 ;
+}
 
 extern "C" void G__cpp_setup_tagtableG__Gui2() {
 
@@ -9021,7 +9164,7 @@ class G__cpp_setup_initG__Gui2 {
 G__cpp_setup_initG__Gui2 G__cpp_setup_initializerG__Gui2;
 
 //
-// File generated by /user/brun/root/bin/rootcint at Fri Dec  4 14:24:01 1998.
+// File generated by /user/brun/root/bin/rootcint at Mon Mar 15 08:52:08 1999.
 // Do NOT change. Changes will be lost next time file is generated
 //
 
@@ -9090,6 +9233,8 @@ void TGToolTip::ShowMembers(TMemberInspector &R__insp, char *R__parent)
    R__insp.Inspect(R__cl, R__parent, "*fL1", &fL1);
    R__insp.Inspect(R__cl, R__parent, "*fDelay", &fDelay);
    R__insp.Inspect(R__cl, R__parent, "*fWindow", &fWindow);
+   R__insp.Inspect(R__cl, R__parent, "*fPad", &fPad);
+   R__insp.Inspect(R__cl, R__parent, "*fBox", &fBox);
    TGCompositeFrame::ShowMembers(R__insp, R__parent);
 }
 

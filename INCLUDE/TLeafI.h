@@ -1,3 +1,4 @@
+//*CMZ :  2.21/07 06/03/99  16.28.01  by  Rene Brun
 //*CMZ :  2.00/13 22/10/98  17.43.42  by  Rene Brun
 //*CMZ :  2.00/12 22/09/98  15.40.57  by  Rene Brun
 //*CMZ :  1.03/09 08/12/97  13.29.01  by  Fons Rademakers
@@ -49,7 +50,7 @@ public:
     TLeafI(const Text_t *name, const Text_t *type);
     virtual ~TLeafI();
 
-    virtual void    Export(TClonesArray *list);
+    virtual void    Export(TClonesArray *list, Int_t n);
     virtual void    FillBasket(TBuffer &b);
     const Text_t    *GetTypeName() const;
     virtual Int_t   GetMaximum() {return fMaximum;}

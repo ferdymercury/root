@@ -1,3 +1,5 @@
+//*CMZ :  2.21/08 10/03/99  09.07.30  by  Rene Brun
+//*CMZ :  2.21/05 09/02/99  19.08.38  by  Rene Brun
 //*CMZ :  2.20/00 09/11/98  18.43.13  by  Rene Brun
 //*CMZ :  2.00/12 10/09/98  17.58.12  by  Rene Brun
 //*CMZ :  2.00/06 11/05/98  12.56.10  by  Rene Brun
@@ -142,7 +144,7 @@ public:
         Double_t     fUpdflt;           //
         Double_t     *fXpt;             //X array of points for contours
         Double_t     *fYpt;             //Y array of points for contours
-        TString      *fChpt;            //Character to be plotted at the X,Y contour positions
+        char         *fChpt;            //Character to be plotted at the X,Y contour positions
         Double_t     fXmidcr;           //
         Double_t     fYmidcr;           //
         Double_t     fXdircr;           //
@@ -165,23 +167,25 @@ public:
                 TMinuit(Int_t maxpar);
  virtual       ~TMinuit();
  virtual void   BuildArrays(Int_t maxpar=15);
+ virtual Int_t  Command(const char *command);
  virtual TGraph *Contour(const char *graphname, Int_t npoints=10, Int_t pa1=1, Int_t pa2=2);
+ virtual Int_t  DefineParameter( Int_t parNo, const char *name, Double_t initVal, Double_t initErr, Double_t lowerLimit, Double_t upperLimit );
  virtual void   DeleteArrays();
+ virtual Int_t  FixParameter( Int_t parNo );
  TMethodCall   *GetMethodCall() {return fMethodCall;}
  TObject       *GetObjectFit() {return fObjectFit;}
  Int_t          GetMaxIterations() {return fMaxIterations;}
+ virtual Int_t  GetParameter( Int_t parNo, Double_t &currentValue, Double_t &currentError );
  Int_t          GetStatus() {return fStatus;}
- virtual void   SetObjectFit(TObject *obj) {fObjectFit=obj;}
- virtual void   SetFCN(void *fcn);
- virtual void   SetFCN(void (*fcn)(Int_t &, Double_t *, Double_t &f, Double_t *, Int_t));
+ virtual Int_t  Migrad();
  virtual void   mnamin();
  virtual void   mnbins(Double_t a1, Double_t a2, Int_t naa, Double_t &bl, Double_t &bh, Int_t &nb, Double_t &bwid);
  virtual void   mncalf(Double_t *pvec, Double_t &ycalf);
  virtual void   mncler();
  virtual void   mncntr(Int_t ke1, Int_t ke2, Int_t &ierrf);
- virtual void   mncomd(TString crdbin, Int_t &icondn);
+ virtual void   mncomd(const char *crdbin, Int_t &icondn);
  virtual void   mncont(Int_t ke1, Int_t ke2, Int_t nptu, Double_t *xptu, Double_t *yptu, Int_t &ierrf);
- virtual void   mncrck(TString &crdbuf, Int_t maxcwd, TString &comand, Int_t &lnc
+ virtual void   mncrck(TString crdbuf, Int_t maxcwd, TString &comand, Int_t &lnc
                     ,  Int_t mxp, Double_t *plist, Int_t &llist, Int_t &ierr, Int_t isyswr);
  virtual void   mncros(Double_t &aopt, Int_t &iercr);
  virtual void   mncuve();
@@ -212,7 +216,7 @@ public:
  virtual void   mnpars(TString &crdbuf, Int_t &icondn);
  virtual void   mnpfit(Double_t *parx2p, Double_t *pary2p, Int_t npar2p, Double_t *coef2p, Double_t &sdev2p);
  virtual void   mnpint(Double_t &pexti, Int_t i, Double_t &pinti);
- virtual void   mnplot(Double_t *xpt, Double_t *ypt, TString *chpt, Int_t nxypt, Int_t npagwd, Int_t npagln);
+ virtual void   mnplot(Double_t *xpt, Double_t *ypt, char *chpt, Int_t nxypt, Int_t npagwd, Int_t npagln);
  virtual void   mnpout(Int_t iuext, TString chnam, Double_t &val, Double_t &err, Double_t &xlolim, Double_t &xuplim, Int_t &iuint);
  virtual void   mnprin(Int_t inkode, Double_t fval);
  virtual void   mnpsdf();
@@ -230,7 +234,13 @@ public:
  virtual void   mnvert(Double_t *a, Int_t l, Int_t m, Int_t n, Int_t &ifail);
  virtual void   mnwarn(const char *copt, const char *corg, const char *cmes);
  virtual void   mnwerr();
+ virtual Int_t  Release( Int_t parNo );
+ virtual Int_t  SetErrorDef( Double_t up );
+ virtual void   SetFCN(void *fcn);
+ virtual void   SetFCN(void (*fcn)(Int_t &, Double_t *, Double_t &f, Double_t *, Int_t));
  virtual void   SetMaxIterations(Int_t maxiter=500) {fMaxIterations = maxiter;}
+ virtual void   SetObjectFit(TObject *obj) {fObjectFit=obj;}
+ virtual Int_t  SetPrintLevel( Int_t printLevel=0 );
 
  ClassDef(TMinuit,0)  //The MINUIT minimisation package
 };

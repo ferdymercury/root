@@ -1,3 +1,4 @@
+//*CMZ :  2.21/04 01/02/99  21.35.04  by  Valery Fine(fine@mail.cern.ch)
 //*CMZ :  2.00/11 09/08/98  10.30.13  by  Rene Brun
 //*CMZ :  2.00/00 03/07/98  15.45.57  by  Fons Rademakers
 //*CMZ :  1.03/09 07/12/97  16.17.32  by  Fons Rademakers
@@ -27,7 +28,6 @@
 #include "TBrowser.h"
 
 TGeometry *gGeometry = 0;
-
 
 ClassImp(TGeometry)
 
@@ -104,6 +104,10 @@ TGeometry::TGeometry()
    fShapePointer    = 0;
    gGeometry = this;
    fBomb            = 1;
+   fMatrix          = 0;
+   fX=fY=fZ         =0.0;
+   fGeomLevel       =0;
+   fIsReflection[fGeomLevel] = kFALSE;
 }
 
 //______________________________________________________________________________
@@ -122,10 +126,12 @@ TGeometry::TGeometry(const Text_t *name,const Text_t *title ) : TNamed (name, ti
    fShapePointer    = 0;
    gGeometry = this;
    fBomb            = 1;
+   fMatrix          = 0;
+   fX=fY=fZ         =0.0;
    gROOT->GetListOfGeometries()->Add(this);
+   fGeomLevel       =0;
+   fIsReflection[fGeomLevel] = kFALSE;
 }
-
-
 //______________________________________________________________________________
 TGeometry::~TGeometry()
 {
@@ -159,7 +165,6 @@ TGeometry::~TGeometry()
    }
    gROOT->GetListOfGeometries()->Remove(this);
 }
-
 //______________________________________________________________________________
 void TGeometry::Browse(TBrowser *b)
 {
@@ -278,6 +283,82 @@ TShape *TGeometry::GetShapeByNumber(Int_t number)
 }
 
 //______________________________________________________________________________
+void TGeometry::Local2Master(Double_t *local, Double_t *master)
+{
+//*-*-*-*-*Convert one point from local system to master reference system*-*-*
+//*-*      ==============================================================
+//
+//  Note that before invoking this function, the global rotation matrix
+//  and translation vector for this node must have been computed.
+//  This is automatically done by the Paint functions.
+//  Otherwise TNode::UpdateMatrix should be called before.
+
+  if (GeomLevel()) {
+     Double_t x,y,z;
+     Double_t bomb = GetBomb();
+//   Double_t *matrix      = fMatrix->GetMatrix();
+     Double_t *matrix = &fRotMatrix[GeomLevel()][0];
+     x = bomb*fX
+       + local[0]*matrix[0]
+       + local[1]*matrix[3]
+       + local[2]*matrix[6];
+
+     y = bomb*fY
+       + local[0]*matrix[1]
+       + local[1]*matrix[4]
+       + local[2]*matrix[7];
+
+     z = bomb*fZ
+       + local[0]*matrix[2]
+       + local[1]*matrix[5]
+       + local[2]*matrix[8];
+     master[0] = x; master[1] = y; master[2] = z;
+  }
+  else
+     memcpy(master,local,sizeof(Double_t)* kVectorSize);
+}
+
+//______________________________________________________________________________
+void TGeometry::Local2Master(Float_t *local, Float_t *master)
+{
+//*-*-*-*-*Convert one point from local system to master reference system*-*-*
+//*-*      ==============================================================
+//
+//  Note that before invoking this function, the global rotation matrix
+//  and translation vector for this node must have been computed.
+//  This is automatically done by the Paint functions.
+//  Otherwise TNode::UpdateMatrix should be called before.
+
+ if (GeomLevel()) {
+    Float_t x,y,z;
+    Float_t bomb = GetBomb();
+
+//   Double_t *matrix      = fMatrix->GetMatrix();
+    Double_t *matrix = &fRotMatrix[GeomLevel()][0];
+
+    x = bomb*fX
+      + local[0]*matrix[0]
+      + local[1]*matrix[3]
+      + local[2]*matrix[6];
+
+    y = bomb*fY
+      + local[0]*matrix[1]
+      + local[1]*matrix[4]
+      + local[2]*matrix[7];
+
+    z = bomb*fZ
+      + local[0]*matrix[2]
+      + local[1]*matrix[5]
+      + local[2]*matrix[8];
+
+     master[0] = x; master[1] = y; master[2] = z;
+  }
+  else
+     memcpy(master,local,sizeof(Float_t)* kVectorSize);
+
+
+}
+//______________________________________________________________________________
 void TGeometry::ls(Option_t *option)
 {
 //*-*-*-*-*-*-*-*-*-*-*-*List this geometry*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
@@ -386,4 +467,105 @@ void TGeometry::Streamer(TBuffer &b)
       fNodes->Streamer(b);
       b << fBomb;
    }
+}
+
+//______________________________________________________________________________
+void TGeometry::UpdateMatrix(TNode *node)
+{
+//    Update global rotation matrix/translation vector for this node
+//   this function must be called before invoking Local2Master
+
+   TNode *nodes[kMAXLEVELS];
+   Int_t i;
+   for (i=0;i<kVectorSize;i++) fTranslation[0][i] = 0;
+   for (i=0;i<kMatrixSize;i++) fRotMatrix[0][i] = 0;
+   fRotMatrix[0][0] = 1;   fRotMatrix[0][4] = 1;   fRotMatrix[0][8] = 1;
+
+   fGeomLevel  = 0;
+   //build array of parent nodes
+   while (node) {
+      nodes[fGeomLevel] = node;
+      node = node->GetParent();
+      fGeomLevel++;
+   }
+   fGeomLevel--;
+   Int_t saveGeomLevel = fGeomLevel;
+   //Update matrices in the hierarchy
+   for (fGeomLevel=1;i<=saveGeomLevel;fGeomLevel++) {
+      node = nodes[i-i];
+      UpdateTempMatrix(node->GetX(),node->GetY(),node->GetZ(),node->GetMatrix());
+   }
+}
+//______________________________________________________________________________
+void TGeometry::UpdateTempMatrix(Double_t x, Double_t y, Double_t z, TRotMatrix *rotMatrix)
+{
+  Double_t *matrix = 0;
+  Bool_t isReflection = kFALSE;
+  if (rotMatrix && rotMatrix->GetType()) {
+     matrix = rotMatrix->GetMatrix();
+    isReflection = rotMatrix->IsReflection();
+  }
+  UpdateTempMatrix( x,y,z, matrix,isReflection);
+}
+//______________________________________________________________________________
+void TGeometry::UpdateTempMatrix(Double_t x, Double_t y, Double_t z, Double_t *matrix,Bool_t isReflection)
+{
+  Int_t i=GeomLevel();
+  if (i) {
+    if(matrix)
+    {
+      UpdateTempMatrix(&(fTranslation[i-1][0]),&fRotMatrix[i-1][0]
+                       ,x,y,z,matrix
+                      ,&fTranslation[i][0],&fRotMatrix[i][0]);
+      fX = fTranslation[i][0];
+      fY = fTranslation[i][1];
+      fZ = fTranslation[i][2];
+      fIsReflection[i] = fIsReflection[i-1] ^ isReflection;
+   }
+   else {
+      fX = fTranslation[i][0] = fTranslation[i-1][0] + x;
+      fY = fTranslation[i][1] = fTranslation[i-1][1] + y;
+      fZ = fTranslation[i][2] = fTranslation[i-1][2] + z;
+   }
+
+  }
+  else {
+    fX=fY=fZ=0;
+    fIsReflection[0] = kFALSE;
+    for (i=0;i<kVectorSize;i++) fTranslation[0][i] = 0;
+    for (i=0;i<kMatrixSize;i++) fRotMatrix[0][i] = 0;
+    fRotMatrix[0][0] = 1;   fRotMatrix[0][4] = 1;   fRotMatrix[0][8] = 1;
+  }
+}
+//______________________________________________________________________________
+void TGeometry::UpdateTempMatrix(Double_t *dx,Double_t *rmat
+                         , Double_t x, Double_t y, Double_t z, Double_t *matrix
+                         , Double_t *dxnew, Double_t *rmatnew)
+{
+//*-*-*-*-*-*-*Compute new translation vector and global matrix*-*-*-*-*-*-*-*
+//*-*          ================================================
+//*-*
+//*-*  dx      old translation vector
+//*-*  rmat    old global matrix
+//*-*  x,y,z   offset of new local system with respect to mother
+//*-*  dxnew   new translation vector
+//*-*  rmatnew new global rotation matrix
+//*-*
+//*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+
+
+   dxnew[0] = dx[0] + x*rmat[0] + y*rmat[3] + z*rmat[6];
+   dxnew[1] = dx[1] + x*rmat[1] + y*rmat[4] + z*rmat[7];
+   dxnew[2] = dx[2] + x*rmat[2] + y*rmat[5] + z*rmat[8];
+
+
+   rmatnew[0] = rmat[0]*matrix[0] + rmat[3]*matrix[1] + rmat[6]*matrix[2];
+   rmatnew[1] = rmat[1]*matrix[0] + rmat[4]*matrix[1] + rmat[7]*matrix[2];
+   rmatnew[2] = rmat[2]*matrix[0] + rmat[5]*matrix[1] + rmat[8]*matrix[2];
+   rmatnew[3] = rmat[0]*matrix[3] + rmat[3]*matrix[4] + rmat[6]*matrix[5];
+   rmatnew[4] = rmat[1]*matrix[3] + rmat[4]*matrix[4] + rmat[7]*matrix[5];
+   rmatnew[5] = rmat[2]*matrix[3] + rmat[5]*matrix[4] + rmat[8]*matrix[5];
+   rmatnew[6] = rmat[0]*matrix[6] + rmat[3]*matrix[7] + rmat[6]*matrix[8];
+   rmatnew[7] = rmat[1]*matrix[6] + rmat[4]*matrix[7] + rmat[7]*matrix[8];
+   rmatnew[8] = rmat[2]*matrix[6] + rmat[5]*matrix[7] + rmat[8]*matrix[8];
 }

@@ -1,3 +1,6 @@
+//*CMZ :  2.21/08 17/03/99  08.32.00  by  Rene Brun
+//*CMZ :  2.21/07 05/03/99  17.21.43  by  Rene Brun
+//*CMZ :  2.21/01 13/01/99  09.37.48  by  Rene Brun
 //*CMZ :  2.00/11 30/11/98  11.06.39  by  Rene Brun
 //*CMZ :  2.00/09 26/06/98  09.53.31  by  Rene Brun
 //*CMZ :  2.00/08 26/05/98  17.05.07  by  Fons Rademakers
@@ -196,7 +199,7 @@ THtml::THtml()
    // check for output directory
    fOutputDir = gEnv->GetValue( "Root.Html.OutputDir", "html/" );
 
-   fXwho      = "http://xwho.cern.ch/WHO/people?";
+   fXwho      = "http://consult.cern.ch/xwho/people?";
 
    Int_t  st;
    Long_t sId, sSize, sFlags, sModtime;
@@ -901,14 +904,14 @@ void THtml::ClassDescription( ofstream &out, TClass *classPtr, Bool_t &flag )
                     // find method name
                     Char_t *funcName = key + len;
 
-                    while( isspace( *funcName ) && *funcName )
+                    while( *funcName && isspace( *funcName ) )
                         funcName++;
                     Char_t *nameEndPtr = funcName;
 
                     // In case of destructor
                     if( *nameEndPtr == '~' ) nameEndPtr++;
 
-                    while( IsName( *nameEndPtr ) && *nameEndPtr )
+                    while( *nameEndPtr && IsName( *nameEndPtr ) )
                         nameEndPtr++;
 
                     Char_t c1 = *nameEndPtr;
@@ -918,7 +921,7 @@ void THtml::ClassDescription( ofstream &out, TClass *classPtr, Bool_t &flag )
                     params = nameEndPtr;
                     paramsEnd = NULL;
 
-                    while( isspace( *params ) && *params ) params++;
+                    while( *params  && isspace( *params ) ) params++;
                     if( *params != '(') params = NULL;
                     else params++;
                     paramsEnd = params;
@@ -953,7 +956,7 @@ void THtml::ClassDescription( ofstream &out, TClass *classPtr, Bool_t &flag )
 
                         // try to get type
                         typeEnd = key-1;
-                        while( (isspace( *typeEnd ) || *typeEnd == '*') && ( typeEnd > fLine ))
+                        while( ( typeEnd > fLine ) && (isspace( *typeEnd ) || *typeEnd == '*') )
                             typeEnd--;
                         typeEnd++;
                         c2 = *typeEnd;
@@ -1376,17 +1379,17 @@ Bool_t THtml::CopyHtmlFile( const Char_t *sourceName, const Char_t *destName )
 
 #ifdef R__UNIX
             strcpy( cmd, "/bin/cp " );
-#endif
-
-#ifdef WIN32
-            strcpy( cmd, "copy " );
-#endif
-
             strcat( cmd, sourceFile );
             strcat( cmd, " " );
             strcat( cmd, filename );
+#endif
 
 #ifdef WIN32
+            strcpy( cmd, "copy \"" );
+            strcat( cmd, sourceFile );
+            strcat( cmd, "\" \"" );
+            strcat( cmd, filename );
+            strcat( cmd, "\"");
             Char_t *bptr = 0;
             while( bptr = strchr( cmd, '/') )
                 *bptr = '\\';
@@ -1860,7 +1863,7 @@ void THtml::ExpandKeywords( ofstream &out, Char_t *text, TClass *ptr2class,
                 tempEndPtr = end;
 
                 // skip leading spaces
-                while( isspace( *tempEndPtr ) && *tempEndPtr ) tempEndPtr++;
+                while( *tempEndPtr && isspace( *tempEndPtr ) ) tempEndPtr++;
 
 
                 // check if we have a something like a 'name[arg].name'
@@ -1895,7 +1898,7 @@ void THtml::ExpandKeywords( ofstream &out, Char_t *text, TClass *ptr2class,
                     else mmf = kFALSE;
 
                     // skip leading spaces
-                    while( isspace( *funcName ) && *funcName ) funcName++;
+                    while( *funcName && isspace( *funcName )) funcName++;
 
                     // get the end of the word
                     if( !IsWord( *funcName )) funcName = NULL;
@@ -1913,7 +1916,7 @@ void THtml::ExpandKeywords( ofstream &out, Char_t *text, TClass *ptr2class,
                             funcSig = funcNameEnd;
 
                             // skip leading spaces
-                            while( isspace( *funcSig ) && *funcSig ) funcSig++;
+                            while( *funcSig && isspace( *funcSig )) funcSig++;
                             if( *funcSig != '(') funcSig = NULL;
                             else funcSig++;
                             funcSigEnd = funcSig;
@@ -2006,7 +2009,7 @@ void THtml::ExpandKeywords( ofstream &out, Char_t *text, TClass *ptr2class,
                     Bool_t isfunc = ( (*tempEndPtr == '(') || c == '(')? kTRUE: kFALSE;
                     if( !isfunc ) {
                         Char_t *bptr = tempEndPtr + 1;
-                        while( isspace( *bptr ) && *bptr ) bptr++;
+                        while( *bptr && isspace( *bptr ) ) bptr++;
                         if( *bptr == '(') isfunc = kTRUE;
                     }
 
@@ -2722,17 +2725,18 @@ void THtml::WriteHtmlFooter( ofstream &out, Char_t *dir, const Char_t *lastUpdat
             Char_t c;
 
             // remove leading spaces
-            while( isspace( *ptr ) && *ptr ) ptr++;
+            while( *ptr && isspace( *ptr ) ) ptr++;
 
             if( !firstAuthor ) out << ", ";
 
-            if( !strncmp( ptr, "Nicolas", 7 ) )
-                out << "<a href=http://root.cern.ch/root/nicolas/?";
-            else
+            if( !strncmp( ptr, "Nicolas", 7 ) ) {
+                out << "<a href=http://root.cern.ch/root/nicolas/html/index.html";
+                ptr += 12;
+            } else {
                 out << "<a href="<<GetXwho();
-
+            }
             while( *ptr ) {
-                // Velery's specific case
+                // Valery's specific case
                 if( !strncmp( ptr, "Valery", 6 ) ) {
                     out << "Valeri";
                     ptr += 6;
@@ -2741,11 +2745,11 @@ void THtml::WriteHtmlFooter( ofstream &out, Char_t *dir, const Char_t *lastUpdat
                     out << "Faine";
                     ptr += 4;
                 }
-                while( !isspace( *ptr ) && *ptr )
+                while( *ptr && !isspace( *ptr ) )
                     out << *ptr++;
 
                 if( isspace( *ptr ) ) {
-                    while( isspace( *ptr ) && *ptr ) ptr++;
+                    while( *ptr && isspace( *ptr ) ) ptr++;
                     if( isalpha( *ptr) ) out << '+';
                     else break;
                 }

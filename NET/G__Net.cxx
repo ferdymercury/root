@@ -1,5 +1,5 @@
-//*CMZ :  2.00/12 08/10/98  19.50.39  by  Fons Rademakers
-//*-- Author :    Fons Rademakers   08/10/98
+//*CMZ :  2.21/07 08/03/99  12.35.02  by  Fons Rademakers
+//*-- Author :    Fons Rademakers   08/03/99
 //*CMZ :  1.00/09 23/04/97  17.59.54  by  Rene Brun
 //*-- Author :    Rene Brun   23/04/97
 #if defined(__hpux) && !defined(__GNUG__)
@@ -91,6 +91,7 @@ extern G__linked_taginfo G__G__NetLN_TWebFile;
 #undef malloc
 #endif
 
+extern "C" void G__cpp_reset_tagtableG__Net();
 
 extern "C" void G__set_cpp_environmentG__Net() {
   G__add_macro("__MAKECINT__");
@@ -105,8 +106,9 @@ extern "C" void G__set_cpp_environmentG__Net() {
   G__add_compiledheader("TNetFile.h");
   G__add_compiledheader("TWebFile.h");
   G__add_compiledheader("MessageTypes.h");
+  G__cpp_reset_tagtableG__Net();
 }
-int G__cpp_dllrevG__Net() { return(51111); }
+extern "C" int G__cpp_dllrevG__Net() { return(51111); }
 
 /*********************************************************
 * Member function Interface Method
@@ -1321,21 +1323,8 @@ static int G__TNetFile_Streamer_8_2(G__value *result7,char *funcname,struct G__p
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-// automatic copy constructor
-static int G__TNetFile_TNetFile_9_2(G__value *result7,char *funcname,struct G__param *libp,int hash)
-{
-   TNetFile *p;
-   if(1!=libp->paran) ;
-   p=new TNetFile(*(TNetFile*)G__int(libp->para[0]));
-   result7->obj.i = (long)p;
-   result7->ref = (long)p;
-   result7->type = 'u';
-   result7->tagnum = G__get_linked_tagnum(&G__G__NetLN_TNetFile);
-   return(1 || funcname || hash || result7 || libp) ;
-}
-
 // automatic destructor
-static int G__TNetFile_wATNetFile_0_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TNetFile_wATNetFile_9_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    if(G__getaryconstruct())
      if(G__PVOID==G__getgvp())
        delete[] (TNetFile *)(G__getstructoffset());
@@ -1446,21 +1435,8 @@ static int G__TWebFile_Streamer_6_1(G__value *result7,char *funcname,struct G__p
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-// automatic copy constructor
-static int G__TWebFile_TWebFile_7_1(G__value *result7,char *funcname,struct G__param *libp,int hash)
-{
-   TWebFile *p;
-   if(1!=libp->paran) ;
-   p=new TWebFile(*(TWebFile*)G__int(libp->para[0]));
-   result7->obj.i = (long)p;
-   result7->ref = (long)p;
-   result7->type = 'u';
-   result7->tagnum = G__get_linked_tagnum(&G__G__NetLN_TWebFile);
-   return(1 || funcname || hash || result7 || libp) ;
-}
-
 // automatic destructor
-static int G__TWebFile_wATWebFile_8_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__TWebFile_wATWebFile_7_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
    if(G__getaryconstruct())
      if(G__PVOID==G__getgvp())
        delete[] (TWebFile *)(G__getstructoffset());
@@ -1702,10 +1678,10 @@ extern "C" void G__cpp_setup_typetableG__Net() {
    G__search_typename2("FreeHookFun_t",89,-1,0,
 -1);
    G__setnewtype(-1,NULL,0);
-   G__search_typename2("ReAllocFun_t",81,-1,2,
+   G__search_typename2("ReAllocFun_t",81,-1,0,
 -1);
    G__setnewtype(-1,NULL,0);
-   G__search_typename2("ReAllocCFun_t",81,-1,2,
+   G__search_typename2("ReAllocCFun_t",81,-1,0,
 -1);
    G__setnewtype(-1,NULL,0);
    G__search_typename2("Axis_t",102,-1,0,
@@ -1801,7 +1777,7 @@ static void G__setup_memvarTUrl(void) {
    G__tag_memvar_setup(G__get_linked_tagnum(&G__G__NetLN_TUrl));
    { TUrl *p; p=(TUrl*)0x1000; if (p) { }
    G__memvar_setup((void*)NULL,117,0,0,G__get_linked_tagnum(&G__G__NetLN_TString),-1,-1,4,"fUrl=",0,"full URL");
-   G__memvar_setup((void*)NULL,117,0,0,G__get_linked_tagnum(&G__G__NetLN_TString),-1,-1,4,"fProtocol=",0,"protocol: http, ftp, news, root");
+   G__memvar_setup((void*)NULL,117,0,0,G__get_linked_tagnum(&G__G__NetLN_TString),-1,-1,4,"fProtocol=",0,"protocol: http, ftp, news, root, rfio, hpss");
    G__memvar_setup((void*)NULL,117,0,0,G__get_linked_tagnum(&G__G__NetLN_TString),-1,-1,4,"fHost=",0,"remote host");
    G__memvar_setup((void*)NULL,117,0,0,G__get_linked_tagnum(&G__G__NetLN_TString),-1,-1,4,"fFile=",0,"remote object");
    G__memvar_setup((void*)NULL,117,0,0,G__get_linked_tagnum(&G__G__NetLN_TString),-1,-1,4,"fAnchor=",0,"anchor in object");
@@ -2138,10 +2114,8 @@ static void G__setup_memfuncTNetFile(void) {
    G__memfunc_setup("ShowMembers",1132,G__TNetFile_ShowMembers_7_2,121,-1,-1,0,2,1,1,0,
 "u 'TMemberInspector' - 1 - insp C - - 0 - parent",(char*)NULL,(void*)NULL,1);
    G__memfunc_setup("Streamer",835,G__TNetFile_Streamer_8_2,121,-1,-1,0,1,1,1,0,"u 'TBuffer' - 1 - b",(char*)NULL,(void*)NULL,1);
-   // automatic copy constructor
-   G__memfunc_setup("TNetFile",763,G__TNetFile_TNetFile_9_2,(int)('i'),G__get_linked_tagnum(&G__G__NetLN_TNetFile),-1,0,1,1,1,0,"u 'TNetFile' - 1 - -",(char*)NULL,(void*)NULL,0);
    // automatic destructor
-   G__memfunc_setup("~TNetFile",889,G__TNetFile_wATNetFile_0_3,(int)('y'),-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("~TNetFile",889,G__TNetFile_wATNetFile_9_2,(int)('y'),-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
    G__tag_memfunc_reset();
 }
 
@@ -2167,10 +2141,8 @@ static void G__setup_memfuncTWebFile(void) {
    G__memfunc_setup("ShowMembers",1132,G__TWebFile_ShowMembers_5_1,121,-1,-1,0,2,1,1,0,
 "u 'TMemberInspector' - 1 - insp C - - 0 - parent",(char*)NULL,(void*)NULL,1);
    G__memfunc_setup("Streamer",835,G__TWebFile_Streamer_6_1,121,-1,-1,0,1,1,1,0,"u 'TBuffer' - 1 - b",(char*)NULL,(void*)NULL,1);
-   // automatic copy constructor
-   G__memfunc_setup("TWebFile",754,G__TWebFile_TWebFile_7_1,(int)('i'),G__get_linked_tagnum(&G__G__NetLN_TWebFile),-1,0,1,1,1,0,"u 'TWebFile' - 1 - -",(char*)NULL,(void*)NULL,0);
    // automatic destructor
-   G__memfunc_setup("~TWebFile",880,G__TWebFile_wATWebFile_8_1,(int)('y'),-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("~TWebFile",880,G__TWebFile_wATWebFile_7_1,(int)('y'),-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
    G__tag_memfunc_reset();
 }
 
@@ -2273,6 +2245,30 @@ G__linked_taginfo G__G__NetLN_TUrl = { "TUrl" , 99 , -1 };
 G__linked_taginfo G__G__NetLN_TNetFile = { "TNetFile" , 99 , -1 };
 G__linked_taginfo G__G__NetLN_TWebFile = { "TWebFile" , 99 , -1 };
 
+/* Reset class/struct taginfo */
+extern "C" void G__cpp_reset_tagtableG__Net() {
+  G__G__NetLN_TClass.tagnum = -1 ;
+  G__G__NetLN_TBuffer.tagnum = -1 ;
+  G__G__NetLN_TList.tagnum = -1 ;
+  G__G__NetLN_TObject.tagnum = -1 ;
+  G__G__NetLN_TObjectcLcLdA.tagnum = -1 ;
+  G__G__NetLN_TString.tagnum = -1 ;
+  G__G__NetLN_TNamed.tagnum = -1 ;
+  G__G__NetLN_TFile.tagnum = -1 ;
+  G__G__NetLN_TDirectory.tagnum = -1 ;
+  G__G__NetLN_TInetAddress.tagnum = -1 ;
+  G__G__NetLN_TSocket.tagnum = -1 ;
+  G__G__NetLN_TServerSocket.tagnum = -1 ;
+  G__G__NetLN_EMessageTypes.tagnum = -1 ;
+  G__G__NetLN_ESockOptions.tagnum = -1 ;
+  G__G__NetLN_ESendRecvOptions.tagnum = -1 ;
+  G__G__NetLN_TMessage.tagnum = -1 ;
+  G__G__NetLN_TMonitor.tagnum = -1 ;
+  G__G__NetLN_TUrl.tagnum = -1 ;
+  G__G__NetLN_TNetFile.tagnum = -1 ;
+  G__G__NetLN_TWebFile.tagnum = -1 ;
+}
+
 extern "C" void G__cpp_setup_tagtableG__Net() {
 
    /* Setting up class,struct,union tag entry */
@@ -2314,7 +2310,7 @@ class G__cpp_setup_initG__Net {
 G__cpp_setup_initG__Net G__cpp_setup_initializerG__Net;
 
 //
-// File generated by /home/rdm/root/bin/rootcint at Thu Oct  8 19:50:38 1998.
+// File generated by /home/rdm/root/bin/rootcint at Mon Mar  8 12:35:02 1999.
 // Do NOT change. Changes will be lost next time file is generated
 //
 

@@ -1,3 +1,5 @@
+//*CMZ :  2.21/08 11/03/99  08.13.39  by  Rene Brun
+//*CMZ :  2.21/04 05/02/99  17.17.10  by  Fons Rademakers
 //*CMZ :  2.20/01 01/12/98  12.42.35  by  Rene Brun
 //*CMZ :  2.20/00 05/11/98  15.09.28  by  Fons Rademakers
 //*CMZ :  2.00/13 29/10/98  17.18.17  by  Fons Rademakers
@@ -68,9 +70,9 @@ class TControlBar;
 class TCanvas : public TPad {
 
 friend class TCanvasImp;
-+IF,THREAD.
+#ifdef R__THREAD
 friend class TThread;
-+ENDIF
+#endif
 
 protected:
    TString      fDISPLAY;         //Name of destination screen
@@ -130,6 +132,7 @@ public:
    void              Close(Option_t *option="");
    virtual void      Draw(Option_t *option="");
    virtual void      EditorBar();
+   void              EnterLeave(TPad *prevSelPad, TObject *prevSelObj);
    void              FeedbackMode(Bool_t set);
    void              Flush();
    void              UseCurrentStyle(); // *MENU*
@@ -152,7 +155,7 @@ public:
    Size_t            GetYsizeUser() {return fYsizeUser;}
    Size_t            GetXsizeReal() {return fXsizeReal;}
    Size_t            GetYsizeReal() {return fYsizeReal;}
-   Int_t             GetCanvasID() {return fCanvasID;}
+   Int_t             GetCanvasID() const {return fCanvasID;}
    TCanvasImp       *GetCanvasImp() {return fCanvasImp;}
    Int_t             GetWindowTopX();
    Int_t             GetWindowTopY();

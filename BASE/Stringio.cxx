@@ -1,3 +1,4 @@
+//*CMZ :  2.21/03 22/01/99  16.25.57  by  Fons Rademakers
 //*CMZ :  1.03/09 05/12/97  13.58.15  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   04/08/95
 
@@ -123,9 +124,9 @@ istream& TString::ReadToken(istream& strm)
 
    UInt_t wid = strm.width(0);
    char c;
-   Bool_t hitSpace = kFALSE;
+   Int_t hitSpace = 0;
    while ((wid == 0 || Pref()->fNchars < (Int_t)wid) &&
-          strm.get(c).good() && (hitSpace = isspace((unsigned char)c)) == 0) {
+          strm.get(c).good() && (hitSpace = isspace((Int_t)c)) == 0) {
       // Check for overflow:
       if (Length() == Capacity())
          Capacity(Length() + GetResizeIncrement());

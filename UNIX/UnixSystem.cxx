@@ -1,3 +1,7 @@
+//*CMZ :  2.21/05 08/02/99  12.53.47  by  Fons Rademakers
+//*CMZ :  2.21/04 02/02/99  19.23.12  by  Fons Rademakers
+//*CMZ :  2.21/03 22/01/99  18.25.23  by  Fons Rademakers
+//*CMZ :  2.21/01 14/01/99  13.35.08  by  Fons Rademakers
 //*CMZ :  2.20/01 02/12/98  18.00.58  by  Fons Rademakers
 //*CMZ :  2.20/00 25/11/98  18.28.15  by  Fons Rademakers
 //*CMZ :  2.00/13 29/10/98  10.34.15  by  Rene Brun
@@ -49,11 +53,14 @@
 #include "TSocket.h"
 #include "Getline.h"
 
+//#define G__OLDEXPAND
+
 #include <unistd.h>
 #include <stdlib.h>
 #include <sys/types.h>
 #if defined(R__SUN) || defined(R__SGI) || defined(R__HPUX) || defined(R__AIX) || \
-    defined(R__LINUX) || defined(R__SOLARIS) || defined(R__ALPHA)  || defined(R__HIUX)
+    defined(R__LINUX) || defined(R__SOLARIS) || defined(R__ALPHA) || \
+    defined(R__HIUX) || defined(R__FBSD)
 #   include <dirent.h>
 #else
 #   include <sys/dir.h>
@@ -61,7 +68,8 @@
 #if defined(ULTRIX) || defined(R__SUN)
 #   include <sgtty.h>
 #endif
-#if defined(R__AIX) || defined(R__LINUX) || defined(R__ALPHA) || defined(R__SGI)  || defined(R__HIUX)
+#if defined(R__AIX) || defined(R__LINUX) || defined(R__ALPHA) || defined(R__SGI) || \
+    defined(R__HIUX) || defined(R__FBSD)
 #   include <sys/ioctl.h>
 #endif
 #if defined(R__AIX) || defined(R__SOLARIS)
@@ -89,7 +97,7 @@
 #   define _XOPEN_EXTENDED_SOURCE
 #   include <arpa/inet.h>
 #   undef _XOPEN_EXTENDED_SOURCE
-#   if !defined(_AIX41)
+#   if !defined(_AIX41) && !defined(_AIX43)
     // AIX 3.2 doesn't have it
     extern "C" int inet_aton(const char *, struct in_addr *) { return 0; }
 #   endif
@@ -144,7 +152,7 @@ extern "C" {
 #define HAVE_UTMPX_H
 #define UTMP_NO_ADDR
 #endif
-#if defined(R__ALPHA) || defined(R__AIX)
+#if defined(R__ALPHA) || defined(R__AIX) || defined(R__FBSD)
 #define UTMP_NO_ADDR
 #endif
 
@@ -152,7 +160,7 @@ extern "C" {
 #include <utmpx.h>
 #define STRUCT_UTMP struct utmpx
 #else
-#if defined(R__MKLINUX)
+#if defined(R__MKLINUX) && !defined(R__PPCEGCS)
         extern "C" {
 #endif
 #include <utmp.h>
@@ -288,7 +296,7 @@ const char *TUnixSystem::GetError()
 {
    // Return system error string.
 
-#if defined(R__SOLARIS) || defined (R__LINUX) || defined(R__AIX)
+#if defined(R__SOLARIS) || defined (R__LINUX) || defined(R__AIX) || defined(R__FBSD)
    return strerror(errno);
 #else
    if (errno < 0 || errno >= sys_nerr)
@@ -398,10 +406,10 @@ void TUnixSystem::IgnoreInterrupt(Bool_t ignore)
          sigact.sa_flags = 0;
 #endif
          if (sigaction(SIGINT, &sigact, &oldsigact) < 0)
-            ::SysError("IgnoreInterrupt", "sigaction");
+            ::SysError("TUnixSystem::IgnoreInterrupt", "sigaction");
       } else {
          if (sigaction(SIGINT, &oldsigact, 0) < 0)
-            ::SysError("IgnoreInterrupt", "sigaction");
+            ::SysError("TUnixSystem::IgnoreInterrupt", "sigaction");
       }
    }
 }
@@ -450,7 +458,8 @@ void TUnixSystem::DispatchOneEvent(Bool_t pendingOnly)
       if (fTimers && fTimers->GetSize() > 0)
          if (DispatchTimers(kTRUE)) {
             // prevent timers from blocking file descriptor monitoring
-            if (NextTimeOut(kTRUE) > kItimerResolution)
+            Long_t to = NextTimeOut(kTRUE);
+            if (to > kItimerResolution || to == -1)
                return;
          }
 
@@ -654,11 +663,11 @@ const char *TUnixSystem::WorkingDirectory()
 }
 
 //______________________________________________________________________________
-const char *TUnixSystem::HomeDirectory()
+const char *TUnixSystem::HomeDirectory(const Char_t *userName)
 {
    // Return the user's home directory.
 
-   return UnixHomedirectory(0);
+   return UnixHomedirectory(userName);
 }
 
 //______________________________________________________________________________
@@ -762,10 +771,46 @@ int TUnixSystem::Unlink(const char *name)
 // expand the metacharacters as in the shell
 
 static const char
-   *shellMeta      = "~*[]{}?$",
+#ifdef G__OLDEXPAND
+   shellEscape     = '\\',
    *shellStuff     = "(){}<>\"'",
-   shellEscape     = '\\';
+#endif
+   *shellMeta      = "~*[]{}?$";
 
+
+#ifndef G__OLDEXPAND
+//______________________________________________________________________________
+Bool_t TUnixSystem::ExpandPathName(TString &path)
+{
+   // Expand a pathname getting rid of special shell characters like ~.$, etc.
+   // For Unix/Win32 compatibility use $(XXX) instead of $XXX when using
+   // environment variables in a pathname. If compatibility is not an issue
+   // you can use on Unix directly $XXX.
+
+   const char *p, *patbuf = (const char *)path;
+
+   // skip leading blanks
+   while (*patbuf == ' ')
+      patbuf++;
+
+   // any shell meta characters ?
+   for (p = patbuf; *p; p++)
+      if (strchr(shellMeta, *p))
+         goto expand;
+
+   return kFALSE;
+
+expand:
+   // replace $(XXX) by $XXX
+   path.ReplaceAll("$(","$");
+   path.ReplaceAll(")","");
+
+   path = ExpandFileName(path.Data());
+   return kFALSE;
+}
+#endif
+
+#ifdef G__OLDEXPAND
 //______________________________________________________________________________
 Bool_t TUnixSystem::ExpandPathName(TString &patbuf0)
 {
@@ -866,6 +911,7 @@ again:
 
    return kFALSE;
 }
+#endif
 
 //______________________________________________________________________________
 char *TUnixSystem::ExpandPathName(const char *path)
@@ -1266,7 +1312,7 @@ TInetAddress TUnixSystem::GetSockName(int sock)
    // Get Internet Protocol (IP) address of host and port #.
 
    struct sockaddr_in addr;
-#if defined(R__AIX)
+#if defined(R__AIX) || defined(R__FBSD)
    size_t len = sizeof(addr);
 #elif defined(R__GLIBC)
    socklen_t len = sizeof(addr);
@@ -1304,7 +1350,7 @@ TInetAddress TUnixSystem::GetPeerName(int sock)
    // Get Internet Protocol (IP) address of remote host and port #.
 
    struct sockaddr_in addr;
-#if defined(R__AIX)
+#if defined(R__AIX) || defined(R__FBSD)
    size_t len = sizeof(addr);
 #elif defined(R__GLIBC)
    socklen_t len = sizeof(addr);
@@ -1438,7 +1484,7 @@ void TUnixSystem::CloseConnection(int sock)
 
    if (sock < 0) return;
 
-#if !defined(R__AIX) || defined(_AIX41)
+#if !defined(R__AIX) || defined(_AIX41) || defined(_AIX43)
    ::shutdown(sock, 2);
 #endif
 
@@ -1498,10 +1544,11 @@ int TUnixSystem::RecvRaw(int sock, void *buf, int length, int opt)
 {
    // Receive exactly length bytes into buffer. Use opt to receive out-of-band
    // data or to have a peek at what is in the buffer (see TSocket). Buffer
-   // must be able to store at least lenght bytes. Returns the number of
-   // bytes received or -1 in case of error, -2 in case of MSG_OOB
-   // and errno == EWOULDBLOCK, -3 in case of MSG_OOB and errno == EINVAL
-   // and -4 in case of kNonBlock and errno == EWOULDBLOCK.
+   // must be able to store at least length bytes. Returns the number of
+   // bytes received (can be 0 if other side of connection was closed) or -1
+   // in case of error, -2 in case of MSG_OOB and errno == EWOULDBLOCK, -3
+   // in case of MSG_OOB and errno == EINVAL and -4 in case of kNoBlock and
+   // errno == EWOULDBLOCK.
 
    int flag;
 
@@ -1521,7 +1568,7 @@ int TUnixSystem::RecvRaw(int sock, void *buf, int length, int opt)
    }
 
    int n;
-   if ((n = UnixRecv(sock, buf, length, flag)) < 0) {
+   if ((n = UnixRecv(sock, buf, length, flag)) <= 0) {
       if (n == -1 && errno != EINTR)
          Error("RecvRaw", "cannot receive buffer");
       return n;
@@ -1630,8 +1677,10 @@ int TUnixSystem::GetSockOpt(int sock, int opt, int *val)
 
    if (sock < 0) return -1;
 
-#if defined(R__GLIBC)
+#if defined(R__GLIBC) || defined(_AIX43)
    socklen_t optlen = sizeof(*val);
+#elif defined(R__FBSD)
+   size_t optlen = sizeof(*val);
 #else
    int optlen = sizeof(*val);
 #endif
@@ -1780,7 +1829,7 @@ void TUnixSystem::UnixSignal(ESignals sig, SigHandler_t handler)
       sigact.sa_flags = 0;
 #endif
       if (sigaction(gSignalMap[sig].code, &sigact, 0) < 0)
-         ::SysError("UnixSignal", "sigaction");
+         ::SysError("TUnixSystem::UnixSignal", "sigaction");
    }
 }
 
@@ -1812,7 +1861,7 @@ Long_t TUnixSystem::UnixNow()
 
       jan95 = mktime(&tp);
       if ((int)jan95 == -1) {
-         ::SysError("UnixNow", "error converting 950001 0:00 to time_t");
+         ::SysError("TUnixSystem::UnixNow", "error converting 950001 0:00 to time_t");
          return 0;
       }
    }
@@ -1838,7 +1887,7 @@ int TUnixSystem::UnixSetitimer(Long_t ms)
    }
    int st = setitimer(ITIMER_REAL, &itv, 0);
    if (st == -1)
-      ::SysError("UnixSetitimer", "setitimer");
+      ::SysError("TUnixSystem::UnixSetitimer", "setitimer");
    return st;
 }
 
@@ -1857,13 +1906,15 @@ int TUnixSystem::UnixSelect(UInt_t nfds, TFdSet *readready, TFdSet *writeready,
       struct timeval tv;
       tv.tv_sec  = Int_t(timeout / 1000);
       tv.tv_usec = (timeout % 1000) * 1000;
-#if (defined(R__HPUX) && !defined(_XPG4_EXTENDED)) || defined(R__AIX)  || defined(R__HIUX)
+#if (defined(R__HPUX) && !defined(_XPG4_EXTENDED) && !defined(R__GNU)) || \
+    (defined(R__HIUX) && !defined(R__GNU)) || (defined(R__AIX) && !defined(_AIX43))
       retcode = select(nfds, readready->GetBits(), writeready->GetBits(), 0, &tv);
 #else
       retcode = select(nfds, (fd_set*)readready->GetBits(), (fd_set*)writeready->GetBits(), 0, &tv);
 #endif
    } else {
-#if (defined(R__HPUX) && !defined(_XPG4_EXTENDED)) || defined(R__AIX)  || defined(R__HIUX)
+#if (defined(R__HPUX) && !defined(_XPG4_EXTENDED) && !defined(R__GNU)) || \
+    (defined(R__HIUX) && !defined(R__GNU)) || (defined(R__AIX) && !defined(_AIX43))
       retcode = select(nfds, readready->GetBits(), writeready->GetBits(), 0, 0);
 #else
       retcode = select(nfds, (fd_set*)readready->GetBits(), (fd_set*)writeready->GetBits(), 0, 0);
@@ -1949,7 +2000,8 @@ const char *TUnixSystem::UnixGetdirentry(void *dirp1)
 
    DIR *dirp = (DIR*)dirp1;
 #if defined(R__SUN) || defined(R__SGI) || defined(R__AIX) || defined(R__HPUX) || \
-    defined(R__LINUX) || defined(R__SOLARIS) || defined(R__ALPHA)  || defined(R__HIUX)
+    defined(R__LINUX) || defined(R__SOLARIS) || defined(R__ALPHA) || \
+    defined(R__HIUX) || defined(R__FBSD)
    struct dirent *dp;
 #else
    struct direct *dp;
@@ -2048,12 +2100,12 @@ int TUnixSystem::UnixTcpConnect(const char *hostname, int port)
    // Create socket
    int sock;
    if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
-      ::SysError("UnixConnectTcp", "socket");
+      ::SysError("TUnixSystem::UnixConnectTcp", "socket");
       return -1;
    }
 
    if (connect(sock, (struct sockaddr*) &server, sizeof(server)) < 0) {
-      //::SysError("UnixConnectTcp", "connect");
+      //::SysError("TUnixSystem::UnixConnectTcp", "connect");
       close(sock);
       return -1;
    }
@@ -2076,12 +2128,12 @@ int TUnixSystem::UnixUnixConnect(int port)
 
    // Open socket
    if ((sock = socket(AF_UNIX, SOCK_STREAM, 0)) < 0) {
-      ::SysError("UnixUnixConnect", "socket");
+      ::SysError("TUnixSystem::UnixUnixConnect", "socket");
       return -1;
    }
 
    if (connect(sock, (struct sockaddr*) &unserver, strlen(unserver.sun_path)+2) < 0) {
-      // ::SysError("UnixUnixConnect", "connect");
+      // ::SysError("TUnixSystem::UnixUnixConnect", "connect");
       close(sock);
       return -1;
    }
@@ -2106,7 +2158,7 @@ int TUnixSystem::UnixTcpService(int port, Bool_t reuse, int backlog)
    // Create tcp socket
    int sock;
    if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
-      ::SysError("UnixTcpService", "socket");
+      ::SysError("TUnixSystem::UnixTcpService", "socket");
       return -1;
    }
 
@@ -2121,13 +2173,13 @@ int TUnixSystem::UnixTcpService(int port, Bool_t reuse, int backlog)
 
    // Bind socket
    if (bind(sock, (struct sockaddr*) &inserver, sizeof(inserver))) {
-      ::SysError("UnixTcpService", "bind");
+      ::SysError("TUnixSystem::UnixTcpService", "bind");
       return -2;
    }
 
    // Start accepting connections
    if (listen(sock, backlog)) {
-      ::SysError("UnixTcpService", "listen");
+      ::SysError("TUnixSystem::UnixTcpService", "listen");
       return -3;
    }
 
@@ -2157,18 +2209,18 @@ int TUnixSystem::UnixUnixService(int port, int backlog)
 
    // Create socket
    if ((sock = socket(AF_UNIX, SOCK_STREAM, 0)) < 0) {
-      ::SysError("UnixUnixService", "socket");
+      ::SysError("TUnixSystem::UnixUnixService", "socket");
       return -1;
    }
 
    if (bind(sock, (struct sockaddr*) &unserver, strlen(unserver.sun_path)+2)) {
-      ::SysError("UnixUnixService", "bind");
+      ::SysError("TUnixSystem::UnixUnixService", "bind");
       return -1;
    }
 
    // Start accepting connections
    if (listen(sock, backlog)) {
-      ::SysError("UnixUnixService", "listen");
+      ::SysError("TUnixSystem::UnixUnixService", "listen");
       return -1;
    }
 
@@ -2181,7 +2233,7 @@ int TUnixSystem::UnixRecv(int sock, void *buffer, int length, int flag)
    // Receive exactly length bytes into buffer. Returns number of bytes
    // received. Returns -1 in case of error, -2 in case of MSG_OOB
    // and errno == EWOULDBLOCK, -3 in case of MSG_OOB and errno == EINVAL
-   // and -4 in case of kNonBlock and errno == EWOULDBLOCK.
+   // and -4 in case of kNoBlock and errno == EWOULDBLOCK.
 
    errno = 0;
 
@@ -2204,7 +2256,7 @@ int TUnixSystem::UnixRecv(int sock, void *buffer, int length, int flag)
             return -4;
          else {
             if (errno != EINTR)
-               ::SysError("UnixRecv", "recv");
+               ::SysError("TUnixSystem::UnixRecv", "recv");
             return -1;
          }
       }
@@ -2225,7 +2277,7 @@ int TUnixSystem::UnixSend(int sock, const void *buffer, int length, int flag)
 
    for (n = 0; n < length; n += nsent) {
       if ((nsent = send(sock, buf+n, length-n, flag)) <= 0) {
-         ::SysError("UnixSend", "send");
+         ::SysError("TUnixSystem::UnixSend", "send");
          return nsent;
       }
    }
@@ -2345,7 +2397,7 @@ Func_t TUnixSystem::UnixDynFindSymbol(const char *lib, const char *entry)
    if (handle = (shl_t)FindDynLib(lib)) {
       Func_t addr = 0;
       if (shl_findsym(&handle, entry, TYPE_PROCEDURE, addr) == -1)
-         ::SysError("UnixDynFindSymbol", "shl_findsym");
+         ::SysError("TUnixSystem::UnixDynFindSymbol", "shl_findsym");
       return addr;
    }
    return 0;
@@ -2442,11 +2494,11 @@ void TUnixSystem::UnixDynUnload(const char *lib)
 
    if (handle = (shl_t)FindDynLib(lib))
       if (cxxshl_unload(handle) == -1)
-         ::SysError("UnixDynUnload", "could not unload library %s", lib);
+         ::SysError("TUnixSystem::UnixDynUnload", "could not unload library %s", lib);
 #else
    if (lib) { }
    // should call CINT unload file here, but does not work for sl's yet.
-   ::Warning("UnixDynUnload", "CINT does not support unloading shared libs");
+   ::Warning("TUnixSystem::UnixDynUnload", "CINT does not support unloading shared libs");
 #endif
 }
 

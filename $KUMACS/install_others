@@ -1,3 +1,4 @@
+*CMZ :  2.21/08 11/03/99  08.18.46  by  Rene Brun
 *CMZ :  2.00/00 05/03/98  17.24.47  by  Fons Rademakers
 *CMZ :  1.01/02 13/05/97  10.16.47  by  Rene Brun
 *-- Author :    Rene Brun   23/03/97
@@ -25,6 +26,11 @@ sel gl
 seq gl
 cx gl
 sel -gl
+sel thread posix
+seq thread
+cx thread
+sel -thread
+sel -posix
 
 +IF,UNIX.
 *      install WinNT and MAC sources

@@ -1,3 +1,4 @@
+//*CMZ :  2.21/04 05/02/99  13.28.35  by  Fons Rademakers
 //*CMZ :  2.20/05 12/12/98  18.09.50  by  Rene Brun
 //*CMZ :  2.00/11 08/08/98  22.26.12  by  Rene Brun
 //*CMZ :  1.03/09 09/12/97  20.56.48  by  Fons Rademakers
@@ -52,7 +53,7 @@ protected:
 
 public:
    TButton();
-   TButton(const Text_t *title, const Text_t *method, Coord_t x1, Coord_t y1,Coord_t x2 ,Coord_t y2);
+   TButton(const Text_t *title, const Text_t *method, Coord_t x1, Coord_t y1, Coord_t x2, Coord_t y2);
    virtual ~TButton();
    virtual void  Divide(Int_t nx=1, Int_t ny=1, Float_t xmargin=0.01, Float_t ymargin=0.01, Int_t color=0);
    virtual void  Draw(Option_t *option="");

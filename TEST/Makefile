@@ -1,3 +1,5 @@
+*CMZ :  2.21/07 04/03/99  18.06.22  by  Rene Brun
+*CMZ :  2.21/04 05/02/99  11.19.10  by  Fons Rademakers
 *CMZ :  2.20/00 21/11/98  21.14.38  by  Rene Brun
 *CMZ :  2.00/13 29/10/98  13.27.18  by  Rene Brun
 *CMZ :  2.00/12 09/10/98  10.22.49  by  Rene Brun
@@ -19,17 +21,17 @@ OutPutOpt     = -o
 
 ROOTLIBS      = -L$(ROOTSYS)/lib -lNew -lBase -lCint -lClib -lCont -lFunc \
                 -lGraf -lGraf3d -lHist -lHtml -lMatrix -lMeta -lMinuit -lNet \
-                -lPostscript -lProof -lTree -lUnix -lZip
+                -lPhysics -lPostscript -lProof -lTree -lUnix -lZip
 ROOTGLIBS     = -lGpad -lGui -lGX11 -lX3d
 
-+SELF,IF=HPUX,IF=-ACC,IF=-GCC.
++SELF,IF=HPUX,IF=-ACC,IF=-EGCS.
 # HP-UX with CC
 CXX           = CC
-+SELF,IF=HPUX,IF=HPUX9,IF=-ACC,IF=-GCC.
++SELF,IF=HPUX,IF=HPUX9,IF=-ACC,IF=-EGCS.
 CXXFLAGS      = -O +a1 +Z -I$(ROOTSYS)/include
-+SELF,IF=HPUX,IF=-HPUX9,IF=-ACC,IF=-GCC.
++SELF,IF=HPUX,IF=-HPUX9,IF=-ACC,IF=-EGCS.
 CXXFLAGS      = -O +a1 +Z -I$(ROOTSYS)/include
-+SELF,IF=HPUX,IF=-ACC,IF=-GCC.
++SELF,IF=HPUX,IF=-ACC,IF=-EGCS.
 LD            = CC
 LDFLAGS       = -g +a1 -z
 SOFLAGS       = -b
@@ -47,17 +49,15 @@ SOFLAGS       = -b
 LIBS          = $(ROOTLIBS) -lm
 GLIBS         = $(ROOTLIBS) $(ROOTGLIBS) -lXpm -lX11 -lm -ldld
 
-+SELF,IF=HPUX,IF=GCC.
++SELF,IF=HPUX,IF=EGCS.
 # HP-UX 10.x with g++
-CXXFLAGS      = -g -I$(ROOTSYS)/include
+CXXFLAGS      = -g -fPIC -fno-rtti -fno-exceptions -I$(ROOTSYS)/include
 CXX           = g++
 LD            = g++
 LDFLAGS       = -g
-SOFLAGS       = -b
-ROOTLIBS      = -L$(ROOTSYS)/lib -lRoot
-LIBS          = $(ROOTLIBS) -lg++ -lm
-GLIBS         = $(ROOTLIBS) $(ROOTGLIBS) -L/usr/lib/X11R5 \
-                -L/usr/lib -lXpm -lX11 -lg++ -lm -ldld
+SOFLAGS       = -fPIC -shared
+LIBS          = $(ROOTLIBS) -lm
+GLIBS         = $(ROOTLIBS) $(ROOTGLIBS) -lXpm -lX11 -lm -ldld
 
 +SELF,IF=IBMRT,IF=-GCC.
 # IBM AIX
@@ -131,8 +131,19 @@ CXXFLAGS      = -fsigned-char -Wall -fPIC -fno-rtti -fno-exceptions -I$(ROOTSYS)
 LD            = g++
 LDFLAGS       = -g -Wl,-u,__builtin_new -Wl,-u,__builtin_delete -Wl,-u,__nw__FUiPv
 SOFLAGS       = -shared
-LIBS          = $(ROOTLIBS) -lg++ -lm -ldl
-GLIBS         = $(ROOTLIBS) $(ROOTGLIBS) -lXpm -lX11 -lg++ -lm -lPW -ldl
+LIBS          = $(ROOTLIBS) -lstdc++ -lm
+GLIBS         = $(ROOTLIBS) $(ROOTGLIBS) -lXpm -lX11 -lstdc++ -lm
+
++SELF,IF=SGI,IF=EGCS,IF=SGI64.
+# SGI 6.4 with EGCS
+CXX           = g++
+CXXFLAGS      = -fsigned-char -Wall -fPIC -fno-rtti -fno-exceptions -I$(ROOTSYS)/include
+LD            = g++
+LDFLAGS       = -g -Wl,-u,__builtin_new -Wl,-u,__builtin_delete -Wl,-u,__nw__FUiPv \
+                -lgcc -lm -L/usr/lib32
+SOFLAGS       = -shared
+LIBS          = $(ROOTLIBS) -lg++ -lm -lgen
+GLIBS         = $(ROOTLIBS) $(ROOTGLIBS) -lXpm -lX11 -lg++ -lm -lPW
 
 +SELF,IF=SGI,IF=GCC.
 # SGI with GCC
@@ -147,13 +158,13 @@ GLIBS         = $(ROOTLIBS) $(ROOTGLIBS) -lXpm -lX11 -lg++ -lm -lPW -ldl
 +SELF,IF=SGI,IF=KCC.
 # SGI with KCC
 CXX           = KCC -32
-CXXFLAGS      = -I$(ROOTSYS)/include --signed_chars --display_error_number --diag_suppress 68 --diag_suppress 191 --diag_suppress 837
+CXXFLAGS      = -I$(ROOTSYS)/include --signed_chars --display_error_number \
+                --diag_suppress 68 --diag_suppress 191 --diag_suppress 837 \
+                --no_exceptions
 LD            = KCC -32
-LDFLAGS       = -g -Wl,-u,__builtin_new -Wl,-u,__builtin_delete -Wl,-u,__nw__FUiPv
+LDFLAGS       = -g -Wl,-u,__builtin_new -Wl,-u,__builtin_delete -Wl,-u,__nw__FUiPv \
+                --no_exceptions
 SOFLAGS       =
-ROOTLIBS      = -L$(ROOTSYS)/lib -lBase -lCint -lClib -lCont -lFunc \
-                -lGraf -lGraf3d -lHist -lHtml -lMatrix -lMeta -lMinuit -lNet \
-                -lPostscript -lProof -lTree -lUnix -lZip
 LIBS          = $(ROOTLIBS) -lm -ldl
 GLIBS         = $(ROOTLIBS) $(ROOTGLIBS) -lXpm -lX11 -lm -lPW -ldl
 

@@ -1,3 +1,4 @@
+*CMZ :  2.21/03 20/01/99  14.43.07  by  Fons Rademakers
 *CMZ :  2.20/00 22/11/98  18.40.46  by  Fons Rademakers
 *CMZ :  2.00/10 27/06/98  19.20.45  by  Fons Rademakers
 *CMZ :  2.00/09 26/06/98  19.07.30  by  Fons Rademakers
@@ -34,5 +35,7 @@ ctot X11TTF_LinkDef
 ctot GUI1_LinkDef
 ctot GUI2_LinkDef
 ctot GUI3_LinkDef
+ctot RFIO_LinkDef
+ctot PHYSICS_LinkDef
 
 shell touch -t  010100001994 src/*LinkDef* src/G__TypeInfo.h

@@ -1,4 +1,5 @@
-//*CMZ :  2.00/11 19/08/98  21.04.49  by  Rene Brun
+//*CMZ :  2.21/07 06/03/99  19.10.59  by  Rene Brun
+//*CMZ :  2.00/11 03/03/99  14.18.31  by  Rene Brun
 //*CMZ :  2.00/00 17/02/98  10.56.24  by  Rene Brun
 //*CMZ :  1.01/04 02/06/97  11.24.03  by  Rene Brun
 //*-- Author :    Rene Brun   12/01/96
@@ -63,19 +64,19 @@ TLeafF::~TLeafF()
 
 
 //______________________________________________________________________________
-void TLeafF::Export(TClonesArray *list)
+void TLeafF::Export(TClonesArray *list, Int_t n)
 {
 //*-*-*-*-*-*Export element from local leaf buffer to ClonesArray*-*-*-*-*
 //*-*        ====================================================
 
-   Int_t n = list->GetEntriesFast();
-   if (!n) return;
-   Int_t j = 0;
-//printf("Exporting leaf:%s, n=%d, list=%x\n",GetName(),n,list);
+   Float_t *value = fValue;
    for (Int_t i=0;i<n;i++) {
-//printf("list(i)=%x, fOffset=%d,fValue[%d]=%f\n",list->UncheckedAt(i),fOffset,i,fValue[j]);
-      memcpy((char*)list->UncheckedAt(i) + fOffset,&fValue[j], 4*fLen);
-      j += fLen;
+      char *first = (char*)list->UncheckedAt(i);
+      Float_t *ff = (Float_t*)&first[fOffset];
+      for (Int_t j=0;j<fLen;j++) {
+         ff[j] = value[j];
+      }
+      value += fLen;
    }
 }
 

@@ -1,3 +1,4 @@
+//*CMZ :  2.21/07 28/02/99  16.39.32  by  Valery Fine(fine@mail.cern.ch)
 //*CMZ :  1.01/04 27/05/97  16.42.01  by  Valery Fine(fine@vxcern.cern.ch)
 //*-- Author :    Valery Fine(fine@vxcern.cern.ch)   01/11/96
 
@@ -17,6 +18,7 @@
  * It is provided "as is" without express or implied warranty.           *
  *************************************************************************/
 
+#include "TBrowser.h"
 #include "TWin32TreeViewCtrl.h"
 #include "TWin32BrowserImp.h"
 #include "TWin32Application.h"
@@ -326,7 +328,11 @@ void TWin32TreeViewCtrl::OnItemExpandingCB(LPNM_TREEVIEW lParam)
 
       SetCursor(LoadCursor(NULL,IDC_WAIT));
 
-      obj->Browse(((TWin32BrowserImp *)fMasterWindow)->Browser());
+      TBrowser *b = ((TWin32BrowserImp *)fMasterWindow)->Browser();
+      if (b) {
+         obj->Browse(b);
+         b->SetSelected(obj);
+      }
       ((TWin32BrowserImp *)fMasterWindow)->SetListBlocked(kFALSE);
 
       lParam->itemNew.mask = 0;

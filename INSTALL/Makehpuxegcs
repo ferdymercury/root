@@ -1,0 +1,35 @@
+*CMZ :  2.21/01 11/01/99  13.00.13  by  Fons Rademakers
+*-- Author :    Fons Rademakers   11/01/99
+# Makefile of ROOT for HP-UX 10.x with egcs-1.1.1
+
+PLATFORM      = hpux
+
+CXX           = g++
+CC            = gcc
+CXXFLAGS      = -fPIC -fno-rtti -fno-exceptions -I/usr/include/X11R5
+CFLAGS        = -fPIC -I/usr/include/X11R5
+CINTCXXFLAGS  = -fPIC -fno-rtti -fno-exceptions -DG__REGEXP -DG__UNIX \
+                -DG__SHAREDLIB -D_POSIX2_SOURCE -DG__ROOT -DG__REDIRECTIO
+CINTCFLAGS    = -fPIC -DG__REGEXP -DG__UNIX \
+                -DG__SHAREDLIB -D_POSIX2_SOURCE -DG__ROOT -DG__REDIRECTIO
+OPT           = -g
+NOOPT         =
+LD            = g++
+LDFLAGS       = $(OPT)
+SOFLAGS       = -shared -fPIC
+SOEXT         = sl
+SYSLIBS       = -lm -ldld
+SYSXLIBS      = -L/usr/lib/X11R5 -L/usr/lib -lX11 -lm -ldld
+XLIBS         = $(ROOTSYS)/lib/libXpm.a -L/usr/lib/X11R5 -lX11
+CILIBS        = -L/usr/lib -lm -ldld
+
+
+##### MACROS and TARGETS #####
+
+include Make-macros
+
+
+##### DEPENDENCIES #####
+
+include Make-depend
+

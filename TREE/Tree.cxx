@@ -1,3 +1,8 @@
+//*CMZ :  2.21/08 14/03/99  07.55.47  by  Rene Brun
+//*CMZ :  2.21/07 05/03/99  15.38.48  by  Rene Brun
+//*CMZ :  2.21/06 03/03/99  14.18.31  by  Rene Brun
+//*CMZ :  2.21/05 07/02/99  20.37.46  by  Rene Brun
+//*CMZ :  2.21/04 03/02/99  09.35.26  by  Rene Brun
 //*CMZ :  2.20/06 17/12/98  09.30.47  by  Rene Brun
 //*CMZ :  2.20/05 13/12/98  17.44.24  by  Rene Brun
 //*CMZ :  2.20/04 11/12/98  14.57.36  by  Rene Brun
@@ -97,7 +102,7 @@
 //
 //  ==> Case B
 //      ======
-//     TBranch *branch = tree->Branch(branchname,object, bufsize, splitlevel)
+//     TBranch *branch = tree->Branch(branchname,className,object, bufsize, splitlevel)
 //          object is the address of a pointer to an existing object (derived from TObject).
 //        if splitlevel=1 (default), this branch will automatically be split
 //          into subbranches, with one subbranch for each data member or object
@@ -309,7 +314,7 @@ TTree::TTree(): TNamed()
    fVar4           = 0;
    fSelect         = 0;
    fTotalBuffers   = 0;
-   fOldEventNumber = -1;
+   fChainOffset    = 0;
    fReadEvent      = -1;
    fUpdate         = 0;
    fDraw           = 0;
@@ -350,7 +355,7 @@ TTree::TTree(const Text_t *name,const Text_t *title, Int_t maxvirtualsize)
    fAutoSave       = 100000000;
    fSavedBytes     = 0;
    fTotalBuffers   = 0;
-   fOldEventNumber = -1;
+   fChainOffset    = 0;
    fReadEvent      = -1;
    fEstimate       = 10000;
    fUpdate         = 0;
@@ -460,6 +465,11 @@ TBranch *TTree::Branch(const Text_t *name, const Text_t *classname, void *addobj
 //    use TBranch::SetFile to specify a different file
 
    gTree = this;
+   TClass *cl = gROOT->GetClass(classname);
+   if (!cl) {
+      Error("BranchObject","Cannot find class:%s",classname);
+      return 0;
+   }
    TBranch *branch = new TBranchObject(name,classname,addobj,bufsize,splitlevel);
    fBranches.Add(branch);
    if (!splitlevel) return branch;
@@ -468,8 +478,6 @@ TBranch *TTree::Branch(const Text_t *name, const Text_t *classname, void *addobj
    const char *rdname;
    const char *dname;
    char branchname[64];
-   TClass *cl = gROOT->GetClass(classname);
-   if (!cl) return 0;
    if (!cl->GetListOfRealData()) cl->BuildRealData();
    char **apointer = (char**)(addobj);
    TObject *obj = (TObject*)(*apointer);
@@ -480,6 +488,9 @@ TBranch *TTree::Branch(const Text_t *name, const Text_t *classname, void *addobj
       delobj = kTRUE;
    }
 //*-*- Loop on all public data members of the class and its base classes
+   Int_t lenName = strlen(name);
+   Int_t isDot = 0;
+   if (name[lenName-1] == '.') isDot = 1;
    TBranch *branch1 = 0;
    TRealData *rd;
    TIter      next(cl->GetListOfRealData());
@@ -500,7 +511,10 @@ TBranch *TTree::Branch(const Text_t *name, const Text_t *classname, void *addobj
 
 //*-*- Encode branch name. Use real data member name
       sprintf(branchname,"%s",rdname);
-
+      if (isDot) {
+         if (dm->IsaPointer()) sprintf(branchname,"%s%s",name,&rdname[1]);
+         else                  sprintf(branchname,"%s%s",name,&rdname[0]);
+      }
       char leaflist[64];
       Int_t offset    = rd->GetThisOffset();
       char *pointer   = (char*)obj + offset;
@@ -508,7 +522,8 @@ TBranch *TTree::Branch(const Text_t *name, const Text_t *classname, void *addobj
          TClass *clobj = 0;
          if (!dm->IsBasic()) clobj = gROOT->GetClass(dm->GetTypeName());
          if (clobj && !strcmp("TClonesArray",clobj->GetName())) {
-            branch1 = new TBranchClones(&branchname[1],pointer,bufsize);
+            if (isDot) branch1 = new TBranchClones(&branchname[0],pointer,bufsize);
+            else       branch1 = new TBranchClones(&branchname[1],pointer,bufsize);
             blist->Add(branch1);
          } else {
             if (!clobj) {
@@ -520,7 +535,8 @@ TBranch *TTree::Branch(const Text_t *name, const Text_t *classname, void *addobj
             } else {
                if (!clobj->InheritsFrom(TObject::Class())) continue;
                branch1 = new TBranchObject(dname,clobj->GetName(),pointer,bufsize,0);
-               branch1->SetName(&branchname[1]);  //do not use the first character (*)
+               if (isDot) branch1->SetName(&branchname[0]);
+               else       branch1->SetName(&branchname[1]);  //do not use the first character (*)
                blist->Add(branch1);
             }
          }
@@ -540,7 +556,7 @@ TBranch *TTree::Branch(const Text_t *name, const Text_t *classname, void *addobj
             blist->Add(branch1);
          }
       }
-      branch1->SetOffset(offset);
+      if (branch1) branch1->SetOffset(offset);
    }
    if (delobj) delete obj;
    return branch;
@@ -2270,7 +2286,7 @@ void TTree::Reset(Option_t *option)
    fZipBytes       = 0;
    fSavedBytes     = 0;
    fTotalBuffers   = 0;
-   fOldEventNumber = -1;
+   fChainOffset    = 0;
    fReadEvent      = -1;
 
    Int_t nb = fBranches.GetEntriesFast();
@@ -2628,11 +2644,17 @@ void TTree::TakeAction(Int_t nfill, Int_t &npoints, Int_t &action, TObject *obj,
 
   Int_t i;
   if      (action ==  1) ((TH1*)obj)->FillN(nfill,fV1,fW);
-  else if (action ==  2) {for(i=0;i<nfill;i++) ((TH1*)obj)->Fill(fV2[i],fV1[i],fW[i]);}
+  else if (action ==  2) {
+     if (obj->IsA() == TH2F::Class())      {for(i=0;i<nfill;i++) ((TH2F*)obj)->Fill(fV2[i],fV1[i],fW[i]);}
+     else if (obj->IsA() == TH2S::Class()) {for(i=0;i<nfill;i++) ((TH2S*)obj)->Fill(fV2[i],fV1[i],fW[i]);}
+     else if (obj->IsA() == TH2C::Class()) {for(i=0;i<nfill;i++) ((TH2C*)obj)->Fill(fV2[i],fV1[i],fW[i]);}
+     else if (obj->IsA() == TH2D::Class()) {for(i=0;i<nfill;i++) ((TH2D*)obj)->Fill(fV2[i],fV1[i],fW[i]);}
+  }
   else if (action ==  4) ((TProfile*)obj)->FillN(nfill,fV2,fV1,fW);
   else if (action ==  5) {
      TEventList *elist = (TEventList*)obj;
-     if (elist->GetIndex(fReadEvent) < 0) elist->Enter(fReadEvent);
+     Int_t enumb = fChainOffset + fReadEvent;
+     if (elist->GetIndex(enumb) < 0) elist->Enter(enumb);
   }
   else if (action == 12) {
      TPolyMarker *pm = new TPolyMarker(nfill);
@@ -2659,9 +2681,10 @@ void TTree::TakeAction(Int_t nfill, Int_t &npoints, Int_t &action, TObject *obj,
      }
 
      pm->Draw();
-     for(i=0;i<nfill;i++) {
-        ((TH1*)obj)->Fill(fV2[i],fV1[i],fW[i]);
-     }
+     if (obj->IsA() == TH2F::Class())      {for(i=0;i<nfill;i++) ((TH2F*)obj)->Fill(fV2[i],fV1[i],fW[i]);}
+     else if (obj->IsA() == TH2S::Class()) {for(i=0;i<nfill;i++) ((TH2S*)obj)->Fill(fV2[i],fV1[i],fW[i]);}
+     else if (obj->IsA() == TH2C::Class()) {for(i=0;i<nfill;i++) ((TH2C*)obj)->Fill(fV2[i],fV1[i],fW[i]);}
+     else if (obj->IsA() == TH2D::Class()) {for(i=0;i<nfill;i++) ((TH2D*)obj)->Fill(fV2[i],fV1[i],fW[i]);}
   }
   else if (action == 13) {
      TPolyMarker3D *pm3d = new TPolyMarker3D(nfill);
@@ -2737,7 +2760,10 @@ void TTree::TakeEstimate(Int_t nfill, Int_t &, Int_t action, TObject *obj, Optio
 
      TH1 *h2 = (TH1*)obj;
      h2->SetBins(fNbins[1],fVmin[1],fVmax[1],fNbins[0],fVmin[0],fVmax[0]);
-     h2->FillN(nfill, fV2, fV1, fW);
+     if (obj->IsA() == TH2F::Class())      {for(i=0;i<nfill;i++) ((TH2F*)obj)->Fill(fV2[i],fV1[i],fW[i]);}
+     else if (obj->IsA() == TH2S::Class()) {for(i=0;i<nfill;i++) ((TH2S*)obj)->Fill(fV2[i],fV1[i],fW[i]);}
+     else if (obj->IsA() == TH2C::Class()) {for(i=0;i<nfill;i++) ((TH2C*)obj)->Fill(fV2[i],fV1[i],fW[i]);}
+     else if (obj->IsA() == TH2D::Class()) {for(i=0;i<nfill;i++) ((TH2D*)obj)->Fill(fV2[i],fV1[i],fW[i]);}
      gCurrentHist = h2;
 //__________________________Profile histogram_______________________
   } else if (action ==  4) {
@@ -2798,7 +2824,7 @@ void TTree::TakeEstimate(Int_t nfill, Int_t &, Int_t action, TObject *obj, Optio
      }
      if (!fDraw && !strstr(option,"goff")) pm->Draw();
      if (!h2->TestBit(kCanDelete)) {
-        h2->FillN(nfill, x, y, 0);
+        for (i=0;i<nfill;i++) h2->Fill(x[i], y[i]);
      }
      gCurrentHist = h2;
 //__________________________3D scatter plot_______________________

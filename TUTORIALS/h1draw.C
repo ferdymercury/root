@@ -1,3 +1,4 @@
+//*CMZ :  2.21/07 19/02/99  20.11.49  by  Fons Rademakers
 //*CMZ :  0.90/08 02/12/96  11.34.35  by  Rene Brun
 //*-- Author :    Rene Brun
 {
@@ -60,7 +61,7 @@
    // The following illustrates how to add comments using a PaveText.
    // Attributes of text/lines/boxes added to a PaveText can be modified.
    // The AddText function returns a pointer to the added object.
-   pave = new TPaveText(-3.78,500,-1.5,750);
+   pave = new TPaveText(-3.78,500,-1.2,750);
    pave->SetFillColor(42);
    TText *t1=pave->AddText("You can move");
    t1->SetTextColor(4);

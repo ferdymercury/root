@@ -1,0 +1,35 @@
+*CMZ :  2.21/05 08/02/99  12.22.12  by  Fons Rademakers
+*-- Author :    A.Yu.Isupov   08/02/99
+# Makefile of ROOT for FreeBSD
+
+PLATFORM      = fbsd
+
+CXX           = g++
+CC            = gcc
+CXXFLAGS      = -pipe -W -Wall -fPIC
+CFLAGS        = -pipe -W -Wall -fPIC
+CINTCXXFLAGS  = -pipe -W -Wall -fPIC -DG__REGEXP \
+                -DG__UNIX -DG__SHAREDLIB -DG__ROOT -DG__REDIRECTIO -DG__OSFDLL
+CINTCFLAGS    = -pipe -W -Wall -fPIC -DG__REGEXP -DG__UNIX -DG__SHAREDLIB \
+                -DG__ROOT -DG__REDIRECTIO -DG__OSFDLL
+OPT           = -O
+NOOPT         =
+LD            = g++
+LDFLAGS       = $(OPT)
+SOFLAGS       = -shared -Wl,-x
+SOEXT         = so
+SYSLIBS       = -lg++ -lm
+SYSXLIBS      = -L/usr/X11R6/lib -lX11 -lg++ -lm
+XLIBS         = -L/usr/X11R6/lib -lXpm -lX11 -lg++
+CILIBS        = -lm -ltermcap -lg++
+
+
+##### MACROS and TARGETS #####
+
+include Make-macros
+
+
+##### DEPENDENCIES #####
+
+include Make-depend
+

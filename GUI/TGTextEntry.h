@@ -1,3 +1,4 @@
+//*CMZ :  2.21/06 11/02/99  16.48.10  by  Valery Fine(fine@vxcern.cern.ch)
 //*CMZ :  2.00/04 06/04/98  10.07.45  by  Fons Rademakers
 //*CMZ :  2.00/00 23/02/98  16.26.51  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   08/01/98
@@ -67,7 +68,8 @@ protected:
 
    static Cursor_t      fgDefaultCursor;
    static GContext_t    fgDefaultGC;
-   static GContext_t    fgDefaultSelectedGC, fgDefaultSelectedBackgroundGC;
+   static GContext_t    fgDefaultSelectedGC;
+   static GContext_t    fgDefaultSelectedBackgroundGC;
    static FontStruct_t  fgDefaultFontStruct;
 
    virtual void DoRedraw();
