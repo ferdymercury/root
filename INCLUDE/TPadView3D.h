@@ -1,3 +1,5 @@
+//*CMZ :  2.22/02 20/05/99  17.55.05  by  Rene Brun
+//*CMZ :  2.22/01 10/05/99  12.05.38  by  Valery Fine(fine@mail.cern.ch)
 //*CMZ :  2.21/04 01/02/99  21.05.37  by  Valery Fine(fine@mail.cern.ch)
 //*CMZ :  2.00/13 30/10/98  08.25.09  by  Valery Fine(fine@mail.cern.ch)
 //*CMZ :  1.03/09 07/12/97  14.17.58  by  Fons Rademakers
@@ -6,20 +8,22 @@
 #ifndef ROOT_TPadView3D
 #define ROOT_TPadView3D
 
+/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Fons Rademakers.                                  *
+ * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
  *                                                                       *
  * Permission to use, copy, modify and distribute this software and its  *
  * documentation for non-commercial purposes is hereby granted without   *
  * fee, provided that the above copyright notice appears in all copies   *
  * and that both the copyright notice and this permission notice appear  *
  * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose.                         *
- * It is provided "as is" without express or implied warranty.           *
+ * suitability of this software for any purpose. It is provided "as is"  *
+ * without express or implied warranty.                                  *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -46,6 +50,7 @@
 class TVirtualPad;
 class TPolyMarker3D;
 class TPolyLine3D;
+class TPoints3DABC;
 class TNode;
 class TRotMatrix;
 
@@ -77,6 +82,7 @@ class TPadView3D
    virtual void PaintScene(Option_t *opt="");
    virtual void PaintPolyMarker(TPolyMarker3D *marker, Option_t *opt="");
    virtual void PaintPolyLine(TPolyLine3D *line, Option_t *opt="");
+   virtual void PaintPoints3D(const TPoints3DABC *points,Option_t *opt="");
    virtual void PushMatrix() { }
    virtual void PopMatrix() { }
    virtual void SetAttNode(TNode *node, Option_t *opt="");
@@ -115,6 +121,7 @@ inline void TPadView3D::PaintEnd(Option_t *) { }
 inline void TPadView3D::PaintScene(Option_t *) { }
 inline void TPadView3D::PaintPolyMarker(TPolyMarker3D *, Option_t *) { }
 inline void TPadView3D::PaintPolyLine(TPolyLine3D *, Option_t *) { }
+inline void TPadView3D::PaintPoints3D(const TPoints3DABC *,Option_t *){ }
 inline void TPadView3D::SetAttNode(TNode *, Option_t *) { }
 inline void TPadView3D::SetLineAttr(Color_t ,Int_t ,Option_t *) { }
 inline void TPadView3D::UpdateNodeMatrix(TNode *, Option_t *) { }

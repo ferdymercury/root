@@ -1,3 +1,9 @@
+//*CMZ :  2.22/10 27/07/99  17.07.51  by  Rene Brun
+//*CMZ :  2.22/09 12/07/99  17.47.57  by  Rene Brun
+//*CMZ :  2.22/07 05/07/99  16.41.12  by  Rene Brun
+//*CMZ :  2.22/05 15/06/99  16.20.19  by  Rene Brun
+//*CMZ :  2.22/02 26/05/99  12.35.40  by  Rene Brun
+//*CMZ :  2.22/00 17/05/99  08.50.46  by  Rene Brun
 //*CMZ :  2.21/07 02/03/99  17.04.25  by  Rene Brun
 //*CMZ :  2.21/06 15/02/99  09.00.59  by  Rene Brun
 //*CMZ :  2.21/03 22/01/99  08.42.02  by  Rene Brun
@@ -16,20 +22,22 @@
 //*CMZ :  1.03/09 15/12/97  09.17.18  by  Rene Brun
 //*-- Author :    Rene Brun, Olivier Couet   12/12/94
 
+/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Fons Rademakers.                                  *
+ * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
  *                                                                       *
  * Permission to use, copy, modify and distribute this software and its  *
  * documentation for non-commercial purposes is hereby granted without   *
  * fee, provided that the above copyright notice appears in all copies   *
  * and that both the copyright notice and this permission notice appear  *
  * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose.                         *
- * It is provided "as is" without express or implied warranty.           *
+ * suitability of this software for any purpose. It is provided "as is"  *
+ * without express or implied warranty.                                  *
  *************************************************************************/
 
 #include <string.h>
@@ -49,6 +57,7 @@
 #include "TInterpreter.h"
 
 const Int_t NPMAX = 204;
+const Int_t kNoStats   = BIT(9);
 const Int_t kClipFrame = BIT(10);
 const Int_t kFitInit   = BIT(19);
 
@@ -292,7 +301,7 @@ void TGraph::ExecuteEvent(Int_t event, Int_t px, Int_t py)
    static Int_t px1,px2,py1,py2;
    static Int_t pxold, pyold, px1old, py1old, px2old, py2old;
    static Int_t dpx, dpy;
-   static Int_t *x, *y;
+   static Int_t *x=0, *y=0;
 
    switch (event) {
 
@@ -306,6 +315,7 @@ void TGraph::ExecuteEvent(Int_t event, Int_t px, Int_t py)
       ipoint = -1;
 
 
+      if (x || y) break;
       x = new Int_t[fNpoints+1];
       y = new Int_t[fNpoints+1];
       for (i=0;i<fNpoints;i++) {
@@ -450,8 +460,8 @@ void TGraph::ExecuteEvent(Int_t event, Int_t px, Int_t py)
          fX[ipoint] = gPad->PadtoX(gPad->AbsPixeltoX(pxold));
          fY[ipoint] = gPad->PadtoY(gPad->AbsPixeltoY(pyold));
       }
-      delete [] x;
-      delete [] y;
+      delete [] x; x = 0;
+      delete [] y; y = 0;
       gPad->Modified(kTRUE);
       gGXW->SetLineColor(-1);
 
@@ -678,11 +688,11 @@ void TGraph::FitPanel()
    }
    TList *lc = (TList*)gROOT->GetListOfCanvases();
    if (!lc->FindObject("fitpanelgraph")) {
-      char cmd[] = "fitpanel = new TFitPanelGraph(\"fitpanelgraph\",\"Fit Panel\",300,400)";
+      char cmd[] = "TFitPanelGraph *fitpanel = new TFitPanelGraph(\"fitpanelgraph\",\"Fit Panel\",300,400);";
       gInterpreter->ProcessLine(cmd);
       return;
    }
-   char cmdupd[] = "fitpanelgraph->SetDefaults()";
+   char cmdupd[] = "fitpanelgraph->SetDefaults(); fitpanelgraph->Show();";
    gInterpreter->ProcessLine(cmdupd);
 
 
@@ -1141,12 +1151,24 @@ void TGraph::PaintGraph(Int_t npoints, Float_t *x, Float_t *y, Option_t *chopt)
      uxmax    = rwxmax + dx;
      minimum  = rwymin - dy;
      maximum  = rwymax + dy;
-     if (fMinimum != -1111) minimum = fMinimum;
-     if (fMaximum != -1111) maximum = fMaximum;
-     if (uxmin < 0 && rwxmin >= 0) uxmin = 0;
-     if (uxmax > 0 && rwxmax <= 0) uxmax = 0;
-     if (minimum < 0 && rwymin >= 0) minimum = 0;
-     if (maximum > 0 && rwymax <= 0) maximum = 0;
+     if (fMinimum != -1111) rwymin = minimum = fMinimum;
+     if (fMaximum != -1111) rwymax = maximum = fMaximum;
+     if (uxmin < 0 && rwxmin >= 0) {
+        if (gPad->GetLogx()) uxmin = 0.9*rwxmin;
+        else                 uxmin = 0;
+     }
+     if (uxmax > 0 && rwxmax <= 0) {
+        if (gPad->GetLogx()) uxmax = 1.1*rwxmax;
+        else                 uxmax = 0;
+     }
+     if (minimum < 0 && rwymin >= 0) {
+        if(gPad->GetLogy()) minimum = 0.9*rwymin;
+        else                minimum = 0;
+     }
+     if (maximum > 0 && rwymax <= 0) {
+        if(gPad->GetLogy()) maximum = 1.1*rwymax;
+        else                maximum = 0;
+     }
      if (minimum <= 0 && gPad->GetLogy()) minimum = 0.001*maximum;
      if (uxmin <= 0 && gPad->GetLogx()) {
         if (uxmax > 1000) uxmin = 1;
@@ -1160,6 +1182,7 @@ void TGraph::PaintGraph(Int_t npoints, Float_t *x, Float_t *y, Option_t *chopt)
        fHistogram->SetMinimum(rwymin);
        fHistogram->SetMaximum(rwymax);
        fHistogram->GetXaxis()->SetLimits(rwxmin,rwxmax);
+       fHistogram->GetYaxis()->SetLimits(rwymin,rwymax);
      }
 
 //*-*-  Create a temporary histogram and fill each channel with the function value
@@ -1167,7 +1190,9 @@ void TGraph::PaintGraph(Int_t npoints, Float_t *x, Float_t *y, Option_t *chopt)
       fHistogram = new TH1F((char*)GetName(),(char*)GetTitle(),40,rwxmin,rwxmax);
       if (!fHistogram) return;
       fHistogram->SetMinimum(rwymin);
+      fHistogram->SetBit(kNoStats);
       fHistogram->SetMaximum(rwymax);
+      fHistogram->GetYaxis()->SetLimits(rwymin,rwymax);
       fHistogram->SetDirectory(0);
    }
    fHistogram->Paint();
@@ -1396,6 +1421,11 @@ void TGraph::PaintGraph(Int_t npoints, Float_t *x, Float_t *y, Option_t *chopt)
            xwork[1] = xhigh;
            ywork[1] = yhigh;
            ComputeLogs(2, OptionZ);
+           if (yworkl[0] < gPad->GetUymin()) yworkl[0] = gPad->GetUymin();
+           if (yworkl[1] < gPad->GetUymin()) continue;
+           if (yworkl[1] > gPad->GetUymax()) yworkl[0] = gPad->GetUymax();
+           if (yworkl[0] > gPad->GetUymax()) continue;
+
            gPad->PaintBox(xworkl[0],yworkl[0],xworkl[1],yworkl[1], "B");
         }
      }
@@ -1541,6 +1571,7 @@ void TGraph::PaintGrapHist(Int_t npoints, Float_t *x, Float_t *y, Option_t *chop
   Float_t rwymax    = gPad->GetUymax();
   Float_t uxmin     = gPad->PadtoX(rwxmin);
   Float_t uxmax     = gPad->PadtoX(rwxmax);
+  Float_t rounding  = (uxmax-uxmin)*1.e-5;
   drawborder        = gStyle->GetDrawBorder();
   if (OptionAxis) {
      Int_t nx1, nx2, ndivx, ndivy, ndiv;
@@ -1641,7 +1672,7 @@ void TGraph::PaintGrapHist(Int_t npoints, Float_t *x, Float_t *y, Option_t *chop
            }
            ywork[npt-1] = y[j-1];
            ywork[npt]   = y[j-1];
-           if (xwork[npt-1] >= uxmin && xwork[npt] <= uxmax) npt += 2;
+           if (xwork[npt-1] >= uxmin && xwork[npt] <= uxmax+rounding) npt += 2;
            else xwork[npt-2] = TMath::Min(xwork[npt], uxmax);
            if (j == last) {
               xwork[npt-1] = xwork[npt-2];
@@ -1690,7 +1721,7 @@ void TGraph::PaintGrapHist(Int_t npoints, Float_t *x, Float_t *y, Option_t *chop
               ywork[npt-1] = y[j-1];       ywork[npt] = y[j];
            }
            xwork[npt-1] = x[j-1];      xwork[npt] = x[j-1];
-           if (xwork[npt-1] >= uxmin && xwork[npt] <= uxmax) npt += 2;
+           if (xwork[npt-1] >= uxmin && xwork[npt] <= uxmax+rounding) npt += 2;
            if (j == last) {
               ywork[npt-1] = ywork[npt-2];
               xwork[npt-1] = xwork[0];
@@ -1745,7 +1776,7 @@ void TGraph::PaintGrapHist(Int_t npoints, Float_t *x, Float_t *y, Option_t *chop
            }
            ywork[npt-1] = y[i-1];
            ywork[npt]   = y[i-1];
-           if (xwork[npt-1] >= uxmin && xwork[npt] <= uxmax) npt += 2;
+           if (xwork[npt-1] >= uxmin && xwork[npt] <= uxmax+rounding) npt += 2;
            else xwork[npt-2] = TMath::Min(xwork[npt], uxmax);
            if (i == last) {
               xwork[npt-1] = xwork[npt-2];
@@ -1783,7 +1814,7 @@ void TGraph::PaintGrapHist(Int_t npoints, Float_t *x, Float_t *y, Option_t *chop
               ywork[npt-1] = y[i-1];      ywork[npt] = y[i];
            }
            xwork[npt-1] = x[i-1];      xwork[npt] = x[i-1];
-           if (xwork[npt-1] >= uxmin && xwork[npt] <= uxmax) npt += 2;
+           if (xwork[npt-1] >= uxmin && xwork[npt] <= uxmax+rounding) npt += 2;
            if (i == last) {
               ywork[npt-1] = ywork[npt-2];
               xwork[npt-1] = xwmin;

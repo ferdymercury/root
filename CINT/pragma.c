@@ -1,5 +1,5 @@
-/*CMZ :  2.21/08 17/03/99  13.13.44  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   17/03/99*/
+/*CMZ :  2.22/10 23/07/99  14.42.19  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   23/07/99*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -219,7 +219,7 @@ int G__pragma()
 #ifdef G__ASM_WHOLEFUNC
   else if(strcmp(command,"optimize")==0) {
     c = G__fgetstream(command,";\n\r");
-    G__asm_loopcompile = G__int(G__calc(command));
+    G__asm_loopcompile = G__int(G__calc_internal(command));
     /* if('\n'!=c&&'\r'!=c) G__fignoreline(); */
   }
   else if(strcmp(command,"bytecode")==0) {
@@ -290,7 +290,7 @@ int G__pragma()
     G__no_exec_compile=0;
     c=G__fgetstream(command,";");
     fprintf(G__sout," evaluate (%d) ",store_no_exec_compile);
-    G__calc(command);
+    G__calc_internal(command);
     G__no_exec_compile=store_no_exec_compile;
   }
 
@@ -666,7 +666,7 @@ char *string;
   int len;
   if(string[0]) {
     if(isdigit(string[0])) {
-      code = G__int(G__calc(string));
+      code = G__int(G__calc_internal(string));
     }
     else {
       len = strlen(string)-1;
@@ -699,18 +699,36 @@ char *string;
   }
 
   /* Prevent 2 #pragma security in one file */
+#ifndef G__PHILIPPE0
+  /* Let's not complain if the security requested is the same as
+     before */
+  /* In case of preprocessed file, the same logical file might actually
+     be processed more than once. */
+  if((G__security&G__SECURE_NO_CHANGE) &&(G__security!=code) ) {
+#else
   if(G__security&G__SECURE_NO_CHANGE) {
-    G__genericerror("Warning: security level locked, can't change");
+#endif
+    fprintf(G__serr,"Warning: security level locked, can't change");
+    G__printlinenum();
     code = G__security;
   }
   else if(G__security&G__SECURE_NO_RELAX) {
-    G__genericerror("Warning: security level locked, can't relax");
+    fprintf(G__serr,"Warning: security level locked, can't relax");
+    G__printlinenum();
     code |= G__security;
   }
 
   if(-1!=G__ifile.filenum&&G__prerun) {
+#ifndef G__PHILIPPE0
+    /* Let's not complain if the security requested is the same as
+       before */
+    if((G__srcfile[G__ifile.filenum].security&G__SECURE_NO_CHANGE) &&
+       (G__srcfile[G__ifile.filenum].security!=code)) {
+#else
     if(G__srcfile[G__ifile.filenum].security&G__SECURE_NO_CHANGE) {
-      G__genericerror("Warning: security level locked, can't change");
+#endif
+      fprintf(G__serr,"Warning: security level locked, can't change");
+      G__printlinenum();
     }
     else {
       G__srcfile[G__ifile.filenum].security = code | G__SECURE_NO_CHANGE;

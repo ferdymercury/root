@@ -1,5 +1,5 @@
-/*CMZ :  2.21/08 17/03/99  13.13.41  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   17/03/99*/
+/*CMZ :  2.22/10 23/07/99  14.42.16  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   23/07/99*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -803,7 +803,17 @@ long pobject;
   struct G__inheritance *derived;
   int i,n;
 
+#ifndef G__OLDIMPLEMENTATION1060
+  if (0 > derivedtagnum) {
+    for (i = 0; i < G__globalusingnamespace.basen; i++) {
+      if (G__globalusingnamespace.basetagnum[i] == basetagnum)
+        return 0;
+    }
+    return -1;
+  }
+#else
   if(0>derivedtagnum) return(-1);
+#endif
   if(basetagnum==derivedtagnum) return(0);
   derived = G__struct.baseclass[derivedtagnum];
   n = derived->basen;
@@ -870,7 +880,11 @@ int basen;
 {
   long (*f) G__P((long));
 #ifndef G__OLDIMPLEMENTATION652
-  if(!pobject || G__no_exec_compile) {
+  if(!pobject || G__no_exec_compile
+#ifndef G__OLDIMPLEMENTATION1140
+     || -1==pobject || 1==pobject
+#endif
+     ) {
     G__abortbytecode();
     return(0);
   }

@@ -1,3 +1,7 @@
+//*CMZ :  2.22/10 22/07/99  13.46.06  by  Fons Rademakers
+//*CMZ :  2.22/04 01/06/99  15.21.40  by  Fons Rademakers
+//*CMZ :  2.22/01 28/04/99  12.10.14  by  Fons Rademakers
+//*CMZ :  2.22/00 27/03/99  01.20.50  by  Rene Brun
 //*CMZ :  2.20/04 10/12/98  15.31.16  by  Fons Rademakers
 //*CMZ :  2.20/00 06/11/98  14.40.30  by  Rene Brun
 //*CMZ :  2.00/13 29/10/98  08.32.37  by  Fons Rademakers
@@ -9,20 +13,22 @@
 //*CMZ :  1.03/09 12/12/97  18.40.43  by  Fons Rademakers
 //*-- Author :    Rene Brun   07/01/95
 
+/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Fons Rademakers.                                  *
+ * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
  *                                                                       *
  * Permission to use, copy, modify and distribute this software and its  *
  * documentation for non-commercial purposes is hereby granted without   *
  * fee, provided that the above copyright notice appears in all copies   *
  * and that both the copyright notice and this permission notice appear  *
  * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose.                         *
- * It is provided "as is" without express or implied warranty.           *
+ * suitability of this software for any purpose. It is provided "as is"  *
+ * without express or implied warranty.                                  *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -56,6 +62,7 @@
 #include "TBuffer.h"
 #include "TMemberInspector.h"
 #include "TError.h"
+#include "TMapFile.h"
 #include "Api.h"
 
 #ifndef WIN32
@@ -118,6 +125,8 @@ TClass::TClass() : TDictionary()
    fMethod       = 0;
    fRealData     = 0;
    fClassInfo    = 0;
+   fAllPubData   = 0;
+   fAllPubMethod = 0;
 
    ResetInstanceCount();
 }
@@ -144,6 +153,8 @@ TClass::TClass(const Text_t *name, Version_t cversion,
    fMethod         = 0;
    fRealData       = 0;
    fClassInfo      = 0;
+   fAllPubData     = 0;
+   fAllPubMethod   = 0;
 
    ResetInstanceCount();
 
@@ -183,6 +194,10 @@ TClass::~TClass()
    gROOT->GetListOfClasses()->Remove(this);
 
    delete fClassInfo;
+
+   // Not owning lists, don't call Delete()
+   delete fAllPubData;
+   delete fAllPubMethod;
 }
 
 //______________________________________________________________________________
@@ -467,6 +482,74 @@ TList *TClass::GetListOfMethods()
 }
 
 //______________________________________________________________________________
+TList *TClass::GetListOfAllPublicMethods()
+{
+   // Returns a list of all public methods of this class and its base classes.
+   // Refers to a subset of the methods in GetListOfMethods() so don't do
+   // GetListOfAllPublicMethods()->Delete().
+   // Algorithm used to get the list is:
+   // - put all methods of the class in the list (also protected and private
+   //   ones).
+   // - loop over all base classes and add only those methods not already in the
+   //   list (also protected and private ones).
+   // - once finished, loop over resulting list and remove all private and
+   //   protected methods.
+
+   if (!fAllPubMethod) {
+      fAllPubMethod = new TList;
+
+      // put all methods in the list
+      fAllPubMethod->AddAll(GetListOfMethods());
+
+      // loop over all base classes and add new methods
+      TIter nextBaseClass(GetListOfBases());
+      TBaseClass *pB;
+      TMethod    *p;
+      while ((pB = (TBaseClass*) nextBaseClass())) {
+         if (!pB->GetClassPointer()) continue;
+         TIter next(pB->GetClassPointer()->GetListOfAllPublicMethods());
+         TList temp;
+         while ((p = (TMethod*) next()))
+            if (!fAllPubMethod->Contains(p->GetName()))
+               temp.Add(p);
+         fAllPubMethod->AddAll(&temp);
+         temp.Clear();
+      }
+
+      // loop over list and remove all non-public methods
+      TIter next(fAllPubMethod);
+      while ((p = (TMethod*) next()))
+         if (!(p->Property() & kIsPublic)) fAllPubMethod->Remove(p);
+   }
+   return fAllPubMethod;
+}
+
+//______________________________________________________________________________
+TList *TClass::GetListOfAllPublicDataMembers()
+{
+   // Returns a list of all public data members of this class and its base
+   // classes. Refers to a subset of the data members in GetListOfDatamembers()
+   // so don't do GetListOfAllPublicDataMembers()->Delete().
+
+   if (!fAllPubData) {
+      fAllPubData = new TList;
+      TIter next(GetListOfDataMembers());
+      TDataMember *p;
+
+       while ((p = (TDataMember*) next()))
+          if (p->Property() & kIsPublic) fAllPubData->Add(p);
+
+       TIter next_BaseClass(GetListOfBases());
+       TBaseClass *pB;
+       while ((pB = (TBaseClass*) next_BaseClass())) {
+          if (!pB->GetClassPointer()) continue;
+          fAllPubData->AddAll(pB->GetClassPointer()->GetListOfAllPublicDataMembers() );
+       }
+   }
+   return fAllPubData;
+}
+
+//______________________________________________________________________________
 void TClass::GetMenuItems(TList *list)
 {
    // Returns list of methods accessible by context menu.
@@ -476,8 +559,10 @@ void TClass::GetMenuItems(TList *list)
    // get the base class
    TIter nextBase(GetListOfBases(), kIterBackward);
    TBaseClass *baseClass;
-   while ((baseClass = (TBaseClass *) nextBase()))
-      baseClass->GetClassPointer()->GetMenuItems(list);
+   while ((baseClass = (TBaseClass *) nextBase())) {
+      TClass *base = baseClass->GetClassPointer();
+      if (base) base->GetMenuItems(list);
+   }
 
    // remove methods redefined in this class with no menu
    TMethod *method, *m;
@@ -736,7 +821,11 @@ TClass *TClass::Load(TBuffer &b)
    char s[80];
 
    b.ReadString(s, 80);
-   return gROOT->GetClass(s, kTRUE);
+   TClass *cl = gROOT->GetClass(s, kTRUE);
+   if (!cl)
+      ::Error("TClass::Load", "dictionary of class %s not found", s);
+
+   return cl;
 }
 
 //______________________________________________________________________________
@@ -754,5 +843,14 @@ TClass *CreateClass(const char *cname, Version_t id, const char *dfil,
    // Global function called by a class' static Dictionary() method
    // (see the ClassDef macro).
 
+   // When called via TMapFile (e.g. Update()) make sure that the dictionary
+   // gets allocated on the heap and not in the mapped file.
+   if (gMmallocDesc) {
+      void *msave  = gMmallocDesc;
+      gMmallocDesc = 0;
+      TClass *cl   = new TClass(cname, id, dfil, ifil, dl, il);
+      gMmallocDesc = msave;
+      return cl;
+   }
    return new TClass(cname, id, dfil, ifil, dl, il);
 }

@@ -1,3 +1,6 @@
+//*CMZ :  2.22/07 29/06/99  18.23.54  by  Fons Rademakers
+//*CMZ :  2.22/02 20/05/99  18.13.51  by  Rene Brun
+//*CMZ :  2.22/01 16/04/99  12.26.24  by  Fons Rademakers
 //*CMZ :  2.21/06 17/02/99  18.46.08  by  Fons Rademakers
 //*CMZ :  2.20/04 09/12/98  19.25.21  by  Rene Brun
 //*CMZ :  2.00/13 27/10/98  18.48.25  by  Fons Rademakers
@@ -7,20 +10,22 @@
 //*CMZ :  1.03/09 04/06/98  19.11.26  by  Fons Rademakers
 //*-- Author :    Rene Brun   28/12/94
 
+/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Fons Rademakers.                                  *
+ * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
  *                                                                       *
  * Permission to use, copy, modify and distribute this software and its  *
  * documentation for non-commercial purposes is hereby granted without   *
  * fee, provided that the above copyright notice appears in all copies   *
  * and that both the copyright notice and this permission notice appear  *
  * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose.                         *
- * It is provided "as is" without express or implied warranty.           *
+ * suitability of this software for any purpose. It is provided "as is"  *
+ * without express or implied warranty.                                  *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -75,7 +80,7 @@ const Int_t kMAXBUF = 0xffffff;
 ClassImp(TKey)
 
 //______________________________________________________________________________
-TKey::TKey() : TNamed()
+TKey::TKey() : TNamed(), fDatime(0)
 {
 //*-*-*-*-*-*-*-*-*-*-*TKey default constructor*-*-*-*-*-*-*-*-*-*-*-*-*
 //*-*                  ========================
@@ -148,6 +153,10 @@ TKey::TKey(TObject *obj, const Text_t *name, const Int_t bufsize)
    fBuffer    = 0;
    fBufferRef = new TBuffer(TBuffer::kWrite, bufsize);
    fCycle = gDirectory->AppendKey(this);
+   fObjlen    = 0 ; // RDK: Must initialize before calling Streamer()
+   fKeylen    = 0 ; // RDK: Must initialize before calling Streamer()
+   fSeekKey   = 0 ; // RDK: Must initialize before calling Streamer()
+   fSeekPdir  = 0 ; // RDK: Must initialize before calling Streamer()
    Streamer(*fBufferRef);         //write key itself
    fKeylen    = fBufferRef->Length();
    fBufferRef->MapObject(obj);    //register obj in map in case of self reference
@@ -241,15 +250,16 @@ void TKey::Create(Int_t nbytes)
    } else {
       fLeft = Int_t(bestfree->GetLast() - fSeekKey - nsize + 1);
    }
-//*-*------------------Case where new object fills exactly a deleted gap
+//*-*----------------- Case where new object fills exactly a deleted gap
    fNbytes = nsize;
    if (fLeft == 0) {
       if (!fBuffer) {
          fBuffer = new char[nsize];
       }
       gFile->GetListOfFree()->Remove(bestfree);
+      delete bestfree;
    }
-//*-*------------------Case where new object is placed in a deleted gap larger than itself
+//*-*----------------- Case where new object is placed in a deleted gap larger than itself
    if (fLeft > 0) {    // found a bigger segment
       if (!fBuffer) {
          fBuffer = new char[nsize+sizeof(Int_t)];
@@ -280,6 +290,9 @@ void TKey::Delete(Option_t *option)
 {
 //*-*-*-*-*-*-*-*-*-*-*-*Delete an object from the file*-*-*-*-*-*-*-*-*-*-*
 //*-*                    ==============================
+// Note: the key is not deleted. You still have to call "delete key".
+// This is different from the behaviour of TObject::Delete()!
+
 
    if (option && option[0] == 'v') printf("Deleting key: %s at address %d, nbytes = %d\n",GetName(),fSeekKey,fNbytes);
    Seek_t first = fSeekKey;
@@ -596,6 +609,7 @@ void TKey::Streamer(TBuffer &b)
       b << fNbytes;
       b.WriteVersion(TKey::IsA());
       b << fObjlen;
+      if (fDatime.Get() == 0) fDatime.Set();
       fDatime.Streamer(b);
       b << fKeylen;
       b << fCycle;

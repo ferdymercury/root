@@ -1,3 +1,4 @@
+/*CMZ :  2.22/10 22/07/99  14.06.48  by  Fons Rademakers*/
 /*CMZ :  1.03/09 10/12/97  08.56.10  by  Rene Brun*/
 /*-- Author :    Rene Brun   11/06/97*/
 #include <stdio.h>
@@ -240,12 +241,12 @@ int GIFdecode(byte *GIFarr, byte *PIXarr, int *Width, int *Height, int *Ncols, b
   while (Npix > 0) {
 
     if (CurCode < 0) {
-      fprintf(stderr,"\nGIFdecode: corrapted GIF (zero block length)\n");
+      fprintf(stderr,"\nGIFdecode: corrupted GIF (zero block length)\n");
       return 1;
     }
 
     if (CurCode == EOFCode) {
-      fprintf(stderr,"\nGIFdecode: corrapted GIF (unexpected EOF)\n");
+      fprintf(stderr,"\nGIFdecode: corrupted GIF (unexpected EOF)\n");
       return 1;
     }
 
@@ -268,7 +269,7 @@ int GIFdecode(byte *GIFarr, byte *PIXarr, int *Width, int *Height, int *Ncols, b
       }
       while (CurCode > PixMask) {       /* build output pixel chain */
         if (OutCount >= TSIZE) {
-          fprintf(stderr,"\nGIFdecode: corrapted GIF (big output count)\n");
+          fprintf(stderr,"\nGIFdecode: corrupted GIF (big output count)\n");
           return 1;
         }
       OutCode[OutCount++] = Suffix[CurCode];

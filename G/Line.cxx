@@ -1,22 +1,26 @@
+//*CMZ :  2.22/02 21/05/99  10.59.52  by  Rene Brun
+//*CMZ :  2.22/01 19/05/99  12.47.17  by  Rene Brun
 //*CMZ :  2.20/05 15/12/98  09.17.21  by  Rene Brun
 //*CMZ :  2.00/13 28/10/98  09.21.36  by  Rene Brun
 //*CMZ :  1.03/09 06/12/97  17.25.12  by  Fons Rademakers
 //*-- Author :    Rene Brun   12/12/94
 
+/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Fons Rademakers.                                  *
+ * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
  *                                                                       *
  * Permission to use, copy, modify and distribute this software and its  *
  * documentation for non-commercial purposes is hereby granted without   *
  * fee, provided that the above copyright notice appears in all copies   *
  * and that both the copyright notice and this permission notice appear  *
  * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose.                         *
- * It is provided "as is" without express or implied warranty.           *
+ * suitability of this software for any purpose. It is provided "as is"  *
+ * without express or implied warranty.                                  *
  *************************************************************************/
 
 #include <stdlib.h>
@@ -29,6 +33,8 @@
 #include "TClass.h"
 #include "TGXW.h"
 #include "TMath.h"
+
+const Int_t kLineNDC = BIT(14);
 
 ClassImp(TLine)
 
@@ -87,7 +93,12 @@ Int_t TLine::DistancetoPrimitive(Int_t px, Int_t py)
 //*-*-*-*-*-*-*-*-*-*-*Compute distance from point px,py to a line*-*-*-*-*-*
 //*-*                  ===========================================
 
-   return DistancetoLine(px,py,fX1,fY1,fX2,fY2);
+   if (!TestBit(kLineNDC)) return DistancetoLine(px,py,fX1,fY1,fX2,fY2);
+   Float_t x1 = gPad->GetX1() + fX1*(gPad->GetX2()-gPad->GetX1());
+   Float_t y1 = gPad->GetY1() + fY1*(gPad->GetY2()-gPad->GetY1());
+   Float_t x2 = gPad->GetX1() + fX2*(gPad->GetX2()-gPad->GetX1());
+   Float_t y2 = gPad->GetY1() + fY2*(gPad->GetY2()-gPad->GetY1());
+   return DistancetoLine(px,py,x1,y1,x2,y2);
 }
 
 //______________________________________________________________________________
@@ -100,7 +111,7 @@ void TLine::Draw(Option_t *option)
 }
 
 //______________________________________________________________________________
-void TLine::DrawLine(Coord_t x1, Coord_t y1, Coord_t x2, Coord_t  y2)
+TLine *TLine::DrawLine(Coord_t x1, Coord_t y1, Coord_t x2, Coord_t  y2)
 {
 //*-*-*-*-*-*-*-*-*-*-*Draw this line with new coordinates*-*-*-*-*-*-*-*-*-*
 //*-*                  ===================================
@@ -108,6 +119,17 @@ void TLine::DrawLine(Coord_t x1, Coord_t y1, Coord_t x2, Coord_t  y2)
    TAttLine::Copy(*newline);
    newline->SetBit(kCanDelete);
    newline->AppendPad();
+   return newline;
+}
+
+//______________________________________________________________________________
+TLine *TLine::DrawLineNDC(Coord_t x1, Coord_t y1, Coord_t x2, Coord_t  y2)
+{
+//*-*-*-*-*-*-*-*-*-*-*Draw this line with new coordinates in NDC*-*-*-*-*-*-*
+//*-*                  ==========================================
+   TLine *newline = DrawLine(x1, y1, x2, y2);
+   newline->SetBit(kLineNDC);
+   return newline;
 }
 
 //______________________________________________________________________________
@@ -128,6 +150,7 @@ void TLine::ExecuteEvent(Int_t event, Int_t px, Int_t py)
    static Int_t d1,d2,px1,px2,py1,py2;
    static Int_t pxold, pyold, px1old, py1old, px2old, py2old;
    static Bool_t P1, P2, L;
+   Float_t dpx,dpy,xp1,yp1;
    Int_t dx, dy;
 
 
@@ -141,11 +164,17 @@ void TLine::ExecuteEvent(Int_t event, Int_t px, Int_t py)
 
    case kMouseMotion:
 
-      px1 = gPad->XtoAbsPixel(fX1);
-      py1 = gPad->YtoAbsPixel(fY1);
-      px2 = gPad->XtoAbsPixel(fX2);
-      py2 = gPad->YtoAbsPixel(fY2);
-
+      if (TestBit(kLineNDC)) {
+         px1 = gPad->UtoPixel(fX1);
+         py1 = gPad->VtoPixel(fY1);
+         px2 = gPad->UtoPixel(fX2);
+         py2 = gPad->VtoPixel(fY2);
+      } else {
+         px1 = gPad->XtoAbsPixel(fX1);
+         py1 = gPad->YtoAbsPixel(fY1);
+         px2 = gPad->XtoAbsPixel(fX2);
+         py2 = gPad->YtoAbsPixel(fY2);
+      }
       P1 = P2 = L = kFALSE;
 
       d1  = abs(px1 - px) + abs(py1-py); //simply take sum of pixels differences
@@ -195,19 +224,40 @@ void TLine::ExecuteEvent(Int_t event, Int_t px, Int_t py)
 
    case kButton1Up:
 
-      if (P1) {
-         fX1 = gPad->AbsPixeltoX(px);
-         fY1 = gPad->AbsPixeltoY(py);
-      }
-      if (P2) {
-         fX2 = gPad->AbsPixeltoX(px);
-         fY2 = gPad->AbsPixeltoY(py);
-      }
-      if (L) {
-         fX1 = gPad->AbsPixeltoX(px1);
-         fY1 = gPad->AbsPixeltoY(py1);
-         fX2 = gPad->AbsPixeltoX(px2);
-         fY2 = gPad->AbsPixeltoY(py2);
+      if (TestBit(kLineNDC)) {
+         dpx  = gPad->GetX2() - gPad->GetX1();
+         dpy  = gPad->GetY2() - gPad->GetY1();
+         xp1  = gPad->GetX1();
+         yp1  = gPad->GetY1();
+         if (P1) {
+            fX1 = (gPad->AbsPixeltoX(px)-xp1)/dpx;
+            fY1 = (gPad->AbsPixeltoY(py)-yp1)/dpy;
+         }
+         if (P2) {
+            fX2 = (gPad->AbsPixeltoX(px)-xp1)/dpx;
+            fY2 = (gPad->AbsPixeltoY(py)-yp1)/dpy;
+         }
+         if (L) {
+            fX1 = (gPad->AbsPixeltoX(px1)-xp1)/dpx;
+            fY1 = (gPad->AbsPixeltoY(py1)-yp1)/dpy;
+            fX2 = (gPad->AbsPixeltoX(px2)-xp1)/dpx;
+            fY2 = (gPad->AbsPixeltoY(py2)-yp1)/dpy;
+         }
+      } else {
+         if (P1) {
+            fX1 = gPad->AbsPixeltoX(px);
+            fY1 = gPad->AbsPixeltoY(py);
+         }
+         if (P2) {
+            fX2 = gPad->AbsPixeltoX(px);
+            fY2 = gPad->AbsPixeltoY(py);
+         }
+         if (L) {
+            fX1 = gPad->AbsPixeltoX(px1);
+            fY1 = gPad->AbsPixeltoY(py1);
+            fX2 = gPad->AbsPixeltoX(px2);
+            fY2 = gPad->AbsPixeltoY(py2);
+         }
       }
       gPad->Modified(kTRUE);
       gGXW->SetLineColor(-1);
@@ -244,7 +294,8 @@ void TLine::Paint(Option_t *)
 {
 //*-*-*-*-*-*-*-*-*-*-*Paint this line with its current attributes*-*-*-*-*-*-*
 //*-*                  ===========================================
-   PaintLine(fX1,fY1,fX2,fY2);
+   if (TestBit(kLineNDC)) PaintLineNDC(fX1,fY1,fX2,fY2);
+   else                   PaintLine(fX1,fY1,fX2,fY2);
 }
 
 //______________________________________________________________________________

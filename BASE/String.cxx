@@ -1,23 +1,26 @@
+//*CMZ :  2.22/02 24/05/99  17.08.12  by  Fons Rademakers
 //*CMZ :  2.21/04 05/02/99  16.43.33  by  Fons Rademakers
 //*CMZ :  2.00/12 08/10/98  15.34.37  by  Fons Rademakers
 //*CMZ :  2.00/05 07/04/98  22.35.08  by  Fons Rademakers
 //*CMZ :  1.03/09 16/12/97  16.44.28  by  Rene Brun
 //*-- Author :    Fons Rademakers   04/08/95
 
+/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Fons Rademakers.                                  *
+ * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
  *                                                                       *
  * Permission to use, copy, modify and distribute this software and its  *
  * documentation for non-commercial purposes is hereby granted without   *
  * fee, provided that the above copyright notice appears in all copies   *
  * and that both the copyright notice and this permission notice appear  *
  * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose.                         *
- * It is provided "as is" without express or implied warranty.           *
+ * suitability of this software for any purpose. It is provided "as is"  *
+ * without express or implied warranty.                                  *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -25,6 +28,8 @@
 // TString                                                              //
 //                                                                      //
 // Basic string class.                                                  //
+//                                                                      //
+// Cannot be stored in a TCollection... use TObjString instead.         //
 //                                                                      //
 //////////////////////////////////////////////////////////////////////////
 
@@ -537,13 +542,11 @@ TString& TString::ReplaceAll(const char *s1, Ssiz_t ls1, const char *s2, Ssiz_t 
 {
    // Find & Replace ls1 symbols of s1 with ls2 symbols of s2 if any.
 
-   if (s1 && ls1) {
+   if (s1 && ls1>0) {
       Ssiz_t index = 0;
-      Int_t size = ls2-ls1+1;
-      if (size < 0) size = 0;
       while ((index = Index(s1,ls1,index, kExact)) != kNPOS) {
          Replace(index,ls1,s2,ls2);
-         index += size;
+         index += ls2;
       }
    }
    return *this;
@@ -744,6 +747,8 @@ void TString::Streamer(TBuffer &b)
       fData = TStringRef::GetRep(nwh, nwh)->Data();
       for (int i = 0; i < nwh; i++) b >> fData[i];
    } else {
+      if (Length() > 255)
+         Error("Streamer", "string too long (>255) for I/O, use TStringLong");
       nwh = Length();
       b << nwh;
       for (int i = 0; i < nwh; i++) b << fData[i];
@@ -1073,6 +1078,15 @@ Bool_t TString::IsAscii() const
       if (cp[i] & ~0x7F)
          return kFALSE;
    return kTRUE;
+}
+
+//______________________________________________________________________________
+Bool_t TString::EndsWith(const char* s, ECaseCompare cmp) const
+{
+   Ssiz_t l = strlen(s);
+   Ssiz_t i = Index(s, l, (Ssiz_t)0, cmp);
+   if (i == kNPOS) return kFALSE;
+   return i == Length() - l;
 }
 
 

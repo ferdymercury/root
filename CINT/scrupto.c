@@ -1,5 +1,5 @@
-/*CMZ :  2.21/08 17/03/99  13.13.44  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   17/03/99*/
+/*CMZ :  2.22/10 23/07/99  14.42.19  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   23/07/99*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -47,6 +47,9 @@
 void G__store_dictposition(dictpos)
 struct G__dictposition *dictpos;
 {
+#ifndef G__OLDIMPLEMENTATION1035
+  G__LockCriticalSection();
+#endif
   /* global variable position */
   dictpos->var = &G__global;
   while(dictpos->var->next) dictpos->var=dictpos->var->next;
@@ -90,6 +93,9 @@ struct G__dictposition *dictpos;
   dictpos->definedtemplatefunc = &G__definedtemplatefunc;
   while(dictpos->definedtemplatefunc->next)
     dictpos->definedtemplatefunc=dictpos->definedtemplatefunc->next;
+#ifndef G__OLDIMPLEMENTATION1035
+  G__UnlockCriticalSection();
+#endif
 }
 
 /***********************************************************************
@@ -104,8 +110,12 @@ struct G__dictposition *dictpos;
 
   /* struct G__var_array *local; */
 
+#ifndef G__OLDIMPLEMENTATION1035
+  G__LockCriticalSection();
+#endif
+
 #ifdef G__MEMTEST
-	fprintf(G__memhist,"G__scratch_upto() start\n");
+  fprintf(G__memhist,"G__scratch_upto() start\n");
 #endif
 
 
@@ -214,7 +224,13 @@ struct G__dictposition *dictpos;
 #endif
   G__close_inputfiles_upto(dictpos->nfile);
 
+#ifndef G__OLDIMPLEMENTATION1045
+  G__tagdefining = -1;
+#endif
 
+#ifndef G__OLDIMPLEMENTATION1035
+  G__UnlockCriticalSection();
+#endif
 }
 
 
@@ -238,6 +254,9 @@ int ifn;
     ifunc->next=(struct G__ifunc_table *)NULL;
   }
   /* Freeing default parameter storage */
+#ifndef G__OLDIMPLEMENTATION1039
+  if(ifunc==dictpos && ifn==ifunc->allifunc) {return(1);}
+#endif
   for(i=ifunc->allifunc-1;i>=0;i--) {
 #ifdef G__MEMTEST
     fprintf(G__memhist,"func %s\n",ifunc->funcname[i]);
@@ -524,10 +543,16 @@ struct G__dictposition *dictpos;
   /*******************************************
    * clear interpreted global variables
    *******************************************/
+#ifndef G__OLDIMPLEMENTATION1035
+  G__LockCriticalSection();
+#endif
 #ifdef G__MEMTEST
   fprintf(G__memhist,"Freeing global variables\n");
 #endif
   G__destroy_upto(dictpos->var,1,dictpos->var,dictpos->ig15);
+#ifndef G__OLDIMPLEMENTATION1035
+  G__UnlockCriticalSection();
+#endif
 }
 #endif
 
@@ -564,14 +589,24 @@ int ig15;
    * destroy it too.
    *******************************************/
   if(var->next) {
-#ifndef G__FONS22
-    /* Never true */
-    if(G__destroy_upto(var->next,global,dictpos,0)) return(1);
-#else
-    if(G__destroy_upto(var->next,global,dictpos,ig15)) return(1);
+#ifndef G__OLDIMPLEMENTATION1081
+    if(var->allvar==G__MEMDEPTH) {
 #endif
-    free((void*)var->next);
-    var->next=NULL;
+#ifndef G__FONS22
+      /* Never true */
+      if(G__destroy_upto(var->next,global,dictpos,0)) return(1);
+#else
+      if(G__destroy_upto(var->next,global,dictpos,ig15)) return(1);
+#endif
+      free((void*)var->next);
+      var->next=NULL;
+#ifndef G__OLDIMPLEMENTATION1081
+    }
+    else {
+      fprintf(stderr,"!!!Fatal Error: Interpreter memory overwritten by illegal access.!!!\n");
+      fprintf(stderr,"!!!Terminate session!!!\n");
+    }
+#endif
   }
 
   for(itemp=var->allvar-1;itemp>=remain;itemp--) {
@@ -729,6 +764,15 @@ int nfile;
     }
     if(G__srcfile[G__nfile].fp) {
       fclose(G__srcfile[G__nfile].fp);
+#ifndef G__PHILIPPE0
+      if(G__srcfile[G__nfile].prepname) {
+	int j;
+	for(j=G__nfile-1;j>=0;j--) {
+	  if(G__srcfile[j].fp==G__srcfile[G__nfile].fp)
+	    G__srcfile[j].fp=(FILE*)NULL;
+	}
+      }
+#endif
       G__srcfile[G__nfile].fp=(FILE*)NULL;
     }
     if(G__srcfile[G__nfile].breakpoint) {

@@ -1,5 +1,5 @@
-/*CMZ :  2.21/08 17/03/99  13.13.39  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   17/03/99*/
+/*CMZ :  2.22/10 23/07/99  14.42.13  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   23/07/99*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -39,6 +39,14 @@ int *ptype;
 #ifdef G__VIRTUALBASE
     if(-1!=(offset=G__isanybase(tagnum,result3->tagnum,result3->obj.i)))
       offset=offset;
+#ifndef G__OLDIMPLEMENTATION1050
+    else if(0==castflag && 0==G__oprovld &&
+	    (G__SECURE_MARGINAL_CAST&G__security) &&
+	    'i'!=result3->type && 'l'!=result3->type && 'Y'!=result3->type) {
+      G__genericerror("Error: illegal type cast");
+      return;
+    }
+#endif
 #ifndef G__OLDIMPLEMENTATION661
     else {
       int store_tagnum = G__tagnum;
@@ -61,6 +69,14 @@ int *ptype;
       offset=0;
 #endif
   }
+#ifndef G__OLDIMPLEMENTATION1050
+  else if(0==castflag && 0==G__oprovld &&
+	  (G__SECURE_MARGINAL_CAST&G__security) &&
+	  'i'!=result3->type && 'l'!=result3->type && 'Y'!=result3->type) {
+    G__genericerror("Error: illegal type cast");
+    return;
+  }
+#endif
   result3->tagnum=tagnum;
   result3->typenum = -1;
   *ptype='u'+castflag;
@@ -362,7 +378,11 @@ G__value result3;
   }
 
 #ifdef G__ASM
-  if(G__asm_noverflow) {
+  if(G__asm_noverflow
+#ifndef G__OLDIMPLEMENTATION1073
+     && 0==G__oprovld
+#endif
+     ) {
     /*********************************************************
      * CAST
      *********************************************************/
@@ -379,6 +399,10 @@ G__value result3;
     G__inc_cp_asm(5,0);
   }
 #endif /* G__ASM */
+
+#ifndef G__OLDIMPLEMENTATION1050
+  if(G__security_error) return(result3);
+#endif
 
   switch(type) {
   case 'd':
@@ -413,7 +437,11 @@ G__value result3;
     break;
   default:
     G__letint(&result3,type,G__int(result3));
+#ifndef G__OLDIMPLEMENTATION1071
+    if(islower(type)) result3.ref = result3.obj.i;
+#else
     result3.ref = result3.obj.i;
+#endif
     result3.obj.reftype.reftype = reftype;
     break;
   }

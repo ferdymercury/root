@@ -1,3 +1,4 @@
+//*CMZ :  2.22/02 28/05/99  16.31.33  by  Fons Rademakers
 //*CMZ :  2.00/09 10/06/98  12.44.31  by  Fons Rademakers
 //*CMZ :  2.00/00 06/02/98  14.52.21  by  Rene Brun
 //*CMZ :  1.00/07 04/04/97  11.59.06  by  Fons Rademakers
@@ -28,6 +29,7 @@
    // server tells us who we are
    int idx = !strcmp(str, "go 0") ? 0 : 1;
 
+   TH1 *hpx;
    if (idx == 0) {
       // Create the histogram
       hpx = new TH1F("hpx","This is the px distribution",100,-4,4);
@@ -48,7 +50,7 @@
       if (idx == 0)
          hpx->Fill(px);
       else
-         hpx->Fill(px,py);
+         hpx->Fill(px,py,1);
       if (i && (i%kUPDATE) == 0) {
          mess.Reset();              // re-use TMessage object
          mess.WriteObject(hpx);     // write object in message buffer

@@ -1,20 +1,24 @@
+//*CMZ :  2.22/03 31/05/99  17.04.44  by  Rene Brun
+//*CMZ :  2.22/01 26/04/99  16.40.42  by  Rene Brun
 //*CMZ :  1.03/05 01/10/97  20.37.47  by  Fons Rademakers
 //*-- Author :    Ola Nordmann   09/01/96
 
+/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Fons Rademakers.                                  *
+ * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
  *                                                                       *
  * Permission to use, copy, modify and distribute this software and its  *
  * documentation for non-commercial purposes is hereby granted without   *
  * fee, provided that the above copyright notice appears in all copies   *
  * and that both the copyright notice and this permission notice appear  *
  * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose.                         *
- * It is provided "as is" without express or implied warranty.           *
+ * suitability of this software for any purpose. It is provided "as is"  *
+ * without express or implied warranty.                                  *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////////
@@ -176,7 +180,8 @@ public:
          Double_t impactParameterMax, Double_t phiMin, Double_t phiMax);
   virtual ~TVenus();
   virtual void            GenerateEvent(Option_t *option="");
-  virtual TObjArray      *GetPrimaries(Option_t *option="");
+  virtual Int_t           ImportParticles(TClonesArray *particles, Option_t *option="");
+  virtual TObjArray      *ImportParticles(Option_t *option="");
   virtual void            SetVersionNumber(Int_t iversn = 521);
   virtual void            SetU_D_QuarkProductionProb(Float_t pud = 0.455);
   virtual void            SetQQ_QQbarProbability(Float_t pdiqua = 0.08);

@@ -1,22 +1,25 @@
+//*CMZ :  2.22/01 26/04/99  11.56.30  by  Rene Brun
 //*CMZ :  2.20/00 08/11/98  11.05.07  by  Rene Brun
 //*CMZ :  2.00/00 17/02/98  16.24.30  by  Rene Brun
 //*CMZ :  1.03/09 16/12/97  16.26.15  by  Rene Brun
 //*-- Author :    Fons Rademakers   16/02/97
 
+/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Fons Rademakers.                                  *
+ * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
  *                                                                       *
  * Permission to use, copy, modify and distribute this software and its  *
  * documentation for non-commercial purposes is hereby granted without   *
  * fee, provided that the above copyright notice appears in all copies   *
  * and that both the copyright notice and this permission notice appear  *
  * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose.                         *
- * It is provided "as is" without express or implied warranty.           *
+ * suitability of this software for any purpose. It is provided "as is"  *
+ * without express or implied warranty.                                  *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -226,14 +229,14 @@ TObject *TProofServ::Get(const char *namecycle)
 }
 
 //______________________________________________________________________________
-void TProofServ::GetLimits(Int_t dim, Int_t nevents, Int_t *nbins, Float_t *vmin, Float_t *vmax)
+void TProofServ::GetLimits(Int_t dim, Int_t nentries, Int_t *nbins, Float_t *vmin, Float_t *vmax)
 {
    // Get limits of histogram from master. This method is called by
    // TTree::TakeEstimate().
 
    TMessage mess(kPROOF_LIMITS);
 
-   mess << dim << nevents << nbins[0] << vmin[0] << vmax[0];
+   mess << dim << nentries << nbins[0] << vmin[0] << vmax[0];
 
    if (dim == 2)
       mess << nbins[1] << vmin[1] << vmax[1];
@@ -258,9 +261,9 @@ void TProofServ::GetLimits(Int_t dim, Int_t nevents, Int_t *nbins, Float_t *vmin
 }
 
 //______________________________________________________________________________
-Bool_t TProofServ::GetNextPacket(Int_t &nevents, Stat_t &firstevent)
+Bool_t TProofServ::GetNextPacket(Int_t &nentries, Stat_t &firstentry)
 {
-   // Get next range of events to be processed on this server.
+   // Get next range of entries to be processed on this server.
 
    fSocket->Send(kPROOF_GETPACKET);
 
@@ -268,9 +271,9 @@ Bool_t TProofServ::GetNextPacket(Int_t &nevents, Stat_t &firstevent)
    if (fSocket->Recv(mess) < 0)
       return kFALSE;
 
-   (*mess) >> nevents >> firstevent >> fEventsProcessed;
+   (*mess) >> nentries >> firstentry >> fEntriesProcessed;
 
-   if (nevents == -1)
+   if (nentries == -1)
       return kFALSE;
    return kTRUE;
 }

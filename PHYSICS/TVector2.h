@@ -1,3 +1,5 @@
+//*CMZ :  2.22/02 26/05/99  09.41.15  by  Rene Brun
+//*CMZ :  2.22/00 06/04/99  19.09.04  by  Rene Brun
 //*CMZ :  2.21/06 15/02/99  09.30.26  by  Rene Brun
 //*-- Author :    Pasha Murat   12/02/99
 //------------------------------------------------------------------------------
@@ -113,8 +115,8 @@ public:
                                         // rotates 2-vector by phi radians
   TVector2 Rotate (Double_t phi);
 
-				        // required by CINT
-  ClassDef(TVector2,1)
+				
+  ClassDef(TVector2,1)  // a two dim physics vector
 
 };
 
@@ -175,13 +177,13 @@ inline Double_t   operator ^ (const TVector2& v1, const TVector2& v2) {
 
 inline  Double_t TVector2::DeltaPhi(TVector2& v) const { return phi_mpi_pi(Phi()-v.Phi()); }
 
-inline  TVector2 TVector2::Unit() const {return (Mod2()) ? *this/Mod() : TVector2(0); };
+inline  TVector2 TVector2::Unit() const {return (Mod2()) ? *this/Mod() : TVector2(0); }
 
-inline  TVector2 TVector2::Ort () const { return Unit(); };
+inline  TVector2 TVector2::Ort () const { return Unit(); }
 
-inline  TVector2 TVector2::Proj(const TVector2& v) const { return v*(((*this)*v)/v.Mod2()); };
+inline  TVector2 TVector2::Proj(const TVector2& v) const { return v*(((*this)*v)/v.Mod2()); }
 
-inline  TVector2 TVector2::Norm(const TVector2& v) const {return *this-Proj(v); };
+inline  TVector2 TVector2::Norm(const TVector2& v) const {return *this-Proj(v); }
 
                                      // ****** setters
 

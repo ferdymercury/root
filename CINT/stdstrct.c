@@ -1,5 +1,5 @@
-/*CMZ :  2.21/08 17/03/99  13.13.44  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   17/03/99*/
+/*CMZ :  2.22/10 23/07/99  14.42.19  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   23/07/99*/
 /********************************************************
 * stdstrct.c
 ********************************************************/
@@ -46,7 +46,6 @@ static void G__setup_memvarlconv() {
    G__memvar_setup((void*)((long)(&p->int_curr_symbol)-(long)(p)),67,0,0,-1,-1,-1,1,"int_curr_symbol=",0,(char*)NULL);
    G__memvar_setup((void*)((long)(&p->mon_decimal_point)-(long)(p)),67,0,0,-1,-1,-1,1,"mon_decimal_point=",0,(char*)NULL);
    G__memvar_setup((void*)((long)(&p->mon_grouping)-(long)(p)),67,0,0,-1,-1,-1,1,"mon_grouping=",0,(char*)NULL);
-   G__memvar_setup((void*)((long)(&p->mon_thousands_sep)-(long)(p)),67,0,0,-1,-1,-1,1,"mon_thousands_sep=",0,(char*)NULL);
    G__memvar_setup((void*)((long)(&p->n_cs_precedes)-(long)(p)),99,0,0,-1,-1,-1,1,"n_cs_precedes=",0,(char*)NULL);
    G__memvar_setup((void*)((long)(&p->n_sep_by_space)-(long)(p)),99,0,0,-1,-1,-1,1,"n_sep_by_space=",0,(char*)NULL);
    G__memvar_setup((void*)((long)(&p->n_sign_posn)-(long)(p)),99,0,0,-1,-1,-1,1,"n_sign_posn=",0,(char*)NULL);

@@ -1,3 +1,5 @@
+//*CMZ :  2.22/02 21/05/99  10.59.52  by  Rene Brun
+//*CMZ :  2.22/01 19/05/99  12.47.17  by  Rene Brun
 //*CMZ :  2.20/05 15/12/98  09.17.21  by  Rene Brun
 //*CMZ :  2.20/01 02/12/98  18.03.03  by  Fons Rademakers
 //*CMZ :  2.00/11 08/08/98  22.20.54  by  Rene Brun
@@ -5,20 +7,22 @@
 //*CMZ :  1.03/09 10/12/97  09.32.36  by  Rene Brun
 //*-- Author :    Nicolas Brun   12/12/94
 
+/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Fons Rademakers.                                  *
+ * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
  *                                                                       *
  * Permission to use, copy, modify and distribute this software and its  *
  * documentation for non-commercial purposes is hereby granted without   *
  * fee, provided that the above copyright notice appears in all copies   *
  * and that both the copyright notice and this permission notice appear  *
  * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose.                         *
- * It is provided "as is" without express or implied warranty.           *
+ * suitability of this software for any purpose. It is provided "as is"  *
+ * without express or implied warranty.                                  *
  *************************************************************************/
 
 #include <fstream.h>
@@ -106,9 +110,15 @@ Int_t TText::DistancetoPrimitive(Int_t px, Int_t py)
 //  if point is in rectangle, the distance is set to zero.
 //
    Int_t Ax,Ay,Bx,By,Cx,Cy,Dx,Dy,pxl,pxt,pyl,pyt;
+   Int_t ptx, pty;
    Ax = Ay = pxl = pxt = pyl = pyt = 0;
-   Int_t ptx    = gPad->XtoAbsPixel(fX);
-   Int_t pty    = gPad->YtoAbsPixel(fY);
+   if (TestBit(kTextNDC)) {
+      ptx   = gPad->UtoPixel(fX);
+      pty   = gPad->VtoPixel(fY);
+   } else {
+      ptx    = gPad->XtoAbsPixel(fX);
+      pty    = gPad->YtoAbsPixel(fY);
+   }
    const Text_t *text = GetTitle();
    Int_t len    = strlen(text);
    Float_t fh   = (fTextSize*gPad->GetAbsHNDC())*Float_t(gPad->GetWh());
@@ -204,7 +214,7 @@ void TText::Draw(Option_t *option)
 }
 
 //______________________________________________________________________________
-void TText::DrawText(Coord_t x, Coord_t y, const Text_t *text)
+TText *TText::DrawText(Coord_t x, Coord_t y, const Text_t *text)
 {
 //*-*-*-*-*-*-*-*-*-*-*Draw this text with new coordinates*-*-*-*-*-*-*-*-*-*
 //*-*                  ===================================
@@ -213,6 +223,17 @@ void TText::DrawText(Coord_t x, Coord_t y, const Text_t *text)
    newtext->SetBit(kCanDelete);
    if (TestBit(kTextNDC)) newtext->SetNDC();
    newtext->AppendPad();
+   return newtext;
+}
+
+//______________________________________________________________________________
+TText *TText::DrawTextNDC(Coord_t x, Coord_t y, const Text_t *text)
+{
+//*-*-*-*-*-*-*-*-*-*-*Draw this text with new coordinates in NDC*-*-*-*-*-*
+//*-*                  ==========================================
+   TText *newtext = DrawText(x, y, text);
+   newtext->SetNDC();
+   return newtext;
 }
 
 //______________________________________________________________________________
@@ -242,6 +263,7 @@ void TText::ExecuteEvent(Int_t event, Int_t px, Int_t py)
    Int_t Ax,Ay,Hx,Hy,Bx,By,Cx,Cy;
    Ax = Ay = 0;
    Float_t lambda, x2,y2,xy;
+   Float_t dpx,dpy,xp1,yp1;
    switch (event) {
 
    case kButton1Down:
@@ -251,8 +273,13 @@ void TText::ExecuteEvent(Int_t event, Int_t px, Int_t py)
       // No break !!!
 
    case kMouseMotion:
-      px1   = gPad->XtoAbsPixel(fX);
-      py1   = gPad->YtoAbsPixel(fY);
+      if (TestBit(kTextNDC)) {
+         px1   = gPad->UtoPixel(fX);
+         py1   = gPad->VtoPixel(fY);
+      } else {
+         px1   = gPad->XtoAbsPixel(fX);
+         py1   = gPad->YtoAbsPixel(fY);
+      }
       theta = fTextAngle;
       Size = 0;
       pxold = px;  pyold = py;
@@ -363,8 +390,17 @@ void TText::ExecuteEvent(Int_t event, Int_t px, Int_t py)
       break;
 
    case kButton1Up:
-      fX = gPad->AbsPixeltoX(px1);
-      fY = gPad->AbsPixeltoY(py1);
+      if (TestBit(kTextNDC)) {
+         dpx  = gPad->GetX2() - gPad->GetX1();
+         dpy  = gPad->GetY2() - gPad->GetY1();
+         xp1  = gPad->GetX1();
+         yp1  = gPad->GetY1();
+         fX = (gPad->AbsPixeltoX(px1)-xp1)/dpx;
+         fY = (gPad->AbsPixeltoY(py1)-yp1)/dpy;
+      } else {
+         fX = gPad->AbsPixeltoX(px1);
+         fY = gPad->AbsPixeltoY(py1);
+      }
       fTextAngle = theta;
       gPad->Modified(kTRUE);
       gGXW->SetTextColor(-1);

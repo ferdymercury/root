@@ -1,5 +1,5 @@
-//*CMZ :  2.21/08 17/03/99  13.13.46  by  Masaharu Goto
-//*-- Author :    Masaharu Goto   17/03/99
+//*CMZ :  2.22/10 23/07/99  14.42.21  by  Masaharu Goto
+//*-- Author :    Masaharu Goto   23/07/99
 /* /% C++ %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -220,6 +220,7 @@ int G__MethodInfo::NDefaultArg()
 	if(ifunc->para_default[index][i]) ++defaultnu;
 	else return(defaultnu);
       }
+      return(defaultnu);
     }
     else {
       return(0);
@@ -233,17 +234,29 @@ int G__MethodInfo::NDefaultArg()
 ///////////////////////////////////////////////////////////////////////////
 G__InterfaceMethod G__MethodInfo::InterfaceMethod()
 {
+#ifndef G__OLDIMPLEMENTATION1035
+  G__LockCriticalSection();
+#endif
   if(IsValid()) {
     struct G__ifunc_table *ifunc;
     ifunc = (struct G__ifunc_table*)handle;
     if(-1==ifunc->pentry[index]->filenum) {
+#ifndef G__OLDIMPLEMENTATION1035
+      G__UnlockCriticalSection();
+#endif
       return((G__InterfaceMethod)ifunc->pentry[index]->p);
     }
     else {
+#ifndef G__OLDIMPLEMENTATION1035
+      G__UnlockCriticalSection();
+#endif
       return((G__InterfaceMethod)NULL);
     }
   }
   else {
+#ifndef G__OLDIMPLEMENTATION1035
+    G__UnlockCriticalSection();
+#endif
     return((G__InterfaceMethod)NULL);
   }
 }

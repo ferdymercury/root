@@ -1,3 +1,4 @@
+//*CMZ :  2.22/01 11/04/99  21.23.33  by  Valery Fine(fine@mail.cern.ch)
 //*CMZ :  2.21/06 12/02/99  17.18.10  by  Valery Fine(fine@vxcern.cern.ch)
 //*CMZ :  1.03/09 16/12/97  11.11.14  by  Valery Fine(fine@mail.cern.ch)
 //*-- Author :    Valery Fine(fine@vxcern.cern.ch)   16/08/96
@@ -84,7 +85,6 @@ protected:
                        fLenLine,         // Pixel length of the entered string
                        fix0,fiy0,
                        fInsert;          // "insert" mode flag
-    Char_t            *fInstr;           // temporary buffer
 
    static int insert;
 
@@ -222,6 +222,7 @@ protected:
   virtual LRESULT APIENTRY OnRootMouse(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
   //                                        LOWORD(wParam) = IX_REQST
   virtual LRESULT APIENTRY OnRootTextInput(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+  virtual LRESULT APIENTRY OnRootEditInput(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
   //    Message ID: WM_USER+    OnRootHook
   //                ==========

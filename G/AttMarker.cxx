@@ -1,20 +1,25 @@
+//*CMZ :  2.22/09 12/07/99  17.54.52  by  Rene Brun
+//*CMZ :  2.22/02 25/05/99  09.56.13  by  Rene Brun
+//*CMZ :  2.22/00 27/03/99  02.20.28  by  Rene Brun
 //*CMZ :  1.03/09 06/12/97  16.51.17  by  Fons Rademakers
 //*-- Author :    Rene Brun   12/05/95
 
+/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Fons Rademakers.                                  *
+ * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
  *                                                                       *
  * Permission to use, copy, modify and distribute this software and its  *
  * documentation for non-commercial purposes is hereby granted without   *
  * fee, provided that the above copyright notice appears in all copies   *
  * and that both the copyright notice and this permission notice appear  *
  * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose.                         *
- * It is provided "as is" without express or implied warranty.           *
+ * suitability of this software for any purpose. It is provided "as is"  *
+ * without express or implied warranty.                                  *
  *************************************************************************/
 
 #include <fstream.h>
@@ -54,17 +59,17 @@ ClassImp(TAttMarker)
 //*-*      7 : full circle (medium)
 //*-*      8 : full circle (large)
 //*-*      9 -->19 : dot
-//*-*     20 : full circle (large)
-//*-*     21 : full triangle up
-//*-*     22 : full triangle down
-//*-*     23 : two nested open hexagones
-//*-*     24 : open square
-//*-*     25 : open triangle up
-//*-*     26 : open diamond
-//*-*     27 : open cross
-//*-*     28 : full pentagon
-//*-*     29 : open hexagone
-//*-*     30 : open square
+//*-*     20 : full circle
+//*-*     21 : full square
+//*-*     22 : full triangle up
+//*-*     23 : full triangle down
+//*-*     24 : open circle
+//*-*     25 : open square
+//*-*     26 : open triangle up
+//*-*     27 : open diamond
+//*-*     28 : open cross
+//*-*     29 : open star
+//*-*     30 : full star
 //*-*
 //Begin_Html
 /*
@@ -188,10 +193,10 @@ void TAttMarker::SetMarkerAttributes()
 
    TList *lc = (TList*)gROOT->GetListOfCanvases();
    if (!lc->FindObject("attmarker")) {
-      char cmd[] = "attmarker = new TAttMarkerCanvas(\"attmarker\",\"Marker Attributes\",250,400)";
+      char cmd[] = "TAttMarkerCanvas *attmarker = new TAttMarkerCanvas(\"attmarker\",\"Marker Attributes\",250,400);";
       gInterpreter->ProcessLine(cmd);
    }
-   char cmdupd[] = "attmarker->UpdateMarkerAttributes(    ,     ,     )";
-   sprintf(cmdupd,"attmarker->UpdateMarkerAttributes(%d,%d,%f)",fMarkerColor,fMarkerStyle,fMarkerSize);
+   char cmdupd[90];
+   sprintf(cmdupd,"attmarker->UpdateMarkerAttributes(%d,%d,%f); attmarker->Show();",fMarkerColor,fMarkerStyle,fMarkerSize);
    gInterpreter->ProcessLine(cmdupd);
 }

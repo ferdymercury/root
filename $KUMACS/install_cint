@@ -1,3 +1,5 @@
+*CMZ :  2.22/04 03/06/99  16.16.16  by  Fons Rademakers
+*CMZ :  2.22/01 30/04/99  15.23.34  by  Fons Rademakers
 *CMZ :  2.20/05 15/12/98  18.02.14  by  Rene Brun
 *CMZ :  2.00/09 19/06/98  10.54.47  by  Rene Brun
 *CMZ :  2.00/06 12/05/98  18.05.59  by  Rene Brun
@@ -99,6 +101,61 @@ else
   seq -I cint/include/*.h
 endif
 seq .
+
+* export std version of C headers (i.e. the ones with .h extension)
+seq .
+cd /cintstdinclude
+if [OS]='VMS' then
+  set [.cint.include]* -f text
+else
+  set cint/include/* -f text
+endif
+ctot *
+
+* export CINT STL run-time includes
+if [machine] = 'WinNT' then
+   exec mkdir cint\stl
+   exec mkdir cint\lib
+   exec mkdir cint\lib\prec_stl
+elseif [OS]='VMS' then
+  exec mkdir [.cint.stl]
+  exec mkdir [.cint.lib]
+  exec mkdir [.cint.lib.prec_stl]
+else
+   exec mkdir cint/stl
+   exec mkdir cint/lib
+   exec mkdir cint/lib/prec_stl
+endif
+
+cd /
+seq .
+seq cintstl
+if [OS]='VMS' then
+  seq -I [.cint.stl]*.h
+else
+  seq -I cint/stl/*.h
+endif
+
+* export std version of STL headers (i.e. the ones with .h extension)
+seq .
+cd /cintstdstl
+if [OS]='VMS' then
+  set [.cint.stl]* -f text
+else
+  set cint/stl/* -f text
+endif
+ctot *
+
+seq .
+cd /cintprecstl
+if [OS]='VMS' then
+  set [.cint.lib.prec_stl]* -f text
+else
+  set cint/lib/prec_stl/* -f text
+endif
+ctot *
+set *.txt -f text
+cd /
 
 * create standalone CINT, called cint
 sel cintmain

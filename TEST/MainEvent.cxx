@@ -1,3 +1,4 @@
+//*CMZ :  2.22/01 26/04/99  12.07.23  by  Rene Brun
 //*CMZ :  2.21/08 15/03/99  11.39.55  by  Rene Brun
 //*CMZ :  2.21/06 15/02/99  09.08.07  by  Rene Brun
 //*CMZ :  2.00/13 28/10/98  12.53.40  by  Fons Rademakers
@@ -143,14 +144,14 @@ int main(int argc, char **argv)
       if (read == 1) {  //read sequential
          for (ev = 0; ev < nevent; ev++) {
             if (ev%printev == 0) cout<<"event="<<ev<<endl;
-            nb += tree->GetEvent(ev);        //read complete event in memory
+            nb += tree->GetEntry(ev);        //read complete event in memory
          }
       } else {    //read random
          Int_t evrandom;
          for (ev = 0; ev < nevent; ev++) {
             if (ev%printev == 0) cout<<"event="<<ev<<endl;
             evrandom = Int_t(nevent*gRandom->Rndm(1));
-            nb += tree->GetEvent(evrandom);  //read complete event in memory
+            nb += tree->GetEntry(evrandom);  //read complete event in memory
          }
       }
    } else {

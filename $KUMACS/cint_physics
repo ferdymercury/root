@@ -1,3 +1,4 @@
+*CMZ :  2.22/06 19/06/99  09.25.09  by  Peter Malzacher
 *CMZ :  2.21/06 15/02/99  09.30.26  by  Rene Brun
 *CMZ :  2.21/03 20/01/99  14.42.32  by  Fons Rademakers
 *-- Author :    Fons Rademakers   20/01/99
@@ -14,9 +15,9 @@ macro cint_physics
 seq -i src/*.h
 
 
-headers=TLorentzVector.h TVector2.h TVector3.h
+headers=TLorentzVector.h TLorentzRotation.h TRotation.h TVector2.h TVector3.h
 
-name=PHYSICS
+name=Physics
 patch=PHYSICS
 
 set G__LinkDef.h -F TEXT

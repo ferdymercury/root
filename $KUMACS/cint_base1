@@ -1,3 +1,4 @@
+*CMZ :  2.22/00 08/04/99  17.09.30  by  Rene Brun
 *CMZ :  2.00/09 22/06/98  12.14.03  by  Fons Rademakers
 *CMZ :  2.00/00 07/03/98  18.01.13  by  Fons Rademakers
 *CMZ :  1.03/02 29/08/97  13.28.56  by  Fons Rademakers
@@ -21,7 +22,7 @@ headers=TArrayC.h TArrayD.h TArrayF.h TArrayI.h TArrayL.h TArrayS.h _
         TObject.h TMemberInspector.h TMethod.h TMethodArg.h TMethodCall.h _
         TNamed.h TRealData.h TMapFile.h TMath.h TROOT.h TKeyMapFile.h _
         TApplication.h TApplicationImp.h TBrowserImp.h TCanvasImp.h _
-        TContextMenuImp.h TControlBarImp.h _
+        TContextMenuImp.h TControlBarImp.h TError.h _
         TString.h TStringLong.h TObjString.h TSystem.h TSysEvtHandler.h _
         TSystemFile.h TStopwatch.h TRandom.h TBenchmark.h TTime.h TTimer.h
 

@@ -1,3 +1,5 @@
+//*CMZ :  2.22/04 01/06/99  11.27.39  by  Rene Brun
+//*CMZ :  2.22/01 26/04/99  11.51.22  by  Rene Brun
 //*CMZ :  2.21/06 03/03/99  14.18.31  by  Rene Brun
 //*CMZ :  2.21/05 09/02/99  18.24.33  by  Rene Brun
 //*CMZ :  2.20/00 21/11/98  17.34.16  by  Rene Brun
@@ -8,20 +10,22 @@
 //*CMZ :  1.03/09 10/12/97  16.18.34  by  Fons Rademakers
 //*-- Author :    Rene Brun   03/02/97
 
+/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Fons Rademakers.                                  *
+ * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
  *                                                                       *
  * Permission to use, copy, modify and distribute this software and its  *
  * documentation for non-commercial purposes is hereby granted without   *
  * fee, provided that the above copyright notice appears in all copies   *
  * and that both the copyright notice and this permission notice appear  *
  * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose.                         *
- * It is provided "as is" without express or implied warranty.           *
+ * suitability of this software for any purpose. It is provided "as is"  *
+ * without express or implied warranty.                                  *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -227,39 +231,39 @@ void TChain::CreatePackets()
 }
 
 //______________________________________________________________________________
-void TChain::Draw(TCut varexp, TCut selection, Option_t *option, Int_t nevents, Int_t firstevent)
+void TChain::Draw(TCut varexp, TCut selection, Option_t *option, Int_t nentries, Int_t firstentry)
 {
-   // Draw expression varexp for selected events.
+   // Draw expression varexp for selected entries.
    //
    // This function accepts TCut objects as arguments.
    // Useful to use the string operator +, example:
    //    ntuple.Draw("x",cut1+cut2+cut3);
    //
 
-   TChain::Draw(varexp.GetTitle(), selection.GetTitle(), option, nevents, firstevent);
+   TChain::Draw(varexp.GetTitle(), selection.GetTitle(), option, nentries, firstentry);
 }
 
 //______________________________________________________________________________
-void TChain::Draw(const Text_t *varexp, const Text_t *selection, Option_t *option,Int_t nevents, Int_t firstevent)
+void TChain::Draw(const Text_t *varexp, const Text_t *selection, Option_t *option,Int_t nentries, Int_t firstentry)
 {
-   // Process all events in this chain and draw histogram
+   // Process all entries in this chain and draw histogram
    // corresponding to expression varexp.
 
-   if (LoadTree(firstevent)) return;
-   TTree::Draw(varexp,selection,option,nevents,firstevent);
+   if (LoadTree(firstentry)) return;
+   TTree::Draw(varexp,selection,option,nentries,firstentry);
 }
 
 //______________________________________________________________________________
-Int_t TChain::GetEvent(Int_t event, Int_t getall)
+Int_t TChain::GetEntry(Int_t entry, Int_t getall)
 {
-//*-*-*-*-*-*-*-*-*Return event in memory*-*-*-*-*-*-*-*-*-*
+//*-*-*-*-*-*-*-*-*Return entry in memory*-*-*-*-*-*-*-*-*-*
 //*-*              ======================
 //     getall = 0 : get only active branches
 //     getall = 1 : get all branches
 
-   if (LoadTree(event)) return 0;
-   fReadEvent = event - fTreeOffset[fTreeNumber];
-   return fTree->GetEvent(fReadEvent,getall);
+   if (LoadTree(entry)) return 0;
+   fReadEntry = entry - fTreeOffset[fTreeNumber];
+   return fTree->GetEntry(fReadEntry,getall);
 }
 
 
@@ -289,21 +293,55 @@ TObjArray *TChain::GetListOfLeaves()
 }
 
 //______________________________________________________________________________
-Int_t TChain::LoadTree(Int_t event)
+Float_t TChain::GetMaximum(Text_t *columname)
 {
-//    Load tree corresponding to event
+//*-*-*-*-*-*-*-*-*Return maximum of column with name columname*-*-*-*-*-*-*
+//*-*              ============================================
+
+   Float_t theMax = -1e30;
+   for (Int_t file=0;file<fNtrees;file++) {
+      Int_t first = fTreeOffset[file];
+      LoadTree(first);
+      Float_t curmax = fTree->GetMaximum(columname);;
+      if (curmax > theMax) theMax = curmax;
+   }
+   return theMax;
+}
+
+
+//______________________________________________________________________________
+Float_t TChain::GetMinimum(Text_t *columname)
+{
+//*-*-*-*-*-*-*-*-*Return minimum of column with name columname*-*-*-*-*-*-*
+//*-*              ============================================
+
+   Float_t theMin = 1e30;
+   for (Int_t file=0;file<fNtrees;file++) {
+      Int_t first = fTreeOffset[file];
+      LoadTree(first);
+      Float_t curmin = fTree->GetMinimum(columname);;
+      if (curmin < theMin) theMin = curmin;
+   }
+   return theMin;
+}
+
+
+//______________________________________________________________________________
+Int_t TChain::LoadTree(Int_t entry)
+{
+//    Load tree corresponding to entry
 
    if (!fNtrees) return 1;
-   if (event < 0 || event > fEntries) return 2;
+   if (entry < 0 || entry > fEntries) return 2;
 
-   //Find in which tree this event belongs to
+   //Find in which tree this entry belongs to
    Int_t t;
    for (t=0;t<fNtrees;t++) {
-      if (event < fTreeOffset[t+1]) break;
+      if (entry < fTreeOffset[t+1]) break;
    }
 
-   fReadEvent = event - fTreeOffset[t];
-   // If event belongs to the current tree return event
+   fReadEntry = entry - fTreeOffset[t];
+   // If entry belongs to the current tree return entry
    if (t == fTreeNumber) {
       return 0;
    }
@@ -340,37 +378,37 @@ Int_t TChain::LoadTree(Int_t event)
 }
 
 //______________________________________________________________________________
-void TChain::Loop(Option_t *option, Int_t nevents, Int_t firstevent)
+void TChain::Loop(Option_t *option, Int_t nentries, Int_t firstentry)
 {
-//*-*-*-*-*-*-*-*-*Loop on nevents of this chain starting at firstevent
+//*-*-*-*-*-*-*-*-*Loop on nentries of this chain starting at firstentry
 //*-*              ===================================================
 
 
-   if (LoadTree(firstevent)) return;
+   if (LoadTree(firstentry)) return;
 
-   if (firstevent < 0) firstevent = 0;
-   Int_t lastevent = firstevent + nevents -1;
-   if (lastevent > fEntries-1) {
-      lastevent = (Int_t)fEntries -1;
+   if (firstentry < 0) firstentry = 0;
+   Int_t lastentry = firstentry + nentries -1;
+   if (lastentry > fEntries-1) {
+      lastentry = (Int_t)fEntries -1;
    }
 
    GetSelector();
    fSelector->Start(option);
 
-   Int_t event = firstevent;
+   Int_t entry = firstentry;
    Int_t tree,e0,en;
    for (tree=0;tree<fNtrees;tree++) {
       e0 = fTreeOffset[tree];
       en = fTreeOffset[tree+1] - 1;
-      if (en > lastevent) en = lastevent;
-      if (event > en) continue;
+      if (en > lastentry) en = lastentry;
+      if (entry > en) continue;
 
-      LoadTree(event);
+      LoadTree(entry);
       fSelector->BeginFile();
 
-      while (event <= en) {
-         fSelector->Execute(fTree, event - e0);
-         event++;
+      while (entry <= en) {
+         fSelector->Execute(fTree, entry - e0);
+         entry++;
       }
       fSelector->EndFile();
    }
@@ -457,7 +495,7 @@ void TChain::Merge(TFile *file, Int_t basketsize, Option_t *option)
    Int_t treeNumber = -1;
    Int_t nentries = Int_t(GetEntries());
    for (Int_t i=0;i<nentries;i++) {
-      GetEvent(i);
+      GetEntry(i);
       if (treeNumber != fTreeNumber) {
          treeNumber = fTreeNumber;
          TIter next(fTree->GetListOfBranches());
@@ -532,7 +570,7 @@ void TChain::SetBranchStatus(const Text_t *bname, Bool_t status)
 //_______________________________________________________________________
 void TChain::SetPacketSize(Int_t size)
 {
-//*-*-*-*-*-*-*-*-*Set number of events per packet for parallel root*-*-*-*-*
+//*-*-*-*-*-*-*-*-*Set number of entries per packet for parallel root*-*-*-*-*
 //*-*              =================================================
 
    fPacketSize = size;

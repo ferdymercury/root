@@ -1,3 +1,8 @@
+//*CMZ :  2.22/09 10/07/99  21.29.51  by  Rene Brun
+//*CMZ :  2.22/07 26/06/99  23.05.04  by  Rene Brun
+//*CMZ :  2.22/05 14/06/99  13.32.14  by  Fons Rademakers
+//*CMZ :  2.22/04 01/06/99  16.37.32  by  Fons Rademakers
+//*CMZ :  2.22/01 30/04/99  14.49.31  by  Fons Rademakers
 //*CMZ :  2.21/06 15/02/99  01.29.37  by  Fons Rademakers
 //*CMZ :  2.20/04 11/12/98  18.41.38  by  Fons Rademakers
 //*CMZ :  2.20/00 26/11/98  12.45.27  by  Fons Rademakers
@@ -7,20 +12,22 @@
 //*CMZ :  1.03/09 10/12/97  09.00.38  by  Rene Brun
 //*-- Author :    Fons Rademakers   22/12/95
 
+/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Fons Rademakers.                                  *
+ * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
  *                                                                       *
  * Permission to use, copy, modify and distribute this software and its  *
  * documentation for non-commercial purposes is hereby granted without   *
  * fee, provided that the above copyright notice appears in all copies   *
  * and that both the copyright notice and this permission notice appear  *
  * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose.                         *
- * It is provided "as is" without express or implied warranty.           *
+ * suitability of this software for any purpose. It is provided "as is"  *
+ * without express or implied warranty.                                  *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -128,11 +135,13 @@ TApplication::TApplication(const char *appClassName,
    fAppImp = gGuiFactory->CreateApplicationImp(appClassName, argc, argv, options, numOptions);
 
    // Try to load TrueType font renderer. Only try to load if not in batch
-   // mode and Root.UseTTFonts is true and $ROOTSYS/ttf exists. Abort silently
+   // mode and Root.UseTTFonts is true and Root.TTFontPath exists. Abort silently
    // if libttf or libGX11TTF are not found in $ROOTSYS/lib.
 #if !defined(WIN32)
-   if (!gROOT->IsBatch() && gEnv->GetValue("Root.UseTTFonts", 1) &&
-       !gSystem->AccessPathName(Form("%s/ttf/fonts", gRootDir))) {
+   const char *ttpath = gEnv->GetValue("Root.TTFontPath", "$(ROOTSYS)/ttf/fonts");
+   char *ttfont = gSystem->Which(ttpath, "arialbd.ttf", kReadPermission);
+
+   if (!gROOT->IsBatch() && ttfont && gEnv->GetValue("Root.UseTTFonts", 1)) {
       char *p, *lib = Form("%s/lib/libttf", gRootDir);
       if ((p = gSystem->DynamicPathName(lib, kTRUE))) {
          delete [] p;
@@ -367,7 +376,7 @@ void TApplication::InitializeColors()
       // Initialize some additional greyish non saturated colors
       new TColor(8, 0.35,0.83,0.33);
       new TColor(9, 0.35,0.33,0.85);
-      new TColor(12,.3,.3,.3,"grey13");
+      new TColor(12,.3,.3,.3,"grey12");
       new TColor(13,.4,.4,.4,"grey13");
       new TColor(14,.5,.5,.5,"grey14");
       new TColor(15,.6,.6,.6,"grey15");
@@ -376,6 +385,25 @@ void TApplication::InitializeColors()
       new TColor(18,.9,.9,.9,"grey18");
       new TColor(19,.95,.95,.95,"grey19");
       new TColor(50, 0.83,0.35,0.33);
+
+      // Initialize the Pretty Palette Spectrum Violet->Red
+      //   The color model used here is based on the HLS model which
+      //   is much more suitable for creating palettes than RGB.
+      //   Fixing the saturation and lightness we can scan through the
+      //   spectrum of visible light by using "hue" alone.
+      //   In Root hue takes values from 0 to 360.
+      Float_t  saturation = 1;
+      Float_t  lightness = 0.5;
+      Float_t  MaxHue = 280;
+      Float_t  MinHue = 0;
+      Int_t    MaxPretty = 50;
+      Float_t  hue;
+
+      for (i=0 ; i<MaxPretty ; i++) {
+         hue = MaxHue-(i+1)*((MaxHue-MinHue)/MaxPretty);
+         c110->HLStoRGB(hue, lightness, saturation, r, g, b);
+         new TColor(i+51, r, g, b);
+      }
 
       // Initialize special colors for x3d
       for (i = 1; i < 8; i++) {
@@ -444,14 +472,23 @@ void TApplication::ProcessLine(const Text_t *line)
       return;
    }
 
+
    if (!strncmp(line, ".L", 2)) {
       char *fn  = Strip(line+3);
+      // See if script compilation requested
+      Bool_t compile = !strcmp(fn+strlen(fn)-2,"++");
+      if (compile)
+         fn[strlen(fn)-2] = 0;
       char *mac = gSystem->Which(TROOT::GetMacroPath(), fn, kReadPermission);
       if (!mac)
          Error("ProcessLine", "macro %s not found in path %s", fn,
                TROOT::GetMacroPath());
-      else
-         gInterpreter->ProcessLine(Form(".L %s", mac));
+      else {
+         if (compile)
+           gInterpreter->ProcessLine(Form(".L %s++", mac));
+         else
+           gInterpreter->ProcessLine(Form(".L %s", mac));
+      }
 
       delete [] fn;
       delete [] mac;
@@ -491,13 +528,19 @@ void TApplication::ProcessFile(const Text_t *name)
 
    char *fname = Strip(name);
    if (fname[nch-1] == ';') { nch--; fname[nch] = 0; }
-   char *s = strrchr(fname, '(');
-   if (s) *s = 0;
+   char *arg = strrchr(fname, '(');
+   if (arg) {
+      *arg = 0;
+      char *t = arg-1;
+      while (*t == ' ') {
+         *t = 0; t--;
+      }
+   }
 
    // strip off I/O redirect tokens from filename
    char ssave = 0;
    char *s2   = 0;
-   if (!s) {
+   if (!arg) {
       char *s3;
       s2 = strstr(fname, ">>");
       if (!s2) s2 = strstr(fname, "2>");
@@ -514,6 +557,13 @@ void TApplication::ProcessFile(const Text_t *name)
       }
    }
 
+   // See if script compilation requested
+   char *compile = "";
+   if (!strcmp(fname+strlen(fname)-2,"++")) {
+      compile = "++";
+      fname[strlen(fname)-2] = 0;
+   }
+
    char *exnam = gSystem->Which(TROOT::GetMacroPath(), fname, kReadPermission);
    if (!exnam) {
       Error("ProcessFile", "macro %s not found in path %s", fname,
@@ -522,29 +572,12 @@ void TApplication::ProcessFile(const Text_t *name)
       return;
    }
 
-   int exlen = strlen(exnam);
-   if (s)  exlen += strlen(s+1)+1;
-   if (s2) exlen += strlen(s2+1)+1;
-   char *exname = new char [exlen + 1];
-
-   strcpy(exname, exnam);
-   delete [] exnam;
-
-   ifstream file(exname,ios::in);
+   ifstream file(exnam,ios::in);
    if (!file.good()) {
-      Error("ProcessFile", "%s no such file", exname);
-      delete [] exname;
+      Error("ProcessFile", "%s no such file", exnam);
+      delete [] exnam;
       delete [] fname;
       return;
-   }
-
-   if (s)  {
-      *s  = '(';
-      strcat(exname, s);
-   }
-   if (s2) {
-      *s2 = ssave;
-      strcat(exname, s2);
    }
 
    Text_t currentline[kBufSize];
@@ -552,58 +585,80 @@ void TApplication::ProcessFile(const Text_t *name)
    int comment  = 0;
    int ifndefc  = 0;
    int ifdef    = 0;
-   s = 0;
+   char *s      = 0;
    Bool_t execute = kFALSE;
 
    while (1) {
-     file.getline(currentline,kBufSize);
-     if (file.eof()) break;
-     s = currentline;
-     while (s && *s == ' ') s++;     // strip-off leading blanks
+      file.getline(currentline,kBufSize);
+      if (file.eof()) break;
+      s = currentline;
+      while (s && *s == ' ') s++;     // strip-off leading blanks
 
-     // very simple minded pre-processor parsing, only works in case macro file
-     // starts with "#ifndef __CINT__". In that case everything till next
-     // "#else" or "#endif" will be skipped.
-     if (*s == '#') {
-        char *cs = Compress(currentline);
-        if (strstr(cs, "#ifndef__CINT__") ||
-            strstr(cs, "#if!defined(__CINT__)"))
-           ifndefc = 1;
-        else if (ifndefc && (strstr(cs, "#ifdef") || strstr(cs, "#ifndef") ||
-                 strstr(cs, "#ifdefined") || strstr(cs, "#if!defined")))
-           ifdef++;
-        else if (ifndefc && strstr(cs, "#endif")) {
-           if (ifdef)
-              ifdef--;
-           else
-              ifndefc = 0;
-        } else if (ifndefc && !ifdef && strstr(cs, "#else"))
-           ifndefc = 0;
-        delete [] cs;
-     }
-     if (!*s || *s == '#' || ifndefc || !strncmp(s, "//", 2)) continue;
+      // very simple minded pre-processor parsing, only works in case macro file
+      // starts with "#ifndef __CINT__". In that case everything till next
+      // "#else" or "#endif" will be skipped.
+      if (*s == '#') {
+         char *cs = Compress(currentline);
+         if (strstr(cs, "#ifndef__CINT__") ||
+             strstr(cs, "#if!defined(__CINT__)"))
+            ifndefc = 1;
+         else if (ifndefc && (strstr(cs, "#ifdef") || strstr(cs, "#ifndef") ||
+                  strstr(cs, "#ifdefined") || strstr(cs, "#if!defined")))
+            ifdef++;
+         else if (ifndefc && strstr(cs, "#endif")) {
+            if (ifdef)
+               ifdef--;
+            else
+               ifndefc = 0;
+         } else if (ifndefc && !ifdef && strstr(cs, "#else"))
+            ifndefc = 0;
+         delete [] cs;
+      }
+      if (!*s || *s == '#' || ifndefc || !strncmp(s, "//", 2)) continue;
 
-     if (!strncmp(s, ".X", 2) || !strncmp(s, ".x", 2)) {
-        ProcessFile(s+3);
-        execute = kTRUE;
-        continue;
-     }
+      if (!strncmp(s, ".X", 2) || !strncmp(s, ".x", 2)) {
+         ProcessFile(s+3);
+         execute = kTRUE;
+         continue;
+      }
 
-     if (!strncmp(s, "/*", 2)) comment = 1;
-     if (comment && !strncmp(s+strlen(s)-2, "*/", 2)) comment = 0;
-     if (!comment && *s == '{') tempfile = 1;
-     if (!comment) break;
+      if (!strncmp(s, "/*", 2)) comment = 1;
+      if (comment && !strncmp(s+strlen(s)-2, "*/", 2)) comment = 0;
+      if (!comment && *s == '{') tempfile = 1;
+      if (!comment) break;
    }
    file.close();
 
    if (!execute) {
-      if (tempfile)
+      int exlen = strlen(exnam);
+      if (arg) exlen += strlen(arg+1)+1;
+      if (s2)  exlen += strlen(s2+1)+1;
+      char *exname = new char [exlen + strlen(compile) + 1];
+
+      strcpy(exname, exnam);
+      if (!tempfile) {
+         // We have a script that does NOT contain an unamed macro,
+         // so we can call the script compiler on it.
+         strcat(exname,compile);
+      }
+      if (arg)  {
+         *arg  = '(';
+         strcat(exname, arg);
+      }
+      if (s2) {
+         *s2 = ssave;
+         strcat(exname, s2);
+      }
+
+      if (tempfile) {
          gInterpreter->ProcessLineSynch(Form(".x %s", exname));
-      else
+      } else
          gInterpreter->ProcessLineSynch(Form(".X %s", exname));
+
+      delete [] exname;
    }
 
-   delete [] exname;
+   delete [] exnam;
    delete [] fname;
 }
 

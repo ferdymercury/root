@@ -1,3 +1,6 @@
+//*CMZ :  2.22/06 22/06/99  15.04.49  by  Rene Brun
+//*CMZ :  2.22/02 26/05/99  09.29.36  by  Rene Brun
+//*CMZ :  2.22/01 21/04/99  10.48.10  by  Rene Brun
 //*CMZ :  2.21/06 12/02/99  13.21.45  by  Pasha Murat
 //*-- Author :    Pasha Murat   12/02/99
 #ifndef ROOT_TParticlePDG
@@ -49,28 +52,29 @@ public:
   virtual ~TParticlePDG();
 				// ****** access methods
 
-  Int_t           PdgCode    () { return fPdgCode; }
-  Double_t        Mass       () { return fMass; }
-  Double_t        Charge     () { return fCharge; }
-  Double_t        Lifetime   () { return fLifetime; }
-  Double_t        Width      () { return fWidth; }
-  Int_t           Parity     () { return fParity; }
-  Double_t        Spin       () { return fSpin; }
-  Double_t        Isospin    () { return fIsospin; }
-  Double_t        I3         () { return fI3; }
-  Int_t           Strangeness() { return fStrangeness; }
-  Int_t           Charm      () { return fCharm; }
-  Int_t           Beauty     () { return fBeauty; }
-  Int_t           Top        () { return fTop; }
-  Int_t           X          () { return fX; }
-  Int_t           Y          () { return fY; }
-  Int_t           Stable     () { return fStable; }
+  Int_t           PdgCode    () const { return fPdgCode; }
+  Double_t        Mass       () const { return fMass; }
+  Double_t        Charge     () const { return fCharge; }
+  Double_t        Lifetime   () const { return fLifetime; }
+  Double_t        Width      () const { return fWidth; }
+  Int_t           Parity     () const { return fParity; }
+  Double_t        Spin       () const { return fSpin; }
+  Double_t        Isospin    () const { return fIsospin; }
+  Double_t        I3         () const { return fI3; }
+  Int_t           Strangeness() const { return fStrangeness; }
+  Int_t           Charm      () const { return fCharm; }
+  Int_t           Beauty     () const { return fBeauty; }
+  Int_t           Top        () const { return fTop; }
+  Int_t           X          () const { return fX; }
+  Int_t           Y          () const { return fY; }
+  Int_t           Stable     () const { return fStable; }
+  const Text_t*   Type       () const { return fType.Data(); }
 
   TObjArray*      DecayList  () { return fDecayList; }
 
   virtual void    Print(Option_t* opt);
 
-  ClassDef(TParticlePDG,1)
+  ClassDef(TParticlePDG,1)  //PDG static particle definition
 };
 
 #endif

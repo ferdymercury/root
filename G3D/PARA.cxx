@@ -1,20 +1,23 @@
+//*CMZ :  2.22/01 17/04/99  07.50.09  by  Valery Fine(fine@mail.cern.ch)
 //*CMZ :  1.00/07 27/03/97  17.55.23  by  Rene Brun
 //*-- Author :    Nenad Buncic   19/09/95
 
+/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Fons Rademakers.                                  *
+ * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
  *                                                                       *
  * Permission to use, copy, modify and distribute this software and its  *
  * documentation for non-commercial purposes is hereby granted without   *
  * fee, provided that the above copyright notice appears in all copies   *
  * and that both the copyright notice and this permission notice appear  *
  * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose.                         *
- * It is provided "as is" without express or implied warranty.           *
+ * suitability of this software for any purpose. It is provided "as is"  *
+ * without express or implied warranty.                                  *
  *************************************************************************/
 
 #include "TPARA.h"
@@ -79,31 +82,31 @@ void TPARA::SetPoints(Float_t *buff)
 //*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*Create PARA points*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 //*-*                            ==================
 
-    Float_t dx, dy, dz, dxx, dyy, ddx, ddy, theta, phi, alpha;
+    if (!buff) return;
+    Float_t dx, dy, dz, theta, phi, alpha;
     const Float_t PI = Float_t (TMath::Pi());
 
-    alpha = fAlpha     * PI/180.0;
-    theta = TBRIK::fDx * PI/180.0;
-    phi   = TBRIK::fDy * PI/180.0;
+    alpha = fAlpha * PI/180.0;
+    theta = fTheta * PI/180.0;
+    phi   = fPhi   * PI/180.0;
 
     dx = TBRIK::fDx;
     dy = TBRIK::fDy;
     dz = TBRIK::fDz;
+//    Parallelepiped change angles to tangents (by Pavel Nevski 12/04/99)
+      Float_t TXY,TTH,TXZ,TYZ;
 
-    dxx = 2*fDz*TMath::Sin(theta)*TMath::Cos(phi);
-    dyy = 2*fDz*TMath::Sin(theta)*TMath::Sin(phi);
-    ddx = 2*fDy*TMath::Tan(alpha);
-    ddy = 2*fDy*(1.0/TMath::Cos(alpha) - 1);
+      TXY = TMath::Tan(alpha);
+      TTH = TMath::Tan(theta);
+      TXZ = TTH*TMath::Cos(phi);
+      TYZ = TTH*TMath::Sin(phi);
 
-
-    if (buff) {
-        buff[ 0] = -dx;         buff[ 1] = -dy;         buff[ 2] = -dz;
-        buff[ 3] =  dx;         buff[ 4] = -dy;         buff[ 5] = -dz;
-        buff[ 6] =  dx+ddx;     buff[ 7] =  dy+ddy;     buff[ 8] = -dz;
-        buff[ 9] = -dx+ddx;     buff[10] =  dy+ddy;     buff[11] = -dz;
-        buff[12] = -dx+dxx;     buff[13] = -dy+dyy;     buff[14] =  dz;
-        buff[15] =  dx+dxx;     buff[16] = -dy+dyy;     buff[17] =  dz;
-        buff[18] =  dx+dxx+ddx; buff[19] =  dy+dyy+ddy; buff[20] =  dz;
-        buff[21] = -dx+dxx+ddx; buff[22] =  dy+dyy+ddy; buff[23] =  dz;
-    }
+      *buff++ = -dz*TXZ-TXY*dy-dx; *buff++ = -dy-dz*TYZ; *buff++ = -dz;
+      *buff++ = -dz*TXZ-TXY*dy+dx; *buff++ = -dy-dz*TYZ; *buff++ = -dz;
+      *buff++ = -dz*TXZ+TXY*dy+dx; *buff++ = +dy-dz*TYZ; *buff++ = -dz;
+      *buff++ = -dz*TXZ+TXY*dy-dx; *buff++ = +dy-dz*TYZ; *buff++ = -dz;
+      *buff++ = +dz*TXZ-TXY*dy-dx; *buff++ = -dy+dz*TYZ; *buff++ = +dz;
+      *buff++ = +dz*TXZ-TXY*dy+dx; *buff++ = -dy+dz*TYZ; *buff++ = +dz;
+      *buff++ = +dz*TXZ+TXY*dy+dx; *buff++ = +dy+dz*TYZ; *buff++ = +dz;
+      *buff++ = +dz*TXZ+TXY*dy-dx; *buff++ = +dy+dz*TYZ; *buff++ = +dz;
 }

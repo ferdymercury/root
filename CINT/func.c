@@ -1,5 +1,5 @@
-/*CMZ :  2.21/08 17/03/99  13.13.40  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   17/03/99*/
+/*CMZ :  2.22/10 23/07/99  14.42.14  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   23/07/99*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -33,6 +33,10 @@ int G__dlclose G__P((void *handle));
 */
 #endif
 
+#ifndef G__OLDIMPLEMENTATION1103
+extern int G__const_noerror;
+#endif
+
 #ifndef G__OLDIMPLEMENTATION875
 /******************************************************************
 ******************************************************************
@@ -54,7 +58,7 @@ void *p2f;
     fname = G__p2f2funcname(p2f);
     sprintf(buf,"%s()",fname);
     if(G__asm_dbg) fprintf(G__serr,"(*p2f)() %s interpreted\n",buf);
-    G__calc(buf);
+    G__calc_internal(buf);
   }
     break;
   case G__BYTECODEFUNC:
@@ -437,6 +441,17 @@ G__value *presult3;
     presult3->ref = 0;
 #endif
   }
+#ifndef G_OLDIMPLEMENTATION1128
+  if(flag && 'u'==libp->para[0].type) {
+    char ttt[G__ONELINE];
+    int xtype = presult3->type;
+    int xreftype = 0;
+    int xisconst = 0;
+    *presult3 = libp->para[0];
+    G__fundamental_conversion_operator(xtype,-1 ,-1 ,xreftype,xisconst
+				       ,presult3,ttt);
+  }
+#endif
   return(flag);
 }
 #endif
@@ -460,6 +475,59 @@ int addstros;
     G__inc_cp_asm(2,0);
   }
 #endif
+}
+#endif
+
+#ifdef G__PTR2MEMFUNC
+/******************************************************************
+* G__pointer2memberfunction()
+*
+******************************************************************/
+G__value G__pointer2memberfunction(parameter0,parameter1,known3)
+char *parameter0 ;
+char *parameter1;
+int *known3;
+{
+  char buf[G__LONGLINE];
+  char buf2[G__ONELINE];
+  char expr[G__LONGLINE];
+  char* mem;
+  G__value res;
+  char* opx;
+
+  strcpy(buf,parameter0);
+
+  if((mem=strstr(buf,".*"))) {
+    *mem=0;
+    mem+=2;
+    opx=".";
+  }
+  else if((mem=strstr(buf,"->*"))) {
+    *mem=0;
+    mem+=3;
+    opx="->";
+  }
+
+  res = G__getexpr(mem);
+  if(!res.type) {
+    fprintf(G__serr,"Error: Pointer to member function %s not found"
+	    ,parameter0);
+    G__genericerror((char*)NULL);
+    return(G__null);
+  }
+
+  if(!res.obj.i || !*(char**)res.obj.i) {
+    fprintf(G__serr,"Error: Pointer to member function %s is NULL",parameter0);
+    G__genericerror((char*)NULL);
+    return(G__null);
+  }
+
+  strcpy(buf2,*(char**)res.obj.i);
+
+  sprintf(expr,"%s%s%s%s",buf,opx,buf2,parameter1);
+
+  G__abortbytecode();
+  return(G__getvariable(expr,known3,&G__global,G__p_local));
 }
 #endif
 
@@ -621,6 +689,58 @@ int memfunc_flag;
 	  break;
 	}
 	fpara.parameter[fpara.paran][ig35++]=item[ig15++];
+#ifndef G__OLDIMPLEMENtATION1036
+	if(ig35>=G__ONELINE-1) {
+	  if(fpara.parameter[fpara.paran][0]=='"') {
+	    G__value bufv;
+	    char bufx[G__LONGLINE];
+	    strncpy(bufx,fpara.parameter[fpara.paran],G__ONELINE-1);
+	    while((((item[ig15]!=',')&&(item[ig15]!=')'))||
+		   (nest>0)||(single_quote>0)||
+		   (double_quote>0))&&(ig15<lenitem)) {
+	      switch(item[ig15]) {
+	      case '"' : /* double quote */
+		if(single_quote==0) double_quote ^= 1;
+		break;
+	      case '\'' : /* single quote */
+		if(double_quote==0) single_quote ^= 1;
+		break;
+	      case '(':
+	      case '[':
+	      case '{':
+		if((double_quote==0)&& (single_quote==0)) nest++;
+		break;
+	      case ')':
+	      case ']':
+	      case '}':
+		if((double_quote==0)&& (single_quote==0)) nest--;
+		break;
+	      case '\\':
+		bufx[ig35++]=item[ig15++];
+		break;
+	      }
+	      bufx[ig35++]=item[ig15++];
+	      if(ig35>=G__LONGLINE-1) {
+		G__genericerror("Limitation: Too long function argument");
+		return(G__null);
+	      }
+	    }
+	    bufx[ig35]=0;
+	    bufv = G__strip_quotation(bufx);
+	    sprintf(fpara.parameter[fpara.paran],"(char*)(%ld)",bufv.obj.i);
+	    ig35=strlen(fpara.parameter[fpara.paran])+1;
+	    break;
+	  }
+	  else {
+	    fprintf(G__serr
+    ,"Limitation: length of one function argument be less than %d",G__ONELINE);
+	    G__genericerror((char*)NULL);
+	    fprintf(G__serr,"Use temp variable as workaround.\n");
+	    *known3=1;
+	    return(G__null);
+	  }
+	}
+#endif
       }
       /*************************************************
        * if ')' is found at the middle of expression,
@@ -716,6 +836,21 @@ int memfunc_flag;
       return(G__pointer2func(fpara.parameter[0],fpara.parameter[1],known3));
     }
 
+#ifdef G__PTR2MEMFUNC
+    /***************************************************************
+     * pointer to member function
+     *
+     *  (obj.*p2mf)(param);
+     *  (obj->*p2mf)(param);
+     ***************************************************************/
+    else if('('==fpara.parameter[1][0] &&
+	    (strstr(fpara.parameter[0],".*")||
+	     strstr(fpara.parameter[0],"->*"))) {
+      return(G__pointer2memberfunction(fpara.parameter[0]
+				       ,fpara.parameter[1],known3));
+    }
+#endif
+
 #ifndef G__OLDIMPLEMENTATION1001
     /***************************************************************
      * (expr)[n]
@@ -790,7 +925,8 @@ int memfunc_flag;
     /* In case of operator overloading function, arguments are already
      * evaluated. Avoid duplication in argument stack by temporarily
      * reset G__asm_noverflow */
-    G__asm_noverflow=0;
+    /* G__asm_noverflow=0; */
+    G__abortbytecode();
   }
   if(G__asm_noverflow&&fpara.paran&&
      G__store_struct_offset!=G__memberfunc_struct_offset) {
@@ -816,6 +952,12 @@ int memfunc_flag;
   }
   else {
     for(ig15=0;ig15< fpara.paran;ig15++) {
+#ifndef G__OLDIMPLEMENTATION1069
+      if('['==fpara.parameter[ig15][0]) {
+	fpara.paran=ig15;
+	break;
+      }
+#endif
       fpara.para[ig15]=G__getexpr(fpara.parameter[ig15]);
     }
   }
@@ -849,7 +991,12 @@ int memfunc_flag;
 #endif
 
 #ifdef G__SECURITY
+#ifndef G__OLDIMPLEMENTATION1115
+  if(G__return>G__RETURN_NORMAL||
+     (G__security_error&&G__security!=G__SECURE_NONE)) return(G__null);
+#else
   if(G__return>G__RETURN_NORMAL) return(G__null);
+#endif
 #endif
 
 
@@ -861,7 +1008,7 @@ int memfunc_flag;
    ***************************************************************/
   if(funcname[0]=='\0') {
     /*************************************************
-     *  'result3 = fpara.para[fpara.paran] ;'
+     *  'result3 = fpara.para[fpara.paran-1] ;'
      * should be correct as ANSI-C.
      *************************************************/
     result3=fpara.para[0];
@@ -903,7 +1050,11 @@ int memfunc_flag;
     memfunc_flag=G__TRYNORMAL;
     break;
   case G__CLASSSCOPE: /* class scope */
+#ifndef G__OLDIMPLEMENTATION1101
+    memfunc_flag=G__CALLSTATICMEMFUNC;
+#else
     memfunc_flag=G__CALLMEMFUNC;
+#endif
     break;
   }
 
@@ -931,7 +1082,7 @@ int memfunc_flag;
       G__incsetup_memfunc(G__tagnum);
 #endif
 #ifndef G__OLDIMPLEMENTATION589
-      if(G__interpret_func(&result3,funcname,&fpara,hash
+      if(-1!=local_tagnum&& G__interpret_func(&result3,funcname,&fpara,hash
 			   ,G__struct.memfunc[local_tagnum]
 			   ,funcmatch,memfunc_flag)==1 ) {
 #else
@@ -979,7 +1130,11 @@ int memfunc_flag;
      * If G__exec_memberfunc==2, don't display error message.
      ***************************************************************/
     /* If searching only member function */
-    if(memfunc_flag) {
+    if(memfunc_flag
+#ifndef G__OLDIMPLEMENTATION1104
+       &&(G__store_struct_offset||G__CALLSTATICMEMFUNC!=memfunc_flag)
+#endif
+       ) {
 
       G__exec_memberfunc = store_exec_memberfunc;
       G__memberfunc_tagnum=store_memberfunc_tagnum;
@@ -1056,9 +1211,23 @@ int memfunc_flag;
 	  G__genericerror((char*)NULL);
 	  store_exec_memberfunc=G__exec_memberfunc;
 	  G__exec_memberfunc=1;
-	  fprintf(G__serr,"Possible canditates are...\n");
-	  G__listfunc(G__serr,G__PUBLIC_PROTECTED_PRIVATE,funcname
+#ifndef G__OLDIMPLEMENTATION1103
+	  if(0==G__const_noerror) {
+#endif
+	    fprintf(G__serr,"Possible candidates are...\n");
+#ifndef G__OLDIMPLEMENTATION1079
+	    {
+	      char itemtmp[G__LONGLINE];
+	      sprintf(itemtmp,"%s::%s",G__struct.name[G__tagnum],funcname);
+	      G__display_proto(G__serr,itemtmp);
+	    }
+#else
+	    G__listfunc(G__serr,G__PUBLIC_PROTECTED_PRIVATE,funcname
 		      ,G__struct.memfunc[G__tagnum]);
+#endif
+#ifndef G__OLDIMPLEMENTATION1103
+	  }
+#endif
 	  G__exec_memberfunc=store_exec_memberfunc;
 	}
 #ifdef G__DUMPFILE
@@ -1286,7 +1455,11 @@ int memfunc_flag;
   /********************************************************************
    * Explicit type conversion by searching constructors
    ********************************************************************/
-  if(G__TRYNORMAL==memfunc_flag) {
+  if(G__TRYNORMAL==memfunc_flag
+#ifndef G__OLDIMPLEMENTATION1104
+     ||G__CALLSTATICMEMFUNC==memfunc_flag
+#endif
+     ) {
 #ifndef G__OLDIMPLEMENTATION985
     int store_var_typeX = G__var_type;
 #endif
@@ -2066,7 +2239,7 @@ int hash;
 #ifndef G__OLDIMPLEMENTATION575
     G__CHECKNONULL(0,'C');
 #endif
-    *result7=G__calc((char *)G__int(libp->para[0]));
+    *result7=G__calc_internal((char *)G__int(libp->para[0]));
     return(1);
   }
 
@@ -2331,6 +2504,26 @@ int hash;
     }
     G__set_sym_underscore((int)G__int(libp->para[0]));
     *result7=G__null;
+    return(1);
+  }
+
+#ifndef G__OLDIMPLEMENTATION1034
+  if(1162==hash&&strcmp(funcname,"G__IsInMacro")==0) {
+    if(G__no_exec_compile) {
+      G__abortbytecode();
+      return(1);
+    }
+    G__letint(result7,'i',(long)G__IsInMacro());
+    return(1);
+  }
+#endif
+
+  if(1423==hash&&strcmp(funcname,"G__getmakeinfo")==0) {
+    if(G__no_exec_compile) {
+      G__abortbytecode();
+      return(1);
+    }
+    G__letint(result7,'C',(long)G__getmakeinfo((char*)G__int(libp->para[0])));
     return(1);
   }
 
@@ -2975,7 +3168,20 @@ int tracemode;
 int G__stepmode(stepmode)
 int stepmode;
 {
-  G__step = stepmode;
+  switch(stepmode) {
+  case 0:
+    G__stepover=0;
+    G__step = 0;
+    break;
+  case 1:
+    G__stepover=0;
+    G__step = 1;
+    break;
+  default:
+    G__stepover=3;
+    G__step = 1;
+    break;
+  }
   G__setdebugcond();
   return(G__step);
 }

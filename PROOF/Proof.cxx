@@ -1,22 +1,25 @@
+//*CMZ :  2.22/01 26/04/99  11.56.30  by  Rene Brun
 //*CMZ :  2.20/04 09/12/98  19.25.23  by  Rene Brun
 //*CMZ :  2.20/00 09/11/98  17.56.09  by  Rene Brun
 //*CMZ :  1.03/09 10/12/97  10.02.07  by  Rene Brun
 //*-- Author :    Fons Rademakers   13/02/97
 
+/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Fons Rademakers.                                  *
+ * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
  *                                                                       *
  * Permission to use, copy, modify and distribute this software and its  *
  * documentation for non-commercial purposes is hereby granted without   *
  * fee, provided that the above copyright notice appears in all copies   *
  * and that both the copyright notice and this permission notice appear  *
  * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose.                         *
- * It is provided "as is" without express or implied warranty.           *
+ * suitability of this software for any purpose. It is provided "as is"  *
+ * without express or implied warranty.                                  *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -573,12 +576,12 @@ Int_t TProof::Collect(TMonitor *mon)
 
          case kPROOF_GETPACKET:
             if (fTree) {
-               Int_t  nevents;
-               Stat_t firstevent, processed;
+               Int_t  nentries;
+               Stat_t firstentry, processed;
                sl = FindSlave(s);
-               fTree->GetNextPacket(sl, nevents, firstevent, processed);
+               fTree->GetNextPacket(sl, nentries, firstentry, processed);
                TMessage answ(kPROOF_GETPACKET);
-               answ << nevents << firstevent << processed;
+               answ << nentries << firstentry << processed;
                s->Send(answ);
             }
             break;
@@ -617,7 +620,7 @@ Int_t TProof::Collect(TMonitor *mon)
 //______________________________________________________________________________
 void TProof::Limits(TSocket *s, TMessage &mess)
 {
-   // Calculate histogram limits after TTree::fEstimate events have
+   // Calculate histogram limits after TTree::fEstimate entries have
    // been processed.
    // This function is called via Collect() in response to a kPROOF_LIMITS
    // message send from a PROOF slave in TTree::TakeEstimate().
@@ -625,10 +628,10 @@ void TProof::Limits(TSocket *s, TMessage &mess)
    static TObjArray arr;
    static Int_t     mxnbin[4], totevt;
    static Float_t   mxvmin[4], mxvmax[4];
-   Int_t            dim, nevents, nbin[4];
+   Int_t            dim, nentries, nbin[4];
    Float_t          vmin[4], vmax[4];
 
-   mess >> dim >> nevents >> nbin[0] >> vmin[0] >> vmax[0];
+   mess >> dim >> nentries >> nbin[0] >> vmin[0] >> vmax[0];
    if (dim == 2)
       mess >> nbin[1] >> vmin[1] >> vmax[1];
    if (dim == 3)
@@ -641,7 +644,7 @@ void TProof::Limits(TSocket *s, TMessage &mess)
          mxvmin[i] = vmin[i];
          mxvmax[i] = vmax[i];
       }
-      totevt = nevents;
+      totevt = nentries;
       arr.Add(s);
       fLimits++;
    } else if (totevt < fTree->GetEstimate()) {
@@ -650,7 +653,7 @@ void TProof::Limits(TSocket *s, TMessage &mess)
          mxvmin[i] = TMath::Min(mxvmin[i], vmin[i]);
          mxvmax[i] = TMath::Max(mxvmax[i], vmax[i]);
       }
-      totevt += nevents;
+      totevt += nentries;
       arr.Add(s);
       fLimits++;
    }

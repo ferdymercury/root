@@ -1,26 +1,30 @@
+//*CMZ :  2.22/00 26/03/99  23.40.28  by  Rene Brun
 //*CMZ :  2.21/02 16/01/99  15.04.29  by  Rene Brun
 //*CMZ :  1.03/09 06/12/97  16.51.54  by  Fons Rademakers
 //*-- Author :    Rene Brun   04/01/95
 
+/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Fons Rademakers.                                  *
+ * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
  *                                                                       *
  * Permission to use, copy, modify and distribute this software and its  *
  * documentation for non-commercial purposes is hereby granted without   *
  * fee, provided that the above copyright notice appears in all copies   *
  * and that both the copyright notice and this permission notice appear  *
  * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose.                         *
- * It is provided "as is" without express or implied warranty.           *
+ * suitability of this software for any purpose. It is provided "as is"  *
+ * without express or implied warranty.                                  *
  *************************************************************************/
 
 #include "Strlen.h"
 #include "TAttPad.h"
 #include "TBuffer.h"
+#include "TStyle.h"
 
 ClassImp(TAttPad)
 
@@ -71,23 +75,23 @@ void TAttPad::Print(Option_t *)
 //______________________________________________________________________________
 void TAttPad::Reset(Option_t *)
 {
-   fLeftMargin   = 0.1;
-   fRightMargin  = 0.1;
-   fBottomMargin = 0.1;
-   fTopMargin    = 0.1;
+   fLeftMargin   = gStyle->GetPadLeftMargin();
+   fRightMargin  = gStyle->GetPadRightMargin();
+   fBottomMargin = gStyle->GetPadBottomMargin();
+   fTopMargin    = gStyle->GetPadTopMargin();
    fXfile  = 2;
    fYfile  = 2;
    fAfile  = 1;
    fXstat  = 0.99;
    fYstat  = 0.99;
    fAstat  = 2;
-   fFrameLineColor = 1;
-   fFrameFillColor = 0;
-   fFrameFillStyle = 1001;
-   fFrameLineStyle = 1;
-   fFrameLineWidth = 1;
-   fFrameBorderSize= 1;
-   fFrameBorderMode= 1;
+   fFrameLineColor = gStyle->GetFrameLineColor();
+   fFrameFillColor = gStyle->GetFrameFillColor();
+   fFrameFillStyle = gStyle->GetFrameFillStyle();
+   fFrameLineStyle = gStyle->GetFrameLineStyle();
+   fFrameLineWidth = gStyle->GetFrameLineWidth();
+   fFrameBorderSize= gStyle->GetFrameBorderSize();
+   fFrameBorderMode= gStyle->GetFrameBorderMode();
 }
 
 //______________________________________________________________________________

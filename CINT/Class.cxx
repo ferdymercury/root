@@ -1,5 +1,5 @@
-//*CMZ :  2.21/08 17/03/99  13.13.46  by  Masaharu Goto
-//*-- Author :    Masaharu Goto   17/03/99
+//*CMZ :  2.22/10 23/07/99  14.42.21  by  Masaharu Goto
+//*-- Author :    Masaharu Goto   23/07/99
 /* /% C++ %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -63,6 +63,16 @@ const char* G__ClassInfo::Name()
 {
   if(IsValid()) {
     return(G__struct.name[tagnum]);
+  }
+  else {
+    return((char*)NULL);
+  }
+}
+///////////////////////////////////////////////////////////////////////////
+const char* G__ClassInfo::Fullname()
+{
+  if(IsValid()) {
+    return(G__fulltagname((int)tagnum,1));
   }
   else {
     return((char*)NULL);
@@ -248,10 +258,7 @@ const char* G__ClassInfo::FileName()
       return((char*)NULL);
     }
   }
-  else {
-    return((char*)NULL);
-  }
-  return((char*)NULL); // dummy
+  return((char*)NULL);
 }
 ///////////////////////////////////////////////////////////////////////////
 int G__ClassInfo::LineNumber()

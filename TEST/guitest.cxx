@@ -1,3 +1,5 @@
+//*CMZ :  2.22/05 08/06/99  17.55.36  by  Fons Rademakers
+//*CMZ :  2.22/04 03/06/99  18.58.14  by  Rene Brun
 //*CMZ :  2.21/06 15/02/99  15.25.01  by  Fons Rademakers
 //*CMZ :  2.21/04 03/02/99  11.40.18  by  Fons Rademakers
 //*CMZ :  2.00/12 05/10/98  16.07.22  by  Fons Rademakers
@@ -110,7 +112,7 @@ public:
 class TestDialog : public TGTransientFrame {
 
 private:
-   TGCompositeFrame    *fFrame1, *fF1, *fF2, *fF3, *fF4, *fF5, *fF6;
+   TGCompositeFrame    *fFrame1, *fF1, *fF2, *fF3, *fF4, *fF5, *fF6, *fF7;
    TGButton            *fOkButton, *fCancelButton, *fStartB, *fStopB;
    TGButton            *fBtn1, *fBtn2, *fChk1, *fChk2, *fRad1, *fRad2;
    TGPictureButton     *fPicBut1;
@@ -538,13 +540,16 @@ TestDialog::TestDialog(const TGWindow *p, const TGWindow *main, UInt_t w,
 
    //--- tab 5
    tf = fTab->AddTab("Tab 5");
+   tf->SetLayoutManager(new TGHorizontalLayout(tf));
+
    fF6 = new TGGroupFrame(tf, "Options", kVerticalFrame);
    tf->AddFrame(fF6, fL3);
 
    // 2 column, n rows
    fF6->SetLayoutManager(new TGMatrixLayout(fF6, 0, 2, 10));
    char buff[100];
-   for (int j = 0; j < 4; j++) {
+   int j;
+   for (j = 0; j < 4; j++) {
       sprintf(buff, "Module %i", j+1);
       fF6->AddFrame(new TGLabel(fF6, new TGHotString(buff)));
 
@@ -556,6 +561,26 @@ TestDialog::TestDialog(const TGWindow *p, const TGWindow *main, UInt_t w,
       fF6->AddFrame(tent);
    }
    fF6->Resize(fF6->GetDefaultSize());
+
+   // another matrix with text and buttons
+   fF7 = new TGGroupFrame(tf, "Tab Handling", kVerticalFrame);
+   tf->AddFrame(fF7, fL3);
+
+   fF7->SetLayoutManager(new TGMatrixLayout(fF7, 0, 1, 10));
+
+   fF7->AddFrame(bt = new TGTextButton(fF7, "Remove Tab", 101));
+   bt->Associate(this);
+   bt->Resize(90, bt->GetDefaultHeight());
+
+   fF7->AddFrame(bt = new TGTextButton(fF7, "Add Tab", 103));
+   bt->Associate(this);
+   bt->Resize(90, bt->GetDefaultHeight());
+
+   fF7->AddFrame(bt = new TGTextButton(fF7, "Remove Tab 5", 102));
+   bt->Associate(this);
+   bt->Resize(90, bt->GetDefaultHeight());
+
+   fF7->Resize(fF6->GetDefaultSize());
 
    //--- end of last tab
 
@@ -594,7 +619,8 @@ TestDialog::~TestDialog()
    delete fRad1; delete fRad2;
    delete fTxt1; delete fTxt2;
    delete fEc1; delete fEc2;
-   delete fF1; delete fF2; delete fF3; delete fF4; delete fF5; delete fF6;
+   delete fF1; delete fF2; delete fF3; delete fF4; delete fF5;
+   delete fF6; delete fF7;
    delete fListBox;
    delete fCombo;
    delete fTab;
@@ -654,6 +680,7 @@ Bool_t TestDialog::ProcessMessage(Long_t msg, Long_t parm1, Long_t)
    // Process messages coming from widgets associated with the dialog.
 
    char tmp[20];
+   static int newtab = 0;
 
    switch (GET_MSG(msg)) {
       case kC_COMMAND:
@@ -687,6 +714,39 @@ Bool_t TestDialog::ProcessMessage(Long_t msg, Long_t parm1, Long_t)
                         fListBox->Layout();
                         fFirstEntry++;
                      }
+                     break;
+                  case 101:  // remove tabs
+                     {
+                        TString s = fTab->GetTabTab(0)->GetString();
+                        if (s == "Tab 3") {
+                           // Need to delete the embedded canvases
+                           // since RemoveTab() will Destroy the container
+                           // window, which in turn will destroy the embedded
+                           // canvas windows.
+                           SafeDelete(fEc1);
+                           SafeDelete(fEc2);
+                        }
+                        fTab->RemoveTab(0);
+                        fTab->Layout();
+                     }
+                     break;
+                  case 102:  // remove tab 5
+                     {
+                        int nt = fTab->GetNumberOfTabs();
+                        for (int i = 0 ; i < nt; i++) {
+                           TString s = fTab->GetTabTab(i)->GetString();
+                           if (s == "Tab 5") {
+                              fTab->RemoveTab(i);
+                              fTab->Layout();
+                           }
+                        }
+                     }
+                     break;
+                  case 103:  // add tabs
+                     sprintf(tmp, "New Tab %d", ++newtab);
+                     fTab->AddTab(tmp);
+                     fTab->MapSubwindows();
+                     fTab->Layout();
                      break;
                   default:
                      break;

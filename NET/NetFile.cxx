@@ -1,22 +1,26 @@
+//*CMZ :  2.22/05 04/06/99  18.59.13  by  Rene Brun
+//*CMZ :  2.22/01 15/04/99  18.04.56  by  Fons Rademakers
 //*CMZ :  2.20/00 08/11/98  11.48.36  by  Rene Brun
 //*CMZ :  2.00/06 25/04/98  00.47.27  by  Fons Rademakers
 //*CMZ :  1.03/09 08/12/97  13.09.17  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   14/08/97
 
+/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Fons Rademakers.                                  *
+ * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
  *                                                                       *
  * Permission to use, copy, modify and distribute this software and its  *
  * documentation for non-commercial purposes is hereby granted without   *
  * fee, provided that the above copyright notice appears in all copies   *
  * and that both the copyright notice and this permission notice appear  *
  * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose.                         *
- * It is provided "as is" without express or implied warranty.           *
+ * suitability of this software for any purpose. It is provided "as is"  *
+ * without express or implied warranty.                                  *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -109,6 +113,10 @@ TNetFile::TNetFile(const char *url, Option_t *option, const Text_t *ftitle, Int_
    // If the file specified in the URL does not exist, is not accessable
    // or can not be created the kZombie bit will be set in the TNetFile
    // object. Use IsZombie() to see if the file is accessable.
+   // If the remote daemon thinks the file is still connected, while you are
+   // sure this is not the case you can force open the file by preceding the
+   // option argument with an "f" or "F" , e.g.: "frecreate". Do this only
+   // in cases when you are very sure nobody else is using the file.
 
    fOffset = 0;
 
@@ -342,7 +350,7 @@ void TNetFile::Close(Option_t *opt)
 }
 
 //______________________________________________________________________________
-void TNetFile::Flush() const
+void TNetFile::Flush()
 {
    // Flush file to disk.
 
@@ -394,6 +402,7 @@ void TNetFile::Init(Bool_t create)
    Seek(0);
 
    TFile::Init(create);
+   fD = -2;   // so TFile::IsOpen() will return true when in TFile::~TFile
 }
 
 //______________________________________________________________________________

@@ -1,3 +1,6 @@
+//*CMZ :  2.22/04 01/06/99  19.05.39  by  Fons Rademakers
+//*CMZ :  2.22/01 16/04/99  12.29.25  by  Fons Rademakers
+//*CMZ :  2.22/00 01/04/99  02.19.31  by  Rene Brun
 //*CMZ :  2.20/04 09/12/98  19.11.39  by  Rene Brun
 //*CMZ :  2.20/01 02/12/98  11.50.21  by  Rene Brun
 //*CMZ :  2.00/12 30/09/98  13.00.10  by  Rene Brun
@@ -9,20 +12,22 @@
 //*CMZ :  1.03/09 16/12/97  16.35.32  by  Rene Brun
 //*-- Author :    Rene Brun   26/12/94
 
+/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Fons Rademakers.                                  *
+ * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
  *                                                                       *
  * Permission to use, copy, modify and distribute this software and its  *
  * documentation for non-commercial purposes is hereby granted without   *
  * fee, provided that the above copyright notice appears in all copies   *
  * and that both the copyright notice and this permission notice appear  *
  * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose.                         *
- * It is provided "as is" without express or implied warranty.           *
+ * suitability of this software for any purpose. It is provided "as is"  *
+ * without express or implied warranty.                                  *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -67,6 +72,8 @@
 #include "TObjArray.h"
 #include "TObjString.h"
 #include "TDatime.h"
+#include "TMath.h"
+
 
 Long_t TObject::fgDtorOnly = 0;
 Int_t  TObject::fgDirLevel = 0;
@@ -330,7 +337,7 @@ void TObject::Delete(Option_t *)
    // Normally use "delete" operator.
 
    // Delete object from CINT symbol table so it can not be used anymore.
-   //gInterpreter->DeleteGlobal(this);
+   gInterpreter->DeleteGlobal(this);
 
    delete this;
 }
@@ -536,7 +543,9 @@ ULong_t TObject::Hash()
 {
    // Return hash value for this object.
 
-   return (ULong_t) this >> 2;
+   //return (ULong_t) this >> 2;
+   const void *ptr = this;
+   return TMath::Hash(&ptr, sizeof(void*));
 }
 
 //______________________________________________________________________________
@@ -822,18 +831,35 @@ void TObject::Write(const Text_t *name, Int_t option, Int_t bufsize)
    if (!bsize) bsize = gFile->GetBestBuffer();
    const char *oname = name ? name : GetName();
 
+   // Remove trailing blanks in object name
+   Int_t nch = strlen(oname);
+   char *newName = 0;
+   if (oname[nch-1] == ' ') {
+      newName = new char[nch+1];
+      strcpy(newName,oname);
+      for (Int_t i=0;i<nch;i++) {
+         if (newName[nch-i-1] != ' ') break;
+         newName[nch-i-1] = 0;
+      }
+      oname = newName;
+   }
+
    if ((option & kOverwrite)) {
       key = (TKey*)gDirectory->GetListOfKeys()->FindObject(oname);
-      if (key) key->Delete();
+      if (key) {
+         key->Delete();
+         delete key;
+      }
    }
    key = new TKey(this, oname, bsize);
+   if (newName) delete [] newName;
 
-   if (!key->GetSeekKey()) return;
-   gFile->SumBuffer(key->GetObjlen());
    if (!key->GetSeekKey()) {
       gDirectory->GetListOfKeys()->Remove(key);
+      delete key;
       return;
    }
+   gFile->SumBuffer(key->GetObjlen());
    key->WriteFile(0);
 }
 

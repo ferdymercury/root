@@ -1,3 +1,4 @@
+//*CMZ :  2.22/08 07/07/99  16.51.51  by  Rene Brun
 //*CMZ :  2.00/09 24/06/98  11.33.44  by  Rene Brun
 //*CMZ :  0.90/02 08/11/96  15.54.23  by  Rene Brun
 //*-- Author :    Rene Brun   22/03/96
@@ -80,8 +81,7 @@ void zdemo()
 
 
    // create a 2-d histogram to define the range
-   TH2F *hr = new TH2F("hr","",2,1.,110.,2,1.e-18,1.e-8);
-   hr->Draw();
+   pad1->DrawFrame(1,1e-18,110,1e-8);
    pad1->GetFrame()->SetFillColor(19);
    TText *t = new TText();
    t->SetTextFont(62);
@@ -213,8 +213,7 @@ void zdemo()
    pad2->SetLogy();
 
 
-   TH2F *hr2 = new TH2F("hr2","",2,1.,3100.,2,1.e-22,1.e-8);
-   hr2->Draw();
+   pad2->DrawFrame(1,1e-22,3100,1e-8);
    pad2->GetFrame()->SetFillColor(19);
 
    gr = new TGraph(NLOOP,Z,HZ);

@@ -1,3 +1,7 @@
+//*CMZ :  2.22/10 19/07/99  11.39.50  by  Fons Rademakers
+//*CMZ :  2.22/07 02/07/99  08.56.05  by  Rene Brun
+//*CMZ :  2.22/06 22/06/99  18.51.19  by  Fons Rademakers
+//*CMZ :  2.22/05 14/06/99  15.39.27  by  Fons Rademakers
 //*CMZ :  2.21/04 02/02/99  19.06.30  by  Fons Rademakers
 //*CMZ :  2.20/00 25/11/98  18.28.15  by  Fons Rademakers
 //*CMZ :  2.00/11 25/08/98  10.55.56  by  Fons Rademakers
@@ -9,20 +13,22 @@
 #ifndef ROOT_TSystem
 #define ROOT_TSystem
 
+/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Fons Rademakers.                                  *
+ * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
  *                                                                       *
  * Permission to use, copy, modify and distribute this software and its  *
  * documentation for non-commercial purposes is hereby granted without   *
  * fee, provided that the above copyright notice appears in all copies   *
  * and that both the copyright notice and this permission notice appear  *
  * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose.                         *
- * It is provided "as is" without express or implied warranty.           *
+ * suitability of this software for any purpose. It is provided "as is"  *
+ * without express or implied warranty.                                  *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -167,15 +173,26 @@ protected:
    TString          fHostname;         //Hostname
    Bool_t           fInsideNotify;     //Used by DispatchTimers()
 
-   Bool_t           fInControl;       //True if in eventloop
-   Bool_t           fDone;            //True if eventloop should be finished
-   Int_t            fLevel;           //Level of nested eventloops
-   TString          fLastErrorString; //Last system error message
+   Bool_t           fInControl;        //True if in eventloop
+   Bool_t           fDone;             //True if eventloop should be finished
+   Int_t            fLevel;            //Level of nested eventloops
+   TString          fLastErrorString;  //Last system error message
 
-   TSeqCollection  *fTimers;          //List of timers
-   TSeqCollection  *fSignalHandler;   //List of signal handlers
-   TSeqCollection  *fFileHandler;     //List of file handlers
-   TSeqCollection  *fOnExitList;      //List of items to be cleaned-up on exit
+   TSeqCollection  *fTimers;           //List of timers
+   TSeqCollection  *fSignalHandler;    //List of signal handlers
+   TSeqCollection  *fFileHandler;      //List of file handlers
+   TSeqCollection  *fOnExitList;       //List of items to be cleaned-up on exit
+
+   TString          fListLibs;         //List shared libraries. Cache used by GetLibraries
+
+   TString          fListPaths;        //List of all include (fIncludePath + interpreter include path). Cache used by GetIncludePath
+   TString          fIncludePath;      //Used to expand $IncludePath in the directives given to SetMakeSharedLib and SetMakeExe
+   TString          fLinkedLibs;       //Used to expand $LinkedLibs in the directives given to SetMakeSharedLib and SetMakeExe
+   TString          fSoExt;            //Extension of shared library (.so, .sl, .a, .dll, etc.)
+   TString          fObjExt;           //Extension of object files (.o, .obj, etc.)
+   TString          fMakeSharedLib;    //Directive used to build a shared library
+   TString          fMakeExe;          //Directive used to build an executable
+   TSeqCollection  *fCompiled;         //List of created shared libs from compiled macros
 
    virtual const char    *ExpandFileName(const char *fname);
 
@@ -271,6 +288,7 @@ public:
    virtual void            Unload(const char *module);
    virtual void            ListSymbols(const char *module, const char *re = "");
    virtual void            ListLibraries(const char *regexp = "");
+   virtual const char*     GetLibraries(const char *regexp = "", const char* option = "");
 
    //---- RPC
    virtual TInetAddress    GetHostByName(const char *server);
@@ -289,6 +307,22 @@ public:
    virtual int             SendBuf(int sock, const void *buffer, int length);
    virtual int             SetSockOpt(int sock, int kind, int val);
    virtual int             GetSockOpt(int sock, int kind, int *val);
+
+   //---- Script Compiler
+   virtual int             CompileMacro(const char *filename);
+   virtual const char     *GetMakeSharedLib() const;
+   virtual const char     *GetMakeExe() const;
+   virtual const char     *GetIncludePath();
+   virtual const char     *GetLinkedLibs() const;
+   virtual const char     *GetSoExt() const;
+   virtual const char     *GetObjExt() const;
+   virtual void            SetMakeSharedLib(const char *directives);
+   virtual void            SetMakeExe(const char *directives);
+   virtual void            SetIncludePath(const char *IncludePath);
+   virtual void            SetLinkedLibs(const char *LinkedLibs);
+   virtual void            SetSoExt(const char *SoExt);
+   virtual void            SetObjExt(const char *ObjExt);
+   virtual void            CleanCompiledMacros();
 
    ClassDef(TSystem,0)  //ABC defining a generic interface to the OS
 };

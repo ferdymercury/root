@@ -1,3 +1,4 @@
+//*CMZ :  2.22/01 19/05/99  12.38.49  by  Rene Brun
 //*CMZ :  2.00/00 06/02/98  15.40.00  by  Rene Brun
 //*CMZ :  1.03/03 04/09/97  12.40.50  by  Rene Brun
 //*-- Author :    Rene Brun   08/12/94
@@ -5,20 +6,22 @@
 #ifndef ROOT_TText
 #define ROOT_TText
 
+/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Fons Rademakers.                                  *
+ * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
  *                                                                       *
  * Permission to use, copy, modify and distribute this software and its  *
  * documentation for non-commercial purposes is hereby granted without   *
  * fee, provided that the above copyright notice appears in all copies   *
  * and that both the copyright notice and this permission notice appear  *
  * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose.                         *
- * It is provided "as is" without express or implied warranty.           *
+ * suitability of this software for any purpose. It is provided "as is"  *
+ * without express or implied warranty.                                  *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -53,7 +56,8 @@ public:
                 void     Copy(TObject &text);
         virtual Int_t    DistancetoPrimitive(Int_t px, Int_t py);
         virtual void     Draw(Option_t *option="");
-        virtual void     DrawText(Coord_t x, Coord_t y, const Text_t *text);
+        virtual TText   *DrawText(Coord_t x, Coord_t y, const Text_t *text);
+        virtual TText   *DrawTextNDC(Coord_t x, Coord_t y, const Text_t *text);
         virtual void     ExecuteEvent(Int_t event, Int_t px, Int_t py);
 
          Coord_t         GetX()  {return fX;}

@@ -1,0 +1,39 @@
+*CMZ :  2.22/06 18/06/99  08.48.39  by  Rene Brun
+*-- Author :    Rene Brun   18/06/99
+# Makefile of ROOT for FreeBSD 4.x
+
+PLATFORM      = fbsd
+
+CXX           = g++
+CC            = gcc
+CXXFLAGS      = -pipe -W -Wall -fPIC -I/usr/X11R6/include
+CFLAGS        = -pipe -W -Wall -fPIC -I/usr/X11R6/include
+CINTCXXFLAGS  = -pipe -W -Wall -fPIC -DG__REGEXP \
+                -DG__UNIX -DG__SHAREDLIB -DG__ROOT -DG__REDIRECTIO -DG__OSFDLL
+CINTCFLAGS    = -pipe -W -Wall -fPIC -DG__REGEXP -DG__UNIX -DG__SHAREDLIB \
+                -DG__ROOT -DG__REDIRECTIO -DG__OSFDLL
+OPT           = -O
+NOOPT         =
+LD            = g++
+LDFLAGS       = $(OPT)
+SOFLAGS       = -shared -Wl,-x
+SOEXT         = so
+SYSLIBS       = -lstdc++ -lm
+SYSXLIBS      = -L/usr/X11R6/lib -lX11 -lstdc++ -lm
+XLIBS         = -L/usr/X11R6/lib -lXpm -lX11 -lstdc++
+CILIBS        = -lm -ltermcap -lstdc++
+CRYPTLIBS     = -lcrypt
+F77           = f77
+F77FLAGS      = $(OPT)
+F77LIBS       = -lg2c
+
+
+##### MACROS and TARGETS #####
+
+include Make-macros
+
+
+##### DEPENDENCIES #####
+
+include Make-depend
+

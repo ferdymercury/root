@@ -1,3 +1,5 @@
+//*CMZ :  2.22/02 21/05/99  11.42.25  by  Rene Brun
+//*CMZ :  2.22/01 19/05/99  11.11.37  by  Valery Fine(fine@mail.cern.ch)
 //*CMZ :  2.21/07 21/02/99  19.20.02  by  Valery Fine(fine@mail.cern.ch)
 //*CMZ :  2.20/05 15/12/98  09.17.22  by  Rene Brun
 //*CMZ :  2.00/13 16/10/98  17.43.38  by  Rene Brun
@@ -7,20 +9,22 @@
 //*-- Author :    "Valery fine"   31/10/97
 
 
+/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Fons Rademakers.                                  *
+ * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
  *                                                                       *
  * Permission to use, copy, modify and distribute this software and its  *
  * documentation for non-commercial purposes is hereby granted without   *
  * fee, provided that the above copyright notice appears in all copies   *
  * and that both the copyright notice and this permission notice appear  *
  * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose.                         *
- * It is provided "as is" without express or implied warranty.           *
+ * suitability of this software for any purpose. It is provided "as is"  *
+ * without express or implied warranty.                                  *
  *************************************************************************/
 
 #include <fstream.h>
@@ -136,6 +140,23 @@ Int_t TMarker3DBox::DistancetoPrimitive(Int_t px, Int_t py)
    return dist;
 }
 
+
+//______________________________________________________________________________
+void TMarker3DBox::ExecuteEvent(Int_t event, Int_t px, Int_t py)
+{
+//*-*-*-*-*-*-*-*-*-*Execute action corresponding to one event*-*-*-*-*-*-*-*-*-*
+//*-*                =========================================
+//*-*
+//*-*  This member function must be implemented to realize the action
+//*-*  corresponding to the mouse click on the object in the window
+//*-*
+//*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+
+        if (gPad->GetView())
+                gPad->GetView()->ExecuteRotateView(event, px, py);
+
+}
+
 //______________________________________________________________________________
 void TMarker3DBox::Paint(Option_t *option)
 {
@@ -151,9 +172,12 @@ void TMarker3DBox::Paint(Option_t *option)
 
    SetPoints(points);
 
-
-   gGLKernel->SetLineAttr(GetLineColor(),GetLineWidth());
-   PaintGLPoints(points);
+   TPadView3D *view3D = gPad->GetView3D();
+   Bool_t rangeView = option && *option && strcmp(option,"range")==0 ? kTRUE : kFALSE;
+   if (view3D && !rangeView) {
+     gGLKernel->SetLineAttr(GetLineColor(),GetLineWidth());
+     PaintGLPoints(points);
+   }
 
    Int_t c = ((GetLineColor() % 8) - 1) * 4;  // Basic colors: 0, 1, ... 7
    if (c < 0) c = 0;
@@ -205,7 +229,6 @@ void TMarker3DBox::Paint(Option_t *option)
     }
 
     //*-* Paint in the pad
-    Bool_t rangeView = strcmp(option,"range")==0 ? kTRUE : kFALSE;
     PaintShape(buff,rangeView);
 
     if (strstr(option, "x3d")) {

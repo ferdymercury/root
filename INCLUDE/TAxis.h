@@ -1,3 +1,5 @@
+//*CMZ :  2.22/04 01/06/99  12.37.01  by  Rene Brun
+//*CMZ :  2.22/01 17/05/99  13.16.14  by  Rene Brun
 //*CMZ :  2.21/02 18/01/99  16.14.21  by  Rene Brun
 //*CMZ :  1.03/01 13/08/97  12.02.09  by  axis
 //*-- Author :    Rene Brun   11/12/94
@@ -5,20 +7,22 @@
 #ifndef ROOT_TAxis
 #define ROOT_TAxis
 
+/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Fons Rademakers.                                  *
+ * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
  *                                                                       *
  * Permission to use, copy, modify and distribute this software and its  *
  * documentation for non-commercial purposes is hereby granted without   *
  * fee, provided that the above copyright notice appears in all copies   *
  * and that both the copyright notice and this permission notice appear  *
  * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose.                         *
- * It is provided "as is" without express or implied warranty.           *
+ * suitability of this software for any purpose. It is provided "as is"  *
+ * without express or implied warranty.                                  *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -57,6 +61,7 @@ public:
         TAxis(Int_t nbins, Axis_t *xbins);
         TAxis(const TAxis &axis);
         virtual ~TAxis();
+        virtual void    CenterTitle(Bool_t center=kTRUE);  //*MENU*
         virtual void    Copy(TObject &axis);
         virtual Int_t   DistancetoPrimitive(Int_t px, Int_t py);
         virtual void    Draw(Option_t *option="");
@@ -87,7 +92,8 @@ public:
         virtual void    SetBinLabel(Int_t bin, Text_t *label);
         virtual void    SetLabel(const Text_t *label);
         virtual void    SetLimits(Axis_t xmin, Axis_t xmax);
-        virtual void    SetRange(Int_t first=0, Int_t last=0);
+        virtual void    SetRange(Int_t first=0, Int_t last=0);  //*MENU*
+        virtual void    UnZoom();  //*MENU*
 
         ClassDef(TAxis,3)  //Axis class
 };

@@ -1,5 +1,5 @@
-/*CMZ :  2.21/08 17/03/99  13.13.44  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   17/03/99*/
+/*CMZ :  2.22/10 23/07/99  14.42.19  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   23/07/99*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -632,9 +632,27 @@ int tagnum;
        pcomment->filenum>=0) {
       pos = pcomment->p.pos;
       filenum = pcomment->filenum;
+#ifndef G__OLDIMPLEMENTATION1100
+      if(filenum==G__MAXFILE) fp = G__mfp;
+      else                    fp = G__srcfile[filenum].fp;
+#else
       fp = G__srcfile[filenum].fp;
+#endif
       if((FILE*)NULL==fp) {
+#ifndef G__PHILIPPE0
+	/* Open the right file even in case where we use the preprocessor */
+	if (
+#ifndef G__OLDIMPLEMENTATION1100
+	    filenum<G__MAXFILE &&
+#endif
+	    G__srcfile[filenum].prepname ) {
+	  fp = fopen(G__srcfile[filenum].prepname,"r");
+	} else {
+	  fp = fopen(G__srcfile[filenum].filename,"r");
+	}
+#else
 	fp = fopen(G__srcfile[filenum].filename,"r");
+#endif
 #ifndef G__OLDIMPLEMENTATION469
 	flag=0;
 #else
@@ -706,9 +724,27 @@ int typenum;
     if(G__NOLINK==G__newtype.iscpplink[typenum] && pcomment->filenum>=0) {
       pos = pcomment->p.pos;
       filenum = pcomment->filenum;
+#ifndef G__OLDIMPLEMENTATION1100
+      if(filenum==G__MAXFILE) fp = G__mfp;
+      else                    fp = G__srcfile[filenum].fp;
+#else
       fp = G__srcfile[filenum].fp;
+#endif
       if((FILE*)NULL==fp) {
+#ifndef G__PHILIPPE0
+	/* Open the right file even in case where we use the preprocessor */
+	if (
+#ifndef G__OLDIMPLEMENTATION1100
+	    filenum<G__MAXFILE &&
+#endif
+	    G__srcfile[filenum].prepname ) {
+	  fp = fopen(G__srcfile[filenum].prepname,"r");
+	} else {
+	  fp = fopen(G__srcfile[filenum].filename,"r");
+	}
+#else
 	fp = fopen(G__srcfile[filenum].filename,"r");
+#endif
 #ifndef G__OLDIMPLEMENTATION469
 	flag=0;
 #else

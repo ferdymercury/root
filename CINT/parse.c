@@ -1,5 +1,5 @@
-/*CMZ :  2.21/08 17/03/99  13.13.43  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   17/03/99*/
+/*CMZ :  2.22/10 23/07/99  14.42.17  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   23/07/99*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -24,6 +24,11 @@
 
 #include "common.h"
 
+
+#ifndef G__OLDIMPLEMENTATION1103
+extern int G__const_setnoerror();
+extern int G__const_resetnoerror();
+#endif
 
 #ifndef G__SECURITY
 /**************************************************************************
@@ -72,7 +77,7 @@
          G__define_var(-1,-1);                  \
          spaceflag = -1;                        \
          iout=0;                                \
-         if(mparen==0||G__return!=G__RETURN_NON>G__RETURN_NORMAL) return(G__null)
+         if(mparen==0||G__return>G__RETURN_NORMAL) return(G__null)
 /**************************************************************************
 * G__DEFREFVAR()
 *
@@ -461,9 +466,25 @@ char *statement;
 
 #ifndef G__OLDIMPLEMENTATION986
   if((G__prerun||(G__ASM_FUNC_COMPILE==G__asm_wholefunction&&0==G__ansiheader))
-      && G__func_now>=0&&strcmp(statement,"const")==0) {
-     G__constvar = G__CONSTVAR;
-     return(G__keyword_anytime_6("static"));
+#ifdef G__OLDIMPLEMENTATION1083_YET
+     && (G__func_now>=0 || G__def_struct_member )
+#else
+     && G__func_now>=0
+#endif
+     && strcmp(statement,"const")==0) {
+#ifndef G__OLDIMPLEMENTATION1103
+    int rslt;
+    G__constvar = G__CONSTVAR;
+    G__const_setnoerror();
+    rslt=G__keyword_anytime_6("static");
+    G__const_resetnoerror();
+    G__security_error = G__NOERROR ;
+    G__return = G__RETURN_NON;
+    return(rslt);
+#else
+    G__constvar = G__CONSTVAR;
+    return(G__keyword_anytime_6("static"));
+#endif
   }
 #endif
 
@@ -727,8 +748,9 @@ int *piout;
   /* char *usrinclude="/usr/include/"; */
   /* char *codelibs="/usr/include/codelibs/"; */
   /* char *SC="/usr/include/SC/"; */
-  int len;
+  int len,lenstl;
   char sysinclude[G__MAXFILENAME];
+  char sysstl[G__MAXFILENAME];
   int hash,temp;
   int i;
   int null_entry;
@@ -747,13 +769,12 @@ int *piout;
 	 *****************************************/
 	if(statement[0]=='"') {
 	  G__getcintsysdir();
-#ifndef G__OLDIMPLEMENTATION960
 	  sprintf(sysinclude,"%s%sinclude%s",G__cintsysdir,G__psep,G__psep);
-#else
-	  sprintf(sysinclude,"%s/include/",G__cintsysdir);
-#endif
+	  sprintf(sysstl,"%s%sstl%s",G__cintsysdir,G__psep,G__psep);
 	  len=strlen(sysinclude);
-	  if(strncmp(sysinclude,statement+1,(size_t)len)==0)
+	  lenstl=strlen(sysstl);
+	  if(strncmp(sysinclude,statement+1,(size_t)len)==0||
+	     strncmp(sysstl,statement+1,(size_t)lenstl)==0)
 	    G__globalcomp=G__NOLINK;
 	  else
 	    G__globalcomp=G__store_globalcomp;
@@ -789,6 +810,20 @@ int *piout;
 #ifndef G__OLDIMPLEMENTATION437
 	    G__srcfile[null_entry].security = G__security;
 #endif
+#ifndef G__PHILIPPE0
+	    /* If we are using a preprocessed file, the logical file
+	       is actually located in the result file from the preprocessor
+	       We need to need to carry this information on.
+	       If the previous file (G__ifile) was preprocessed, this one
+	       wshould also be. */
+	    if( G__cpp && G__srcfile[G__ifile.filenum].prepname[0] ) {
+	      G__srcfile[null_entry].prepname =
+		(char*)malloc(strlen(G__srcfile[G__ifile.filenum].prepname)+1);
+	      strcpy(G__srcfile[null_entry].prepname,
+		     G__srcfile[G__ifile.filenum].prepname);	
+	      G__srcfile[null_entry].fp = G__ifile.fp;
+	    }
+#endif
 	    G__ifile.filenum = null_entry;
 	  }
 	  else {
@@ -807,6 +842,20 @@ int *piout;
 	      G__srcfile[G__nfile].breakpoint=(char*)NULL;
 #ifndef G__OLDIMPLEMENTATION437
 	      G__srcfile[G__nfile].security = G__security;
+#endif
+#ifndef G__PHILIPPE0
+	      /* If we are using a preprocessed file, the logical file
+		 is actually located in the result file from the preprocessor
+		 We need to need to carry this information on.
+		 If the previous file (G__ifile) was preprocessed, this one
+		 should also be. */
+	      if( G__cpp && G__srcfile[G__ifile.filenum].prepname[0] ) {
+		G__srcfile[G__nfile].prepname =
+	       (char*)malloc(strlen(G__srcfile[G__ifile.filenum].prepname)+1);
+		strcpy(G__srcfile[G__nfile].prepname,
+		       G__srcfile[G__ifile.filenum].prepname);	
+		G__srcfile[G__nfile].fp = G__ifile.fp;
+	      }
 #endif
 	      G__ifile.filenum = G__nfile;
 	      ++G__nfile;
@@ -1090,6 +1139,14 @@ void G__pp_if()
     }
   }
 #endif
+#ifndef G__OLDIMPLEMENTATION1063
+  {
+    char *p;
+    while((p=strstr(condition,"\\\r"))!=0) {
+      memmove(p,p+2,strlen(p+2)+1);
+    }
+  }
+#endif
 
   /* This supresses error message when undefined
    * macro is refered in the #if defined(macro) */
@@ -1215,6 +1272,7 @@ void G__pp_undef()
     for(i=0;i<var->allvar;i++) {
       if((strcmp(temp,var->varnamebuf[i])==0)&&
 	 (var->type[i]=='p')) {
+	var->hash[i] = 0;
 	var->varnamebuf[i][0] = '\0'; /* sprintf(var->varnamebuf[i],""); */
       }
     }
@@ -2552,6 +2610,12 @@ G__value G__exec_for()
   p=foractionbuf;
   do {
     c=G__fgetstream(p,"),");
+#ifndef G__OLDIMPLEMENTATIONF1086
+    if(G__return>G__RETURN_NORMAL) {
+      fprintf(G__serr,"Error: for statement syntax error. ';' needed\n");
+      return(G__null);
+    }
+#endif
     foraction[naction++] = p;
     p += strlen(p)+1;
   } while(')'!=c);
@@ -3010,7 +3074,11 @@ G__value G__exec_statement()
 	    if(strcmp(statement,"try")==0) {
               G__exec_try(statement);
               iout=0;
-	      spaceflag=0;
+#ifndef G__OLDIMPLEMENTATION1043
+	      spaceflag= -1;
+#else
+	      spaceflag= 0;
+#endif
 	      break;
 	    }
 #endif
@@ -3372,6 +3440,13 @@ G__value G__exec_statement()
 #endif
 	  }
 	
+#ifndef G__OLDIMPLEMENTATION1062
+          if (iout && G__execvarmacro_noexec (statement)) {
+            spaceflag = 0;
+            iout = 0;
+            break;
+          }
+#endif
 	  if(iout && G__defined_type(statement ,iout)) {
 	    spaceflag = -1;
 	    iout=0;
@@ -3732,6 +3807,9 @@ G__value G__exec_statement()
 #ifndef G__OLDIMPLEMENTATION926
       else if(G__prerun && single_quote==0 && double_quote==0) {
         c = G__fignorestream(";,}");
+#ifndef G__OLDIMPLEMENTATION1023
+	if('}'==c && mparen) --mparen;
+#endif
 	iout=0;
 	spaceflag=0;
       }
@@ -3898,6 +3976,16 @@ G__value G__exec_statement()
 	spaceflag=0;
 	if(mparen==0 || G__return>G__RETURN_NORMAL) return(G__null);
       }
+#ifndef G__OLDIMPLEMENTATION1051
+      else if(8==iout && strcmp(statement,"#include")==0) {
+	fseek(G__ifile.fp,-1,SEEK_CUR);
+	if(G__dispsource) G__disp_mask=1;
+	G__include_file();
+	iout=0;
+	spaceflag=0;
+	if(mparen==0 || G__return>G__RETURN_NORMAL) return(G__null);
+      }
+#endif
       else
 #ifndef G__OLDIMPLEMENTATION870
       {

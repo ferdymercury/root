@@ -1,3 +1,5 @@
+//*CMZ :  2.22/05 10/06/99  10.05.13  by  Rene Brun
+//*CMZ :  2.22/00 05/04/99  18.09.37  by  Rene Brun
 //*CMZ :  2.21/05 10/02/99  09.24.36  by  Rene Brun
 //*CMZ :  2.21/01 05/01/99  16.09.52  by  Rene Brun
 //*CMZ :  2.00/10 29/07/98  22.28.16  by  Rene Brun
@@ -7,20 +9,22 @@
 #ifndef ROOT_TH2
 #define ROOT_TH2
 
+/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Fons Rademakers.                                  *
+ * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
  *                                                                       *
  * Permission to use, copy, modify and distribute this software and its  *
  * documentation for non-commercial purposes is hereby granted without   *
  * fee, provided that the above copyright notice appears in all copies   *
  * and that both the copyright notice and this permission notice appear  *
  * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose.                         *
- * It is provided "as is" without express or implied warranty.           *
+ * suitability of this software for any purpose. It is provided "as is"  *
+ * without express or implied warranty.                                  *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -78,13 +82,12 @@ public:
    TH2C(const TH2C &h2c);
    virtual ~TH2C();
    virtual void    Copy(TObject &hnew);
-   virtual void    DrawCopy(Option_t *option="");
+   virtual TH1    *DrawCopy(Option_t *option="");
    virtual Int_t   Fill(Axis_t x, Axis_t y);
    virtual Int_t   Fill(Axis_t x, Axis_t y, Stat_t w);
    virtual Stat_t  GetCorrelationFactor(Int_t axis1=1,Int_t axis2=2);
    virtual Stat_t  GetCovariance(Int_t axis1=1,Int_t axis2=2);
-   virtual Stat_t  GetMean(Int_t axis=1);
-   virtual Stat_t  GetRMS(Int_t axis=1);
+   virtual void    GetStats(Stat_t *stats);
    virtual void    Reset(Option_t *option="");
            TH2C&   operator=(const TH2C &h1);
    friend  TH2C    operator*(Float_t c1, TH2C &h1);
@@ -120,13 +123,12 @@ public:
    TH2S(const TH2S &h2s);
    virtual ~TH2S();
    virtual void    Copy(TObject &hnew);
-   virtual void    DrawCopy(Option_t *option="");
+   virtual TH1    *DrawCopy(Option_t *option="");
    virtual Int_t   Fill(Axis_t x, Axis_t y);
    virtual Int_t   Fill(Axis_t x, Axis_t y, Stat_t w);
    virtual Stat_t  GetCorrelationFactor(Int_t axis1=1,Int_t axis2=2);
    virtual Stat_t  GetCovariance(Int_t axis1=1,Int_t axis2=2);
-   virtual Stat_t  GetMean(Int_t axis=1);
-   virtual Stat_t  GetRMS(Int_t axis=1);
+   virtual void    GetStats(Stat_t *stats);
    virtual void    Reset(Option_t *option="");
            TH2S&   operator=(const TH2S &h1);
    friend  TH2S    operator*(Float_t c1, TH2S &h1);
@@ -162,13 +164,12 @@ public:
    TH2F(const TH2F &h2f);
    virtual ~TH2F();
    virtual void    Copy(TObject &hnew);
-   virtual void    DrawCopy(Option_t *option="");
+   virtual TH1    *DrawCopy(Option_t *option="");
    virtual Int_t   Fill(Axis_t x, Axis_t y);
    virtual Int_t   Fill(Axis_t x, Axis_t y, Stat_t w);
    virtual Stat_t  GetCorrelationFactor(Int_t axis1=1,Int_t axis2=2);
    virtual Stat_t  GetCovariance(Int_t axis1=1,Int_t axis2=2);
-   virtual Stat_t  GetMean(Int_t axis=1);
-   virtual Stat_t  GetRMS(Int_t axis=1);
+   virtual void    GetStats(Stat_t *stats);
    virtual void    Reset(Option_t *option="");
            TH2F&   operator=(const TH2F &h1);
    friend  TH2F    operator*(Float_t c1, TH2F &h1);
@@ -204,13 +205,12 @@ public:
    TH2D(const TH2D &h2d);
    virtual ~TH2D();
    virtual void    Copy(TObject &hnew);
-   virtual void    DrawCopy(Option_t *option="");
+   virtual TH1    *DrawCopy(Option_t *option="");
    virtual Int_t   Fill(Axis_t x, Axis_t y);
    virtual Int_t   Fill(Axis_t x, Axis_t y, Stat_t w);
    virtual Stat_t  GetCorrelationFactor(Int_t axis1=1,Int_t axis2=2);
    virtual Stat_t  GetCovariance(Int_t axis1=1,Int_t axis2=2);
-   virtual Stat_t  GetMean(Int_t axis=1);
-   virtual Stat_t  GetRMS(Int_t axis=1);
+   virtual void    GetStats(Stat_t *stats);
    virtual void    Reset(Option_t *option="");
            TH2D&   operator=(const TH2D &h1);
    friend  TH2D    operator*(Float_t c1, TH2D &h1);

@@ -1,5 +1,5 @@
-/*CMZ :  2.21/08 17/03/99  13.13.39  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   17/03/99*/
+/*CMZ :  2.22/10 23/07/99  14.42.13  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   23/07/99*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -549,7 +549,7 @@ char *typename;
   static char vtype[80];
   char ispointer[3];
 
-  buf = G__calc(name);
+  buf = G__calc_internal(name);
 
   if(isupper(buf.type)) {
     sprintf(ispointer," *");
@@ -620,7 +620,7 @@ char *typename;
   if(typename) strcpy(typename,G__newtype.name[buf.typenum]) ;
 
   sprintf(vtype,"&%s",name);
-  buf = G__calc(vtype);
+  buf = G__calc_internal(vtype);
 
   return(buf.obj.i);
 }

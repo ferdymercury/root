@@ -1,3 +1,4 @@
+*CMZ :  2.22/00 29/03/99  17.02.00  by  Fons Rademakers
 *CMZ :  2.21/08 15/03/99  08.57.31  by  Rene Brun
 *CMZ :  2.21/07 04/03/99  09.32.00  by  Rene Brun
 *-- Author :    Rene Brun   04/03/99
@@ -11,10 +12,10 @@ CXXFLAGS      = -fsigned-chars -Wall -fPIC -fno-exceptions  \
                 -I$(OPENGL)/include
 CFLAGS        =
 CINTCXXFLAGS  = -fsigned-chars -Wall -fPIC -fno-exceptions -DG__REGEXP1 \
-                -DG__UNIX -DG__SIGNEDCHAR -DG__SHAREDLIB -DG__OSFDLL -DG__DECCXX \
+                -DG__UNIX -DG__SIGNEDCHAR -DG__SHAREDLIB -DG__OSFDLL \
                 -DG__ROOT -DG__REDIRECTIO
 CINTCFLAGS    = -signed -DG__REGEXP1 -DG__SIGNEDCHAR -DG__UNIX -DG__SHAREDLIB \
-                -DG__OSFDLL -DG__DECCXX -DG__ROOT -DG__REDIRECTIO
+                -DG__OSFDLL -DG__ROOT -DG__REDIRECTIO
 OPT           = -O
 NOOPT         =
 LD            = gcc

@@ -1,5 +1,5 @@
-/*CMZ :  2.21/08 17/03/99  13.13.40  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   17/03/99*/
+/*CMZ :  2.22/10 23/07/99  14.42.14  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   23/07/99*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -25,6 +25,23 @@
 #include "common.h"
 
 
+#ifndef G__OLDIMPLEMENTATION1103
+int G__const_noerror=0;
+/******************************************************************
+* G__const_setnoerror()
+******************************************************************/
+int G__const_setnoerror() {
+  G__const_noerror = 1;
+  return(G__const_noerror);
+}
+/******************************************************************
+* G__const_resetnoerror()
+******************************************************************/
+int G__const_resetnoerror() {
+  G__const_noerror = 0;
+  return(G__const_noerror);
+}
+#endif
 
 /******************************************************************
 * G__nosupport()
@@ -122,11 +139,19 @@ int num;
 /**************************************************************************
 * G__assign_error()
 **************************************************************************/
-int G__assign_error(item)
+int G__assign_error(item,pbuf)
 char *item;
+G__value *pbuf;
 {
   if(0==G__prerun) {
-    fprintf(G__serr,"Error: Incorrect assignment to %s ",item);
+    if(pbuf->type) {
+      fprintf(G__serr,"Error: Incorrect assignment to %s, wrong type '%s'"
+	      ,item ,G__type2string(pbuf->type ,pbuf->tagnum ,pbuf->typenum
+				    ,pbuf->obj.reftype.reftype,0));
+    }
+    else {
+      fprintf(G__serr,"Error: Incorrect assignment to %s ",item);
+    }
     G__genericerror((char*)NULL);
   }
 #ifdef G__SECURITY
@@ -165,12 +190,18 @@ char *item;
     G__CHECK(G__SECURE_EXIT_AT_ERROR,1,G__return=G__RETURN_EXIT1);
   }
   else {
+#ifndef G__OLDIMPLEMENTATION1103
+    if(0==G__const_noerror) {
+#endif
 #ifdef G__ROOT
-    fprintf(G__serr
-	    ,"Error: No symbol %s in current scope ",item[0]=='$'?item+1:item);
+      fprintf(G__serr
+	      ,"Error: No symbol %s in current scope ",item[0]=='$'?item+1:item);
 #else
-    fprintf(G__serr
-	    ,"Error: No symbol %s in current scope ",item);
+      fprintf(G__serr
+	      ,"Error: No symbol %s in current scope ",item);
+#endif
+#ifndef G__OLDIMPLEMENTATION1103
+    }
 #endif
     G__genericerror((char*)NULL);
   }
@@ -188,7 +219,11 @@ char *message;
 {
   G__eof=2;
   fprintf(G__serr,"Error: Unexpected EOF %s",message);
+#ifndef G__OLDIMPLEMENTATION1086
+  G__genericerror((char*)NULL);
+#else
   G__printlinenum();
+#endif
   if(0==G__cpp)
     fprintf(G__serr,"Advice: You may need to use +P or -p option\n");
   G__CHECK(G__SECURE_EXIT_AT_ERROR,1,G__return=G__RETURN_EXIT1);
@@ -351,8 +386,14 @@ int G__genericerror(message)
 char *message;
 {
   if(G__ASM_FUNC_NOP==G__asm_wholefunction) {
-    if(message) fprintf(G__serr,"%s",message);
-    G__printlinenum();
+#ifndef G__OLDIMPLEMENTATION1103
+    if(0==G__const_noerror) {
+#endif
+      if(message) fprintf(G__serr,"%s",message);
+      G__printlinenum();
+#ifndef G__OLDIMPLEMENTATION1103
+    }
+#endif
   }
 
   G__CHECK(G__SECURE_PAUSE,1,G__pause());

@@ -1,20 +1,25 @@
+//*CMZ :  2.22/06 22/06/99  21.06.50  by  Rene Brun
+//*CMZ :  2.22/03 31/05/99  08.31.57  by  Rene Brun
+//*CMZ :  2.22/01 26/04/99  15.57.17  by  Rene Brun
 //*CMZ :  1.03/09 08/12/97  21.07.49  by  Fons Rademakers
 //*-- Author :    Ola Nordmann   21/09/95
 
+/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Fons Rademakers.                                  *
+ * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
  *                                                                       *
  * Permission to use, copy, modify and distribute this software and its  *
  * documentation for non-commercial purposes is hereby granted without   *
  * fee, provided that the above copyright notice appears in all copies   *
  * and that both the copyright notice and this permission notice appear  *
  * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose.                         *
- * It is provided "as is" without express or implied warranty.           *
+ * suitability of this software for any purpose. It is provided "as is"  *
+ * without express or implied warranty.                                  *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -28,15 +33,16 @@
 // Every class inherited from TGenerator knows already the interface to  //
 // the /HEPEVT/ common block. So in the event creation of the various   //
 // generators, the /HEPEVT/ common block should be filled               //
-// The GetPrimaries method then parses the result from the event        //
-// generators into a TClonesArray of TPrimary objects.                   //
+// The ImportParticles method then parses the result from the event        //
+// generators into a TClonesArray of TParticle objects.                   //
 //                                                                      //
 //////////////////////////////////////////////////////////////////////////
 
 #include "TROOT.h"
 #include "TGenerator.h"
-#include "TAttParticle.h"
-#include "TPrimary.h"
+#include "TDatabasePDG.h"
+#include "TParticlePDG.h"
+#include "TParticle.h"
 #include "TObjArray.h"
 #include "TCanvas.h"
 #include "HepEvt.h"
@@ -44,6 +50,7 @@
 #include "TView.h"
 #include "TText.h"
 #include "TPaveText.h"
+#include "TClonesArray.h"
 
 #include <iostream.h>
 
@@ -58,11 +65,11 @@ TGenerator::TGenerator(Text_t *name,Text_t *title): TNamed(name,title)
 
 
   //  Initialize particles table
-  TAttParticle::DefinePDG();
+   TDatabasePDG::Instance()->Init();
 
    fPtCut        = 0;
    fShowNeutrons = kTRUE;
-   fPrimaries    =  new TObjArray(10000);
+   fParticles    =  new TObjArray(10000);
 }
 
 //______________________________________________________________________________
@@ -73,15 +80,15 @@ TGenerator::~TGenerator()
 //
 
    //do nothing
-   if (fPrimaries) {
-      fPrimaries->Delete();
-      delete fPrimaries;
-      fPrimaries = 0;
+   if (fParticles) {
+      fParticles->Delete();
+      delete fParticles;
+      fParticles = 0;
    }
 }
 
 //______________________________________________________________________________
-TObjArray* TGenerator::GetPrimaries(Option_t *option)
+TObjArray* TGenerator::ImportParticles(Option_t *option)
 {
 //
 //  Default primary creation method. It reads the /HEPEVT/ common block which
@@ -92,19 +99,22 @@ TObjArray* TGenerator::GetPrimaries(Option_t *option)
 //  This can be demanded explicitly by setting the option = "Final"
 //  If the option = "All", all the particles are stored.
 //
-  fPrimaries->Clear();
+  fParticles->Clear();
   Int_t numpart = HEPEVT.nhep;
   if (!strcmp(option,"") || !strcmp(option,"Final")) {
     for (Int_t i = 0; i<=numpart; i++) {
       if (HEPEVT.isthep[i] == 1) {
 //
-//  Use the common block values for the TPrimary constructor
+//  Use the common block values for the TParticle constructor
 //
-        TPrimary *p = new TPrimary(
+        TParticle *p = new TParticle(
                                    HEPEVT.idhep[i],
-                                   -1,
-                                   -1,
-                                   0,
+                                   HEPEVT.isthep[i],
+                                   HEPEVT.jmohep[i][0]-1,
+                                   HEPEVT.jmohep[i][1]-1,
+                                   HEPEVT.jdahep[i][0]-1,
+                                   HEPEVT.jdahep[i][1]-1,
+
                                    HEPEVT.phep[i][0],
                                    HEPEVT.phep[i][1],
                                    HEPEVT.phep[i][2],
@@ -112,32 +122,99 @@ TObjArray* TGenerator::GetPrimaries(Option_t *option)
                                    HEPEVT.vhep[i][0],
                                    HEPEVT.vhep[i][1],
                                    HEPEVT.vhep[i][2],
-                                   HEPEVT.vhep[i][3],
-                                   999999);
-        fPrimaries->Add(p);
+                                   HEPEVT.vhep[i][3]);
+        fParticles->Add(p);
         }
      }
   }
   else if (!strcmp(option,"All")) {
     for (Int_t i = 0; i<=numpart; i++) {
-      TPrimary *p = new TPrimary(
-                                 HEPEVT.idhep[i],
-                                 HEPEVT.jmohep[i][0]-1,
-                                 0,
-                                 HEPEVT.jmohep[i][1]-1,
-                                 HEPEVT.phep[i][0],
-                                 HEPEVT.phep[i][1],
-                                 HEPEVT.phep[i][2],
-                                 HEPEVT.phep[i][3],
-                                 HEPEVT.vhep[i][0],
-                                 HEPEVT.vhep[i][1],
-                                 HEPEVT.vhep[i][2],
-                                 HEPEVT.vhep[i][3],
-                                 999999);
-      fPrimaries->Add(p);
+      TParticle *p = new TParticle(
+                                   HEPEVT.idhep[i],
+                                   HEPEVT.isthep[i],
+                                   HEPEVT.jmohep[i][0]-1,
+                                   HEPEVT.jmohep[i][1]-1,
+                                   HEPEVT.jdahep[i][0]-1,
+                                   HEPEVT.jdahep[i][1]-1,
+
+                                   HEPEVT.phep[i][0],
+                                   HEPEVT.phep[i][1],
+                                   HEPEVT.phep[i][2],
+                                   HEPEVT.phep[i][3],
+                                   HEPEVT.vhep[i][0],
+                                   HEPEVT.vhep[i][1],
+                                   HEPEVT.vhep[i][2],
+                                   HEPEVT.vhep[i][3]);
+      fParticles->Add(p);
     }
   }
-  return fPrimaries;
+  return fParticles;
+}
+
+//______________________________________________________________________________
+Int_t TGenerator::ImportParticles(TClonesArray *particles, Option_t *option)
+{
+//
+//  Default primary creation method. It reads the /HEPEVT/ common block which
+//  has been filled by the GenerateEvent method. If the event generator does
+//  not use the HEPEVT common block, This routine has to be overloaded by
+//  the subclasses.
+//  The function loops on the generated particles and store them in
+//  the TClonesArray pointed by the argument particles.
+//  The default action is to store only the stable particles (ISTHEP = 1)
+//  This can be demanded explicitly by setting the option = "Final"
+//  If the option = "All", all the particles are stored.
+//
+  if (particles == 0) return 0;
+  TClonesArray &Particles = *particles;
+  Particles.Clear();
+  Int_t numpart = HEPEVT.nhep;
+  if (!strcmp(option,"") || !strcmp(option,"Final")) {
+    for (Int_t i = 0; i<=numpart; i++) {
+      if (HEPEVT.isthep[i] == 1) {
+//
+//  Use the common block values for the TParticle constructor
+//
+        new(Particles[i]) TParticle(
+                                   HEPEVT.idhep[i],
+                                   HEPEVT.isthep[i],
+                                   HEPEVT.jmohep[i][0]-1,
+                                   HEPEVT.jmohep[i][1]-1,
+                                   HEPEVT.jdahep[i][0]-1,
+                                   HEPEVT.jdahep[i][1]-1,
+
+                                   HEPEVT.phep[i][0],
+                                   HEPEVT.phep[i][1],
+                                   HEPEVT.phep[i][2],
+                                   HEPEVT.phep[i][3],
+                                   HEPEVT.vhep[i][0],
+                                   HEPEVT.vhep[i][1],
+                                   HEPEVT.vhep[i][2],
+                                   HEPEVT.vhep[i][3]);
+        }
+     }
+  }
+  else if (!strcmp(option,"All")) {
+    for (Int_t i = 0; i<=numpart; i++) {
+      new(Particles[i]) TParticle(
+                                   HEPEVT.idhep[i],
+                                   HEPEVT.isthep[i],
+                                   HEPEVT.jmohep[i][0]-1,
+                                   HEPEVT.jmohep[i][1]-1,
+                                   HEPEVT.jdahep[i][0]-1,
+                                   HEPEVT.jdahep[i][1]-1,
+
+                                   HEPEVT.phep[i][0],
+                                   HEPEVT.phep[i][1],
+                                   HEPEVT.phep[i][2],
+                                   HEPEVT.phep[i][3],
+                                   HEPEVT.vhep[i][0],
+                                   HEPEVT.vhep[i][1],
+                                   HEPEVT.vhep[i][2],
+                                   HEPEVT.vhep[i][3]);
+    }
+  }
+  return numpart;
 }
 
 //______________________________________________________________________________
@@ -158,7 +235,6 @@ Int_t TGenerator::DistancetoPrimitive(Int_t px, Int_t py)
    const Int_t inview = 0;
    Int_t dist = big;
    if (px > 50 && py > 50) dist = inview;
-//printf("px=%d, py=%d, dist=%d\n",px,py,dist);
    return dist;
 }
 
@@ -168,9 +244,6 @@ void TGenerator::Draw(Option_t *option)
 //
 //  Insert one event in the pad list
 //
-
-  //  Initialize particles table
-  TAttParticle::DefinePDG();
 
   // Create a default canvas if a canvas does not exist
    if (!gPad) {
@@ -216,26 +289,24 @@ void TGenerator::Draw(Option_t *option)
    Int_t NElectrons  = 0;
    Int_t NGammas     = 0;
 
-   Int_t ntracks = fPrimaries->GetEntriesFast();
+   Int_t ntracks = fParticles->GetEntriesFast();
    Int_t i,lwidth,color,lstyle;
-   TAttParticle *ap;
-   TPrimary *p;
+   TParticlePDG *ap;
+   TParticle *p;
    const char *name;
-   Double_t etot,vx,vy,vz,px,py;
+   Double_t etot,vx,vy,vz;
    Int_t ninvol = 0;
    for (i=0;i<ntracks;i++) {
-      p = (TPrimary*)fPrimaries->UncheckedAt(i);
+      p = (TParticle*)fParticles->UncheckedAt(i);
       if(!p) continue;
-      ap = (TAttParticle*)p->GetParticle();
-      vx = p->GetXPosition();
-      vy = p->GetYPosition();
-      vz = p->GetZPosition();
+      ap = (TParticlePDG*)p->GetPDG();
+      vx = p->Vx();
+      vy = p->Vy();
+      vz = p->Vz();
       if  (vx*vx+vy*vy+vz*vz > rbox*rbox) continue;
-      px = p->GetXMomentum();
-      py = p->GetYMomentum();
-      Float_t pt = TMath::Sqrt(px*px + py*py);
+      Float_t pt = p->Pt();
       if (pt < fPtCut) continue;
-      etot = p->GetTotalEnergy();
+      etot = p->Energy();
       if (etot > 0.1) lwidth = Int_t(6*TMath::Log10(etot));
       else lwidth = 1;
       if (lwidth < 1) lwidth = 1;
@@ -319,16 +390,16 @@ void TGenerator::ExecuteEvent(Int_t event, Int_t px, Int_t py)
 }
 
 //______________________________________________________________________________
-TPrimary *TGenerator::GetPrimary(Int_t i)
+TParticle *TGenerator::GetParticle(Int_t i)
 {
 //
 //  Returns pointer to primary number i;
 //
 
-   if (!fPrimaries) return 0;
-   Int_t n = fPrimaries->GetLast();
+   if (!fParticles) return 0;
+   Int_t n = fParticles->GetLast();
    if (i < 0 || i > n) return 0;
-   return (TPrimary*)fPrimaries->UncheckedAt(i);
+   return (TParticle*)fParticles->UncheckedAt(i);
 }
 
 //______________________________________________________________________________
@@ -393,10 +464,10 @@ void TGenerator::Streamer(TBuffer &b)
    if (b.IsReading()) {
       b.ReadVersion();  //Version_t v = b.ReadVersion();
       TNamed::Streamer(b);
-      fPrimaries->Streamer(b);
+      fParticles->Streamer(b);
    } else {
       b.WriteVersion(TGenerator::IsA());
       TNamed::Streamer(b);
-      fPrimaries->Streamer(b);
+      fParticles->Streamer(b);
    }
 }

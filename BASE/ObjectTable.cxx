@@ -1,3 +1,5 @@
+//*CMZ :  2.22/04 02/06/99  12.50.58  by  Rene Brun
+//*CMZ :  2.22/02 26/05/99  18.09.57  by  Fons Rademakers
 //*CMZ :  2.21/05 08/02/99  12.33.11  by  Fons Rademakers
 //*CMZ :  2.20/00 10/11/98  13.12.08  by  Rene Brun
 //*CMZ :  2.00/13 29/10/98  18.03.44  by  Fons Rademakers
@@ -5,20 +7,22 @@
 //*CMZ :  1.03/09 06/12/97  20.09.56  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   11/08/95
 
+/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Fons Rademakers.                                  *
+ * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
  *                                                                       *
  * Permission to use, copy, modify and distribute this software and its  *
  * documentation for non-commercial purposes is hereby granted without   *
  * fee, provided that the above copyright notice appears in all copies   *
  * and that both the copyright notice and this permission notice appear  *
  * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose.                         *
- * It is provided "as is" without express or implied warranty.           *
+ * suitability of this software for any purpose. It is provided "as is"  *
+ * without express or implied warranty.                                  *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -183,9 +187,12 @@ void TObjectTable::Delete(Option_t *)
    // Delete all objects stored in the TObjectTable.
 
    for (int i = 0; i < fSize; i++) {
-      if (fTable[i])
+      if (fTable[i]) {
          delete fTable[i];
+         fTable[i] = 0;
+      }
    }
+   fTally = 0;
 }
 
 //______________________________________________________________________________
@@ -212,9 +219,11 @@ void TObjectTable::Remove(TObject *op)
       }
    }
 
-   fTable[i] = 0;
-   FixCollisions(i);
-   fTally--;
+   if (fTable[i]) {
+      fTable[i] = 0;
+      FixCollisions(i);
+      fTally--;
+   }
 }
 
 //______________________________________________________________________________
@@ -263,7 +272,8 @@ Int_t TObjectTable::FindElement(TObject *op)
    if (!fTable)
       return 0;
 
-   slot = Int_t(((ULong_t) op >> 2) % fSize);
+   //slot = Int_t(((ULong_t) op >> 2) % fSize);
+   slot = Int_t(TMath::Hash(&op, sizeof(TObject*)) % fSize);
    for (n = 0; n < fSize; n++) {
       if ((slotOp = fTable[slot]) == 0)
          break;

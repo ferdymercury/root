@@ -1,20 +1,24 @@
+//*CMZ :  2.22/03 31/05/99  17.02.28  by  Rene Brun
+//*CMZ :  2.22/01 26/04/99  16.41.13  by  Rene Brun
 //*CMZ :  1.03/09 08/12/97  21.26.14  by  Fons Rademakers
 //*-- Author :    Ola Nordmann   21/09/95
 
+/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Fons Rademakers.                                  *
+ * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
  *                                                                       *
  * Permission to use, copy, modify and distribute this software and its  *
  * documentation for non-commercial purposes is hereby granted without   *
  * fee, provided that the above copyright notice appears in all copies   *
  * and that both the copyright notice and this permission notice appear  *
  * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose.                         *
- * It is provided "as is" without express or implied warranty.           *
+ * suitability of this software for any purpose. It is provided "as is"  *
+ * without express or implied warranty.                                  *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////////
@@ -360,17 +364,17 @@ void TVenus::GenerateEvent(Option_t *option)
   }
   aseed();
 
-  GetPrimaries(option);
+  ImportParticles(option);
 }
 
 //______________________________________________________________________________
-TObjArray* TVenus::GetPrimaries(Option_t *option)
+TObjArray* TVenus::ImportParticles(Option_t *option)
 {
 //
 //  Overloaded primary creation method. The event generator does
 //  not use the HEPEVT common block, and has not the PDG numbering scheme.
 //
-  fPrimaries->Delete();
+  fParticles->Delete();
 
     Int_t identifier;
   Int_t nptevt = 0;
@@ -402,7 +406,7 @@ TObjArray* TVenus::GetPrimaries(Option_t *option)
                                    CPTL.xorptl[i][2],
                                    CPTL.xorptl[i][3],
                                    CPTL.tivptl[i][1]);
-           fPrimaries->Add(p);
+           fParticles->Add(p);
            ipart++;
         }
       }
@@ -427,13 +431,30 @@ TObjArray* TVenus::GetPrimaries(Option_t *option)
                                    CPTL.xorptl[i][2],
                                    CPTL.xorptl[i][3],
                                    CPTL.tivptl[i][1]);
-           fPrimaries->Add(p);
+           fParticles->Add(p);
            ipart++;
         }
       }
     }
   }
-  return fPrimaries;
+  return fParticles;
+}
+
+//______________________________________________________________________________
+Int_t TVenus::ImportParticles(TClonesArray *particles, Option_t *option)
+{
+//
+//  Default primary creation method. It reads the /HEPEVT/ common block which
+//  has been filled by the GenerateEvent method. If the event generator does
+//  not use the HEPEVT common block, This routine has to be overloaded by
+//  the subclasses.
+//  The function loops on the generated particles and store them in
+//  the TClonesArray pointed by the argument particles.
+//  The default action is to store only the stable particles (ISTHEP = 1)
+//  This can be demanded explicitly by setting the option = "Final"
+//  If the option = "All", all the particles are stored.
+//
+   return TGenerator::ImportParticles(particles,option);
 }
 
 //______________________________________________________________________________

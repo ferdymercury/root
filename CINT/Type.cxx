@@ -1,5 +1,5 @@
-//*CMZ :  2.21/08 17/03/99  13.13.47  by  Masaharu Goto
-//*-- Author :    Masaharu Goto   17/03/99
+//*CMZ :  2.22/10 23/07/99  14.42.21  by  Masaharu Goto
+//*-- Author :    Masaharu Goto   23/07/99
 /* /% C++ %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -130,7 +130,7 @@ long G__TypeInfo::Property()
   if(-1!=typenum) property|=G__BIT_ISTYPEDEF;
   if(-1==tagnum) property|=G__BIT_ISFUNDAMENTAL;
   if(G__ClassInfo::IsValid()) property|=G__ClassInfo::Property();
-  if(isupper(type)) property|=G__BIT_ISPOINTER;
+  if(isupper((int)type)) property|=G__BIT_ISPOINTER;
 #ifndef G__OLDIMPLEMENTATION401
   if(isconst&G__CONSTVAR)  property|=G__BIT_ISCONSTANT;
   if(isconst&G__PCONSTVAR) property|=G__BIT_ISPCONSTANT;

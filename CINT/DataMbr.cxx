@@ -1,5 +1,5 @@
-//*CMZ :  2.21/08 17/03/99  13.13.46  by  Masaharu Goto
-//*-- Author :    Masaharu Goto   17/03/99
+//*CMZ :  2.22/10 23/07/99  14.42.21  by  Masaharu Goto
+//*-- Author :    Masaharu Goto   23/07/99
 /* /% C++ %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -256,6 +256,26 @@ const char* G__DataMemberInfo::FileName() {
   }
 #else
   return((char*)NULL);
+#endif
+}
+///////////////////////////////////////////////////////////////////////////
+int G__DataMemberInfo::LineNumber() {
+#ifdef G__VARIABLEFPOS
+  if(IsValid()) {
+    struct G__var_array *var;
+    var = (struct G__var_array*)handle;
+    if(var->filenum[index]>=0) {
+      return(var->linenum[index]);
+    }
+    else {
+      return(-1);
+    }
+  }
+  else {
+    return(-1);
+  }
+#else
+  return(-1);
 #endif
 }
 ///////////////////////////////////////////////////////////////////////////

@@ -1,3 +1,5 @@
+//*CMZ :  2.22/10 22/07/99  13.46.06  by  Fons Rademakers
+//*CMZ :  2.22/02 28/05/99  16.38.54  by  Fons Rademakers
 //*CMZ :  2.21/08 11/03/99  19.58.32  by  Fons Rademakers
 //*CMZ :  2.21/07 05/03/99  15.21.25  by  Fons Rademakers
 //*CMZ :  2.21/06 15/02/99  19.22.13  by  Fons Rademakers
@@ -11,20 +13,22 @@
 //*CMZ :  1.03/09 16/12/97  16.35.32  by  Rene Brun
 //*-- Author :    Fons Rademakers   08/07/97
 
+/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Fons Rademakers.                                  *
+ * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
  *                                                                       *
  * Permission to use, copy, modify and distribute this software and its  *
  * documentation for non-commercial purposes is hereby granted without   *
  * fee, provided that the above copyright notice appears in all copies   *
  * and that both the copyright notice and this permission notice appear  *
  * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose.                         *
- * It is provided "as is" without express or implied warranty.           *
+ * suitability of this software for any purpose. It is provided "as is"  *
+ * without express or implied warranty.                                  *
  *************************************************************************/
 #ifdef WIN32
 //*CMZ :  1.00/09 23/04/97  17.59.54  by  Rene Brun
@@ -143,7 +147,8 @@
 #include <sys/ipc.h>
 #include <sys/sem.h>
 #if defined(R__HPUX) || defined (R__ALPHA) || defined (R__SOLARIS) || \
-    defined(R__AIX) || defined(R__HIUX) || defined (R__MKLINUX)
+    defined(R__AIX) || defined(R__HIUX) || defined (R__MKLINUX) || \
+    __GLIBC_MINOR__ > 0
 union semun {
    int val;                      // value for SETVAL
    struct semid_ds *buf;         // buffer for IPC_STAT & IPC_SET
@@ -563,10 +568,10 @@ void TMapFile::Add(TObject *obj, const char *name)
    gMmallocDesc = fMmallocDesc;
 
    const char *n;
-   if (!name || name != "")
-      n = obj->GetName();
-   else
+   if (name && *name)
       n = name;
+   else
+      n = obj->GetName();
 
    if (Remove(n, kFALSE))
       ; //Warning("Add", "replaced object with same name %s", n);

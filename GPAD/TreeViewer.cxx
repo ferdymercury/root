@@ -1,3 +1,4 @@
+//*CMZ :  2.22/01 12/05/99  16.35.37  by  Rene Brun
 //*CMZ :  2.21/06 15/02/99  10.04.00  by  Rene Brun
 //*CMZ :  2.21/04 03/02/99  16.47.16  by  Rene Brun
 //*CMZ :  2.20/06 17/12/98  09.30.48  by  Rene Brun
@@ -5,20 +6,22 @@
 //*CMZ :  2.20/04 11/12/98  16.19.08  by  Rene Brun
 //*-- Author :    Rene Brun   08/12/98
 
+/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Fons Rademakers.                                  *
+ * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
  *                                                                       *
  * Permission to use, copy, modify and distribute this software and its  *
  * documentation for non-commercial purposes is hereby granted without   *
  * fee, provided that the above copyright notice appears in all copies   *
  * and that both the copyright notice and this permission notice appear  *
  * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose.                         *
- * It is provided "as is" without express or implied warranty.           *
+ * suitability of this software for any purpose. It is provided "as is"  *
+ * without express or implied warranty.                                  *
  *************************************************************************/
 
 #include "TROOT.h"
@@ -365,7 +368,7 @@ void TTreeViewer::ExecuteDraw(Option_t *option)
 //*-*              ========================================
 //
 // Look for TPaveVar objects below the action buttons X,Y,Z,W
-// Check if an Event range is given via the slider
+// Check if an Entry range is given via the slider
 // Check if a new histogram name is selected (instead of default "htemp")
 // Check if there is an Output Event List or/and an Input Event List
 //
@@ -429,10 +432,10 @@ void TTreeViewer::ExecuteDraw(Option_t *option)
       strcpy(histname,plhist->GetLabel());
    }
    // find selection/weight
-   char select[80];
+   char select[500];
    select[0] = 0;
    TPaveVar *plw = IsUnderW(fW);
-   if (plw) sprintf(select,"%s",plw->GetLabel());
+   if (plw) strncat(select,plw->GetLabel(),500);
 
    // find graphics option
    char gopt[80];
@@ -445,7 +448,7 @@ void TTreeViewer::ExecuteDraw(Option_t *option)
    Float_t smax = fSlider->GetMaximum();
    Int_t nentries = Int_t(fTree->GetEntries());
    Int_t nevents  = Int_t(nentries*(smax-smin));
-   Int_t firstEvent = Int_t(nentries*smin);
+   Int_t firstEntry = Int_t(nentries*smin);
 
    // find canvas/pad where to draw
    TPaveVar *plcpad = IsUnder(fCpad);
@@ -473,7 +476,7 @@ void TTreeViewer::ExecuteDraw(Option_t *option)
       return;
    }
    if (opt.Contains("Scan")) {
-      fTree->Scan(varexp,select,gopt,nevents,firstEvent);
+      fTree->Scan(varexp,select,gopt,nevents,firstEntry);
       return;
    }
 
@@ -482,13 +485,13 @@ void TTreeViewer::ExecuteDraw(Option_t *option)
    SetBit(kDrawExecuting);
    fTree->SetTimerInterval(fTimerInterval);
    fTimer->TurnOn();
-   fTree->Draw(varexp,select,gopt,nevents,firstEvent);
+   fTree->Draw(varexp,select,gopt,nevents,firstEntry);
    HandleTimer(fTimer); //call necessary to show last slider status
    fTimer->TurnOff();
    fTree->SetTimerInterval(0);
    ResetBit(kDrawExecuting);
    if (gROOT->IsInterrupted()) {
-      printf("Break event loop at event: %d\n",fTree->GetReadEvent());
+      printf("Break event loop at event: %d\n",fTree->GetReadEntry());
    }
    gPad->Update();
 
@@ -503,7 +506,7 @@ Bool_t TTreeViewer::HandleTimer(TTimer *timer)
 
    if (TestBit(kDrawExecuting)) {
       Float_t smin = fSlider->GetMinimum();
-      Float_t ymax = Float_t(fTree->GetReadEvent())/fTree->GetEntries();
+      Float_t ymax = Float_t(fTree->GetReadEntry())/fTree->GetEntries();
       Int_t px1 = fSlider->XtoAbsPixel(0)+3;
       Int_t px2 = fSlider->XtoAbsPixel(1)-2;
       Int_t py1 = fSlider->YtoAbsPixel(smin)-1;

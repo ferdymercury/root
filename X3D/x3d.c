@@ -1,4 +1,5 @@
-/*CMZ :  2.20/04 08/12/98  16.41.37  by  Fons Rademakers*/
+/*CMZ :  2.22/01 20/05/99  09.47.37  by  Rene Brun*/
+/*CMZ :  2.20/04 20/05/99  09.24.33  by  Fons Rademakers*/
 /*CMZ :  1.03/09 08/12/97  18.03.24  by  Fons Rademakers*/
 /*-- Author : Mark Spychalla*/
 /*
@@ -2400,7 +2401,7 @@ int requestSize, evenAmount, remainder, index;
       index += requestSize;
       }
 
-   if(remainder)
+   if(remainder > 0)
       XDrawSegments(display, win, gc, &segs[index], remainder);
 }
 

@@ -1,10 +1,12 @@
+*CMZ :  2.22/09 13/07/99  10.04.56  by  Rene Brun
+*CMZ :  2.22/01 11/05/99  09.08.02  by  Rene Brun
 *CMZ :  2.21/01 07/01/99  13.48.18  by  Rene Brun
 *CMZ :  2.20/06 17/12/98  14.00.40  by  Rene Brun
 *CMZ :  2.20/00 17/12/98  10.43.27  by  Rene Brun
 *-- Author :    Rene Brun   17/12/98
 # Makefile to build ROOT for DEC unix with egcs1.1
 
-PLATFORM      = alpha
+PLATFORM      = alphaegcs
 
 # OPT         = -g
 OPT           = -O2
@@ -13,9 +15,9 @@ NOOPT         =
 # Compiler:
 CXX           = g++
 CC            = gcc
-CXXFLAGS      = -fPIC -fno-rtti -fno-exceptions -mcpu=ev5 -D__osf__ -D__alpha
+CXXFLAGS      = -fPIC -mcpu=ev5 -D__osf__ -D__alpha
 CFLAGS        = -fPIC -mcpu=ev5
-CINTCXXFLAGS  = -fPIC -fno-rtti -fno-exceptions -mcpu=ev5 \
+CINTCXXFLAGS  = -fPIC -mcpu=ev5 \
                 -DG__REGEXP -DG__UNIX -DG__SHAREDLIB \
                 -DG__OSFDLL -DG__ROOT -DG__REDIRECTIO
 CINTCFLAGS    = -fPIC -mcpu=ev5 -DG__REGEXP -DG__UNIX -DG__SHAREDLIB \
@@ -23,8 +25,8 @@ CINTCFLAGS    = -fPIC -mcpu=ev5 -DG__REGEXP -DG__UNIX -DG__SHAREDLIB \
 
 # Linker:
 LD            = g++
-LDFLAGS       = $(OPT)
-SOFLAGS       = -shared -Wl,-expect_unresolved,*,-soname,
+LDFLAGS       =
+SOFLAGS       = -Wl,-expect_unresolved,* -shared
 SOEXT         = so
 
 # System libraries:
@@ -32,6 +34,7 @@ SYSLIBS       = -lm -ltermcap
 SYSXLIBS      = -lX11 -lm -ltermcap
 XLIBS         = -L$(LPATH) -lXpm -lX11
 CILIBS        = -lm -ltermcap
+F77LIBS       = /usr/shlib/libFutil.so /usr/shlib/libfor.so /usr/shlib/libots.so
 
 
 ##### MACROS and TARGETS #####

@@ -1,3 +1,6 @@
+*CMZ :  2.22/08 06/07/99  18.09.12  by  Fons Rademakers
+*CMZ :  2.22/04 01/06/99  10.27.18  by  Fons Rademakers
+*CMZ :  2.22/00 29/03/99  17.12.46  by  Fons Rademakers
 *CMZ :  2.21/08 18/03/99  21.31.40  by  Rene Brun
 *CMZ :  2.21/05 10/02/99  10.56.49  by  Fons Rademakers
 *CMZ :  2.21/01 11/01/99  13.00.13  by  Fons Rademakers
@@ -22,16 +25,23 @@ shell mv src/Makelinuxkcc.mk     src/Makefile.linuxkcc
 shell mv src/Makelinuxdeb.mk     src/Makefile.linuxdeb
 shell mv src/Makelinuxdeb2.mk    src/Makefile.linuxdeb2
 shell mv src/Makelinuxrh42.mk    src/Makefile.linuxrh42
+shell mv src/Makelinuxpgcc.mk    src/Makefile.linuxpgcc
+shell mv src/Makelinuxsuse6.mk   src/Makefile.linuxsuse6
+shell mv src/Makelinuxppcegcs.mk src/Makefile.linuxppcegcs
 shell mv src/Makemklinux.mk      src/Makefile.mklinux
 shell mv src/Makehpux.mk         src/Makefile.hpux
 shell mv src/Makehpuxacc.mk      src/Makefile.hpuxacc
 shell mv src/Makehpuxegcs.mk     src/Makefile.hpuxegcs
+shell mv src/Makesgi64egcs.mk    src/Makefile.sgi64egcs
+shell mv src/Makesgiegcs.mk      src/Makefile.sgiegcs
 shell mv src/Makesgikcc.mk       src/Makefile.sgikcc
 shell mv src/Makealphacxx6.mk    src/Makefile.alphacxx6
 shell mv src/Makealphaegcs.mk    src/Makefile.alphaegcs
 shell mv src/Makesolaris.mk      src/Makefile.solaris
 shell mv src/Makesolarisegcs.mk  src/Makefile.solarisegcs
 shell mv src/Makefreebsd.mk      src/Makefile.freebsd
+shell mv src/Makefreebsd4.mk     src/Makefile.freebsd4
+shell mv src/Makeaixegcs.mk      src/Makefile.aixegcs
 
 shell mv src/Makelib.mk          src/Makelib
 shell mv src/makeSharedLib.mk    src/makeSharedLib

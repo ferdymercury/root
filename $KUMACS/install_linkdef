@@ -1,3 +1,6 @@
+*CMZ :  2.22/08 06/07/99  17.34.19  by  Rene Brun
+*CMZ :  2.22/07 30/06/99  18.09.11  by  Fons Rademakers
+*CMZ :  2.22/04 01/06/99  11.18.51  by  Fons Rademakers
 *CMZ :  2.21/03 20/01/99  14.43.07  by  Fons Rademakers
 *CMZ :  2.20/00 22/11/98  18.40.46  by  Fons Rademakers
 *CMZ :  2.00/10 27/06/98  19.20.45  by  Fons Rademakers
@@ -15,6 +18,7 @@ ctot BASE2_LinkDef
 ctot CONT_LinkDef
 ctot G1_LinkDef
 ctot -S G2_LinkDef
+ctot G3_LinkDef
 ctot G3D_LinkDef
 ctot GPAD_LinkDef
 ctot H_LinkDef
@@ -37,5 +41,7 @@ ctot GUI2_LinkDef
 ctot GUI3_LinkDef
 ctot RFIO_LinkDef
 ctot PHYSICS_LinkDef
+ctot POSTSCRIPT_LinkDef
 
-shell touch -t  010100001994 src/*LinkDef* src/G__TypeInfo.h
+shell 'touch -t 199401010000 src/*LinkDef* src/G__TypeInfo.h; if [ $? != 0 ];then _
+       touch -t 010100001994 src/*LinkDef* src/G__TypeInfo.h; fi'

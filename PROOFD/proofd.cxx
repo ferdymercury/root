@@ -1,22 +1,27 @@
+//*CMZ :  2.22/10 23/07/99  15.26.15  by  Fons Rademakers
+//*CMZ :  2.22/05 04/06/99  11.24.24  by  Fons Rademakers
+//*CMZ :  2.22/01 23/04/99  10.48.15  by  Fons Rademakers
 //*CMZ :  2.21/08 18/03/99  15.13.31  by  Fons Rademakers
 //*CMZ :  2.00/12 08/10/98  17.56.11  by  Fons Rademakers
 //*CMZ :  1.03/09 08/12/97  18.45.13  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   02/02/97
 
+/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Fons Rademakers.                                  *
+ * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
  *                                                                       *
  * Permission to use, copy, modify and distribute this software and its  *
  * documentation for non-commercial purposes is hereby granted without   *
  * fee, provided that the above copyright notice appears in all copies   *
  * and that both the copyright notice and this permission notice appear  *
  * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose.                         *
- * It is provided "as is" without express or implied warranty.           *
+ * suitability of this software for any purpose. It is provided "as is"  *
+ * without express or implied warranty.                                  *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -82,6 +87,7 @@ extern "C" {
 #endif
 
 #if defined(sun)
+extern "C" int gethostname(char *, int);
 #ifndef SHADOWPW
 #define SHADOWPW
 #endif
@@ -124,7 +130,7 @@ void Send(char *msg)
    int hlen = sizeof(kMESS_STRING) + strlen(msg)+1;  // including \0
    hdr[0] = htonl(hlen);
    hdr[1] = htonl(kMESS_STRING);
-   if (send(sockout, hdr, sizeof(hdr), 0) != sizeof(hdr))
+   if (send(sockout, (const char *)hdr, sizeof(hdr), 0) != sizeof(hdr))
       exit(1);
    hlen -= sizeof(kMESS_STRING);
    if (send(sockout, msg, hlen, 0) != hlen)
@@ -137,7 +143,7 @@ int Recv(char *msg, int max)
 
    int n, hdr[2];
 
-   if ((n = recv(sockin, hdr, sizeof(hdr), 0)) < 0)
+   if ((n = recv(sockin, (char *)hdr, sizeof(hdr), 0)) < 0)
       return -1;
 
    int hlen = ntohl(hdr[0]) - sizeof(kMESS_STRING);
@@ -413,4 +419,3 @@ int main(int /* argc */, char **argv)
    Send(msg);
 
    return 0;
-}

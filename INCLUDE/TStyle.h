@@ -1,3 +1,4 @@
+//*CMZ :  2.22/01 18/05/99  19.07.27  by  Rene Brun
 //*CMZ :  2.21/04 03/02/99  11.29.38  by  Rene Brun
 //*CMZ :  2.21/02 16/01/99  12.20.07  by  Rene Brun
 //*CMZ :  2.00/13 29/10/98  18.54.20  by  Rene Brun
@@ -11,20 +12,22 @@
 #ifndef ROOT_TStyle
 #define ROOT_TStyle
 
+/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Fons Rademakers.                                  *
+ * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
  *                                                                       *
  * Permission to use, copy, modify and distribute this software and its  *
  * documentation for non-commercial purposes is hereby granted without   *
  * fee, provided that the above copyright notice appears in all copies   *
  * and that both the copyright notice and this permission notice appear  *
  * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose.                         *
- * It is provided "as is" without express or implied warranty.           *
+ * suitability of this software for any purpose. It is provided "as is"  *
+ * without express or implied warranty.                                  *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -118,13 +121,16 @@ private:
         Float_t       fPaperSizeY;        //PostScript paper size along Y
         Float_t       fScreenFactor;      //Multiplication factor for canvas size and position
         Color_t       fStatColor;         //stat color
-        Width_t       fStatBorderSize;    //border size of Stats PavelLabel
+        Width_t       fStatBorderSize;    //border size of Stats PaveLabel
+        Style_t       fStatFont;          //font style of Stats PaveLabel
+        Style_t       fStatStyle;         //fill area style of Stats PaveLabel
         Float_t       fStatX;             //X position of top right corner of stat box
         Float_t       fStatY;             //Y position of top right corner of stat box
         Float_t       fStatW;             //width of stat box
         Float_t       fStatH;             //height of stat box
         Color_t       fTitleColor;        //title color
         Width_t       fTitleBorderSize;   //border size of Title PavelLabel
+        Style_t       fTitleFont;         //font style of Title PaveLabel
         Float_t       fTitleX;            //X position of top left corner of title box
         Float_t       fTitleY;            //Y position of top left corner of title box
         Float_t       fTitleW;            //width of title box
@@ -211,11 +217,14 @@ public:
         Float_t          GetScreenFactor() {return fScreenFactor;}
         Color_t          GetStatColor() {return fStatColor;}
         Width_t          GetStatBorderSize() {return fStatBorderSize;}
+        Style_t          GetStatFont()  {return fStatFont;}
+        Style_t          GetStatStyle()  {return fStatStyle;}
         Float_t          GetStatX()     {return fStatX;}
         Float_t          GetStatY()     {return fStatY;}
         Float_t          GetStatW()     {return fStatW;}
         Float_t          GetStatH()     {return fStatH;}
         Color_t          GetTitleColor() {return fTitleColor;}  //return histogram title color
+        Style_t          GetTitleFont()  {return fTitleFont;} //return histogram title font
         Width_t          GetTitleBorderSize() {return fTitleBorderSize;} //return border size of histogram title TPaveLabel
         Float_t          GetTitleXOffset() {return GetTitleOffset("X");} //return X axis title offset
         Float_t          GetTitleXSize()   {return GetTitleSize("X");}   //return X axis title size
@@ -292,12 +301,15 @@ public:
         void             SetPaperSize(EPaperSize size);
         void             SetPaperSize(Float_t xsize=20, Float_t ysize=26);
         void             SetStatColor(Int_t color=19) {fStatColor=color;}
+        void             SetStatStyle(Style_t style=1001) {fStatStyle=style;}
         void             SetStatBorderSize(Width_t size=2) {fStatBorderSize=size;}
+        void             SetStatFont(Style_t font=62) {fStatFont=font;}
         void             SetStatX(Float_t x=0)    {fStatX=x;}
         void             SetStatY(Float_t y=0)    {fStatY=y;}
         void             SetStatW(Float_t w=0.19) {fStatW=w;}
         void             SetStatH(Float_t h=0.1)  {fStatH=h;}
         void             SetTitleColor(Int_t color=19)      {fTitleColor=color;}
+        void             SetTitleFont(Style_t font=62)      {fTitleFont=font;}
         void             SetTitleBorderSize(Width_t size=2) {fTitleBorderSize=size;}
         void             SetTitleXOffset(Float_t offset=1)  {SetTitleOffset(offset,"X");}
         void             SetTitleXSize(Float_t size=0.02)   {SetTitleSize(size,"X");}

@@ -1,3 +1,4 @@
+/*CMZ :  2.22/01 18/05/99  11.07.56  by  Rene Brun*/
 /*CMZ :  2.00/00 08/03/98  11.27.32  by  Rene Brun*/
 /*CMZ :  1.03/09 08/12/97  20.54.43  by  Fons Rademakers*/
 /*-- Author :*/
@@ -260,6 +261,7 @@ void copy_block(char far *buf, unsigned len, int header)
 #endif
     }
     if (out_offset + len > out_size) {
+printf("out_offset=%d, len=%d, out_size=%d\n",out_offset,len,out_size);
         error("output buffer too small for in-memory compression");
     } else {
         memcpy(out_buf + out_offset, buf, len);

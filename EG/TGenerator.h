@@ -1,20 +1,24 @@
+//*CMZ :  2.22/03 31/05/99  17.06.36  by  Rene Brun
+//*CMZ :  2.22/01 03/05/99  09.32.35  by  Rene Brun
 //*CMZ :  1.03/04 17/09/97  13.02.46  by  Piotr Golonka
 //*-- Author :    Ola Nordmann   21/09/95
 
+/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Fons Rademakers.                                  *
+ * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
  *                                                                       *
  * Permission to use, copy, modify and distribute this software and its  *
  * documentation for non-commercial purposes is hereby granted without   *
  * fee, provided that the above copyright notice appears in all copies   *
  * and that both the copyright notice and this permission notice appear  *
  * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose.                         *
- * It is provided "as is" without express or implied warranty.           *
+ * suitability of this software for any purpose. It is provided "as is"  *
+ * without express or implied warranty.                                  *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -28,8 +32,8 @@
 // Every class inherited from TGenerator knows already the interface to //
 // the /HEPEVT/ common block. So in the event creation of the various   //
 // generators, the /HEPEVT/ common block should be filled               //
-// The GetPrimaries method then parses the result from the event        //
-// generators into a TClonesArray of TPrimary objects.                  //
+// The ImportParticles method then parses the result from the event     //
+// generators into a TClonesArray of TParticle objects.                 //
 //                                                                      //
 //////////////////////////////////////////////////////////////////////////
 
@@ -39,18 +43,18 @@
 #ifndef ROOT_TNamed
 #include "TNamed.h"
 #endif
-#ifndef ROOT_TObjArray
-#include "TObjArray.h"
+#ifndef ROOT_TClonesArray
+#include "TClonesArray.h"
 #endif
 
 class TBrowser;
-class TPrimary;
+class TParticle;
 
 class TGenerator : public TNamed {
  protected:
         Float_t       fPtCut;        //Pt cut. Do not show primaries below
         Bool_t        fShowNeutrons; //display neutrons if true
-        TObjArray    *fPrimaries;    //static container of the primaries
+        TObjArray    *fParticles;    //static container of the primary particles
  public:
 
         TGenerator(){}; //Used by Dictionary
@@ -60,10 +64,12 @@ class TGenerator : public TNamed {
         virtual Int_t           DistancetoPrimitive(Int_t px, Int_t py);
         virtual void            Draw(Option_t *option="");
         virtual void            ExecuteEvent(Int_t event, Int_t px, Int_t py);
-        virtual TObjArray      *GetPrimaries(Option_t *option="");
-        virtual TPrimary       *GetPrimary(Int_t i);
-        Int_t                   GetNumberOfPrimaries() {return fPrimaries->GetLast()+1;}
-        virtual TObjArray      *GetListOfPrimaries() {return fPrimaries;}
+        virtual Int_t           ImportParticles(TClonesArray *particles, Option_t *option="");
+        virtual TObjArray      *ImportParticles(Option_t *option="");
+        virtual TParticle      *GetParticle(Int_t i);
+        Int_t                   GetNumberOfParticles() {return fParticles->GetLast()+1;}
+        virtual TObjArray      *GetListOfParticles() {return fParticles;}
+        virtual TObjArray      *GetPrimaries(Option_t *option="") {return ImportParticles(option);}
         Float_t                 GetPtCut() {return fPtCut;}
         virtual void            Paint(Option_t *option="");
         virtual void            SetPtCut(Float_t ptcut=0); // *MENU*

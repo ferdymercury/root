@@ -1,3 +1,7 @@
+//*CMZ :  2.22/06 16/06/99  12.09.13  by  Rene Brun
+//*CMZ :  2.22/05 10/06/99  10.03.37  by  Rene Brun
+//*CMZ :  2.22/03 31/05/99  12.32.53  by  Rene Brun
+//*CMZ :  2.22/00 05/04/99  18.13.30  by  Rene Brun
 //*CMZ :  2.21/07 01/03/99  10.08.38  by  Rene Brun
 //*CMZ :  2.21/05 10/02/99  09.31.56  by  Rene Brun
 //*CMZ :  2.21/01 05/01/99  16.09.50  by  Rene Brun
@@ -7,26 +11,29 @@
 //*CMZ :  1.03/09 09/12/97  20.01.55  by  Fons Rademakers
 //*-- Author :    Rene Brun   26/12/94
 
+/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Fons Rademakers.                                  *
+ * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
  *                                                                       *
  * Permission to use, copy, modify and distribute this software and its  *
  * documentation for non-commercial purposes is hereby granted without   *
  * fee, provided that the above copyright notice appears in all copies   *
  * and that both the copyright notice and this permission notice appear  *
  * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose.                         *
- * It is provided "as is" without express or implied warranty.           *
+ * suitability of this software for any purpose. It is provided "as is"  *
+ * without express or implied warranty.                                  *
  *************************************************************************/
 
 #include "Strlen.h"
 #include "TH2.h"
 #include "TVirtualPad.h"
 
+const Int_t kAxisRange   = BIT(11);
 
 ClassImp(TH2)
 
@@ -159,16 +166,16 @@ void TH2C::Copy(TObject &newth2)
 }
 
 //______________________________________________________________________________
-void TH2C::DrawCopy(Option_t *option)
+TH1 *TH2C::DrawCopy(Option_t *option)
 {
    TString opt = option;
    opt.ToLower();
    if (gPad && !opt.Contains("same")) gPad->Clear();
-   TH2C *newth2 = new TH2C();
-   Copy(*newth2);
+   TH2C *newth2 = (TH2C*)Clone();
    newth2->SetDirectory(0);
    newth2->SetBit(kCanDelete);
    newth2->AppendPad(option);
+   return newth2;
 }
 
 //______________________________________________________________________________
@@ -225,26 +232,27 @@ Stat_t TH2C::GetCovariance(Int_t axis1, Int_t axis2)
 }
 
 //______________________________________________________________________________
-Stat_t TH2C::GetMean(Int_t axis)
+void TH2C::GetStats(Stat_t *stats)
 {
-//*-*-*-*-*-*-*-*Return mean value of this histogram along the X axis*-*-*-*-*
-//*-*            ====================================================
-  if (fTsumw == 0) return 0;
-  if (axis == 1) return fTsumwx / fTsumw;
-  if (axis == 2) return fTsumwy / fTsumw;
-  return 0;
-}
+   // fill the array stats from the contents of this histogram
+   // The array stats must be correctly dimensionned in the calling program.
+   // stats[0] = sumw
+   // stats[1] = sumw2
+   // stats[2] = sumwx
+   // stats[3] = sumwx2
+   // stats[4] = sumwy
+   // stats[5] = sumwy2
 
-//______________________________________________________________________________
-Stat_t TH2C::GetRMS(Int_t axis)
-{
-//*-*-*-*-*-*-*-*Return the Root Mean Square value of this histogram*-*-*-*-*
-//*-*            ===================================================
-  if (fTsumw == 0) return 0;
-  Stat_t rms2 = 0;
-  if (axis == 1) rms2 = TMath::Abs(fTsumwx2/fTsumw - fTsumwx*fTsumwx/(fTsumw*fTsumw));
-  if (axis == 2) rms2 = TMath::Abs(fTsumwy2/fTsumw - fTsumwy*fTsumwy/(fTsumw*fTsumw));
-  return TMath::Sqrt(rms2);
+   if (fTsumw == 0 || fXaxis.TestBit(kAxisRange) || fYaxis.TestBit(kAxisRange)) {
+      TH1::GetStats(stats);
+   } else {
+      stats[0] = fTsumw;
+      stats[1] = fTsumw2;
+      stats[2] = fTsumwx;
+      stats[3] = fTsumwx2;
+      stats[4] = fTsumwy;
+      stats[5] = fTsumwy2;
+   }
 }
 
 //______________________________________________________________________________
@@ -386,16 +394,16 @@ void TH2S::Copy(TObject &newth2)
 }
 
 //______________________________________________________________________________
-void TH2S::DrawCopy(Option_t *option)
+TH1 *TH2S::DrawCopy(Option_t *option)
 {
    TString opt = option;
    opt.ToLower();
    if (gPad && !opt.Contains("same")) gPad->Clear();
-   TH2S *newth2 = new TH2S();
-   Copy(*newth2);
+   TH2S *newth2 = (TH2S*)Clone();
    newth2->SetDirectory(0);
    newth2->SetBit(kCanDelete);
    newth2->AppendPad(option);
+   return newth2;
 }
 
 //______________________________________________________________________________
@@ -451,28 +459,28 @@ Stat_t TH2S::GetCovariance(Int_t axis1, Int_t axis2)
   return fTsumwxy/fTsumw - fTsumwx/fTsumw*fTsumwy/fTsumw;
 }
 
-
 //______________________________________________________________________________
-Stat_t TH2S::GetMean(Int_t axis)
+void TH2S::GetStats(Stat_t *stats)
 {
-//*-*-*-*-*-*-*-*Return mean value of this histogram along the X axis*-*-*-*-*
-//*-*            ====================================================
-  if (fTsumw == 0) return 0;
-  if (axis == 1) return fTsumwx / fTsumw;
-  if (axis == 2) return fTsumwy / fTsumw;
-  return 0;
-}
+   // fill the array stats from the contents of this histogram
+   // The array stats must be correctly dimensionned in the calling program.
+   // stats[0] = sumw
+   // stats[1] = sumw2
+   // stats[2] = sumwx
+   // stats[3] = sumwx2
+   // stats[4] = sumwy
+   // stats[5] = sumwy2
 
-//______________________________________________________________________________
-Stat_t TH2S::GetRMS(Int_t axis)
-{
-//*-*-*-*-*-*-*-*Return the Root Mean Square value of this histogram*-*-*-*-*
-//*-*            ===================================================
-  if (fTsumw == 0) return 0;
-  Stat_t rms2 = 0;
-  if (axis == 1) rms2 = TMath::Abs(fTsumwx2/fTsumw - fTsumwx*fTsumwx/(fTsumw*fTsumw));
-  if (axis == 2) rms2 = TMath::Abs(fTsumwy2/fTsumw - fTsumwy*fTsumwy/(fTsumw*fTsumw));
-  return TMath::Sqrt(rms2);
+   if (fTsumw == 0 || fXaxis.TestBit(kAxisRange) || fYaxis.TestBit(kAxisRange)) {
+      TH1::GetStats(stats);
+   } else {
+      stats[0] = fTsumw;
+      stats[1] = fTsumw2;
+      stats[2] = fTsumwx;
+      stats[3] = fTsumwx2;
+      stats[4] = fTsumwy;
+      stats[5] = fTsumwy2;
+   }
 }
 
 //______________________________________________________________________________
@@ -617,16 +625,16 @@ void TH2F::Copy(TObject &newth2)
 }
 
 //______________________________________________________________________________
-void TH2F::DrawCopy(Option_t *option)
+TH1 *TH2F::DrawCopy(Option_t *option)
 {
    TString opt = option;
    opt.ToLower();
    if (gPad && !opt.Contains("same")) gPad->Clear();
-   TH2F *newth2 = new TH2F();
-   Copy(*newth2);
+   TH2F *newth2 = (TH2F*)Clone();
    newth2->SetDirectory(0);
    newth2->SetBit(kCanDelete);
    newth2->AppendPad(option);
+   return newth2;
 }
 
 //______________________________________________________________________________
@@ -682,28 +690,28 @@ Stat_t TH2F::GetCovariance(Int_t axis1, Int_t axis2)
   return fTsumwxy/fTsumw - fTsumwx/fTsumw*fTsumwy/fTsumw;
 }
 
-
 //______________________________________________________________________________
-Stat_t TH2F::GetMean(Int_t axis)
+void TH2F::GetStats(Stat_t *stats)
 {
-//*-*-*-*-*-*-*-*Return mean value of this histogram along the X axis*-*-*-*-*
-//*-*            ====================================================
-  if (fTsumw == 0) return 0;
-  if (axis == 1) return fTsumwx / fTsumw;
-  if (axis == 2) return fTsumwy / fTsumw;
-  return 0;
-}
+   // fill the array stats from the contents of this histogram
+   // The array stats must be correctly dimensionned in the calling program.
+   // stats[0] = sumw
+   // stats[1] = sumw2
+   // stats[2] = sumwx
+   // stats[3] = sumwx2
+   // stats[4] = sumwy
+   // stats[5] = sumwy2
 
-//______________________________________________________________________________
-Stat_t TH2F::GetRMS(Int_t axis)
-{
-//*-*-*-*-*-*-*-*Return the Root Mean Square value of this histogram*-*-*-*-*
-//*-*            ===================================================
-  if (fTsumw == 0) return 0;
-  Stat_t rms2 = 0;
-  if (axis == 1) rms2 = TMath::Abs(fTsumwx2/fTsumw - fTsumwx*fTsumwx/(fTsumw*fTsumw));
-  if (axis == 2) rms2 = TMath::Abs(fTsumwy2/fTsumw - fTsumwy*fTsumwy/(fTsumw*fTsumw));
-  return TMath::Sqrt(rms2);
+   if (fTsumw == 0 || fXaxis.TestBit(kAxisRange) || fYaxis.TestBit(kAxisRange)) {
+      TH1::GetStats(stats);
+   } else {
+      stats[0] = fTsumw;
+      stats[1] = fTsumw2;
+      stats[2] = fTsumwx;
+      stats[3] = fTsumwx2;
+      stats[4] = fTsumwy;
+      stats[5] = fTsumwy2;
+   }
 }
 
 //______________________________________________________________________________
@@ -857,16 +865,16 @@ void TH2D::Copy(TObject &newth2)
 }
 
 //______________________________________________________________________________
-void TH2D::DrawCopy(Option_t *option)
+TH1 *TH2D::DrawCopy(Option_t *option)
 {
    TString opt = option;
    opt.ToLower();
    if (gPad && !opt.Contains("same")) gPad->Clear();
-   TH2D *newth2 = new TH2D();
-   Copy(*newth2);
+   TH2D *newth2 = (TH2D*)Clone();
    newth2->SetDirectory(0);
    newth2->SetBit(kCanDelete);
    newth2->AppendPad();
+   return newth2;
 }
 
 //______________________________________________________________________________
@@ -922,28 +930,28 @@ Stat_t TH2D::GetCovariance(Int_t axis1, Int_t axis2)
   return fTsumwxy/fTsumw - fTsumwx/fTsumw*fTsumwy/fTsumw;
 }
 
-
 //______________________________________________________________________________
-Stat_t TH2D::GetMean(Int_t axis)
+void TH2D::GetStats(Stat_t *stats)
 {
-//*-*-*-*-*-*-*-*Return mean value of this histogram along the X axis*-*-*-*-*
-//*-*            ====================================================
-  if (fTsumw == 0) return 0;
-  if (axis == 1) return fTsumwx / fTsumw;
-  if (axis == 2) return fTsumwy / fTsumw;
-  return 0;
-}
+   // fill the array stats from the contents of this histogram
+   // The array stats must be correctly dimensionned in the calling program.
+   // stats[0] = sumw
+   // stats[1] = sumw2
+   // stats[2] = sumwx
+   // stats[3] = sumwx2
+   // stats[4] = sumwy
+   // stats[5] = sumwy2
 
-//______________________________________________________________________________
-Stat_t TH2D::GetRMS(Int_t axis)
-{
-//*-*-*-*-*-*-*-*Return the Root Mean Square value of this histogram*-*-*-*-*
-//*-*            ===================================================
-  if (fTsumw == 0) return 0;
-  Stat_t rms2 = 0;
-  if (axis == 1) rms2 = TMath::Abs(fTsumwx2/fTsumw - fTsumwx*fTsumwx/(fTsumw*fTsumw));
-  if (axis == 2) rms2 = TMath::Abs(fTsumwy2/fTsumw - fTsumwy*fTsumwy/(fTsumw*fTsumw));
-  return TMath::Sqrt(rms2);
+   if (fTsumw == 0 || fXaxis.TestBit(kAxisRange) || fYaxis.TestBit(kAxisRange)) {
+      TH1::GetStats(stats);
+   } else {
+      stats[0] = fTsumw;
+      stats[1] = fTsumw2;
+      stats[2] = fTsumwx;
+      stats[3] = fTsumwx2;
+      stats[4] = fTsumwy;
+      stats[5] = fTsumwy2;
+   }
 }
 
 //______________________________________________________________________________

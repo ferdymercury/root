@@ -1,5 +1,5 @@
-/*CMZ :  2.21/08 17/03/99  13.13.37  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   17/03/99*/
+/*CMZ :  2.22/10 23/07/99  14.42.12  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   23/07/99*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -100,14 +100,14 @@ void G__define_var G__P((int tagnum,int typenum));
 int G__initary G__P((char *new_name));
 int G__initstruct G__P((char *new_name));
 int G__ignoreinit G__P((char *new_name));
-void G__listfunc G__P((FILE *fp,int access,char* fname,struct G__ifunc_table *ifunc));
-void G__showstack G__P((FILE *fout));
+int G__listfunc G__P((FILE *fp,int access,char* fname,struct G__ifunc_table *ifunc));
+int G__showstack G__P((FILE *fout));
 void G__display_note G__P((void));
 int G__display_proto G__P((FILE *fout,char *string));
 int G__display_newtypes G__P((FILE *fout,char *string));
 int G__display_class G__P((FILE *fout,char *name,int base,int start));
 int G__display_typedef G__P((FILE *fout,char *name,int startin));
-void G__display_template G__P((FILE *fout,char *name));
+int G__display_template G__P((FILE *fout,char *name));
 int G__display_includepath G__P((FILE *fout));
 int G__display_macro G__P((FILE *fout,char *name));
 int G__display_string G__P((FILE *fout));
@@ -115,9 +115,9 @@ int G__display_files G__P((FILE *fout));
 int G__pr G__P((FILE *fout,struct G__input_file view));
 int G__dump_tracecoverage G__P((FILE *fout));
 #ifndef G__OLDIMPLEMENTATION444
-void G__objectmonitor G__P((FILE *fout,long pobject,int tagnum,char *addspace));
+int G__objectmonitor G__P((FILE *fout,long pobject,int tagnum,char *addspace));
 #endif
-void G__varmonitor G__P((FILE *fout,struct G__var_array *var,char *index,char *addspace,long offset));
+int G__varmonitor G__P((FILE *fout,struct G__var_array *var,char *index,char *addspace,long offset));
 int G__pushdumpinput G__P((FILE *fp,int exflag));
 int G__popdumpinput G__P((void));
 int G__dumpinput G__P((char *line));
@@ -148,7 +148,7 @@ void G__nosupport G__P((char *name));
 void G__malloc_error G__P((char *varname));
 void G__arrayindexerror G__P((int ig15,struct G__var_array *var,char *item,int p_inc));
 int G__asm_execerr G__P((char *message,int num));
-int G__assign_error G__P((char *item));
+int G__assign_error G__P((char *item,G__value *pbuf));
 int G__reference_error G__P((char *item));
 int G__warnundefined G__P((char *item));
 int G__unexpectedEOF G__P((char *message));
@@ -179,6 +179,7 @@ int G__handleEOF G__P((char *statement,int mparen,int single_quote,int double_qu
 void G__printerror G__P((char *funcname,int ipara,int paran));
 int G__pounderror G__P((void));
 int G__missingsemicolumn G__P((char *item));
+G__value G__calc_internal G__P((char *exprwithspace));
 G__value G__getexpr G__P((char *expression));
 G__value G__getprod G__P((char *expression1));
 G__value G__getpower G__P((char *expression2));
@@ -208,7 +209,6 @@ int G__istypename G__P((char *temp));
 void G__make_ifunctable G__P((char *funcheader));
 int G__readansiproto G__P((struct G__ifunc_table *ifunc,int func_now));
 int G__interpret_func G__P((G__value *result7,char *funcname,struct G__param *libp,int hash,struct G__ifunc_table *p_ifunc,int funcmatch,int memfunc_flag));
-int G__param_match G__P((char formal_type,int formal_tagnum,G__value *default_parameter,char param_type,int param_tagnum,G__value *param,char *parameter,int funcmatch,int rewind_arg));
 struct G__ifunc_table *G__ifunc_exist G__P((struct G__ifunc_table *ifunc_now,int allifunc,struct G__ifunc_table *ifunc,int *piexist));
 struct G__ifunc_table *G__ifunc_ambiguous G__P((struct G__ifunc_table *ifunc_now,int allifunc,struct G__ifunc_table *ifunc,int *piexist,int derivedtagnum));
 void G__inheritclass G__P((int to_tagnum,int from_tagnum,char baseaccess));
@@ -278,7 +278,6 @@ int G__errorprompt G__P((char *nameoferror));
 int G__call_interruptfunc G__P((char *func));
 
 void G__include_file G__P((void));
-char *G__getmakeinfo G__P((char *item));
 int G__getcintsysdir G__P((void));
 int G__preprocessor G__P((char *outname,char *inname,int cppflag,char *macros,char *undeflist,char *ppopt,char *includepath));
 int G__difffile G__P((char *file1,char *file2));
@@ -288,7 +287,11 @@ void G__openmfp G__P((void));
 int G__closemfp G__P((void));
 void G__define G__P((void));
 int G__handle_as_typedef G__P((char *oldtype,char *newtype));
+#ifndef G__OLDIMPLEMENTATION1062
+void G__createmacro G__P((char *new_name,char *initvalue,int nowrapper));
+#else
 void G__createmacro G__P((char *new_name,char *initvalue));
+#endif
 G__value G__execfuncmacro G__P((char *item,int *done));
 #ifndef G__OLDIMPLEMENTATION942
 int G__transfuncmacro G__P((char *item,struct G__Deffuncmacro *deffuncmacro,struct G__Callfuncmacro *callfuncmacro,fpos_t call_pos,char *p,int nobraces,int nosemic));
@@ -298,6 +301,9 @@ int G__maybe_finish_macro G__P(());
 #else
 int G__transfuncmacro G__P((char *item,struct G__Deffuncmacro *deffuncmacro,struct G__Callfuncmacro *callfuncmacro,fpos_t call_pos,char *p));
 int G__replacefuncmacro G__P((char *item,struct G__Callfuncmacro *callfuncmacro,struct G__Charlist *callpara,struct G__Charlist *defpara,FILE *def_fp,fpos_t def_pos));
+#endif
+#ifndef G__OLDIMPLEMENTATION1062
+int G__execvarmacro_noexec G__P((char* macroname));
 #endif
 int G__argsubstitute G__P((char *symbol,struct G__Charlist *callpara,struct G__Charlist *defpara));
 int G__createfuncmacro G__P((char *new_name));
@@ -648,8 +654,9 @@ extern int G__SetGlobalcomp G__P((char *funcname,char *param,int globalcomp));
 #endif
 
 #ifndef G__OLDIMPLEMENTATION640
-extern void G__more G__P((FILE* fp,char *msg));
-extern void G__more_pause G__P((FILE* fp));
+extern void G__more_col G__P((int len));
+extern int G__more G__P((FILE* fp,char *msg));
+extern int G__more_pause G__P((FILE* fp,int len));
 extern void G__redirect_on();
 extern void G__redirect_off();
 #endif
@@ -660,6 +667,9 @@ void G__add_label_bytecode G__P((char *label));
 void G__add_jump_bytecode G__P((char *label));
 void G__resolve_jumptable_bytecode G__P(());
 #endif
+
+extern void G__LockCriticalSection G__P(());
+extern void G__UnlockCriticalSection G__P(());
 
 #ifndef G__OLDIMPLEMENTATION873
 extern struct G__dictposition* G__get_dictpos G__P((char* fname));

@@ -1,22 +1,25 @@
-//*CMZ :  2.21/06 12/02/99  17.23.30  by  Rene Brun
+//*CMZ :  2.22/01 11/05/99  10.20.12  by  Rene Brun
+//*CMZ :  2.21/06 17/04/99  07.50.09  by  Rene Brun
 //*CMZ :  2.21/04 01/02/99  21.02.14  by  Valery Fine(fine@mail.cern.ch)
 //*CMZ :  1.03/09 10/12/97  09.38.29  by  Rene Brun
 //*-- Author :    Valery Fine(fine@vxcern.cern.ch)   08/05/97
 
+/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Fons Rademakers.                                  *
+ * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
  *                                                                       *
  * Permission to use, copy, modify and distribute this software and its  *
  * documentation for non-commercial purposes is hereby granted without   *
  * fee, provided that the above copyright notice appears in all copies   *
  * and that both the copyright notice and this permission notice appear  *
  * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose.                         *
- * It is provided "as is" without express or implied warranty.           *
+ * suitability of this software for any purpose. It is provided "as is"  *
+ * without express or implied warranty.                                  *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -247,6 +250,18 @@ void TPadOpenGLView::PaintPolyMarker(TPolyMarker3D *marker,Option_t *opt)
     gGLKernel->SetGLPointSize((Float_t)(marker->GetMarkerSize()));
     gGLKernel->PaintGLPoints(marker->GetN(), marker->GetP(), opt);
 }
+//______________________________________________________________________________
+void TPadOpenGLView::PaintPoints3D(const TPoints3DABC *points,Option_t *opt)
+{
+  //
+  // option = "L"        - connect all points with straight lines
+  //          "P"        - draw the 3d points at each coordinate (by default)
+  //          "LP"       - draw the 3D points and connect them with
+  //                       straight lines
+
+  if (points) gGLKernel->PaintGLPointsObject(points,opt);
+}
+
 //______________________________________________________________________________
 void TPadOpenGLView::PaintBeginModel(Option_t *)
 {

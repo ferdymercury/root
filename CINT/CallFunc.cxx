@@ -1,5 +1,5 @@
-//*CMZ :  2.21/08 17/03/99  13.13.46  by  Masaharu Goto
-//*-- Author :    Masaharu Goto   17/03/99
+//*CMZ :  2.22/10 23/07/99  14.42.21  by  Masaharu Goto
+//*-- Author :    Masaharu Goto   23/07/99
 /* /% C++ %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -72,7 +72,13 @@
 ///////////////////////////////////////////////////////////////////////////
 G__CallFunc::G__CallFunc()
 {
+#ifndef G__OLDIMPLEMENTATION1035
+  G__LockCriticalSection();
+#endif
   Init();
+#ifndef G__OLDIMPLEMENTATION1035
+  G__UnlockCriticalSection();
+#endif
 }
 ///////////////////////////////////////////////////////////////////////////
 void G__CallFunc::Init()
@@ -174,6 +180,9 @@ void G__CallFunc::SetFuncProto(G__ClassInfo* cls
 			  ,char* fname  ,char* argtype
 			  ,long* poffset)
 {
+#ifndef G__OLDIMPLEMENTATION1035
+  G__LockCriticalSection();
+#endif
 
   method = cls->GetMethod(fname,argtype,poffset); // get G__MethodInfo object
   pfunc = method.InterfaceMethod(); // get compiled interface method
@@ -183,6 +192,10 @@ void G__CallFunc::SetFuncProto(G__ClassInfo* cls
   }
 #endif
   para.paran=0; // reset parameters, not needed actually, done in SetBytecode
+
+#ifndef G__OLDIMPLEMENTATION1035
+  G__UnlockCriticalSection();
+#endif
 }
 #endif
 ///////////////////////////////////////////////////////////////////////////
@@ -239,6 +252,9 @@ void G__CallFunc::Exec(void *pobject)
 {
   int ret;
   long store_struct_offset;
+#ifndef G__OLDIMPLEMENTATION1035
+  G__LockCriticalSection();
+#endif
   // Set object address
   store_struct_offset = G__store_struct_offset;
   G__store_struct_offset = (long)pobject;
@@ -256,6 +272,9 @@ void G__CallFunc::Exec(void *pobject)
   if(0==ret) {
     /* error */
   }
+#ifndef G__OLDIMPLEMENTATION1035
+  G__UnlockCriticalSection();
+#endif
 }
 ///////////////////////////////////////////////////////////////////////////
 long G__CallFunc::ExecInt(void *pobject)

@@ -1,21 +1,26 @@
+//*CMZ :  2.22/09 12/07/99  08.45.50  by  Rene Brun
+//*CMZ :  2.22/07 26/06/99  23.04.37  by  Rene Brun
+//*CMZ :  2.22/00 03/04/99  22.26.28  by  Rene Brun
 //*CMZ :  2.20/04 11/12/98  15.20.36  by  Rene Brun
 //*CMZ :  1.03/09 13/12/97  21.26.24  by  Rene Brun
 //*-- Author :    Rene Brun   12/12/94
 
+/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Fons Rademakers.                                  *
+ * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
  *                                                                       *
  * Permission to use, copy, modify and distribute this software and its  *
  * documentation for non-commercial purposes is hereby granted without   *
  * fee, provided that the above copyright notice appears in all copies   *
  * and that both the copyright notice and this permission notice appear  *
  * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose.                         *
- * It is provided "as is" without express or implied warranty.           *
+ * suitability of this software for any purpose. It is provided "as is"  *
+ * without express or implied warranty.                                  *
  *************************************************************************/
 
 #include <iostream.h>
@@ -83,7 +88,7 @@ TColor::TColor(Int_t color, Float_t r, Float_t g, Float_t b, Text_t *name)
    }
    const char *cname = GetName();
 //*-*- enter in the list of colors
-   gROOT->GetListOfColors()->Add(this);
+   gROOT->GetListOfColors()->AddAt(this,color);
 
    if (color > 0 && color < 51) {   //*-*- Now create associated colors for WBOX shading
       sprintf(aname,"%s%s",cname,"_dark");
@@ -273,17 +278,25 @@ void TColor::SetRGB(Float_t r, Float_t g, Float_t b)
 //*-*- make this color known to the graphics system
    if (gGXW && !gROOT->IsBatch())   gGXW->SetRGB(color, r, g, b);
 
-   if (color > 100) return;
+   if (color > 50) return;
 //*-*- Now define associated colors for WBOX shading
    Float_t dr, dg, db, lr, lg, lb;
+   Int_t nplanes = 16;
+   if (gGXW) gGXW->GetPlanes(nplanes);
 //*-*-----------Dark color
 //*-*           ==========
    HLStoRGB(fHue, 0.7*fLight, fSaturation, dr, dg, db);
    TColor *dark = gROOT->GetColor(100+color);
-   if (dark)  dark->SetRGB(dr, dg, db);
+   if (dark) {
+       if (nplanes > 8)  dark->SetRGB(dr, dg, db);
+       else              dark->SetRGB(0.3,0.3,0.3);
+    }
 //*-*-----------Light color
 //*-*           ===========
    HLStoRGB(fHue, 1.2*fLight, fSaturation, lr, lg, lb);
    TColor *light = gROOT->GetColor(150+color);
-   if (light) light->SetRGB(lr, lg, lb);
+   if (light) {
+      if (nplanes > 8) light->SetRGB(lr, lg, lb);
+      else             light->SetRGB(0.8,0.8,0.8);
+   }
 }

@@ -1,20 +1,25 @@
+//*CMZ :  2.22/10 22/07/99  20.05.46  by  Fons Rademakers
+//*CMZ :  2.22/07 30/06/99  10.29.16  by  Fons Rademakers
+//*CMZ :  2.22/01 15/04/99  19.12.07  by  Fons Rademakers
 //*CMZ :  2.21/03 20/01/99  11.43.30  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   20/01/99
 
+/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Fons Rademakers.                                  *
+ * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
  *                                                                       *
  * Permission to use, copy, modify and distribute this software and its  *
  * documentation for non-commercial purposes is hereby granted without   *
  * fee, provided that the above copyright notice appears in all copies   *
  * and that both the copyright notice and this permission notice appear  *
  * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose.                         *
- * It is provided "as is" without express or implied warranty.           *
+ * suitability of this software for any purpose. It is provided "as is"  *
+ * without express or implied warranty.                                  *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -28,7 +33,7 @@
 // valid TRFIOFile URL's:                                               //
 //                                                                      //
 //    rfio:/afs/cern.ch/user/r/rdm/galice.root                          //
-//         where alice.root is a symlink of the type /shift/.../...     //
+//         where galice.root is a symlink of the type /shift/.../...    //
 //    rfio:na49db1:/data1/raw.root                                      //
 //                                                                      //
 //////////////////////////////////////////////////////////////////////////
@@ -37,7 +42,6 @@
 #include "TSystem.h"
 #include "TROOT.h"
 
-
 extern "C" {
    int rfio_open(char *filepath, int flags, int mode);
    int rfio_close(int s);
@@ -45,6 +49,8 @@ extern "C" {
    int rfio_write(int s, char *ptr, int size);
    int rfio_lseek(int s, int offset, int how);
    int rfio_access(char *filepath, int mode);
+   int rfio_unlink(char *filepath);
+   int rfio_parse(char *name, char **host, char **path);
 };
 
 
@@ -61,6 +67,9 @@ TRFIOFile::TRFIOFile(const char *url, Option_t *option, const Text_t *ftitle, In
    // If the file specified in the URL does not exist, is not accessable
    // or can not be created the kZombie bit will be set in the TRFIOFile
    // object. Use IsZombie() to see if the file is accessable.
+
+   fOption = option;
+   fOffset = 0;
 
    Bool_t create = kFALSE;
    if (!fOption.CompareTo("NEW", TString::kIgnoreCase) ||
@@ -79,7 +88,15 @@ TRFIOFile::TRFIOFile(const char *url, Option_t *option, const Text_t *ftitle, In
 
    char *fname;
    if ((fname = gSystem->ExpandPathName(fUrl.GetFile()))) {
-      SetName(fname);
+      if (!strstr(fname, ":/")) {
+         char *host;
+         char *name;
+         if (::rfio_parse(fname, &host, &name))
+            SetName(Form("%s:%s", host, name));
+         else
+            SetName(fname);
+      } else
+         SetName(fname);
       delete [] fname;
       fname = (char *)GetName();
    } else {
@@ -89,7 +106,7 @@ TRFIOFile::TRFIOFile(const char *url, Option_t *option, const Text_t *ftitle, In
 
    if (recreate) {
       if (::rfio_access(fname, kFileExists) == 0)
-         gSystem->Unlink(fname);
+         ::rfio_unlink(fname);
       recreate = kFALSE;
       create   = kTRUE;
       fOption  = "CREATE";
@@ -154,7 +171,15 @@ zombie:
 }
 
 //______________________________________________________________________________
-Int_t TRFIOFile::SysOpen(const char *pathname, Int_t flags, UInt_t mode) const
+TRFIOFile::~TRFIOFile()
+{
+   // RFIO file dtor. Close and flush directory structure.
+
+   Close();
+}
+
+//______________________________________________________________________________
+Int_t TRFIOFile::SysOpen(const char *pathname, Int_t flags, UInt_t mode)
 {
    // Interface to system open. All arguments like in "man 2 open".
 
@@ -162,7 +187,7 @@ Int_t TRFIOFile::SysOpen(const char *pathname, Int_t flags, UInt_t mode) const
 }
 
 //______________________________________________________________________________
-Int_t TRFIOFile::SysClose(Int_t fd) const
+Int_t TRFIOFile::SysClose(Int_t fd)
 {
    // Interface to system close. All arguments like in "man 2 close".
 
@@ -170,27 +195,36 @@ Int_t TRFIOFile::SysClose(Int_t fd) const
 }
 
 //______________________________________________________________________________
-Int_t TRFIOFile::SysRead(Int_t fd, void *buf, Int_t len) const
+Int_t TRFIOFile::SysRead(Int_t fd, void *buf, Int_t len)
 {
    // Interface to system read. All arguments like in "man 2 read".
 
+   fOffset += len;
    return ::rfio_read(fd, (char *)buf, len);
 }
 
 //______________________________________________________________________________
-Int_t TRFIOFile::SysWrite(Int_t fd, const void *buf, Int_t len) const
+Int_t TRFIOFile::SysWrite(Int_t fd, const void *buf, Int_t len)
 {
    // Interface to system write. All arguments like in "man 2 write".
 
+   fOffset += len;
    return ::rfio_write(fd, (char *)buf, len);
 }
 
 //______________________________________________________________________________
-Seek_t TRFIOFile::SysSeek(Int_t fd, Seek_t offset, Int_t whence) const
+Seek_t TRFIOFile::SysSeek(Int_t fd, Seek_t offset, Int_t whence)
 {
    // Interface to system lseek. All arguments like in "man 2 lseek"
    // except that the offset and return value are Long_t to be able to
    // handle 64 bit file systems.
+
+   if (whence == SEEK_SET) {
+      if (offset == fOffset)
+         return 0;
+      else
+         fOffset = offset;
+   }
 
    return ::rfio_lseek(fd, offset, whence);
 }

@@ -1,3 +1,4 @@
+*CMZ :  2.22/06 21/06/99  18.38.32  by  Rene Brun
 *CMZ :  1.03/02 25/08/97  17.05.19  by  Victor Perev
 *-- Author :    Victor Perev   25/07/97
 
@@ -12,7 +13,7 @@ macro cint_thread
 
 seq -i src/*.h
 
-headers=TThread.h TConditionImp.h TCondition.h TMutex.h TMutexImp.h _
+headers=-DR__THREAD TThread.h TConditionImp.h TCondition.h TMutex.h TMutexImp.h _
         TPosixCondition.h TPosixMutex.h TPosixThread.h _
         TPosixThreadFactory.h TSemaphore.h TThreadFactory.h _
         TThreadImp.h
@@ -20,29 +21,8 @@ headers=TThread.h TConditionImp.h TCondition.h TMutex.h TMutexImp.h _
 name=Thread
 patch=THREAD
 
-application data G__LinkDef.h
-#ifdef __CINT__
-
-#pragma link off all globals;
-#pragma link off all classes;
-#pragma link off all functions;
-
-#pragma link C++ class TThread;
-#pragma link C++ class TConditionImp;
-#pragma link C++ class TCondition;
-#pragma link C++ class TMutex;
-#pragma link C++ class TMutexImp;
-#pragma link C++ class TPosixCondition;
-#pragma link C++ class TPosixMutex;
-#pragma link C++ class TPosixThread;
-#pragma link C++ class TPosixThreadFactory;
-#pragma link C++ class TSemaphore;
-#pragma link C++ class TThreadFactory;
-#pragma link C++ class TThreadImp;
-#pragma link C++ function TThreadFun;
-#endif
-G__LinkDef.h
-
+set G__LinkDef.h -F TEXT
+ctot /$kumacs/THREAD_LinkDef
 
 exec makecint [name] [patch] [headers]
 

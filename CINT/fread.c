@@ -1,5 +1,5 @@
-/*CMZ :  2.21/08 17/03/99  13.13.40  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   17/03/99*/
+/*CMZ :  2.22/10 23/07/99  14.42.14  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   23/07/99*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -415,6 +415,10 @@ char *string,*endmark;
       }
       break;
     case ',':
+#ifndef G__OLDIMPLEMENTATION1114
+      /* may be following line is needed. 1999/5/31 */
+      /* if(i>2 && ' '==string[i-1] && isalnum(string[i-2])) --i; */
+#endif
 #ifndef G__OLDIMPLEMENTATION608
       pp = string+i+1;
 #endif
@@ -446,6 +450,10 @@ char *string,*endmark;
     case ')':
     case ']':
       if((single_quote==0)&&(double_quote==0)) {
+#ifndef G__OLDIMPLEMENTATION1114
+	/* may be following line is needed. 1999/5/31 */
+	/* if(i>2 && ' '==string[i-1] && isalnum(string[i-2])) --i; */
+#endif
 	nest--;
 #ifndef G__OLDIMPLEMENTATION994
 	inew=i+1;
@@ -620,6 +628,9 @@ char *string,*endmark;
     case ')':
     case ']':
       if((single_quote==0)&&(double_quote==0)) {
+#ifndef G__OLDIMPLEMENTATION1114
+	if(i>2 && ' '==string[i-1] && isalnum(string[i-2])) --i;
+#endif
 	nest--;
 	if(nest<0) {
 	  flag=1;
@@ -690,6 +701,9 @@ char *string,*endmark;
 #ifndef G__OLDIMPLEMENTATION608
     case ',':
       pp = string+i+1;
+#endif
+#ifndef G__OLDIMPLEMENTATION1114
+      if(i>2 && ' '==string[i-1] && isalnum(string[i-2])) --i;
 #endif
 
 #ifdef G__MULTIBYTE
@@ -789,6 +803,9 @@ char *string,*endmark;
     case ')':
     case ']':
       if((single_quote==0)&&(double_quote==0)) {
+#ifndef G__OLDIMPLEMENTATION1114
+	if(i>2 && ' '==string[i-1] && isalnum(string[i-2])) --i;
+#endif
 	nest--;
 	if(nest<0) {
 	  flag=1;
@@ -835,6 +852,9 @@ char *string,*endmark;
 #ifndef G__OLDIMPLEMENTATION608
     case ',':
       pp = string+i+1;
+#endif
+#ifndef G__OLDIMPLEMENTATION1114
+      if(i>2 && ' '==string[i-1] && isalnum(string[i-2])) --i;
 #endif
 
 #ifdef G__MULTIBYTE
@@ -948,6 +968,9 @@ char *endmark;
   int tmpltflag=0;
   int notmpltflag=0;
 #endif
+#ifndef G__OLDIMPLEMENtATION1056
+  char* pp = string;
+#endif
 
   do {
     ignoreflag=0;
@@ -970,10 +993,20 @@ char *endmark;
     case '\r':
     case '\f':
       if((single_quote==0)&&(double_quote==0)) {
+#ifndef G__OLDIMPLEMENtATION1056
+        string[i] = '\0';
+        if (tmpltflag && G__isstoragekeyword (pp)) {
+          c = ' ';
+          pp = string + i + 1;
+          break;
+        }
+        ignoreflag = 1;
+#else
 #ifndef G__OLDIMPLEMENtATION1005
 	if(0==tmpltflag||0==nest) ignoreflag=1;
 #else
 	ignoreflag=1;
+#endif
 #endif
 	if(nest==0&&spaceflag!=0) {
 	  flag=1;
@@ -994,6 +1027,11 @@ char *endmark;
       break;
 #ifdef G__TEMPLATEMEMFUNC
     case '<':
+#ifndef G__OLDIMPLEMENtATION1056
+      if((single_quote==0)&&(double_quote==0)) {
+        pp = string + i + 1;
+      }
+#endif
       if(notmpltflag || (8==i && strncmp("operator",string,8)==0)
 	 || (9==i && (strncmp("&operator",string,9)==0||
 		      strncmp("*operator",string,9)==0))
@@ -1091,6 +1129,12 @@ char *endmark;
       string[i] = '\0';
 #endif
       return(c);
+
+#ifndef G__OLDIMPLEMENTATION1089
+    case ',':
+      pp = string + i + 1;
+      /* fall through... */
+#endif
 
     default:
       spaceflag=1;
@@ -1916,6 +1960,161 @@ char *string,*endmark;
   return(c);
 }
 
+#ifndef G__OLDIMPLEMENTATION1061
+/***********************************************************************
+* G__fgetstream_spaces(string,endmark)
+*
+* char *string       : string until the endmark appears
+* char *endmark      : specify endmark characters
+*
+*  read source file until specified endmark char appears.
+*
+*  Just like G__fgetstream(), except that spaces are not
+*  completely removed.  Multiple spaces are, however, collapased
+*  into a single space; leading and trailing spaces are also removed.
+*
+*  *endmark=";"
+*     '  ab cd e f g;hijklm '
+*      -------------^          *string="ab cd e f g"; return(';');
+*
+*  *endmark=";"
+*     ' abc );'
+*      -----^    *string="abc"; return(')');
+*
+***********************************************************************/
+int G__fgetstream_spaces(string,endmark)
+char *string,*endmark;
+{
+  short i=0,l;
+  int c,prev;
+  int nest=0,single_quote=0,double_quote=0,flag=0,ignoreflag;
+  int commentflag=0;
+  int last_was_space = 0;
+
+  do {
+    ignoreflag=0;
+    c=G__fgetc() ;
+
+    if((nest<=0)&&(single_quote==0)&&(double_quote==0)) {
+      l=0;
+      while((prev=endmark[l++])!='\0') {
+	if(c==prev) {
+	  flag=1;
+	  ignoreflag=1;
+	}
+      }
+    }
+
+    switch(c) {
+    case '\f':
+    case '\n':
+    case '\r':
+    case '\t':
+    case ' ':
+      commentflag=0;
+      if((single_quote==0)&&(double_quote==0)) {
+	c=' ';
+        if (last_was_space || i == 0)
+          ignoreflag=1;
+      }
+      break;
+    case '{':
+    case '(':
+    case '[':
+      if((single_quote==0)&&(double_quote==0)) {
+	++nest;
+      }
+      break;
+    case '}':
+    case ')':
+    case ']':
+      if((single_quote==0)&&(double_quote==0)) {
+	nest--;
+      }
+      break;
+    case '"':
+      if(single_quote==0) {
+	double_quote ^= 1;
+      }
+      break;
+    case '\'':
+      if(double_quote==0) {
+	single_quote ^= 1;
+      }
+      break;
+
+    case '\\':
+      if(ignoreflag==0) {
+	string[i++] = c ;
+	c=G__fgetc() ;
+      }
+      break;
+
+    case '/':
+      if(0==double_quote && 0==single_quote && i>0 && string[i-1]=='/' &&
+	 commentflag) {
+	i--;
+	G__fignoreline();
+	ignoreflag=1;
+      }
+      else {
+	commentflag=1;
+      }
+      break;
+
+    case '*':
+      /* comment */
+      if(0==double_quote && 0==single_quote && i>0 && string[i-1]=='/' &&
+	 commentflag) {
+	G__skip_comment();
+	--i;
+	ignoreflag=1;
+      }
+      break;
+
+    case '#':
+      if(single_quote==0&&double_quote==0&&(i==0||string[i-1]!='$')) {
+	G__pp_command();
+	ignoreflag=1;
+#ifdef G__TEMPLATECLASS
+	c=' ';
+#endif
+      }
+      break;
+
+    case EOF:
+      G__unexpectedEOF("G__fgetstream_new():2");
+      string[i] = '\0';
+      return(c);
+
+#ifdef G__MULTIBYTE
+    default:
+      if(G__IsDBCSLeadByte(c) && !ignoreflag) {
+	string[i++]=c;
+	c=G__fgetc() ;
+	G__CheckDBCS2ndByte(c);
+      }
+      break;
+#endif
+    }
+
+    if(ignoreflag==0) {
+      string[i++] = c ;
+    }
+
+    last_was_space = (c == ' ');
+
+  } while(flag==0) ;
+
+  while (i > 0 && string[i-1] == ' ')
+    --i;
+
+  string[i]='\0';
+
+  return(c);
+}
+#endif
+
 /***********************************************************************
 * G__getstream(source,isrc,string,endmark)
 *
@@ -2147,7 +2346,12 @@ struct G__comment_info *pcomment;
 	  return;
 	}
       }
+#ifndef G__OLDIMPLEMENTATION1100
+      if(G__ifile.fp==G__mfp) pcomment->filenum = G__MAXFILE;
+      else                    pcomment->filenum = G__ifile.filenum;
+#else
       pcomment->filenum = G__ifile.filenum;
+#endif
       fseek(G__ifile.fp,-1,SEEK_CUR);
       fgetpos(G__ifile.fp,&pcomment->p.pos);
     }

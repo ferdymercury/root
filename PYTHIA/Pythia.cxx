@@ -1,23 +1,28 @@
+//*CMZ :  2.22/07 05/07/99  16.13.12  by  Rene Brun
+//*CMZ :  2.22/03 31/05/99  17.06.21  by  Rene Brun
+//*CMZ :  2.22/01 26/04/99  16.44.57  by  Rene Brun
 //*CMZ :  2.21/01 06/01/99  09.29.21  by  Rene Brun
 //*CMZ :  2.00/11 22/08/98  09.48.59  by  Rene Brun
 //*CMZ :  2.00/09 08/06/98  17.57.53  by  Valery Fine(fine@mail.cern.ch)
 //*CMZ :  1.03/09 10/12/97  12.31.04  by  Rene Brun
 //*-- Author :    Piotr Golonka   10/09/97
 
+/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Fons Rademakers.                                  *
+ * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
  *                                                                       *
  * Permission to use, copy, modify and distribute this software and its  *
  * documentation for non-commercial purposes is hereby granted without   *
  * fee, provided that the above copyright notice appears in all copies   *
  * and that both the copyright notice and this permission notice appear  *
  * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose.                         *
- * It is provided "as is" without express or implied warranty.           *
+ * suitability of this software for any purpose. It is provided "as is"  *
+ * without express or implied warranty.                                  *
  *************************************************************************/
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -76,10 +81,8 @@
 
 #include "TPythia.h"
 #include "PCommon.h"
-#include "TGenerator.h"
 #include "TMCParticle.h"
-
-#include "TClonesArray.h"
+#include "TParticle.h"
 
 #include "TCanvas.h"
 #include "TView.h"
@@ -126,6 +129,7 @@ extern "C" int  type_of_call lucomp(Long_t &kf);
 
 ClassImp(TPythia)
 
+
 //______________________________________________________________________________
 TPythia::TPythia() : TGenerator("Pythia","Pythia")
 {
@@ -133,9 +137,9 @@ TPythia::TPythia() : TGenerator("Pythia","Pythia")
 // particles. Note that there may be only one functional TPythia object
 // at a time, so it's not use to create more than one instance of it.
 
-    delete fPrimaries; // was allocated as TObjArray in TGenerator
+    delete fParticles; // was allocated as TObjArray in TGenerator
 
-    fPrimaries = new TClonesArray("TMCParticle",50);
+    fParticles = new TClonesArray("TMCParticle",50);
 }
 
 //______________________________________________________________________________
@@ -143,10 +147,10 @@ TPythia::~TPythia()
 {
 // Destroys the object, deletes and disposes all TMCParticles currently on list.
 
-    if (fPrimaries) {
-      fPrimaries->Delete();
-      delete fPrimaries;
-      fPrimaries = 0;
+    if (fParticles) {
+      fParticles->Delete();
+      delete fParticles;
+      fParticles = 0;
    }
 }
 
@@ -189,19 +193,19 @@ void TPythia::Draw(Option_t *option)
 }
 
 //______________________________________________________________________________
-TObjArray *TPythia::GetPrimaries(Option_t *)
+TObjArray *TPythia::ImportParticles(Option_t *)
 {
-// Fills TClonesArray fPrimaries list with particles from common LUJETS.
+// Fills TClonesArray fParticles list with particles from common LUJETS.
 // Old contents of a list are cleared. This function should be called after
-// any change in common LUJETS, however GetPrimaries() method  calls it
+// any change in common LUJETS, however GetParticles() method  calls it
 // automatically - user don't need to care about it. In case you make a call
 // to LuExec() you must call this method yourself to transfer new data from
-// common LUJETS to the fPrimaries list.
+// common LUJETS to the fParticles list.
 
-   fPrimaries->Clear();
+   fParticles->Clear();
 
    Int_t numpart   = LUJETS.n;
-   TClonesArray &a = *((TClonesArray*)fPrimaries);
+   TClonesArray &a = *((TClonesArray*)fParticles);
 
    for (Int_t i = 0; i < numpart; i++) {
       new(a[i]) TMCParticle(LUJETS.k[0][i] ,
@@ -223,9 +227,76 @@ TObjArray *TPythia::GetPrimaries(Option_t *)
                             LUJETS.v[4][i]);
 
    }
-   return fPrimaries;
+   return fParticles;
 }
 
+//______________________________________________________________________________
+Int_t TPythia::ImportParticles(TClonesArray *particles, Option_t *option)
+{
+//
+//  Default primary creation method. It reads the /HEPEVT/ common block which
+//  has been filled by the GenerateEvent method. If the event generator does
+//  not use the HEPEVT common block, This routine has to be overloaded by
+//  the subclasses.
+//  The function loops on the generated particles and store them in
+//  the TClonesArray pointed by the argument particles.
+//  The default action is to store only the stable particles (ISTHEP = 1)
+//  This can be demanded explicitly by setting the option = "Final"
+//  If the option = "All", all the particles are stored.
+//
+  if (particles == 0) return 0;
+  TClonesArray &Particles = *particles;
+  Particles.Clear();
+  Int_t numpart = LUJETS.n;
+  if (!strcmp(option,"") || !strcmp(option,"Final")) {
+    for (Int_t i = 0; i<=numpart; i++) {
+      if (LUJETS.k[1][i] == 1) {
+//
+//  Use the common block values for the TParticle constructor
+//
+        new(Particles[i]) TParticle(
+                            LUJETS.k[1][i] ,
+                            LUJETS.k[0][i] ,
+                            LUJETS.k[2][i] ,
+                            -1,
+                            LUJETS.k[3][i] ,
+                            LUJETS.k[4][i] ,
+
+                            LUJETS.p[0][i] ,
+                            LUJETS.p[1][i] ,
+                            LUJETS.p[2][i] ,
+                            LUJETS.p[3][i] ,
+
+                            LUJETS.v[0][i] ,
+                            LUJETS.v[1][i] ,
+                            LUJETS.v[2][i] ,
+                            LUJETS.v[3][i]);
+      }
+    }
+  }
+  else if (!strcmp(option,"All")) {
+    for (Int_t i = 0; i<=numpart; i++) {
+        new(Particles[i]) TParticle(
+                            LUJETS.k[1][i] ,
+                            LUJETS.k[0][i] ,
+                            LUJETS.k[2][i] ,
+                            -1,
+                            LUJETS.k[3][i] ,
+                            LUJETS.k[4][i] ,
+
+                            LUJETS.p[0][i] ,
+                            LUJETS.p[1][i] ,
+                            LUJETS.p[2][i] ,
+                            LUJETS.p[3][i] ,
+
+                            LUJETS.v[0][i] ,
+                            LUJETS.v[1][i] ,
+                            LUJETS.v[2][i] ,
+                            LUJETS.v[3][i]);
+    }
+  }
+  return numpart;
+}
 
 //====================== access to common PYSUBS ===============================
 
@@ -1440,11 +1511,11 @@ void TPythia::Initialize(char *frame, char *beam, char *target, float win)
 //______________________________________________________________________________
 void TPythia::GenerateEvent()
 {
-// Generates one event nd automatically fills the fPrimaries list with new particles.
+// Generates one event nd automatically fills the fParticles list with new particles.
 // This function should rathe be used instead of pyevnt();
 
    pyevnt();
-   GetPrimaries();
+   ImportParticles();
 }
 
 //______________________________________________________________________________

@@ -1,22 +1,25 @@
+//*CMZ :  2.22/07 05/07/99  18.55.30  by  Fons Rademakers
 //*CMZ :  2.00/10 14/07/98  15.57.04  by  Fons Rademakers
 //*CMZ :  2.00/08 11/06/98  18.20.39  by  Fons Rademakers
 //*CMZ :  1.03/09 11/12/97  15.44.42  by  Rene Brun
 //*-- Author :    Fons Rademakers   11/09/95
 
+/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Fons Rademakers.                                  *
+ * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
  *                                                                       *
  * Permission to use, copy, modify and distribute this software and its  *
  * documentation for non-commercial purposes is hereby granted without   *
  * fee, provided that the above copyright notice appears in all copies   *
  * and that both the copyright notice and this permission notice appear  *
  * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose.                         *
- * It is provided "as is" without express or implied warranty.           *
+ * suitability of this software for any purpose. It is provided "as is"  *
+ * without express or implied warranty.                                  *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -534,9 +537,9 @@ Int_t TObjArray::BinarySearch(TObject *op, Int_t upto)
    while (last >= base) {
       position = (base+last) / 2;
       op2 = fCont[position];
-      if (op2 == 0 || (result = op->Compare(op2)) == 0)
+      if (op2 && (result = op->Compare(op2)) == 0)
          return position + fLowerBound;
-      if (result < 0)
+      if (!op2 || result < 0)
          last = position-1;
       else
          base = position+1;
@@ -564,6 +567,43 @@ TObjArrayIter::TObjArrayIter(const TObjArray *arr, Bool_t dir)
    fArray     = arr;
    fDirection = dir;
    Reset();
+}
+
+//______________________________________________________________________________
+TObjArrayIter::TObjArrayIter(const TObjArrayIter &iter)
+{
+   // Copy ctor.
+
+   fArray     = iter.fArray;
+   fDirection = iter.fDirection;
+   fCursor    = iter.fCursor;
+}
+
+//______________________________________________________________________________
+TIterator &TObjArrayIter::operator=(const TIterator &rhs)
+{
+   // Overridden assignment operator.
+
+   if (this != &rhs && rhs.IsA() == TObjArrayIter::Class()) {
+      const TObjArrayIter &rhs1 = (const TObjArrayIter &)rhs;
+      fArray     = rhs1.fArray;
+      fDirection = rhs1.fDirection;
+      fCursor    = rhs1.fCursor;
+   }
+   return *this;
+}
+
+//______________________________________________________________________________
+TObjArrayIter &TObjArrayIter::operator=(const TObjArrayIter &rhs)
+{
+   // Overloaded assignment operator.
+
+   if (this != &rhs) {
+      fArray     = rhs.fArray;
+      fDirection = rhs.fDirection;
+      fCursor    = rhs.fCursor;
+   }
+   return *this;
 }
 
 //______________________________________________________________________________

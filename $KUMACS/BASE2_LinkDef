@@ -1,3 +1,4 @@
+*CMZ :  2.22/06 21/06/99  16.06.43  by  Fons Rademakers
 *CMZ :  2.21/07 08/03/99  12.19.42  by  Fons Rademakers
 *CMZ :  2.00/11 14/08/98  17.20.13  by  Fons Rademakers
 *CMZ :  2.00/09 21/06/98  20.30.09  by  Fons Rademakers
@@ -8,7 +9,7 @@
 #pragma link off all classes;
 #pragma link off all functions;
 
-#pragma link C++ enum EObjBits;
+#pragma link C++ enum EAccessMode;
 
 #pragma link C++ class TFree;
 #pragma link C++ class TKey-;

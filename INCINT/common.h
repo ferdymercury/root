@@ -1,5 +1,5 @@
-/*CMZ :  2.21/08 17/03/99  13.13.37  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   17/03/99*/
+/*CMZ :  2.22/10 23/07/99  14.42.12  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   23/07/99*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -243,6 +243,7 @@
 #define G__VARIABLE       0
 #define G__CONSTVAR       1
 #define G__LOCKVAR        2
+#define G__DYNCONST       2
 #define G__PCONSTVAR      4
 #define G__PCONSTCONSTVAR 5
 #define G__CONSTFUNC      8
@@ -390,6 +391,7 @@
 #define G__LETNEWVAL          0x003d
 #define G__SETGVP             0x003e
 #define G__TOPVALUE           0x003f
+#define G__CTOR_SETGVP        0x0040
 
 #define G__NOP                0xffff
 
@@ -668,6 +670,7 @@ struct G__baseparam {
 #define G__CALLCONSTRUCTOR  3
 #define G__TRYCONSTRUCTOR   4
 #define G__TRYDESTRUCTOR    5
+#define G__CALLSTATICMEMFUNC 6
 
 
 

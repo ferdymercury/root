@@ -1,3 +1,8 @@
+*CMZ :  2.22/07 06/07/99  08.18.49  by  Rene Brun
+*CMZ :  2.22/06 21/06/99  17.17.41  by  Rene Brun
+*CMZ :  2.22/05 15/06/99  11.07.48  by  Fons Rademakers
+*CMZ :  2.22/04 03/06/99  16.55.48  by  Rene Brun
+*CMZ :  2.22/01 11/05/99  09.08.02  by  Rene Brun
 *CMZ :  2.21/08 18/03/99  16.53.11  by  Rene Brun
 *CMZ :  2.21/07 05/03/99  12.22.16  by  Rene Brun
 *CMZ :  2.21/06 13/02/99  11.15.52  by  Rene Brun
@@ -54,6 +59,9 @@ if $AFS <> '$AFS' then
    cxxdef = [cxxdef]//' -DAFS'
 endif
 
++IF,THREAD.
+   cxxdef = [cxxdef]//' -DR__THREAD'
++ENDIF
 
 if [2] = 'g' then
    cxxdbg = -g
@@ -87,14 +95,14 @@ if [machine] = 'HPUX' then
    GL/CR CXX g++
    GL/CR CC  gcc
    GL/CR LD  g++
-   GL/CR CXXOPT [cxxdbg]//' -fPIC -fno-rtti -fno-exceptions -c'
+   GL/CR CXXOPT [cxxdbg]//' -fPIC -c'
    GL/CR CCOPT  [ccdbg]//' -fPIC -c'
    GL/CR LDOPT  [cxxdbg]//' -o'
    GL/CR SLOPT  [cxxdbg]//' -shared -fPIC -o'
    GL/CR LIBS   '-L$ROOTSYS/lib '//[rlibs]//' -lXpm -lX11 -lm -ldld'
    GL/CR LIBSX  '$ROOTSYS/lib/libXpm.a -lX11'
 
-   GL/CR CICXXOPT [cxxdbg]//' -fPIC -fno-rtti -fno-exceptions -DG__REGEXP _
+   GL/CR CICXXOPT [cxxdbg]//' -fPIC -DG__REGEXP _
            -DG__UNIX -DG__SHAREDLIB -D_POSIX2_SOURCE -DG__ROOT _
            -DG__REDIRECTIO -c'
    GL/CR CICCOPT  [ccdbg]//' -fPIC -DG__REGEXP -DG__UNIX -DG__SHAREDLIB _
@@ -105,7 +113,7 @@ if [machine] = 'HPUX' then
    GL/CR CXX aCC
    GL/CR CC  cc
    GL/CR LD  aCC
-   GL/CR CXXOPT [cxxdbg]//' +W70,495,740,749,829 -DR__ACC -z +Z -c'
+   GL/CR CXXOPT [cxxdbg]//' +W70,495,740,749,823,829 -DR__ACC -z +Z -c'
    GL/CR CCOPT  [ccdbg]//' -Ae -z +Z -c'
    GL/CR LDOPT  [cxxdbg]//' -z -Wl,+s -Wl,-E -o'
    GL/CR SLOPT  [cxxdbg]//' -b -z -Wl,+vnocompatwarnings -o'
@@ -156,7 +164,7 @@ elseif [machine] = 'IBMRT' then
    GL/CR CXX g++
    GL/CR CC  gcc
    Gl/CR LD  g++
-   GL/CR CXXOPT [cxxdbg]//' -D_AIX41 -U_AIX32 -DR__AIXGCC -fsigned-char  -c'
+   GL/CR CXXOPT [cxxdbg]//' -D_AIX41 -U_AIX32 -DR__AIXGCC -fsigned-char -c'
    GL/CR CCOPT  [ccdbg]//' -DR__AIXGCC -fsigned-char -c'
    GL/CR LDOPT  [cxxdbg]//' -o'
    GL/CR SLOPT  [cxxdbg]//' -shared -o'
@@ -223,7 +231,7 @@ elseif [machine] = 'SOLARIS' .OR. [machine] = 'SOLARISPC' then
    GL/CR CXX /opt/SUNWspro/bin/CC
    GL/CR CC  /opt/SUNWspro/bin/cc
    GL/CR LD  /opt/SUNWspro/bin/CC
-   GL/CR CXXOPT [cxxdbg]//' -KPIC -I/usr/openwin/include -D__SunOS_5_6 -c'
+   GL/CR CXXOPT [cxxdbg]//' -KPIC -I/usr/openwin/include -c'
    GL/CR CCOPT  [ccdbg]//' -KPIC -I/usr/openwin/include -c'
    GL/CR LDOPT  [cxxdbg]//' -o'
    GL/CR SLOPT  [cxxdbg]//' -G -o'
@@ -237,6 +245,9 @@ elseif [machine] = 'SOLARIS' .OR. [machine] = 'SOLARISPC' then
           -DG__OSFDLL -DG__ROOT -DG__REDIRECTIO -c'
    GL/CR CILDOPT  [cxxdbg]//' -o'
    GL/CR CILIBS   '-L$ROOTSYS/lib -lCint -lm -ltermcap -ldl -L/usr/ccs/lib -lgen'
++ENDIF.
++IF,SUNOS56.
+   CXXOPT = '-D__SunOS_5_6 '//[CXXOPT]
 +ENDIF.
    ALIAS/C bind_lib 'exec bind_lib_solaris' C
 *---------------------------------------------------------------------------
@@ -266,14 +277,14 @@ elseif [machine] = 'ALPHA' then
    GL/CR CXX g++
    GL/CR CC  gcc
    Gl/CR LD  g++
-   GL/CR CXXOPT [cxxdbg]//' -c -fPIC -fno-rtti -fno-exceptions -mcpu=ev5 -D__osf__ -D__alpha'
-   GL/CR CCOPT  [ccdbg]//' -c -fPIC -mcpu=ev5'
+   GL/CR CXXOPT [cxxdbg]//' -fPIC -mcpu=ev5 -D__osf__ -D__alpha -c'
+   GL/CR CCOPT  [ccdbg]//' -fPIC -mcpu=ev5 -c'
    GL/CR LDOPT  [cxxdbg]//' -o'
    GL/CR SLOPT  [cxxdbg]//' -Wl,-expect_unresolved,* -shared -o'
    GL/CR LIBS   '-L$ROOTSYS/lib '//[rlibs]//' -lXpm -lX11 -lm -ltermcap'
    GL/CR LIBSX  '$ROOTSYS/lib/libXpm.a -lX11'
 
-   GL/CR CICXXOPT [cxxdbg]//' -fPIC -fno-rtti -fno-exceptions -mcpu=ev5 _
+   GL/CR CICXXOPT [cxxdbg]//' -fPIC -mcpu=ev5 _
                  -DG__REGEXP -DG__UNIX -DG__SHAREDLIB _
                  -DG__OSFDLL -DG__ROOT -DG__REDIRECTIO -c'
    GL/CR CICCOPT  [ccdbg]//' -fPIC -mcpu=ev5 -DG__REGEXP -DG__UNIX -DG__SHAREDLIB _
@@ -316,26 +327,26 @@ elseif [machine] = 'ALPHA' then
       ALIAS/C bind_lib 'exec bind_lib_vms' C
    else
       if [2] <> 'g' then
-         cxxdbg = '-O '//[cxxdef]
+         cxxdbg = '-O0 '//[cxxdef]
       endif
       select ALPHACXX
       GL/CR CXX cxx
       GL/CR CC  cc
       GL/CR LD  cxx
 +IF,CXX6
-      GL/CR CXXOPT [cxxdbg]//' -nostdnew -D__osf__ -D__alpha -c'
+      GL/CR CXXOPT [cxxdbg]//' -trapuv -nortti -nostdnew -Dcxxbug -D__osf__ -D__alpha -c'
 +ELSE
-      GL/CR CXXOPT [cxxdbg]//' -oldcxx -D__osf__ -D__alpha -c'
+      GL/CR CXXOPT [cxxdbg]//' -oldcxx -Dcxxbug -D__osf__ -D__alpha -c'
 +ENDIF
-      GL/CR CCOPT  [ccdbg]//'  -D__osf__ -D__alpha -c'
+      GL/CR CCOPT  [ccdbg]//' -D__osf__ -D__alpha -c'
       GL/CR LDOPT  [cxxdbg]//' -o'
       GL/CR SLOPT  [cxxdbg]//' -Wl,-expect_unresolved,* -shared -o'
       GL/CR LIBS   '-L$ROOTSYS/lib '//[rlibs]//' -lXpm -lX11 -lm -lPW'
       GL/CR LIBSX  '$ROOTSYS/lib/libXpm.a -lX11'
 
 +IF,CXX6
-      GL/CR CICXXOPT [cxxdbg]//' -nostdnew -DG__DECCXX -DG__REGEXP -DG__UNIX -DG__SHAREDLIB _
-                 -DG__OSFDLL  -DG__ROOT -DG__REDIRECTIO -c'
+      GL/CR CICXXOPT [cxxdbg]//' -trapuv -nortti -nostdnew -DG__DECCXX -DG__REGEXP -DG__UNIX -DG__SHAREDLIB _
+                 -DG__OSFDLL -DG__ROOT -DG__REDIRECTIO -c'
 +ELSE
       GL/CR CICXXOPT [cxxdbg]//' -oldcxx -DG__DECCXX -DG__REGEXP -DG__UNIX -DG__SHAREDLIB _
                  -DG__OSFDLL -DG__ROOT -DG__REDIRECTIO -c'
@@ -370,14 +381,14 @@ elseif [machine] = 'SGI' then
    GL/CR CXX g++
    GL/CR CC  gcc
    Gl/CR LD  g++
-   GL/CR CXXOPT [cxxdbg]//' -fsigned-char -Wall -fPIC -fno-rtti -fno-exceptions -c'
+   GL/CR CXXOPT [cxxdbg]//' -fsigned-char -Wall -fPIC -c'
    GL/CR CCOPT  [ccdbg]//' -fsigned-char -fPIC -c'
    GL/CR LDOPT  [cxxdbg]//' -Wl,-u,__builtin_new -Wl,-u,__builtin_delete -Wl,-u,__nw__FUiPv -o'
    GL/CR SLOPT  [cxxdbg]//' -shared -o'
    GL/CR LIBS   '-L$ROOTSYS/lib '//[rlibs]//' -lXpm -lX11 -lstdc++ -lm'
    GL/CR LIBSX  '$ROOTSYS/lib/libXpm.a -lX11'
 
-   GL/CR CICXXOPT [cxxdbg]//' -fsigned-char -Wall -fPIC -fno-rtti -fno-exceptions -DG__REGEXP1 -DG__UNIX -DG__SHAREDLIB _
+   GL/CR CICXXOPT [cxxdbg]//' -fsigned-char -Wall -fPIC -DG__REGEXP1 -DG__UNIX -DG__SHAREDLIB _
                  -DG__OSFDLL -DG__SIGNEDCHAR -DG__ROOT -DG__REDIRECTIO -c'
    GL/CR CICCOPT  [ccdbg]//' -fsigned-char -fPIC  -DG__REGEXP1 -DG__UNIX -DG__SHAREDLIB _
                  -DG__OSFDLL -DG__SIGNEDCHAR -DG__ROOT -DG__REDIRECTIO -c'
@@ -416,7 +427,7 @@ elseif [machine] = 'SGI' then
    GL/CR LDOPT  [cxxdbg]//' -n32 -o'
    GL/CR SLOPT  [cxxdbg]//' -n32 -shared -o'
    GL/CR F77    f77
-   GL/CR F77OPT '-n32 -static -g  -c '
+   GL/CR F77OPT '-n32 -static -g -c '
    GL/CR LIBS   '-L$ROOTSYS/lib '//[rlibs]//' -lXpm -lX11 -lm -lPW -ldl'
    GL/CR LIBSX  '-lXpm -lX11'
 
@@ -445,6 +456,9 @@ elseif [machine] = 'SGI' then
    GL/CR CILDOPT  [cxxdbg]//' -o'
    GL/CR CILIBS   '-L$ROOTSYS/lib -lCint -lm -ltermcap -lbsd -lgen -ldl'
 +ENDIF.
++IF,IRIX62.
+   CXXOPT = '-DSGI_REL=62 '//[CXXOPT]
++ENDIF
    ALIAS/C bind_lib 'exec bind_lib_sgi' C
 *---------------------------------------------------------------------------
 elseif [machine] = 'LINUX' then
@@ -466,7 +480,7 @@ elseif [machine] = 'LINUX' then
    GL/CR CXXOPT [cxxdbg]//' -fPIC -I$ROOTSYS/src -c'
    GL/CR CCOPT  [ccdbg]//' -Wall -fPIC -c'
 +ENDIF.
-   GL/CR F77OPT [f77dbg]//' -c -Nx800 -NC200 '
+   GL/CR F77OPT [f77dbg]//' -Nx800 -NC200 -c'
    GL/CR LDOPT  [cxxdbg]//' -o'
    GL/CR SLOPT  [cxxdbg]//' -o'
    GL/CR LIBS   '-L$ROOTSYS/lib '//[rlibs]//' -L/usr/X11R6/lib  _
@@ -487,16 +501,13 @@ elseif [machine] = 'LINUX' then
    GL/CR CC  gcc
    GL/CR F77 fort77
 +IF,GLIBC.
-+IF,EGCS.
-      cxxdbg = [cxxdbg]//' -fno-rtti -fno-exceptions'
-+ENDIF.
    GL/CR CXXOPT [cxxdbg]//' -DR__GLIBC -Wall -fPIC -I$ROOTSYS/src -c'
    GL/CR CCOPT  [ccdbg]//' -DR__GLIBC -Wall -fPIC -c'
 +ELSE.
    GL/CR CXXOPT [cxxdbg]//' -Wall -fPIC -I$ROOTSYS/src -c'
    GL/CR CCOPT  [ccdbg]//' -Wall -fPIC -c'
 +ENDIF.
-   GL/CR F77OPT [f77dbg]//' -c -Nx800 -NC200 '
+   GL/CR F77OPT [f77dbg]//' -Nx800 -NC200 -c'
    GL/CR LDOPT  [cxxdbg]//' -o'
    GL/CR SLOPT  [cxxdbg]//' -shared -o'
 +IF,EGCS.
@@ -525,15 +536,15 @@ elseif [machine] = 'LINUX' then
 *---------------------------------------------------------------------------
 elseif [machine] = 'HIUX' then
 *             This is an non-tested procedure for Hitachi/HIUX under gcc
-   cxxdbg = ' -O2  -DR__NOSTATS -fno-rtti -fno-exceptions '
-   ccdbg  = ' -O2  -DR__NOSTATS -fno-rtti -fno-exceptions '
+   cxxdbg = ' -O2  -DR__NOSTATS '
+   ccdbg  = ' -O2  -DR__NOSTATS '
    f77dbg = ' -O2 '
 
    GL/CR CXX g++
    GL/CR CC  gcc
    GL/CR LD  g++
    GL/CR F77 g77
-   GL/CR F77OPT [f77dbg]//' -c -Nx800 -NC200 '
+   GL/CR F77OPT [f77dbg]//' -Nx800 -NC200 -c'
    GL/CR CXXOPT [cxxdbg]//' -shared -fPIC -I/usr/include/X11R5 -c'
    GL/CR CCOPT  [ccdbg]//' -shared -fPIC -I$ROOTSYS/include -I/usr/include/X11R5 -c'
    GL/CR LDOPT  [cxxdbg]//' -Wl,+s -o'

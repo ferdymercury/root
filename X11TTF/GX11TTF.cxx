@@ -1,3 +1,4 @@
+//*CMZ :  2.22/02 26/05/99  13.49.18  by  Fons Rademakers
 //*CMZ :  2.21/06 12/02/99  08.12.46  by  Rene Brun
 //*CMZ :  2.21/04 26/01/99  11.54.22  by  Fons Rademakers
 //*CMZ :  2.21/01 11/01/99  10.58.43  by  Fons Rademakers
@@ -5,20 +6,22 @@
 //*CMZ :  2.20/01 02/12/98  18.00.27  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   21/11/98
 
+/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Fons Rademakers.                                  *
+ * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
  *                                                                       *
  * Permission to use, copy, modify and distribute this software and its  *
  * documentation for non-commercial purposes is hereby granted without   *
  * fee, provided that the above copyright notice appears in all copies   *
  * and that both the copyright notice and this permission notice appear  *
  * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose.                         *
- * It is provided "as is" without express or implied warranty.           *
+ * suitability of this software for any purpose. It is provided "as is"  *
+ * without express or implied warranty.                                  *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -76,7 +79,7 @@ TTFInit::TTFInit()
 static TTFInit gTTFInit;
 
 
-// Class (actually strcuture) containing character description
+// Class (actually structure) containing character description
 
 class TTChar : public TObject {
 
@@ -992,6 +995,7 @@ TTChar *TGX11TTF::AllocChar(UInt_t code, UInt_t size, const char *fontname)
    c->fDescent  = int(TTCeil(metrics.bbox.yMax - metrics.bbox.yMin - metrics.bearingY) >> 6);
    c->fAscent   = bitmap.rows - c->fDescent;
    c->fXoff     = int(metrics.bearingX >> 6);
+   if (c->fXoff < 0) c->fXoff = 0;
    c->fFontName = fontname;
    c->fCharlen  = int(metrics.advance >> 6);
    c->fBitmap   = (UChar_t *)bitmap.bitmap;

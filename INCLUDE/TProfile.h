@@ -1,4 +1,4 @@
-//*CMZ :          19/03/99  00.01.22  by  Rene Brun
+//*CMZ :  2.22/00 07/04/99  18.22.28  by  Rene Brun
 //*CMZ :  2.21/01 05/01/99  16.20.59  by  Rene Brun
 //*CMZ :  2.00/11 17/08/98  15.14.16  by  Rene Brun
 //*CMZ :  2.00/08 25/05/98  10.06.15  by  Rene Brun
@@ -8,20 +8,22 @@
 #ifndef ROOT_TProfile
 #define ROOT_TProfile
 
+/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Fons Rademakers.                                  *
+ * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
  *                                                                       *
  * Permission to use, copy, modify and distribute this software and its  *
  * documentation for non-commercial purposes is hereby granted without   *
  * fee, provided that the above copyright notice appears in all copies   *
  * and that both the copyright notice and this permission notice appear  *
  * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose.                         *
- * It is provided "as is" without express or implied warranty.           *
+ * suitability of this software for any purpose. It is provided "as is"  *
+ * without express or implied warranty.                                  *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -73,7 +75,7 @@ public:
     virtual void    Copy(TObject &hnew);
     virtual void    Divide(TH1 *h1);
     virtual void    Divide(TH1 *h1, TH1 *h2, Float_t c1=1, Float_t c2=1, Option_t *option=""); // *MENU*
-    virtual void    DrawCopy(Option_t *option="");
+    virtual TH1    *DrawCopy(Option_t *option="");
     virtual Int_t   Fill(Axis_t x, Axis_t y);
     virtual Int_t   Fill(Axis_t x, Axis_t y, Stat_t w);
     virtual void    FillN(Int_t ntimes, Axis_t *x, Axis_t *y, Double_t *w, Int_t stride=1);
@@ -81,6 +83,8 @@ public:
     virtual Stat_t  GetBinError(Int_t bin);
     virtual Stat_t  GetBinEntries(Int_t bin);
     Option_t       *GetErrorOption() const;
+    virtual Float_t GetYmin() {return fYmin;}
+    virtual Float_t GetYmax() {return fYmax;}
     virtual void    Multiply(TH1 *h1);
     virtual void    Multiply(TH1 *h1, TH1 *h2, Float_t c1=1, Float_t c2=1, Option_t *option=""); // *MENU*
     virtual void    Reset(Option_t *option="");

@@ -1,3 +1,4 @@
+//*CMZ :  2.22/07 05/07/99  15.37.31  by  Fons Rademakers
 //*CMZ :  2.00/11 17/08/98  15.14.15  by  Rene Brun
 //*CMZ :  2.00/10 27/07/98  18.49.19  by  Fons Rademakers
 //*CMZ :  2.00/08 26/05/98  17.25.15  by  Fons Rademakers
@@ -8,20 +9,22 @@
 #ifndef ROOT_TCollection
 #define ROOT_TCollection
 
+/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Fons Rademakers.                                  *
+ * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
  *                                                                       *
  * Permission to use, copy, modify and distribute this software and its  *
  * documentation for non-commercial purposes is hereby granted without   *
  * fee, provided that the above copyright notice appears in all copies   *
  * and that both the copyright notice and this permission notice appear  *
  * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose.                         *
- * It is provided "as is" without express or implied warranty.           *
+ * suitability of this software for any purpose. It is provided "as is"  *
+ * without express or implied warranty.                                  *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -135,11 +138,14 @@ public:
    TIter(const TCollection *col, Bool_t dir = kIterForward)
         : fIterator(col ? col->MakeIterator(dir) : 0) { }
    TIter(TIterator *it) : fIterator(it) { }
-   virtual         ~TIter() { SafeDelete(fIterator) }
-   TObject        *operator()() { return fIterator ? fIterator->Next() : 0; }
-   TObject        *Next() { return fIterator ? fIterator->Next() : 0; }
-   Option_t       *GetOption() const { return fIterator ? fIterator->GetOption() : ""; }
-   void            Reset() { if (fIterator) fIterator->Reset(); }
+   TIter(const TIter &iter);
+   TIter &operator=(const TIter &rhs);
+   virtual            ~TIter() { SafeDelete(fIterator) }
+   TObject           *operator()() { return fIterator ? fIterator->Next() : 0; }
+   TObject           *Next() { return fIterator ? fIterator->Next() : 0; }
+   const TCollection *GetCollection() const { return fIterator ? fIterator->GetCollection() : 0; }
+   Option_t          *GetOption() const { return fIterator ? fIterator->GetOption() : ""; }
+   void               Reset() { if (fIterator) fIterator->Reset(); }
 
    ClassDef(TIter,0)  //Iterator wrapper
 };

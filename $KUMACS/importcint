@@ -1,3 +1,7 @@
+*CMZ :  2.22/09 11/07/99  11.48.29  by  Fons Rademakers
+*CMZ :  2.22/05 15/06/99  11.31.53  by  Fons Rademakers
+*CMZ :  2.22/04 03/06/99  16.18.02  by  Fons Rademakers
+*CMZ :  2.22/01 21/04/99  18.18.44  by  Fons Rademakers
 *CMZ :  2.00/09 19/06/98  11.16.32  by  Rene Brun
 *CMZ :  2.00/06 12/05/98  17.39.23  by  Rene Brun
 *CMZ :  1.00/00 18/02/97  16.48.53  by  Fons Rademakers
@@ -19,7 +23,7 @@ seq .
 *
 ci -a -k -is ~/cint/*.h ~/cint/src/*.h
 ci -a -k -is ~/cint/*.h ~/cint/src/*.h
-ci -a -k -is ~/cint/*.h ~/cint/platform/aixdlfcn/dlfcn.h
+ci -a -k -is ~/cint/*.h ~/cint/platform/aixdlfcn/aixdlfcn.h
 ci -a -k     ~/cint/lib/stream/*.h
 ci -a -k     ~/cint/lib/stdstrct/*.h
 pur
@@ -35,7 +39,7 @@ ci -a -t C -is ~/cint/src/*.c
 ci -a -t C,IF=SUN -is ~/cint/src/sunos.c
 ci -a -t C,IF=WINNT -is ~/cint/src/winnt.c
 ci -a -t C,IF=MAC -is ~/cint/src/macos.c
-ci -a -t C,IF=IBM -is ~/cint/platform/aixdlfcn/dlfcn.c
+ci -a -t C,IF=IBM3 -is ~/cint/platform/aixdlfcn/dlfcn.c
 pur
 mess *** Import C++ files from cint directory
 ci -a -t C++ -is ~/cint/*.cxx
@@ -58,7 +62,6 @@ al
 ci -a -t TEXT,IF=SYMANTEC -is ~/cint/platform/symantec/src/libcint.def
 ci -a -t TEXT,IF=WIN32,IF=-SYMANTEC -is ~/cint/platform/visual/src/libcint.def
 
-
 **=============Import CINT include files required at run time
 cd cintinclude
 exec deleteall
@@ -70,6 +73,86 @@ ci -a -k -is ~/cint/include/*.h
 ci -a -k -is ~/cint/include/*.h
 pur
 al
+*
+*-- import std:: version of C headers (i.e. the ones with .h extension)
+*
+cd cintstdinclude
+exec deleteall
+seq .
+ci -a -k -is ~/cint/include/cassert ~/cint/include/cctype ~/cint/include/cerrno _
+             ~/cint/include/cfloat ~/cint/include/climits ~/cint/include/clocale _
+             ~/cint/include/cmath ~/cint/include/complex ~/cint/include/csetjmp _
+             ~/cint/include/csignal ~/cint/include/cstdarg ~/cint/include/cstddef _
+             ~/cint/include/cstdio ~/cint/include/cstdlib ~/cint/include/cstring _
+             ~/cint/include/ctime ~/cint/include/cwchar ~/cint/include/cwctype _
+             ~/cint/include/iostream ~/cint/include/ostream ~/cint/include/sstream _
+             ~/cint/include/iosfwd
+ci -a -k -is ~/cint/include/cassert ~/cint/include/cctype ~/cint/include/cerrno _
+             ~/cint/include/cfloat ~/cint/include/climits ~/cint/include/clocale _
+             ~/cint/include/cmath ~/cint/include/complex ~/cint/include/csetjmp _
+             ~/cint/include/csignal ~/cint/include/cstdarg ~/cint/include/cstddef _
+             ~/cint/include/cstdio ~/cint/include/cstdlib ~/cint/include/cstring _
+             ~/cint/include/ctime ~/cint/include/cwchar ~/cint/include/cwctype _
+             ~/cint/include/iostream ~/cint/include/ostream ~/cint/include/sstream _
+             ~/cint/include/iosfwd
+pur
+al
+**=============Import CINT STL include files required at run time
+cd cintstl
+exec deleteall
+seq .
+*
+*-- the following command must be executed two times
+*
+ci -a -k -is ~/cint/stl/*.h
+ci -a -k -is ~/cint/stl/*.h
+pur
+al
+
+* these includes have the same KEEP name as the previous ones (same include minus
+* extension .h)
+cd cintstdstl
+exec deleteall
+seq .
+ci -a -k -is ~/cint/stl/algorithm ~/cint/stl/bitset ~/cint/stl/bool ~/cint/stl/deque _
+             ~/cint/stl/functional ~/cint/stl/iterator ~/cint/stl/limits _
+             ~/cint/stl/list ~/cint/stl/map ~/cint/stl/memory ~/cint/stl/multimap _
+             ~/cint/stl/multiset ~/cint/stl/numeric ~/cint/stl/pair ~/cint/stl/queue _
+             ~/cint/stl/set ~/cint/stl/stack ~/cint/stl/string ~/cint/stl/utility _
+             ~/cint/stl/valarray ~/cint/stl/vector
+ci -a -k -is ~/cint/stl/algorithm ~/cint/stl/bitset ~/cint/stl/bool ~/cint/stl/deque _
+             ~/cint/stl/functional ~/cint/stl/iterator ~/cint/stl/limits _
+             ~/cint/stl/list ~/cint/stl/map ~/cint/stl/memory ~/cint/stl/multimap _
+             ~/cint/stl/multiset ~/cint/stl/numeric ~/cint/stl/pair ~/cint/stl/queue _
+             ~/cint/stl/set ~/cint/stl/stack ~/cint/stl/string ~/cint/stl/utility _
+             ~/cint/stl/valarray ~/cint/stl/vector
+pur
+al
+**=============Import CINT STL include files required for precompilation
+cd cintprecstl
+exec deleteall
+seq .
+ci -a -k -is ~/cint/lib/prec_stl/algorithm ~/cint/lib/prec_stl/bitset _
+             ~/cint/lib/prec_stl/deque ~/cint/lib/prec_stl/functional _
+             ~/cint/lib/prec_stl/functional ~/cint/lib/prec_stl/iterator _
+             ~/cint/lib/prec_stl/list ~/cint/lib/prec_stl/map _
+             ~/cint/lib/prec_stl/memory ~/cint/lib/prec_stl/multimap _
+             ~/cint/lib/prec_stl/multiset ~/cint/lib/prec_stl/queue _
+             ~/cint/lib/prec_stl/set ~/cint/lib/prec_stl/stack _
+             ~/cint/lib/prec_stl/string ~/cint/lib/prec_stl/utility _
+             ~/cint/lib/prec_stl/valarray ~/cint/lib/prec_stl/vector
+ci -a -k -is ~/cint/lib/prec_stl/algorithm ~/cint/lib/prec_stl/bitset _
+             ~/cint/lib/prec_stl/deque ~/cint/lib/prec_stl/functional _
+             ~/cint/lib/prec_stl/functional ~/cint/lib/prec_stl/iterator _
+             ~/cint/lib/prec_stl/list ~/cint/lib/prec_stl/map _
+             ~/cint/lib/prec_stl/memory ~/cint/lib/prec_stl/multimap _
+             ~/cint/lib/prec_stl/multiset ~/cint/lib/prec_stl/queue _
+             ~/cint/lib/prec_stl/set ~/cint/lib/prec_stl/stack _
+             ~/cint/lib/prec_stl/string ~/cint/lib/prec_stl/utility _
+             ~/cint/lib/prec_stl/valarray ~/cint/lib/prec_stl/vector
+pur
+al
+**=============Reset
 seq .
 set c c++ -lan
 author [saveauthor]

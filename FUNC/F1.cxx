@@ -1,3 +1,8 @@
+//*CMZ :  2.22/10 27/07/99  15.46.21  by  Rene Brun
+//*CMZ :  2.22/09 10/07/99  21.35.45  by  Rene Brun
+//*CMZ :  2.22/07 05/07/99  19.26.51  by  Rene Brun
+//*CMZ :  2.22/05 17/06/99  10.02.15  by  Rene Brun
+//*CMZ :  2.22/00 05/04/99  16.42.07  by  Rene Brun
 //*CMZ :  2.21/07 02/03/99  16.39.53  by  Rene Brun
 //*CMZ :  2.21/05 09/02/99  12.30.16  by  Rene Brun
 //*CMZ :  2.21/02 18/01/99  12.19.48  by  Rene Brun
@@ -14,20 +19,22 @@
 //*CMZ :  1.03/09 05/12/97  16.49.56  by  Fons Rademakers
 //*-- Author :    Rene Brun   18/08/95
 
+/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Fons Rademakers.                                  *
+ * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
  *                                                                       *
  * Permission to use, copy, modify and distribute this software and its  *
  * documentation for non-commercial purposes is hereby granted without   *
  * fee, provided that the above copyright notice appears in all copies   *
  * and that both the copyright notice and this permission notice appear  *
  * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose.                         *
- * It is provided "as is" without express or implied warranty.           *
+ * suitability of this software for any purpose. It is provided "as is"  *
+ * without express or implied warranty.                                  *
  *************************************************************************/
 
 #include <fstream.h>
@@ -44,6 +51,7 @@
 #include "TInterpreter.h"
 
 TF1 *gF1 = 0;
+const Int_t kNoStats   = BIT(9);
 
 ClassImp(TF1)
 
@@ -71,7 +79,7 @@ ClassImp(TF1)
 //End_Html
 //
 //      Example of a function of type B
-//   TF1 *f1 = new TF1("f1","[0]x*sin([1]*x",-3,3);
+//   TF1 *f1 = new TF1("f1","[0]*x*sin([1]*x)",-3,3);
 //    This creates a function of variable x with 2 parameters.
 //    The parameters must be initialized via:
 //      f1->SetParameter(0,value_first_parameter);
@@ -243,6 +251,7 @@ TF1::TF1(const char *name,void *fcn, Float_t xmin, Float_t xmax, Int_t npar)
    fMinimum    = -1111;
    fMaximum    = -1111;
    fMethodCall = 0;
+   fNdim       = 1;
    if (!fcn) return;
    TF1 *f1old = (TF1*)gROOT->GetListOfFunctions()->FindObject(name);
    if (f1old) delete f1old;
@@ -317,7 +326,7 @@ TF1::TF1(const char *name,Double_t (*fcn)(Double_t *, Double_t *), Float_t xmin,
    fMinimum    = -1111;
    fMaximum    = -1111;
    fMethodCall = 0;
-
+   fNdim       = 1;
 //*-*- Store formula in linked list of formula in ROOT
 
    SetName((char *)name);
@@ -485,7 +494,7 @@ void TF1::Draw(Option_t *option)
 }
 
 //______________________________________________________________________________
-void TF1::DrawCopy(Option_t *option)
+ TF1 *TF1::DrawCopy(Option_t *option)
 {
 //*-*-*-*-*-*-*-*Draw a copy of this function with its current attributes*-*-*
 //*-*            ========================================================
@@ -506,6 +515,7 @@ void TF1::DrawCopy(Option_t *option)
    TF1 *newf1 = new TF1();
    Copy(*newf1);
    newf1->AppendPad(option);
+   return newf1;
 }
 
 //______________________________________________________________________________
@@ -539,7 +549,7 @@ void TF1::DrawPanel()
    }
    TList *lc = (TList*)gROOT->GetListOfCanvases();
    if (!lc->FindObject("drawpanelhist")) {
-      char cmd[] = "drawpanelhist = new TDrawPanelHist(\"drawpanelhist\",\"Hist Draw Panel\",330,450)";
+      char cmd[] = "TDrawPanelHist *drawpanelhist = new TDrawPanelHist(\"drawpanelhist\",\"Hist Draw Panel\",330,450);";
       gInterpreter->ProcessLine(cmd);
       return;
    }
@@ -627,7 +637,7 @@ void TF1::ExecuteEvent(Int_t event, Int_t px, Int_t py)
 //______________________________________________________________________________
 TH1F *TF1::GetHistogram()
 {
-// return a pointer to teh histogram used to vusualize the function
+// return a pointer to the histogram used to vusualize the function
 
    if (fHistogram) return fHistogram;
 
@@ -695,6 +705,7 @@ Double_t TF1::GetRandom()
    Float_t r  = gRandom->Rndm();
    Int_t bin  = TMath::BinarySearch(fNpx,fIntegral,r);
    Float_t dy = fIntegral[bin+1] - fIntegral[bin];
+//printf(" r=%g, bin=%d, dy=%g, dx=%f, I[%d]=%g, I[%d]=%g\n",r,bin,dy,dx,bin,fIntegral[bin],bin,fIntegral[bin+1]);
    if (dy > 0) return fXmin + (r-fIntegral[bin])*dx/dy +dx*bin;
    else        return fXmin + dx*bin;
 }
@@ -1263,6 +1274,7 @@ void TF1::Paint(Option_t *option)
    }
 
 //*-*- Copy Function attributes to histogram attributes
+   fHistogram->SetBit(kNoStats);
    fHistogram->SetMinimum(fMinimum);
    fHistogram->SetMaximum(fMaximum);
    fHistogram->SetLineColor(GetLineColor());
@@ -1295,12 +1307,18 @@ void TF1::Save(Float_t xmin, Float_t xmax)
 {
     // Save values of function in array fSave
 
-   if (fSave != 0) {fSave = 0; delete [] fSave;}
+   if (fSave != 0) {delete [] fSave; fSave = 0;}
    fNsave = fNpx;
    if (fNsave <= 0) return;
    fSave  = new Double_t[fNsave+10];
    Int_t i;
    Float_t dx = (xmax-xmin)/fNsave;
+   if (dx <= 0) {
+      dx = (fXmax-fXmin)/fNsave;
+      fNsave--;
+      xmin = fXmin +0.5*dx;
+      xmax = fXmax -0.5*dx;
+   }
    Double_t xv[1];
    InitArgs(xv,fParams);
    for (i=0;i<=fNsave;i++) {
@@ -1371,7 +1389,7 @@ void TF1::SetNpx(Int_t npx)
 //*-*-*-*-*-*-*-*Set the number of points used to draw the function*-*-*-*-*-*
 //*-*            ==================================================
 
-   if(npx > 4 && npx < 10000) fNpx = npx;
+   if(npx > 4 && npx < 100000) fNpx = npx;
    Update();
 }
 
@@ -1461,8 +1479,11 @@ void TF1::Streamer(TBuffer &b)
       b << fNpfits;
       b << fMinimum;
       b << fMaximum;
+      Int_t saved = 0;
+      if (fType > 0 && fNsave <= 0) { saved = 1; Save(0,0);}
       b << fNsave;
       if (fNsave > 0) b.WriteArray(fSave, fNsave+10);
+      if (saved) {delete [] fSave; fSave = 0; fNsave = 0;}
    }
 }
 

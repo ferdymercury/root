@@ -1,3 +1,4 @@
+//*CMZ :  2.22/07 05/07/99  16.50.10  by  Rene Brun
 //*CMZ :  2.21/05 09/02/99  01.10.37  by  Fons Rademakers
 //*CMZ :  2.21/04 05/02/99  13.01.10  by  Fons Rademakers
 //*CMZ :  2.20/05 12/12/98  17.45.20  by  Rene Brun
@@ -13,20 +14,22 @@
 #ifndef ROOT_TPad
 #define ROOT_TPad
 
+/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Fons Rademakers.                                  *
+ * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
  *                                                                       *
  * Permission to use, copy, modify and distribute this software and its  *
  * documentation for non-commercial purposes is hereby granted without   *
  * fee, provided that the above copyright notice appears in all copies   *
  * and that both the copyright notice and this permission notice appear  *
  * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose.                         *
- * It is provided "as is" without express or implied warranty.           *
+ * suitability of this software for any purpose. It is provided "as is"  *
+ * without express or implied warranty.                                  *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -143,7 +146,7 @@ public:
    virtual void     Divide(Int_t nx=1, Int_t ny=1, Float_t xmargin=0.01, Float_t ymargin=0.01, Int_t color=0); // *MENU*
    virtual void     Draw(Option_t *option="");
    virtual void     DrawClassObject(TObject *obj, Option_t *option="");
-   virtual void     DrawFrame(Float_t xmin, Float_t ymin, Float_t xmax, Float_t ymax, Text_t *title="");
+   TH1F            *DrawFrame(Float_t xmin, Float_t ymin, Float_t xmax, Float_t ymax, Text_t *title="");
    void             DrawLine(Float_t x1, Float_t y1, Float_t x2, Float_t y2);
    void             DrawLineNDC(Float_t u1, Float_t v1, Float_t u2, Float_t v2);
    void             DrawText(Float_t x, Float_t y, const Text_t *text);

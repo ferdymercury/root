@@ -1,3 +1,4 @@
+*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers
 *CMZ :  1.03/08 16/11/97  19.39.32  by  Fons Rademakers
 *-- Author :    Valery Fine(fine@vxcern.cern.ch)   02/09/96
 *
@@ -15,6 +16,9 @@ rem ==================================================
 Echo Restore name of the AA_README file
 cd root
 ren AA_REA~1 AA_README
+ren AA_INT~1 AA_INSTALL
+ren AA_LIC~1 AA_LICENSE
+ren AA_CRE~1 AA_CREDITS
 
 Echo Restore the name of Tutorial directory
 ren TUTORI~1 tutorials

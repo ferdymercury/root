@@ -1,3 +1,4 @@
+//*CMZ :  2.22/02 17/05/99  16.36.47  by  Fons Rademakers
 //*CMZ :  2.21/08 15/03/99  08.40.02  by  Fons Rademakers
 //*CMZ :  2.21/07 05/03/99  15.21.25  by  Fons Rademakers
 //*CMZ :  2.21/06 15/02/99  19.21.42  by  Fons Rademakers
@@ -11,20 +12,22 @@
 #ifndef ROOT_TMapFile
 #define ROOT_TMapFile
 
+/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Fons Rademakers.                                  *
+ * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
  *                                                                       *
  * Permission to use, copy, modify and distribute this software and its  *
  * documentation for non-commercial purposes is hereby granted without   *
  * fee, provided that the above copyright notice appears in all copies   *
  * and that both the copyright notice and this permission notice appear  *
  * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose.                         *
- * It is provided "as is" without express or implied warranty.           *
+ * suitability of this software for any purpose. It is provided "as is"  *
+ * without express or implied warranty.                                  *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -186,6 +189,7 @@ inline TMapFile *TMapFile::WhichMapFile(void *addr)
    TObjLink *lnk = ((TList *)gROOT->GetListOfMappedFiles())->LastLink();
    while (lnk) {
       TMapFile *mf = (TMapFile*)lnk->GetObject();
+      if (!mf) return 0;
       if ((ULong_t)addr >= mf->fBaseAddr + mf->fOffset &&
           (ULong_t)addr <  mf->fBaseAddr + mf->fOffset + mf->fSize)
          return mf;

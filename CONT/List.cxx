@@ -1,3 +1,5 @@
+//*CMZ :  2.22/07 05/07/99  18.54.53  by  Fons Rademakers
+//*CMZ :  2.22/01 18/05/99  12.44.57  by  Fons Rademakers
 //*CMZ :  2.21/01 12/01/99  11.47.03  by  Fons Rademakers
 //*CMZ :  2.20/00 12/11/98  13.57.41  by  Fons Rademakers
 //*CMZ :  2.00/13 20/10/98  12.33.43  by  Fons Rademakers
@@ -6,20 +8,22 @@
 //*CMZ :  1.03/09 03/12/97  02.13.01  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   10/08/95
 
+/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Fons Rademakers.                                  *
+ * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
  *                                                                       *
  * Permission to use, copy, modify and distribute this software and its  *
  * documentation for non-commercial purposes is hereby granted without   *
  * fee, provided that the above copyright notice appears in all copies   *
  * and that both the copyright notice and this permission notice appear  *
  * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose.                         *
- * It is provided "as is" without express or implied warranty.           *
+ * suitability of this software for any purpose. It is provided "as is"  *
+ * without express or implied warranty.                                  *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -376,11 +380,11 @@ TObject *TList::FindObject(const Text_t *name) const
    // name is not found. This method overrides the generic FindObject()
    // of TCollection for efficiency reasons.
 
+   if (!name) return 0;
    TObjLink *lnk = FirstLink();
-
    while (lnk) {
       TObject *obj = lnk->GetObject();
-      if (!strcmp(name, obj->GetName())) return obj;
+      if (obj->GetName() && !strcmp(name, obj->GetName())) return obj;
       lnk = lnk->Next();
    }
    return 0;
@@ -678,6 +682,49 @@ TListIter::TListIter(const TList *l, Bool_t dir)
 {
    // Create a new list iterator. By default the iteration direction
    // is kIterForward. To go backward use kIterBackward.
+}
+
+//______________________________________________________________________________
+TListIter::TListIter(const TListIter &iter)
+{
+   // Copy ctor.
+
+   fList      = iter.fList;
+   fCurCursor = iter.fCurCursor;
+   fCursor    = iter.fCursor;
+   fDirection = iter.fDirection;
+   fStarted   = iter.fStarted;
+}
+
+//______________________________________________________________________________
+TIterator &TListIter::operator=(const TIterator &rhs)
+{
+   // Overridden assignment operator.
+
+   if (this != &rhs && rhs.IsA() == TListIter::Class()) {
+      const TListIter &rhs1 = (const TListIter &)rhs;
+      fList      = rhs1.fList;
+      fCurCursor = rhs1.fCurCursor;
+      fCursor    = rhs1.fCursor;
+      fDirection = rhs1.fDirection;
+      fStarted   = rhs1.fStarted;
+   }
+   return *this;
+}
+
+//______________________________________________________________________________
+TListIter &TListIter::operator=(const TListIter &rhs)
+{
+   // Overloaded assignment operator.
+
+   if (this != &rhs) {
+      fList      = rhs.fList;
+      fCurCursor = rhs.fCurCursor;
+      fCursor    = rhs.fCursor;
+      fDirection = rhs.fDirection;
+      fStarted   = rhs.fStarted;
+   }
+   return *this;
 }
 
 //______________________________________________________________________________

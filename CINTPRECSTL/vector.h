@@ -1,0 +1,140 @@
+/*CMZ :  2.22/10 23/07/99  14.42.34  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   23/07/99*/
+// lib/prec_stl/vector
+
+#ifndef PREC_STL_VECTOR
+#define PREC_STL_VECTOR
+#pragma link off global PREC_STL_VECTOR;
+#pragma link C++ nestedtypedef;
+#pragma link C++ nestedclass;
+
+// Imported from ANSI/ISO C++ 1997/Nov draft
+// Got some ideas from Scott Snyder, Fermi-lab
+// Modified by Masaharu Goto
+
+#include <iterator>
+#include <memory>
+
+#if defined(G__GNUC)
+template<class T,class Allocator=alloc>
+#elif defined(G__HPUX)
+template<class T,class Allocator=allocator>
+#else
+template<class T,class Allocator=allocator<T> >
+#endif
+class vector {
+ public:
+  typedef T value_type;
+  typedef T* iterator;
+  typedef const T* const_iterator;
+#if defined(G__GNUC) || defined(G__HPUX)
+  typedef value_type* pointer;
+  typedef const value_type* const_pointer;
+  typedef value_type& reference;
+  typedef const value_type& const_reference;
+  typedef size_t size_type;
+  typedef ptrdiff_t difference_type;
+#else
+  typedef typename Allocator::pointer pointer;
+  typedef typename Allocator::const_pointer const_pointer;
+  typedef typename Allocator::reference reference;
+  typedef typename Allocator::const_reference const_reference;
+  typedef typename Allocator::size_type size_type;
+  typedef typename Allocator::difference_type difference_type;
+#endif
+
+#if 0
+  typedef reverse_iterator<iterator> reverse_iterator;
+#else
+#ifdef G__VISUAL
+  class reverse_iterator : public _Ranit<T,difference_type>
+#else
+  class reverse_iterator : public random_access_iterator<T,difference_type>
+#endif
+	{
+   public:
+    reverse_iterator(const reverse_iterator& x) ;
+#ifndef G__BORLAND
+    reverse_iterator& operator=(const reverse_iterator& x) ;
+#endif
+    T* base() ;
+    T& operator*() const ;
+    reverse_iterator& operator++();
+    reverse_iterator operator++(int a);
+    reverse_iterator& operator--();
+    reverse_iterator operator--(int a);
+    reverse_iterator operator+(long n);
+    reverse_iterator operator-(long n);
+    reverse_iterator& operator+=(long n);
+    reverse_iterator& operator-=(long n);
+    T& operator[](long n) ;
+   private:
+  };
+#endif
+  friend bool operator==(const vector::reverse_iterator& x
+                        ,const vector::reverse_iterator& y) const;
+  friend bool operator!=(const vector::reverse_iterator& x
+                        ,const vector::reverse_iterator& y) const;
+
+  typedef reverse_iterator const_reverse_iterator;
+
+#if 0
+  friend random_access_iterator_tag
+    iterator_category(random_access_iterator<T,vector::difference_type>& x);
+  //friend random_access_iterator_tag
+  //iterator_category(vector::reverse_iterator& x);
+#endif
+
+  iterator begin(void) const ;
+  iterator end(void) const ;
+  reverse_iterator rbegin(void) const ;
+  reverse_iterator rend(void) const ;
+  size_type size(void) const ;
+  size_type max_size(void) const ;
+  size_type capacity(void) const ;
+  bool empty(void) const ;
+  T& operator[](size_type n) ;
+  vector(void) ;
+  vector(size_type n,const T& value=T()) ;
+  vector(const vector& x) ;
+  vector(const_iterator first,const_iterator last) ;
+  ~vector(void) ;
+  vector& operator=(const vector& x);
+  void reserve(size_type n) ;
+  T& front(void) ;
+  T& back(void) ;
+  void push_back(const T& x) ;
+  void swap(vector& x);
+  iterator insert(iterator position,const T& x);
+  void insert(iterator position,const_iterator first,const_iterator last);
+  void insert(iterator position,size_type n,const T& x);
+  void pop_back(void) ;
+  void erase(iterator position) ;
+  void erase(iterator first,iterator last) ;
+
+#if 0
+  // doesn't work on VC++ 5.0
+  friend bool operator==(const vector& x, const vector& y);
+  friend bool operator< (const vector& x, const vector& y);
+  friend bool operator!=(const vector& x, const vector& y);
+  friend bool operator> (const vector& x, const vector& y);
+  friend bool operator>=(const vector& x, const vector& y);
+  friend bool operator<=(const vector& x, const vector& y);
+#endif
+  // specialized algorithms:
+#ifndef G__GNUC
+  // doesn't work on egcs
+  friend void swap(vector& x, vector& y);
+#endif
+
+
+  // Generic algorithm
+  friend void reverse(vector::iterator first,vector::iterator last);
+  //friend void reverse(vector::reverse_iterator first,vector::reverse_itetator last);
+
+
+  // iterator_category resolution
+  //friend random_access_iterator_tag iterator_category(vector::iterator x);
+};
+
+

@@ -1,3 +1,4 @@
+//*CMZ :  2.22/01 12/05/99  16.06.10  by  Fons Rademakers
 //*CMZ :  2.21/04 05/02/99  16.43.33  by  Fons Rademakers
 //*CMZ :  2.00/10 16/07/98  13.40.44  by  Fons Rademakers
 //*CMZ :  2.00/08 24/04/98  19.41.09  by  Fons Rademakers
@@ -9,20 +10,22 @@
 #ifndef ROOT_TString
 #define ROOT_TString
 
+/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Fons Rademakers.                                  *
+ * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
  *                                                                       *
  * Permission to use, copy, modify and distribute this software and its  *
  * documentation for non-commercial purposes is hereby granted without   *
  * fee, provided that the above copyright notice appears in all copies   *
  * and that both the copyright notice and this permission notice appear  *
  * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose.                         *
- * It is provided "as is" without express or implied warranty.           *
+ * suitability of this software for any purpose. It is provided "as is"  *
+ * without express or implied warranty.                                  *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -31,7 +34,7 @@
 //                                                                      //
 // Basic string class.                                                  //
 //                                                                      //
-// Include is called TString to prevent name clash on Macintosh.        //
+// Cannot be stored in a TCollection... use TObjString instead.         //
 //                                                                      //
 //////////////////////////////////////////////////////////////////////////
 
@@ -255,14 +258,18 @@ public:
    TString&     Append(const TString& s);
    TString&     Append(const TString& s, Ssiz_t n);
    TString&     Append(char c, Ssiz_t rep = 1);   // Append c rep times
+   Bool_t       BeginsWith(const char *s,      ECaseCompare cmp = kExact) const;
+   Bool_t       BeginsWith(const TString& pat, ECaseCompare cmp = kExact) const;
    Ssiz_t       Capacity() const         { return Pref()->Capacity(); }
    Ssiz_t       Capacity(Ssiz_t n);
+   TString&     Chop();
    int          CompareTo(const char *cs,    ECaseCompare cmp = kExact) const;
    int          CompareTo(const TString& st, ECaseCompare cmp = kExact) const;
    Bool_t       Contains(const char *pat,    ECaseCompare cmp = kExact) const;
    Bool_t       Contains(const TString& pat, ECaseCompare cmp = kExact) const;
    TString      Copy() const;
    const char  *Data() const                 { return fData; }
+   Bool_t       EndsWith(const char *pat,    ECaseCompare cmp = kExact) const;
    Ssiz_t       First(char c) const          { return Pref()->First(c); }
    Ssiz_t       First(const char *cs) const  { return Pref()->First(cs); }
    unsigned     Hash(ECaseCompare cmp = kExact) const;
@@ -380,6 +387,12 @@ inline TString& TString::operator+=(const char* cs)
 inline TString& TString::operator+=(const TString& s)
 { return Append(s.Data(), s.Length()); }
 
+inline Bool_t TString::BeginsWith(const char* s, ECaseCompare cmp) const
+{ return Index(s, strlen(s), (Ssiz_t)0, cmp) == 0; }
+
+inline Bool_t TString::BeginsWith(const TString& pat, ECaseCompare cmp) const
+{ return Index(pat.Data(), pat.Length(), (Ssiz_t)0, cmp) == 0; }
+
 inline Bool_t TString::Contains(const TString& pat, ECaseCompare cmp) const
 { return Index(pat.Data(), pat.Length(), (Ssiz_t)0, cmp) != kNPOS; }
 
@@ -421,10 +434,13 @@ inline TString& TString::Prepend(const TString& s, Ssiz_t n)
 { return Replace(0, 0, s.Data(), TMath::Min(n, s.Length())); }
 
 inline TString& TString::Remove(Ssiz_t pos)
-{ return Replace(pos, Length()-pos, 0, 0); }
+{ return Replace(pos, TMath::Max(0, Length()-pos), 0, 0); }
 
 inline TString& TString::Remove(Ssiz_t pos, Ssiz_t n)
 { return Replace(pos, n, 0, 0); }
+
+inline TString& TString::Chop()
+{ return Remove(TMath::Max(0,Length()-1)); }
 
 inline TString& TString::Replace(Ssiz_t pos, Ssiz_t n, const char* cs)
 { return Replace(pos, n, cs, strlen(cs)); }

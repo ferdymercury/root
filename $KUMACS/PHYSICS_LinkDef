@@ -1,3 +1,5 @@
+*CMZ :  2.22/06 23/06/99  08.19.49  by  Rene Brun
+*CMZ :  2.22/00 29/03/99  05.51.23  by  Rene Brun
 *CMZ :  2.21/06 15/02/99  09.30.26  by  Rene Brun
 *CMZ :  2.21/03 20/01/99  14.43.50  by  Fons Rademakers
 *-- Author :    Fons Rademakers   20/01/99
@@ -8,7 +10,21 @@
 #pragma link off all functions;
 
 #pragma link C++ class TLorentzVector;
-#pragma link C++ class TVector2;
+#pragma link C++ function operator * (Double_t , const TLorentzVector &);
+
+#pragma link C++ class TLorentzRotation;
+
 #pragma link C++ class TVector3;
+#pragma link C++ function operator + ( const TVector3 &, const TVector3 & );
+#pragma link C++ function operator - ( const TVector3 &, const TVector3 & );
+#pragma link C++ function operator * ( const TVector3 &, const TVector3 & );
+#pragma link C++ function operator * ( const TVector3 &, Double_t  );
+#pragma link C++ function operator * ( Double_t, const TVector3 & );
+#pragma link C++ function operator * ( const TMatrix &, const TVector3 &);
+
+#pragma link C++ class TVector2;
+
+#pragma link C++ class TRotation;
 
 #endif
+

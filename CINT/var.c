@@ -1,6 +1,5 @@
-/*CMZ :          19/03/99  15.13.05  by  Rene Brun*/
-/*CMZ :  2.21/08 17/03/99  13.15.39  by  Fons Rademakers*/
-/*-- Author :    Masaharu Goto   17/03/99*/
+/*CMZ :  2.22/10 23/07/99  14.42.20  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   23/07/99*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -25,6 +24,15 @@
 
 #include "common.h"
 
+char G__declctor[G__LONGLINE];
+#ifndef G__OLDIMPLEMENTATION1103
+extern int G__const_noerror;
+#endif
+
+#ifndef G__OLDIMPLEMENTATION1119
+static int G__getarraydim=0;
+extern int G__dynconst;
+#endif
 
 /**************************************************************************
 * G__ASSIGN_VAR()
@@ -34,12 +42,20 @@
 *  MUST CORRESPOND TO G__letstruct
 **************************************************************************/
 
-#ifndef G__OLDIMPLEMENTATION457
 
 #define G__ASSIGN_VAR(SIZE,CASTTYPE,CONVFUNC)                             \
 switch(G__var_type) {                                                     \
+case 'v': /* int var[10]; *var=expr; assign to value */                   \
+        if(var->paran[ig15]==paran+1&&p_inc==0) { /*1070*/                \
+          ++paran;                                                        \
+	}                                                                 \
+	else {                                                            \
+	  G__assign_error(item,&result);                                  \
+	  break;                                                          \
+	}                                         /*end 1070*/            \
 case 'p': /* var = expr; assign to value */                               \
 	if(var->paran[ig15]<=paran) { /*assign to type element*/          \
+    /*1068*/    result.ref=G__struct_offset+var->p[ig15]+p_inc*SIZE;      \
 		*(CASTTYPE *)(G__struct_offset+var->p[ig15]+p_inc*SIZE)   \
 			= (CASTTYPE)CONVFUNC(result);                     \
 		break;                                                    \
@@ -55,37 +71,11 @@ case 'p': /* var = expr; assign to value */                               \
 		break;                                                    \
 	}                                                                 \
 default :                                                                 \
-	G__assign_error(item);                                            \
+	G__assign_error(item,&result);                                    \
 	break;                                                            \
 }                                                                         \
 G__var_type = 'p';                                                        \
 return(result);
-
-#else
-
-#define G__ASSIGN_VAR(SIZE,CASTTYPE,CONVFUNC)                             \
-switch(G__var_type) {                                                     \
-case 'p': /* var = expr; assign to value */                               \
-	if(var->paran[ig15]<=paran) { /*assign to type element*/          \
-		*(CASTTYPE *)(G__struct_offset+var->p[ig15]+p_inc*SIZE)   \
-			= (CASTTYPE)CONVFUNC(result);                     \
-		break;                                                    \
-	}                                                                 \
-	else if(G__funcheader && paran==0 && isupper(result.type)) {      \
-		/* K&$ style 'type a[]' initialization */                 \
-	        if(var->p[ig15]!=G__PINVALID) free((void*)var->p[ig15]);  \
-		var->p[ig15] = result.obj.i;                              \
-		var->statictype[ig15]=G__COMPILEDGLOBAL;                  \
-		break;                                                    \
-	}                                                                 \
-default :                                                                 \
-	G__assign_error(item);                                            \
-	break;                                                            \
-}                                                                         \
-G__var_type = 'p';                                                        \
-return(result);
-
-#endif
 
 /**************************************************************************
 * G__ASSIGN_PVAR()
@@ -102,20 +92,26 @@ switch(G__var_type) {                                                        \
 case 'v': /* *var = expr ;  assign to contents of pointer */                 \
   switch(var->reftype[ig15]) {                                               \
   case G__PARANORMAL:                                                        \
-    if(INT_MAX!=var->varlabel[ig15][1])                                      \
+    if(INT_MAX!=var->varlabel[ig15][1]) {   /* below line 1068 */            \
+  result.ref=(*(long*)(G__struct_offset+var->p[ig15]+p_inc*G__LONGALLOC));   \
   *(CASTTYPE *)(*(long *)(G__struct_offset+var->p[ig15]+p_inc*G__LONGALLOC)) \
 	= (CASTTYPE)CONVFUNC(result);                                        \
-    else                                                                     \
+    }                                                                        \
+    else {                                                                   \
+      result.ref=G__struct_offset+var->p[ig15]+p_inc*G__LONGALLOC;/*1068*/   \
       *(long *)(G__struct_offset+var->p[ig15]+p_inc*G__LONGALLOC)            \
 			= G__int(result);                                    \
+    }                                                                        \
     break;                                                                   \
   case G__PARAP2P:                                                           \
     if(var->paran[ig15]<paran) {                                             \
       address = G__struct_offset+var->p[ig15]+p_inc*G__LONGALLOC;            \
+      result.ref=(*(((long*)(*(long *)address))+pp_inc));  /*1068*/          \
       *(CASTTYPE*)(*(((long*)(*(long *)address))+pp_inc))                    \
 		= (CASTTYPE)CONVFUNC(result);                                \
     }                                                                        \
-    else {                                                                   \
+    else { /* below line 1068*/                                              \
+   result.ref=(*(long *)(G__struct_offset+var->p[ig15]+p_inc*G__LONGALLOC)); \
       *(long *)(*(long *)(G__struct_offset+var->p[ig15]+p_inc*G__LONGALLOC)) \
 	= G__int(result);                                                    \
     }                                                                        \
@@ -127,10 +123,12 @@ case 'p': /* var = expr; assign to pointer variable  */                      \
     if(var->paran[ig15]<paran) {                                             \
       address = G__struct_offset+var->p[ig15]+p_inc*G__LONGALLOC;            \
       if(G__PARANORMAL==var->reftype[ig15]) {                                \
+        result.ref=(((long)(*(long *)address))+pp_inc); /*1068*/             \
         *(((CASTTYPE *)(*(long *)address))+pp_inc)                           \
 		= (CASTTYPE)CONVFUNC(result);                                \
       }                                                                      \
       else if(var->paran[ig15]==paran-1) {                                   \
+        result.ref=(long)(((long*)(*(long *)address))+pp_inc);/*1068*/       \
         *(((long*)(*(long *)address))+pp_inc)                                \
 		= G__int(result);                                            \
       }                                                                      \
@@ -143,11 +141,13 @@ case 'p': /* var = expr; assign to pointer variable  */                      \
  	for (ip = 0; ip < paran-1; ip++) {				     \
           phyaddress=(long*)phyaddress[para[ip].obj.i];                      \
  	}                                                                    \
+        /*1068 Dont know how to implement*/                                  \
         ((CASTTYPE*)(phyaddress))[para[paran-1].obj.i] = CONVFUNC(result);   \
         /* ron eastman change ends */                                        \
       }                                                                      \
     }                                                                        \
     else {                                                                   \
+      result.ref=(G__struct_offset+var->p[ig15]+p_inc*G__LONGALLOC);/*1068*/ \
       *(long *)(G__struct_offset+var->p[ig15]+p_inc*G__LONGALLOC)            \
 			= G__int(result);                                    \
     }                                                                        \
@@ -161,7 +161,7 @@ case 'p': /* var = expr; assign to pointer variable  */                      \
   }                                                                          \
   break;                                                                     \
 default :                                                                    \
-  G__assign_error(item);                                                     \
+  G__assign_error(item,&result);                                             \
   break;                                                                     \
 }
 
@@ -197,7 +197,7 @@ case 'p': /* var = expr; assign to pointer variable  */                      \
     }                                                                        \
     break;                                                                   \
 default :                                                                    \
-    G__assign_error(item);                                                   \
+    G__assign_error(item,&result);                                           \
     break;                                                                   \
 }
 
@@ -690,6 +690,23 @@ default : /* 'p' */                                                           \
    break;                                                                     \
 }
 
+#endif
+
+#ifndef G__OLDIMPLEMENTATION1135
+/******************************************************************
+* G__filescopeaccess()
+******************************************************************/
+int G__filescopeaccess(filenum,statictype)
+int filenum;
+int statictype;
+{
+  if(filenum==statictype) return(1);
+  while(statictype>=0) {
+    statictype = G__srcfile[statictype].included_from;
+    if(filenum==statictype) return(1);
+  }
+  return(0);
+}
 #endif
 
 #ifndef G__OLDIMPLEMENTATION674
@@ -1238,6 +1255,10 @@ int isdecl;
   int specialflag=0;
 #endif
 #endif
+  /* #define G__OLDIMPLEMENTATION1059 */
+#ifndef G__OLDIMPLEMENTATION1059
+  int save_scope_tagnum;
+#endif
 
 #ifdef G__ROOT
 #ifndef G__OLDIMPLEMENTATION481
@@ -1274,8 +1295,15 @@ int isdecl;
     break;
   }
 
+#ifndef G__OLDIMPLEMENTATION1059
+  save_scope_tagnum = scope_tagnum;
+#endif
+
   while(ilg<=G__GLOBAL+1) {
 
+#ifndef G__OLDIMPLEMENTATION1059
+    scope_tagnum = save_scope_tagnum;
+#endif
     /***********************************************
      * switch local and global for letvariable
      ************************************************/
@@ -1356,6 +1384,12 @@ int isdecl;
       accesslimit = G__PUBLIC;
       isbase=0;
       basen=0;
+#ifndef G__OLDIMPLEMENTATION1060
+      if (var && var == varglobal) {
+        isbase = 1;
+        baseclass = &G__globalusingnamespace;
+      }
+#endif
     }
     /* search for variable name and access rule match */
     do {
@@ -1366,7 +1400,12 @@ int isdecl;
 	  if(varhash==var->hash[ig15] &&
 	     strcmp(varname,var->varnamebuf[ig15])==0 &&
 	     (var->statictype[ig15]<0||
-	      G__ifile.filenum==var->statictype[ig15])&&
+#ifndef G__OLDIMPLEMENTATION1135
+	      G__filescopeaccess(G__ifile.filenum,var->statictype[ig15])
+#else
+	      G__ifile.filenum==var->statictype[ig15]
+#endif
+	     )&&
 	     (var->access[ig15]&accesslimit)) {
 	    *pig15 = ig15;
 	    return(var);
@@ -1427,6 +1466,17 @@ int isdecl;
 	  }
 	  ++basen;
 	}
+#ifndef G__OLDIMPLEMENTATION1059
+        /* Also search enclosing scopes. */
+        if (scope_tagnum >= 0 && baseclass != &G__globalusingnamespace &&
+	    -1!=G__struct.parent_tagnum[scope_tagnum]) {
+          scope_tagnum = G__struct.parent_tagnum[scope_tagnum];
+          basen =0;
+          baseclass = G__struct.baseclass[scope_tagnum];
+          var = G__struct.memvar[scope_tagnum];
+          goto next_base;
+        }
+#endif
 	isbase=0;
       }
     } while(isbase);
@@ -1817,6 +1867,13 @@ struct G__var_array *varglobal,*varlocal;
   int store_exec_memberfunc;
   int store_def_struct_member;
   int store_vartype;
+#ifndef G__OLDIMPLEMENTATION1119
+  int store_asm_wholefunction;
+  int store_no_exec_compile;
+  int store_no_exec;
+  int store_getarraydim;
+  int store_asm_noverflow;
+#endif
 
 #ifdef G__ASM
   if(G__asm_exec) {
@@ -2113,8 +2170,35 @@ struct G__var_array *varglobal,*varlocal;
     G__var_type = 'p';
   }
 
+#ifndef G__OLDIMPLEMENTATION1119
+  store_asm_wholefunction = G__asm_wholefunction;
+  store_no_exec_compile = G__no_exec_compile;
+  store_no_exec = G__no_exec;
+  store_getarraydim = G__getarraydim;
+  store_asm_noverflow = G__asm_noverflow;
+  if(G__decl) {
+    G__getarraydim=1;
+    if(store_asm_wholefunction) {
+      G__asm_wholefunction=0;
+      G__no_exec_compile=0;
+      G__no_exec=0;
+      G__asm_noverflow=0;
+    }
+  }
+#endif
+
   /* evaluate parameter */
-  for(ig15=0;ig15<paran;ig15++) para[ig15]=G__getexpr(parameter[ig15]);
+  for(ig15=0;ig15<paran;ig15++) {
+    para[ig15]=G__getexpr(parameter[ig15]);
+  }
+
+#ifndef G__OLDIMPLEMENTATION1119
+  G__asm_wholefunction = store_asm_wholefunction;
+  G__no_exec_compile = store_no_exec_compile;
+  G__no_exec = store_no_exec;
+  G__getarraydim = store_getarraydim;
+  G__asm_noverflow = store_asm_noverflow;
+#endif
 
   /* recover function call environment */
 #ifdef G__ASM
@@ -2144,10 +2228,21 @@ struct G__var_array *varglobal,*varlocal;
    *            global,global->next, global->next->next ,,,
    ***********************************************************/
 
+#ifndef G__OLDIMPLEMENTATION1119
+  /* avoid searching global variable when allocating in function (static)
+   * const in prerun */
+  if(G__func_now<0||!G__decl||!G__static_alloc||!G__constvar||!G__prerun)
+    var=G__searchvariable(varname,varhash,varlocal,varglobal,&G__struct_offset
+			  ,&store_struct_offset,&ig15
+			  ,G__decl||G__def_struct_member);
+  else
+    var = (struct G__var_array*)NULL;
+#else
   G__ASSERT(0==G__decl || 1==G__decl);
   var = G__searchvariable(varname,varhash,varlocal,varglobal,&G__struct_offset
 			  ,&store_struct_offset,&ig15
 			  ,G__decl||G__def_struct_member);
+#endif
 
 
 
@@ -2208,8 +2303,14 @@ struct G__var_array *varglobal,*varlocal;
      *******************************************************/
     G__ASSERT(0==G__decl || 1==G__decl);
     if(G__asm_noverflow) {
-      G__asm_gen_stvar(G__struct_offset,ig15,paran,var,item
-		       ,store_struct_offset,G__var_type);
+#ifndef G__OLDIMPLEMENTATION1073
+      if( (0==G__decl || !G__asm_wholefunction) ) { /* ??? */
+#endif
+	G__asm_gen_stvar(G__struct_offset,ig15,paran,var,item
+			 ,store_struct_offset,G__var_type);
+#ifndef G__OLDIMPLEMENTATION1073
+      }
+#endif
     }
     else if('u'==G__var_type&&G__AUTO==var->statictype[ig15]&&
 	    (G__decl||G__cppconstruct)) {
@@ -2270,11 +2371,13 @@ struct G__var_array *varglobal,*varlocal;
       /* check const variable */
       if((var->constvar[ig15])&&(G__funcheader==0)&&
 	 (tolower(var->type[ig15])!='p')) {
+#ifdef G__OLDIMPLEMENTATION1119
 	if(var->constvar[ig15]&G__LOCKVAR) {
 	  G__lockedvariable(var->varnamebuf[ig15]);
 	  G__var_type='p';
 	  return(result);
 	}
+#endif
 	if((0==G__prerun || G__COMPILEDGLOBAL==var->statictype[ig15])&&
 #ifndef G__OLDIMPLEMENTATION946
 	   !G__decl &&
@@ -2377,7 +2480,7 @@ struct G__var_array *varglobal,*varlocal;
 	 G__PARANORMAL==var->reftype[ig15]&&0==var->varlabel[ig15][1]&&
 #endif
 	 0==(*(long*)(G__struct_offset+var->p[ig15]))) {
-	G__assign_error(item);
+	G__assign_error(item,&result);
 	return(G__null);
       }
 #endif
@@ -2550,6 +2653,7 @@ struct G__var_array *varglobal,*varlocal;
 	  return(para[0]);
 	}
 	else {
+	  /* 1068 Don't know how to implement */
 	  G__letstruct(&result,p_inc,var,ig15,item,paran,G__struct_offset);
 	}
 	break;
@@ -2618,9 +2722,7 @@ struct G__var_array *varglobal,*varlocal;
 /* #ifdef G__ROOT */
   /* THIS PART HAS NOT BEEN PROVEN TO BE SAFE YET */
   G__ASSERT(0==G__decl || 1==G__decl);
-  if(G__decl||G__cppconstruct) {
-    result.ref = (long)(&var->p[ig15]);
-  }
+  if(G__decl||G__cppconstruct) result.ref = (long)(&var->p[ig15]);
 /* #endif G__ROOT */
 #endif
 
@@ -3213,6 +3315,15 @@ struct G__var_array *varglobal,*varlocal;
     G__hash(temp,varhash,itmpx);
     var = G__searchvariable(temp,varhash,varlocal,varglobal,&G__struct_offset
 			    ,&store_struct_offset,&ig15,0);
+#ifndef G__OLDIMPLEMENTATION1119
+    if(var) G__struct_offset = 0;
+    if(!var && G__getarraydim && !G__IsInMacro()) {
+      G__const_noerror=0;
+      G__genericerror("Error: Illegal array dimention (Ignore subsequent errors)");
+      *known2=1;
+      return(G__null);
+    }
+#endif
   }
 #endif
 
@@ -3222,6 +3333,21 @@ struct G__var_array *varglobal,*varlocal;
      * This is a very very long 'if{}' clause.
      *************************************************/
     if(var) {
+
+#ifndef G__OLDIMPLEMENTATION1119
+      if(G__getarraydim && !G__IsInMacro() &&
+	 'm'!=var->type[ig15]&&'p'!=var->type[ig15]&&
+	 (0==(G__CONSTVAR&var->constvar[ig15])||
+	  (G__DYNCONST&var->constvar[ig15]))) {
+        G__const_noerror=0;
+	G__genericerror("Error: Non-static-const variable in array dimention");
+	fprintf(G__serr," (cint allows this only in interactive command and special form macro which\n");
+	fprintf(G__serr,"  is special extension. It is not allowed in source code. Please ignore\n");
+	fprintf(G__serr,"  subsequent errors.)\n");
+	*known2=1;
+	return(G__null);
+      }
+#endif
 
 /* #define G__OLDIMPLEMENTATION793 */
 #ifndef G__OLDIMPLEMENTATION793
@@ -3316,6 +3442,7 @@ struct G__var_array *varglobal,*varlocal;
 #else
       if(G__no_exec_compile) {
 #endif
+#ifdef G__OLDIMPLEMENTATION1121
 	if(isupper(var->type[ig15])) {
 	  long dmy=0;
 	  result.ref = (long)(&dmy);
@@ -3324,6 +3451,7 @@ struct G__var_array *varglobal,*varlocal;
 	else {
 	  result.obj.reftype.reftype=G__PARANORMAL;
 	}
+#endif
 	*known2=1;
 	result.obj.d=0.0;
         switch(var->type[ig15]) {
@@ -3339,6 +3467,13 @@ struct G__var_array *varglobal,*varlocal;
 	  break;
 	}
 	G__returnvartype(&result,var,ig15,paran);
+#ifndef G__OLDIMPLEMENTATION1121
+	if(isupper(var->type[ig15])) {
+	  long dmy=0;
+	  result.ref = (long)(&dmy);
+	  G__getpointer2pointer(&result,var,ig15,paran);
+	}
+#endif
 	result.tagnum=var->p_tagtable[ig15];
 	result.typenum=var->p_typetable[ig15];
 	result.ref=G__struct_offset+var->p[ig15];
@@ -3672,6 +3807,7 @@ struct G__var_array *varglobal,*varlocal;
 
 
   if(done==0) { /* undefined variable */
+
     /*******************************************
      * if variable name not found, then search
      * for 'this' keywords
@@ -3735,6 +3871,16 @@ struct G__var_array *varglobal,*varlocal;
 
 }
 
+#ifndef G__OLDIMPLEMENTATION1013
+/******************************************************************
+* G__IsInMacro()
+******************************************************************/
+int G__IsInMacro()
+{
+  if(G__nfile>G__ifile.filenum) return(0);
+  else return(1);
+}
+#endif
 
 /******************************************************************
 * G__value G__getstructmem()
@@ -3810,6 +3956,19 @@ int objptr;  /* 1 : object , 2 : pointer */
 
   flag = 0;
 
+#ifndef G__OLDIMPLEMENTATION1065
+  if(strchr(tagname,'.') && (strchr(tagname,'+')|| strchr(tagname,'-')||
+			     strchr(tagname,'*')|| strchr(tagname,'/')||
+			     strchr(tagname,'%')|| strchr(tagname,'&')||
+			     strchr(tagname,'|')|| strchr(tagname,'^')||
+			     strchr(tagname,'!') )) {
+    result = G__getexpr(tagname);
+    if(result.type) flag=1;
+  }
+  if(flag) {
+  }
+  else
+#endif
   /****************************************************
    * Get entry pointer for the struct,union and
    * store it to a global variable G__store_struct_offset.
@@ -3863,6 +4022,17 @@ int objptr;  /* 1 : object , 2 : pointer */
       result = G__getfunction(tagname,&flag,G__CALLMEMFUNC);
     }
 
+#ifndef G__OLDIMPLEMENTATION1065
+    if(flag==0 && (strchr(tagname,'+')|| strchr(tagname,'-')||
+		   strchr(tagname,'*')|| strchr(tagname,'/')||
+		   strchr(tagname,'%')|| strchr(tagname,'&')||
+		   strchr(tagname,'|')|| strchr(tagname,'^')||
+		   strchr(tagname,'!') )) {
+      result = G__getexpr(tagname);
+      if(result.type) flag=1;
+    }
+#endif
+
     /*************************************************
      * if no function like that then return. error
      * message will be displayed by G__getitem().
@@ -3886,16 +4056,36 @@ int objptr;  /* 1 : object , 2 : pointer */
 
 #ifndef G__OLDIMPLEMENTATION925
   if(G__tagnum<0 || (isupper(result.type)&&result.obj.reftype.reftype)) {
-    /* ignore destructor to fundamemtal types and pointer */
+#ifndef G__OLDIMPLEMENTATION1080
+    if('~'!=membername[0]) {
+#ifndef G__OLDIMPLEMENTATION1103
+      if(0==G__const_noerror) {
+#endif
+	fprintf(G__serr
+		,"Error: non class,struct,union object %s used with . or ->"
+		,tagname);
+	G__genericerror((char*)NULL);
+#ifndef G__OLDIMPLEMENTATION1103
+      }
+#endif
+    }
+    /* else { ignore destructor to fundamemtal types and pointer } */
+#endif
     *known2=1;
     return(G__null);
   }
 #else
   if(G__tagnum<0) {
     *known2=1;
-    fprintf(G__serr,"Error: non class,struct,union object %s used with . or ->"
-	    ,tagname);
-    G__genericerror((char*)NULL);
+#ifndef G__OLDIMPLEMENTATION1103
+    if(0==G__const_noerror) {
+#endif
+      fprintf(G__serr,"Error: non class,struct,union object %s used with . or ->"
+	      ,tagname);
+      G__genericerror((char*)NULL);
+#ifndef G__OLDIMPLEMENTATION1103
+    }
+#endif
     return(G__null);
   }
 #endif
@@ -3924,12 +4114,13 @@ int objptr;  /* 1 : object , 2 : pointer */
   /****************************************************
    * check if . or -> matches
    ****************************************************/
-  if((isupper(result.type)&&1==objptr)||(islower(result.type)&&2==objptr)) {
-     /*
-    fprintf(G__serr,"Warning: check '.' and '->'");
+#ifndef G__ROOT
+  if(G__MAXFILE-1!=G__ifile.filenum &&
+     ((isupper(result.type)&&1==objptr)||(islower(result.type)&&2==objptr))) {
+    fprintf(G__serr,"Warning: wrong member access operator '.' or '->'");
     G__printlinenum();
-    */
   }
+#endif
 #endif
 
 #ifdef G__ASM
@@ -4152,12 +4343,13 @@ int objptr;  /* 1 : object , 2 : pointer */
   /****************************************************
    * check if . or -> matches
    ****************************************************/
-  if((isupper(result.type)&&1==objptr)||(islower(result.type)&&2==objptr)) {
-     /*
-    fprintf(G__serr,"Warning: check '.' and '->'");
+#ifndef G__ROOT
+  if(G__MAXFILE-1!=G__ifile.filenum &&
+     ((isupper(result.type)&&1==objptr)||(islower(result.type)&&2==objptr))) {
+    fprintf(G__serr,"Warning: wrong member access operator '.' or '->'");
     G__printlinenum();
-    */
   }
+#endif
 #endif
 
 #ifdef G__ASM
@@ -4295,22 +4487,17 @@ long G__struct_offset; /* used to be int */
 	}
       }
 
-      if(('u'==result->type||'i'==result->type) && -1!=result->tagnum) {
 #ifndef G__OLDIMPLEMENTATION738
-	if(result->obj.i)
-	  sprintf(ttt,"(%s)(%ld)"
-		  ,G__fulltagname(result->tagnum,1),result->obj.i);
-	else
-	  sprintf(ttt,"(%s)%ld"
-		  ,G__fulltagname(result->tagnum,1),result->obj.i);
+      if(-1!=result->tagnum&&('u'==result->type||'i'==result->type)) {
 #else
+      if(result->type=='u') {
+#endif
 	if(result->obj.i)
 	  sprintf(ttt,"(%s)(%ld)"
-		  ,G__struct.name[result->tagnum] ,result->obj.i);
+		  ,G__fulltagname(result->tagnum,1),result->obj.i);
 	else
 	  sprintf(ttt,"(%s)%ld"
-		  ,G__struct.name[result->tagnum] ,result->obj.i);
-#endif
+		  ,G__fulltagname(result->tagnum,1),result->obj.i);
       }
       else {
 	G__valuemonitor(*result,ttt);
@@ -4339,7 +4526,17 @@ long G__struct_offset; /* used to be int */
 	
 	ig2=0;
 	G__decl=0;
+#ifndef G__OLDIMPLEMENTATION1073
+	G__oprovld=1;
+#endif
 	G__getfunction(result7,&ig2 ,G__TRYCONSTRUCTOR);
+#ifndef G__OLDIMPLEMENTATION1073
+	G__oprovld=0;
+	if(G__asm_wholefunction && 0==ig2) {
+	  G__asm_gen_stvar(G__struct_offset,ig15,paran,var,item
+			   ,G__ASM_VARLOCAL,G__var_type);
+	}
+#endif
 	G__decl=1;
 	
 	G__store_struct_offset = store_struct_offset;
@@ -4482,7 +4679,11 @@ long G__struct_offset; /* used to be int */
 #endif /* ON674 */
 
 #ifdef G__ASM
-	if(G__asm_noverflow) {
+	if(G__asm_noverflow
+#ifndef G__OLDIMPLEMENTATION1073
+	   && store_asm_inst
+#endif
+	   ) {
 #ifdef G__ASM_DBG
 	  if(G__asm_dbg) fprintf(G__serr,"ST_VAR or ST_MSTR recovered no_exec_compile=%d\n",G__no_exec_compile);
 #endif
@@ -4544,14 +4745,14 @@ long G__struct_offset; /* used to be int */
       G__tagnum = store_tagnumX;
       G__store_struct_offset = store_struct_offsetX;
       if(0==done) {
-	G__assign_error(item);
+	G__assign_error(item,result);
       }
       G__letVvalue(&para,*result);
     }
     else
-      G__assign_error(item);
+      G__assign_error(item,result);
 #else
-    G__assign_error(item);
+    G__assign_error(item,result);
 #endif
     break;
   }
@@ -4678,8 +4879,9 @@ int pp_inc;
 	 */
 	if(G__no_exec_compile) return;
 #ifndef G__OLDIMPLEMENTATION1006
-	if('U'!=result.type && 'Y'!= result.type && 0!=result.obj.i) {
-	  G__assign_error(item);
+	if('U'!=result.type && 'Y'!= result.type && 0!=result.obj.i
+	   && ('u'!=result.type||result.obj.i==G__p_tempbuf->obj.ref)) {
+	  G__assign_error(item,&result);
 	  return;
 	}
 #endif
@@ -4700,7 +4902,7 @@ int pp_inc;
 	    = G__int(result)+baseoffset;
 	}
 	else {
-	  G__assign_error(item);
+	  G__assign_error(item,&result);
 	}
       }
     }
@@ -4718,7 +4920,7 @@ int pp_inc;
     }
     break;
   default:
-    G__assign_error(item);
+    G__assign_error(item,&result);
     break;
   }
 }
@@ -4884,32 +5086,56 @@ int parameter00;
   else { /* equal to G__prerun==1 */
     var=varglobal;
   }
-#ifndef G__OLDIMPLEMENTATION903
   if(!var) {
     fprintf(G__serr,"Error: Illegal assignment to %s",item);
     G__genericerror((char*)NULL);
     return(result);
   }
-#endif
-#ifndef G__OLDIMPLEMENTATION982
   if(G__def_struct_member && G__PARAREFERENCE==G__reftype) {
-    G__genericerror("Limitation: Reference member not supported. Please use pointer");
-    return(result);
-  }
+#ifndef G__OLDIMPLEMENTATION1088
+    if(G__NOLINK==G__globalcomp) {
 #endif
-#ifndef G__OLDIMPLEMENTATION983
+      G__genericerror("Limitation: Reference member not supported. Please use pointer");
+      return(result);
+#ifndef G__OLDIMPLEMENTATION1088
+    }
+    else if(G__access==G__PUBLIC) {
+      fprintf(G__serr,"Limitation: Reference member not accessible from the interpreter");
+      G__printlinenum();
+      G__access=G__PRIVATE;
+    }
+#endif
+  }
   if('U'==G__var_type&&'U'==result.type&&
      -1==G__ispublicbase(G__tagnum,result.tagnum,0)&&
      -1==G__ispublicbase(result.tagnum,G__tagnum,0)) {
-    G__genericerror("Error: Illegal initialization of pointer");
+    fprintf(G__serr,"Error: Illegal initialization of pointer, wrong type %s"
+	    ,G__type2string(result.type ,result.tagnum ,result.typenum
+			    ,result.obj.reftype.reftype,0));
+    G__genericerror((char*)NULL);
+    /* G__genericerror("Error: Illegal initialization of pointer"); */
     return(result);
   }
-#endif
 
   while(var->next) var=var->next;
 
+#ifndef G__OLDIMPLEMENTATION1089
+  if(0==G__definemacro&&G__NOLINK==G__globalcomp&&'p'==G__var_type
+#ifndef G__OLDIMPLEMENTATION1089
+     && G__automaticvar
+#endif
+     ) {
+    if(-1==result.tagnum) {
+      G__var_type=result.type;
+      fprintf(G__serr
+	   ,"Warning: Automatic variable %s allocated in global scope",item);
+      G__printlinenum();
+    }
+    else {
+#else
   if(0==G__definemacro&&G__NOLINK==G__globalcomp&&'p'==G__var_type&&
      -1!=result.tagnum) {
+#endif
      /* undeclared variable assignment of class/struct will create
       * a global object of pointer or reference */
     autoobjectflag=1;
@@ -4960,6 +5186,9 @@ int parameter00;
       }
     }
   }
+#ifndef G__OLDIMPLEMENTATION1089
+  }
+#endif
 
 #ifndef G__OLDIMPLEMENTATION448
   /***************************************************
@@ -5091,6 +5320,13 @@ int parameter00;
 	G__hash(ttt,varhash,ig25)
 	var->statictype[var->allvar] = G__LOCALSTATICBODY;
       }
+#ifndef G__OLDIMPLEMENTATION1091
+      else if(G__nfile<G__ifile.filenum) {
+	fprintf(G__serr,"Warning: 'static' ignored in '{ }' style macro");
+	G__printlinenum();
+	G__static_alloc=0;
+      }
+#endif
       else {
 	/****************************************
 	 * File scope static variable
@@ -5337,6 +5573,7 @@ int parameter00;
 
 #ifdef G__VARIABLEFPOS
   var->filenum[var->allvar] = G__ifile.filenum;
+  var->linenum[var->allvar] = G__ifile.line_number;
 #endif
 
   /*****************************************************************
@@ -5372,8 +5609,11 @@ int parameter00;
   var->reftype[var->allvar] = G__reftype;
 
   /* set const flag if it is a constant */
+#ifndef G__OLDIMPLEMENTATION1119
+  G__constvar |= G__dynconst;
+  G__dynconst=0;
+#endif
   var->constvar[ig15] = G__constvar ;
-
 
   /* allocate variable and pointer */
   var->allvar++;
@@ -5405,56 +5645,36 @@ int parameter00;
    * variable */
   if(G__asm_wholefunction) {
     if(
-#ifndef G__OLDIMPLEMENTATION523
-       ('u'==G__var_type && G__PARAREFERENCE!=G__reftype)
-       || (1==paran && '\0'==parameter00)
-#else
-       'u'==G__var_type
-       || G__PARAREFERENCE==G__reftype
-       || (1==paran && '\0'==parameter00)
+       /* G__funcheader case must be implemented, the following line is
+	* deleted */
+       ('u'==G__var_type && G__PARAREFERENCE!=G__reftype
+#ifndef G__OLDIMPLEMENTATION1073
+	&& G__funcheader
 #endif
-       ) {
+	) ||
+       (1==paran && '\0'==parameter00)) {
       G__abortbytecode();
       G__asm_wholefunc_default_cp=0;
-#ifndef G__OLDIMPLEMENTATION539
       G__no_exec=1;
       G__return=G__RETURN_NORMAL;
-#endif
 #ifdef G__ASM_DBG
-#ifndef G__OLDIMPLEMENTATION841
       if(G__asm_dbg) {
 	fprintf(G__serr,"bytecode compile aborted by automatic class object. Use pointer to class obj + new");
 	G__printlinenum();
       }
-#else
-      if(G__asm_dbg) fprintf(G__serr,"WHOLE FUNC COMPILE ABORTED\n");
-#endif
 #endif
       return(result);
     }
   }
 
-#ifndef G__OLDIMPLEMENTATION517
   if(G__asm_wholefunc_default_cp) {
     /* default param eval masked for bytecode func compilation, recovered */
     G__asm_noverflow=1;
   }
-#endif
 
   /* may need refinement */
   if(G__asm_noverflow && G__asm_wholefunction && 1==p_inc) {
     if(G__funcheader) {
-#ifdef G__OLDIMPLEMENTATION517
-      /* This part is not activated */
-      if(G__asm_wholefunc_default_cp) {
-#ifdef G__ASM_DBG
-	if(G__asm_dbg) fprintf(G__serr,"ISDEFAULT assigned %x\n",G__asm_cp);
-#endif	
-	G__asm_inst[G__asm_wholefunc_default_cp]=G__asm_cp;
-	G__asm_wholefunc_default_cp=0;
-      }
-#endif /* ON517 */
-#ifndef G__OLDIMPLEMENTATION523
       if(G__PARAREFERENCE==G__reftype) {
 #ifdef G__ASM_DBG
 	if(G__asm_dbg) fprintf(G__serr,"%3x: INIT_REF\n",G__asm_cp);
@@ -5469,9 +5689,6 @@ int parameter00;
       else {
 	G__asm_gen_stvar(0,ig15,paran,var,item,G__ASM_VARLOCAL,'p');
       }
-#else
-      G__asm_gen_stvar(0,ig15,paran,var,item,G__ASM_VARLOCAL,'p');
-#endif
 #ifdef G__ASM_DBG
       if(G__asm_dbg) fprintf(G__serr,"%3x: POP\n",G__asm_cp);
 #endif
@@ -5481,6 +5698,46 @@ int parameter00;
     else if(result.type && !G__static_alloc) {
       G__asm_gen_stvar(0,ig15,paran,var,item,G__ASM_VARLOCAL,'p');
     }
+#ifndef G__OLDIMPLEMENTATION1073
+    else if('u'==G__var_type && G__PARAREFERENCE!=G__reftype &&
+	    -1!=G__tagnum&&'e'!=G__struct.type[G__tagnum]) {
+      if(G__CPPLINK==G__struct.iscpplink[G__tagnum]) { /* precompiled class */
+	/* Move LD_FUNC instruction */
+	int ix;
+	G__inc_cp_asm(-5,0);
+	for(ix=4;ix>=0;ix--)
+	  G__asm_inst[G__asm_cp+ix+3] = G__asm_inst[G__asm_cp+ix];
+#ifdef G__ASM_DBG
+	if(G__asm_dbg) fprintf(G__serr ,"%3x: LD_CTOR_SETGVP %s index=%d paran=%d\n"
+			       ,G__asm_cp,item,ig15,paran);
+#endif
+	G__asm_inst[G__asm_cp]=G__CTOR_SETGVP;
+	G__asm_inst[G__asm_cp+1]=ig15;
+	G__asm_inst[G__asm_cp+2]=(long)var;
+	G__inc_cp_asm(3,0);
+	G__inc_cp_asm(5,0); /* increment for moved LD_FUNC instruction */
+      }
+      else { /* Interpreted class */
+#ifdef G__ASM_DBG
+	if(G__asm_dbg) fprintf(G__serr ,"%3x: LD_VAR  %s index=%d paran=%d\n"
+			       ,G__asm_cp,item,ig15,paran);
+#endif
+	G__asm_inst[G__asm_cp]=G__LD_LVAR;
+	G__asm_inst[G__asm_cp+1]=ig15;
+	G__asm_inst[G__asm_cp+2]=paran;
+	G__asm_inst[G__asm_cp+3]='p';
+	G__asm_inst[G__asm_cp+4]=(long)var;
+	G__inc_cp_asm(5,0);
+#ifdef G__ASM_DBG
+	if(G__asm_dbg) fprintf(G__serr ,"%3x: PUSHSTROS\n",G__asm_cp);
+	if(G__asm_dbg) fprintf(G__serr ,"%3x: SETSTROS\n",G__asm_cp+1);
+#endif
+	G__asm_inst[G__asm_cp]=G__PUSHSTROS;
+	G__asm_inst[G__asm_cp+1]=G__SETSTROS;
+	G__inc_cp_asm(2,0);
+      }
+    }
+#endif /* ON1073 */
   }
 #endif /* G__ASM_WHOLEFUNC */
 
@@ -5495,12 +5752,8 @@ int parameter00;
     else if('u'==G__var_type) {
       G__ASSERT(0==G__decl || 1==G__decl);
       if(G__decl) {
-#ifndef G__OLDIMPLEMENTATION799
 	if(G__reftype) G__redecl(var,ig15);
 	else G__class_2nd_decl_i(var,ig15);
-#else
-	G__class_2nd_decl_i(var,ig15);
-#endif
       }
       else if(G__cppconstruct) {
 	G__class_2nd_decl_c(var,ig15);
@@ -5553,6 +5806,9 @@ int parameter00;
    *****************************************************************/
   switch(G__var_type) {
 
+    /*********************************************************
+     * THIS PART MUST CORRESPOND TO G__ALLOC_VAR_REF
+     *********************************************************/
   case 'u': /* struct, union */
     if(G__struct.isabstract[G__tagnum]&&0==G__ansiheader&&0==G__funcheader
        &&G__PARANORMAL==G__reftype) {
@@ -5560,55 +5816,46 @@ int parameter00;
       G__genericerror((char*)NULL);
       var->hash[ig15]=0;
     }
+    /* type var; normal variable */
+    var->p[ig15] = G__malloc((p_inc),G__struct.size[G__tagnum], item);
+    /*******************************************
+     * bug fix  7 Jan 1992
+     * old: 'if(G__ansiheader!=0)'
+     * When pre-RUN with ANSI style header,
+     * G__int(result)==NULL and
+     * memcpy tried to copy data from address 0.
+     * This caused error on BSD.
+     * When G__CPLUSPLUS or G__IFUNCPARA are not
+     * specified, there are no problems.
+     *******************************************/
+    if(G__ansiheader!=0&&result.type!='\0'&& G__globalvarpointer==G__PVOID)
+      memcpy((void *)var->p[ig15] ,(void *)(G__int(result))
+	     ,(size_t)G__struct.size[var->p_tagtable[ig15]]);
+    result.obj.i = var->p[ig15];
+    break;
+
   case 'U': /* struct, union pointer */
-    /*********************************************************
-     * THIS PART MUST CORRESPOND TO G__ALLOC_VAR_REF
-     *********************************************************/
-    if(islower(G__var_type)) {
-      /* type var; normal variable */
-      var->p[ig15] = G__malloc((p_inc),G__struct.size[G__tagnum], item);
-      /*******************************************
-       * bug fix  7 Jan 1992
-       * old: 'if(G__ansiheader!=0)'
-       * When pre-RUN with ANSI style header,
-       * G__int(result)==NULL and
-       * memcpy tried to copy data from address 0.
-       * This caused error on BSD.
-       * When G__CPLUSPLUS or G__IFUNCPARA are not
-       * specified, there are no problems.
-       *******************************************/
-      if(G__ansiheader!=0&&result.type!='\0'&& G__globalvarpointer==G__PVOID)
-	memcpy((void *)var->p[ig15] ,(void *)(G__int(result))
-	       ,(size_t)G__struct.size[var->p_tagtable[ig15]]);
-      result.obj.i = var->p[ig15];
+    if(p_inc>1 && result.type!='\0') { /* char *argv[]; */
+      var->p[ig15] = G__int(result);
     }
-    else { /* type *var; pointer */
-      if(p_inc>1 && result.type!='\0') { /* char *argv[]; */
-	var->p[ig15] = G__int(result);
-      }
-      else {
-	var->p[ig15] = G__malloc((p_inc),G__LONGALLOC,item);
-	if((G__def_struct_member==0&&G__ASM_FUNC_NOP==G__asm_wholefunction)&&
-	   ((!G__static_alloc)||(G__prerun))&&
-	   (G__globalvarpointer==G__PVOID||result.type!='\0')) {
-#ifndef G__OLDIMPLEMENTATION657
-	  int baseoffset;
-	  if(-1!=(baseoffset=G__ispublicbase(var->p_tagtable[ig15]
-					     ,result.tagnum
-					     ,result.obj.i))) {
-	    *((long *)var->p[ig15])=G__int(result)+baseoffset;
-	  }
-	  else {
-	    *((long *)var->p[ig15])=G__int(result);
-	  }
-#else
+    else {
+      var->p[ig15] = G__malloc((p_inc),G__LONGALLOC,item);
+      if((G__def_struct_member==0&&G__ASM_FUNC_NOP==G__asm_wholefunction)&&
+	 ((!G__static_alloc)||(G__prerun))&&
+	 (G__globalvarpointer==G__PVOID||result.type!='\0')) {
+	int baseoffset;
+	if(-1!=(baseoffset=G__ispublicbase(var->p_tagtable[ig15]
+					   ,result.tagnum
+					   ,result.obj.i))) {
+	  *((long *)var->p[ig15])=G__int(result)+baseoffset;
+	}
+	else {
 	  *((long *)var->p[ig15])=G__int(result);
-#endif
 	}
       }
-      /* ensure returning 0 for not running constructor */
-      result.obj.i = 0;
     }
+    /* ensure returning 0 for not running constructor */
+    result.obj.i = 0;
     break;
 
 
@@ -5718,8 +5965,16 @@ int parameter00;
     var->p[ig15] = G__malloc(p_inc,G__P2MFALLOC,item);
     if((G__def_struct_member==0&&G__ASM_FUNC_NOP==G__asm_wholefunction)&&
        ((!G__static_alloc)||(G__prerun))&& result.obj.i &&
-       (G__globalvarpointer==G__PVOID||result.type!='\0'))
-	  memcpy((void*)var->p[ig15], (void*)result.obj.i,G__P2MFALLOC);
+       (G__globalvarpointer==G__PVOID||result.type!='\0')) {
+#ifdef G__PTR2MEMFUNC
+      if('C'==result.type)
+	*(long*)var->p[ig15] = result.obj.i;
+      else
+	memcpy((void*)var->p[ig15], (void*)result.obj.i,G__P2MFALLOC);
+#else
+      memcpy((void*)var->p[ig15], (void*)result.obj.i,G__P2MFALLOC);
+#endif
+    }
     break;
 
 
@@ -5740,12 +5995,18 @@ int parameter00;
 #ifndef G__OLDIMPLEMENTATION566
       if(-1!=var->tagnum) {
 	fprintf(G__serr,"Warning: Undeclared data member %s",item);
-	G__genericerror(NULL);
+	G__genericerror((char*)NULL);
 	return(result);
       }
 #endif
+#ifndef G__OLDIMPLEMENTATION1089
+      /* Following code will never be used */
+      fprintf(G__serr,"Error: Undeclared variable %s",item);
+      G__genericerror((char*)NULL);
+#else
       fprintf(G__serr,"Warning: Undeclared symbol %s. Automatic variable allocated",item);
       G__printlinenum();
+#endif
       var->type[ig15]='o';
     }
 
@@ -5968,7 +6229,12 @@ struct G__var_array *varglobal,*varlocal;
 	  if(varhash==var->hash[ig15] &&
 	     strcmp(varname,var->varnamebuf[ig15])==0 &&
 	     (var->statictype[ig15]<0||
-	      G__ifile.filenum==var->statictype[ig15])&&
+#ifndef G__OLDIMPLEMENTATION1135
+	      G__filescopeaccess(G__ifile.filenum,var->statictype[ig15])
+#else
+	      G__ifile.filenum==var->statictype[ig15]
+#endif
+	      )&&
 	     (var->access[ig15]&accesslimit)) {
 	    *pi=ig15;
 	    return(var);
@@ -6010,7 +6276,13 @@ struct G__var_array *varglobal,*varlocal;
       while(ig15<var->allvar) {
 	if(varhash==var->hash[ig15] &&
 	   strcmp(varname,var->varnamebuf[ig15])==0 &&
-	   (var->statictype[ig15]<0||G__ifile.filenum==var->statictype[ig15])&&
+	   (var->statictype[ig15]<0||
+#ifndef G__OLDIMPLEMENTATION1135
+	    G__filescopeaccess(G__ifile.filenum,var->statictype[ig15])
+#else
+	    G__ifile.filenum==var->statictype[ig15]
+#endif
+	    )&&
 	   (G__PUBLIC==var->access[ig15] || in_memfunc ||
 	    G__isfriend(G__tagnum))) {
 	  *pi=ig15;
@@ -6070,6 +6342,9 @@ char *varname,*item;
     G__var_type = 'p'; /* pointer to struct,class */
     result7->typenum = G__typenum;
     result7->tagnum = G__tagnum;
+#ifndef G__OLDIMPLEMENTATION1131
+    result7->ref = 0;
+#endif
     return(1);
   }
   return(0);
@@ -6091,12 +6366,21 @@ long G__struct_offset;
   switch(G__var_type) {
   case 'p': /* var = expr; assign to value */
     if(var->paran[ig15]<=paran) { /*assign to type element*/
+#ifdef G__PTR2MEMFUNC
+      if('C'==presult->type)
+	*(long*)(G__struct_offset+var->p[ig15]+p_inc*G__P2MFALLOC)
+	  = presult->obj.i;
+      else
+	memcpy((void*)(G__struct_offset+var->p[ig15]+p_inc*G__P2MFALLOC)
+	       ,(void*)presult->obj.i,G__P2MFALLOC);
+#else
       memcpy((void*)(G__struct_offset+var->p[ig15]+p_inc*G__P2MFALLOC)
 	     ,(void*)presult->obj.i,G__P2MFALLOC);
+#endif
       break;
     }
   default:
-    G__assign_error(item);
+    G__assign_error(item,presult);
     break;
   }
 }
@@ -6240,9 +6524,14 @@ int mparen;
     while(classname[0]) {
 #ifndef G__OLDIMPLEMENTATION458
       def_tagnum=G__def_tagnum;
-      tagdefining=G__tagdefining;
+#ifdef G__OLDIMPLEMENTATION1107
+      tagdefining=G__tagdefining; /* ??? not good ??? */
+#endif
       G__def_tagnum=store_def_tagnum;
       G__tagdefining=store_tagdefining;
+#ifndef G__OLDIMPLEMENTATION1107
+      tagdefining=G__tagdefining; /* ??? good ??? */
+#endif
       friendtagnum=G__defined_tagname(classname,2);
       G__def_tagnum=def_tagnum;
       G__tagdefining=tagdefining;
@@ -6428,6 +6717,10 @@ void* pin;
   struct G__var_array *var;
   int ig15;
 
+#ifndef G__OLDIMPLEMENTATION1035
+  G__LockCriticalSection();
+#endif
+
   var = &G__global;
 
   while(var) {
@@ -6448,6 +6741,9 @@ void* pin;
     }
     var=var->next;
   }
+#ifndef G__OLDIMPLEMENTATION1035
+  G__UnlockCriticalSection();
+#endif
   return(0);
 }
 #endif

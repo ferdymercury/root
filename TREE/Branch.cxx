@@ -1,4 +1,8 @@
-//*CMZ :  2.21/07 06/03/99  17.42.39  by  Rene Brun
+//*CMZ :  2.22/09 10/07/99  11.02.43  by  Rene Brun
+//*CMZ :  2.22/07 30/06/99  17.49.47  by  Rene Brun
+//*CMZ :  2.22/01 18/05/99  11.42.55  by  Rene Brun
+//*CMZ :  2.22/00 26/03/99  20.12.38  by  Rene Brun
+//*CMZ :  2.21/07 26/03/99  20.03.21  by  Rene Brun
 //*CMZ :  2.20/03 03/03/99  14.18.31  by  Rene Brun
 //*CMZ :  2.20/01 01/12/98  11.08.37  by  Rene Brun
 //*CMZ :  2.20/00 04/11/98  08.56.35  by  Rene Brun
@@ -10,20 +14,22 @@
 //*CMZ :  1.03/09 15/12/97  09.41.55  by  Rene Brun
 //*-- Author :    Rene Brun   12/01/96
 
+/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Fons Rademakers.                                  *
+ * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
  *                                                                       *
  * Permission to use, copy, modify and distribute this software and its  *
  * documentation for non-commercial purposes is hereby granted without   *
  * fee, provided that the above copyright notice appears in all copies   *
  * and that both the copyright notice and this permission notice appear  *
  * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose.                         *
- * It is provided "as is" without express or implied warranty.           *
+ * suitability of this software for any purpose. It is provided "as is"  *
+ * without express or implied warranty.                                  *
  *************************************************************************/
 
 #include <string.h>
@@ -73,17 +79,17 @@ TBranch::TBranch(): TNamed()
 //*-*        ===================================
    fCompress       = 0;
    fBasketSize     = 32000;
-   fEventOffsetLen = 1000;
+   fEntryOffsetLen = 1000;
    fMaxBaskets     = 1000;
    fReadBasket     = 0;
-   fReadEvent      = -1;
+   fReadEntry      = -1;
    fWriteBasket    = 0;
    fEntries        = 0;
    fTotBytes       = 0;
    fZipBytes       = 0;
-   fBasketEvent    = 0;
+   fBasketEntry    = 0;
    fBasketSeek     = 0;
-   fEventNumber    = 0;
+   fEntryNumber    = 0;
    fNleaves        = 0;
    fTree           = 0;
    fAddress        = 0;
@@ -143,22 +149,25 @@ TBranch::TBranch(const Text_t *name, void *address, const Text_t *leaflist, Int_
    }
    if (basketsize < 100) basketsize = 100;
    fBasketSize     = basketsize;
-   fEventOffsetLen = 0;
+   fEntryOffsetLen = 0;
    fMaxBaskets     = 1000;
    fReadBasket     = 0;
-   fReadEvent      = -1;
+   fReadEntry      = -1;
    fWriteBasket    = 0;
-   fEventNumber    = 0;
+   fEntryNumber    = 0;
    fEntries        = 0;
    fTotBytes       = 0;
    fZipBytes       = 0;
    fOffset         = 0;
    fNleaves        = 0;
    fAddress        = (char*)address;
-   fBasketEvent    = new Int_t[fMaxBaskets];
+   fBasketEntry    = new Int_t[fMaxBaskets];
    fBasketSeek     = new Seek_t[fMaxBaskets];
-   fBasketEvent[0] = fEventNumber;
-
+   fBasketEntry[0] = fEntryNumber;
+   for (Int_t i=0;i<fMaxBaskets;i++) {
+      fBasketEntry[i] = 0;
+      fBasketSeek[i]  = 0;
+   }
 //*-*- Decode the leaflist (search for : as separator)
    char * varcur  = (char*)leaflist;
    char * var     = varcur;
@@ -214,8 +223,8 @@ TBranch::TBranch(const Text_t *name, void *address, const Text_t *leaflist, Int_
          leaf->SetBranch(this);
          leaf->SetAddress((char*)(fAddress+offset));
          leaf->SetOffset(offset);
-         if (leaf->GetLeafCount()) fEventOffsetLen = 1000;
-         if (leaf->InheritsFrom("TLeafC")) fEventOffsetLen = 1000;
+         if (leaf->GetLeafCount()) fEntryOffsetLen = 1000;
+         if (leaf->InheritsFrom("TLeafC")) fEntryOffsetLen = 1000;
          fNleaves++;
          fLeaves.Add(leaf);
          gTree->GetListOfLeaves()->Add(leaf);
@@ -246,7 +255,7 @@ TBranch::~TBranch()
 
    fLeaves.Delete();
    fBaskets.Delete();
-   if (fBasketEvent) delete [] fBasketEvent;
+   if (fBasketEntry) delete [] fBasketEntry;
    if (fBasketSeek)  delete [] fBasketSeek;
    // Warning. Must use FindObject by name instead of fDirectory->GetFile()
    // because two branches<may point to the same file and the file
@@ -255,7 +264,7 @@ TBranch::~TBranch()
       TFile *file = (TFile*)gROOT->GetListOfFiles()->FindObject(GetFileName());
       if (file ) delete file;
    }
-   fBasketEvent = 0;
+   fBasketEntry = 0;
    fBasketSeek  = 0;
    fTree        = 0;
    fDirectory   = 0;
@@ -314,16 +323,16 @@ Int_t TBranch::Fill()
    Int_t lold = buf->Length();
    basket->Update(lold);
    fEntries++;
-   fEventNumber++;
+   fEntryNumber++;
    for (Int_t i=0;i<fNleaves;i++) {
       TLeaf *leaf = (TLeaf*)fLeaves.UncheckedAt(i);
       leaf->FillBasket(*buf);
    }
    Int_t lnew   = buf->Length();
    Int_t nbytes = lnew - lold;
-   if (fEventOffsetLen) {
+   if (fEntryOffsetLen) {
       Int_t nevbuf = basket->GetNevBuf();
-      nsize = nevbuf*sizeof(Int_t); //total size in bytes of EventOffset table
+      nsize = nevbuf*sizeof(Int_t); //total size in bytes of EntryOffset table
    } else {
       if (!basket->GetNevBufSize()) basket->SetNevBufSize(nbytes);
    }
@@ -333,7 +342,7 @@ Int_t TBranch::Fill()
       Int_t nout  = basket->WriteBuffer();    //  Write buffer
       fBasketSeek[fWriteBasket]  = basket->GetSeekKey();
       Int_t addbytes = basket->GetObjlen() + basket->GetKeylen() ;
-      if (fDirectory != gROOT) {
+      if (fDirectory != gROOT && fDirectory->IsWritable()) {
          delete basket;
          fBaskets[fWriteBasket] = 0;
       }
@@ -345,18 +354,18 @@ Int_t TBranch::Fill()
       fWriteBasket++;
       fBaskets.AddAtAndExpand(basket,fWriteBasket);
       if (fWriteBasket >= fMaxBaskets) {
-           //Increase BasketEvent buffer of a minimum of 10 locations
+           //Increase BasketEntry buffer of a minimum of 10 locations
            // and a maximum of 50 per cent of current size
          Int_t newsize = TMath::Max(10,Int_t(1.5*fMaxBaskets));
-         Int_t *newbuf = (Int_t*)TStorage::ReAlloc(fBasketEvent,
+         Int_t *newbuf = (Int_t*)TStorage::ReAlloc(fBasketEntry,
                          newsize*sizeof(Int_t),fMaxBaskets*sizeof(Int_t));
-         fBasketEvent  = newbuf;
+         fBasketEntry  = newbuf;
          Seek_t *nseek = (Seek_t*)TStorage::ReAlloc(fBasketSeek,
                          newsize*sizeof(Seek_t),fMaxBaskets*sizeof(Seek_t));
          fBasketSeek   = nseek;
          fMaxBaskets   = newsize;
       }
-      fBasketEvent[fWriteBasket] = fEventNumber;
+      fBasketEntry[fWriteBasket] = fEntryNumber;
       fBasketSeek[fWriteBasket]  = 0;
    }
    return nbytes;
@@ -368,6 +377,8 @@ TBasket *TBranch::GetBasket(Int_t basketnumber)
 {
 //*-*-*-*-*Return pointer to basket basketnumber in this Branch*-*-*-*-*-*
 //*-*      ====================================================
+
+   static Int_t nerrors = 0;
 
       // reference to an existing basket in memory ?
    if (basketnumber <0 || basketnumber > fWriteBasket) return 0;
@@ -389,8 +400,32 @@ TBasket *TBranch::GetBasket(Int_t basketnumber)
    file->Seek(fBasketSeek[basketnumber]);
    file->ReadBuffer(buf,nb);
    basket->Streamer(*buffer);
+   if (basket->GetSeekKey() != fBasketSeek[basketnumber]) {
+      cursav->cd();
+      nerrors++;
+      if (nerrors > 10) return 0;
+      if (nerrors == 10) {
+         printf(" file probably overwritten: stopping reporting error messages\n");
+         if (fBasketSeek[basketnumber] > 2000000000) {
+            printf("===>File is more than 2 Gigabytes\n");
+            return 0;
+         }
+         if (fBasketSeek[basketnumber] > 1000000000) {
+            printf("===>Your file is may be bigger than the maximum file size allowed on your system\n");
+            printf("    Check your AFS maximum file size limit for example\n");
+            return 0;
+         }
+      }
+      Error("GetBasket","File problem at address:%d, basket seekkey=%d, branch:%s",fBasketSeek[basketnumber],basket->GetSeekKey(),GetName());
+      return 0;
+   }
+
    if (basket->GetKeylen() > nb) {
       Warning("GetBasket","Estimated keylen too small=%d",basket->GetKeylen());
+   }
+   if (basket->GetObjlen() <= nb) {
+      buffer->SetBufferOffset(0);
+      basket->ReadBasketBuffers(buf);
    }
    cursav->cd();
 //   delete buffer;
@@ -410,26 +445,26 @@ Seek_t TBranch::GetBasketSeek(Int_t basketnumber)
 
 
 //______________________________________________________________________________
-Int_t TBranch::GetEvent(Int_t event)
+Int_t TBranch::GetEntry(Int_t entry)
 {
-//*-*-*-*-*-*Read all leaves of event and return total number of bytes*-*-*
+//*-*-*-*-*-*Read all leaves of entry and return total number of bytes*-*-*
 //*-*        =========================================================
 
-   if (fReadEvent == event) return 1;
-   if (event < 0 || event >= fEventNumber) return 0;
+   if (fReadEntry == entry) return 1;
+   if (entry < 0 || entry >= fEntryNumber) return 0;
    Int_t nbytes;
-   Int_t first  = fBasketEvent[fReadBasket];
+   Int_t first  = fBasketEntry[fReadBasket];
    Int_t last;
-   if (fReadBasket == fWriteBasket) last = fEventNumber - 1;
-   else                             last = fBasketEvent[fReadBasket+1] - 1;
+   if (fReadBasket == fWriteBasket) last = fEntryNumber - 1;
+   else                             last = fBasketEntry[fReadBasket+1] - 1;
 //
 //      Are we still in the same ReadBasket?
-   if (event < first || event > last) {
-      fReadBasket = TMath::BinarySearch(fWriteBasket+1, fBasketEvent, event);
-      first       = fBasketEvent[fReadBasket];
+   if (entry < first || entry > last) {
+      fReadBasket = TMath::BinarySearch(fWriteBasket+1, fBasketEntry, entry);
+      first       = fBasketEntry[fReadBasket];
    }
 
-//     We have found the basket containing this event.
+//     We have found the basket containing this entry.
 //     make sure basket buffers are in memory.
    TBasket *basket = GetBasket(fReadBasket);
    if (!basket) return 0;
@@ -438,18 +473,18 @@ Int_t TBranch::GetEvent(Int_t event)
       basket->ReadBasketBuffers();
       buf    = basket->GetBufferRef();
    }
-//     Set event offset in buffer and read data from all leaves
+//     Set entry offset in buffer and read data from all leaves
    buf->ResetMap();
    if (!buf->IsReading()) {
       basket->SetReadMode();
    }
-   Int_t bufbegin = basket->GetEventPointer(event-first);
+   Int_t bufbegin = basket->GetEntryPointer(entry-first);
    for (Int_t i=0;i<fNleaves;i++) {
       TLeaf *leaf = (TLeaf*)fLeaves.UncheckedAt(i);
       leaf->ReadBasket(*buf);
    }
    nbytes = buf->Length() - bufbegin;
-   fReadEvent = event;
+   fReadEntry = entry;
    return nbytes;
 }
 
@@ -592,19 +627,23 @@ void TBranch::Reset(Option_t *)
 //
 
    fBaskets.Delete();
-   if (fBasketEvent) delete [] fBasketEvent;
+   if (fBasketEntry) delete [] fBasketEntry;
    if (fBasketSeek)  delete [] fBasketSeek;
-   fBasketEvent    = 0;
+   fBasketEntry    = 0;
    fReadBasket     = 0;
-   fReadEvent      = -1;
+   fReadEntry      = -1;
    fWriteBasket    = 0;
    fEntries        = 0;
    fTotBytes       = 0;
    fZipBytes       = 0;
-   fEventNumber    = 0;
-   fBasketEvent    = new Int_t[fMaxBaskets];
+   fEntryNumber    = 0;
+   fBasketEntry    = new Int_t[fMaxBaskets];
    fBasketSeek     = new Seek_t[fMaxBaskets];
-   fBasketEvent[0] = fEventNumber;
+   fBasketEntry[0] = fEntryNumber;
+   for (Int_t i=0;i<fMaxBaskets;i++) {
+      fBasketEntry[i] = 0;
+      fBasketSeek[i]  = 0;
+   }
    TBasket *basket = new TBasket(GetName(),fTree->GetName(),this);
    fBaskets.AddAt(basket,0);
 }
@@ -616,6 +655,7 @@ void TBranch::SetAddress(void *add)
 //*-*            ====================
 //
 
+   fReadEntry = -1;
    fAddress = (char*)add;
    Int_t i,offset;
    for (i=0;i<fNleaves;i++) {
@@ -647,7 +687,7 @@ void TBranch::SetFile(const char *fname)
 //  The Root file will be connected only when necessary.
 //  If called by TBranch::Fill (via TBasket::WriteFile), the file
 //  will be created with the option "recreate".
-//  If called by TBranch::GetEvent (via TBranch::GetBasket), the file
+//  If called by TBranch::GetEntry (via TBranch::GetBasket), the file
 //  will be open in read mode.
 //
 //  To open a file in "update" mode, use TBranch::SetFile(TFile *file).
@@ -669,10 +709,10 @@ void TBranch::Streamer(TBuffer &b)
       TNamed::Streamer(b);
       b >> fCompress;
       b >> fBasketSize;
-      b >> fEventOffsetLen;
+      b >> fEntryOffsetLen;
       b >> fMaxBaskets;
       b >> fWriteBasket;
-      b >> fEventNumber;
+      b >> fEntryNumber;
       b >> fEntries;
       b >> fTotBytes;
       b >> fZipBytes;
@@ -683,8 +723,8 @@ void TBranch::Streamer(TBuffer &b)
       fLeaves.Streamer(b);
       fBaskets.Streamer(b);
       fNleaves = fLeaves.GetEntriesFast();
-      fBasketEvent = new Int_t[fMaxBaskets];
-      Int_t n  = b.ReadArray(fBasketEvent);
+      fBasketEntry = new Int_t[fMaxBaskets];
+      Int_t n  = b.ReadArray(fBasketEntry);
       if (v < 2) {
          fBasketSeek = new Seek_t[fMaxBaskets];
          for (n=0;n<fWriteBasket;n++) {
@@ -705,10 +745,10 @@ void TBranch::Streamer(TBuffer &b)
       TNamed::Streamer(b);
       b << fCompress;
       b << fBasketSize;
-      b << fEventOffsetLen;
+      b << fEntryOffsetLen;
       b << fMaxBaskets;
       b << fWriteBasket;
-      b << fEventNumber;
+      b << fEntryNumber;
       b << fEntries;
       b << fTotBytes;
       b << fZipBytes;
@@ -716,7 +756,7 @@ void TBranch::Streamer(TBuffer &b)
       fBranches.Streamer(b);
       fLeaves.Streamer(b);
       fBaskets.Streamer(b);
-      b.WriteArray(fBasketEvent,fMaxBaskets);
+      b.WriteArray(fBasketEntry,fMaxBaskets);
       b.WriteArray(fBasketSeek, fMaxBaskets);
       fFileName.Streamer(b);
 

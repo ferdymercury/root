@@ -1,5 +1,5 @@
-/*CMZ :  2.21/08 17/03/99  13.13.37  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   17/03/99*/
+/*CMZ :  2.22/10 23/07/99  14.42.12  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   23/07/99*/
 /* /% C++ %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -42,6 +42,17 @@ class G__TypeInfo : public G__ClassInfo  {
   G__TypeInfo(const char *typenamein) : G__ClassInfo() { Init(typenamein); }
   G__TypeInfo() : G__ClassInfo() { type=0; typenum= -1; reftype=0; isconst=0; }
   void Init(const char *typenamein);
+#ifndef __MAKECINT__
+  G__TypeInfo(G__value buf) : G__ClassInfo() { Init(buf); }
+  void Init(G__value buf) {
+    type    = buf.type;
+    typenum = buf.typenum;
+    tagnum  = buf.tagnum;
+    if(isupper((int)type)) reftype=buf.obj.reftype.reftype;
+    else              reftype=0;
+    isconst = 0;
+  }
+#endif
   int operator==(const G__TypeInfo& a);
   int operator!=(const G__TypeInfo& a);
   const char *Name();

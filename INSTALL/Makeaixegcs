@@ -1,6 +1,9 @@
+*CMZ :  2.22/09 09/07/99  09.32.48  by  Rene Brun
+*CMZ :  2.22/05 15/06/99  11.39.26  by  Fons Rademakers
+*CMZ :  2.22/01 11/05/99  09.08.02  by  Rene Brun
 *CMZ :  2.21/08 18/03/99  21.32.33  by  Rene Brun
 *-- Author :    Rene Brun   18/03/99
-# Makefile of ROOT for AIX with glibc and egcs1.1
+# Makefile of ROOT for AIX 4.x with glibc and egcs1.1
 # origin Richard Dubois & Donald Benton
 
 PLATFORM      = aix
@@ -8,7 +11,7 @@ PLATFORM      = aix
 CXX           = g++
 CC            = gcc
 
-# CXXFLAGS      = -Wall -DR__GLIBC -fno-rtti -fno-exceptions -D_AIX41 -DR__AIXGCC
+# CXXFLAGS      = -Wall -DR__GLIBC -D_AIX41 -DR__AIXGCC
 CXXFLAGS      = -D_AIX41 -DR__AIXGCC -D_AIX32 -fsigned-char
 
 # CFLAGS        = -Wall -DR__GLIBC -D_AIX41 -DR__AIXGCC
@@ -20,7 +23,7 @@ CINTCXXFLAGS  = -fsigned-char -DG__REGEXP -D_POSIX2_SOURCE -DG__P2FCAST \
 CINTCFLAGS  = -fsigned-char -DG__REGEXP -D_POSIX2_SOURCE \
           -DG__UNIX -DG__SHAREDLIB -DG__OSFDLL -DG__ROOT -DG__REDIRECTIO
 
-OPT           = -g
+OPT           = -O
 NOOPT         =
 # LD            = g++
 LD            = makeSharedLib

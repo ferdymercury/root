@@ -1,5 +1,5 @@
-/*CMZ :  2.21/08 17/03/99  13.13.39  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   17/03/99*/
+/*CMZ :  2.22/10 23/07/99  14.42.14  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   23/07/99*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -54,6 +54,10 @@ struct G__Preprocessfilekey *pkey;
 void G__scratch_all()
 {
   struct G__var_array *local;
+
+#ifndef G__OLDIMPLEMENTATION1035
+  G__LockCriticalSection();
+#endif
 
 #ifndef G__OLDIMPLEMENTATION563
   G__cintready=0; /* reset ready flag for embedded use */
@@ -248,6 +252,9 @@ void G__scratch_all()
   G__memresult();
 #endif
 
+#ifndef G__OLDIMPLEMENTATION1035
+  G__UnlockCriticalSection();
+#endif
 }
 
 
@@ -388,9 +395,19 @@ int isglobal;
    * destroy it too.
    *******************************************/
   if(var->next) {
-    G__destroy(var->next,isglobal);
-    free((void*)var->next);
-    var->next=NULL;
+#ifndef G__OLDIMPLEMENTATION1081
+    if(var->allvar==G__MEMDEPTH) {
+#endif
+      G__destroy(var->next,isglobal);
+      free((void*)var->next);
+      var->next=NULL;
+#ifndef G__OLDIMPLEMENTATION1081
+    }
+    else {
+      fprintf(stderr,"!!!Fatal Error: Interpreter memory overwritten by illegal access.!!!\n");
+      fprintf(stderr,"!!!Terminate session!!!\n");
+    }
+#endif
   }
 
   for(itemp=var->allvar-1;itemp>=remain;itemp--) {
@@ -589,6 +606,15 @@ int G__close_inputfiles()
     }
     if(G__srcfile[iarg].fp) {
       fclose(G__srcfile[iarg].fp);
+#ifndef G__PHILIPPE0
+      if(G__srcfile[iarg].prepname) {
+	int j;
+	for(j=iarg+1;j<G__nfile;j++) {
+	  if(G__srcfile[j].fp==G__srcfile[iarg].fp)
+	    G__srcfile[j].fp=(FILE*)NULL;
+	}
+      }
+#endif
       G__srcfile[iarg].fp=(FILE*)NULL;
     }
     if(G__srcfile[iarg].breakpoint) {

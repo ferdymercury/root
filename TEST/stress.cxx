@@ -1,3 +1,10 @@
+//*CMZ :          28/07/99  10.54.24  by  Rene Brun
+//*CMZ :  2.22/10 21/07/99  22.39.20  by  Rene Brun
+//*CMZ :  2.22/07 05/07/99  19.25.42  by  Rene Brun
+//*CMZ :  2.22/06 16/06/99  15.59.59  by  Rene Brun
+//*CMZ :  2.22/05 15/06/99  11.52.24  by  Rene Brun
+//*CMZ :  2.22/02 20/05/99  17.42.37  by  Rene Brun
+//*CMZ :  2.22/01 10/05/99  19.12.15  by  Rene Brun
 //*CMZ :  2.21/07 02/03/99  19.11.59  by  Rene Brun
 //*CMZ :  2.21/06 17/02/99  19.01.48  by  Rene Brun
 //*CMZ :  2.21/04 05/02/99  08.59.52  by  Rene Brun
@@ -36,7 +43,7 @@
 // One single number (ROOTMARKS) is also calculated showing the relative
 // performance of your machine compared to a reference machine (HP735/99).
 //
-// An example of output when all teh tests run OK is shown below:
+// An example of output when all the tests run OK is shown below:
 // ******************************************************************
 // *  Starting  R O O T - S T R E S S test suite with 1000 events
 // ******************************************************************
@@ -113,10 +120,10 @@
    void cleanup();
    Double_t(*func)(double *, double *);
 
-   TROOT root("stress","The Root test program");
 
 int main(int argc, char **argv)
 {
+   TROOT root("stress","The Root test program");
    TApplication theApp("App", &argc, argv);
    gBenchmark = new TBenchmark();
    Int_t nevent = 1000;      // by default create 1000 events
@@ -126,6 +133,10 @@ int main(int argc, char **argv)
 }
 
 #endif
+
+class TH1;
+class TTree;
+
 //_______________________common part_________________________
 
 Double_t ntotin=0, ntotout=0;
@@ -322,8 +333,8 @@ void stress2()
    Float_t comp = f.GetCompressionFactor();
 
    Bool_t OK = kTRUE;
-   Int_t lastgood = 4176;
-   if (last <lastgood-200 || last > lastgood+200 || comp <1.42 || comp > 1.45) OK = kFALSE;
+   Int_t lastgood = 4913;
+   if (last <lastgood-200 || last > lastgood+200 || comp <1.35 || comp > 1.41) OK = kFALSE;
    if (OK) printf("OK\n");
    else    {
       printf("failed\n");
@@ -352,8 +363,8 @@ void stress3()
    Int_t last = f.GetEND();
    Float_t comp = f.GetCompressionFactor();
    Bool_t OK = kTRUE;
-   Int_t lastgood = 41798;
-   if (last <lastgood-300 || last > lastgood+300 || comp <1.42 || comp > 1.46) OK = kFALSE;
+   Int_t lastgood = 42789;
+   if (last <lastgood-300 || last > lastgood+300 || comp <1.37 || comp > 1.43) OK = kFALSE;
    if (OK) printf("OK\n");
    else    {
       printf("failed\n");
@@ -450,7 +461,7 @@ void stress5()
    FILE *fp = fopen("stress.ps","r");
    char line[200];
    Int_t nlines = 0;
-   Int_t nlinesGood = 1789;
+   Int_t nlinesGood = 1745;
    while (fgets(line,199,fp)) {
       nlines++;
    }
@@ -458,7 +469,7 @@ void stress5()
    ntotin  += f.GetBytesRead();
    ntotout += f.GetBytesWritten();
    Bool_t OK = kTRUE;
-   if (nlines < nlinesGood-10 || nlines > nlinesGood+10) OK = kFALSE;
+   if (nlines < nlinesGood-20 || nlines > nlinesGood+20) OK = kFALSE;
    if (OK) printf("OK\n");
    else    {
       printf("failed\n");
@@ -632,7 +643,7 @@ void stress7()
    Int_t nlist = elist->GetN();
    for (i=0;i<nlist;i++) {
       Int_t event = elist->GetEntry(i);
-      ntuple->GetEvent(event);
+      ntuple->GetEntry(event);
       helistc->Fill(pxr);
    }
    Int_t n3 = (Int_t)helistc->GetEntries();
@@ -706,7 +717,7 @@ Int_t stress8read(Int_t nevent)
    Int_t nev = TMath::Max(nevent,nentries);
    Int_t nb = 0;
    for (Int_t ev = 0; ev < nev; ev++) {
-      nb += tree->GetEvent(ev);        //read complete event in memory
+      nb += tree->GetEntry(ev);        //read complete event in memory
    }
    ntotin  += hfile->GetBytesRead();
 
@@ -931,7 +942,7 @@ void stress9tree(TTree *tree)
    EventHeader *head;
    Int_t nbin = 0;
    for (Int_t ev=0;ev<nev;ev++) {
-      nbin += tree->GetEvent(ev);
+      nbin += tree->GetEntry(ev);
       head = event->GetHeader();
       evmod = head->GetEvtNum()%10;
       bNtrack->Fill(event->GetNtrack());
@@ -1061,7 +1072,7 @@ void stress10()
    Int_t evmod, nbin=0, nbout=0;
    EventHeader *head;
    for (Int_t ev=0;ev<nev;ev++) {
-      nbin +=tree->GetEvent(ev);
+      nbin +=tree->GetEntry(ev);
       head = event->GetHeader();
       evmod = head->GetEvtNum()%10;
       nbout += chTree[evmod]->Fill();
@@ -1238,7 +1249,7 @@ void stress15()
 
    //Divert branch fH to a separate file and copy all events
    newtree->GetBranch("fH")->SetFile("stress_fH.root");
-   newtree->CopyEvents(oldtree);
+   newtree->CopyEntries(oldtree);
 
    newfile->Write();
    ntotin  += oldfile->GetBytesRead();
@@ -1379,7 +1390,7 @@ void stress16()
    FILE *fp = fopen("stress_lhcb.ps","r");
    char line[200];
    Int_t nlines = 0;
-   Int_t nlinesGood = 8063;
+   Int_t nlinesGood = 8009;
    while (fgets(line,200,fp)) {
       nlines++;
    }

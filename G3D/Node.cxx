@@ -1,3 +1,4 @@
+//*CMZ :  2.22/01 17/04/99  07.50.09  by  Rene Brun
 //*CMZ :  2.21/07 21/02/99  20.17.38  by  Valery Fine(fine@mail.cern.ch)
 //*CMZ :  2.21/04 02/02/99  18.23.24  by  Rene Brun
 //*CMZ :  2.00/11 22/08/98  12.26.40  by  Rene Brun
@@ -5,20 +6,22 @@
 //*CMZ :  1.03/09 09/12/97  15.00.39  by  Fons Rademakers
 //*-- Author :    Rene Brun   14/09/95
 
+/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Fons Rademakers.                                  *
+ * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
  *                                                                       *
  * Permission to use, copy, modify and distribute this software and its  *
  * documentation for non-commercial purposes is hereby granted without   *
  * fee, provided that the above copyright notice appears in all copies   *
  * and that both the copyright notice and this permission notice appear  *
  * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose.                         *
- * It is provided "as is" without express or implied warranty.           *
+ * suitability of this software for any purpose. It is provided "as is"  *
+ * without express or implied warranty.                                  *
  *************************************************************************/
 
 #include <iostream.h>
@@ -108,7 +111,7 @@ TNode::TNode(const Text_t *name, const Text_t *title, const Text_t *shapename, D
 #endif
    static Int_t counter = 0;
    counter++;
-   if(!(counter%1000))cout<<"TNode count="<<counter<<" name="<<name<<endl;
+//   if(!(counter%1000))cout<<"TNode count="<<counter<<" name="<<name<<endl;
    fX      = x;
    fY      = y;
    fZ      = z;
@@ -564,7 +567,7 @@ void TNode::Paint(Option_t *option)
 
    Int_t level = gGeometry->GeomLevel();
 // restrict the levels for "range" option
-   if (level > 3 && strcmp(option,"range") == 0) return;
+   if (level > 3 && option && strlen(option) && strcmp(option,"range") == 0) return;
 //*-*- Update translation vector and rotation matrix for new level
    if (level) {
       gGeometry->UpdateTempMatrix(fX,fY,fZ,fMatrix->GetMatrix(),fMatrix->IsReflection());

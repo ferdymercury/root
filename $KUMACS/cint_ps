@@ -1,0 +1,29 @@
+*CMZ :  2.22/04 01/06/99  11.22.45  by  Fons Rademakers
+*CMZ :  2.22/02 26/05/99  10.00.34  by  Rene Brun
+*CMZ :  2.00/09 25/06/98  15.10.13  by  Fons Rademakers
+*CMZ :  2.00/00 05/03/98  18.06.24  by  Fons Rademakers
+*CMZ :  1.03/03 04/09/97  16.59.18  by  Victor Perev
+*-- Author :    Rene Brun   06/05/97
+
+macro cint_ps
+*
+*    To generate the dictionary  for the TPostScript class
+*    =====================================================
+*
+* Only change the [headers], [name] and [patch] variables and the
+* "#pragma ..." statements.
+*
+
+seq -i src/*.h
+
+headers=TPostScript.h
+
+name=PostScript
+patch=POSTSCRIPT
+
+set G__LinkDef.h -F TEXT
+ctot /$kumacs/PostScript_LinkDef
+
+exec makecint [name] [patch] [headers]
+
+return

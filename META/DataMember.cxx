@@ -1,3 +1,4 @@
+//*CMZ :  2.22/05 15/06/99  13.20.12  by  Fons Rademakers
 //*CMZ :  2.20/00 09/11/98  11.21.56  by  Fons Rademakers
 //*CMZ :  2.00/12 25/09/98  17.42.23  by  Rene Brun
 //*CMZ :  2.00/10 18/07/98  12.49.09  by  Fons Rademakers
@@ -5,20 +6,22 @@
 //*CMZ :  1.03/09 11/12/97  09.18.46  by  Rene Brun
 //*-- Author :    Fons Rademakers   04/02/95
 
+/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Fons Rademakers.                                  *
+ * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
  *                                                                       *
  * Permission to use, copy, modify and distribute this software and its  *
  * documentation for non-commercial purposes is hereby granted without   *
  * fee, provided that the above copyright notice appears in all copies   *
  * and that both the copyright notice and this permission notice appear  *
  * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose.                         *
- * It is provided "as is" without express or implied warranty.           *
+ * suitability of this software for any purpose. It is provided "as is"  *
+ * without express or implied warranty.                                  *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -214,15 +217,15 @@ TDataMember::TDataMember(G__DataMemberInfo *info, TClass *cl) : TDictionary()
       if (IsBasic() || IsEnum()) {
          if (IsBasic()) {
             const char *name = GetFullTypeName();
-            if    (strcmp (name, "unsigned char") != 0
-                && strncmp (name, "unsigned short", sizeof ("unsigned short")) != 0
-                && strcmp (name, "unsigned int") != 0
-                && strncmp (name, "unsigned long", sizeof ("unsigned long")) != 0)
-              name = GetTypeName();
+            if (strcmp(name, "unsigned char") != 0 &&
+                strncmp(name, "unsigned short", sizeof ("unsigned short")) != 0 &&
+                strcmp(name, "unsigned int") != 0 &&
+                strncmp(name, "unsigned long", sizeof ("unsigned long")) != 0)
+               name = GetTypeName();
             fDataType = gROOT->GetType(name);
-          } else {
-             fDataType = gROOT->GetType("Int_t");
-          }
+         } else {
+            fDataType = gROOT->GetType("Int_t");
+         }
          if (!fDataType)
             Error("TDataMember", "basic data type %s not found in list of basic types",
                   GetTypeName());

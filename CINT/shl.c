@@ -1,5 +1,5 @@
-/*CMZ :  2.21/08 17/03/99  13.13.44  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   17/03/99*/
+/*CMZ :  2.22/10 23/07/99  14.42.19  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   23/07/99*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -35,7 +35,11 @@
 ****************************************************/
 #if defined(G__OSFDLL)
 typedef void* G__SHLHANDLE;
+#if defined(G__ROOT) && defined(_AIX) && defined(G__AIXDLFCN)
+#include <aixdlfcn.h>
+#else
 #include <dlfcn.h>
+#endif
 #define TYPE_PROCEDURE 1
 #define TYPE_DATA 2
 #ifndef RTLD_LAZY
@@ -96,14 +100,6 @@ typedef void* G__SHLHANDLE;
 G__SHLHANDLE G__sl_handle[G__MAX_SL];
 short G__allsl=0;
 
-#ifdef G__DLL_SYM_UNDERSCORE
-static int G__sym_underscore=1;
-#else
-static int G__sym_underscore=0;
-#endif
-
-void G__set_sym_underscore(x) int x; { G__sym_underscore=x; }
-
 #define G__CALL_SETUP(setupfunc)  \
     sharedlib_func=(int (*)())G__shl_findsym(&G__sl_handle[allsl],setupfunc,TYPE_PROCEDURE);   \
     if(sharedlib_func!=NULL) (*sharedlib_func)()
@@ -115,10 +111,64 @@ typedef void* G__SHLHANDLE;
 #endif /* G__SHAREDLIB */
 
 
+#ifdef G__DLL_SYM_UNDERSCORE
+static int G__sym_underscore=1;
+#else
+static int G__sym_underscore=0;
+#endif
+
+void G__set_sym_underscore(x) int x; { G__sym_underscore=x; }
+
+
 G__SHLHANDLE G__dlopen G__P((char *path));
 void *G__shl_findsym G__P((G__SHLHANDLE *phandle,char *sym,short type));
 int G__dlclose G__P((G__SHLHANDLE handle));
 
+#ifndef G__PHILIPPE1
+/****************************************************
+* OSF or SunOS
+****************************************************/
+#if defined(G__OSFDLL)
+#if defined(__FreeBSD__) || defined(__alpha) || (defined(G__SUNOS4) && defined(G__NONANSI))
+# define G__RTLD_NOW RTLD_NOW
+# define G__RTLD_LAZY RTLD_LAZY
+#else
+#ifndef RTLD_GLOBAL
+#define RTLD_GLOBAL 0
+#endif
+# define G__RTLD_NOW  (RTLD_GLOBAL | RTLD_NOW)
+# define G__RTLD_LAZY (RTLD_GLOBAL | RTLD_LAZY)
+#endif
+/****************************************************
+* HP-UX
+****************************************************/
+#elif defined(__hpux) || defined(_HIUX_SOURCE)
+# define G__RTLD_NOW BIND_IMMEDIATE
+# define G__RTLD_LAZY BIND_DEFERRED
+/****************************************************
+* Win32
+****************************************************/
+#elif defined(G__WIN32)
+  /* Do not know how to force binding at load time */
+# define G__RTLD_NOW 0
+# define G__RTLD_LAZY 0
+#endif /* G__WIN32 */
+
+#ifdef G__SHAREDLIB
+static int G__RTLD_flag = G__RTLD_LAZY;
+#endif
+
+/***********************************************************************
+* G__Set_RTLD_NOW() && G__Set_RTLD_LAZY()
+*
+***********************************************************************/
+void G__Set_RTLD_NOW() {
+  G__RTLD_flag = G__RTLD_NOW;
+}
+void G__Set_RTLD_LAZY() {
+  G__RTLD_flag = G__RTLD_LAZY;
+}
+#endif /* G__PHILIPPE1 */
 
 /***********************************************************************
 * G__dlopen()
@@ -130,6 +180,69 @@ char *path;
   G__SHLHANDLE handle;
 #ifdef G__SHAREDLIB
 
+#ifndef G__PHILIPPE1
+
+/****************************************************
+* OSF or SunOS
+****************************************************/
+#if defined(G__OSFDLL)
+
+  handle = dlopen(path,G__RTLD_flag);
+  if(!handle) fprintf(G__serr,"dlopen error: %s\n",dlerror());
+
+/****************************************************
+* HP-UX
+****************************************************/
+# elif defined(__hpux) || defined(_HIUX_SOURCE)
+#  if defined(G__HPUXCPPDLL) && !defined(__STDCPP__)
+  handle = cxxshl_load(path,G__RTLD_flag,0L);
+#  else
+  handle = shl_load(path,G__RTLD_flag,0L);
+#  endif
+#ifndef G__OLDIMPLEMENTATION984
+#  if defined(__GNUC__)
+  {
+     /* find all _GLOBAL__FI_* functions to initialize global static objects */
+     struct shl_symbol *symbols;
+     int nsym;
+     nsym = shl_getsymbols(handle, TYPE_PROCEDURE, EXPORT_SYMBOLS|NO_VALUES,
+                           (void *(*)())malloc, &symbols);
+     if (nsym != -1) {
+        void (*ctor)();
+        int i;
+        for (i = 0; i < nsym; i++) {
+           if (symbols[i].type == TYPE_PROCEDURE) {
+              if (!strncmp(symbols[i].name, "_GLOBAL__FI_", 12)) {
+                 ctor = (void (*)())G__shl_findsym(&handle, symbols[i].name,
+TYPE_PROCEDURE);
+                 if (ctor) (*ctor)();
+              }
+           }
+        }
+        free(symbols);
+     }
+  }
+#  endif
+#endif
+/****************************************************
+* Win32
+****************************************************/
+# elif defined(G__WIN32)
+  handle = LoadLibrary(path);
+/****************************************************
+* VMS
+****************************************************/
+# elif defined(G__VMS)
+  handle = path;
+/****************************************************
+* Non of above
+****************************************************/
+# else /* non of above */
+  handle = (G__SHLHANDLE)NULL;
+# endif
+
+#else /* G__PHILIPPE1 */
+
 /****************************************************
 * OSF or SunOS
 ****************************************************/
@@ -137,6 +250,9 @@ char *path;
 #if defined(__FreeBSD__) || defined(__alpha) || (defined(G__SUNOS4) && defined(G__NONANSI))
   handle = dlopen(path,RTLD_LAZY);
 #else
+#ifndef RTLD_GLOBAL
+#define RTLD_GLOBAL 0
+#endif
   handle = dlopen(path,RTLD_GLOBAL | RTLD_LAZY);
 #endif
 #ifndef G__OLDIMPLEMENTATION861
@@ -192,6 +308,9 @@ TYPE_PROCEDURE);
 # else /* non of above */
   handle = (G__SHLHANDLE)NULL;
 # endif
+
+#endif /* G__PHILIPPE1 */
+
 #else /* G__SHAREDLIB */
   handle = (G__SHLHANDLE)NULL;
 #endif /* G__SHAREDLIB */
@@ -344,11 +463,13 @@ G__SHLHANDLE handle;
 * HP-UX
 ****************************************************/
 # elif defined(__hpux) || defined(_HIUX_SOURCE)
+#ifdef G__OLDIMPLEMENTATION1136
 #  if defined(G__HPUXCPPDLL) && !defined(__STDCPP__)
   return(cxxshl_unload(handle));
 #  else
   return(shl_unload(handle));
 #  endif
+#endif
 #ifndef G__OLDIMPLEMENTATION984
 #  if defined(__GNUC__)
   {
@@ -372,6 +493,13 @@ TYPE_PROCEDURE);
         free(symbols);
      }
   }
+#  endif
+#endif
+#ifndef G__OLDIMPLEMENTATION1136
+#  if defined(G__HPUXCPPDLL) && !defined(__STDCPP__)
+  return(cxxshl_unload(handle));
+#  else
+  return(shl_unload(handle));
 #  endif
 #endif
 /****************************************************
@@ -622,13 +750,18 @@ char *shlfile;
 
   sprintf(dllid,"G__cpp_setup%s",dllidheader);
   G__CALL_SETUP("G__set_cpp_environment");
+#ifndef G__OLDIMPLEMENTATION1053
+  G__CALL_SETUP("G__cpp_setup_tagtable");
+#endif
   G__CALL_SETUP("G__cpp_setup_inheritance");
   G__CALL_SETUP("G__cpp_setup_typetable");
   /* G__CALL_SETUP("G__cpp_setup_memvar");
    * G__CALL_SETUP("G__cpp_setup_memfunc"); */
   G__CALL_SETUP("G__cpp_setup_global");
   G__CALL_SETUP("G__cpp_setup_func");
+#ifdef G__OLDIMPLEMENTATION1053
   G__CALL_SETUP("G__cpp_setup_tagtable");
+#endif
   if(sharedlib_func==NULL) {
     G__CALL_SETUP(dllid);
   }
@@ -1113,7 +1246,7 @@ int state;
 	scope = (char*)NULL;
 	strcpy(memtext,dot+1);
 	*dot='\0';
-	buf = G__calc(completionbuf);
+	buf = G__calc_internal(completionbuf);
 	*dot='.';
 	*(dot+1)='\0';
       }
@@ -1121,7 +1254,7 @@ int state;
 	scope = (char*)NULL;
 	strcpy(memtext,point+2);
 	*point='\0';
-	buf = G__calc(completionbuf);
+	buf = G__calc_internal(completionbuf);
 	*point='-';
 	*(point+2)='\0';
       }

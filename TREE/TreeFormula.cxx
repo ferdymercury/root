@@ -1,3 +1,6 @@
+//*CMZ :  2.22/09 12/07/99  21.58.53  by  Rene Brun
+//*CMZ :  2.22/04 01/06/99  12.58.50  by  Rene Brun
+//*CMZ :  2.22/01 26/04/99  11.10.16  by  Rene Brun
 //*CMZ :  2.21/07 05/03/99  19.06.42  by  Rene Brun
 //*CMZ :  2.20/00 03/03/99  14.18.31  by  Rene Brun
 //*CMZ :  2.00/12 11/11/98  18.33.33  by  Rene Brun
@@ -8,20 +11,22 @@
 //*CMZ :  1.03/09 08/12/97  13.59.35  by  Fons Rademakers
 //*-- Author :    Rene Brun   19/01/96
 
+/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Fons Rademakers.                                  *
+ * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
  *                                                                       *
  * Permission to use, copy, modify and distribute this software and its  *
  * documentation for non-commercial purposes is hereby granted without   *
  * fee, provided that the above copyright notice appears in all copies   *
  * and that both the copyright notice and this permission notice appear  *
  * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose.                         *
- * It is provided "as is" without express or implied warranty.           *
+ * suitability of this software for any purpose. It is provided "as is"  *
+ * without express or implied warranty.                                  *
  *************************************************************************/
 
 #include "TROOT.h"
@@ -85,6 +90,7 @@ TTreeFormula::TTreeFormula(const char *name,const char *expression, TTree *tree)
       if (fCodes[i] < 0) continue;
       TLeaf *leaf = GetLeaf(i);
       if (leaf->InheritsFrom("TLeafC")) SetBit(kIsCharacter);
+      if (leaf->InheritsFrom("TLeafB")) SetBit(kIsCharacter);
       if(leaf->GetLeafCount() && fIndex[i] < 0) fMultiplicity = 1;
       if(leaf->GetLeafCount() && fMultiplicity == 0) fMultiplicity = -1;
       if (fIndex[i] == -1 ) fIndex[i] = 0;
@@ -256,7 +262,7 @@ Double_t TTreeFormula::EvalInstance(Int_t instance)
   Double_t dexp;
   char *tab2[20];
 
-  if (fNoper == 1) {
+  if (fNoper == 1 && fNcodes > 0) {
      if (fCodes[0] < 0) {
         TCutG *gcut = (TCutG*)fMethods.At(0);
         gcut->EvalInstance(instance);
@@ -267,7 +273,7 @@ Double_t TTreeFormula::EvalInstance(Int_t instance)
         if (instance < leaf->GetNdata()) return leaf->GetValue(instance);
         else                             return leaf->GetValue(0);
      } else {
-        leaf->GetBranch()->GetEvent(fTree->GetReadEvent());
+        leaf->GetBranch()->GetEntry(fTree->GetReadEntry());
         return leaf->GetValue(fIndex[0],this);
      }
   }
@@ -281,7 +287,7 @@ Double_t TTreeFormula::EvalInstance(Int_t instance)
            if (instance < leaf->GetNdata()) param[i] = leaf->GetValue(instance);
            else                             param[i] = leaf->GetValue(0);
         } else {
-           leaf->GetBranch()->GetEvent(fTree->GetReadEvent());
+           leaf->GetBranch()->GetEntry(fTree->GetReadEntry());
            param[i] = leaf->GetValue(fIndex[i], this);
         }
      }
@@ -297,7 +303,7 @@ Double_t TTreeFormula::EvalInstance(Int_t instance)
 //          for (i=0;i<fNstring;i++) string_calc[i]=DefinedString(i);
 //       }
        TLeafC *leafc = (TLeafC*)GetLeaf(action-105000);
-       leafc->GetBranch()->GetEvent(fTree->GetReadEvent());
+       leafc->GetBranch()->GetEntry(fTree->GetReadEntry());
        pos2++; tab2[pos2-1] = leafc->GetValueString();
 //       pos2++; tab2[pos2-1] = string_calc[action-105000];
        continue;
@@ -440,7 +446,7 @@ Int_t TTreeFormula::GetNdata()
       TLeaf *leaf = GetLeaf(i);
       if (leaf->GetLeafCount()) {
          TBranch *branch = leaf->GetLeafCount()->GetBranch();
-         branch->GetEvent(fTree->GetReadEvent());
+         branch->GetEntry(fTree->GetReadEntry());
          return leaf->GetLen();
       }
    }
@@ -459,8 +465,8 @@ char *TTreeFormula::PrintValue(Int_t mode)
 
    static char value[100];
    if (TestBit(kIsCharacter)) {
-      TLeafC *leafc = (TLeafC*)GetLeaf(0);
-      Int_t maxchar = leafc->GetMaximum();
+      TLeaf *leaf = GetLeaf(0);
+      Int_t maxchar = leaf->GetMaximum();
       if (maxchar > 99)  maxchar = 99;
       if (maxchar < 11)  maxchar = 11;
       if (mode == -2) {
@@ -468,8 +474,9 @@ char *TTreeFormula::PrintValue(Int_t mode)
       } else if (mode == -1) {
          sprintf(value," %s ",GetTitle());
       } else {
-         leafc->GetBranch()->GetEvent(fTree->GetReadEvent());
-         sprintf(value," %s",leafc->GetValueString());
+         leaf->GetBranch()->GetEntry(fTree->GetReadEntry());
+         value[0] = ' '; value[1] = 0;
+         strncat(value,(char*)leaf->GetValuePointer(),95);
       }
       Int_t nch = strlen(value);
       for (Int_t i=nch;i<maxchar;i++) value[i] = ' ';

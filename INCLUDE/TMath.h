@@ -1,3 +1,7 @@
+//*CMZ :  2.22/10 19/07/99  11.47.17  by  Fons Rademakers
+//*CMZ :  2.22/08 07/07/99  11.44.39  by  Rene Brun
+//*CMZ :  2.22/03 31/05/99  08.39.59  by  Rene Brun
+//*CMZ :  2.22/02 28/05/99  18.00.19  by  Rene Brun
 //*CMZ :  2.21/07 02/03/99  14.31.56  by  Rene Brun
 //*CMZ :  2.21/04 28/01/99  16.36.17  by  Valery Fine(fine@mail.cern.ch)
 //*CMZ :  2.20/03 05/12/98  16.28.27  by  Rene Brun
@@ -10,20 +14,22 @@
 #ifndef ROOT_TMath
 #define ROOT_TMath
 
+/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Fons Rademakers.                                  *
+ * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
  *                                                                       *
  * Permission to use, copy, modify and distribute this software and its  *
  * documentation for non-commercial purposes is hereby granted without   *
  * fee, provided that the above copyright notice appears in all copies   *
  * and that both the copyright notice and this permission notice appear  *
  * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose.                         *
- * It is provided "as is" without express or implied warranty.           *
+ * suitability of this software for any purpose. It is provided "as is"  *
+ * without express or implied warranty.                                  *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -43,7 +49,6 @@ class TMath {
 private:
    static Double_t GamCf(Double_t a,Double_t x);
    static Double_t GamSer(Double_t a,Double_t x);
-   static Double_t LnGamma(Double_t z);
 
 public:
 
@@ -104,30 +109,40 @@ public:
    static Double_t Sign(Double_t a, Double_t b);
 
    // Min
-   static Short_t Min(Short_t a, Short_t b);
+   static Short_t  Min(Short_t a, Short_t b);
    static UShort_t Min(UShort_t a, UShort_t b);
-   static Int_t Min(Int_t a, Int_t b);
-   static UInt_t Min(UInt_t a, UInt_t b);
-   static Long_t Min(Long_t a, Long_t b);
-   static ULong_t Min(ULong_t a, ULong_t b);
-   static Float_t Min(Float_t a, Float_t b);
+   static Int_t    Min(Int_t a, Int_t b);
+   static UInt_t   Min(UInt_t a, UInt_t b);
+   static Long_t   Min(Long_t a, Long_t b);
+   static ULong_t  Min(ULong_t a, ULong_t b);
+   static Float_t  Min(Float_t a, Float_t b);
    static Double_t Min(Double_t a, Double_t b);
 
    // Max
-   static Short_t Max(Short_t a, Short_t b);
+   static Short_t  Max(Short_t a, Short_t b);
    static UShort_t Max(UShort_t a, UShort_t b);
-   static Int_t Max(Int_t a, Int_t b);
-   static UInt_t Max(UInt_t a, UInt_t b);
-   static Long_t Max(Long_t a, Long_t b);
-   static ULong_t Max(ULong_t a, ULong_t b);
-   static Float_t Max(Float_t a, Float_t b);
+   static Int_t    Max(Int_t a, Int_t b);
+   static UInt_t   Max(UInt_t a, UInt_t b);
+   static Long_t   Max(Long_t a, Long_t b);
+   static ULong_t  Max(ULong_t a, ULong_t b);
+   static Float_t  Max(Float_t a, Float_t b);
    static Double_t Max(Double_t a, Double_t b);
 
+   // Locate Min, Max
+   static Int_t  LocMin(Int_t n, Short_t *a);
+   static Int_t  LocMin(Int_t n, Int_t *a);
+   static Int_t  LocMin(Int_t n, Float_t *a);
+   static Int_t  LocMin(Int_t n, Double_t *a);
+   static Int_t  LocMax(Int_t n, Short_t *a);
+   static Int_t  LocMax(Int_t n, Int_t *a);
+   static Int_t  LocMax(Int_t n, Float_t *a);
+   static Int_t  LocMax(Int_t n, Double_t *a);
+
    // Range
-   static Short_t Range(Short_t lb, Short_t ub, Short_t x);
-   static Int_t Range(Int_t lb, Int_t ub, Int_t x);
-   static Long_t Range(Long_t lb, Long_t ub, Long_t x);
-   static ULong_t Range(ULong_t lb, ULong_t ub, ULong_t x);
+   static Short_t  Range(Short_t lb, Short_t ub, Short_t x);
+   static Int_t    Range(Int_t lb, Int_t ub, Int_t x);
+   static Long_t   Range(Long_t lb, Long_t ub, Long_t x);
+   static ULong_t  Range(ULong_t lb, ULong_t ub, ULong_t x);
    static Double_t Range(Double_t lb, Double_t ub, Double_t x);
 
    // Binary search
@@ -140,11 +155,15 @@ public:
    static Int_t BinarySearch(Int_t n, Double_t *array, Double_t value);
    static Int_t BinarySearch(Int_t n, Double_t **array, Double_t value);
 
+   // Hashing
+   static ULong_t Hash(const void *txt, Int_t ntxt);
+   static ULong_t Hash(const char *str);
+
    // Sorting
-   static void  Sort(Int_t n, Short_t *a,  Int_t *index, Bool_t down=kTRUE);
-   static void  Sort(Int_t n, Int_t *a,    Int_t *index, Bool_t down=kTRUE);
-   static void  Sort(Int_t n, Float_t *a,  Int_t *index, Bool_t down=kTRUE);
-   static void  Sort(Int_t n, Double_t *a, Int_t *index, Bool_t down=kTRUE);
+   static void Sort(Int_t n, Short_t *a,  Int_t *index, Bool_t down=kTRUE);
+   static void Sort(Int_t n, Int_t *a,    Int_t *index, Bool_t down=kTRUE);
+   static void Sort(Int_t n, Float_t *a,  Int_t *index, Bool_t down=kTRUE);
+   static void Sort(Int_t n, Double_t *a, Int_t *index, Bool_t down=kTRUE);
 
    // Advanced
    static Float_t *Cross(Float_t v1[3],Float_t v2[3],Float_t out[3]);     // Calculate the Cross Product of two vectors
@@ -153,35 +172,21 @@ public:
    static Float_t *Normal2Plane(Float_t v1[3],Float_t v2[3],Float_t v3[3], Float_t normal[3]); // Calcualte a normal vector of a plane
 
    static Double_t *Cross(Double_t v1[3],Double_t v2[3],Double_t out[3]);// Calculate the Cross Product of two vectors
-   static Double_t Erf(Double_t x);
-   static Double_t Erfc(Double_t x);
-   static Double_t Gamma(Double_t z);
-   static Double_t Gamma(Double_t a,Double_t x);
-   static Double_t Gaus(Double_t x, Double_t mean=0, Double_t sigma=1);
-   static Double_t Landau(Double_t x, Double_t mean=0, Double_t sigma=1);
-   static Double_t Normalize(Double_t v[3]);                             // normalize a vector
-   static Double_t NormCross(Double_t v1[3],Double_t v2[3],Double_t out[3]); // Calculate the Normalized Cross Product of two vectors
+   static Double_t  Erf(Double_t x);
+   static Double_t  Erfc(Double_t x);
+   static Double_t  Gamma(Double_t z);
+   static Double_t  Gamma(Double_t a,Double_t x);
+   static Double_t  Gaus(Double_t x, Double_t mean=0, Double_t sigma=1);
+   static Double_t  Landau(Double_t x, Double_t mean=0, Double_t sigma=1);
+   static Double_t  LnGamma(Double_t z);
+   static Double_t  Normalize(Double_t v[3]);                             // normalize a vector
+   static Double_t  NormCross(Double_t v1[3],Double_t v2[3],Double_t out[3]); // Calculate the Normalized Cross Product of two vectors
    static Double_t *Normal2Plane(Double_t v1[3],Double_t v2[3],Double_t v3[3], Double_t normal[3]); // Calcualte a normal vector of a plane
-   static Double_t Prob(Double_t chi2,Int_t ndf);
+   static Double_t  Prob(Double_t chi2,Int_t ndf);
 
    ClassDef(TMath,0)  //Interface to math routines
 };
 
-//---- Misc --------------------------------------------------------------------
-
-inline Int_t TMath::Nint(Float_t x)
-{
-   int i = int(x + 0.5);
-   if (x + 0.5 == Float_t(i) && i & 1) i--;
-   return i;
-}
-
-inline Int_t TMath::Nint(Double_t x)
-{
-   int i = int(x + 0.5);
-   if (x + 0.5 == Double_t(i) && i & 1) i--;
-   return i;
-}
 
 //---- Even/odd ----------------------------------------------------------------
 
@@ -348,7 +353,7 @@ inline Double_t TMath::ATan(Double_t x)
    { return atan(x); }
 
 inline Double_t TMath::ATan2(Double_t y, Double_t x)
-   { return x ? atan2(y, x) : Pi()/2; }
+   { return x != 0 ? atan2(y, x) : (y > 0 ? Pi()/2 : -Pi()/2); }
 
 inline Double_t TMath::Sqrt(Double_t x)
    { return sqrt(x); }

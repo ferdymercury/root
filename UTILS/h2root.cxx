@@ -1,3 +1,4 @@
+//*CMZ :  2.22/00 06/04/99  19.07.00  by  Rene Brun
 //*CMZ :  2.21/05 08/02/99  11.08.46  by  Rene Brun
 //*CMZ :  2.21/01 11/01/99  15.23.35  by  Fons Rademakers
 //*CMZ :  2.00/10 23/07/98  14.24.58  by  akiya miyamoto
@@ -470,8 +471,8 @@ int main(int argc, char **argv)
   Float_t offsety = 0.5*(ymax-ymin)/ncy;
 
   Float_t x,y;
-  for (Int_t j=1;j<=ncy;j++) {
-     for (Int_t i=1;i<=ncx;i++) {
+  for (Int_t j=0;j<=ncy+1;j++) {
+     for (Int_t i=0;i<=ncx+1;i++) {
         hijxy(id,i,j,x,y);
         h2->Fill(x+offsetx,y+offsety,hij(id,i,j));
      }

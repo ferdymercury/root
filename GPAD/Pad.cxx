@@ -1,3 +1,10 @@
+//*CMZ :  2.22/09 13/07/99  12.37.42  by  Rene Brun
+//*CMZ :  2.22/07 05/07/99  17.06.23  by  Rene Brun
+//*CMZ :  2.22/05 11/06/99  16.15.49  by  Rene Brun
+//*CMZ :  2.22/04 02/06/99  09.18.13  by  Rene Brun
+//*CMZ :  2.22/03 31/05/99  17.57.57  by  Rene Brun
+//*CMZ :  2.22/02 28/05/99  18.05.02  by  Rene Brun
+//*CMZ :  2.22/01 20/05/99  08.16.22  by  Rene Brun
 //*CMZ :  2.21/06 15/02/99  09.05.14  by  Rene Brun
 //*CMZ :  2.21/05 09/02/99  01.10.37  by  Fons Rademakers
 //*CMZ :  2.21/02 16/01/99  14.51.35  by  Rene Brun
@@ -14,20 +21,22 @@
 //*CMZ :  1.03/09 16/12/97  16.26.14  by  Rene Brun
 //*-- Author :    Rene Brun   12/12/94
 
+/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Fons Rademakers.                                  *
+ * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
  *                                                                       *
  * Permission to use, copy, modify and distribute this software and its  *
  * documentation for non-commercial purposes is hereby granted without   *
  * fee, provided that the above copyright notice appears in all copies   *
  * and that both the copyright notice and this permission notice appear  *
  * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose.                         *
- * It is provided "as is" without express or implied warranty.           *
+ * suitability of this software for any purpose. It is provided "as is"  *
+ * without express or implied warranty.                                  *
  *************************************************************************/
 
 #include <string.h>
@@ -75,7 +84,9 @@
 #include "TSystem.h"
 #endif
 
-const Int_t kClipFrame = BIT(10);
+const Int_t kNoStats    = BIT(9);
+const Int_t kClipFrame  = BIT(10);
+const Int_t kPrintingPS = BIT(11);
 const Int_t kDistanceMaximum = 5;
 
 // Local scratch buffer for screen points, faster than allocating buffer on heap
@@ -1059,6 +1070,7 @@ void TPad::DrawClassObject(TObject *classobj, Option_t *option)
    while(lbase) {
       base = (TBaseClass*)lbase->First();
       if (!base) break;
+      if ( base->GetClassPointer() == 0) break;
       nlevel++;
       clevel[nlevel] = base->GetClassPointer();
       lbase = clevel[nlevel]->GetListOfBases();
@@ -1212,7 +1224,7 @@ void TPad::DrawClassObject(TObject *classobj, Option_t *option)
 }
 
 //______________________________________________________________________________
-void TPad::DrawFrame(Float_t xmin, Float_t ymin, Float_t xmax, Float_t ymax, Text_t *title)
+TH1F *TPad::DrawFrame(Float_t xmin, Float_t ymin, Float_t xmax, Float_t ymax, Text_t *title)
 {
 //  Draw a pad frame
 //  Compute real pad range taking into account all margins
@@ -1221,10 +1233,13 @@ void TPad::DrawFrame(Float_t xmin, Float_t ymin, Float_t xmax, Float_t ymax, Tex
    TH1F *hframe = (TH1F*)GetPrimitive("hframe");
    if (hframe) delete hframe;
    hframe = new TH1F("hframe",title,100,xmin,xmax);
+   hframe->SetBit(kNoStats);
    hframe->SetMinimum(ymin);
    hframe->SetMaximum(ymax);
    hframe->SetDirectory(0);
    hframe->Draw();
+   Update();
+   return hframe;
 }
 
 //______________________________________________________________________________
@@ -1322,8 +1337,8 @@ void TPad::ExecuteEvent(Int_t event, Int_t px, Int_t py)
          CreateNewText(event,px,py);
 #else
         {
-         char cmd[]="TPad *p=(TPad *)0x1234567890123456; p->CreateNewText(xx,xxxx,xxxx);";
-         sprintf(cmd,"TPad *p=(TPad *)%#16x; p->CreateNewText(%2i,%4i,%4i);",
+         char cmd[]="((TPad *)0x1234567890123456)->CreateNewText(xx,xxxx,xxxx);";
+         sprintf(cmd,"((TPad *)%#16x)->CreateNewText(%2i,%4i,%4i);",
                                        this,                event, px, py);
          if (event == kButton1Down) gROOT->SetEditorMode();
          gInterpreter->ProcessLine(cmd);
@@ -1353,8 +1368,8 @@ void TPad::ExecuteEvent(Int_t event, Int_t px, Int_t py)
       case kDiamond:
 #ifdef WIN32
          if (newcode == kPaveLabel || newcode == kButton) {
-           char cmd[]= "TPad *p=(TPad *)0x1234567890123456; p->CreateNewPave(xx,xxxx,xxxx,xx);";
-           sprintf(cmd,"TPad *p=(TPad *)%#16x; p->CreateNewPave(%2i,%4i,%4i,%2i);",
+           char cmd[]= "((TPad *)0x1234567890123456)->CreateNewPave(xx,xxxx,xxxx,xx);";
+           sprintf(cmd,"((TPad *)%#16x)->CreateNewPave(%2i,%4i,%4i,%2i);",
                                          this,                event, px, py,newcode);
            if (event == kButton1Up) gROOT->SetEditorMode();
            gInterpreter->ProcessLine(cmd);
@@ -1575,6 +1590,7 @@ void TPad::Update()
 //______________________________________________________________________________
 TFrame *TPad::GetFrame()
 {
+   if (fFrame && !GetListOfPrimitives()->FindObject(fFrame)) fFrame = 0;
    if (!fFrame) {
       fFrame = new TFrame(0,0,1,1);
       Int_t framecolor = GetFrameFillColor();
@@ -1905,7 +1921,7 @@ void TPad::Paint(Option_t *option)
 //   else
    TWbox::Paint(option);
 
-   fPrimitives->Paint(option);
+   if (fPrimitives) fPrimitives->Paint(option);
 
    if (fPadView3D)
    {
@@ -1932,7 +1948,10 @@ void TPad::PaintPadFrame(Float_t xmin, Float_t ymin, Float_t xmax, Float_t ymax)
    frame->SetX2(xmax);
    frame->SetY1(ymin);
    frame->SetY2(ymax);
-   if (!glist->FindObject(fFrame)) glist->AddFirst(frame);
+   if (!glist->FindObject(fFrame)) {
+      glist->AddFirst(frame);
+      fFrame->SetBit(kObjInCanvas);
+   }
    frame->Paint();
 }
 
@@ -1943,7 +1962,10 @@ void TPad::PaintModified()
 //*-*          =======================================================
 
    TPad *padsav = (TPad*)gPad;
-
+   TPostScript *saveps = gCurrentPS;
+   if (gCurrentPS) {
+      if (gCurrentPS->TestBit(kPrintingPS)) gCurrentPS = 0;
+   }
    fPadPaint = 1;
    cd();
    if (IsModified() || IsTransparent()) {
@@ -1969,9 +1991,10 @@ void TPad::PaintModified()
        fPadView3D->PaintScene();
    }
 
-   padsav->cd();
+   if (padsav) padsav->cd();
    fPadPaint = 0;
    Modified(kFALSE);
+   gCurrentPS = saveps;
 }
 
 //______________________________________________________________________________
@@ -2189,7 +2212,7 @@ void TPad::PaintPolyLine(Int_t n, Float_t *x, Float_t *y, Option_t *)
 //*-*              ==============================================
 
    for (Int_t i=0;i<n-1;i++) {
-      TPad::PaintLine(x[i],y[i],x[i+1],y[i+1]);
+      PaintLine(x[i],y[i],x[i+1],y[i+1]);
    }
 
 #ifdef NEVER
@@ -2308,6 +2331,9 @@ void TPad::PaintText(Float_t x, Float_t y, const Text_t *text)
 //*-*-*-*-*-*-*-*-*Paint text in CurrentPad World coordinates*-*-*-*-*-*-*-*
 //*-*              ==========================================
 
+
+   Modified();
+
    if (!gPad->IsBatch()) {
       Int_t px = XtoPixel(x);
       Int_t py = YtoPixel(y);
@@ -2317,10 +2343,10 @@ void TPad::PaintText(Float_t x, Float_t y, const Text_t *text)
    }
 
    if (gCurrentPS) {
+      if (x < fX1 || x > fX2) return;
+      if (y < fY1 || y > fY2) return;
       gCurrentPS->Text(x, y, text);
    }
-
-   Modified();
 
 }
 
@@ -2329,6 +2355,9 @@ void TPad::PaintTextNDC(Float_t u, Float_t v, const Text_t *text)
 {
 //*-*-*-*-*-*-*-*-*Paint text in CurrentPad NDC coordinates*-*-*-*-*-*-*-*
 //*-*              ========================================
+
+
+   Modified();
 
    if (!gPad->IsBatch()) {
       Int_t px = UtoPixel(u);
@@ -2341,10 +2370,10 @@ void TPad::PaintTextNDC(Float_t u, Float_t v, const Text_t *text)
    if (gCurrentPS) {
       Float_t x = GetX1() + u*(GetX2() - GetX1());
       Float_t y = GetY1() + v*(GetY2() - GetY1());
+      if (x < fX1 || x > fX2) return;
+      if (y < fY1 || y > fY2) return;
       gCurrentPS->Text(x, y, text);
    }
-
-   Modified();
 
 }
 
@@ -2405,11 +2434,13 @@ TPad *TPad::Pick(Int_t px, Int_t py, TObjLink *&pickobj)
          }
       } else if (!gROOT->GetEditorMode()) {
          if (!gotPrim) {
-            dist = obj->DistancetoPrimitive(px, py);
-            if (dist < kDistanceMaximum) {
-               pickobj = lnk;
-               gotPrim = kTRUE;
-               if (dist == 0) break;
+            if (!obj->TestBit(kCannotPick)) {
+               dist = obj->DistancetoPrimitive(px, py);
+               if (dist < kDistanceMaximum) {
+                  pickobj = lnk;
+                  gotPrim = kTRUE;
+                  if (dist == 0) break;
+               }
             }
          }
       }
@@ -2493,6 +2524,7 @@ void TPad::Print(const Text_t *filename, Option_t *option)
          Printf("Cannot create gif file in batch mode.");
          return;
       }
+      Update();
       Int_t canvasid = GetCanvas()->GetCanvasID();
       gGXW->SelectWindow(canvasid);
       gGXW->WriteGIF(psname);
@@ -2515,6 +2547,13 @@ void TPad::Print(const Text_t *filename, Option_t *option)
       return;
    }
 
+   // in case we read directly from a Root file and teh canvas
+   // is not on the screen, set batch mode
+   Bool_t noScreen = kFALSE;
+   if (!GetCanvas()->IsBatch() && GetCanvas()->GetCanvasID() == -1) {
+      noScreen = kTRUE;
+      GetCanvas()->SetBatch(kTRUE);
+   }
    Int_t pstype = 111;
    Float_t xcanvas = GetCanvas()->XtoPixel(GetCanvas()->GetX2());
    Float_t ycanvas = GetCanvas()->YtoPixel(GetCanvas()->GetY1());
@@ -2527,8 +2566,10 @@ void TPad::Print(const Text_t *filename, Option_t *option)
    cd();
    TPostScript *psave = gCurrentPS;
    TPostScript *ps = new TPostScript(psname,pstype);
+   ps->SetBit(kPrintingPS);
    Paint();
    ps->Close();
+   if (noScreen) GetCanvas()->SetBatch(kFALSE);
    Printf("PostScript file: %s has been created",psname);
    gCurrentPS = psave;
    delete ps;
@@ -2592,6 +2633,7 @@ void TPad::RecursiveRemove(TObject *obj)
 //*-*-*-*-*-*-*-*Recursively remove object from a pad and its subpads*-*-*-*-*
 //*-*            ====================================================
 
+   if (obj == fCanvas->GetSelected()) fCanvas->SetSelected(0);
    Int_t nold = fPrimitives->GetSize();
    fPrimitives->RecursiveRemove(obj);
    if (nold != fPrimitives->GetSize()) fModified = kTRUE;
@@ -2604,17 +2646,33 @@ void TPad::RedrawAxis()
 //  Redrawing axis may be necessary in case of superimposed histograms
 //  when one or more histograms have a fill color
 //
-   TGaxis *axis = new TGaxis();
+   TGaxis axis;
    Float_t xmin,ymin,xmax,ymax;
    gPad->GetRangeAxis(xmin,ymin,xmax,ymax);
 //  redraw x axis
-   if (!gPad->GetLogx()) axis->DrawAxis(xmin,ymin,xmax,ymin,xmin,xmax);
-   else   axis->DrawAxis(xmin,ymin,xmax,ymin,
-                     TMath::Power(10,xmin),TMath::Power(10,xmax),510,"G");
+   axis.SetLineColor(gStyle->GetAxisColor("X"));
+   axis.SetTextColor(gStyle->GetLabelColor("X"));
+   axis.SetTextFont(gStyle->GetLabelFont("X"));
+   axis.SetLabelFont(gStyle->GetLabelFont("X"));
+   axis.SetLabelSize(gStyle->GetLabelSize("X"));
+   axis.SetLabelOffset(gStyle->GetLabelOffset("X"));
+   axis.SetTickSize(gStyle->GetTickLength("X"));
+   Int_t ndiv =gStyle->GetNdivisions("X");
+   if (!gPad->GetLogx()) axis.DrawAxis(xmin,ymin,xmax,ymin,xmin,xmax,ndiv);
+   else   axis.DrawAxis(xmin,ymin,xmax,ymin,
+                     TMath::Power(10,xmin),TMath::Power(10,xmax),ndiv,"G");
 //  redraw y axis
-   if (!gPad->GetLogy()) axis->DrawAxis(xmin,ymin,xmin,ymax,ymin,ymax);
-   else   axis->DrawAxis(xmin,ymin,xmin,ymax,
-                     TMath::Power(10,ymin),TMath::Power(10,ymax),510,"G");
+   axis.SetLineColor(gStyle->GetAxisColor("Y"));
+   axis.SetTextColor(gStyle->GetLabelColor("Y"));
+   axis.SetTextFont(gStyle->GetLabelFont("Y"));
+   axis.SetLabelFont(gStyle->GetLabelFont("Y"));
+   axis.SetLabelSize(gStyle->GetLabelSize("Y"));
+   axis.SetLabelOffset(gStyle->GetLabelOffset("Y"));
+   axis.SetTickSize(gStyle->GetTickLength("Y"));
+   ndiv =gStyle->GetNdivisions("Y");
+   if (!gPad->GetLogy()) axis.DrawAxis(xmin,ymin,xmin,ymax,ymin,ymax,ndiv);
+   else   axis.DrawAxis(xmin,ymin,xmin,ymax,
+                     TMath::Power(10,ymin),TMath::Power(10,ymax),ndiv,"G");
 }
 
 //______________________________________________________________________________
@@ -2947,7 +3005,7 @@ void TPad::SavePrimitive(ofstream &out, Option_t *)
          obj->SavePrimitive(out, (Option_t *)next.GetOption());
    out<<"   "<<GetName()<<"->Modified();"<<endl;
    out<<"   "<<padsav->GetName()<<"->cd();"<<endl;
-   padsav->cd();
+   if (padsav) padsav->cd();
 }
 
 //______________________________________________________________________________

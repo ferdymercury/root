@@ -1,5 +1,5 @@
-/*CMZ :  2.21/08 17/03/99  13.13.38  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   17/03/99*/
+/*CMZ :  2.22/10 23/07/99  14.42.12  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   23/07/99*/
 /* /% C++ %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -35,7 +35,7 @@ struct lconv
   char *int_curr_symbol;
   char *mon_decimal_point;	/* Decimal point character.  */
   char *mon_grouping;		/* Like `grouping' element (above).  */
-  char *mon_thousands_sep;	/* Thousands separator.  */
+  /* char *mon_thousands_sep;*/	/* Thousands separator.  */
   char n_cs_precedes;
   char n_sep_by_space;
   char n_sign_posn;

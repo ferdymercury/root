@@ -1,5 +1,5 @@
-/*CMZ :  2.21/08 17/03/99  13.13.39  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   17/03/99*/
+/*CMZ :  2.22/10 23/07/99  14.42.13  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   23/07/99*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -162,9 +162,9 @@ int G__display_proto(fp,func)
 FILE *fp;
 char *func;
 {
-  char funcname[G__ONELINE];
-  char scope[G__ONELINE];
-  char temp[G__ONELINE];
+  char funcname[G__LONGLINE];
+  char scope[G__LONGLINE];
+  char temp[G__LONGLINE];
   char *pc;
   /* int temp1; */
   int tagnum;
@@ -182,7 +182,12 @@ char *func;
     strcpy(scope,funcname);
     strcpy(temp,pc+2);
     strcpy(funcname,temp);
+#ifndef G__OLDIMPLEMENTATION1030
+    if(0==scope[0]) tagnum = -1;
+    else tagnum = G__defined_tagname(scope,0);
+#else
     tagnum = G__defined_tagname(scope,0);
+#endif
     /* class scope A::func , global scope ::func */
     if(-1==tagnum) ifunc = &G__ifunc;  /* global scope, ::func */
     else {
@@ -192,17 +197,35 @@ char *func;
   }
   else {
     /* global scope */
+    tagnum = -1;
     ifunc = &G__ifunc;
   }
 
   i=strlen(funcname);
   while(i&&(isspace(funcname[i-1])||'('==funcname[i-1])) funcname[--i]='\0';
   if(i) {
-    G__listfunc(fp,G__PUBLIC_PROTECTED_PRIVATE,funcname,ifunc);
+    if(G__listfunc(fp,G__PUBLIC_PROTECTED_PRIVATE,funcname,ifunc)) return(1);
   }
-  else {
-    G__listfunc(fp,G__PUBLIC_PROTECTED_PRIVATE,(char*)NULL,ifunc);
+  else  {
+    if(G__listfunc(fp,G__PUBLIC_PROTECTED_PRIVATE,(char*)NULL,ifunc))return(1);
   }
+#ifndef G__OLDIMPLEMENTATION1079
+  if(-1!=tagnum) {
+    int i1;
+    struct G__inheritance *baseclass = G__struct.baseclass[tagnum];
+    for(i1=0;i1<baseclass->basen;i1++) {
+      ifunc = G__struct.memfunc[baseclass->basetagnum[i1]];
+      if(i) {
+	if(G__listfunc(fp,G__PUBLIC_PROTECTED_PRIVATE,funcname,ifunc))
+	  return(1);
+      }
+      else  {
+	if(G__listfunc(fp,G__PUBLIC_PROTECTED_PRIVATE,(char*)NULL,ifunc))
+	  return(1);
+      }
+    }
+  }
+#endif
   return(0);
 }
 #endif
@@ -236,6 +259,10 @@ char *file;
   G__value buf;
 #ifdef G__ASM
   G__ALLOC_ASMENV;
+#endif
+
+#ifndef G__OLDIMPLEMENTATION1035
+  G__LockCriticalSection();
 #endif
 
   /*************************************************
@@ -334,10 +361,16 @@ char *file;
     if(G__RETURN_NORMAL==G__return) G__return=G__RETURN_NON;
 #endif
     G__no_exec=0;
+#ifndef G__OLDIMPLEMENTATION1035
+    G__UnlockCriticalSection();
+#endif
     return(buf);
   }
   else {
     fprintf(G__serr,"Error: file %s can not open\n",file);
+#ifndef G__OLDIMPLEMENTATION1035
+    G__UnlockCriticalSection();
+#endif
     return(G__null);
   }
 }
@@ -497,6 +530,11 @@ char *varname;
   int hash,ig15;
   struct G__var_array *var;
 
+#ifndef G__OLDIMPLEMENTATION1119
+  fprintf(G__serr,"Warning: lock variable obsolete feature");
+  G__printlinenum();
+#endif
+
   G__hash(varname,hash,ig15)
   var = G__getvarentry(varname,hash,&ig15,&G__global,G__p_local);	
 
@@ -521,6 +559,11 @@ char *varname;
 {
   int hash,ig15;
   struct G__var_array *var;
+
+#ifndef G__OLDIMPLEMENTATION1119
+  fprintf(G__serr,"Warning: lock variable obsolete feature");
+  G__printlinenum();
+#endif
 
   G__hash(varname,hash,ig15)
     var = G__getvarentry(varname,hash,&ig15,&G__global,G__p_local);	

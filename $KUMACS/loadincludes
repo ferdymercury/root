@@ -1,3 +1,4 @@
+*CMZ :  2.22/06 21/06/99  17.09.56  by  Rene Brun
 *CMZ :  2.00/09 19/06/98  11.05.50  by  Rene Brun
 *CMZ :  2.00/06 12/05/98  17.02.12  by  Rene Brun
 *CMZ :  2.00/00 05/03/98  17.26.27  by  Fons Rademakers
@@ -19,7 +20,7 @@ if [OS] = 'VMS' then
    machine = 'VMS'
 endif
 
-seq . include c zip incint eg gui
+seq . include c zip incint eg gui physics matrix thread
 
 if [machine] = 'HPUX' .OR. [machine] = 'IBMRT' .OR. [machine] = 'SOLARIS' .OR. _
    [machine] = 'SOLARISPC' .OR. [machine] = 'ALPHA' .OR. [machine] = 'SGI' _

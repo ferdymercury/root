@@ -1,5 +1,5 @@
-/*CMZ :  2.21/08 17/03/99  13.13.52  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   17/03/99*/
+/*CMZ :  2.22/10 23/07/99  14.42.26  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   23/07/99*/
 /***************************************************************************
 * include/platform.h
 *

@@ -1,3 +1,4 @@
+*CMZ :  2.22/07 05/07/99  15.17.01  by  Rene Brun
 *CMZ :  2.21/07 03/03/99  10.25.43  by  Rene Brun
 *CMZ :  2.00/11 07/08/98  21.59.00  by  Rene Brun
 *CMZ :  2.00/09 25/06/98  15.10.03  by  Fons Rademakers
@@ -17,8 +18,8 @@ seq -i src/*.h
 
 headers=TAttPad.h TAttCanvas.h TArc.h TArrow.h TBox.h TColor.h TDiamond.h _
         TEllipse.h TFrame.h TGaxis.h TGraph.h TGraphErrors.h TGraphAsymmErrors.h _
-        TLatex.h TLine.h TMarker.h TPolyLine.h TPolyMarker.h TText.h TPave.h _
-        TPaveLabel.h TPaveText.h TPavesText.h TF1.h TF2.h TF3.h TWbox.h
+        TLine.h TMarker.h TPolyLine.h TPolyMarker.h TText.h TPave.h _
+        TPaveLabel.h TPaveText.h TPavesText.h TWbox.h
 
 name=Graf1
 patch=G

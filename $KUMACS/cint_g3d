@@ -1,3 +1,4 @@
+*CMZ :  2.22/01 10/05/99  16.31.56  by  Valery Fine(fine@mail.cern.ch)
 *CMZ :  2.20/04 08/12/98  09.35.03  by  Rene Brun
 *CMZ :  2.00/09 25/06/98  14.25.10  by  Fons Rademakers
 *CMZ :  2.00/08 27/05/98  14.58.35  by  Valery Fine(fine@mail.cern.ch)
@@ -19,7 +20,7 @@ seq -i src/*.h
 headers=TPolyLine3D.h TPolyMarker3D.h TGeometry.h TMaterial.h TMixture.h TNode.h _
         TNodeDiv.h TRotMatrix.h TShape.h TBRIK.h TTRD1.h TTRD2.h TTUBE.h TCONE.h TCTUB.h TELTU.h _
         TTUBS.h TCONS.h TTRAP.h TPARA.h TGTRA.h TPCON.h TPGON.h TSPHE.h TGLKernelABC.h _
-        TPadOpenGLView.h TPadView3D.h TMarker3DBox.h THelix.h THYPE.h
+        TPadOpenGLView.h TPadView3D.h TMarker3DBox.h THelix.h THYPE.h TPoints3DABC.h
 
 name=G3D
 patch=G3D

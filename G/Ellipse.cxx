@@ -1,22 +1,25 @@
+//*CMZ :  2.22/01 10/05/99  09.38.04  by  Rene Brun
 //*CMZ :  2.20/05 15/12/98  09.17.20  by  Rene Brun
 //*CMZ :  2.00/12 05/09/98  18.32.20  by  Rene Brun
 //*CMZ :  1.03/09 06/12/97  17.07.11  by  Fons Rademakers
 //*-- Author :    Rene Brun   16/10/95
 
+/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Fons Rademakers.                                  *
+ * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
  *                                                                       *
  * Permission to use, copy, modify and distribute this software and its  *
  * documentation for non-commercial purposes is hereby granted without   *
  * fee, provided that the above copyright notice appears in all copies   *
  * and that both the copyright notice and this permission notice appear  *
  * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose.                         *
- * It is provided "as is" without express or implied warranty.           *
+ * suitability of this software for any purpose. It is provided "as is"  *
+ * without express or implied warranty.                                  *
  *************************************************************************/
 
 #include <stdlib.h>
@@ -441,7 +444,7 @@ void TEllipse::PaintEllipse(Float_t, Float_t, Float_t, Float_t, Float_t phimin,F
 
    const Int_t np = 40;
    const Float_t PI = 3.141592;
-   static Float_t x[np+2], y[np+2];
+   static Float_t x[np+3], y[np+3];
    TAttLine::Modify();  //Change line attributes only if necessary
    TAttFill::Modify();  //Change fill attributes only if necessary
 
@@ -449,7 +452,7 @@ void TEllipse::PaintEllipse(Float_t, Float_t, Float_t, Float_t, Float_t phimin,F
    Float_t dphi = (phimax-phimin)*PI/(180*np);
    Float_t ct   = TMath::Cos(PI*theta/180);
    Float_t st   = TMath::Sin(PI*theta/180);
-   for (Int_t i=0;i<np;i++) {
+   for (Int_t i=0;i<=np;i++) {
       angle = phimin + Float_t(i)*dphi;
       dx    = fR1*TMath::Cos(angle);
       dy    = fR2*TMath::Sin(angle);
@@ -457,17 +460,15 @@ void TEllipse::PaintEllipse(Float_t, Float_t, Float_t, Float_t, Float_t phimin,F
       y[i]  = fY1 + dx*st + dy*ct;
    }
    if (phimax-phimin >= 360 ) {
-      x[np] = x[0];
-      y[np] = y[0];
       if (GetFillColor()) gPad->PaintFillArea(np,x,y);
       if (GetLineStyle()) gPad->PaintPolyLine(np+1,x,y);
    } else {
-      x[np]   = fX1;
-      y[np]   = fY1;
-      x[np+1] = x[0];
-      y[np+1] = y[0];
-      if (GetFillColor()) gPad->PaintFillArea(np+1,x,y);
-      if (GetLineStyle()) gPad->PaintPolyLine(np+2,x,y);
+      x[np+1] = fX1;
+      y[np+1] = fY1;
+      x[np+2] = x[0];
+      y[np+2] = y[0];
+      if (GetFillColor()) gPad->PaintFillArea(np+2,x,y);
+      if (GetLineStyle()) gPad->PaintPolyLine(np+3,x,y);
    }
 }
 

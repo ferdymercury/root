@@ -1,3 +1,4 @@
+//*CMZ :  2.22/10 21/07/99  22.18.32  by  Rene Brun
 //*CMZ :  2.00/10 19/12/98  19.03.49  by  Fons Rademakers
 //*CMZ :  2.00/00 11/02/98  12.55.58  by  Rene Brun
 //*CMZ :  1.03/09 11/12/97  08.14.32  by  Fons Rademakers
@@ -6,20 +7,22 @@
 #ifndef ROOT_TPostScript
 #define ROOT_TPostScript
 
+/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Fons Rademakers.                                  *
+ * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
  *                                                                       *
  * Permission to use, copy, modify and distribute this software and its  *
  * documentation for non-commercial purposes is hereby granted without   *
  * fee, provided that the above copyright notice appears in all copies   *
  * and that both the copyright notice and this permission notice appear  *
  * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose.                         *
- * It is provided "as is" without express or implied warranty.           *
+ * suitability of this software for any purpose. It is provided "as is"  *
+ * without express or implied warranty.                                  *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -101,6 +104,7 @@ protected:
         Bool_t       fZone;          //Zone indicator
         ofstream    *fStream;        //File stream identifier
         Text_t       fBuffer[512];   //PostScript file buffer
+        Text_t       fPatterns[32];  //Indicate if pattern n is defined
 
 public:
         TPostScript();
@@ -108,7 +112,6 @@ public:
         virtual     ~TPostScript();
                 void  Close(Option_t *opt="");
                 Int_t CMtoPS(Float_t u) {return Int_t(0.5 + 72*u/2.54);}
-                void  DefineFillPatterns();
                 void  DefineMarkers();
                 void  DrawBox(Coord_t x1, Coord_t y1,Coord_t x2, Coord_t  y2);
                 void  DrawFrame(Coord_t xl, Coord_t yl, Coord_t xt, Coord_t  yt,
@@ -139,6 +142,7 @@ public:
                 void  Open(Text_t *filename, Int_t type=-111);
                 void  SaveRestore(Int_t flag);
                 void  SetFillColor( Color_t cindex=1);
+                void  SetFillPatterns(Int_t ipat, Int_t color);
                 void  SetFillStyle( Style_t style);
                 void  SetLineColor( Color_t cindex=1);
                 void  SetLineStyle(Style_t linestyle = 1);
@@ -177,4 +181,3 @@ public:
 R__EXTERN TPostScript  *gCurrentPS;
 
 #endif
-

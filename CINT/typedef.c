@@ -1,5 +1,5 @@
-/*CMZ :  2.21/08 17/03/99  13.13.45  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   17/03/99*/
+/*CMZ :  2.22/10 23/07/99  14.42.20  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   23/07/99*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -41,9 +41,9 @@ char *typename;
 {
   int i,flag=0,len;
   char ispointer=0;
-  char temp[G__ONELINE];
+  char temp[G__LONGLINE];
   char *p;
-  char temp2[G__ONELINE];
+  char temp2[G__LONGLINE];
   int env_tagnum;
 #ifndef G__OLDIMPLEMENTATION745
   char *par;
@@ -118,12 +118,12 @@ void G__define_type()
 {
   fpos_t rewind_fpos;
   int c;
-  char type1[G__ONELINE],tagname[G__ONELINE],typename[G__ONELINE];
+  char type1[G__LONGLINE],tagname[G__LONGLINE],typename[G__LONGLINE];
   int isnext;
   fpos_t next_fpos;
   int /* itag=0,*/ mparen,store_tagnum,store_def_struct_member=0;
   struct G__var_array *store_local;
-  /* char store_tagname[G__ONELINE] */
+  /* char store_tagname[G__LONGLINE] */
   char category[10],memname[G__MAXNAME],val[G__ONELINE];
   char type,tagtype=0;
   int unsigned_flag=0 /* ,flag=0 */ ,mem_def=0,temp_line;
@@ -364,7 +364,33 @@ void G__define_type()
     itemp = G__defined_typename(type1);
     if(-1!=itemp) {
       type=G__newtype.type[itemp];
-#ifndef G__OLDIMPLEMENTATION919
+#ifndef G__OLDIMPLEMENTATION1112
+      switch(reftype) {
+      case G__PARANORMAL:
+	reftype=G__newtype.reftype[itemp];
+	break;
+      case G__PARAREFERENCE:
+	if(G__PARANORMAL!=G__newtype.reftype[itemp]) {
+	  fprintf(G__serr
+	 ,"Limitation: reference or pointer type not handled properly");
+	  G__printlinenum();
+	}
+	break;
+      default:
+	switch(G__newtype.reftype[itemp]) {
+	case G__PARANORMAL:
+	  break;
+	case G__PARAREFERENCE:
+	  fprintf(G__serr
+	  ,"Limitation: reference or pointer type not handled properly");
+	  G__printlinenum();
+	  break;
+	default:
+	  break;
+	}
+	break;
+      }
+#else
       reftype=G__newtype.reftype[itemp];
 #endif
       itemp = G__newtype.tagnum[itemp];
@@ -404,6 +430,27 @@ void G__define_type()
     c=G__fgetname_template(typename,";,[");
   }
 
+#ifndef G__OLDIMPLEMENTATION1141
+  if(strcmp(typename,"long")==0) {
+    if('l'==type) {
+      if(0==G__defined_macro("G__LONGLONG_H")) {
+#ifdef G__WIN32
+	G__loadfile("long.dll");
+#else
+	G__loadfile("long.dl");
+#endif
+      }
+      strcpy(tagname,"G__longlong");
+      itemp=G__defined_tagname(tagname,2);
+      if(-1==itemp) {
+	G__genericerror("Error: 'long long' not ready. Go to $CINTSYSDIR/lib/longlong and run setup");
+      }
+      G__search_typename("long long",'u',itemp,G__PARANORMAL);
+      type='u';
+    }
+    c=G__fgetname(typename,";,[");
+  }
+#endif
 
   /* in case of
    *  typedef unsigned long int  int32;
@@ -823,9 +870,9 @@ char *typename;
   int i;
   int len;
   char ispointer=0;
-  char temp[G__ONELINE];
+  char temp[G__LONGLINE];
   char *p;
-  char temp2[G__ONELINE];
+  char temp2[G__LONGLINE];
   int env_tagnum;
   int typenum = -1;
   unsigned long matchflag=0;
@@ -1046,7 +1093,7 @@ int reftype;
   char ispointer=0;
 
 #ifndef G__OLDIMPLEMENTATION708
-  char typename[G__ONELINE];
+  char typename[G__LONGLINE];
   strcpy(typename,typenamein);
   /* keep uniqueness for pointer to function typedefs */
   if('Q'==typein) G__make_uniqueP2Ftypedef(typename);
@@ -1247,6 +1294,10 @@ int len;
 	G__tagnum=G__search_tagname(typename,'c');
 	fprintf(G__fpundeftype,"class %s; /* %s %d */\n",typename
 		,G__ifile.name,G__ifile.line_number);
+#ifndef G__OLDIMPLEMENTATION1133
+	fprintf(G__fpundeftype,"#pragma link off class %s;\n\n",typename);
+	G__struct.globalcomp[G__tagnum] = G__NOLINK;
+#endif
       }
       else {
 	/* if not found, return */

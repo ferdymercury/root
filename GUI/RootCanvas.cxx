@@ -1,3 +1,4 @@
+//*CMZ :  2.22/08 07/07/99  18.00.42  by  Rene Brun
 //*CMZ :  2.21/08 11/03/99  16.29.53  by  Fons Rademakers
 //*CMZ :  2.21/05 09/02/99  15.41.56  by  Fons Rademakers
 //*CMZ :  2.20/05 14/12/98  01.16.26  by  Fons Rademakers
@@ -13,20 +14,22 @@
 //*CMZ :  2.00/00 06/03/98  17.28.43  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   15/01/98
 
+/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Fons Rademakers.                                  *
+ * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
  *                                                                       *
  * Permission to use, copy, modify and distribute this software and its  *
  * documentation for non-commercial purposes is hereby granted without   *
  * fee, provided that the above copyright notice appears in all copies   *
  * and that both the copyright notice and this permission notice appear  *
  * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose.                         *
- * It is provided "as is" without express or implied warranty.           *
+ * suitability of this software for any purpose. It is provided "as is"  *
+ * without express or implied warranty.                                  *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -956,8 +959,11 @@ Bool_t TRootCanvas::HandleContainerCrossing(Event_t *event)
 {
    // Handle enter/leave events. Only leave is activated at the moment.
 
+   Int_t x = event->fX;
+   Int_t y = event->fY;
+
    if (event->fType == kLeaveNotify)
-      fCanvas->HandleInput(kMouseLeave, 0, 0);
+      fCanvas->HandleInput(kMouseLeave, x, y);
 
    return kTRUE;
 }

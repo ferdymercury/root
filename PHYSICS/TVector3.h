@@ -1,283 +1,380 @@
+//*CMZ :  2.22/09 12/07/99  18.43.17  by  Rene Brun
+//*CMZ :  2.22/06 19/06/99  09.15.38  by  Peter Malzacher
+//*CMZ :  2.22/02 26/05/99  09.41.45  by  Rene Brun
+//*CMZ :  2.22/00 06/04/99  19.09.39  by  Rene Brun
 //*CMZ :  2.21/06 15/02/99  09.42.59  by  Rene Brun
-//*-- Author :    Pasha Murat   12/02/99
-//------------------------------------------------------------------------------
-// Copyright(c) 1995-1997, P.Murat (CDF collaboration, FNAL)
-//
-// Permission to use, copy, modify and distribute this software and its
-// documentation for non-commercial purposes is hereby granted without fee,
-// provided that the above copyright notice appears in all copies and
-// that both the copyright notice and this permission notice appear in
-// the supporting documentation. The authors make no claims about the
-// suitability of this software for any purpose.
-// It is provided "as is" without express or implied warranty.
-//------------------------------------------------------------------------------
-
-//------------------------------------------------------------------------------
-//  1994 P.Murat
-//  define special V3 class for handling 3-vectors (to keep efficiency)
-//  choose internal representation to be double
-//  revision history:
-//  -----------------
-// *0001 Feb 12 1997 P.Murat: change `private' to `protected' for data members
-//                             add deltaPhi(TVector3&) method
-// *0002 Sep 01 1997 P.Murat: add ifdefs for CINT
-// *0003 Sep 29 1997 P.Murat: fix misuse of the UNION
-//------------------------------------------------------------------------------
-
+//*-- Author :    Pasha Murat, Peter Malzacher   12/02/99
 #ifndef ROOT_TVector3
 #define ROOT_TVector3
 
-#ifndef ROOT_TVector2
+#include "TMath.h"
+#include "TError.h"
 #include "TVector2.h"
-#endif
-
-#ifndef ROOT_TMatrix
 #include "TMatrix.h"
-#endif
+
+class TRotation;
+
 
 class TVector3 : public TObject {
-//------------------------------------------------------------------------------
-//  data members (components of the vector)
-//------------------------------------------------------------------------------
-protected:
-					
-  Double_t   fX;       // components of the vector
-  Double_t   fY;
-  Double_t   fZ;
-//------------------------------------------------------------------------------
-//  function members
-//------------------------------------------------------------------------------
+
 public:
-                                        // ****** constructors and destructor
-  TVector3();
-  TVector3(Double_t x0, Double_t y0, Double_t z0);
-  TVector3(float  x0, float  y0, float  z0);
-  TVector3(Double_t *x0);
-  TVector3(float  *x0);
-  virtual ~TVector3();
-                                        // data component access
-
-  Double_t X  ()     const  { return fX;};
-  Double_t Y  ()     const  { return fY;};
-  Double_t Z  ()     const  { return fZ;};
 
 
-  TVector3      Ort();
+  TVector3(Double_t x = 0.0, Double_t y = 0.0, Double_t z = 0.0);
+  // The constructor.
 
-                                        // vector-like notation (1:3)
+  TVector3(Double_t *);
+  TVector3(Float_t *);
+  // Constructors from an array
 
-  Double_t operator () (Int_t i) const { return *(&fX+i-1); };
+  TVector3(const TVector3 &);
+  // The copy constructor.
 
-                                        // unary operators
+  Double_t operator () (int) const;
+  inline Double_t operator [] (int) const;
+  // Get components by index (Geant4).
 
-  inline TVector3& operator +           (const TVector3& v);
-  inline TVector3& operator -           (const TVector3& v);
+  Double_t & operator () (int);
+  inline Double_t & operator [] (int);
+  // Set components by index.
 
-                                        // overloaded binary operators
-                                        // (should be defined as friends)
+  inline Double_t X() const;
+  inline Double_t Y() const;
+  inline Double_t Z() const;
+  // The components in cartesian coordinate system.
 
-  friend TVector3       operator ^  (const TVector3&, const TVector3&);
-  friend Int_t     operator == (const TVector3& u, const TVector3& v);
-  friend TVector3       operator  + (const TVector3&, const TVector3&);
-  friend TVector3       operator  - (const TVector3&, const TVector3&);
-  friend Double_t  operator  * (const TVector3&, const TVector3&);
-  friend TVector3       operator  * (const TVector3&, double);
-  friend TVector3       operator  * (double, const TVector3&);
-  friend TVector3       operator  * (const TMatrix&, const TVector3&);
-  friend TVector3       operator  / (const TVector3&, double);
+  inline void SetX(Double_t);
+  inline void SetY(Double_t);
+  inline void SetZ(Double_t);
+  inline void SetXYZ(Double_t x, Double_t y, Double_t z);
+  // Set the components in cartesian coordinate system.
 
-                                        // synonims (momentum and coordinate)
-                                        // for TVector3 length
+  inline Double_t Phi() const;
+  // The azimuth angle.
 
-  Double_t Mod2 () const { return (fX*fX+fY*fY+fZ*fZ); };
-  Double_t Mod  () const { return TMath::Sqrt(Mod2()); };
+  inline Double_t Theta() const;
+  // The polar angle.
 
-  Double_t Pmod () const { return Mod(); };
-  Double_t Rmod () const { return Mod(); };
-  Double_t P    () const { return Mod(); };
-  Double_t R    () const { return Mod(); };
+  inline Double_t CosTheta() const;
+  // Cosine of the polar angle.
 
-                                        // vector components and Pt
+  inline Double_t Mag2() const;
+  // The magnitude squared (rho^2 in spherical coordinate system).
 
-  Double_t Px   () const { return fX;};
-  Double_t Py   () const { return fY;};
-  Double_t Pz   () const { return fZ;};
+  inline Double_t Mag() const;
+  // The magnitude (rho in spherical coordinate system).
 
-  Double_t Pt2  () const {return fX*fX+fY*fY ;};
-  Double_t Pt   () const {return TMath::Sqrt(Pt2()) ;};
+  inline void SetPhi(Double_t);
+  // Set phi keeping mag and theta constant (BaBar).
 
-                                        // phi and theta, phi is in [0,TWOPI]
+  inline void SetTheta(Double_t);
+  // Set theta keeping mag and phi constant (BaBar).
 
-  Double_t Phi  () const { return kPI+TMath::ATan2(-Py(),-Px()); };
-  Double_t Theta() const { return TMath::ASin(Pz()/Pmod()); };
+  inline void SetMag(Double_t);
+  // Set magnitude keeping theta and phi constant (BaBar).
 
-				        // delta(phi) between 2 vectors, defined
-					// in [-PI,PI)
+  inline Double_t Perp2() const;
+  // The transverse component squared (R^2 in cylindrical coordinate system).
 
-  Double_t DeltaPhi(TVector3& v) const { return phi_mpi_pi(Phi()-v.Phi()); }
+  inline Double_t Pt() const;
+  inline Double_t Perp() const;
+  // The transverse component (R in cylindrical coordinate system).
 
-                                        // pseudorapidity
-  Double_t  Eta();
-                                        // distance in eta-phi between two
-                                        // 3-vectors take into account that phi
-                                        // is discontigous: 0 == TWOPI
-  Double_t DrEtaPhi(TVector3& v);
-                                        // 2D vector in (eta-phi) space
-  TVector2  EtaPhiVector();
-                                        // different setters
+  inline void SetPerp(Double_t);
+  // Set the transverse component keeping phi and z constant.
 
-  void Set (Double_t x0, Double_t y0, Double_t z0);
-  void Set (float  x0, float  y0, float  z0);
-  void Set (Double_t v0[]);
-  void Set (float  v0[]);
-                                        // different getters
+  inline Double_t Perp2(const TVector3 &) const;
+  // The transverse component w.r.t. given axis squared.
 
-  void Get (double& x0, double& y0, double& z0);
-  void Get (float&  x0, float&  y0, float&  z0);
-  void Get (Double_t *v0);
-  void Get (float  *v0);
-                                        // sinonyms for XY 2-vector's
+  inline Double_t Pt(const TVector3 &) const;
+  inline Double_t Perp(const TVector3 &) const;
+  // The transverse component w.r.t. given axis.
 
-  TVector2    Xy ()  { return TVector2(fX,fY); };
-  TVector2    Pxy()  { return TVector2(fX,fY); };
+  inline Double_t DeltaPhi(const TVector3 &) const;
+  inline Double_t DeltaR(const TVector3 &) const;
+  inline Double_t DrEtaPhi(const TVector3 &) const;
+  inline TVector2 EtaPhiVector();
 
-                                        // part of *this, normal to `v'
-  TVector3    Normal(TVector3& v);
-			
-  ClassDef(TVector3,1)
+  inline TVector3 & operator = (const TVector3 &);
+  // Assignment.
+
+  inline Bool_t operator == (const TVector3 &) const;
+  inline Bool_t operator != (const TVector3 &) const;
+  // Comparisons (Geant4).
+
+  inline TVector3 & operator += (const TVector3 &);
+  // Addition.
+
+  inline TVector3 & operator -= (const TVector3 &);
+  // Subtraction.
+
+  inline TVector3 operator - () const;
+  // Unary minus.
+
+  inline TVector3 & operator *= (Double_t);
+  // Scaling with real numbers.
+
+  inline TVector3 Unit() const;
+  // Unit vector parallel to this.
+
+  inline TVector3 Orthogonal() const;
+  // Vector orthogonal to this (Geant4).
+
+  inline Double_t Dot(const TVector3 &) const;
+  // Scalar product.
+
+  inline TVector3 Cross(const TVector3 &) const;
+  // Cross product.
+
+  inline Double_t Angle(const TVector3 &) const;
+  // The angle w.r.t. another 3-vector.
+
+  Double_t PseudoRapidity() const;
+  // Returns the pseudo-rapidity, i.e. -ln(tan(theta/2))
+
+  inline Double_t Eta() const;
+
+  void RotateX(Double_t);
+  // Rotates the Hep3Vector around the x-axis.
+
+  void RotateY(Double_t);
+  // Rotates the Hep3Vector around the y-axis.
+
+  void RotateZ(Double_t);
+  // Rotates the Hep3Vector around the z-axis.
+
+  void RotateUz(const TVector3&);
+  // Rotates reference frame from Uz to newUz (unit vector) (Geant4).
+
+  void Rotate(Double_t, const TVector3 &);
+  // Rotates around the axis specified by another Hep3Vector.
+
+  TVector3 & operator *= (const TRotation &);
+  TVector3 & Transform(const TRotation &);
+  // Transformation with a Rotation matrix.
+
+  inline TVector2 XYvector();
+
+
+
+private:
+
+  Double_t fX, fY, fZ;
+  // The components.
+
+  ClassDef(TVector3,1) // A three vector
+
 };
 
-//------------------------------------------------------------------------------
-//  ****** TVector3 class inline functions
-//------------------------------------------------------------------------------
 
-                                        // unary operators
+TVector3 operator + (const TVector3 &, const TVector3 &);
+// Addition of 3-vectors.
 
-inline TVector3&  TVector3::operator + (const TVector3& v) {
-  fX += v.fX; fY += v.fY; fZ += v.fZ;
+TVector3 operator - (const TVector3 &, const TVector3 &);
+// Subtraction of 3-vectors.
+
+Double_t operator * (const TVector3 &, const TVector3 &);
+// Scalar product of 3-vectors.
+
+TVector3 operator * (const TVector3 &, Double_t a);
+TVector3 operator * (Double_t a, const TVector3 &);
+// Scaling of 3-vectors with a real number
+
+TVector3 operator * (const TMatrix &, const TVector3 &);
+
+
+Double_t & TVector3::operator[] (int i)       { return operator()(i); }
+Double_t   TVector3::operator[] (int i) const { return operator()(i); }
+
+inline Double_t TVector3::X() const { return fX; }
+inline Double_t TVector3::Y() const { return fY; }
+inline Double_t TVector3::Z() const { return fZ; }
+
+inline void TVector3::SetX(Double_t x) { fX = x; }
+inline void TVector3::SetY(Double_t y) { fY = y; }
+inline void TVector3::SetZ(Double_t z) { fZ = z; }
+
+inline void TVector3::SetXYZ(Double_t x, Double_t y, Double_t z) {
+   fX = x;
+   fY = y;
+   fZ = z;
+}
+
+inline TVector3 & TVector3::operator = (const TVector3 & p) {
+  fX = p.fX;
+  fY = p.fY;
+  fZ = p.fZ;
   return *this;
 }
 
-inline TVector3&  TVector3::operator - (const TVector3& v) {
-  fX -= v.fX; fY -= v.fY; fZ -= v.fZ;
+inline Bool_t TVector3::operator == (const TVector3& v) const {
+  return (v.fX==fX && v.fY==fY && v.fZ==fZ) ? kTRUE : kFALSE;
+}
+
+inline Bool_t TVector3::operator != (const TVector3& v) const {
+  return (v.fX!=fX || v.fY!=fY || v.fZ!=fZ) ? kTRUE : kFALSE;
+}
+
+inline TVector3& TVector3::operator += (const TVector3 & p) {
+  fX += p.fX;
+  fY += p.fY;
+  fZ += p.fZ;
   return *this;
 }
-                                        // binary operators
 
-inline TVector3  operator + (const TVector3& v1, const TVector3& v2) {
-  return TVector3 (v1.fX+v2.fX, v1.fY+v2.fY, v1.fZ+v2.fZ);
+inline TVector3& TVector3::operator -= (const TVector3 & p) {
+  fX -= p.fX;
+  fY -= p.fY;
+  fZ -= p.fZ;
+  return *this;
 }
 
-inline TVector3  operator - (const TVector3& v1, const TVector3& v2) {
-  return TVector3 (v1.fX-v2.fX, v1.fY-v2.fY, v1.fZ-v2.fZ);
+inline TVector3 TVector3::operator - () const {
+  return TVector3(-fX, -fY, -fZ);
 }
 
-
-inline TVector3  operator ^ (const TVector3& v1, const TVector3& v2) {
-  return TVector3 ( v1.fY*v2.fZ-v1.fZ*v2.fY,
-	       v1.fZ*v2.fX-v1.fX*v2.fZ,
-	       v1.fX*v2.fY-v1.fY*v2.fX );
+inline TVector3& TVector3::operator *= (Double_t a) {
+  fX *= a;
+  fY *= a;
+  fZ *= a;
+  return *this;
 }
 
-inline Int_t operator == (const TVector3& u, const TVector3& v) {
-  if ((v.fX==u.fX)&&(v.fY==u.fY)&&(v.fZ==u.fZ)) return 1;
-  else return 0;
+inline Double_t TVector3::Dot(const TVector3 & p) const {
+  return fX*p.fX + fY*p.fY + fZ*p.fZ;
 }
 
-inline TVector3  operator / (const TVector3& v, Double_t a) {
-  return TVector3 (v.fX/a, v.fY/a, v.fZ/a);
+inline TVector3 TVector3::Cross(const TVector3 & p) const {
+  return TVector3(fY*p.fZ-p.fY*fZ, fZ*p.fX-p.fZ*fX, fX*p.fY-p.fX*fY);
 }
 
-inline TVector3  operator * (const TVector3& v, Double_t a) {
-  return TVector3 (v.fX*a, v.fY*a, v.fZ*a);
+inline Double_t TVector3::Mag2() const { return fX*fX + fY*fY + fZ*fZ; }
+
+inline Double_t TVector3::Mag() const { return TMath::Sqrt(Mag2()); }
+
+inline TVector3 TVector3::Unit() const {
+  Double_t  tot = Mag2();
+  TVector3 p(fX,fY,fZ);
+  return tot > 0.0 ? p *= (1.0/TMath::Sqrt(tot)) : p;
 }
 
-inline TVector3  operator * (Double_t a, const TVector3& v) {
-  return TVector3 (v.fX*a, v.fY*a, v.fZ*a);
+inline TVector3 TVector3::Orthogonal() const {
+  Double_t x = fX < 0.0 ? -fX : fX;
+  Double_t y = fY < 0.0 ? -fY : fY;
+  Double_t z = fZ < 0.0 ? -fZ : fZ;
+  if (x < y) {
+    return x < z ? TVector3(0,fZ,-fY) : TVector3(fY,-fX,0);
+  }else{
+    return y < z ? TVector3(-fZ,0,fX) : TVector3(fY,-fX,0);
+  }
 }
 
-inline Double_t  operator * (const TVector3& v1, const TVector3& v2) {
-  return v1.fX*v2.fX+v1.fY*v2.fY+v1.fZ*v2.fZ;
-}
-				        // TMatrix here is supposed to be a 3x3
-					// matrix (no checks though!)
+inline Double_t TVector3::Perp2() const { return fX*fX + fY*fY; }
 
-inline TVector3  operator * (const TMatrix& m, const TVector3& v) {
-  TVector3 u;
+inline Double_t TVector3::Perp() const { return TMath::Sqrt(Perp2()); }
 
-  u.fX = m(0,0)*v.fX+m(0,1)*v.fY+m(0,2)*v.fZ;
-  u.fY = m(1,0)*v.fX+m(1,1)*v.fY+m(1,2)*v.fZ;
-  u.fZ = m(2,0)*v.fX+m(2,1)*v.fY+m(2,2)*v.fZ;
+inline Double_t TVector3::Pt() const { return Perp(); }
 
-  return u;
-}
-
-inline  TVector3   TVector3::Ort()       { return *this/Mod(); };
-
-
-//------------------------------------------------------------------------------
-//  different setters and getters
-//------------------------------------------------------------------------------
-
-inline void TVector3::Set (Double_t x0, Double_t y0, Double_t z0) {
-  fX=x0; fY=y0; fZ=z0;
-}
-
-inline void TVector3::Set (float  x0, float  y0, float  z0) {
-  fX=x0; fY=y0; fZ=z0;
-}
-
-inline void TVector3::Set (Double_t *v0) {
-  fX=v0[0]; fY=v0[1]; fZ=v0[2];
-}
-
-inline void TVector3::Set (float  *v0) {
-  fX=v0[0]; fY=v0[1]; fZ=v0[2];
-}
-
-inline void TVector3::Get (double& x0, double& y0, double& z0) {
-  x0 = fX; y0 = fY; z0 = fZ;
-}
-
-inline void TVector3::Get (float&  x0, float&  y0, float&  z0) {
-  x0 = fX; y0 = fY; z0 = fZ;
-}
-
-inline void TVector3::Get (Double_t *v0) {
-  v0[0] = fX ; v0[1] = fY ; v0[2] = fZ ;
-}
-
-inline void TVector3::Get (float *v0) {
-  v0[0] = fX ; v0[1] = fY ; v0[2] = fZ ;
+inline Double_t TVector3::Perp2(const TVector3 & p)  const {
+  Double_t tot = p.Mag2();
+  Double_t ss  = Dot(p);
+  return tot > 0.0 ? Mag2()-ss*ss/tot : Mag2();
 }
 
 
-inline TVector3 TVector3::Normal(TVector3& v) {
-  TVector3 nv = v.Ort();
-  return ::operator-(*this, (nv*(*this*nv)));
+inline Double_t TVector3::Perp(const TVector3 & p) const {
+  return TMath::Sqrt(Perp2(p));
 }
 
-                                        // pseudorapidity
-                                        // process pt() = 0 case separately
-inline Double_t TVector3::Eta() {
-  if (Pt() > 1.e-4) return 0.5*TMath::Log((P()+Pz())/(P()-Pz()));
-  else              return 1.e30;
+inline Double_t TVector3::Pt(const TVector3 & p) const {
+  return Perp(p);
 }
-                                        // 2D vector in (eta-phi) space
-inline TVector2  TVector3::EtaPhiVector() {
+
+
+inline Double_t TVector3::Phi() const {
+  return fX == 0.0 && fY == 0.0 ? 0.0 : TMath::ATan2(fY,fX);
+}
+
+inline Double_t TVector3::Theta() const {
+  return fX == 0.0 && fY == 0.0 && fZ == 0.0 ? 0.0 : TMath::ATan2(Perp(),fZ);
+}
+
+inline Double_t TVector3::CosTheta() const {
+  Double_t ptot = Mag();
+  return ptot == 0.0 ? 1.0 : fZ/ptot;
+}
+
+inline Double_t TVector3::Angle(const TVector3 & q) const {
+  Double_t ptot2 = Mag2()*q.Mag2();
+  if(ptot2 <= 0) {
+    return 0.0;
+  }else{
+    Double_t arg = Dot(q)/TMath::Sqrt(ptot2);
+    if(arg >  1.0) arg =  1.0;
+    if(arg < -1.0) arg = -1.0;
+    return TMath::ACos(arg);
+  }
+}
+
+inline void TVector3::SetMag(Double_t ma) {
+  Double_t factor = Mag();
+  if (factor == 0) {
+    Warning("SetMag","zero vector can't be stretched");
+  }else{
+    factor = ma/factor;
+    SetX(fX*factor);
+    SetY(fY*factor);
+    SetZ(fZ*factor);
+  }
+}
+
+inline void TVector3::SetTheta(Double_t th) {
+  Double_t ma   = Mag();
+  Double_t ph   = Phi();
+  SetX(ma*TMath::Sin(th)*TMath::Cos(ph));
+  SetY(ma*TMath::Sin(th)*TMath::Sin(ph));
+  SetZ(ma*TMath::Cos(th));
+}
+
+inline void TVector3::SetPhi(Double_t ph) {
+  Double_t xy   = Perp();
+  SetX(xy*TMath::Cos(ph));
+  SetY(xy*TMath::Sin(ph));
+}
+
+inline void TVector3::SetPerp(Double_t r) {
+  Double_t p = Perp();
+  if (p != 0.0) {
+    fX *= r/p;
+    fY *= r/p;
+  }
+}
+
+inline Double_t TVector3::DeltaPhi(const TVector3 & v) const {
+  return phi_mpi_pi(Phi()-v.Phi());
+}
+
+inline Double_t TVector3::Eta() const {
+  return PseudoRapidity();
+}
+
+inline Double_t TVector3::DrEtaPhi(const TVector3 & v) const{
+  return DeltaR(v);
+}
+
+inline Double_t TVector3::DeltaR(const TVector3 & v) const {
+  Double_t deta = Eta()-v.Eta();
+  Double_t dphi = phi_mpi_pi(Phi()-v.Phi());
+  return TMath::Sqrt( deta*deta+dphi*dphi );
+}
+
+
+inline TVector2 TVector3::EtaPhiVector() {
   return TVector2 (Eta(),Phi());
 }
-                                        // distance in eta-phi between two
-                                        // 3-vectors: take into account that
-                                        // phi is discontignous and 0 = TWOPI
-inline Double_t TVector3::DrEtaPhi(TVector3& v) {
 
-  Double_t deta = Eta()-v.Eta();
-                                        // put dphi back into [-PI,PI] interval
-
-  Double_t dphi = phi_mpi_pi(Phi()-v.Phi());
-
-  return TMath::Sqrt (deta*deta+dphi*dphi);
+inline TVector2 TVector3::XYvector() {
+  return TVector2(fX,fY);
 }
 
 #endif

@@ -1,5 +1,5 @@
-/*CMZ :  2.21/08 17/03/99  13.13.44  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   17/03/99*/
+/*CMZ :  2.22/10 23/07/99  14.42.19  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   23/07/99*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -23,6 +23,39 @@
  ************************************************************************/
 
 #include "common.h"
+
+#ifndef G__OLDIMPLEMENTATION1087
+/******************************************************************
+* G__check_semicolumn_after_classdef
+******************************************************************/
+static int G__check_semicolumn_after_classdef(isclassdef)
+int isclassdef;
+{
+  char checkbuf[G__ONELINE];
+  int store_linenum = G__ifile.line_number;
+  int store_c;
+  int errflag=0;
+  fpos_t store_pos;
+  fgetpos(G__ifile.fp,&store_pos);
+  G__disp_mask=1000;
+
+  store_c = G__fgetname(checkbuf,";,(");
+  if(isspace(store_c && '*'!=checkbuf[0])) {
+    char checkbuf2[G__ONELINE];
+    store_c = G__fgetname(checkbuf2,";,(");
+    if(isalnum(checkbuf2[0])) errflag=1;
+  }
+
+  G__disp_mask=0;
+  fsetpos(G__ifile.fp,&store_pos);
+  G__ifile.line_number = store_linenum;
+  if(errflag || (isclassdef&&'('==store_c)) {
+    G__genericerror("Error: ';' missing after class/struct declaration");
+    return(1);
+  }
+  return(0);
+}
+#endif
 
 #ifndef G__OLDIMPLEMENTATION613
 /******************************************************************
@@ -64,6 +97,9 @@ int G__using_namespace()
 	  base->basetagnum[*pbasen]=basetagnum;
 	  base->baseoffset[*pbasen]=0;
 	  base->baseaccess[*pbasen]=G__PUBLIC;
+#ifndef G__OLDIMPLEMENTATION1057
+	  base->property[*pbasen]=0;
+#endif
 	  ++(*pbasen);
 	}
 	else {
@@ -84,8 +120,10 @@ int G__using_namespace()
 	base->baseoffset[*pbasen]=0;
 	base->baseaccess[*pbasen]=G__PUBLIC;
 	++(*pbasen);
+#ifdef G__OLDIMPLEMENTATION1060
 	fprintf(G__serr,"Warning: using directive in global scope, not completely supported");
 	G__printlinenum();
+#endif
       }
       else {
 	G__genericerror("Limitation: too many using directives in global scope");
@@ -331,8 +369,8 @@ int noerror;
   static int boolflag=0;
   int i,len;
   char *p;
-  char temp[G__ONELINE];
-  char atom_tagname[G__ONELINE];
+  char temp[G__LONGLINE];
+  char atom_tagname[G__LONGLINE];
   int env_tagnum;
   int store_var_type;
 
@@ -366,8 +404,16 @@ int noerror;
     env_tagnum = G__get_envtagnum();
   }
 
+
   /* Search for old tagname */
   len=strlen(atom_tagname);
+#ifndef G__OLDIMPLEMENTATION1109
+  if(0==len) {
+    strcpy(atom_tagname,"$");
+    len=1;
+  }
+#endif
+
   for(i=G__struct.alltag-1;i>=0;i--) {
     if(len==G__struct.hash[i]&&strcmp(atom_tagname,G__struct.name[i])==0&&
 #ifndef G__OLDIMPLEMENTATION1010
@@ -382,6 +428,9 @@ int noerror;
 	-1!=G__isanybase(G__struct.parent_tagnum[i],env_tagnum)||
 #endif
 	G__isenclosingclass(G__struct.parent_tagnum[i],env_tagnum)
+#ifndef G__OLDIMPLEMENTATION1057
+	||G__isenclosingclassbase(G__struct.parent_tagnum[i],env_tagnum)
+#endif
 #ifndef G__OLDIMPLEMENTATION1010
 	||((char*)NULL==p&&G__tmplt_def_tagnum==G__struct.parent_tagnum[i])
 #else
@@ -393,6 +442,9 @@ int noerror;
 	||-1!=G__isanybase(G__struct.parent_tagnum[i],G__tmplt_def_tagnum)
 #endif
 	||G__isenclosingclass(G__struct.parent_tagnum[i],G__tmplt_def_tagnum)
+#ifndef G__OLDIMPLEMENTATION1057
+	||G__isenclosingclassbase(G__struct.parent_tagnum[i],G__tmplt_def_tagnum)
+#endif
 	)) {
       return(i);
     }
@@ -413,7 +465,11 @@ int noerror;
   }
   else if(noerror<2) {
     struct G__Definedtemplateclass *deftmplt=G__defined_templateclass(tagname);
-    if(deftmplt && deftmplt->def_para->default_parameter) {
+    if(deftmplt
+#ifndef G__OLDIMPLEMENTATION1046
+       && deftmplt->def_para
+#endif
+       && deftmplt->def_para->default_parameter) {
       i=G__instantiate_templateclass(tagname);
       return(i);
     }
@@ -677,8 +733,15 @@ int statictype;
   envvar->reftype[envig15]=var->reftype[ig15];
   envvar->access[envig15]=access;
   envvar->globalcomp[envig15]=var->globalcomp[ig15];
+#ifndef G__PHILIPPE0
+  /* Let's also copy the comment information */
+  envvar->comment[envig15].p.com=var->comment[ig15].p.com;
+  envvar->comment[envig15].p.pos=var->comment[ig15].p.pos;
+  envvar->comment[envig15].filenum = var->comment[ig15].filenum;
+#else
   envvar->comment[ig15].p.com=(char*)NULL;
   envvar->comment[ig15].filenum = -1;
+#endif
 }
 
 /******************************************************************
@@ -756,15 +819,15 @@ char type;
 {
   /* fpos_t rewind_fpos; */
   int c;
-  char tagname[G__ONELINE],category[10],memname[G__ONELINE],val[G__ONELINE];
+  char tagname[G__LONGLINE],category[10],memname[G__ONELINE],val[G__ONELINE];
   int /* itag=0, */ mparen,store_tagnum ,store_def_struct_member=0;
   struct G__var_array *store_local;
-  /* char store_tagname[G__ONELINE]; */
+  /* char store_tagname[G__LONGLINE]; */
   G__value enumval;
 
   int tagdefining;
   int store_access;
-  char basename[G__ONELINE];
+  char basename[G__LONGLINE];
   int *pbasen;
   struct G__inheritance *baseclass;
   int baseaccess;
@@ -776,6 +839,9 @@ char type;
   int store_prerun;
   int store_def_tagnum;
   int isvirtualbase=0;
+#ifndef G__OLDIMPLEMENTATION1087
+  int isclassdef=0;
+#endif
 
 #ifdef G__ASM
 #ifdef G__ASM_DBG
@@ -798,6 +864,14 @@ char type;
   c=G__fgetname_template(tagname,"{:;=&");
 #else
   c=G__fgetname_template(tagname,"{:;=");
+#endif
+
+#ifndef G__OLDIMPLEMENTATION1038
+  if(strlen(tagname)>=G__LONGLINE) {
+    fprintf(G__serr,"Limitation: class name too long. Must be < %d"
+	    ,G__LONGLINE);
+    G__genericerror((char*)NULL);
+  }
 #endif
 
   /*
@@ -972,6 +1046,14 @@ char type;
     c=G__fgetname(basename,"{,");
 #endif
 
+#ifndef G__OLDIMPLEMENTATION1038
+    if(strlen(basename)>=G__LONGLINE) {
+      fprintf(G__serr,"Limitation: class name too long. Must be < %d"
+	      ,G__LONGLINE);
+      G__genericerror((char*)NULL);
+    }
+#endif
+
     /* [struct|class] <tagname> : <private|public> base1 , base2 {
      *                                            ^  or ^         */
 
@@ -982,6 +1064,13 @@ char type;
 #endif
       c=G__fgetname_template(basename,"{,");
       isvirtualbase = G__ISVIRTUALBASE;
+#ifndef G__OLDIMPLEMENTATION1038
+      if(strlen(basename)>=G__LONGLINE) {
+	fprintf(G__serr,"Limitation: class name too long. Must be < %d"
+		,G__LONGLINE);
+	G__genericerror((char*)NULL);
+      }
+#endif
     }
 
     if('c'==type) baseaccess=G__PRIVATE;
@@ -993,6 +1082,13 @@ char type;
 #else
       c=G__fgetname(basename,"{,");
 #endif
+#ifndef G__OLDIMPLEMENTATION1038
+      if(strlen(basename)>=G__LONGLINE) {
+	fprintf(G__serr,"Limitation: class name too long. Must be < %d"
+		,G__LONGLINE);
+	G__genericerror((char*)NULL);
+      }
+#endif
     }
     else if(strcmp(basename,"private")==0) {
       baseaccess=G__PRIVATE;
@@ -1001,6 +1097,13 @@ char type;
 #else
       c=G__fgetname(basename,"{,");
 #endif
+#ifndef G__OLDIMPLEMENTATION1038
+      if(strlen(basename)>=G__LONGLINE) {
+	fprintf(G__serr,"Limitation: class name too long. Must be < %d"
+		,G__LONGLINE);
+	G__genericerror((char*)NULL);
+      }
+#endif
     }
     else if(strcmp(basename,"protected")==0) {
       baseaccess=G__PROTECTED;
@@ -1008,6 +1111,13 @@ char type;
       c=G__fgetname_template(basename,"{,");
 #else
       c=G__fgetname(basename,"{,");
+#endif
+#ifndef G__OLDIMPLEMENTATION1038
+      if(strlen(basename)>=G__LONGLINE) {
+	fprintf(G__serr,"Limitation: class name too long. Must be < %d"
+		,G__LONGLINE);
+	G__genericerror((char*)NULL);
+      }
 #endif
     }
 
@@ -1018,6 +1128,13 @@ char type;
 #endif
       c=G__fgetname_template(basename,"{,");
       isvirtualbase = G__ISVIRTUALBASE;
+#ifndef G__OLDIMPLEMENTATION1038
+      if(strlen(basename)>=G__LONGLINE) {
+	fprintf(G__serr,"Limitation: class name too long. Must be < %d"
+		,G__LONGLINE);
+	G__genericerror((char*)NULL);
+      }
+#endif
     }
 
     if(newdecl) {
@@ -1115,7 +1232,14 @@ char type;
    **************************************************************/
   baseclass = G__struct.baseclass[G__tagnum];
 #ifndef G__OLDIMPLEMENTATION943
+#ifndef G__PHILIPPE0
+  /* When it is not a new declaration, updating purecount is going to
+     make us fail because the rest of the code is not going to be run.
+     Anyway we already checked once. */
+  if (newdecl) {
+#else
   {
+#endif
     int purecount= 0;
     int lastdirect = 0;
     int ivb;
@@ -1215,6 +1339,10 @@ char type;
 
   /* fsetpos(G__ifile.fp,&rewind_fpos); */
   if(c=='{') { /* member declarations */
+
+#ifndef G__OLDIMPLEMENTATION1087
+    isclassdef=1;
+#endif
 
 #ifndef G__OLDIMPLEMENTATION612
     if(newdecl || 'n'==type) {
@@ -1411,6 +1539,9 @@ char type;
   }
 #endif
   else { /* struct or class instance */
+#ifndef G__OLDIMPLEMENTATION1087
+    if(G__check_semicolumn_after_classdef(isclassdef)) return;
+#endif
     G__define_var(G__tagnum,-1);
   }
 

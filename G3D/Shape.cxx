@@ -1,4 +1,5 @@
-//*CMZ :  2.21/07 21/02/99  19.02.44  by  Valery Fine(fine@mail.cern.ch)
+//*CMZ :  2.22/04 01/06/99  08.09.38  by  Valery Fine(fine@mail.cern.ch)
+//*CMZ :  2.21/07 17/04/99  07.50.09  by  Valery Fine(fine@mail.cern.ch)
 //*CMZ :  2.21/01 06/01/99  13.57.19  by  Rene Brun
 //*CMZ :  2.21/00 03/01/99  23.34.38  by  Valery Fine(fine@mail.cern.ch)
 //*CMZ :  2.20/05 13/12/98  17.45.30  by  Rene Brun
@@ -6,20 +7,22 @@
 //*CMZ :  1.03/08 18/11/97  15.52.24  by  Rene Brun
 //*-- Author :    Nenad Buncic   17/09/95
 
+/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Fons Rademakers.                                  *
+ * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
  *                                                                       *
  * Permission to use, copy, modify and distribute this software and its  *
  * documentation for non-commercial purposes is hereby granted without   *
  * fee, provided that the above copyright notice appears in all copies   *
  * and that both the copyright notice and this permission notice appear  *
  * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose.                         *
- * It is provided "as is" without express or implied warranty.           *
+ * suitability of this software for any purpose. It is provided "as is"  *
+ * without express or implied warranty.                                  *
  *************************************************************************/
 
 #include "TNode.h"
@@ -150,8 +153,10 @@ void TShape::PaintShape(X3DBuffer *buff, Bool_t rangeView)
 
     x0 = y0 = z0 = x1 = y1 = z1 = buff->points[0];
 
-    TAttLine::Modify();  //Change line attributes only if necessary
-    TAttFill::Modify();  //Change fill area attributes only if necessary
+    if (!rangeView) {
+      TAttLine::Modify();  //Change line attributes only if necessary
+      TAttFill::Modify();  //Change fill area attributes only if necessary
+    }
 
     for (Int_t i = 0; i < buff->numSegs; i++) {
         i0 = 3*buff->segs[3*i+1];

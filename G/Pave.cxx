@@ -1,3 +1,4 @@
+//*CMZ :  2.22/09 13/07/99  11.37.49  by  Rene Brun
 //*CMZ :  2.21/07 05/03/99  11.40.20  by  Rene Brun
 //*CMZ :  2.21/00 28/12/98  17.23.23  by  Rene Brun
 //*CMZ :  2.20/05 15/12/98  09.17.21  by  Rene Brun
@@ -6,20 +7,22 @@
 //*CMZ :  1.03/09 06/12/97  17.30.14  by  Fons Rademakers
 //*-- Author :    Rene Brun   16/10/95
 
+/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Fons Rademakers.                                  *
+ * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
  *                                                                       *
  * Permission to use, copy, modify and distribute this software and its  *
  * documentation for non-commercial purposes is hereby granted without   *
  * fee, provided that the above copyright notice appears in all copies   *
  * and that both the copyright notice and this permission notice appear  *
  * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose.                         *
- * It is provided "as is" without express or implied warranty.           *
+ * suitability of this software for any purpose. It is provided "as is"  *
+ * without express or implied warranty.                                  *
  *************************************************************************/
 
 #include <fstream.h>
@@ -77,6 +80,7 @@ TPave::TPave(Coord_t x1, Coord_t y1,Coord_t x2, Coord_t  y2,
    fName         = "";
    fInit         = 0;
    fCornerRadius = 0;
+   if (fOption == "NDC" || fOption == "ndc") fOption = "brNDC";
 
    SetFillColor(18);
    SetFillStyle(1001);

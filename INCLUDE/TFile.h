@@ -1,3 +1,4 @@
+//*CMZ :  2.22/01 15/04/99  18.01.09  by  Fons Rademakers
 //*CMZ :  2.21/07 19/02/99  11.07.10  by  Fons Rademakers
 //*CMZ :  2.21/03 15/01/99  18.37.02  by  Fons Rademakers
 //*CMZ :  2.21/01 11/01/99  16.37.57  by  Fons Rademakers
@@ -11,20 +12,22 @@
 #ifndef ROOT_TFile
 #define ROOT_TFile
 
+/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Fons Rademakers.                                  *
+ * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
  *                                                                       *
  * Permission to use, copy, modify and distribute this software and its  *
  * documentation for non-commercial purposes is hereby granted without   *
  * fee, provided that the above copyright notice appears in all copies   *
  * and that both the copyright notice and this permission notice appear  *
  * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose.                         *
- * It is provided "as is" without express or implied warranty.           *
+ * suitability of this software for any purpose. It is provided "as is"  *
+ * without express or implied warranty.                                  *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -70,12 +73,12 @@ protected:
    void Init(Bool_t create);
 
    // Interface to basic system I/O routines
-   virtual Int_t  SysOpen(const char *pathname, Int_t flags, UInt_t mode) const;
-   virtual Int_t  SysClose(Int_t fd) const;
-   virtual Int_t  SysRead(Int_t fd, void *buf, Int_t len) const;
-   virtual Int_t  SysWrite(Int_t fd, const void *buf, Int_t len) const;
-   virtual Seek_t SysSeek(Int_t fd, Seek_t offset, Int_t whence) const;
-   virtual Int_t  SysSync(Int_t fd) const;
+   virtual Int_t  SysOpen(const char *pathname, Int_t flags, UInt_t mode);
+   virtual Int_t  SysClose(Int_t fd);
+   virtual Int_t  SysRead(Int_t fd, void *buf, Int_t len);
+   virtual Int_t  SysWrite(Int_t fd, const void *buf, Int_t len);
+   virtual Seek_t SysSeek(Int_t fd, Seek_t offset, Int_t whence);
+   virtual Int_t  SysSync(Int_t fd);
 
 private:
    TFile(const TFile &);            //Files cannot be copied
@@ -92,7 +95,7 @@ public:
    virtual void      Delete(const Text_t *namecycle="");
    virtual void      Draw(Option_t *option="");
    virtual void      FillBuffer(char *&buffer);
-   virtual void      Flush() const;
+   virtual void      Flush();
    Int_t             GetBestBuffer();
    Int_t             GetCompressionLevel() {return fCompress;}
    Float_t           GetCompressionFactor();

@@ -1,29 +1,164 @@
+*CMZ :  2.22/01 11/05/99  12.19.35  by  Rene Brun
 *CMZ :  1.03/09 16/12/97  17.10.09  by  Rene Brun
 *-- Author :
 How to install ROOT from the root.cmz file
 ==========================================
+The ROOT system is currently developed and maintained using the CMZ system.
+The root.cmz file (see below) contains all the source, installation
+procedures, tutorials and test programs.
+This file is highly compressed (around 5 Mbytes) and greatly facilitates
+the installation and test on new machines for the development team.
+Installing root on a machine consists of the following operations:
+ -Create a directory called root in your file system.
+ -Define an environment variable called ROOTSYS pointing to this directory
+ -Define an environment variable called CERNLIB pointing to the cernlib
+  libraries (eg /cern/pro/lib). This variable is used for the installation
+  of the h2root and g2root utilities only.
+ -Get version 1.50 of cmz (see below)
+ -Import the file root.cmz to the directory pointed by ROOTSYS
 
- - Make sure you have cmz version 1.48 or higher.
-   If not copy executable module via anonymous ftp from hpbrun.cern.ch.
-   Unpack and install the module in your ~/bin directory.
-   do not forget chmod +x cmz
- - Go to your home directory (cd).
- - mkdir root
- - cd root
- - mkdir lib
- - Define an environment variable called ROOTSYS pointing to your root directory
-   If you use tcsh or csh modify your .cshrc file adding the statement:
-       setenv ROOTSYS ~/root
-   If you use ksh modify your .kshrc file adding the statement:
-       export ROOTSYS=~/root
- - Create a file ~/root/cmzlogon.kumac containing the following lines
-     SET /tmp/cmedt.edt.$pid   -E
-     SET /tmp/cmexec.exec.$pid -XACL
-     set C++ -lan
-     FILE  root
-     exec setup
-     set . -s
-     RETURN
+ -run cmz and type the 3 commands, example:
+     cmz
+     cmz > file root
+     cmz > exec setup
+     cmz > install
+     cmz > exit
+
+The install command generates the source code in the $ROOTSYS/src directory,
+invokes the C and C++ compilers, generates the shared libraries, the
+executable modules, the tutorials and test directories.
+It also generates the conversion program h2root.
+More details on the installation procedure can be found in the cmz deck
+README in the root.cmz file. In particular, install invokes one macro called
+GLOBALS where the compiler/linker/etc options for the various compilers and
+machines are defined.
+If you do not know cmz,you can look at the README,INSTALL,GLOBALS or
+any other macro invoked by INSTALL in the following way:
+  cmz
+  cmz > file root
+  cmz > find README -r  //this will invoke the vi editor by default
+  cmz > find GLOBALS -r
+  cmz > exit
+
+If you do not have cmz1.50 installed on your machine, you can ftp it
+from hpbrun.cern.ch  (anonymous ftp)
+cd public/cmz
+ls to see all supported platforms.
+you can import the gzip file and ungzip it on your site.
+
+You can import in the same way the root.cmz file from the same machine.
+cd public/root
+get root.cmz
+
+for both cmz and root, set ftp in binary mode.
+
+If you want to extract only the source code (no compilation,etc), you
+can do
+the following:
+ cmz
+ cmz > file root
+ cmz > exe setup
+ cmz > cx *   // this will create root/src/*.c and *.C files
+ cmz > exit
+
+If you know cmz and you want to make a few changes in the root.cmz file,
+then just recompile what has been modified, you can invoke the make command.
+Example:
+  cmz > file root
+  cmz > exec setup
+  cmz > cd ..     this will set the cmz directory to the top
+  cmz > make      this will recompile all decks modified since the last make,
+                  and will regenerate the corresponding shared libraries.
+
+By default, when executing the install command above, the compiler is invoked
+with optimisation On. You can install in debug mode in typing instead
+the following command:
+    cmz > install -  g
+
+The setup command will automatically set the environment for the default
+compiler on the system. In case you want to use a different compiler, eg GCC
+you can type the cmz command:
+    select GCC
+before executing the install command.
+
+If you intend to install new versions of Root at regular intervals, we recommend
+to create a file cmzlogon.kumac containing the above instructions for
+an easy installation. Examples of cmzlogon.kumac files are given below
+for a few systems. Once this file is created, the following cmz session
+shows how to generate a complete installation of the Root system.
+   cmz
+   cmz > install
+   cmz > exit
+
+*======> cmzlogon.kumac for Linux
+set C++ -lan
+*sel thread posix  (uncomment to select the thread option)
+*select glibc      (uncomment for Redhat5.0 with glibc) (default is Redhat4.2 gcc)
+*select glibc egcs (uncomment for Redhat5.2 with egcs)
+select venus pythia
+FILE  root
+exec setup
+set . -s
+RETURN
+
+*======> cmzlogon.kumac for hpux
+set C++ -lan
+*sel HPUX9      (uncomment for hpux9) default is hpux10-20
+*sel ACC        (uncomment to install with aCC compiler under hpux10-20)
+sel venus pythia
+FILE  root
+exec setup
+RETURN
+
+*======> cmzlogon.kumac for aix4.1
+set C++ -lan
+*select venus pythia
+FILE  root
+exec setup
+set . -s
+RETURN
+
+*======> cmzlogon.kumac for alpha/unix with cxx6
+set C++ -lan
+FILE root
+select venus pythia
+*sel EGCS     (uncomment to install with egcs) default is cxx6
+exec setup
+RETURN
+
+*======> cmzlogon.kumac for sgi
+set C++ -lan
+*select EGCS   (uncomment for egcs) default is native CC
+*select KCC
+*select SGI64  to install under SGI6.4
+select venus pythia
+FILE root
+EXEC setup
+RETURN
+
+*======> cmzlogon.kumac for Solaris
+set C++ -lan
+select venus pythia
+FILE  root
+exec setup
+set . -s
+RETURN
+
+*======> cmzlogon.kumac for Windows/NT/95
+SET cmexec$pid.bat -XACL
+set C++ -lan
+*note that the selection of RootIcon implies having the file RootIcon.obj
+*installed in $ROOTSYS\Icons\RootIcon.obj
+*this file is at ftp://root.cern.ch/root/RootIcon.obj
+sel RootIcon GL
+sel venus pythia
+FILE  root
+exec setup - nolog
+set . -s
+sync -off
+RETURN
+
+
 
 
 
@@ -62,6 +197,12 @@ and operate on the objects
 
    root > .q       to exit from root
 
+Running the test programs
+=========================
+cd to $ROOTSYS/test
+gmake on Unix
+nmake on NT
+stress 30
 
 Remarks on the C++ interpreter.
 -------------------------------

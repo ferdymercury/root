@@ -1,3 +1,4 @@
+//*CMZ :  2.22/01 03/05/99  16.22.19  by  Rene Brun
 //*CMZ :  2.20/03 05/12/98  16.32.24  by  Rene Brun
 //*CMZ :  2.20/01 01/12/98  11.14.47  by  Rene Brun
 //*CMZ :  2.00/00 18/02/98  17.43.25  by  Rene Brun
@@ -7,20 +8,22 @@
 #ifndef ROOT_TBranch
 #define ROOT_TBranch
 
+/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Fons Rademakers.                                  *
+ * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
  *                                                                       *
  * Permission to use, copy, modify and distribute this software and its  *
  * documentation for non-commercial purposes is hereby granted without   *
  * fee, provided that the above copyright notice appears in all copies   *
  * and that both the copyright notice and this permission notice appear  *
  * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose.                         *
- * It is provided "as is" without express or implied warranty.           *
+ * suitability of this software for any purpose. It is provided "as is"  *
+ * without express or implied warranty.                                  *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -65,12 +68,12 @@ class TBranch : public TNamed {
 protected:
     Int_t       fCompress;        //(=1 branch is compressed, 0 otherwise)
     Int_t       fBasketSize;      //Initial Size of  Basket Buffer
-    Int_t       fEventOffsetLen;  //Initial Length of fEventOffset table in the basket buffers
+    Int_t       fEntryOffsetLen;  //Initial Length of fEntryOffset table in the basket buffers
     Int_t       fMaxBaskets;      //Maximum number of Baskets so far
     Int_t       fWriteBasket;     //Last basket number written
     Int_t       fReadBasket;      //Current basket number when reading
-    Int_t       fReadEvent;       //Current event number when reading
-    Int_t       fEventNumber;     //Current event number (last one filled in this branch)
+    Int_t       fReadEntry;       //Current entry number when reading
+    Int_t       fEntryNumber;     //Current entry number (last one filled in this branch)
     Int_t       fOffset;          //Offset of this branch
     Int_t       fNleaves;         //Number of leaves
     Stat_t      fEntries;         //Number of entries
@@ -79,7 +82,7 @@ protected:
     TObjArray   fBranches;        //List of Branches of this branch
     TObjArray   fLeaves;          //List of leaves of this branch
     TObjArray   fBaskets;         //List of baskets of this branch
-    Int_t       *fBasketEvent;    //Table of first event in eack basket
+    Int_t       *fBasketEntry;    //Table of first entry in eack basket
     Seek_t      *fBasketSeek;     //Addresses of baskets on file
     TTree       *fTree;           //Pointer to Tree header
     char        *fAddress;        //Address of 1st leaf (variable or object)
@@ -97,8 +100,9 @@ public:
     char            *GetAddress() {return fAddress;}
     virtual Int_t   GetBasketSize() {return fBasketSize;}
     virtual Int_t   GetCompressionLevel() {return fCompress;}
-    virtual Int_t   GetEvent(Int_t event=0);
-    virtual Int_t   GetEventOffsetLen() {return fEventOffsetLen;}
+    virtual Int_t   GetEntry(Int_t entry=0);
+            Int_t   GetEvent(Int_t entry=0) {return GetEntry(entry);}
+    virtual Int_t   GetEntryOffsetLen() {return fEntryOffsetLen;}
     TLeaf           *GetLeaf(Text_t *name);
     TBasket         *GetBasket(Int_t basket);
     Seek_t          GetBasketSeek(Int_t basket);
@@ -107,11 +111,11 @@ public:
     const Text_t    *GetFileName() const {return fFileName.Data();}
     Int_t           GetOffset() {return fOffset;}
     Int_t           GetReadBasket() {return fReadBasket;}
-    Int_t           GetReadEvent() {return fReadEvent;}
+    Int_t           GetReadEntry() {return fReadEntry;}
     Int_t           GetWriteBasket() {return fWriteBasket;}
     virtual Stat_t  GetTotBytes() {return fTotBytes;}
     virtual Stat_t  GetZipBytes() {return fZipBytes;}
-    Int_t           GetEventNumber() {return fEventNumber;}
+    Int_t           GetEntryNumber() {return fEntryNumber;}
     TObjArray       *GetListOfBaskets() {return &fBaskets;}
     TObjArray       *GetListOfBranches() {return &fBranches;}
     TObjArray       *GetListOfLeaves() {return &fLeaves;}
@@ -127,7 +131,7 @@ public:
     virtual void    SetAddress(void *add);
     virtual void    SetBasketSize(Int_t buffsize) {fBasketSize=buffsize;}
     virtual void    SetCompressionLevel(Int_t level=1) {fCompress=level;}
-    virtual void    SetEventOffsetLen(Int_t len) {fEventOffsetLen = len;}
+    virtual void    SetEntryOffsetLen(Int_t len) {fEntryOffsetLen = len;}
     virtual void    SetFile(TFile *file=0);
     virtual void    SetFile(const Text_t *filename);
     virtual void    SetOffset(Int_t offset=0) {fOffset=offset;}

@@ -1,22 +1,25 @@
+//*CMZ :  2.22/00 08/04/99  14.20.22  by  Rene Brun
 //*CMZ :  2.21/07 06/03/99  16.26.28  by  Rene Brun
 //*CMZ :  2.00/00 03/03/99  14.18.31  by  Rene Brun
 //*CMZ :  1.01/04 02/06/97  12.31.14  by  Rene Brun
 //*-- Author :    Rene Brun   12/01/96
 
+/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Fons Rademakers.                                  *
+ * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
  *                                                                       *
  * Permission to use, copy, modify and distribute this software and its  *
  * documentation for non-commercial purposes is hereby granted without   *
  * fee, provided that the above copyright notice appears in all copies   *
  * and that both the copyright notice and this permission notice appear  *
  * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose.                         *
- * It is provided "as is" without express or implied warranty.           *
+ * suitability of this software for any purpose. It is provided "as is"  *
+ * without express or implied warranty.                                  *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -92,9 +95,13 @@ void TLeafD::Import(TClonesArray *list, Int_t n)
 //*-*-*-*-*-*Import element from ClonesArray into local leaf buffer*-*-*-*-*
 //*-*        ======================================================
 
+   const Double_t kDoubleUndefined = -9999.;
    Int_t j = 0;
+   char *clone;
    for (Int_t i=0;i<n;i++) {
-      memcpy(&fValue[j],(char*)list->UncheckedAt(i) + fOffset, 8*fLen);
+      clone = (char*)list->UncheckedAt(i);
+      if (clone) memcpy(&fValue[j],clone + fOffset, 8*fLen);
+      else       memcpy(&fValue[j],&kDoubleUndefined,  8*fLen);
       j += fLen;
    }
 }

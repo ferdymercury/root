@@ -1,3 +1,6 @@
+*CMZ :  2.22/07 05/07/99  18.25.43  by  Rene Brun
+*CMZ :  2.22/06 17/06/99  15.08.14  by  Rene Brun
+*CMZ :  2.22/02 26/05/99  10.01.13  by  Rene Brun
 *CMZ :  2.00/11 09/08/98  09.16.06  by  Rene Brun
 *CMZ :  2.00/09 25/06/98  15.08.53  by  Fons Rademakers
 *-- Author :    Fons Rademakers   25/06/98
@@ -8,16 +11,14 @@
 #pragma link off all functions;
 
 #pragma link C++ global gGXW;
-#pragma link C++ global gStyle;
-#pragma link C++ global gCurrentPS;
 
-//+IF,THREAD
-//#pragma link C++ global gPadMain;
-//#pragma link C++ global gThreadTsd;
-//#pragma link C++ global gThreadXAR;
-//+ELSE.
+#ifdef R__THREAD
+#pragma link C++ global gPadMain;
+#pragma link C++ global gThreadTsd;
+#pragma link C++ global gThreadXAR;
+#else
 #pragma link C++ global gPad;
-//+ENDIF
+#endif
 #pragma link C++ global gGLKernel;
 
 #pragma link C++ class TBrowser;
@@ -28,9 +29,6 @@
 #pragma link C++ class TLego;
 #pragma link C++ class TLink;
 #pragma link C++ class TPoints;
-#pragma link C++ class TPostScript;
-#pragma link C++ class TStyle;
-#pragma link C++ class TView;
 #pragma link C++ class TVirtualPad;
 
 #endif

@@ -1,23 +1,27 @@
+//*CMZ :  2.22/01 11/04/99  21.23.25  by  Valery Fine(fine@mail.cern.ch)
 //*CMZ :  2.21/06 12/02/99  17.22.36  by  Valery Fine(fine@vxcern.cern.ch)
 //*CMZ :  1.03/09 16/12/97  11.47.23  by  Valery Fine(fine@mail.cern.ch)
 //*-- Author :    Valery Fine   11/03/96
 
+/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Fons Rademakers.                                  *
+ * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
  *                                                                       *
  * Permission to use, copy, modify and distribute this software and its  *
  * documentation for non-commercial purposes is hereby granted without   *
  * fee, provided that the above copyright notice appears in all copies   *
  * and that both the copyright notice and this permission notice appear  *
  * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose.                         *
- * It is provided "as is" without express or implied warranty.           *
+ * suitability of this software for any purpose. It is provided "as is"  *
+ * without express or implied warranty.                                  *
  *************************************************************************/
 
+#include "OptimizeOff.h"
 #include "TGWin32WindowsObject.h"
 
 #include "TGWin32PixmapObject.h"
@@ -215,231 +219,112 @@ void TGWin32WindowsObject::RestoreROOT(int ctyp)
   }
 
 //______________________________________________________________________________
- LRESULT APIENTRY
-         TGWin32WindowsObject::OnRootTextInput
-                               (HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
-   {
+LRESULT APIENTRY TGWin32WindowsObject::OnRootEditInput
+         (HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
 #define ixg(x) (fix0+x)
 #define iyg(y) (fiy0+y)
   int i;
 
-      switch (uMsg) {
+  if (uMsg != IX11_ROOT_Input) return 0;
+
+  flpROOTString = (TGWin32GetString *)lParam;
+
+//*-*       Write  TEXT to the pointed position on the screen
+  fix0 =  flpROOTString->GetX();
+  fiy0 =  flpROOTString->GetY();
+  fiXText = 0;
+  fiYText = 0;
+//*-*        Init of string input
+  flpInstr = flpROOTString->GetTextPointer();
+  fnCur    = 0;
+  flStr    = 0;
+  fInsert  = 1;
+
+  if (!(flpInstr && lstrlen(flpInstr)))
+  {
+	  flpROOTString->Release();
+	  return 0;
+  }
+  fLenLine = 0;
+
+  if (fEditCtrl) {
+	  UnRegisterControlItem(fEditCtrl);
+	  delete fEditCtrl;
+	  fEditCtrl =0;
+  }
+  // Convert from the pixel to the relative cooridunat
+  UInt_t iw,ih;
+  Float_t x,y,w,h;
+  RECT winsize;
+  GetClientRect(fhwndRootWindow,&winsize);
+  x = Float_t(fix0)/winsize.right;
+//           y = Float_t(winsize.bottom-fiy0)/winsize.bottom -(fdwAscent);
+  y = (Float_t(fiy0)/winsize.bottom);
+  gGXW->GetTextExtent(iw,ih,flpInstr);
+  w = Float_t(iw)/winsize.right;
+  h = Float_t(ih)/winsize.bottom;
+  // Clean buffer. Delete all right blanks in there
+  int len_text = flpInstr ? lstrlen(flpInstr) : 0;
+  if (len_text > 0 ) {
+	  int il=len_text;
+	  while (il && (flpInstr[il-1] == ' ' || flpInstr[il-1] == 0))
+	  { flpInstr[il] = 0; il--;}
+  }
+  // set size in WM_SIZE message
+  fEditCtrl = new TWin32SimpleEditCtrl(this,flpInstr,len_text,x,y,w,h);
+
+  //*-*  Set text font
+
+  SendMessage(fEditCtrl->GetWindow(),WM_SETFONT, (WPARAM) fWin32Mother->fhdCommonFont, FALSE);
+
+  /* Add text to the window. */
+
+  SendMessage(fEditCtrl->GetWindow(), WM_SETTEXT, 0, (LPARAM) flpInstr);
+  SetFocus(fEditCtrl->GetWindow());
+
+  fSetTextInput = TRUE;
+
+  return 0;
+}
+
+
+//______________________________________________________________________________
+ LRESULT APIENTRY
+         TGWin32WindowsObject::OnRootTextInput
+                               (HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+ {
+     // This method reads the input string via WIN32 EDIT Control
+     // if (!fEditCtrl) return OnRootEditInput(hwnd, uMsg, wParam, lParam);
+
+     switch (uMsg) {
        case WM_CHAR:
          switch(wParam) {
-
            case 0x0A: /* line feed       */
            case 0x0D: /* carriage return */
                      flpROOTString->IncBreakKey();
            case 0x1B: /* escape          */
+               {
                      flpROOTString->IncBreakKey();
 
                      fSetTextInput = FALSE;
-                     if (fEditCtrl)
-                     {
-                         int len_text = lstrlen(flpInstr);
-                         if (len_text)
-                         {
-                             SendMessage(fEditCtrl->GetWindow(),WM_GETTEXT,(WPARAM)len_text,(LPARAM)flpInstr);
-                         }
-                         UnRegisterControlItem(fEditCtrl);
-                         delete fEditCtrl; fEditCtrl = 0;
-                     }
-                     else
-                     {
-                        HideCaret(hwnd);
-                        DestroyCaret();
-                        int len_text =
-                           flpInstr ? lstrlen(flpInstr) : 0;
-                        if (len_text > 0) {
-                          for (i=0;i<flStr;i++)                     flpInstr[i] = fInstr[i];
-                          for (i=flStr; i<len_text; i++) flpInstr[i]=' ';
-                          delete [] fInstr;
-                        }
-                     }
-
-
-/*          End of text input from keyboard
- *            and restore previous active window
- */
-//              SetActiveWindow(ConWindow);
-//              SetFocus(ConWindow);
-
-              flpROOTString->Release();
-              break;
-
-           case 0x09: /* Tab */
-           case 0x08: /* backspace */
-              break;
-           default:   /* all other letters */
-
-             fch = (TCHAR) wParam;
-             HideCaret(hwnd);
-
-                 if (fnCur != flStr){/*             Clear the old tail of the string            */
-                                   COLORREF CurTextCol;
-                                   CurTextCol = SetTextColor(fObjectDC,GetBkColor(fObjectDC));
-                                   TextOut(fObjectDC,ixg(fiXText),iyg(fiYText),
-                                           &fInstr[fnCur],flStr-fnCur);
-                                   SetTextColor(fObjectDC,CurTextCol);
-                                  }
-                 if (fInsert==1)    {/*                      Shift string                       */
-                                   for (i=flStr; i>fnCur; i--) fInstr[i] = fInstr[i-1];
-                                   /*   Increasing of the acctual length                       */
-                                   flStr++;
-                                   fInstr[flStr] = '\0';
-                                  }
-                 else if (fnCur == flStr) flStr++;
-                 else // reduce length of string
-                      fLenLine -= CharWidth(fInstr[fnCur]);
-
-/*             Put enreted symbol in place                 */
-             fInstr[fnCur] = fch;
-/*            Out the  new tail of the text                 */
-             TextOut(fObjectDC,ixg(fiXText),iyg(fiYText),
-                     &fInstr[fnCur],flStr-fnCur);
-
-             fLenLine += CharWidth(fch); // pixel length of entered string
-             fiXText  += CharWidth(fch); // Reset Graphics position for next input
-             fnCur++;
-             break;
-          }
-         SetCaretPos(ixg(fiXText),iyg(fiYText-(fdwAscent) ));
-         ShowCaret(hwnd);
-         return 0;
-       case WM_KEYDOWN:
-         HideCaret(hwnd);
-         switch(wParam) {
-           case VK_LEFT:
-               fnCur--;
-               fiXText -= CharWidth(fInstr[fnCur]);
-               break;
-           case VK_RIGHT:
-               fiXText += CharWidth(fInstr[fnCur]);
-               fnCur++;
-               break;
-           case VK_HOME:
-               fiXText = 0;
-               fnCur = 0;
-               break;
-           case VK_END:
-               fiXText = fLenLine;
-               fnCur = flStr;
-               break;
-           case VK_INSERT:
-                fInsert = -fInsert;
-                break;
-           case VK_DELETE:
-/*             Clear the old tail of the string            */
-                          { COLORREF CurTextCol;
-                            CurTextCol = SetTextColor(fObjectDC,GetBkColor(fObjectDC));
-                            TextOut(fObjectDC,ixg(fiXText),iyg(fiYText), &fInstr[fnCur],flStr-fnCur);
-                            SetTextColor(fObjectDC,CurTextCol);
-                          }
-/*           Reduce current lenght of string               */
-                   fLenLine -= CharWidth(fInstr[fnCur]);
-
-                    for (i=fnCur; i<flStr;i++)
-                      fInstr[i] = fInstr[i+1];
-                    flStr = max(flStr-1, fnCur);
-                    if (flStr != fnCur)
-                       TextOut(fObjectDC,ixg(fiXText),iyg(fiYText), &fInstr[fnCur],flStr-fnCur);
-                else
-                    Beep(1000L,100L);
-                 break;
-
-           case VK_BACK:
-               fnCur--;
-               if (fnCur >= 0) {
-/*             Clear the old tail of the string            */
-                    fiXText -= CharWidth(fInstr[fnCur]);
-                    { COLORREF CurTextCol;
-                      CurTextCol = SetTextColor(fObjectDC,GetBkColor(fObjectDC));
-                      TextOut(fObjectDC,ixg(fiXText),iyg(fiYText), &fInstr[fnCur],flStr-fnCur);
-                      SetTextColor(fObjectDC,CurTextCol);
-                    }
-/*             Reduce current lenght of string               */
-                   fLenLine -= CharWidth(fInstr[fnCur]);
-
-                    for (i=fnCur; i<flStr;i++)
-                      fInstr[i] = fInstr[i+1];
-                    flStr = max(flStr-1, fnCur);
-                    if (flStr != fnCur)
-                       TextOut(fObjectDC,ixg(fiXText),iyg(fiYText), &fInstr[fnCur],flStr-fnCur);
-               } else {
-                 Beep(1000L,100L);
-                 fnCur = 0;
+					 fEditCtrl->GetText(flpInstr);
+                     ::ShowWindow(fEditCtrl->GetWindow(),SW_HIDE);
+                     // delete fEditCtrl; fEditCtrl = 0;
+                     flpROOTString->Release();
                }
+               return 0;
+           default:
+               return  DefWindowProc(hwnd,uMsg, wParam, lParam);
                break;
-        default:
-              return  DefWindowProc(hwnd,uMsg, wParam, lParam);
-         }
-
-        SetCaretPos(ixg(fiXText),iyg(fiYText-(fdwAscent)));
-        ShowCaret(hwnd);
-        return 0;                         // User procedure SHOULD return ZERO if it is process
-       case IX11_ROOT_Input:
-           flpROOTString = (TGWin32GetString *)lParam;
-
-//*-*       Write  TEXT to the pointed position on the screen
-           fix0 =  flpROOTString->GetX();
-           fiy0 =  flpROOTString->GetY();
-           fiXText = 0;
-           fiYText = 0;
-//*-*        Init of string input
-          flpInstr = flpROOTString->GetTextPointer();
-          fnCur    = 0;
-          flStr    = 0;
-          fInsert  = 1;
-
-          { int len_text = flpInstr ? lstrlen(flpInstr) : 0;
-            if (len_text > 0 ) {
-              fInstr = new char[len_text];
-              fInstr[0] = '\0';
-            }
-            else
-            {
-                //*-*  No buffer to hold text was supplied !!!
-                flpROOTString->Release();
-                break;
-            }
-          }
-          fLenLine = 0;
-
-
-#ifndef noeditctrl
-          //*-*         Create and set Caret
-
-           CreateCaret(hwnd, (HBITMAP) 1, fdwCharX, fdwAscent);
-           SetCaretPos(ixg(fiXText),iyg(fiYText-(fdwAscent)));
-           ShowCaret(hwnd);
-
-           SetFocus(hwnd);
-//           ConWindow = SetActiveWindow(hwnd);
-           SetActiveWindow(hwnd);
-#else
-           fEditCtrl = new TWin32SimpleEditCtrl(this,flpInstr,
-                  0.0, 0.0, 0.5, 0.5);                 // set size in WM_SIZE message
-//                  fix0, fiy0, 0, 0);                 // set size in WM_SIZE message
-
-
-           //*-*  Set text font
-
-           SendMessage(fEditCtrl->GetWindow(),WM_SETFONT, (WPARAM) fWin32Mother->fhdCommonFont, FALSE);
-
-             /* Add text to the window. */
-
-           SendMessage(fEditCtrl->GetWindow(), WM_SETTEXT, 0, (LPARAM) flpInstr);
-
-
-#endif
-
-           fSetTextInput = TRUE;
-
-           break;
-       default: break;
+         };
+         case IX11_ROOT_Input:
+             return OnRootEditInput(hwnd, uMsg, wParam, lParam);
+         default:
+             break;
      }
-    return 0;
-   }
+     return  DefWindowProc(hwnd,uMsg, wParam, lParam);
+ }
 
 
 //______________________________________________________________________________
@@ -680,12 +565,13 @@ LRESULT APIENTRY TGWin32WindowsObject::OnKillFocus
 //*-*  Hide and destroy the caret when the window loses
 //*-*  keyboard focus
 //*-*
-
+#if 0
  if (fSetTextInput) {
    HideCaret(hwnd);
    DestroyCaret();
    return 0;
  }
+#endif
  return DefWindowProc(hwnd, uMsg, wParam, lParam);
 }
 
@@ -897,12 +783,14 @@ LRESULT APIENTRY TGWin32WindowsObject::OnSetFocus
 {
  //*-*    Message ID: WM_SETFOCUS
 
+#if 0
  if (fSetTextInput) {
    CreateCaret(hwnd, (HBITMAP) 1, fdwCharX, fdwAscent);
    SetCaretPos(fiXText, fiYText);
    ShowCaret(hwnd);
    return 0;
  }
+#endif
  return DefWindowProc(hwnd, uMsg, wParam, lParam);
 }
 
@@ -1676,6 +1564,7 @@ void TGWin32WindowsObject::UnRegisterMenuItem(TVirtualMenuItem *item){
 
 //______________________________________________________________________________
 void TGWin32WindowsObject::UnRegisterControlItem(TWin32CommCtrl *ctrl){
+   if (!ctrl) return;
    Int_t id =  ctrl->GetCommandId();
    if (id && id != -1) fCommandArray.Remove(ctrl);
 }

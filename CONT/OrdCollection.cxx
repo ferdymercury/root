@@ -1,20 +1,23 @@
+//*CMZ :  2.22/07 05/07/99  18.55.52  by  Fons Rademakers
 //*CMZ :  1.03/09 03/12/97  02.17.27  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   13/09/95
 
+/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Fons Rademakers.                                  *
+ * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
  *                                                                       *
  * Permission to use, copy, modify and distribute this software and its  *
  * documentation for non-commercial purposes is hereby granted without   *
  * fee, provided that the above copyright notice appears in all copies   *
  * and that both the copyright notice and this permission notice appear  *
  * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose.                         *
- * It is provided "as is" without express or implied warranty.           *
+ * suitability of this software for any purpose. It is provided "as is"  *
+ * without express or implied warranty.                                  *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -455,6 +458,43 @@ TOrdCollectionIter::TOrdCollectionIter(const TOrdCollection *col, Bool_t dir)
    fCol = col;
    fDirection = dir;
    Reset();
+}
+
+//______________________________________________________________________________
+TOrdCollectionIter::TOrdCollectionIter(const TOrdCollectionIter &iter)
+{
+   // Copy ctor.
+
+   fCol       = iter.fCol;
+   fDirection = iter.fDirection;
+   fCursor    = iter.fCursor;
+}
+
+//______________________________________________________________________________
+TIterator &TOrdCollectionIter::operator=(const TIterator &rhs)
+{
+   // Overridden assignment operator.
+
+   if (this != &rhs && rhs.IsA() == TOrdCollectionIter::Class()) {
+      const TOrdCollectionIter &rhs1 = (const TOrdCollectionIter &)rhs;
+      fCol       = rhs1.fCol;
+      fDirection = rhs1.fDirection;
+      fCursor    = rhs1.fCursor;
+   }
+   return *this;
+}
+
+//______________________________________________________________________________
+TOrdCollectionIter &TOrdCollectionIter::operator=(const TOrdCollectionIter &rhs)
+{
+   // Overloaded assignment operator.
+
+   if (this != &rhs) {
+      fCol       = rhs.fCol;
+      fDirection = rhs.fDirection;
+      fCursor    = rhs.fCursor;
+   }
+   return *this;
 }
 
 //______________________________________________________________________________

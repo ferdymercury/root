@@ -1,3 +1,5 @@
+*CMZ :  2.22/09 09/07/99  09.31.58  by  Rene Brun
+*CMZ :  2.22/00 29/03/99  17.50.20  by  Fons Rademakers
 *CMZ :  2.20/03 07/12/98  09.01.29  by  Fons Rademakers
 *CMZ :  2.20/02 04/12/98  10.54.16  by  Rene Brun
 *-- Author :    Rene Brun     04/12/98
@@ -14,7 +16,7 @@ CINTCXXFLAGS  = +a1 -z +Z -I/opt/CC/include -DG__REGEXP -DG__UNIX -DG__HPUXCPPDL
                 -DG__SHAREDLIB -D_POSIX2_SOURCE -DG__ROOT -DG__REDIRECTIO
 CINTCFLAGS    = -Ae -z +Z -I/opt/CC/include -DG__REGEXP -DG__UNIX -DG__HPUXCPPDLL \
                 -DG__SHAREDLIB -D_POSIX2_SOURCE -DG__ROOT -DG__REDIRECTIO
-OPT           = -g1
+OPT           = -O
 NOOPT         =
 LD            = CC
 LDFLAGS       = $(OPT) +a1 -z -Wl,+s -Wl,-E
@@ -24,6 +26,12 @@ SYSLIBS       = -lm -ldld
 SYSXLIBS      = -L/usr/lib/X11R5 -lX11 -lm -ldld
 XLIBS         = $(ROOTSYS)/lib/libXpm.a -L/usr/lib/X11R5 -lX11
 CILIBS        = -lm -Wl,-E -ldld -lcurses
+CRYPTLIBS     =
+F77           = f77
+F77FLAGS      = $(OPT) -K +ppu
+F77LIBS       =
+
+VPATH         = $(ROOTSYS)/include
 
 
 ##### MACROS and TARGETS #####

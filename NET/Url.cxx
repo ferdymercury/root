@@ -1,21 +1,24 @@
+//*CMZ :  2.22/06 22/06/99  10.28.39  by  Fons Rademakers
 //*CMZ :  2.21/03 19/01/99  16.19.07  by  Fons Rademakers
 //*CMZ :  1.03/08 17/11/97  16.21.41  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   17/01/97
 
+/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Fons Rademakers.                                  *
+ * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
  *                                                                       *
  * Permission to use, copy, modify and distribute this software and its  *
  * documentation for non-commercial purposes is hereby granted without   *
  * fee, provided that the above copyright notice appears in all copies   *
  * and that both the copyright notice and this permission notice appear  *
  * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose.                         *
- * It is provided "as is" without express or implied warranty.           *
+ * suitability of this software for any purpose. It is provided "as is"  *
+ * without express or implied warranty.                                  *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -57,34 +60,35 @@ TUrl::TUrl(const char *url)
    fAnchor   = "";
    fOptions  = "";
 
-   char *u = (char *)url;  // yes, I know, but I promise I'll not damage it
-
    // Find protocol
    char *s, sav;
 
    // Special case for "file:"
-   if (!strncmp(u, "file:", 5)) {
+   if (!strncmp(url, "file:", 5)) {
       fProtocol = "file";
-      fFile = u+5;
+      fFile = url+5;
       fPort = 0;
       return;
    }
 
    // Special case for "rfio:"
-   if (!strncmp(u, "rfio:", 5)) {
+   if (!strncmp(url, "rfio:", 5)) {
       fProtocol = "rfio";
-      fFile = u+5;
+      fFile = url+5;
       fPort = 0;
       return;
    }
 
    // Special case for "hpss:"
-   if (!strncmp(u, "hpss:", 5)) {
+   if (!strncmp(url, "hpss:", 5)) {
       fProtocol = "hpss";
-      fFile = u+5;
+      fFile = url+5;
       fPort = 0;
       return;
    }
+
+   char *u0, *u = StrDup(url);
+   u0 = u;
 
    if ((s = strstr(u, "://"))) {
       sav = *s;
@@ -102,13 +106,13 @@ TUrl::TUrl(const char *url)
       else {
          // illegal protocol
          fPort = -1;
-         return;
+         goto cleanup;
       }
       s += 3;
       if (!*s) {
          // error if we are at end of string
          fPort = -1;
-         return;
+         goto cleanup;
       }
    } else
       s = u;
@@ -125,7 +129,7 @@ TUrl::TUrl(const char *url)
          // Get port #
          if (!*s) {
             fPort = -1;
-            return;
+            goto cleanup;
          }
          u = s;
          if ((s = strchr(u, '/'))) {
@@ -135,15 +139,15 @@ TUrl::TUrl(const char *url)
             *s = sav;
          } else {
             fPort = atoi(u);
-            return;
+            goto cleanup;
          }
       }
    } else {
       fHost = u;
-      return;
+      goto cleanup;
    }
 
-   if (!*s) return;
+   if (!*s) goto cleanup;
 
    // Find file
    u = s;
@@ -157,7 +161,7 @@ TUrl::TUrl(const char *url)
          // Get anchor
          if (!*s) {
             fPort = -1;
-            return;
+            goto cleanup;
          }
          u = s;
          if ((s = strchr(u, '?'))) {
@@ -168,21 +172,24 @@ TUrl::TUrl(const char *url)
             s++;
          } else {
             fAnchor = u;
-            return;
+            goto cleanup;
          }
       }
       if (!*s) {
          // error if we are at end of string
          fPort = -1;
-         return;
+         goto cleanup;
       }
    } else {
       fFile = u;
-      return;
+      goto cleanup;
    }
 
    // Set option
    fOptions = s;
+
+cleanup:
+   delete [] u0;
 }
 
 //______________________________________________________________________________

@@ -1,3 +1,4 @@
+//*CMZ :  2.22/08 06/07/99  18.56.49  by  Fons Rademakers
 //*CMZ :  2.20/00 19/11/98  19.21.13  by  Fons Rademakers
 //*CMZ :  2.00/13 28/10/98  12.39.37  by  Fons Rademakers
 //*CMZ :  2.00/12 08/10/98  14.11.32  by  Fons Rademakers
@@ -10,20 +11,22 @@
 #ifndef ROOT_TGX11
 #define ROOT_TGX11
 
+/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Fons Rademakers.                                  *
+ * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
  *                                                                       *
  * Permission to use, copy, modify and distribute this software and its  *
  * documentation for non-commercial purposes is hereby granted without   *
  * fee, provided that the above copyright notice appears in all copies   *
  * and that both the copyright notice and this permission notice appear  *
  * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose.                         *
- * It is provided "as is" without express or implied warranty.           *
+ * suitability of this software for any purpose. It is provided "as is"  *
+ * without express or implied warranty.                                  *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -64,6 +67,7 @@ struct XSetWindowAttributes;
 struct XColor;
 struct XEvent;
 struct XImage;
+struct XPoint;
 struct XpmAttributes;
 
 #endif

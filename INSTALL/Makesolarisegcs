@@ -1,3 +1,4 @@
+*CMZ :  2.22/01 11/05/99  09.08.02  by  Rene Brun
 *CMZ :  2.21/01 14/01/99  13.39.48  by  Rene Brun
 *CMZ :  2.20/06 17/12/98  13.59.05  by  Rene Brun
 *CMZ :  2.20/00 17/12/98  10.43.27  by  Rene Brun
@@ -13,9 +14,9 @@ NOOPT         =
 # Compiler:
 CXX           = g++
 CC            = gcc
-CXXFLAGS      = -fPIC -fno-rtti -fno-exceptions -I/usr/openwin/include
-CFLAGS        =  -fPIC -I/usr/openwin/include
-CINTCXXFLAGS  = -fPIC -fno-rtti -fno-exceptions \
+CXXFLAGS      = -fPIC -I/usr/openwin/include
+CFLAGS        = -fPIC -I/usr/openwin/include
+CINTCXXFLAGS  = -fPIC \
                 -DG__REGEXP1 -DG__UNIX -DG__SHAREDLIB \
                 -DG__OSFDLL -DG__ROOT -DG__REDIRECTIO
 CINTCFLAGS    = -fPIC -DG__REGEXP1 -DG__UNIX -DG__SHAREDLIB \

@@ -1,3 +1,4 @@
+//*CMZ :  2.22/01 23/04/99  11.01.11  by  Rene Brun
 //*CMZ :  2.21/05 07/02/99  11.37.56  by  Rene Brun
 //*CMZ :  2.20/05 15/12/98  09.17.21  by  Rene Brun
 //*CMZ :  2.00/13 30/10/98  09.17.34  by  Valery Fine
@@ -7,20 +8,22 @@
 //*CMZ :  1.03/09 10/12/97  09.30.58  by  Rene Brun
 //*-- Author :    Rene Brun   20/10/95
 
+/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Fons Rademakers.                                  *
+ * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
  *                                                                       *
  * Permission to use, copy, modify and distribute this software and its  *
  * documentation for non-commercial purposes is hereby granted without   *
  * fee, provided that the above copyright notice appears in all copies   *
  * and that both the copyright notice and this permission notice appear  *
  * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose.                         *
- * It is provided "as is" without express or implied warranty.           *
+ * suitability of this software for any purpose. It is provided "as is"  *
+ * without express or implied warranty.                                  *
  *************************************************************************/
 
 #include <fstream.h>
@@ -96,6 +99,7 @@ TBox *TPaveText::AddBox(Float_t x1, Float_t y1, Float_t x2, Float_t y2)
 
    TBox *newbox = new TBox(x1,y1,x2,y2);
 
+   if (!fLines) fLines = new TList(this);
    fLines->Add(newbox);
    return newbox;
 }
@@ -108,6 +112,7 @@ TLine *TPaveText::AddLine(Float_t x1, Float_t y1, Float_t x2, Float_t y2)
 
    TLine *newline = new TLine(x1,y1,x2,y2);
 
+   if (!fLines) fLines = new TList(this);
    fLines->Add(newline);
    return newline;
 }
@@ -139,6 +144,7 @@ TText *TPaveText::AddText(Float_t x1, Float_t y1, const Text_t *text)
    nch -= Int_t(nspecials + 0.5);
    if (nch > fLongest) fLongest = nch;
 
+   if (!fLines) fLines = new TList(this);
    fLines->Add(newtext);
    return newtext;
 }
@@ -158,6 +164,7 @@ void TPaveText::Clear(Option_t *)
 //*-*-*-*-*-*-*-*-*-*Clear all lines in this pavetext*-*-*-*-*-*-*-*-*-*
 //*-*                ================================
 
+   if (!fLines) return;
    fLines->Delete();
    fLongest = 0;
 }
@@ -183,6 +190,7 @@ void TPaveText::DeleteText()
 //*-*              =========================================
 
 
+   if (!fLines) return;
    TObject *obj = GetObject();             //get object pointed by the mouse
    if (!obj) return;
    if (obj->IsA() != TText::Class()) return;
@@ -265,6 +273,7 @@ TObject *TPaveText::GetObject()
 //*-*-*-*-*Get object pointed by the mouse in this pavetext*-*-*-*
 //*-*      ================================================
 
+   if (!fLines) return 0;
    Int_t nlines = fLines->GetSize();
    if (nlines == 0) return 0;
 
@@ -357,6 +366,7 @@ void TPaveText::PaintPrimitives(Int_t mode)
 {
 //*-*-*-*-*-*-*-*Paint list of primitives in this pavetext*-*-*-*-*-*-*-*
 //*-*            =========================================
+   if (!fLines) return;
    Int_t nlines = fLines->GetSize();
    if (nlines == 0) return;
 
@@ -467,7 +477,7 @@ void TPaveText::Print(Option_t *option)
 //*-*-*-*-*-*-*-*-*-*-*Dump this pavetext with its attributes*-*-*-*-*-*-*-*
 //*-*                  =======================================
    TPave::Print(option);
-   fLines->Print();
+   if (fLines) fLines->Print();
 }
 
 //______________________________________________________________________________
@@ -560,6 +570,7 @@ void TPaveText::SaveLines(ofstream &out, char *name)
 {
     // Save lines of this pavetext as C++ statements on output stream out
 
+   if (!fLines) return;
    Int_t nlines = fLines->GetSize();
    if (nlines == 0) return;
 

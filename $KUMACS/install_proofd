@@ -1,3 +1,4 @@
+*CMZ :  2.22/05 04/06/99  11.27.16  by  Fons Rademakers
 *CMZ :  2.00/12 08/10/98  18.43.14  by  Fons Rademakers
 *CMZ :  2.00/09 28/05/98  12.50.31  by  Valery Fine(fine@mail.cern.ch)
 *CMZ :  1.00/07 27/03/97  17.20.44  by  Rene Brun
@@ -21,7 +22,7 @@ EXEC setup [1] [2] [LOGFILE]
 SEL PROOFD
 cd ..
 
-CC proof/proofd
+CC proofd/proofd
 
 
 if $AFS <> '$AFS' then
@@ -41,16 +42,16 @@ if [machine] = 'SOLARIS' .OR. [machine] = 'SOLARISPC' then
 endif
 
 
-main=$ROOTSYS/src/PROOF_proofd.o
+main=$ROOTSYS/src/PROOFD_proofd.o
 
 if [machine] = 'WinNT' then
 +IF,SYMANTEC
-   main=$ROOTSYS\src\PROOF_proofd.obj
+   main=$ROOTSYS\src\PROOFD_proofd.obj
 * LINK obj[, out[, map[, lib[, def[, res]]]]]
    exec LFLAGS
 *  Set list of obj modules
-   sh for %f in ($ROOTSYS\src\PROOF_*.obj) do echo %f+ >> $ROOTSYS\bin\symantec.lnk
-   sh echo $ROOTSYS\src\PROOF_proofd.obj >> $ROOTSYS\bin\symantec.lnk
+   sh for %f in ($ROOTSYS\src\PROOFD_*.obj) do echo %f+ >> $ROOTSYS\bin\symantec.lnk
+   sh echo $ROOTSYS\src\PROOFD_proofd.obj >> $ROOTSYS\bin\symantec.lnk
 * Set output name of the exe file
    SH echo $ROOTSYS\bin\proofd.exe       >> $ROOTSYS\bin\symantec.lnk
    SH echo NUL                     >> $ROOTSYS\bin\symantec.lnk
@@ -58,7 +59,7 @@ if [machine] = 'WinNT' then
    SH echo NUL                     >> $ROOTSYS\bin\symantec.lnk
    SH [LD] [LDOPT] @$ROOTSYS\bin\symantec.lnk
 +ELSE
-   main=$ROOTSYS\src\PROOF_proofd.obj
+   main=$ROOTSYS\src\PROOFD_proofd.obj
 
    pdb = '$ROOTSYS\bin\proofd.pdb'
 

@@ -1,5 +1,5 @@
-//*CMZ :  2.21/08 17/03/99  13.13.48  by  Masaharu Goto
-//*-- Author :    Masaharu Goto   17/03/99
+//*CMZ :  2.22/10 23/07/99  14.42.23  by  Masaharu Goto
+//*-- Author :    Masaharu Goto   23/07/99
 /********************************************************
 * libstrm.cxx
 ********************************************************/
@@ -1860,15 +1860,11 @@ extern "C" void G__cpp_setup_inheritanceG__stream() {
 
    /* Setting up class inheritance */
    if(0==G__getnumbaseclass(G__get_linked_tagnum(&G__G__streamLN_ostream))) {
-     ostream *G__Lderived;
-     G__Lderived=(ostream*)0x1000;
      {
        G__inheritance_setup(G__get_linked_tagnum(&G__G__streamLN_ostream),G__get_linked_tagnum(&G__G__streamLN_ios),(long)G__2vbo_ostream_ios_0,1,3);
      }
    }
    if(0==G__getnumbaseclass(G__get_linked_tagnum(&G__G__streamLN_istream))) {
-     istream *G__Lderived;
-     G__Lderived=(istream*)0x1000;
      {
        G__inheritance_setup(G__get_linked_tagnum(&G__G__streamLN_istream),G__get_linked_tagnum(&G__G__streamLN_ios),(long)G__2vbo_istream_ios_0,1,3);
      }
@@ -1900,8 +1896,6 @@ extern "C" void G__cpp_setup_inheritanceG__stream() {
      }
    }
    if(0==G__getnumbaseclass(G__get_linked_tagnum(&G__G__streamLN_fstreambase))) {
-     fstreambase *G__Lderived;
-     G__Lderived=(fstreambase*)0x1000;
      {
        G__inheritance_setup(G__get_linked_tagnum(&G__G__streamLN_fstreambase),G__get_linked_tagnum(&G__G__streamLN_ios),(long)G__2vbo_fstreambase_ios_0,1,3);
      }
@@ -1980,8 +1974,6 @@ extern "C" void G__cpp_setup_inheritanceG__stream() {
      }
    }
    if(0==G__getnumbaseclass(G__get_linked_tagnum(&G__G__streamLN_strstreambase))) {
-     strstreambase *G__Lderived;
-     G__Lderived=(strstreambase*)0x1000;
      {
        G__inheritance_setup(G__get_linked_tagnum(&G__G__streamLN_strstreambase),G__get_linked_tagnum(&G__G__streamLN_ios),(long)G__2vbo_strstreambase_ios_0,1,3);
      }

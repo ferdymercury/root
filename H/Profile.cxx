@@ -1,3 +1,4 @@
+//*CMZ :  2.22/00 05/04/99  18.14.00  by  Rene Brun
 //*CMZ :  2.21/01 05/01/99  16.29.20  by  Rene Brun
 //*CMZ :  2.20/03 05/12/98  22.30.19  by  Rene Brun
 //*CMZ :  2.00/11 17/08/98  15.18.36  by  Rene Brun
@@ -7,20 +8,22 @@
 //*CMZ :  1.03/09 12/12/97  16.18.13  by  Fons Rademakers
 //*-- Author :    Rene Brun   29/09/95
 
+/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Fons Rademakers.                                  *
+ * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
  *                                                                       *
  * Permission to use, copy, modify and distribute this software and its  *
  * documentation for non-commercial purposes is hereby granted without   *
  * fee, provided that the above copyright notice appears in all copies   *
  * and that both the copyright notice and this permission notice appear  *
  * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose.                         *
- * It is provided "as is" without express or implied warranty.           *
+ * suitability of this software for any purpose. It is provided "as is"  *
+ * without express or implied warranty.                                  *
  *************************************************************************/
 
 #include "TProfile.h"
@@ -462,7 +465,7 @@ void TProfile::Divide(TH1 *h1, TH1 *h2, Float_t c1, Float_t c2, Option_t *option
 }
 
 //______________________________________________________________________________
-void TProfile::DrawCopy(Option_t *option)
+TH1 *TProfile::DrawCopy(Option_t *option)
 {
 //*-*-*-*-*-*-*-*Draw a copy of this profile histogram*-*-*-*-*-*-*-*-*-*-*-*
 //*-*            =====================================
@@ -471,6 +474,7 @@ void TProfile::DrawCopy(Option_t *option)
    newpf->SetDirectory(0);
    newpf->SetBit(kCanDelete);
    newpf->AppendPad(option);
+   return newpf;
 }
 
 //______________________________________________________________________________
@@ -709,3 +713,4 @@ void TProfile::SetErrorOption(Option_t *option)
    if (opt.Contains("s")) fErrorMode = kERRORSPREAD;
    if (opt.Contains("i")) fErrorMode = kERRORSPREADI;
    if (opt.Contains("g")) fErrorMode = kERRORSPREADG;
+}

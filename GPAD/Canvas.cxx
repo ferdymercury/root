@@ -1,3 +1,7 @@
+//*CMZ :  2.22/07 05/07/99  19.26.51  by  Rene Brun
+//*CMZ :  2.22/06 21/06/99  17.56.24  by  Rene Brun
+//*CMZ :  2.22/01 27/04/99  10.50.23  by  Fons Rademakers
+//*CMZ :  2.22/00 06/04/99  09.17.09  by  Rene Brun
 //*CMZ :  2.21/08 11/03/99  08.17.14  by  Rene Brun
 //*CMZ :  2.21/07 03/03/99  11.58.31  by  Rene Brun
 //*CMZ :  2.21/05 09/02/99  13.16.29  by  Fons Rademakers
@@ -19,20 +23,22 @@
 //*CMZ :  1.03/09 11/12/97  08.39.01  by  Rene Brun
 //*-- Author :    Rene Brun   12/12/94
 
+/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Fons Rademakers.                                  *
+ * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
  *                                                                       *
  * Permission to use, copy, modify and distribute this software and its  *
  * documentation for non-commercial purposes is hereby granted without   *
  * fee, provided that the above copyright notice appears in all copies   *
  * and that both the copyright notice and this permission notice appear  *
  * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose.                         *
- * It is provided "as is" without express or implied warranty.           *
+ * suitability of this software for any purpose. It is provided "as is"  *
+ * without express or implied warranty.                                  *
  *************************************************************************/
 
 #include <string.h>
@@ -144,6 +150,24 @@ ClassImp(TCanvas)
 //______________________________________________________________________________
 TCanvas::TCanvas() : TPad()
 {
+#ifdef R__THREAD
+
+// begin changes M.H. 10.06.99
+Constructor();}
+// end changes M.H. 10.06.99
+
+void TCanvas::Constructor()
+{
+   // Canvas default constructor
+
+// begin changes M.H. 10.06.99
+   if (gThreadXAR) {
+     void *arr[2];
+     arr[1] = this;
+     if ((*gThreadXAR)("CANV", 2, arr, NULL)) return;
+   }
+// end changes M.H. 10.06.99
+#endif
    // Canvas default constructor
 
    fCanvas    = 0;
@@ -154,6 +178,9 @@ TCanvas::TCanvas() : TPad()
    fContextMenu = 0;
    fEditorBar   = 0;
    fIsEditable  = kIsEditable;
+   fSelected    = 0;
+   fSelectedPad = 0;
+   fPadSave     = 0;
 }
 
 //______________________________________________________________________________
@@ -190,6 +217,14 @@ TCanvas::TCanvas(const char *name, Int_t ww, Int_t wh, Int_t winid)
 //_____________________________________________________________________________
 TCanvas::TCanvas(const Text_t *name, const Text_t *title, Int_t form) : TPad()
 {
+#ifdef R__THREAD
+
+// begin changes M.H. 10.06.99
+ Constructor(name, title, form);}
+// end changes M.H. 10.06.99
+
+void TCanvas::Constructor(const Text_t *name, const Text_t *title, Int_t form)
+{
 //*-*-*-*-*-*-*-*-*Canvas constructor using a template*-*-*-*-*-*-*-*-*-*-*-*
 //*-*              ===================================
 //  Create a new canvas with a predefined size form.
@@ -200,6 +235,16 @@ TCanvas::TCanvas(const Text_t *name, const Text_t *title, Int_t form) : TPad()
 //  form = 3    500x500 at 30,30
 //  form = 4    500x500 at 40,40
 //  form = 5    500x500 at 50,50
+//
+
+// begin changes M.H. 10.06.99
+   if (gThreadXAR) {
+     void *arr[5];
+     arr[1] = this; arr[2] = (void *)name; arr[3] = (void *)title; arr[4] =&form;
+     if ((*gThreadXAR)("CANV", 5, arr, NULL)) return;
+   }
+// end changes M.H. 10.06.99
+#endif
 //
    fMenuBar = kTRUE;
    if (form < 0) {
@@ -250,6 +295,31 @@ TCanvas::TCanvas(const Text_t *name, const Text_t *title, Int_t ww, Int_t wh) : 
 //  wide is the canvas size in pixels along X
 //      if ww < 0  the menubar is not shown.
 //  wh is the canvas size in pixels along Y
+#ifdef R__THREAD
+
+// begin changes M.H. 10.06.99
+ Constructor(name, title, ww, wh);}
+// end changes M.H. 10.06.99
+
+void TCanvas::Constructor(const Text_t *name, const Text_t *title, Int_t ww, Int_t wh)
+{
+//*-*-*-*-*-*-*-*-*-*-*-*Canvas constructor*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+//*-*                    ==================
+//  Create a new canvas at a random position.
+//
+//  wide is the canvas size in pixels along X
+//      if ww < 0  the menubar is not shown.
+//  wh is the canvas size in pixels along Y
+//
+
+// begin changes M.H. 10.06.99
+  if (gThreadXAR) {
+     void *arr[6];
+     arr[1] = this; arr[2] = (void *)name; arr[3] = (void *)title; arr[4] =&ww; arr[5] = &wh;
+     if ((*gThreadXAR)("CANV", 6, arr, NULL)) return;
+   }
+// end changes M.H. 10.06.99
+#endif
 //
 
    fMenuBar = kTRUE;
@@ -292,7 +362,25 @@ TCanvas::TCanvas(const Text_t *name, const Text_t *title, Int_t wtopx, Int_t wto
 //     if wtopx < 0) the menubar is not shown.
 //  ww is the canvas size in pixels along X
 //  wh is the canvas size in pixels along Y
-//
+#ifdef R__THREAD
+
+// begin changes M.H. 10.06.99
+ Constructor(name, title, wtopx, wtopy, ww, wh);}
+// end changes M.H. 10.06.99
+
+void TCanvas::Constructor(const Text_t *name, const Text_t *title, Int_t wtopx, Int_t wtopy, Int_t
+ww, Int_t wh)
+{
+
+// begin changes M.H. 10.06.99
+  if (gThreadXAR) {
+     void *arr[8];
+     arr[1] = this;   arr[2] = (void *)name;   arr[3] = (void *)title;
+     arr[4] = &wtopx; arr[5] = &wtopy; arr[6] = &ww; arr[7] = &wh;
+     if ((*gThreadXAR)("CANV", 8, arr, NULL)) return;
+   }
+// end changes M.H. 10.06.99
+#endif
 
    fMenuBar = kTRUE;
    if (wtopx < 0) {
@@ -393,6 +481,8 @@ void TCanvas::Build()
    if (fShowEventStatus && fMenuBar && fCanvasImp)
       fCanvasImp->ShowStatusBar(fShowEventStatus);
 
+   fSelected        = 0;
+   fSelectedPad     = 0;
    fPadSave         = 0;
    fEditorBar       = 0;
    fIsEditable      = kIsEditable;
@@ -436,6 +526,23 @@ TCanvas::~TCanvas()
 {
 //*-*-*-*-*-*-*-*-*-*-*Canvas default destructor*-*-*-*-*-*-*-*-*-*-*-*-*-*
 //*-*                  =========================
+#ifdef R__THREAD
+
+// begin changes M.H. 10.06.99
+Destructor();}
+// end changes M.H. 10.06.99
+
+void TCanvas::Destructor()
+{
+
+// begin changes M.H. 10.06.99
+   if (gThreadXAR) {
+     void *arr[2];
+     arr[1] = this;
+     if ((*gThreadXAR)("CDEL", 2, arr, NULL)) return;
+   }
+// end changes M.H. 10.06.99
+#endif
 
    if (!TestBit(kNotDeleted)) return;
    if (!gPad) return;
@@ -799,6 +906,20 @@ void TCanvas::HandleInput(EEventType event, Int_t px, Int_t py)
 
       if (fShowEventStatus) DrawEventStatus(event, px, py, fSelected);
 
+      break;
+
+   case kMouseLeave:
+      // mouse leaves canvas
+      {
+         // force popdown of tooltips
+         TObject     *sobj = fSelected;
+         TVirtualPad *spad = fSelectedPad;
+         fSelected    = 0;
+         fSelectedPad = 0;
+         EnterLeave(prevSelPad, prevSelObj);
+         fSelected    = sobj;
+         fSelectedPad = spad;
+      }
       break;
 
    case kButton1Double:
@@ -1241,7 +1362,7 @@ void TCanvas::SetCanvasSize(UInt_t ww, UInt_t wh)
    // If ww and/or wh are greater than the current canvas window
    // a scroll bar is automatically generated.
    // Use this function to zoom in a canvas and naviguate via
-   // teh scroll bars.
+   // the scroll bars.
 
    fCanvasImp->SetCanvasSize(ww, wh);
 }

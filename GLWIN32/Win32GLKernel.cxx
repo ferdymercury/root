@@ -1,3 +1,4 @@
+//*CMZ :  2.22/01 10/05/99  12.20.59  by  Valery Fine(fine@mail.cern.ch)
 //*CMZ :  2.00/00 05/03/98  20.10.31  by  Fons Rademakers
 //*CMZ :  1.02/00 20/07/97  21.31.01  by  Valery Fine(fine@vxcern.cern.ch)
 //*-- Author :    Valery Fine(fine@vxcern.cern.ch)   05/03/97
@@ -198,6 +199,10 @@ void TWin32GLKernel::PaintGLPoints(Int_t n, Float_t *p, Option_t *option)
 {
     CallWindowMethod3(PaintGLPoints,n,p,option);
 }
+
+//______________________________________________________________________________
+void TWin32GLKernel::PaintGLPointsObject(const TPoints3DABC *points, Option_t *option)
+{  CallWindowMethod2(PaintGLPointsObject,points,option); }
 
 //______________________________________________________________________________
 void TWin32GLKernel::PushGLMatrix() {CallWindowMethod(PushGLMatrix);}
@@ -402,9 +407,7 @@ void TWin32GLKernel::ExecThreadCB(TWin32SendClass *command)
                 ,"UpdateMatrix(Double_t *translate, Double_t *rotate, Bool_t isreflection)"
                                 ,"AddRotation(Double_t *rotmatrix,Double_t *extraangles)"
                                 ,"SetStack(Double_t *matrix)"
-
-
-
+                ,"PaintGLPointsObject(TPoints3DABC *points, Option_t *option)"
     };
 
     if (gDebug) printf("TWin32GLKernel: commamd %d: %s",cmd,listcmd[cmd]);
@@ -702,6 +705,13 @@ void TWin32GLKernel::ExecThreadCB(TWin32SendClass *command)
         {
             Double_t *matrix = (Double_t *)(command->GetData(1));
             TGLKernel::SetStack(matrix);
+        }
+        break;
+    case kPaintGLPointsObject:
+        {
+            const TPoints3DABC *points = (TPoints3DABC *)(command->GetData(1));
+            Option_t *option     = (Option_t *)(command->GetData(2));
+            TGLKernel::PaintGLPointsObject(points,option);
         }
         break;
      default:

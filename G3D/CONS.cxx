@@ -1,21 +1,24 @@
+//*CMZ :  2.22/00 17/04/99  07.50.09  by  Rene Brun
 //*CMZ :  2.00/12 07/10/98  08.52.28  by  Valery Fine(fine@mail.cern.ch)
 //*CMZ :  1.03/09 07/12/97  16.04.56  by  Fons Rademakers
 //*-- Author :    Nenad Buncic   18/09/95
 
+/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Fons Rademakers.                                  *
+ * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
  *                                                                       *
  * Permission to use, copy, modify and distribute this software and its  *
  * documentation for non-commercial purposes is hereby granted without   *
  * fee, provided that the above copyright notice appears in all copies   *
  * and that both the copyright notice and this permission notice appear  *
  * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose.                         *
- * It is provided "as is" without express or implied warranty.           *
+ * suitability of this software for any purpose. It is provided "as is"  *
+ * without express or implied warranty.                                  *
  *************************************************************************/
 
 #include "TCONS.h"
@@ -60,8 +63,9 @@ TCONS::TCONS()
 
 
 //______________________________________________________________________________
-TCONS::TCONS(Text_t *name, Text_t *title, Text_t *material, Float_t rmin1, Float_t rmax1, Float_t rmin2, Float_t rmax2,
-             Float_t dz, Float_t phi1, Float_t phi2) : TTUBS(name,title,material,rmin1,rmax1,dz,phi1,phi2)
+TCONS::TCONS(Text_t *name, Text_t *title, Text_t *material, Float_t dz, Float_t rmin1, Float_t rmax1, Float_t rmin2, Float_t rmax2,
+             Float_t phi1, Float_t phi2)
+      : TTUBS(name,title,material,rmin1,rmax1,dz,phi1,phi2)
 {
 //*-*-*-*-*-*-*-*-*-*-*-*-*CONS shape normal constructor*-*-*-*-*-*-*-*-*-*-*-*-*
 //*-*                      =============================
@@ -72,7 +76,7 @@ TCONS::TCONS(Text_t *name, Text_t *title, Text_t *material, Float_t rmin1, Float
 
 
 //______________________________________________________________________________
-TCONS::TCONS(Text_t *name, Text_t *title, Text_t *material, Float_t rmax1, Float_t dz
+TCONS::TCONS(Text_t *name, Text_t *title, Text_t *material,  Float_t rmax1, Float_t dz
                           , Float_t phi1, Float_t phi2, Float_t rmax2)
              : TTUBS(name,title,material,rmax1,dz,phi1,phi2)
 {

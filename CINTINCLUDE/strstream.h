@@ -1,5 +1,5 @@
-/*CMZ :  2.21/08 17/03/99  13.13.52  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   17/03/99*/
+/*CMZ :  2.22/10 23/07/99  14.42.26  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   23/07/99*/
 /*********************************************************************
 * strstream.h
 *
@@ -8,7 +8,6 @@
 #ifndef G__STRSTREAM_H
 
 #pragma setstream
-
 
 #ifndef G__STRSTREAM_H
 #define G__STRSTREAM_H
@@ -212,5 +211,15 @@ class iostrstream : public istrstream , public ostrstream {
 };
 
 
+#else
+
+istrstream::istrstream() {
+}
+
+typedef ostrstream ostringstream;
+typedef istrstream istringstream;
+//typedef strstream stringstream;
+
 #endif
+
 #endif

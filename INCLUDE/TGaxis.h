@@ -1,3 +1,4 @@
+//*CMZ :  2.22/07 28/06/99  18.12.24  by  Rene Brun
 //*CMZ :  2.00/12 28/08/98  17.51.29  by  Rene Brun
 //*CMZ :  2.00/00 03/03/98  16.27.12  by  Rene Brun
 //*CMZ :  0.90/01 12/10/96  15.03.02  by  Rene Brun
@@ -6,20 +7,22 @@
 #ifndef ROOT_TGaxis
 #define ROOT_TGaxis
 
+/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Fons Rademakers.                                  *
+ * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
  *                                                                       *
  * Permission to use, copy, modify and distribute this software and its  *
  * documentation for non-commercial purposes is hereby granted without   *
  * fee, provided that the above copyright notice appears in all copies   *
  * and that both the copyright notice and this permission notice appear  *
  * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose.                         *
- * It is provided "as is" without express or implied warranty.           *
+ * suitability of this software for any purpose. It is provided "as is"  *
+ * without express or implied warranty.                                  *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -54,7 +57,7 @@ private:
     Float_t    fTitleOffset;         //Offset of title wrt axis
     Float_t    fTitleSize;           //Size of title in NDC
     Int_t      fLabelFont;           //Font for labels
-    char       fChopt[16];           //Axis options
+    TString    fChopt;               //Axis options
     TString    fName;                //axis name
     TString    fTitle;               //axis title
 
@@ -77,6 +80,7 @@ public:
              Float_t    GetTitleOffset()  {return fTitleOffset;}
              Float_t    GetTitleSize()    {return fTitleSize;}
 virtual const Text_t    *GetName() const  {return fName.Data();}
+virtual const Text_t    *GetOption() const {return fChopt.Data();}
 virtual const Text_t    *GetTitle() const {return fTitle.Data();}
                Int_t    GetNdiv()         {return fNdiv;}
              Float_t    GetWmin()         {return fWmin;}

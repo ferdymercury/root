@@ -1,3 +1,4 @@
+*CMZ :  2.22/02 27/05/99  12.35.48  by  Fons Rademakers
 *CMZ :  2.00/09 24/06/98  00.21.08  by  Fons Rademakers
 *-- Author :    Fons Rademakers   23/06/98
 #ifdef __CINT__
@@ -32,6 +33,7 @@
 #pragma link C++ class TListIter;
 #pragma link C++ class TMap-;
 #pragma link C++ class TMapIter;
+#pragma link C++ class TAssoc;
 #pragma link C++ class TObjArray-;
 #pragma link C++ class TObjArrayIter;
 #pragma link C++ class TObjectTable;
@@ -39,5 +41,6 @@
 #pragma link C++ class TOrdCollectionIter;
 #pragma link C++ class TSeqCollection;
 #pragma link C++ class TSortedList;
+#pragma link C++ class TExMap;
 
 #endif

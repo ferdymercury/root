@@ -1,3 +1,5 @@
+//*CMZ :  2.22/04 01/06/99  11.09.13  by  Rene Brun
+//*CMZ :  2.22/01 03/05/99  16.21.34  by  Rene Brun
 //*CMZ :  2.00/12 15/09/98  16.35.30  by  Fons Rademakers
 //*CMZ :  2.00/11 17/08/98  15.49.57  by  Rene Brun
 //*CMZ :  2.00/00 05/04/98  17.03.27  by  Rene Brun
@@ -7,20 +9,22 @@
 #ifndef ROOT_TChain
 #define ROOT_TChain
 
+/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Fons Rademakers.                                  *
+ * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
  *                                                                       *
  * Permission to use, copy, modify and distribute this software and its  *
  * documentation for non-commercial purposes is hereby granted without   *
  * fee, provided that the above copyright notice appears in all copies   *
  * and that both the copyright notice and this permission notice appear  *
  * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose.                         *
- * It is provided "as is" without express or implied warranty.           *
+ * suitability of this software for any purpose. It is provided "as is"  *
+ * without express or implied warranty.                                  *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -56,37 +60,39 @@ public:
     TChain(const Text_t *name, const Text_t *title="");
     virtual ~TChain();
 
-    virtual void    Add(const Text_t *name);
-    virtual void    Browse(TBrowser *b);
-    virtual void    CreatePackets();
-    virtual void    Draw(Option_t *opt);
-    virtual void    Draw(TCut varexp, TCut selection, Option_t *option=""
-                     ,Int_t nevents=1000000000, Int_t firstevent=0);
-    virtual void    Draw(const Text_t *varexp, const Text_t *selection, Option_t *option=""
-                     ,Int_t nevents=1000000000, Int_t firstevent=0); // *MENU*
-    virtual TBranch *GetBranch(const Text_t *name) {return fTree->GetBranch(name);}
-    virtual Int_t   GetNtrees() {return fNtrees;}
-    virtual Int_t   GetEvent(Int_t event=0, Int_t getall=0);
-    TFile          *GetFile() {return fFile;}
-    TLeaf          *GetLeaf(const Text_t *name) {return fTree->GetLeaf(name);}
-    TObjArray      *GetListOfBranches();
-    TObjArray      *GetListOfFiles() {return fFiles;}
-    TObjArray      *GetListOfLeaves();
-    virtual Int_t   GetNbranches() {return fTree->GetNbranches();}
-    TList          *GetStatus() {return fStatus;}
-    TTree          *GetTree() {return fTree;}
-            Int_t   GetTreeNumber() {return fTreeNumber;}
-            Int_t  *GetTreeOffset() {return fTreeOffset;}
-    virtual Int_t   GetTreeOffsetLen() {return fTreeOffsetLen;}
-            Int_t   LoadTree(Int_t event);
-    virtual void    Loop(Option_t *option="",Int_t nevents=1000000000, Int_t firstevent=0); // *MENU*
-    virtual void    ls(Option_t *option="");
-    virtual void    Merge(const Text_t *name);
-    virtual void    Merge(TFile *file, Int_t basketsize, Option_t *option="");
-    virtual void    Print(Option_t *option="");
-    virtual void    SetBranchAddress(const Text_t *bname,void *add);
-    virtual void    SetBranchStatus(const Text_t *bname,Bool_t status=1);
-    virtual void    SetPacketSize(Int_t size = 100);
+    virtual void      Add(const Text_t *name);
+    virtual void      Browse(TBrowser *b);
+    virtual void      CreatePackets();
+    virtual void      Draw(Option_t *opt);
+    virtual void      Draw(TCut varexp, TCut selection, Option_t *option=""
+                       ,Int_t nentries=1000000000, Int_t firstentry=0);
+    virtual void      Draw(const Text_t *varexp, const Text_t *selection, Option_t *option=""
+                     ,Int_t nentries=1000000000, Int_t firstentry=0); // *MENU*
+    virtual TBranch  *GetBranch(const Text_t *name) {return fTree->GetBranch(name);}
+    virtual Int_t     GetNtrees() {return fNtrees;}
+    virtual Int_t     GetEntry(Int_t entry=0, Int_t getall=0);
+    TFile            *GetFile() {return fFile;}
+    TLeaf            *GetLeaf(const Text_t *name) {return fTree->GetLeaf(name);}
+    TObjArray        *GetListOfBranches();
+    TObjArray        *GetListOfFiles() {return fFiles;}
+    TObjArray        *GetListOfLeaves();
+    virtual Float_t   GetMaximum(Text_t *columname);
+    virtual Float_t   GetMinimum(Text_t *columname);
+    virtual Int_t     GetNbranches() {return fTree->GetNbranches();}
+    TList            *GetStatus() {return fStatus;}
+    TTree            *GetTree() {return fTree;}
+            Int_t     GetTreeNumber() {return fTreeNumber;}
+            Int_t    *GetTreeOffset() {return fTreeOffset;}
+    virtual Int_t     GetTreeOffsetLen() {return fTreeOffsetLen;}
+            Int_t     LoadTree(Int_t entry);
+    virtual void      Loop(Option_t *option="",Int_t nentries=1000000000, Int_t firstentry=0); // *MENU*
+    virtual void      ls(Option_t *option="");
+    virtual void      Merge(const Text_t *name);
+    virtual void      Merge(TFile *file, Int_t basketsize, Option_t *option="");
+    virtual void      Print(Option_t *option="");
+    virtual void      SetBranchAddress(const Text_t *bname,void *add);
+    virtual void      SetBranchStatus(const Text_t *bname,Bool_t status=1);
+    virtual void      SetPacketSize(Int_t size = 100);
 
     ClassDef(TChain,1)  //A chain of TTrees
 };

@@ -1,3 +1,4 @@
+/*CMZ :  2.22/01 04/05/99  16.28.07  by  Valery Fine(fine@mail.cern.ch)*/
 /*CMZ :  1.03/02 23/08/97  08.33.56  by  Fons Rademakers*/
 /*-- Author :    Fons Rademakers   21/04/95*/
 
@@ -20,9 +21,9 @@ void Gl_histadd(char *buf);
 
 char *strip(char *line);
 
-extern int (*gl_in_hook)(char *buf);
-extern int (*gl_out_hook)(char *buf);
-extern int (*gl_tab_hook)(char *buf, int prompt_width, int *cursor_loc);
+R__EXTERN int (*gl_in_hook)(char *buf);
+R__EXTERN int (*gl_out_hook)(char *buf);
+R__EXTERN int (*gl_tab_hook)(char *buf, int prompt_width, int *cursor_loc);
 
 #ifdef __cplusplus
 }

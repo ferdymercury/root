@@ -1,5 +1,5 @@
-//*CMZ :  2.21/08 17/03/99  13.13.46  by  Masaharu Goto
-//*-- Author :    Masaharu Goto   17/03/99
+//*CMZ :  2.22/10 23/07/99  14.42.21  by  Masaharu Goto
+//*-- Author :    Masaharu Goto   23/07/99
 /* /% C++ %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -156,6 +156,9 @@ extern "C" G__value G__APIGetSpecialObject_layer1(char *item)
 //
 extern "C" void G__InitGetSpecialObject(G__pMethodSpecialObject pmethod)
 {
+#ifndef G__OLDIMPLEMENTATION1035
+  G__LockCriticalSection();
+#endif
 #if !defined(G__OLDIMPLEMENTATION481)
   G__GetSpecialObject
 	=(G__value (*)(char*,void**,void**))G__APIGetSpecialObject_layer1;
@@ -165,6 +168,9 @@ extern "C" void G__InitGetSpecialObject(G__pMethodSpecialObject pmethod)
   G__GetSpecialObject = (G__value (*)(char*))G__APIGetSpecialObject_layer1;
 #endif
   G__UserSpecificGetSpecialObject = pmethod;
+#ifndef G__OLDIMPLEMENTATION1035
+  G__UnlockCriticalSection();
+#endif
 }
 
 #ifndef G__OLDIMPLEMENTATION1002
@@ -174,7 +180,123 @@ extern "C" void* G__new_interpreted_object(int size) {
   return((void*)p);
 }
 extern "C" void G__delete_interpreted_object(void* p) {
+#ifndef G__OLDIMPLEMENTATION1074
+  delete [] (char*)p;
+#else
   delete p;
+#endif
 }
 #endif
 #endif
+
+
+/*********************************************************************
+* G__SourceFileInfo
+*********************************************************************/
+////////////////////////////////////////////////////////////////////
+void G__SourceFileInfo::Init(const char* fname) {
+  for(filen=0;filen<G__nfile;filen++) {
+    if(0==strcmp(fname,G__srcfile[filen].filename)) break;
+  }
+}
+////////////////////////////////////////////////////////////////////
+const char* G__SourceFileInfo::Name() {
+  if(IsValid()) {
+    return(G__srcfile[filen].filename);
+  }
+  else {
+    return((char*)NULL);
+  }
+}
+////////////////////////////////////////////////////////////////////
+const char* G__SourceFileInfo::Prepname() {
+  if(IsValid()) {
+    return(G__srcfile[filen].prepname);
+  }
+  else {
+    return((char*)NULL);
+  }
+}
+////////////////////////////////////////////////////////////////////
+FILE* G__SourceFileInfo::fp() {
+  if(IsValid()) {
+    return(G__srcfile[filen].fp);
+  }
+  else {
+    return((FILE*)NULL);
+  }
+}
+////////////////////////////////////////////////////////////////////
+int G__SourceFileInfo::MaxLine() {
+  if(IsValid()) {
+    return(G__srcfile[filen].maxline);
+  }
+  else {
+    return(0);
+  }
+}
+////////////////////////////////////////////////////////////////////
+G__SourceFileInfo& G__SourceFileInfo::IncludedFrom() {
+  static G__SourceFileInfo x;
+  if(IsValid()) {
+    x.filen = G__srcfile[filen].included_from;
+  }
+  else {
+    x.filen = -1;
+  }
+  return(x);
+}
+////////////////////////////////////////////////////////////////////
+long G__SourceFileInfo::Property() {
+  return(0);
+}
+////////////////////////////////////////////////////////////////////
+int G__SourceFileInfo::IsValid() {
+  if(filen<0||filen>=G__nfile) return(0);
+  else return(1);
+}
+////////////////////////////////////////////////////////////////////
+int G__SourceFileInfo::Next() {
+  ++filen;
+  if(IsValid()) {
+    return(1);
+  }
+  else {
+    return(0);
+  }
+}
+////////////////////////////////////////////////////////////////////
+
+/*********************************************************************
+* G__IncludePathInfo
+*********************************************************************/
+////////////////////////////////////////////////////////////////////
+const char* G__IncludePathInfo::Name() {
+  if(IsValid()) {
+    return(p->pathname);
+  }
+  else {
+    return((char*)NULL);
+  }
+}
+////////////////////////////////////////////////////////////////////
+long G__IncludePathInfo::Property() {
+  return(0);
+}
+////////////////////////////////////////////////////////////////////
+int G__IncludePathInfo::IsValid() {
+  if(p&&p->pathname) return(1);
+  else  return(0);
+}
+////////////////////////////////////////////////////////////////////
+int G__IncludePathInfo::Next() {
+  if(!p) {
+    p = &G__ipathentry;
+  }
+  else {
+    p = p->next;
+  }
+  return(IsValid());
+}
+////////////////////////////////////////////////////////////////////
+

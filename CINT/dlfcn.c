@@ -1,9 +1,9 @@
-/*CMZ :  2.21/08 17/03/99  13.13.46  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   17/03/99*/
+/*CMZ :  2.22/10 23/07/99  14.42.21  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   23/07/99*/
 /*
- * @(#)dlfcn.c	1.11 revision of 96/04/10  20:12:51
+ * @(#)dlfcn.c	1.13 revision of 98/04/26  18:46:51
  * This is an unpublished work copyright (c) 1992 HELIOS Software GmbH
- * 30159 Hannover, Germany
+ * 30827 Garbsen, Germany
  */
 
 /*
@@ -27,6 +27,20 @@
 #include <a.out.h>
 #include <ldfcn.h>
 #include "dlfcn.h"
+
+/*
+ * AIX 4.3 does remove some useful definitions from ldfcn.h. Define
+ * these here to compensate for that lossage.
+ */
+#ifndef BEGINNING
+# define BEGINNING SEEK_SET
+#endif
+#ifndef FSEEK
+# define FSEEK(ldptr,o,p)	fseek(IOPTR(ldptr),(p==BEGINNING)?(OFFSET(ldptr) +o):o,p)
+#endif
+#ifndef FREAD
+# define FREAD(p,s,n,ldptr)	fread(p,s,n,IOPTR(ldptr))
+#endif
 
 /*
  * We simulate dlopen() et al. through a call to load. Because AIX has
@@ -355,68 +369,64 @@ static int readExports(ModulePtr mp)
 	LDSYM *ls;
 	int i;
 	ExportPtr ep;
+	struct ld_info *lp;
+	char *buf;
+	int size = 4*1024;
+	void *dataorg;
 
-	if ((ldp = ldopen(mp->name, ldp)) == NULL) {
-		struct ld_info *lp;
-		char *buf;
-		int size = 4*1024;
-		if (errno != ENOENT) {
-			errvalid++;
-			strcpy(errbuf, "readExports: ");
-			strcat(errbuf, strerror(errno));
-			return -1;
-		}
-		/*
-		 * The module might be loaded due to the LIBPATH
-		 * environment variable. Search for the loaded
-		 * module using L_GETINFO.
-		 */
+	/*
+	 * The module might be loaded due to the LIBPATH
+	 * environment variable. Search for the loaded
+	 * module using L_GETINFO.
+	 */
+	if ((buf = malloc(size)) == NULL) {
+		errvalid++;
+		strcpy(errbuf, "readExports: ");
+		strcat(errbuf, strerror(errno));
+		return -1;
+	}
+	while ((i = loadquery(L_GETINFO, buf, size)) == -1 && errno == ENOMEM) {
+		free(buf);
+		size += 4*1024;
 		if ((buf = malloc(size)) == NULL) {
 			errvalid++;
 			strcpy(errbuf, "readExports: ");
 			strcat(errbuf, strerror(errno));
 			return -1;
 		}
-		while ((i = loadquery(L_GETINFO, buf, size)) == -1 && errno == ENOMEM) {
-			free(buf);
-			size += 4*1024;
-			if ((buf = malloc(size)) == NULL) {
-				errvalid++;
-				strcpy(errbuf, "readExports: ");
-				strcat(errbuf, strerror(errno));
-				return -1;
-			}
-		}
-		if (i == -1) {
-			errvalid++;
-			strcpy(errbuf, "readExports: ");
-			strcat(errbuf, strerror(errno));
-			free(buf);
-			return -1;
-		}
-		/*
-		 * Traverse the list of loaded modules. The entry point
-		 * returned by load() does actually point to the data
-		 * segment origin.
-		 */
-		lp = (struct ld_info *)buf;
-		while (lp) {
-			if (lp->ldinfo_dataorg == mp->entry) {
-				ldp = ldopen(lp->ldinfo_filename, ldp);
-				break;
-			}
-			if (lp->ldinfo_next == 0)
-				lp = NULL;
-			else
-				lp = (struct ld_info *)((char *)lp + lp->ldinfo_next);
-		}
+	}
+	if (i == -1) {
+		errvalid++;
+		strcpy(errbuf, "readExports: ");
+		strcat(errbuf, strerror(errno));
 		free(buf);
-		if (!ldp) {
-			errvalid++;
-			strcpy(errbuf, "readExports: ");
-			strcat(errbuf, strerror(errno));
-			return -1;
+		return -1;
+	}
+	/*
+	 * Traverse the list of loaded modules. The entry point
+	 * returned by load() does actually point to the TOC
+	 * entry contained in the data segment.
+	 */
+	lp = (struct ld_info *)buf;
+	while (lp) {
+		if ((unsigned long)mp->entry >= (unsigned long)lp->ldinfo_dataorg &&
+		    (unsigned long)mp->entry < (unsigned long)lp->ldinfo_dataorg +
+		      lp->ldinfo_datasize) {
+			dataorg = lp->ldinfo_dataorg;
+			ldp = ldopen(lp->ldinfo_filename, ldp);
+			break;
 		}
+		if (lp->ldinfo_next == 0)
+			lp = NULL;
+		else
+			lp = (struct ld_info *)((char *)lp + lp->ldinfo_next);
+	}
+	free(buf);
+	if (!ldp) {
+		errvalid++;
+		strcpy(errbuf, "readExports: ");
+		strcat(errbuf, strerror(errno));
+		return -1;
 	}
 	if (TYPE(ldp) != U802TOCMAGIC) {
 		errvalid++;
@@ -493,7 +503,7 @@ static int readExports(ModulePtr mp)
 	}
 	/*
 	 * Fill in the export table. All entries are relative to
-	 * the entry point we got from load.
+	 * the beginning of the data origin.
 	 */
 	ep = mp->exports;
 	ls = (LDSYM *)(ldbuf+LDHDRSZ);
@@ -515,7 +525,7 @@ static int readExports(ModulePtr mp)
 			symname = tmpsym;
 		}
 		ep->name = strdup(symname);
-		ep->addr = (void *)((unsigned long)mp->entry +
+		ep->addr = (void *)((unsigned long)dataorg +
 					ls->l_value - shdata.s_vaddr);
 		ep++;
 	}
@@ -526,7 +536,7 @@ static int readExports(ModulePtr mp)
 }
 
 /*
- * Find the main modules entry point. This is used as export pointer
+ * Find the main modules data origin. This is used as export pointer
  * for loadbind() to be able to resolve references to the main part.
  */
 static void * findMain(void)
@@ -561,9 +571,9 @@ static void * findMain(void)
 		return NULL;
 	}
 	/*
-	 * The first entry is the main module. The entry point
-	 * returned by load() does actually point to the data
-	 * segment origin.
+	 * The first entry is the main module. The data segment
+	 * starts with the TOC entries for all exports, so the
+	 * data segment origin works as argument for loadbind.
 	 */
 	lp = (struct ld_info *)buf;
 	ret = lp->ldinfo_dataorg;

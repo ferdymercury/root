@@ -1,3 +1,5 @@
+//*CMZ :  2.22/07 05/07/99  16.35.42  by  Rene Brun
+//*CMZ :  2.22/01 18/05/99  19.07.27  by  Rene Brun
 //*CMZ :  2.21/04 03/02/99  10.49.07  by  Rene Brun
 //*CMZ :  2.21/02 16/01/99  12.20.44  by  Rene Brun
 //*CMZ :  2.20/02 03/12/98  18.59.19  by  Rene Brun
@@ -10,20 +12,22 @@
 //*CMZ :  1.03/09 06/12/97  17.42.01  by  Fons Rademakers
 //*-- Author :    Rene Brun   12/12/94
 
+/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Fons Rademakers.                                  *
+ * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
  *                                                                       *
  * Permission to use, copy, modify and distribute this software and its  *
  * documentation for non-commercial purposes is hereby granted without   *
  * fee, provided that the above copyright notice appears in all copies   *
  * and that both the copyright notice and this permission notice appear  *
  * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose.                         *
- * It is provided "as is" without express or implied warranty.           *
+ * suitability of this software for any purpose. It is provided "as is"  *
+ * without express or implied warranty.                                  *
  *************************************************************************/
 
 #include <string.h>
@@ -155,11 +159,14 @@ void TStyle::Copy(TObject &obj)
    ((TStyle&)obj).fErrorX         = fErrorX;
    ((TStyle&)obj).fStatColor      = fStatColor;
    ((TStyle&)obj).fStatBorderSize = fStatBorderSize;
+   ((TStyle&)obj).fStatFont       = fStatFont;
+   ((TStyle&)obj).fStatStyle      = fStatStyle;
    ((TStyle&)obj).fStatW          = fStatW;
    ((TStyle&)obj).fStatH          = fStatH ;
    ((TStyle&)obj).fStatX          = fStatX;
    ((TStyle&)obj).fStatY          = fStatY;
    ((TStyle&)obj).fTitleColor     = fTitleColor;
+   ((TStyle&)obj).fTitleFont      = fTitleFont;
    ((TStyle&)obj).fTitleBorderSize= fTitleBorderSize;
    ((TStyle&)obj).fTitleW         = fTitleW;
    ((TStyle&)obj).fTitleH         = fTitleH;
@@ -235,11 +242,14 @@ void TStyle::Reset(Option_t *)
    fScreenFactor   = 1;
    fStatColor      = fCanvasColor;
    fStatBorderSize = 2;
+   fStatFont       = 62;
+   fStatStyle      = 1001;
    fStatW          = 0.20;
    fStatH          = 0.16;
    fStatX          = 0.98;
    fStatY          = 0.98;
    fTitleColor     = fCanvasColor;
+   fTitleFont      = 62;
    fTitleBorderSize= 2;
    fTitleW         = 0;
    fTitleH         = 0;
@@ -540,13 +550,14 @@ void TStyle::SetOptStat(Int_t mode)
 {
 // The type of information printed in the histogram statistics box
 //  can be selected via the parameter mode.
-//  The parameter mode can be = ourmen  (default = 001111)
+//  The parameter mode can be = ourmeni  (default = 0001111)
 //    n = 1;  name of histogram is printed
 //    e = 1;  number of entries printed
 //    m = 1;  mean value printed
 //    r = 1;  rms printed
 //    u = 1;  number of underflows printed
 //    o = 1;  number of overflows printed
+//    i = 1;  integral of bins printed
 //  Example: gStyle->SetOptStat(11);
 //           print only name of histogram and number of entries.
 //
@@ -635,6 +646,13 @@ void TStyle::SetPalette(Int_t ncolors, Int_t *colors)
 // cell contents are scaled to ncolors.
 //
 // if ncolors <= 0 a default palette (see below) of 50 colors is defined.
+//     the colors defined in this palette are OK for coloring pads, labels
+//
+// if ncolors == 1 && colors == 0, then
+//     a Pretty Palette with a Spectrum Violet->Red is created.
+//   It is recommended to use this Pretty palette when drawing legos,
+//   surfaces or contours.
+//
 // if ncolors > 0 and colors = 0, the default palette is used
 // with a maximum of ncolors.
 //
@@ -655,12 +673,21 @@ void TStyle::SetPalette(Int_t ncolors, Int_t *colors)
                         31,32,33,34,35,36,37,38,39,40, 9,
                         41,42,43,44,45,47,48,49,46,50, 2,
                          7, 6, 5, 4, 3, 112,1};
+   // set default palette (pad type)
    if (ncolors <= 0) {
       ncolors = 50;
       fPalette.Set(ncolors);
       for (i=0;i<ncolors;i++) fPalette.fArray[i] = palette[i];
       return;
    }
+   // set Pretty Palette Spectrum Violet->Red
+      if (ncolors == 1 && colors == 0) {
+      ncolors = 50;
+      fPalette.Set(ncolors);
+      for (i=0;i<ncolors;i++) fPalette.fArray[i] = 51+i;
+      return;
+   }
+   // set user defined palette
    if (colors == 0 && ncolors > 50) ncolors = 50;
    fPalette.Set(ncolors);
    if (colors)  for (i=0;i<ncolors;i++) fPalette.fArray[i] = colors[i];

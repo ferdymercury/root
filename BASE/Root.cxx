@@ -1,3 +1,8 @@
+//*CMZ :  2.22/07 24/06/99  23.34.57  by  Fons Rademakers
+//*CMZ :  2.22/06 22/06/99  18.53.52  by  Fons Rademakers
+//*CMZ :  2.22/05 07/06/99  14.30.06  by  Rene Brun
+//*CMZ :  2.22/01 19/04/99  18.22.33  by  Fons Rademakers
+//*CMZ :  2.22/00 03/04/99  22.29.18  by  Rene Brun
 //*CMZ :  2.21/03 22/01/99  16.25.57  by  Fons Rademakers
 //*CMZ :  2.20/05 15/12/98  09.19.59  by  Rene Brun
 //*CMZ :  2.20/00 11/11/98  16.29.54  by  Rene Brun
@@ -11,20 +16,22 @@
 //*CMZ :  1.03/09 16/12/97  16.42.20  by  Rene Brun
 //*-- Author :    Rene Brun   08/12/94
 
+/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Fons Rademakers.                                  *
+ * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
  *                                                                       *
  * Permission to use, copy, modify and distribute this software and its  *
  * documentation for non-commercial purposes is hereby granted without   *
  * fee, provided that the above copyright notice appears in all copies   *
  * and that both the copyright notice and this permission notice appear  *
  * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose.                         *
- * It is provided "as is" without express or implied warranty.           *
+ * suitability of this software for any purpose. It is provided "as is"  *
+ * without express or implied warranty.                                  *
  *************************************************************************/
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -107,6 +114,7 @@
 #include "TClassTable.h"
 #include "TSystem.h"
 #include "THashList.h"
+#include "TObjArray.h"
 #include "TGeometry.h"
 #include "TEnv.h"
 #include "TColor.h"
@@ -213,7 +221,7 @@ TROOT::TROOT(const Text_t *name, const Text_t *title, VoidFuncPtr_t *initfunc)
    fVersionTime = Int_t(ITIMQQ);
    fApplication = 0;
    fClasses     = new THashList(this,300,2);
-   fColors      = new TList(this);
+   fColors      = new TObjArray(1000);
    fTypes       = 0;
    fGlobals     = 0;
    fGlobalFunctions = 0;
@@ -231,6 +239,7 @@ TROOT::TROOT(const Text_t *name, const Text_t *title, VoidFuncPtr_t *initfunc)
    fForceStyle    = kFALSE;
    fFromPopUp     = kFALSE;
    fReadingBasket = kFALSE;
+   fInterrupt     = kFALSE;
    fMustClean     = kTRUE;
    fPrimitive     = 0;
    fSelectPad     = 0;
@@ -246,6 +255,7 @@ TROOT::TROOT(const Text_t *name, const Text_t *title, VoidFuncPtr_t *initfunc)
 
    // Create some styles
    TStyle *plain      = new TStyle("Plain","Plain Style (no colors/fill areas)");
+   plain->SetFrameBorderMode(0);
    plain->SetCanvasBorderMode(0);
    plain->SetPadBorderMode(0);
    plain->SetPadColor(0);
@@ -334,8 +344,10 @@ TROOT::~TROOT()
       // deleted in the dtor's above. Crash.
       //SafeDelete(fInterpreter);
 
-      // Prints memory stats
+      // Remove shared libraries produced by the TSystem::CompileMacro() call
+      gSystem->CleanCompiledMacros();
 
+      // Prints memory stats
       TStorage::PrintStatistics();
 
       gROOT = 0;
@@ -517,7 +529,8 @@ TColor *TROOT::GetColor(Int_t color)
 {
 //*-*-*-*-*-*-*-*Return address of color with index color*-*-*-*-*-*-*-*-*
 //*-*            ========================================
-   TColor *col;
+   TColor *col = (TColor*)gROOT->GetListOfColors()->At(color);
+   if (col && col->GetNumber() == color) return col;
    TIter   next(gROOT->GetListOfColors());
    while ((col = (TColor *) next()))
       if (col->GetNumber() == color) return col;
@@ -824,7 +837,7 @@ void TROOT::InitSystem()
       if (msize != -1 || mcnt != -1)
          TStorage::EnableStatistics(msize, mcnt);
 
-      TObject::SetObjectStat( gEnv->GetValue("Root.ObjectStat", 0) );
+      TObject::SetObjectStat(gEnv->GetValue("Root.ObjectStat", 0));
    }
 }
 

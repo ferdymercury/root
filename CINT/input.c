@@ -1,5 +1,5 @@
-/*CMZ :  2.21/08 17/03/99  13.13.41  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   17/03/99*/
+/*CMZ :  2.22/10 23/07/99  14.42.16  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   23/07/99*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -24,6 +24,9 @@
 
 #include "common.h"
 
+#ifndef G__OLDIMPLEMENTATION1078
+int G__quiet=0;
+#endif
 
 
 #ifdef G__GNUREADLINE
@@ -47,7 +50,7 @@ char *string;
 #ifdef G__TMPFILE
   char tname[G__MAXFILENAME];
 #else
-  char tname[L_tmpnam];
+  char tname[L_tmpnam+10];
 #endif
 
   static char prevstring[G__ONELINE];
@@ -140,6 +143,10 @@ char *prompt;
   char *pchar;
 #ifdef G__GNUREADLINE
   static int state=0;
+#endif
+
+#ifndef G__OLDIMPLEMENTATION1078
+  if(G__quiet) prompt="";
 #endif
 
   if(G__Xdumpreadline[0]) {

@@ -1,3 +1,9 @@
+//*CMZ :  2.22/10 19/07/99  11.29.20  by  Fons Rademakers
+//*CMZ :  2.22/07 02/07/99  08.31.39  by  Rene Brun
+//*CMZ :  2.22/06 22/06/99  19.38.28  by  Fons Rademakers
+//*CMZ :  2.22/05 15/06/99  11.12.20  by  Fons Rademakers
+//*CMZ :  2.22/04 03/06/99  16.53.46  by  Fons Rademakers
+//*CMZ :  2.22/01 28/04/99  10.40.37  by  Fons Rademakers
 //*CMZ :  2.21/06 15/02/99  10.16.39  by  Rene Brun
 //*CMZ :  2.21/04 02/02/99  19.17.01  by  Fons Rademakers
 //*CMZ :  2.20/00 25/11/98  18.27.02  by  Fons Rademakers
@@ -9,20 +15,22 @@
 //*CMZ :  1.03/09 14/12/97  12.46.49  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   15/09/95
 
+/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Fons Rademakers.                                  *
+ * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
  *                                                                       *
  * Permission to use, copy, modify and distribute this software and its  *
  * documentation for non-commercial purposes is hereby granted without   *
  * fee, provided that the above copyright notice appears in all copies   *
  * and that both the copyright notice and this permission notice appear  *
  * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose.                         *
- * It is provided "as is" without express or implied warranty.           *
+ * suitability of this software for any purpose. It is provided "as is"  *
+ * without express or implied warranty.                                  *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -41,7 +49,7 @@
 
 #include <stdlib.h>
 #include <errno.h>
-
+#include <fstream.h>
 
 #include "TSystem.h"
 #include "TApplication.h"
@@ -51,7 +59,13 @@
 #include "TBrowser.h"
 #include "TString.h"
 #include "TOrdCollection.h"
+#include "TCint.h"
+#include "TRegexp.h"
 #include "TTimer.h"
+#include "TObjString.h"
+
+#include "compiledata.h"
+
 
 const char *gSystemName;
 const char *gRootDir;
@@ -106,6 +120,7 @@ TSystem::TSystem(const char *name, const char *title) : TNamed(name, title)
    fSignalHandler = 0;
    fFileHandler   = 0;
    fTimers        = 0;
+   fCompiled      = 0;
 }
 
 //______________________________________________________________________________
@@ -133,6 +148,11 @@ TSystem::~TSystem()
       SafeDelete(fTimers);
    }
 
+   if (fCompiled) {
+      fCompiled->Delete();
+      SafeDelete(fCompiled);
+   }
+
    if (gSystem == this)
       gSystem = 0;
 }
@@ -155,6 +175,14 @@ Bool_t TSystem::Init()
    fSignalHandler = new TOrdCollection;
    fFileHandler   = new TOrdCollection;
    fTimers        = new TOrdCollection;
+
+   fIncludePath   = INCLUDEPATH;
+   fLinkedLibs    = LINKEDLIBS;
+   fSoExt         = SOEXT;
+   fObjExt        = OBJEXT;
+   fMakeSharedLib = MAKESHAREDLIB;
+   fMakeExe       = MAKEEXE;
+   fCompiled      = new TOrdCollection;
 
    gSystemName = StrDup(fName.Data());
    gRootName   = StrDup(gROOT->GetName());
@@ -221,13 +249,26 @@ void TSystem::Run()
    fInControl = kTRUE;
    fDone      = kFALSE;
 
-   RETRY {
-      while (!fDone) {
-         gApplication->StartIdleing();
-         InnerLoop();
-         gApplication->StopIdleing();
-      }
-   } ENDTRY;
+#ifdef R__EH
+   try {
+#endif
+      RETRY {
+         while (!fDone) {
+            gApplication->StartIdleing();
+            InnerLoop();
+            gApplication->StopIdleing();
+         }
+      } ENDTRY;
+#ifdef R__EH
+   }
+   catch (const char *str) {
+      printf("%s\n", str);
+   }
+   // handle every exception
+   catch (...) {
+      Warning("Run", "handle uncaugth exception, terminating\n");
+   }
+#endif
 
    fInControl = kFALSE;
 }
@@ -557,6 +598,8 @@ const char *TSystem::DirName(const char *pathname)
       char *r = strrchr(buf, '/');
       if (r != buf)
          *r = '\0';
+      else
+         *(r+1) = '\0';
       return buf;
    }
    return WorkingDirectory();
@@ -890,6 +933,49 @@ void TSystem::ListLibraries(const char *)
    AbstractMethod("ListLibraries");
 }
 
+//______________________________________________________________________________
+const char * TSystem::GetLibraries(const char *regexp, const char *options)
+{
+   // Return a space separated list of of loaded shared libraries.
+   // This list is of a format suitable for a linker, i.e it may contain
+   // -Lpathname and/or -lNameOfLib.
+   // Option can be any of:
+   //   S: shared libraries loaded at the start of the executable, because
+   //      they were specified on the link line.
+   //   D: shared libraries dynamically loaded after the start of the program.
+
+   fListLibs = "";
+   TString libs = "";
+   TString opt = options;
+   if ((opt.Length()==0) || (opt.First('D')!=kNPOS)) {
+      libs += gInterpreter->GetSharedLibs();
+      libs.Append(" ");
+   }
+   if ((opt.Length()==0) || (opt.First('S')!=kNPOS))
+      libs.Append(fLinkedLibs);
+
+   // Select according to regexp
+   if (regexp!=0 && strlen(regexp)!=0) {
+      TRegexp separator("[^ \\t\\s]+");
+      TRegexp user_re(regexp);
+      TString s;
+      Ssiz_t start, index, end;
+      start = index = end = 0;
+
+      while ( (start < libs.Length()) && (index != kNPOS) ) {
+         index = libs.Index(separator,&end,start);
+         if (index >= 0) {
+            s = libs(index,end);
+            if (s.Index(user_re) != kNPOS)
+               fListLibs.Append(s).Append(" ");
+         }
+         start += end+1;
+      }
+   } else
+      fListLibs = libs;
+
+   return fListLibs;
+}
 
 //---- RPC ---------------------------------------------------------------------
 
@@ -1035,4 +1121,425 @@ int TSystem::GetSockOpt(int, int, int*)
 
    AbstractMethod("GetSockOpt");
    return -1;
+}
+
+
+//---- Script Compiler ---------------------------------------------------------
+
+//______________________________________________________________________________
+int TSystem::CompileMacro(const char *filename)
+{
+  // This method compiles and loads a shared library containing
+  // the code from the file "filename".
+  //
+  // It uses the directive fMakeSharedLibs to create a shared library.
+  // If loading the shared library fails, it tries to output a list of missing
+  // symbols by creating an executable (on some platforms like OSF, this does
+  // not HAVE to be an executable) containing the script. It uses the
+  // directive fMakeExe to do so.
+  // For both directives, before passing them to TSystem::Exec, it expands the
+  // variables $SourceFiles, $SharedLib, $LibName, $IncludePath, $LinkedLibs,
+  // $ExeName and $ObjectFiles. See SetMakeSharedLib() for more information on
+  // those variables.
+  //
+  // This method is used to implement the following feature:
+  //
+  // Synopsis:
+  //
+  // The purpose of this addition is to allow the user to use an external
+  // compiler to create a shared library from its C++ macro (scripts).
+  // Currently in order to execute a script, a user has to type at the root
+  // prompt
+  //
+  //  .X myfunc.C(arg1,arg2)
+  //
+  // We propose to allow him to type:
+  //
+  //  .X myfunc.C++(arg1,arg2)
+  //
+  // In which case an external compiler will be called to create a shared
+  // library.  This shared library will then be loaded and the function
+  // myfunc will be called with the two arguments. Of course the ++ notation
+  // will also be supported in similar way for .x and .L.
+  //
+  // Through the function TSystem::SetMakeSharedLib(), the user will be able to
+  // indicate, with shell commands, how to build a shared library (a good
+  // default will be provided). The most common change, namely where to find
+  // header files, will be available through the function
+  // TSystem::SetIncludePath().
+  // A good default will be provided so that a typical user session should be at
+  // most:
+  //
+  // root[1] gSystem->SetIncludePath("-I$ROOTSYS/include
+  // -I$HOME/mypackage/include");
+  // root[2] .x myfunc.C++(10,20);
+  //
+  // The user may sometimes try to compile a script before it has loaded all the
+  // needed shared libraries.  In this case we want to be helpfull and output a
+  // list of the unresolved symbols. So if the loading of the created shared
+  // library fails, we will try to build a executable that contains the
+  // script. The linker should then output a list of missing symbols.
+  //
+  // To support this we provide a TSystem::SetMakeExe() function, that sets the
+  // directive telling how to create an executable. The loader will need
+  // to be informed of all the libraries available. The information about
+  // the libraries that has been loaded by .L and TSystem::Load() is accesible
+  // to the script compiler. However, the information about
+  // the libraries that have been selected at link time by the application
+  // builder (like the root libraries for root.exe) are not available and need
+  // to be explictly listed in fLinkedLibs (either by default or by a call to
+  // TSystem::SetLinkedLibs()).
+  //
+  // To simplify customization we could also add to the .rootrc support for the
+  // variables
+  //
+  // Unix.*.Root.IncludePath:     -I$ROOTSYS/include
+  // WinNT.*.Root.IncludePath:    -I%ROOTSYS%/include
+  //
+  // Unix.*.Root.LinkedLibs:      -L$ROOTSYS/lib -lBase ....
+  // WinNT.*.Root.LinkedLibs:     %ROOTSYS%/lib/*.lib msvcrt.lib ....
+  //
+  // And also support for MakeSharedLibs() and MakeExe().
+  //
+  // (the ... have to be replaced by the actual values and are here only to
+  // shorten this comment).
+
+  // Get the right file names for the dictionnary and the shared library
+  TString library = filename;
+  ExpandFileName( library );
+  Ssiz_t where = library.Last('.');
+
+  TString extension = filename;
+  extension.Replace( 0, where+1, 0 , 0);
+
+  // Extension of shared library is platform dependent!!
+  library.Replace( where+1, library.Length()-where, fSoExt );
+
+  TString libname = filename;
+  libname.Remove(where);
+  TString filename_noext = libname;
+  libname.Replace( 0, libname.Last('/')+1, 0, 0);
+
+  if ( strlen(GetLibraries(library,"D")) != 0 ) {
+    // The library has already been built and loaded.
+    // If the time library is older than the script we
+    // are going to recompile !
+
+    Long_t lib_time, script_time;
+    GetPathInfo( library, 0, 0, 0, &lib_time );
+    GetPathInfo( filename, 0, 0, 0, &script_time );
+
+    if ( lib_time > script_time ) {
+      cerr << "Unmodified ";
+      cerr << "script has already been compiled and loaded. " << endl;
+    } else {
+      cerr << "Modified ";
+      cerr << "script has already been compiled and loaded. " << endl;
+      cerr << "Shared library can not be updated!." << endl;
+    }
+    return G__LOADFILE_DUPLICATE;
+    // the following is not working because it seems that dlclose
+    // does not properly get rid of the object.  It WILL provoke a
+    // core dump at termination.
+    //if ( G__unloadfile( (char*) library.Data() ) != 0 ) {
+    //  // The library is being used. We can not unload it.
+    //  return(G__LOADFILE_FAILURE);
+    //}
+    //Unlink(library);
+  }
+
+  cerr << "Creating shared library " << library << endl;
+
+  TString dict = tmpnam(0);
+  // do a basename to remove /var/tmp
+  // because because some compiler do not add a -I. when compiling
+  // file given by full pathname!
+  dict.Replace( 0, dict.Last('/')+1, 0, 0);
+  // the file name end up in the file produced
+  // by rootcint as a variable name so all character need to be valid!
+  dict.ReplaceAll( "-","_" ).Append(".");
+  TString dicth = dict;
+  TString dictObj = dict;
+  dict += extension;
+  dicth += "h";
+  dictObj += fObjExt;
+
+  // Generate a linkdef file
+
+  TString linkdef = tmpnam(0);
+  linkdef += "linkdef.h";
+  ofstream linkdefFile( linkdef, ios::out );
+  linkdefFile << "// File Automatically generated by the ROOT Script Compiler " << endl;
+  linkdefFile << endl;
+  linkdefFile << "#ifdef __CINT__" << endl;
+  linkdefFile << endl;
+  linkdefFile << "#pragma link off all globals;" << endl;
+  linkdefFile << "#pragma link off all classes;" << endl;
+  linkdefFile << "#pragma link off all functions;" << endl;
+  linkdefFile << endl;
+
+  // We want to look for a header file that has the same name as the macro
+  // First lets get the include directory list in the dir1:dir2:dir3 format
+  TString incPath = GetIncludePath(); // of the form -Idir1  -Idir2 -Idir3
+  incPath.Append(":").Prepend(" ");
+  incPath.ReplaceAll(" -I",":");       // of form :dir1 :dir2:dir3
+  while ( incPath.Index(" :") != -1 ) {
+    incPath.ReplaceAll(" :",":");
+  }
+  incPath.Prepend(".:");
+  char * extensions[] = { ".h", ".hh", ".hpp", ".hxx",  ".hPP", ".hXX" };
+  for ( int i = 0; i < 6; i++ ) {
+    char * name;
+    TString lookup = libname;
+    lookup.Append(extensions[i]);
+    name = Which(incPath,lookup);
+    if (name) {
+      linkdefFile << "#pragma link C++ defined_in "<<name<<";"<< endl;
+      delete name;
+    }
+  }
+  linkdefFile << "#pragma link C++ defined_in "<<filename << ";" << endl;
+
+  linkdefFile << endl;
+  linkdefFile << "#endif" << endl;
+  linkdefFile.close();
+
+  // Generate a command lines
+
+  TString rcint = "rootcint -f ";
+  rcint.Append(dict).Append(" -c -p ").Append(GetIncludePath()).Append(" ");
+  rcint.Append(filename).Append(" ").Append(linkdef);
+
+  TString cmd = fMakeSharedLib;
+  // Replace(cmd,filename,library);
+  // NOTE: may want to add code to allow for \$SourceFiles to not be
+  //       interpreted
+  // we do not add filename because it is already include in dicth !
+  // dict.Append(" ").Append(filename);
+  cmd.ReplaceAll("$SourceFiles",dict);
+  cmd.ReplaceAll("$ObjectFiles",dictObj);
+  cmd.ReplaceAll("$IncludePath",GetIncludePath());
+  cmd.ReplaceAll("$SharedLib",library);
+  cmd.ReplaceAll("$LinkedLibs",GetLibraries("","SD"));
+  cmd.ReplaceAll("$LibName",libname);
+
+  TString testcmd = fMakeExe;
+  TString fakeMain = tmpnam(0);
+  fakeMain += extension;
+  ofstream fakeMainFile( fakeMain, ios::out );
+  fakeMainFile << "// File Automatically generated by the ROOT Script Compiler " << endl;
+  fakeMainFile << "int main(char*argc,char**argvv) {};" << endl;
+  fakeMainFile.close();
+  // We could append this fake main routine to the compilation line.
+  // But in this case compiler may output the name of the dictionary file
+  // and of the fakeMain file while it compiles it. (this would be useless
+  // confusing output).
+  // We could also the fake main routine to the end of the dictionnary file
+  // however compilation would fail if a main is already there
+  // (like stress.cxx)
+  // dict.Append(" ").Append(fakeMain);
+  TString exec = tmpnam(0);
+  testcmd.ReplaceAll("$SourceFiles",dict);
+  testcmd.ReplaceAll("$ObjectFiles",dictObj);
+  testcmd.ReplaceAll("$IncludePath",GetIncludePath());
+  testcmd.ReplaceAll("$ExeName",exec);
+  testcmd.ReplaceAll("$LinkedLibs",GetLibraries("","SD"));
+
+  // Run the build
+
+  int result = !gSystem->Exec(rcint);
+  if (result) result = !gSystem->Exec( cmd );
+
+  if ( result ) {
+
+    fCompiled->Add(new TObjString( library ));
+
+#ifndef NOCINT
+    // This is intended to force a failure if not all symbols needed
+    // by the library are present.
+    G__Set_RTLD_NOW();
+#endif
+    result = !gSystem->Load(library);
+#ifndef NOCINT
+    G__Set_RTLD_LAZY();
+#endif
+
+    if ( !result ) {
+      // Try to output unresolved symbols
+      gSystem->Exec(testcmd);
+      gSystem->Unlink( exec );
+    }
+
+  };
+
+#ifdef DEBUG_COMPILE
+  rcint.Prepend("echo ");
+  cmd.Prepend("echo ");
+  testcmd.Prepend("echo ");
+  gSystem->Exec(rcint);
+  gSystem->Exec( cmd );
+  gSystem->Exec(testcmd);
+#else
+  gSystem->Unlink( dict );
+  gSystem->Unlink( dicth );
+  gSystem->Unlink( linkdef );
+  gSystem->Unlink( fakeMain );
+  gSystem->Unlink( exec );
+#endif
+
+  return result;
+}
+
+//______________________________________________________________________________
+const char *TSystem::GetMakeSharedLib() const
+{
+   return fMakeSharedLib;
+}
+
+//______________________________________________________________________________
+const char *TSystem::GetMakeExe() const
+{
+   return fMakeExe;
+}
+
+//______________________________________________________________________________
+const char *TSystem::GetIncludePath()
+{
+   fListPaths = fIncludePath;
+   fListPaths.Append(" ").Append(gInterpreter->GetIncludePath());
+   return fListPaths;
+}
+
+//______________________________________________________________________________
+const char *TSystem::GetLinkedLibs() const
+{
+   return fLinkedLibs;
+}
+
+//______________________________________________________________________________
+const char *TSystem::GetSoExt() const
+{
+   return fSoExt;
+}
+
+//______________________________________________________________________________
+const char *TSystem::GetObjExt() const
+{
+   return fObjExt;
+}
+
+//______________________________________________________________________________
+void TSystem::SetMakeExe(const char *directives)
+{
+   // Directives has the same syntax as the argument of SetMakeSharedLib but is
+   // used to create an executable. This creation is used as a means to output
+   // a list of unresolved symbols, when loading a shared library has failed.
+   // The required variable is $ExeName rather than $SharedLib, e.g.:
+   // gSystem->SetMakeExe(
+   // "g++ -Wall -fPIC -DR__GLIBC $IncludePath $SourceFiles
+   //  -o $ExeName $LinkedLibs -L/usr/X11R6/lib -lX11 -lm -ldl -rdynamic");
+
+   fMakeExe = directives;
+   // NOTE: add verification that the directives has the required variables
+}
+
+//______________________________________________________________________________
+void TSystem::SetMakeSharedLib(const char *directives)
+{
+   // Directives should contain the description on how to compile and link a
+   // shared lib. This description can be any valid shell command, including
+   // the use of ';' to separate several instructions. However, shell specific
+   // construct should be avoided. In particular this description can contain
+   // environment variables, like $ROOTSYS (or %ROOTSYS% on windows).
+   //
+   // Five special variables will be expanded before execution:
+   //   Variable name       Expands to
+   //   -------------       ----------
+   //   $SourceFiles        Name of source files to be compiled
+   //   $SharedLib          Name of the shared library being created
+   //   $LibName            Name of shared library without extension
+   //   $IncludePath        value of fIncludePath
+   //   $LinkedLibs         value of fLinkedLibs
+   //   $ObjectFiles        Name of source files to be compiler with
+   //                       their extension changed to .o or .obj
+   // e.g.:
+   // gSystem->SetMakeSharedLib(
+   // "KCC -n32 --strict $IncludePath -K0 -O0 -g $SourceFile
+   //  --no_exceptions --signed_chars --display_error_number
+   //  --diag_suppress 68 -o $SharedLib");
+   //
+   // gSystem->setMakeSharedLib(
+   // "Cxx $IncludePath -c $SourceFile;
+   //  ld  -L/usr/lib/cmplrs/cxx -rpath /usr/lib/cmplrs/cxx -expect_unresolved
+   //  -g0 -O1 -shared /usr/lib/cmplrs/cc/crt0.o /usr/lib/cmplrs/cxx/_main.o
+   //  -o $SharedLib $ObjectFile -lcxxstd -lcxx -lexc -lots -lc"
+   //
+   // gSystem->SetMakeSharedLib(
+   // "$HOME/mygcc/bin/g++ -Wall -fPIC -DR__GLIBC $IncludePath $SourceFile
+   //  -shared -o $SharedLib");
+   //
+   // gSystem->SetMakeSharedLib(
+   // "cl -DWIN32  -D_WIN32 -D_MT -D_DLL -MD /O2 /G5 /MD -DWIN32
+   //  -DVISUAL_CPLUSPLUS -D_WINDOWS $IncludePath $SourceFile
+   //  /link -PDB:NONE /NODEFAULTLIB /INCREMENTAL:NO /RELEASE /NOLOGO
+   //  $LinkedLibs -entry:_DllMainCRTStartup@12 -dll /out:$SharedLib")
+
+   fMakeSharedLib = directives;
+   // NOTE: add verification that the directives has the required variables
+}
+
+//______________________________________________________________________________
+void TSystem::SetIncludePath(const char *IncludePath)
+{
+   // IncludePath should contain the list of compiler flags to indicate where
+   // to find user defined header files. It is used to expand $IncludePath in
+   // the directives given to SetMakeSharedLib() and SetMakeExe(), e.g.:
+   //    gSystem->SetInclude("-I$ROOTSYS/include -Imydirectory/include");
+   // the default value of IncludePath on Unix is:
+   //    "-I$ROOTSYS/include "
+   // and on Windows:
+   //    "/I%ROOTSYS%/include "
+
+   fIncludePath = IncludePath;
+}
+
+//______________________________________________________________________________
+void  TSystem::SetLinkedLibs(const char *LinkedLibs)
+{
+   // LinkedLibs should contain the library directory and list of libraries
+   // needed to recreate the current executable. It is used to expand $LinkedLibs
+   // in the directives given to SetMakeSharedLib() and SetMakeExe()
+   // The default value on Unix is:
+   // "-L$ROOTSYS/lib -lNew -lBase -lCint -lClib -lCont -lFunc -lGraf -lGraf3d
+   //  -lHist -lHtml -lMatrix -lMeta -lMinuit -lNet -lPhysics -lPostscript
+   //  -lProof -lTree -lUnix -lZip -lGpad -lGui -lGX11 -lX3d -lXpm -lRint"
+
+   fLinkedLibs = LinkedLibs;
+}
+
+//______________________________________________________________________________
+void TSystem::SetSoExt(const char *SoExt)
+{
+   // Set shared library extension, should be either .so, .sl, .a, .dll, etc.
+
+   fSoExt = SoExt;
+}
+
+//______________________________________________________________________________
+void TSystem::SetObjExt(const char *ObjExt)
+{
+   // Set object files extension, should be either .o, .obj, etc.
+
+   fObjExt = ObjExt;
+}
+
+//______________________________________________________________________________
+void TSystem::CleanCompiledMacros()
+{
+   // Remove the shared libs produced by the CompileMacro() function.
+
+   TIter next(fCompiled);
+   TObjString *lib;
+   while ((lib = (TObjString*)next()))
+      Unlink(lib->GetString().Data());
 }

@@ -1,5 +1,5 @@
-/*CMZ :  2.21/08 17/03/99  13.13.45  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   17/03/99*/
+/*CMZ :  2.22/10 23/07/99  14.42.20  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   23/07/99*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -43,21 +43,21 @@ char *temp;
       /* typedef can be local to a class */
 #ifndef G__OLDIMPLEMENTATION719
       if(buf.obj.d<0.0)
-	sprintf(temp,"(%s)(%.12e)"
+	sprintf(temp,"(%s)(%.17e)"
 		,G__type2string(buf.type ,buf.tagnum ,buf.typenum
 				,buf.obj.reftype.reftype,0)
 				,buf.obj.d);
       else
-	sprintf(temp,"(%s)%.12e"
+	sprintf(temp,"(%s)%.17e"
 		,G__type2string(buf.type ,buf.tagnum ,buf.typenum
 				,buf.obj.reftype.reftype,0)
 				,buf.obj.d);
       break;
 #else /* ON719 */
       if(buf.obj.d<0.0)
-	sprintf(temp,"(%s)(%.12e)" ,G__newtype.name[buf.typenum] ,buf.obj.d);
+	sprintf(temp,"(%s)(%.17e)" ,G__newtype.name[buf.typenum] ,buf.obj.d);
       else
-	sprintf(temp,"(%s)%.12e" ,G__newtype.name[buf.typenum] ,buf.obj.d);
+	sprintf(temp,"(%s)%.17e" ,G__newtype.name[buf.typenum] ,buf.obj.d);
       break;
 #endif /* ON719 */
     default:
@@ -153,6 +153,7 @@ char *temp;
       if(G__in_pause && G__PARANORMAL==buf.obj.reftype.reftype) {
 	if(strlen((char*)buf.obj.i)>G__ONELINE-25) {
 	  strncpy(temp2,(char*)buf.obj.i,G__ONELINE-25);
+	  temp2[G__ONELINE-25] = 0;
 	  sprintf(temp,"(char* 0x%lx)\"%s\"...",buf.obj.i,temp2);
 	}
 	else {
@@ -282,18 +283,18 @@ char *temp;
     break;
   case 'd':
     if(buf.obj.d<0.0)
-      sprintf(temp,"(double)(%.12e)",buf.obj.d);
+      sprintf(temp,"(double)(%.17e)",buf.obj.d);
     else
-      sprintf(temp,"(double)%.12e",buf.obj.d);
+      sprintf(temp,"(double)%.17e",buf.obj.d);
     break;
   case 'D':
     sprintf(temp,"(double*)0x%lx",buf.obj.i);
     break;
   case 'f':
     if(buf.obj.d<0.0)
-      sprintf(temp,"(float)(%.12e)",buf.obj.d);
+      sprintf(temp,"(float)(%.17e)",buf.obj.d);
     else
-      sprintf(temp,"(float)%.12e",buf.obj.d);
+      sprintf(temp,"(float)%.17e",buf.obj.d);
     break;
   case 'F':
     sprintf(temp,"(float*)0x%lx",buf.obj.i);
@@ -480,7 +481,7 @@ char *G__type2string(type,tagnum,typenum,reftype,isconst)
 int type,tagnum,typenum,reftype,isconst;
 {
 #ifndef G__OLDIMPLEMENTATION711
-  static char stringbuf[G__ONELINE];
+  static char stringbuf[G__LONGLINE];
 #else
   static char stringbuf[G__MAXNAME*2];
 #endif
@@ -556,6 +557,12 @@ int type,tagnum,typenum,reftype,isconst;
 #endif
   }
   else if(-1!=tagnum) {
+#ifndef G__OLDIMPLEMENTATION1139
+    if(tagnum>=G__struct.alltag || !G__struct.name[tagnum]) {
+      strcpy(stringbuf,"(invalid_class)");
+      return(stringbuf);
+    }
+#endif
     if('$'==G__struct.name[tagnum][0]) {
       if('\0'==G__struct.name[tagnum][1]) {
 	G__ASSERT('e'==G__struct.type[tagnum]);
@@ -606,9 +613,11 @@ int type,tagnum,typenum,reftype,isconst;
     case 'y': strcpy(string,"void"); break;
     case 'e': strcpy(string,"FILE"); break;
     case 'u': strcpy(string,"enum");
+#ifdef G__OLDIMPLEMENTATION1055
       fprintf(G__serr,"%c %d %d %d\n",type,tagnum,typenum,reftype);
       /* Must be redundant */
       G__genericerror("Internal error: G__type2string()");
+#endif
       break;
 #ifndef G__OLDIMPLEMENTATION904
     case 't':
@@ -646,8 +655,15 @@ int type,tagnum,typenum,reftype,isconst;
     case G__PARANORMAL: break;
 #endif
     case G__PARAREFERENCE:
+#ifndef G__OLDIMPLEMENTATION1112
+      if(-1==typenum||G__PARAREFERENCE!=G__newtype.reftype[typenum]) {
+	if(isconst&G__PCONSTVAR) strcpy(string+strlen(string)," const&");
+	else strcpy(string+strlen(string),"&");
+      }
+#else
       if(isconst&G__PCONSTVAR) strcpy(string+strlen(string)," const&");
       else strcpy(string+strlen(string),"&");
+#endif
       break;
     case G__PARAP2P:
       if(isconst&G__PCONSTVAR) strcpy(string+strlen(string)," *const");
@@ -1649,6 +1665,7 @@ int noerror;
       result.type = toupper(result.type);
       break;
     default:
+      result.type = toupper(result.type);
       result.obj.reftype.reftype = G__PARAP2P + plevel-2;
       break;
     }
@@ -1669,7 +1686,14 @@ int noerror;
 G__value G__string2type(typenamin)
 char *typenamin;
 {
+#ifndef G__OLDIMPLEMENTATION1042
+  int store_var_type = G__var_type;
+  G__value buf = G__string2type_body(typenamin,0);
+  G__var_type = store_var_type;
+  return(buf);
+#else
   return(G__string2type_body(typenamin,0));
+#endif
 }
 
 

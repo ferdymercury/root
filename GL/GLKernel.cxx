@@ -1,20 +1,24 @@
+//*CMZ :  2.22/05 11/06/99  08.20.05  by  Rene Brun
+//*CMZ :  2.22/01 21/05/99  11.20.38  by  Rene Brun
 //*CMZ :  1.03/09 08/12/97  21.02.04  by  Fons Rademakers
 //*-- Author :    Valery Fine(fine@vxcern.cern.ch)   05/03/97
 
+/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Fons Rademakers.                                  *
+ * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
  *                                                                       *
  * Permission to use, copy, modify and distribute this software and its  *
  * documentation for non-commercial purposes is hereby granted without   *
  * fee, provided that the above copyright notice appears in all copies   *
  * and that both the copyright notice and this permission notice appear  *
  * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose.                         *
- * It is provided "as is" without express or implied warranty.           *
+ * suitability of this software for any purpose. It is provided "as is"  *
+ * without express or implied warranty.                                  *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -35,6 +39,7 @@
 #include "TROOT.h"
 #include "TColor.h"
 #include "TError.h"
+#include "TPoints3DABC.h"
 
 #ifndef   ColorOffset
 #ifdef WIN32
@@ -73,13 +78,9 @@ void TGLKernel::ClearColor(Int_t color)
         Float_t blue;
         Float_t alpha = 0.0;
 
-#ifdef WIN32
-        gGXW->GetRGB(color,red,green,blue);
-#else
         TColor *c = gROOT->GetColor(color);
         if (!c) c= gROOT->GetColor(1);
         c->GetRGB(red,green,blue);
-#endif
         TGLKernel::ClearGLColor(red, green, blue, alpha);
     }
     else
@@ -276,13 +277,9 @@ void TGLKernel::SetCurrentColor(Int_t color)
         Float_t green;
         Float_t blue;
 
-#ifdef WIN32
-       gGXW->GetRGB(color,red,green,blue);
-#else
         TColor *c = gROOT->GetColor(color);
-        if (!c) c= gROOT->GetColor(17);
+        if (!c) c = gROOT->GetColor(17);
         c->GetRGB(red,green,blue);
-#endif
         rgb[0] = red;
         rgb[1] = green;
         rgb[2] = blue;
@@ -467,6 +464,37 @@ void TGLKernel::NewModelView(Double_t *angles,Double_t *delta )
                            90+angles[2]);
 //*-*  Move model to the center of the "view" box ??????????
     TGLKernel::TranslateGL(delta[0],delta[1],delta[2]);
+}
+
+//______________________________________________________________________________
+void TGLKernel::PaintGLPointsObject(const TPoints3DABC *points, Option_t *option)
+{
+  // PaintGLPointsObject - draws the points
+  //
+  // option = "L"        - connect all points with straight lines
+  //          "P"        - draw the 3d points at each coordinate (by default)
+  //          "LP"       - draw the 3D points and connect them with
+  //                       straight lines
+    if (!points) return;
+    Int_t n = points->Size();
+    if (n <=0) return;
+
+//    if (fRootLight)
+//           LightIndex(0);  //reset the original color
+
+    GLenum mode = GL_POINTS;
+    Int_t pass = 0;
+    if (option && strchr(option,'P')) { pass++;}
+    if (option && strchr(option,'L')) { mode = GL_LINE_STRIP; pass++;}
+    do {
+      pass--;
+      glBegin(mode);
+         for (int i=0; i < n; i++)
+             glVertex3f(GLfloat(points->GetX(i))
+                       ,GLfloat(points->GetY(i))
+                       ,GLfloat(points->GetZ(i)));
+      glEnd();
+    } while ((mode=GL_POINTS) && pass);
 }
 
 //______________________________________________________________________________

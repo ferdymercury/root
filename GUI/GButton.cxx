@@ -1,23 +1,27 @@
-//*CMZ :  2.21/05 06/02/99  01.30.42  by  Fons Rademakers
+//*CMZ :  2.22/07 29/06/99  13.53.54  by  Fons Rademakers
+//*CMZ :  2.22/01 11/05/99  13.01.45  by  Fons Rademakers
+//*CMZ :  2.21/05 11/05/99  12.30.58  by  Fons Rademakers
 //*CMZ :  2.20/05 14/12/98  17.11.47  by  Fons Rademakers
 //*CMZ :  2.00/11 03/08/98  11.57.53  by  Fons Rademakers
 //*CMZ :  2.00/00 23/02/98  16.03.43  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   06/01/98
 
+/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Fons Rademakers.                                  *
+ * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
  *                                                                       *
  * Permission to use, copy, modify and distribute this software and its  *
  * documentation for non-commercial purposes is hereby granted without   *
  * fee, provided that the above copyright notice appears in all copies   *
  * and that both the copyright notice and this permission notice appear  *
  * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose.                         *
- * It is provided "as is" without express or implied warranty.           *
+ * suitability of this software for any purpose. It is provided "as is"  *
+ * without express or implied warranty.                                  *
  *************************************************************************/
 //*CMZ :  2.00/00 16/02/98  00.17.08  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   27/12/97
@@ -179,6 +183,9 @@ Bool_t TGButton::HandleCrossing(Event_t *event)
       else
          fTip->Hide();
    }
+
+   if (fgDbw != event->fWindow) return kTRUE;
+
    if (!(event->fState & (kButton1Mask | kButton2Mask | kButton3Mask)))
       return kTRUE;
 
@@ -588,8 +595,10 @@ Bool_t TGCheckButton::HandleCrossing(Event_t *event)
          fTip->Reset();
       else
          fTip->Hide();
-
    }
+
+   if (fgDbw != event->fWindow) return kTRUE;
+
    if (!(event->fState & (kButton1Mask | kButton2Mask | kButton3Mask)))
       return kTRUE;
 
@@ -815,8 +824,10 @@ Bool_t TGRadioButton::HandleCrossing(Event_t *event)
          fTip->Reset();
       else
          fTip->Hide();
-
    }
+
+   if (fgDbw != event->fWindow) return kTRUE;
+
    if (!(event->fState & (kButton1Mask | kButton2Mask | kButton3Mask)))
       return kTRUE;
 

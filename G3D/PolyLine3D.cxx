@@ -1,4 +1,6 @@
-//*CMZ :  2.21/04 29/01/99  23.26.18  by  Valery Fine(fine@mail.cern.ch)
+//*CMZ :  2.22/09 10/07/99  08.47.45  by  Rene Brun
+//*CMZ :  2.22/02 25/05/99  13.16.16  by  Rene Brun
+//*CMZ :  2.21/04 17/04/99  07.50.09  by  Valery Fine(fine@mail.cern.ch)
 //*CMZ :  2.21/01 12/01/99  07.55.28  by  Valery Fine(fine@mail.cern.ch)
 //*CMZ :  2.20/05 15/12/98  09.17.22  by  Rene Brun
 //*CMZ :  2.00/13 13/10/98  09.21.28  by  Rene Brun
@@ -8,20 +10,22 @@
 //*CMZ :  1.03/09 07/12/97  16.59.17  by  Fons Rademakers
 //*-- Author :    Nenad Buncic   17/08/95
 
+/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Fons Rademakers.                                  *
+ * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
  *                                                                       *
  * Permission to use, copy, modify and distribute this software and its  *
  * documentation for non-commercial purposes is hereby granted without   *
  * fee, provided that the above copyright notice appears in all copies   *
  * and that both the copyright notice and this permission notice appear  *
  * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose.                         *
- * It is provided "as is" without express or implied warranty.           *
+ * suitability of this software for any purpose. It is provided "as is"  *
+ * without express or implied warranty.                                  *
  *************************************************************************/
 
 #include <fstream.h>
@@ -381,8 +385,14 @@ void TPolyLine3D::Print(Option_t *option)
 //*-*-*-*-*-*-*-*-*-*Dump this 3-D polyline with its attributes*-*-*-*-*-*-*-*-*
 //*-*                ==========================================
 
-   cout <<"    TPolyLine3D Printing N=" <<fN<<" Option="<<option<<endl;
-
+   printf("    TPolyLine3D N=%d, Option=%s\n",fN,option);
+   TString opt = option;
+   opt.ToLower();
+   if (opt.Contains("all")) {
+      for (Int_t i=0;i<Size();i++) {
+        printf(" x[%d]=%g, y[%d]=%g, z[%d]=%g\n",i,fP[3*i],i,fP[3*i+1],i,fP[3*i+2]);
+      }
+   }
 }
 
 //______________________________________________________________________________
@@ -454,8 +464,14 @@ void TPolyLine3D::SetPolyLine(Int_t n, Float_t *p, Option_t *option)
    fN =n;
    if (fP) delete [] fP;
    fP = new Float_t[3*fN];
-   for (Int_t i=0; i<3*fN;i++) {
-      if (p) fP[i] = p[i];
+   for (Int_t i=0; i<fN;i++) {
+          if (p) {
+             fP[3*i]   = p[3*i];
+             fP[3*i+1] = p[3*i+1];
+             fP[3*i+2] = p[3*i+2];
+          } else {
+             memset(fP,0,3*fN*sizeof(Float_t));
+          }
    }
    fOption = option;
    fLastPoint = fN-1;
@@ -490,7 +506,7 @@ void TPolyLine3D::Streamer(TBuffer &b)
          b.ReadFastArray(fP,3*fN);
       }
       fOption.Streamer(b);
-      fLastPoint = fN;
+      fLastPoint = fN-1;
    } else {
       b.WriteVersion(TPolyLine3D::IsA());
       TObject::Streamer(b);

@@ -1,3 +1,4 @@
+*CMZ :  2.22/01 10/05/99  16.32.58  by  Valery Fine(fine@mail.cern.ch)
 *CMZ :  2.20/04 08/12/98  09.35.30  by  Rene Brun
 *CMZ :  2.00/10 03/07/98  21.21.20  by  Rene Brun
 *CMZ :  2.00/09 25/06/98  14.24.39  by  Fons Rademakers
@@ -40,5 +41,6 @@
 #pragma link C++ class TPadOpenGLView;
 #pragma link C++ class TPadView3D;
 #pragma link C++ class TMarker3DBox;
+#pragma link C++ class TPoints3DABC;
 
 #endif

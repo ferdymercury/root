@@ -1,20 +1,23 @@
+//*CMZ :  2.22/01 26/04/99  11.51.22  by  Rene Brun
 //*CMZ :  1.03/09 03/03/99  14.18.31  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   28/03/97
 
+/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Fons Rademakers.                                  *
+ * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
  *                                                                       *
  * Permission to use, copy, modify and distribute this software and its  *
  * documentation for non-commercial purposes is hereby granted without   *
  * fee, provided that the above copyright notice appears in all copies   *
  * and that both the copyright notice and this permission notice appear  *
  * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose.                         *
- * It is provided "as is" without express or implied warranty.           *
+ * suitability of this software for any purpose. It is provided "as is"  *
+ * without express or implied warranty.                                  *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -22,7 +25,7 @@
 // TPacketGenerator                                                     //
 //                                                                      //
 // This class generates packets to be processed on PROOF slave servers. //
-// A packet is an event range (begin event and number of events).       //
+// A packet is an entry range (begin entry and number of entries).      //
 // Packets are generated taking into account the performance of the     //
 // remote machine, the time it took to process a previous packet on     //
 // the remote machine, the locality of the database files, etc.         //
@@ -44,34 +47,34 @@ class TPacket : public TObject {
 
 private:
    TSlave   *fSlave;    // slave on which packet has been processed
-   Stat_t    fFirst;    // event number of first event in packet
-   Int_t     fNevents;  // number of events in packet
+   Stat_t    fFirst;    // entry number of first entry in packet
+   Int_t     fNentries; // number of entries in packet
    TTime     fTime;     // time when packet was generated
 
 public:
-   TPacket(TSlave *sl, Stat_t first, Int_t nevents);
+   TPacket(TSlave *sl, Stat_t first, Int_t nentries);
    ~TPacket() { }
 
-   Stat_t  GetFirstEvent() const { return fFirst; }
-   Int_t   GetPacketSize() const { return fNevents; }
+   Stat_t  GetFirstEntry() const { return fFirst; }
+   Int_t   GetPacketSize() const { return fNentries; }
    TSlave *GetSlave() const { return fSlave; }
    TTime   GetTime() const { return fTime; }
    void    Print(Option_t *option ="");
 };
 
-TPacket::TPacket(TSlave *sl, Stat_t first, Int_t nevents)
+TPacket::TPacket(TSlave *sl, Stat_t first, Int_t nentries)
 {
-   fSlave   = sl;
-   fFirst   = first;
-   fNevents = nevents;
-   fTime    = gSystem->Now();
+   fSlave    = sl;
+   fFirst    = first;
+   fNentries = nentries;
+   fTime     = gSystem->Now();
 }
 
 void TPacket::Print(Option_t *)
 {
    Printf("    Processed on host:     %s",   fSlave->GetName());
-   Printf("    Begin event:           %.0f", fFirst);
-   Printf("    Number of events:      %d",   fNevents);
+   Printf("    Begin entry:           %.0f", fFirst);
+   Printf("    Number of entries:     %d",   fNentries);
    Printf("    Starting time:         %lu",  long(fTime));
 }
 
@@ -83,20 +86,20 @@ TPacketGenerator::TPacketGenerator()
 {
    // Private default ctor.
 
-   fTree           = 0;
-   fSlaves         = 0;
-   fLastPackets    = 0;
-   fPackets        = 0;
-   fEventsPerSlave = 0;
+   fTree            = 0;
+   fSlaves          = 0;
+   fLastPackets     = 0;
+   fPackets         = 0;
+   fEntriesPerSlave = 0;
 }
 
 //______________________________________________________________________________
-TPacketGenerator::TPacketGenerator(Stat_t firstEvent, Stat_t lastEvent, TTree *tree, TList *slaves)
+TPacketGenerator::TPacketGenerator(Stat_t firstEntry, Stat_t lastEntry, TTree *tree, TList *slaves)
 {
    // Initialize TPacketGenerator using a TTree and a list of slave processors.
 
-   fNextEvent         = firstEvent;
-   fLastEvent         = lastEvent;
+   fNextEntry         = firstEntry;
+   fLastEntry         = lastEntry;
    fTree              = tree;
    fInitialPacketSize = fTree->GetPacketSize();
    fSlaves            = slaves;
@@ -105,13 +108,13 @@ TPacketGenerator::TPacketGenerator(Stat_t firstEvent, Stat_t lastEvent, TTree *t
 }
 
 //______________________________________________________________________________
-TPacketGenerator::TPacketGenerator(Stat_t firstEvent, Stat_t lastEvent, Int_t packetSize, TList *slaves)
+TPacketGenerator::TPacketGenerator(Stat_t firstEntry, Stat_t lastEntry, Int_t packetSize, TList *slaves)
 {
-   // Initialize TPacketGenerator using the total number of events, the
+   // Initialize TPacketGenerator using the total number of entries, the
    // initial packet size and the list of slaves.
 
-   fNextEvent         = firstEvent;
-   fLastEvent         = lastEvent;
+   fNextEntry         = firstEntry;
+   fLastEntry         = lastEntry;
    fInitialPacketSize = packetSize;
    fSlaves            = slaves;
    fTree              = 0;
@@ -127,7 +130,7 @@ TPacketGenerator::~TPacketGenerator()
    if (fPackets) fPackets->Delete();
    delete fPackets;
    delete fLastPackets;
-   delete [] fEventsPerSlave;
+   delete [] fEntriesPerSlave;
 }
 
 //______________________________________________________________________________
@@ -144,27 +147,27 @@ void TPacketGenerator::Init()
    fMaxOrd = mxo;
    mxo++;
 
-   fEventsProcessed = 0;
-   fMinPacketSize   = fInitialPacketSize/5;  // 20% of initial packet size
-   fSmallestPacket  = fInitialPacketSize;
-   fEventsPerSlave  = new Stat_t[mxo];
-   fLastPackets     = new TObjArray(mxo);
-   fPackets         = new TList;
+   fEntriesProcessed = 0;
+   fMinPacketSize    = fInitialPacketSize/5;  // 20% of initial packet size
+   fSmallestPacket   = fInitialPacketSize;
+   fEntriesPerSlave  = new Stat_t[mxo];
+   fLastPackets      = new TObjArray(mxo);
+   fPackets          = new TList;
 }
 
 //______________________________________________________________________________
-Stat_t TPacketGenerator::GetEventsProcessed(TSlave *sl) const
+Stat_t TPacketGenerator::GetEntriesProcessed(TSlave *sl) const
 {
-   // Return number of events processed by slave sl.
+   // Return number of entries processed by slave sl.
 
-   return fEventsPerSlave[sl->GetOrdinal()];
+   return fEntriesPerSlave[sl->GetOrdinal()];
 }
 
 //______________________________________________________________________________
-Bool_t TPacketGenerator::GetNextPacket(TSlave *sl, Int_t &nevent, Stat_t &first)
+Bool_t TPacketGenerator::GetNextPacket(TSlave *sl, Int_t &nentry, Stat_t &first)
 {
-   // Get next packet for slave sl. Returns kTRUE and sets first and nevent.
-   // In case no more packets return kFALSE (and set first and nevent == 0).
+   // Get next packet for slave sl. Returns kTRUE and sets first and nentry.
+   // In case no more packets return kFALSE (and set first and nentry == 0).
    // The packet size for a slave is a linear function of the time diff between
    // the processing of two packets relative to the fastest slave (i.e. the one
    // with the smallest time diff). The fastest slave always processes
@@ -176,8 +179,8 @@ Bool_t TPacketGenerator::GetNextPacket(TSlave *sl, Int_t &nevent, Stat_t &first)
    // Update the statistics and calculate new packet size for the slave
    if (fLastPackets->UncheckedAt(sl->GetOrdinal())) {
       TPacket *p = (TPacket*)fLastPackets->UncheckedAt(sl->GetOrdinal());
-      fEventsPerSlave[sl->GetOrdinal()] += p->GetPacketSize();
-      fEventsProcessed += p->GetPacketSize();
+      fEntriesPerSlave[sl->GetOrdinal()] += p->GetPacketSize();
+      fEntriesProcessed += p->GetPacketSize();
       packetSize = p->GetPacketSize();
       TTime tdiff = gSystem->Now() - p->GetTime();
       if (long(fMinTimeDiff) == 0)
@@ -201,24 +204,24 @@ Bool_t TPacketGenerator::GetNextPacket(TSlave *sl, Int_t &nevent, Stat_t &first)
       }
    }
 
-   // If all events have been processed return kFALSE
-   if (fNextEvent > fLastEvent) {
+   // If all entries have been processed return kFALSE
+   if (fNextEntry > fLastEntry) {
       fLastPackets->AddAt(0, sl->GetOrdinal());
       first  = 0;
-      nevent = -1;
+      nentry = -1;
       return kFALSE;
    }
 
-   if (fNextEvent + packetSize > fLastEvent+1)
-      packetSize = Int_t(fLastEvent - fNextEvent + 1);
+   if (fNextEntry + packetSize > fLastEntry+1)
+      packetSize = Int_t(fLastEntry - fNextEntry + 1);
 
-   TPacket *pn = new TPacket(sl, fNextEvent, packetSize);
+   TPacket *pn = new TPacket(sl, fNextEntry, packetSize);
    fPackets->Add(pn);
    fLastPackets->AddAt(pn, sl->GetOrdinal());
-   fNextEvent += packetSize;
+   fNextEntry += packetSize;
 
-   first  = pn->GetFirstEvent();
-   nevent = pn->GetPacketSize();
+   first  = pn->GetFirstEntry();
+   nentry = pn->GetPacketSize();
    return kTRUE;
 }
 
@@ -244,14 +247,14 @@ void TPacketGenerator::Print(Option_t *option)
    if (fPackets) {
       tott = (long(((TPacket*)fPackets->Last())->GetTime()) -
               long(((TPacket*)fPackets->First())->GetTime())) / 1000.0;
-      aves = fEventsProcessed / fPackets->GetSize();
+      aves = fEntriesProcessed / fPackets->GetSize();
       avet = (long(((TPacket*)fPackets->Last())->GetTime()) -
               long(((TPacket*)fPackets->First())->GetTime())) /
               Float_t(fPackets->GetSize());
    }
 
    // Print generator summary
-   Printf("Total events processed:             %.0f", fEventsProcessed);
+   Printf("Total entries processed:            %.0f", fEntriesProcessed);
    Printf("Total number of packets:            %d",   fPackets ? fPackets->GetSize() : 0);
    Printf("Default packet size:                %d",   fInitialPacketSize);
    Printf("Smallest packet size:               %d",   fSmallestPacket);
@@ -265,7 +268,7 @@ void TPacketGenerator::Print(Option_t *option)
    TSlave *sl;
    int     i = 0;
    while ((sl = (TSlave*) next())) {
-      Printf("   Number of events processed by slave %d:  %.0f", i, fEventsPerSlave[sl->GetOrdinal()]);
+      Printf("   Number of entries processed by slave %d:  %.0f", i, fEntriesPerSlave[sl->GetOrdinal()]);
       i++;
    }
 
@@ -275,7 +278,7 @@ void TPacketGenerator::Print(Option_t *option)
 }
 
 //______________________________________________________________________________
-void TPacketGenerator::Reset(Stat_t firstEvent, Stat_t lastEvent, TList *slaves)
+void TPacketGenerator::Reset(Stat_t firstEntry, Stat_t lastEntry, TList *slaves)
 {
    // Reset the packet generator for a new cycle.
 
@@ -291,27 +294,27 @@ void TPacketGenerator::Reset(Stat_t firstEvent, Stat_t lastEvent, TList *slaves)
 
    if (mxo != fMaxOrd+1) {
       delete fLastPackets;
-      delete [] fEventsPerSlave;
-      fLastPackets     = new TObjArray(mxo);
-      fEventsPerSlave  = new Stat_t[mxo];
+      delete [] fEntriesPerSlave;
+      fLastPackets      = new TObjArray(mxo);
+      fEntriesPerSlave  = new Stat_t[mxo];
       fMaxOrd = mxo - 1;
    } else {
       for (int i = 0; i < mxo; i++) {
          fLastPackets->AddAt(0,i);
-         fEventsPerSlave[i] = 0;
+         fEntriesPerSlave[i] = 0;
       }
    }
 
    if (fTree)
       fInitialPacketSize = fTree->GetPacketSize();
 
-   fNextEvent       = firstEvent;
-   fLastEvent       = lastEvent;
-   fSlaves          = slaves;
-   fEventsProcessed = 0;
-   fMinPacketSize   = fInitialPacketSize/5;  // 20% of initial packet size
-   fMinTimeDiff     = 0;
-   fSmallestPacket  = fInitialPacketSize;
+   fNextEntry        = firstEntry;
+   fLastEntry        = lastEntry;
+   fSlaves           = slaves;
+   fEntriesProcessed = 0;
+   fMinPacketSize    = fInitialPacketSize/5;  // 20% of initial packet size
+   fMinTimeDiff      = 0;
+   fSmallestPacket   = fInitialPacketSize;
 }
 
 //______________________________________________________________________________

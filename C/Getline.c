@@ -1,3 +1,5 @@
+/*CMZ :  2.22/01 29/04/99  14.46.55  by  Fons Rademakers*/
+/*CMZ :  2.22/00 30/03/99  19.24.05  by  Fons Rademakers*/
 /*CMZ :  2.00/08 22/05/98  12.04.27  by  Fons Rademakers*/
 /*CMZ :  2.00/06 12/05/98  16.00.37  by  Rene Brun*/
 /*CMZ :  2.00/02 23/03/98  14.25.23  by  Fons Rademakers*/
@@ -59,8 +61,8 @@ PS: I don't have, and don't want to add, a vi mode, sorry.
 Entering printable keys generally inserts new text into the buffer (unless
 in overwrite mode, see below).  Other special keys can be used to modify
 the text in the buffer.  In the description of the keys below, ^n means
-Control-n, or holding the CONTROL key down while pressing "n".  Errors
-will ring the terminal bell.
+Control-n, or holding the CONTROL key down while pressing "n". M-B means
+Meta-B (or Alt-B). Errors will ring the terminal bell.
 
 ^A/^E   : Move cursor to beginning/end of the line.
 ^F/^B   : Move cursor forward/backward one character.
@@ -88,6 +90,11 @@ will ring the terminal bell.
 ^U      : Kill from beginning to the end of the line.
 ^Y      : Yank previously killed text back at current location.  Note that
           this will overwrite or insert, depending on the current mode.
+M-F/M-B : Move cursor forward/backward one word.
+M-D     : Delete the word under the cursor.
+^SPC    : Set mark.
+^W      : Kill from mark to point.
+^X      : Exchange mark and point.
 TAB     : By default adds spaces to buffer to get to next TAB stop
           (just after every 8th column), although this may be rebound by the
           programmer, as described below.
@@ -223,7 +230,8 @@ int (*gl_tab_hook)(char *buf, int prompt_width, int *cursor_loc)
         up at the specified location after the screen is redrawn.
 */
 
-static int gl_tab(char *buf, int offset, int *loc);  /* forward reference needed for gl_tab_hook */
+/* forward reference needed for gl_tab_hook */
+static int gl_tab(char *buf, int offset, int *loc);
 
 /********************* exported interface ********************************/
 
@@ -237,7 +245,7 @@ void    Gl_histadd(char *buf);   /* adds entries to hist */
 
 int             (*gl_in_hook)(char *buf) = 0;
 int             (*gl_out_hook)(char *buf) = 0;
-int             (*gl_tab_hook)(char *buf, int offset, int *loc) = gl_tab;
+int             (*gl_tab_hook)(char *buf, int prompt_width, int *loc) = gl_tab;
 
 /******************** imported interface *********************************/
 
@@ -291,6 +299,16 @@ static void     gl_puts(char *buf);     /* write a line to terminal */
 static void     gl_redraw();            /* issue \n and redraw all */
 static void     gl_transpose();         /* transpose two chars */
 static void     gl_yank();              /* yank killed text */
+
+static int      is_whitespace(char c);  /* "whitespace" very loosely interpreted */
+static void     gl_back_1_word();       /* move cursor back one word */
+static void     gl_kill_1_word();       /* kill to end of word */
+static void     gl_kill_region(int i, int j); /* kills from i to j */
+static void     gl_fwd_1_word();        /* move cursor forward one word */
+static void     gl_set_mark();          /* sets mark to be at point */
+static void     gl_exch();              /* exchanges point and mark */
+static void     gl_wipe();              /* kills from mark to point */
+static int      gl_mark = -1;           /* position of mark. gl_mark<0 if not set */
 
 static void     hist_init();            /* initializes hist pointers */
 static char    *hist_next();            /* return ptr to next item */
@@ -574,7 +592,7 @@ gl_getc()
     int c;
 
 #if defined(unix)
-    char ch;
+    unsigned char ch;
     while ((c = (read(0, &ch, 1) > 0) ? ch : -1) == -1 && errno == EINTR)
        errno = 0;
 #endif
@@ -728,12 +746,19 @@ Gl_windowchanged()
 {
 #ifdef TIOCGWINSZ
    if (isatty(0)) {
+      static char lenv[32], cenv[32];
       struct winsize wins;
       ioctl(0, TIOCGWINSZ, &wins);
 
       if (wins.ws_col == 0) wins.ws_col = 80;
+      if (wins.ws_row == 0) wins.ws_row = 24;
 
       Gl_setwidth(wins.ws_col);
+
+      sprintf(lenv, "LINES=%d", wins.ws_row);
+      putenv(lenv);
+      sprintf(cenv, "COLUMNS=%d", wins.ws_col);
+      putenv(cenv);
    }
 #endif
 }
@@ -787,7 +812,39 @@ Getlinem(int mode, char *prompt)
                     search_term();      /* terminate and handle char */
                 }
             }
+#define gl_Meta_b   226
+#define gl_Meta_B   194
+#define gl_Meta_d   228
+#define gl_Meta_D   196
+#define gl_Meta_f   230
+#define gl_Meta_F   198
+#define gl_Ctrl_SPC   0
+#define gl_Ctrl_W    23
+#define gl_Ctrl_X    24
             switch (c) {
+
+              case gl_Meta_b:                           /* M-b */
+              case gl_Meta_B:                           /* M-B */
+                gl_back_1_word();
+                break;
+              case gl_Meta_d:                           /* M-d */
+              case gl_Meta_D:                           /* M-D */
+                gl_kill_1_word();
+                break;
+              case gl_Meta_f:                           /* M-f */
+              case gl_Meta_F:                           /* M-F */
+                gl_fwd_1_word();
+                break;
+              case gl_Ctrl_SPC:                         /* ^SPC */
+                gl_set_mark();
+                break;
+              case gl_Ctrl_W:                           /* ^W  */
+                gl_wipe();
+                break;
+              case gl_Ctrl_X:                           /* ^X  */
+                gl_exch();
+                break;
+
               case '\n': case '\r':                     /* newline */
                 gl_newline();
                 gl_cleanup();
@@ -818,7 +875,7 @@ Getlinem(int mode, char *prompt)
                 if (gl_tab_hook) {
                     tmp = gl_pos;
                     loc = gl_tab_hook(gl_buf, strlen(gl_prompt), &tmp);
-                    if (loc >= 0 || tmp != gl_pos)
+                    if (loc >= 0 || tmp != gl_pos || loc == -2)
                         gl_fixup(gl_prompt, loc, tmp);
                 }
                 break;
@@ -954,6 +1011,7 @@ gl_yank()
 
     len = strlen(gl_killbuf);
     if (len > 0) {
+        gl_mark = gl_pos;
         if (gl_overwrite == 0) {
             if (gl_cnt + len >= BUF_SIZE - 1)
                 gl_error("\n*** Error: Getline(): input buffer overflow\n");
@@ -1024,6 +1082,7 @@ gl_newline()
     }
     gl_buf[len] = '\n';
     gl_buf[len+1] = '\0';
+    gl_mark = -1;
 }
 
 static void
@@ -1290,22 +1349,23 @@ Gl_histadd(char *buf)
                    fclose(fp);
                }
 
+               /* if more than HIST_SIZE lines, safe last 60 command and delete rest */
                if (gl_savehist > HIST_SIZE) {
                   FILE *ftmp;
                   char tname[L_tmpnam];
-                  char line[256];
+                  char line[BUFSIZ];
 
                   fp = fopen(gl_histfile, "r");
                   tmpnam(tname);
                   ftmp = fopen(tname, "w");
                   if (fp && ftmp) {
                      int nline = 0;
-                     while (fgets(line, 256, fp)) {
+                     while (fgets(line, BUFSIZ, fp)) {
                         nline++;
                         gl_savehist = 1;  /* prevent from becoming 0 */
                         if (nline > HIST_SIZE-60) {
                            gl_savehist++;
-                           fprintf(ftmp, "%s\n", line);
+                           fprintf(ftmp, "%s", line);
                         }
                      }
                   }
@@ -1313,11 +1373,11 @@ Gl_histadd(char *buf)
                   if (ftmp) fclose(ftmp);
 
                   /* copy back to history file */
-                  fp =   fopen(gl_histfile, "w");
+                  fp   = fopen(gl_histfile, "w");
                   ftmp = fopen(tname, "r");
                   if (fp && ftmp)
-                     while (fgets(line, 256, fp))
-                        fprintf(fp, "%s\n", line);
+                     while (fgets(line, BUFSIZ, ftmp))
+                        fprintf(fp, "%s", line);
 
                   if (fp)   fclose(fp);
                   if (ftmp) fclose(ftmp);
@@ -1566,5 +1626,158 @@ char *strip(char *s)
    strncpy(r, t1, (size_t) (t2-t1+1));
 
    return r;
+}
+
+/*****************************************************************************/
+/* Extra routine provided by Christian Lacunza <lacunza@cdfsg5.lbl.gov>      */
+/*****************************************************************************/
+
+/* move cursor back to beginning of _current_ word */
+/* unless it's already at the beginning,           */
+/* in which case it moves back to the beginning    */
+/* of the _previous_ word.                         */
+static void gl_back_1_word( void )
+{
+     int i = gl_pos;
+
+     /* if we're at the beginning of a word,     */
+     /* slip back into the preceeding whitespace */
+     if( i>0 && is_whitespace(gl_buf[i-1]) ) {
+          i-=1;
+     }
+
+     /* now move back over all consecutive whitespace */
+     while( i>0 && is_whitespace(gl_buf[i]) ) {
+          i-=1;
+     }
+
+     /* now keep moving back over all consecutive non-whitespace */
+     /* until we find the beginning of this word.                */
+     /* ie. stop just before more whitespace shows up.           */
+     while( i>0 && !is_whitespace(gl_buf[i-1]) ) {
+          i-=1;
+     }
+
+     /* move the cursor here */
+     gl_fixup(gl_prompt, -1, i);
+}
+
+/* kills from current position to end of word */
+static void gl_kill_1_word( void )
+{
+     int i = gl_pos;
+     int j = gl_pos;
+
+/* delete this: */
+#if 0
+     /* not sure what to do with "punctuation" */
+     if( is_whitespace(gl_buf[j]) && gl_buf[j]!=' ' ) {
+          return;
+     }
+     /* first find a word */
+     while( j<gl_cnt && gl_buf[j]==' ' ) {
+          j+=1;
+     }
+#endif
+
+     /* first find a word */
+     while( j<gl_cnt && is_whitespace(gl_buf[j]) ) {
+          j+=1;
+     }
+
+     /* next, find the end of this word. */
+     while( j<gl_cnt && !is_whitespace(gl_buf[j+1]) ) {
+          j+=1;
+     }
+
+     /* kill */
+     gl_kill_region( i, j );
+
+     /* fixup */
+     gl_fixup(gl_prompt, gl_pos, gl_pos);
+}
+
+static void gl_kill_region( int i, int j )
+{
+     /* copy to kill buffer */
+     strncpy( gl_killbuf, gl_buf+i, j-i+1 );
+     gl_killbuf[j-i+1]='\0';
+
+     /* remove from gl_buf */
+     while( j<gl_cnt ) {
+          gl_buf[i]=gl_buf[j+1];
+          i+=1;
+          j+=1;
+     }
+     gl_buf[i]='\0';
+}
+
+/* move cursor forward to the beginning of the next word. */
+static void gl_fwd_1_word( void )
+{
+     int i = gl_pos;
+
+     /* move past all non-whitespace into the whitespace between words. */
+     while( i<gl_cnt && !is_whitespace(gl_buf[i]) ) {
+          i+=1;
+     }
+
+     /* move past this whitespace to the beginning of the next word. */
+     while( i<gl_cnt && is_whitespace(gl_buf[i]) ) {
+          i+=1;
+     }
+
+     /* move the cursor here. */
+     gl_fixup(gl_prompt, -1, i);
+}
+
+/* NOTE: "whitespace" is very loosely defined. */
+static int is_whitespace( char c )
+{
+     int decent_character;
+
+     decent_character = isalpha(c) || isdigit(c) || c=='_';
+
+     return !decent_character;
+}
+
+/* sets mark to be at point */
+static void gl_set_mark( void )
+{
+     gl_mark = gl_pos;
+}
+
+/* kills from mark to point */
+static void gl_wipe( void )
+{
+     int left, right;
+
+     if( gl_mark  <   0    ) return;
+     if( gl_mark == gl_pos ) return;
+
+     if( gl_mark < gl_pos ) {
+          left  = gl_mark;
+          right = gl_pos;
+     }
+     else {
+          left  = gl_pos;
+          right = gl_mark;
+     }
+
+     gl_kill_region( left, right-1 );
+     gl_fixup( gl_prompt, left, left );
+}
+
+/* echanges point and mark */
+static void gl_exch( void )
+{
+     int tmp;
+
+     /* make sure mark is set */
+     if( gl_mark < 0 ) return;
+
+     tmp = gl_pos;
+     gl_fixup( gl_prompt, -1, gl_mark );
+     gl_mark = tmp;
 }
 

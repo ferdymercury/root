@@ -572,3 +572,4 @@ int main()
    test_vector_io();
 
    return 0;
+}

@@ -1,3 +1,6 @@
+//*CMZ :  2.22/10 15/07/99  09.44.45  by  Rene Brun
+//*CMZ :  2.22/06 18/06/99  09.04.17  by  Rene Brun
+//*CMZ :  2.22/01 16/04/99  15.45.38  by  Rene Brun
 //*CMZ :  2.21/06 12/02/99  13.25.55  by  Pasha Murat
 //*-- Author :    Pasha Murat   12/02/99
 //------------------------------------------------------------------------------
@@ -30,15 +33,16 @@ protected:
 public:
 				// ****** constructors and destructor
 
-  TDatabasePDG(const char *name = "PDGDB", const char *title = "PDG database");
+  TDatabasePDG();
 
   virtual ~TDatabasePDG();
 				
   void     Init(); // function which does the real job of initializing the database
 
   static TDatabasePDG *Instance() {
-    Cleaner cleaner;
-    return (fgInstance) ? fgInstance : fgInstance = new TDatabasePDG();
+    static Cleaner cleaner;
+    if(!fgInstance) fgInstance = new TDatabasePDG();
+    return fgInstance;
   }
 
   void  AddParticle(const Text_t *name, const Text_t *title,

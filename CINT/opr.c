@@ -1,5 +1,5 @@
-/*CMZ :  2.21/08 17/03/99  13.13.42  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   17/03/99*/
+/*CMZ :  2.22/10 23/07/99  14.42.17  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   23/07/99*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -348,6 +348,7 @@ G__value *defined;
   if((G__isdouble(expressionin))||(G__isdouble(*defined))) {
     fexpression=G__double(expressionin);
     fdefined=G__double(*defined);
+    defined->typenum = -1;
     switch(operator) {
     case '\0':
       defined->ref=expressionin.ref;
@@ -444,6 +445,12 @@ G__value *defined;
       break;
 #endif /* G__NONANSIOPR */
     case '@': /* power */
+#ifndef G__OLDIMPLEMENTATION1123
+      if(G__asm_dbg) {
+	fprintf(G__serr,"Warning: Power operator, Cint special extension");
+	G__printlinenum();
+      }
+#endif
       if(fdefined>0.0) {
 	/* G__letdouble(defined,'d' ,exp(fexpression*log(fdefined))); */
 	G__letdouble(defined,'d' ,pow(fdefined,fexpression));
@@ -936,6 +943,12 @@ G__value *defined;
       defined->ref=0;
       break;
     case '@': /* power */
+#ifndef G__OLDIMPLEMENTATION1123
+      if(G__asm_dbg) {
+	fprintf(G__serr,"Warning: Power operator, Cint special extension");
+	G__printlinenum();
+      }
+#endif
 #ifndef G__OLDIMPLEMENTATION966
       fdefined=1.0;
       for(ig2=1;ig2<=lexpression;ig2++) fdefined *= ldefined;
@@ -1249,9 +1262,17 @@ int *piout,*pspaceflag,*pmparen;
       fgetpos(G__ifile.fp,&pos);
       line = G__ifile.line_number;
       if(G__dispsource) G__disp_mask=1000;
+#ifndef G__OLDIMPLEMENTATION1064
+      c=G__fgetname_template(temp,"(;&*");
+      if(isspace(c) || c == '&' || c == '*') {
+        do {
+  	  c=G__fgetspace();
+        } while (c == '&' || c == '*');
+#else
       c=G__fgetname_template(temp,"(;");
       if(isspace(c)) {
 	c=G__fgetspace();
+#endif
 #ifndef G__STD_NAMESPACE /* ON780 */
 	if((isalpha(c) && strcmp(temp,"operator")!=0) ||
 	   strcmp(statement,"std:")==0) {
@@ -1513,7 +1534,7 @@ G__value *pios;
     return(!result.obj.i);
   }
   else {
-    G__genericerror("Error: non ios object in condition");
+    G__genericerror("Limitation: Cint does not support full iostream functionality in this platform");
     return(0);
   }
 }
@@ -1532,7 +1553,7 @@ G__value *defined;
   int ig2;
 
   /* struct G__param fpara; */
-  char expr[G__ONELINE],opr[12],arg1[50],arg2[50];
+  char expr[G__LONGLINE],opr[12],arg1[G__LONGLINE],arg2[G__LONGLINE];
   long store_struct_offset; /* used to be int */
   int store_tagnum;
   G__value buffer;

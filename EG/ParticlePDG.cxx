@@ -1,7 +1,9 @@
+//*CMZ :  2.22/07 01/07/99  16.40.14  by  Rene Brun
 //*CMZ :  2.21/06 15/02/99  10.12.43  by  Rene Brun
 //*-- Author :    Pasha Murat   12/02/99
 
 #include "TParticlePDG.h"
+
 
 ClassImp(TParticlePDG)
 
@@ -50,17 +52,14 @@ void TParticlePDG::Print(Option_t *)
 //  Print the entire information of this kind of particle
 //
 
-   Printf("");
-   Printf("Particle: %-15s  ",
-          this->GetName());
+   printf("\n%-20s  %6d\t",GetName(),fPdgCode);
    if (!fStable) {
-       Printf("Mass: %8f     DecayWidth: %8f  Charge : %8f",
+       printf("Mass:%9.4f Width (GeV):%11.4e\tCharge: %5.1f\n",
               fMass, fWidth, fCharge);
    }
    else {
-       Printf("Mass: %8f     DecayWidth: Stable  Charge : %8f",
+       printf("Mass:%9.4f Width (GeV): Stable\tCharge: %5.1f\n",
               fMass, fCharge);
    }
-   Printf("");
 }
 

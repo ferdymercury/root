@@ -1,3 +1,5 @@
+//*CMZ :  2.22/06 16/06/99  20.57.04  by  Rene Brun
+//*CMZ :  2.22/05 14/06/99  10.59.10  by  Rene Brun
 //*CMZ :  2.21/08 18/03/99  10.26.14  by  Rene Brun
 //*CMZ :  2.21/04 05/02/99  12.03.34  by  Rene Brun
 //*CMZ :  2.21/02 15/01/99  12.08.48  by  Rene Brun
@@ -24,6 +26,10 @@
 //*-*                                                                     *
 //*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 
+
+void fcnk0(int &npar, double *gin, double &f, double *x, int iflag);
+int minexam();
+
 #ifndef __CINT__
 #include "TROOT.h"
 #include "TMinuit.h"
@@ -32,10 +38,6 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-#endif
-
-void fcnk0(Int_t &npar, Double_t *gin, Double_t &f, Double_t *x, Int_t iflag);
-Int_t minexam();
 
 //______________________________________________________________________________
 int main()
@@ -43,8 +45,9 @@ int main()
    TROOT mintest("TestMinuit","Test of Minuit");
    return minexam();
 }
+#endif
 
-Int_t minexam()
+int minexam()
 {
    TStopwatch timer;
 

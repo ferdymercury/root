@@ -1,3 +1,5 @@
+*CMZ :  2.22/05 14/06/99  19.10.36  by  Fons Rademakers
+*CMZ :  2.22/00 29/03/99  15.38.31  by  Fons Rademakers
 *CMZ :  2.20/00 04/11/98  17.07.43  by  Fons Rademakers
 *CMZ :  2.00/09 27/06/98  00.40.41  by  Fons Rademakers
 *CMZ :  2.00/06 12/05/98  15.08.57  by  Rene Brun
@@ -52,6 +54,7 @@ cd ..
 exec exporticons
 *
 *   Install ROOT library and main program
+exec makecompiledata
 exec install_onlyroot [1] [2] [3]
 *
 *   Install ROOT tutorials
@@ -87,6 +90,28 @@ message *   Installing g2root: the GEANT to ROOT converter
 message ************************************
 exec install_g2root
 *
+if [OS] <> 'WINNT' then
+*
+*   Install rootd
+message ************************************
+message *   Installing rootd: the remote ROOT daemon
+message ************************************
+exec install_rootd
+*
+*   Install proofd
+message ************************************
+message *   Installing proofd: the remote PROOF daemon
+message ************************************
+exec install_proofd
+*
+*   Install proofserv
+message ************************************
+message *   Installing proofserv: the remote PROOF server
+message ************************************
+exec install_proofserv
+*
+endif
+*
 *   Install ROOT test examples in directory test
 message ************************************
 message *   Installing test programs in directory test
@@ -106,5 +131,6 @@ message ************************************
 exec install_linkdef
 exec install_make
 exec install_changelog
+exec install_rootconfig
 
 return

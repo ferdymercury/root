@@ -1,5 +1,5 @@
-/*CMZ :  2.21/08 17/03/99  13.13.41  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   17/03/99*/
+/*CMZ :  2.22/10 23/07/99  14.42.16  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   23/07/99*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -123,18 +123,24 @@ char *libname;
 **************************************************************************/
 int G__call_setup_funcs()
 {
-   int i, k = 0;
-
-   for (i = 0; i < G__nlibs; i++)
-      if (G__setup_func_list[i] && !G__setup_func_list[i]->inited) {
-         (G__setup_func_list[i]->func)();
-         G__setup_func_list[i]->inited = 1;
-         k++;
-#ifdef G__DEBUG
-         fprintf(G__sout,"Dictionary for %s initialized\n", G__setup_func_list[i]->libname); /* only for debug */
+  int i, k = 0;
+#ifndef G__OLDIMPLEMENTATION1035
+  G__LockCriticalSection();
 #endif
-      }
-   return k;
+
+  for (i = 0; i < G__nlibs; i++)
+    if (G__setup_func_list[i] && !G__setup_func_list[i]->inited) {
+      (G__setup_func_list[i]->func)();
+      G__setup_func_list[i]->inited = 1;
+      k++;
+#ifdef G__DEBUG
+      fprintf(G__sout,"Dictionary for %s initialized\n", G__setup_func_list[i]->libname); /* only for debug */
+#endif
+    }
+#ifndef G__OLDIMPLEMENTATION1035
+  G__UnlockCriticalSection();
+#endif
+  return k;
 }
 
 /**************************************************************************
@@ -222,6 +228,35 @@ static void G__do_p2fsetup()
 }
 #endif
 
+#ifndef G__OLDIMPLEMENATTION1090
+/**************************************************************************
+* G__read_include_env()
+**************************************************************************/
+static void G__read_include_env(envname)
+char* envname;
+{
+  char *env = getenv(envname);
+  if(env) {
+    char *p,*pc;
+    char* tmp = (char*)malloc(strlen(env)+2);
+    strcpy(tmp,env);
+    p=tmp;
+    while( (pc=strchr(p,';')) || (pc=strchr(p,',')) ) {
+      *pc=0;
+      if(p[0]) {
+        if(strncmp(p,"-I",2)==0) G__add_ipath(p+2);
+        else G__add_ipath(p);
+      }
+      p=pc+1;
+    }
+    if(p[0]) {
+      if(strncmp(p,"-I",2)==0) G__add_ipath(p+2);
+      else G__add_ipath(p);
+    }
+    free((void*)tmp);
+  }
+}
+#endif
 
 /**************************************************************************
 * G__init_cint(char *command)
@@ -261,6 +296,10 @@ char *command;
   int result;
   char *arg[G__MAXARG];
   char argbuf[G__LONGLINE];
+
+#ifndef G__OLDIMPLEMENTATION1035
+    G__LockCriticalSection();
+#endif
 
   /***************************************
   * copy command to argbuf. argbuf will
@@ -304,13 +343,23 @@ char *command;
   G__othermain=2;
   result=G__main(argn,arg);
 
+
   if(G__MAINEXIST==G__ismain) {
+#ifndef G__OLDIMPLEMENTATION1035
+    G__UnlockCriticalSection();
+#endif
     return(G__INIT_CINT_SUCCESS_MAIN);
   }
   else if(result==EXIT_SUCCESS) {
+#ifndef G__OLDIMPLEMENTATION1035
+    G__UnlockCriticalSection();
+#endif
     return(G__INIT_CINT_SUCCESS);
   }
   else {
+#ifndef G__OLDIMPLEMENTATION1035
+    G__UnlockCriticalSection();
+#endif
     return(G__INIT_CINT_FAILURE);
   }
 
@@ -440,6 +489,9 @@ void G__display_note() {
   G__more(G__sout,"Note3: Cint reads source file on-the-fly from the file system. Do not change\n");
   G__more(G__sout," the active source during cint run. Use -C option or C1 command otherwise.\n");
   G__more(G__sout,"\n");
+  G__more(G__sout,"Note4: In source code trace mode, cint sometimes displays extra-characters.\n");
+  G__more(G__sout," This is harmless. Please ignore.\n");
+  G__more(G__sout,"\n");
 }
 
 #ifndef G__OLDIMPLEMENTATION889
@@ -499,6 +551,10 @@ char *optlist;
     return (EOF);
   }
 }
+#endif
+
+#ifndef G__OLDIMPLEMENTATION1078
+extern int G__quiet;
 #endif
 
 /**************************************************************************
@@ -658,9 +714,15 @@ char *argv[] ;
    * Get command options
    *************************************************************/
   while((c=getopt(argc,argv
-       ,"a:b:c:d:ef:gikl:n:pq:rstu:vw:x:y:z:AB:CD:EF:G:HI:KM:N:O:P:RSTVW:X:"))
+       ,"a:b:c:d:ef:gikl:n:pq:rstu:vw:x:y:z:AB:CD:EF:G:HI:KM:N:O:P:QRSTVW:X:"))
 	!=EOF) {
     switch(c) {
+
+#ifndef G__OLDIMPLEMENTATION1078
+    case 'Q':
+      G__quiet=1;
+      break;
+#endif
 
     case 'o':
       G__lang=G__ONEBYTE;
@@ -691,7 +753,7 @@ char *argv[] ;
       break;
 
     case 'M':
-      G__is_operator_newdelete = (int)G__int(G__calc((optarg)));
+      G__is_operator_newdelete = (int)G__int(G__calc_internal((optarg)));
       break;
 
     case 'V': /* Create precompiled private member dictionary */
@@ -726,7 +788,15 @@ char *argv[] ;
       break;
 
     case 'I': /* Include path */
+#ifndef G__OLDIMPLEMENATTION1090
+      /*************************************************************
+       * INCLUDE environment variable. Implemented but must not activate this.
+       *************************************************************/
+      if(','==optarg[0]) G__read_include_env(optarg+1);
+      else G__add_ipath(optarg);
+#else
       G__add_ipath(optarg);
+#endif
       break;
 
     case 'F': /* force assignment is evaluated after pre-RUN */
@@ -942,9 +1012,9 @@ char *argv[] ;
       /* break; */
     default:
 #ifndef G__SMALLOBJECT
-      G__more_pause((FILE*)NULL);
+      G__more_pause((FILE*)NULL,0);
       fprintf(G__sout,usage,progname);
-      G__more_pause(G__sout);
+      G__more_pause(G__sout,0);
 
       G__display_note();
 
@@ -978,7 +1048,7 @@ char *argv[] ;
 #endif
       G__more(G__sout,"  -n [linkname] : Specify precompiled interface method filename\n");
       G__more(G__sout,"  -N [DLL_name] : Specify DLL interface method name\n");
-      G__more(G__sout,"  -O [0~5] : Loop compiler on(1~5) off(0). Default on(4)\n");
+      G__more(G__sout,"  -O [0~4] : Loop compiler on(1~5) off(0). Default on(4)\n");
       G__more(G__sout,"  -p : use preprocessor prior to interpretation\n");
       G__more(G__sout,"  -q [security] : Set security level(default 0)\n");
       G__more(G__sout,"  -r : revision and linked function/global info\n");
@@ -1176,7 +1246,7 @@ char *argv[] ;
    * Expressions are evaluated after pre-RUN.
    *************************************************************/
   if(forceassignment) {
-    G__calc(forceassignment);
+    G__calc_internal(forceassignment);
   }
 
 
@@ -1258,7 +1328,7 @@ char *argv[] ;
      * Call main(argc,argv)
      ********************************/
     if(G__breaksignal) fprintf(G__serr,"\nCALL main()\n");
-    result=G__calc(temp);
+    result=G__calc_internal(temp);
 #endif /* ON575 */
 
     if(0==result.type) result=G__null;
@@ -1320,13 +1390,15 @@ char *argv[] ;
     /*************************************
      * print out message
      *************************************/
-    G__cintrevision(G__sout);
-    fprintf(G__sout,"No main() function found in given source file. Interactive interface started.\n");
+    if(0==G__quiet) { /* ON1078 */
+      G__cintrevision(G__sout);
+      fprintf(G__sout,"No main() function found in given source file. Interactive interface started.\n");
 #ifdef G__ROOT
-    fprintf(G__sout,"'?' for help, '.q' to quit, '{ statements }' or '.p [expression]' to evaluate\n");
+      fprintf(G__sout,"'?' for help, '.q' to quit, '{ statements }' or '.p [expression]' to evaluate\n");
 #else
-    fprintf(G__sout,"'h' for help, 'q' to quit, '{ statements }' or 'p [expression]' to evaluate\n");
+      fprintf(G__sout,"'h' for help, 'q' to quit, '{ statements }' or 'p [expression]' to evaluate\n");
 #endif
+    } /* ON1078 */
 
 
     /*************************************
@@ -1892,7 +1964,7 @@ FILE* sin;
 **************************************************************************/
 char *G__cint_version()
 {
-  return "5.13.92, Mar 13 1999";
+  return "5.14.10, Jul 20 1999";
 }
 #endif
 

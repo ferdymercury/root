@@ -1,5 +1,5 @@
-/*CMZ :  2.21/08 17/03/99  13.13.51  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   17/03/99*/
+/*CMZ :  2.22/10 23/07/99  14.42.26  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   23/07/99*/
 /**************************************************************************
 * darray.h
 *
@@ -29,7 +29,7 @@ class array  {
 	array(double x);
 	array(array& X);
 	array(void);
-	array(array& X,int offset,ndat);
+	array(array& X,int offset,int ndat);
 	array(double *p,int ndat,int isnew=0);
 	~array();
 

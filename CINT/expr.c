@@ -1,5 +1,5 @@
-/*CMZ :  2.21/08 17/03/99  13.13.40  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   17/03/99*/
+/*CMZ :  2.22/10 23/07/99  14.42.14  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   23/07/99*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -24,18 +24,29 @@
 
 #include "common.h"
 
+#if defined(G__NONANSI) || defined(G__SUNOS4) || defined(G__NEWSOS6) || defined(G__NEWSOS4)
+#define G__OLDIMPLEMENTATION918
+#endif
+
+
+#ifndef G__OLDIMPLEMENTATION1103
+extern int G__const_noerror;
+#endif
+#ifndef G__OLDIMPLEMENTATION1119
+extern int G__initval_eval;
+extern int G__dynconst;
+#endif
 
 /******************************************************************
-* G__value G__calc(exprwithspace)
+* G__value G__calc_internal(exprwithspace)
 *
 * Grand entry for C/C++ expression evaluator. This function is
 * open to public as CINT API.
 *
 ******************************************************************/
-G__value G__calc(exprwithspace)
+G__value G__calc_internal(exprwithspace)
 char *exprwithspace;
 {
-
 #ifdef G__EH_SIGNAL
   void (*fpe)();
   void (*segv)();
@@ -56,10 +67,9 @@ char *exprwithspace;
   G__value result;
   int len=0;
   int store_asm_exec = G__asm_exec;
-#ifndef G__OLDIMPLEMENTATION899
   int store_asm_noverflow = G__asm_noverflow;
+
   G__asm_noverflow = 0;
-#endif
 
   G__asm_exec = 0;
 
@@ -153,10 +163,38 @@ char *exprwithspace;
   G__asm_noverflow = store_asm_noverflow;
 #endif
 
+  return(result);
+}
+
+/******************************************************************
+* G__value G__calc(exprwithspace)
+*
+* Grand entry for C/C++ expression evaluator. This function is
+* open to public as CINT API.
+*
+******************************************************************/
+G__value G__calc(exprwithspace)
+char *exprwithspace;
+{
+  G__value result;
+
+#ifndef G__OLDIMPLEMENTATION1035
+  G__LockCriticalSection();
+#endif
+
+#ifndef G__OLDIMPLEMENTATION1031
+  G__storerewindposition();
+#endif
+
+  result = G__calc_internal(exprwithspace);
+
 #ifndef G__OLDIMPLEMENTATION895
   G__security_recover(G__serr);
 #endif
 
+#ifndef G__OLDIMPLEMENTATION1035
+  G__UnlockCriticalSection();
+#endif
   return(result);
 }
 
@@ -1278,6 +1316,44 @@ char *expression2;
   return(defined2);
 }
 
+#ifdef G__PTR2MEMFUNC
+/******************************************************************
+* G__getpointer2memberfunc
+******************************************************************/
+int G__getpointer2memberfunc(item,presult)
+char *item;
+G__value *presult;
+{
+  int hash=0;
+  long scope_struct_offset=0;
+  int scope_tagnum;
+  int ifn;
+  struct G__ifunc_table *memfunc;
+  char *p = strstr(item,"::");
+
+  if(!p) return(0);
+
+  G__scopeoperator(item,&hash,&scope_struct_offset,&scope_tagnum);
+  if(scope_tagnum<0 || scope_tagnum>=G__struct.alltag) return(0);
+
+  G__incsetup_memfunc(scope_tagnum);
+  memfunc=G__struct.memfunc[scope_tagnum];
+
+  while(memfunc) {
+    for(ifn=0;ifn<memfunc->allifunc;ifn++) {
+      if(strcmp(item,memfunc->funcname[ifn])==0) {
+	G__letint(presult,'C',(long)memfunc->funcname[ifn]);
+	presult->tagnum = -1;
+	presult->typenum= -1;
+	presult->ref=0;
+	return(1);
+      }
+    }
+    memfunc=memfunc->next;
+  }
+  return(0);
+}
+#endif
 
 
 /******************************************************************
@@ -1462,7 +1538,12 @@ char *item;
       G__var_typeB = store_var_typeB;
       result3=G__getfunction(item,&known,G__TRYNORMAL);
 #ifndef G__OLDIMPLEMENTATION695
-      if(known) result3 = G__toXvalue(result3,store_var_typeB);
+      if(known) {
+	result3 = G__toXvalue(result3,store_var_typeB);
+#ifndef G__OLDIMPLEMENTATION1119
+	if(G__initval_eval) G__dynconst=G__DYNCONST;
+#endif
+      }
 #endif
       G__var_typeB = 'p';
     }
@@ -1486,12 +1567,39 @@ char *item;
       else if(strncmp(item,"__",2)==0) {
 	result3=G__getreserved(item+1,(void**)NULL,(void**)NULL);
       }
+#ifdef G__PTR2MEMFUNC
+      if(known==0&&result3.obj.i==0) {
+	known=G__getpointer2memberfunc(item,&result3);
+      }
+#endif
       if (known == 0 && result3.obj.i == 0) {
 	result3=G__null;
 	if(G__noerr_defined==0) {
 	
 	  if(G__definemacro==0) {
+#ifndef G__OLDIMPLEMENTATION1030
+	    char *pxx;
 	    G__warnundefined(item);
+	    pxx = strstr(item,"::");
+	    if(!pxx || pxx==item) {
+	      pxx = strchr(item,'(');
+	      if(pxx) {
+		*pxx = 0;
+#ifndef G__OLDIMPLEMENTATION1103
+		if(0==G__const_noerror&&!G__asm_wholefunction) {
+#endif
+		  fprintf(G__serr,"Possible candidates are...\n");
+		  if('$'==item[0]) G__display_proto(G__serr,item+1);
+		  else             G__display_proto(G__serr,item);
+#ifndef G__OLDIMPLEMENTATION1103
+		}
+#endif
+		*pxx = '(';
+	      }
+	    }
+#else
+	    G__warnundefined(item);
+#endif
 	    result3=G__interactivereturn();
 	  }
 	  else {

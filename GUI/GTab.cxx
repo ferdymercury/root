@@ -1,23 +1,27 @@
+//*CMZ :  2.22/05 09/06/99  18.30.40  by  Fons Rademakers
+//*CMZ :  2.22/04 03/06/99  18.57.13  by  Rene Brun
 //*CMZ :  2.21/04 03/02/99  11.31.17  by  Fons Rademakers
 //*CMZ :  2.00/12 02/10/98  15.14.26  by  Fons Rademakers
 //*CMZ :  2.00/11 03/08/98  12.17.47  by  Fons Rademakers
 //*CMZ :  2.00/00 17/02/98  18.55.16  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   13/01/98
 
+/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Fons Rademakers.                                  *
+ * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
  *                                                                       *
  * Permission to use, copy, modify and distribute this software and its  *
  * documentation for non-commercial purposes is hereby granted without   *
  * fee, provided that the above copyright notice appears in all copies   *
  * and that both the copyright notice and this permission notice appear  *
  * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose.                         *
- * It is provided "as is" without express or implied warranty.           *
+ * suitability of this software for any purpose. It is provided "as is"  *
+ * without express or implied warranty.                                  *
  *************************************************************************/
 //*CMZ :  2.00/00 16/02/98  00.17.08  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   27/12/97
@@ -184,18 +188,24 @@ TGDimension TGTabLayout::GetDefaultSize() const
 {
    // Get default size of tab widget.
 
-   TGDimension dsize;
-   TGDimension size(0,0);
+   TGDimension dsize, dsize_te;
+   TGDimension size(0,0), size_te(0,0);
 
-   TGFrameElement *elnxt;
+   TGFrameElement *el, *elnxt;
    TIter next(fList);
    next();   // skip first container
-   while (next()) {
-       elnxt = (TGFrameElement *) next();
-       dsize = elnxt->fFrame->GetDefaultSize();
-       if (size.fWidth < dsize.fWidth) size.fWidth = dsize.fWidth;
-       if (size.fHeight < dsize.fHeight) size.fHeight = dsize.fHeight;
+   while ((el = (TGFrameElement *)next())) {
+      dsize_te = el->fFrame->GetDefaultSize();
+      size_te.fWidth += dsize_te.fWidth;
+      elnxt = (TGFrameElement *) next();
+      dsize = elnxt->fFrame->GetDefaultSize();
+      if (size.fWidth < dsize.fWidth) size.fWidth = dsize.fWidth;
+      if (size.fHeight < dsize.fHeight) size.fHeight = dsize.fHeight;
    }
+
+   // check if tab elements make a larger width than the containers
+   if (size.fWidth < size_te.fWidth) size.fWidth = size_te.fWidth;
+
    size.fWidth += fMain->GetBorderWidth() << 1;
    size.fHeight += fMain->GetTabHeight() + (fMain->GetBorderWidth() << 1);
 
@@ -215,6 +225,7 @@ TGTab::TGTab(const TGWindow *p, UInt_t w, UInt_t h,
 
    fBorderWidth = 2;
    fCurrent     = 0;
+   fRemoved     = new TList;
 
    fNormGC     = norm;
    fFontStruct = font;
@@ -246,6 +257,9 @@ TGTab::~TGTab()
        delete el->fFrame;
        // delete el->fLayout; // el->fLayout is NULL!
    }
+
+   fRemoved->Delete();
+   delete fRemoved;
 }
 
 //______________________________________________________________________________
@@ -270,6 +284,40 @@ TGCompositeFrame *TGTab::AddTab(const char *text)
    // is owned by the tab widget.
 
    return AddTab(new TGString(text));
+}
+
+//______________________________________________________________________________
+void TGTab::RemoveTab(Int_t tabIndex)
+{
+   // Remove container and tabtab of tab with index tabIndex.
+   // Does NOT remove the container contents!
+
+   if (tabIndex < 0) return;
+
+   TGFrameElement *elTab, *elCont ;
+   Int_t  count = 0 ;
+
+   TIter next(fList) ;
+   next() ; // skip first container
+
+   while ((elTab = (TGFrameElement *) next())) {
+      elCont = (TGFrameElement *) next();
+      if (count == tabIndex) {
+         elTab->fFrame->DestroyWindow();
+         elCont->fFrame->DestroyWindow();
+         delete elTab->fFrame;
+         fRemoved->Add(elCont->fFrame);   // delete only in dtor
+         RemoveFrame(elTab->fFrame);
+         RemoveFrame(elCont->fFrame);
+         if (tabIndex == fCurrent) {
+           // select another tab only if the current is the one we delete
+           SetTab(0) ;
+         } else
+            fCurrent--;
+         break;
+      }
+      count++;
+   }
 }
 
 //______________________________________________________________________________
@@ -409,3 +457,22 @@ TGTabElement *TGTab::GetTabTab(Int_t tabIndex) const
 
    return 0;
 }
+
+//______________________________________________________________________________
+Int_t TGTab::GetNumberOfTabs() const
+{
+   // Return number of tabs.
+
+   Int_t count = 0;
+
+   TIter next(fList);
+   next();           // skip first container
+
+   while (next()) {
+      next();
+      count++;
+   }
+
+   return count;
+}
+

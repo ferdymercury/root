@@ -1,3 +1,4 @@
+//*CMZ :  2.22/07 05/07/99  17.08.22  by  Rene Brun
 //*CMZ :  2.20/00 26/11/98  17.01.16  by  Rene Brun
 //*CMZ :  2.00/00 20/02/98  08.55.17  by  Rene Brun
 //*-- Author :    Rene Brun   20/02/98
@@ -10,11 +11,10 @@
    c1->SetFillColor(42);
    c1->SetGrid();
 
-      // create a 2-d histogram to define the range
-   TH2F *hr = new TH2F("hr","Several graphs in the same pad",40,-0.4,1.2,40,0,12);
+      // draw a frame to define the range
+   TH1F *hr = c1->DrawFrame(-0.4,0,1.2,12);
    hr->SetXTitle("X title");
    hr->SetYTitle("Y title");
-   hr->Draw();
    c1->GetFrame()->SetFillColor(21);
    c1->GetFrame()->SetBorderSize(12);
 

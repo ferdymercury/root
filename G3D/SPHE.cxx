@@ -1,3 +1,4 @@
+//*CMZ :  2.22/01 19/05/99  19.23.00  by  Rene Brun
 //*CMZ :  2.21/07 21/02/99  19.07.06  by  Valery Fine(fine@mail.cern.ch)
 //*CMZ :  2.21/06 10/02/99  19.10.17  by  Rene Brun
 //*CMZ :  2.21/00 03/01/99  23.12.57  by  Valery Fine(fine@mail.cern.ch)
@@ -7,20 +8,22 @@
 //*CMZ :  1.01/05 13/06/97  08.31.19  by  Rene Brun
 //*-- Author :    Rene Brun   13/06/97
 
+/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Fons Rademakers.                                  *
+ * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
  *                                                                       *
  * Permission to use, copy, modify and distribute this software and its  *
  * documentation for non-commercial purposes is hereby granted without   *
  * fee, provided that the above copyright notice appears in all copies   *
  * and that both the copyright notice and this permission notice appear  *
  * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose.                         *
- * It is provided "as is" without express or implied warranty.           *
+ * suitability of this software for any purpose. It is provided "as is"  *
+ * without express or implied warranty.                                  *
  *************************************************************************/
 
 #include "TSPHE.h"
@@ -165,7 +168,8 @@ void TSPHE::Paint(Option_t *option)
    if (!points) return;
    SetPoints(points);
 
-   if (gPad->GetView3D()) PaintGLPoints(points);
+   Bool_t rangeView = option && *option && strcmp(option,"range")==0 ? kTRUE : kFALSE;
+   if (!rangeView && gPad->GetView3D()) PaintGLPoints(points);
 
  //==  for (i = 0; i < numpoints; i++)
  //==          gNode->Local2Master(&points[3*i],&points[3*i]);
@@ -331,7 +335,6 @@ void TSPHE::Paint(Option_t *option)
     }
 
     //*-* Paint in the pad
-    Bool_t rangeView = strcmp(option,"range")==0 ? kTRUE : kFALSE;
     PaintShape(buff,rangeView);
 
     if (strstr(option, "x3d")) {
@@ -504,12 +507,14 @@ void TSPHE::Streamer(TBuffer &b)
       b >> fThemax;  // maximum theta
       b >> fPhimin;  // minimum phi
       b >> fPhimax;  // maximum phi
-      b >> fNdiv;
+      Int_t tNdiv;   // XXX added by RvdE XXX (fNdiv is set by SetNumberOfDivisions)
+      b >> tNdiv;
       if (v > 1) {
         b >> faX;
         b >> faY;
         b >> faZ;
       }
+      SetNumberOfDivisions (tNdiv); // XXX added by RvdE
    } else {
       b.WriteVersion(TSPHE::IsA());
       TShape::Streamer(b);

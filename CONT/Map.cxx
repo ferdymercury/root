@@ -1,22 +1,25 @@
+//*CMZ :  2.22/07 05/07/99  18.55.09  by  Fons Rademakers
 //*CMZ :  2.00/12 01/10/98  12.43.39  by  Rene Brun
 //*CMZ :  2.00/06 11/06/98  18.38.10  by  Fons Rademakers
 //*CMZ :  1.03/09 03/12/97  02.15.24  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   12/11/95
 
+/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Fons Rademakers.                                  *
+ * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
  *                                                                       *
  * Permission to use, copy, modify and distribute this software and its  *
  * documentation for non-commercial purposes is hereby granted without   *
  * fee, provided that the above copyright notice appears in all copies   *
  * and that both the copyright notice and this permission notice appear  *
  * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose.                         *
- * It is provided "as is" without express or implied warranty.           *
+ * suitability of this software for any purpose. It is provided "as is"  *
+ * without express or implied warranty.                                  *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -298,6 +301,52 @@ TMapIter::TMapIter(const TMap *m, Bool_t dir)
    fMap        = m;
    fDirection  = dir;
    fCursor     = 0;
+}
+
+//______________________________________________________________________________
+TMapIter::TMapIter(const TMapIter &iter)
+{
+   // Copy ctor.
+
+   fMap       = iter.fMap;
+   fDirection = iter.fDirection;
+   if (fCursor) {
+      fCursor = (THashTableIter *)iter.fCursor->GetCollection()->MakeIterator();
+      fCursor->operator=(*iter.fCursor);
+   }
+}
+
+//______________________________________________________________________________
+TIterator &TMapIter::operator=(const TIterator &rhs)
+{
+   // Overridden assignment operator.
+
+   if (this != &rhs && rhs.IsA() == TMapIter::Class()) {
+      const TMapIter &rhs1 = (const TMapIter &)rhs;
+      fMap       = rhs1.fMap;
+      fDirection = rhs1.fDirection;
+      if (rhs1.fCursor) {
+         fCursor = (THashTableIter *)rhs1.fCursor->GetCollection()->MakeIterator();
+         fCursor->operator=(*rhs1.fCursor);
+      }
+   }
+   return *this;
+}
+
+//______________________________________________________________________________
+TMapIter &TMapIter::operator=(const TMapIter &rhs)
+{
+   // Overloaded assignment operator.
+
+   if (this != &rhs) {
+      fMap       = rhs.fMap;
+      fDirection = rhs.fDirection;
+      if (rhs.fCursor) {
+         fCursor = (THashTableIter *)rhs.fCursor->GetCollection()->MakeIterator();
+         fCursor->operator=(*rhs.fCursor);
+      }
+   }
+   return *this;
 }
 
 //______________________________________________________________________________

@@ -1,5 +1,5 @@
-/*CMZ :  2.21/08 17/03/99  13.13.41  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   17/03/99*/
+/*CMZ :  2.22/10 23/07/99  14.42.16  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   23/07/99*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -36,6 +36,20 @@ static int G__kindofheader = G__USERHEADER;
 
 #ifndef G__OLDIMPLEMENTATION970
 static int G__copyflag = 0;
+
+#ifndef G__PHILIPPE1
+int (*G__ScriptCompiler) (const char*) = 0;
+
+/******************************************************************
+* G__RegisterScriptCompiler()
+******************************************************************/
+void G__RegisterScriptCompiler(p2f)
+int(*p2f)(const char*);
+{
+  G__ScriptCompiler = p2f;
+}
+#endif
+
 
 /******************************************************************
 * G__copysourcetotmp()
@@ -532,6 +546,12 @@ Copyright (C) Microsoft Corp 1984-1997. All rights reserved.
 int G__loadfile(filenamein)
 char *filenamein;
 {
+#ifndef G__PHILIPPE0
+  FILE *tmpfp;
+#endif
+#ifndef G__PHILIPPE1
+  int external_compiler = 0;
+#endif
   int store_prerun;
   int i1=0;
   struct G__var_array *store_p_local;
@@ -542,7 +562,7 @@ char *filenamein;
 #ifdef G__TMPFILE
   char prepname[G__MAXFILENAME];
 #else
-  char prepname[L_tmpnam];
+  char prepname[L_tmpnam+10];
 #endif
   int store_step;
   int null_entry = -1;
@@ -580,6 +600,25 @@ char *filenamein;
   len = strlen(filename);
   while(len>1&&isspace(filename[len-1])) {
     filename[--len]='\0';
+  }
+#endif
+
+#ifndef G__PHILIPPE1
+  /*************************************************
+  * Check if the filename as an extension ending in
+  * ++, like script.cxx++ or script.C++
+  *************************************************/
+  if ( len>2&& (strcmp(filename+len-2,"++")==0 ) ) {
+    len -= 2;
+    filename[len]='\0';
+    external_compiler = 1; /* Request external compilation
+			    * if available (in ROOT) */
+    if (G__ScriptCompiler!=0) {
+      if ( (*G__ScriptCompiler)(filename) )
+	return(G__LOADFILE_SUCCESS);
+      else
+	return(G__LOADFILE_FAILURE);
+    }
   }
 #endif
 
@@ -816,6 +855,24 @@ char *filenamein;
 	G__globalcomp=G__NOLINK;
       }
       if(G__ifile.fp) break;
+
+#ifndef G__OLDIMPLEMENTATION1041
+      /**********************************************
+       * try $CINTSYSDIR/lib
+       **********************************************/
+      /* G__getcintsysdir(); */
+      if('\0'!=G__cintsysdir[0]) {
+	sprintf(G__ifile.name,"%s%slib%s%s%s",G__cintsysdir,G__psep
+		,G__psep,filename,addpost[i2]);
+#ifndef G__WIN32
+	G__ifile.fp = fopen(G__ifile.name,"r");
+#else
+	G__ifile.fp = fopen(G__ifile.name,"rb");
+#endif
+	/* G__globalcomp=G__NOLINK; */
+      }
+      if(G__ifile.fp) break;
+#endif
 
 #ifdef G__EDU_VERSION
       /**********************************************
@@ -1144,6 +1201,10 @@ char *filenamein;
       G__copyfile(G__sutpi,G__ifile.fp);
     }
     else {
+#ifndef G__OLDIMPLEMENTATION1072
+      long store_struct_offset = G__store_struct_offset;
+      G__store_struct_offset = 0;
+#endif
       if(G__isbinaryfile(filename)) {
 	G__iscpp=store_iscpp;
 #ifdef G__SECURITY
@@ -1155,6 +1216,9 @@ char *filenamein;
       if(G__copyflag) G__copysourcetotmp(prepname,&G__ifile,fentry);
 #endif
       while (!G__eof && G__return<G__RETURN_EXIT1) G__exec_statement();
+#ifndef G__OLDIMPLEMENTATION1072
+      G__store_struct_offset = store_struct_offset;
+#endif
     }
   }
 #else /* of G__SHAREDLIB */
@@ -1181,7 +1245,19 @@ char *filenamein;
     if(!G__macroORtemplateINfile) {
       /* Close file for process max file open limitation with -cN option */
       fclose(G__srcfile[fentry].fp);
+#ifndef G__PHILIPPE0
+      /* After closing the file let's make sure than all reference to
+	 the file pointer are reset. When a preprocessor is used, we
+	 will have several logical file packed in one. */
+      tmpfp = G__srcfile[fentry].fp;
+      for(i1=0;i1<G__nfile;i1++) {
+        if (G__srcfile[i1].fp==tmpfp){
+	  G__srcfile[i1].fp = (FILE*)NULL;
+	}
+      }
+#else
       G__srcfile[fentry].fp = (FILE*)NULL;
+#endif
     }
   }
 
@@ -1388,8 +1464,22 @@ char *macros,*undeflist,*ppopt,*includepath;
     }
 
     /* Get tmpfile name if necessary */
-    if(0==strcmp(inname+strlen(inname)-2,".H") ||
-       0==strcmp(inname+strlen(inname)-2,".h")) {
+#ifndef G__OLDIMPLEMENTATION1099
+    if((strlen(inname)>2 && (0==strcmp(inname+strlen(inname)-2,".H")||
+			     0==strcmp(inname+strlen(inname)-2,".h"))) ||
+       (strlen(inname)>3 && (0==strcmp(inname+strlen(inname)-3,".hh")||
+			     0==strcmp(inname+strlen(inname)-3,".HH"))) ||
+       (strlen(inname)>4 && (0==strcmp(inname+strlen(inname)-4,".hpp")||
+			     0==strcmp(inname+strlen(inname)-4,".HPP")||
+			     0==strcmp(inname+strlen(inname)-4,".hxx")||
+			     0==strcmp(inname+strlen(inname)-4,".HXX")) ||
+	!strchr(inname,'.')
+	))
+#else
+    if(0==strcmp(inname+strlen(inname)-2,".H")||
+       0==strcmp(inname+strlen(inname)-2,".h"))
+#endif
+    {
       /* if header file, create tmpfile name as xxx.C */
       do {
 	G__tmpnam(tmpfile);
@@ -1435,9 +1525,9 @@ char *macros,*undeflist,*ppopt,*includepath;
      * preprocessor statement for Symantec C++
      ***************************************************************/
     if(G__cintsysdir[0]) {
-      sprintf(temp,"%s %s %s -I. %s %s -D__CINT__ -I%s/include %s -o%s"
+      sprintf(temp,"%s %s %s -I. %s %s -D__CINT__ -I%s/include -I%s/stl %s -o%s"
 	      ,G__ccom ,macros,undeflist,ppopt ,includepath
-	      ,G__cintsysdir ,tmpfile,outname);
+	      ,G__cintsysdir,G__cintsysdir ,tmpfile,outname);
     }
     else {
       sprintf(temp,"%s %s %s %s -I. %s -D__CINT__ %s -o%s" ,G__ccom
@@ -1450,9 +1540,9 @@ char *macros,*undeflist,*ppopt,*includepath;
      ***************************************************************/
     strcat(outname,".i");
     if(G__cintsysdir[0]) {
-      sprintf(temp,"%s %s %s -I. %s %s -D__CINT__ -I%s/include -o%s %s"
+      sprintf(temp,"%s %s %s -I. %s %s -D__CINT__ -I%s/include -I%s/stl -o%s %s"
 	      ,G__ccom ,macros,undeflist,ppopt ,includepath
-	      ,G__cintsysdir ,outname,tmpfile);
+	      ,G__cintsysdir,G__cintsysdir ,outname,tmpfile);
     }
     else {
       sprintf(temp,"%s %s %s %s -I. %s -D__CINT__ -o%s %s" ,G__ccom
@@ -1467,9 +1557,9 @@ char *macros,*undeflist,*ppopt,*includepath;
      * preprocessor statement for UNIX
      ***************************************************************/
    if(G__cintsysdir[0]) {
-      sprintf(temp,"%s %s %s -I. %s %s -D__CINT__ -I%s/include %s > %s"
+      sprintf(temp,"%s %s %s -I. %s %s -D__CINT__ -I%s/include -I%s/stl %s > %s"
               ,G__ccom ,macros,undeflist,ppopt ,includepath
-              ,G__cintsysdir ,tmpfile,outname);
+              ,G__cintsysdir,G__cintsysdir ,tmpfile,outname);
     }
     else {
       sprintf(temp,"%s %s %s %s -I. %s -D__CINT__ %s > %s" ,G__ccom
@@ -1584,8 +1674,11 @@ char *badname;
 char* G__tmpnam(name)
 char *name;
 {
+  const char *appendix="_cint";
 #ifndef G__TMPFILE
-  return(tmpnam(name));
+  tmpnam(name);
+  if(strlen(name)<G__MAXFILENAME-6) strcat(name,appendix);
+  return(name);
 #else
   static char tempname[G__MAXFILENAME];
   char *tmp;
@@ -1598,11 +1691,13 @@ char *name;
   if(name) {
     strcpy(name,(tmp=tempnam(G__tmpdir,"")));
     free((void*)tmp);
+    if(strlen(name)<L_tmpnam-6) strcat(name,appendix);
     return(name);
   }
   else {
     strcpy(tempname,(tmp=tempnam(G__tmpdir,"")));
     free((void*)tmp);
+    if(strlen(tempname)<L_tmpnam-6) strcat(tempname,appendix);
     return(tempname);
   }
 #endif

@@ -1,5 +1,5 @@
-/*CMZ :  2.21/08 17/03/99  13.13.41  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   17/03/99*/
+/*CMZ :  2.22/10 23/07/99  14.42.15  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   23/07/99*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -77,8 +77,8 @@ short G__Xdumpreadline[6];
 char G__xfile[G__MAXFILENAME];
 char G__tempc[G__MAXFILENAME];
 #else
-char G__xfile[L_tmpnam];
-char G__tempc[L_tmpnam];
+char G__xfile[L_tmpnam+10];
+char G__tempc[L_tmpnam+10];
 #endif
 
 int G__doingconstruction;
@@ -396,6 +396,13 @@ G__value G__exceptionbuffer;
 * Exception object buffer
 **************************************************************************/
 int G__ispragmainclude=0;
+#endif
+
+#ifndef G__OLDIMPLEMENTATION1097
+/**************************************************************************
+* automatic variable on/off
+**************************************************************************/
+int G__automaticvar=1;
 #endif
 
 /*

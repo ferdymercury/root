@@ -1,3 +1,7 @@
+//*CMZ :  2.22/10 21/07/99  22.28.37  by  Rene Brun
+//*CMZ :  2.22/07 05/07/99  14.02.11  by  Rene Brun
+//*CMZ :  2.22/03 28/05/99  22.17.04  by  Rene Brun
+//*CMZ :  2.22/02 21/05/99  18.12.17  by  Rene Brun
 //*CMZ :  2.21/07 08/03/99  12.42.06  by  Rene Brun
 //*CMZ :  2.21/06 12/02/99  10.13.55  by  Rene Brun
 //*CMZ :  2.21/05 07/02/99  16.30.29  by  Rene Brun
@@ -15,20 +19,22 @@
 //*CMZ :  1.03/09 16/12/97  12.18.29  by  Rene Brun
 //*-- Author :    Rene Brun, Olivier Couet, Pierre Juillot   29/11/94
 
+/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Fons Rademakers.                                  *
+ * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
  *                                                                       *
  * Permission to use, copy, modify and distribute this software and its  *
  * documentation for non-commercial purposes is hereby granted without   *
  * fee, provided that the above copyright notice appears in all copies   *
  * and that both the copyright notice and this permission notice appear  *
  * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose.                         *
- * It is provided "as is" without express or implied warranty.           *
+ * suitability of this software for any purpose. It is provided "as is"  *
+ * without express or implied warranty.                                  *
  *************************************************************************/
 #ifdef WIN32
 //*CMZ :  1.00/09 23/04/97  17.59.54  by  Rene Brun
@@ -340,69 +346,6 @@ void TPostScript::Off()
    gCurrentPS = 0;
 }
 
-//______________________________________________________________________________
-void TPostScript::DefineFillPatterns()
-{
-//*-*-*-*-*-*-*-*-*-*-*Define the fill patterns from 1 to 25*-*-*-*-*-*-*-*-*-*
-//*-*                  ======================================
-//*-*
-//*-*.==========> (O.Couet)
-//*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
-  PrintStr("/DP {/PT exch def gsave 47.2 47.2 scale PT 1  eq { 1616 1 [ 16 0 0 16 neg 0 16@");
-  PrintStr("] { < AA AA 55 55 AA AA 55 55 AA AA 55 55 AA AA 55 55 AA AA 55 55 AA AA 55 55@");
-  PrintStr("AA AA 55 55 AA AA 55 55 > } image } if PT 2 eq { 16 16 1 [ 16 0 0 16 neg 0 16@");
-  PrintStr("] { < BB BB EE EE BB BB EE EE BB BB EE EE BB BB EE EE BB BB EE EE BB BB EE EE@");
-  PrintStr("BB BB EE EE BB BB EE EE > } image } if PT 3 eq { 16 16 1 [ 16 0 0 16 neg 0 16@");
-  PrintStr("] { < FF FF BB BB FF FF EE EE FF FF BB BB FF FF EE EE FF FF BB BB FF FF EE EE@");
-  PrintStr("FF FF BB BB FF FF EE EE > } image } if PT 4 eq { 16 16 1 [ 16 0 0 16 neg 0 16@");
-  PrintStr("] { < DF DF BF BF 7F 7F FE FE FD FD FB FB F7 F7 EF EF DF DF BF BF 7F 7F FE FE@");
-  PrintStr("FD FD FB FB F7 F7 EF EF > } image } if PT 5 eq { 16 16 1 [ 16 0 0 16 neg 0 16@");
-  PrintStr("] { < 7F 7F BF B F DF DF EF EF F7 F7 FB FB FD FD FE FE 7F 7F BF BF DF DF EF@");
-  PrintStr("EF F7 F7 FB FB FD FD FE FE > } image } if PT 6 eq { 16 16 1 [ 16 0 0 16 neg 0@");
-  PrintStr("16 ] { < BB BB BB BB BB BB BB BB BB BB BB BB BB BB BB BB BB BB BB BB BB BB BB@");
-  PrintStr("BB BB BB BB BB BB BB BB BB > } image } if PT 7 eq { 16 16 1 [ 16 0 0 16 neg 0@");
-  PrintStr("16 ] { < FF FF FF FF FF FF 00 00 FF FF FF FF FF FF 00 00 FF FF FF FF FF FF 00@");
-  PrintStr("00 FF FF FF FF FF FF 00 00 > } image } if PT 8 eq { 16 16 1 [ 16 0 0 16 neg 0@");
-  PrintStr("16 ] { < EE EE 47 47 83 83 C5 C5 EE EE 5C 5C 38 38 74 74 EE EE 47 47 83 83 C5@");
-  PrintStr("C5 EE EE 5C 5C 38 38 74 74 > } image } if PT 9 eq { 16 16 1 [ 16 0 0 16 neg 0@");
-  PrintStr("16 ] { < EF EF EF EF D7 D7 38 38 FE FE FE FE 7D 7D 83 83 EF EF EF EF D7 D7 38@");
-  PrintStr("38  FE FE FE FE 7D 7D 83 83 > } image } if PT 10 eq {16 16 1 [ 16 0 0 16 neg@");
-  PrintStr("0 16 ] { <  EF EF EF EF EF EF 00 00 FE FE FE FE FE FE00 00 EF EF EF EF EF EF@");
-  PrintStr("00 00 FE FE FE FE FE FE 00 00 > } image } if PT 11 eq { 16 16 1 [ 16 0 0 16@");
-  PrintStr("neg 0 16 ] { < F7 F7 B6 B6 D5 D5 E3 E3 D5 D5 B6 B6 F7 F7 FF FF 7F 7F 6B 6B 5D@");
-  PrintStr("5D 3E 3E 5D 5D 6B 6B 7F 7F FF FF > } image } if PT 12 eq { 16 16 1 [ 16 0 0@");
-  PrintStr("16 neg 0 16 ] { < E3 E3 DD DD BE BE BE BE BE BE DD DD E3 E3 FF FF 3E 3E DD DD@");
-  PrintStr("EB EB EB EB EB EB DD DD 3E 3E FF FF > } image } if PT 13 eq { 16 16 1 [ 16 0@");
-  PrintStr("0 16 neg 0 16 ] { <  FE FE 7D 7D BB BB D7 D7 EF EF D7D7 BB BB 7D 7D FE FE 7D@");
-  PrintStr("7D BB BB D7 D7 EF EF D7 D7 BB BB 7D 7D > } image } if PT 14 eq { 16 16 1 [ 16@");
-  PrintStr("0 0 16 neg 0 16 ] { < 00 00 EE EF EE EF EE EF 0E E0 EE EE EE EE EE EE 00 EE@");
-  PrintStr("FE EE FE EE FE EE 00 00 FE EF FE EF FE EF > } image } if PT 15 eq { 16 16 1 [@");
-  PrintStr("16 0 0 16 neg 0 16 ] { < DD DD AA AA DD DD FF FF 77 77 AA AA 77 77 FF FF DD@");
-  PrintStr("DD AA AA DD DD FF FF 77 77 AA AA 77 77 FF FF > } image } if PT 16 eq { 16 16@");
-  PrintStr("1 [ 16 0 0 16 neg 0 16 ] { <  F1 F1 EE EE 1F 1F FF FFF1 F1 EE EE 1F 1F FF FF@");
-  PrintStr("F1 F1 EE EE 1F 1F FF FF F1 F1 EE EE 1F 1F FF FF > } image } if PT 17 eq { 16@");
-  PrintStr("16 1 [ 16 0 0 16 neg 0 16 ] { <  EE EE DD DD BB BB FFFF EE EE DD DD BB BB FF@");
-  PrintStr(" FF EE EE DD DD BB BB FF FF EE EE DD DD BB BB FF FF >} image } if PT 18 eq {@");
-  PrintStr("16 16 1 [ 16 0 0 16 neg 0 16 ] { <  BB BB DD DD EE EEFF FF BB BB DD DD EE EE@");
-  PrintStr("FF FF BB BB DD DD EE EE FF FF BB BB DD DD EE EE FF FF > } image } if PT 19 eq@");
-  PrintStr("{ 16 16 1 [ 16 0 0 16 neg 0 16 ] { < 1F FC 67 F3 7B EF BD DE BD DE DE BD E6@");
-  PrintStr("B3 F8 0F E6 B3 DE BD BD DE BD DE 7B EF 67 F3 1F FC 7F FF > } image } if PT@");
-  PrintStr("20 eq { 16 16 1 [ 16 0 0 16 neg 0 16 ] { < DD DD EE EE EE EE EE EE DD DD BB@");
-  PrintStr("BB BB BB BB BB DD DD EE EE EE EE EE EE DD DD BB BB BB BB BB BB > } image }@");
-  PrintStr("if PT 21 eq { 16 16 1 [ 16 0 0 16 neg 0 16 ] { < 0E 0E EF EF EF EF EF EF E0@");
-  PrintStr("E0 FE FE FE FE FE FE 0E 0E EF EF EF EF EF EF E0 E0 FE FE FE FE FE FE > }@");
-  PrintStr("image }  if PT 22 eq { 16 16 1 [ 16 0 0 16 neg 0 16 ]{ < 70 70 F7 F7 F7 F7 F7@");
-  PrintStr("F7 07 07 7F 7F 7F 7F 7F 7F 70 70 F7 F7 F7 F7 F7 F7 07 07 7F 7F 7F 7F 7F 7F >@");
-  PrintStr("} image } if PT 23 eq  { 16 16 1 [ 16 0 0 16 neg 0 16] { < AA AA 55 55 A9 A9@");
-  PrintStr("D1 D1 E1 E1 D1 D1 A9 A9 55 55 AA AA 55 55 A9 A9 D1 D1 E1 E1 D1 D1 A9 A9 55 55@");
-  PrintStr("> } image } if PT 24 eq { 16 16 1 [ 16 0 0 16 neg 0 16 ] { < FF FE FF FC EA@");
-  PrintStr("A8 D5 54 EA A8 D5 54 E8 28 D4 54 E8 E8 D4 D4 E8 EA 54 D5 A8 EA 54 D5 00 C0 00@");
-  PrintStr("80 > } image } if PT 25 eq {  16 16 1 [ 16 0 0 16 neg0 16 ] { < FF FE FF FC@");
-  PrintStr("FF F8 FF F0 F0 00 F0 00 F0 20 F0 60 F0 E0 F1 E0 F3 E0 F0 00 E0 00 C0 00 80 00@");
-  PrintStr("00 00 > } image } if gr } def /FA { /PT exch def gsave clip 0 0 translate 1 1@");
-  PrintStr("74 { 1 sub 47.2 mul /Xcurr exch def 1 1 74 { 1 sub 47.2 mul /Ycurr exch def@");
-  PrintStr("gsave Xcurr Ycurr translate PT DP gr } for } for gr newpath } def@");
-}
 
 //______________________________________________________________________________
 void TPostScript::DefineMarkers()
@@ -462,8 +405,6 @@ void TPostScript::DrawBox(Coord_t x1, Coord_t y1, Coord_t x2, Coord_t  y2)
          x[2] = x2;   y[2] = y2;
          x[3] = x1;   y[3] = y2;
          DrawPS(-4, &x[0], &y[0]);
-//         WriteInteger(fillsi);
-//         PrintFast(3," FA");
       }
       if (fillsi == -3) {
          SetColor(5);
@@ -876,6 +817,9 @@ void TPostScript::DrawPS(Int_t nn, Float_t *xw, Float_t *yw)
            DrawHatch(dyhatch[fasi-101],anglehatch[fasi-101], n, xw, yw);
            return;
         }
+        if (fasi > 0 && fasi < 26) {
+           SetFillPatterns(fasi, Int_t(fFillColor));
+        }
      }
   }
 
@@ -928,11 +872,6 @@ void TPostScript::DrawPS(Int_t nn, Float_t *xw, Float_t *yw)
      if (fais == 0) {PrintFast(5," cl s"); return;}
      if (fais == 3 || fais == 2) {
         if (fasi > 0 && fasi < 26) {
-//printf("idx=%d, idy=%d, jxd0=%d, jyd0=%d\n",idx,idy,jxd0,jyd0);
-           WriteInteger(ixd0);
-           WriteInteger(iyd0);
-           PrintFast(2," m");
-           WriteInteger(fasi);
            PrintFast(3," FA");
         }
         return;
@@ -1120,6 +1059,7 @@ void TPostScript::Initialize()
    rpxmin = rpymin = width = heigth = 0;
    Int_t format;
    fNpages=1;
+   for (Int_t i=0;i<32;i++) fPatterns[i]=0;
 //*-*
 //*-*- Mode is last digit of PostScript Workstation type
 //*-*-     mode=1,2 for portrait/landscape black and white
@@ -1198,7 +1138,6 @@ void TPostScript::Initialize()
    PrintStr("/bl {box s} def /bf {box f} def /Y { 0 exch d} def /X { 0 d} def @");
 
    DefineMarkers();
-   DefineFillPatterns();
    FontEncode();
    MakeGreek();
 //*-*
@@ -1670,6 +1609,314 @@ void TPostScript::SetFillColor( Color_t cindex )
 
 
 //______________________________________________________________________________
+void TPostScript::SetFillPatterns(Int_t ipat, Int_t color)
+{
+//*-*-*-*-*-*-*-*-*-*-*-*-*-*-*Patterns definition*-*-*-*-*-*-*-*-*-*-*-*-*
+//*-*                          ===================
+//*-- Author :    O.Couet   16/07/99
+//*-*
+//*-* Define the pattern ipat in the current PS file. ipat can vary from
+//*-* 1 to 25. Together with the pattern, the color (color) in which the
+//*-* pattern has to be drawn is also required. A pattern is defined in the
+//*-* current PS file only the first time it is used. Some level 2
+//*-* Postscript functions are used, so on level 1 printers, patterns will
+//*-* not work. This is not a big problem because patterns are
+//*-* defined only if they are used, so if they are not used a PS level 1
+//*-* file will not be poluted by level 2 features, and in any case the old
+//*-* patterns used a lot of memory which made them almost unusable on old
+//*-* level 1 printers. Finally we should say that level 1 devices are
+//*-* becoming very rare. The official PostScript is now level 3 !
+//*-*
+//*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+//*-*
+   char cdef[28];
+   char cpat[4];
+   sprintf(cpat, " P%2.2d", ipat);
+//*-*
+//*-*- fPatterns is used as an array of chars. If fPatterns[ipat] != 0 the
+//*-*- pattern number ipat as already be defined is this file and it
+//*-*- is not necessary to redefine it. fPatterns is set to zero in Initialize.
+//*-*- The pattern number 26 allows to know if the macro "cs" has already
+//*-*- been defined in the current file (see label 200).
+//*-*
+   if (fPatterns[ipat] == 0) {
+//*-*
+//*-*- Define the Patterns.
+//*-*
+      PrintStr(" << /PatternType 1 /PaintType 2 /TilingType 1");
+      switch (ipat) {
+         case 1 :
+            PrintStr(" /BBox [ 0 0 100 100 ]");
+            PrintStr(" /XStep 98 /YStep 4");
+            PrintStr(" /PaintProc { begin gsave");
+            PrintStr(" [1] 0 sd 2 4 m 99 4 l s 1 3 m 98 3 l s");
+            PrintStr(" 2 2 m 99 2 l s 1 1 m 98 1 l s");
+            PrintStr(" gr end } >> [ 4.0 0 0 4.0 0 0 ]");
+            break;
+         case 2 :
+            PrintStr(" /BBox [ 0 0 100 100 ]");
+            PrintStr(" /XStep 96 /YStep 4");
+            PrintStr(" /PaintProc { begin gsave");
+            PrintStr(" [1 3] 0 sd 2 4 m 98 4 l s 0 3 m 96 3 l s");
+            PrintStr(" 2 2 m 98 2 l s 0 1 m 96 1 l s");
+            PrintStr(" gr end } >> [ 3.0 0 0 3.0 0 0 ]");
+            break;
+         case 3 :
+            PrintStr(" /BBox [ 0 0 100 100 ]");
+            PrintStr(" /XStep 96 /YStep 16");
+            PrintStr(" /PaintProc { begin gsave");
+            PrintStr(" [1 3] 0 sd 2 13 m 98 13 l s 0 9 m 96 9 l s");
+            PrintStr(" 2 5 m 98 5 l s 0 1 m 96 1 l s");
+            PrintStr(" gr end } >> [ 2.0 0 0 2.0 0 0 ]");
+            break;
+         case 4 :
+            PrintStr(" /BBox [ 0 0 100 100 ]");
+            PrintStr(" /XStep 100 /YStep 100");
+            PrintStr(" /PaintProc { begin gsave");
+            PrintStr(" 0 0 m 100 100 l s");
+            PrintStr(" gr end } >> [ 0.24 0 0 0.24 0 0 ]");
+            break;
+         case 5 :
+            PrintStr(" /BBox [ 0 0 100 100 ]");
+            PrintStr(" /XStep 100 /YStep 100");
+            PrintStr(" /PaintProc { begin gsave");
+            PrintStr(" 0 100 m 100 0 l s");
+            PrintStr(" gr end } >> [ 0.24 0 0 0.24 0 0 ]");
+            break;
+         case 6 :
+            PrintStr(" /BBox [ 0 0 100 100 ]");
+            PrintStr(" /XStep 100 /YStep 100");
+            PrintStr(" /PaintProc { begin gsave");
+            PrintStr(" 50 0 m 50 100 l s");
+            PrintStr(" gr end } >> [ 0.12 0 0 0.12 0 0 ]");
+            break;
+         case 7 :
+            PrintStr(" /BBox [ 0 0 100 100 ]");
+            PrintStr(" /XStep 100 /YStep 100");
+            PrintStr(" /PaintProc { begin gsave");
+            PrintStr(" 0 50 m 100 50 l s");
+            PrintStr(" gr end } >> [ 0.12 0 0 0.12 0 0 ]");
+            break;
+         case 8 :
+            PrintStr(" /BBox [ 0 0 101 101 ]");
+            PrintStr(" /XStep 100 /YStep 100");
+            PrintStr(" /PaintProc { begin gsave");
+            PrintStr(" 0 0 m 0 30 l 30 0 l f 0 70 m 0 100 l 30 100 l f");
+            PrintStr(" 70 100 m 100 100 l 100 70 l f 70 0 m 100 0 l");
+            PrintStr(" 100 30 l f 50 20 m 20 50 l 50 80 l 80 50 l f");
+            PrintStr(" 50 80 m 30 100 l s 20 50 m 0 30 l s 50 20 m");
+            PrintStr(" 70 0 l s 80 50 m 100 70 l s");
+            PrintStr(" gr end } >> [ 0.24 0 0 0.24 0 0 ]");
+            break;
+         case 9 :
+            PrintStr(" /BBox [ 0 0 100 100 ]");
+            PrintStr(" /XStep 100 /YStep 100");
+            PrintStr(" /PaintProc { begin gsave");
+            PrintStr(" 0 50 m 50 50 50 180 360 arc");
+            PrintStr(" 0 50 m 0 100 50 270 360 arc");
+            PrintStr(" 50 100 m 100 100 50 180 270 arc s");
+            PrintStr(" gr end } >> [ 0.24 0 0 0.24 0 0 ]");
+            break;
+         case 10 :
+            PrintStr(" /BBox [ 0 0 100 100 ]");
+            PrintStr(" /XStep 100 /YStep 100");
+            PrintStr(" /PaintProc { begin gsave");
+            PrintStr(" 0 50 m 100 50 l 1 1 m 100 1 l");
+            PrintStr(" 0 0 m 0 50 l 100 0 m 100 50 l");
+            PrintStr(" 50 50 m 50 100 l s");
+            PrintStr(" gr end } >> [ 0.24 0 0 0.24 0 0 ]");
+            break;
+         case 11 :
+            PrintStr(" /BBox [ 0 0 100 100 ]");
+            PrintStr(" /XStep 100 /YStep 100");
+            PrintStr(" /PaintProc { begin gsave");
+            PrintStr(" 0 0 m 0 20 l 50 0 m 50 20 l");
+            PrintStr(" 100 0 m 100 20 l 0 80 m 0 100 l");
+            PrintStr(" 50 80 m 50 100 l 100 80 m 100 100 l");
+            PrintStr(" 25 30 m 25 70 l 75 30 m 75 70 l");
+            PrintStr(" 0 100 m 20 85 l 50 100 m 30 85 l");
+            PrintStr(" 50 100 m 70 85 l 100 100 m 80 85 l");
+            PrintStr(" 0 0 m 20 15 l 50 0 m 30 15 l");
+            PrintStr(" 50 0 m 70 15 l 100 0 m 80 15 l");
+            PrintStr(" 5 35 m 45 65 l 5 65 m 45 35 l");
+            PrintStr(" 55 35 m 95 65 l 55 65 m 95 35 l s");
+            PrintStr(" gr end } >> [ 0.5 0 0 0.5 0 0 ]");
+            break;
+         case 12 :
+            PrintStr(" /BBox [ 0 0 100 100 ]");
+            PrintStr(" /XStep 100 /YStep 100");
+            PrintStr(" /PaintProc { begin gsave");
+            PrintStr(" 0 80 m 0 100 20 270 360 arc");
+            PrintStr(" 30 100 m 50 100 20 180 360 arc");
+            PrintStr(" 80 100 m 100 100 20 180 270 arc");
+            PrintStr(" 20 0 m 0 0 20 0 90 arc");
+            PrintStr(" 70 0 m 50 0 20 0 180 arc");
+            PrintStr(" 100 20 m 100 0 20 90 180 arc");
+            PrintStr(" 45 50 m 25 50 20 0 360 arc");
+            PrintStr(" 95 50 m 75 50 20 0 360 arc s");
+            PrintStr(" gr end } >> [ 0.5 0 0 0.5 0 0 ]");
+            break;
+         case 13 :
+            PrintStr(" /BBox [ 0 0 100 100 ]");
+            PrintStr(" /XStep 100 /YStep 100");
+            PrintStr(" /PaintProc { begin gsave");
+            PrintStr(" 0 0 m 100 100 l 0 100 m 100 0 l s");
+            PrintStr(" gr end } >> [ 0.24 0 0 0.24 0 0 ]");
+            break;
+         case 14 :
+            PrintStr(" /BBox [ 0 0 100 100 ]");
+            PrintStr(" /XStep 80 /YStep 80");
+            PrintStr(" /PaintProc { begin gsave");
+            PrintStr(" 0 20 m 100 20 l 20 0 m 20 100 l");
+            PrintStr(" 0 80 m 100 80 l 80 0 m 80 100 l");
+            PrintStr(" 20 40 m 60 40 l 60 20 m 60 60 l");
+            PrintStr(" 40 40 m 40 80 l 40 60 m 80 60 l s");
+            PrintStr(" gr end } >> [ 0.60 0 0 0.60 0 0 ]");
+            break;
+         case 15 :
+            PrintStr(" /BBox [ 0 0 60 60 ]");
+            PrintStr(" /XStep 60 /YStep 60");
+            PrintStr(" /PaintProc { begin gsave");
+            PrintStr(" 0 55 m 0 60 5 270 360 arc");
+            PrintStr(" 25 60 m 30 60 5 180 360 arc");
+            PrintStr(" 55 60 m 60 60 5 180 270 arc");
+            PrintStr(" 20 30 m 15 30 5 0 360 arc");
+            PrintStr(" 50 30 m 45 30 5 0 360");
+            PrintStr(" arc 5 0 m 0 0 5 0 90 arc");
+            PrintStr(" 35 0 m 30 0 5 0 180 arc");
+            PrintStr(" 60 5 m 60 0 5 90 180 arc s");
+            PrintStr(" gr end } >> [ 0.41 0 0 0.41 0 0 ]");
+            break;
+         case 16 :
+            PrintStr(" /BBox [ 0 0 100 100 ]");
+            PrintStr(" /XStep 100 /YStep 100");
+            PrintStr(" /PaintProc { begin gsave");
+            PrintStr(" 50 50 m 25 50 25 0 180 arc s");
+            PrintStr(" 50 50 m 75 50 25 180 360 arc s");
+            PrintStr(" gr end } >> [ 0.4 0 0 0.2 0 0 ]");
+            break;
+         case 17 :
+            PrintStr(" /BBox [ 0 0 100 100 ]");
+            PrintStr(" /XStep 100 /YStep 100");
+            PrintStr(" /PaintProc { begin gsave");
+            PrintStr(" [24] 0 setdash 0 0 m 100 100 l s");
+            PrintStr(" gr end } >> [ 0.24 0 0 0.24 0 0 ]");
+            break;
+         case 18 :
+            PrintStr(" /BBox [ 0 0 100 100 ]");
+            PrintStr(" /XStep 100 /YStep 100");
+            PrintStr(" /PaintProc { begin gsave");
+            PrintStr(" [24] 0 setdash 0 100 m 100 0 l s");
+            PrintStr(" gr end } >> [ 0.24 0 0 0.24 0 0 ]");
+            break;
+         case 19 :
+            PrintStr(" /BBox [ 0 0 100 100 ]");
+            PrintStr(" /XStep 100 /YStep 100");
+            PrintStr(" /PaintProc { begin gsave");
+            PrintStr(" 90 50 m 50 50 40 0 360 arc");
+            PrintStr(" 0 50 m 0 100 50 270 360 arc");
+            PrintStr(" 50 0 m 0 0 50 0 90 arc");
+            PrintStr(" 100 50 m 100 0 50 90 180 arc");
+            PrintStr(" 50 100 m 100 100 50 180 270 arc s");
+            PrintStr(" gr end } >> [ 0.47 0 0 0.47 0 0 ]");
+            break;
+         case 20 :
+            PrintStr(" /BBox [ 0 0 100 100 ]");
+            PrintStr(" /XStep 100 /YStep 100");
+            PrintStr(" /PaintProc { begin gsave");
+            PrintStr(" 50 50 m 50 75 25 270 450 arc s");
+            PrintStr(" 50 50 m 50 25 25 90  270 arc s");
+            PrintStr(" gr end } >> [ 0.2 0 0 0.4 0 0 ]");
+            break;
+         case 21 :
+            PrintStr(" /BBox [ 0 0 101 101 ]");
+            PrintStr(" /XStep 100 /YStep 100");
+            PrintStr(" /PaintProc { begin gsave");
+            PrintStr(" 1 1 m 25 1 l 25 25 l 50 25 l 50 50 l");
+            PrintStr(" 75 50 l 75 75 l 100 75 l 100 100 l");
+            PrintStr(" 50 1 m 75 1 l 75 25 l 100 25 l 100 50 l");
+            PrintStr(" 0 50 m 25 50 l 25 75 l 50 75 l 50 100 l s");
+            PrintStr(" gr end } >> [ 0.5 0 0 0.5 0 0 ]");
+            break;
+         case 22 :
+            PrintStr(" /BBox [ 0 0 101 101 ]");
+            PrintStr(" /XStep 100 /YStep 100");
+            PrintStr(" /PaintProc { begin gsave");
+            PrintStr(" 1 100 m 25 100 l 25 75 l 50 75 l 50 50 l");
+            PrintStr(" 75 50 l 75 25 l 100 25 l 100 1 l");
+            PrintStr(" 50 100 m 75 100 l 75 75 l 100 75 l 100 50 l");
+            PrintStr(" 0 50 m 25 50 l 25 25 l 50 25 l 50 1 l s");
+            PrintStr(" gr end } >> [ 0.5 0 0 0.5 0 0 ]");
+            break;
+         case 23 :
+            PrintStr(" /BBox [ 0 0 100 100 ]");
+            PrintStr(" /XStep 100 /YStep 100");
+            PrintStr(" /PaintProc { begin gsave");
+            PrintStr(" [1 7] 0 sd 0 8 50 { dup dup m 2 mul 0 l s } for");
+            PrintStr(" 0 8 50 { dup dup 2 mul 100 m 50 add exch 50");
+            PrintStr(" add l s } for 100 0 m 100 100 l 50 50 l f");
+            PrintStr(" gr end } >> [ 0.24 0 0 0.24 0 0 ]");
+            break;
+         case 24 :
+            PrintStr(" /BBox [ 0 0 100 100 ]");
+            PrintStr(" /XStep 100 /YStep 100");
+            PrintStr(" /PaintProc { begin gsave");
+            PrintStr(" 100 100 m 100 36 l 88 36 l 88 88 l f");
+            PrintStr(" 100 0 m 100 12 l 56 12 l 50 0 l f");
+            PrintStr(" 0 0 m 48 0 l 48 48 l 50 48 l 56 60 l");
+            PrintStr(" 36 60 l 36 12 l 0 12 l f [1 7] 0 sd");
+            PrintStr(" 61 8 87 { dup dup dup 12 exch m 88 exch l s");
+            PrintStr(" 16 exch 4 sub m 88 exch 4 sub l s } for");
+            PrintStr(" 13 8 35 { dup dup dup 0 exch m 36 exch l s");
+            PrintStr(" 4 exch 4 sub m 36 exch 4 sub l s } for");
+            PrintStr(" 37 8 59 { dup dup dup 12 exch m 36 exch l s");
+            PrintStr(" 16 exch 4 sub m 36 exch 4 sub l s } for");
+            PrintStr(" 13 8 60 { dup dup dup 56 exch m 100 exch l s");
+            PrintStr(" 60 exch 4 sub m 100 exch 4 sub l s } for");
+            PrintStr(" gr end } >> [ 0.5 0 0 0.5 0 0 ]");
+            break;
+         case 25 :
+            PrintStr(" /BBox [ 0 0 101 101 ]");
+            PrintStr(" /XStep 100 /YStep 100");
+            PrintStr(" /PaintProc { begin gsave");
+            PrintStr(" 0 0 m 30 30 l 70 30 l 70 70 l 100 100 l 100 0 l");
+            PrintStr(" f 30 30 m 30 70 l 70 70 l f");
+            PrintStr(" gr end } >> [ 0.5 0 0 0.5 0 0 ]");
+      };
+      sprintf(cdef, " makepattern /%s exch def",&cpat[1]);
+      PrintStr(cdef);
+      fPatterns[ipat] = 1;
+   }
+//*-*
+//*-*- Define the macro cs and FA if they are not yet defined.
+//*-*
+  if (fPatterns[26] == 0) {
+      PrintStr(" /cs {[/Pattern /DeviceRGB] setcolorspace} def");
+      PrintStr(" /FA {f [/DeviceRGB] setcolorspace} def");
+      fPatterns[26] = 1;
+   }
+//*-*
+//*-*- Activate the pattern.
+//*-*
+   PrintFast(3," cs");
+   if( color < 0) color = 0;
+   if( color > 255) color = 255;
+   TColor *col;
+   TIter next(gROOT->GetListOfColors());
+   while ((col = (TColor *) next())) {
+      if (col->GetNumber() == color) {
+         WriteReal(col->GetRed());
+         WriteReal(col->GetGreen());
+         WriteReal(col->GetBlue());
+         break;
+      }
+   }
+   PrintFast(4,cpat);
+   PrintFast(9," setcolor");
+}
+
+
+//______________________________________________________________________________
 void TPostScript::SetFillStyle( Style_t fstyle )
 {
 //*-*-*-*-*-*-*-*-*-*-*Set fill area style*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
@@ -1949,9 +2196,9 @@ void TPostScript::Text(Float_t xx, Float_t yy, const Text_t *chars)
 
    Int_t font     = abs(fTextFont)/10;
    if( font > 42 || font < 1) font = 1;
-   Float_t fontrap = 75/51;
+   Float_t fontrap = 1.01;
    if( font <= 14 && font >= 1) fontrap = fontrap*psrap[font-1];
-   if (wh < hh) ftsize = fTextSize*fYsize*gPad->GetAbsWNDC();
+   if (wh < hh) ftsize = fTextSize*fXsize*gPad->GetAbsWNDC();
    else         ftsize = fTextSize*fYsize*gPad->GetAbsHNDC();
 
    Float_t rchh   = ftsize*fontrap;   //*-* rchh should be the text size in cm
@@ -2371,12 +2618,12 @@ L120:        //*-* check if CHAR2 will not be cut in the middle of an octal code
          for ( j=0;j<(int)strlen(pc);j++) {
             if(      pc[j] == 'J')  pc[j]='I';
             else if( pc[j] == 'V')  pc[j]='C';
-            else if( pc[j] == 'C')  pc[j]='H';
-            else if( pc[j] == 'H')  pc[j]='C';
+          //  else if( pc[j] == 'C')  pc[j]='H';
+          //  else if( pc[j] == 'H')  pc[j]='C';
             else if( pc[j] == 'j')  pc[j]='i';
             else if( pc[j] == 'v')  pc[j]='c';
-            else if( pc[j] == 'c')  pc[j]='h';
-            else if( pc[j] == 'h')  pc[j]='c';
+          //  else if( pc[j] == 'c')  pc[j]='h';
+          //  else if( pc[j] == 'h')  pc[j]='c';
          }
       }
    }
@@ -2791,3 +3038,4 @@ void TPostScript::Zone()
   fFillColor  = -1;
   fFillStyle  = -1;
   fMarkerSizeCur = -1;
+}

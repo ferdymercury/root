@@ -1,3 +1,5 @@
+*CMZ :  2.22/10 19/07/99  11.08.13  by  Fons Rademakers
+*CMZ :  2.22/09 13/07/99  09.58.13  by  Rene Brun
 *CMZ :  2.21/07 04/03/99  09.31.28  by  Rene Brun
 *CMZ :  2.21/05 08/02/99  12.22.12  by  Fons Rademakers
 *CMZ :  2.21/03 20/01/99  12.54.03  by  Fons Rademakers
@@ -24,6 +26,9 @@ rm -f $LIB
 
 if [ $PLATFORM = aix ]; then
    echo this is aix
+elif [ $PLATFORM = alphaegcs ]; then
+   echo $LD $SOFLAGS $LDFLAGS -o $LIB $OBJS $EXTRA
+   $LD $SOFLAGS $LDFLAGS -o $LIB $OBJS $EXTRA
 elif [ $PLATFORM = hpux ]; then
    echo $LD $SOFLAGS $LDFLAGS -o $LIB $OBJS $EXTRA
    $LD $SOFLAGS $LDFLAGS -o $LIB $OBJS $EXTRA
@@ -31,11 +36,11 @@ elif [ $PLATFORM = solaris ]; then
    echo $LD $SOFLAGS $LDFLAGS -o $LIB $OBJS $EXTRA
    $LD $SOFLAGS $LDFLAGS -o $LIB $OBJS $EXTRA
 elif [ $PLATFORM = sgi ]; then
-  echo $LD $SOFLAGS $LDFLAGS -o $LIB $OBJS
-  $LD $SOFLAGS $LDFLAGS -o $LIB $OBJS
+   echo $LD $SOFLAGS $LDFLAGS -o $LIB $OBJS $EXTRA
+   $LD $SOFLAGS $LDFLAGS -o $LIB $OBJS $EXTRA
 elif [ $PLATFORM = fbsd ]; then
-   echo $PLATFORM: $LD $SOFLAGS $LDFLAGS -o $LIB $OBJS
-   $LD $SOFLAGS $LDFLAGS -o $LIB `lorder $OBJS | tsort -q`
+   echo $LD $SOFLAGS $LDFLAGS -o $LIB $OBJS $EXTRA
+   $LD $SOFLAGS $LDFLAGS -o $LIB `lorder $OBJS | tsort -q` $EXTRA
 # for elf:  echo $PLATFORM: $LD $SOFLAGS$SONAME $LDFLAGS -o $LIB $OBJS
 # for elf:  $LD $SOFLAGS$SONAME $LDFLAGS -o $LIB `lorder $OBJS | tsort -q`
 elif [ $LD = KCC ]; then

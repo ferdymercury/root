@@ -1,3 +1,5 @@
+*CMZ :  2.22/09 13/07/99  09.49.07  by  Rene Brun
+*CMZ :  2.22/04 03/06/99  16.56.11  by  Rene Brun
 *CMZ :  2.20/00 22/11/98  18.43.27  by  Fons Rademakers
 *CMZ :  2.00/12 22/09/98  11.47.01  by  Fons Rademakers
 *-- Author :    Fons Rademakers   22/09/98
@@ -12,7 +14,7 @@ NOOPT         =
 # Compiler:
 CXX           = cxx
 CC            = cc
-CXXFLAGS      = -nostdnew -D__osf__ -D__alpha
+CXXFLAGS      = -nostdnew -nortti -D__osf__ -D__alpha
 CFLAGS        =
 CINTCXXFLAGS  = -nostdnew -DG__DECCXX \
                 -DG__REGEXP -DG__UNIX -DG__SHAREDLIB \
@@ -31,6 +33,7 @@ SYSLIBS       = -lm
 SYSXLIBS      = -lX11 -lm
 XLIBS         = -L$(LPATH) -lXpm -lX11
 CILIBS        = -lm -ltermcap
+F77LIBS       = /usr/shlib/libFutil.so /usr/shlib/libfor.so /usr/shlib/libots.so
 
 
 ##### MACROS and TARGETS #####

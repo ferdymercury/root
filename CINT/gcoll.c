@@ -1,5 +1,5 @@
-/*CMZ :  2.21/08 17/03/99  13.13.41  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   17/03/99*/
+/*CMZ :  2.22/10 23/07/99  14.42.15  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   23/07/99*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -262,7 +262,7 @@ int G__garbagecollection()
   unsigned int count;
 
 #ifndef G__IMMEDIATE_GARBAGECOLLECTION
-  fprintf(G__serr,"!!! Garbage Collection start !!!\n");
+  fprintf(G__serr,"!!! Reference Count Control start !!!\n");
 #endif
 
   alloc = G__alloctable;
@@ -285,7 +285,7 @@ int G__garbagecollection()
     alloc=alloc->next;
   }
 
-  fprintf(G__serr,"!!! %d object(s) deleted by Garbage Collection !!!\n"
+  fprintf(G__serr,"!!! %d object(s) deleted by Reference Count Control !!!\n"
 	  ,G__count_garbagecollection);
   count = G__count_garbagecollection;
   G__count_garbagecollection=0;
@@ -403,10 +403,10 @@ void **storedmem;
     if(!alloc->reflist && flag) {
 #ifdef G__DEBUG
 #ifndef G__OLDIMPLEMENTATION401
-      fprintf(G__serr,"!!! %s object deleted by Garbage Collection !!!\n"
+      fprintf(G__serr,"!!! %s object deleted by Reference Count Control !!!\n"
 	      ,G__type2string(alloc->type,alloc->tagnum,-1,0,0));
 #else
-      fprintf(G__serr,"!!! %s object deleted by Garbage Collection !!!\n"
+      fprintf(G__serr,"!!! %s object deleted by Reference Count Control !!!\n"
 	      ,G__type2string(alloc->type,alloc->tagnum,-1,0));
 #endif
 #endif

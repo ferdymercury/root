@@ -1,3 +1,4 @@
+*CMZ :  2.22/01 26/04/99  21.01.23  by  Rene Brun
 *CMZ :  2.21/06 12/02/99  13.26.45  by  Pasha Murat
 *CMZ :  2.00/09 25/06/98  20.20.38  by  Fons Rademakers
 *CMZ :  1.03/04 19/09/97  11.18.20  by  Rene Brun
@@ -14,7 +15,8 @@ macro cint_eg
 
 seq -i src/*.h
 
-headers=TGenerator.h TPrimary.h TAttParticle.h TParticlePDG.h TDatabasePDG.h
+headers=TGenerator.h TPrimary.h TAttParticle.h TParticlePDG.h TDatabasePDG.h _
+        TParticle.h
 
 name=EG
 patch=EG

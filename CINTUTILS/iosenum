@@ -1,3 +1,4 @@
+*CMZ :  2.22/06 21/06/99  15.58.38  by  Fons Rademakers
 *CMZ :  2.21/08 18/03/99  15.14.41  by  Fons Rademakers
 *CMZ :  1.03/09 16/12/97  17.11.12  by  Rene Brun
 *-- Author :
@@ -387,7 +388,6 @@ static int ios::app=8;
 static int ios::trunc=16;
 static int ios::nocreate=32;
 static int ios::noreplace=64;
-static int ios::bin=128;
 static int ios::beg=0;
 static int ios::cur=1;
 static int ios::end=2;
@@ -426,7 +426,7 @@ static int ios::app=8;
 static int ios::trunc=16;
 static int ios::nocreate=32;
 static int ios::noreplace=64;
-static int ios::bin=128;
+static int ios::binary=128;
 static int ios::beg=0;
 static int ios::cur=1;
 static int ios::end=2;

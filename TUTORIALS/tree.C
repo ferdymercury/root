@@ -1,3 +1,4 @@
+//*CMZ :  2.22/00 20/03/99  18.47.57  by  Rene Brun
 //*CMZ :  2.21/03 21/01/99  19.02.18  by  Rene Brun
 //*CMZ :  0.90/08 02/12/96  12.02.58  by  Rene Brun
 //*-- Author :    Rene Brun   08/03/96
@@ -32,7 +33,7 @@
    tree.AddText("fSelectedRows");
    tree.Draw();
    TPavesText farm(.01,1.02,.15,1.1,9,"tr");
-   TText *tfarm = farm.AddText("FARM");
+   TText *tfarm = farm.AddText("CHAIN");
    tfarm.SetTextSize(0.024);
    farm.AddText("Collection");
    farm.AddText("of Trees");

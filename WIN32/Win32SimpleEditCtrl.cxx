@@ -1,21 +1,24 @@
+//*CMZ :  2.22/01 11/04/99  20.53.25  by  Valery Fine(fine@mail.cern.ch)
 //*CMZ :  2.00/00 22/02/98  18.01.40  by  Valery Fine(fine@mail.cern.ch)
 //*CMZ :  1.00/06 23/03/97  11.52.02  by  Rene Brun
 //*-- Author :    Valery Fine(fine@vxcern.cern.ch)   01/11/96
 
+/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Fons Rademakers.                                  *
+ * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
  *                                                                       *
  * Permission to use, copy, modify and distribute this software and its  *
  * documentation for non-commercial purposes is hereby granted without   *
  * fee, provided that the above copyright notice appears in all copies   *
  * and that both the copyright notice and this permission notice appear  *
  * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose.                         *
- * It is provided "as is" without express or implied warranty.           *
+ * suitability of this software for any purpose. It is provided "as is"  *
+ * without express or implied warranty.                                  *
  *************************************************************************/
 
 #include "TWin32SimpleEditCtrl.h"
@@ -29,11 +32,12 @@
 //                                                           //
 ///////////////////////////////////////////////////////////////
 
+
 // ClassImp(TWin32SimpleEditCtrl)
 
 
 //______________________________________________________________________________
-TWin32SimpleEditCtrl::TWin32SimpleEditCtrl(TGWin32WindowsObject *winobj, Text_t *text, Float_t x,Float_t y, Float_t width, Float_t height, Text_t *type, UInt_t style)
+TWin32SimpleEditCtrl::TWin32SimpleEditCtrl(TGWin32WindowsObject *winobj, Text_t *text,Int_t lTitle, Float_t x,Float_t y, Float_t width, Float_t height, Text_t *type, UInt_t style)
 {
 //  Create a control object for the winobj object.
         // The postion and the size of the control are defined in the relative units in the 0-1 range
@@ -42,12 +46,11 @@ TWin32SimpleEditCtrl::TWin32SimpleEditCtrl(TGWin32WindowsObject *winobj, Text_t 
 
 //*-*  Ensure that the common control DLL is loaded
   InitCommonControls();
-
+  fEditBufferLength = lTitle;
   fhwndWindow  = 0;
   fWindowType  = type;
   fWindowStyle = style;
   fMasterWindow= winobj;
-
 
   if (fMasterWindow) {
 //*-* define the size of the control
@@ -62,7 +65,6 @@ TWin32SimpleEditCtrl::TWin32SimpleEditCtrl(TGWin32WindowsObject *winobj, Text_t 
       fWindowStyle |=  WS_CHILD;
 //*-*  Register this control with parent
       winobj->RegisterControlItem(this);
-
       if (!(fhwndWindow =
           CreateWindowEx(WS_EX_LEFT,
                        (LPCTSTR) fWindowType, // predefined class
@@ -129,3 +131,11 @@ LRESULT APIENTRY TWin32SimpleEditCtrl::OnSubClassCtrl(HWND hwnd, UINT uMsg, WPAR
         return 0;
 }
 
+//______________________________________________________________________________
+Char_t  *TWin32SimpleEditCtrl::GetText(Text_t *receiveBuffer)
+{
+	if (!(fEditBufferLength && receiveBuffer) ) return 0;
+	SendMessage(GetWindow(),WM_GETTEXT,(WPARAM)fEditBufferLength,
+		                    (LPARAM)receiveBuffer);
+	return receiveBuffer;
+}

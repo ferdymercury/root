@@ -1,3 +1,6 @@
+//*CMZ :  2.22/03 31/05/99  09.55.45  by  Rene Brun
+//*CMZ :  2.22/02 22/05/99  19.33.16  by  Fons Rademakers
+//*CMZ :  2.22/00 02/04/99  22.28.04  by  Rene Brun
 //*CMZ :  2.20/01 01/12/98  11.58.16  by  Fons Rademakers
 //*CMZ :  2.20/00 20/11/98  00.34.39  by  Fons Rademakers
 //*CMZ :  2.00/13 29/10/98  16.59.36  by  Fons Rademakers
@@ -7,20 +10,22 @@
 //*CMZ :  1.03/09 16/12/97  16.30.02  by  Rene Brun
 //*-- Author :    Rene Brun, Olivier Couet, Fons Rademakers   28/11/94
 
+/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Fons Rademakers.                                  *
+ * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
  *                                                                       *
  * Permission to use, copy, modify and distribute this software and its  *
  * documentation for non-commercial purposes is hereby granted without   *
  * fee, provided that the above copyright notice appears in all copies   *
  * and that both the copyright notice and this permission notice appear  *
  * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose.                         *
- * It is provided "as is" without express or implied warranty.           *
+ * suitability of this software for any purpose. It is provided "as is"  *
+ * without express or implied warranty.                                  *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -79,7 +84,7 @@ static XWindow_t *gTws;      // gTws: temporary pointer
 // gColors[2..kMAXCOL-1]: colors which can be set by SetColor
 //
 const Int_t kBIGGEST_RGB_VALUE = 65535;
-const Int_t kMAXCOL = 256;
+const Int_t kMAXCOL = 1000;
 static struct {
   Int_t   defined;
   ULong_t pixel;
@@ -556,7 +561,12 @@ void TGX11::DrawLine(int x1, int y1, int x2, int y2)
    // x1,y1        : begin of line
    // x2,y2        : end of line
 
-   XDrawLine(fDisplay, gCws->drawing, *gGCline, x1, y1, x2, y2);
+   if (gLineStyle == LineSolid)
+      XDrawLine(fDisplay, gCws->drawing, *gGCline, x1, y1, x2, y2);
+   else {
+      XSetDashes(fDisplay, *gGCdash, gDashOffset, gDashList, sizeof(gDashList));
+      XDrawLine(fDisplay, gCws->drawing, *gGCdash, x1, y1, x2, y2);
+   }
 }
 
 //______________________________________________________________________________
@@ -1806,6 +1816,7 @@ void TGX11::SetFillColor(Color_t cindex)
 
    if (!gStyle->GetFillColor() && cindex > 1) cindex = 0;
    if (cindex >= 0) SetColor(*gGCfill, Int_t(cindex));
+   fFillColor = cindex;
 
    // invalidate fill pattern
    if (gFillPattern != 0) {

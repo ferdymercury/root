@@ -1,3 +1,4 @@
+//*CMZ :  2.22/01 26/04/99  12.07.23  by  Rene Brun
 //*CMZ :  1.00/09 24/04/97  11.01.18  by  Rene Brun
 //*-- Author :    Rene Brun   10/01/97
 {
@@ -28,7 +29,7 @@
    Int_t nb = 0;
    for (Int_t i=0;i<nevent;i++) {
       if(i%50 == 0) printf("Event:%d\n",i);
-      nb += T->GetEvent(i);                  //read complete event in memory
+      nb += T->GetEntry(i);                  //read complete event in memory
       if (i < 3) event->Dump();              //dump the first 3 events
       event->Clear();                        //clear tracks array
    }

@@ -1,3 +1,4 @@
+//*CMZ :  2.22/01 29/04/99  18.00.45  by  Fons Rademakers
 //*CMZ :  2.20/00 26/11/98  10.19.18  by  Fons Rademakers
 //*CMZ :  2.00/10 14/07/98  16.15.29  by  Fons Rademakers
 //*CMZ :  2.00/09 05/06/98  15.17.37  by  Valery Fine(fine@mail.cern.ch)
@@ -38,6 +39,9 @@ Root.Debug:              0
 # Default editor
 Unix.*.Editor:           vi
 WinNT.*.Editor:          notepad
+
+# Specify list of file endings which TTabCom (TAB completion) should ignore.
+#TabCom.FileIgnore:       .cpp:.h:.cmz
 
 # TCanvas specific settings. Opaque move and resize show full pad during
 # the operation instead of only the outline. Especially for resize you'll

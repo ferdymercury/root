@@ -1,3 +1,6 @@
+*CMZ :  2.22/07 06/07/99  08.18.49  by  Rene Brun
+*CMZ :  2.22/05 08/06/99  16.25.51  by  Fons Rademakers
+*CMZ :  2.22/01 11/05/99  09.08.02  by  Rene Brun
 *CMZ :  2.21/07 04/03/99  18.06.22  by  Rene Brun
 *CMZ :  2.21/04 05/02/99  11.19.10  by  Fons Rademakers
 *CMZ :  2.20/00 21/11/98  21.14.38  by  Rene Brun
@@ -19,264 +22,206 @@ DllSuf        = so
 EVENTLIB      = $(EVENTO)
 OutPutOpt     = -o
 
-ROOTLIBS      = -L$(ROOTSYS)/lib -lNew -lBase -lCint -lClib -lCont -lFunc \
-                -lGraf -lGraf3d -lHist -lHtml -lMatrix -lMeta -lMinuit -lNet \
-                -lPhysics -lPostscript -lProof -lTree -lUnix -lZip
-ROOTGLIBS     = -lGpad -lGui -lGX11 -lX3d
+ROOTCFLAGS    = $(shell root-config --cflags)
+ROOTLIBS      = $(shell root-config --libs)
+ROOTGLIBS     = $(shell root-config --glibs)
 
 +SELF,IF=HPUX,IF=-ACC,IF=-EGCS.
 # HP-UX with CC
 CXX           = CC
 +SELF,IF=HPUX,IF=HPUX9,IF=-ACC,IF=-EGCS.
-CXXFLAGS      = -O +a1 +Z -I$(ROOTSYS)/include
+CXXFLAGS      = -O +Z
 +SELF,IF=HPUX,IF=-HPUX9,IF=-ACC,IF=-EGCS.
-CXXFLAGS      = -O +a1 +Z -I$(ROOTSYS)/include
+CXXFLAGS      = -O +Z
 +SELF,IF=HPUX,IF=-ACC,IF=-EGCS.
 LD            = CC
 LDFLAGS       = -g +a1 -z
 SOFLAGS       = -b
-LIBS          = $(ROOTLIBS) -lm
-GLIBS         = $(ROOTLIBS) $(ROOTGLIBS) -L/usr/lib/X11R5 \
-                -lXpm -lX11 -lm -ldld
 
 +SELF,IF=HPUX,IF=ACC.
 # HP-UX 10.x with aCC
 CXX           = aCC
-CXXFLAGS      = -g +Z -I$(ROOTSYS)/include
+CXXFLAGS      = -O +Z
 LD            = aCC
 LDFLAGS       = -g -z
 SOFLAGS       = -b
-LIBS          = $(ROOTLIBS) -lm
-GLIBS         = $(ROOTLIBS) $(ROOTGLIBS) -lXpm -lX11 -lm -ldld
 
 +SELF,IF=HPUX,IF=EGCS.
 # HP-UX 10.x with g++
-CXXFLAGS      = -g -fPIC -fno-rtti -fno-exceptions -I$(ROOTSYS)/include
+CXXFLAGS      = -O -fPIC
 CXX           = g++
 LD            = g++
 LDFLAGS       = -g
 SOFLAGS       = -fPIC -shared
-LIBS          = $(ROOTLIBS) -lm
-GLIBS         = $(ROOTLIBS) $(ROOTGLIBS) -lXpm -lX11 -lm -ldld
 
 +SELF,IF=IBMRT,IF=-GCC.
 # IBM AIX
 CXX           = xlC
-CXXFLAGS      = -O -qnoro -qnoroconst -qmaxmem=-1 -I$(ROOTSYS)/include
+CXXFLAGS      = -O
 LD            = xlC
 LDFLAGS       = -g
 SOFLAGS       =
-ROOTLIBS      = -L$(ROOTSYS)/lib -lRoot -lCint
-LIBS          = $(ROOTLIBS) -lm -lcurses
-GLIBS         = $(ROOTLIBS) -lXpm -lX11 -lm -lPW -lld -lcurses
 
 +SELF,IF=IBMRT,IF=GCC.
 # IBM AIX with GCC
 CXX           = g++
-CXXFLAGS      = -g -fsigned-char -I$(ROOTSYS)/include
+CXXFLAGS      = -O
 LD            = g++
 LDFLAGS       = -g
 SOFLAGS       = -shared
-ROOTLIBS      = -L$(ROOTSYS)/lib -lRoot -lCint
-LIBS          = $(ROOTLIBS) -lg++ -lm -lcurses
-GLIBS         = $(ROOTLIBS) -lXpm -lX11 -lg++ -lm -lPW -lld
 
 +SELF,IF=SOLARIS,IF=-GCC.
 # Solaris
 CXX           = CC
-CXXFLAGS      = -O -KPIC -I$(ROOTSYS)/include
+CXXFLAGS      = -O -KPIC
 LD            = CC
 LDFLAGS       = -g
 SOFLAGS       = -G
-LIBS          = $(ROOTLIBS) -lm -lsocket -lgen -lsunmath
-GLIBS         = $(ROOTLIBS) $(ROOTGLIBS) -L/usr/openwin/lib \
-                -L/usr/ccs/lib -lXpm -lX11 -lm -lgen -ldl -lsocket -lsunmath
 
 +SELF,IF=SOLARIS,IF=GCC.
 # Solaris
 CXX           = g++
-CXXFLAGS      = -O -fPIC -I$(ROOTSYS)/include
+CXXFLAGS      = -O -fPIC
 LD            = CC
 LDFLAGS       = -g
 SOFLAGS       = -shared
-LIBS          = $(ROOTLIBS) -lg++ -lm -lsocket -lgen
-GLIBS         = $(ROOTLIBS) $(ROOTGLIBS) -L/usr/openwin/lib \
-                -L/usr/ccs/lib -lXpm -lX11 -lg++ -lm -lgen -ldl -lsocket
 
 +SELF,IF=SOLARISPC.
 # Solaris
 CXX           = CC
-CXXFLAGS      = -KPIC -I$(ROOTSYS)/include
+CXXFLAGS      = -O -KPIC
 LD            = CC
 LDFLAGS       = -g
 SOFLAGS       = -G
-LIBS          = $(ROOTLIBS) -lm -lsocket -lgen
-GLIBS         = $(ROOTLIBS) $(ROOTGLIBS) -L/usr/openwin/lib \
-                -L/usr/ccs/lib -lXpm -lX11 -lm -lgen -ldl -lsocket
 
 +SELF,IF=SGI,IF=-GCC,IF=-KCC,IF=-EGCS.
 # SGI
 CXX           = CC
-CXXFLAGS      = -O -I$(ROOTSYS)/include
+CXXFLAGS      = -O
 LD            = CC
 LDFLAGS       = -g
 SOFLAGS       = -shared
-LIBS          = $(ROOTLIBS) -lm -ldl
-GLIBS         = $(ROOTLIBS) $(ROOTGLIBS) -lXpm -lX11 -lm -lPW -ldl
 
 +SELF,IF=SGI,IF=EGCS.
 # SGI with EGCS
 CXX           = g++
-CXXFLAGS      = -fsigned-char -Wall -fPIC -fno-rtti -fno-exceptions -I$(ROOTSYS)/include
+CXXFLAGS      = -O -Wall -fPIC
 LD            = g++
 LDFLAGS       = -g -Wl,-u,__builtin_new -Wl,-u,__builtin_delete -Wl,-u,__nw__FUiPv
 SOFLAGS       = -shared
-LIBS          = $(ROOTLIBS) -lstdc++ -lm
-GLIBS         = $(ROOTLIBS) $(ROOTGLIBS) -lXpm -lX11 -lstdc++ -lm
 
 +SELF,IF=SGI,IF=EGCS,IF=SGI64.
 # SGI 6.4 with EGCS
 CXX           = g++
-CXXFLAGS      = -fsigned-char -Wall -fPIC -fno-rtti -fno-exceptions -I$(ROOTSYS)/include
+CXXFLAGS      = -O -Wall -fPIC
 LD            = g++
 LDFLAGS       = -g -Wl,-u,__builtin_new -Wl,-u,__builtin_delete -Wl,-u,__nw__FUiPv \
                 -lgcc -lm -L/usr/lib32
 SOFLAGS       = -shared
-LIBS          = $(ROOTLIBS) -lg++ -lm -lgen
-GLIBS         = $(ROOTLIBS) $(ROOTGLIBS) -lXpm -lX11 -lg++ -lm -lPW
 
 +SELF,IF=SGI,IF=GCC.
 # SGI with GCC
 CXX           = g++
-CXXFLAGS      = -fsigned-char -fPIC -I$(ROOTSYS)/include
+CXXFLAGS      = -O -Wall -fPIC
 LD            = g++
 LDFLAGS       = -g -Wl,-u,__builtin_new -Wl,-u,__builtin_delete -Wl,-u,__nw__FUiPv
 SOFLAGS       = -shared
-LIBS          = $(ROOTLIBS) -lg++ -lm -ldl
-GLIBS         = $(ROOTLIBS) $(ROOTGLIBS) -lXpm -lX11 -lg++ -lm -lPW -ldl
 
 +SELF,IF=SGI,IF=KCC.
 # SGI with KCC
 CXX           = KCC -32
-CXXFLAGS      = -I$(ROOTSYS)/include --signed_chars --display_error_number \
-                --diag_suppress 68 --diag_suppress 191 --diag_suppress 837 \
-                --no_exceptions
+CXXFLAGS      = -O
 LD            = KCC -32
 LDFLAGS       = -g -Wl,-u,__builtin_new -Wl,-u,__builtin_delete -Wl,-u,__nw__FUiPv \
                 --no_exceptions
 SOFLAGS       =
-LIBS          = $(ROOTLIBS) -lm -ldl
-GLIBS         = $(ROOTLIBS) $(ROOTGLIBS) -lXpm -lX11 -lm -lPW -ldl
 
 +SELF,IF=ALPHA,IF=GCC.
 # Alpha/OSF with g++
 CXX           = g++
-CXXFLAGS      = -O -I$(ROOTSYS)/include
+CXXFLAGS      = -O -Wall -fPIC
 LD            = g++
 LDFLAGS       = -g
 SOFLAGS       = -Wl,-expect_unresolved,* -shared
-LIBS          = $(ROOTLIBS) -lg++ -lm
-GLIBS         = $(ROOTLIBS) $(ROOTGLIBS) -lXpm -lX11 -lg++ -lm -lPW
 
 +SELF,IF=ALPHA,IF=EGCS.
 # Alpha/OSF with egcs
 CXX           = g++
-CXXFLAGS      = -O -I$(ROOTSYS)/include -fPIC -fno-rtti -fno-exceptions \
-                -mcpu=ev5 -D__osf__ -D__alpha
+CXXFLAGS      = -O -Wall -fPIC
 LD            = g++
 LDFLAGS       = -g
 SOFLAGS       = -Wl,-expect_unresolved,* -shared
-LIBS          = $(ROOTLIBS) -ltermcap -lm
-GLIBS         = $(ROOTLIBS) $(ROOTGLIBS) -lXpm -lX11 -ltermcap -lm
 
 +SELF,IF=ALPHA,IF=KCC.
 # Alpha/OSF with kai compiler (not yet valid)
 CXX           = g++
-CXXFLAGS      = -O -I$(ROOTSYS)/include -fPIC -fno-rtti -fno-exceptions \
-                -mcpu=ev5 -D__osf__ -D__alpha
+CXXFLAGS      = -O -fPIC
 LD            = g++
 LDFLAGS       = -g
 SOFLAGS       = -Wl,-expect_unresolved,* -shared
-LIBS          = $(ROOTLIBS) -ltermcap -lm
-GLIBS         = $(ROOTLIBS) $(ROOTGLIBS) -lXpm -lX11 -ltermcap -lm
 
 +SELF,IF=ALPHA,IF=-GCC,IF=-EGCS,IF=-KCC,IF=CXX6.
 # Alpha/OSF with cxx6
 CXX           = cxx
-CXXFLAGS      = -O -nostdnew -D__osf__ -D__alpha -I$(ROOTSYS)/include
+CXXFLAGS      = -O0
 LD            = cxx
 LDFLAGS       = -g
 SOFLAGS       = -Wl,-expect_unresolved,* -call_shared
-LIBS          = $(ROOTLIBS) -lm
-GLIBS         = $(ROOTLIBS) $(ROOTGLIBS) -lXpm -lX11 -lm -lPW
 
 +SELF,IF=ALPHA,IF=-GCC,IF=-EGCS,IF=-KCC,IF=-CXX6.
 # Alpha/OSF with cxx5
 CXX           = cxx
-CXXFLAGS      = -O -oldcxx -D__osf__ -D__alpha -I$(ROOTSYS)/include
+CXXFLAGS      = -O
 LD            = cxx
 LDFLAGS       = -g
 SOFLAGS       = -Wl,-expect_unresolved,* -call_shared
-LIBS          = $(ROOTLIBS) -lm
-GLIBS         = $(ROOTLIBS) $(ROOTGLIBS) -lXpm -lX11 -lm -lPW
 
 +SELF,IF=LINUX,IF=-EGCS,IF=-KCC.
-# Linux
+# Linux with gcc 2.7.2.x
 CXX           = g++
-CXXFLAGS      = -O -Wall -fPIC -I$(ROOTSYS)/include
+CXXFLAGS      = -O -Wall -fPIC
 LD            = g++
 LDFLAGS       = -g
 SOFLAGS       = -shared
-LIBS          = $(ROOTLIBS) -lg++ -lm -ldl -rdynamic
-GLIBS         = $(ROOTLIBS) $(ROOTGLIBS) -L/usr/X11R6/lib \
-                -lXpm -lX11 -lg++ -lm -ldl -rdynamic
 
 +SELF,IF=LINUX,IF=EGCS.
 # Linux with egcs
 CXX           = g++
-CXXFLAGS      = -O -Wall -fno-rtti -fno-exceptions -fPIC -I$(ROOTSYS)/include
+CXXFLAGS      = -O -Wall -fPIC
 LD            = g++
 LDFLAGS       = -g
 SOFLAGS       = -shared
-LIBS          = $(ROOTLIBS) -lm -ldl -rdynamic
-GLIBS         = $(ROOTLIBS) $(ROOTGLIBS) -L/usr/X11R6/lib \
-                -lXpm -lX11 -lm -ldl -rdynamic
 
 +SELF,IF=LINUX,IF=KCC.
 # Linux with the KAI compiler
 CXX           = KCC
-CXXFLAGS      = --signed_chars -D_EXTERN_INLINE=inline --display_error_number \
-                --diag_suppress 191 -fPIC -I$(ROOTSYS)/include -DR__GLIBC +K0
+CXXFLAGS      = -fPIC +K0
 LD            = KCC
 LDFLAGS       = -g
 SOFLAGS       =
-LIBS          = $(ROOTLIBS) -lm -ldl
-GLIBS         = $(ROOTLIBS) $(ROOTGLIBS) -L/usr/X11R6/lib \
-                -lXpm -lX11 -lm -ldl
 
 +SELF,IF=HIUX.
 # Hitachi HIUX
 DllSuf        = sl
 CXX           = g++
-CXXFLAGS      = -O2 -fno-rtti -fno-exceptions -fPIC -I$(ROOTSYS)/include
+CXXFLAGS      = -O2 -fPIC
 LD            = g++
 LDFLAGS       = -Wl,+s
 SOFLAGS       = -Wl,-b,-E -nostdlib -nostartfiles
-LIBS          = $(ROOTLIBS) -lm -ldld
-GLIBS         = $(ROOTLIBS) $(ROOTGLIBS) -lXpm -lX11 -lm -ldld
 
 +SELF,IF=MkLinux.
 # MkLinux with glibc
 CXX           = g++
-CXXFLAGS      = -Wall -fsigned-char -fPIC -I$(OPENGL)/include -DR__GLIBC \
-                -I/usr/X11/include/  -I/usr/include/g++/
+CXXFLAGS      = -O -Wall -fPIC
 LD            = g++
-LDFLAGS       = -O2
+LDFLAGS       = -g
 SOFLAGS       = -shared -Wl,-soname,
-LIBS          = $(ROOTLIBS) -lg++ -lm -ldl
-GLIBS         = $(ROOTLIBS) $(ROOTGLIBS) -L/usr/X11R6/lib -lX11 -lSM -lICE -lXpm -lg++
 
 +SELF.
+
+CXXFLAGS     += $(ROOTCFLAGS)
+LIBS          = $(ROOTLIBS)
+GLIBS         = $(ROOTGLIBS)
 
 #------------------------------------------------------------------------------
 

@@ -1,3 +1,4 @@
+//*CMZ :  2.22/01 10/05/99  19.13.48  by  Rene Brun
 //*CMZ :  2.00/08 04/06/98  11.31.15  by  Rene Brun
 //*CMZ :  0.90/08 02/12/96  12.02.58  by  Rene Brun
 //*-- Author :    Rene Brun
@@ -28,7 +29,7 @@
 
    //Divert branch fH to a separate file and copy all events
    newtree->GetBranch("fH")->SetFile("small_fH.root");
-   newtree->CopyEvents(oldtree);
+   newtree->CopyEntries(oldtree);
 
    newtree->Print();
    newfile->Write();

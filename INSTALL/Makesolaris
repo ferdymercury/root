@@ -1,3 +1,4 @@
+*CMZ :  2.22/10 23/07/99  15.26.15  by  Fons Rademakers
 *CMZ :  2.21/08 15/03/99  08.58.18  by  Rene Brun
 *CMZ :  2.21/07 19/02/99  11.23.11  by  Fons Rademakers
 *CMZ :  2.21/06 13/02/99  11.15.52  by  Rene Brun
@@ -25,7 +26,7 @@ LD            = $(CXX)
 LDFLAGS       = $(OPT)
 SOFLAGS       = -G
 SOEXT         = so
-SYSLIBS       = -lm -ldl
+SYSLIBS       = -lm -ldl -lnsl -lsocket -lgen -L/usr/ucblib -lucb
 SYSXLIBS      = -L/usr/openwin/lib -lX11 -lm -lgen -ldl -lsocket
 XLIBS         = $(ROOTSYS)/lib/libXpm.a -L/usr/openwin/lib -lX11
 CILIBS        = -lm -ltermcap -ldl -L/usr/ccs/lib -lgen

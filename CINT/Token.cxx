@@ -1,5 +1,5 @@
-//*CMZ :  2.21/08 17/03/99  13.13.46  by  Masaharu Goto
-//*-- Author :    Masaharu Goto   17/03/99
+//*CMZ :  2.22/10 23/07/99  14.42.21  by  Masaharu Goto
+//*-- Author :    Masaharu Goto   23/07/99
 /* /% C++ %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -82,8 +82,8 @@ G__MethodInfo G__TokenInfo::MakeLocalTable(G__ClassInfo& tag_scope
 ///////////////////////////////////////////////////////////////////////////
 // Query has to be used to get information for each token
 int G__TokenInfo::Query(G__ClassInfo& tag_scope
-                                     ,G__MethodInfo& func_scope
-                                     ,char* preopr,char* name, char* postopr)
+			,G__MethodInfo& func_scope
+			,char* /* preopr*/ ,char* name, char* postopr)
 {
   nextscope.Init(); // initialize nesting scope information
   // search token matches in following order
@@ -96,7 +96,7 @@ int G__TokenInfo::Query(G__ClassInfo& tag_scope
   // no match
   tokenproperty = p_invalid;
   tokentype = t_invalid;
-  preopr = postopr; /* preopr not used, this statement isn't needed */
+  /* preopr = postopr; preopr not used, this statement isn't needed */
   return(0);
 }
 ///////////////////////////////////////////////////////////////////////////

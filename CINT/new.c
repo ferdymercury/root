@@ -1,5 +1,5 @@
-/*CMZ :  2.21/08 17/03/99  13.13.42  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   17/03/99*/
+/*CMZ :  2.22/10 23/07/99  14.42.16  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   23/07/99*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -52,7 +52,7 @@ char *expression;
   long memarena=0;
   int arenaflag=0;
 #endif
-  char construct[G__ONELINE];
+  char construct[G__LONGLINE];
   char *type;
   char *initializer;
   char *arrayindex;
@@ -71,6 +71,9 @@ char *expression;
   int typelen;
 #ifndef G__OLDIMPLEMENTATION683
   int ispointer=0;
+#endif
+#ifndef G__OLDIMPLEMENTATION1052
+  int typenum,tagnum;
 #endif
 
   G__CHECK(G__SECURE_MALLOC,1,return(G__null));
@@ -115,10 +118,20 @@ char *expression;
       initializer=NULL;
     }
   }
+#ifndef G__OLDIMPLEMENTATION1052
+  typenum = G__defined_typename(type);
+  if(-1!=typenum) tagnum = G__newtype.tagnum[typenum];
+  else tagnum = -1;
+#endif
   if(arrayindex) {
     pinc=G__getarrayindex(arrayindex);
     *arrayindex='\0';
+#ifndef G__OLDIMPLEMENTATION1052
+    if(-1!=tagnum) sprintf(construct,"%s()",G__struct.name[tagnum]);
+    else sprintf(construct,"%s()",type);
+#else
     sprintf(construct,"%s()",type);
+#endif
 #ifndef G__OLDIMPLEMENTATION911
     if(G__asm_wholefunction) G__abortbytecode();
 #endif
@@ -141,12 +154,23 @@ char *expression;
 #endif
     if(initializer) {
       pinc=1;
+#ifndef G__OLDIMPLEMENTATION1052
+      if(-1!=tagnum) sprintf(construct,"%s%s"
+			     ,G__struct.name[tagnum],initializer);
+      else strcpy(construct,type);
+#else
       strcpy(construct,type);
+#endif
       *initializer='\0';
     }
     else {
       pinc=1;
+#ifndef G__OLDIMPLEMENTATION1052
+      if(-1!=tagnum) sprintf(construct,"%s()",G__struct.name[tagnum]);
+      else sprintf(construct,"%s()",type);
+#else
       sprintf(construct,"%s()",type);
+#endif
     }
   }
 
@@ -164,6 +188,9 @@ char *expression;
   store_struct_offset = G__store_struct_offset;
   store_tagnum = G__tagnum;
   store_typenum = G__typenum;
+#ifndef G__OLDIMPLEMENTATION1040
+  result.ref=0;
+#endif
 #ifdef G__ASM
   if(G__asm_noverflow) {
 #ifdef G__ASM_DBG
@@ -375,6 +402,9 @@ char *expression;
         if(G__no_exec_compile) break;
 #endif
 	G__getfunction(construct,&known,G__TRYCONSTRUCTOR);
+#ifndef G__OLDIMPLEMENTATION1040
+	result.ref=0;
+#endif
 	if(known==0) {
 #ifndef G__OLDIMPLEMENTATION736
 	  if(initializer) {
@@ -389,7 +419,7 @@ char *expression;
 	    ++bp;
 	    /* construct = "TYPE" , bp = "ARG" */
 	    buf = G__getexpr(bp);
-	    G__ASSERT(-1!=buf.tagnum);
+	    /* G__ASSERT(-1!=buf.tagnum); */
 #ifndef G__OLDIMPLEMENTATION843
 	    G__abortbytecode(); /* Disable bytecode */
 	    if(-1!=buf.tagnum && 0==G__no_exec_compile)

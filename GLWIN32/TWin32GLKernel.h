@@ -1,3 +1,4 @@
+//*CMZ :  2.22/01 10/05/99  12.20.59  by  Valery Fine(fine@mail.cern.ch)
 //*CMZ :  1.02/00 20/07/97  21.20.33  by  Valery Fine(fine@vxcern.cern.ch)
 //*-- Author :    Valery Fine(fine@vxcern.cern.ch)   05/03/97
 
@@ -31,7 +32,7 @@ typedef enum EGLCallbackCmd {
                              ,kRotateGL      , kFrontGLFace      ,kPaintGLPoints  ,kSetGLPointSize
                              ,kClearColor    , kNewModelView     ,kPolygonGLMode  ,kGetGL
                              ,kShadeGLModel  , kSetRootLight     ,kSetLineAttr    ,kUpdateMatrix
-                             ,kAddRotation   , kSetStack
+                             ,kAddRotation   , kSetStack         ,kPaintGLPointsObject
                             } ;
 
 class TWin32GLKernel : protected TWin32HookViaThread, public TGLKernel {
@@ -64,6 +65,7 @@ public:
    virtual Int_t GetGLError();
    virtual void EndGLCmd();
    virtual void PaintGLPoints(Int_t n, Float_t *p, Option_t *option);
+   virtual void PaintGLPointsObject(const TPoints3DABC *points, Option_t *option="");
    virtual void PolygonGLMode(EG3D2GLmode face , EG3D2GLmode mode);
    virtual void PushGLMatrix();
    virtual void PopGLMatrix();

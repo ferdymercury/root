@@ -1,5 +1,5 @@
-/*CMZ :  2.21/08 17/03/99  13.13.52  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   17/03/99*/
+/*CMZ :  2.22/10 23/07/99  14.42.26  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   23/07/99*/
 /* /% C++ %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -30,6 +30,9 @@
 #pragma setstream
 #pragma ifdef G__IOSTREAM_H
 #pragma include <iosenum.h>
+typedef ostrstream ostringstream;
+typedef istrstream istringstream;
+//typedef strstream stringstream;
 #pragma endif
 
 #include <bool.h>
@@ -128,6 +131,7 @@ class ostream : /* virtual */ public ios {
 	void close() { if(fout) fclose(fout); fout=NULL;}
 	void flush() { if(fout) fflush(fout); }
 	FILE *fp() { return(fout); }
+	int rdstate() ;
 
 	ostream& operator <<(char c);
 	ostream& operator <<(char *s);
@@ -228,6 +232,12 @@ ostream& ostream::operator <<(void *p)
   return(*this);
 }
 
+int ostream::rdstate()
+{
+  if(fout) return(0);
+  else   return(1);
+}
+
 /* instanciation of cout,cerr */
 ostream cout=ostream(stdout);
 ostream cerr=ostream(stderr);
@@ -248,6 +258,7 @@ public:
   void close() { if(fin) fclose(fin); fin=NULL;}
   ostream& tie(ostream& cx);
   FILE *fp() { return(fin); }
+  int rdstate();
 
   istream& operator >>(char& c);
   istream& operator >>(char *s);
@@ -362,6 +373,16 @@ istream& istream::operator >>(double& d)
   if(tie) tie->flush();
   fscanf(fin,"%lg",&d);
   return(*this);
+}
+
+int istream::rdstate()
+{
+  int cx;
+  if(!fin) return(1);
+  cx = fgetc(fin);
+  fseek(fin,-1,SEEK_CUR);
+  if(EOF==cx) return(1);
+  return(0);
 }
 
 /* instanciation of cin */
@@ -485,6 +506,7 @@ istream& operator<<(istream& istr,G__CINT_NOSUPPORT& i) {
 }
 
 // Value evaluation
+template<class T> int G__ateval(const T* x) {return(0);}
 template<class T> int G__ateval(const T& x) {return(0);}
 int G__ateval(const char* x) {return(0);}
 int G__ateval(const void* x) {return(0);}

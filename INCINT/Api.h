@@ -1,5 +1,5 @@
-/*CMZ :  2.21/08 17/03/99  13.13.37  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   17/03/99*/
+/*CMZ :  2.22/10 23/07/99  14.42.11  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   23/07/99*/
 /* /% C++ %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -101,10 +101,53 @@ typedef void (*G__pMethodSpecialValue)(char *item,G__TypeInfo *typeinfo
 void G__InitGetSpecialValue(G__pMethodSpecialValue pmethod);
 }
 
+/*********************************************************************
+* G__SourceFileInfo
+*********************************************************************/
+class G__SourceFileInfo {
+ public:
+  G__SourceFileInfo() { Init(); }
+  G__SourceFileInfo(int filenin) { filen = filenin; }
+  G__SourceFileInfo(const char* fname) { Init(fname); }
+  ~G__SourceFileInfo() { }
+  void Init() { filen = -1; }
+  void Init(const char* fname);
+  const char *Name();
+  const char *Prepname();
+  FILE* fp();
+  int MaxLine();
+  G__SourceFileInfo& IncludedFrom();
+  long Property();
+  int IsValid();
+  int Next();
+ private:
+  int filen;
+};
+
+/*********************************************************************
+* G__IncludePathInfo
+*********************************************************************/
+class G__IncludePathInfo {
+ public:
+  G__IncludePathInfo() { Init(); }
+  ~G__IncludePathInfo() { }
+  void Init() { p=(struct G__includepath*)NULL; }
+  const char *Name();
+  long Property();
+  int IsValid();
+  int Next();
+ private:
+#ifndef __CINT__
+  struct G__includepath *p;
+#endif
+};
+
+
 #ifdef __MAKECINT__
 #pragma link off class $G__value;
 #pragma link off class $G__COMPLETIONLIST;
 #pragma link off class $G__linked_taginfo;
+#pragma link off class G__includepath;
 #endif
 
 #endif

@@ -1,23 +1,27 @@
+//*CMZ :  2.22/02 20/05/99  17.54.14  by  Rene Brun
+//*CMZ :  2.22/01 10/05/99  12.20.57  by  Valery Fine(fine@mail.cern.ch)
 //*CMZ :  1.03/09 05/12/97  13.41.25  by  Fons Rademakers
 //*-- Author :    Valery Fine(fine@vxcern.cern.ch)   05/03/97
 
 #ifndef ROOT_TGLKernelABC
 #define ROOT_TGLKernelABC
 
+/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Fons Rademakers.                                  *
+ * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
  *                                                                       *
  * Permission to use, copy, modify and distribute this software and its  *
  * documentation for non-commercial purposes is hereby granted without   *
  * fee, provided that the above copyright notice appears in all copies   *
  * and that both the copyright notice and this permission notice appear  *
  * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose.                         *
- * It is provided "as is" without express or implied warranty.           *
+ * suitability of this software for any purpose. It is provided "as is"  *
+ * without express or implied warranty.                                  *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -47,6 +51,7 @@ class TGLViewerImp;
 class TPadView3D;
 class TPadOpenGLView;
 class TVirtualPad;
+class TPoints3DABC;
 
 R__EXTERN TGLKernelABC *gGLKernel;
 
@@ -114,6 +119,7 @@ public:
    virtual void NewModelView(Double_t *angles, Double_t *delta );
    virtual void PaintCone(Float_t *vertex, Int_t ndiv, Int_t nstacks);
    virtual void PaintPolyLine(Int_t n, Float_t *p, Option_t *option);
+   virtual void PaintGLPointsObject(const TPoints3DABC *points, Option_t *option="");
    virtual void PaintBrik(Float_t vertex[24]);
 
    virtual void SetRootLight(Bool_t flag=kTRUE) { fRootLight = flag; }
@@ -160,6 +166,7 @@ inline void TGLKernelABC::NewProjectionView(Double_t [], Double_t [], Bool_t) { 
 inline void TGLKernelABC::NewModelView(Double_t *, Double_t *) { }
 inline void TGLKernelABC::PaintCone(Float_t *, Int_t, Int_t) { }
 inline void TGLKernelABC::PaintPolyLine(Int_t, Float_t *, Option_t *) { }
+inline void TGLKernelABC::PaintGLPointsObject(const TPoints3DABC *, Option_t *) { }
 inline void TGLKernelABC::PaintBrik(Float_t [24]) { }
 inline void TGLKernelABC::SetLineAttr(Color_t, Int_t) { }
 inline void TGLKernelABC::UpdateMatrix(Double_t *, Double_t *, Bool_t) { }

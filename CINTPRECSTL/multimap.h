@@ -1,0 +1,201 @@
+/*CMZ :  2.22/10 23/07/99  14.42.33  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   23/07/99*/
+// lib/prec_stl/multimap
+
+#ifndef PREC_STL_MULTIMAP
+#define PREC_STL_MULTIMAP
+#pragma link off global PREC_STL_MULTIMAP;
+#pragma link C++ nestedtypedef;
+#pragma link C++ nestedclass;
+
+// Imported from ANSI/ISO C++ 1997/Nov draft
+// Got some ideas from Scott Snyder, Fermi-lab
+// Modified by Masaharu Goto
+
+#include <utility>
+#include <memory>
+#include <iterator>
+#include <functional>
+
+//////////////////////////////////////////////////////////////////////////
+#if defined(G__GNUC)
+template<class Key,class T,class Compare=less<Key>
+        ,class Allocator=alloc>
+#elif defined(G__HPUX)
+template<class Key,class T,class Compare=less<Key>
+        ,class Allocator=allocator>
+#else
+template<class Key,class T,class Compare=less<Key>
+        ,class Allocator=allocator<T> >
+#endif
+class multimap {
+ public:
+  typedef Key                                       key_type;
+  typedef T                                         mapped_type;
+  typedef pair<Key,T>                               value_type;
+  //typedef pair<const Key,T>                         value_type;
+  typedef Compare                                   key_compare;
+  typedef Allocator                                 allocator_type;
+#if defined(G__GNUC) || defined(G__HPUX)
+  //typedef Key*                                     pointer;
+  //typedef const Key*                               const_pointer;
+  //typedef Key&                                     reference;
+  //typedef const Key&                               const_reference;
+  typedef size_t                                   size_type;
+  typedef ptrdiff_t                                difference_type;
+#else
+  typedef typename Allocator::pointer               pointer;
+  typedef typename Allocator::const_pointer         const_pointer;
+  typedef typename Allocator::reference             reference;
+  typedef typename Allocator::const_reference       const_reference;
+  typedef typename Allocator::size_type             size_type;
+  typedef typename Allocator::difference_type       difference_type;
+#endif
+
+#ifdef G__VISUAL
+  class iterator : public _Bidit<T,difference_type>
+#else
+  class iterator : public bidirectional_iterator<T,difference_type>
+#endif
+	{
+   public:
+    iterator() ;
+    iterator(const iterator& x) ;
+#ifndef G__BORLAND
+    iterator& operator=(const iterator& x) ;
+#endif
+    value_type& operator*() ;
+    iterator& operator++();
+    iterator operator++(int a);
+    iterator& operator--();
+    iterator operator--(int a);
+#ifdef G__VISUAL
+    bool operator==(const iterator& x) ;
+    bool operator!=(const iterator& x) ;
+#endif
+#ifdef G__HPUX
+    bool operator==(const iterator& x) ;
+#endif
+  };
+#ifdef G__GNUC
+  friend bool operator==(const multimap::iterator& x ,const multimap::iterator& y) const;
+  friend bool operator!=(const multimap::iterator& x ,const multimap::iterator& y) const;
+#endif
+#ifdef G__HPUX
+  friend bool operator!=(const multimap::iterator& x,const multimap::iterator& y)const;
+#endif
+
+#ifdef G__VISUAL
+  class reverse_iterator : public _Bidit<T,difference_type>
+#else
+  class reverse_iterator : public bidirectional_iterator<T,difference_type>
+#endif
+	{
+   public:
+    reverse_iterator(const reverse_iterator& x);
+#ifndef G__BORLAND
+    reverse_iterator& operator=(const reverse_iterator& x) ;
+#endif
+    value_type& operator*() ;
+    reverse_iterator& operator++();
+    reverse_iterator operator++(int a);
+    reverse_iterator& operator--();
+    reverse_iterator operator--(int a);
+   private:
+  };
+  friend bool operator==(const multimap::reverse_iterator& x
+                        ,const multimap::reverse_iterator& y) const;
+  friend bool operator!=(const multimap::reverse_iterator& x
+                        ,const multimap::reverse_iterator& y) const;
+
+  typedef const iterator const_iterator;
+  typedef const reverse_iterator const_reverse_iterator;
+
+  // _lib.multimap.cons_ construct/copy/destroy:
+  multimap();
+#if 0
+  template <class InputIterator>
+    multimap(InputIterator first, InputIterator last,
+     const Compare& comp = Compare(), const Allocator& = Allocator());
+#endif
+#ifdef G__GNUC
+  multimap(iterator first, iterator last);
+  multimap(reverse_iterator first, reverse_iterator last);
+#endif
+  multimap(const multimap& x);
+  ~multimap();
+  multimap& operator=(const multimap& x);
+  // iterators:
+  iterator               begin();
+  //const_iterator         begin() const;
+  iterator               end();
+  //const_iterator         end() const;
+  reverse_iterator       rbegin();
+  //const_reverse_iterator rbegin() const;
+  reverse_iterator       rend();
+  //const_reverse_iterator rend() const;
+  // capacity:
+  bool      empty() const;
+  size_type size() const;
+  size_type max_size() const;
+  // _lib.multimap.access_ element access:
+  //T& operator[](const Key& x);
+  // modifiers:
+  //pair<iterator, bool> insert(const value_type& x);
+  iterator             insert(iterator position, const value_type& x);
+#if 0
+  template <class InputIterator>
+   void insert(InputIterator first, InputIterator last);
+#endif
+#ifdef G__GNUC
+  void insert(iterator first, iterator last);
+  void insert(reverse_iterator first, reverse_iterator last);
+#endif
+  void      erase(iterator position);
+  size_type erase(const Key& x);
+  void      erase(iterator first, iterator last);
+  void swap(multimap&);
+  void clear();
+  // observers:
+  //key_compare   key_comp() const;
+  //value_compare value_comp() const;
+  // _lib.multimap.ops_ multimap operations:
+  iterator       find(const Key& x);
+  //const_iterator find(const Key& x) const;
+  size_type      count(const Key& x) const;
+  iterator       lower_bound(const Key& x);
+  //const_iterator lower_bound(const Key& x) const;
+  iterator       upper_bound(const Key& x);
+  //const_iterator upper_bound(const Key& x) const;
+#if 0
+  pair<iterator,iterator> equal_range(const Key& x);
+  pair<const_iterator,const_iterator> equal_range(const Key& x) const;
+#endif
+
+  friend bool operator==(const multimap& x, const multimap& y);
+  friend bool operator< (const multimap& x, const multimap& y);
+  friend bool operator!=(const multimap& x, const multimap& y);
+  friend bool operator> (const multimap& x, const multimap& y);
+  friend bool operator>=(const multimap& x, const multimap& y);
+  friend bool operator<=(const multimap& x, const multimap& y);
+  // specialized algorithms:
+#ifndef G__GNUC
+  // doesn't work on egcs nor VC++5.0
+  //friend void swap(multimap& x, multimap& y);
+#endif
+
+  // Generic algorithm
+  //friend void reverse(multimap::iterator first,multimap::iterator last);
+  //friend void reverse(multimap::reverse_iterator first,multimap::reverse_itetator last);
+
+  // iterator_category resolution
+  //friend bidirectional_iterator_tag iterator_category(multimap::iterator x);
+
+};
+
+//////////////////////////////////////////////////////////////////////////
+
+#endif
+
+
+

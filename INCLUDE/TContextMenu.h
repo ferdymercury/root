@@ -1,3 +1,4 @@
+//*CMZ :  2.22/09 13/07/99  11.06.33  by  Fons Rademakers
 //*CMZ :  2.00/00 12/02/98  16.54.31  by  Fons Rademakers
 //*CMZ :  1.03/09 07/12/97  00.17.48  by  Fons Rademakers
 //*-- Author :    Nenad Buncic   08/02/96
@@ -5,20 +6,22 @@
 #ifndef ROOT_TContextMenu
 #define ROOT_TContextMenu
 
+/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Fons Rademakers.                                  *
+ * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
  *                                                                       *
  * Permission to use, copy, modify and distribute this software and its  *
  * documentation for non-commercial purposes is hereby granted without   *
  * fee, provided that the above copyright notice appears in all copies   *
  * and that both the copyright notice and this permission notice appear  *
  * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose.                         *
- * It is provided "as is" without express or implied warranty.           *
+ * suitability of this software for any purpose. It is provided "as is"  *
+ * without express or implied warranty.                                  *
  *************************************************************************/
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -44,6 +47,7 @@ class TMethodArg;
 class TVirtualPad;
 class TObjArray;
 class TBrowser;
+class TToggle;
 
 
 class TContextMenu : public TNamed {
@@ -69,6 +73,9 @@ public:
    virtual ~TContextMenu();
 
    virtual void Action(TObject *object, TMethod *method);
+   virtual void Action(TObject *object, TToggle *toggle);
+   void Action(TMethod *method) { Action(fSelectedObject, method); }
+   void Action(TToggle *toggle) { Action(fSelectedObject, toggle); }
    virtual Char_t *CreateArgumentTitle(TMethodArg *argument);
    virtual Char_t *CreateDialogTitle(TObject *object, TMethod *method);
    virtual Char_t *CreatePopupTitle(TObject *object );
@@ -76,6 +83,8 @@ public:
    virtual void Execute(TMethod *method, TObjArray *params) { TObject::Execute(method, params); }
    virtual void Execute(TObject *object, TMethod *method, Char_t *params);
    virtual void Execute(TObject *object, TMethod *method, TObjArray *params);
+   void Execute(Char_t *params) { Execute(fSelectedObject, fSelectedMethod, params); }
+   void Execute(TObjArray *params) { Execute(fSelectedObject, fSelectedMethod, params); }
    virtual TBrowser *GetBrowser() { return fBrowser; }
    virtual TContextMenuImp *GetContextMenuImp() { return fContextMenuImp; }
    virtual TVirtualPad *GetSelectedCanvas() { return fSelectedCanvas; }

@@ -1,21 +1,26 @@
+//*CMZ :  2.22/09 12/07/99  18.10.08  by  Rene Brun
+//*CMZ :  2.22/07 05/07/99  13.42.36  by  Rene Brun
+//*CMZ :  2.22/06 21/06/99  17.53.19  by  Rene Brun
 //*CMZ :  2.00/00 20/11/97  02.39.25  by  Victor Perev
 //*CMZ :  1.03/03 08/09/97  16.27.45  by  Rene Brun
 //*-- Author :    Fons Rademakers   02/07/97
 
+/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Fons Rademakers.                                  *
+ * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
  *                                                                       *
  * Permission to use, copy, modify and distribute this software and its  *
  * documentation for non-commercial purposes is hereby granted without   *
  * fee, provided that the above copyright notice appears in all copies   *
  * and that both the copyright notice and this permission notice appear  *
  * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose.                         *
- * It is provided "as is" without express or implied warranty.           *
+ * suitability of this software for any purpose. It is provided "as is"  *
+ * without express or implied warranty.                                  *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -36,7 +41,7 @@
 TThreadImp     *TThread::fgThreadImp = 0;
 TThread        *TThread::fgMain = 0;
 TMutex         *TThread::fgMainMutex;
-char  *volatile TThread::fgXAct = NULL;	
+char  *volatile TThread::fgXAct = NULL;
 TMutex         *TThread::fgXActMutex;
 TCondition     *TThread::fgXActCondi;
 void **volatile TThread::fgXArr = NULL;
@@ -144,7 +149,7 @@ TThread::~TThread()
  sprintf(cbuf,"*** Thread %s.%d is DELETED ***",GetName(),fId);
  TThread::Printf("\n %s\n\n",cbuf);
 
-//  	Disconnect thread instance
+//      Disconnect thread instance
 
  PutComm("Destructor: MainMutex Locking");
  Lock();
@@ -246,7 +251,7 @@ Int_t TThread::Kill(Text_t *name)
            return 13;}
 }
 
-Int_t     TThread::SetCancelOff(){return fgThreadImp-> SetCancelOff();} 		
+Int_t     TThread::SetCancelOff(){return fgThreadImp-> SetCancelOff();}
 Int_t     TThread::SetCancelOn() {return fgThreadImp->SetCancelOn();}
 Int_t     TThread::SetCancelAsynchronous(){return fgThreadImp->SetCancelAsynchronous();}
 Int_t     TThread::SetCancelDeferred()    {return fgThreadImp->SetCancelDeferred();}
@@ -309,6 +314,7 @@ unsigned long TThread::Call(void *p2f,void *arg) {
 
 // reconstruct function name
   fname=G__p2f2funcname(p2f);
+  iPointer2Function=p2f;
   if(fname) {
     G__ClassInfo globalscope;
     G__MethodInfo method;
@@ -377,7 +383,7 @@ void *TThread::Fun(void *ptr) {
 //  User can change it by call SetCancelON & SetCancelAsynchronous()
   SetCancelOff();
   SetCancelDeferred();
-  CleanUpPush(&AfterCancel,th);  // Enable standard cancelling function
+  CleanUpPush((void *)&AfterCancel,th);  // Enable standard cancelling function
 
   th = (TThread *)ptr;
   th->fId = SelfId(); th->SetUniqueID(th->fId);
@@ -398,7 +404,8 @@ void *TThread::Fun(void *ptr) {
     th->fState = kTerminatedState;
   }
 
-  CleanUpPop(0);// Disable standard cancelling function
+  //CleanUpPop(0);// Disable standard cancelling function
+  CleanUpPop(1);// Disable standard cancelling function
 
   sprintf(cbuf,"Thread %s.%d finished",th->GetName(),th->fId);
   TThread::Printf("\n %s\n\n",cbuf);
@@ -485,7 +492,7 @@ Int_t TThread::XARequest(char *xact, Int_t nb, void **ar, Int_t *iret) {
 //     th->PutComm("XARequest: Condition Wait");
      th->PutComm(fgXAct);
 
-//	THis nasty tric for Linux only
+//      THis nasty tric for Linux only
 //     fgXActCondi->Wait();
      while (fgXAct) {fgXActCondi->TimedWait(1);}
 
@@ -520,7 +527,7 @@ void TThread::XAction()
 
     case kCANV:
 
-    switch(fgXAnb) { //	Over TCanvas constructors
+    switch(fgXAnb) { // Over TCanvas constructors
 
       case 2:
       ((TCanvas*)fgXArr[1])->Constructor();
@@ -607,5 +614,3 @@ TThreadCleaner::~TThreadCleaner()
 
   TThread::CleanUp(); // Call user clean up routines
 }
-
-

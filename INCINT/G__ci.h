@@ -1,5 +1,5 @@
-/*CMZ :  2.21/08 17/03/99  13.13.38  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   17/03/99*/
+/*CMZ :  2.22/10 23/07/99  14.42.12  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   23/07/99*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -25,7 +25,34 @@
 #ifndef G__CI_H
 #define G__CI_H
 
+/**********************************************************************
+* SPECIAL CHANGES and CINT CORE COMPILATION SWITCH
+**********************************************************************/
+
+/* This change activates bytecode compilation of class object
+ * instantiation in a function. Because the change includes some
+ * problems , it is turned off at this moment by defining following
+ * macro. */
+#define G__OLDIMPLEMENTATION1073
+#ifdef G__OLDIMPLEMENTATION1073
+/* define related macros here */
+#endif
+
+/* Scott Snyder's modification Apr1999 9.Improvements for `variable' macros.
+ * Comment out line below to activate the change */
+#define G__OLDIMPLEMENTATION1062
+
+/* Scott Snyder's modification Apr1999 10.More CRLF problems
+ * Comment out line below to activate the change */
+#define G__OLDIMPLEMENTATION1063
+
+/* Scott Snyder's modification in macro.c around line 709. Apr1999
+ * Uncomment following line to use 969 version */
+/* #define G__OLDIMPLEMENTATION973 */
+
+
 #define G__OLDIMPLEMENTATION834 /* THIS MODIFICATION IS TURNED OFF */
+
 
 /**********************************************************************
 * Define following macro if you want to know where global variable is defined.
@@ -678,8 +705,9 @@ struct G__comment_info {
 * ROOT special requirement
 *
 **************************************************************************/
-#define G__NOSTREAMER 0x01
+#define G__NOSTREAMER      0x01
 #define G__NOINPUTOPERATOR 0x02
+#define G__USEBYTECOUNT   0x04
 
 struct G__RootSpecial {
   char* deffile;
@@ -991,6 +1019,7 @@ struct G__var_array {
   char bitfield[G__MEMDEPTH];
 #ifdef G__VARIABLEFPOS
   int filenum[G__MEMDEPTH];
+  int linenum[G__MEMDEPTH];
 #endif
 
   /* type information,
@@ -1280,6 +1309,7 @@ extern G__EXPORT double G__double G__P((G__value buf));
 extern G__EXPORT long G__int G__P((G__value buf));
 extern G__EXPORT int  G__loadfile G__P((char *filename));
 extern G__EXPORT int  G__unloadfile G__P((char *filename));
+extern G__EXPORT char *G__getmakeinfo G__P((char *item));
 #if !defined(G__OLDIMPLEMENTATION481)
 extern G__value (*G__GetSpecialObject) G__P((char *name,void **ptr,void** ppdict));
 #elif !defined(G__OLDIMPLEMENTATION455)
@@ -1338,6 +1368,15 @@ extern G__EXPORT int G__printlinenum G__P((void));
 */
 
 #ifndef __CINT__
+/*************************************************************************
+* ROOT script compiler
+*************************************************************************/
+#ifndef G__PHILIPPE1
+extern G__EXPORT void G__Set_RTLD_NOW G__P((void));
+extern G__EXPORT void G__Set_RTLD_LAZY G__P((void));
+extern G__EXPORT int (*G__ScriptCompiler) G__P((const char*));
+extern G__EXPORT void G__RegisterScriptCompiler G__P((int(*p2f)(const char*)));
+#endif
 /*************************************************************************
 * Pointer to function evaluation function
 *************************************************************************/
@@ -1422,6 +1461,11 @@ G__value G__string2type_body G__P((char *typenamin,int noerror));
 G__value G__string2type G__P((char *typenamin));
 #endif
 void* G__findsym G__P((char *fname));
+
+extern G__EXPORT int G__IsInMacro G__P(());
+extern G__EXPORT void G__storerewindposition G__P(());
+extern G__EXPORT void G__rewinddictionary G__P(());
+extern G__EXPORT void G__SetCriticalSectionEnv G__P(());
 
 #ifdef G__ASM_WHOLEFUNC
 /**************************************************************************

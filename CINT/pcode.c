@@ -1,5 +1,5 @@
-/*CMZ :  2.21/08 17/03/99  13.13.43  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   17/03/99*/
+/*CMZ :  2.22/10 23/07/99  14.42.18  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   23/07/99*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -2170,6 +2170,27 @@ long localmem;
       goto pcode_parse_start;
 #endif
 
+#ifndef G__OLDIMPLEMENTATION1073
+    case G__CTOR_SETGVP:
+      /***************************************
+      * inst
+      * 0 CTOR_SETGVP
+      * 1 index
+      * 2 var_array pointer
+      ***************************************/
+#ifdef G__ASM_DBG
+      if(G__asm_dbg)
+	fprintf(G__serr,"%3x,%d: CTOR_SETGVP\n",pc,sp);
+#endif
+      var=(struct G__var_array*)G__asm_inst[pc+2];
+      G__globalvarpointer = localmem+var->p[G__asm_inst[pc+1]];
+      pc+=3;
+#ifdef G__ASM_DBG
+      break;
+#else
+      goto pcode_parse_start;
+#endif
+#endif /* ON1073 */
 
 #ifdef G__NEVER_BUT_KEEP
     case G__NOP:
@@ -2712,7 +2733,13 @@ long offset;
 struct G__var_array *var;
 long ig15;
 {
-  G__ASM_GET_INT_P10(int,'i');
+  /* G__ASM_GET_INT_P10(int,'i'); */
+  G__value *buf= &pbuf[*psp-1];
+  buf->tagnum = -1;
+  buf->type = 'i';
+  buf->typenum = var->p_typetable[ig15];
+  buf->ref = *(long*)(var->p[ig15]+offset)+buf->obj.i*sizeof(int);
+  buf->obj.i = *(int*)buf->ref;
 }
 
 /****************************************************************
@@ -5150,9 +5177,11 @@ int G__asm_clear()
   if(G__asm_dbg) fprintf(G__serr ,"%3x: CL  FILE:%s LINE:%d\n" ,G__asm_cp
 			 ,G__ifile.name ,G__ifile.line_number);
 #endif
-  G__asm_inst[G__asm_cp]=G__CL;
-  G__asm_inst[G__asm_cp+1]=G__ifile.line_number;
-  G__inc_cp_asm(2,0);
+  if(G__asm_cp<2 || G__CL!=G__asm_inst[G__asm_cp-2]) {
+    G__asm_inst[G__asm_cp]=G__CL;
+    G__asm_inst[G__asm_cp+1]=G__ifile.line_number;
+    G__inc_cp_asm(2,0);
+  }
   return(0);
 }
 
@@ -7885,7 +7914,7 @@ int *start;
       * 0 GETRSVD
       ***************************************/
 #ifdef G__ASM_DBG
-      if(G__asm_dbg) fprintf(G__serr,"%3x: GETRSVD %d\n" ,pc);
+      if(G__asm_dbg) fprintf(G__serr,"%3x: GETRSVD\n" ,pc);
 #endif
       /* no optimization */
       ++pc;
@@ -8461,6 +8490,22 @@ int *start;
       pc+=2;
       break;
 
+#ifndef G__OLDIMPLEMENTATION1073
+    case G__CTOR_SETGVP:
+      /***************************************
+      * inst
+      * 0 CTOR_SETGVP
+      * 1 index
+      * 2 var_array pointer
+      ***************************************/
+#ifdef G__ASM_DBG
+      if(G__asm_dbg) fprintf(G__serr,"%3x: CTOR_SETGVP\n",pc);
+#endif
+      /* no optimization */
+      pc+=3;
+      break;
+#endif
+
     case G__TOPVALUE:
       /***************************************
       * 0 TOPVALUE:
@@ -8537,6 +8582,7 @@ FILE *fout;
       ***************************************/
 #ifdef G__ASM_DBG
       var = (struct G__var_array*)G__asm_inst[pc+4];
+      if(!var) return(1);
       fprintf(fout,"%3x: LDST_VAR_P index=%d %s\n"
 	      ,pc,G__asm_inst[pc+1]
 	      ,var->varnamebuf[G__asm_inst[pc+1]]);
@@ -8557,6 +8603,7 @@ FILE *fout;
       ***************************************/
 #ifdef G__ASM_DBG
       var = (struct G__var_array*)G__asm_inst[pc+4];
+      if(!var) return(1);
       fprintf(fout,"%3x: LDST_MSTR_P index=%d %s\n"
 	      ,pc,G__asm_inst[pc+1]
 	      ,var->varnamebuf[G__asm_inst[pc+1]]);
@@ -8578,12 +8625,11 @@ FILE *fout;
       * sp          <-
       ***************************************/
 #ifdef G__ASM_DBG
-      if(G__asm_dbg) {
-	var = (struct G__var_array*)G__asm_inst[pc+6];
-	fprintf(fout,"%3x: LDST_VAR_INDEX index=%d %s\n"
-		,pc,G__asm_inst[pc+3]
-		,var->varnamebuf[G__asm_inst[pc+3]]);
-      }
+      var = (struct G__var_array*)G__asm_inst[pc+6];
+      if(!var) return(1);
+      fprintf(fout,"%3x: LDST_VAR_INDEX index=%d %s\n"
+	      ,pc,G__asm_inst[pc+3]
+	      ,var->varnamebuf[G__asm_inst[pc+3]]);
 #endif
       pc+=G__asm_inst[pc+4];
       break;
@@ -8604,12 +8650,11 @@ FILE *fout;
       * sp          <-
       ***************************************/
 #ifdef G__ASM_DBG
-      if(G__asm_dbg) {
-	var = (struct G__var_array*)G__asm_inst[pc+8];
-	fprintf(fout,"%3x: LDST_VAR_INDEX_OPR index=%d %s\n"
-		,pc,G__asm_inst[pc+5]
-		,var->varnamebuf[G__asm_inst[pc+5]]);
-      }
+      var = (struct G__var_array*)G__asm_inst[pc+8];
+      if(!var) return(1);
+      fprintf(fout,"%3x: LDST_VAR_INDEX_OPR index=%d %s\n"
+	      ,pc,G__asm_inst[pc+5]
+	      ,var->varnamebuf[G__asm_inst[pc+5]]);
 #endif
       pc+=G__asm_inst[pc+6];
       break;
@@ -8625,7 +8670,7 @@ FILE *fout;
       * sp    G__null
       ***************************************/
 #ifdef G__ASM_DBG
-      if(G__asm_dbg) fprintf(fout,"%3x: OP2_OPTIMIZED \n",pc);
+      fprintf(fout,"%3x: OP2_OPTIMIZED \n",pc);
 #endif
       pc+=2;
       break;
@@ -8640,7 +8685,7 @@ FILE *fout;
       * sp    G__null     <-
       ***************************************/
 #ifdef G__ASM_DBG
-      if(G__asm_dbg) fprintf(fout,"%3x: OP1_OPTIMIZED \n",pc);
+      fprintf(fout,"%3x: OP1_OPTIMIZED \n",pc);
 #endif
       pc+=2;
       break;
@@ -8660,6 +8705,7 @@ FILE *fout;
       * sp
       ***************************************/
       var = (struct G__var_array*)G__asm_inst[pc+4];
+      if(!var) return(1);
       fprintf(fout,"%3x: LD_VAR index=%d paran=%d point %c %s\n"
 	      ,pc,G__asm_inst[pc+1],G__asm_inst[pc+2]
 	      ,G__asm_inst[pc+3]
@@ -8725,6 +8771,7 @@ FILE *fout;
       * sp
       ***************************************/
       var = (struct G__var_array*)G__asm_inst[pc+4];
+      if(!var) return(1);
       fprintf(fout,"%3x: ST_VAR index=%d paran=%d point %c %s\n"
 	      ,pc,G__asm_inst[pc+1],G__asm_inst[pc+2]
 	      ,G__asm_inst[pc+3]
@@ -8747,6 +8794,7 @@ FILE *fout;
       * sp
       ***************************************/
       var = (struct G__var_array*)G__asm_inst[pc+4];
+      if(!var) return(1);
       fprintf(fout,"%3x: LD_MSTR index=%d paran=%d point %c %s\n"
 	      ,pc,G__asm_inst[pc+1],G__asm_inst[pc+2]
 	      ,G__asm_inst[pc+3]
@@ -8819,6 +8867,7 @@ FILE *fout;
       * sp
       ***************************************/
       var = (struct G__var_array*)G__asm_inst[pc+4];
+      if(!var) return(1);
       fprintf(fout,"%3x: ST_MSTR index=%d paran=%d point %c %s\n"
 	      ,pc,G__asm_inst[pc+1],G__asm_inst[pc+2]
 	      ,G__asm_inst[pc+3]
@@ -9068,6 +9117,7 @@ FILE *fout;
       ***************************************/
 #ifdef G__ASM_DBG
       var = (struct G__var_array*)G__asm_inst[pc+4];
+      if(!var) return(1);
       fprintf(fout,"%3x: LDST_LVAR_P index=%d %s\n"
 	      ,pc,G__asm_inst[pc+1]
 	      ,var->varnamebuf[G__asm_inst[pc+1]]);
@@ -9090,6 +9140,7 @@ FILE *fout;
       * sp
       ***************************************/
       var = (struct G__var_array*)G__asm_inst[pc+4];
+      if(!var) return(1);
       fprintf(fout,"%3x: LD_LVAR index=%d paran=%d point %c %s\n"
 	      ,pc,G__asm_inst[pc+1],G__asm_inst[pc+2]
 	      ,G__asm_inst[pc+3]
@@ -9112,6 +9163,7 @@ FILE *fout;
       * sp
       ***************************************/
       var = (struct G__var_array*)G__asm_inst[pc+4];
+      if(!var) return(1);
       fprintf(fout,"%3x: ST_LVAR index=%d paran=%d point %c %s\n"
 	      ,pc,G__asm_inst[pc+1],G__asm_inst[pc+2]
 	      ,G__asm_inst[pc+3]
@@ -9431,6 +9483,19 @@ FILE *fout;
       fprintf(fout,"%3x: TOPVALUE\n",pc);
       ++pc;
       break;
+
+#ifndef G__OLDIMPLEMENTATION1073
+    case G__CTOR_SETGVP:
+      /***************************************
+      * inst
+      * 0 CTOR_SETGVP
+      * 1 index
+      * 2 var_array pointer
+      ***************************************/
+      fprintf(fout,"%3x: CTOR_SETGVP\n",pc);
+      pc+=3;
+      break;
+#endif
 
     case G__NOP:
       /***************************************

@@ -1,5 +1,5 @@
-/*CMZ :  2.21/08 17/03/99  13.13.37  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   17/03/99*/
+/*CMZ :  2.22/10 23/07/99  14.42.11  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   23/07/99*/
 /* /% C++ %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -54,6 +54,7 @@ class G__ClassInfo {
   int operator!=(const G__ClassInfo& a);
 
   const char *Name() ;
+  const char *Fullname();
   const char *Title() ;
   int Size() ;
   long Property();

@@ -1,3 +1,7 @@
+//*CMZ :  2.22/07 02/07/99  08.34.09  by  Rene Brun
+//*CMZ :  2.22/06 22/06/99  19.15.13  by  Fons Rademakers
+//*CMZ :  2.22/05 15/06/99  12.37.08  by  Fons Rademakers
+//*CMZ :  2.22/01 23/04/99  17.06.28  by  Fons Rademakers
 //*CMZ :  2.21/03 19/01/99  18.33.32  by  Fons Rademakers
 //*CMZ :  2.00/13 29/10/98  08.32.37  by  Fons Rademakers
 //*CMZ :  2.00/10 28/07/98  12.50.40  by  Fons Rademakers
@@ -5,20 +9,22 @@
 //*CMZ :  1.03/09 12/12/97  19.27.01  by  Rene Brun
 //*-- Author :    Fons Rademakers   01/03/96
 
+/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Fons Rademakers.                                  *
+ * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
  *                                                                       *
  * Permission to use, copy, modify and distribute this software and its  *
  * documentation for non-commercial purposes is hereby granted without   *
  * fee, provided that the above copyright notice appears in all copies   *
  * and that both the copyright notice and this permission notice appear  *
  * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose.                         *
- * It is provided "as is" without express or implied warranty.           *
+ * suitability of this software for any purpose. It is provided "as is"  *
+ * without express or implied warranty.                                  *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -44,6 +50,8 @@
 #include "TObjString.h"
 #include "TString.h"
 #include "TList.h"
+#include "TVirtualPad.h"
+#include "TSystem.h"
 #include "G__ci.h"
 
 
@@ -61,7 +69,10 @@ R__EXTERN int optind;
 #undef G__FPROTO_H
 #include "fproto.h"
 #include "Api.h"
-#include "TCanvas.h"
+
+extern "C" int ScriptCompiler(const char* filename) {
+   return gSystem->CompileMacro(filename);
+}
 
 // It is a "fantom" method to synchronize user keyboard input
 // and ROOT prompt line (for WIN32)
@@ -78,6 +89,7 @@ TCint::TCint(const char *name, const char *title) : TInterpreter(name, title)
    fMore      = 0;
    fPrompt[0] = 0;
 
+   G__RegisterScriptCompiler(&ScriptCompiler);
    G__InitGetSpecialObject(&TCint::FindObject);
 
    ResetAll();
@@ -247,6 +259,16 @@ void TCint::ResetGlobals()
 }
 
 //______________________________________________________________________________
+void TCint::RewindDictionary()
+{
+   // Rewind CINT dictionary to the point where it was before executing
+   // the current macro. This function is typically called after SEGV or
+   // ctlr-C after doing a longjmp back to the prompt.
+
+   G__rewinddictionary();
+}
+
+//______________________________________________________________________________
 Int_t TCint::DeleteGlobal(void *obj)
 {
    // Delete obj from CINT symbol table so it cannot be accessed anymore.
@@ -331,6 +353,12 @@ void TCint::UpdateListOfGlobalFunctions()
 
       // if name cannot be obtained no use to put in list
       if (a->IsValid() && a->Name()) {
+         // first remove if already in list
+         TFunction *f = (TFunction *)gROOT->fGlobalFunctions->FindObject(a->Name());
+         if (f) {
+            gROOT->fGlobalFunctions->Remove(f);
+            delete f;
+         }
          gROOT->fGlobalFunctions->Add(new TFunction(a));
       } else
          delete a;
@@ -666,7 +694,7 @@ const char *TCint::TypeName(const char *typeDesc)
 
    static char t[64];
    char *s;
-   if ((s = strchr(typeDesc, ' ')))
+   if (!strstr(typeDesc, "(*)(") && (s = strchr(typeDesc, ' ')))
       strcpy(t, s+1);
    else
       strcpy(t, typeDesc);
@@ -698,7 +726,51 @@ void TCint::UpdateAllCanvases()
    // Update all canvases at end the terminal input command.
 
    TIter next(gROOT->GetListOfCanvases());
-   TCanvas *canvas;
-   while ((canvas = (TCanvas *)next()))
+   TVirtualPad *canvas;
+   while ((canvas = (TVirtualPad *)next()))
       canvas->Update();
 }
+
+//______________________________________________________________________________
+const char* TCint::GetSharedLibs()
+{
+   // Refresh the list of shared libraries and return it.
+
+   fSharedLibs = "";
+
+   G__SourceFileInfo cursor(0);
+   while (cursor.IsValid()) {
+      const char *filename = cursor.Name();
+      if (filename &&
+          (strstr(filename,".sl")  != 0 ||
+           strstr(filename,".dl")  != 0 ||
+           strstr(filename,".so")  != 0 ||
+           strstr(filename,".dll") != 0 ||
+           strstr(filename,".DLL") != 0))
+         fSharedLibs.Append(filename).Append(" ");
+
+      cursor.Next();
+   }
+
+   return fSharedLibs;
+}
+
+//______________________________________________________________________________
+const char* TCint::GetIncludePath()
+{
+  // Refresh the list of include path known to the interpreter and return it,
+  // with -I prepended.
+
+  fIncludePath = "";
+
+  G__IncludePathInfo path;
+
+  while ( path.Next() ) {
+    const char *pathname = path.Name();
+    fIncludePath.Append(" -I").Append(pathname);
+  } ;
+
+  return fIncludePath;
+
+}
+

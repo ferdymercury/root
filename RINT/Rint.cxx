@@ -1,3 +1,5 @@
+//*CMZ :  2.22/05 06/06/99  11.36.16  by  Fons Rademakers
+//*CMZ :  2.22/01 27/04/99  10.36.28  by  Fons Rademakers
 //*CMZ :  2.21/06 14/02/99  18.23.35  by  Fons Rademakers
 //*CMZ :  2.20/00 22/11/98  19.29.37  by  Fons Rademakers
 //*CMZ :  2.00/13 29/10/98  08.32.56  by  Fons Rademakers
@@ -6,20 +8,22 @@
 //*CMZ :  1.03/09 16/12/97  16.26.15  by  Rene Brun
 //*-- Author :    Rene Brun   17/02/95
 
+/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Fons Rademakers.                                  *
+ * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
  *                                                                       *
  * Permission to use, copy, modify and distribute this software and its  *
  * documentation for non-commercial purposes is hereby granted without   *
  * fee, provided that the above copyright notice appears in all copies   *
  * and that both the copyright notice and this permission notice appear  *
  * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose.                         *
- * It is provided "as is" without express or implied warranty.           *
+ * suitability of this software for any purpose. It is provided "as is"  *
+ * without express or implied warranty.                                  *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -54,6 +58,7 @@
 #include "TProof.h"
 #include "TFile.h"
 #include "TMapFile.h"
+#include "TTabCom.h"
 
 #ifdef R__UNIX
 #include <signal.h>
@@ -86,6 +91,7 @@ Bool_t TInterruptHandler::Notify()
    if (gProof) gProof->Interrupt(TProof::kHardInterrupt);
    if (TROOT::Initialized()) {
       Getlinem(kInit, "Root > ");
+      gInterpreter->RewindDictionary();
       Throw(GetSignal());
    }
    return kTRUE;
@@ -132,6 +138,9 @@ TRint::TRint(char *appClassName, int *argc, char **argv, void *options, int numO
 
    PrintLogo();
 
+   // Everybody expects iostream to be available, so load it...
+   ProcessLine("#include <iostream>");
+
    // Load user functions
    const char *logon;
    logon = gEnv->GetValue("Rint.Load", (char*)0);
@@ -172,6 +181,9 @@ TRint::TRint(char *appClassName, int *argc, char **argv, void *options, int numO
    logon = gEnv->GetValue("Rint.History", defhist);
    Gl_histinit((char *)logon);
    Gl_windowchanged();
+
+   // Setup for tab completion
+   gTabCom = new TTabCom;
 }
 
 //______________________________________________________________________________
@@ -195,7 +207,7 @@ void TRint::Run(Bool_t retrn)
       RETRY {
          while ((file = (TObjString *)next())) {
             char cmd[256];
-            if (file->String().Contains(".root")) {
+            if (file->String().EndsWith(".root")) {
                const char *rfile = (const char*)file->String();
                Printf("\nAttaching file %s...", rfile);
                char *base = StrDup(gSystem->BaseName(rfile));
@@ -315,29 +327,25 @@ void TRint::HandleTermInput()
    char *line;
 
    if ((line = Getlinem(kOneChar, 0))) {
-//      if (line[0]) {
-         if (gROOT->Timer()) timer.Start();
+      if (gROOT->Timer()) timer.Start();
 
-         Gl_histadd(line);
+      Gl_histadd(line);
 
-         char *s = line;
-         while (s && *s == ' ') s++;     // strip-off leading blanks
-         s[strlen(s)-1] = '\0';          // strip also '\n' off
-         fInterrupt = kFALSE;
+      char *s = line;
+      while (s && *s == ' ') s++;     // strip-off leading blanks
+      s[strlen(s)-1] = '\0';          // strip also '\n' off
+      fInterrupt = kFALSE;
 
-         if (!gInterpreter->GetMore() && strlen(s) != 0) fNcmd++;
+      if (!gInterpreter->GetMore() && strlen(s) != 0) fNcmd++;
 
-         ProcessLine(s);
+      ProcessLine(s);
 
-         if (strstr(s,".reset") != s)
-             gInterpreter->EndOfLineAction();
+      if (strstr(s,".reset") != s)
+          gInterpreter->EndOfLineAction();
 
-         if (gROOT->Timer()) timer.Print();
-//      } else {
-//         printf("Funny character typed\n");
-       //  Terminate(0);
-//      }
+      if (gROOT->Timer()) timer.Print();
 
+      gTabCom->ClearAll();
       Getlinem(kInit, GetPrompt());
    }
 }

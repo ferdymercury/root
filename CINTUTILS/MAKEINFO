@@ -1,3 +1,4 @@
+*CMZ :  2.22/01 03/05/99  18.25.27  by  Fons Rademakers
 *CMZ :  2.21/08 18/03/99  15.14.44  by  Fons Rademakers
 *CMZ :  2.00/11 07/08/98  12.08.36  by  Fons Rademakers
 *CMZ :  1.03/09 16/12/97  17.11.12  by  Rene Brun
@@ -5,8 +6,8 @@
 
 +SELF,IF=HPUX,IF=-ACC,IF=-GCC.
 # Preprocessor
-CPREP       = cc -Aa -E
-CPPPREP     = CC +a1 -E
+CPREP       = cc -Aa -E -C
+CPPPREP     = CC +a1 -E -C
 
 # source code postfix
 CSRCPOST    = .c
@@ -18,8 +19,8 @@ DLLPOST     = .dl
 
 +SELF,IF=HPUX,IF=ACC.
 # Preprocessor
-CPREP       = cc -Aa -E
-CPPPREP     = aCC -E
+CPREP       = cc -Aa -E -C
+CPPPREP     = /opt/langtools/lbin/cpp.ansi -Z -D__hppa -D__hpux -D__unix -E -C
 
 # source code postfix
 CSRCPOST    = .c
@@ -31,8 +32,8 @@ DLLPOST     = .dl
 
 +SELF,IF=HPUX,IF=GCC.
 # Preprocessor
-CPREP       = gcc -E
-CPPPREP     = g++ -E
+CPREP       = gcc -E -C
+CPPPREP     = g++ -E -C
 
 # source code postfix
 CSRCPOST    = .c
@@ -44,8 +45,8 @@ DLLPOST     = .dl
 
 +SELF,IF=IBMRT,IF=-GCC.
 # Preprocessor
-CPREP       = xlC -E
-CPPPREP     = xlC -+ -E
+CPREP       = xlC -E -C
+CPPPREP     = xlC -+ -E -C
 
 # source code postfix
 CSRCPOST    = .c
@@ -57,8 +58,8 @@ DLLPOST     = .dl
 
 +SELF,IF=IBMRT,IF=GCC.
 # Preprocessor
-CPREP       = gcc -E
-CPPPREP     = g++ -E
+CPREP       = gcc -E -C
+CPPPREP     = g++ -E -C
 
 # source code postfix
 CSRCPOST    = .c
@@ -70,8 +71,8 @@ DLLPOST     = .dl
 
 +SELF,IF=SOLARIS,IF=-GCC.
 # Preprocessor
-CPREP       = /opt/SUNWspro/bin/cc -E
-CPPPREP     = /opt/SUNWspro/bin/CC -E
+CPREP       = /opt/SUNWspro/bin/cc -E -C
+CPPPREP     = /usr/ccs/lib/cpp -D__sun -D__sparc -D__unix -E -C
 
 # source code postfix
 CSRCPOST    = .c
@@ -83,8 +84,8 @@ DLLPOST     = .dl
 
 +SELF,IF=SOLARIS,IF=GCC.
 # Preprocessor
-CPREP       = gcc -E
-CPPPREP     = g++ -E
+CPREP       = gcc -E -C
+CPPPREP     = g++ -E -C
 
 # source code postfix
 CSRCPOST    = .c
@@ -96,8 +97,8 @@ DLLPOST     = .dl
 
 +SELF,IF=SOLARISPC,IF=-GCC.
 # Preprocessor
-CPREP       = /opt/SUNWspro/bin/cc -E
-CPPPREP     = /opt/SUNWspro/bin/CC -E
+CPREP       = /opt/SUNWspro/bin/cc -E -C
+CPPPREP     = /usr/ccs/lib/cpp -D__sun -D__i386 -D__unix -E -C
 
 # source code postfix
 CSRCPOST    = .c
@@ -109,8 +110,8 @@ DLLPOST     = .dl
 
 +SELF,IF=SOLARISPC,IF=GCC.
 # Preprocessor
-CPREP       = gcc -E
-CPPPREP     = g++ -E
+CPREP       = gcc -E -C
+CPPPREP     = g++ -E -C
 
 # source code postfix
 CSRCPOST    = .c
@@ -122,8 +123,8 @@ DLLPOST     = .dl
 
 +SELF,IF=SGI,IF=-GCC.
 # Preprocessor
-CPREP       = cc -E
-CPPPREP     = CC -E
+CPREP       = cc -E -C
+CPPPREP     = CC -E -C
 
 # source code postfix
 CSRCPOST    = .c
@@ -135,8 +136,8 @@ DLLPOST     = .dl
 
 +SELF,IF=SGI,IF=GCC.
 # Preprocessor
-CPREP       = gcc -E
-CPPPREP     = g++ -E
+CPREP       = gcc -E -C
+CPPPREP     = g++ -E -C
 
 # source code postfix
 CSRCPOST    = .c
@@ -148,8 +149,8 @@ DLLPOST     = .dl
 
 +SELF,IF=ALPHA,IF=-GCC.
 # Preprocessor
-CPREP       = cc -E
-CPPPREP     = cxx -E
+CPREP       = cc -E -C
+CPPPREP     = cxx -E -C
 
 # source code postfix
 CSRCPOST    = .c
@@ -161,8 +162,8 @@ DLLPOST     = .dl
 
 +SELF,IF=ALPHA,IF=GCC.
 # Preprocessor
-CPREP       = gcc -E
-CPPPREP     = g++ -E
+CPREP       = gcc -E -C
+CPPPREP     = g++ -E -C
 
 # source code postfix
 CSRCPOST    = .c
@@ -174,8 +175,8 @@ DLLPOST     = .dl
 
 +SELF,IF=LINUX,FREEBSD.
 # Preprocessor
-CPREP       = gcc -E
-CPPPREP     = g++ -E
+CPREP       = gcc -E -C
+CPPPREP     = g++ -E -C
 
 # source code postfix
 CSRCPOST    = .c
@@ -187,8 +188,8 @@ DLLPOST     = .dl
 
 +SELF,IF=HIUX.
 # Preprocessor
-CPREP       = gcc -E
-CPPPREP     = g++ -E
+CPREP       = gcc -E -C
+CPPPREP     = g++ -E -C
 
 # source code postfix
 CSRCPOST    = .c
@@ -200,8 +201,8 @@ DLLPOST     = .dl
 
 +SELF,IF=WinNT.
 # Preprocessor
-CPREP       = [CC] -E
-CPPPREP     = [CXX] -E
+CPREP       = [CC] -E -C
+CPPPREP     = [CXX] -E -C
 
 # source code postfix
 CSRCPOST    = .c

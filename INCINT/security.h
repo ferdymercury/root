@@ -1,5 +1,5 @@
-/*CMZ :  2.21/08 17/03/99  13.13.37  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   17/03/99*/
+/*CMZ :  2.22/10 23/07/99  14.42.12  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   23/07/99*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -48,6 +48,7 @@
 /* Cint internal error check */
 #define G__SECURE_STACK_DEPTH            0x00000001 /* ifunc.c */
 #define G__SECURE_BUFFER_SIZE            0x00000002 /* unused yet */
+#define G__SECURE_MARGINAL_CAST          0x00000002 /* added 4/1999 */
 #define G__SECURE_POINTER_INIT           0x00000004 /* allocvariable var.c*/
 #ifndef G__OLDIMPLEMENTATION575
 #define G__SECURE_POINTER_TYPE           0x00000008 /* var.c*/

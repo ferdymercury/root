@@ -1,4 +1,13 @@
-//*CMZ :  2.21/08 17/03/99  09.24.48  by  Rene Brun
+//*CMZ :  2.22/09 13/07/99  11.20.05  by  Rene Brun
+//*CMZ :  2.22/08 07/07/99  17.08.28  by  Rene Brun
+//*CMZ :  2.22/07 05/07/99  16.38.25  by  Rene Brun
+//*CMZ :  2.22/06 25/06/99  14.39.44  by  Rene Brun
+//*CMZ :  2.22/05 15/06/99  10.08.10  by  Rene Brun
+//*CMZ :  2.22/04 03/06/99  09.35.52  by  Rene Brun
+//*CMZ :  2.22/03 31/05/99  12.31.17  by  Rene Brun
+//*CMZ :  2.22/01 20/05/99  14.18.15  by  Rene Brun
+//*CMZ :  2.22/00 06/04/99  09.37.32  by  Rene Brun
+//*CMZ :  2.21/08 26/03/99  23.08.29  by  Rene Brun
 //*CMZ :  2.21/07 03/03/99  11.34.48  by  Rene Brun
 //*CMZ :  2.21/06 18/02/99  09.06.08  by  Rene Brun
 //*CMZ :  2.21/05 07/02/99  11.41.46  by  Rene Brun
@@ -26,20 +35,22 @@
 //*CMZ :  1.03/09 07/01/98  08.24.24  by  Fons Rademakers
 //*-- Author :    Rene Brun   26/12/94
 
+/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Fons Rademakers.                                  *
+ * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
  *                                                                       *
  * Permission to use, copy, modify and distribute this software and its  *
  * documentation for non-commercial purposes is hereby granted without   *
  * fee, provided that the above copyright notice appears in all copies   *
  * and that both the copyright notice and this permission notice appear  *
  * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose.                         *
- * It is provided "as is" without express or implied warranty.           *
+ * suitability of this software for any purpose. It is provided "as is"  *
+ * without express or implied warranty.                                  *
  *************************************************************************/
 
 #include <stdlib.h>
@@ -60,7 +71,7 @@
 #include "TText.h"
 #include "TLine.h"
 #include "TPolyLine.h"
-#include "TPolymarker3d.h"
+#include "TPolymarker3D.h"
 #include "TMarker3DBox.h"
 #include "TPoints.h"
 #include "TStyle.h"
@@ -137,14 +148,16 @@ static Float_t xbuf[kNMAX];
 static Float_t ybuf[kNMAX];
 static Int_t xfirst,xlast,yfirst,ylast,zfirst,zlast;
 static Float_t xmin, xmax, ymin, ymax, zmin, zmax, binwidx, binwidy, binwidz;
-TAxis xaxis, yaxis, zaxis;
+TAxis *xaxis, *yaxis, *zaxis;
 TH1 *hlist[10];
 TLego *gLego;
 Int_t gNIDS = 0;
 const Float_t kHMAX = 1.05;
-const Int_t kMAXCONTOUR = 104;
+const Int_t kMAXCONTOUR  = 104;
 const Int_t kCloseDirectory = BIT(7);
-const Int_t kNoStats = BIT(9);
+const Int_t kNoStats     = BIT(9);
+const Int_t kAxisRange   = BIT(11);
+const Int_t kCenterTitle = BIT(12);
 
 R__EXTERN TF1 *gF1;
 
@@ -161,12 +174,13 @@ extern void H1LeastSquareSeqnd(Int_t n, Double_t *a, Int_t idim, Int_t &ifail, I
 ClassImp(TH1)
 
 //______________________________________________________________________________
-TH1::TH1(): TNamed()
+TH1::TH1(): TNamed(), TAttLine(), TAttFill(), TAttMarker()
 {
 //*-*-*-*-*-*-*-*-*-*-*Histogram default constructor*-*-*-*-*-*-*-*-*-*-*-*-*
 //*-*                  =============================
    fDirectory = 0;
    fFunctions = new TList(this);
+   fIntegral  = 0;
 }
 
 //______________________________________________________________________________
@@ -176,9 +190,8 @@ TH1::~TH1()
 //*-*                  ============================
 
    if (!TestBit(kNotDeleted)) return;
-   if (!fFunctions) return;
-   fFunctions->Delete();
-   delete fFunctions;
+   if (fIntegral) {delete [] fIntegral; fIntegral = 0;}
+   if (fFunctions) { fFunctions->Delete(); delete fFunctions; }
    if (fDirectory) {
       if (!fDirectory->TestBit(kCloseDirectory)) fDirectory->GetList()->Remove(this);
    }
@@ -188,7 +201,7 @@ TH1::~TH1()
 
 //______________________________________________________________________________
 TH1::TH1(const Text_t *name,const Text_t *title,Int_t nbins,Axis_t xlow,Axis_t xup)
-    :TNamed(name,title)
+    :TNamed(name,title), TAttLine(), TAttFill(), TAttMarker()
 {
 //*-*-*-*-*-*-*-*-*Normal constructor for fix bin size histograms*-*-*-*-*-*-*
 //*-*              ==============================================
@@ -216,7 +229,7 @@ TH1::TH1(const Text_t *name,const Text_t *title,Int_t nbins,Axis_t xlow,Axis_t x
 
 //______________________________________________________________________________
 TH1::TH1(const Text_t *name,const Text_t *title,Int_t nbins,Axis_t *xbins)
-    :TNamed(name,title)
+    :TNamed(name,title), TAttLine(), TAttFill(), TAttMarker()
 {
 //*-*-*-*-*-*-*Normal constructor for variable bin size histograms*-*-*-*-*-*-*
 //*-*          ===================================================
@@ -250,6 +263,7 @@ void TH1::Build()
 //*-*-*-*-*-*-*-*-*-*Creates histogram basic data structure*-*-*-*-*-*-*-*-*-*
 //*-*                ======================================
 
+   fIntegral      = 0;
    fEntries       = 0;
    fNormFactor    = 0;
    fTsumw         = fTsumw2=fTsumwx=fTsumwx2=0;
@@ -435,6 +449,50 @@ void TH1::AddBinContent(Int_t, Stat_t)
 }
 
 //______________________________________________________________________________
+Double_t TH1::ComputeIntegral()
+{
+//  Compute integral (cumulative sum of bins)
+//  The result stored in fIntegral is used by the GetRandom functions.
+//  This function is automatically called by GetRandom when the fIntegral
+//  array does not exist or when the number of entries in the histogram
+//  has changed since the previous call to GetRandom.
+//  The resulting integral is normalized to 1
+
+   Int_t bin, binx, biny, binz, ibin;
+
+// delete previously computed integral (if any)
+   if (fIntegral) delete [] fIntegral;
+
+//*-*- Allocate space to store the integral and compute integral
+   Int_t nbinsx = GetNbinsX();
+   Int_t nbinsy = GetNbinsY();
+   Int_t nbinsz = GetNbinsZ();
+   Int_t nxy    = nbinsx*nbinsy;
+   Int_t nbins  = nxy*nbinsz;
+
+   fIntegral = new Double_t[nbins+2];
+   ibin = 0;
+   fIntegral[ibin] = 0;
+   for (binz=1;binz<=nbinsz;binz++) {
+      for (biny=1;biny<=nbinsy;biny++) {
+         for (binx=1;binx<=nbinsx;binx++) {
+            ibin++;
+            bin  = GetBin(binx, biny, binz);
+            fIntegral[ibin] = fIntegral[ibin-1] + GetBinContent(bin);
+         }
+      }
+   }
+
+//*-*- Normalize integral to 1
+   if (fIntegral[nbins] == 0 ) {
+      Printf(" Error in ComputeIntegral, Integral = zero"); return 0;
+   }
+   for (bin=1;bin<=nbins;bin++)  fIntegral[bin] /= fIntegral[nbins];
+   fIntegral[nbins+1] = fEntries;
+   return fIntegral[nbins];
+}
+
+//______________________________________________________________________________
 void TH1::Copy(TObject &obj)
 {
 //*-*-*-*-*-*-*Copy this histogram structure to newth1*-*-*-*-*-*-*-*-*-*-*-*
@@ -510,7 +568,7 @@ Int_t TH1::DistancetoPrimitive(Int_t px, Int_t py)
       return big;
    }
 //*-*- check if point is close to an axis
-   TAxis *yaxis = GetYaxis();
+   yaxis = GetYaxis();
    Int_t xyaxis = puxmin - Int_t((puxmax-puxmin)*yaxis->GetLabelOffset());
    Int_t dyaxis = Int_t(2*(puymin-puymax)*yaxis->GetLabelSize());
    if (px >= xyaxis-dyaxis && px <= xyaxis && py >puymax && py < puymin) {
@@ -519,7 +577,7 @@ Int_t TH1::DistancetoPrimitive(Int_t px, Int_t py)
          return 0;
       }
    }
-   TAxis *xaxis = GetXaxis();
+   xaxis = GetXaxis();
    Int_t yxaxis = puymin + Int_t((puymin-puymax)*xaxis->GetLabelOffset());
    if (yxaxis < puymin) yxaxis = puymin;
    Int_t dxaxis = Int_t((puymin-puymax)*xaxis->GetLabelSize());
@@ -790,6 +848,14 @@ void TH1::Draw(Option_t *option)
 //*-*  Note that most options above can be concatenated, example:
 //*-*  h-Draw("e1same");
 //*-*  Options are case insensitive
+//*-*
+//*-*  Whe using the options "BOX", "COL" or "COLZ", the color palette used
+//*-*  is the one defined in the current style (see TStyle::SetPalette)
+//*-*
+//*-*  When using the "CONT" or "SURF" or "LEGO" options, the number
+//*-*  of contour levels can be changed via TH1::SetContour.
+//*-*  (default is 20 equidistant levels)
+//*-*
 //*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 
    TString opt = option;
@@ -804,7 +870,7 @@ void TH1::Draw(Option_t *option)
 }
 
 //______________________________________________________________________________
-void TH1::DrawCopy(Option_t *)
+TH1 *TH1::DrawCopy(Option_t *)
 {
 //*-*-*-*-*-*-*Copy this histogram and Draw in the current pad*-*-*-*-*-*-*-*
 //*-*          ===============================================
@@ -817,6 +883,7 @@ void TH1::DrawCopy(Option_t *)
 //*-*
 //*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
    AbstractMethod("DrawCopy");
+   return 0;
 }
 
 //______________________________________________________________________________
@@ -844,11 +911,11 @@ void TH1::DrawPanel()
 
    TList *lc = (TList*)gROOT->GetListOfCanvases();
    if (!lc->FindObject("drawpanelhist")) {
-      char cmd[] = "drawpanelhist = new TDrawPanelHist(\"drawpanelhist\",\"Hist Draw Panel\",330,450)";
+      char cmd[] = "TDrawPanelHist *drawpanelhist = new TDrawPanelHist(\"drawpanelhist\",\"Hist Draw Panel\",330,450);";
       gInterpreter->ProcessLine(cmd);
       return;
    }
-   char cmdupd[] = "drawpanelhist->SetDefaults()";
+   char cmdupd[] = "drawpanelhist->SetDefaults(); drawpanelhist->Show();";
    gInterpreter->ProcessLine(cmdupd);
 }
 
@@ -862,16 +929,21 @@ void TH1::Eval(TF1 *f1, Option_t *option)
 //*-*  for the bins included in the function range.
 //*-*  If option "A" is specified, the value of the function is added to the
 //*-*  existing bin contents
+//*-*  If option "S" is specified, the value of the function is used to
+//*-*  generate an integer value, distributed according to the Poisson
+//*-*  distribution, with f1 as the mean.
 //*-*
 //*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
    Double_t x[3];
-   Int_t add,bin,binx,biny,binz,nbinsx, nbinsy, nbinsz;
+   Int_t stat,add,bin,binx,biny,binz,nbinsx, nbinsy, nbinsz;
    if (!f1) return;
    Double_t fu;
    TString opt = option;
    opt.ToLower();
-   if (opt.Contains("a")) add = 1;
-   else                   add = 0;
+   if (opt.Contains("a")) add  = 1;
+   else                   add  = 0;
+   if (opt.Contains("s")) stat = 1;
+   else                   stat = 0;
    nbinsx  = fXaxis.GetNbins();
    nbinsy  = fYaxis.GetNbins();
    nbinsz  = fZaxis.GetNbins();
@@ -884,6 +956,7 @@ void TH1::Eval(TF1 *f1, Option_t *option)
             bin = GetBin(binx,biny,binz);
             x[0]  = fXaxis.GetBinCenter(binx);
             fu = f1->Eval(x[0],x[1],x[2]);
+            if (stat) fu = gRandom->Poisson(fu);
             if (add) AddBinContent(bin,fu);
             else     SetBinContent(bin,fu);
          }
@@ -1071,15 +1144,10 @@ void TH1::FillN(Int_t ntimes, Axis_t *x, Double_t *w, Int_t stride)
    Int_t bin,i;
    fEntries += ntimes;
    Double_t ww = 1;
-   Float_t xmin  = fXaxis.GetXmin();
-   Float_t xmax  = fXaxis.GetXmax();
    Int_t nbins   = fXaxis.GetNbins();
-   Float_t alpha = Float_t(nbins)/(xmax-xmin);
    ntimes *= stride;
    for (i=0;i<ntimes;i+=stride) {
-      if (x[i] < xmin) bin = 0;
-      else if (x[i] >= xmax) bin = nbins+1;
-      else bin = 1 + Int_t(alpha*(x[i]-xmin));
+      bin =fXaxis.FindBin(x[i]);
       if (w) ww = w[i];
       AddBinContent(bin, ww);
       if (fSumw2.fN) fSumw2.fArray[bin] += ww*ww;
@@ -1245,7 +1313,7 @@ void TH1::FillRandom(char *fname, Int_t ntimes)
 //*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-**-*-*-*-*-*-*-*
 
    Int_t bin, binx, biny, binz, ibin, loop;
-   Double_t r1, x, xv[3];
+   Double_t r1, x, y,z, xv[3];
 //*-*- Search for fname in the list of ROOT defined functions
    gF1 = gROOT->GetFunction(fname);
    if (!gF1) { Printf("Error Unknow function: %s",fname); return; }
@@ -1281,6 +1349,8 @@ void TH1::FillRandom(char *fname, Int_t ntimes)
 //*-*--------------Start main loop ntimes
    if (fDimension < 2) nbinsy = -1;
    if (fDimension < 3) nbinsz = -1;
+   Bool_t profile = kFALSE;
+   if (IsA() == TProfile::Class()) profile = kTRUE;
    for (loop=0;loop<ntimes;loop++) {
       r1 = gRandom->Rndm(loop);
       ibin = TMath::BinarySearch(nbins,&integral[0],r1);
@@ -1290,14 +1360,14 @@ void TH1::FillRandom(char *fname, Int_t ntimes)
       if (nbinsz) binz++;
       if (nbinsy) biny++;
       x    = GetBinCenter(binx);
-      bin  = GetBin(binx, biny, binz);
-      AddBinContent(bin);
-      fEntries++;
-      if (fSumw2.fN) ++fSumw2.fArray[bin];
-      ++fTsumw;
-      ++fTsumw2;
-      fTsumwx  += x;
-      fTsumwx2 += x*x;
+      y    = GetBinCenter(biny);
+      z    = GetBinCenter(binz);
+      if (fDimension == 1) {
+         if (profile) Fill(x,y,1.);
+         else         Fill(x, 1.);
+      }
+      else if (fDimension == 2) Fill(x,y, 1.);
+      else if (fDimension == 3) Fill(x,y,z, 1.);
   }
   delete [] integral;
 }
@@ -1319,61 +1389,31 @@ void TH1::FillRandom(TH1 *h, Int_t ntimes)
 //*-*
 //*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-**-*-*-*-*-*-*-*
 
-   Int_t bin, binx, biny, binz, ibin, loop;
-   Double_t r1, x;
    if (!h) { Printf("Error Null histogram"); return; }
    if (fDimension != h->GetDimension()) {
       Printf("Error Histograms with different dimensions"); return;
    }
 
-//*-*- Allocate temporary space to store the integral and compute integral
-   Int_t nbinsx = GetNbinsX();
-   Int_t nbinsy = GetNbinsY();
-   Int_t nbinsz = GetNbinsZ();
-   Int_t nxy    = nbinsx*nbinsy;
-   Int_t nbins  = nxy*nbinsz;
+   if (h->ComputeIntegral() == 0) return;
 
-   Double_t *integral = new Double_t[nbins+1];
-   ibin = 0;
-   integral[ibin] = 0;
-   for (binz=1;binz<=nbinsz;binz++) {
-      for (biny=1;biny<=nbinsy;biny++) {
-         for (binx=1;binx<=nbinsx;binx++) {
-            ibin++;
-            bin  = GetBin(binx, biny, binz);
-            integral[ibin] = integral[ibin-1] + h->GetBinContent(bin);
-         }
+   Int_t loop;
+   Axis_t x,y,z;
+   if (fDimension == 1) {
+      for (loop=0;loop<ntimes;loop++) {
+         x = h->GetRandom();
+         Fill(x);
+      }
+   } else if (fDimension == 2) {
+      for (loop=0;loop<ntimes;loop++) {
+         h->GetRandom2(x,y);
+         Fill(x,y,1.);
+      }
+   } else {
+      for (loop=0;loop<ntimes;loop++) {
+         h->GetRandom3(x,y,z);
+         Fill(x,y,z,1.);
       }
    }
-
-//*-*- Normalize integral to 1
-   if (integral[nbins] == 0 ) {
-      Printf(" Error in FillRandom, Integral = zero"); return;
-   }
-   for (bin=1;bin<=nbins;bin++)  integral[bin] /= integral[nbins];
-
-//*-*--------------Start main loop ntimes
-   if (fDimension < 2) nbinsy = -1;
-   if (fDimension < 3) nbinsz = -1;
-   for (loop=0;loop<ntimes;loop++) {
-      r1 = gRandom->Rndm(loop);
-      ibin = TMath::BinarySearch(nbins,&integral[0],r1);
-      binz = ibin/nxy;
-      biny = (ibin - nxy*binz)/nbinsx;
-      binx = 1 + ibin - nbinsx*(biny + nbinsy*binz);
-      if (nbinsz) binz++;
-      if (nbinsy) biny++;
-      x    = GetBinCenter(binx);
-      bin  = GetBin(binx, biny, binz);
-      AddBinContent(bin);
-      fEntries++;
-      if (fSumw2.fN) ++fSumw2.fArray[bin];
-      ++fTsumw;
-      ++fTsumw2;
-      fTsumwx  += x;
-      fTsumwx2 += x*x;
-  }
-  delete [] integral;
 }
 
 //______________________________________________________________________________
@@ -1451,9 +1491,9 @@ void TH1::Fit(const Text_t *fname ,Option_t *option ,Option_t *goption, Float_t 
    binwidz = fZaxis.GetBinWidth(zlast);
    zmin    = fZaxis.GetBinLowEdge(zfirst);
    zmax    = fZaxis.GetBinLowEdge(zlast) +binwidz;
-   xaxis   = fXaxis;
-   yaxis   = fYaxis;
-   zaxis   = fZaxis;
+   xaxis   = &fXaxis;
+   yaxis   = &fYaxis;
+   zaxis   = &fZaxis;
    gCurrentHist = this;
 
 //*-*- Check if Minuit is initialized and create special functions
@@ -1642,16 +1682,105 @@ void TH1::FitPanel()
 
    TList *lc = (TList*)gROOT->GetListOfCanvases();
    if (!lc->FindObject("fitpanel")) {
-      char cmd[] = "fitpanel = new TFitPanel(\"fitpanel\",\"Fit Panel\",300,400)";
+      char cmd[] = "TFitPanel *fitpanel = new TFitPanel(\"fitpanel\",\"Fit Panel\",300,400);";
       gInterpreter->ProcessLine(cmd);
       return;
    }
-   char cmdupd[] = "fitpanel->SetDefaults()";
+   char cmdupd[] = "fitpanel->SetDefaults(); fitpanel->Show();";
    gInterpreter->ProcessLine(cmdupd);
 }
 
 //______________________________________________________________________________
-void TH1::FitSlicesY(TF1 *f1, Int_t binmin, Int_t binmax, Int_t cut)
+void TH1::FitSlicesX(TF1 *f1, Int_t binmin, Int_t binmax, Int_t cut, Option_t *option)
+{
+// Project slices along X in case of a 2-D histogram, then fit each slice
+// with function f1 and make a histogram for each fit parameter
+// Only bins along Y between binmin and binmax are considered.
+// if f1=0, a gaussian is assumed
+// Before invoking this function, one can set a subrange to be fitted along X
+// via f1->SetRange(xmin,xmax)
+// The argument option (default="QNR") can be used to change the fit options.
+//     "Q" means Quiet mode
+//     "N" means do not show the result of the fit
+//     "R" means fit the function in the specified function range
+//
+// Note that the generated histograms are added to the list of objects
+// in the current directory. It is the user's responsability to delete
+// these histograms.
+//
+//  Example: Assume a 2-d histogram h2
+//   Root > h2->FitSlicesX(); produces 4 TH1D histograms
+//          with h2_0 containing parameter 0(Constant) for a Gaus fit
+//                    of each bin in Y projected along X
+//          with h2_1 containing parameter 1(Mean) for a gaus fit
+//          with h2_2 containing parameter 2(RMS)  for a gaus fit
+//          with h2_chi2 containing the chisquare/number of degrees of freedom for a gaus fit
+//
+//   Root > h2->FitSlicesX(0,15,22,10);
+//          same as above, but only for bins 15 to 22 along Y
+//          and only for bins in Y for which the corresponding projection
+//          along X has more than cut bins filled.
+//
+
+   //only valid for 2-D histogram
+   if (fDimension != 2) {
+      printf("Error in FitSlicesX: Function only valid for 2-D histograms");
+      return;
+   }
+
+   Int_t nbins  = fYaxis.GetNbins();
+   if (binmin < 1) binmin = 1;
+   if (binmax > nbins) binmax = nbins;
+   if (binmax < binmin) {binmin = 1; binmax = nbins;}
+
+   //default is to fit with a gaussian
+   if (f1 == 0) {
+      f1 = gROOT->GetFunction("gaus");
+      if (f1 == 0) f1 = new TF1("gaus","gaus",fXaxis.GetXmin(),fXaxis.GetXmax());
+      else         f1->SetRange(fXaxis.GetXmin(),fXaxis.GetXmax());
+   }
+   const char *fname = f1->GetName();
+   Int_t npar = f1->GetNpar();
+   Double_t *parsave = new Double_t[npar];
+   f1->GetParameters(parsave);
+
+   //Create one histogram for each function parameter
+   Int_t ipar;
+   char name[80], title[80];
+   TH1D *hlist[25];
+   for (ipar=0;ipar<npar;ipar++) {
+      sprintf(name,"%s_%d",GetName(),ipar);
+      sprintf(title,"Fitted value of par[%d]=%s",ipar,f1->GetParName(ipar));
+      hlist[ipar] = new TH1D(name,title, nbins, fYaxis.GetXmin(), fYaxis.GetXmax());
+   }
+   sprintf(name,"%s_chi2",GetName());
+   TH1D *hchi2 = new TH1D(name,"chisquare", nbins, fYaxis.GetXmin(), fYaxis.GetXmax());
+
+   //Loop on all bins in Y, generate a projection along X
+   Int_t bin;
+   Int_t nentries;
+   for (bin=binmin;bin<=binmax;bin++) {
+      TH1D *hpx = ProjectionX("_temp",bin,bin,"e");
+      if (hpx == 0) continue;
+      nentries = Int_t(hpx->GetEntries());
+      if (nentries == 0 || nentries < cut) {delete hpx; continue;}
+      f1->SetParameters(parsave);
+      hpx->Fit(fname,option);
+      Int_t npfits = f1->GetNumberFitPoints();
+      if (npfits > npar && npfits >= cut) {
+         for (ipar=0;ipar<npar;ipar++) {
+            hlist[ipar]->Fill(GetBinCenter(bin),f1->GetParameter(ipar));
+            hlist[ipar]->SetBinError(bin,f1->GetParError(ipar));
+         }
+         hchi2->Fill(GetBinCenter(bin),f1->GetChisquare()/(npfits-npar));
+      }
+      delete hpx;
+   }
+   delete [] parsave;
+}
+
+//______________________________________________________________________________
+void TH1::FitSlicesY(TF1 *f1, Int_t binmin, Int_t binmax, Int_t cut, Option_t *option)
 {
 // Project slices along Y in case of a 2-D histogram, then fit each slice
 // with function f1 and make a histogram for each fit parameter
@@ -1659,6 +1788,11 @@ void TH1::FitSlicesY(TF1 *f1, Int_t binmin, Int_t binmax, Int_t cut)
 // if f1=0, a gaussian is assumed
 // Before invoking this function, one can set a subrange to be fitted along Y
 // via f1->SetRange(ymin,ymax)
+// The argument option (default="QNR") can be used to change the fit options.
+//     "Q" means Quiet mode
+//     "N" means do not show the result of the fit
+//     "R" means fit the function in the specified function range
+//
 // Note that the generated histograms are added to the list of objects
 // in the current directory. It is the user's responsability to delete
 // these histograms.
@@ -1671,7 +1805,7 @@ void TH1::FitSlicesY(TF1 *f1, Int_t binmin, Int_t binmax, Int_t cut)
 //          with h2_2 containing parameter 2(RMS)  for a gaus fit
 //          with h2_chi2 containing the chisquare/number of degrees of freedom for a gaus fit
 //
-//   Root > h2->Fit(0,15,22,10);
+//   Root > h2->FitSlicesY(0,15,22,10);
 //          same as above, but only for bins 15 to 22 along X
 //          and only for bins in X for which the corresponding projection
 //          along Y has more than cut bins filled.
@@ -1727,7 +1861,7 @@ void TH1::FitSlicesY(TF1 *f1, Int_t binmin, Int_t binmax, Int_t cut)
       nentries = Int_t(hpy->GetEntries());
       if (nentries == 0 || nentries < cut) {delete hpy; continue;}
       f1->SetParameters(parsave);
-      hpy->Fit(fname,"QNR");
+      hpy->Fit(fname,option);
       Int_t npfits = f1->GetNumberFitPoints();
       if (npfits > npar && npfits >= cut) {
          for (ipar=0;ipar<npar;ipar++) {
@@ -1742,7 +1876,7 @@ void TH1::FitSlicesY(TF1 *f1, Int_t binmin, Int_t binmax, Int_t cut)
 }
 
 //______________________________________________________________________________
-void TH1::FitSlicesZ(TF1 *f1, Int_t binminx, Int_t binmaxx, Int_t binminy, Int_t binmaxy, Int_t cut)
+void TH1::FitSlicesZ(TF1 *f1, Int_t binminx, Int_t binmaxx, Int_t binminy, Int_t binmaxy, Int_t cut, Option_t *option)
 {
 // Project slices along Z in case of a 3-D histogram, then fit each slice
 // with function f1 and make a 2-d histogram for each fit parameter
@@ -1750,6 +1884,11 @@ void TH1::FitSlicesZ(TF1 *f1, Int_t binminx, Int_t binmaxx, Int_t binminy, Int_t
 // if f1=0, a gaussian is assumed
 // Before invoking this function, one can set a subrange to be fitted along Z
 // via f1->SetRange(zmin,zmax)
+// The argument option (default="QNR") can be used to change the fit options.
+//     "Q" means Quiet mode
+//     "N" means do not show the result of the fit
+//     "R" means fit the function in the specified function range
+//
 //
 //  Example: Assume a 3-d histogram h3
 //   Root > h3->FitSlicesZ(); produces 4 TH2D histograms
@@ -1824,7 +1963,7 @@ void TH1::FitSlicesZ(TF1 *f1, Int_t binminx, Int_t binmaxx, Int_t binminy, Int_t
          }
          if (nfill < cut) continue;
          f1->SetParameters(parsave);
-         hpz->Fit(fname,"QNR");
+         hpz->Fit(fname,option);
          Int_t npfits = f1->GetNumberFitPoints();
          if (npfits > npar && npfits >= cut) {
             for (ipar=0;ipar<npar;ipar++) {
@@ -2077,16 +2216,16 @@ void H1FitChisquare(Int_t &npar, Double_t *gin, Double_t &f, Double_t *u, Int_t 
    gF1->InitArgs(x,u);
    f = 0;
    for (binz=zfirst;binz<=zlast;binz++) {
-      x[2]  = zaxis.GetBinCenter(binz);
+      x[2]  = zaxis->GetBinCenter(binz);
       for (biny=yfirst;biny<=ylast;biny++) {
-         x[1]  = yaxis.GetBinCenter(biny);
+         x[1]  = yaxis->GetBinCenter(biny);
          for (binx=xfirst;binx<=xlast;binx++) {
             bin = hfit->GetBin(binx,biny,binz);
             cu  = hfit->GetBinContent(bin);
-            x[0]  = xaxis.GetBinCenter(binx);
+            x[0]  = xaxis->GetBinCenter(binx);
             if (Foption.Integral) {
-               binlow  = xaxis.GetBinLowEdge(binx);
-               binsize = xaxis.GetBinWidth(binx);
+               binlow  = xaxis->GetBinLowEdge(binx);
+               binsize = xaxis->GetBinWidth(binx);
                binup   = binlow + binsize;
                fu      = gF1->Integral(binlow,binup,u)/binsize;
             } else {
@@ -2141,16 +2280,16 @@ void H1FitLikelihood(Int_t &npar, Double_t *gin, Double_t &f, Double_t *u, Int_t
    gF1->InitArgs(x,u);
    f = 0;
    for (binz=zfirst;binz<=zlast;binz++) {
-      x[2]  = zaxis.GetBinCenter(binz);
+      x[2]  = zaxis->GetBinCenter(binz);
       for (biny=yfirst;biny<=ylast;biny++) {
-         x[1]  = yaxis.GetBinCenter(biny);
+         x[1]  = yaxis->GetBinCenter(biny);
          for (binx=xfirst;binx<=xlast;binx++) {
             bin = hfit->GetBin(binx,biny,binz);
             cu  = hfit->GetBinContent(bin);
-            x[0]  = xaxis.GetBinCenter(binx);
+            x[0]  = xaxis->GetBinCenter(binx);
             if (Foption.Integral) {
-               binlow  = xaxis.GetBinLowEdge(binx);
-               binsize = xaxis.GetBinWidth(binx);
+               binlow  = xaxis->GetBinLowEdge(binx);
+               binsize = xaxis->GetBinWidth(binx);
                binup   = binlow + binsize;
                fu      = gF1->Integral(binlow,binup,u)/binsize;
             } else {
@@ -2491,6 +2630,95 @@ Int_t TH1::GetBin(Int_t binx, Int_t biny, Int_t binz)
 }
 
 //______________________________________________________________________________
+Axis_t TH1::GetRandom()
+{
+// return a random number distributed according the histogram bin contents.
+// This function checks if the bins integral exists. If not, the integral
+// is evaluated, normalized to one.
+// The integral is automatically recomputed if the number of entries
+// is not the same then when the integral was computed.
+
+   if (fDimension > 1) {
+      Error("GetRandom","Function only valid for 1-d histograms");
+      return 0;
+   }
+   Int_t nbinsx = GetNbinsX();
+   Double_t integral;
+   if (fIntegral) {
+      if (fIntegral[nbinsx+1] != fEntries) integral = ComputeIntegral();
+   } else {
+      integral = ComputeIntegral();
+      if (integral == 0 || fIntegral == 0) return 0;
+   }
+   Float_t r1 = gRandom->Rndm();
+   Int_t ibin = TMath::BinarySearch(nbinsx,&fIntegral[0],r1);
+   return GetBinLowEdge(ibin+1)
+      +GetBinWidth(ibin+1)*(fIntegral[ibin+1]-r1)/(fIntegral[ibin+1] - fIntegral[ibin]);
+}
+
+//______________________________________________________________________________
+void TH1::GetRandom2(Axis_t &x, Axis_t &y)
+{
+// return 2 random numbers along axis x and y distributed according
+// the cellcontents of a 2-dim histogram
+
+   if (fDimension != 2) {
+      Error("GetRandom","Function only valid for 2-d histograms");
+      return;
+   }
+   Int_t nbinsx = GetNbinsX();
+   Int_t nbinsy = GetNbinsY();
+   Int_t nbins  = nbinsx*nbinsy;
+   Double_t integral;
+   if (fIntegral) {
+      if (fIntegral[nbins+1] != fEntries) integral = ComputeIntegral();
+   } else {
+      integral = ComputeIntegral();
+      if (integral == 0 || fIntegral == 0) return;
+   }
+   Float_t r1 = gRandom->Rndm();
+   Int_t ibin = TMath::BinarySearch(nbins,&fIntegral[0],r1);
+   Int_t biny = ibin/nbinsx;
+   Int_t binx = ibin - nbinsx*biny;
+   x = fXaxis.GetBinLowEdge(binx+1)
+      +fXaxis.GetBinWidth(binx+1)*(fIntegral[ibin+1]-r1)/(fIntegral[ibin+1] - fIntegral[ibin]);
+   y = fYaxis.GetBinLowEdge(biny+1) + fYaxis.GetBinWidth(biny+1)*gRandom->Rndm();
+}
+
+//______________________________________________________________________________
+void TH1::GetRandom3(Axis_t &x, Axis_t &y, Axis_t &z)
+{
+// return 3 random numbers along axis x , y and z distributed according
+// the cellcontents of a 3-dim histogram
+
+   if (fDimension != 3) {
+      Error("GetRandom","Function only valid for 3-d histograms");
+      return;
+   }
+   Int_t nbinsx = GetNbinsX();
+   Int_t nbinsy = GetNbinsY();
+   Int_t nbinsz = GetNbinsZ();
+   Int_t nxy    = nbinsx*nbinsy;
+   Int_t nbins  = nxy*nbinsz;
+   Double_t integral;
+   if (fIntegral) {
+      if (fIntegral[nbins+1] != fEntries) integral = ComputeIntegral();
+   } else {
+      integral = ComputeIntegral();
+      if (integral == 0 || fIntegral == 0) return;
+   }
+   Float_t r1 = gRandom->Rndm();
+   Int_t ibin = TMath::BinarySearch(nbins,&fIntegral[0],r1);
+   Int_t binz = ibin/nxy;
+   Int_t biny = (ibin - nxy*binz)/nbinsx;
+   Int_t binx = ibin - nbinsx*(biny + nbinsy*binz);
+   x = fXaxis.GetBinLowEdge(binx+1)
+      +fXaxis.GetBinWidth(binx+1)*(fIntegral[ibin+1]-r1)/(fIntegral[ibin+1] - fIntegral[ibin]);
+   y = fYaxis.GetBinLowEdge(biny+1) + fYaxis.GetBinWidth(biny+1)*gRandom->Rndm();
+   z = fZaxis.GetBinLowEdge(binz+1) + fZaxis.GetBinWidth(binz+1)*gRandom->Rndm();
+}
+
+//______________________________________________________________________________
 Stat_t TH1::GetBinContent(Int_t)
 {
 //*-*-*-*-*-*-*Return content of global bin number bin*-*-*-*-*-*-*-*-*-*-*-*
@@ -2725,12 +2953,14 @@ void TH1::Paint(Option_t *option)
 
    PaintAxis();     //*-* Draw the axes
    PaintTitle();    //*-* Draw histogram title
-   PaintFile();     //*-* Draw Current File name corresp to current directory
-   PaintDate();     //*-* Draw date/time
+//   PaintFile();     //*-* Draw Current File name corresp to current directory
+//   PaintDate();     //*-* Draw date/time
      //*-* Draw box with histogram statistics and/or fit parameters
-   if (!Hoption.Same && fEntries != 0) {
+   if (!Hoption.Same) {
       TF1 *fit = (TF1*)fFunctions->First();
-      PaintStat(gStyle->GetOptStat(),fit);
+      if (!TestBit(kNoStats)) {  // bit set via TH1::SetStats
+         PaintStat(gStyle->GetOptStat(),fit);
+      }
    }
    fMinimum = minsav;
    gCurrentHist = oldhist;
@@ -2863,18 +3093,20 @@ void TH1::PaintAxis()
       nx1   = TMath::Max(1, ndivx%100);
       ndivx = 100*nx2 + Int_t(Float_t(nx1)*gPad->GetAbsWNDC());
    }
-   TGaxis *axis = new TGaxis();
-   axis->SetTextAngle(0);
-   axis->SetLineColor(fXaxis.GetAxisColor());
-   axis->SetTextColor(fXaxis.GetLabelColor());
-   axis->SetTextFont(fXaxis.GetLabelFont());
-   axis->SetLabelFont(fXaxis.GetLabelFont());
-   axis->SetLabelSize(fXaxis.GetLabelSize());
-   axis->SetLabelOffset(fXaxis.GetLabelOffset());
-   axis->SetTickSize(fXaxis.GetTickLength());
-   axis->SetTitle((char*)fXaxis.GetTitle());
-   axis->SetTitleOffset(fXaxis.GetTitleOffset());
-   axis->SetTitleSize(fXaxis.GetTitleSize());
+   TGaxis axis;
+   axis.SetTextAngle(0);
+   axis.SetLineColor(fXaxis.GetAxisColor());
+   axis.SetTextColor(fXaxis.GetLabelColor());
+   axis.SetTextFont(fXaxis.GetLabelFont());
+   axis.SetLabelFont(fXaxis.GetLabelFont());
+   axis.SetLabelSize(fXaxis.GetLabelSize());
+   axis.SetLabelOffset(fXaxis.GetLabelOffset());
+   axis.SetTickSize(fXaxis.GetTickLength());
+   axis.SetTitle((char*)fXaxis.GetTitle());
+   axis.SetTitleOffset(fXaxis.GetTitleOffset());
+   axis.SetTitleSize(fXaxis.GetTitleSize());
+   axis.SetBit(kCenterTitle, fXaxis.TestBit(kCenterTitle));
+
    chopt[0] = 0;
    strcat(chopt, "SDH");
    if (ndivx < 0) strcat(chopt, "N");
@@ -2896,30 +3128,32 @@ void TH1::PaintAxis()
    uminsave = umin;
    umaxsave = umax;
    ndivsave = ndiv;
-   axis->PaintAxis(Hparam.xmin, Hparam.ymin,
-                   Hparam.xmax, Hparam.ymin,
-                   umin, umax,  ndiv, chopt, gridl);
+   axis.PaintAxis(Hparam.xmin, Hparam.ymin,
+                  Hparam.xmax, Hparam.ymin,
+                  umin, umax,  ndiv, chopt, gridl);
    if (gPad->GetTickx()) {
       strcat(chopt, "-");
       if (gPad->GetTickx() < 2) strcat(chopt, "U");
       if ((cw=strstr(chopt,"W"))) *cw='z';
-      axis->SetTitle("");
-      axis->PaintAxis(Hparam.xmin, Hparam.ymax,
-                      Hparam.xmax, Hparam.ymax,
-                      uminsave, umaxsave,  ndivsave, chopt, gridl);
+      axis.SetTitle("");
+      axis.PaintAxis(Hparam.xmin, Hparam.ymax,
+                     Hparam.xmax, Hparam.ymax,
+                     uminsave, umaxsave,  ndivsave, chopt, gridl);
    }
 //*-*- Y axis
-   axis->SetLineColor(fYaxis.GetAxisColor());
-   axis->SetTextColor(fYaxis.GetLabelColor());
-   axis->SetTextFont(fYaxis.GetLabelFont());
-   axis->SetLabelFont(fYaxis.GetLabelFont());
-   axis->SetLabelSize(fYaxis.GetLabelSize());
-   axis->SetLabelOffset(fYaxis.GetLabelOffset());
-   axis->SetTickSize(fYaxis.GetTickLength());
-   axis->SetTitle((char*)fYaxis.GetTitle());
-   axis->SetTitleOffset(fYaxis.GetTitleOffset());
-   axis->SetTitleSize(fYaxis.GetTitleSize());
-   chopt[0] = 0;
+   axis.SetLineColor(fYaxis.GetAxisColor());
+   axis.SetTextColor(fYaxis.GetLabelColor());
+   axis.SetTextFont(fYaxis.GetLabelFont());
+   axis.SetLabelFont(fYaxis.GetLabelFont());
+   axis.SetLabelSize(fYaxis.GetLabelSize());
+   axis.SetLabelOffset(fYaxis.GetLabelOffset());
+   axis.SetTickSize(fYaxis.GetTickLength());
+   axis.SetTitle((char*)fYaxis.GetTitle());
+   axis.SetTitleOffset(fYaxis.GetTitleOffset());
+   axis.SetTitleSize(fYaxis.GetTitleSize());
+   axis.SetBit(kCenterTitle, fYaxis.TestBit(kCenterTitle));
+
+      chopt[0] = 0;
    strcat(chopt, "SDH");
    if (ndivy < 0) {
       nx2   = ndivy/100;
@@ -2944,25 +3178,22 @@ void TH1::PaintAxis()
    uminsave = umin;
    umaxsave = umax;
    ndivsave = ndiv;
-   axis->PaintAxis(Hparam.xmin, Hparam.ymin,
-                   Hparam.xmin, Hparam.ymax,
-                   umin, umax,  ndiv, chopt, gridl);
+   axis.PaintAxis(Hparam.xmin, Hparam.ymin,
+                  Hparam.xmin, Hparam.ymax,
+                  umin, umax,  ndiv, chopt, gridl);
    if (gPad->GetTicky()) {
       if (gPad->GetTicky() < 2) {
          strcat(chopt, "U");
-         axis->SetTickSize(-fYaxis.GetTickLength());
+         axis.SetTickSize(-fYaxis.GetTickLength());
       } else {
          strcat(chopt, "+L");
       }
       if ((cw=strstr(chopt,"W"))) *cw='z';
-      axis->SetTitle("");
-      axis->PaintAxis(Hparam.xmax, Hparam.ymin,
-                      Hparam.xmax, Hparam.ymax,
-                      uminsave, umaxsave,  ndivsave, chopt, gridl);
+      axis.SetTitle("");
+      axis.PaintAxis(Hparam.xmax, Hparam.ymin,
+                     Hparam.xmax, Hparam.ymax,
+                     uminsave, umaxsave,  ndivsave, chopt, gridl);
    }
-
-   delete axis;
-
 }
 
 
@@ -3028,6 +3259,7 @@ void TH1::PaintBoxes()
          if (ylow < gPad->GetUymin()) continue;
          if (xup  > gPad->GetUxmax()) continue;
          if (yup  > gPad->GetUymax()) continue;
+         gGXW->SetFillColor(GetFillColor()); //is redefined in TPad::PaintBox
          gPad->PaintBox(xlow, ylow, xup, yup);
       }
    }
@@ -3062,7 +3294,7 @@ void TH1::PaintColorLevels()
 
    Style_t fillsav   = GetFillStyle();
    Style_t colsav    = GetFillColor();
-   SetFillStyle(1000);
+//   SetFillStyle(1000);
    TAttFill::Modify();
 
    Int_t ncolors = gStyle->GetNumberOfColors();
@@ -3138,18 +3370,17 @@ void TH1::PaintPalette()
       TAttFill::Modify();
       gPad->PaintBox(xmin,ymin+i*dy,xmax,ymin+(i+1)*dy);
    }
-   TGaxis *axis = new TGaxis();
+   TGaxis axis;
    Int_t ndiv = 10;
    Float_t wmin = Hparam.zmin;
    Float_t wmax = Hparam.zmax;
    if (Hoption.Logz) {
       wmin = TMath::Power(10.,wmin);
       wmax = TMath::Power(10.,wmax);
-      axis->PaintAxis(xmax,ymin,xmax,ymax,wmin,wmax,ndiv,"+LG");
+      axis.PaintAxis(xmax,ymin,xmax,ymax,wmin,wmax,ndiv,"+LG");
    } else {
-      axis->PaintAxis(xmax,ymin,xmax,ymax,wmin,wmax,ndiv,"+L");
+      axis.PaintAxis(xmax,ymin,xmax,ymax,wmin,wmax,ndiv,"+L");
    }
-   delete axis;
 }
 
 //______________________________________________________________________________
@@ -3354,12 +3585,6 @@ Int_t TH1::PaintContourLine(Float_t elev1, Int_t icont1, Float_t x1, Float_t y1,
    return icount;
 }
 
-
-//______________________________________________________________________________
-void TH1::PaintDate()
-{
-}
-
 //______________________________________________________________________________
 Int_t TH1::PaintInit()
 {
@@ -3396,8 +3621,10 @@ Int_t TH1::PaintInit()
          Error(where, "cannot set X axis to log scale");
          return 0;
       }
-      Hparam.xmin = TMath::Log10(Hparam.xmin);
-      Hparam.xmax = TMath::Log10(Hparam.xmax);
+      Hparam.xfirst= fXaxis.FindBin(Hparam.xmin);
+      Hparam.xlast = fXaxis.FindBin(Hparam.xmax);
+      Hparam.xmin  = TMath::Log10(Hparam.xmin);
+      Hparam.xmax  = TMath::Log10(Hparam.xmax);
    }
 
 //*-*  Compute Y axis parameters
@@ -3586,8 +3813,10 @@ void TH1::PaintErrors()
    npoints    = last - first  +1;
    if (errormarker == 1) symbolsize = 0.01;
    Float_t factor = Hparam.factor;
-   xmin       = Hparam.xmin;
-   xmax       = Hparam.xmax;
+//   xmin       = Hparam.xmin;
+//   xmax       = Hparam.xmax;
+   xmin       = gPad->GetUxmin();
+   xmax       = gPad->GetUxmax();
    ymin       = gPad->GetUymin();
    ymax       = gPad->GetUymax();
    bxsize     = 0.01*symbolsize*(xmax-xmin);
@@ -3642,6 +3871,8 @@ void TH1::PaintErrors()
 //*-*- ey2   = Up Y error
 //*-*- (xi,yi) = Error bars corrdinates
 
+      if (xp < xmin) goto L30;
+      if (xp > xmax) break;
       yp = factor*GetBinContent(k);
       if (fixbin) ex1 = xerror*Hparam.xbinsize;
       else {
@@ -3758,22 +3989,14 @@ L30:
 //*-*-      draw the filled area
 
    if (option3) {
-      TGraph *graph = new TGraph();
-      graph->SetFillStyle(GetFillStyle());
-      graph->SetFillColor(GetFillColor());
-      if (option4) graph->PaintGraph(2*npoints,xline,yline,"FC");
-      else         graph->PaintGraph(2*npoints,xline,yline,"F");
-      delete graph;
+      TGraph graph;
+      graph.SetFillStyle(GetFillStyle());
+      graph.SetFillColor(GetFillColor());
+      if (option4) graph.PaintGraph(2*npoints,xline,yline,"FC");
+      else         graph.PaintGraph(2*npoints,xline,yline,"F");
       delete [] xline;
       delete [] yline;
    }
-//   SetLineWidth(widthsav);
-//   SetMarkerSize(sizesav);
-}
-
-//______________________________________________________________________________
-void TH1::PaintFile()
-{
 }
 
 //______________________________________________________________________________
@@ -4038,19 +4261,18 @@ void TH1::PaintHist()
 
 //*-*-     Draw the histogram
 
-   TGraph *graph = new TGraph();
-   graph->SetLineWidth(lw);
-   graph->SetLineStyle(GetLineStyle());
-   graph->SetLineColor(GetLineColor());
-   graph->SetFillStyle(htype);
-   graph->SetFillColor(GetFillColor());
+   TGraph graph;
+   graph.SetLineWidth(lw);
+   graph.SetLineStyle(GetLineStyle());
+   graph.SetLineColor(GetLineColor());
+   graph.SetFillStyle(htype);
+   graph.SetFillColor(GetFillColor());
    if (fixbin) {
-      graph->PaintGrapHist(nbins, keepx, keepy ,chopth);
+      graph.PaintGrapHist(nbins, keepx, keepy ,chopth);
    }
    else {
-      graph->PaintGrapHist(nbins, keepx, keepy ,chopth);
+      graph.PaintGrapHist(nbins, keepx, keepy ,chopth);
    }
-   delete graph;
    delete [] keepx;
    delete [] keepy;
    gStyle->SetBarOffset(baroffsetsave);
@@ -4073,14 +4295,13 @@ void TH1::PaintH3(Option_t *option)
    Float_t rmin[3], rmax[3];
    Float_t xf,yf,zf;
    Int_t bin, binx, biny, binz;
-   TPolyMarker3D *pm3d;
    TView * view;
 
    if (!fEntries) return;
    Int_t nx  = fXaxis.GetNbins();
    Int_t ny  = fYaxis.GetNbins();
    Int_t nz  = fZaxis.GetNbins();
-   pm3d    = new TPolyMarker3D(Int_t(fEntries));
+   TPolyMarker3D *pm3d    = new TPolyMarker3D(Int_t(fEntries));
    gPad->Modified(kTRUE);
    rmin[0] = fXaxis.GetBinLowEdge(1);
    rmin[1] = fYaxis.GetBinLowEdge(1);
@@ -4170,10 +4391,10 @@ void TH1::PaintH3Box(Option_t *option)
 
 
    //Draw TMarker3DBox with size proportional to cell content
-   TMarker3DBox *m3 = new TMarker3DBox();
-   m3->SetRefObject(this);
-   m3->SetDirection(0,0);
-   m3->SetLineColor(GetMarkerColor());
+   TMarker3DBox m3;
+   m3.SetRefObject(this);
+   m3.SetDirection(0,0);
+   m3.SetLineColor(GetMarkerColor());
    Float_t scale;
    for (ix=1;ix<=nbinsx;ix++) {
       xmin = fXaxis.GetBinLowEdge(ix);
@@ -4188,13 +4409,12 @@ void TH1::PaintH3Box(Option_t *option)
             w = GetBinContent(bin);
             if (w == 0) continue;
             scale = (w-wmin)/(wmax-wmin);
-            m3->SetPosition(0.5*(xmin+xmax),0.5*(ymin+ymax),0.5*(zmin+zmax));
-            m3->SetSize(scale*(xmax-xmin),scale*(ymax-ymin),scale*(zmax-zmin));
-            m3->Paint(option);
+            m3.SetPosition(0.5*(xmin+xmax),0.5*(ymin+ymax),0.5*(zmin+zmax));
+            m3.SetSize(scale*(xmax-xmin),scale*(ymax-ymin),scale*(zmax-zmin));
+            m3.Paint(option);
          }
       }
    }
-   delete m3;
 }
 
 
@@ -4213,6 +4433,11 @@ void TH1::PaintLego()
 //*-*
 //*-*   See TH1::Draw for the list of Lego options.
 //*-*   See TLego for more examples of lego options.
+//
+//      See TStyle::SetPalette to change the color palette.
+//      It is suggested to use palette 1 via the call
+//      gStyle->SetColorPalette(1)
+//
 //Begin_Html
 /*
 <img src="gif/PaintLego1.gif">
@@ -4367,11 +4592,14 @@ void TH1::PaintLego()
    Float_t *funlevel = new Float_t[ndivz+1];
    Int_t *colorlevel = new Int_t[ndivz+1];
    Int_t lowcolor = GetFillColor();
+   Int_t theColor;
+   Int_t ncolors = gStyle->GetNumberOfColors();
    for (i = 0; i < ndivz; ++i) {
       funlevel[i]   = GetContourLevel(i);
-      colorlevel[i] = gStyle->GetColorPalette(lowcolor+i);
+      theColor = lowcolor + Int_t(i*Float_t(ncolors)/Float_t(ndivz));
+      colorlevel[i] = gStyle->GetColorPalette(theColor);
    }
-   colorlevel[ndivz] = gStyle->GetColorPalette(lowcolor+i+1);
+   colorlevel[ndivz] = gStyle->GetColorPalette(lowcolor+ncolors-1);
    gLego->ColorFunction(ndivz, funlevel, colorlevel, irep);
    delete [] colorlevel;
    delete [] funlevel;
@@ -4526,6 +4754,7 @@ void TH1::PaintLegoAxis(TGaxis *axis, Float_t ang)
         axis->SetTitle((char*)fXaxis.GetTitle());
         axis->SetTitleOffset(fXaxis.GetTitleOffset());
         axis->SetTitleSize(fXaxis.GetTitleSize());
+        axis->SetBit(kCenterTitle, fXaxis.TestBit(kCenterTitle));
 	if (Hoption.Logx) {
 	    bmin = TMath::Power(10, rmin[0]);
 	    bmax = TMath::Power(10, rmax[0]);
@@ -4549,6 +4778,7 @@ void TH1::PaintLegoAxis(TGaxis *axis, Float_t ang)
         axis->SetTitle((char*)fYaxis.GetTitle());
         axis->SetTitleOffset(fYaxis.GetTitleOffset());
         axis->SetTitleSize(fYaxis.GetTitleSize());
+        axis->SetBit(kCenterTitle, fYaxis.TestBit(kCenterTitle));
 
 	if (TMath::Abs(z1[0] - z2[0]) < epsil && TMath::Abs(z1[1] - z2[1]) < epsil) {
 	    strcpy(chopay, "SDH+=N");
@@ -4583,6 +4813,7 @@ void TH1::PaintLegoAxis(TGaxis *axis, Float_t ang)
         axis->SetTitle((char*)fZaxis.GetTitle());
         axis->SetTitleOffset(fZaxis.GetTitleOffset());
         axis->SetTitleSize(fZaxis.GetTitleSize());
+        axis->SetBit(kCenterTitle, fZaxis.TestBit(kCenterTitle));
 	if (Hoption.Logz) {
 	    bmin = TMath::Power(10, rmin[2]);
 	    bmax = TMath::Power(10, rmax[2]);
@@ -4594,13 +4825,6 @@ void TH1::PaintLegoAxis(TGaxis *axis, Float_t ang)
     }
 
     SetLineStyle(1);
-}
-
-
-
-//______________________________________________________________________________
-void TH1::PaintLive()
-{
 }
 
 //______________________________________________________________________________
@@ -4623,14 +4847,30 @@ void TH1::PaintScatterPlot()
    TAttMarker::Modify();
 
    Int_t k, marker;
-   Float_t z, xk,xstep, yk, ystep;
-   if (Hparam.zmin == 0 && Hparam.zmax == 0) return;
-   Float_t dz = Hparam.zmax - Hparam.zmin;
+   Float_t dz, z, xk,xstep, yk, ystep;
    Float_t scale = 1;
    Bool_t ltest  = kFALSE;
-   if (dz >= kNMAX || Hparam.zmax < 1) {
-      scale = (kNMAX-1)/dz;
+   Float_t zmax  = GetMaximum();
+   Float_t zmin  = GetMinimum();
+   if (zmin == 0 && zmax == 0) return;
+   Int_t ncells = (Hparam.ylast-Hparam.yfirst)*(Hparam.xlast-Hparam.xfirst);
+   if (Hoption.Logz) {
+      if (zmin > 0) zmin = TMath::Log10(zmin);
+      else          zmin = 0;
+      if (zmax > 0) zmax = TMath::Log10(zmax);
+      else          zmax = 0;
+      if (zmin == 0 && zmax == 0) return;
+      dz = zmax - zmin;
+      scale = 100/dz;
+      if (ncells > 10000) scale /= 5;
       ltest = kTRUE;
+   } else {
+      dz = zmax - zmin;
+      if (dz >= kNMAX || zmax < 1) {
+         scale = (kNMAX-1)/dz;
+         if (ncells > 10000) scale /= 5;
+         ltest = kTRUE;
+      }
    }
    UInt_t seedsave = gRandom->GetSeed();
    gRandom->SetSeed();
@@ -4642,13 +4882,13 @@ void TH1::PaintScatterPlot()
          Int_t bin  = j*(fXaxis.GetNbins()+2) + i;
          xk    = fXaxis.GetBinLowEdge(i);
          xstep = fXaxis.GetBinWidth(i);
-         z     = GetBinContent(bin) - Hparam.zmin;
+         z     = GetBinContent(bin);
          if (Hoption.Logz) {
-            if (z != 0) z = TMath::Log10(z) - Hparam.zmin;
+            if (z > 0) z = TMath::Log10(z) - zmin;
          } else {
-            z    -=  Hparam.zmin;
+            z    -=  zmin;
          }
-         if (z == 0) continue;
+         if (z <= 0) continue;
          k = Int_t(z*scale);
          if (ltest) k++;
          if (k > 0) {
@@ -4688,13 +4928,14 @@ void TH1::PaintStat(Int_t dostat, TF1 *fit)
 //*-*                    =======================
 // The type of information printed in the histogram statistics box
 //  can be selected via gStyle->SetOptStat(mode).
-//  The parameter mode can be = ourmen  (default = 001111)
+//  The parameter mode can be = ourmeni  (default = 0001111)
 //    n = 1;  name of histogram is printed
 //    e = 1;  number of entries printed
 //    m = 1;  mean value printed
 //    r = 1;  rms printed
 //    u = 1;  number of underflows printed
 //    o = 1;  number of overflows printed
+//    i = 1;  integral of bins printed
 //  Example: gStyle->SetOptStat(11);
 //           print only name of histogram and number of entries.
 //
@@ -4708,8 +4949,6 @@ void TH1::PaintStat(Int_t dostat, TF1 *fit)
 //  Example: gStyle->SetOptFit(1011);
 //           print fit probability, parameter names/values and errors.
 //
-
-   if (TestBit(kNoStats)) return;  // bit set via TH1::SetStats
 
    static char t[64];
    Int_t dofit;
@@ -4729,7 +4968,8 @@ void TH1::PaintStat(Int_t dostat, TF1 *fit)
    Int_t print_rms     = (dostat/1000)%10;
    Int_t print_under   = (dostat/10000)%10;
    Int_t print_over    = (dostat/100000)%10;
-   Int_t nlines = print_name + print_entries + print_mean + print_rms + print_under + print_over;
+   Int_t print_integral= (dostat/1000000)%10;
+   Int_t nlines = print_name + print_entries + print_mean + print_rms + print_under + print_over + print_integral;
    Int_t print_fval    = dofit%10;
    Int_t print_ferrors = (dofit/10)%10;
    Int_t print_fchi2   = (dofit/100)%10;
@@ -4758,12 +4998,13 @@ void TH1::PaintStat(Int_t dostat, TF1 *fit)
       stats->SetOptFit(dofit);
       stats->SetOptStat(dostat);
       stats->SetFillColor(gStyle->GetStatColor());
+      stats->SetFillStyle(gStyle->GetStatStyle());
       stats->SetBorderSize(gStyle->GetStatBorderSize());
+      stats->SetTextFont(gStyle->GetStatFont());
       stats->SetName("stats");
 
       stats->SetTextColor(1);
       stats->SetTextAlign(12);
-      stats->SetTextFont(gStyle->GetTextFont());
       stats->SetBit(kCanDelete);
    }
    if (print_name)  stats->AddText((char*)GetName());
@@ -4773,11 +5014,11 @@ void TH1::PaintStat(Int_t dostat, TF1 *fit)
       stats->AddText(t);
    }
    if (print_mean) {
-      sprintf(t,"Mean  = %6.4g",GetMean());
+      sprintf(t,"Mean  = %6.4g",GetMean(1));
       stats->AddText(t);
    }
    if (print_rms) {
-      sprintf(t,"RMS   = %6.4g",GetRMS());
+      sprintf(t,"RMS   = %6.4g",GetRMS(1));
       stats->AddText(t);
    }
    if (print_under) {
@@ -4786,6 +5027,10 @@ void TH1::PaintStat(Int_t dostat, TF1 *fit)
    }
    if (print_over) {
       sprintf(t,"Over  = %6.4g",GetBinContent(fNcells-1));
+      stats->AddText(t);
+   }
+   if (print_integral) {
+      sprintf(t,"Integ = %6.4g",Integral());
       stats->AddText(t);
    }
 
@@ -4831,6 +5076,7 @@ void TH1::PaintStat2(Int_t dostat, TF1 *fit)
    //    r = 1;  rms printed
    //    u = 1;  number of underflows printed
    //    o = 1;  number of overflows printed
+   //    i = 1;  integral of bins printed
    //  Example: gStyle->SetOptStat(11);
    //           print only name of histogram and number of entries.
 
@@ -4852,7 +5098,8 @@ void TH1::PaintStat2(Int_t dostat, TF1 *fit)
    Int_t print_rms     = (dostat/1000)%10;
    Int_t print_under   = (dostat/10000)%10;
    Int_t print_over    = (dostat/100000)%10;
-   Int_t nlines = print_name + print_entries + 2*print_mean + 2*print_rms;
+   Int_t print_integral= (dostat/1000000)%10;
+   Int_t nlines = print_name + print_entries + 2*print_mean + 2*print_rms + print_integral;
    if (print_under || print_over) nlines += 3;
 
    // Pavetext with statistics
@@ -4878,12 +5125,13 @@ void TH1::PaintStat2(Int_t dostat, TF1 *fit)
       stats->SetOptFit(dofit);
       stats->SetOptStat(dostat);
       stats->SetFillColor(gStyle->GetStatColor());
+      stats->SetFillStyle(gStyle->GetStatStyle());
       stats->SetBorderSize(gStyle->GetStatBorderSize());
       stats->SetName("stats");
 
       stats->SetTextColor(1);
       stats->SetTextAlign(12);
-      stats->SetTextFont(gStyle->GetTextFont());
+      stats->SetTextFont(gStyle->GetStatFont());
       stats->SetBit(kCanDelete);
    }
    if (print_name)  stats->AddText((char*)GetName());
@@ -4930,6 +5178,10 @@ void TH1::PaintStat2(Int_t dostat, TF1 *fit)
       sprintf(t, " %7d %7d %7d\n", (Int_t)unov[6], (Int_t)unov[7], (Int_t)unov[8]);
       stats->AddText(t);
    }
+   if (print_integral) {
+      sprintf(t,"Integ  = %6.4g",Integral());
+      stats->AddText(t);
+   }
 
    // Draw Fit parameters
    if (fit) {
@@ -4964,6 +5216,11 @@ void TH1::PaintSurface()
 //*-*
 //*-*   See TH1::Draw for a list of Surface options
 //*-*  The following picture is generated with option SURF1.
+//
+//      See TStyle::SetPalette to change the color palette.
+//      It is suggested to use palette 1 via the call
+//      gStyle->SetColorPalette(1)
+//
 //Begin_Html
 /*
 <img src="gif/PaintSurface1.gif">
@@ -5090,11 +5347,14 @@ void TH1::PaintSurface()
    Float_t *funlevel = new Float_t[ndivz+1];
    Int_t *colorlevel = new Int_t[ndivz+1];
    Int_t lowcolor = GetFillColor();
+   Int_t theColor;
+   Int_t ncolors = gStyle->GetNumberOfColors();
    for (i = 0; i < ndivz; ++i) {
       funlevel[i]   = GetContourLevel(i);
-      colorlevel[i] = gStyle->GetColorPalette(lowcolor+i);
+      theColor = lowcolor + Int_t(i*Float_t(ncolors)/Float_t(ndivz));
+      colorlevel[i] = gStyle->GetColorPalette(theColor);
    }
-   colorlevel[ndivz] = gStyle->GetColorPalette(lowcolor+i+1);
+   colorlevel[ndivz] = gStyle->GetColorPalette(lowcolor+ncolors-1);
    gLego->ColorFunction(ndivz, funlevel, colorlevel, irep);
    delete [] colorlevel;
    delete [] funlevel;
@@ -5249,11 +5509,13 @@ void TH1::PaintTable()
    if (!Hoption.Lego && !Hoption.Surf) PaintAxis();     //*-* Draw the axes
 
    PaintTitle();    //*-* Draw histogram title
-   PaintFile();     //*-* Draw Current File name corresp to current directory
-   PaintDate();     //*-* Draw date/time
-   if (fEntries != 0 && !Hoption.Same && !Hoption.Lego && !Hoption.Surf) {
+//   PaintFile();     //*-* Draw Current File name corresp to current directory
+//   PaintDate();     //*-* Draw date/time
+   if (!Hoption.Same && !Hoption.Lego && !Hoption.Surf) {
       TF2 *fit = (TF2*)fFunctions->First();
-      PaintStat2(gStyle->GetOptStat(),fit);
+      if (!TestBit(kNoStats)) {  // bit set via TH1::SetStats
+         PaintStat2(gStyle->GetOptStat(),fit);
+      }
    }
 }
 
@@ -5568,11 +5830,11 @@ TH1 *TH1::Rebin(Int_t ngroup, const char*newname)
    // Save old bin contents into a new array
    Double_t *oldBins = new Double_t[nbins];
    Int_t bin, i;
-   for (bin=1;bin<nbins;bin++) oldBins[bin] = GetBinContent(bin);
+   for (bin=0;bin<nbins;bin++) oldBins[bin] = GetBinContent(bin+1);
    Double_t *oldErrors = 0;
    if (fSumw2.fN != 0) {
       oldErrors = new Double_t[nbins];
-      for (bin=1;bin<nbins;bin++) oldErrors[bin] = GetBinError(bin);
+      for (bin=0;bin<nbins;bin++) oldErrors[bin] = GetBinError(bin+1);
    }
 
    // create a clone of the old histogram if newname is specified
@@ -5586,9 +5848,9 @@ TH1 *TH1::Rebin(Int_t ngroup, const char*newname)
    hnew->SetBins(newbins,xmin,xmax); //this also changes errors array (if any)
 
    // copy merged bin contents (ignore under/overflows)
-   Int_t oldbin = 1;
+   Int_t oldbin = 0;
    Double_t binContent, binError;
-   for (bin = 1;bin<=newbins;bin++) {
+   for (bin = 0;bin<newbins;bin++) {
       binContent = 0;
       binError   = 0;
       for (i=0;i<ngroup;i++) {
@@ -5596,8 +5858,8 @@ TH1 *TH1::Rebin(Int_t ngroup, const char*newname)
          binContent += oldBins[oldbin+i];
          if (oldErrors) binError += oldErrors[oldbin+i]*oldErrors[oldbin+i];
       }
-      hnew->SetBinContent(bin,binContent);
-      if (oldErrors) hnew->SetBinError(bin,TMath::Sqrt(binError));
+      hnew->SetBinContent(bin+1,binContent);
+      if (oldErrors) hnew->SetBinError(bin+1,TMath::Sqrt(binError));
       oldbin += ngroup;
    }
 
@@ -5621,6 +5883,14 @@ void TH1::Scale(Float_t c1)
    Double_t ent = fEntries;
    Add(this,this,c1,0);
    fEntries = ent;
+
+   //if contours set, must also scale contours
+   Int_t ncontours = GetContour();
+   if (ncontours == 0) return;
+   Float_t *levels = fContour.GetArray();
+   for (Int_t i=0;i<ncontours;i++) {
+      levels[i] *= c1;
+   }
 }
 
 
@@ -5720,8 +5990,10 @@ Int_t TH1::TableInit()
          Error(where, "cannot set X axis to log scale");
          return 0;
       }
-      Hparam.xmin = TMath::Log10(Hparam.xmin);
-      Hparam.xmax = TMath::Log10(Hparam.xmax);
+      Hparam.xfirst= fXaxis.FindBin(Hparam.xmin);
+      Hparam.xlast = fXaxis.FindBin(Hparam.xmax);
+      Hparam.xmin  = TMath::Log10(Hparam.xmin);
+      Hparam.xmax  = TMath::Log10(Hparam.xmax);
    }
 
 //*-*------------------  Compute Y axis parameters
@@ -5745,8 +6017,10 @@ Int_t TH1::TableInit()
          Error(where, "cannot set Y axis to log scale");
          return 0;
       }
-      Hparam.ymin = TMath::Log10(Hparam.ymin);
-      Hparam.ymax = TMath::Log10(Hparam.ymax);
+      Hparam.yfirst= fYaxis.FindBin(Hparam.ymin);
+      Hparam.ylast = fYaxis.FindBin(Hparam.ymax);
+      Hparam.ymin  = TMath::Log10(Hparam.ymin);
+      Hparam.ymax  = TMath::Log10(Hparam.ymax);
    }
 
 
@@ -5889,17 +6163,11 @@ void TH1::PaintTitle()
    ptitle->SetBorderSize(gStyle->GetTitleBorderSize());
 //   ptitle->SetTextSize(0.85*ht);
    ptitle->SetTextColor(1);
-   ptitle->SetTextFont(gStyle->GetTextFont());
+   ptitle->SetTextFont(gStyle->GetTitleFont());
    ptitle->AddText((char*)GetTitle());
    ptitle->SetBit(kCanDelete);
    ptitle->Draw();
    ptitle->Paint();
-
-}
-
-//______________________________________________________________________________
-void TH1::PaintValues()
-{
 
 }
 
@@ -5962,6 +6230,7 @@ void TH1::Reset(Option_t *)
    fSumw2.Reset();
    fFunctions->Delete();
    fContour.Set(0);
+   if (fIntegral) {delete [] fIntegral; fIntegral = 0;}
 }
 
 //______________________________________________________________________________
@@ -5980,14 +6249,6 @@ void TH1::SavePrimitive(ofstream &out, Option_t *option)
    fZaxis.SaveAttributes(out,GetName(),"->GetZaxis()");
    out<<"   "<<GetName()<<"->Draw("
       <<quote<<option<<quote<<");"<<endl;
-}
-
-//______________________________________________________________________________
-void TH1::UpdateOptions()
-{
-//*-*-*-*-*-*Change Drawing options of an already drawn histogram*-*-*-*-*-*
-//*-*        ====================================================
-//*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 }
 
 //______________________________________________________________________________
@@ -6011,32 +6272,115 @@ void TH1::UseCurrentStyle()
 }
 
 //______________________________________________________________________________
-void TH1::Smooth(Option_t *)
-{
-//*-*-*-*-*-*-*-*Smooth contents of this histogram*-*-*-*-*-*-*-*-*-*-*-*-*
-//*-*            =================================
-
-   printf("TH1.Smooth Total sum= %g RMS=%g\n",GetSumOfWeights(),GetRMS());
-}
-
-//______________________________________________________________________________
-Stat_t TH1::GetMean(Int_t)
+Stat_t TH1::GetMean(Int_t axis)
 {
 //*-*-*-*-*-*-*-*Return mean value of this histogram along the X axis*-*-*-*-*
 //*-*            ====================================================
-  if (fTsumw == 0) return 0;
-  return fTsumwx / fTsumw;
+
+  if (axis <1 || axis > 3) return 0;
+  Stat_t stats[10];
+  GetStats(stats);
+  if (stats[0] == 0) return 0;
+  Int_t ax = 2*axis;
+  return stats[ax]/stats[0];
 }
 
 //______________________________________________________________________________
-Stat_t TH1::GetRMS(Int_t)
+Stat_t TH1::GetRMS(Int_t axis)
 {
 //*-*-*-*-*-*-*-*Return the Root Mean Square value of this histogram*-*-*-*-*
 //*-*            ===================================================
-  if (fTsumw == 0) return 0;
-    Stat_t x = fTsumwx/fTsumw;
-    Stat_t rms2 = TMath::Abs(fTsumwx2/fTsumw - x*x);
-    return TMath::Sqrt(rms2);
+
+  if (axis <1 || axis > 3) return 0;
+  Stat_t x, rms2, stats[10];
+  GetStats(stats);
+  if (stats[0] == 0) return 0;
+  Int_t ax = 2*axis;
+  x    = stats[ax]/stats[0];
+  rms2 = TMath::Abs(stats[ax+1]/stats[0] -x*x);
+  return TMath::Sqrt(rms2);
+}
+
+//______________________________________________________________________________
+void TH1::GetStats(Stat_t *stats)
+{
+   // fill the array stats from the contents of this histogram
+   // The array stats must be correctly dimensionned in the calling program.
+   // stats[0] = sumw
+   // stats[1] = sumw2
+   // stats[2] = sumwx
+   // stats[3] = sumwx2
+   // stats[4] = sumwy   if 2-d or 3-d
+   // stats[5] = sumwy2
+   // stats[6] = sumwz   if 3-d
+   // stats[7] = sumwz2
+   //
+   // If no axis-subrange is specified (via TAxis::SetRange), the array stats
+   // is simply a copy of the statistics quantities computed at filling time.
+   // If a sub-range is specified, the function recomputes these quantities
+   // from the bin contents in the current axis range.
+
+   // Loop on bins (possibly including underflows/overflows)
+   Int_t bin, binx, biny, binz;
+   Stat_t w;
+   Float_t x,y,z;
+   if (fDimension == 1) {
+      if (fTsumw == 0 || fXaxis.TestBit(kAxisRange)) {
+         for (bin=0;bin<4;bin++) stats[bin] = 0;
+         for (binx=fXaxis.GetFirst();binx<=fXaxis.GetLast();binx++) {
+            x = fXaxis.GetBinCenter(binx);
+            w = TMath::Abs(GetBinContent(binx));
+            stats[0] += w;
+            stats[1] += w*w;
+            stats[2] += w*x;
+            stats[3] += w*x*x;
+         }
+      } else {
+         stats[0] = fTsumw;
+         stats[1] = fTsumw2;
+         stats[2] = fTsumwx;
+         stats[3] = fTsumwx2;
+      }
+   }
+   if (fDimension == 2) {
+      for (bin=0;bin<6;bin++) stats[bin] = 0;
+      for (biny=fYaxis.GetFirst();biny<=fYaxis.GetLast();biny++) {
+         y = fYaxis.GetBinCenter(biny);
+         for (binx=fXaxis.GetFirst();binx<=fXaxis.GetLast();binx++) {
+            bin = GetBin(binx,biny);
+            x = fXaxis.GetBinCenter(binx);
+            w = TMath::Abs(GetBinContent(bin));
+            stats[0] += w;
+            stats[1] += w*w;
+            stats[2] += w*x;
+            stats[3] += w*x*x;
+            stats[4] += w*y;
+            stats[5] += w*y*y;
+         }
+      }
+   }
+   if (fDimension == 3) {
+      for (bin=0;bin<8;bin++) stats[bin] = 0;
+      for (binz=fZaxis.GetFirst();binz<=fZaxis.GetLast();binz++) {
+         z = fZaxis.GetBinCenter(binz);
+         for (biny=fYaxis.GetFirst();biny<=fYaxis.GetLast();biny++) {
+            y = fYaxis.GetBinCenter(biny);
+            for (binx=fXaxis.GetFirst();binx<=fXaxis.GetLast();binx++) {
+               bin = GetBin(binx,biny,binz);
+               x = fXaxis.GetBinCenter(binx);
+               w = TMath::Abs(GetBinContent(bin));
+               stats[0] += w;
+               stats[1] += w*w;
+               stats[2] += w*x;
+               stats[3] += w*x*x;
+               stats[4] += w*y;
+               stats[5] += w*y*y;
+               stats[6] += w*z;
+               stats[7] += w*z*z;
+            }
+         }
+      }
+   }
 }
 
 //______________________________________________________________________________
@@ -6096,6 +6440,7 @@ Stat_t TH1::Integral(Int_t binx1, Int_t binx2)
    if (fDimension < 3) nbinsz = -1;
    if (binx1 < 0) binx1 = 0;
    if (binx2 > nbinsx+1) binx2 = nbinsx+1;
+   if (binx2 < binx1)    binx2 = nbinsx;
    Stat_t integral = 0;
 
 //*-*- Loop on bins in specified range
@@ -6124,8 +6469,10 @@ Stat_t TH1::Integral(Int_t binx1, Int_t binx2, Int_t biny1, Int_t biny2)
    if (fDimension < 3) nbinsz = -1;
    if (binx1 < 0) binx1 = 0;
    if (binx2 > nbinsx+1) binx2 = nbinsx+1;
+   if (binx2 < binx1)    binx2 = nbinsx;
    if (biny1 < 0) biny1 = 0;
    if (biny2 > nbinsy+1) biny2 = nbinsy+1;
+   if (biny2 < biny1)    biny2 = nbinsy;
    Stat_t integral = 0;
 
 //*-*- Loop on bins in specified range
@@ -6251,20 +6598,6 @@ void TH1::SetContour(Int_t  nlevels, Float_t *levels)
      }
   }
 }
-
-
-//______________________________________________________________________________
-void TH1::SetContour(Int_t  nlevels)
-{
-//*-*-*-*-*-*-*-*-*-*-*Set number of contour levels*-*-*-*-*-*-*-*-*-*-*-*
-//*-*                  ============================
-// Values for the nlevels contours is automatically computed by linear
-// interpolation between minimum and maximum value.
-//
-
-  SetContour(nlevels,0);
-}
-
 
 //______________________________________________________________________________
 void TH1::SetContourLevel(Int_t level, Float_t value)
@@ -6416,7 +6749,7 @@ void TH1::SetMinimum(Float_t minimum)
 {
 //*-*-*-*-*-*-*-*-*Set the minimum value for the Y axis*-*-*-*-*-*-*-*-*-*-*-*
 //*-*              ====================================
-// By default the maximum value is automatically set to zero if all bin contents
+// By default the minimum value is automatically set to zero if all bin contents
 // are positive or the minimum - 10 per cent otherwise.
 //
    fMinimum = minimum;
@@ -6662,17 +6995,17 @@ void TH1C::Copy(TObject &newth1)
 }
 
 //______________________________________________________________________________
-void TH1C::DrawCopy(Option_t *option)
+TH1 *TH1C::DrawCopy(Option_t *option)
 {
 
    TString opt = option;
    opt.ToLower();
    if (gPad && !opt.Contains("same")) gPad->Clear();
-   TH1C *newth1 = new TH1C();
-   Copy(*newth1);
+   TH1C *newth1 = (TH1C*)Clone();
    newth1->SetDirectory(0);
    newth1->SetBit(kCanDelete);
    newth1->AppendPad(option);
+   return newth1;
 }
 
 //______________________________________________________________________________
@@ -6834,16 +7167,16 @@ void TH1S::Copy(TObject &newth1)
 }
 
 //______________________________________________________________________________
-void TH1S::DrawCopy(Option_t *option)
+TH1 *TH1S::DrawCopy(Option_t *option)
 {
    TString opt = option;
    opt.ToLower();
    if (gPad && !opt.Contains("same")) gPad->Clear();
-   TH1S *newth1 = new TH1S();
-   Copy(*newth1);
+   TH1S *newth1 = (TH1S*)Clone();
    newth1->SetDirectory(0);
    newth1->SetBit(kCanDelete);
    newth1->AppendPad(option);
+   return newth1;
 }
 
 //______________________________________________________________________________
@@ -6984,16 +7317,16 @@ void TH1F::Copy(TObject &newth1)
 }
 
 //______________________________________________________________________________
-void TH1F::DrawCopy(Option_t *option)
+TH1 *TH1F::DrawCopy(Option_t *option)
 {
    TString opt = option;
    opt.ToLower();
    if (gPad && !opt.Contains("same")) gPad->Clear();
-   TH1F *newth1 = new TH1F();
-   Copy(*newth1);
+   TH1F *newth1 = (TH1F*)Clone();
    newth1->SetDirectory(0);
    newth1->SetBit(kCanDelete);
    newth1->AppendPad(option);
+   return newth1;
 }
 
 //______________________________________________________________________________
@@ -7135,16 +7468,16 @@ void TH1D::Copy(TObject &newth1)
 }
 
 //______________________________________________________________________________
-void TH1D::DrawCopy(Option_t *option)
+TH1 *TH1D::DrawCopy(Option_t *option)
 {
    TString opt = option;
    opt.ToLower();
    if (gPad && !opt.Contains("same")) gPad->Clear();
-   TH1D *newth1= new TH1D();
-   Copy(*newth1);
+   TH1D *newth1 = (TH1D*)Clone();
    newth1->SetDirectory(0);
    newth1->SetBit(kCanDelete);
    newth1->AppendPad(option);
+   return newth1;
 }
 
 //______________________________________________________________________________

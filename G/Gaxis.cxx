@@ -1,3 +1,5 @@
+//*CMZ :  2.22/07 28/06/99  18.14.09  by  Rene Brun
+//*CMZ :  2.22/01 17/05/99  13.39.37  by  Rene Brun
 //*CMZ :  2.21/01 07/01/99  14.47.09  by  Rene Brun
 //*CMZ :  2.20/05 15/12/98  09.17.20  by  Rene Brun
 //*CMZ :  2.20/00 13/11/98  18.38.02  by  Rene Brun
@@ -7,20 +9,22 @@
 //*CMZ :  1.03/09 10/12/97  10.07.31  by  Rene Brun
 //*-- Author :    Rene Brun, Olivier Couet   12/12/94
 
+/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Fons Rademakers.                                  *
+ * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
  *                                                                       *
  * Permission to use, copy, modify and distribute this software and its  *
  * documentation for non-commercial purposes is hereby granted without   *
  * fee, provided that the above copyright notice appears in all copies   *
  * and that both the copyright notice and this permission notice appear  *
  * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose.                         *
- * It is provided "as is" without express or implied warranty.           *
+ * suitability of this software for any purpose. It is provided "as is"  *
+ * without express or implied warranty.                                  *
  *************************************************************************/
 
 #include <stdlib.h>
@@ -33,7 +37,10 @@
 #include "TGXW.h"
 #include "TLine.h"
 #include "TText.h"
+#include "TStyle.h"
 #include "TMath.h"
+
+const Int_t kCenterTitle = BIT(12);
 
 ClassImp(TGaxis)
 
@@ -116,11 +123,9 @@ TGaxis::TGaxis(Float_t xmin, Float_t ymin, Float_t xmax, Float_t ymax,
    fTickSize    = 0.030;
    fTitleOffset = 1;
    fTitleSize   = fLabelSize;
-   Int_t nch    = strlen(chopt);
-   if (nch < 15) strcpy(fChopt, chopt);
-   else          {strncpy(fChopt, chopt,15); fChopt[15] = 0;}
-   fName  = " ";
-   fTitle = " ";
+   fChopt       = chopt;
+   fName        = " ";
+   fTitle       = " ";
 }
 
 //______________________________________________________________________________
@@ -171,7 +176,7 @@ void TGaxis::Paint(Option_t *)
    Float_t wmin = fWmin;
    Float_t wmax = fWmax;
    Int_t   ndiv = fNdiv;
-   PaintAxis(fX1,fY1,fX2,fY2,wmin,wmax,ndiv,fChopt,fGridLength);
+   PaintAxis(fX1,fY1,fX2,fY2,wmin,wmax,ndiv,fChopt.Data(),fGridLength);
 }
 //______________________________________________________________________________
 void TGaxis::PaintAxis(Float_t xmin, Float_t ymin, Float_t xmax, Float_t ymax,
@@ -516,7 +521,7 @@ void TGaxis::PaintAxis(Float_t xmin, Float_t ymin, Float_t xmax, Float_t ymax,
    TText *textaxis = new TText();
    lineaxis->SetLineColor(GetLineColor());
    lineaxis->SetLineStyle(1);
-   lineaxis->SetLineWidth(1);
+   lineaxis->SetLineWidth(gStyle->GetLineWidth());
    textaxis->SetTextColor(GetTextColor());
    textaxis->SetTextFont(GetTextFont());
 
@@ -623,12 +628,17 @@ void TGaxis::PaintAxis(Float_t xmin, Float_t ymin, Float_t xmax, Float_t ymax,
       if (X1 == X0) Ylabel = XLside*1.6*charheight*toffset;
       else          Ylabel = XLside*1.3*charheight*toffset;
       if (Y1 == Y0) Ylabel = XLside*1.6*charheight*toffset;
+      Float_t axispos;
+      if (TestBit(kCenterTitle)) axispos = 0.5*axis_length;
+      else                       axispos = axis_length;
       if (X1 >= X0) {
-         textaxis->SetTextAlign(32);
-         Rotate(axis_length,Ylabel,cosphi,sinphi,X0,Y0,xpl1,ypl1);
+         if (TestBit(kCenterTitle)) textaxis->SetTextAlign(22);
+         else                       textaxis->SetTextAlign(32);
+         Rotate(axispos,Ylabel,cosphi,sinphi,X0,Y0,xpl1,ypl1);
       } else {
-         textaxis->SetTextAlign(12);
-         Rotate(0,Ylabel,cosphi,sinphi,X1,Y1,xpl1,ypl1);
+         if (TestBit(kCenterTitle)) textaxis->SetTextAlign(22);
+         else                       textaxis->SetTextAlign(12);
+         Rotate(axispos,Ylabel,cosphi,sinphi,X0,Y0,xpl1,ypl1);
       }
       textaxis->SetTextAngle(phil*180/PI);
       textaxis->PaintTextNDC(xpl1,ypl1,GetTitle());
@@ -1428,7 +1438,7 @@ void TGaxis::SavePrimitive(ofstream &out, Option_t *)
        out<<"   TGaxis *";
    }
    out<<"gaxis = new TGaxis("<<fX1<<","<<fY1<<","<<fX2<<","<<fY2
-      <<","<<fWmin<<","<<fWmax<<","<<fNdiv<<","<<quote<<fChopt<<quote<<");"<<endl;
+      <<","<<fWmin<<","<<fWmax<<","<<fNdiv<<","<<quote<<fChopt.Data()<<quote<<");"<<endl;
    out<<"   gaxis->SetLabelOffset("<<GetLabelOffset()<<");"<<endl;
    out<<"   gaxis->SetLabelSize("<<GetLabelSize()<<");"<<endl;
    out<<"   gaxis->SetTickSize("<<GetTickSize()<<");"<<endl;
@@ -1457,9 +1467,7 @@ void TGaxis::SetOption(Option_t *option)
 //*-*-*-*-*-*-*-*-*-*-*-*-*-*-*To set axis options*-*-*-*-*-*-*-*-*-*-*-*-*-*
 //*-*                          ===================
 
-   Int_t nch = strlen(option);
-   if (nch < 15) strcpy(fChopt, option);
-   else          {strncpy(fChopt, option,15); fChopt[15] = 0;}
+   fChopt = option;
 }
 
 //______________________________________________________________________________

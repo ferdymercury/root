@@ -1,5 +1,5 @@
-/*CMZ :  2.21/08 17/03/99  13.13.39  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   17/03/99*/
+/*CMZ :  2.22/10 23/07/99  14.42.13  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   23/07/99*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -24,6 +24,15 @@
 
 #include "common.h"
 
+extern char G__declctor[];
+
+#ifndef G__OLDIMPLEMENTATION1103
+extern int G__const_noerror;
+#endif
+#ifndef G__OLDIMPLEMENTATION1119
+int G__initval_eval=0;
+int G__dynconst=0;
+#endif
 
 /***********************************************************************
 * G__get_newname()
@@ -193,7 +202,12 @@ char *new_name;
       }
       else if(strcmp(new_name,"const")==0) {
 	cin=G__fgetvarname(new_name,",;=():");
+#ifndef G__OLDIMPLEMENTATION1134
+	if(isupper(G__var_type)) G__constvar |= G__PCONSTVAR;
+	else                     G__constvar |= G__CONSTVAR;
+#else
 	G__constvar |= G__PCONSTVAR;
+#endif
       }
       else if(strcmp(new_name,"const&")==0) {
 	cin=G__fgetvarname(new_name,",;=():");
@@ -419,6 +433,50 @@ char *new_name;
   return(0);
 }
 
+#ifndef G__OLDIMPLEMENTATION1037
+/******************************************************************
+* G__removespacetemplate()
+******************************************************************/
+void G__removespacetemplate(name)
+char *name;
+{
+  char buf[G__LONGLINE];
+  int c;
+  int i=0,j=0;
+  while((c=name[i])) {
+    if(isspace(c)&&i>0) {
+      switch(name[i-1]) {
+      case ':':
+      case '<':
+      case ',':
+	break;
+      case '>':
+	if('>'==name[i+1]) buf[j++] = c;
+	break;
+      default:
+	switch(name[i+1]) {
+	case ':':
+	case '<':
+	case '>':
+	case ',':
+	  break;
+	default:
+	  buf[j++] = c;
+	  break;
+	}
+	break;
+      }
+    }
+    else {
+      buf[j++] = c;
+    }
+    ++i;
+  }
+  buf[j] = 0;
+  strcpy(name,buf);
+}
+#endif
+
 /******************************************************************
 * void G__define_var(tagnum,typenum)
 *
@@ -528,6 +586,9 @@ int tagnum,typenum;      /* overrides global variables */
     G__typenum = store_typenum;
     G__reftype=G__PARANORMAL;
     G__static_alloc=store_static_alloc2;
+#ifndef G__OLDIMPLEMENTATION1119
+    G__dynconst=0;
+#endif
     return; /* long long handling */
   }
 #endif
@@ -719,12 +780,18 @@ int tagnum,typenum;      /* overrides global variables */
 	 '*'!=new_name[0] && !strstr(new_name,"[]") ) {
 	G__ansiheader=0;
 	if(G__CPPLINK==G__struct.iscpplink[tagnum]) {
+#ifndef G__OLDIMPLEMENTATION1110
+	  char tttt[G__ONELINE];
+	  G__valuemonitor(reg,tttt);
+	  sprintf(temp1,"%s(%s)",G__struct.name[tagnum],tttt);
+#else
 	  if(reg.obj.i<0)
 	    sprintf(temp1,"%s((%s)(%ld))",G__struct.name[tagnum]
 		    ,G__struct.name[tagnum],reg.obj.i);
 	  else
 	    sprintf(temp1,"%s((%s)%ld)",G__struct.name[tagnum]
 		    ,G__struct.name[tagnum],reg.obj.i);
+#endif
 #ifndef G__OLDIMPLEMENTATION979
 	  if(-1!=G__struct.parent_tagnum[tagnum]) {
             int store_exec_memberfunc=G__exec_memberfunc;
@@ -785,6 +852,9 @@ int tagnum,typenum;      /* overrides global variables */
       G__typenum = store_typenum;
       G__reftype=G__PARANORMAL;
       G__static_alloc=store_static_alloc2;
+#ifndef G__OLDIMPLEMENTATION1119
+      G__dynconst=0;
+#endif
       return;
     }
 
@@ -913,6 +983,9 @@ int tagnum,typenum;      /* overrides global variables */
 	    G__typenum = store_typenum;
 	    G__reftype=G__PARANORMAL;
 	    G__static_alloc=store_static_alloc2;
+#ifndef G__OLDIMPLEMENTATION1119
+	    G__dynconst=0;
+#endif
 	    return;
 	  }
 	  G__var_type = var_type;
@@ -927,7 +1000,17 @@ int tagnum,typenum;      /* overrides global variables */
 	 *                 ^            */
 	
 	/* read parameter list and build command string */
+#ifndef G__OLDIMPLEMENTATION1127
+	cin = G__fgetstream_newtemplate(temp,")");
+#else
 	cin = G__fgetstream(temp,")");
+#endif
+
+#ifndef G__OLDIMPLEMENTATION1049
+	if('*'==new_name[0]&&var_type!='c'&&'"'==temp[0]) {
+	  G__genericerror("Error: illegal pointer initialization");
+	}
+#endif
 
 #ifndef G__OLDIMPLEMENTATION927
 	if(G__static_alloc&&0==G__prerun) {
@@ -987,6 +1070,9 @@ int tagnum,typenum;      /* overrides global variables */
 	      G__typenum = store_typenum;
 	      G__reftype=G__PARANORMAL;
 	      G__static_alloc=store_static_alloc2;
+#ifndef G__OLDIMPLEMENTATION1119
+	      G__dynconst=0;
+#endif
 	      return;
 	    }
 	  }
@@ -1017,9 +1103,18 @@ int tagnum,typenum;      /* overrides global variables */
 	    G__typenum = store_typenum;
 	    G__reftype=G__PARANORMAL;
 	    G__static_alloc=store_static_alloc2;
+#ifndef G__OLDIMPLEMENTATION1119
+	    G__dynconst=0;
+#endif
 	    return;
 	  }
 	  G__prerun=0;
+#ifndef G__OLDIMPLEMENTATION1073
+	  if(0==G__store_struct_offset &&
+	     G__asm_wholefunction && G__asm_noverflow) {
+	    G__store_struct_offset = G__PVOID;
+	  }
+#endif
 	}
 	else {
 	  G__store_struct_offset = G__PVOID;
@@ -1071,10 +1166,29 @@ int tagnum,typenum;      /* overrides global variables */
 #endif
 	  G__cppconstruct = 0;
 	  G__globalvarpointer=G__PVOID;
+#ifndef G__OLDIMPLEMENTATION1073
+	  if(G__asm_wholefunction&&G__no_exec_compile) {
+#ifdef G__ASM_DBG
+	    if(G__asm_dbg) fprintf(G__serr ,"%3x: SETGVP -1\n",G__asm_cp);
+#endif
+	    G__asm_inst[G__asm_cp]=G__SETGVP;
+	    G__asm_inst[G__asm_cp+1] = -1;
+	    G__inc_cp_asm(2,0);
+	  }
+#endif
 	}
 	else {
 	  if(G__store_struct_offset) {
 	    G__getfunction(temp1,&known,G__CALLCONSTRUCTOR);
+#ifndef G__OLDIMPLEMENTATION1073
+	    if(G__asm_wholefunction && G__asm_noverflow) {
+#ifdef G__ASM_DBG
+	      if(G__asm_dbg) fprintf(G__serr ,"%3x: POPSTROS\n",G__asm_cp);
+#endif
+	      G__asm_inst[G__asm_cp]=G__POPSTROS;
+	      G__inc_cp_asm(1,0);
+	    }
+#endif
 	  }
 	  else
 #ifndef G__OLDIMPLEMENTATION510_TEMP
@@ -1098,6 +1212,9 @@ int tagnum,typenum;      /* overrides global variables */
 	  G__typenum = store_typenum;
 	  G__reftype=G__PARANORMAL;
 	  G__static_alloc=store_static_alloc2;
+#ifndef G__OLDIMPLEMENTATION1119
+	  G__dynconst=0;
+#endif
 	  return;
 	}
 	
@@ -1144,12 +1261,10 @@ int tagnum,typenum;      /* overrides global variables */
 	G__def_struct_member = 1;
 	store_def_tagnum = G__def_tagnum;
 	store_tagdefining = G__tagdefining;
-#ifndef G__OLDIMPLEMENTATION857
 	i=0;
 	while('*'==new_name[i]) ++i;
-#else
-	if('*'==new_name[0]) i=1;
-	else                 i=0;
+#ifndef G__OLDIMPLEMENTATION1037
+	if(strchr(new_name+i,'<')) G__removespacetemplate(new_name+i);
 #endif
 	do {
 	  G__def_tagnum = G__defined_tagname(new_name+i,0) ;
@@ -1200,6 +1315,12 @@ int tagnum,typenum;      /* overrides global variables */
 	G__typenum = store_typenum;
 	G__reftype=G__PARANORMAL;
 	G__static_alloc=store_static_alloc2;
+#ifndef G__OLDIMPLEMENTATION1106
+	G__tagdefining = store_tagdefining; /* FIX */
+#endif
+#ifndef G__OLDIMPLEMENTATION1119
+	G__dynconst=0;
+#endif
 	return;
       }
       else {
@@ -1252,6 +1373,16 @@ int tagnum,typenum;      /* overrides global variables */
       else
 	cin=G__fgetstream_new(temp,",;{");
 
+#ifndef G__OLDIMPLEMENTATION1084
+      if(G__def_struct_member && G__CONSTVAR!=G__constvar && G__static_alloc &&
+	 -1!=G__tagdefining &&
+	 ('c'==G__struct.type[G__tagdefining]||
+	  's'==G__struct.type[G__tagdefining])) {
+	fprintf(G__serr,"Warning: In-class initialization of non-const static member not allowed in C++ standard");
+	G__printlinenum();
+      }
+#endif
+
       /*************************************************************
       * ignore array and struct initialization
       *  type var1[N] = { 0, 1, 2.... }
@@ -1276,8 +1407,41 @@ int tagnum,typenum;      /* overrides global variables */
 #endif
         ) {
 	int store_reftype = G__reftype;
+	/*#define G__OLDIMPLEMENTATION1093*/
+#ifndef G__OLDIMPLEMENTATION1093
+	int store_prerun=G__prerun;
+	int store_decl=G__decl;
+#ifndef G__OLDIMPLEMENTATION1119
+	int store_constvar=G__constvar;
+	int store_static_alloc=G__static_alloc;
+#endif
+	if(G__NOLINK==G__globalcomp) {
+	  G__prerun=0;
+	  G__decl=0;
+#ifndef G__OLDIMPLEMENTATION1119
+	  if(G__CONSTVAR&G__constvar) G__initval_eval=1;
+	  G__constvar=0;
+	  G__static_alloc=0;
+#endif
+	}
+#endif
 	G__reftype=G__PARANORMAL;
+#ifndef G__OLDIMPLEMENTATION1093
+	if(store_prerun||0==G__static_alloc||G__IsInMacro())
+	  reg=G__getexpr(temp);
+	else reg=G__null;
+#else
 	reg = G__getexpr(temp);
+#endif
+#ifndef G__OLDIMPLEMENTATION1093
+	G__prerun=store_prerun;
+	G__decl=store_decl;
+#ifndef G__OLDIMPLEMENTATION1119
+	G__constvar=store_constvar;
+	G__static_alloc=store_static_alloc;
+	G__initval_eval=0;
+#endif
+#endif
 	G__reftype=store_reftype;
 	G__globalvarpointer = reg.ref;
 	reg=G__null;
@@ -1292,22 +1456,82 @@ int tagnum,typenum;      /* overrides global variables */
 	  reg = G__null;
 	  /* avoiding assignment ignore in G__letvariable when reg==G__null */
 	  if(staticclassobject) reg=G__one;
+#ifndef G__OLDIMPLEMENTATION1032
+	  if(0==strncmp(temp,"new ",4)) G__assign_error(new_name,&G__null);
+#endif
 	}
 	else if('u'==var_type&&'*'==new_name[0]&&0==strncmp(temp,"new ",4)){
+#ifndef G__OLDIMPLEMENTATION1093
+	  int store_prerun=G__prerun;
+	  int store_decl=G__decl;
+#ifndef G__OLDIMPLEMENTATION1119
+	  int store_constvar=G__constvar;
+	  int store_static_alloc=G__static_alloc;
+#endif
+	  if(G__NOLINK==G__globalcomp) {
+	    G__prerun=0;
+	    G__decl=0;
+#ifndef G__OLDIMPLEMENTATION1119
+	    if(G__CONSTVAR&G__constvar) G__initval_eval=1;
+	    G__constvar=0;
+	    G__static_alloc=0;
+#endif
+	  }
+	  if(store_prerun||0==G__static_alloc||G__IsInMacro())
+	    reg = G__getpower(temp);
+	  else reg=G__null;
+	  G__prerun=store_prerun;
+	  G__decl=store_decl;
+#ifndef G__OLDIMPLEMENTATION1119
+	  G__constvar=store_constvar;
+	  G__static_alloc=store_static_alloc;
+	  G__initval_eval=0;
+#endif
+#else
 	  reg = G__getpower(temp);
+#endif
 #ifndef G__OLDIMPLEMENTATION1006
 	  if('U'!=reg.type && 'Y'!=reg.type && 0!=reg.obj.i) {
-	    G__assign_error(new_name+1);
+	    G__assign_error(new_name+1,&reg);
 	    reg = G__null;
 	  }
 #endif
 	}
 	else {
+#ifndef G__OLDIMPLEMENTATION1093
+	  int store_prerun=G__prerun;
+	  int store_decl=G__decl;
+#ifndef G__OLDIMPLEMENTATION1119
+	  int store_constvar=G__constvar;
+	  int store_static_alloc=G__static_alloc;
+#endif
+	  if(G__NOLINK==G__globalcomp) {
+	    G__prerun=0;
+	    G__decl=0;
+#ifndef G__OLDIMPLEMENTATION1119
+	    if(G__CONSTVAR&G__constvar) G__initval_eval=1;
+	    G__constvar=0;
+	    G__static_alloc=0;
+#endif
+	  }
+	  if(store_prerun||0==G__static_alloc||G__IsInMacro()) {
+	    reg=G__getexpr(temp);
+	  }
+	  else reg=G__null;
+	  G__prerun=store_prerun;
+	  G__decl=store_decl;
+#ifndef G__OLDIMPLEMENTATION1119
+	  G__constvar=store_constvar;
+	  G__static_alloc=store_static_alloc;
+	  G__initval_eval=0;
+#endif
+#else
 	  reg = G__getexpr(temp);
+#endif
 #ifndef G__OLDIMPLEMENTATION1006
 	  if('u'==var_type&&'*'==new_name[0]&&'U'!=reg.type&&0!=reg.obj.i
 	     && 'Y'!=reg.type) {
-	    G__assign_error(new_name+1);
+	    G__assign_error(new_name+1,&reg);
 	    reg = G__null;
 	  }
 #endif
@@ -1384,6 +1608,9 @@ int tagnum,typenum;      /* overrides global variables */
 	      G__reftype=G__PARANORMAL;
 	      G__prerun=store_prerun;
 	      G__static_alloc=store_static_alloc2;
+#ifndef G__OLDIMPLEMENTATION1119
+	      G__dynconst=0;
+#endif
 	      return;
 	    }
 	  }
@@ -1407,6 +1634,12 @@ int tagnum,typenum;      /* overrides global variables */
 	  G__var_type = var_type;
 	  G__store_struct_offset=G__int(G__letvariable(new_name,reg,&G__global
 						       ,G__p_local));
+#ifndef G__OLDIMPLEMENTATION1073
+	  if(0==G__store_struct_offset &&
+	     G__asm_wholefunction && G__asm_noverflow) {
+	    G__store_struct_offset = G__PVOID;
+	  }
+#endif
 	}
 	else {
 	  /* precompiled class,
@@ -1422,6 +1655,9 @@ int tagnum,typenum;      /* overrides global variables */
 	  G__typenum = store_typenum;
 	  G__reftype=G__PARANORMAL;
 	  G__static_alloc=store_static_alloc2;
+#ifndef G__OLDIMPLEMENTATION1119
+	  G__dynconst=0;
+#endif
 	  return;
 	}
 	G__prerun = 0; /* FOR RUNNING CONSTRUCTOR */
@@ -1457,6 +1693,17 @@ int tagnum,typenum;      /* overrides global variables */
 		G__letvariable(new_name,G__null,&G__global,G__p_local);
 		G__cppconstruct = 0;
 		G__globalvarpointer=G__PVOID;
+#ifndef G__OLDIMPLEMENTATION1073
+		if(G__asm_wholefunction&&G__no_exec_compile) {
+#ifdef G__ASM_DBG
+		  if(G__asm_dbg)
+		    fprintf(G__serr ,"%3x: SETGVP -1\n",G__asm_cp);
+#endif
+		  G__asm_inst[G__asm_cp]=G__SETGVP;
+		  G__asm_inst[G__asm_cp+1] = -1;
+		  G__inc_cp_asm(2,0);
+		}
+#endif
 	      }
 	      else {
 		/* interpreterd class, memory area is alread allocated above */
@@ -1464,7 +1711,27 @@ int tagnum,typenum;      /* overrides global variables */
 		  G__getfunction(temp,&known,G__TRYCONSTRUCTOR);
 		  if(G__return>G__RETURN_NORMAL||0==known) break;
 		  G__store_struct_offset+=G__struct.size[G__tagnum];
+#ifndef G__OLDIMPLEMENTATION1073
+		  if(G__asm_wholefunction && G__asm_noverflow) {
+#ifdef G__ASM_DBG
+		    if(G__asm_dbg) fprintf(G__serr ,"%3x: ADDSTROS %d\n"
+			              ,G__asm_cp,G__struct.size[G__tagnum]);
+#endif
+		    G__asm_inst[G__asm_cp]=G__POPSTROS;
+		    G__asm_inst[G__asm_cp+1]=G__struct.size[G__tagnum];
+		    G__inc_cp_asm(2,0);
+		  }
+#endif
 		}
+#ifndef G__OLDIMPLEMENTATION1073
+		if(G__asm_wholefunction && G__asm_noverflow) {
+#ifdef G__ASM_DBG
+		  if(G__asm_dbg) fprintf(G__serr ,"%3x: POPSTROS\n",G__asm_cp);
+#endif
+		  G__asm_inst[G__asm_cp]=G__POPSTROS;
+		  G__inc_cp_asm(1,0);
+		}
+#endif
 	      }
 	    }
 	    /******************************************************
@@ -1478,13 +1745,43 @@ int tagnum,typenum;      /* overrides global variables */
 		G__globalvarpointer=G__int(reg);
 		G__cppconstruct = 1;
 		G__var_type = var_type;
+#ifndef G__OLDIMPLEMENTATION1137
+		if(G__globalvarpointer) {
+		  G__letvariable(new_name,G__null,&G__global,G__p_local);
+		}
+		else {
+		  fprintf(G__serr,"Error: %s no default constructor",temp);
+		  G__genericerror((char*)NULL);
+		}
+#else
 		G__letvariable(new_name,G__null,&G__global,G__p_local);
+#endif
 		G__cppconstruct = 0;
 		G__globalvarpointer=G__PVOID;
+#ifndef G__OLDIMPLEMENTATION1073
+		if(G__asm_wholefunction&&G__no_exec_compile) {
+#ifdef G__ASM_DBG
+		  if(G__asm_dbg)
+		    fprintf(G__serr ,"%3x: SETGVP -1\n",G__asm_cp);
+#endif
+		  G__asm_inst[G__asm_cp]=G__SETGVP;
+		  G__asm_inst[G__asm_cp+1] = -1;
+		  G__inc_cp_asm(2,0);
+		}
+#endif
 	      }
 	      else {
 		/* interpreterd class, memory area is alread allocated above */
 		G__getfunction(temp,&known,G__TRYCONSTRUCTOR);
+#ifndef G__OLDIMPLEMENTATION1073
+		if(G__asm_wholefunction && G__asm_noverflow) {
+#ifdef G__ASM_DBG
+		  if(G__asm_dbg) fprintf(G__serr ,"%3x: POPSTROS\n",G__asm_cp);
+#endif
+		  G__asm_inst[G__asm_cp]=G__POPSTROS;
+		  G__inc_cp_asm(1,0);
+		}
+#endif
 	      }
 	    }
 	    G__decl=1;
@@ -1495,6 +1792,9 @@ int tagnum,typenum;      /* overrides global variables */
 	      G__typenum = store_typenum;
 	      G__reftype=G__PARANORMAL;
 	      G__static_alloc=store_static_alloc2;
+#ifndef G__OLDIMPLEMENTATION1119
+	      G__dynconst=0;
+#endif
 	      return;
 	    }
 	    /* struct class initialization ={x,y,z} */
@@ -1591,6 +1891,9 @@ int tagnum,typenum;      /* overrides global variables */
 		G__typenum = store_typenum;
 		G__reftype=G__PARANORMAL;
 		G__static_alloc=store_static_alloc2;
+#ifndef G__OLDIMPLEMENTATION1119
+		G__dynconst=0;
+#endif
 		return;
 	      }
 	    }
@@ -1613,15 +1916,35 @@ int tagnum,typenum;      /* overrides global variables */
 	      G__typenum = -1;
 #ifndef G__OLDIMPLEMENTATION931
 	      G__store_struct_offset=G__memberfunc_struct_offset;
+#ifndef G__OLDIMPLEMENTATION1073
+	      if(G__asm_noverflow&&G__asm_wholefunction) {
+#ifdef G__ASM_DBG
+		if(G__asm_dbg)
+		  fprintf(G__serr,"%3x: SETMEMFUNCENV\n",G__asm_cp);
+#endif
+		G__asm_inst[G__asm_cp]=G__SETMEMFUNCENV;
+		G__inc_cp_asm(1,0);
+	      }
+#endif
 #endif
 	      reg=G__getexpr(temp);
 #ifndef G__OLDIMPLEMENTATION931
 	      G__store_struct_offset=store_struct_offsetB;
+#ifndef G__OLDIMPLEMENTATION1073
+	      if(G__asm_noverflow&&G__asm_wholefunction) {
+#ifdef G__ASM_DBG
+		if(G__asm_dbg)
+		  fprintf(G__serr,"%3x: RECMEMFUNCENV\n",G__asm_cp);
+#endif
+		G__asm_inst[G__asm_cp]=G__RECMEMFUNCENV;
+		G__inc_cp_asm(1,0);
+	      }
+#endif
 #endif
 	      G__var_type=store_var_typeB;
 	      G__tagnum = store_tagnumB;
 	      G__typenum = store_typenumB;
-	      if(-1==G__struct.iscpplink[tagnum]) {
+	      if(G__CPPLINK==G__struct.iscpplink[tagnum]) {
 #ifndef G__OLDIMPLEMENTATION983
 		if(reg.tagnum==tagnum && 'u'==reg.type) {
 #else
@@ -1639,6 +1962,15 @@ int tagnum,typenum;      /* overrides global variables */
 		  G__valuemonitor(reg,tttt);
 		  sprintf(temp,"%s(%s)",G__struct.name[tagnum],tttt);
 		}
+#ifndef G__OLDIMPLEMENTATION1073
+		if(G__asm_wholefunction) {
+		  G__oprovld=1;
+		}
+#endif
+#ifndef G__OLDIMPLEMENTATION1096
+		G__oprovld=1;
+		G__decl=0;
+#endif
 #ifndef G__OLDIMPLEMENTATION979
 		if(-1!=G__struct.parent_tagnum[tagnum]) {
                   int store_exec_memberfunc=G__exec_memberfunc;
@@ -1660,9 +1992,40 @@ int tagnum,typenum;      /* overrides global variables */
 		G__letvariable(new_name,G__null,&G__global,G__p_local);
 		G__cppconstruct=0;
 		G__globalvarpointer=G__PVOID;
+#ifndef G__OLDIMPLEMENTATION1096
+		G__oprovld=0;
+		G__decl=1;
+#endif
+#ifndef G__OLDIMPLEMENTATION1073
+		if(G__asm_wholefunction) {
+		  G__oprovld=0;
+#ifdef G__ASM_DBG
+		  if(G__asm_dbg)
+		    fprintf(G__serr ,"%3x: SETGVP -1\n",G__asm_cp);
+#endif
+		  G__asm_inst[G__asm_cp]=G__SETGVP;
+		  G__asm_inst[G__asm_cp+1] = -1;
+		  G__inc_cp_asm(2,0);
+		}
+#endif
 	      }
 	      else {
+#ifndef G__OLDIMPLEMENTATION1073
+		if(G__asm_wholefunction) {
+		  G__oprovld=1;
+		}
+#endif
 		G__letvariable(new_name ,reg ,&G__global ,G__p_local);
+#ifndef G__OLDIMPLEMENTATION1073
+		if(G__asm_wholefunction) {
+		  G__oprovld=0;
+#ifdef G__ASM_DBG
+		  if(G__asm_dbg) fprintf(G__serr ,"%3x: POPSTROS\n",G__asm_cp);
+#endif
+		  G__asm_inst[G__asm_cp]=G__POPSTROS;
+		  G__inc_cp_asm(1,0);
+		}
+#endif
 	      }
 	      if(G__return>G__RETURN_NORMAL) {
 		G__decl=store_decl;
@@ -1671,6 +2034,9 @@ int tagnum,typenum;      /* overrides global variables */
 		G__typenum = store_typenum;
 		G__reftype=G__PARANORMAL;
 		G__static_alloc=store_static_alloc2;
+#ifndef G__OLDIMPLEMENTATION1119
+		G__dynconst=0;
+#endif
 		return;
 	      }
 	    }
@@ -1721,12 +2087,29 @@ int tagnum,typenum;      /* overrides global variables */
 	  G__typenum = store_typenum;
 	  G__reftype=G__PARANORMAL;
 	  G__static_alloc=store_static_alloc2;
+#ifndef G__OLDIMPLEMENTATION1119
+	  G__dynconst=0;
+#endif
 	  return;
 	}
 	/* insert array initialization */
 	if(initary) {
 	  cin=G__initary(new_name);
 	  initary=0;
+#ifndef G__OLDIMPLEMENTATION1118
+	  if(EOF==cin) {
+	    G__decl=store_decl;
+	    G__constvar=0;
+	    G__tagnum = store_tagnum;
+	    G__typenum = store_typenum;
+	    G__reftype=G__PARANORMAL;
+	    G__static_alloc=store_static_alloc2;
+#ifndef G__OLDIMPLEMENTATION1119
+	    G__dynconst=0;
+#endif
+	    return;
+	  }
+#endif
 	}
       }
       /**************************************************************
@@ -1772,6 +2155,9 @@ int tagnum,typenum;      /* overrides global variables */
 #endif
 
       G__static_alloc=store_static_alloc2;
+#ifndef G__OLDIMPLEMENTATION1119
+      G__dynconst=0;
+#endif
       return;
     }
     else if('}'==cin) {
@@ -1783,6 +2169,9 @@ int tagnum,typenum;      /* overrides global variables */
       fseek(G__ifile.fp,-1,SEEK_CUR);
       G__missingsemicolumn(new_name);
       G__static_alloc=store_static_alloc2;
+#ifndef G__OLDIMPLEMENTATION1119
+      G__dynconst=0;
+#endif
       return;
     }
     else {
@@ -1791,6 +2180,22 @@ int tagnum,typenum;      /* overrides global variables */
        *  read variable name
        */
       cin=G__fgetstream(new_name,",;=():");
+#ifndef G__OLDIMPLEMENTATION1118
+      if(EOF==cin) {
+	G__decl=store_decl;
+	G__constvar=0;
+	G__tagnum = store_tagnum;
+	G__typenum = store_typenum;
+	G__reftype=G__PARANORMAL;
+	fseek(G__ifile.fp,-1,SEEK_CUR);
+	G__missingsemicolumn(new_name);
+	G__static_alloc=store_static_alloc2;
+#ifndef G__OLDIMPLEMENTATION1119
+	G__dynconst=0;
+#endif
+	return;
+      }
+#endif
       if(G__typepdecl) {
 	var_type = tolower(var_type);
 	G__var_type = var_type;
@@ -1876,6 +2281,27 @@ char *new_name;
   /* get variable table entry */
   var = G__getvarentry(name,hash,&ig15,&G__global,G__p_local);
 
+#ifndef G__OLDIMPLEMENTATION1119
+  if(!var) {
+    char temp[G__ONELINE];
+    int itmpx,varhash;
+    char *px=strchr(name,'\\');
+    if(px) *px=0;
+    if(-1!=G__tagdefining)
+      sprintf(temp,"%s\\%x\\%x\\%x",name,G__func_page,G__func_now
+	      ,G__tagdefining);
+    else
+      sprintf(temp,"%s\\%x\\%x" ,name,G__func_page,G__func_now);
+    G__hash(temp,varhash,itmpx);
+    var = G__getvarentry(temp,varhash,&ig15,&G__global,G__p_local);
+    if(!var) {
+      c=G__fignorestream(",;");
+      G__genericerror("Error: array initialization");
+      return(c);
+    }
+  }
+#endif
+
   /*******************************************************
    * multidimentional array number of dimention
    *******************************************************/
@@ -1958,9 +2384,15 @@ char *new_name;
 #ifndef G__OLDIMPLEMENTATION877
 	  if(G__ASM_FUNC_NOP==G__asm_wholefunction) {
 #endif
-	    fprintf(G__serr
+#ifndef G__OLDIMPLEMENTATION1103
+	    if(0==G__const_noerror) {
+#endif
+	      fprintf(G__serr
 		 ,"Error: Array initialization out of range *(%s+%d), upto %d "
 		 ,name,pinc ,var->varlabel[ig15][1]);
+#ifndef G__OLDIMPLEMENTATION1103
+	    }
+#endif
 #ifndef G__OLDIMPLEMENTATION877
 	  }
 #endif
@@ -2310,9 +2742,15 @@ char *new_name;
 #ifndef G__OLDIMPLEMENTATION877
 	  if(G__ASM_FUNC_NOP==G__asm_wholefunction) {
 #endif
-	    fprintf(G__serr
+#ifndef G__OLDIMPLEMENTATION1103
+	    if(0==G__const_noerror) {
+#endif
+	      fprintf(G__serr
 		 ,"Error: Array initialization out of range *(%s+%d), upto %d "
 		    ,name,pinc ,var->varlabel[ig15][1]);
+#ifndef G__OLDIMPLEMENTATION1103
+	    }
+#endif
 #ifndef G__OLDIMPLEMENTATION877
 	  }
 #endif

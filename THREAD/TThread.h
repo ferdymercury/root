@@ -1,3 +1,5 @@
+//*CMZ :  2.22/09 12/07/99  18.13.43  by  Rene Brun
+//*CMZ :  2.22/06 21/06/99  17.47.54  by  Rene Brun
 //*CMZ :  2.00/00 19/11/97  22.50.48  by  Victor Perev
 //*CMZ :  1.03/03 05/09/97  12.49.31  by  Victor Perev
 //*-- Author :    Fons Rademakers   18/06/97
@@ -10,20 +12,22 @@
 #include "CallFunc.h"
 
 
+/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Fons Rademakers.                                  *
+ * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
  *                                                                       *
  * Permission to use, copy, modify and distribute this software and its  *
  * documentation for non-commercial purposes is hereby granted without   *
  * fee, provided that the above copyright notice appears in all copies   *
  * and that both the copyright notice and this permission notice appear  *
  * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose.                         *
- * It is provided "as is" without express or implied warranty.           *
+ * suitability of this software for any purpose. It is provided "as is"  *
+ * without express or implied warranty.                                  *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -91,7 +95,7 @@ private:
    EPriority    fPriority;         	// thread priority
    EState       fState;            	// thread state
    EState       fStateComing;      	// coming thread state
-   Int_t        fId;               	// thread id
+   UInt_t       fId;               	// thread id
    Bool_t       fDetached;         	// kTRUE if thread is Detached
    Int_t        fJoinId;           	// thread id to whom can join
    void       *(*fFcnRetn)(void *);	// void* start function of thread
@@ -133,6 +137,12 @@ public:
 
    TThread(void  *(*fn)(void*), void *arg = 0,  EPriority pri = kNormalPriority);
    TThread(void   (*fn)(void*), void *arg = 0,  EPriority pri = kNormalPriority);
+   ////////// begin changes (J.A.):
+   // additional constructors with own threadname thname
+   // as useful for invoking thread from compiled program:
+   TThread(Text_t *thname, void  *(*fn)(void*), void *arg = 0,  EPriority pri = kNormalPriority);
+   TThread(Text_t *thname, void   (*fn)(void*), void *arg = 0,  EPriority pri = kNormalPriority);
+   /////////////// end changes (J.A.)
    Int_t               Run(void *arg = 0);
    static    Int_t     Join(Int_t id,void **ret=0);
    static    Int_t     Join(         void **ret=0);
@@ -183,18 +193,18 @@ public:
    static void Printf(char *txt,void* i){Printf(txt,(int)i);}
 
 
+//	Compilation and dynamic link
+   static Int_t MakeFun(char *funname);
+
    static void XAction();
 
   ClassDef(TThread,0)  // Thread class
-
-//	Compilation and dynamic link
-static Int_t MakeFun(char *funname);
 
 
 };
 
 //	Compilation and dynamic link
-static Int_t MakeFun(char *funname);
+//static Int_t MakeFun(char *funname);
 
 //////////////////////////////////////////////////////////////////////////
 //                                                                      //

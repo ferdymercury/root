@@ -1,3 +1,4 @@
+//*CMZ :  2.22/01 10/05/99  12.05.38  by  Valery Fine(fine@mail.cern.ch)
 //*CMZ :  2.21/04 23/01/99  11.35.56  by  Valery Fine(fine@mail.cern.ch)
 //*CMZ :  1.03/09 09/12/97  15.19.41  by  Fons Rademakers
 //*-- Author :    Valery Fine(fine@vxcern.cern.ch)   08/05/97
@@ -6,20 +7,22 @@
 #ifndef ROOT_TPadOpenGLView
 #define ROOT_TPadOpenGLView
 
+/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Fons Rademakers.                                  *
+ * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
  *                                                                       *
  * Permission to use, copy, modify and distribute this software and its  *
  * documentation for non-commercial purposes is hereby granted without   *
  * fee, provided that the above copyright notice appears in all copies   *
  * and that both the copyright notice and this permission notice appear  *
  * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose.                         *
- * It is provided "as is" without express or implied warranty.           *
+ * suitability of this software for any purpose. It is provided "as is"  *
+ * without express or implied warranty.                                  *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -40,10 +43,7 @@
 
 
 class TGLViewerImp;
-class TPolyMarker3D;
-class TPolyLine3D;
 class TNode;
-
 
 class TPadOpenGLView : public TPadView3D
 {
@@ -97,6 +97,7 @@ class TPadOpenGLView : public TPadView3D
    virtual void PaintScene(Option_t *opt="");
    virtual void PaintPolyMarker(TPolyMarker3D *marker,Option_t *opt="");
    virtual void PaintPolyLine(TPolyLine3D *line,Option_t *opt="");
+   virtual void PaintPoints3D(const TPoints3DABC *line,Option_t *opt="");
    virtual void PushMatrix();
    virtual void PopMatrix();
    virtual void ResetView(Bool_t flag=kTRUE){fResetView=flag;}

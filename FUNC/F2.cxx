@@ -1,3 +1,6 @@
+//*CMZ :  2.22/10 25/07/99  21.42.21  by  Rene Brun
+//*CMZ :  2.22/06 21/06/99  09.10.45  by  Rene Brun
+//*CMZ :  2.22/00 05/04/99  18.07.15  by  Rene Brun
 //*CMZ :  2.21/03 22/01/99  11.10.51  by  Rene Brun
 //*CMZ :  2.21/02 18/01/99  16.46.09  by  Rene Brun
 //*CMZ :  2.21/01 16/01/99  10.38.56  by  Rene Brun
@@ -7,20 +10,22 @@
 //*CMZ :  1.03/06 24/10/97  09.30.54  by  Rene Brun
 //*-- Author :    Rene Brun   23/08/95
 
+/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Fons Rademakers.                                  *
+ * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
  *                                                                       *
  * Permission to use, copy, modify and distribute this software and its  *
  * documentation for non-commercial purposes is hereby granted without   *
  * fee, provided that the above copyright notice appears in all copies   *
  * and that both the copyright notice and this permission notice appear  *
  * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose.                         *
- * It is provided "as is" without express or implied warranty.           *
+ * suitability of this software for any purpose. It is provided "as is"  *
+ * without express or implied warranty.                                  *
  *************************************************************************/
 
 #include "TROOT.h"
@@ -101,6 +106,7 @@ TF2::TF2(const char *name, void *fcn, Float_t xmin, Float_t xmax, Float_t ymin, 
    fYmax   = ymax;
    fNpx    = 30;
    fNpy    = 30;
+   fNdim   = 2;
    fContour.Set(0);
 
 }
@@ -123,6 +129,7 @@ TF2::TF2(const char *name, Double_t (*fcn)(Double_t *, Double_t *), Float_t xmin
    fYmax   = ymax;
    fNpx    = 30;
    fNpy    = 30;
+   fNdim   = 2;
    fContour.Set(0);
 
 }
@@ -188,7 +195,7 @@ void TF2::Draw(Option_t *option)
 }
 
 //______________________________________________________________________________
-void TF2::DrawCopy(Option_t *option)
+TF1 *TF2::DrawCopy(Option_t *option)
 {
 //*-*-*-*-*-*-*-*Draw a copy of this function with its current attributes*-*-*
 //*-*            ========================================================
@@ -209,6 +216,7 @@ void TF2::DrawCopy(Option_t *option)
    TF2 *newf2 = new TF2();
    Copy(*newf2);
    newf2->AppendPad(option);
+   return newf2;
 }
 
 //______________________________________________________________________________
@@ -288,7 +296,7 @@ Text_t *TF2::GetObjectInfo(Int_t px, Int_t py)
       uymax=gPad->GetUymax();
       y = fYmin +(fYmax-fYmin)*(y-uymin)/(uymax-uymin);
    }
-   sprintf(info,"(x=%g, y=%g, f=%g)",x,y,Eval(x,y));
+   sprintf(info,"(x=%g, y=%g, f=%.18g)",x,y,Eval(x,y));
    return info;
 }
 

@@ -1,5 +1,5 @@
-/*CMZ :  2.21/08 17/03/99  13.13.42  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   17/03/99*/
+/*CMZ :  2.22/10 23/07/99  14.42.16  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   23/07/99*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -108,9 +108,20 @@ void G__define()
 	break;
       }
     }
+#ifndef G__OLDIMPLEMENTATION1062
+    if (strchr ("\n\r\\/", c) == 0) {
+      fsetpos(G__ifile.fp,&pos);
+      G__createmacro(new_name,"",1);
+      return;
+    }
+#endif
     if(c=='\\') {
       fsetpos(G__ifile.fp,&pos);
+#ifndef G__OLDIMPLEMENTATION1062
+      G__createmacro(new_name,initvalue,0);
+#else
       G__createmacro(new_name,initvalue);
+#endif
       return;
     }
   }
@@ -152,7 +163,7 @@ void G__define()
     evalval=G__null;
   }
   else {
-    evalval=G__calc(initvalue);
+    evalval=G__calc_internal(initvalue);
   }
 
   if(G__null.type==evalval.type && initvalue[0]) {
@@ -266,6 +277,21 @@ char *oldtype,*newtype;
 #endif
   }
 
+#ifndef G__OLDIMPLEMENTATION734
+  /* this is only workaround for STL Allocator */
+  if(strcmp(newtype,"Allocator")==0) {
+    strcpy(G__Allocator,oldtype);
+  }
+  else if(strcmp(newtype,"vector")==0) {
+  }
+  else if(strcmp(newtype,"list")==0) {
+  }
+  else if(strcmp(newtype,"deque")==0) {
+  }
+  else if(strcmp(newtype,"rb_tree")==0) {
+  }
+  else
+#endif
   if(type) {
 #ifndef G__OLDIMPLEMENTATION734
     if(strcmp(newtype,"bool")!=0) {
@@ -281,20 +307,6 @@ char *oldtype,*newtype;
     G__printlinenum();
 #endif
   }
-#ifndef G__OLDIMPLEMENTATION734
-  /* this is only workaround for STL Allocator */
-  else if(strcmp(newtype,"Allocator")==0) {
-    strcpy(G__Allocator,oldtype);
-  }
-  else if(strcmp(newtype,"vector")==0) {
-  }
-  else if(strcmp(newtype,"list")==0) {
-  }
-  else if(strcmp(newtype,"deque")==0) {
-  }
-  else if(strcmp(newtype,"rb_tree")==0) {
-  }
-#endif
   else {
     fprintf(G__serr,"Limitation: can not handle macro %s %s" ,newtype,oldtype);
     if(0==G__cpp) fprintf(G__serr," Use +P or -p option\n");
@@ -308,9 +320,16 @@ char *oldtype,*newtype;
 /**************************************************************************
 * G__createmacro()
 **************************************************************************/
+#ifndef G__OLDIMPLEMENTATION1062
+void G__createmacro(new_name,initvalue,nowrapper)
+char *new_name;
+char *initvalue;
+int nowrapper;
+#else
 void G__createmacro(new_name,initvalue)
 char *new_name;
 char *initvalue;
+#endif
 {
   char line[G__ONELINE];
   int c;
@@ -338,7 +357,7 @@ char *initvalue;
 
   /* print out header */
   ++G__mline;
-  fprintf(G__mfp,"// #define %s  FILE:%s LIEN:%d\n"
+  fprintf(G__mfp,"// #define %s  FILE:%s LINE:%d\n"
 	  ,new_name
 	  ,G__ifile.name,G__ifile.line_number);
 
@@ -346,7 +365,11 @@ char *initvalue;
 
   fprintf(G__mfp,"# %d\n",++G__mline);
   ++G__mline;
+#ifndef G__OLDIMPLEMENTATION1062
+  if(!nowrapper) fprintf(G__mfp,"{\n");
+#else
   fprintf(G__mfp,"{\n");
+#endif
 
 #ifndef G__OLDIMPLEMENTATION431
   fprintf(G__mfp,"%s\n",initvalue);
@@ -392,12 +415,24 @@ char *initvalue;
 
   p = strrchr(line,';');
   ++G__mline;
+#ifndef G__OLDIMPLEMENTATION1062
+  if (!nowrapper) {
+    if(p==NULL) {
+      fprintf(G__mfp,";}\n");
+    }
+    else {
+      fprintf(G__mfp,"}\n");
+    }
+  }
+  fputc('\0',G__mfp); /* Mark the end of this expansion. */
+#else
   if(p==NULL) {
     fprintf(G__mfp,";}\n");
   }
   else {
     fprintf(G__mfp,"}\n");
   }
+#endif
   fgetpos(G__mfp,&G__nextmacro);
 
   G__var_type = 'm';
@@ -629,7 +664,7 @@ int nosemic;
 
   /* print out header */
   ++G__mline;
-  fprintf(G__mfp,"// #define %s  FILE:%s LIEN:%d\n"
+  fprintf(G__mfp,"// #define %s  FILE:%s LINE:%d\n"
 	  ,item
 	  ,G__ifile.name,G__ifile.line_number);
 
@@ -815,7 +850,12 @@ int G__execfuncmacro_noexec (char* macroname)
 
   /* Snarf the arg list. */
   *p = '(';
+#define G__OLDIMPLEMENTATION1061
+#ifndef G__OLDIMPLEMENTATION1061
+  c=G__fgetstream_spaces (p+1 ,")");
+#else
   c=G__fgetstream_new (p+1 ,")");
+#endif
   i = strlen (funcmacro);
   funcmacro[i++] = c;
   funcmacro[i] = '\0';
@@ -874,6 +914,58 @@ int G__execfuncmacro_noexec (char* macroname)
   return 1;
 }
 
+#ifndef G__OLDIMPLEMENTATION1062
+/**************************************************************************
+* G__execvarmacro_noexec()
+*
+* Execute variable macro in noexec mode.
+*
+*  input  char *item :  `macro'
+*  returns 1 if macro expanded, 0 if no macro found
+*
+**************************************************************************/
+int G__execvarmacro_noexec (char* macroname)
+{
+  struct G__var_array *var;
+  int ig15, hash;
+  long struct_offset, store_struct_offset;
+  char name[G__ONELINE];
+
+  /* G__searchvariable can modify its argument.
+     Insulate ourselves from that perversion. */
+  strcpy (name, macroname);
+
+  G__hash (name, hash, ig15);
+  var = G__searchvariable (name, hash, G__p_local, &G__global,
+                           &struct_offset, &store_struct_offset, &ig15, 0);
+  if (var != 0 && var->type[ig15] == 'm') {
+
+    fpos_t call_pos;
+    struct G__input_file store_ifile;
+    struct G__funcmacro_stackelt* stackelt;
+
+    /* store calling file pointer and position */
+    fgetpos(G__ifile.fp,&call_pos);
+    store_ifile = G__ifile;
+
+    /* Push onto the macro stack. */
+    stackelt = (struct G__funcmacro_stackelt*)
+      malloc (sizeof (struct G__funcmacro_stackelt));
+    stackelt->pos = call_pos;
+    stackelt->file = store_ifile;
+    stackelt->next = G__funcmacro_stack;
+    G__funcmacro_stack = stackelt;
+
+    /* Jump to the macro. */
+    G__ifile.fp = G__mfp;
+    fsetpos(G__ifile.fp,(fpos_t *)var->p[ig15]);
+    strcpy(G__ifile.name,G__macro);
+
+    return 1;
+  }
+  return 0;
+}
+#endif
 
 /**************************************************************************
 * G__maybe_finish_macro()
@@ -989,30 +1081,56 @@ int G__getparameterlist(paralist,charlist)
 char *paralist;
 struct G__Charlist *charlist;
 {
-#ifndef G__OLDIMPLEMENTATION956
+#ifdef G__OLDIMPLEMENTATION1061
   int store_isrc;
 #endif
   int isrc;
   char string[G__ONELINE];
   int c;
 
+#ifndef G__OLDIMPLEMENTATION1061
+  charlist->string = (char*)NULL;
+  charlist->next = (struct G__Charlist*)NULL;
+#endif
+
   c=',';
   isrc=0;
+#ifndef G__OLDIMPLEMENTATION1061
+  while(','==c || ' ' == c) {
+    c = G__getstream_template(paralist,&isrc,string," \t,)\0");
+    if (c == '\t') c = ' ';
+
+    if (charlist->string)
+      charlist->string = realloc (charlist->string,
+                                  strlen (charlist->string) +
+                                  strlen (string) + 2);
+    else {
+      charlist->string = malloc(strlen(string)+2);
+      charlist->string[0] = '\0';
+    }
+    strcat (charlist->string, string);
+    if (c == ' ') {
+      if (charlist->string[0] != '\0')
+        strcat (charlist->string, " ");
+    }
+    else {
+      int i = strlen (charlist->string);
+      while (i > 0 && charlist->string[i-1] == ' ')
+        --i;
+      charlist->next = (struct G__Charlist*)malloc(sizeof(struct G__Charlist));
+      charlist->next->next = (struct G__Charlist *)NULL;
+      charlist->next->string = (char *)NULL;
+      charlist = charlist->next;
+    }
+  }
+#else
   while(','==c) {
-#ifdef G__TEMPLATECLASS
-#ifndef G__OLDIMPLEMENTATION956
     store_isrc=isrc;
-#endif
     c = G__getstream_template(paralist,&isrc,string,",)\0");
-#ifndef G__OLDIMPLEMENTATION956
     if(0==c) {
       isrc=store_isrc;
       c = G__getstream(paralist,&isrc,string,",)\0");
     }
-#endif
-#else
-    c = G__getstream(paralist,&isrc,string,",)\0");
-#endif
 
     charlist->string = malloc(strlen(string)+1);
     strcpy(charlist->string,string);
@@ -1021,6 +1139,7 @@ struct G__Charlist *charlist;
     charlist->next->string = (char *)NULL;
     charlist = charlist->next;
   }
+#endif
 
   return(0);
 }

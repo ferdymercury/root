@@ -1,3 +1,6 @@
+//*CMZ :  2.22/09 09/07/99  10.47.07  by  Rene Brun
+//*CMZ :  2.22/04 01/06/99  12.37.01  by  Rene Brun
+//*CMZ :  2.22/01 17/05/99  13.13.13  by  Rene Brun
 //*CMZ :  2.21/02 18/01/99  16.14.21  by  Rene Brun
 //*CMZ :  2.20/02 04/12/98  16.50.13  by  Rene Brun
 //*CMZ :  2.20/01 30/11/98  10.22.36  by  Rene Brun
@@ -6,20 +9,22 @@
 //*CMZ :  1.03/09 13/12/97  21.25.19  by  Rene Brun
 //*-- Author :    Rene Brun   12/12/94
 
+/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Fons Rademakers.                                  *
+ * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
  *                                                                       *
  * Permission to use, copy, modify and distribute this software and its  *
  * documentation for non-commercial purposes is hereby granted without   *
  * fee, provided that the above copyright notice appears in all copies   *
  * and that both the copyright notice and this permission notice appear  *
  * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose.                         *
- * It is provided "as is" without express or implied warranty.           *
+ * suitability of this software for any purpose. It is provided "as is"  *
+ * without express or implied warranty.                                  *
  *************************************************************************/
 
 #include <iostream.h>
@@ -29,8 +34,10 @@
 #include "TStyle.h"
 #include "TView.h"
 #include "TError.h"
+#include "TH1.h"
 
-const Int_t kAxisRange = BIT(11);
+const Int_t kAxisRange   = BIT(11);
+const Int_t kCenterTitle = BIT(12);
 
 ClassImp(TAxis)
 
@@ -85,6 +92,15 @@ TAxis::~TAxis()
 TAxis::TAxis(const TAxis &axis)
 {
    ((TAxis&)axis).Copy(*this);
+}
+
+//______________________________________________________________________________
+void TAxis::CenterTitle(Bool_t center)
+{
+//   if center = kTRUE axis title will be centered
+//   default is right adjusted
+   if (center) SetBit(kCenterTitle);
+   else        ResetBit(kCenterTitle);
 }
 
 //______________________________________________________________________________
@@ -245,14 +261,13 @@ void TAxis::ExecuteEvent(Int_t event, Int_t px, Int_t py)
          }
          if (ratio2 - ratio1 > 0.05) {
             {
-               char params[30];
-               if (axisNumber == 1) sprintf(params,"%f,%f,\"X\"",xmin,xmax);
-               else                 sprintf(params,"%f,%f,\"Y\"",xmin,xmax);
                TIter next(gPad->GetListOfPrimitives());
                TObject *obj;
                while ((obj = next())) {
                   if (obj->InheritsFrom("TH1")) {
-                     obj->Execute("SetAxisRange",params);
+                     TH1 *hobj = (TH1*)obj;
+                     if (axisNumber == 1) hobj->SetAxisRange(xmin,xmax,"X");
+                     if (axisNumber == 2) hobj->SetAxisRange(xmin,xmax,"Y");
                   }
                }
             }
@@ -531,5 +546,26 @@ void TAxis::Streamer(TBuffer &R__b)
       fXbins.Streamer(R__b);
       R__b << fFirst;
       R__b << fLast;
+   }
+}
+
+//______________________________________________________________________________
+void TAxis::UnZoom()
+{
+   // Reset first & last bin to the full range
+
+   SetRange(0,0);
+
+   // loop on all histograms in the same pad
+   if (!gPad) return;
+   TIter next(gPad->GetListOfPrimitives());
+   TObject *obj;
+   while ((obj = next())) {
+      if (obj->InheritsFrom("TH1")) {
+         TH1 *hobj = (TH1*)obj;
+         if (strstr(GetName(),"xaxis")) hobj->GetXaxis()->SetRange(0,0);
+         if (strstr(GetName(),"yaxis")) hobj->GetYaxis()->SetRange(0,0);
+         if (strstr(GetName(),"zaxis")) hobj->GetZaxis()->SetRange(0,0);
+      }
    }
 }

@@ -1,3 +1,6 @@
+//*CMZ :  2.22/05 06/06/99  11.20.30  by  Fons Rademakers
+//*CMZ :  2.22/01 03/06/99  08.58.11  by  Fons Rademakers
+//*CMZ :  2.22/00 07/04/99  11.40.43  by  Rene Brun
 //*CMZ :  2.21/07 19/02/99  11.07.09  by  Fons Rademakers
 //*CMZ :  2.21/03 20/01/99  18.10.03  by  Fons Rademakers
 //*CMZ :  2.21/01 11/01/99  16.37.57  by  Fons Rademakers
@@ -11,20 +14,22 @@
 //*CMZ :  1.03/09 10/12/97  09.03.00  by  Rene Brun
 //*-- Author :    Rene Brun   28/11/94
 
+/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Fons Rademakers.                                  *
+ * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
  *                                                                       *
  * Permission to use, copy, modify and distribute this software and its  *
  * documentation for non-commercial purposes is hereby granted without   *
  * fee, provided that the above copyright notice appears in all copies   *
  * and that both the copyright notice and this permission notice appear  *
  * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose.                         *
- * It is provided "as is" without express or implied warranty.           *
+ * suitability of this software for any purpose. It is provided "as is"  *
+ * without express or implied warranty.                                  *
  *************************************************************************/
 
 #include <iostream.h>
@@ -401,6 +406,10 @@ void TFile::Init(Bool_t create)
       frombuf(buffer, &fSeekParent);
       frombuf(buffer, &fSeekKeys);
       delete [] header;
+      if (fNbytesName < 10 || fNbytesName > 300) {
+         Error("Init","Cannot read directory info");
+         goto zombie;
+      }
 //*-* -------------Read keys of the top directory
       if (fSeekKeys > fBEGIN) {
          TDirectory::ReadKeys();
@@ -428,6 +437,7 @@ void TFile::Close(Option_t *)
 {
 //*-*-*-*-*-*-*-*-*-*-*-*Close a file*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 //*-*                    ============
+
    if (!IsOpen()) return;
 
    TCollection::StartGarbageCollection();
@@ -469,6 +479,7 @@ void TFile::Close(Option_t *)
       gFile      = 0;
       gDirectory = gROOT;
    }
+
    gROOT->GetListOfFiles()->Remove(this);
 
    if (gProof)
@@ -515,7 +526,7 @@ void TFile::Draw(Option_t *option)
 }
 
 //______________________________________________________________________________
-void TFile::Flush() const
+void TFile::Flush()
 {
    // Synchornize a file's in-core and on-disk states.
 
@@ -1039,7 +1050,10 @@ void TFile::WriteFree()
    }
    if (!nbytes) return;
    TKey *key    = new TKey(fName,fTitle,IsA(),nbytes);
-   if (key->GetSeekKey() == 0) return;
+   if (key->GetSeekKey() == 0) {
+      delete key;
+      return;
+   }
    char *buffer = key->GetBuffer();
 
    next.Reset();
@@ -1085,14 +1099,14 @@ void TFile::WriteHeader()
 TFile *TFile::Open(const Text_t *name, Option_t *option, const Text_t *ftitle, Int_t compress)
 {
    // Static member function allowing the creation/opening of either a
-   // TFile, TNetFile or a TWebFile. The type of TFile depends on the
-   // file name. If the file starts with "root:" a TNetFile object will
-   // be returned, with "http:" a TWebFile, with "file:" or the default
-   // a local TFile. However, before opening a file via TNetFile a check
-   // is made to see if the URL specifies a local file. If that is the
-   // case the file will be opened via a normal TFile. To force the opening
-   // of a local file via a TNetFile use either TNetFile directly or specify
-   // as host "localhost".
+   // TFile, TNetFile, TWebFile or a TRFIOFile. The returned type of TFile
+   // depends on the file name. If the file starts with "root:" a TNetFile
+   // object will be returned, with "http:" a TWebFile, with "rfio:" a
+   // TRFIOFile and with "file:" or the default a local TFile. However,
+   // before opening a file via TNetFile a check is made to see if the URL
+   // specifies a local file. If that is the case the file will be opened
+   // via a normal TFile. To force the opening of a local file via a
+   // TNetFile use either TNetFile directly or specify as host "localhost".
 
    static Bool_t RFIO_loaded = kFALSE;
    TFile *f=0;
@@ -1126,7 +1140,8 @@ TFile *TFile::Open(const Text_t *name, Option_t *option, const Text_t *ftitle, I
             return 0;
          }
       }
-      f = (TFile*) gROOT->ProcessLineFast(Form("new TRFIOFile(\"%s\")", name));
+      f = (TFile*) gROOT->ProcessLineFast(Form("new TRFIOFile(\"%s\",\"%s\",\"%s\",%d)",
+          name, option, ftitle, compress));
    } else if (!strncmp(name, "hpss:", 5)) {
 
    } else if (!strncmp(name, "http:", 5))
@@ -1140,7 +1155,7 @@ TFile *TFile::Open(const Text_t *name, Option_t *option, const Text_t *ftitle, I
 }
 
 //______________________________________________________________________________
-Int_t TFile::SysOpen(const char *pathname, Int_t flags, UInt_t mode) const
+Int_t TFile::SysOpen(const char *pathname, Int_t flags, UInt_t mode)
 {
    // Interface to system open. All arguments like in "man 2 open".
 
@@ -1148,7 +1163,7 @@ Int_t TFile::SysOpen(const char *pathname, Int_t flags, UInt_t mode) const
 }
 
 //______________________________________________________________________________
-Int_t TFile::SysClose(Int_t fd) const
+Int_t TFile::SysClose(Int_t fd)
 {
    // Interface to system close. All arguments like in "man 2 close".
 
@@ -1156,7 +1171,7 @@ Int_t TFile::SysClose(Int_t fd) const
 }
 
 //______________________________________________________________________________
-Int_t TFile::SysRead(Int_t fd, void *buf, Int_t len) const
+Int_t TFile::SysRead(Int_t fd, void *buf, Int_t len)
 {
    // Interface to system read. All arguments like in "man 2 read".
 
@@ -1164,7 +1179,7 @@ Int_t TFile::SysRead(Int_t fd, void *buf, Int_t len) const
 }
 
 //______________________________________________________________________________
-Int_t TFile::SysWrite(Int_t fd, const void *buf, Int_t len) const
+Int_t TFile::SysWrite(Int_t fd, const void *buf, Int_t len)
 {
    // Interface to system write. All arguments like in "man 2 write".
 
@@ -1172,7 +1187,7 @@ Int_t TFile::SysWrite(Int_t fd, const void *buf, Int_t len) const
 }
 
 //______________________________________________________________________________
-Seek_t TFile::SysSeek(Int_t fd, Seek_t offset, Int_t whence) const
+Seek_t TFile::SysSeek(Int_t fd, Seek_t offset, Int_t whence)
 {
    // Interface to system lseek. All arguments like in "man 2 lseek"
    // except that the offset and return value are Long_t to be able to
@@ -1182,7 +1197,7 @@ Seek_t TFile::SysSeek(Int_t fd, Seek_t offset, Int_t whence) const
 }
 
 //______________________________________________________________________________
-Int_t TFile::SysSync(Int_t fd) const
+Int_t TFile::SysSync(Int_t fd)
 {
    // Interface to system fsync. All arguments like in "man 2 fsync".
 

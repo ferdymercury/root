@@ -1,3 +1,5 @@
+//*CMZ :  2.22/08 06/07/99  19.02.49  by  Fons Rademakers
+//*CMZ :  2.22/02 28/05/99  15.09.19  by  Fons Rademakers
 //*CMZ :  2.00/12 03/09/98  22.36.45  by  Fons Rademakers
 //*CMZ :  2.00/10 28/07/98  10.37.43  by  Fons Rademakers
 //*CMZ :  1.03/06 24/10/97  13.25.14  by  Fons Rademakers
@@ -6,20 +8,22 @@
 #ifndef ROOT_TBuffer
 #define ROOT_TBuffer
 
+/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Fons Rademakers.                                  *
+ * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
  *                                                                       *
  * Permission to use, copy, modify and distribute this software and its  *
  * documentation for non-commercial purposes is hereby granted without   *
  * fee, provided that the above copyright notice appears in all copies   *
  * and that both the copyright notice and this permission notice appear  *
  * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose.                         *
- * It is provided "as is" without express or implied warranty.           *
+ * suitability of this software for any purpose. It is provided "as is"  *
+ * without express or implied warranty.                                  *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -40,38 +44,38 @@
 #endif
 
 class TClass;
-class TObjArray;
-class TMap;
+class TExMap;
 
 
 class TBuffer : public TObject {
 
 protected:
    Bool_t  fMode;       //Read or write mode
+   Int_t   fVersion;    //Buffer format version
    Int_t   fBufSize;    //Size of buffer
    char   *fBuffer;     //Buffer used to store objects
    char   *fBufCur;     //Current position in buffer
    char   *fBufMax;     //End of buffer
    Int_t   fMapCount;   //Number of objects or classes in map
-   Int_t   fArraySize;  //Default size of fReadArray array
-   Int_t   fMapSize;    //Default size of fWriteMap hash table
+   Int_t   fMapSize;    //Default size of map
    union {
-      TObjArray  *fReadArray;  //Array containing object references during reading
-      TMap       *fWriteMap;   //Map containing object,id pairs during writing
+      TExMap *fReadMap;    //Map containing id,object references during reading
+      TExMap *fWriteMap;   //Map containing object,id pairs during writing
    };
 
-   static Int_t  fgArraySize;  //Default array size for all TBuffer objects
-   static Int_t  fgMapSize;    //Default map size for all TBuffer objects
+   static Int_t fgMapSize; //Default map size for all TBuffer objects
 
-   void Expand(Int_t newsize);  //Expand buffer to newsize
-
-   TBuffer() : fMode(0), fBuffer(0) { fReadArray = 0; }  // For Dictionary()
+   // Default ctor
+   TBuffer() : fMode(0), fBuffer(0) { fReadMap = 0; }
 
    // TBuffer objects cannot be copied or assigned
-   TBuffer(const TBuffer &) { };
-   void operator=(const TBuffer &) { };
+   TBuffer(const TBuffer &) { }
+   void operator=(const TBuffer &) { }
 
-   void CheckCount();
+   void   CheckCount(UInt_t offset);
+   UInt_t CheckObject(UInt_t offset, const TClass *cl, Bool_t readClass = kFALSE);
+
+   void Expand(Int_t newsize);  //Expand buffer to newsize
 
    void Read(const Text_t *name) { TObject::Read(name); }
    void Write(const Text_t *name, Int_t opt, Int_t bufs)
@@ -80,16 +84,17 @@ protected:
 public:
    enum EMode { kRead = 0, kWrite = 1 };
    enum { kInitialSize = 1024, kMinimalSize = 128 };
-   enum { kArraySize = 64, kMapSize = 67 };
+   enum { kMapSize = 67 };
 
    TBuffer(EMode mode, Int_t bufsiz = kInitialSize, void *buf = 0);
    virtual ~TBuffer();
 
-   void     MapObject(const TObject *obj);
+   void     MapObject(const TObject *obj, UInt_t offset = 1);
    virtual void Reset() { SetBufferOffset(); ResetMap(); }
+   void     InitMap();
    void     ResetMap();
    void     SetReadMode();
-   void     SetReadParam(Int_t arraysize);
+   void     SetReadParam(Int_t mapsize);
    void     SetWriteMode();
    void     SetWriteParam(Int_t mapsize);
    void     SetBufferOffset(Int_t offset = 0) { fBufCur = fBuffer+offset; }
@@ -98,6 +103,9 @@ public:
    Int_t    BufferSize() const { return fBufSize; }
    void     DetachBuffer() { fBuffer = 0; }
    Int_t    Length() const { return (Int_t)(fBufCur - fBuffer); }
+
+   void     CheckByteCount(UInt_t startpos, UInt_t bcnt, const TClass *clss);
+   void     SetByteCount(UInt_t cntpos, Bool_t packInVersion = kFALSE);
 
    Bool_t   IsReading() const { return (fMode & kWrite) == 0; }
    Bool_t   IsWriting() const { return (fMode & kWrite) != 0; }
@@ -108,8 +116,8 @@ public:
    Text_t  *ReadString(Text_t *s, Int_t max);
    void     WriteString(const Text_t *s);
 
-   Version_t ReadVersion();
-   void      WriteVersion(const TClass *cl);
+   Version_t ReadVersion(UInt_t *start = 0, UInt_t *bcnt = 0);
+   UInt_t    WriteVersion(const TClass *cl, Bool_t useBcnt = kFALSE);
 
    TClass  *ReadClass(const TClass *cl = 0, UInt_t *objTag = 0);
    void     WriteClass(const TClass *cl);
@@ -200,7 +208,7 @@ public:
    friend TBuffer  &operator>>(TBuffer &b, const TObject *&obj);
    friend TBuffer  &operator<<(TBuffer &b, const TObject *obj);
 
-   static void  SetGlobalReadParam(Int_t arraysize);
+   static void  SetGlobalReadParam(Int_t mapsize);
    static void  SetGlobalWriteParam(Int_t mapsize);
    static Int_t GetGlobalReadParam();
    static Int_t GetGlobalWriteParam();

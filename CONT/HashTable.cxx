@@ -1,21 +1,25 @@
+//*CMZ :  2.22/07 05/07/99  18.54.36  by  Fons Rademakers
+//*CMZ :  2.22/01 19/04/99  18.22.33  by  Fons Rademakers
 //*CMZ :  2.20/00 06/11/98  12.37.08  by  Fons Rademakers
 //*CMZ :  1.03/09 07/12/97  13.26.16  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   27/09/95
 
+/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Fons Rademakers.                                  *
+ * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
  *                                                                       *
  * Permission to use, copy, modify and distribute this software and its  *
  * documentation for non-commercial purposes is hereby granted without   *
  * fee, provided that the above copyright notice appears in all copies   *
  * and that both the copyright notice and this permission notice appear  *
  * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose.                         *
- * It is provided "as is" without express or implied warranty.           *
+ * suitability of this software for any purpose. It is provided "as is"  *
+ * without express or implied warranty.                                  *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -210,7 +214,7 @@ void THashTable::Rehash(Int_t newCapacity, Bool_t checkObjValidity)
    TIter next(this);
    TObject *obj;
 
-   if (checkObjValidity && gObjectTable) {
+   if (checkObjValidity && TObject::GetObjectStat() && gObjectTable) {
       while ((obj = next()))
          if (gObjectTable->PtrIsValid(obj)) ht->Add(obj);
    } else {
@@ -277,6 +281,55 @@ THashTableIter::THashTableIter(const THashTable *ht, Bool_t dir)
    fDirection  = dir;
    fListCursor = 0;
    Reset();
+}
+
+//______________________________________________________________________________
+THashTableIter::THashTableIter(const THashTableIter &iter)
+{
+   // Copy ctor.
+
+   fTable      = iter.fTable;
+   fDirection  = iter.fDirection;
+   fCursor     = iter.fCursor;
+   if (iter.fListCursor) {
+      fListCursor = (TListIter *)iter.fListCursor->GetCollection()->MakeIterator();
+      fListCursor->operator=(*iter.fListCursor);
+   }
+}
+
+//______________________________________________________________________________
+TIterator &THashTableIter::operator=(const TIterator &rhs)
+{
+   // Overridden assignment operator.
+
+   if (this != &rhs && rhs.IsA() == THashTableIter::Class()) {
+      const THashTableIter &rhs1 = (const THashTableIter &)rhs;
+      fTable     = rhs1.fTable;
+      fDirection = rhs1.fDirection;
+      fCursor    = rhs1.fCursor;
+      if (rhs1.fListCursor) {
+         fListCursor = (TListIter *)rhs1.fListCursor->GetCollection()->MakeIterator();
+         fListCursor->operator=(*rhs1.fListCursor);
+      }
+   }
+   return *this;
+}
+
+//______________________________________________________________________________
+THashTableIter &THashTableIter::operator=(const THashTableIter &rhs)
+{
+   // Overloaded assignment operator.
+
+   if (this != &rhs) {
+      fTable     = rhs.fTable;
+      fDirection = rhs.fDirection;
+      fCursor    = rhs.fCursor;
+      if (rhs.fListCursor) {
+         fListCursor = (TListIter *)rhs.fListCursor->GetCollection()->MakeIterator();
+         fListCursor->operator=(*rhs.fListCursor);
+      }
+   }
+   return *this;
 }
 
 //______________________________________________________________________________

@@ -1,0 +1,189 @@
+/*CMZ :  2.22/10 23/07/99  14.42.33  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   23/07/99*/
+// lib/prec_stl/deque
+
+#ifndef PREC_STL_DEQUE
+#define PREC_STL_DEQUE
+#pragma link off global PREC_STL_DEQUE;
+#pragma link C++ nestedtypedef;
+#pragma link C++ nestedclass;
+
+// Imported from ANSI/ISO C++ 1997/Nov draft
+// Got some ideas from Scott Snyder, Fermi-lab
+// Modified by Masaharu Goto
+
+#include <iterator>
+#include <memory>
+
+#if defined(G__GNUC)
+template<class T,class Allocator=alloc>
+#elif defined(G__HPUX)
+template<class T,class Allocator=allocator>
+#else
+template<class T,class Allocator=allocator<T> >
+#endif
+class deque {
+ public:
+  typedef T value_type;
+  typedef Allocator                                 allocator_type;
+#if defined(G__GNUC) || defined(G__HPUX)
+  typedef value_type* pointer;
+  typedef const value_type* const_pointer;
+  typedef value_type& reference;
+  typedef const value_type& const_reference;
+  typedef size_t size_type;
+  typedef ptrdiff_t difference_type;
+#else
+  typedef typename Allocator::reference             reference;
+  typedef typename Allocator::const_reference       const_reference;
+  typedef typename Allocator::size_type             size_type;
+  typedef typename Allocator::difference_type       difference_type;
+  typedef typename Allocator::pointer               pointer;
+  typedef typename Allocator::const_pointer         const_pointer;
+#endif
+
+#ifdef G__VISUAL
+  class iterator : public _Ranit<T,difference_type>
+#else
+  class iterator : public random_access_iterator<T,difference_type>
+#endif
+	{
+   public:
+    iterator() ;
+    iterator(const iterator& x) ;
+#ifndef G__BORLAND
+    iterator& operator=(const iterator& x) ;
+#endif
+    T& operator*() const ;
+    iterator& operator++();
+    iterator operator++(int a);
+    iterator& operator--();
+    iterator operator--(int a);
+    bool operator==(const iterator& x) ;
+#ifndef G__HPUX
+    bool operator!=(const iterator& x) ;
+#endif
+    iterator operator+(long n);
+    iterator operator-(long n);
+    iterator& operator+=(long n);
+    iterator& operator-=(long n);
+    T& operator[](long n) ;
+  };
+#ifdef G__HPUX
+  friend bool operator!=(const deque::iterator& x
+                        ,const deque::iterator& y) const;
+#endif
+
+#ifdef G__VISUAL
+  class reverse_iterator : public _Ranit<T,difference_type>
+#else
+  class reverse_iterator : public random_access_iterator<T,difference_type>
+#endif
+	{
+   public:
+    reverse_iterator(const reverse_iterator& x);
+#ifndef G__BORLAND
+    reverse_iterator& operator=(const reverse_iterator& x) ;
+#endif
+    T& operator*() const ;
+    reverse_iterator& operator++();
+    reverse_iterator operator++(int a);
+    reverse_iterator& operator--();
+    reverse_iterator operator--(int a);
+    reverse_iterator operator+(long n);
+    reverse_iterator operator-(long n);
+    reverse_iterator& operator+=(long n);
+    reverse_iterator& operator-=(long n);
+    T& operator[](long n) ;
+   private:
+  };
+  friend bool operator==(const deque::reverse_iterator& x
+                        ,const deque::reverse_iterator& y) const;
+  friend bool operator!=(const deque::reverse_iterator& x
+                        ,const deque::reverse_iterator& y) const;
+
+  typedef const iterator const_iterator;
+  typedef const reverse_iterator const_reverse_iterator;
+
+  deque();
+  deque(size_type n, const T& value = T());
+#if 0
+  template <class InputIterator>
+    deque(InputIterator first, InputIterator last,
+         const Allocator& = Allocator());
+#endif
+  deque(const deque& x);
+  ~deque();
+  deque& operator=(const deque& x);
+#if 0
+  template <class InputIterator>
+   void assign(InputIterator first, InputIterator last);
+#endif
+#ifndef G__GNUC
+  void assign(size_type n, const T& t);
+#endif
+  //allocator_type get_allocator() const;
+  // iterators:
+  iterator               begin();
+  //const_iterator         begin() const;
+  iterator               end();
+  //const_iterator         end() const;
+  reverse_iterator       rbegin();
+  //const_reverse_iterator rbegin() const;
+  reverse_iterator       rend();
+  //const_reverse_iterator rend() const;
+  // _lib.deque.capacity_ capacity:
+  size_type size() const;
+  size_type max_size() const;
+  void      resize(size_type sz, T c = T());
+  bool      empty() const;
+
+  // element access:
+  T&       operator[](size_type n);
+  //const_reference operator[](size_type n) const;
+#ifndef G__GNUC
+  T& at(size_type n);
+#endif
+  //const_reference at(size_type n) const;
+  T& front();
+  //const_reference front() const;
+  T& back();
+  //const_reference back() const;
+  // _lib.deque.modifiers_ modifiers:
+  void push_front(const T& x);
+  void push_back(const T& x);
+  iterator insert(iterator position, const T& x);
+  void     insert(iterator position, size_type n, const T& x);
+#if 0
+  template <class InputIterator>
+   void insert (iterator position,
+                InputIterator first, InputIterator last);
+#endif
+  void pop_front();
+  void pop_back();
+  iterator erase(iterator position);
+  iterator erase(iterator first, iterator last);
+  void     swap(deque<T,Allocator>&);
+  void     clear();
+
+  friend bool operator==(const deque& x, const deque& y);
+  friend bool operator< (const deque& x, const deque& y);
+  friend bool operator!=(const deque& x, const deque& y);
+  friend bool operator> (const deque& x, const deque& y);
+  friend bool operator>=(const deque& x, const deque& y);
+  friend bool operator<=(const deque& x, const deque& y);
+  // specialized algorithms:
+#ifndef G__GNUC
+  // doesn't work on egcs nor VC++5.0
+  //friend void swap(deque& x, deque& y);
+#endif
+
+  // Generic algorithm
+  friend void reverse(deque::iterator first,deque::iterator last);
+  //friend void reverse(deque::reverse_iterator first,deque::reverse_itetator last);
+
+  // iterator_category resolution
+  //friend random_access_iterator_tag iterator_category(deque::iterator x);
+};
+
+#endif

@@ -1,4 +1,7 @@
-//*CMZ :  2.21/08 10/03/99  16.34.22  by  Rene Brun
+//*CMZ :  2.22/09 10/07/99  08.46.55  by  Rene Brun
+//*CMZ :  2.22/02 21/05/99  14.26.09  by  Rene Brun
+//*CMZ :  2.22/01 20/05/99  09.09.42  by  Rene Brun
+//*CMZ :  2.21/08 17/04/99  07.50.09  by  Rene Brun
 //*CMZ :  2.21/01 12/01/99  07.55.28  by  Valery Fine(fine@mail.cern.ch)
 //*CMZ :  2.20/05 15/12/98  09.17.22  by  Rene Brun
 //*CMZ :  2.00/11 18/08/98  10.12.29  by  Rene Brun
@@ -7,20 +10,22 @@
 //*CMZ :  1.03/09 11/12/97  08.43.07  by  Rene Brun
 //*-- Author :    Nenad Buncic   21/08/95
 
+/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Fons Rademakers.                                  *
+ * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
  *                                                                       *
  * Permission to use, copy, modify and distribute this software and its  *
  * documentation for non-commercial purposes is hereby granted without   *
  * fee, provided that the above copyright notice appears in all copies   *
  * and that both the copyright notice and this permission notice appear  *
  * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose.                         *
- * It is provided "as is" without express or implied warranty.           *
+ * suitability of this software for any purpose. It is provided "as is"  *
+ * without express or implied warranty.                                  *
  *************************************************************************/
 
 #include <fstream.h>
@@ -291,7 +296,7 @@ void TPolyMarker3D::Paint(Option_t *option)
 
         if (size > 10000) mode = 1;         // One line marker    '-'
         else if (size > 3000) mode = 2;     // Two lines marker   '+'
-        else mode = 3;                    // Three lines marker '*'
+        else mode = 3;                      // Three lines marker '*'
 
         buff->numSegs   = size*mode;
         buff->numPoints = buff->numSegs*2;
@@ -342,7 +347,6 @@ void TPolyMarker3D::Paint(Option_t *option)
         if (buff->segs)     delete [] buff->segs;
         if (buff->polys)    delete [] buff->polys;
         if (buff)           delete    buff;
-        FillX3DBuffer(buff);
     }
 }
 
@@ -400,7 +404,14 @@ void TPolyMarker3D::Print(Option_t *option)
 //*-*-*-*-*-*-*-*-*-*-*-*-*-*-*Print PolyMarker Info*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 //*-*                          =====================
 
-   cout << "    TPolyMarker3D Printing N=" << fN << " Option=" << option << endl;
+   printf("    TPolyMarker3D N=%d, Option=%s\n",fN,option);
+   TString opt = option;
+   opt.ToLower();
+   if (opt.Contains("all")) {
+      for (Int_t i=0;i<Size();i++) {
+        printf(" x[%d]=%g, y[%d]=%g, z[%d]=%g\n",i,fP[3*i],i,fP[3*i+1],i,fP[3*i+2]);
+      }
+   }
 }
 
 //______________________________________________________________________________
@@ -470,15 +481,19 @@ void TPolyMarker3D::SetPolyMarker(Int_t n, Float_t *p, Marker_t marker, Option_t
 
        fN = n;
        if (fP) delete [] fP;
-       fP = new Float_t [kDimension*fN];
-       for (Int_t i = 0; i < kDimension*fN; i++) {
-          if (p)
-             fP[i] = p[i];
-          else
+       fP = new Float_t [3*fN];
+       for (Int_t i = 0; i < fN; i++) {
+          if (p) {
+             fP[3*i]   = p[3*i];
+             fP[3*i+1] = p[3*i+1];
+             fP[3*i+2] = p[3*i+2];
+          } else {
              memset(fP,0,kDimension*fN*sizeof(Float_t));
+          }
        }
        SetMarkerStyle(marker);
        fOption = option;
+       fLastPoint = n-1;
 }
 
 //______________________________________________________________________________

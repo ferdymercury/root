@@ -1,22 +1,25 @@
+//*CMZ :  2.22/05 15/06/99  16.34.37  by  Fons Rademakers
 //*CMZ :  2.00/06 26/04/98  15.13.32  by  Fons Rademakers
 //*CMZ :  2.00/03 27/03/98  18.23.44  by  Fons Rademakers
 //*CMZ :  2.00/00 16/02/98  02.36.01  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   12/01/98
 
+/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Fons Rademakers.                                  *
+ * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
  *                                                                       *
  * Permission to use, copy, modify and distribute this software and its  *
  * documentation for non-commercial purposes is hereby granted without   *
  * fee, provided that the above copyright notice appears in all copies   *
  * and that both the copyright notice and this permission notice appear  *
  * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose.                         *
- * It is provided "as is" without express or implied warranty.           *
+ * suitability of this software for any purpose. It is provided "as is"  *
+ * without express or implied warranty.                                  *
  *************************************************************************/
 //*CMZ :  2.00/00 16/02/98  00.17.08  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   27/12/97
@@ -397,6 +400,23 @@ Bool_t TGLBContainer::GetSelection(Int_t id)
 
    return kFALSE;
 
+}
+
+//______________________________________________________________________________
+void TGLBContainer::GetSelectedEntries(TList *selected)
+{
+   // Adds all selected entries (TGLBEntry) of the list box into
+   // the list selected.
+
+   TGLBEntry      *f;
+   TGFrameElement *el;
+
+   TIter next(fList);
+   while ((el = (TGFrameElement *) next())) {
+      f = (TGLBEntry *) el->fFrame;
+      if (f->Active())
+         selected->Add(f);
+   }
 }
 
 //______________________________________________________________________________
@@ -842,6 +862,15 @@ Int_t TGListBox::GetSelected() const
 
    TGLBContainer *ct = (TGLBContainer *) fVport->GetContainer();
    return ct->GetSelected();
+}
+
+//______________________________________________________________________________
+void TGListBox::GetSelectedEntries(TList *selected)
+{
+   // Adds all selected entries (TGLBEntry) of the list box into
+   // the list selected.
+
+   fLbc->GetSelectedEntries(selected);
 }
 
 //______________________________________________________________________________

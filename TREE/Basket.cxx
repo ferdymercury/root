@@ -1,24 +1,30 @@
-//*CMZ :  2.00/13 03/03/99  14.18.31  by  Rene Brun
+//*CMZ :  2.22/07 30/06/99  11.37.44  by  Rene Brun
+//*CMZ :  2.22/06 17/06/99  09.42.13  by  Rene Brun
+//*CMZ :  2.22/02 20/05/99  18.10.52  by  Rene Brun
+//*CMZ :  2.22/01 18/05/99  12.37.47  by  Rene Brun
+//*CMZ :  2.00/13 26/03/99  20.03.21  by  Rene Brun
 //*CMZ :  2.00/12 05/10/98  23.58.00  by  Rene Brun
 //*CMZ :  2.00/08 04/06/98  12.05.44  by  Rene Brun
 //*CMZ :  2.00/06 15/05/98  10.51.24  by  Rene Brun
 //*CMZ :  2.00/00 19/02/98  15.07.07  by  Rene Brun
 //*CMZ :  1.03/09 21/01/98  09.01.01  by  Fons Rademakers
 //*-- Author :    Rene Brun   19/01/96
+/*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Fons Rademakers.                                  *
+ * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
  *                                                                       *
  * Permission to use, copy, modify and distribute this software and its  *
  * documentation for non-commercial purposes is hereby granted without   *
  * fee, provided that the above copyright notice appears in all copies   *
  * and that both the copyright notice and this permission notice appear  *
  * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose.                         *
- * It is provided "as is" without express or implied warranty.           *
+ * suitability of this software for any purpose. It is provided "as is"  *
+ * without express or implied warranty.                                  *
  *************************************************************************/
 
 #include "TBasket.h"
@@ -44,10 +50,11 @@ ClassImp(TBasket)
 TBasket::TBasket()
 {
 //               Default contructor
-   fEventOffset = 0;
-   fZipBuffer   = 0;
-   fBufferRef   = 0;
-   fBuffer      = 0;
+   fEntryOffset   = 0;
+   fZipBuffer     = 0;
+   fBufferRef     = 0;
+   fBuffer        = 0;
+   fWritingBuffer = kFALSE;
 }
 
 //_______________________________________________________________________
@@ -60,12 +67,13 @@ TBasket::TBasket(const Text_t *name, const Text_t *title, TBranch *branch)
    SetTitle(title);
    fClassName   = "TBasket";
    fBufferSize  = branch->GetBasketSize();
-   fNevBufSize  = branch->GetEventOffsetLen();
+   fNevBufSize  = branch->GetEntryOffsetLen();
    fNevBuf      = 0;
-   fEventOffset = 0;  //Must be set to 0 before calling Sizeof
+   fEntryOffset = 0;  //Must be set to 0 before calling Sizeof
    fBuffer      = 0;  //Must be set to 0 before calling Sizeof
    fBufferRef   = new TBuffer(TBuffer::kWrite, fBufferSize);
    fWritingBuffer = kTRUE;
+   fLast        = 0; // RDK: Must initialize before calling Streamer()
    Streamer(*fBufferRef);
    fKeylen      = fBufferRef->Length();
    fObjlen      = fBufferSize - fKeylen;
@@ -74,7 +82,7 @@ TBasket::TBasket(const Text_t *name, const Text_t *title, TBranch *branch)
    fBranch      = branch;
    fZipBuffer   = 0;
    fWritingBuffer = kFALSE;
-   if (fNevBufSize) fEventOffset = new Int_t[fNevBufSize];
+   if (fNevBufSize) fEntryOffset = new Int_t[fNevBufSize];
    branch->GetTree()->IncrementTotalBuffers(fBufferSize);
 }
 
@@ -84,11 +92,11 @@ TBasket::~TBasket()
 //          Basket destructor
 //
 
-   if (fEventOffset) delete [] fEventOffset;
+   if (fEntryOffset) delete [] fEntryOffset;
    if (fZipBuffer)   delete [] fZipBuffer;
 //   if (fBufferRef)   delete fBufferRef; //this is done in the TKey destructor
 //   fBufferRef   = 0;
-   fEventOffset = 0;
+   fEntryOffset = 0;
    fZipBuffer   = 0;
 }
 
@@ -110,24 +118,24 @@ Int_t TBasket::DropBuffers()
 
    if (!fBuffer && !fBufferRef) return 0;
 //   delete [] fBuffer;
-   if (fEventOffset) delete [] fEventOffset;
+   if (fEntryOffset) delete [] fEntryOffset;
    if (fBufferRef)   delete fBufferRef;
    fBufferRef   = 0;
    fBuffer      = 0;
-   fEventOffset = 0;
+   fEntryOffset = 0;
    fBranch->GetTree()->IncrementTotalBuffers(-fBufferSize);
    return fBufferSize;
 }
 
 //_______________________________________________________________________
-Int_t TBasket::GetEventPointer(Int_t event)
+Int_t TBasket::GetEntryPointer(Int_t entry)
 {
-//*-*-*-*-*-*-*Get pointer to buffer for internal event*-*-*-*-*-*
+//*-*-*-*-*-*-*Get pointer to buffer for internal entry*-*-*-*-*-*
 //*-*          ========================================
 
    Int_t offset;
-   if (fEventOffset) offset = fEventOffset[event];
-   else              offset = fKeylen + event*fNevBufSize;
+   if (fEntryOffset) offset = fEntryOffset[entry];
+   else              offset = fKeylen + entry*fNevBufSize;
    fBufferRef->SetBufferOffset(offset);
    return offset;
 }
@@ -176,11 +184,53 @@ void TBasket::ReadBasketBuffers()
    fBranch->GetTree()->IncrementTotalBuffers(fBufferSize);
 
 //        read offsets table
-   if (!fBranch->GetEventOffsetLen()) return;
-   delete [] fEventOffset;
-   fEventOffset = 0;
+   if (!fBranch->GetEntryOffsetLen()) return;
+   delete [] fEntryOffset;
+   fEntryOffset = 0;
    fBufferRef->SetBufferOffset(fLast);
-   fBufferRef->ReadArray(fEventOffset);
+   fBufferRef->ReadArray(fEntryOffset);
+}
+
+//_______________________________________________________________________
+void TBasket::ReadBasketBuffers(char *buf)
+{
+//*-*-*-*-*-*-*-*-*Read basket buffers in memory and cleanup*-*-*-*-*-*-*
+//*-*              =========================================
+//
+//       Read a basket buffer from buf. Check if buffers of previous ReadBasket
+//       should not be dropped. Remember, we keep buffers
+//       in memory up to fMaxVirtualSize.
+   TDirectory *cursav = gDirectory;
+   fBranch->GetDirectory()->cd();
+
+   if (fBranch->GetTree()->MemoryFull(fBufferSize)) fBranch->DropBaskets();
+
+   fBufferRef = new TBuffer(TBuffer::kRead, fObjlen+fKeylen);
+   if (fObjlen > fNbytes-fKeylen) {
+      fBuffer = new char[fNbytes];
+      memcpy(fBufferRef->Buffer(),buf,fKeylen);
+      char *objbuf = fBufferRef->Buffer() + fKeylen;
+      Int_t nin = fNbytes-fKeylen;
+      Int_t nout;
+      mmuzip(&nin, &buf[fKeylen], &fObjlen, objbuf, &nout);
+      if (nout != fObjlen) Error("Read", "fObjlen = %d, nout = %d", fObjlen, nout);
+      delete [] fBuffer;
+      fBuffer = 0;
+   } else {
+      fBuffer = fBufferRef->Buffer();
+      memcpy(fBuffer,buf,fNbytes);
+   }
+   cursav->cd();
+
+   fBranch->GetTree()->IncrementTotalBuffers(fBufferSize);
+
+//        read offsets table
+   if (!fBranch->GetEntryOffsetLen()) return;
+   delete [] fEntryOffset;
+   fEntryOffset = 0;
+   fBufferRef->SetBufferOffset(fLast);
+   fBufferRef->ReadArray(fEntryOffset);
+
 }
 
 //_______________________________________________________________________
@@ -217,22 +267,23 @@ void TBasket::Streamer(TBuffer &b)
    if (b.IsReading()) {
       fBranch = gBranch;
       TKey::Streamer(b); //this must be first
-      b.ReadVersion();   //Version_t v = b.ReadVersion();
+      Version_t v = b.ReadVersion();
       b >> fBufferSize;
       b >> fNevBufSize;
       b >> fNevBuf;
       b >> fLast;
       b >> flag;
      if (!flag) return;
-      if (flag%10 != 2 && fNevBuf) {
-         delete [] fEventOffset;
-         fEventOffset = new Int_t[fNevBufSize];
-         b.ReadArray(fEventOffset);
+      if (flag%10 != 2) {
+         delete [] fEntryOffset;
+         fEntryOffset = new Int_t[fNevBufSize];
+         if (fNevBuf) b.ReadArray(fEntryOffset);
       }
       if (flag == 1 || flag > 10) {
          fBufferRef = new TBuffer(TBuffer::kRead,fBufferSize);
          char *buf  = fBufferRef->Buffer();
-         b.ReadArray(buf);
+         if (v > 1) b.ReadFastArray(buf,fLast);
+         else       b.ReadArray(buf);
          fBufferRef->SetBufferOffset(fLast);
          fBranch->GetTree()->IncrementTotalBuffers(fBufferSize);
       }
@@ -245,17 +296,17 @@ void TBasket::Streamer(TBuffer &b)
       if (fBufferRef && !fWritingBuffer) fLast = fBufferRef->Length();
       b << fLast;
       flag = 1;
-      if (!fEventOffset)  flag  = 2;
+      if (!fEntryOffset)  flag  = 2;
       if (fBufferRef)     flag += 10;
       if (fWritingBuffer) flag  = 0;
       b << flag;
       if (fWritingBuffer) return;
-      if (fEventOffset && fNevBuf) {
-         b.WriteArray(fEventOffset, fNevBuf);
+      if (fEntryOffset && fNevBuf) {
+         b.WriteArray(fEntryOffset, fNevBuf);
       }
       if (fBufferRef) {
          char *buf  = fBufferRef->Buffer();
-         b.WriteArray(buf, fBufferSize);
+         b.WriteFastArray(buf, fLast);
       }
    }
 }
@@ -263,19 +314,19 @@ void TBasket::Streamer(TBuffer &b)
 //_______________________________________________________________________
 void TBasket::Update(Int_t offset)
 {
-//    Update basket header and EventOffset table
+//    Update basket header and EntryOffset table
 
-   if (fEventOffset) {
+   if (fEntryOffset) {
       if (fNevBuf+1 >= fNevBufSize) {
          Int_t newsize = TMath::Max(10,2*fNevBufSize);
-         Int_t *newoff = (Int_t*)TStorage::ReAlloc(fEventOffset,
+         Int_t *newoff = (Int_t*)TStorage::ReAlloc(fEntryOffset,
                                newsize*sizeof(Int_t),fNevBufSize*sizeof(Int_t));
-         fEventOffset  = newoff;
+         fEntryOffset  = newoff;
          fNevBufSize   = newsize;
          //Update branch only for the first 10 baskets
-         if (fBranch->GetWriteBasket() < 10) fBranch->SetEventOffsetLen(newsize);
+         if (fBranch->GetWriteBasket() < 10) fBranch->SetEntryOffsetLen(newsize);
       }
-      fEventOffset[fNevBuf] = offset;
+      fEntryOffset[fNevBuf] = offset;
    }
 
    fNevBuf++;
@@ -293,12 +344,12 @@ Int_t TBasket::WriteBuffer()
 
    fBranch->GetDirectory()->cd();
    if (gFile ? !gFile->IsWritable() : 1) { cursav->cd(); return 0;}
-//*-*- Transfer fEventOffset table at the end of fBuffer. Offsets to fBuffer
-//     are transformed in event length to optimize compression algorithm.
+//*-*- Transfer fEntryOffset table at the end of fBuffer. Offsets to fBuffer
+//     are transformed in entry length to optimize compression algorithm.
    fLast      = fBufferRef->Length();
-   if (fEventOffset) {
-      fBufferRef->WriteArray(fEventOffset,fNevBuf+1);
-      delete [] fEventOffset; fEventOffset = 0;
+   if (fEntryOffset) {
+      fBufferRef->WriteArray(fEntryOffset,fNevBuf+1);
+      delete [] fEntryOffset; fEntryOffset = 0;
    }
 
    Int_t lbuf, nout;
@@ -310,16 +361,26 @@ Int_t TBasket::WriteBuffer()
    Int_t cxlevel = fBranch->GetCompressionLevel();
    if (cxlevel) {
       if (cxlevel == 2) cxlevel--;
-      Int_t buflen = fKeylen + fObjlen + 8; //add 8 bytes in case object is placed in a deleted gap
+      Int_t buflen = fKeylen + fObjlen + 28; //add 28 bytes in case object is placed in a deleted gap
       fBuffer = new char[buflen];
       char *objbuf = fBufferRef->Buffer() + fKeylen;
       Int_t bufmax = buflen-fKeylen;
       mmzip(cxlevel, &fObjlen, objbuf, &bufmax, &fBuffer[fKeylen], &nout);
-      Create(nout);
-      fBufferRef->SetBufferOffset(0);
-      Streamer(*fBufferRef);         //write key itself again
-      memcpy(fBuffer,fBufferRef->Buffer(),fKeylen);
-      delete fBufferRef; fBufferRef = 0;
+//printf("mmzip:%s, bufmax=%d, fObjlen=%d, fKeylen=%d, nout=%d\n",GetName(),bufmax,fObjlen,fKeylen,nout);
+      if (nout > fObjlen) {
+         delete [] fBuffer;
+         fBuffer = fBufferRef->Buffer();
+         Create(fObjlen);
+         fBufferRef->SetBufferOffset(0);
+         Streamer(*fBufferRef);         //write key itself again
+         nout = fObjlen;
+      } else {
+         Create(nout);
+         fBufferRef->SetBufferOffset(0);
+         Streamer(*fBufferRef);         //write key itself again
+         memcpy(fBuffer,fBufferRef->Buffer(),fKeylen);
+         delete fBufferRef; fBufferRef = 0;
+      }
    } else {
       fBuffer = fBufferRef->Buffer();
       Create(fObjlen);
