@@ -1,0 +1,69 @@
+*CMZ :  2.00/06 12/05/98  15.28.18  by  Rene Brun
+*CMZ :  2.00/04 06/04/98  09.34.02  by  Rene Brun
+*CMZ :  2.00/01 09/03/98  18.02.05  by  Rene Brun
+*CMZ :  2.00/00 17/02/98  12.12.34  by  Rene Brun
+*CMZ :  1.03/09 16/12/97  11.52.38  by  Rene Brun
+*-- Author :    Rene Brun   04/12/95
+macro sourcedir 1=-
+
+import *
+
+SET   '#include "$SEQ.h"' -INC C++
+SET   '#include "$SEQ.h"' -INC C
+
+machine = [1]
+if [machine] = '-' then
+   machine = $MACHINE
+endif
+
+if [machine] = 'IBMPC' then
+   machine = 'WinNT'
+endif
+
+if [OS] = 'VMS' then
+   machine = 'VMS'
+endif
+
+if [machine] = 'HPUX' .OR. [machine] = 'IBMRT' .OR. [machine] = 'SOLARIS' .OR. _
+   [machine] = 'SOLARISPC' .OR. [machine] = 'ALPHA' .OR. [machine] = 'SGI' _
+   .OR. [machine] = 'SGI64' .OR. [machine] = 'LINUX' .OR. [machine] = 'HIUX' then
+   SET $ROOTSYS/lib/libRoot.a -L
+   SET $ROOTSYS/src/$CMZDIR_*.f -f f
+   SET $ROOTSYS/src/$CMZDIR_*.cxx -f C++
+   SET $ROOTSYS/src/$CMZDIR_*.c -f C
+   exec mkdir $ROOTSYS/lib
+   exec mkdir $ROOTSYS/src
+   exec mkdir $ROOTSYS/bin
+   exec mkdir $ROOTSYS/icons
+elseif [machine] = 'WinNT' then
+   SET // . -COM C++
+   SET src/$CMZDIR_*.[FORSRCSUF] -f f
+   SET src/$CMZDIR_*.cxx         -f C++
+   SET src/$CMZDIR_*.c           -f C
+   exec mkdir $ROOTSYS\src
+   exec mkdir $ROOTSYS\bin
+   exec mkdir $ROOTSYS\lib
+   exec mkdir $ROOTSYS\icons
+elseif [machine] = 'MAC' then
+   SET $ROOTSYS/lib/libRoot.a -L
+   SET $ROOTSYS/src/$CMZDIR_*.f -fe f
+   SET $ROOTSYS/src/$CMZDIR_*.cc -fe C++
+   SET $ROOTSYS/src/$CMZDIR_*.c  -fe C
+   exec mkdir $ROOTSYS/lib
+   exec mkdir $ROOTSYS/src
+   exec mkdir $ROOTSYS/bin
+   exec mkdir $ROOTSYS/icons
+elseif [machine] = 'VMS' then
+   SET [.lib]libRoot.olb -L
+   SET [.src]$CMZDIR_*.for -f f
+   SET [.src]$CMZDIR_*.cxx -f C++
+   SET [.src]$CMZDIR_*.c -f C
+   exec mkdir [.lib]
+   exec mkdir [.src]
+   exec mkdir [.bin]
+   exec mkdir [.icons]
+else
+   mess 'sourcedir: *** Unknown machine type ***'
+endif
+
+return

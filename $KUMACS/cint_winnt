@@ -1,0 +1,36 @@
+*CMZ :  0.80/00 22/07/96  18.32.50  by  Rene Brun
+*-- Author :    Fons Rademakers   15/02/96
+
+macro cint_winnt
+*
+*    To generate the dictionary for the Win/NT classes
+*    =================================================
+*
+* Only change the [headers], [name] and [patch] variables and the
+* "#pragma ..." statements.
+*
+
+seq -i src/*.h
+
+headers=TWinNTSystem.h
+
+name=WinNT
+patch=WINNT
+
+application data G__LinkDef.h
+#ifdef __CINT__
+
+#pragma link off all globals;
+#pragma link off all classes;
+#pragma link off all functions;
+
+#pragma link C++ class TWinNTSystem;
+#pragma link C++ class TFdSet;
+
+#endif
+G__LinkDef.h
+
+
+exec makecint [name] [patch] [headers]
+
+return

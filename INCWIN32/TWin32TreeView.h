@@ -1,0 +1,50 @@
+//*CMZ :  2.00/11 22/08/98  10.07.35  by  Rene Brun
+//*CMZ :  0.90/01 21/10/96  16.07.44  by  Valery Fine(fine@vxcern.cern.ch)
+//*-- Author :    Valery Fine(fine@vxcern.cern.ch)   21/10/96
+
+/*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
+/*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
+/*-- Author :    Rene Brun   23/03/97*/
+/*************************************************************************
+ * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ *                                                                       *
+ * Permission to use, copy, modify and distribute this software and its  *
+ * documentation for non-commercial purposes is hereby granted without   *
+ * fee, provided that the above copyright notice appears in all copies   *
+ * and that both the copyright notice and this permission notice appear  *
+ * in the supporting documentation. The authors make no claims about the *
+ * suitability of this software for any purpose.                         *
+ * It is provided "as is" without express or implied warranty.           *
+ *************************************************************************/
+
+#ifndef ROOT_TWin32TreeView
+#define ROOT_TWin32TreeView
+
+class TWin32TreeView {
+
+////////////////////////////////////////////////////////////////////
+//                                                                //
+//  TWin32TreeView is define to manage Win32 Tree View Controls   //
+//                                                                //
+//                                                                //
+//                                                                //
+////////////////////////////////////////////////////////////////////
+
+private:
+
+   HWND  fhwnd;  //
+
+public:
+
+  TWin32TreeView()
+  TWin32TreeView(TWin32WindowsObject *obj, const char *title, UInt_t width, UInt_t height);
+  TWin32TreeView(TWin32WindowsObject *obj, const char *title, Int_t x, Int_t y, UInt_t width, UInt_t height);
+ ~TWin32TreeView();
+
+  AddItem(TObject *obj);
+  AddItem(TObject *obj, const char *name);
+
+};
+
+#endif

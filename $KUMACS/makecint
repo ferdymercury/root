@@ -1,0 +1,121 @@
+*CMZ :  2.00/11 07/08/98  11.14.12  by  Fons Rademakers
+*CMZ :  2.00/09 22/06/98  12.14.25  by  Fons Rademakers
+*CMZ :  1.00/09 23/04/97  18.11.13  by  Rene Brun
+*-- Author :    Fons Rademakers   17/02/96
+
+macro makecint [1] [2] [3]
+
+*
+*  Run CINT to create the CINT interface files (G__cpplink*.[hC]) and
+*  patch, pack (into CAR format) and import into CMZ.
+*  =============================================================================
+*
+*  1) strip G__TypeInfo.h and G__LinkDef.h includes from G__cpplink.h
+*  2) add G__cpplink.hh to the CAR file
+*  3) loop over the G__cpplink*.cxx files and...
+*  4) change '#include "G__cpplink.h"' into '+SEQ,G__[1]'
+*  5) add G__cpplink*.cxx file to the CAR file
+*  6) import CAR file into CMZ
+*  7) delete all scratch files
+*
+
+*
+*-- create file G__TypeInfo.h --------------------------------------------------
+*
+set G__TypeInfo.h -F TEXT
+ctot /$kumacs/G__TypeInfo
+
+*
+*-- create file G__patch.cxx---------------------------------------------------
+*
+application data G__patch.cxx
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+char selfinclude[64];
+
+void cat(char *file, FILE *fp)
+{
+   FILE *fi = fopen(file, "r");
+   if (!fi) {
+      printf("Can not open file %s\n", file);
+      return;
+   }
+
+   char s[BUFSIZ];
+   while (fgets(s, BUFSIZ, fi)) {
+      // change: '#include "Object.h"' to '+SEQ,TObject.'
+      if (strstr(s, "G__TypeInfo.h") || strstr(s, "G__LinkDef.h") ||
+          strstr(s, selfinclude)) {
+         ;  // skip these lines
+      } else if (!strncmp(s,"#include",8) && !strstr(s, selfinclude) &&
+                 !strchr(s,'<')) {
+         char *s1, *s2;
+         s1 = strchr(s,'"') + 1;
+         s2 = strrchr(s, '"') - 1;
+         *s2 = 0;
+         fprintf(fp, "+SEQ,%s\n", s1);
+      } else
+         fprintf(fp, "%s", s);
+   }
+
+   fclose(fi);
+}
+
+int main(int argc, char *argv[])
+{
+   if (argc < 3) {
+      printf("Usage: %s <package name> <patch name>\n", argv[0]);
+      exit(1);
+   }
+
+   char out[64];
+   sprintf(out, "%s.car", argv[1]);
+   FILE *fp = fopen(out, "w");
+   if (!fp) {
+      printf("%s: can not open output file %s\n", argv[0], out);
+      exit(1);
+   }
+
+   fprintf(fp, "+PATCH,//ROOT/%s.\n", argv[2]);
+   fprintf(fp, "+DECK,%s,T=C++.\n", argv[1]);
+   fprintf(fp, "+SEQ,OptimizeOff,T=NOINCLUDE.\n");
+
+   sprintf(selfinclude, "%s.h", argv[1]);
+
+   sprintf(out, "%s.h", argv[1]);
+   cat(out, fp);
+   sprintf(out, "%s.cxx", argv[1]);
+   cat(out, fp);
+
+   fclose(fp);
+
+   exit(0);
+}
+G__patch.cxx
+
+*-------------------------------------------------------------------------------
+
+
++SELF, IF=-WIN32.
+
+shell $ROOTSYS/bin/rootcint G__[1].cxx -c [3] G__LinkDef.h
+
+shell $ROOTSYS/bin/cint G__patch.cxx G__[1] [2]
+
++SELF, IF=WIN32.
+
+exec MakeInclude [3]
+shell $ROOTSYS\bin\rootcint G__[1].cxx -c [3] G__LinkDef.h
+
+shell $ROOTSYS\bin\cint G__patch.cxx G__[1] [2]
++SELF.
+
+arc G__[1].car -a
+
+remove G__*
+
+mess DECKS //ROOT/[2]/G__[1]... created
+
+return

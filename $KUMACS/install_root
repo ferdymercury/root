@@ -1,0 +1,65 @@
+*CMZ :  2.00/09 19/06/98  10.56.37  by  Rene Brun
+*CMZ :  2.00/06 12/05/98  15.18.40  by  Rene Brun
+*CMZ :  2.00/00 20/02/98  01.11.46  by  Fons Rademakers
+*CMZ :  1.00/06 23/03/97  10.10.36  by  Rene Brun
+*-- Author :    Rene Brun   04/12/95
+macro install_root 1=-
+
+import *
+
+OS = $OS
+sel rint
+
+machine = [1]
+if [machine] = '-' then
+   machine = $MACHINE
+endif
+
+if [machine] = 'IBMPC' then
+   machine = 'WinNT'
+endif
+
+
+if [machine] = 'WinNT' then
+   set $ROOTSYS/src/MAIN_*.cxx -f C++
+   set $ROOTSYS/src/MAIN_*.f -f f77
+if [LOGFILE] = 'log' then
+   set install_root.bat -xarcl
+endif
+elseif [machine] = 'MAC' then
+   set $ROOTSYS/src/MAIN_*.cxx -fe C++
+elseif [OS] = 'VMS' then
+   shell purge/log $ROOTSYS[bin.root]
+   set $ROOTSYS[src]MAIN_*.cxx -f C++
+else
+   shell /bin/rm -f $ROOTSYS/bin/root.exe
+   set $ROOTSYS/src/MAIN_*.cxx -f C++
+endif
+
+cd /rint
++IF,SOURCE
+   cx rmain
++ELSE
+   cc rmain
++ENDIF
+
++IF,WIN32.
+* We have to compile a dummy fortran routine to allow loading Fortran DLLs too
+set f77 -lan
+cd /winnt
++IF,SOURCE
+   cx welcome
++ELSE
+   cc welcome
++ENDIF
+cd /rint
+set c c++ -lan
++ENDIF.
+
+sel -rint
+exe sourcedir [1]
++IF,-SOURCE
+   exec bind_root [1]
++ENDIF
+
+return

@@ -1,0 +1,26 @@
+*CMZ :  2.00/09 25/06/98  19.13.11  by  Fons Rademakers
+*CMZ :  1.00/00 18/02/97  18.58.21  by  Fons Rademakers
+*-- Author :    Fons Rademakers   13/02/97
+
+macro cint_proof
+*
+*    To generate the dictionary for all PROOF classes
+*    ================================================
+*
+* Only change the [headers], [name] and [patch] variables and the
+* "#pragma ..." statements.
+*
+
+seq -i src/*.h
+
+headers=TProof.h TProofServ.h TSlave.h
+
+name=Proof
+patch=PROOF
+
+set G__LinkDef.h -F TEXT
+ctot /$kumacs/PROOF_LinkDef
+
+exec makecint [name] [patch] [headers]
+
+return

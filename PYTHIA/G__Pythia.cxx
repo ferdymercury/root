@@ -1,0 +1,1638 @@
+//*CMZ :  2.00/12 08/10/98  19.50.44  by  Fons Rademakers
+//*-- Author :    Fons Rademakers   08/10/98
+//*CMZ :  1.00/09 23/04/97  17.59.54  by  Rene Brun
+//*-- Author :    Rene Brun   23/04/97
+#if defined(__hpux) && !defined(__GNUG__)
+#pragma OPTIMIZE OFF
+#endif
+
+#if defined(_AIX) && !defined(__GNUG__)
+#endif
+
+#if defined(__alpha) && !defined(__GNUG__)
+#endif
+
+#if defined(__sun) && !defined(__GNUG__)
+#endif
+
+#if defined(__sgi) && !defined(__GNUG__)
+#endif
+
+#if defined(_linux)
+#endif
+
+#ifdef WIN32
+#pragma optimize("",off)
+#endif
+
+/********************************************************************
+********************************************************************/
+#ifdef __CINT__
+#endif
+#include <stddef.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include <string.h>
+extern "C" {
+#define G__ANSIHEADER
+#include "G__ci.h"
+extern void G__cpp_setup_tagtableG__Pythia();
+extern void G__cpp_setup_inheritanceG__Pythia();
+extern void G__cpp_setup_typetableG__Pythia();
+extern void G__cpp_setup_memvarG__Pythia();
+extern void G__cpp_setup_globalG__Pythia();
+extern void G__cpp_setup_memfuncG__Pythia();
+extern void G__cpp_setup_funcG__Pythia();
+extern void G__set_cpp_environmentG__Pythia();
+}
+
+
+#include "TROOT.h"
+#include "TMemberInspector.h"
+#include "TPythia.h"
+#include "TMCParticle.h"
+
+#ifndef G__MEMFUNCBODY
+#endif
+
+extern G__linked_taginfo G__G__PythiaLN_TClass;
+extern G__linked_taginfo G__G__PythiaLN_TObjArray;
+extern G__linked_taginfo G__G__PythiaLN_TObject;
+extern G__linked_taginfo G__G__PythiaLN_TNamed;
+extern G__linked_taginfo G__G__PythiaLN_TPrimary;
+extern G__linked_taginfo G__G__PythiaLN_TGenerator;
+extern G__linked_taginfo G__G__PythiaLN_TPythia;
+extern G__linked_taginfo G__G__PythiaLN_TAttLine;
+extern G__linked_taginfo G__G__PythiaLN__x3d_data_;
+extern G__linked_taginfo G__G__PythiaLN__x3d_sizeof_;
+extern G__linked_taginfo G__G__PythiaLN_TMCParticle;
+/********************************************************
+* G__Pythia.cxx
+********************************************************/
+
+#ifdef G__MEMTEST
+#undef malloc
+#endif
+
+
+extern "C" void G__set_cpp_environmentG__Pythia() {
+  G__add_macro("__MAKECINT__");
+  G__add_compiledheader("TROOT.h");
+  G__add_compiledheader("TMemberInspector.h");
+  G__add_compiledheader("TPythia.h");
+  G__add_compiledheader("TMCParticle.h");
+}
+int G__cpp_dllrevG__Pythia() { return(51111); }
+
+/*********************************************************
+* Member function Interface Method
+*********************************************************/
+
+/* TPythia */
+static int G__TPythia_TPythia_3_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   TPythia *p=NULL;
+   if(G__getaryconstruct()) p=new TPythia[G__getaryconstruct()];
+   else                    p=new TPythia;
+      result7->obj.i = (long)p;
+      result7->ref = (long)p;
+      result7->type = 'u';
+      result7->tagnum = G__get_linked_tagnum(&G__G__PythiaLN_TPythia);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPythia_Initialize_5_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TPythia*)(G__getstructoffset()))->Initialize((char*)G__int(libp->para[0]),(char*)G__int(libp->para[1])
+,(char*)G__int(libp->para[2]),(float)G__double(libp->para[3]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPythia_GetNumberOfPrimaries_6_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TPythia*)(G__getstructoffset()))->GetNumberOfPrimaries());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPythia_GetPrimaries_7_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 1:
+      G__letint(result7,85,(long)((TPythia*)(G__getstructoffset()))->GetPrimaries((Option_t*)G__int(libp->para[0])));
+      break;
+   case 0:
+      G__letint(result7,85,(long)((TPythia*)(G__getstructoffset()))->GetPrimaries());
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPythia_SetupTest_8_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TPythia*)(G__getstructoffset()))->SetupTest();
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPythia_SetMSEL_9_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TPythia*)(G__getstructoffset()))->SetMSEL((Int_t)G__int(libp->para[0]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPythia_GetMSEL_0_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TPythia*)(G__getstructoffset()))->GetMSEL());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPythia_SetMSUB_1_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 2:
+      G__setnull(result7);
+      ((TPythia*)(G__getstructoffset()))->SetMSUB((Int_t)G__int(libp->para[0]),(Bool_t)G__int(libp->para[1]));
+      break;
+   case 1:
+      G__setnull(result7);
+      ((TPythia*)(G__getstructoffset()))->SetMSUB((Int_t)G__int(libp->para[0]));
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPythia_GetMSUB_2_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,98,(long)((TPythia*)(G__getstructoffset()))->GetMSUB((Int_t)G__int(libp->para[0])));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPythia_SetKFIN_3_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 3:
+      G__setnull(result7);
+      ((TPythia*)(G__getstructoffset()))->SetKFIN((Int_t)G__int(libp->para[0]),(Int_t)G__int(libp->para[1])
+,(Bool_t)G__int(libp->para[2]));
+      break;
+   case 2:
+      G__setnull(result7);
+      ((TPythia*)(G__getstructoffset()))->SetKFIN((Int_t)G__int(libp->para[0]),(Int_t)G__int(libp->para[1]));
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPythia_GetKFIN_4_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,98,(long)((TPythia*)(G__getstructoffset()))->GetKFIN((Int_t)G__int(libp->para[0]),(Int_t)G__int(libp->para[1])));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPythia_SetCKIN_5_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TPythia*)(G__getstructoffset()))->SetCKIN((Int_t)G__int(libp->para[0]),(Float_t)G__double(libp->para[1]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPythia_GetCKIN_6_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letdouble(result7,102,(double)((TPythia*)(G__getstructoffset()))->GetCKIN((Int_t)G__int(libp->para[0])));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPythia_SetMSTP_7_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TPythia*)(G__getstructoffset()))->SetMSTP((Int_t)G__int(libp->para[0]),(Int_t)G__int(libp->para[1]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPythia_GetMSTP_8_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TPythia*)(G__getstructoffset()))->GetMSTP((Int_t)G__int(libp->para[0])));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPythia_SetPARP_9_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TPythia*)(G__getstructoffset()))->SetPARP((Int_t)G__int(libp->para[0]),(Float_t)G__double(libp->para[1]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPythia_GetPARP_0_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letdouble(result7,102,(double)((TPythia*)(G__getstructoffset()))->GetPARP((Int_t)G__int(libp->para[0])));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPythia_SetMSTI_1_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TPythia*)(G__getstructoffset()))->SetMSTI((Int_t)G__int(libp->para[0]),(Int_t)G__int(libp->para[1]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPythia_GetMSTI_2_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TPythia*)(G__getstructoffset()))->GetMSTI((Int_t)G__int(libp->para[0])));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPythia_SetPARI_3_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TPythia*)(G__getstructoffset()))->SetPARI((Int_t)G__int(libp->para[0]),(Float_t)G__double(libp->para[1]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPythia_GetPARI_4_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letdouble(result7,102,(double)((TPythia*)(G__getstructoffset()))->GetPARI((Int_t)G__int(libp->para[0])));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPythia_SetMINT_5_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TPythia*)(G__getstructoffset()))->SetMINT((Int_t)G__int(libp->para[0]),(Int_t)G__int(libp->para[1]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPythia_GetMINT_6_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TPythia*)(G__getstructoffset()))->GetMINT((Int_t)G__int(libp->para[0])));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPythia_SetVINT_7_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TPythia*)(G__getstructoffset()))->SetVINT((Int_t)G__int(libp->para[0]),(Float_t)G__double(libp->para[1]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPythia_GetVINT_8_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letdouble(result7,102,(double)((TPythia*)(G__getstructoffset()))->GetVINT((Int_t)G__int(libp->para[0])));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPythia_SetISET_9_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TPythia*)(G__getstructoffset()))->SetISET((Int_t)G__int(libp->para[0]),(Int_t)G__int(libp->para[1]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPythia_GetISET_0_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TPythia*)(G__getstructoffset()))->GetISET((Int_t)G__int(libp->para[0])));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPythia_SetKFPR_1_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TPythia*)(G__getstructoffset()))->SetKFPR((Int_t)G__int(libp->para[0]),(Int_t)G__int(libp->para[1])
+,(Int_t)G__int(libp->para[2]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPythia_GetKFPR_2_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TPythia*)(G__getstructoffset()))->GetKFPR((Int_t)G__int(libp->para[0]),(Int_t)G__int(libp->para[1])));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPythia_SetCOEF_3_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TPythia*)(G__getstructoffset()))->SetCOEF((Int_t)G__int(libp->para[0]),(Int_t)G__int(libp->para[1])
+,(Float_t)G__double(libp->para[2]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPythia_GetCOEF_4_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letdouble(result7,102,(double)((TPythia*)(G__getstructoffset()))->GetCOEF((Int_t)G__int(libp->para[0]),(Int_t)G__int(libp->para[1])));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPythia_SetICOL_5_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TPythia*)(G__getstructoffset()))->SetICOL((Int_t)G__int(libp->para[0]),(Int_t)G__int(libp->para[1])
+,(Int_t)G__int(libp->para[2]),(Int_t)G__int(libp->para[3]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPythia_GetICOL_6_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TPythia*)(G__getstructoffset()))->GetICOL((Int_t)G__int(libp->para[0]),(Int_t)G__int(libp->para[1])
+,(Int_t)G__int(libp->para[2])));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPythia_GetXSFX_7_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letdouble(result7,102,(double)((TPythia*)(G__getstructoffset()))->GetXSFX((Int_t)G__int(libp->para[0]),(Int_t)G__int(libp->para[1])));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPythia_GetISIG_8_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TPythia*)(G__getstructoffset()))->GetISIG((Int_t)G__int(libp->para[0]),(Int_t)G__int(libp->para[1])));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPythia_GetSIGH_9_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letdouble(result7,102,(double)((TPythia*)(G__getstructoffset()))->GetSIGH((Int_t)G__int(libp->para[0])));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPythia_GetWIDP_0_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letdouble(result7,102,(double)((TPythia*)(G__getstructoffset()))->GetWIDP((Int_t)G__int(libp->para[0]),(Int_t)G__int(libp->para[1])));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPythia_GetWIDE_1_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letdouble(result7,102,(double)((TPythia*)(G__getstructoffset()))->GetWIDE((Int_t)G__int(libp->para[0]),(Int_t)G__int(libp->para[1])));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPythia_GetWIDS_2_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letdouble(result7,102,(double)((TPythia*)(G__getstructoffset()))->GetWIDS((Int_t)G__int(libp->para[0]),(Int_t)G__int(libp->para[1])));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPythia_GetNGEN_3_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TPythia*)(G__getstructoffset()))->GetNGEN((Int_t)G__int(libp->para[0]),(Int_t)G__int(libp->para[1])));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPythia_GetXSEC_4_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letdouble(result7,102,(double)((TPythia*)(G__getstructoffset()))->GetXSEC((Int_t)G__int(libp->para[0]),(Int_t)G__int(libp->para[1])));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPythia_GetMSTU_5_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TPythia*)(G__getstructoffset()))->GetMSTU((Int_t)G__int(libp->para[0])));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPythia_SetMSTU_6_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TPythia*)(G__getstructoffset()))->SetMSTU((Int_t)G__int(libp->para[0]),(Int_t)G__int(libp->para[1]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPythia_GetPARU_7_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letdouble(result7,102,(double)((TPythia*)(G__getstructoffset()))->GetPARU((Int_t)G__int(libp->para[0])));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPythia_SetPARU_8_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TPythia*)(G__getstructoffset()))->SetPARU((Int_t)G__int(libp->para[0]),(Float_t)G__double(libp->para[1]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPythia_GetMSTJ_9_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TPythia*)(G__getstructoffset()))->GetMSTJ((Int_t)G__int(libp->para[0])));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPythia_SetMSTJ_0_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TPythia*)(G__getstructoffset()))->SetMSTJ((Int_t)G__int(libp->para[0]),(Int_t)G__int(libp->para[1]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPythia_GetPARJ_1_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letdouble(result7,102,(double)((TPythia*)(G__getstructoffset()))->GetPARJ((Int_t)G__int(libp->para[0])));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPythia_SetPARJ_2_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TPythia*)(G__getstructoffset()))->SetPARJ((Int_t)G__int(libp->para[0]),(Float_t)G__double(libp->para[1]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPythia_GetKCHG_3_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TPythia*)(G__getstructoffset()))->GetKCHG((Int_t)G__int(libp->para[0]),(Int_t)G__int(libp->para[1])));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPythia_SetKCHG_4_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TPythia*)(G__getstructoffset()))->SetKCHG((Int_t)G__int(libp->para[0]),(Int_t)G__int(libp->para[1])
+,(Int_t)G__int(libp->para[2]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPythia_GetPMAS_5_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letdouble(result7,102,(double)((TPythia*)(G__getstructoffset()))->GetPMAS((Int_t)G__int(libp->para[0]),(Int_t)G__int(libp->para[1])));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPythia_SetPMAS_6_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TPythia*)(G__getstructoffset()))->SetPMAS((Int_t)G__int(libp->para[0]),(Int_t)G__int(libp->para[1])
+,(Float_t)G__double(libp->para[2]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPythia_GetPARF_7_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letdouble(result7,102,(double)((TPythia*)(G__getstructoffset()))->GetPARF((Int_t)G__int(libp->para[0])));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPythia_SetPARF_8_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TPythia*)(G__getstructoffset()))->SetPARF((Int_t)G__int(libp->para[0]),(Float_t)G__double(libp->para[1]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPythia_GetVCKM_9_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letdouble(result7,102,(double)((TPythia*)(G__getstructoffset()))->GetVCKM((Int_t)G__int(libp->para[0]),(Int_t)G__int(libp->para[1])));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPythia_SetVCKM_0_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TPythia*)(G__getstructoffset()))->SetVCKM((Int_t)G__int(libp->para[0]),(Int_t)G__int(libp->para[1])
+,(Float_t)G__double(libp->para[2]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPythia_GetMDCY_1_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TPythia*)(G__getstructoffset()))->GetMDCY((Int_t)G__int(libp->para[0]),(Int_t)G__int(libp->para[1])));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPythia_SetMDCY_2_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TPythia*)(G__getstructoffset()))->SetMDCY((Int_t)G__int(libp->para[0]),(Int_t)G__int(libp->para[1])
+,(Int_t)G__int(libp->para[2]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPythia_GetMDME_3_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TPythia*)(G__getstructoffset()))->GetMDME((Int_t)G__int(libp->para[0]),(Int_t)G__int(libp->para[1])));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPythia_SetMDME_4_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TPythia*)(G__getstructoffset()))->SetMDME((Int_t)G__int(libp->para[0]),(Int_t)G__int(libp->para[1])
+,(Int_t)G__int(libp->para[2]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPythia_GetBRAT_5_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letdouble(result7,102,(double)((TPythia*)(G__getstructoffset()))->GetBRAT((Int_t)G__int(libp->para[0])));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPythia_SetBRAT_6_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TPythia*)(G__getstructoffset()))->SetBRAT((Int_t)G__int(libp->para[0]),(Float_t)G__double(libp->para[1]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPythia_GetKFDP_7_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TPythia*)(G__getstructoffset()))->GetKFDP((Int_t)G__int(libp->para[0]),(Int_t)G__int(libp->para[1])));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPythia_SetKFDP_8_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TPythia*)(G__getstructoffset()))->SetKFDP((Int_t)G__int(libp->para[0]),(Int_t)G__int(libp->para[1])
+,(Int_t)G__int(libp->para[2]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPythia_GetCHAF_9_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,67,(long)((TPythia*)(G__getstructoffset()))->GetCHAF((Int_t)G__int(libp->para[0])));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPythia_SetCHAF_0_7(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TPythia*)(G__getstructoffset()))->SetCHAF((Int_t)G__int(libp->para[0]),(Text_t*)G__int(libp->para[1]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPythia_SetMRLU_1_7(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TPythia*)(G__getstructoffset()))->SetMRLU((Int_t)G__int(libp->para[0]),(Int_t)G__int(libp->para[1]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPythia_GetMRLU_2_7(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TPythia*)(G__getstructoffset()))->GetMRLU((Int_t)G__int(libp->para[0])));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPythia_SetRRLU_3_7(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TPythia*)(G__getstructoffset()))->SetRRLU((Int_t)G__int(libp->para[0]),(Float_t)G__double(libp->para[1]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPythia_GetRRLU_4_7(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letdouble(result7,102,(double)((TPythia*)(G__getstructoffset()))->GetRRLU((Int_t)G__int(libp->para[0])));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPythia_PyStat_5_7(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 1:
+      G__setnull(result7);
+      ((TPythia*)(G__getstructoffset()))->PyStat((Int_t)G__int(libp->para[0]));
+      break;
+   case 0:
+      G__setnull(result7);
+      ((TPythia*)(G__getstructoffset()))->PyStat();
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPythia_PyTest_6_7(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 1:
+      G__setnull(result7);
+      ((TPythia*)(G__getstructoffset()))->PyTest((Int_t)G__int(libp->para[0]));
+      break;
+   case 0:
+      G__setnull(result7);
+      ((TPythia*)(G__getstructoffset()))->PyTest();
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPythia_PyEvnt_7_7(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TPythia*)(G__getstructoffset()))->PyEvnt();
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPythia_LuList_8_7(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 1:
+      G__setnull(result7);
+      ((TPythia*)(G__getstructoffset()))->LuList((Int_t)G__int(libp->para[0]));
+      break;
+   case 0:
+      G__setnull(result7);
+      ((TPythia*)(G__getstructoffset()))->LuList();
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPythia_LuExec_9_7(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TPythia*)(G__getstructoffset()))->LuExec();
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPythia_LuComp_0_8(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TPythia*)(G__getstructoffset()))->LuComp((Int_t)G__int(libp->para[0])));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPythia_PyInit_1_8(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TPythia*)(G__getstructoffset()))->PyInit((char*)G__int(libp->para[0]),(char*)G__int(libp->para[1])
+,(char*)G__int(libp->para[2]),(float)G__double(libp->para[3]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPythia_GenerateEvent_2_8(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TPythia*)(G__getstructoffset()))->GenerateEvent();
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPythia_Draw_3_8(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 1:
+      G__setnull(result7);
+      ((TPythia*)(G__getstructoffset()))->Draw((Option_t*)G__int(libp->para[0]));
+      break;
+   case 0:
+      G__setnull(result7);
+      ((TPythia*)(G__getstructoffset()))->Draw();
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPythia_DeclFileName_4_8(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,67,(long)((TPythia*)(G__getstructoffset()))->DeclFileName());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPythia_DeclFileLine_5_8(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TPythia*)(G__getstructoffset()))->DeclFileLine());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPythia_ImplFileName_6_8(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,67,(long)((TPythia*)(G__getstructoffset()))->ImplFileName());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPythia_ImplFileLine_7_8(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TPythia*)(G__getstructoffset()))->ImplFileLine());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPythia_Class_Version_8_8(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,115,(long)((TPythia*)(G__getstructoffset()))->Class_Version());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPythia_Class_9_8(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,85,(long)((TPythia*)(G__getstructoffset()))->Class());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPythia_Dictionary_0_9(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TPythia*)(G__getstructoffset()))->Dictionary();
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPythia_IsA_1_9(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,85,(long)((TPythia*)(G__getstructoffset()))->IsA());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPythia_ShowMembers_2_9(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TPythia*)(G__getstructoffset()))->ShowMembers(*(TMemberInspector*)libp->para[0].ref,(char*)G__int(libp->para[1]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TPythia_Streamer_3_9(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TPythia*)(G__getstructoffset()))->Streamer(*(TBuffer*)libp->para[0].ref);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+// automatic copy constructor
+static int G__TPythia_TPythia_4_9(G__value *result7,char *funcname,struct G__param *libp,int hash)
+{
+   TPythia *p;
+   if(1!=libp->paran) ;
+   p=new TPythia(*(TPythia*)G__int(libp->para[0]));
+   result7->obj.i = (long)p;
+   result7->ref = (long)p;
+   result7->type = 'u';
+   result7->tagnum = G__get_linked_tagnum(&G__G__PythiaLN_TPythia);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+// automatic destructor
+static int G__TPythia_wATPythia_5_9(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   if(G__getaryconstruct())
+     if(G__PVOID==G__getgvp())
+       delete[] (TPythia *)(G__getstructoffset());
+     else
+       for(int i=G__getaryconstruct()-1;i>=0;i--)
+         delete (TPythia *)((G__getstructoffset())+sizeof(TPythia)*i);
+   else  delete (TPythia *)(G__getstructoffset());
+      G__setnull(result7);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+
+/* TMCParticle */
+static int G__TMCParticle_TMCParticle_0_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   TMCParticle *p=NULL;
+   if(G__getaryconstruct()) p=new TMCParticle[G__getaryconstruct()];
+   else                    p=new TMCParticle;
+      result7->obj.i = (long)p;
+      result7->ref = (long)p;
+      result7->type = 'u';
+      result7->tagnum = G__get_linked_tagnum(&G__G__PythiaLN_TMCParticle);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TMCParticle_TMCParticle_1_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   TMCParticle *p=NULL;
+      p = new TMCParticle(
+(Int_t)G__int(libp->para[0]),(Int_t)G__int(libp->para[1])
+,(Int_t)G__int(libp->para[2]),(Int_t)G__int(libp->para[3])
+,(Int_t)G__int(libp->para[4]),(Float_t)G__double(libp->para[5])
+,(Float_t)G__double(libp->para[6]),(Float_t)G__double(libp->para[7])
+,(Float_t)G__double(libp->para[8]),(Float_t)G__double(libp->para[9])
+,(Float_t)G__double(libp->para[10]),(Float_t)G__double(libp->para[11])
+,(Float_t)G__double(libp->para[12]),(Float_t)G__double(libp->para[13])
+,(Float_t)G__double(libp->para[14]));
+      result7->obj.i = (long)p;
+      result7->ref = (long)p;
+      result7->type = 'u';
+      result7->tagnum = G__get_linked_tagnum(&G__G__PythiaLN_TMCParticle);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TMCParticle_GetKS_3_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TMCParticle*)(G__getstructoffset()))->GetKS());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TMCParticle_GetKF_4_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TMCParticle*)(G__getstructoffset()))->GetKF());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TMCParticle_GetParent_5_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TMCParticle*)(G__getstructoffset()))->GetParent());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TMCParticle_GetFirstChild_6_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TMCParticle*)(G__getstructoffset()))->GetFirstChild());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TMCParticle_GetLastChild_7_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TMCParticle*)(G__getstructoffset()))->GetLastChild());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TMCParticle_GetPx_8_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letdouble(result7,102,(double)((TMCParticle*)(G__getstructoffset()))->GetPx());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TMCParticle_GetPy_9_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letdouble(result7,102,(double)((TMCParticle*)(G__getstructoffset()))->GetPy());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TMCParticle_GetPz_0_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letdouble(result7,102,(double)((TMCParticle*)(G__getstructoffset()))->GetPz());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TMCParticle_GetEnergy_1_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letdouble(result7,102,(double)((TMCParticle*)(G__getstructoffset()))->GetEnergy());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TMCParticle_GetMass_2_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letdouble(result7,102,(double)((TMCParticle*)(G__getstructoffset()))->GetMass());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TMCParticle_GetVx_3_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letdouble(result7,102,(double)((TMCParticle*)(G__getstructoffset()))->GetVx());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TMCParticle_GetVy_4_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letdouble(result7,102,(double)((TMCParticle*)(G__getstructoffset()))->GetVy());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TMCParticle_GetVz_5_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letdouble(result7,102,(double)((TMCParticle*)(G__getstructoffset()))->GetVz());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TMCParticle_GetTime_6_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letdouble(result7,102,(double)((TMCParticle*)(G__getstructoffset()))->GetTime());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TMCParticle_GetLifetime_7_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letdouble(result7,102,(double)((TMCParticle*)(G__getstructoffset()))->GetLifetime());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TMCParticle_GetName_8_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,67,(long)((TMCParticle*)(G__getstructoffset()))->GetName());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TMCParticle_SetKS_9_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TMCParticle*)(G__getstructoffset()))->SetKS((Int_t)G__int(libp->para[0]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TMCParticle_SetKF_0_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TMCParticle*)(G__getstructoffset()))->SetKF((Int_t)G__int(libp->para[0]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TMCParticle_SetParent_1_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TMCParticle*)(G__getstructoffset()))->SetParent((Int_t)G__int(libp->para[0]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TMCParticle_SetFirstChild_2_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TMCParticle*)(G__getstructoffset()))->SetFirstChild((Int_t)G__int(libp->para[0]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TMCParticle_SetLastChild_3_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TMCParticle*)(G__getstructoffset()))->SetLastChild((Int_t)G__int(libp->para[0]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TMCParticle_SetPx_4_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TMCParticle*)(G__getstructoffset()))->SetPx((Float_t)G__double(libp->para[0]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TMCParticle_SetPy_5_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TMCParticle*)(G__getstructoffset()))->SetPy((Float_t)G__double(libp->para[0]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TMCParticle_SetPz_6_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TMCParticle*)(G__getstructoffset()))->SetPz((Float_t)G__double(libp->para[0]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TMCParticle_SetEnergy_7_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TMCParticle*)(G__getstructoffset()))->SetEnergy((Float_t)G__double(libp->para[0]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TMCParticle_SetMass_8_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TMCParticle*)(G__getstructoffset()))->SetMass((Float_t)G__double(libp->para[0]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TMCParticle_SetVx_9_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TMCParticle*)(G__getstructoffset()))->SetVx((Float_t)G__double(libp->para[0]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TMCParticle_SetVy_0_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TMCParticle*)(G__getstructoffset()))->SetVy((Float_t)G__double(libp->para[0]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TMCParticle_SetVz_1_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TMCParticle*)(G__getstructoffset()))->SetVz((Float_t)G__double(libp->para[0]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TMCParticle_SetTime_2_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TMCParticle*)(G__getstructoffset()))->SetTime((Float_t)G__double(libp->para[0]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TMCParticle_SetLifetime_3_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TMCParticle*)(G__getstructoffset()))->SetLifetime((Float_t)G__double(libp->para[0]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TMCParticle_ls_4_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TMCParticle*)(G__getstructoffset()))->ls((Option_t*)G__int(libp->para[0]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TMCParticle_DeclFileName_5_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,67,(long)((TMCParticle*)(G__getstructoffset()))->DeclFileName());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TMCParticle_DeclFileLine_6_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TMCParticle*)(G__getstructoffset()))->DeclFileLine());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TMCParticle_ImplFileName_7_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,67,(long)((TMCParticle*)(G__getstructoffset()))->ImplFileName());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TMCParticle_ImplFileLine_8_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TMCParticle*)(G__getstructoffset()))->ImplFileLine());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TMCParticle_Class_Version_9_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,115,(long)((TMCParticle*)(G__getstructoffset()))->Class_Version());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TMCParticle_Class_0_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,85,(long)((TMCParticle*)(G__getstructoffset()))->Class());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TMCParticle_Dictionary_1_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TMCParticle*)(G__getstructoffset()))->Dictionary();
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TMCParticle_IsA_2_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,85,(long)((TMCParticle*)(G__getstructoffset()))->IsA());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TMCParticle_ShowMembers_3_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TMCParticle*)(G__getstructoffset()))->ShowMembers(*(TMemberInspector*)libp->para[0].ref,(char*)G__int(libp->para[1]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TMCParticle_Streamer_4_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TMCParticle*)(G__getstructoffset()))->Streamer(*(TBuffer*)libp->para[0].ref);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+// automatic copy constructor
+static int G__TMCParticle_TMCParticle_5_4(G__value *result7,char *funcname,struct G__param *libp,int hash)
+{
+   TMCParticle *p;
+   if(1!=libp->paran) ;
+   p=new TMCParticle(*(TMCParticle*)G__int(libp->para[0]));
+   result7->obj.i = (long)p;
+   result7->ref = (long)p;
+   result7->type = 'u';
+   result7->tagnum = G__get_linked_tagnum(&G__G__PythiaLN_TMCParticle);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+// automatic destructor
+static int G__TMCParticle_wATMCParticle_6_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   if(G__getaryconstruct())
+     if(G__PVOID==G__getgvp())
+       delete[] (TMCParticle *)(G__getstructoffset());
+     else
+       for(int i=G__getaryconstruct()-1;i>=0;i--)
+         delete (TMCParticle *)((G__getstructoffset())+sizeof(TMCParticle)*i);
+   else  delete (TMCParticle *)(G__getstructoffset());
+      G__setnull(result7);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+
+/* Setting up global function */
+
+/*********************************************************
+* Member function Stub
+*********************************************************/
+
+/* TPythia */
+
+/* TMCParticle */
+
+/*********************************************************
+* Global function Stub
+*********************************************************/
+
+/*********************************************************
+* Get size of pointer to member function
+*********************************************************/
+class G__Sizep2memfuncG__Pythia {
+ public:
+  G__Sizep2memfuncG__Pythia() {p=&G__Sizep2memfuncG__Pythia::sizep2memfunc;}
+    size_t sizep2memfunc() { return(sizeof(p)); }
+  private:
+    size_t (G__Sizep2memfuncG__Pythia::*p)();
+};
+
+size_t G__get_sizep2memfuncG__Pythia()
+{
+  G__Sizep2memfuncG__Pythia a;
+  G__setsizep2memfunc((int)a.sizep2memfunc());
+  return((size_t)a.sizep2memfunc());
+}
+
+
+/*********************************************************
+* virtual base class offset calculation interface
+*********************************************************/
+
+   /* Setting up class inheritance */
+
+/*********************************************************
+* Inheritance information setup/
+*********************************************************/
+extern "C" void G__cpp_setup_inheritanceG__Pythia() {
+
+   /* Setting up class inheritance */
+   if(0==G__getnumbaseclass(G__get_linked_tagnum(&G__G__PythiaLN_TPythia))) {
+     TPythia *G__Lderived;
+     G__Lderived=(TPythia*)0x1000;
+     {
+       TGenerator *G__Lpbase=(TGenerator*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__PythiaLN_TPythia),G__get_linked_tagnum(&G__G__PythiaLN_TGenerator),(long)G__Lpbase-(long)G__Lderived,1,1);
+     }
+     {
+       TNamed *G__Lpbase=(TNamed*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__PythiaLN_TPythia),G__get_linked_tagnum(&G__G__PythiaLN_TNamed),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+     {
+       TObject *G__Lpbase=(TObject*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__PythiaLN_TPythia),G__get_linked_tagnum(&G__G__PythiaLN_TObject),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+   }
+   if(0==G__getnumbaseclass(G__get_linked_tagnum(&G__G__PythiaLN_TMCParticle))) {
+     TMCParticle *G__Lderived;
+     G__Lderived=(TMCParticle*)0x1000;
+     {
+       TObject *G__Lpbase=(TObject*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__PythiaLN_TMCParticle),G__get_linked_tagnum(&G__G__PythiaLN_TObject),(long)G__Lpbase-(long)G__Lderived,1,1);
+     }
+     {
+       TAttLine *G__Lpbase=(TAttLine*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__PythiaLN_TMCParticle),G__get_linked_tagnum(&G__G__PythiaLN_TAttLine),(long)G__Lpbase-(long)G__Lderived,1,1);
+     }
+   }
+}
+
+/*********************************************************
+* typedef information setup/
+*********************************************************/
+extern "C" void G__cpp_setup_typetableG__Pythia() {
+
+   /* Setting up typedef entry */
+   G__search_typename2("Char_t",99,-1,0,
+-1);
+   G__setnewtype(-1,"Signed Character 1 byte",0);
+   G__search_typename2("UChar_t",98,-1,0,
+-1);
+   G__setnewtype(-1,"Unsigned Character 1 byte",0);
+   G__search_typename2("Short_t",115,-1,0,
+-1);
+   G__setnewtype(-1,"Signed Short integer 2 bytes",0);
+   G__search_typename2("UShort_t",114,-1,0,
+-1);
+   G__setnewtype(-1,"Unsigned Short integer 2 bytes",0);
+   G__search_typename2("Int_t",105,-1,0,
+-1);
+   G__setnewtype(-1,"Signed integer 4 bytes",0);
+   G__search_typename2("UInt_t",104,-1,0,
+-1);
+   G__setnewtype(-1,"Unsigned integer 4 bytes",0);
+   G__search_typename2("Seek_t",105,-1,0,
+-1);
+   G__setnewtype(-1,"File pointer",0);
+   G__search_typename2("Long_t",108,-1,0,
+-1);
+   G__setnewtype(-1,"Signed long integer 8 bytes",0);
+   G__search_typename2("ULong_t",107,-1,0,
+-1);
+   G__setnewtype(-1,"Unsigned long integer 8 bytes",0);
+   G__search_typename2("Float_t",102,-1,0,
+-1);
+   G__setnewtype(-1,"Float 4 bytes",0);
+   G__search_typename2("Double_t",100,-1,0,
+-1);
+   G__setnewtype(-1,"Float 8 bytes",0);
+   G__search_typename2("Text_t",99,-1,0,
+-1);
+   G__setnewtype(-1,"General string",0);
+   G__search_typename2("Bool_t",98,-1,0,
+-1);
+   G__setnewtype(-1,"Boolean (0=false, 1=true)",0);
+   G__search_typename2("Byte_t",98,-1,0,
+-1);
+   G__setnewtype(-1,"Byte (8 bits)",0);
+   G__search_typename2("Version_t",115,-1,0,
+-1);
+   G__setnewtype(-1,"Class version identifier",0);
+   G__search_typename2("Option_t",99,-1,0,
+-1);
+   G__setnewtype(-1,"Option string",0);
+   G__search_typename2("Ssiz_t",105,-1,0,
+-1);
+   G__setnewtype(-1,"String size",0);
+   G__search_typename2("Real_t",102,-1,0,
+-1);
+   G__setnewtype(-1,"TVector and TMatrix element type",0);
+   G__search_typename2("VoidFuncPtr_t",89,-1,0,
+-1);
+   G__setnewtype(-1,"pointer to void function",0);
+   G__search_typename2("FreeHookFun_t",89,-1,0,
+-1);
+   G__setnewtype(-1,NULL,0);
+   G__search_typename2("ReAllocFun_t",81,-1,2,
+-1);
+   G__setnewtype(-1,NULL,0);
+   G__search_typename2("ReAllocCFun_t",81,-1,2,
+-1);
+   G__setnewtype(-1,NULL,0);
+   G__search_typename2("Axis_t",102,-1,0,
+-1);
+   G__setnewtype(-1,"Axis values type",0);
+   G__search_typename2("Stat_t",100,-1,0,
+-1);
+   G__setnewtype(-1,"Statistics type",0);
+   G__search_typename2("Font_t",115,-1,0,
+-1);
+   G__setnewtype(-1,"Font number",0);
+   G__search_typename2("Style_t",115,-1,0,
+-1);
+   G__setnewtype(-1,"Style number",0);
+   G__search_typename2("Marker_t",115,-1,0,
+-1);
+   G__setnewtype(-1,"Marker number",0);
+   G__search_typename2("Width_t",115,-1,0,
+-1);
+   G__setnewtype(-1,"Line width",0);
+   G__search_typename2("Color_t",115,-1,0,
+-1);
+   G__setnewtype(-1,"Color number",0);
+   G__search_typename2("SCoord_t",115,-1,0,
+-1);
+   G__setnewtype(-1,"Screen coordinates",0);
+   G__search_typename2("Coord_t",102,-1,0,
+-1);
+   G__setnewtype(-1,"Pad world coordinates",0);
+   G__search_typename2("Angle_t",102,-1,0,
+-1);
+   G__setnewtype(-1,"Graphics angle",0);
+   G__search_typename2("Size_t",102,-1,0,
+-1);
+   G__setnewtype(-1,"Attribute size",0);
+   G__search_typename2("X3DBuffer",117,G__get_linked_tagnum(&G__G__PythiaLN__x3d_data_),0,-1);
+   G__setnewtype(-1,NULL,0);
+   G__search_typename2("Size3D",117,G__get_linked_tagnum(&G__G__PythiaLN__x3d_sizeof_),0,-1);
+   G__setnewtype(-1,NULL,0);
+}
+
+/*********************************************************
+* Data Member information setup/
+*********************************************************/
+
+   /* Setting up class,struct,union tag member variable */
+
+   /* TPythia */
+static void G__setup_memvarTPythia(void) {
+   G__tag_memvar_setup(G__get_linked_tagnum(&G__G__PythiaLN_TPythia));
+   { TPythia *p; p=(TPythia*)0x1000; if (p) { }
+   G__memvar_setup((void*)NULL,85,0,0,G__get_linked_tagnum(&G__G__PythiaLN_TClass),-1,-2,4,"fgIsA=",0,(char*)NULL);
+   }
+   G__tag_memvar_reset();
+}
+
+
+   /* TMCParticle */
+static void G__setup_memvarTMCParticle(void) {
+   G__tag_memvar_setup(G__get_linked_tagnum(&G__G__PythiaLN_TMCParticle));
+   { TMCParticle *p; p=(TMCParticle*)0x1000; if (p) { }
+   G__memvar_setup((void*)NULL,105,0,0,-1,G__defined_typename("Int_t"),-1,4,"fKS=",0,"status of particle       ( LUJETS K[1] )");
+   G__memvar_setup((void*)NULL,105,0,0,-1,G__defined_typename("Int_t"),-1,4,"fKF=",0,"KF flavour code          ( LUJETS K[2] )");
+   G__memvar_setup((void*)NULL,105,0,0,-1,G__defined_typename("Int_t"),-1,4,"fParent=",0,"parrent's id             ( LUJETS K[3] )");
+   G__memvar_setup((void*)NULL,105,0,0,-1,G__defined_typename("Int_t"),-1,4,"fFirstChild=",0,"id of first child        ( LUJETS K[4] )");
+   G__memvar_setup((void*)NULL,105,0,0,-1,G__defined_typename("Int_t"),-1,4,"fLastChild=",0,"id of last  child        ( LUJETS K[5] )");
+   G__memvar_setup((void*)NULL,102,0,0,-1,G__defined_typename("Float_t"),-1,4,"fPx=",0,"X momenta [GeV/c]        ( LUJETS P[1] )");
+   G__memvar_setup((void*)NULL,102,0,0,-1,G__defined_typename("Float_t"),-1,4,"fPy=",0,"Y momenta [GeV/c]        ( LUJETS P[2] )");
+   G__memvar_setup((void*)NULL,102,0,0,-1,G__defined_typename("Float_t"),-1,4,"fPz=",0,"Z momenta [GeV/c]        ( LUJETS P[3] )");
+   G__memvar_setup((void*)NULL,102,0,0,-1,G__defined_typename("Float_t"),-1,4,"fEnergy=",0,"Energy    [GeV]          ( LUJETS P[4] )");
+   G__memvar_setup((void*)NULL,102,0,0,-1,G__defined_typename("Float_t"),-1,4,"fMass=",0,"Mass      [Gev/c^2]      ( LUJETS P[5] )");
+   G__memvar_setup((void*)NULL,102,0,0,-1,G__defined_typename("Float_t"),-1,4,"fVx=",0,"X vertex  [mm]           ( LUJETS V[1] )");
+   G__memvar_setup((void*)NULL,102,0,0,-1,G__defined_typename("Float_t"),-1,4,"fVy=",0,"Y vertex  [mm]           ( LUJETS V[2] )");
+   G__memvar_setup((void*)NULL,102,0,0,-1,G__defined_typename("Float_t"),-1,4,"fVz=",0,"Z vertex  [mm]           ( LUJETS V[3] )");
+   G__memvar_setup((void*)NULL,102,0,0,-1,G__defined_typename("Float_t"),-1,4,"fTime=",0,"time of procuction [mm/c]( LUJETS V[4] )");
+   G__memvar_setup((void*)NULL,102,0,0,-1,G__defined_typename("Float_t"),-1,4,"fLifetime=",0,"proper lifetime [mm/c]   ( LUJETS V[5] )");
+   G__memvar_setup((void*)NULL,85,0,0,G__get_linked_tagnum(&G__G__PythiaLN_TClass),-1,-2,4,"fgIsA=",0,(char*)NULL);
+   }
+   G__tag_memvar_reset();
+}
+
+extern "C" void G__cpp_setup_memvarG__Pythia() {
+}
+/***********************************************************
+************************************************************
+************************************************************
+************************************************************
+************************************************************
+************************************************************
+************************************************************
+***********************************************************/
+
+/*********************************************************
+* Member function information setup for each class
+*********************************************************/
+static void G__setup_memfuncTPythia(void) {
+   /* TPythia */
+   G__tag_memfunc_setup(G__get_linked_tagnum(&G__G__PythiaLN_TPythia));
+   G__memfunc_setup("Unsupported",1193,(G__InterfaceMethod)NULL,121,-1,-1,0,1,1,4,0,"C - 'Text_t' 0 - name",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetPrimary",1028,(G__InterfaceMethod)NULL,85,G__get_linked_tagnum(&G__G__PythiaLN_TPrimary),-1,0,1,1,4,0,"i - 'Int_t' 0 - -",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("ShowNeutrons",1279,(G__InterfaceMethod)NULL,121,-1,-1,0,1,1,4,0,"b - 'Bool_t' 0 - -",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("TPythia",707,G__TPythia_TPythia_3_0,105,G__get_linked_tagnum(&G__G__PythiaLN_TPythia),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Initialize",1042,G__TPythia_Initialize_5_0,121,-1,-1,0,4,1,1,0,
+"C - - 0 - frame C - - 0 - beam "
+"C - - 0 - target f - - 0 - win",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetNumberOfPrimaries",2026,G__TPythia_GetNumberOfPrimaries_6_0,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetPrimaries",1228,G__TPythia_GetPrimaries_7_0,85,G__get_linked_tagnum(&G__G__PythiaLN_TObjArray),-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetupTest",945,G__TPythia_SetupTest_8_0,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetMSEL",605,G__TPythia_SetMSEL_9_0,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 - sel",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetMSEL",593,G__TPythia_GetMSEL_0_1,105,-1,G__defined_typename("Int_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetMSUB",611,G__TPythia_SetMSUB_1_1,121,-1,-1,0,2,1,1,0,
+"i - 'Int_t' 0 - isub b - 'Bool_t' 0 1 msub",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetMSUB",599,G__TPythia_GetMSUB_2_1,98,-1,G__defined_typename("Bool_t"),0,1,1,1,8,"i - 'Int_t' 0 - isub",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetKFIN",596,G__TPythia_SetKFIN_3_1,121,-1,-1,0,3,1,1,0,
+"i - 'Int_t' 0 - i i - 'Int_t' 0 - j "
+"b - 'Bool_t' 0 1 kfin",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetKFIN",584,G__TPythia_GetKFIN_4_1,98,-1,G__defined_typename("Bool_t"),0,2,1,1,8,
+"i - 'Int_t' 0 - i i - 'Int_t' 0 - j",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetCKIN",593,G__TPythia_SetCKIN_5_1,121,-1,-1,0,2,1,1,0,
+"i - 'Int_t' 0 - key f - 'Float_t' 0 - value",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetCKIN",581,G__TPythia_GetCKIN_6_1,102,-1,G__defined_typename("Float_t"),0,1,1,1,8,"i - 'Int_t' 0 - key",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetMSTP",624,G__TPythia_SetMSTP_7_1,121,-1,-1,0,2,1,1,0,
+"i - 'Int_t' 0 - key i - 'Int_t' 0 - value",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetMSTP",612,G__TPythia_GetMSTP_8_1,105,-1,G__defined_typename("Int_t"),0,1,1,1,8,"i - 'Int_t' 0 - key",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetPARP",607,G__TPythia_SetPARP_9_1,121,-1,-1,0,2,1,1,0,
+"i - 'Int_t' 0 - key f - 'Float_t' 0 - value",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetPARP",595,G__TPythia_GetPARP_0_2,102,-1,G__defined_typename("Float_t"),0,1,1,1,8,"i - 'Int_t' 0 - key",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetMSTI",617,G__TPythia_SetMSTI_1_2,121,-1,-1,0,2,1,1,0,
+"i - 'Int_t' 0 - key i - 'Int_t' 0 - value",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetMSTI",605,G__TPythia_GetMSTI_2_2,105,-1,G__defined_typename("Int_t"),0,1,1,1,8,"i - 'Int_t' 0 - key",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetPARI",600,G__TPythia_SetPARI_3_2,121,-1,-1,0,2,1,1,0,
+"i - 'Int_t' 0 - key f - 'Float_t' 0 - value",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetPARI",588,G__TPythia_GetPARI_4_2,102,-1,G__defined_typename("Float_t"),0,1,1,1,8,"i - 'Int_t' 0 - key",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetMINT",612,G__TPythia_SetMINT_5_2,121,-1,-1,0,2,1,1,0,
+"i - 'Int_t' 0 - key i - 'Int_t' 0 - value",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetMINT",600,G__TPythia_GetMINT_6_2,105,-1,G__defined_typename("Int_t"),0,1,1,1,8,"i - 'Int_t' 0 - key",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetVINT",621,G__TPythia_SetVINT_7_2,121,-1,-1,0,2,1,1,0,
+"i - 'Int_t' 0 - key f - 'Float_t' 0 - value",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetVINT",609,G__TPythia_GetVINT_8_2,102,-1,G__defined_typename("Float_t"),0,1,1,1,8,"i - 'Int_t' 0 - key",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetISET",609,G__TPythia_SetISET_9_2,121,-1,-1,0,2,1,1,0,
+"i - 'Int_t' 0 - isub i - 'Int_t' 0 - iset",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetISET",597,G__TPythia_GetISET_0_3,105,-1,G__defined_typename("Int_t"),0,1,1,1,8,"i - 'Int_t' 0 - isub",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetKFPR",607,G__TPythia_SetKFPR_1_3,121,-1,-1,0,3,1,1,0,
+"i - 'Int_t' 0 - isub i - 'Int_t' 0 - j "
+"i - 'Int_t' 0 - kfpr",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetKFPR",595,G__TPythia_GetKFPR_2_3,105,-1,G__defined_typename("Int_t"),0,2,1,1,8,
+"i - 'Int_t' 0 - isub i - 'Int_t' 0 - j",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetCOEF",585,G__TPythia_SetCOEF_3_3,121,-1,-1,0,3,1,1,0,
+"i - 'Int_t' 0 - isub i - 'Int_t' 0 - j "
+"f - 'Float_t' 0 - coef",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetCOEF",573,G__TPythia_GetCOEF_4_3,102,-1,G__defined_typename("Float_t"),0,2,1,1,8,
+"i - 'Int_t' 0 - isub i - 'Int_t' 0 - j",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetICOL",595,G__TPythia_SetICOL_5_3,121,-1,-1,0,4,1,1,0,
+"i - 'Int_t' 0 - kf i - 'Int_t' 0 - i "
+"i - 'Int_t' 0 - j i - 'Int_t' 0 - value",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetICOL",583,G__TPythia_GetICOL_6_3,105,-1,G__defined_typename("Int_t"),0,3,1,1,8,
+"i - 'Int_t' 0 - kf i - 'Int_t' 0 - i "
+"i - 'Int_t' 0 - j",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetXSFX",617,G__TPythia_GetXSFX_7_3,102,-1,G__defined_typename("Float_t"),0,2,1,1,8,
+"i - 'Int_t' 0 - side i - 'Int_t' 0 - kf",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetISIG",588,G__TPythia_GetISIG_8_3,105,-1,G__defined_typename("Int_t"),0,2,1,1,8,
+"i - 'Int_t' 0 - ichn i - 'Int_t' 0 - isig",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetSIGH",587,G__TPythia_GetSIGH_9_3,102,-1,G__defined_typename("Float_t"),0,1,1,1,8,"i - 'Int_t' 0 - ichn",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetWIDP",596,G__TPythia_GetWIDP_0_4,102,-1,G__defined_typename("Float_t"),0,2,1,1,8,
+"i - 'Int_t' 0 - kf i - 'Int_t' 0 - j",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetWIDE",585,G__TPythia_GetWIDE_1_4,102,-1,G__defined_typename("Float_t"),0,2,1,1,8,
+"i - 'Int_t' 0 - kf i - 'Int_t' 0 - j",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetWIDS",599,G__TPythia_GetWIDS_2_4,102,-1,G__defined_typename("Float_t"),0,2,1,1,8,
+"i - 'Int_t' 0 - kf i - 'Int_t' 0 - j",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetNGEN",584,G__TPythia_GetNGEN_3_4,105,-1,G__defined_typename("Int_t"),0,2,1,1,8,
+"i - 'Int_t' 0 - isub i - 'Int_t' 0 - key",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetXSEC",595,G__TPythia_GetXSEC_4_4,102,-1,G__defined_typename("Float_t"),0,2,1,1,8,
+"i - 'Int_t' 0 - isub i - 'Int_t' 0 - key",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetMSTU",617,G__TPythia_GetMSTU_5_4,105,-1,G__defined_typename("Int_t"),0,1,1,1,8,"i - 'Int_t' 0 - key",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetMSTU",629,G__TPythia_SetMSTU_6_4,121,-1,-1,0,2,1,1,0,
+"i - 'Int_t' 0 - key i - 'Int_t' 0 - value",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetPARU",600,G__TPythia_GetPARU_7_4,102,-1,G__defined_typename("Float_t"),0,1,1,1,8,"i - 'Int_t' 0 - key",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetPARU",612,G__TPythia_SetPARU_8_4,121,-1,-1,0,2,1,1,0,
+"i - 'Int_t' 0 - key f - 'Float_t' 0 - value",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetMSTJ",606,G__TPythia_GetMSTJ_9_4,105,-1,G__defined_typename("Int_t"),0,1,1,1,8,"i - 'Int_t' 0 - key",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetMSTJ",618,G__TPythia_SetMSTJ_0_5,121,-1,-1,0,2,1,1,0,
+"i - 'Int_t' 0 - key i - 'Int_t' 0 - value",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetPARJ",589,G__TPythia_GetPARJ_1_5,102,-1,G__defined_typename("Float_t"),0,1,1,1,8,"i - 'Int_t' 0 - key",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetPARJ",601,G__TPythia_SetPARJ_2_5,121,-1,-1,0,2,1,1,0,
+"i - 'Int_t' 0 - key f - 'Float_t' 0 - value",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetKCHG",573,G__TPythia_GetKCHG_3_5,105,-1,G__defined_typename("Int_t"),0,2,1,1,8,
+"i - 'Int_t' 0 - kc i - 'Int_t' 0 - key",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetKCHG",585,G__TPythia_SetKCHG_4_5,121,-1,-1,0,3,1,1,0,
+"i - 'Int_t' 0 - kc i - 'Int_t' 0 - key "
+"i - 'Int_t' 0 - value",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetPMAS",593,G__TPythia_GetPMAS_5_5,102,-1,G__defined_typename("Float_t"),0,2,1,1,8,
+"i - 'Int_t' 0 - kc i - 'Int_t' 0 - key",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetPMAS",605,G__TPythia_SetPMAS_6_5,121,-1,-1,0,3,1,1,0,
+"i - 'Int_t' 0 - kc i - 'Int_t' 0 - key "
+"f - 'Float_t' 0 - value",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetPARF",585,G__TPythia_GetPARF_7_5,102,-1,G__defined_typename("Float_t"),0,1,1,1,8,"i - 'Int_t' 0 - key",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetPARF",597,G__TPythia_SetPARF_8_5,121,-1,-1,0,2,1,1,0,
+"i - 'Int_t' 0 - key f - 'Float_t' 0 - value",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetVCKM",593,G__TPythia_GetVCKM_9_5,102,-1,G__defined_typename("Float_t"),0,2,1,1,8,
+"i - 'Int_t' 0 - i i - 'Int_t' 0 - j",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetVCKM",605,G__TPythia_SetVCKM_0_6,121,-1,-1,0,3,1,1,0,
+"i - 'Int_t' 0 - i i - 'Int_t' 0 - j "
+"f - 'Float_t' 0 - value",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetMDCY",589,G__TPythia_GetMDCY_1_6,105,-1,G__defined_typename("Int_t"),0,2,1,1,8,
+"i - 'Int_t' 0 - kc i - 'Int_t' 0 - key",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetMDCY",601,G__TPythia_SetMDCY_2_6,121,-1,-1,0,3,1,1,0,
+"i - 'Int_t' 0 - kc i - 'Int_t' 0 - key "
+"i - 'Int_t' 0 - value",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetMDME",579,G__TPythia_GetMDME_3_6,105,-1,G__defined_typename("Int_t"),0,2,1,1,8,
+"i - 'Int_t' 0 - idc i - 'Int_t' 0 - key",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetMDME",591,G__TPythia_SetMDME_4_6,121,-1,-1,0,3,1,1,0,
+"i - 'Int_t' 0 - idc i - 'Int_t' 0 - key "
+"i - 'Int_t' 0 - value",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetBRAT",585,G__TPythia_GetBRAT_5_6,102,-1,G__defined_typename("Float_t"),0,1,1,1,8,"i - 'Int_t' 0 - idc",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetBRAT",597,G__TPythia_SetBRAT_6_6,121,-1,-1,0,2,1,1,0,
+"i - 'Int_t' 0 - idc f - 'Float_t' 0 - value",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetKFDP",581,G__TPythia_GetKFDP_7_6,105,-1,G__defined_typename("Int_t"),0,2,1,1,8,
+"i - 'Int_t' 0 - idc i - 'Int_t' 0 - j",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetKFDP",593,G__TPythia_SetKFDP_8_6,121,-1,-1,0,3,1,1,0,
+"i - 'Int_t' 0 - idc i - 'Int_t' 0 - j "
+"i - 'Int_t' 0 - value",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetCHAF",562,G__TPythia_GetCHAF_9_6,67,-1,G__defined_typename("Text_t"),0,1,1,1,8,"i - 'Int_t' 0 - kc",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetCHAF",574,G__TPythia_SetCHAF_0_7,121,-1,-1,0,2,1,1,0,
+"i - 'Int_t' 0 - kc C - 'Text_t' 0 - value",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetMRLU",620,G__TPythia_SetMRLU_1_7,121,-1,-1,0,2,1,1,0,
+"i - 'Int_t' 0 - key i - 'Int_t' 0 - seed",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetMRLU",608,G__TPythia_GetMRLU_2_7,105,-1,G__defined_typename("Int_t"),0,1,1,1,8,"i - 'Int_t' 0 - key",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetRRLU",625,G__TPythia_SetRRLU_3_7,121,-1,-1,0,2,1,1,0,
+"i - 'Int_t' 0 - key f - 'Float_t' 0 - value",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetRRLU",613,G__TPythia_GetRRLU_4_7,102,-1,G__defined_typename("Float_t"),0,1,1,1,8,"i - 'Int_t' 0 - key",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("PyStat",613,G__TPythia_PyStat_5_7,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 1 mstat",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("PyTest",617,G__TPythia_PyTest_6_7,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 1 key",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("PyEvnt",614,G__TPythia_PyEvnt_7_7,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("LuList",605,G__TPythia_LuList_8_7,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 1 mlist",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("LuExec",582,G__TPythia_LuExec_9_7,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("LuComp",592,G__TPythia_LuComp_0_8,105,-1,G__defined_typename("Int_t"),0,1,1,1,0,"i - 'Int_t' 0 - kf",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("PyInit",605,G__TPythia_PyInit_1_8,121,-1,-1,0,4,1,1,0,
+"C - - 0 - frame C - - 0 - beam "
+"C - - 0 - target f - - 0 - win",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GenerateEvent",1325,G__TPythia_GenerateEvent_2_8,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Draw",398,G__TPythia_Draw_3_8,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("DeclFileName",1145,G__TPythia_DeclFileName_4_8,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("DeclFileLine",1152,G__TPythia_DeclFileLine_5_8,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ImplFileName",1171,G__TPythia_ImplFileName_6_8,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ImplFileLine",1178,G__TPythia_ImplFileLine_7_8,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Class_Version",1339,G__TPythia_Class_Version_8_8,115,-1,G__defined_typename("Version_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Class",502,G__TPythia_Class_9_8,85,G__get_linked_tagnum(&G__G__PythiaLN_TClass),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Dictionary",1046,G__TPythia_Dictionary_0_9,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("IsA",253,G__TPythia_IsA_1_9,85,G__get_linked_tagnum(&G__G__PythiaLN_TClass),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("ShowMembers",1132,G__TPythia_ShowMembers_2_9,121,-1,-1,0,2,1,1,0,
+"u 'TMemberInspector' - 1 - insp C - - 0 - parent",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Streamer",835,G__TPythia_Streamer_3_9,121,-1,-1,0,1,1,1,0,"u 'TBuffer' - 1 - b",(char*)NULL,(void*)NULL,1);
+   // automatic copy constructor
+   G__memfunc_setup("TPythia",707,G__TPythia_TPythia_4_9,(int)('i'),G__get_linked_tagnum(&G__G__PythiaLN_TPythia),-1,0,1,1,1,0,"u 'TPythia' - 1 - -",(char*)NULL,(void*)NULL,0);
+   // automatic destructor
+   G__memfunc_setup("~TPythia",833,G__TPythia_wATPythia_5_9,(int)('y'),-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__tag_memfunc_reset();
+}
+
+static void G__setup_memfuncTMCParticle(void) {
+   /* TMCParticle */
+   G__tag_memfunc_setup(G__get_linked_tagnum(&G__G__PythiaLN_TMCParticle));
+   G__memfunc_setup("TMCParticle",1048,G__TMCParticle_TMCParticle_0_0,105,G__get_linked_tagnum(&G__G__PythiaLN_TMCParticle),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("TMCParticle",1048,G__TMCParticle_TMCParticle_1_0,105,G__get_linked_tagnum(&G__G__PythiaLN_TMCParticle),-1,0,15,1,1,0,
+"i - 'Int_t' 0 - kS i - 'Int_t' 0 - kF "
+"i - 'Int_t' 0 - parent i - 'Int_t' 0 - firstchild "
+"i - 'Int_t' 0 - lastchild f - 'Float_t' 0 - px "
+"f - 'Float_t' 0 - py f - 'Float_t' 0 - pz "
+"f - 'Float_t' 0 - energy f - 'Float_t' 0 - mass "
+"f - 'Float_t' 0 - vx f - 'Float_t' 0 - vy "
+"f - 'Float_t' 0 - vz f - 'Float_t' 0 - time "
+"f - 'Float_t' 0 - lifetime",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetKS",446,G__TMCParticle_GetKS_3_0,105,-1,G__defined_typename("Int_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetKF",433,G__TMCParticle_GetKF_4_0,105,-1,G__defined_typename("Int_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetParent",906,G__TMCParticle_GetParent_5_0,105,-1,G__defined_typename("Int_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetFirstChild",1292,G__TMCParticle_GetFirstChild_6_0,105,-1,G__defined_typename("Int_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetLastChild",1176,G__TMCParticle_GetLastChild_7_0,105,-1,G__defined_typename("Int_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetPx",488,G__TMCParticle_GetPx_8_0,102,-1,G__defined_typename("Float_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetPy",489,G__TMCParticle_GetPy_9_0,102,-1,G__defined_typename("Float_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetPz",490,G__TMCParticle_GetPz_0_1,102,-1,G__defined_typename("Float_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetEnergy",906,G__TMCParticle_GetEnergy_1_1,102,-1,G__defined_typename("Float_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetMass",692,G__TMCParticle_GetMass_2_1,102,-1,G__defined_typename("Float_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetVx",494,G__TMCParticle_GetVx_3_1,102,-1,G__defined_typename("Float_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetVy",495,G__TMCParticle_GetVy_4_1,102,-1,G__defined_typename("Float_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetVz",496,G__TMCParticle_GetVz_5_1,102,-1,G__defined_typename("Float_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetTime",687,G__TMCParticle_GetTime_6_1,102,-1,G__defined_typename("Float_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetLifetime",1103,G__TMCParticle_GetLifetime_7_1,102,-1,G__defined_typename("Float_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetName",673,G__TMCParticle_GetName_8_1,67,-1,G__defined_typename("Text_t"),0,0,1,1,9,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetKS",458,G__TMCParticle_SetKS_9_1,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 - kS",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetKF",445,G__TMCParticle_SetKF_0_2,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 - kF",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetParent",918,G__TMCParticle_SetParent_1_2,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 - parent",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetFirstChild",1304,G__TMCParticle_SetFirstChild_2_2,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 - first",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetLastChild",1188,G__TMCParticle_SetLastChild_3_2,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 - last",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetPx",500,G__TMCParticle_SetPx_4_2,121,-1,-1,0,1,1,1,0,"f - 'Float_t' 0 - px",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetPy",501,G__TMCParticle_SetPy_5_2,121,-1,-1,0,1,1,1,0,"f - 'Float_t' 0 - py",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetPz",502,G__TMCParticle_SetPz_6_2,121,-1,-1,0,1,1,1,0,"f - 'Float_t' 0 - pz",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetEnergy",918,G__TMCParticle_SetEnergy_7_2,121,-1,-1,0,1,1,1,0,"f - 'Float_t' 0 - energy",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetMass",704,G__TMCParticle_SetMass_8_2,121,-1,-1,0,1,1,1,0,"f - 'Float_t' 0 - mass",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetVx",506,G__TMCParticle_SetVx_9_2,121,-1,-1,0,1,1,1,0,"f - 'Float_t' 0 - vx",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetVy",507,G__TMCParticle_SetVy_0_3,121,-1,-1,0,1,1,1,0,"f - 'Float_t' 0 - vy",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetVz",508,G__TMCParticle_SetVz_1_3,121,-1,-1,0,1,1,1,0,"f - 'Float_t' 0 - vz",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetTime",699,G__TMCParticle_SetTime_2_3,121,-1,-1,0,1,1,1,0,"f - 'Float_t' 0 - time",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetLifetime",1115,G__TMCParticle_SetLifetime_3_3,121,-1,-1,0,1,1,1,0,"f - 'Float_t' 0 - lifetime",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("ls",223,G__TMCParticle_ls_4_3,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 - option",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("DeclFileName",1145,G__TMCParticle_DeclFileName_5_3,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("DeclFileLine",1152,G__TMCParticle_DeclFileLine_6_3,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ImplFileName",1171,G__TMCParticle_ImplFileName_7_3,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ImplFileLine",1178,G__TMCParticle_ImplFileLine_8_3,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Class_Version",1339,G__TMCParticle_Class_Version_9_3,115,-1,G__defined_typename("Version_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Class",502,G__TMCParticle_Class_0_4,85,G__get_linked_tagnum(&G__G__PythiaLN_TClass),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Dictionary",1046,G__TMCParticle_Dictionary_1_4,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("IsA",253,G__TMCParticle_IsA_2_4,85,G__get_linked_tagnum(&G__G__PythiaLN_TClass),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("ShowMembers",1132,G__TMCParticle_ShowMembers_3_4,121,-1,-1,0,2,1,1,0,
+"u 'TMemberInspector' - 1 - insp C - - 0 - parent",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Streamer",835,G__TMCParticle_Streamer_4_4,121,-1,-1,0,1,1,1,0,"u 'TBuffer' - 1 - b",(char*)NULL,(void*)NULL,1);
+   // automatic copy constructor
+   G__memfunc_setup("TMCParticle",1048,G__TMCParticle_TMCParticle_5_4,(int)('i'),G__get_linked_tagnum(&G__G__PythiaLN_TMCParticle),-1,0,1,1,1,0,"u 'TMCParticle' - 1 - -",(char*)NULL,(void*)NULL,0);
+   // automatic destructor
+   G__memfunc_setup("~TMCParticle",1174,G__TMCParticle_wATMCParticle_6_4,(int)('y'),-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__tag_memfunc_reset();
+}
+
+
+/*********************************************************
+* Member function information setup
+*********************************************************/
+extern "C" void G__cpp_setup_memfuncG__Pythia() {
+}
+
+/*********************************************************
+* Global variable information setup for each class
+*********************************************************/
+extern "C" void G__cpp_setup_globalG__Pythia() {
+
+   /* Setting up global variables */
+   G__resetplocal();
+
+
+   G__resetglobalenv();
+}
+
+/*********************************************************
+* Global function information setup for each class
+*********************************************************/
+extern "C" void G__cpp_setup_funcG__Pythia() {
+   G__lastifuncposition();
+
+
+   G__resetifuncposition();
+}
+
+/*********************************************************
+* Class,struct,union,enum tag information setup
+*********************************************************/
+/* Setup class/struct taginfo */
+G__linked_taginfo G__G__PythiaLN_TClass = { "TClass" , 99 , -1 };
+G__linked_taginfo G__G__PythiaLN_TObjArray = { "TObjArray" , 99 , -1 };
+G__linked_taginfo G__G__PythiaLN_TObject = { "TObject" , 99 , -1 };
+G__linked_taginfo G__G__PythiaLN_TNamed = { "TNamed" , 99 , -1 };
+G__linked_taginfo G__G__PythiaLN_TPrimary = { "TPrimary" , 99 , -1 };
+G__linked_taginfo G__G__PythiaLN_TGenerator = { "TGenerator" , 99 , -1 };
+G__linked_taginfo G__G__PythiaLN_TPythia = { "TPythia" , 99 , -1 };
+G__linked_taginfo G__G__PythiaLN_TAttLine = { "TAttLine" , 99 , -1 };
+G__linked_taginfo G__G__PythiaLN__x3d_data_ = { "_x3d_data_" , 115 , -1 };
+G__linked_taginfo G__G__PythiaLN__x3d_sizeof_ = { "_x3d_sizeof_" , 115 , -1 };
+G__linked_taginfo G__G__PythiaLN_TMCParticle = { "TMCParticle" , 99 , -1 };
+
+extern "C" void G__cpp_setup_tagtableG__Pythia() {
+
+   /* Setting up class,struct,union tag entry */
+   G__tagtable_setup(G__get_linked_tagnum(&G__G__PythiaLN_TPythia),sizeof(TPythia),-1,0,"Interface to Pythia Event Generator",G__setup_memvarTPythia,G__setup_memfuncTPythia);
+   G__tagtable_setup(G__get_linked_tagnum(&G__G__PythiaLN_TMCParticle),sizeof(TMCParticle),-1,0,"LUJETS particles data record.",G__setup_memvarTMCParticle,G__setup_memfuncTMCParticle);
+}
+extern "C" void G__cpp_setupG__Pythia() {
+  G__check_setup_version(51111,"G__cpp_setupG__Pythia()");
+  G__set_cpp_environmentG__Pythia();
+  G__cpp_setup_tagtableG__Pythia();
+
+  G__cpp_setup_inheritanceG__Pythia();
+
+  G__cpp_setup_typetableG__Pythia();
+
+  G__cpp_setup_memvarG__Pythia();
+
+  G__cpp_setup_memfuncG__Pythia();
+  G__cpp_setup_globalG__Pythia();
+  G__cpp_setup_funcG__Pythia();
+
+   if(0==G__getsizep2memfunc()) G__get_sizep2memfuncG__Pythia();
+  return;
+}
+class G__cpp_setup_initG__Pythia {
+  public:
+    G__cpp_setup_initG__Pythia() { G__add_setup_func("G__Pythia",&G__cpp_setupG__Pythia); }
+   ~G__cpp_setup_initG__Pythia() { G__remove_setup_func("G__Pythia"); }
+};
+G__cpp_setup_initG__Pythia G__cpp_setup_initializerG__Pythia;
+
+//
+// File generated by /home/rdm/root/bin/rootcint at Thu Oct  8 19:50:43 1998.
+// Do NOT change. Changes will be lost next time file is generated
+//
+
+#include "TBuffer.h"
+#include "TMemberInspector.h"
+#include "TError.h"
+
+//______________________________________________________________________________
+TBuffer &operator>>(TBuffer &buf, TPythia *&obj)
+{
+   // Read a pointer to an object of class TPythia.
+
+   obj = (TPythia *) buf.ReadObject(TPythia::Class());
+   return buf;
+}
+
+//______________________________________________________________________________
+void TPythia::Streamer(TBuffer &R__b)
+{
+   // Stream an object of class TPythia.
+
+   if (R__b.IsReading()) {
+      Version_t R__v = R__b.ReadVersion(); if (R__v) { }
+      TGenerator::Streamer(R__b);
+   } else {
+      R__b.WriteVersion(TPythia::IsA());
+      TGenerator::Streamer(R__b);
+   }
+}
+
+//______________________________________________________________________________
+void TPythia::ShowMembers(TMemberInspector &R__insp, char *R__parent)
+{
+   // Inspect the data members of an object of class TPythia.
+
+   TClass *R__cl  = TPythia::IsA();
+   Int_t   R__ncp = strlen(R__parent);
+   if (R__ncp || R__cl || R__insp.IsA()) { }
+   TGenerator::ShowMembers(R__insp, R__parent);
+}
+
+//______________________________________________________________________________
+TBuffer &operator>>(TBuffer &buf, TMCParticle *&obj)
+{
+   // Read a pointer to an object of class TMCParticle.
+
+   obj = (TMCParticle *) buf.ReadObject(TMCParticle::Class());
+   return buf;
+}
+
+//______________________________________________________________________________
+void TMCParticle::Streamer(TBuffer &R__b)
+{
+   // Stream an object of class TMCParticle.
+
+   if (R__b.IsReading()) {
+      Version_t R__v = R__b.ReadVersion(); if (R__v) { }
+      TObject::Streamer(R__b);
+      TAttLine::Streamer(R__b);
+      R__b >> fKS;
+      R__b >> fKF;
+      R__b >> fParent;
+      R__b >> fFirstChild;
+      R__b >> fLastChild;
+      R__b >> fPx;
+      R__b >> fPy;
+      R__b >> fPz;
+      R__b >> fEnergy;
+      R__b >> fMass;
+      R__b >> fVx;
+      R__b >> fVy;
+      R__b >> fVz;
+      R__b >> fTime;
+      R__b >> fLifetime;
+   } else {
+      R__b.WriteVersion(TMCParticle::IsA());
+      TObject::Streamer(R__b);
+      TAttLine::Streamer(R__b);
+      R__b << fKS;
+      R__b << fKF;
+      R__b << fParent;
+      R__b << fFirstChild;
+      R__b << fLastChild;
+      R__b << fPx;
+      R__b << fPy;
+      R__b << fPz;
+      R__b << fEnergy;
+      R__b << fMass;
+      R__b << fVx;
+      R__b << fVy;
+      R__b << fVz;
+      R__b << fTime;
+      R__b << fLifetime;
+   }
+}
+
+//______________________________________________________________________________
+void TMCParticle::ShowMembers(TMemberInspector &R__insp, char *R__parent)
+{
+   // Inspect the data members of an object of class TMCParticle.
+
+   TClass *R__cl  = TMCParticle::IsA();
+   Int_t   R__ncp = strlen(R__parent);
+   if (R__ncp || R__cl || R__insp.IsA()) { }
+   R__insp.Inspect(R__cl, R__parent, "fKS", &fKS);
+   R__insp.Inspect(R__cl, R__parent, "fKF", &fKF);
+   R__insp.Inspect(R__cl, R__parent, "fParent", &fParent);
+   R__insp.Inspect(R__cl, R__parent, "fFirstChild", &fFirstChild);
+   R__insp.Inspect(R__cl, R__parent, "fLastChild", &fLastChild);
+   R__insp.Inspect(R__cl, R__parent, "fPx", &fPx);
+   R__insp.Inspect(R__cl, R__parent, "fPy", &fPy);
+   R__insp.Inspect(R__cl, R__parent, "fPz", &fPz);
+   R__insp.Inspect(R__cl, R__parent, "fEnergy", &fEnergy);
+   R__insp.Inspect(R__cl, R__parent, "fMass", &fMass);
+   R__insp.Inspect(R__cl, R__parent, "fVx", &fVx);
+   R__insp.Inspect(R__cl, R__parent, "fVy", &fVy);
+   R__insp.Inspect(R__cl, R__parent, "fVz", &fVz);
+   R__insp.Inspect(R__cl, R__parent, "fTime", &fTime);
+   R__insp.Inspect(R__cl, R__parent, "fLifetime", &fLifetime);
+   TObject::ShowMembers(R__insp, R__parent);
+   TAttLine::ShowMembers(R__insp, R__parent);
+}

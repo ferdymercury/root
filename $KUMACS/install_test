@@ -1,0 +1,417 @@
+*CMZ :  2.20/04 09/12/98  15.17.22  by  Rene Brun
+*CMZ :  2.20/03 04/12/98  18.45.54  by  Fons Rademakers
+*CMZ :  2.20/01 30/11/98  14.48.35  by  Fons Rademakers
+*CMZ :  2.20/00 27/11/98  12.26.46  by  Rene Brun
+*CMZ :  2.00/13 28/10/98  18.02.41  by  Rene Brun
+*CMZ :  2.00/12 04/10/98  17.31.35  by  Fons Rademakers
+*CMZ :  2.00/11 07/08/98  11.17.34  by  Fons Rademakers
+*CMZ :  2.00/10 30/06/98  16.33.38  by  Fons Rademakers
+*CMZ :  2.00/09 19/06/98  11.04.50  by  Rene Brun
+*CMZ :  2.00/08 19/05/98  12.56.59  by  Rene Brun
+*CMZ :  2.00/06 12/05/98  15.23.09  by  Rene Brun
+*CMZ :  2.00/01 10/03/98  19.16.39  by  Fons Rademakers
+*CMZ :  2.00/00 08/03/98  16.02.50  by  Rene Brun
+*CMZ :  1.03/07 04/11/97  17.42.45  by  Rene Brun
+*-- Author :    Rene Brun   25/07/96
+macro install_test 1=-  2=opt
+
+import *
+
+machine = [1]
+if [machine] = '-' then
+   machine = $MACHINE
+endif
+if [machine] = 'IBMPC' then
+   machine = 'WinNT'
+endif
+
+
+*=======================Generating AA_README file==============================
+mess Creating file AA_README
+application data AA_README
+Contents
+========
+
+Directory root/ :
+
+AA_README   - this file
+AA_INSTALL  - how to install ROOT from source
+bin         - directory containing executables
+include     - directory containing the ROOT header files
+lib         - directory containing the ROOT libraries (in shared library format)
+macros      - directory containing system macros (e.g. GL.C to load OpenGL libs)
+icons       - directory containing xpm icons
+test        - some ROOT test programs
+tutorials   - example macros that can be executed by the bin/root module
+
+
+Environment variables
+=====================
+
+Define the variable ROOTSYS pointing to the directory where you unpacked
+the ROOT distribution:
++SELF, IF=-WIN32.
++SELF, IF=VMS.
+   set ROOTSYS=[<pathname>.root]
++SELF, IF=-VMS.
+   export ROOTSYS=<pathname>/root   (in bash or ksh)
+   setenv ROOTSYS <pathname>/root   (in csh or tcsh)
++SELF, IF=WIN32.
+   set ROOTSYS=<pathname>\root
++SELF.
+
+
+Add ROOTSYS/bin to your PATH:
++SELF, IF=-WIN32.
++SELF, IF=VMS.
+   set path=[$path];[$rootsys.bin]
++SELF, IF=-VMS.
+   export PATH=$PATH:$ROOTSYS/bin        (in bash or ksh)
+   set path=($path $ROOTSYS/bin)         (in csh or tcsh)
++SELF, IF=WIN32.
+   PATH=%PATH%;%ROOTSYS%\bin
+
+Define the HOME directory if the last was not defined yet
+   set HOME= <any existing directory to write in> for Windows95
++SELF.
+
+On systems using shared libraries you must specify the load path
+before you can run the root module. [NOTE: with version 2.00 this
+is not necessary anymore since the front-end program sets the
+load path correctly. However, we leave the information below because
+maybe you will need it when distributing your own ROOT based
+applications.]
+
+On HP-UX do:
+   export SHLIB_PATH=$SHLIB_PATH:$ROOTSYS/lib       (in bash or ksh)
+   setenv SHLIB_PATH ${SHLIB_PATH}:${ROOTSYS}/lib   (in csh or tcsh)
+
+On Solaris, Linux, SGI, Alpha/OSF do:
+   export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$ROOTSYS/lib
+
+On AIX do:
+   [ -z "$LIBPATH" ] && export LIBPATH=/lib:/usr/lib
+   export LIBPATH=$LIBPATH:$ROOTSYS/lib
+
+
+Running interactive ROOT and the tutorial macros
+================================================
+
+To run the example macros, go to the root/tutorials directory and do, e.g.:
+
++SELF, IF=-WIN32.
+$ root
++SELF, IF=WIN32.
+c:root\tutorials> root
++SELF
+root [0] .x benchmarks.C
+  -- this will run all tutorials and will benchmark your machine.
+  -- For a rating of your machine check:
+  -- http://root.cern.ch/root/html/examples/benchmarks_v100.html.
+  -- If your machine is not in the list please mail the results to:
+  -- rootdev@root.cern.ch.
+root [1] .x demos.C
+  -- Click on any button you like to run the corresponding tutorial.
+  -- Move the objects on the canvas around using the mouse.
+root [2] .q
+
+
+
+Compiling and running ROOT test programs
+========================================
+
+To run some ROOT test programs, go to the root/test directory and do
+(after having selected the machine dependent flags in the Makefile):
+
++SELF, IF=-WIN32.
++SELF, IF=VMS.
+$ make
+$ [.Event]
+$ [.hsimple]
+$ [.minexam]
+$ [.tcollex]
+$ [.tstring]
++SELF, IF=-VMS.
+$ make
+$ ./Event
+$ ./hsimple
+$ ./minexam
+$ ./tcollex
+$ ./tstring
++SELF, IF=WIN32.
+$ nmake
+$ Event.exe
+$ hsimple.exe
+$ minexam.exe
+$ tcollex.exe
+$ tstring.exe
++SELF.
+AA_README
+
+*=======================Generating AA_INSTALL file==============================
+mess Creating file AA_INSTALL
+application data AA_INSTALL
+Installion of ROOT from source
+==============================
+
+To install ROOT from source you first have to get the tar file
+containing the source. This tar file can be found in the usual
+ROOT download area (ftp://root.cern.ch/root).
+
+
+Installing add-on libraries for TrueType fonts and OpenGL graphics
+==================================================================
+
+If you want to compile the ROOT add-on libraries to handle
+TrueType fonts and OpenGL graphics you have to make the following
+links in your $ROOTSYS directory prior to compiling:
+
+   cd $ROOTSYS
+   ln -s <pathname>/ttf ttf
+   ln -s <pathname>/Mesa-2.2 opengl    (Mesa 2.2 or higher)
+
+on how to set these variable for other shells see the AA_README.
+
+On how to get the TrueType ttf directory see:
+   http://root.cern.ch/root/TrueType.html
+
+On how to get an open source version of OpenGL see:
+   http://www.ssec.wisc.edu/~brianp/Mesa.html
+
+The TrueType and OpenGL add-on's are not necessary for the proper
+functioning of ROOT but we advice you to at least get the TrueType
+fonts since they hugely increase the appearance of text on the screen.
+
+
+Compiling
+=========
+
+Once you have the above, do the following:
+
+- cd $ROOTSYS
+- gtar zxvf root_v2.20.source.tar.gz
+     [if you have no gtar, first gunzip, then tar xvf]
+- cd src
+- ln -s Makefile.linux Makefile
+     [of course use the makefile for your specific platform]
+- gmake
+     [you need gmake, if you don't have it first install it]
+
+This will produce new libraries in $ROOTSYS/lib and new executables
+in $ROOTSYS/bin.
+AA_INSTALL
+
+*=======================Generating AA_LICENSE file==============================
+mess Creating file AA_LICENSE
+application data AA_LICENSE
+ROOT Software Terms and Conditions
+
+The authors hereby grant permission to use, copy, and distribute this
+software and its documentation for any purpose, provided that existing
+copyright notices are retained in all copies and that this notice is
+included verbatim in any distributions. Additionally, the authors grant
+permission to modify this software and its documentation for any purpose,
+provided that such modifications are not distributed without the explicit
+consent of the authors and that existing copyright notices are retained in
+all copies. Users of the software are asked to feed back problems, benefits,
+and/or suggestions about the software to the ROOT Development Team
+(rootdev@root.cern.ch). Support for this software - fixing of bugs,
+incorporation of new features - is done on a best effort basis. All bug
+fixes and enhancements will be made available under the same terms and
+conditions as the original software,
+
+
+IN NO EVENT SHALL THE AUTHORS OR DISTRIBUTORS BE LIABLE TO ANY PARTY FOR
+DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES ARISING OUT
+OF THE USE OF THIS SOFTWARE, ITS DOCUMENTATION, OR ANY DERIVATIVES THEREOF,
+EVEN IF THE AUTHORS HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+THE AUTHORS AND DISTRIBUTORS SPECIFICALLY DISCLAIM ANY WARRANTIES,
+INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT. THIS SOFTWARE IS
+PROVIDED ON AN "AS IS" BASIS, AND THE AUTHORS AND DISTRIBUTORS HAVE NO
+OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR
+MODIFICATIONS.
+AA_LICENSE
+
+*=======================Generating MakeDist file===============================
+
+if $OS = 'WINNT' then
+*=======================Creating some util batch files for WIN32 dist =========
+  exec winsetup
+  exec restore
+endif
+
+mess Creating file MakeDist
++SELF, IF=-WIN32.
+
+shell echo '\#! /bin/sh' > MakeDist
+
+shell echo ROOTVERS=v[RootVersion] >> MakeDist
+
+shell echo 'MACHINE=\`uname\`' >> MakeDist
+shell echo 'OSREL=\`uname -r\`' >> MakeDist
+shell echo 'TYPE=\$MACHINE.\$OSREL' >> MakeDist
+
+shell echo 'TARFILE=root_\$ROOTVERS.\$TYPE.tar' >> MakeDist
+
+shell echo 'cd \$ROOTSYS/..' >> MakeDist
+
+shell echo 'tar cvf \$TARFILE root/AA_README root/ChangeLog root/bin \\' >> MakeDist
+shell echo '   root/include/\*.h root/include/MAIN_rmain.cxx root/lib \\' >> MakeDist
+shell echo '   root/cint root/tutorials/.rootrc root/tutorials/\*.C \\' >> MakeDist
+shell echo '   root/test/\*.cxx root/test/\*.h root/test/Makefile \\' >> MakeDist
+shell echo '   root/test/README root/macros root/icons \\' >> MakeDist
+shell echo '   root/AA_LICENSE' >> MakeDist
+
+shell echo gzip \$TARFILE >> MakeDist
+
+shell echo 'exit 0' >> MakeDist
+
++SELF, IF=WIN32.
+exec MakeDistWindows
++SELF.
+mess Creating file MakeDistSource
++SELF, IF=-WIN32.
+
+shell echo '\#! /bin/sh' > MakeDistSource
+
+shell echo ROOTVERS=v[RootVersion] >> MakeDistSource
+
+shell echo 'MACHINE=\`uname\`' >> MakeDistSource
+shell echo 'OSREL=\`uname -r\`' >> MakeDistSource
+shell echo 'TYPE=source' >> MakeDistSource
+
+shell echo 'TARFILE=root_\$ROOTVERS.\$TYPE.tar' >> MakeDistSource
+
+shell echo 'cd \$ROOTSYS' >> MakeDistSource
+
+shell echo 'tar cvf \$TARFILE --exclude cint/MAKEINFO --exclude cint/include/iosenum.h \\' >> MakeDistSource
+shell echo '   src/\*.h src/\*.c src/\*.cxx src/\*.f src/Make\* \\' >> MakeDistSource
+shell echo '   cint tutorials/.rootrc tutorials/\*.C \\' >> MakeDistSource
+shell echo '   test/\*.cxx test/\*.h test/README ChangeLog AA_INSTALL' >> MakeDistSource
+
+shell echo 'gzip \$TARFILE' >> MakeDistSource
+
+shell echo 'exit 0' >> MakeDistSource
+
++SELF, IF=WIN32.
+exec MakeDistSourceWindows
++SELF.
+
+if $OS = 'UNIX' then
+   shell chmod +x MakeDist MakeDistSource
+endif
+*=======================Creating test directory with examples==================
+if $OS = 'WINNT' then
+  remove test\*
+elseif $OS = 'VMS' then
+  purge/log [.test]
+else
+  remove test
+endif
+if $OS = 'VMS' then
+   exec mkdir [.test]
+else
+   exec mkdir test
+endif
+
+*sel .
+seq .
+cd ..
+sel test [machine]
+lcd test
+seq test
+seq -i *.h
+if $OS = 'WINNT' then
+  set *.cxx -f C++
+  ctot -s test/MakefileWIN32
+  sh ren MakefileWIN32.txt Makefile
+elseif $OS = 'VMS' then
+  set *.cxx -f C++
+  ctot -s test/Makefile
+  sh rename Makefile.txt Makefile
+else
+  set *.cxx -f C++
+  ctot -s test/Makefile
+  sh mv Makefile.txt Makefile
+endif
+cx test
+
+*=======================Generating README file=================================
+mess Creating file README
+application data README
+This directory contains some ROOT test programs.
+
+Makefile    -  Makefile to build all test programs. Before executing make,
+               select in the Makefile the platform dependent definitions.
+
+hsimple.cxx  - Simple test program that creates and saves some histograms.
+
+MainEvent.cxx- Simple test program that creates a ROOT Tree object and fills
+               it with some simple structures but also with complete histograms.
+               This program uses the files Event.cxx, EventCint.cxx and Event.h.
+               An example of a procedure to link this program is in bind_Event.
+               Note that the Makefile invokes the rootcint utility
+               to generate the CINT interface EventCint.cxx.
+
+Event.cxx    - Implementation for classes Event and Track.
+
+minexam.cxx  - Simple test program to test data fitting.
+
+tcollex.cxx  - Example usage of the ROOT collection classes.
+
+tcollbm.cxx  - Benchmarks of ROOT collection classes.
+
+tstring.cxx  - Example usage of the ROOT string class.
+
+vmatrix.cxx  - Verification program for the TMatrix class.
+
+vvector.cxx  - Verification program for the TVector class.
+
+vlazy.cxx    - Verification program for lazy matrices.
+
+hsimple.cxx  - Small program showing batch usage of histograms.
+
+hworld.cxx   - Small program showing basic graphics.
+
+guitest.cxx  - Example usage of the ROOT GUI classes.
+
+Hello.cxx    - Dancing text example.
+
+Aclock.cxx   - Analog clock (a la X11 xclock)
+
+Tetris.cxx   - The famous tetris game (using ROOT basic graphics).
+
+stress.cxx   - Important ROOT stress testing program.
+
+
+REMARKS
+=======
+
+Before running ROOT or any ROOT-based utility such as rootcint you
+have to set the ROOTSYS environment variable. See root/AA_README
+on how to set this variable.
+README
+
+*=======================Generating EventLinkDef.h file=========================
+mess Creating file EventLinkDef.h
+application data EventLinkDef.h
+#ifdef __CINT__
+
+#pragma link off all globals;
+#pragma link off all classes;
+#pragma link off all functions;
+
+#pragma link C++ class EventHeader;
+#pragma link C++ class Event;
+#pragma link C++ class HistogramManager;
+#pragma link C++ class Track;
+
+#endif
+EventLinkDef.h
+
+lcd ..
+sel -test
+exec setup [1] [2] [LOGFILE]
+return

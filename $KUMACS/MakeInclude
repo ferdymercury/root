@@ -1,0 +1,23 @@
+*CMZ :  1.03/07 04/11/97  17.42.44  by  Rene Brun
+*-- Author :
+macro MakeInclude 1=*
+Mess Create INCLUDE directory since Windows has no the symbolic links features
+sh mkdir include
+Mess Remove all old stuff of that
+*  We have to pass the parameter via "files" because of a problem with CMZ
+files='  '//[1]//'  '
+lcd include
+remove [files]
+lcd ..
+* sh copy src\*.h include\
+Mess  Copy all $ROOTSYS\src\[1].h files to $ROOTSYS\include" subdirectory
+lcd src
+sh copy MAIN_rmain.cxx ..\include
+if [1] = '*' then
+  sh for %f in (*.h) do copy %f ..\include
+else
+  sh for %f in ([files]) do copy %f ..\include
+endif
+lcd ..
+
+return

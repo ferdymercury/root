@@ -1,0 +1,7989 @@
+//*CMZ :  2.20/03 05/12/98  16.39.40  by  Rene Brun
+//*-- Author :    Rene Brun   05/12/98
+//*CMZ :  1.00/09 23/04/97  17.59.54  by  Rene Brun
+//*-- Author :    Rene Brun   23/04/97
+#if defined(__hpux) && !defined(__GNUG__)
+#pragma OPTIMIZE OFF
+#endif
+
+#if defined(_AIX) && !defined(__GNUG__)
+#endif
+
+#if defined(__alpha) && !defined(__GNUG__)
+#endif
+
+#if defined(__sun) && !defined(__GNUG__)
+#endif
+
+#if defined(__sgi) && !defined(__GNUG__)
+#endif
+
+#if defined(_linux)
+#endif
+
+#ifdef WIN32
+#pragma optimize("",off)
+#endif
+
+/********************************************************************
+********************************************************************/
+#ifdef __CINT__
+#endif
+#include <stddef.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include <string.h>
+extern "C" {
+#define G__ANSIHEADER
+#include "G__ci.h"
+extern void G__cpp_setup_tagtableG__Hist();
+extern void G__cpp_setup_inheritanceG__Hist();
+extern void G__cpp_setup_typetableG__Hist();
+extern void G__cpp_setup_memvarG__Hist();
+extern void G__cpp_setup_globalG__Hist();
+extern void G__cpp_setup_memfuncG__Hist();
+extern void G__cpp_setup_funcG__Hist();
+extern void G__set_cpp_environmentG__Hist();
+}
+
+
+#include "TROOT.h"
+#include "TMemberInspector.h"
+#include "TH1.h"
+#include "TH2.h"
+#include "TH3.h"
+#include "TProfile.h"
+
+#ifndef G__MEMFUNCBODY
+#endif
+
+extern G__linked_taginfo G__G__HistLN_TClass;
+extern G__linked_taginfo G__G__HistLN_TList;
+extern G__linked_taginfo G__G__HistLN_TObject;
+extern G__linked_taginfo G__G__HistLN_TString;
+extern G__linked_taginfo G__G__HistLN_TNamed;
+extern G__linked_taginfo G__G__HistLN_TDirectory;
+extern G__linked_taginfo G__G__HistLN_TF1;
+extern G__linked_taginfo G__G__HistLN_TArray;
+extern G__linked_taginfo G__G__HistLN_TArrayF;
+extern G__linked_taginfo G__G__HistLN_TAxis;
+extern G__linked_taginfo G__G__HistLN_TAttLine;
+extern G__linked_taginfo G__G__HistLN_TAttFill;
+extern G__linked_taginfo G__G__HistLN_TAttMarker;
+extern G__linked_taginfo G__G__HistLN_TH1F;
+extern G__linked_taginfo G__G__HistLN_TArrayC;
+extern G__linked_taginfo G__G__HistLN_TArrayS;
+extern G__linked_taginfo G__G__HistLN_TArrayD;
+extern G__linked_taginfo G__G__HistLN_TH1D;
+extern G__linked_taginfo G__G__HistLN_TProfile;
+extern G__linked_taginfo G__G__HistLN_TH1;
+extern G__linked_taginfo G__G__HistLN_TH1C;
+extern G__linked_taginfo G__G__HistLN_TH1S;
+extern G__linked_taginfo G__G__HistLN_TH2;
+extern G__linked_taginfo G__G__HistLN_TH2C;
+extern G__linked_taginfo G__G__HistLN_TH2S;
+extern G__linked_taginfo G__G__HistLN_TH2F;
+extern G__linked_taginfo G__G__HistLN_TH2D;
+extern G__linked_taginfo G__G__HistLN_TH3;
+extern G__linked_taginfo G__G__HistLN_TH3C;
+extern G__linked_taginfo G__G__HistLN_TH3S;
+extern G__linked_taginfo G__G__HistLN_TH3F;
+extern G__linked_taginfo G__G__HistLN_TH3D;
+extern G__linked_taginfo G__G__HistLN_EErrorType;
+/********************************************************
+* G__Hist.cxx
+********************************************************/
+
+#ifdef G__MEMTEST
+#undef malloc
+#endif
+
+
+extern "C" void G__set_cpp_environmentG__Hist() {
+  G__add_macro("__MAKECINT__");
+  G__add_compiledheader("TROOT.h");
+  G__add_compiledheader("TMemberInspector.h");
+  G__add_compiledheader("TH1.h");
+  G__add_compiledheader("TH2.h");
+  G__add_compiledheader("TH3.h");
+  G__add_compiledheader("TProfile.h");
+}
+extern "C" int G__cpp_dllrevG__Hist() { return(51111); }
+
+/*********************************************************
+* Member function Interface Method
+*********************************************************/
+
+/* TH1F */
+static int G__TH1F_TH1F_2_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   TH1F *p=NULL;
+   if(G__getaryconstruct()) p=new TH1F[G__getaryconstruct()];
+   else                    p=new TH1F;
+      result7->obj.i = (long)p;
+      result7->ref = (long)p;
+      result7->type = 'u';
+      result7->tagnum = G__get_linked_tagnum(&G__G__HistLN_TH1F);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1F_TH1F_3_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   TH1F *p=NULL;
+      p = new TH1F(
+(const Text_t*)G__int(libp->para[0]),(const Text_t*)G__int(libp->para[1])
+,(Int_t)G__int(libp->para[2]),(Axis_t)G__double(libp->para[3])
+,(Axis_t)G__double(libp->para[4]));
+      result7->obj.i = (long)p;
+      result7->ref = (long)p;
+      result7->type = 'u';
+      result7->tagnum = G__get_linked_tagnum(&G__G__HistLN_TH1F);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1F_TH1F_4_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   TH1F *p=NULL;
+      p = new TH1F(
+(const Text_t*)G__int(libp->para[0]),(const Text_t*)G__int(libp->para[1])
+,(Int_t)G__int(libp->para[2]),(Axis_t*)G__int(libp->para[3]));
+      result7->obj.i = (long)p;
+      result7->ref = (long)p;
+      result7->type = 'u';
+      result7->tagnum = G__get_linked_tagnum(&G__G__HistLN_TH1F);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1F_TH1F_5_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   TH1F *p=NULL;
+      p = new TH1F(*(TH1F*)libp->para[0].ref);
+      result7->obj.i = (long)p;
+      result7->ref = (long)p;
+      result7->type = 'u';
+      result7->tagnum = G__get_linked_tagnum(&G__G__HistLN_TH1F);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1F_AddBinContent_7_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH1F*)(G__getstructoffset()))->AddBinContent((Int_t)G__int(libp->para[0]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1F_AddBinContent_8_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH1F*)(G__getstructoffset()))->AddBinContent((Int_t)G__int(libp->para[0]),(Stat_t)G__double(libp->para[1]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1F_Copy_9_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH1F*)(G__getstructoffset()))->Copy(*(TObject*)libp->para[0].ref);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1F_DrawCopy_0_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 1:
+      G__setnull(result7);
+      ((TH1F*)(G__getstructoffset()))->DrawCopy((Option_t*)G__int(libp->para[0]));
+      break;
+   case 0:
+      G__setnull(result7);
+      ((TH1F*)(G__getstructoffset()))->DrawCopy();
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1F_GetBinContent_1_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letdouble(result7,100,(double)((TH1F*)(G__getstructoffset()))->GetBinContent((Int_t)G__int(libp->para[0])));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1F_Reset_2_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 1:
+      G__setnull(result7);
+      ((TH1F*)(G__getstructoffset()))->Reset((Option_t*)G__int(libp->para[0]));
+      break;
+   case 0:
+      G__setnull(result7);
+      ((TH1F*)(G__getstructoffset()))->Reset();
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1F_SetBinContent_3_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH1F*)(G__getstructoffset()))->SetBinContent((Int_t)G__int(libp->para[0]),(Stat_t)G__double(libp->para[1]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1F_SetBinsLength_4_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH1F*)(G__getstructoffset()))->SetBinsLength((Int_t)G__int(libp->para[0]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1F_operatoreQ_5_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      {
+        TH1F& obj=((TH1F*)(G__getstructoffset()))->operator=(*(TH1F*)libp->para[0].ref);
+         result7->ref=(long)(&obj); result7->obj.i=(long)(&obj);
+      }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1F_DeclFileName_6_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,67,(long)((TH1F*)(G__getstructoffset()))->DeclFileName());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1F_DeclFileLine_7_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TH1F*)(G__getstructoffset()))->DeclFileLine());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1F_ImplFileName_8_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,67,(long)((TH1F*)(G__getstructoffset()))->ImplFileName());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1F_ImplFileLine_9_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TH1F*)(G__getstructoffset()))->ImplFileLine());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1F_Class_Version_0_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,115,(long)((TH1F*)(G__getstructoffset()))->Class_Version());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1F_Class_1_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,85,(long)((TH1F*)(G__getstructoffset()))->Class());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1F_Dictionary_2_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH1F*)(G__getstructoffset()))->Dictionary();
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1F_IsA_3_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,85,(long)((TH1F*)(G__getstructoffset()))->IsA());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1F_ShowMembers_4_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH1F*)(G__getstructoffset()))->ShowMembers(*(TMemberInspector*)libp->para[0].ref,(char*)G__int(libp->para[1]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1F_Streamer_5_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH1F*)(G__getstructoffset()))->Streamer(*(TBuffer*)libp->para[0].ref);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+// automatic destructor
+static int G__TH1F_wATH1F_6_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   if(G__getaryconstruct())
+     if(G__PVOID==G__getgvp())
+       delete[] (TH1F *)(G__getstructoffset());
+     else
+       for(int i=G__getaryconstruct()-1;i>=0;i--)
+         delete (TH1F *)((G__getstructoffset())+sizeof(TH1F)*i);
+   else  delete (TH1F *)(G__getstructoffset());
+      G__setnull(result7);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+
+/* TH1D */
+static int G__TH1D_TH1D_2_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   TH1D *p=NULL;
+   if(G__getaryconstruct()) p=new TH1D[G__getaryconstruct()];
+   else                    p=new TH1D;
+      result7->obj.i = (long)p;
+      result7->ref = (long)p;
+      result7->type = 'u';
+      result7->tagnum = G__get_linked_tagnum(&G__G__HistLN_TH1D);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1D_TH1D_3_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   TH1D *p=NULL;
+      p = new TH1D(
+(const Text_t*)G__int(libp->para[0]),(const Text_t*)G__int(libp->para[1])
+,(Int_t)G__int(libp->para[2]),(Axis_t)G__double(libp->para[3])
+,(Axis_t)G__double(libp->para[4]));
+      result7->obj.i = (long)p;
+      result7->ref = (long)p;
+      result7->type = 'u';
+      result7->tagnum = G__get_linked_tagnum(&G__G__HistLN_TH1D);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1D_TH1D_4_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   TH1D *p=NULL;
+      p = new TH1D(
+(const Text_t*)G__int(libp->para[0]),(const Text_t*)G__int(libp->para[1])
+,(Int_t)G__int(libp->para[2]),(Axis_t*)G__int(libp->para[3]));
+      result7->obj.i = (long)p;
+      result7->ref = (long)p;
+      result7->type = 'u';
+      result7->tagnum = G__get_linked_tagnum(&G__G__HistLN_TH1D);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1D_TH1D_5_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   TH1D *p=NULL;
+      p = new TH1D(*(TH1D*)libp->para[0].ref);
+      result7->obj.i = (long)p;
+      result7->ref = (long)p;
+      result7->type = 'u';
+      result7->tagnum = G__get_linked_tagnum(&G__G__HistLN_TH1D);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1D_AddBinContent_7_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH1D*)(G__getstructoffset()))->AddBinContent((Int_t)G__int(libp->para[0]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1D_AddBinContent_8_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH1D*)(G__getstructoffset()))->AddBinContent((Int_t)G__int(libp->para[0]),(Stat_t)G__double(libp->para[1]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1D_Copy_9_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH1D*)(G__getstructoffset()))->Copy(*(TObject*)libp->para[0].ref);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1D_DrawCopy_0_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 1:
+      G__setnull(result7);
+      ((TH1D*)(G__getstructoffset()))->DrawCopy((Option_t*)G__int(libp->para[0]));
+      break;
+   case 0:
+      G__setnull(result7);
+      ((TH1D*)(G__getstructoffset()))->DrawCopy();
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1D_GetBinContent_1_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letdouble(result7,100,(double)((TH1D*)(G__getstructoffset()))->GetBinContent((Int_t)G__int(libp->para[0])));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1D_Reset_2_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 1:
+      G__setnull(result7);
+      ((TH1D*)(G__getstructoffset()))->Reset((Option_t*)G__int(libp->para[0]));
+      break;
+   case 0:
+      G__setnull(result7);
+      ((TH1D*)(G__getstructoffset()))->Reset();
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1D_SetBinContent_3_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH1D*)(G__getstructoffset()))->SetBinContent((Int_t)G__int(libp->para[0]),(Stat_t)G__double(libp->para[1]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1D_SetBinsLength_4_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH1D*)(G__getstructoffset()))->SetBinsLength((Int_t)G__int(libp->para[0]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1D_operatoreQ_5_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      {
+        TH1D& obj=((TH1D*)(G__getstructoffset()))->operator=(*(TH1D*)libp->para[0].ref);
+         result7->ref=(long)(&obj); result7->obj.i=(long)(&obj);
+      }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1D_DeclFileName_6_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,67,(long)((TH1D*)(G__getstructoffset()))->DeclFileName());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1D_DeclFileLine_7_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TH1D*)(G__getstructoffset()))->DeclFileLine());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1D_ImplFileName_8_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,67,(long)((TH1D*)(G__getstructoffset()))->ImplFileName());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1D_ImplFileLine_9_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TH1D*)(G__getstructoffset()))->ImplFileLine());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1D_Class_Version_0_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,115,(long)((TH1D*)(G__getstructoffset()))->Class_Version());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1D_Class_1_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,85,(long)((TH1D*)(G__getstructoffset()))->Class());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1D_Dictionary_2_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH1D*)(G__getstructoffset()))->Dictionary();
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1D_IsA_3_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,85,(long)((TH1D*)(G__getstructoffset()))->IsA());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1D_ShowMembers_4_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH1D*)(G__getstructoffset()))->ShowMembers(*(TMemberInspector*)libp->para[0].ref,(char*)G__int(libp->para[1]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1D_Streamer_5_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH1D*)(G__getstructoffset()))->Streamer(*(TBuffer*)libp->para[0].ref);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+// automatic destructor
+static int G__TH1D_wATH1D_6_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   if(G__getaryconstruct())
+     if(G__PVOID==G__getgvp())
+       delete[] (TH1D *)(G__getstructoffset());
+     else
+       for(int i=G__getaryconstruct()-1;i>=0;i--)
+         delete (TH1D *)((G__getstructoffset())+sizeof(TH1D)*i);
+   else  delete (TH1D *)(G__getstructoffset());
+      G__setnull(result7);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+
+/* TProfile */
+static int G__TProfile_TProfile_8_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   TProfile *p=NULL;
+   if(G__getaryconstruct()) p=new TProfile[G__getaryconstruct()];
+   else                    p=new TProfile;
+      result7->obj.i = (long)p;
+      result7->ref = (long)p;
+      result7->type = 'u';
+      result7->tagnum = G__get_linked_tagnum(&G__G__HistLN_TProfile);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TProfile_TProfile_9_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   TProfile *p=NULL;
+   switch(libp->paran) {
+   case 6:
+      p = new TProfile(
+(const Text_t*)G__int(libp->para[0]),(const Text_t*)G__int(libp->para[1])
+,(Int_t)G__int(libp->para[2]),(Axis_t)G__double(libp->para[3])
+,(Axis_t)G__double(libp->para[4]),(Option_t*)G__int(libp->para[5]));
+      break;
+   case 5:
+      p = new TProfile(
+(const Text_t*)G__int(libp->para[0]),(const Text_t*)G__int(libp->para[1])
+,(Int_t)G__int(libp->para[2]),(Axis_t)G__double(libp->para[3])
+,(Axis_t)G__double(libp->para[4]));
+      break;
+   }
+      result7->obj.i = (long)p;
+      result7->ref = (long)p;
+      result7->type = 'u';
+      result7->tagnum = G__get_linked_tagnum(&G__G__HistLN_TProfile);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TProfile_TProfile_0_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   TProfile *p=NULL;
+   switch(libp->paran) {
+   case 8:
+      p = new TProfile(
+(const Text_t*)G__int(libp->para[0]),(const Text_t*)G__int(libp->para[1])
+,(Int_t)G__int(libp->para[2]),(Axis_t)G__double(libp->para[3])
+,(Axis_t)G__double(libp->para[4]),(Axis_t)G__double(libp->para[5])
+,(Axis_t)G__double(libp->para[6]),(Option_t*)G__int(libp->para[7]));
+      break;
+   case 7:
+      p = new TProfile(
+(const Text_t*)G__int(libp->para[0]),(const Text_t*)G__int(libp->para[1])
+,(Int_t)G__int(libp->para[2]),(Axis_t)G__double(libp->para[3])
+,(Axis_t)G__double(libp->para[4]),(Axis_t)G__double(libp->para[5])
+,(Axis_t)G__double(libp->para[6]));
+      break;
+   }
+      result7->obj.i = (long)p;
+      result7->ref = (long)p;
+      result7->type = 'u';
+      result7->tagnum = G__get_linked_tagnum(&G__G__HistLN_TProfile);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TProfile_TProfile_1_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   TProfile *p=NULL;
+   switch(libp->paran) {
+   case 5:
+      p = new TProfile(
+(const Text_t*)G__int(libp->para[0]),(const Text_t*)G__int(libp->para[1])
+,(Int_t)G__int(libp->para[2]),(Axis_t*)G__int(libp->para[3])
+,(Option_t*)G__int(libp->para[4]));
+      break;
+   case 4:
+      p = new TProfile(
+(const Text_t*)G__int(libp->para[0]),(const Text_t*)G__int(libp->para[1])
+,(Int_t)G__int(libp->para[2]),(Axis_t*)G__int(libp->para[3]));
+      break;
+   }
+      result7->obj.i = (long)p;
+      result7->ref = (long)p;
+      result7->type = 'u';
+      result7->tagnum = G__get_linked_tagnum(&G__G__HistLN_TProfile);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TProfile_TProfile_2_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   TProfile *p=NULL;
+      p = new TProfile(*(TProfile*)libp->para[0].ref);
+      result7->obj.i = (long)p;
+      result7->ref = (long)p;
+      result7->type = 'u';
+      result7->tagnum = G__get_linked_tagnum(&G__G__HistLN_TProfile);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TProfile_Add_4_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 2:
+      G__setnull(result7);
+      ((TProfile*)(G__getstructoffset()))->Add((TH1*)G__int(libp->para[0]),(Float_t)G__double(libp->para[1]));
+      break;
+   case 1:
+      G__setnull(result7);
+      ((TProfile*)(G__getstructoffset()))->Add((TH1*)G__int(libp->para[0]));
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TProfile_Add_5_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 4:
+      G__setnull(result7);
+      ((TProfile*)(G__getstructoffset()))->Add((TH1*)G__int(libp->para[0]),(TH1*)G__int(libp->para[1])
+,(Float_t)G__double(libp->para[2]),(Float_t)G__double(libp->para[3]));
+      break;
+   case 3:
+      G__setnull(result7);
+      ((TProfile*)(G__getstructoffset()))->Add((TH1*)G__int(libp->para[0]),(TH1*)G__int(libp->para[1])
+,(Float_t)G__double(libp->para[2]));
+      break;
+   case 2:
+      G__setnull(result7);
+      ((TProfile*)(G__getstructoffset()))->Add((TH1*)G__int(libp->para[0]),(TH1*)G__int(libp->para[1]));
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TProfile_BuildOptions_6_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TProfile*)(G__getstructoffset()))->BuildOptions((Float_t)G__double(libp->para[0]),(Float_t)G__double(libp->para[1])
+,(Option_t*)G__int(libp->para[2]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TProfile_Copy_7_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TProfile*)(G__getstructoffset()))->Copy(*(TObject*)libp->para[0].ref);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TProfile_Divide_8_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TProfile*)(G__getstructoffset()))->Divide((TH1*)G__int(libp->para[0]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TProfile_Divide_9_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 5:
+      G__setnull(result7);
+      ((TProfile*)(G__getstructoffset()))->Divide((TH1*)G__int(libp->para[0]),(TH1*)G__int(libp->para[1])
+,(Float_t)G__double(libp->para[2]),(Float_t)G__double(libp->para[3])
+,(Option_t*)G__int(libp->para[4]));
+      break;
+   case 4:
+      G__setnull(result7);
+      ((TProfile*)(G__getstructoffset()))->Divide((TH1*)G__int(libp->para[0]),(TH1*)G__int(libp->para[1])
+,(Float_t)G__double(libp->para[2]),(Float_t)G__double(libp->para[3]));
+      break;
+   case 3:
+      G__setnull(result7);
+      ((TProfile*)(G__getstructoffset()))->Divide((TH1*)G__int(libp->para[0]),(TH1*)G__int(libp->para[1])
+,(Float_t)G__double(libp->para[2]));
+      break;
+   case 2:
+      G__setnull(result7);
+      ((TProfile*)(G__getstructoffset()))->Divide((TH1*)G__int(libp->para[0]),(TH1*)G__int(libp->para[1]));
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TProfile_DrawCopy_0_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 1:
+      G__setnull(result7);
+      ((TProfile*)(G__getstructoffset()))->DrawCopy((Option_t*)G__int(libp->para[0]));
+      break;
+   case 0:
+      G__setnull(result7);
+      ((TProfile*)(G__getstructoffset()))->DrawCopy();
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TProfile_Fill_1_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TProfile*)(G__getstructoffset()))->Fill((Axis_t)G__double(libp->para[0]),(Axis_t)G__double(libp->para[1]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TProfile_Fill_2_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TProfile*)(G__getstructoffset()))->Fill((Axis_t)G__double(libp->para[0]),(Axis_t)G__double(libp->para[1])
+,(Stat_t)G__double(libp->para[2]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TProfile_FillN_3_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 5:
+      G__setnull(result7);
+      ((TProfile*)(G__getstructoffset()))->FillN((Int_t)G__int(libp->para[0]),(Axis_t*)G__int(libp->para[1])
+,(Axis_t*)G__int(libp->para[2]),(Double_t*)G__int(libp->para[3])
+,(Int_t)G__int(libp->para[4]));
+      break;
+   case 4:
+      G__setnull(result7);
+      ((TProfile*)(G__getstructoffset()))->FillN((Int_t)G__int(libp->para[0]),(Axis_t*)G__int(libp->para[1])
+,(Axis_t*)G__int(libp->para[2]),(Double_t*)G__int(libp->para[3]));
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TProfile_GetBinContent_4_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letdouble(result7,100,(double)((TProfile*)(G__getstructoffset()))->GetBinContent((Int_t)G__int(libp->para[0])));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TProfile_GetBinError_5_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letdouble(result7,100,(double)((TProfile*)(G__getstructoffset()))->GetBinError((Int_t)G__int(libp->para[0])));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TProfile_GetBinEntries_6_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letdouble(result7,100,(double)((TProfile*)(G__getstructoffset()))->GetBinEntries((Int_t)G__int(libp->para[0])));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TProfile_GetErrorOption_7_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,67,(long)((TProfile*)(G__getstructoffset()))->GetErrorOption());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TProfile_Multiply_8_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TProfile*)(G__getstructoffset()))->Multiply((TH1*)G__int(libp->para[0]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TProfile_Multiply_9_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 5:
+      G__setnull(result7);
+      ((TProfile*)(G__getstructoffset()))->Multiply((TH1*)G__int(libp->para[0]),(TH1*)G__int(libp->para[1])
+,(Float_t)G__double(libp->para[2]),(Float_t)G__double(libp->para[3])
+,(Option_t*)G__int(libp->para[4]));
+      break;
+   case 4:
+      G__setnull(result7);
+      ((TProfile*)(G__getstructoffset()))->Multiply((TH1*)G__int(libp->para[0]),(TH1*)G__int(libp->para[1])
+,(Float_t)G__double(libp->para[2]),(Float_t)G__double(libp->para[3]));
+      break;
+   case 3:
+      G__setnull(result7);
+      ((TProfile*)(G__getstructoffset()))->Multiply((TH1*)G__int(libp->para[0]),(TH1*)G__int(libp->para[1])
+,(Float_t)G__double(libp->para[2]));
+      break;
+   case 2:
+      G__setnull(result7);
+      ((TProfile*)(G__getstructoffset()))->Multiply((TH1*)G__int(libp->para[0]),(TH1*)G__int(libp->para[1]));
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TProfile_Reset_0_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 1:
+      G__setnull(result7);
+      ((TProfile*)(G__getstructoffset()))->Reset((Option_t*)G__int(libp->para[0]));
+      break;
+   case 0:
+      G__setnull(result7);
+      ((TProfile*)(G__getstructoffset()))->Reset();
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TProfile_Scale_1_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 1:
+      G__setnull(result7);
+      ((TProfile*)(G__getstructoffset()))->Scale((Float_t)G__double(libp->para[0]));
+      break;
+   case 0:
+      G__setnull(result7);
+      ((TProfile*)(G__getstructoffset()))->Scale();
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TProfile_SetBinEntries_2_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TProfile*)(G__getstructoffset()))->SetBinEntries((Int_t)G__int(libp->para[0]),(Stat_t)G__double(libp->para[1]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TProfile_SetBins_3_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TProfile*)(G__getstructoffset()))->SetBins((Int_t)G__int(libp->para[0]),(Float_t)G__double(libp->para[1])
+,(Float_t)G__double(libp->para[2]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TProfile_SetErrorOption_4_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 1:
+      G__setnull(result7);
+      ((TProfile*)(G__getstructoffset()))->SetErrorOption((Option_t*)G__int(libp->para[0]));
+      break;
+   case 0:
+      G__setnull(result7);
+      ((TProfile*)(G__getstructoffset()))->SetErrorOption();
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TProfile_DeclFileName_5_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,67,(long)((TProfile*)(G__getstructoffset()))->DeclFileName());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TProfile_DeclFileLine_6_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TProfile*)(G__getstructoffset()))->DeclFileLine());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TProfile_ImplFileName_7_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,67,(long)((TProfile*)(G__getstructoffset()))->ImplFileName());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TProfile_ImplFileLine_8_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TProfile*)(G__getstructoffset()))->ImplFileLine());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TProfile_Class_Version_9_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,115,(long)((TProfile*)(G__getstructoffset()))->Class_Version());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TProfile_Class_0_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,85,(long)((TProfile*)(G__getstructoffset()))->Class());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TProfile_Dictionary_1_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TProfile*)(G__getstructoffset()))->Dictionary();
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TProfile_IsA_2_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,85,(long)((TProfile*)(G__getstructoffset()))->IsA());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TProfile_ShowMembers_3_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TProfile*)(G__getstructoffset()))->ShowMembers(*(TMemberInspector*)libp->para[0].ref,(char*)G__int(libp->para[1]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TProfile_Streamer_4_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TProfile*)(G__getstructoffset()))->Streamer(*(TBuffer*)libp->para[0].ref);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+// automatic destructor
+static int G__TProfile_wATProfile_5_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   if(G__getaryconstruct())
+     if(G__PVOID==G__getgvp())
+       delete[] (TProfile *)(G__getstructoffset());
+     else
+       for(int i=G__getaryconstruct()-1;i>=0;i--)
+         delete (TProfile *)((G__getstructoffset())+sizeof(TProfile)*i);
+   else  delete (TProfile *)(G__getstructoffset());
+      G__setnull(result7);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+
+/* TH1 */
+static int G__TH1_TH1_8_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   TH1 *p=NULL;
+   if(G__getaryconstruct()) p=new TH1[G__getaryconstruct()];
+   else                    p=new TH1;
+      result7->obj.i = (long)p;
+      result7->ref = (long)p;
+      result7->type = 'u';
+      result7->tagnum = G__get_linked_tagnum(&G__G__HistLN_TH1);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_TH1_9_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   TH1 *p=NULL;
+      p = new TH1(
+(const Text_t*)G__int(libp->para[0]),(const Text_t*)G__int(libp->para[1])
+,(Int_t)G__int(libp->para[2]),(Axis_t)G__double(libp->para[3])
+,(Axis_t)G__double(libp->para[4]));
+      result7->obj.i = (long)p;
+      result7->ref = (long)p;
+      result7->type = 'u';
+      result7->tagnum = G__get_linked_tagnum(&G__G__HistLN_TH1);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_TH1_0_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   TH1 *p=NULL;
+      p = new TH1(
+(const Text_t*)G__int(libp->para[0]),(const Text_t*)G__int(libp->para[1])
+,(Int_t)G__int(libp->para[2]),(Axis_t*)G__int(libp->para[3]));
+      result7->obj.i = (long)p;
+      result7->ref = (long)p;
+      result7->type = 'u';
+      result7->tagnum = G__get_linked_tagnum(&G__G__HistLN_TH1);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_Add_2_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 2:
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->Add((TH1*)G__int(libp->para[0]),(Float_t)G__double(libp->para[1]));
+      break;
+   case 1:
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->Add((TH1*)G__int(libp->para[0]));
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_Add_3_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 4:
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->Add((TH1*)G__int(libp->para[0]),(TH1*)G__int(libp->para[1])
+,(Float_t)G__double(libp->para[2]),(Float_t)G__double(libp->para[3]));
+      break;
+   case 3:
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->Add((TH1*)G__int(libp->para[0]),(TH1*)G__int(libp->para[1])
+,(Float_t)G__double(libp->para[2]));
+      break;
+   case 2:
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->Add((TH1*)G__int(libp->para[0]),(TH1*)G__int(libp->para[1]));
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_AddBinContent_4_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->AddBinContent((Int_t)G__int(libp->para[0]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_AddBinContent_5_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->AddBinContent((Int_t)G__int(libp->para[0]),(Stat_t)G__double(libp->para[1]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_Browse_6_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->Browse((TBrowser*)G__int(libp->para[0]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_DistancetoPrimitive_7_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TH1*)(G__getstructoffset()))->DistancetoPrimitive((Int_t)G__int(libp->para[0]),(Int_t)G__int(libp->para[1])));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_Divide_8_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->Divide((TH1*)G__int(libp->para[0]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_Divide_9_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 5:
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->Divide((TH1*)G__int(libp->para[0]),(TH1*)G__int(libp->para[1])
+,(Float_t)G__double(libp->para[2]),(Float_t)G__double(libp->para[3])
+,(Option_t*)G__int(libp->para[4]));
+      break;
+   case 4:
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->Divide((TH1*)G__int(libp->para[0]),(TH1*)G__int(libp->para[1])
+,(Float_t)G__double(libp->para[2]),(Float_t)G__double(libp->para[3]));
+      break;
+   case 3:
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->Divide((TH1*)G__int(libp->para[0]),(TH1*)G__int(libp->para[1])
+,(Float_t)G__double(libp->para[2]));
+      break;
+   case 2:
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->Divide((TH1*)G__int(libp->para[0]),(TH1*)G__int(libp->para[1]));
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_Draw_0_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 1:
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->Draw((Option_t*)G__int(libp->para[0]));
+      break;
+   case 0:
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->Draw();
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_DrawCopy_1_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 1:
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->DrawCopy((Option_t*)G__int(libp->para[0]));
+      break;
+   case 0:
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->DrawCopy();
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_DrawPanel_2_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->DrawPanel();
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_Eval_3_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 2:
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->Eval((TF1*)G__int(libp->para[0]),(Option_t*)G__int(libp->para[1]));
+      break;
+   case 1:
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->Eval((TF1*)G__int(libp->para[0]));
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_ExecuteEvent_4_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->ExecuteEvent((Int_t)G__int(libp->para[0]),(Int_t)G__int(libp->para[1])
+,(Int_t)G__int(libp->para[2]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_Fill_5_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->Fill((Axis_t)G__double(libp->para[0]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_Fill_6_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->Fill((Axis_t)G__double(libp->para[0]),(Stat_t)G__double(libp->para[1]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_Fill_7_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->Fill((Axis_t)G__double(libp->para[0]),(Axis_t)G__double(libp->para[1])
+,(Stat_t)G__double(libp->para[2]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_Fill_8_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->Fill((Axis_t)G__double(libp->para[0]),(Axis_t)G__double(libp->para[1])
+,(Axis_t)G__double(libp->para[2]),(Stat_t)G__double(libp->para[3]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_Fill12_9_4(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->Fill12((Axis_t)G__double(libp->para[0]),(Axis_t)G__double(libp->para[1]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_FillN_0_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 4:
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->FillN((Int_t)G__int(libp->para[0]),(Axis_t*)G__int(libp->para[1])
+,(Double_t*)G__int(libp->para[2]),(Int_t)G__int(libp->para[3]));
+      break;
+   case 3:
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->FillN((Int_t)G__int(libp->para[0]),(Axis_t*)G__int(libp->para[1])
+,(Double_t*)G__int(libp->para[2]));
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_FillN_1_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 5:
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->FillN((Int_t)G__int(libp->para[0]),(Axis_t*)G__int(libp->para[1])
+,(Axis_t*)G__int(libp->para[2]),(Double_t*)G__int(libp->para[3])
+,(Int_t)G__int(libp->para[4]));
+      break;
+   case 4:
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->FillN((Int_t)G__int(libp->para[0]),(Axis_t*)G__int(libp->para[1])
+,(Axis_t*)G__int(libp->para[2]),(Double_t*)G__int(libp->para[3]));
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_FillRandom_2_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 2:
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->FillRandom((char*)G__int(libp->para[0]),(Int_t)G__int(libp->para[1]));
+      break;
+   case 1:
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->FillRandom((char*)G__int(libp->para[0]));
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_FillRandom_3_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 2:
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->FillRandom((TH1*)G__int(libp->para[0]),(Int_t)G__int(libp->para[1]));
+      break;
+   case 1:
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->FillRandom((TH1*)G__int(libp->para[0]));
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_Fit_4_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 5:
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->Fit((const Text_t*)G__int(libp->para[0]),(Option_t*)G__int(libp->para[1])
+,(Option_t*)G__int(libp->para[2]),(Float_t)G__double(libp->para[3])
+,(Float_t)G__double(libp->para[4]));
+      break;
+   case 4:
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->Fit((const Text_t*)G__int(libp->para[0]),(Option_t*)G__int(libp->para[1])
+,(Option_t*)G__int(libp->para[2]),(Float_t)G__double(libp->para[3]));
+      break;
+   case 3:
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->Fit((const Text_t*)G__int(libp->para[0]),(Option_t*)G__int(libp->para[1])
+,(Option_t*)G__int(libp->para[2]));
+      break;
+   case 2:
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->Fit((const Text_t*)G__int(libp->para[0]),(Option_t*)G__int(libp->para[1]));
+      break;
+   case 1:
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->Fit((const Text_t*)G__int(libp->para[0]));
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_FitPanel_5_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->FitPanel();
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_FitSlicesY_6_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 4:
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->FitSlicesY((TF1*)G__int(libp->para[0]),(Int_t)G__int(libp->para[1])
+,(Int_t)G__int(libp->para[2]),(Int_t)G__int(libp->para[3]));
+      break;
+   case 3:
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->FitSlicesY((TF1*)G__int(libp->para[0]),(Int_t)G__int(libp->para[1])
+,(Int_t)G__int(libp->para[2]));
+      break;
+   case 2:
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->FitSlicesY((TF1*)G__int(libp->para[0]),(Int_t)G__int(libp->para[1]));
+      break;
+   case 1:
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->FitSlicesY((TF1*)G__int(libp->para[0]));
+      break;
+   case 0:
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->FitSlicesY();
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_FitSlicesZ_7_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 6:
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->FitSlicesZ((TF1*)G__int(libp->para[0]),(Int_t)G__int(libp->para[1])
+,(Int_t)G__int(libp->para[2]),(Int_t)G__int(libp->para[3])
+,(Int_t)G__int(libp->para[4]),(Int_t)G__int(libp->para[5]));
+      break;
+   case 5:
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->FitSlicesZ((TF1*)G__int(libp->para[0]),(Int_t)G__int(libp->para[1])
+,(Int_t)G__int(libp->para[2]),(Int_t)G__int(libp->para[3])
+,(Int_t)G__int(libp->para[4]));
+      break;
+   case 4:
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->FitSlicesZ((TF1*)G__int(libp->para[0]),(Int_t)G__int(libp->para[1])
+,(Int_t)G__int(libp->para[2]),(Int_t)G__int(libp->para[3]));
+      break;
+   case 3:
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->FitSlicesZ((TF1*)G__int(libp->para[0]),(Int_t)G__int(libp->para[1])
+,(Int_t)G__int(libp->para[2]));
+      break;
+   case 2:
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->FitSlicesZ((TF1*)G__int(libp->para[0]),(Int_t)G__int(libp->para[1]));
+      break;
+   case 1:
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->FitSlicesZ((TF1*)G__int(libp->para[0]));
+      break;
+   case 0:
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->FitSlicesZ();
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_GetListOfFunctions_8_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,85,(long)((TH1*)(G__getstructoffset()))->GetListOfFunctions());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_GetNdivisions_9_5(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 1:
+      G__letint(result7,105,(long)((TH1*)(G__getstructoffset()))->GetNdivisions((Option_t*)G__int(libp->para[0])));
+      break;
+   case 0:
+      G__letint(result7,105,(long)((TH1*)(G__getstructoffset()))->GetNdivisions());
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_GetAxisColor_0_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 1:
+      G__letint(result7,115,(long)((TH1*)(G__getstructoffset()))->GetAxisColor((Option_t*)G__int(libp->para[0])));
+      break;
+   case 0:
+      G__letint(result7,115,(long)((TH1*)(G__getstructoffset()))->GetAxisColor());
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_GetLabelColor_1_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 1:
+      G__letint(result7,115,(long)((TH1*)(G__getstructoffset()))->GetLabelColor((Option_t*)G__int(libp->para[0])));
+      break;
+   case 0:
+      G__letint(result7,115,(long)((TH1*)(G__getstructoffset()))->GetLabelColor());
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_GetLabelFont_2_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 1:
+      G__letint(result7,115,(long)((TH1*)(G__getstructoffset()))->GetLabelFont((Option_t*)G__int(libp->para[0])));
+      break;
+   case 0:
+      G__letint(result7,115,(long)((TH1*)(G__getstructoffset()))->GetLabelFont());
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_GetLabelOffset_3_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 1:
+      G__letdouble(result7,102,(double)((TH1*)(G__getstructoffset()))->GetLabelOffset((Option_t*)G__int(libp->para[0])));
+      break;
+   case 0:
+      G__letdouble(result7,102,(double)((TH1*)(G__getstructoffset()))->GetLabelOffset());
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_GetLabelSize_4_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 1:
+      G__letdouble(result7,102,(double)((TH1*)(G__getstructoffset()))->GetLabelSize((Option_t*)G__int(libp->para[0])));
+      break;
+   case 0:
+      G__letdouble(result7,102,(double)((TH1*)(G__getstructoffset()))->GetLabelSize());
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_GetTitleOffset_5_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 1:
+      G__letdouble(result7,102,(double)((TH1*)(G__getstructoffset()))->GetTitleOffset((Option_t*)G__int(libp->para[0])));
+      break;
+   case 0:
+      G__letdouble(result7,102,(double)((TH1*)(G__getstructoffset()))->GetTitleOffset());
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_GetTickLength_6_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 1:
+      G__letdouble(result7,102,(double)((TH1*)(G__getstructoffset()))->GetTickLength((Option_t*)G__int(libp->para[0])));
+      break;
+   case 0:
+      G__letdouble(result7,102,(double)((TH1*)(G__getstructoffset()))->GetTickLength());
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_GetBarOffset_7_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letdouble(result7,102,(double)((TH1*)(G__getstructoffset()))->GetBarOffset());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_GetBarWidth_8_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letdouble(result7,102,(double)((TH1*)(G__getstructoffset()))->GetBarWidth());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_GetContour_9_6(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 1:
+      G__letint(result7,105,(long)((TH1*)(G__getstructoffset()))->GetContour((Float_t*)G__int(libp->para[0])));
+      break;
+   case 0:
+      G__letint(result7,105,(long)((TH1*)(G__getstructoffset()))->GetContour());
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_GetContourLevel_0_7(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letdouble(result7,102,(double)((TH1*)(G__getstructoffset()))->GetContourLevel((Int_t)G__int(libp->para[0])));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_GetBin_1_7(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 3:
+      G__letint(result7,105,(long)((TH1*)(G__getstructoffset()))->GetBin((Int_t)G__int(libp->para[0]),(Int_t)G__int(libp->para[1])
+,(Int_t)G__int(libp->para[2])));
+      break;
+   case 2:
+      G__letint(result7,105,(long)((TH1*)(G__getstructoffset()))->GetBin((Int_t)G__int(libp->para[0]),(Int_t)G__int(libp->para[1])));
+      break;
+   case 1:
+      G__letint(result7,105,(long)((TH1*)(G__getstructoffset()))->GetBin((Int_t)G__int(libp->para[0])));
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_GetBinCenter_2_7(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letdouble(result7,102,(double)((TH1*)(G__getstructoffset()))->GetBinCenter((Int_t)G__int(libp->para[0])));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_GetBinContent_3_7(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letdouble(result7,100,(double)((TH1*)(G__getstructoffset()))->GetBinContent((Int_t)G__int(libp->para[0])));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_GetBinError_4_7(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letdouble(result7,100,(double)((TH1*)(G__getstructoffset()))->GetBinError((Int_t)G__int(libp->para[0])));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_GetBinLabel_5_7(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,67,(long)((TH1*)(G__getstructoffset()))->GetBinLabel((Int_t)G__int(libp->para[0])));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_GetBinLowEdge_6_7(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letdouble(result7,102,(double)((TH1*)(G__getstructoffset()))->GetBinLowEdge((Int_t)G__int(libp->para[0])));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_GetBinWidth_7_7(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letdouble(result7,102,(double)((TH1*)(G__getstructoffset()))->GetBinWidth((Int_t)G__int(libp->para[0])));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_GetCellContent_8_7(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letdouble(result7,100,(double)((TH1*)(G__getstructoffset()))->GetCellContent((Int_t)G__int(libp->para[0]),(Int_t)G__int(libp->para[1])));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_GetCellError_9_7(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letdouble(result7,100,(double)((TH1*)(G__getstructoffset()))->GetCellError((Int_t)G__int(libp->para[0]),(Int_t)G__int(libp->para[1])));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_GetCenter_0_8(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->GetCenter((Axis_t*)G__int(libp->para[0]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_GetDirectory_1_8(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,85,(long)((TH1*)(G__getstructoffset()))->GetDirectory());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_GetEntries_2_8(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letdouble(result7,100,(double)((TH1*)(G__getstructoffset()))->GetEntries());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_GetFunction_3_8(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,85,(long)((TH1*)(G__getstructoffset()))->GetFunction((const Text_t*)G__int(libp->para[0])));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_GetDimension_4_8(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TH1*)(G__getstructoffset()))->GetDimension());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_GetLabel_5_8(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->GetLabel((Text_t*)G__int(libp->para[0]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_GetLowEdge_6_8(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->GetLowEdge((Axis_t*)G__int(libp->para[0]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_GetMaximum_7_8(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letdouble(result7,102,(double)((TH1*)(G__getstructoffset()))->GetMaximum());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_GetMinimum_8_8(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letdouble(result7,102,(double)((TH1*)(G__getstructoffset()))->GetMinimum());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_GetMean_9_8(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 1:
+      G__letdouble(result7,100,(double)((TH1*)(G__getstructoffset()))->GetMean((Int_t)G__int(libp->para[0])));
+      break;
+   case 0:
+      G__letdouble(result7,100,(double)((TH1*)(G__getstructoffset()))->GetMean());
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_GetNbinsX_0_9(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TH1*)(G__getstructoffset()))->GetNbinsX());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_GetNbinsY_1_9(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TH1*)(G__getstructoffset()))->GetNbinsY());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_GetNbinsZ_2_9(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TH1*)(G__getstructoffset()))->GetNbinsZ());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_GetObjectInfo_3_9(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,67,(long)((TH1*)(G__getstructoffset()))->GetObjectInfo((Int_t)G__int(libp->para[0]),(Int_t)G__int(libp->para[1])));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_GetOption_4_9(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,67,(long)((TH1*)(G__getstructoffset()))->GetOption());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_GetSumOfWeights_5_9(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letdouble(result7,100,(double)((TH1*)(G__getstructoffset()))->GetSumOfWeights());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_GetSumw2N_6_9(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TH1*)(G__getstructoffset()))->GetSumw2N());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_GetRMS_7_9(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 1:
+      G__letdouble(result7,100,(double)((TH1*)(G__getstructoffset()))->GetRMS((Int_t)G__int(libp->para[0])));
+      break;
+   case 0:
+      G__letdouble(result7,100,(double)((TH1*)(G__getstructoffset()))->GetRMS());
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_GetXaxis_8_9(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,85,(long)((TH1*)(G__getstructoffset()))->GetXaxis());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_GetYaxis_9_9(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,85,(long)((TH1*)(G__getstructoffset()))->GetYaxis());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_GetZaxis_0_10(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,85,(long)((TH1*)(G__getstructoffset()))->GetZaxis());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_Integral_1_10(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letdouble(result7,100,(double)((TH1*)(G__getstructoffset()))->Integral());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_Integral_2_10(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letdouble(result7,100,(double)((TH1*)(G__getstructoffset()))->Integral((Int_t)G__int(libp->para[0]),(Int_t)G__int(libp->para[1])));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_Integral_3_10(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letdouble(result7,100,(double)((TH1*)(G__getstructoffset()))->Integral((Int_t)G__int(libp->para[0]),(Int_t)G__int(libp->para[1])
+,(Int_t)G__int(libp->para[2]),(Int_t)G__int(libp->para[3])));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_Integral_4_10(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letdouble(result7,100,(double)((TH1*)(G__getstructoffset()))->Integral((Int_t)G__int(libp->para[0]),(Int_t)G__int(libp->para[1])
+,(Int_t)G__int(libp->para[2]),(Int_t)G__int(libp->para[3])
+,(Int_t)G__int(libp->para[4]),(Int_t)G__int(libp->para[5])));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_MakeChopt_5_10(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TH1*)(G__getstructoffset()))->MakeChopt((Option_t*)G__int(libp->para[0])));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_Multiply_6_10(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->Multiply((TH1*)G__int(libp->para[0]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_Multiply_7_10(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 5:
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->Multiply((TH1*)G__int(libp->para[0]),(TH1*)G__int(libp->para[1])
+,(Float_t)G__double(libp->para[2]),(Float_t)G__double(libp->para[3])
+,(Option_t*)G__int(libp->para[4]));
+      break;
+   case 4:
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->Multiply((TH1*)G__int(libp->para[0]),(TH1*)G__int(libp->para[1])
+,(Float_t)G__double(libp->para[2]),(Float_t)G__double(libp->para[3]));
+      break;
+   case 3:
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->Multiply((TH1*)G__int(libp->para[0]),(TH1*)G__int(libp->para[1])
+,(Float_t)G__double(libp->para[2]));
+      break;
+   case 2:
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->Multiply((TH1*)G__int(libp->para[0]),(TH1*)G__int(libp->para[1]));
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_Paint_8_10(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 1:
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->Paint((Option_t*)G__int(libp->para[0]));
+      break;
+   case 0:
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->Paint();
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_PaintAxis_9_10(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->PaintAxis();
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_PaintInit_0_11(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TH1*)(G__getstructoffset()))->PaintInit());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_PaintPalette_1_11(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->PaintPalette();
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_PaintStat_2_11(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->PaintStat((Int_t)G__int(libp->para[0]),(TF1*)G__int(libp->para[1]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_PaintStat2_3_11(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->PaintStat2((Int_t)G__int(libp->para[0]),(TF1*)G__int(libp->para[1]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_Print_4_11(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 1:
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->Print((Option_t*)G__int(libp->para[0]));
+      break;
+   case 0:
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->Print();
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_ProfileX_5_11(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 4:
+      G__letint(result7,85,(long)((TH1*)(G__getstructoffset()))->ProfileX((const char*)G__int(libp->para[0]),(Int_t)G__int(libp->para[1])
+,(Int_t)G__int(libp->para[2]),(Option_t*)G__int(libp->para[3])));
+      break;
+   case 3:
+      G__letint(result7,85,(long)((TH1*)(G__getstructoffset()))->ProfileX((const char*)G__int(libp->para[0]),(Int_t)G__int(libp->para[1])
+,(Int_t)G__int(libp->para[2])));
+      break;
+   case 2:
+      G__letint(result7,85,(long)((TH1*)(G__getstructoffset()))->ProfileX((const char*)G__int(libp->para[0]),(Int_t)G__int(libp->para[1])));
+      break;
+   case 1:
+      G__letint(result7,85,(long)((TH1*)(G__getstructoffset()))->ProfileX((const char*)G__int(libp->para[0])));
+      break;
+   case 0:
+      G__letint(result7,85,(long)((TH1*)(G__getstructoffset()))->ProfileX());
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_ProfileY_6_11(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 4:
+      G__letint(result7,85,(long)((TH1*)(G__getstructoffset()))->ProfileY((const char*)G__int(libp->para[0]),(Int_t)G__int(libp->para[1])
+,(Int_t)G__int(libp->para[2]),(Option_t*)G__int(libp->para[3])));
+      break;
+   case 3:
+      G__letint(result7,85,(long)((TH1*)(G__getstructoffset()))->ProfileY((const char*)G__int(libp->para[0]),(Int_t)G__int(libp->para[1])
+,(Int_t)G__int(libp->para[2])));
+      break;
+   case 2:
+      G__letint(result7,85,(long)((TH1*)(G__getstructoffset()))->ProfileY((const char*)G__int(libp->para[0]),(Int_t)G__int(libp->para[1])));
+      break;
+   case 1:
+      G__letint(result7,85,(long)((TH1*)(G__getstructoffset()))->ProfileY((const char*)G__int(libp->para[0])));
+      break;
+   case 0:
+      G__letint(result7,85,(long)((TH1*)(G__getstructoffset()))->ProfileY());
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_ProjectionX_7_11(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 4:
+      G__letint(result7,85,(long)((TH1*)(G__getstructoffset()))->ProjectionX((const char*)G__int(libp->para[0]),(Int_t)G__int(libp->para[1])
+,(Int_t)G__int(libp->para[2]),(Option_t*)G__int(libp->para[3])));
+      break;
+   case 3:
+      G__letint(result7,85,(long)((TH1*)(G__getstructoffset()))->ProjectionX((const char*)G__int(libp->para[0]),(Int_t)G__int(libp->para[1])
+,(Int_t)G__int(libp->para[2])));
+      break;
+   case 2:
+      G__letint(result7,85,(long)((TH1*)(G__getstructoffset()))->ProjectionX((const char*)G__int(libp->para[0]),(Int_t)G__int(libp->para[1])));
+      break;
+   case 1:
+      G__letint(result7,85,(long)((TH1*)(G__getstructoffset()))->ProjectionX((const char*)G__int(libp->para[0])));
+      break;
+   case 0:
+      G__letint(result7,85,(long)((TH1*)(G__getstructoffset()))->ProjectionX());
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_ProjectionY_8_11(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 4:
+      G__letint(result7,85,(long)((TH1*)(G__getstructoffset()))->ProjectionY((const char*)G__int(libp->para[0]),(Int_t)G__int(libp->para[1])
+,(Int_t)G__int(libp->para[2]),(Option_t*)G__int(libp->para[3])));
+      break;
+   case 3:
+      G__letint(result7,85,(long)((TH1*)(G__getstructoffset()))->ProjectionY((const char*)G__int(libp->para[0]),(Int_t)G__int(libp->para[1])
+,(Int_t)G__int(libp->para[2])));
+      break;
+   case 2:
+      G__letint(result7,85,(long)((TH1*)(G__getstructoffset()))->ProjectionY((const char*)G__int(libp->para[0]),(Int_t)G__int(libp->para[1])));
+      break;
+   case 1:
+      G__letint(result7,85,(long)((TH1*)(G__getstructoffset()))->ProjectionY((const char*)G__int(libp->para[0])));
+      break;
+   case 0:
+      G__letint(result7,85,(long)((TH1*)(G__getstructoffset()))->ProjectionY());
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_Rebin_9_11(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 2:
+      G__letint(result7,85,(long)((TH1*)(G__getstructoffset()))->Rebin((Int_t)G__int(libp->para[0]),(const char*)G__int(libp->para[1])));
+      break;
+   case 1:
+      G__letint(result7,85,(long)((TH1*)(G__getstructoffset()))->Rebin((Int_t)G__int(libp->para[0])));
+      break;
+   case 0:
+      G__letint(result7,85,(long)((TH1*)(G__getstructoffset()))->Rebin());
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_Reset_0_12(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 1:
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->Reset((Option_t*)G__int(libp->para[0]));
+      break;
+   case 0:
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->Reset();
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_SavePrimitive_1_12(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->SavePrimitive(*(ofstream*)libp->para[0].ref,(Option_t*)G__int(libp->para[1]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_Scale_2_12(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 1:
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->Scale((Float_t)G__double(libp->para[0]));
+      break;
+   case 0:
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->Scale();
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_SetAxisColor_3_12(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 2:
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->SetAxisColor((Color_t)G__int(libp->para[0]),(Option_t*)G__int(libp->para[1]));
+      break;
+   case 1:
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->SetAxisColor((Color_t)G__int(libp->para[0]));
+      break;
+   case 0:
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->SetAxisColor();
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_SetBarOffset_4_12(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 1:
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->SetBarOffset((Float_t)G__double(libp->para[0]));
+      break;
+   case 0:
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->SetBarOffset();
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_SetBarWidth_5_12(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 1:
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->SetBarWidth((Float_t)G__double(libp->para[0]));
+      break;
+   case 0:
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->SetBarWidth();
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_SetBinContent_6_12(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->SetBinContent((Int_t)G__int(libp->para[0]),(Stat_t)G__double(libp->para[1]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_SetBinError_7_12(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->SetBinError((Int_t)G__int(libp->para[0]),(Stat_t)G__double(libp->para[1]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_SetBinLabel_8_12(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->SetBinLabel((Int_t)G__int(libp->para[0]),(Text_t*)G__int(libp->para[1]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_SetBins_9_12(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->SetBins((Int_t)G__int(libp->para[0]),(Float_t)G__double(libp->para[1])
+,(Float_t)G__double(libp->para[2]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_SetBins_0_13(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->SetBins((Int_t)G__int(libp->para[0]),(Float_t)G__double(libp->para[1])
+,(Float_t)G__double(libp->para[2]),(Int_t)G__int(libp->para[3])
+,(Float_t)G__double(libp->para[4]),(Float_t)G__double(libp->para[5]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_SetBinsLength_1_13(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->SetBinsLength((Int_t)G__int(libp->para[0]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_SetCellContent_2_13(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->SetCellContent((Int_t)G__int(libp->para[0]),(Int_t)G__int(libp->para[1])
+,(Stat_t)G__double(libp->para[2]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_SetCellError_3_13(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->SetCellError((Int_t)G__int(libp->para[0]),(Int_t)G__int(libp->para[1])
+,(Stat_t)G__double(libp->para[2]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_SetContent_4_13(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->SetContent((Stat_t*)G__int(libp->para[0]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_SetContour_5_13(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->SetContour((Int_t)G__int(libp->para[0]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_SetContour_6_13(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->SetContour((Int_t)G__int(libp->para[0]),(Float_t*)G__int(libp->para[1]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_SetContourLevel_7_13(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->SetContourLevel((Int_t)G__int(libp->para[0]),(Float_t)G__double(libp->para[1]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_SetDirectory_8_13(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->SetDirectory((TDirectory*)G__int(libp->para[0]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_SetEntries_9_13(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->SetEntries((Stat_t)G__double(libp->para[0]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_SetError_0_14(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->SetError((Stat_t*)G__int(libp->para[0]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_SetLabel_1_14(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->SetLabel((const Text_t*)G__int(libp->para[0]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_SetLabelColor_2_14(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 2:
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->SetLabelColor((Color_t)G__int(libp->para[0]),(Option_t*)G__int(libp->para[1]));
+      break;
+   case 1:
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->SetLabelColor((Color_t)G__int(libp->para[0]));
+      break;
+   case 0:
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->SetLabelColor();
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_SetLabelFont_3_14(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 2:
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->SetLabelFont((Style_t)G__int(libp->para[0]),(Option_t*)G__int(libp->para[1]));
+      break;
+   case 1:
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->SetLabelFont((Style_t)G__int(libp->para[0]));
+      break;
+   case 0:
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->SetLabelFont();
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_SetLabelOffset_4_14(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 2:
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->SetLabelOffset((Float_t)G__double(libp->para[0]),(Option_t*)G__int(libp->para[1]));
+      break;
+   case 1:
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->SetLabelOffset((Float_t)G__double(libp->para[0]));
+      break;
+   case 0:
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->SetLabelOffset();
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_SetLabelSize_5_14(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 2:
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->SetLabelSize((Float_t)G__double(libp->para[0]),(Option_t*)G__int(libp->para[1]));
+      break;
+   case 1:
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->SetLabelSize((Float_t)G__double(libp->para[0]));
+      break;
+   case 0:
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->SetLabelSize();
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_SetMaximum_6_14(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 1:
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->SetMaximum((Float_t)G__double(libp->para[0]));
+      break;
+   case 0:
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->SetMaximum();
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_SetMinimum_7_14(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 1:
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->SetMinimum((Float_t)G__double(libp->para[0]));
+      break;
+   case 0:
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->SetMinimum();
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_SetName_8_14(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->SetName((const Text_t*)G__int(libp->para[0]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_SetNdivisions_9_14(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 2:
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->SetNdivisions((Int_t)G__int(libp->para[0]),(Option_t*)G__int(libp->para[1]));
+      break;
+   case 1:
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->SetNdivisions((Int_t)G__int(libp->para[0]));
+      break;
+   case 0:
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->SetNdivisions();
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_SetNormFactor_0_15(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 1:
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->SetNormFactor((Float_t)G__double(libp->para[0]));
+      break;
+   case 0:
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->SetNormFactor();
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_SetOption_1_15(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 1:
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->SetOption((Option_t*)G__int(libp->para[0]));
+      break;
+   case 0:
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->SetOption();
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_SetTickLength_2_15(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 2:
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->SetTickLength((Float_t)G__double(libp->para[0]),(Option_t*)G__int(libp->para[1]));
+      break;
+   case 1:
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->SetTickLength((Float_t)G__double(libp->para[0]));
+      break;
+   case 0:
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->SetTickLength();
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_SetTitleOffset_3_15(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 2:
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->SetTitleOffset((Float_t)G__double(libp->para[0]),(Option_t*)G__int(libp->para[1]));
+      break;
+   case 1:
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->SetTitleOffset((Float_t)G__double(libp->para[0]));
+      break;
+   case 0:
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->SetTitleOffset();
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_SetXTitle_4_15(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->SetXTitle((Text_t*)G__int(libp->para[0]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_SetYTitle_5_15(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->SetYTitle((Text_t*)G__int(libp->para[0]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_SetZTitle_6_15(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->SetZTitle((Text_t*)G__int(libp->para[0]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_Sumw2_7_15(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->Sumw2();
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_Smooth_8_15(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 1:
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->Smooth((Option_t*)G__int(libp->para[0]));
+      break;
+   case 0:
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->Smooth();
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_UseCurrentStyle_9_15(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->UseCurrentStyle();
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_DeclFileName_0_16(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,67,(long)((TH1*)(G__getstructoffset()))->DeclFileName());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_DeclFileLine_1_16(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TH1*)(G__getstructoffset()))->DeclFileLine());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_ImplFileName_2_16(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,67,(long)((TH1*)(G__getstructoffset()))->ImplFileName());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_ImplFileLine_3_16(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TH1*)(G__getstructoffset()))->ImplFileLine());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_Class_Version_4_16(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,115,(long)((TH1*)(G__getstructoffset()))->Class_Version());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_Class_5_16(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,85,(long)((TH1*)(G__getstructoffset()))->Class());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_Dictionary_6_16(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->Dictionary();
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_IsA_7_16(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,85,(long)((TH1*)(G__getstructoffset()))->IsA());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_ShowMembers_8_16(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->ShowMembers(*(TMemberInspector*)libp->para[0].ref,(char*)G__int(libp->para[1]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1_Streamer_9_16(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH1*)(G__getstructoffset()))->Streamer(*(TBuffer*)libp->para[0].ref);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+// automatic copy constructor
+static int G__TH1_TH1_0_17(G__value *result7,char *funcname,struct G__param *libp,int hash)
+{
+   TH1 *p;
+   if(1!=libp->paran) ;
+   p=new TH1(*(TH1*)G__int(libp->para[0]));
+   result7->obj.i = (long)p;
+   result7->ref = (long)p;
+   result7->type = 'u';
+   result7->tagnum = G__get_linked_tagnum(&G__G__HistLN_TH1);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+// automatic destructor
+static int G__TH1_wATH1_1_17(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   if(G__getaryconstruct())
+     if(G__PVOID==G__getgvp())
+       delete[] (TH1 *)(G__getstructoffset());
+     else
+       for(int i=G__getaryconstruct()-1;i>=0;i--)
+         delete (TH1 *)((G__getstructoffset())+sizeof(TH1)*i);
+   else  delete (TH1 *)(G__getstructoffset());
+      G__setnull(result7);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+
+/* TH1C */
+static int G__TH1C_TH1C_2_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   TH1C *p=NULL;
+   if(G__getaryconstruct()) p=new TH1C[G__getaryconstruct()];
+   else                    p=new TH1C;
+      result7->obj.i = (long)p;
+      result7->ref = (long)p;
+      result7->type = 'u';
+      result7->tagnum = G__get_linked_tagnum(&G__G__HistLN_TH1C);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1C_TH1C_3_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   TH1C *p=NULL;
+      p = new TH1C(
+(const Text_t*)G__int(libp->para[0]),(const Text_t*)G__int(libp->para[1])
+,(Int_t)G__int(libp->para[2]),(Axis_t)G__double(libp->para[3])
+,(Axis_t)G__double(libp->para[4]));
+      result7->obj.i = (long)p;
+      result7->ref = (long)p;
+      result7->type = 'u';
+      result7->tagnum = G__get_linked_tagnum(&G__G__HistLN_TH1C);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1C_TH1C_4_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   TH1C *p=NULL;
+      p = new TH1C(
+(const Text_t*)G__int(libp->para[0]),(const Text_t*)G__int(libp->para[1])
+,(Int_t)G__int(libp->para[2]),(Axis_t*)G__int(libp->para[3]));
+      result7->obj.i = (long)p;
+      result7->ref = (long)p;
+      result7->type = 'u';
+      result7->tagnum = G__get_linked_tagnum(&G__G__HistLN_TH1C);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1C_TH1C_5_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   TH1C *p=NULL;
+      p = new TH1C(*(TH1C*)libp->para[0].ref);
+      result7->obj.i = (long)p;
+      result7->ref = (long)p;
+      result7->type = 'u';
+      result7->tagnum = G__get_linked_tagnum(&G__G__HistLN_TH1C);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1C_AddBinContent_7_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH1C*)(G__getstructoffset()))->AddBinContent((Int_t)G__int(libp->para[0]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1C_AddBinContent_8_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH1C*)(G__getstructoffset()))->AddBinContent((Int_t)G__int(libp->para[0]),(Stat_t)G__double(libp->para[1]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1C_Copy_9_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH1C*)(G__getstructoffset()))->Copy(*(TObject*)libp->para[0].ref);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1C_DrawCopy_0_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 1:
+      G__setnull(result7);
+      ((TH1C*)(G__getstructoffset()))->DrawCopy((Option_t*)G__int(libp->para[0]));
+      break;
+   case 0:
+      G__setnull(result7);
+      ((TH1C*)(G__getstructoffset()))->DrawCopy();
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1C_GetBinContent_1_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letdouble(result7,100,(double)((TH1C*)(G__getstructoffset()))->GetBinContent((Int_t)G__int(libp->para[0])));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1C_Reset_2_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 1:
+      G__setnull(result7);
+      ((TH1C*)(G__getstructoffset()))->Reset((Option_t*)G__int(libp->para[0]));
+      break;
+   case 0:
+      G__setnull(result7);
+      ((TH1C*)(G__getstructoffset()))->Reset();
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1C_SetBinContent_3_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH1C*)(G__getstructoffset()))->SetBinContent((Int_t)G__int(libp->para[0]),(Stat_t)G__double(libp->para[1]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1C_SetBinsLength_4_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH1C*)(G__getstructoffset()))->SetBinsLength((Int_t)G__int(libp->para[0]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1C_operatoreQ_5_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      {
+        TH1C& obj=((TH1C*)(G__getstructoffset()))->operator=(*(TH1C*)libp->para[0].ref);
+         result7->ref=(long)(&obj); result7->obj.i=(long)(&obj);
+      }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1C_DeclFileName_6_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,67,(long)((TH1C*)(G__getstructoffset()))->DeclFileName());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1C_DeclFileLine_7_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TH1C*)(G__getstructoffset()))->DeclFileLine());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1C_ImplFileName_8_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,67,(long)((TH1C*)(G__getstructoffset()))->ImplFileName());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1C_ImplFileLine_9_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TH1C*)(G__getstructoffset()))->ImplFileLine());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1C_Class_Version_0_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,115,(long)((TH1C*)(G__getstructoffset()))->Class_Version());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1C_Class_1_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,85,(long)((TH1C*)(G__getstructoffset()))->Class());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1C_Dictionary_2_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH1C*)(G__getstructoffset()))->Dictionary();
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1C_IsA_3_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,85,(long)((TH1C*)(G__getstructoffset()))->IsA());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1C_ShowMembers_4_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH1C*)(G__getstructoffset()))->ShowMembers(*(TMemberInspector*)libp->para[0].ref,(char*)G__int(libp->para[1]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1C_Streamer_5_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH1C*)(G__getstructoffset()))->Streamer(*(TBuffer*)libp->para[0].ref);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+// automatic destructor
+static int G__TH1C_wATH1C_6_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   if(G__getaryconstruct())
+     if(G__PVOID==G__getgvp())
+       delete[] (TH1C *)(G__getstructoffset());
+     else
+       for(int i=G__getaryconstruct()-1;i>=0;i--)
+         delete (TH1C *)((G__getstructoffset())+sizeof(TH1C)*i);
+   else  delete (TH1C *)(G__getstructoffset());
+      G__setnull(result7);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+
+/* TH1S */
+static int G__TH1S_TH1S_2_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   TH1S *p=NULL;
+   if(G__getaryconstruct()) p=new TH1S[G__getaryconstruct()];
+   else                    p=new TH1S;
+      result7->obj.i = (long)p;
+      result7->ref = (long)p;
+      result7->type = 'u';
+      result7->tagnum = G__get_linked_tagnum(&G__G__HistLN_TH1S);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1S_TH1S_3_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   TH1S *p=NULL;
+      p = new TH1S(
+(const Text_t*)G__int(libp->para[0]),(const Text_t*)G__int(libp->para[1])
+,(Int_t)G__int(libp->para[2]),(Axis_t)G__double(libp->para[3])
+,(Axis_t)G__double(libp->para[4]));
+      result7->obj.i = (long)p;
+      result7->ref = (long)p;
+      result7->type = 'u';
+      result7->tagnum = G__get_linked_tagnum(&G__G__HistLN_TH1S);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1S_TH1S_4_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   TH1S *p=NULL;
+      p = new TH1S(
+(const Text_t*)G__int(libp->para[0]),(const Text_t*)G__int(libp->para[1])
+,(Int_t)G__int(libp->para[2]),(Axis_t*)G__int(libp->para[3]));
+      result7->obj.i = (long)p;
+      result7->ref = (long)p;
+      result7->type = 'u';
+      result7->tagnum = G__get_linked_tagnum(&G__G__HistLN_TH1S);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1S_TH1S_5_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   TH1S *p=NULL;
+      p = new TH1S(*(TH1S*)libp->para[0].ref);
+      result7->obj.i = (long)p;
+      result7->ref = (long)p;
+      result7->type = 'u';
+      result7->tagnum = G__get_linked_tagnum(&G__G__HistLN_TH1S);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1S_AddBinContent_7_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH1S*)(G__getstructoffset()))->AddBinContent((Int_t)G__int(libp->para[0]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1S_AddBinContent_8_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH1S*)(G__getstructoffset()))->AddBinContent((Int_t)G__int(libp->para[0]),(Stat_t)G__double(libp->para[1]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1S_Copy_9_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH1S*)(G__getstructoffset()))->Copy(*(TObject*)libp->para[0].ref);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1S_DrawCopy_0_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 1:
+      G__setnull(result7);
+      ((TH1S*)(G__getstructoffset()))->DrawCopy((Option_t*)G__int(libp->para[0]));
+      break;
+   case 0:
+      G__setnull(result7);
+      ((TH1S*)(G__getstructoffset()))->DrawCopy();
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1S_GetBinContent_1_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letdouble(result7,100,(double)((TH1S*)(G__getstructoffset()))->GetBinContent((Int_t)G__int(libp->para[0])));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1S_Reset_2_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 1:
+      G__setnull(result7);
+      ((TH1S*)(G__getstructoffset()))->Reset((Option_t*)G__int(libp->para[0]));
+      break;
+   case 0:
+      G__setnull(result7);
+      ((TH1S*)(G__getstructoffset()))->Reset();
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1S_SetBinContent_3_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH1S*)(G__getstructoffset()))->SetBinContent((Int_t)G__int(libp->para[0]),(Stat_t)G__double(libp->para[1]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1S_SetBinsLength_4_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH1S*)(G__getstructoffset()))->SetBinsLength((Int_t)G__int(libp->para[0]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1S_operatoreQ_5_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      {
+        TH1S& obj=((TH1S*)(G__getstructoffset()))->operator=(*(TH1S*)libp->para[0].ref);
+         result7->ref=(long)(&obj); result7->obj.i=(long)(&obj);
+      }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1S_DeclFileName_6_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,67,(long)((TH1S*)(G__getstructoffset()))->DeclFileName());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1S_DeclFileLine_7_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TH1S*)(G__getstructoffset()))->DeclFileLine());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1S_ImplFileName_8_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,67,(long)((TH1S*)(G__getstructoffset()))->ImplFileName());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1S_ImplFileLine_9_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TH1S*)(G__getstructoffset()))->ImplFileLine());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1S_Class_Version_0_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,115,(long)((TH1S*)(G__getstructoffset()))->Class_Version());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1S_Class_1_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,85,(long)((TH1S*)(G__getstructoffset()))->Class());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1S_Dictionary_2_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH1S*)(G__getstructoffset()))->Dictionary();
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1S_IsA_3_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,85,(long)((TH1S*)(G__getstructoffset()))->IsA());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1S_ShowMembers_4_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH1S*)(G__getstructoffset()))->ShowMembers(*(TMemberInspector*)libp->para[0].ref,(char*)G__int(libp->para[1]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH1S_Streamer_5_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH1S*)(G__getstructoffset()))->Streamer(*(TBuffer*)libp->para[0].ref);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+// automatic destructor
+static int G__TH1S_wATH1S_6_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   if(G__getaryconstruct())
+     if(G__PVOID==G__getgvp())
+       delete[] (TH1S *)(G__getstructoffset());
+     else
+       for(int i=G__getaryconstruct()-1;i>=0;i--)
+         delete (TH1S *)((G__getstructoffset())+sizeof(TH1S)*i);
+   else  delete (TH1S *)(G__getstructoffset());
+      G__setnull(result7);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+
+/* TH2 */
+static int G__TH2_TH2_3_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   TH2 *p=NULL;
+   if(G__getaryconstruct()) p=new TH2[G__getaryconstruct()];
+   else                    p=new TH2;
+      result7->obj.i = (long)p;
+      result7->ref = (long)p;
+      result7->type = 'u';
+      result7->tagnum = G__get_linked_tagnum(&G__G__HistLN_TH2);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2_DeclFileName_5_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,67,(long)((TH2*)(G__getstructoffset()))->DeclFileName());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2_DeclFileLine_6_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TH2*)(G__getstructoffset()))->DeclFileLine());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2_ImplFileName_7_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,67,(long)((TH2*)(G__getstructoffset()))->ImplFileName());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2_ImplFileLine_8_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TH2*)(G__getstructoffset()))->ImplFileLine());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2_Class_Version_9_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,115,(long)((TH2*)(G__getstructoffset()))->Class_Version());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2_Class_0_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,85,(long)((TH2*)(G__getstructoffset()))->Class());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2_Dictionary_1_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH2*)(G__getstructoffset()))->Dictionary();
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2_IsA_2_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,85,(long)((TH2*)(G__getstructoffset()))->IsA());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2_ShowMembers_3_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH2*)(G__getstructoffset()))->ShowMembers(*(TMemberInspector*)libp->para[0].ref,(char*)G__int(libp->para[1]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2_Streamer_4_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH2*)(G__getstructoffset()))->Streamer(*(TBuffer*)libp->para[0].ref);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+// automatic copy constructor
+static int G__TH2_TH2_5_1(G__value *result7,char *funcname,struct G__param *libp,int hash)
+{
+   TH2 *p;
+   if(1!=libp->paran) ;
+   p=new TH2(*(TH2*)G__int(libp->para[0]));
+   result7->obj.i = (long)p;
+   result7->ref = (long)p;
+   result7->type = 'u';
+   result7->tagnum = G__get_linked_tagnum(&G__G__HistLN_TH2);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+// automatic destructor
+static int G__TH2_wATH2_6_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   if(G__getaryconstruct())
+     if(G__PVOID==G__getgvp())
+       delete[] (TH2 *)(G__getstructoffset());
+     else
+       for(int i=G__getaryconstruct()-1;i>=0;i--)
+         delete (TH2 *)((G__getstructoffset())+sizeof(TH2)*i);
+   else  delete (TH2 *)(G__getstructoffset());
+      G__setnull(result7);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+
+/* TH2C */
+static int G__TH2C_TH2C_3_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   TH2C *p=NULL;
+   if(G__getaryconstruct()) p=new TH2C[G__getaryconstruct()];
+   else                    p=new TH2C;
+      result7->obj.i = (long)p;
+      result7->ref = (long)p;
+      result7->type = 'u';
+      result7->tagnum = G__get_linked_tagnum(&G__G__HistLN_TH2C);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2C_TH2C_4_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   TH2C *p=NULL;
+      p = new TH2C(
+(const Text_t*)G__int(libp->para[0]),(const Text_t*)G__int(libp->para[1])
+,(Int_t)G__int(libp->para[2]),(Axis_t)G__double(libp->para[3])
+,(Axis_t)G__double(libp->para[4]),(Int_t)G__int(libp->para[5])
+,(Axis_t)G__double(libp->para[6]),(Axis_t)G__double(libp->para[7]));
+      result7->obj.i = (long)p;
+      result7->ref = (long)p;
+      result7->type = 'u';
+      result7->tagnum = G__get_linked_tagnum(&G__G__HistLN_TH2C);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2C_TH2C_5_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   TH2C *p=NULL;
+      p = new TH2C(
+(const Text_t*)G__int(libp->para[0]),(const Text_t*)G__int(libp->para[1])
+,(Int_t)G__int(libp->para[2]),(Axis_t*)G__int(libp->para[3])
+,(Int_t)G__int(libp->para[4]),(Axis_t)G__double(libp->para[5])
+,(Axis_t)G__double(libp->para[6]));
+      result7->obj.i = (long)p;
+      result7->ref = (long)p;
+      result7->type = 'u';
+      result7->tagnum = G__get_linked_tagnum(&G__G__HistLN_TH2C);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2C_TH2C_6_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   TH2C *p=NULL;
+      p = new TH2C(
+(const Text_t*)G__int(libp->para[0]),(const Text_t*)G__int(libp->para[1])
+,(Int_t)G__int(libp->para[2]),(Axis_t)G__double(libp->para[3])
+,(Axis_t)G__double(libp->para[4]),(Int_t)G__int(libp->para[5])
+,(Axis_t*)G__int(libp->para[6]));
+      result7->obj.i = (long)p;
+      result7->ref = (long)p;
+      result7->type = 'u';
+      result7->tagnum = G__get_linked_tagnum(&G__G__HistLN_TH2C);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2C_TH2C_7_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   TH2C *p=NULL;
+      p = new TH2C(
+(const Text_t*)G__int(libp->para[0]),(const Text_t*)G__int(libp->para[1])
+,(Int_t)G__int(libp->para[2]),(Axis_t*)G__int(libp->para[3])
+,(Int_t)G__int(libp->para[4]),(Axis_t*)G__int(libp->para[5]));
+      result7->obj.i = (long)p;
+      result7->ref = (long)p;
+      result7->type = 'u';
+      result7->tagnum = G__get_linked_tagnum(&G__G__HistLN_TH2C);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2C_TH2C_8_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   TH2C *p=NULL;
+      p = new TH2C(*(TH2C*)libp->para[0].ref);
+      result7->obj.i = (long)p;
+      result7->ref = (long)p;
+      result7->type = 'u';
+      result7->tagnum = G__get_linked_tagnum(&G__G__HistLN_TH2C);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2C_Copy_0_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH2C*)(G__getstructoffset()))->Copy(*(TObject*)libp->para[0].ref);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2C_DrawCopy_1_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 1:
+      G__setnull(result7);
+      ((TH2C*)(G__getstructoffset()))->DrawCopy((Option_t*)G__int(libp->para[0]));
+      break;
+   case 0:
+      G__setnull(result7);
+      ((TH2C*)(G__getstructoffset()))->DrawCopy();
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2C_Fill_2_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH2C*)(G__getstructoffset()))->Fill((Axis_t)G__double(libp->para[0]),(Axis_t)G__double(libp->para[1]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2C_Fill_3_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH2C*)(G__getstructoffset()))->Fill((Axis_t)G__double(libp->para[0]),(Axis_t)G__double(libp->para[1])
+,(Stat_t)G__double(libp->para[2]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2C_GetCorrelationFactor_4_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 2:
+      G__letdouble(result7,100,(double)((TH2C*)(G__getstructoffset()))->GetCorrelationFactor((Int_t)G__int(libp->para[0]),(Int_t)G__int(libp->para[1])));
+      break;
+   case 1:
+      G__letdouble(result7,100,(double)((TH2C*)(G__getstructoffset()))->GetCorrelationFactor((Int_t)G__int(libp->para[0])));
+      break;
+   case 0:
+      G__letdouble(result7,100,(double)((TH2C*)(G__getstructoffset()))->GetCorrelationFactor());
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2C_GetCovariance_5_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 2:
+      G__letdouble(result7,100,(double)((TH2C*)(G__getstructoffset()))->GetCovariance((Int_t)G__int(libp->para[0]),(Int_t)G__int(libp->para[1])));
+      break;
+   case 1:
+      G__letdouble(result7,100,(double)((TH2C*)(G__getstructoffset()))->GetCovariance((Int_t)G__int(libp->para[0])));
+      break;
+   case 0:
+      G__letdouble(result7,100,(double)((TH2C*)(G__getstructoffset()))->GetCovariance());
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2C_GetMean_6_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 1:
+      G__letdouble(result7,100,(double)((TH2C*)(G__getstructoffset()))->GetMean((Int_t)G__int(libp->para[0])));
+      break;
+   case 0:
+      G__letdouble(result7,100,(double)((TH2C*)(G__getstructoffset()))->GetMean());
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2C_GetRMS_7_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 1:
+      G__letdouble(result7,100,(double)((TH2C*)(G__getstructoffset()))->GetRMS((Int_t)G__int(libp->para[0])));
+      break;
+   case 0:
+      G__letdouble(result7,100,(double)((TH2C*)(G__getstructoffset()))->GetRMS());
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2C_operatoreQ_8_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      {
+        TH2C& obj=((TH2C*)(G__getstructoffset()))->operator=(*(TH2C*)libp->para[0].ref);
+         result7->ref=(long)(&obj); result7->obj.i=(long)(&obj);
+      }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2C_DeclFileName_9_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,67,(long)((TH2C*)(G__getstructoffset()))->DeclFileName());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2C_DeclFileLine_0_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TH2C*)(G__getstructoffset()))->DeclFileLine());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2C_ImplFileName_1_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,67,(long)((TH2C*)(G__getstructoffset()))->ImplFileName());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2C_ImplFileLine_2_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TH2C*)(G__getstructoffset()))->ImplFileLine());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2C_Class_Version_3_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,115,(long)((TH2C*)(G__getstructoffset()))->Class_Version());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2C_Class_4_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,85,(long)((TH2C*)(G__getstructoffset()))->Class());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2C_Dictionary_5_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH2C*)(G__getstructoffset()))->Dictionary();
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2C_IsA_6_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,85,(long)((TH2C*)(G__getstructoffset()))->IsA());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2C_ShowMembers_7_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH2C*)(G__getstructoffset()))->ShowMembers(*(TMemberInspector*)libp->para[0].ref,(char*)G__int(libp->para[1]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2C_Streamer_8_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH2C*)(G__getstructoffset()))->Streamer(*(TBuffer*)libp->para[0].ref);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+// automatic destructor
+static int G__TH2C_wATH2C_9_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   if(G__getaryconstruct())
+     if(G__PVOID==G__getgvp())
+       delete[] (TH2C *)(G__getstructoffset());
+     else
+       for(int i=G__getaryconstruct()-1;i>=0;i--)
+         delete (TH2C *)((G__getstructoffset())+sizeof(TH2C)*i);
+   else  delete (TH2C *)(G__getstructoffset());
+      G__setnull(result7);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+
+/* TH2S */
+static int G__TH2S_TH2S_3_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   TH2S *p=NULL;
+   if(G__getaryconstruct()) p=new TH2S[G__getaryconstruct()];
+   else                    p=new TH2S;
+      result7->obj.i = (long)p;
+      result7->ref = (long)p;
+      result7->type = 'u';
+      result7->tagnum = G__get_linked_tagnum(&G__G__HistLN_TH2S);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2S_TH2S_4_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   TH2S *p=NULL;
+      p = new TH2S(
+(const Text_t*)G__int(libp->para[0]),(const Text_t*)G__int(libp->para[1])
+,(Int_t)G__int(libp->para[2]),(Axis_t)G__double(libp->para[3])
+,(Axis_t)G__double(libp->para[4]),(Int_t)G__int(libp->para[5])
+,(Axis_t)G__double(libp->para[6]),(Axis_t)G__double(libp->para[7]));
+      result7->obj.i = (long)p;
+      result7->ref = (long)p;
+      result7->type = 'u';
+      result7->tagnum = G__get_linked_tagnum(&G__G__HistLN_TH2S);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2S_TH2S_5_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   TH2S *p=NULL;
+      p = new TH2S(
+(const Text_t*)G__int(libp->para[0]),(const Text_t*)G__int(libp->para[1])
+,(Int_t)G__int(libp->para[2]),(Axis_t*)G__int(libp->para[3])
+,(Int_t)G__int(libp->para[4]),(Axis_t)G__double(libp->para[5])
+,(Axis_t)G__double(libp->para[6]));
+      result7->obj.i = (long)p;
+      result7->ref = (long)p;
+      result7->type = 'u';
+      result7->tagnum = G__get_linked_tagnum(&G__G__HistLN_TH2S);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2S_TH2S_6_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   TH2S *p=NULL;
+      p = new TH2S(
+(const Text_t*)G__int(libp->para[0]),(const Text_t*)G__int(libp->para[1])
+,(Int_t)G__int(libp->para[2]),(Axis_t)G__double(libp->para[3])
+,(Axis_t)G__double(libp->para[4]),(Int_t)G__int(libp->para[5])
+,(Axis_t*)G__int(libp->para[6]));
+      result7->obj.i = (long)p;
+      result7->ref = (long)p;
+      result7->type = 'u';
+      result7->tagnum = G__get_linked_tagnum(&G__G__HistLN_TH2S);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2S_TH2S_7_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   TH2S *p=NULL;
+      p = new TH2S(
+(const Text_t*)G__int(libp->para[0]),(const Text_t*)G__int(libp->para[1])
+,(Int_t)G__int(libp->para[2]),(Axis_t*)G__int(libp->para[3])
+,(Int_t)G__int(libp->para[4]),(Axis_t*)G__int(libp->para[5]));
+      result7->obj.i = (long)p;
+      result7->ref = (long)p;
+      result7->type = 'u';
+      result7->tagnum = G__get_linked_tagnum(&G__G__HistLN_TH2S);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2S_TH2S_8_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   TH2S *p=NULL;
+      p = new TH2S(*(TH2S*)libp->para[0].ref);
+      result7->obj.i = (long)p;
+      result7->ref = (long)p;
+      result7->type = 'u';
+      result7->tagnum = G__get_linked_tagnum(&G__G__HistLN_TH2S);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2S_Copy_0_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH2S*)(G__getstructoffset()))->Copy(*(TObject*)libp->para[0].ref);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2S_DrawCopy_1_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 1:
+      G__setnull(result7);
+      ((TH2S*)(G__getstructoffset()))->DrawCopy((Option_t*)G__int(libp->para[0]));
+      break;
+   case 0:
+      G__setnull(result7);
+      ((TH2S*)(G__getstructoffset()))->DrawCopy();
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2S_Fill_2_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH2S*)(G__getstructoffset()))->Fill((Axis_t)G__double(libp->para[0]),(Axis_t)G__double(libp->para[1]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2S_Fill_3_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH2S*)(G__getstructoffset()))->Fill((Axis_t)G__double(libp->para[0]),(Axis_t)G__double(libp->para[1])
+,(Stat_t)G__double(libp->para[2]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2S_GetCorrelationFactor_4_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 2:
+      G__letdouble(result7,100,(double)((TH2S*)(G__getstructoffset()))->GetCorrelationFactor((Int_t)G__int(libp->para[0]),(Int_t)G__int(libp->para[1])));
+      break;
+   case 1:
+      G__letdouble(result7,100,(double)((TH2S*)(G__getstructoffset()))->GetCorrelationFactor((Int_t)G__int(libp->para[0])));
+      break;
+   case 0:
+      G__letdouble(result7,100,(double)((TH2S*)(G__getstructoffset()))->GetCorrelationFactor());
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2S_GetCovariance_5_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 2:
+      G__letdouble(result7,100,(double)((TH2S*)(G__getstructoffset()))->GetCovariance((Int_t)G__int(libp->para[0]),(Int_t)G__int(libp->para[1])));
+      break;
+   case 1:
+      G__letdouble(result7,100,(double)((TH2S*)(G__getstructoffset()))->GetCovariance((Int_t)G__int(libp->para[0])));
+      break;
+   case 0:
+      G__letdouble(result7,100,(double)((TH2S*)(G__getstructoffset()))->GetCovariance());
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2S_GetMean_6_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 1:
+      G__letdouble(result7,100,(double)((TH2S*)(G__getstructoffset()))->GetMean((Int_t)G__int(libp->para[0])));
+      break;
+   case 0:
+      G__letdouble(result7,100,(double)((TH2S*)(G__getstructoffset()))->GetMean());
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2S_GetRMS_7_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 1:
+      G__letdouble(result7,100,(double)((TH2S*)(G__getstructoffset()))->GetRMS((Int_t)G__int(libp->para[0])));
+      break;
+   case 0:
+      G__letdouble(result7,100,(double)((TH2S*)(G__getstructoffset()))->GetRMS());
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2S_operatoreQ_8_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      {
+        TH2S& obj=((TH2S*)(G__getstructoffset()))->operator=(*(TH2S*)libp->para[0].ref);
+         result7->ref=(long)(&obj); result7->obj.i=(long)(&obj);
+      }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2S_DeclFileName_9_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,67,(long)((TH2S*)(G__getstructoffset()))->DeclFileName());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2S_DeclFileLine_0_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TH2S*)(G__getstructoffset()))->DeclFileLine());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2S_ImplFileName_1_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,67,(long)((TH2S*)(G__getstructoffset()))->ImplFileName());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2S_ImplFileLine_2_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TH2S*)(G__getstructoffset()))->ImplFileLine());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2S_Class_Version_3_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,115,(long)((TH2S*)(G__getstructoffset()))->Class_Version());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2S_Class_4_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,85,(long)((TH2S*)(G__getstructoffset()))->Class());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2S_Dictionary_5_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH2S*)(G__getstructoffset()))->Dictionary();
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2S_IsA_6_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,85,(long)((TH2S*)(G__getstructoffset()))->IsA());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2S_ShowMembers_7_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH2S*)(G__getstructoffset()))->ShowMembers(*(TMemberInspector*)libp->para[0].ref,(char*)G__int(libp->para[1]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2S_Streamer_8_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH2S*)(G__getstructoffset()))->Streamer(*(TBuffer*)libp->para[0].ref);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+// automatic destructor
+static int G__TH2S_wATH2S_9_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   if(G__getaryconstruct())
+     if(G__PVOID==G__getgvp())
+       delete[] (TH2S *)(G__getstructoffset());
+     else
+       for(int i=G__getaryconstruct()-1;i>=0;i--)
+         delete (TH2S *)((G__getstructoffset())+sizeof(TH2S)*i);
+   else  delete (TH2S *)(G__getstructoffset());
+      G__setnull(result7);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+
+/* TH2F */
+static int G__TH2F_TH2F_3_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   TH2F *p=NULL;
+   if(G__getaryconstruct()) p=new TH2F[G__getaryconstruct()];
+   else                    p=new TH2F;
+      result7->obj.i = (long)p;
+      result7->ref = (long)p;
+      result7->type = 'u';
+      result7->tagnum = G__get_linked_tagnum(&G__G__HistLN_TH2F);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2F_TH2F_4_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   TH2F *p=NULL;
+      p = new TH2F(
+(const Text_t*)G__int(libp->para[0]),(const Text_t*)G__int(libp->para[1])
+,(Int_t)G__int(libp->para[2]),(Axis_t)G__double(libp->para[3])
+,(Axis_t)G__double(libp->para[4]),(Int_t)G__int(libp->para[5])
+,(Axis_t)G__double(libp->para[6]),(Axis_t)G__double(libp->para[7]));
+      result7->obj.i = (long)p;
+      result7->ref = (long)p;
+      result7->type = 'u';
+      result7->tagnum = G__get_linked_tagnum(&G__G__HistLN_TH2F);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2F_TH2F_5_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   TH2F *p=NULL;
+      p = new TH2F(
+(const Text_t*)G__int(libp->para[0]),(const Text_t*)G__int(libp->para[1])
+,(Int_t)G__int(libp->para[2]),(Axis_t*)G__int(libp->para[3])
+,(Int_t)G__int(libp->para[4]),(Axis_t)G__double(libp->para[5])
+,(Axis_t)G__double(libp->para[6]));
+      result7->obj.i = (long)p;
+      result7->ref = (long)p;
+      result7->type = 'u';
+      result7->tagnum = G__get_linked_tagnum(&G__G__HistLN_TH2F);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2F_TH2F_6_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   TH2F *p=NULL;
+      p = new TH2F(
+(const Text_t*)G__int(libp->para[0]),(const Text_t*)G__int(libp->para[1])
+,(Int_t)G__int(libp->para[2]),(Axis_t)G__double(libp->para[3])
+,(Axis_t)G__double(libp->para[4]),(Int_t)G__int(libp->para[5])
+,(Axis_t*)G__int(libp->para[6]));
+      result7->obj.i = (long)p;
+      result7->ref = (long)p;
+      result7->type = 'u';
+      result7->tagnum = G__get_linked_tagnum(&G__G__HistLN_TH2F);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2F_TH2F_7_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   TH2F *p=NULL;
+      p = new TH2F(
+(const Text_t*)G__int(libp->para[0]),(const Text_t*)G__int(libp->para[1])
+,(Int_t)G__int(libp->para[2]),(Axis_t*)G__int(libp->para[3])
+,(Int_t)G__int(libp->para[4]),(Axis_t*)G__int(libp->para[5]));
+      result7->obj.i = (long)p;
+      result7->ref = (long)p;
+      result7->type = 'u';
+      result7->tagnum = G__get_linked_tagnum(&G__G__HistLN_TH2F);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2F_TH2F_8_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   TH2F *p=NULL;
+      p = new TH2F(*(TH2F*)libp->para[0].ref);
+      result7->obj.i = (long)p;
+      result7->ref = (long)p;
+      result7->type = 'u';
+      result7->tagnum = G__get_linked_tagnum(&G__G__HistLN_TH2F);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2F_Copy_0_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH2F*)(G__getstructoffset()))->Copy(*(TObject*)libp->para[0].ref);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2F_DrawCopy_1_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 1:
+      G__setnull(result7);
+      ((TH2F*)(G__getstructoffset()))->DrawCopy((Option_t*)G__int(libp->para[0]));
+      break;
+   case 0:
+      G__setnull(result7);
+      ((TH2F*)(G__getstructoffset()))->DrawCopy();
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2F_Fill_2_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH2F*)(G__getstructoffset()))->Fill((Axis_t)G__double(libp->para[0]),(Axis_t)G__double(libp->para[1]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2F_Fill_3_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH2F*)(G__getstructoffset()))->Fill((Axis_t)G__double(libp->para[0]),(Axis_t)G__double(libp->para[1])
+,(Stat_t)G__double(libp->para[2]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2F_GetCorrelationFactor_4_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 2:
+      G__letdouble(result7,100,(double)((TH2F*)(G__getstructoffset()))->GetCorrelationFactor((Int_t)G__int(libp->para[0]),(Int_t)G__int(libp->para[1])));
+      break;
+   case 1:
+      G__letdouble(result7,100,(double)((TH2F*)(G__getstructoffset()))->GetCorrelationFactor((Int_t)G__int(libp->para[0])));
+      break;
+   case 0:
+      G__letdouble(result7,100,(double)((TH2F*)(G__getstructoffset()))->GetCorrelationFactor());
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2F_GetCovariance_5_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 2:
+      G__letdouble(result7,100,(double)((TH2F*)(G__getstructoffset()))->GetCovariance((Int_t)G__int(libp->para[0]),(Int_t)G__int(libp->para[1])));
+      break;
+   case 1:
+      G__letdouble(result7,100,(double)((TH2F*)(G__getstructoffset()))->GetCovariance((Int_t)G__int(libp->para[0])));
+      break;
+   case 0:
+      G__letdouble(result7,100,(double)((TH2F*)(G__getstructoffset()))->GetCovariance());
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2F_GetMean_6_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 1:
+      G__letdouble(result7,100,(double)((TH2F*)(G__getstructoffset()))->GetMean((Int_t)G__int(libp->para[0])));
+      break;
+   case 0:
+      G__letdouble(result7,100,(double)((TH2F*)(G__getstructoffset()))->GetMean());
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2F_GetRMS_7_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 1:
+      G__letdouble(result7,100,(double)((TH2F*)(G__getstructoffset()))->GetRMS((Int_t)G__int(libp->para[0])));
+      break;
+   case 0:
+      G__letdouble(result7,100,(double)((TH2F*)(G__getstructoffset()))->GetRMS());
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2F_operatoreQ_8_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      {
+        TH2F& obj=((TH2F*)(G__getstructoffset()))->operator=(*(TH2F*)libp->para[0].ref);
+         result7->ref=(long)(&obj); result7->obj.i=(long)(&obj);
+      }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2F_DeclFileName_9_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,67,(long)((TH2F*)(G__getstructoffset()))->DeclFileName());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2F_DeclFileLine_0_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TH2F*)(G__getstructoffset()))->DeclFileLine());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2F_ImplFileName_1_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,67,(long)((TH2F*)(G__getstructoffset()))->ImplFileName());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2F_ImplFileLine_2_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TH2F*)(G__getstructoffset()))->ImplFileLine());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2F_Class_Version_3_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,115,(long)((TH2F*)(G__getstructoffset()))->Class_Version());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2F_Class_4_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,85,(long)((TH2F*)(G__getstructoffset()))->Class());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2F_Dictionary_5_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH2F*)(G__getstructoffset()))->Dictionary();
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2F_IsA_6_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,85,(long)((TH2F*)(G__getstructoffset()))->IsA());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2F_ShowMembers_7_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH2F*)(G__getstructoffset()))->ShowMembers(*(TMemberInspector*)libp->para[0].ref,(char*)G__int(libp->para[1]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2F_Streamer_8_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH2F*)(G__getstructoffset()))->Streamer(*(TBuffer*)libp->para[0].ref);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+// automatic destructor
+static int G__TH2F_wATH2F_9_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   if(G__getaryconstruct())
+     if(G__PVOID==G__getgvp())
+       delete[] (TH2F *)(G__getstructoffset());
+     else
+       for(int i=G__getaryconstruct()-1;i>=0;i--)
+         delete (TH2F *)((G__getstructoffset())+sizeof(TH2F)*i);
+   else  delete (TH2F *)(G__getstructoffset());
+      G__setnull(result7);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+
+/* TH2D */
+static int G__TH2D_TH2D_3_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   TH2D *p=NULL;
+   if(G__getaryconstruct()) p=new TH2D[G__getaryconstruct()];
+   else                    p=new TH2D;
+      result7->obj.i = (long)p;
+      result7->ref = (long)p;
+      result7->type = 'u';
+      result7->tagnum = G__get_linked_tagnum(&G__G__HistLN_TH2D);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2D_TH2D_4_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   TH2D *p=NULL;
+      p = new TH2D(
+(const Text_t*)G__int(libp->para[0]),(const Text_t*)G__int(libp->para[1])
+,(Int_t)G__int(libp->para[2]),(Axis_t)G__double(libp->para[3])
+,(Axis_t)G__double(libp->para[4]),(Int_t)G__int(libp->para[5])
+,(Axis_t)G__double(libp->para[6]),(Axis_t)G__double(libp->para[7]));
+      result7->obj.i = (long)p;
+      result7->ref = (long)p;
+      result7->type = 'u';
+      result7->tagnum = G__get_linked_tagnum(&G__G__HistLN_TH2D);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2D_TH2D_5_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   TH2D *p=NULL;
+      p = new TH2D(
+(const Text_t*)G__int(libp->para[0]),(const Text_t*)G__int(libp->para[1])
+,(Int_t)G__int(libp->para[2]),(Axis_t*)G__int(libp->para[3])
+,(Int_t)G__int(libp->para[4]),(Axis_t)G__double(libp->para[5])
+,(Axis_t)G__double(libp->para[6]));
+      result7->obj.i = (long)p;
+      result7->ref = (long)p;
+      result7->type = 'u';
+      result7->tagnum = G__get_linked_tagnum(&G__G__HistLN_TH2D);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2D_TH2D_6_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   TH2D *p=NULL;
+      p = new TH2D(
+(const Text_t*)G__int(libp->para[0]),(const Text_t*)G__int(libp->para[1])
+,(Int_t)G__int(libp->para[2]),(Axis_t)G__double(libp->para[3])
+,(Axis_t)G__double(libp->para[4]),(Int_t)G__int(libp->para[5])
+,(Axis_t*)G__int(libp->para[6]));
+      result7->obj.i = (long)p;
+      result7->ref = (long)p;
+      result7->type = 'u';
+      result7->tagnum = G__get_linked_tagnum(&G__G__HistLN_TH2D);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2D_TH2D_7_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   TH2D *p=NULL;
+      p = new TH2D(
+(const Text_t*)G__int(libp->para[0]),(const Text_t*)G__int(libp->para[1])
+,(Int_t)G__int(libp->para[2]),(Axis_t*)G__int(libp->para[3])
+,(Int_t)G__int(libp->para[4]),(Axis_t*)G__int(libp->para[5]));
+      result7->obj.i = (long)p;
+      result7->ref = (long)p;
+      result7->type = 'u';
+      result7->tagnum = G__get_linked_tagnum(&G__G__HistLN_TH2D);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2D_TH2D_8_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   TH2D *p=NULL;
+      p = new TH2D(*(TH2D*)libp->para[0].ref);
+      result7->obj.i = (long)p;
+      result7->ref = (long)p;
+      result7->type = 'u';
+      result7->tagnum = G__get_linked_tagnum(&G__G__HistLN_TH2D);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2D_Copy_0_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH2D*)(G__getstructoffset()))->Copy(*(TObject*)libp->para[0].ref);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2D_DrawCopy_1_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 1:
+      G__setnull(result7);
+      ((TH2D*)(G__getstructoffset()))->DrawCopy((Option_t*)G__int(libp->para[0]));
+      break;
+   case 0:
+      G__setnull(result7);
+      ((TH2D*)(G__getstructoffset()))->DrawCopy();
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2D_Fill_2_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH2D*)(G__getstructoffset()))->Fill((Axis_t)G__double(libp->para[0]),(Axis_t)G__double(libp->para[1]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2D_Fill_3_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH2D*)(G__getstructoffset()))->Fill((Axis_t)G__double(libp->para[0]),(Axis_t)G__double(libp->para[1])
+,(Stat_t)G__double(libp->para[2]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2D_GetCorrelationFactor_4_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 2:
+      G__letdouble(result7,100,(double)((TH2D*)(G__getstructoffset()))->GetCorrelationFactor((Int_t)G__int(libp->para[0]),(Int_t)G__int(libp->para[1])));
+      break;
+   case 1:
+      G__letdouble(result7,100,(double)((TH2D*)(G__getstructoffset()))->GetCorrelationFactor((Int_t)G__int(libp->para[0])));
+      break;
+   case 0:
+      G__letdouble(result7,100,(double)((TH2D*)(G__getstructoffset()))->GetCorrelationFactor());
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2D_GetCovariance_5_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 2:
+      G__letdouble(result7,100,(double)((TH2D*)(G__getstructoffset()))->GetCovariance((Int_t)G__int(libp->para[0]),(Int_t)G__int(libp->para[1])));
+      break;
+   case 1:
+      G__letdouble(result7,100,(double)((TH2D*)(G__getstructoffset()))->GetCovariance((Int_t)G__int(libp->para[0])));
+      break;
+   case 0:
+      G__letdouble(result7,100,(double)((TH2D*)(G__getstructoffset()))->GetCovariance());
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2D_GetMean_6_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 1:
+      G__letdouble(result7,100,(double)((TH2D*)(G__getstructoffset()))->GetMean((Int_t)G__int(libp->para[0])));
+      break;
+   case 0:
+      G__letdouble(result7,100,(double)((TH2D*)(G__getstructoffset()))->GetMean());
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2D_GetRMS_7_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   switch(libp->paran) {
+   case 1:
+      G__letdouble(result7,100,(double)((TH2D*)(G__getstructoffset()))->GetRMS((Int_t)G__int(libp->para[0])));
+      break;
+   case 0:
+      G__letdouble(result7,100,(double)((TH2D*)(G__getstructoffset()))->GetRMS());
+      break;
+   }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2D_operatoreQ_8_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      {
+        TH2D& obj=((TH2D*)(G__getstructoffset()))->operator=(*(TH2D*)libp->para[0].ref);
+         result7->ref=(long)(&obj); result7->obj.i=(long)(&obj);
+      }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2D_DeclFileName_9_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,67,(long)((TH2D*)(G__getstructoffset()))->DeclFileName());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2D_DeclFileLine_0_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TH2D*)(G__getstructoffset()))->DeclFileLine());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2D_ImplFileName_1_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,67,(long)((TH2D*)(G__getstructoffset()))->ImplFileName());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2D_ImplFileLine_2_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TH2D*)(G__getstructoffset()))->ImplFileLine());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2D_Class_Version_3_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,115,(long)((TH2D*)(G__getstructoffset()))->Class_Version());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2D_Class_4_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,85,(long)((TH2D*)(G__getstructoffset()))->Class());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2D_Dictionary_5_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH2D*)(G__getstructoffset()))->Dictionary();
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2D_IsA_6_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,85,(long)((TH2D*)(G__getstructoffset()))->IsA());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2D_ShowMembers_7_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH2D*)(G__getstructoffset()))->ShowMembers(*(TMemberInspector*)libp->para[0].ref,(char*)G__int(libp->para[1]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH2D_Streamer_8_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH2D*)(G__getstructoffset()))->Streamer(*(TBuffer*)libp->para[0].ref);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+// automatic destructor
+static int G__TH2D_wATH2D_9_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   if(G__getaryconstruct())
+     if(G__PVOID==G__getgvp())
+       delete[] (TH2D *)(G__getstructoffset());
+     else
+       for(int i=G__getaryconstruct()-1;i>=0;i--)
+         delete (TH2D *)((G__getstructoffset())+sizeof(TH2D)*i);
+   else  delete (TH2D *)(G__getstructoffset());
+      G__setnull(result7);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+
+/* TH3 */
+static int G__TH3_TH3_1_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   TH3 *p=NULL;
+   if(G__getaryconstruct()) p=new TH3[G__getaryconstruct()];
+   else                    p=new TH3;
+      result7->obj.i = (long)p;
+      result7->ref = (long)p;
+      result7->type = 'u';
+      result7->tagnum = G__get_linked_tagnum(&G__G__HistLN_TH3);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH3_DeclFileName_3_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,67,(long)((TH3*)(G__getstructoffset()))->DeclFileName());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH3_DeclFileLine_4_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TH3*)(G__getstructoffset()))->DeclFileLine());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH3_ImplFileName_5_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,67,(long)((TH3*)(G__getstructoffset()))->ImplFileName());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH3_ImplFileLine_6_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TH3*)(G__getstructoffset()))->ImplFileLine());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH3_Class_Version_7_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,115,(long)((TH3*)(G__getstructoffset()))->Class_Version());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH3_Class_8_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,85,(long)((TH3*)(G__getstructoffset()))->Class());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH3_Dictionary_9_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH3*)(G__getstructoffset()))->Dictionary();
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH3_IsA_0_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,85,(long)((TH3*)(G__getstructoffset()))->IsA());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH3_ShowMembers_1_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH3*)(G__getstructoffset()))->ShowMembers(*(TMemberInspector*)libp->para[0].ref,(char*)G__int(libp->para[1]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH3_Streamer_2_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH3*)(G__getstructoffset()))->Streamer(*(TBuffer*)libp->para[0].ref);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+// automatic copy constructor
+static int G__TH3_TH3_3_1(G__value *result7,char *funcname,struct G__param *libp,int hash)
+{
+   TH3 *p;
+   if(1!=libp->paran) ;
+   p=new TH3(*(TH3*)G__int(libp->para[0]));
+   result7->obj.i = (long)p;
+   result7->ref = (long)p;
+   result7->type = 'u';
+   result7->tagnum = G__get_linked_tagnum(&G__G__HistLN_TH3);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+// automatic destructor
+static int G__TH3_wATH3_4_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   if(G__getaryconstruct())
+     if(G__PVOID==G__getgvp())
+       delete[] (TH3 *)(G__getstructoffset());
+     else
+       for(int i=G__getaryconstruct()-1;i>=0;i--)
+         delete (TH3 *)((G__getstructoffset())+sizeof(TH3)*i);
+   else  delete (TH3 *)(G__getstructoffset());
+      G__setnull(result7);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+
+/* TH3C */
+static int G__TH3C_TH3C_0_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   TH3C *p=NULL;
+   if(G__getaryconstruct()) p=new TH3C[G__getaryconstruct()];
+   else                    p=new TH3C;
+      result7->obj.i = (long)p;
+      result7->ref = (long)p;
+      result7->type = 'u';
+      result7->tagnum = G__get_linked_tagnum(&G__G__HistLN_TH3C);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH3C_TH3C_1_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   TH3C *p=NULL;
+      p = new TH3C(
+(const Text_t*)G__int(libp->para[0]),(const Text_t*)G__int(libp->para[1])
+,(Int_t)G__int(libp->para[2]),(Axis_t)G__double(libp->para[3])
+,(Axis_t)G__double(libp->para[4]),(Int_t)G__int(libp->para[5])
+,(Axis_t)G__double(libp->para[6]),(Axis_t)G__double(libp->para[7])
+,(Int_t)G__int(libp->para[8]),(Axis_t)G__double(libp->para[9])
+,(Axis_t)G__double(libp->para[10]));
+      result7->obj.i = (long)p;
+      result7->ref = (long)p;
+      result7->type = 'u';
+      result7->tagnum = G__get_linked_tagnum(&G__G__HistLN_TH3C);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH3C_TH3C_2_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   TH3C *p=NULL;
+      p = new TH3C(
+(const Text_t*)G__int(libp->para[0]),(const Text_t*)G__int(libp->para[1])
+,(Int_t)G__int(libp->para[2]),(Axis_t*)G__int(libp->para[3])
+,(Int_t)G__int(libp->para[4]),(Axis_t*)G__int(libp->para[5])
+,(Int_t)G__int(libp->para[6]),(Axis_t*)G__int(libp->para[7]));
+      result7->obj.i = (long)p;
+      result7->ref = (long)p;
+      result7->type = 'u';
+      result7->tagnum = G__get_linked_tagnum(&G__G__HistLN_TH3C);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH3C_TH3C_3_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   TH3C *p=NULL;
+      p = new TH3C(*(TH3C*)libp->para[0].ref);
+      result7->obj.i = (long)p;
+      result7->ref = (long)p;
+      result7->type = 'u';
+      result7->tagnum = G__get_linked_tagnum(&G__G__HistLN_TH3C);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH3C_Copy_5_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH3C*)(G__getstructoffset()))->Copy(*(TObject*)libp->para[0].ref);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH3C_Fill3_6_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH3C*)(G__getstructoffset()))->Fill3((Axis_t)G__double(libp->para[0]),(Axis_t)G__double(libp->para[1])
+,(Axis_t)G__double(libp->para[2]),(Stat_t)G__double(libp->para[3]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH3C_Is3D_7_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,98,(long)((TH3C*)(G__getstructoffset()))->Is3D());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH3C_operatoreQ_8_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      {
+        TH3C& obj=((TH3C*)(G__getstructoffset()))->operator=(*(TH3C*)libp->para[0].ref);
+         result7->ref=(long)(&obj); result7->obj.i=(long)(&obj);
+      }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH3C_DeclFileName_9_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,67,(long)((TH3C*)(G__getstructoffset()))->DeclFileName());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH3C_DeclFileLine_0_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TH3C*)(G__getstructoffset()))->DeclFileLine());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH3C_ImplFileName_1_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,67,(long)((TH3C*)(G__getstructoffset()))->ImplFileName());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH3C_ImplFileLine_2_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TH3C*)(G__getstructoffset()))->ImplFileLine());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH3C_Class_Version_3_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,115,(long)((TH3C*)(G__getstructoffset()))->Class_Version());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH3C_Class_4_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,85,(long)((TH3C*)(G__getstructoffset()))->Class());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH3C_Dictionary_5_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH3C*)(G__getstructoffset()))->Dictionary();
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH3C_IsA_6_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,85,(long)((TH3C*)(G__getstructoffset()))->IsA());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH3C_ShowMembers_7_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH3C*)(G__getstructoffset()))->ShowMembers(*(TMemberInspector*)libp->para[0].ref,(char*)G__int(libp->para[1]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH3C_Streamer_8_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH3C*)(G__getstructoffset()))->Streamer(*(TBuffer*)libp->para[0].ref);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+// automatic destructor
+static int G__TH3C_wATH3C_9_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   if(G__getaryconstruct())
+     if(G__PVOID==G__getgvp())
+       delete[] (TH3C *)(G__getstructoffset());
+     else
+       for(int i=G__getaryconstruct()-1;i>=0;i--)
+         delete (TH3C *)((G__getstructoffset())+sizeof(TH3C)*i);
+   else  delete (TH3C *)(G__getstructoffset());
+      G__setnull(result7);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+
+/* TH3S */
+static int G__TH3S_TH3S_0_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   TH3S *p=NULL;
+   if(G__getaryconstruct()) p=new TH3S[G__getaryconstruct()];
+   else                    p=new TH3S;
+      result7->obj.i = (long)p;
+      result7->ref = (long)p;
+      result7->type = 'u';
+      result7->tagnum = G__get_linked_tagnum(&G__G__HistLN_TH3S);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH3S_TH3S_1_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   TH3S *p=NULL;
+      p = new TH3S(
+(const Text_t*)G__int(libp->para[0]),(const Text_t*)G__int(libp->para[1])
+,(Int_t)G__int(libp->para[2]),(Axis_t)G__double(libp->para[3])
+,(Axis_t)G__double(libp->para[4]),(Int_t)G__int(libp->para[5])
+,(Axis_t)G__double(libp->para[6]),(Axis_t)G__double(libp->para[7])
+,(Int_t)G__int(libp->para[8]),(Axis_t)G__double(libp->para[9])
+,(Axis_t)G__double(libp->para[10]));
+      result7->obj.i = (long)p;
+      result7->ref = (long)p;
+      result7->type = 'u';
+      result7->tagnum = G__get_linked_tagnum(&G__G__HistLN_TH3S);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH3S_TH3S_2_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   TH3S *p=NULL;
+      p = new TH3S(
+(const Text_t*)G__int(libp->para[0]),(const Text_t*)G__int(libp->para[1])
+,(Int_t)G__int(libp->para[2]),(Axis_t*)G__int(libp->para[3])
+,(Int_t)G__int(libp->para[4]),(Axis_t*)G__int(libp->para[5])
+,(Int_t)G__int(libp->para[6]),(Axis_t*)G__int(libp->para[7]));
+      result7->obj.i = (long)p;
+      result7->ref = (long)p;
+      result7->type = 'u';
+      result7->tagnum = G__get_linked_tagnum(&G__G__HistLN_TH3S);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH3S_TH3S_3_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   TH3S *p=NULL;
+      p = new TH3S(*(TH3S*)libp->para[0].ref);
+      result7->obj.i = (long)p;
+      result7->ref = (long)p;
+      result7->type = 'u';
+      result7->tagnum = G__get_linked_tagnum(&G__G__HistLN_TH3S);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH3S_Copy_5_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH3S*)(G__getstructoffset()))->Copy(*(TObject*)libp->para[0].ref);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH3S_Fill3_6_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH3S*)(G__getstructoffset()))->Fill3((Axis_t)G__double(libp->para[0]),(Axis_t)G__double(libp->para[1])
+,(Axis_t)G__double(libp->para[2]),(Stat_t)G__double(libp->para[3]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH3S_Is3D_7_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,98,(long)((TH3S*)(G__getstructoffset()))->Is3D());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH3S_operatoreQ_8_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      {
+        TH3S& obj=((TH3S*)(G__getstructoffset()))->operator=(*(TH3S*)libp->para[0].ref);
+         result7->ref=(long)(&obj); result7->obj.i=(long)(&obj);
+      }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH3S_DeclFileName_9_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,67,(long)((TH3S*)(G__getstructoffset()))->DeclFileName());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH3S_DeclFileLine_0_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TH3S*)(G__getstructoffset()))->DeclFileLine());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH3S_ImplFileName_1_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,67,(long)((TH3S*)(G__getstructoffset()))->ImplFileName());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH3S_ImplFileLine_2_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TH3S*)(G__getstructoffset()))->ImplFileLine());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH3S_Class_Version_3_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,115,(long)((TH3S*)(G__getstructoffset()))->Class_Version());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH3S_Class_4_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,85,(long)((TH3S*)(G__getstructoffset()))->Class());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH3S_Dictionary_5_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH3S*)(G__getstructoffset()))->Dictionary();
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH3S_IsA_6_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,85,(long)((TH3S*)(G__getstructoffset()))->IsA());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH3S_ShowMembers_7_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH3S*)(G__getstructoffset()))->ShowMembers(*(TMemberInspector*)libp->para[0].ref,(char*)G__int(libp->para[1]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH3S_Streamer_8_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH3S*)(G__getstructoffset()))->Streamer(*(TBuffer*)libp->para[0].ref);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+// automatic destructor
+static int G__TH3S_wATH3S_9_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   if(G__getaryconstruct())
+     if(G__PVOID==G__getgvp())
+       delete[] (TH3S *)(G__getstructoffset());
+     else
+       for(int i=G__getaryconstruct()-1;i>=0;i--)
+         delete (TH3S *)((G__getstructoffset())+sizeof(TH3S)*i);
+   else  delete (TH3S *)(G__getstructoffset());
+      G__setnull(result7);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+
+/* TH3F */
+static int G__TH3F_TH3F_0_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   TH3F *p=NULL;
+   if(G__getaryconstruct()) p=new TH3F[G__getaryconstruct()];
+   else                    p=new TH3F;
+      result7->obj.i = (long)p;
+      result7->ref = (long)p;
+      result7->type = 'u';
+      result7->tagnum = G__get_linked_tagnum(&G__G__HistLN_TH3F);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH3F_TH3F_1_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   TH3F *p=NULL;
+      p = new TH3F(
+(const Text_t*)G__int(libp->para[0]),(const Text_t*)G__int(libp->para[1])
+,(Int_t)G__int(libp->para[2]),(Axis_t)G__double(libp->para[3])
+,(Axis_t)G__double(libp->para[4]),(Int_t)G__int(libp->para[5])
+,(Axis_t)G__double(libp->para[6]),(Axis_t)G__double(libp->para[7])
+,(Int_t)G__int(libp->para[8]),(Axis_t)G__double(libp->para[9])
+,(Axis_t)G__double(libp->para[10]));
+      result7->obj.i = (long)p;
+      result7->ref = (long)p;
+      result7->type = 'u';
+      result7->tagnum = G__get_linked_tagnum(&G__G__HistLN_TH3F);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH3F_TH3F_2_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   TH3F *p=NULL;
+      p = new TH3F(
+(const Text_t*)G__int(libp->para[0]),(const Text_t*)G__int(libp->para[1])
+,(Int_t)G__int(libp->para[2]),(Axis_t*)G__int(libp->para[3])
+,(Int_t)G__int(libp->para[4]),(Axis_t*)G__int(libp->para[5])
+,(Int_t)G__int(libp->para[6]),(Axis_t*)G__int(libp->para[7]));
+      result7->obj.i = (long)p;
+      result7->ref = (long)p;
+      result7->type = 'u';
+      result7->tagnum = G__get_linked_tagnum(&G__G__HistLN_TH3F);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH3F_TH3F_3_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   TH3F *p=NULL;
+      p = new TH3F(*(TH3F*)libp->para[0].ref);
+      result7->obj.i = (long)p;
+      result7->ref = (long)p;
+      result7->type = 'u';
+      result7->tagnum = G__get_linked_tagnum(&G__G__HistLN_TH3F);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH3F_Copy_5_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH3F*)(G__getstructoffset()))->Copy(*(TObject*)libp->para[0].ref);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH3F_Fill3_6_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH3F*)(G__getstructoffset()))->Fill3((Axis_t)G__double(libp->para[0]),(Axis_t)G__double(libp->para[1])
+,(Axis_t)G__double(libp->para[2]),(Stat_t)G__double(libp->para[3]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH3F_Is3D_7_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,98,(long)((TH3F*)(G__getstructoffset()))->Is3D());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH3F_Sizeof3D_8_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH3F*)(G__getstructoffset()))->Sizeof3D();
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH3F_operatoreQ_9_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      {
+        TH3F& obj=((TH3F*)(G__getstructoffset()))->operator=(*(TH3F*)libp->para[0].ref);
+         result7->ref=(long)(&obj); result7->obj.i=(long)(&obj);
+      }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH3F_DeclFileName_0_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,67,(long)((TH3F*)(G__getstructoffset()))->DeclFileName());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH3F_DeclFileLine_1_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TH3F*)(G__getstructoffset()))->DeclFileLine());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH3F_ImplFileName_2_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,67,(long)((TH3F*)(G__getstructoffset()))->ImplFileName());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH3F_ImplFileLine_3_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TH3F*)(G__getstructoffset()))->ImplFileLine());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH3F_Class_Version_4_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,115,(long)((TH3F*)(G__getstructoffset()))->Class_Version());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH3F_Class_5_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,85,(long)((TH3F*)(G__getstructoffset()))->Class());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH3F_Dictionary_6_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH3F*)(G__getstructoffset()))->Dictionary();
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH3F_IsA_7_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,85,(long)((TH3F*)(G__getstructoffset()))->IsA());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH3F_ShowMembers_8_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH3F*)(G__getstructoffset()))->ShowMembers(*(TMemberInspector*)libp->para[0].ref,(char*)G__int(libp->para[1]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH3F_Streamer_9_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH3F*)(G__getstructoffset()))->Streamer(*(TBuffer*)libp->para[0].ref);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+// automatic destructor
+static int G__TH3F_wATH3F_0_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   if(G__getaryconstruct())
+     if(G__PVOID==G__getgvp())
+       delete[] (TH3F *)(G__getstructoffset());
+     else
+       for(int i=G__getaryconstruct()-1;i>=0;i--)
+         delete (TH3F *)((G__getstructoffset())+sizeof(TH3F)*i);
+   else  delete (TH3F *)(G__getstructoffset());
+      G__setnull(result7);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+
+/* TH3D */
+static int G__TH3D_TH3D_0_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   TH3D *p=NULL;
+   if(G__getaryconstruct()) p=new TH3D[G__getaryconstruct()];
+   else                    p=new TH3D;
+      result7->obj.i = (long)p;
+      result7->ref = (long)p;
+      result7->type = 'u';
+      result7->tagnum = G__get_linked_tagnum(&G__G__HistLN_TH3D);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH3D_TH3D_1_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   TH3D *p=NULL;
+      p = new TH3D(
+(const Text_t*)G__int(libp->para[0]),(const Text_t*)G__int(libp->para[1])
+,(Int_t)G__int(libp->para[2]),(Axis_t)G__double(libp->para[3])
+,(Axis_t)G__double(libp->para[4]),(Int_t)G__int(libp->para[5])
+,(Axis_t)G__double(libp->para[6]),(Axis_t)G__double(libp->para[7])
+,(Int_t)G__int(libp->para[8]),(Axis_t)G__double(libp->para[9])
+,(Axis_t)G__double(libp->para[10]));
+      result7->obj.i = (long)p;
+      result7->ref = (long)p;
+      result7->type = 'u';
+      result7->tagnum = G__get_linked_tagnum(&G__G__HistLN_TH3D);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH3D_TH3D_2_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   TH3D *p=NULL;
+      p = new TH3D(
+(const Text_t*)G__int(libp->para[0]),(const Text_t*)G__int(libp->para[1])
+,(Int_t)G__int(libp->para[2]),(Axis_t*)G__int(libp->para[3])
+,(Int_t)G__int(libp->para[4]),(Axis_t*)G__int(libp->para[5])
+,(Int_t)G__int(libp->para[6]),(Axis_t*)G__int(libp->para[7]));
+      result7->obj.i = (long)p;
+      result7->ref = (long)p;
+      result7->type = 'u';
+      result7->tagnum = G__get_linked_tagnum(&G__G__HistLN_TH3D);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH3D_TH3D_3_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   TH3D *p=NULL;
+      p = new TH3D(*(TH3D*)libp->para[0].ref);
+      result7->obj.i = (long)p;
+      result7->ref = (long)p;
+      result7->type = 'u';
+      result7->tagnum = G__get_linked_tagnum(&G__G__HistLN_TH3D);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH3D_Copy_5_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH3D*)(G__getstructoffset()))->Copy(*(TObject*)libp->para[0].ref);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH3D_Fill3_6_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH3D*)(G__getstructoffset()))->Fill3((Axis_t)G__double(libp->para[0]),(Axis_t)G__double(libp->para[1])
+,(Axis_t)G__double(libp->para[2]),(Stat_t)G__double(libp->para[3]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH3D_Is3D_7_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,98,(long)((TH3D*)(G__getstructoffset()))->Is3D());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH3D_operatoreQ_8_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      {
+        TH3D& obj=((TH3D*)(G__getstructoffset()))->operator=(*(TH3D*)libp->para[0].ref);
+         result7->ref=(long)(&obj); result7->obj.i=(long)(&obj);
+      }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH3D_DeclFileName_9_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,67,(long)((TH3D*)(G__getstructoffset()))->DeclFileName());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH3D_DeclFileLine_0_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TH3D*)(G__getstructoffset()))->DeclFileLine());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH3D_ImplFileName_1_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,67,(long)((TH3D*)(G__getstructoffset()))->ImplFileName());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH3D_ImplFileLine_2_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((TH3D*)(G__getstructoffset()))->ImplFileLine());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH3D_Class_Version_3_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,115,(long)((TH3D*)(G__getstructoffset()))->Class_Version());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH3D_Class_4_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,85,(long)((TH3D*)(G__getstructoffset()))->Class());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH3D_Dictionary_5_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH3D*)(G__getstructoffset()))->Dictionary();
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH3D_IsA_6_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,85,(long)((TH3D*)(G__getstructoffset()))->IsA());
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH3D_ShowMembers_7_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH3D*)(G__getstructoffset()))->ShowMembers(*(TMemberInspector*)libp->para[0].ref,(char*)G__int(libp->para[1]));
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__TH3D_Streamer_8_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      G__setnull(result7);
+      ((TH3D*)(G__getstructoffset()))->Streamer(*(TBuffer*)libp->para[0].ref);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+// automatic destructor
+static int G__TH3D_wATH3D_9_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+   if(G__getaryconstruct())
+     if(G__PVOID==G__getgvp())
+       delete[] (TH3D *)(G__getstructoffset());
+     else
+       for(int i=G__getaryconstruct()-1;i>=0;i--)
+         delete (TH3D *)((G__getstructoffset())+sizeof(TH3D)*i);
+   else  delete (TH3D *)(G__getstructoffset());
+      G__setnull(result7);
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+
+/* Setting up global function */
+static int G___operatormU_3_15(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      {
+        TH1C *pobj,xobj=operator*((Float_t)G__double(libp->para[0]),*(TH1C*)libp->para[1].ref);
+        pobj=new TH1C(xobj);
+        result7->obj.i=(long)((void*)pobj); result7->ref=result7->obj.i;
+        G__store_tempobject(*result7);
+      }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G___operatormU_4_15(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      {
+        TH1C *pobj,xobj=operator*(*(TH1C*)libp->para[0].ref,(Float_t)G__double(libp->para[1]));
+        pobj=new TH1C(xobj);
+        result7->obj.i=(long)((void*)pobj); result7->ref=result7->obj.i;
+        G__store_tempobject(*result7);
+      }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G___operatorpL_5_15(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      {
+        TH1C *pobj,xobj=operator+(*(TH1C*)libp->para[0].ref,*(TH1C*)libp->para[1].ref);
+        pobj=new TH1C(xobj);
+        result7->obj.i=(long)((void*)pobj); result7->ref=result7->obj.i;
+        G__store_tempobject(*result7);
+      }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G___operatormI_6_15(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      {
+        TH1C *pobj,xobj=operator-(*(TH1C*)libp->para[0].ref,*(TH1C*)libp->para[1].ref);
+        pobj=new TH1C(xobj);
+        result7->obj.i=(long)((void*)pobj); result7->ref=result7->obj.i;
+        G__store_tempobject(*result7);
+      }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G___operatormU_7_15(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      {
+        TH1C *pobj,xobj=operator*(*(TH1C*)libp->para[0].ref,*(TH1C*)libp->para[1].ref);
+        pobj=new TH1C(xobj);
+        result7->obj.i=(long)((void*)pobj); result7->ref=result7->obj.i;
+        G__store_tempobject(*result7);
+      }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G___operatordI_8_15(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      {
+        TH1C *pobj,xobj=operator/(*(TH1C*)libp->para[0].ref,*(TH1C*)libp->para[1].ref);
+        pobj=new TH1C(xobj);
+        result7->obj.i=(long)((void*)pobj); result7->ref=result7->obj.i;
+        G__store_tempobject(*result7);
+      }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G___operatormU_0_16(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      {
+        TH1S *pobj,xobj=operator*((Float_t)G__double(libp->para[0]),*(TH1S*)libp->para[1].ref);
+        pobj=new TH1S(xobj);
+        result7->obj.i=(long)((void*)pobj); result7->ref=result7->obj.i;
+        G__store_tempobject(*result7);
+      }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G___operatormU_1_16(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      {
+        TH1S *pobj,xobj=operator*(*(TH1S*)libp->para[0].ref,(Float_t)G__double(libp->para[1]));
+        pobj=new TH1S(xobj);
+        result7->obj.i=(long)((void*)pobj); result7->ref=result7->obj.i;
+        G__store_tempobject(*result7);
+      }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G___operatorpL_2_16(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      {
+        TH1S *pobj,xobj=operator+(*(TH1S*)libp->para[0].ref,*(TH1S*)libp->para[1].ref);
+        pobj=new TH1S(xobj);
+        result7->obj.i=(long)((void*)pobj); result7->ref=result7->obj.i;
+        G__store_tempobject(*result7);
+      }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G___operatormI_3_16(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      {
+        TH1S *pobj,xobj=operator-(*(TH1S*)libp->para[0].ref,*(TH1S*)libp->para[1].ref);
+        pobj=new TH1S(xobj);
+        result7->obj.i=(long)((void*)pobj); result7->ref=result7->obj.i;
+        G__store_tempobject(*result7);
+      }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G___operatormU_4_16(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      {
+        TH1S *pobj,xobj=operator*(*(TH1S*)libp->para[0].ref,*(TH1S*)libp->para[1].ref);
+        pobj=new TH1S(xobj);
+        result7->obj.i=(long)((void*)pobj); result7->ref=result7->obj.i;
+        G__store_tempobject(*result7);
+      }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G___operatordI_5_16(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      {
+        TH1S *pobj,xobj=operator/(*(TH1S*)libp->para[0].ref,*(TH1S*)libp->para[1].ref);
+        pobj=new TH1S(xobj);
+        result7->obj.i=(long)((void*)pobj); result7->ref=result7->obj.i;
+        G__store_tempobject(*result7);
+      }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G___operatormU_7_16(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      {
+        TH1F *pobj,xobj=operator*((Float_t)G__double(libp->para[0]),*(TH1F*)libp->para[1].ref);
+        pobj=new TH1F(xobj);
+        result7->obj.i=(long)((void*)pobj); result7->ref=result7->obj.i;
+        G__store_tempobject(*result7);
+      }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G___operatormU_8_16(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      {
+        TH1F *pobj,xobj=operator*(*(TH1F*)libp->para[0].ref,(Float_t)G__double(libp->para[1]));
+        pobj=new TH1F(xobj);
+        result7->obj.i=(long)((void*)pobj); result7->ref=result7->obj.i;
+        G__store_tempobject(*result7);
+      }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G___operatorpL_9_16(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      {
+        TH1F *pobj,xobj=operator+(*(TH1F*)libp->para[0].ref,*(TH1F*)libp->para[1].ref);
+        pobj=new TH1F(xobj);
+        result7->obj.i=(long)((void*)pobj); result7->ref=result7->obj.i;
+        G__store_tempobject(*result7);
+      }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G___operatormI_0_17(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      {
+        TH1F *pobj,xobj=operator-(*(TH1F*)libp->para[0].ref,*(TH1F*)libp->para[1].ref);
+        pobj=new TH1F(xobj);
+        result7->obj.i=(long)((void*)pobj); result7->ref=result7->obj.i;
+        G__store_tempobject(*result7);
+      }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G___operatormU_1_17(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      {
+        TH1F *pobj,xobj=operator*(*(TH1F*)libp->para[0].ref,*(TH1F*)libp->para[1].ref);
+        pobj=new TH1F(xobj);
+        result7->obj.i=(long)((void*)pobj); result7->ref=result7->obj.i;
+        G__store_tempobject(*result7);
+      }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G___operatordI_2_17(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      {
+        TH1F *pobj,xobj=operator/(*(TH1F*)libp->para[0].ref,*(TH1F*)libp->para[1].ref);
+        pobj=new TH1F(xobj);
+        result7->obj.i=(long)((void*)pobj); result7->ref=result7->obj.i;
+        G__store_tempobject(*result7);
+      }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G___operatormU_4_17(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      {
+        TH1D *pobj,xobj=operator*((Float_t)G__double(libp->para[0]),*(TH1D*)libp->para[1].ref);
+        pobj=new TH1D(xobj);
+        result7->obj.i=(long)((void*)pobj); result7->ref=result7->obj.i;
+        G__store_tempobject(*result7);
+      }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G___operatormU_5_17(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      {
+        TH1D *pobj,xobj=operator*(*(TH1D*)libp->para[0].ref,(Float_t)G__double(libp->para[1]));
+        pobj=new TH1D(xobj);
+        result7->obj.i=(long)((void*)pobj); result7->ref=result7->obj.i;
+        G__store_tempobject(*result7);
+      }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G___operatorpL_6_17(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      {
+        TH1D *pobj,xobj=operator+(*(TH1D*)libp->para[0].ref,*(TH1D*)libp->para[1].ref);
+        pobj=new TH1D(xobj);
+        result7->obj.i=(long)((void*)pobj); result7->ref=result7->obj.i;
+        G__store_tempobject(*result7);
+      }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G___operatormI_7_17(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      {
+        TH1D *pobj,xobj=operator-(*(TH1D*)libp->para[0].ref,*(TH1D*)libp->para[1].ref);
+        pobj=new TH1D(xobj);
+        result7->obj.i=(long)((void*)pobj); result7->ref=result7->obj.i;
+        G__store_tempobject(*result7);
+      }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G___operatormU_8_17(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      {
+        TH1D *pobj,xobj=operator*(*(TH1D*)libp->para[0].ref,*(TH1D*)libp->para[1].ref);
+        pobj=new TH1D(xobj);
+        result7->obj.i=(long)((void*)pobj); result7->ref=result7->obj.i;
+        G__store_tempobject(*result7);
+      }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G___operatordI_9_17(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      {
+        TH1D *pobj,xobj=operator/(*(TH1D*)libp->para[0].ref,*(TH1D*)libp->para[1].ref);
+        pobj=new TH1D(xobj);
+        result7->obj.i=(long)((void*)pobj); result7->ref=result7->obj.i;
+        G__store_tempobject(*result7);
+      }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G___operatormU_2_18(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      {
+        TH2C *pobj,xobj=operator*((Float_t)G__double(libp->para[0]),*(TH2C*)libp->para[1].ref);
+        pobj=new TH2C(xobj);
+        result7->obj.i=(long)((void*)pobj); result7->ref=result7->obj.i;
+        G__store_tempobject(*result7);
+      }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G___operatormU_3_18(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      {
+        TH2C *pobj,xobj=operator*(*(TH2C*)libp->para[0].ref,(Float_t)G__double(libp->para[1]));
+        pobj=new TH2C(xobj);
+        result7->obj.i=(long)((void*)pobj); result7->ref=result7->obj.i;
+        G__store_tempobject(*result7);
+      }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G___operatorpL_4_18(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      {
+        TH2C *pobj,xobj=operator+(*(TH2C*)libp->para[0].ref,*(TH2C*)libp->para[1].ref);
+        pobj=new TH2C(xobj);
+        result7->obj.i=(long)((void*)pobj); result7->ref=result7->obj.i;
+        G__store_tempobject(*result7);
+      }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G___operatormI_5_18(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      {
+        TH2C *pobj,xobj=operator-(*(TH2C*)libp->para[0].ref,*(TH2C*)libp->para[1].ref);
+        pobj=new TH2C(xobj);
+        result7->obj.i=(long)((void*)pobj); result7->ref=result7->obj.i;
+        G__store_tempobject(*result7);
+      }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G___operatormU_6_18(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      {
+        TH2C *pobj,xobj=operator*(*(TH2C*)libp->para[0].ref,*(TH2C*)libp->para[1].ref);
+        pobj=new TH2C(xobj);
+        result7->obj.i=(long)((void*)pobj); result7->ref=result7->obj.i;
+        G__store_tempobject(*result7);
+      }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G___operatordI_7_18(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      {
+        TH2C *pobj,xobj=operator/(*(TH2C*)libp->para[0].ref,*(TH2C*)libp->para[1].ref);
+        pobj=new TH2C(xobj);
+        result7->obj.i=(long)((void*)pobj); result7->ref=result7->obj.i;
+        G__store_tempobject(*result7);
+      }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G___operatormU_9_18(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      {
+        TH2S *pobj,xobj=operator*((Float_t)G__double(libp->para[0]),*(TH2S*)libp->para[1].ref);
+        pobj=new TH2S(xobj);
+        result7->obj.i=(long)((void*)pobj); result7->ref=result7->obj.i;
+        G__store_tempobject(*result7);
+      }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G___operatormU_0_19(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      {
+        TH2S *pobj,xobj=operator*(*(TH2S*)libp->para[0].ref,(Float_t)G__double(libp->para[1]));
+        pobj=new TH2S(xobj);
+        result7->obj.i=(long)((void*)pobj); result7->ref=result7->obj.i;
+        G__store_tempobject(*result7);
+      }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G___operatorpL_1_19(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      {
+        TH2S *pobj,xobj=operator+(*(TH2S*)libp->para[0].ref,*(TH2S*)libp->para[1].ref);
+        pobj=new TH2S(xobj);
+        result7->obj.i=(long)((void*)pobj); result7->ref=result7->obj.i;
+        G__store_tempobject(*result7);
+      }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G___operatormI_2_19(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      {
+        TH2S *pobj,xobj=operator-(*(TH2S*)libp->para[0].ref,*(TH2S*)libp->para[1].ref);
+        pobj=new TH2S(xobj);
+        result7->obj.i=(long)((void*)pobj); result7->ref=result7->obj.i;
+        G__store_tempobject(*result7);
+      }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G___operatormU_3_19(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      {
+        TH2S *pobj,xobj=operator*(*(TH2S*)libp->para[0].ref,*(TH2S*)libp->para[1].ref);
+        pobj=new TH2S(xobj);
+        result7->obj.i=(long)((void*)pobj); result7->ref=result7->obj.i;
+        G__store_tempobject(*result7);
+      }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G___operatordI_4_19(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      {
+        TH2S *pobj,xobj=operator/(*(TH2S*)libp->para[0].ref,*(TH2S*)libp->para[1].ref);
+        pobj=new TH2S(xobj);
+        result7->obj.i=(long)((void*)pobj); result7->ref=result7->obj.i;
+        G__store_tempobject(*result7);
+      }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G___operatormU_6_19(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      {
+        TH2F *pobj,xobj=operator*((Float_t)G__double(libp->para[0]),*(TH2F*)libp->para[1].ref);
+        pobj=new TH2F(xobj);
+        result7->obj.i=(long)((void*)pobj); result7->ref=result7->obj.i;
+        G__store_tempobject(*result7);
+      }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G___operatormU_7_19(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      {
+        TH2F *pobj,xobj=operator*(*(TH2F*)libp->para[0].ref,(Float_t)G__double(libp->para[1]));
+        pobj=new TH2F(xobj);
+        result7->obj.i=(long)((void*)pobj); result7->ref=result7->obj.i;
+        G__store_tempobject(*result7);
+      }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G___operatorpL_8_19(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      {
+        TH2F *pobj,xobj=operator+(*(TH2F*)libp->para[0].ref,*(TH2F*)libp->para[1].ref);
+        pobj=new TH2F(xobj);
+        result7->obj.i=(long)((void*)pobj); result7->ref=result7->obj.i;
+        G__store_tempobject(*result7);
+      }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G___operatormI_9_19(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      {
+        TH2F *pobj,xobj=operator-(*(TH2F*)libp->para[0].ref,*(TH2F*)libp->para[1].ref);
+        pobj=new TH2F(xobj);
+        result7->obj.i=(long)((void*)pobj); result7->ref=result7->obj.i;
+        G__store_tempobject(*result7);
+      }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G___operatormU_0_20(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      {
+        TH2F *pobj,xobj=operator*(*(TH2F*)libp->para[0].ref,*(TH2F*)libp->para[1].ref);
+        pobj=new TH2F(xobj);
+        result7->obj.i=(long)((void*)pobj); result7->ref=result7->obj.i;
+        G__store_tempobject(*result7);
+      }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G___operatordI_1_20(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      {
+        TH2F *pobj,xobj=operator/(*(TH2F*)libp->para[0].ref,*(TH2F*)libp->para[1].ref);
+        pobj=new TH2F(xobj);
+        result7->obj.i=(long)((void*)pobj); result7->ref=result7->obj.i;
+        G__store_tempobject(*result7);
+      }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G___operatormU_3_20(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      {
+        TH2D *pobj,xobj=operator*((Float_t)G__double(libp->para[0]),*(TH2D*)libp->para[1].ref);
+        pobj=new TH2D(xobj);
+        result7->obj.i=(long)((void*)pobj); result7->ref=result7->obj.i;
+        G__store_tempobject(*result7);
+      }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G___operatormU_4_20(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      {
+        TH2D *pobj,xobj=operator*(*(TH2D*)libp->para[0].ref,(Float_t)G__double(libp->para[1]));
+        pobj=new TH2D(xobj);
+        result7->obj.i=(long)((void*)pobj); result7->ref=result7->obj.i;
+        G__store_tempobject(*result7);
+      }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G___operatorpL_5_20(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      {
+        TH2D *pobj,xobj=operator+(*(TH2D*)libp->para[0].ref,*(TH2D*)libp->para[1].ref);
+        pobj=new TH2D(xobj);
+        result7->obj.i=(long)((void*)pobj); result7->ref=result7->obj.i;
+        G__store_tempobject(*result7);
+      }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G___operatormI_6_20(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      {
+        TH2D *pobj,xobj=operator-(*(TH2D*)libp->para[0].ref,*(TH2D*)libp->para[1].ref);
+        pobj=new TH2D(xobj);
+        result7->obj.i=(long)((void*)pobj); result7->ref=result7->obj.i;
+        G__store_tempobject(*result7);
+      }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G___operatormU_7_20(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      {
+        TH2D *pobj,xobj=operator*(*(TH2D*)libp->para[0].ref,*(TH2D*)libp->para[1].ref);
+        pobj=new TH2D(xobj);
+        result7->obj.i=(long)((void*)pobj); result7->ref=result7->obj.i;
+        G__store_tempobject(*result7);
+      }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G___operatordI_8_20(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      {
+        TH2D *pobj,xobj=operator/(*(TH2D*)libp->para[0].ref,*(TH2D*)libp->para[1].ref);
+        pobj=new TH2D(xobj);
+        result7->obj.i=(long)((void*)pobj); result7->ref=result7->obj.i;
+        G__store_tempobject(*result7);
+      }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G___operatormU_1_21(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      {
+        TH3C *pobj,xobj=operator*((Float_t)G__double(libp->para[0]),*(TH3C*)libp->para[1].ref);
+        pobj=new TH3C(xobj);
+        result7->obj.i=(long)((void*)pobj); result7->ref=result7->obj.i;
+        G__store_tempobject(*result7);
+      }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G___operatormU_2_21(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      {
+        TH3C *pobj,xobj=operator*(*(TH3C*)libp->para[0].ref,(Float_t)G__double(libp->para[1]));
+        pobj=new TH3C(xobj);
+        result7->obj.i=(long)((void*)pobj); result7->ref=result7->obj.i;
+        G__store_tempobject(*result7);
+      }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G___operatorpL_3_21(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      {
+        TH3C *pobj,xobj=operator+(*(TH3C*)libp->para[0].ref,*(TH3C*)libp->para[1].ref);
+        pobj=new TH3C(xobj);
+        result7->obj.i=(long)((void*)pobj); result7->ref=result7->obj.i;
+        G__store_tempobject(*result7);
+      }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G___operatormI_4_21(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      {
+        TH3C *pobj,xobj=operator-(*(TH3C*)libp->para[0].ref,*(TH3C*)libp->para[1].ref);
+        pobj=new TH3C(xobj);
+        result7->obj.i=(long)((void*)pobj); result7->ref=result7->obj.i;
+        G__store_tempobject(*result7);
+      }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G___operatormU_5_21(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      {
+        TH3C *pobj,xobj=operator*(*(TH3C*)libp->para[0].ref,*(TH3C*)libp->para[1].ref);
+        pobj=new TH3C(xobj);
+        result7->obj.i=(long)((void*)pobj); result7->ref=result7->obj.i;
+        G__store_tempobject(*result7);
+      }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G___operatordI_6_21(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      {
+        TH3C *pobj,xobj=operator/(*(TH3C*)libp->para[0].ref,*(TH3C*)libp->para[1].ref);
+        pobj=new TH3C(xobj);
+        result7->obj.i=(long)((void*)pobj); result7->ref=result7->obj.i;
+        G__store_tempobject(*result7);
+      }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G___operatormU_8_21(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      {
+        TH3S *pobj,xobj=operator*((Float_t)G__double(libp->para[0]),*(TH3S*)libp->para[1].ref);
+        pobj=new TH3S(xobj);
+        result7->obj.i=(long)((void*)pobj); result7->ref=result7->obj.i;
+        G__store_tempobject(*result7);
+      }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G___operatormU_9_21(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      {
+        TH3S *pobj,xobj=operator*(*(TH3S*)libp->para[0].ref,(Float_t)G__double(libp->para[1]));
+        pobj=new TH3S(xobj);
+        result7->obj.i=(long)((void*)pobj); result7->ref=result7->obj.i;
+        G__store_tempobject(*result7);
+      }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G___operatorpL_0_22(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      {
+        TH3S *pobj,xobj=operator+(*(TH3S*)libp->para[0].ref,*(TH3S*)libp->para[1].ref);
+        pobj=new TH3S(xobj);
+        result7->obj.i=(long)((void*)pobj); result7->ref=result7->obj.i;
+        G__store_tempobject(*result7);
+      }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G___operatormI_1_22(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      {
+        TH3S *pobj,xobj=operator-(*(TH3S*)libp->para[0].ref,*(TH3S*)libp->para[1].ref);
+        pobj=new TH3S(xobj);
+        result7->obj.i=(long)((void*)pobj); result7->ref=result7->obj.i;
+        G__store_tempobject(*result7);
+      }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G___operatormU_2_22(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      {
+        TH3S *pobj,xobj=operator*(*(TH3S*)libp->para[0].ref,*(TH3S*)libp->para[1].ref);
+        pobj=new TH3S(xobj);
+        result7->obj.i=(long)((void*)pobj); result7->ref=result7->obj.i;
+        G__store_tempobject(*result7);
+      }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G___operatordI_3_22(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      {
+        TH3S *pobj,xobj=operator/(*(TH3S*)libp->para[0].ref,*(TH3S*)libp->para[1].ref);
+        pobj=new TH3S(xobj);
+        result7->obj.i=(long)((void*)pobj); result7->ref=result7->obj.i;
+        G__store_tempobject(*result7);
+      }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G___operatormU_5_22(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      {
+        TH3F *pobj,xobj=operator*((Float_t)G__double(libp->para[0]),*(TH3F*)libp->para[1].ref);
+        pobj=new TH3F(xobj);
+        result7->obj.i=(long)((void*)pobj); result7->ref=result7->obj.i;
+        G__store_tempobject(*result7);
+      }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G___operatormU_6_22(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      {
+        TH3F *pobj,xobj=operator*(*(TH3F*)libp->para[0].ref,(Float_t)G__double(libp->para[1]));
+        pobj=new TH3F(xobj);
+        result7->obj.i=(long)((void*)pobj); result7->ref=result7->obj.i;
+        G__store_tempobject(*result7);
+      }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G___operatorpL_7_22(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      {
+        TH3F *pobj,xobj=operator+(*(TH3F*)libp->para[0].ref,*(TH3F*)libp->para[1].ref);
+        pobj=new TH3F(xobj);
+        result7->obj.i=(long)((void*)pobj); result7->ref=result7->obj.i;
+        G__store_tempobject(*result7);
+      }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G___operatormI_8_22(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      {
+        TH3F *pobj,xobj=operator-(*(TH3F*)libp->para[0].ref,*(TH3F*)libp->para[1].ref);
+        pobj=new TH3F(xobj);
+        result7->obj.i=(long)((void*)pobj); result7->ref=result7->obj.i;
+        G__store_tempobject(*result7);
+      }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G___operatormU_9_22(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      {
+        TH3F *pobj,xobj=operator*(*(TH3F*)libp->para[0].ref,*(TH3F*)libp->para[1].ref);
+        pobj=new TH3F(xobj);
+        result7->obj.i=(long)((void*)pobj); result7->ref=result7->obj.i;
+        G__store_tempobject(*result7);
+      }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G___operatordI_0_23(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      {
+        TH3F *pobj,xobj=operator/(*(TH3F*)libp->para[0].ref,*(TH3F*)libp->para[1].ref);
+        pobj=new TH3F(xobj);
+        result7->obj.i=(long)((void*)pobj); result7->ref=result7->obj.i;
+        G__store_tempobject(*result7);
+      }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G___operatormU_2_23(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      {
+        TH3D *pobj,xobj=operator*((Float_t)G__double(libp->para[0]),*(TH3D*)libp->para[1].ref);
+        pobj=new TH3D(xobj);
+        result7->obj.i=(long)((void*)pobj); result7->ref=result7->obj.i;
+        G__store_tempobject(*result7);
+      }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G___operatormU_3_23(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      {
+        TH3D *pobj,xobj=operator*(*(TH3D*)libp->para[0].ref,(Float_t)G__double(libp->para[1]));
+        pobj=new TH3D(xobj);
+        result7->obj.i=(long)((void*)pobj); result7->ref=result7->obj.i;
+        G__store_tempobject(*result7);
+      }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G___operatorpL_4_23(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      {
+        TH3D *pobj,xobj=operator+(*(TH3D*)libp->para[0].ref,*(TH3D*)libp->para[1].ref);
+        pobj=new TH3D(xobj);
+        result7->obj.i=(long)((void*)pobj); result7->ref=result7->obj.i;
+        G__store_tempobject(*result7);
+      }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G___operatormI_5_23(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      {
+        TH3D *pobj,xobj=operator-(*(TH3D*)libp->para[0].ref,*(TH3D*)libp->para[1].ref);
+        pobj=new TH3D(xobj);
+        result7->obj.i=(long)((void*)pobj); result7->ref=result7->obj.i;
+        G__store_tempobject(*result7);
+      }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G___operatormU_6_23(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      {
+        TH3D *pobj,xobj=operator*(*(TH3D*)libp->para[0].ref,*(TH3D*)libp->para[1].ref);
+        pobj=new TH3D(xobj);
+        result7->obj.i=(long)((void*)pobj); result7->ref=result7->obj.i;
+        G__store_tempobject(*result7);
+      }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G___operatordI_7_23(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+      {
+        TH3D *pobj,xobj=operator/(*(TH3D*)libp->para[0].ref,*(TH3D*)libp->para[1].ref);
+        pobj=new TH3D(xobj);
+        result7->obj.i=(long)((void*)pobj); result7->ref=result7->obj.i;
+        G__store_tempobject(*result7);
+      }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+
+/*********************************************************
+* Member function Stub
+*********************************************************/
+
+/* TH1F */
+
+/* TH1D */
+
+/* TProfile */
+
+/* TH1 */
+
+/* TH1C */
+
+/* TH1S */
+
+/* TH2 */
+
+/* TH2C */
+
+/* TH2S */
+
+/* TH2F */
+
+/* TH2D */
+
+/* TH3 */
+
+/* TH3C */
+
+/* TH3S */
+
+/* TH3F */
+
+/* TH3D */
+
+/*********************************************************
+* Global function Stub
+*********************************************************/
+
+/*********************************************************
+* Get size of pointer to member function
+*********************************************************/
+class G__Sizep2memfuncG__Hist {
+ public:
+  G__Sizep2memfuncG__Hist() {p=&G__Sizep2memfuncG__Hist::sizep2memfunc;}
+    size_t sizep2memfunc() { return(sizeof(p)); }
+  private:
+    size_t (G__Sizep2memfuncG__Hist::*p)();
+};
+
+size_t G__get_sizep2memfuncG__Hist()
+{
+  G__Sizep2memfuncG__Hist a;
+  G__setsizep2memfunc((int)a.sizep2memfunc());
+  return((size_t)a.sizep2memfunc());
+}
+
+
+/*********************************************************
+* virtual base class offset calculation interface
+*********************************************************/
+
+   /* Setting up class inheritance */
+
+/*********************************************************
+* Inheritance information setup/
+*********************************************************/
+extern "C" void G__cpp_setup_inheritanceG__Hist() {
+
+   /* Setting up class inheritance */
+   if(0==G__getnumbaseclass(G__get_linked_tagnum(&G__G__HistLN_TH1F))) {
+     TH1F *G__Lderived;
+     G__Lderived=(TH1F*)0x1000;
+     {
+       TH1 *G__Lpbase=(TH1*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH1F),G__get_linked_tagnum(&G__G__HistLN_TH1),(long)G__Lpbase-(long)G__Lderived,1,1);
+     }
+     {
+       TNamed *G__Lpbase=(TNamed*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH1F),G__get_linked_tagnum(&G__G__HistLN_TNamed),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+     {
+       TObject *G__Lpbase=(TObject*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH1F),G__get_linked_tagnum(&G__G__HistLN_TObject),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+     {
+       TAttLine *G__Lpbase=(TAttLine*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH1F),G__get_linked_tagnum(&G__G__HistLN_TAttLine),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+     {
+       TAttFill *G__Lpbase=(TAttFill*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH1F),G__get_linked_tagnum(&G__G__HistLN_TAttFill),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+     {
+       TAttMarker *G__Lpbase=(TAttMarker*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH1F),G__get_linked_tagnum(&G__G__HistLN_TAttMarker),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+     {
+       TArrayF *G__Lpbase=(TArrayF*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH1F),G__get_linked_tagnum(&G__G__HistLN_TArrayF),(long)G__Lpbase-(long)G__Lderived,1,1);
+     }
+     {
+       TArray *G__Lpbase=(TArray*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH1F),G__get_linked_tagnum(&G__G__HistLN_TArray),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+   }
+   if(0==G__getnumbaseclass(G__get_linked_tagnum(&G__G__HistLN_TH1D))) {
+     TH1D *G__Lderived;
+     G__Lderived=(TH1D*)0x1000;
+     {
+       TH1 *G__Lpbase=(TH1*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH1D),G__get_linked_tagnum(&G__G__HistLN_TH1),(long)G__Lpbase-(long)G__Lderived,1,1);
+     }
+     {
+       TNamed *G__Lpbase=(TNamed*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH1D),G__get_linked_tagnum(&G__G__HistLN_TNamed),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+     {
+       TObject *G__Lpbase=(TObject*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH1D),G__get_linked_tagnum(&G__G__HistLN_TObject),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+     {
+       TAttLine *G__Lpbase=(TAttLine*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH1D),G__get_linked_tagnum(&G__G__HistLN_TAttLine),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+     {
+       TAttFill *G__Lpbase=(TAttFill*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH1D),G__get_linked_tagnum(&G__G__HistLN_TAttFill),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+     {
+       TAttMarker *G__Lpbase=(TAttMarker*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH1D),G__get_linked_tagnum(&G__G__HistLN_TAttMarker),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+     {
+       TArrayD *G__Lpbase=(TArrayD*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH1D),G__get_linked_tagnum(&G__G__HistLN_TArrayD),(long)G__Lpbase-(long)G__Lderived,1,1);
+     }
+     {
+       TArray *G__Lpbase=(TArray*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH1D),G__get_linked_tagnum(&G__G__HistLN_TArray),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+   }
+   if(0==G__getnumbaseclass(G__get_linked_tagnum(&G__G__HistLN_TProfile))) {
+     TProfile *G__Lderived;
+     G__Lderived=(TProfile*)0x1000;
+     {
+       TH1D *G__Lpbase=(TH1D*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TProfile),G__get_linked_tagnum(&G__G__HistLN_TH1D),(long)G__Lpbase-(long)G__Lderived,1,1);
+     }
+     {
+       TH1 *G__Lpbase=(TH1*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TProfile),G__get_linked_tagnum(&G__G__HistLN_TH1),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+     {
+       TNamed *G__Lpbase=(TNamed*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TProfile),G__get_linked_tagnum(&G__G__HistLN_TNamed),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+     {
+       TObject *G__Lpbase=(TObject*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TProfile),G__get_linked_tagnum(&G__G__HistLN_TObject),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+     {
+       TAttLine *G__Lpbase=(TAttLine*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TProfile),G__get_linked_tagnum(&G__G__HistLN_TAttLine),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+     {
+       TAttFill *G__Lpbase=(TAttFill*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TProfile),G__get_linked_tagnum(&G__G__HistLN_TAttFill),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+     {
+       TAttMarker *G__Lpbase=(TAttMarker*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TProfile),G__get_linked_tagnum(&G__G__HistLN_TAttMarker),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+     {
+       TArrayD *G__Lpbase=(TArrayD*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TProfile),G__get_linked_tagnum(&G__G__HistLN_TArrayD),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+     {
+       TArray *G__Lpbase=(TArray*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TProfile),G__get_linked_tagnum(&G__G__HistLN_TArray),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+   }
+   if(0==G__getnumbaseclass(G__get_linked_tagnum(&G__G__HistLN_TH1))) {
+     TH1 *G__Lderived;
+     G__Lderived=(TH1*)0x1000;
+     {
+       TNamed *G__Lpbase=(TNamed*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH1),G__get_linked_tagnum(&G__G__HistLN_TNamed),(long)G__Lpbase-(long)G__Lderived,1,1);
+     }
+     {
+       TObject *G__Lpbase=(TObject*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH1),G__get_linked_tagnum(&G__G__HistLN_TObject),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+     {
+       TAttLine *G__Lpbase=(TAttLine*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH1),G__get_linked_tagnum(&G__G__HistLN_TAttLine),(long)G__Lpbase-(long)G__Lderived,1,1);
+     }
+     {
+       TAttFill *G__Lpbase=(TAttFill*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH1),G__get_linked_tagnum(&G__G__HistLN_TAttFill),(long)G__Lpbase-(long)G__Lderived,1,1);
+     }
+     {
+       TAttMarker *G__Lpbase=(TAttMarker*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH1),G__get_linked_tagnum(&G__G__HistLN_TAttMarker),(long)G__Lpbase-(long)G__Lderived,1,1);
+     }
+   }
+   if(0==G__getnumbaseclass(G__get_linked_tagnum(&G__G__HistLN_TH1C))) {
+     TH1C *G__Lderived;
+     G__Lderived=(TH1C*)0x1000;
+     {
+       TH1 *G__Lpbase=(TH1*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH1C),G__get_linked_tagnum(&G__G__HistLN_TH1),(long)G__Lpbase-(long)G__Lderived,1,1);
+     }
+     {
+       TNamed *G__Lpbase=(TNamed*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH1C),G__get_linked_tagnum(&G__G__HistLN_TNamed),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+     {
+       TObject *G__Lpbase=(TObject*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH1C),G__get_linked_tagnum(&G__G__HistLN_TObject),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+     {
+       TAttLine *G__Lpbase=(TAttLine*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH1C),G__get_linked_tagnum(&G__G__HistLN_TAttLine),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+     {
+       TAttFill *G__Lpbase=(TAttFill*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH1C),G__get_linked_tagnum(&G__G__HistLN_TAttFill),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+     {
+       TAttMarker *G__Lpbase=(TAttMarker*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH1C),G__get_linked_tagnum(&G__G__HistLN_TAttMarker),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+     {
+       TArrayC *G__Lpbase=(TArrayC*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH1C),G__get_linked_tagnum(&G__G__HistLN_TArrayC),(long)G__Lpbase-(long)G__Lderived,1,1);
+     }
+     {
+       TArray *G__Lpbase=(TArray*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH1C),G__get_linked_tagnum(&G__G__HistLN_TArray),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+   }
+   if(0==G__getnumbaseclass(G__get_linked_tagnum(&G__G__HistLN_TH1S))) {
+     TH1S *G__Lderived;
+     G__Lderived=(TH1S*)0x1000;
+     {
+       TH1 *G__Lpbase=(TH1*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH1S),G__get_linked_tagnum(&G__G__HistLN_TH1),(long)G__Lpbase-(long)G__Lderived,1,1);
+     }
+     {
+       TNamed *G__Lpbase=(TNamed*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH1S),G__get_linked_tagnum(&G__G__HistLN_TNamed),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+     {
+       TObject *G__Lpbase=(TObject*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH1S),G__get_linked_tagnum(&G__G__HistLN_TObject),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+     {
+       TAttLine *G__Lpbase=(TAttLine*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH1S),G__get_linked_tagnum(&G__G__HistLN_TAttLine),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+     {
+       TAttFill *G__Lpbase=(TAttFill*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH1S),G__get_linked_tagnum(&G__G__HistLN_TAttFill),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+     {
+       TAttMarker *G__Lpbase=(TAttMarker*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH1S),G__get_linked_tagnum(&G__G__HistLN_TAttMarker),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+     {
+       TArrayS *G__Lpbase=(TArrayS*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH1S),G__get_linked_tagnum(&G__G__HistLN_TArrayS),(long)G__Lpbase-(long)G__Lderived,1,1);
+     }
+     {
+       TArray *G__Lpbase=(TArray*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH1S),G__get_linked_tagnum(&G__G__HistLN_TArray),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+   }
+   if(0==G__getnumbaseclass(G__get_linked_tagnum(&G__G__HistLN_TH2C))) {
+     TH2C *G__Lderived;
+     G__Lderived=(TH2C*)0x1000;
+     {
+       TH1C *G__Lpbase=(TH1C*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH2C),G__get_linked_tagnum(&G__G__HistLN_TH1C),(long)G__Lpbase-(long)G__Lderived,1,1);
+     }
+     {
+       TH1 *G__Lpbase=(TH1*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH2C),G__get_linked_tagnum(&G__G__HistLN_TH1),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+     {
+       TNamed *G__Lpbase=(TNamed*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH2C),G__get_linked_tagnum(&G__G__HistLN_TNamed),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+     {
+       TObject *G__Lpbase=(TObject*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH2C),G__get_linked_tagnum(&G__G__HistLN_TObject),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+     {
+       TAttLine *G__Lpbase=(TAttLine*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH2C),G__get_linked_tagnum(&G__G__HistLN_TAttLine),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+     {
+       TAttFill *G__Lpbase=(TAttFill*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH2C),G__get_linked_tagnum(&G__G__HistLN_TAttFill),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+     {
+       TAttMarker *G__Lpbase=(TAttMarker*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH2C),G__get_linked_tagnum(&G__G__HistLN_TAttMarker),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+     {
+       TArrayC *G__Lpbase=(TArrayC*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH2C),G__get_linked_tagnum(&G__G__HistLN_TArrayC),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+     {
+       TArray *G__Lpbase=(TArray*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH2C),G__get_linked_tagnum(&G__G__HistLN_TArray),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+     {
+       TH2 *G__Lpbase=(TH2*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH2C),G__get_linked_tagnum(&G__G__HistLN_TH2),(long)G__Lpbase-(long)G__Lderived,1,1);
+     }
+   }
+   if(0==G__getnumbaseclass(G__get_linked_tagnum(&G__G__HistLN_TH2S))) {
+     TH2S *G__Lderived;
+     G__Lderived=(TH2S*)0x1000;
+     {
+       TH1S *G__Lpbase=(TH1S*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH2S),G__get_linked_tagnum(&G__G__HistLN_TH1S),(long)G__Lpbase-(long)G__Lderived,1,1);
+     }
+     {
+       TH1 *G__Lpbase=(TH1*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH2S),G__get_linked_tagnum(&G__G__HistLN_TH1),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+     {
+       TNamed *G__Lpbase=(TNamed*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH2S),G__get_linked_tagnum(&G__G__HistLN_TNamed),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+     {
+       TObject *G__Lpbase=(TObject*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH2S),G__get_linked_tagnum(&G__G__HistLN_TObject),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+     {
+       TAttLine *G__Lpbase=(TAttLine*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH2S),G__get_linked_tagnum(&G__G__HistLN_TAttLine),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+     {
+       TAttFill *G__Lpbase=(TAttFill*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH2S),G__get_linked_tagnum(&G__G__HistLN_TAttFill),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+     {
+       TAttMarker *G__Lpbase=(TAttMarker*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH2S),G__get_linked_tagnum(&G__G__HistLN_TAttMarker),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+     {
+       TArrayS *G__Lpbase=(TArrayS*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH2S),G__get_linked_tagnum(&G__G__HistLN_TArrayS),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+     {
+       TArray *G__Lpbase=(TArray*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH2S),G__get_linked_tagnum(&G__G__HistLN_TArray),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+     {
+       TH2 *G__Lpbase=(TH2*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH2S),G__get_linked_tagnum(&G__G__HistLN_TH2),(long)G__Lpbase-(long)G__Lderived,1,1);
+     }
+   }
+   if(0==G__getnumbaseclass(G__get_linked_tagnum(&G__G__HistLN_TH2F))) {
+     TH2F *G__Lderived;
+     G__Lderived=(TH2F*)0x1000;
+     {
+       TH1F *G__Lpbase=(TH1F*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH2F),G__get_linked_tagnum(&G__G__HistLN_TH1F),(long)G__Lpbase-(long)G__Lderived,1,1);
+     }
+     {
+       TH1 *G__Lpbase=(TH1*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH2F),G__get_linked_tagnum(&G__G__HistLN_TH1),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+     {
+       TNamed *G__Lpbase=(TNamed*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH2F),G__get_linked_tagnum(&G__G__HistLN_TNamed),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+     {
+       TObject *G__Lpbase=(TObject*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH2F),G__get_linked_tagnum(&G__G__HistLN_TObject),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+     {
+       TAttLine *G__Lpbase=(TAttLine*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH2F),G__get_linked_tagnum(&G__G__HistLN_TAttLine),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+     {
+       TAttFill *G__Lpbase=(TAttFill*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH2F),G__get_linked_tagnum(&G__G__HistLN_TAttFill),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+     {
+       TAttMarker *G__Lpbase=(TAttMarker*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH2F),G__get_linked_tagnum(&G__G__HistLN_TAttMarker),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+     {
+       TArrayF *G__Lpbase=(TArrayF*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH2F),G__get_linked_tagnum(&G__G__HistLN_TArrayF),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+     {
+       TArray *G__Lpbase=(TArray*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH2F),G__get_linked_tagnum(&G__G__HistLN_TArray),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+     {
+       TH2 *G__Lpbase=(TH2*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH2F),G__get_linked_tagnum(&G__G__HistLN_TH2),(long)G__Lpbase-(long)G__Lderived,1,1);
+     }
+   }
+   if(0==G__getnumbaseclass(G__get_linked_tagnum(&G__G__HistLN_TH2D))) {
+     TH2D *G__Lderived;
+     G__Lderived=(TH2D*)0x1000;
+     {
+       TH1D *G__Lpbase=(TH1D*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH2D),G__get_linked_tagnum(&G__G__HistLN_TH1D),(long)G__Lpbase-(long)G__Lderived,1,1);
+     }
+     {
+       TH1 *G__Lpbase=(TH1*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH2D),G__get_linked_tagnum(&G__G__HistLN_TH1),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+     {
+       TNamed *G__Lpbase=(TNamed*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH2D),G__get_linked_tagnum(&G__G__HistLN_TNamed),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+     {
+       TObject *G__Lpbase=(TObject*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH2D),G__get_linked_tagnum(&G__G__HistLN_TObject),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+     {
+       TAttLine *G__Lpbase=(TAttLine*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH2D),G__get_linked_tagnum(&G__G__HistLN_TAttLine),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+     {
+       TAttFill *G__Lpbase=(TAttFill*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH2D),G__get_linked_tagnum(&G__G__HistLN_TAttFill),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+     {
+       TAttMarker *G__Lpbase=(TAttMarker*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH2D),G__get_linked_tagnum(&G__G__HistLN_TAttMarker),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+     {
+       TArrayD *G__Lpbase=(TArrayD*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH2D),G__get_linked_tagnum(&G__G__HistLN_TArrayD),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+     {
+       TArray *G__Lpbase=(TArray*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH2D),G__get_linked_tagnum(&G__G__HistLN_TArray),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+     {
+       TH2 *G__Lpbase=(TH2*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH2D),G__get_linked_tagnum(&G__G__HistLN_TH2),(long)G__Lpbase-(long)G__Lderived,1,1);
+     }
+   }
+   if(0==G__getnumbaseclass(G__get_linked_tagnum(&G__G__HistLN_TH3C))) {
+     TH3C *G__Lderived;
+     G__Lderived=(TH3C*)0x1000;
+     {
+       TH1C *G__Lpbase=(TH1C*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH3C),G__get_linked_tagnum(&G__G__HistLN_TH1C),(long)G__Lpbase-(long)G__Lderived,1,1);
+     }
+     {
+       TH1 *G__Lpbase=(TH1*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH3C),G__get_linked_tagnum(&G__G__HistLN_TH1),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+     {
+       TNamed *G__Lpbase=(TNamed*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH3C),G__get_linked_tagnum(&G__G__HistLN_TNamed),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+     {
+       TObject *G__Lpbase=(TObject*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH3C),G__get_linked_tagnum(&G__G__HistLN_TObject),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+     {
+       TAttLine *G__Lpbase=(TAttLine*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH3C),G__get_linked_tagnum(&G__G__HistLN_TAttLine),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+     {
+       TAttFill *G__Lpbase=(TAttFill*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH3C),G__get_linked_tagnum(&G__G__HistLN_TAttFill),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+     {
+       TAttMarker *G__Lpbase=(TAttMarker*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH3C),G__get_linked_tagnum(&G__G__HistLN_TAttMarker),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+     {
+       TArrayC *G__Lpbase=(TArrayC*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH3C),G__get_linked_tagnum(&G__G__HistLN_TArrayC),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+     {
+       TArray *G__Lpbase=(TArray*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH3C),G__get_linked_tagnum(&G__G__HistLN_TArray),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+     {
+       TH3 *G__Lpbase=(TH3*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH3C),G__get_linked_tagnum(&G__G__HistLN_TH3),(long)G__Lpbase-(long)G__Lderived,1,1);
+     }
+   }
+   if(0==G__getnumbaseclass(G__get_linked_tagnum(&G__G__HistLN_TH3S))) {
+     TH3S *G__Lderived;
+     G__Lderived=(TH3S*)0x1000;
+     {
+       TH1S *G__Lpbase=(TH1S*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH3S),G__get_linked_tagnum(&G__G__HistLN_TH1S),(long)G__Lpbase-(long)G__Lderived,1,1);
+     }
+     {
+       TH1 *G__Lpbase=(TH1*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH3S),G__get_linked_tagnum(&G__G__HistLN_TH1),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+     {
+       TNamed *G__Lpbase=(TNamed*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH3S),G__get_linked_tagnum(&G__G__HistLN_TNamed),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+     {
+       TObject *G__Lpbase=(TObject*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH3S),G__get_linked_tagnum(&G__G__HistLN_TObject),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+     {
+       TAttLine *G__Lpbase=(TAttLine*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH3S),G__get_linked_tagnum(&G__G__HistLN_TAttLine),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+     {
+       TAttFill *G__Lpbase=(TAttFill*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH3S),G__get_linked_tagnum(&G__G__HistLN_TAttFill),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+     {
+       TAttMarker *G__Lpbase=(TAttMarker*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH3S),G__get_linked_tagnum(&G__G__HistLN_TAttMarker),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+     {
+       TArrayS *G__Lpbase=(TArrayS*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH3S),G__get_linked_tagnum(&G__G__HistLN_TArrayS),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+     {
+       TArray *G__Lpbase=(TArray*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH3S),G__get_linked_tagnum(&G__G__HistLN_TArray),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+     {
+       TH3 *G__Lpbase=(TH3*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH3S),G__get_linked_tagnum(&G__G__HistLN_TH3),(long)G__Lpbase-(long)G__Lderived,1,1);
+     }
+   }
+   if(0==G__getnumbaseclass(G__get_linked_tagnum(&G__G__HistLN_TH3F))) {
+     TH3F *G__Lderived;
+     G__Lderived=(TH3F*)0x1000;
+     {
+       TH1F *G__Lpbase=(TH1F*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH3F),G__get_linked_tagnum(&G__G__HistLN_TH1F),(long)G__Lpbase-(long)G__Lderived,1,1);
+     }
+     {
+       TH1 *G__Lpbase=(TH1*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH3F),G__get_linked_tagnum(&G__G__HistLN_TH1),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+     {
+       TNamed *G__Lpbase=(TNamed*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH3F),G__get_linked_tagnum(&G__G__HistLN_TNamed),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+     {
+       TObject *G__Lpbase=(TObject*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH3F),G__get_linked_tagnum(&G__G__HistLN_TObject),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+     {
+       TAttLine *G__Lpbase=(TAttLine*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH3F),G__get_linked_tagnum(&G__G__HistLN_TAttLine),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+     {
+       TAttFill *G__Lpbase=(TAttFill*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH3F),G__get_linked_tagnum(&G__G__HistLN_TAttFill),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+     {
+       TAttMarker *G__Lpbase=(TAttMarker*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH3F),G__get_linked_tagnum(&G__G__HistLN_TAttMarker),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+     {
+       TArrayF *G__Lpbase=(TArrayF*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH3F),G__get_linked_tagnum(&G__G__HistLN_TArrayF),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+     {
+       TArray *G__Lpbase=(TArray*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH3F),G__get_linked_tagnum(&G__G__HistLN_TArray),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+     {
+       TH3 *G__Lpbase=(TH3*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH3F),G__get_linked_tagnum(&G__G__HistLN_TH3),(long)G__Lpbase-(long)G__Lderived,1,1);
+     }
+   }
+   if(0==G__getnumbaseclass(G__get_linked_tagnum(&G__G__HistLN_TH3D))) {
+     TH3D *G__Lderived;
+     G__Lderived=(TH3D*)0x1000;
+     {
+       TH1D *G__Lpbase=(TH1D*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH3D),G__get_linked_tagnum(&G__G__HistLN_TH1D),(long)G__Lpbase-(long)G__Lderived,1,1);
+     }
+     {
+       TH1 *G__Lpbase=(TH1*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH3D),G__get_linked_tagnum(&G__G__HistLN_TH1),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+     {
+       TNamed *G__Lpbase=(TNamed*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH3D),G__get_linked_tagnum(&G__G__HistLN_TNamed),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+     {
+       TObject *G__Lpbase=(TObject*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH3D),G__get_linked_tagnum(&G__G__HistLN_TObject),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+     {
+       TAttLine *G__Lpbase=(TAttLine*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH3D),G__get_linked_tagnum(&G__G__HistLN_TAttLine),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+     {
+       TAttFill *G__Lpbase=(TAttFill*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH3D),G__get_linked_tagnum(&G__G__HistLN_TAttFill),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+     {
+       TAttMarker *G__Lpbase=(TAttMarker*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH3D),G__get_linked_tagnum(&G__G__HistLN_TAttMarker),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+     {
+       TArrayD *G__Lpbase=(TArrayD*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH3D),G__get_linked_tagnum(&G__G__HistLN_TArrayD),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+     {
+       TArray *G__Lpbase=(TArray*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH3D),G__get_linked_tagnum(&G__G__HistLN_TArray),(long)G__Lpbase-(long)G__Lderived,1,0);
+     }
+     {
+       TH3 *G__Lpbase=(TH3*)G__Lderived;
+       G__inheritance_setup(G__get_linked_tagnum(&G__G__HistLN_TH3D),G__get_linked_tagnum(&G__G__HistLN_TH3),(long)G__Lpbase-(long)G__Lderived,1,1);
+     }
+   }
+}
+
+/*********************************************************
+* typedef information setup/
+*********************************************************/
+extern "C" void G__cpp_setup_typetableG__Hist() {
+
+   /* Setting up typedef entry */
+   G__search_typename2("Char_t",99,-1,0,
+-1);
+   G__setnewtype(-1,"Signed Character 1 byte",0);
+   G__search_typename2("UChar_t",98,-1,0,
+-1);
+   G__setnewtype(-1,"Unsigned Character 1 byte",0);
+   G__search_typename2("Short_t",115,-1,0,
+-1);
+   G__setnewtype(-1,"Signed Short integer 2 bytes",0);
+   G__search_typename2("UShort_t",114,-1,0,
+-1);
+   G__setnewtype(-1,"Unsigned Short integer 2 bytes",0);
+   G__search_typename2("Int_t",105,-1,0,
+-1);
+   G__setnewtype(-1,"Signed integer 4 bytes",0);
+   G__search_typename2("UInt_t",104,-1,0,
+-1);
+   G__setnewtype(-1,"Unsigned integer 4 bytes",0);
+   G__search_typename2("Seek_t",105,-1,0,
+-1);
+   G__setnewtype(-1,"File pointer",0);
+   G__search_typename2("Long_t",108,-1,0,
+-1);
+   G__setnewtype(-1,"Signed long integer 8 bytes",0);
+   G__search_typename2("ULong_t",107,-1,0,
+-1);
+   G__setnewtype(-1,"Unsigned long integer 8 bytes",0);
+   G__search_typename2("Float_t",102,-1,0,
+-1);
+   G__setnewtype(-1,"Float 4 bytes",0);
+   G__search_typename2("Double_t",100,-1,0,
+-1);
+   G__setnewtype(-1,"Float 8 bytes",0);
+   G__search_typename2("Text_t",99,-1,0,
+-1);
+   G__setnewtype(-1,"General string",0);
+   G__search_typename2("Bool_t",98,-1,0,
+-1);
+   G__setnewtype(-1,"Boolean (0=false, 1=true)",0);
+   G__search_typename2("Byte_t",98,-1,0,
+-1);
+   G__setnewtype(-1,"Byte (8 bits)",0);
+   G__search_typename2("Version_t",115,-1,0,
+-1);
+   G__setnewtype(-1,"Class version identifier",0);
+   G__search_typename2("Option_t",99,-1,0,
+-1);
+   G__setnewtype(-1,"Option string",0);
+   G__search_typename2("Ssiz_t",105,-1,0,
+-1);
+   G__setnewtype(-1,"String size",0);
+   G__search_typename2("Real_t",102,-1,0,
+-1);
+   G__setnewtype(-1,"TVector and TMatrix element type",0);
+   G__search_typename2("VoidFuncPtr_t",89,-1,0,
+-1);
+   G__setnewtype(-1,"pointer to void function",0);
+   G__search_typename2("FreeHookFun_t",89,-1,0,
+-1);
+   G__setnewtype(-1,NULL,0);
+   G__search_typename2("ReAllocFun_t",81,-1,0,
+-1);
+   G__setnewtype(-1,NULL,0);
+   G__search_typename2("ReAllocCFun_t",81,-1,0,
+-1);
+   G__setnewtype(-1,NULL,0);
+   G__search_typename2("Axis_t",102,-1,0,
+-1);
+   G__setnewtype(-1,"Axis values type",0);
+   G__search_typename2("Stat_t",100,-1,0,
+-1);
+   G__setnewtype(-1,"Statistics type",0);
+   G__search_typename2("Font_t",115,-1,0,
+-1);
+   G__setnewtype(-1,"Font number",0);
+   G__search_typename2("Style_t",115,-1,0,
+-1);
+   G__setnewtype(-1,"Style number",0);
+   G__search_typename2("Marker_t",115,-1,0,
+-1);
+   G__setnewtype(-1,"Marker number",0);
+   G__search_typename2("Width_t",115,-1,0,
+-1);
+   G__setnewtype(-1,"Line width",0);
+   G__search_typename2("Color_t",115,-1,0,
+-1);
+   G__setnewtype(-1,"Color number",0);
+   G__search_typename2("SCoord_t",115,-1,0,
+-1);
+   G__setnewtype(-1,"Screen coordinates",0);
+   G__search_typename2("Coord_t",102,-1,0,
+-1);
+   G__setnewtype(-1,"Pad world coordinates",0);
+   G__search_typename2("Angle_t",102,-1,0,
+-1);
+   G__setnewtype(-1,"Graphics angle",0);
+   G__search_typename2("Size_t",102,-1,0,
+-1);
+   G__setnewtype(-1,"Attribute size",0);
+   G__search_typename2("Double_t (*)(Double_t*, Double_t*)",81,-1,0,
+-1);
+   G__setnewtype(-1,NULL,0);
+}
+
+/*********************************************************
+* Data Member information setup/
+*********************************************************/
+
+   /* Setting up class,struct,union tag member variable */
+
+   /* TH1F */
+static void G__setup_memvarTH1F(void) {
+   G__tag_memvar_setup(G__get_linked_tagnum(&G__G__HistLN_TH1F));
+   { TH1F *p; p=(TH1F*)0x1000; if (p) { }
+   G__memvar_setup((void*)NULL,85,0,0,G__get_linked_tagnum(&G__G__HistLN_TClass),-1,-2,4,"fgIsA=",0,(char*)NULL);
+   }
+   G__tag_memvar_reset();
+}
+
+
+   /* TH1D */
+static void G__setup_memvarTH1D(void) {
+   G__tag_memvar_setup(G__get_linked_tagnum(&G__G__HistLN_TH1D));
+   { TH1D *p; p=(TH1D*)0x1000; if (p) { }
+   G__memvar_setup((void*)NULL,85,0,0,G__get_linked_tagnum(&G__G__HistLN_TClass),-1,-2,4,"fgIsA=",0,(char*)NULL);
+   }
+   G__tag_memvar_reset();
+}
+
+
+   /* TProfile */
+static void G__setup_memvarTProfile(void) {
+   G__tag_memvar_setup(G__get_linked_tagnum(&G__G__HistLN_TProfile));
+   { TProfile *p; p=(TProfile*)0x1000; if (p) { }
+   G__memvar_setup((void*)NULL,117,0,0,G__get_linked_tagnum(&G__G__HistLN_TArrayD),-1,-1,2,"fBinEntries=",0,"number of entries per bin");
+   G__memvar_setup((void*)NULL,105,0,0,G__get_linked_tagnum(&G__G__HistLN_EErrorType),-1,-1,2,"fErrorMode=",0,"Option to compute errors");
+   G__memvar_setup((void*)NULL,102,0,0,-1,G__defined_typename("Float_t"),-1,2,"fYmin=",0,"Lower limit in Y (if set)");
+   G__memvar_setup((void*)NULL,102,0,0,-1,G__defined_typename("Float_t"),-1,2,"fYmax=",0,"Upper limit in Y (if set)");
+   G__memvar_setup((void*)NULL,85,0,0,G__get_linked_tagnum(&G__G__HistLN_TClass),-1,-2,4,"fgIsA=",0,(char*)NULL);
+   }
+   G__tag_memvar_reset();
+}
+
+
+   /* TH1 */
+static void G__setup_memvarTH1(void) {
+   G__tag_memvar_setup(G__get_linked_tagnum(&G__G__HistLN_TH1));
+   { TH1 *p; p=(TH1*)0x1000; if (p) { }
+   G__memvar_setup((void*)NULL,105,0,0,-1,G__defined_typename("Int_t"),-1,2,"fNcells=",0,"number of bins(1D), cells (2D) +U/Overflows");
+   G__memvar_setup((void*)NULL,117,0,0,G__get_linked_tagnum(&G__G__HistLN_TAxis),-1,-1,2,"fXaxis=",0,"X axis descriptor");
+   G__memvar_setup((void*)NULL,117,0,0,G__get_linked_tagnum(&G__G__HistLN_TAxis),-1,-1,2,"fYaxis=",0,"Y axis descriptor");
+   G__memvar_setup((void*)NULL,117,0,0,G__get_linked_tagnum(&G__G__HistLN_TAxis),-1,-1,2,"fZaxis=",0,"Z axis descriptor");
+   G__memvar_setup((void*)NULL,115,0,0,-1,G__defined_typename("Short_t"),-1,2,"fBarOffset=",0,"(1000*offset) for bar charts or legos");
+   G__memvar_setup((void*)NULL,115,0,0,-1,G__defined_typename("Short_t"),-1,2,"fBarWidth=",0,"(1000*width) for bar charts or legos");
+   G__memvar_setup((void*)NULL,100,0,0,-1,G__defined_typename("Stat_t"),-1,2,"fEntries=",0,"Number of entries");
+   G__memvar_setup((void*)NULL,100,0,0,-1,G__defined_typename("Stat_t"),-1,2,"fTsumw=",0,"Total Sum of weights");
+   G__memvar_setup((void*)NULL,100,0,0,-1,G__defined_typename("Stat_t"),-1,2,"fTsumw2=",0,"Total Sum of squares of weights");
+   G__memvar_setup((void*)NULL,100,0,0,-1,G__defined_typename("Stat_t"),-1,2,"fTsumwx=",0,"Total Sum of weight*X");
+   G__memvar_setup((void*)NULL,100,0,0,-1,G__defined_typename("Stat_t"),-1,2,"fTsumwx2=",0,"Total Sum of weight*X*X");
+   G__memvar_setup((void*)NULL,102,0,0,-1,G__defined_typename("Float_t"),-1,2,"fMaximum=",0,"Maximum value for plotting");
+   G__memvar_setup((void*)NULL,102,0,0,-1,G__defined_typename("Float_t"),-1,2,"fMinimum=",0,"Minimum value for plotting");
+   G__memvar_setup((void*)NULL,102,0,0,-1,G__defined_typename("Float_t"),-1,2,"fNormFactor=",0,"Normalization factor");
+   G__memvar_setup((void*)NULL,117,0,0,G__get_linked_tagnum(&G__G__HistLN_TArrayF),-1,-1,2,"fContour=",0,"Array to display contour levels");
+   G__memvar_setup((void*)NULL,117,0,0,G__get_linked_tagnum(&G__G__HistLN_TArrayD),-1,-1,2,"fSumw2=",0,"Array of sum of squares of weights");
+   G__memvar_setup((void*)NULL,117,0,0,G__get_linked_tagnum(&G__G__HistLN_TString),-1,-1,2,"fOption=",0,"histogram options");
+   G__memvar_setup((void*)NULL,85,0,0,G__get_linked_tagnum(&G__G__HistLN_TList),-1,-1,2,"fFunctions=",0,"Pointer to list of functions (fits and user)");
+   G__memvar_setup((void*)NULL,85,0,0,G__get_linked_tagnum(&G__G__HistLN_TDirectory),-1,-1,2,"fDirectory=",0,"Pointer to directory holding this histogram");
+   G__memvar_setup((void*)NULL,105,0,0,-1,G__defined_typename("Int_t"),-1,2,"fDimension=",0,"Histogram dimension (1, 2 or 3 dim)");
+   G__memvar_setup((void*)NULL,85,0,0,G__get_linked_tagnum(&G__G__HistLN_TClass),-1,-2,4,"fgIsA=",0,(char*)NULL);
+   }
+   G__tag_memvar_reset();
+}
+
+
+   /* TH1C */
+static void G__setup_memvarTH1C(void) {
+   G__tag_memvar_setup(G__get_linked_tagnum(&G__G__HistLN_TH1C));
+   { TH1C *p; p=(TH1C*)0x1000; if (p) { }
+   G__memvar_setup((void*)NULL,85,0,0,G__get_linked_tagnum(&G__G__HistLN_TClass),-1,-2,4,"fgIsA=",0,(char*)NULL);
+   }
+   G__tag_memvar_reset();
+}
+
+
+   /* TH1S */
+static void G__setup_memvarTH1S(void) {
+   G__tag_memvar_setup(G__get_linked_tagnum(&G__G__HistLN_TH1S));
+   { TH1S *p; p=(TH1S*)0x1000; if (p) { }
+   G__memvar_setup((void*)NULL,85,0,0,G__get_linked_tagnum(&G__G__HistLN_TClass),-1,-2,4,"fgIsA=",0,(char*)NULL);
+   }
+   G__tag_memvar_reset();
+}
+
+
+   /* TH2 */
+static void G__setup_memvarTH2(void) {
+   G__tag_memvar_setup(G__get_linked_tagnum(&G__G__HistLN_TH2));
+   { TH2 *p; p=(TH2*)0x1000; if (p) { }
+   G__memvar_setup((void*)NULL,100,0,0,-1,G__defined_typename("Stat_t"),-1,2,"fScalefactor=",0,"Scale factor");
+   G__memvar_setup((void*)NULL,100,0,0,-1,G__defined_typename("Stat_t"),-1,2,"fTsumwy=",0,"Total Sum of weight*Y");
+   G__memvar_setup((void*)NULL,100,0,0,-1,G__defined_typename("Stat_t"),-1,2,"fTsumwy2=",0,"Total Sum of weight*Y*Y");
+   G__memvar_setup((void*)NULL,100,0,0,-1,G__defined_typename("Stat_t"),-1,2,"fTsumwxy=",0,"Total Sum of weight*X*Y");
+   G__memvar_setup((void*)NULL,108,0,0,-1,-1,-1,4,"G__virtualinfo=",0,(char*)NULL);
+   G__memvar_setup((void*)NULL,85,0,0,G__get_linked_tagnum(&G__G__HistLN_TClass),-1,-2,4,"fgIsA=",0,(char*)NULL);
+   }
+   G__tag_memvar_reset();
+}
+
+
+   /* TH2C */
+static void G__setup_memvarTH2C(void) {
+   G__tag_memvar_setup(G__get_linked_tagnum(&G__G__HistLN_TH2C));
+   { TH2C *p; p=(TH2C*)0x1000; if (p) { }
+   G__memvar_setup((void*)NULL,85,0,0,G__get_linked_tagnum(&G__G__HistLN_TClass),-1,-2,4,"fgIsA=",0,(char*)NULL);
+   }
+   G__tag_memvar_reset();
+}
+
+
+   /* TH2S */
+static void G__setup_memvarTH2S(void) {
+   G__tag_memvar_setup(G__get_linked_tagnum(&G__G__HistLN_TH2S));
+   { TH2S *p; p=(TH2S*)0x1000; if (p) { }
+   G__memvar_setup((void*)NULL,85,0,0,G__get_linked_tagnum(&G__G__HistLN_TClass),-1,-2,4,"fgIsA=",0,(char*)NULL);
+   }
+   G__tag_memvar_reset();
+}
+
+
+   /* TH2F */
+static void G__setup_memvarTH2F(void) {
+   G__tag_memvar_setup(G__get_linked_tagnum(&G__G__HistLN_TH2F));
+   { TH2F *p; p=(TH2F*)0x1000; if (p) { }
+   G__memvar_setup((void*)NULL,85,0,0,G__get_linked_tagnum(&G__G__HistLN_TClass),-1,-2,4,"fgIsA=",0,(char*)NULL);
+   }
+   G__tag_memvar_reset();
+}
+
+
+   /* TH2D */
+static void G__setup_memvarTH2D(void) {
+   G__tag_memvar_setup(G__get_linked_tagnum(&G__G__HistLN_TH2D));
+   { TH2D *p; p=(TH2D*)0x1000; if (p) { }
+   G__memvar_setup((void*)NULL,85,0,0,G__get_linked_tagnum(&G__G__HistLN_TClass),-1,-2,4,"fgIsA=",0,(char*)NULL);
+   }
+   G__tag_memvar_reset();
+}
+
+
+   /* TH3 */
+static void G__setup_memvarTH3(void) {
+   G__tag_memvar_setup(G__get_linked_tagnum(&G__G__HistLN_TH3));
+   { TH3 *p; p=(TH3*)0x1000; if (p) { }
+   G__memvar_setup((void*)NULL,108,0,0,-1,-1,-1,4,"G__virtualinfo=",0,(char*)NULL);
+   G__memvar_setup((void*)NULL,85,0,0,G__get_linked_tagnum(&G__G__HistLN_TClass),-1,-2,4,"fgIsA=",0,(char*)NULL);
+   }
+   G__tag_memvar_reset();
+}
+
+
+   /* TH3C */
+static void G__setup_memvarTH3C(void) {
+   G__tag_memvar_setup(G__get_linked_tagnum(&G__G__HistLN_TH3C));
+   { TH3C *p; p=(TH3C*)0x1000; if (p) { }
+   G__memvar_setup((void*)NULL,85,0,0,G__get_linked_tagnum(&G__G__HistLN_TClass),-1,-2,4,"fgIsA=",0,(char*)NULL);
+   }
+   G__tag_memvar_reset();
+}
+
+
+   /* TH3S */
+static void G__setup_memvarTH3S(void) {
+   G__tag_memvar_setup(G__get_linked_tagnum(&G__G__HistLN_TH3S));
+   { TH3S *p; p=(TH3S*)0x1000; if (p) { }
+   G__memvar_setup((void*)NULL,85,0,0,G__get_linked_tagnum(&G__G__HistLN_TClass),-1,-2,4,"fgIsA=",0,(char*)NULL);
+   }
+   G__tag_memvar_reset();
+}
+
+
+   /* TH3F */
+static void G__setup_memvarTH3F(void) {
+   G__tag_memvar_setup(G__get_linked_tagnum(&G__G__HistLN_TH3F));
+   { TH3F *p; p=(TH3F*)0x1000; if (p) { }
+   G__memvar_setup((void*)NULL,85,0,0,G__get_linked_tagnum(&G__G__HistLN_TClass),-1,-2,4,"fgIsA=",0,(char*)NULL);
+   }
+   G__tag_memvar_reset();
+}
+
+
+   /* TH3D */
+static void G__setup_memvarTH3D(void) {
+   G__tag_memvar_setup(G__get_linked_tagnum(&G__G__HistLN_TH3D));
+   { TH3D *p; p=(TH3D*)0x1000; if (p) { }
+   G__memvar_setup((void*)NULL,85,0,0,G__get_linked_tagnum(&G__G__HistLN_TClass),-1,-2,4,"fgIsA=",0,(char*)NULL);
+   }
+   G__tag_memvar_reset();
+}
+
+extern "C" void G__cpp_setup_memvarG__Hist() {
+}
+/***********************************************************
+************************************************************
+************************************************************
+************************************************************
+************************************************************
+************************************************************
+************************************************************
+***********************************************************/
+
+/*********************************************************
+* Member function information setup for each class
+*********************************************************/
+static void G__setup_memfuncTH1F(void) {
+   /* TH1F */
+   G__tag_memfunc_setup(G__get_linked_tagnum(&G__G__HistLN_TH1F));
+   G__memfunc_setup("TH1F",275,(G__InterfaceMethod)NULL,105,G__get_linked_tagnum(&G__G__HistLN_TH1F),-1,0,6,1,2,0,
+"i - 'Int_t' 0 - dim C - 'Text_t' 0 - name "
+"C - 'Text_t' 0 - title i - 'Int_t' 0 - nbinsx "
+"f - 'Axis_t' 0 - xlow f - 'Axis_t' 0 - xup",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("TH1F",275,(G__InterfaceMethod)NULL,105,G__get_linked_tagnum(&G__G__HistLN_TH1F),-1,0,5,1,2,0,
+"i - 'Int_t' 0 - dim C - 'Text_t' 0 - name "
+"C - 'Text_t' 0 - title i - 'Int_t' 0 - nbinsx "
+"F - 'Axis_t' 0 - xbins",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("TH1F",275,G__TH1F_TH1F_2_0,105,G__get_linked_tagnum(&G__G__HistLN_TH1F),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("TH1F",275,G__TH1F_TH1F_3_0,105,G__get_linked_tagnum(&G__G__HistLN_TH1F),-1,0,5,1,1,0,
+"C - 'Text_t' 0 - name C - 'Text_t' 0 - title "
+"i - 'Int_t' 0 - nbinsx f - 'Axis_t' 0 - xlow "
+"f - 'Axis_t' 0 - xup",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("TH1F",275,G__TH1F_TH1F_4_0,105,G__get_linked_tagnum(&G__G__HistLN_TH1F),-1,0,4,1,1,0,
+"C - 'Text_t' 0 - name C - 'Text_t' 0 - title "
+"i - 'Int_t' 0 - nbinsx F - 'Axis_t' 0 - xbins",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("TH1F",275,G__TH1F_TH1F_5_0,105,G__get_linked_tagnum(&G__G__HistLN_TH1F),-1,0,1,1,1,0,"u 'TH1F' - 1 - h1f",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("AddBinContent",1277,G__TH1F_AddBinContent_7_0,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 - bin",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("AddBinContent",1277,G__TH1F_AddBinContent_8_0,121,-1,-1,0,2,1,1,0,
+"i - 'Int_t' 0 - bin d - 'Stat_t' 0 - w",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Copy",411,G__TH1F_Copy_9_0,121,-1,-1,0,1,1,1,0,"u 'TObject' - 1 - hnew",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("DrawCopy",809,G__TH1F_DrawCopy_0_1,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetBinContent",1300,G__TH1F_GetBinContent_1_1,100,-1,G__defined_typename("Stat_t"),0,1,1,1,0,"i - 'Int_t' 0 - bin",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Reset",515,G__TH1F_Reset_2_1,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetBinContent",1312,G__TH1F_SetBinContent_3_1,121,-1,-1,0,2,1,1,0,
+"i - 'Int_t' 0 - bin d - 'Stat_t' 0 - content",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetBinsLength",1306,G__TH1F_SetBinsLength_4_1,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 - nx",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("operator=",937,G__TH1F_operatoreQ_5_1,117,G__get_linked_tagnum(&G__G__HistLN_TH1F),-1,1,1,1,1,0,"u 'TH1F' - 1 - h1",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("DeclFileName",1145,G__TH1F_DeclFileName_6_1,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("DeclFileLine",1152,G__TH1F_DeclFileLine_7_1,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ImplFileName",1171,G__TH1F_ImplFileName_8_1,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ImplFileLine",1178,G__TH1F_ImplFileLine_9_1,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Class_Version",1339,G__TH1F_Class_Version_0_2,115,-1,G__defined_typename("Version_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Class",502,G__TH1F_Class_1_2,85,G__get_linked_tagnum(&G__G__HistLN_TClass),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Dictionary",1046,G__TH1F_Dictionary_2_2,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("IsA",253,G__TH1F_IsA_3_2,85,G__get_linked_tagnum(&G__G__HistLN_TClass),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("ShowMembers",1132,G__TH1F_ShowMembers_4_2,121,-1,-1,0,2,1,1,0,
+"u 'TMemberInspector' - 1 - insp C - - 0 - parent",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Streamer",835,G__TH1F_Streamer_5_2,121,-1,-1,0,1,1,1,0,"u 'TBuffer' - 1 - b",(char*)NULL,(void*)NULL,1);
+   // automatic destructor
+   G__memfunc_setup("~TH1F",401,G__TH1F_wATH1F_6_2,(int)('y'),-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__tag_memfunc_reset();
+}
+
+static void G__setup_memfuncTH1D(void) {
+   /* TH1D */
+   G__tag_memfunc_setup(G__get_linked_tagnum(&G__G__HistLN_TH1D));
+   G__memfunc_setup("TH1D",273,(G__InterfaceMethod)NULL,105,G__get_linked_tagnum(&G__G__HistLN_TH1D),-1,0,6,1,2,0,
+"i - 'Int_t' 0 - dim C - 'Text_t' 0 - name "
+"C - 'Text_t' 0 - title i - 'Int_t' 0 - nbinsx "
+"f - 'Axis_t' 0 - xlow f - 'Axis_t' 0 - xup",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("TH1D",273,(G__InterfaceMethod)NULL,105,G__get_linked_tagnum(&G__G__HistLN_TH1D),-1,0,5,1,2,0,
+"i - 'Int_t' 0 - dim C - 'Text_t' 0 - name "
+"C - 'Text_t' 0 - title i - 'Int_t' 0 - nbinsx "
+"F - 'Axis_t' 0 - xbins",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("TH1D",273,G__TH1D_TH1D_2_0,105,G__get_linked_tagnum(&G__G__HistLN_TH1D),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("TH1D",273,G__TH1D_TH1D_3_0,105,G__get_linked_tagnum(&G__G__HistLN_TH1D),-1,0,5,1,1,0,
+"C - 'Text_t' 0 - name C - 'Text_t' 0 - title "
+"i - 'Int_t' 0 - nbinsx f - 'Axis_t' 0 - xlow "
+"f - 'Axis_t' 0 - xup",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("TH1D",273,G__TH1D_TH1D_4_0,105,G__get_linked_tagnum(&G__G__HistLN_TH1D),-1,0,4,1,1,0,
+"C - 'Text_t' 0 - name C - 'Text_t' 0 - title "
+"i - 'Int_t' 0 - nbinsx F - 'Axis_t' 0 - xbins",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("TH1D",273,G__TH1D_TH1D_5_0,105,G__get_linked_tagnum(&G__G__HistLN_TH1D),-1,0,1,1,1,0,"u 'TH1D' - 1 - h1d",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("AddBinContent",1277,G__TH1D_AddBinContent_7_0,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 - bin",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("AddBinContent",1277,G__TH1D_AddBinContent_8_0,121,-1,-1,0,2,1,1,0,
+"i - 'Int_t' 0 - bin d - 'Stat_t' 0 - w",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Copy",411,G__TH1D_Copy_9_0,121,-1,-1,0,1,1,1,0,"u 'TObject' - 1 - hnew",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("DrawCopy",809,G__TH1D_DrawCopy_0_1,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetBinContent",1300,G__TH1D_GetBinContent_1_1,100,-1,G__defined_typename("Stat_t"),0,1,1,1,0,"i - 'Int_t' 0 - bin",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Reset",515,G__TH1D_Reset_2_1,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetBinContent",1312,G__TH1D_SetBinContent_3_1,121,-1,-1,0,2,1,1,0,
+"i - 'Int_t' 0 - bin d - 'Stat_t' 0 - content",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetBinsLength",1306,G__TH1D_SetBinsLength_4_1,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 - nx",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("operator=",937,G__TH1D_operatoreQ_5_1,117,G__get_linked_tagnum(&G__G__HistLN_TH1D),-1,1,1,1,1,0,"u 'TH1D' - 1 - h1",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("DeclFileName",1145,G__TH1D_DeclFileName_6_1,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("DeclFileLine",1152,G__TH1D_DeclFileLine_7_1,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ImplFileName",1171,G__TH1D_ImplFileName_8_1,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ImplFileLine",1178,G__TH1D_ImplFileLine_9_1,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Class_Version",1339,G__TH1D_Class_Version_0_2,115,-1,G__defined_typename("Version_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Class",502,G__TH1D_Class_1_2,85,G__get_linked_tagnum(&G__G__HistLN_TClass),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Dictionary",1046,G__TH1D_Dictionary_2_2,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("IsA",253,G__TH1D_IsA_3_2,85,G__get_linked_tagnum(&G__G__HistLN_TClass),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("ShowMembers",1132,G__TH1D_ShowMembers_4_2,121,-1,-1,0,2,1,1,0,
+"u 'TMemberInspector' - 1 - insp C - - 0 - parent",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Streamer",835,G__TH1D_Streamer_5_2,121,-1,-1,0,1,1,1,0,"u 'TBuffer' - 1 - b",(char*)NULL,(void*)NULL,1);
+   // automatic destructor
+   G__memfunc_setup("~TH1D",399,G__TH1D_wATH1D_6_2,(int)('y'),-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__tag_memfunc_reset();
+}
+
+static void G__setup_memfuncTProfile(void) {
+   /* TProfile */
+   G__tag_memfunc_setup(G__get_linked_tagnum(&G__G__HistLN_TProfile));
+   G__memfunc_setup("Fill",391,(G__InterfaceMethod)NULL,121,-1,-1,0,1,1,4,0,"f - 'Axis_t' 0 - -",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Fill",391,(G__InterfaceMethod)NULL,121,-1,-1,0,2,1,4,0,
+"f - 'Axis_t' 0 - - d - 'Stat_t' 0 - -",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Fill",391,(G__InterfaceMethod)NULL,121,-1,-1,0,4,1,4,0,
+"f - 'Axis_t' 0 - - f - 'Axis_t' 0 - - "
+"f - 'Axis_t' 0 - - d - 'Stat_t' 0 - -",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("FillN",469,(G__InterfaceMethod)NULL,121,-1,-1,0,4,1,4,0,
+"i - 'Int_t' 0 - - F - 'Axis_t' 0 - - "
+"D - 'Double_t' 0 - - i - 'Int_t' 0 - -",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetBins",696,(G__InterfaceMethod)NULL,121,-1,-1,0,6,1,4,0,
+"i - 'Int_t' 0 - - f - 'Float_t' 0 - - "
+"f - 'Float_t' 0 - - i - 'Int_t' 0 - - "
+"f - 'Float_t' 0 - - f - 'Float_t' 0 - -",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetB",354,(G__InterfaceMethod)NULL,68,-1,G__defined_typename("Double_t"),0,0,1,4,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetW",375,(G__InterfaceMethod)NULL,68,-1,G__defined_typename("Double_t"),0,0,1,4,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetW2",425,(G__InterfaceMethod)NULL,68,-1,G__defined_typename("Double_t"),0,0,1,4,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("TProfile",805,G__TProfile_TProfile_8_0,105,G__get_linked_tagnum(&G__G__HistLN_TProfile),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("TProfile",805,G__TProfile_TProfile_9_0,105,G__get_linked_tagnum(&G__G__HistLN_TProfile),-1,0,6,1,1,0,
+"C - 'Text_t' 0 - name C - 'Text_t' 0 - title "
+"i - 'Int_t' 0 - nbinsx f - 'Axis_t' 0 - xlow "
+"f - 'Axis_t' 0 - xup C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("TProfile",805,G__TProfile_TProfile_0_1,105,G__get_linked_tagnum(&G__G__HistLN_TProfile),-1,0,8,1,1,0,
+"C - 'Text_t' 0 - name C - 'Text_t' 0 - title "
+"i - 'Int_t' 0 - nbinsx f - 'Axis_t' 0 - xlow "
+"f - 'Axis_t' 0 - xup f - 'Axis_t' 0 - ylow "
+"f - 'Axis_t' 0 - yup C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("TProfile",805,G__TProfile_TProfile_1_1,105,G__get_linked_tagnum(&G__G__HistLN_TProfile),-1,0,5,1,1,0,
+"C - 'Text_t' 0 - name C - 'Text_t' 0 - title "
+"i - 'Int_t' 0 - nbinsx F - 'Axis_t' 0 - xbins "
+"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("TProfile",805,G__TProfile_TProfile_2_1,105,G__get_linked_tagnum(&G__G__HistLN_TProfile),-1,0,1,1,1,0,"u 'TProfile' - 1 - profile",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Add",265,G__TProfile_Add_4_1,121,-1,-1,0,2,1,1,0,
+"U 'TH1' - 0 - h1 f - 'Float_t' 0 1 c1",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Add",265,G__TProfile_Add_5_1,121,-1,-1,0,4,1,1,0,
+"U 'TH1' - 0 - h1 U 'TH1' - 0 - h2 "
+"f - 'Float_t' 0 1 c1 f - 'Float_t' 0 1 c2","*MENU*",(void*)NULL,1);
+   G__memfunc_setup("BuildOptions",1244,G__TProfile_BuildOptions_6_1,121,-1,-1,0,3,1,1,0,
+"f - 'Float_t' 0 - ymin f - 'Float_t' 0 - ymax "
+"C - 'Option_t' 0 - option",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Copy",411,G__TProfile_Copy_7_1,121,-1,-1,0,1,1,1,0,"u 'TObject' - 1 - hnew",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Divide",597,G__TProfile_Divide_8_1,121,-1,-1,0,1,1,1,0,"U 'TH1' - 0 - h1",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Divide",597,G__TProfile_Divide_9_1,121,-1,-1,0,5,1,1,0,
+"U 'TH1' - 0 - h1 U 'TH1' - 0 - h2 "
+"f - 'Float_t' 0 1 c1 f - 'Float_t' 0 1 c2 "
+"C - 'Option_t' 0 \"\" option","*MENU*",(void*)NULL,1);
+   G__memfunc_setup("DrawCopy",809,G__TProfile_DrawCopy_0_2,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Fill",391,G__TProfile_Fill_1_2,121,-1,-1,0,2,1,1,0,
+"f - 'Axis_t' 0 - x f - 'Axis_t' 0 - y",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Fill",391,G__TProfile_Fill_2_2,121,-1,-1,0,3,1,1,0,
+"f - 'Axis_t' 0 - x f - 'Axis_t' 0 - y "
+"d - 'Stat_t' 0 - w",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("FillN",469,G__TProfile_FillN_3_2,121,-1,-1,0,5,1,1,0,
+"i - 'Int_t' 0 - ntimes F - 'Axis_t' 0 - x "
+"F - 'Axis_t' 0 - y D - 'Double_t' 0 - w "
+"i - 'Int_t' 0 1 stride",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetBinContent",1300,G__TProfile_GetBinContent_4_2,100,-1,G__defined_typename("Stat_t"),0,1,1,1,0,"i - 'Int_t' 0 - bin",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetBinError",1091,G__TProfile_GetBinError_5_2,100,-1,G__defined_typename("Stat_t"),0,1,1,1,0,"i - 'Int_t' 0 - bin",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetBinEntries",1299,G__TProfile_GetBinEntries_6_2,100,-1,G__defined_typename("Stat_t"),0,1,1,1,0,"i - 'Int_t' 0 - bin",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetErrorOption",1443,G__TProfile_GetErrorOption_7_2,67,-1,G__defined_typename("Option_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Multiply",864,G__TProfile_Multiply_8_2,121,-1,-1,0,1,1,1,0,"U 'TH1' - 0 - h1",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Multiply",864,G__TProfile_Multiply_9_2,121,-1,-1,0,5,1,1,0,
+"U 'TH1' - 0 - h1 U 'TH1' - 0 - h2 "
+"f - 'Float_t' 0 1 c1 f - 'Float_t' 0 1 c2 "
+"C - 'Option_t' 0 \"\" option","*MENU*",(void*)NULL,1);
+   G__memfunc_setup("Reset",515,G__TProfile_Reset_0_3,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Scale",488,G__TProfile_Scale_1_3,121,-1,-1,0,1,1,1,0,"f - 'Float_t' 0 1 c1",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetBinEntries",1311,G__TProfile_SetBinEntries_2_3,121,-1,-1,0,2,1,1,0,
+"i - 'Int_t' 0 - bin d - 'Stat_t' 0 - w",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetBins",696,G__TProfile_SetBins_3_3,121,-1,-1,0,3,1,1,0,
+"i - 'Int_t' 0 - nbins f - 'Float_t' 0 - xmin "
+"f - 'Float_t' 0 - xmax",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetErrorOption",1455,G__TProfile_SetErrorOption_4_3,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option","*MENU*",(void*)NULL,1);
+   G__memfunc_setup("DeclFileName",1145,G__TProfile_DeclFileName_5_3,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("DeclFileLine",1152,G__TProfile_DeclFileLine_6_3,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ImplFileName",1171,G__TProfile_ImplFileName_7_3,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ImplFileLine",1178,G__TProfile_ImplFileLine_8_3,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Class_Version",1339,G__TProfile_Class_Version_9_3,115,-1,G__defined_typename("Version_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Class",502,G__TProfile_Class_0_4,85,G__get_linked_tagnum(&G__G__HistLN_TClass),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Dictionary",1046,G__TProfile_Dictionary_1_4,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("IsA",253,G__TProfile_IsA_2_4,85,G__get_linked_tagnum(&G__G__HistLN_TClass),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("ShowMembers",1132,G__TProfile_ShowMembers_3_4,121,-1,-1,0,2,1,1,0,
+"u 'TMemberInspector' - 1 - insp C - - 0 - parent",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Streamer",835,G__TProfile_Streamer_4_4,121,-1,-1,0,1,1,1,0,"u 'TBuffer' - 1 - b",(char*)NULL,(void*)NULL,1);
+   // automatic destructor
+   G__memfunc_setup("~TProfile",931,G__TProfile_wATProfile_5_4,(int)('y'),-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__tag_memfunc_reset();
+}
+
+static void G__setup_memfuncTH1(void) {
+   /* TH1 */
+   G__tag_memfunc_setup(G__get_linked_tagnum(&G__G__HistLN_TH1));
+   G__memfunc_setup("AxisChoice",992,(G__InterfaceMethod)NULL,105,-1,G__defined_typename("Int_t"),0,1,1,4,0,"C - 'Option_t' 0 - axis",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Build",496,(G__InterfaceMethod)NULL,121,-1,-1,0,0,1,4,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("FitOptionsMake",1421,(G__InterfaceMethod)NULL,105,-1,G__defined_typename("Int_t"),0,1,1,4,0,"C - 'Option_t' 0 - option",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("PaintArrows",1146,(G__InterfaceMethod)NULL,121,-1,-1,0,0,1,4,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("PaintBoxes",1021,(G__InterfaceMethod)NULL,121,-1,-1,0,0,1,4,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("PaintColorLevels",1638,(G__InterfaceMethod)NULL,121,-1,-1,0,0,1,4,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("PaintContour",1254,(G__InterfaceMethod)NULL,121,-1,-1,0,0,1,4,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("PaintContourLine",1646,(G__InterfaceMethod)NULL,105,-1,G__defined_typename("Int_t"),0,12,1,4,0,
+"f - 'Float_t' 0 - elev1 i - 'Int_t' 0 - icont1 "
+"f - 'Float_t' 0 - x1 f - 'Float_t' 0 - y1 "
+"f - 'Float_t' 0 - elev2 i - 'Int_t' 0 - icont2 "
+"f - 'Float_t' 0 - x2 f - 'Float_t' 0 - y2 "
+"F - 'Float_t' 0 - xarr F - 'Float_t' 0 - yarr "
+"I - 'Int_t' 0 - itarr i - 'Int_t' 0 - ncont",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("PaintDate",890,(G__InterfaceMethod)NULL,121,-1,-1,0,0,1,4,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("PaintErrors",1145,(G__InterfaceMethod)NULL,121,-1,-1,0,0,1,4,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("PaintFile",892,(G__InterfaceMethod)NULL,121,-1,-1,0,0,1,4,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("PaintFrame",999,(G__InterfaceMethod)NULL,121,-1,-1,0,0,1,4,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("PaintFunction",1346,(G__InterfaceMethod)NULL,121,-1,-1,0,0,1,4,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("PaintHist",916,(G__InterfaceMethod)NULL,121,-1,-1,0,0,1,4,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("PaintH3",631,(G__InterfaceMethod)NULL,121,-1,-1,0,1,1,4,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("PaintH3Box",928,(G__InterfaceMethod)NULL,121,-1,-1,0,1,1,4,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("PaintLego",899,(G__InterfaceMethod)NULL,121,-1,-1,0,0,1,4,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("PaintLegoAxis",1304,(G__InterfaceMethod)NULL,121,-1,-1,0,2,1,4,0,
+"U 'TGaxis' - 0 - axis f - 'Float_t' 0 - ang",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("PaintLive",908,(G__InterfaceMethod)NULL,121,-1,-1,0,0,1,4,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("PaintScatterPlot",1649,(G__InterfaceMethod)NULL,121,-1,-1,0,0,1,4,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("PaintSurface",1221,(G__InterfaceMethod)NULL,121,-1,-1,0,0,1,4,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("PaintTable",996,(G__InterfaceMethod)NULL,121,-1,-1,0,0,1,4,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("PaintTitle",1022,(G__InterfaceMethod)NULL,121,-1,-1,0,0,1,4,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("PaintValues",1132,(G__InterfaceMethod)NULL,121,-1,-1,0,0,1,4,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("TableInit",892,(G__InterfaceMethod)NULL,105,-1,G__defined_typename("Int_t"),0,0,1,4,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("UpdateOptions",1359,(G__InterfaceMethod)NULL,121,-1,-1,0,0,1,4,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("RecalculateRange",1618,(G__InterfaceMethod)NULL,121,-1,-1,0,0,1,4,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Copy",411,(G__InterfaceMethod)NULL,121,-1,-1,0,1,1,2,0,"u 'TObject' - 1 - hnew",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("TH1",205,G__TH1_TH1_8_2,105,G__get_linked_tagnum(&G__G__HistLN_TH1),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("TH1",205,G__TH1_TH1_9_2,105,G__get_linked_tagnum(&G__G__HistLN_TH1),-1,0,5,1,1,0,
+"C - 'Text_t' 0 - name C - 'Text_t' 0 - title "
+"i - 'Int_t' 0 - nbinsx f - 'Axis_t' 0 - xlow "
+"f - 'Axis_t' 0 - xup",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("TH1",205,G__TH1_TH1_0_3,105,G__get_linked_tagnum(&G__G__HistLN_TH1),-1,0,4,1,1,0,
+"C - 'Text_t' 0 - name C - 'Text_t' 0 - title "
+"i - 'Int_t' 0 - nbinsx F - 'Axis_t' 0 - xbins",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Add",265,G__TH1_Add_2_3,121,-1,-1,0,2,1,1,0,
+"U 'TH1' - 0 - h1 f - 'Float_t' 0 1 c1",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Add",265,G__TH1_Add_3_3,121,-1,-1,0,4,1,1,0,
+"U 'TH1' - 0 - h1 U 'TH1' - 0 - h2 "
+"f - 'Float_t' 0 1 c1 f - 'Float_t' 0 1 c2","*MENU*",(void*)NULL,1);
+   G__memfunc_setup("AddBinContent",1277,G__TH1_AddBinContent_4_3,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 - bin",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("AddBinContent",1277,G__TH1_AddBinContent_5_3,121,-1,-1,0,2,1,1,0,
+"i - 'Int_t' 0 - bin d - 'Stat_t' 0 - w",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Browse",626,G__TH1_Browse_6_3,121,-1,-1,0,1,1,1,0,"U 'TBrowser' - 0 - b",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("DistancetoPrimitive",1991,G__TH1_DistancetoPrimitive_7_3,105,-1,G__defined_typename("Int_t"),0,2,1,1,0,
+"i - 'Int_t' 0 - px i - 'Int_t' 0 - py",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Divide",597,G__TH1_Divide_8_3,121,-1,-1,0,1,1,1,0,"U 'TH1' - 0 - h1",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Divide",597,G__TH1_Divide_9_3,121,-1,-1,0,5,1,1,0,
+"U 'TH1' - 0 - h1 U 'TH1' - 0 - h2 "
+"f - 'Float_t' 0 1 c1 f - 'Float_t' 0 1 c2 "
+"C - 'Option_t' 0 \"\" option","*MENU*",(void*)NULL,1);
+   G__memfunc_setup("Draw",398,G__TH1_Draw_0_4,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("DrawCopy",809,G__TH1_DrawCopy_1_4,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("DrawPanel",894,G__TH1_DrawPanel_2_4,121,-1,-1,0,0,1,1,0,"","*MENU*",(void*)NULL,1);
+   G__memfunc_setup("Eval",392,G__TH1_Eval_3_4,121,-1,-1,0,2,1,1,0,
+"U 'TF1' - 0 - f1 C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("ExecuteEvent",1237,G__TH1_ExecuteEvent_4_4,121,-1,-1,0,3,1,1,0,
+"i - 'Int_t' 0 - event i - 'Int_t' 0 - px "
+"i - 'Int_t' 0 - py",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Fill",391,G__TH1_Fill_5_4,121,-1,-1,0,1,1,1,0,"f - 'Axis_t' 0 - x",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Fill",391,G__TH1_Fill_6_4,121,-1,-1,0,2,1,1,0,
+"f - 'Axis_t' 0 - x d - 'Stat_t' 0 - w",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Fill",391,G__TH1_Fill_7_4,121,-1,-1,0,3,1,1,0,
+"f - 'Axis_t' 0 - x f - 'Axis_t' 0 - y "
+"d - 'Stat_t' 0 - w",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Fill",391,G__TH1_Fill_8_4,121,-1,-1,0,4,1,1,0,
+"f - 'Axis_t' 0 - x f - 'Axis_t' 0 - y "
+"f - 'Axis_t' 0 - z d - 'Stat_t' 0 - w",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Fill12",490,G__TH1_Fill12_9_4,121,-1,-1,0,2,1,1,0,
+"f - 'Axis_t' 0 - x f - 'Axis_t' 0 - y",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("FillN",469,G__TH1_FillN_0_5,121,-1,-1,0,4,1,1,0,
+"i - 'Int_t' 0 - ntimes F - 'Axis_t' 0 - x "
+"D - 'Double_t' 0 - w i - 'Int_t' 0 1 stride",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("FillN",469,G__TH1_FillN_1_5,121,-1,-1,0,5,1,1,0,
+"i - 'Int_t' 0 - ntimes F - 'Axis_t' 0 - x "
+"F - 'Axis_t' 0 - y D - 'Double_t' 0 - w "
+"i - 'Int_t' 0 1 stride",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("FillRandom",1000,G__TH1_FillRandom_2_5,121,-1,-1,0,2,1,1,0,
+"C - - 0 - fname i - 'Int_t' 0 5000 ntimes",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("FillRandom",1000,G__TH1_FillRandom_3_5,121,-1,-1,0,2,1,1,0,
+"U 'TH1' - 0 - h i - 'Int_t' 0 5000 ntimes",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Fit",291,G__TH1_Fit_4_5,121,-1,-1,0,5,1,1,0,
+"C - 'Text_t' 0 - formula C - 'Option_t' 0 \"\" option "
+"C - 'Option_t' 0 \"\" goption f - 'Float_t' 0 0 xmin "
+"f - 'Float_t' 0 0 xmax","*MENU*",(void*)NULL,1);
+   G__memfunc_setup("FitPanel",787,G__TH1_FitPanel_5_5,121,-1,-1,0,0,1,1,0,"","*MENU*",(void*)NULL,1);
+   G__memfunc_setup("FitSlicesY",991,G__TH1_FitSlicesY_6_5,121,-1,-1,0,4,1,1,0,
+"U 'TF1' - 0 0 f1 i - 'Int_t' 0 1 binmin "
+"i - 'Int_t' 0 0 binmax i - 'Int_t' 0 0 cut",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("FitSlicesZ",992,G__TH1_FitSlicesZ_7_5,121,-1,-1,0,6,1,1,0,
+"U 'TF1' - 0 0 f1 i - 'Int_t' 0 1 binminx "
+"i - 'Int_t' 0 0 binmaxx i - 'Int_t' 0 1 binminy "
+"i - 'Int_t' 0 0 binmaxy i - 'Int_t' 0 0 cut",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetListOfFunctions",1834,G__TH1_GetListOfFunctions_8_5,85,G__get_linked_tagnum(&G__G__HistLN_TList),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetNdivisions",1350,G__TH1_GetNdivisions_9_5,105,-1,G__defined_typename("Int_t"),0,1,1,1,0,"C - 'Option_t' 0 \"X\" axis",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetAxisColor",1204,G__TH1_GetAxisColor_0_6,115,-1,G__defined_typename("Color_t"),0,1,1,1,0,"C - 'Option_t' 0 \"X\" axis",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetLabelColor",1279,G__TH1_GetLabelColor_1_6,115,-1,G__defined_typename("Color_t"),0,1,1,1,0,"C - 'Option_t' 0 \"X\" axis",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetLabelFont",1175,G__TH1_GetLabelFont_2_6,115,-1,G__defined_typename("Style_t"),0,1,1,1,0,"C - 'Option_t' 0 \"X\" axis",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetLabelOffset",1383,G__TH1_GetLabelOffset_3_6,102,-1,G__defined_typename("Float_t"),0,1,1,1,0,"C - 'Option_t' 0 \"X\" axis",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetLabelSize",1179,G__TH1_GetLabelSize_4_6,102,-1,G__defined_typename("Float_t"),0,1,1,1,0,"C - 'Option_t' 0 \"X\" axis",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetTitleOffset",1417,G__TH1_GetTitleOffset_5_6,102,-1,G__defined_typename("Float_t"),0,1,1,1,0,"C - 'Option_t' 0 \"X\" axis",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetTickLength",1293,G__TH1_GetTickLength_6_6,102,-1,G__defined_typename("Float_t"),0,1,1,1,0,"C - 'Option_t' 0 \"X\" axis",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetBarOffset",1180,G__TH1_GetBarOffset_7_6,102,-1,G__defined_typename("Float_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetBarWidth",1077,G__TH1_GetBarWidth_8_6,102,-1,G__defined_typename("Float_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetContour",1034,G__TH1_GetContour_9_6,105,-1,G__defined_typename("Int_t"),0,1,1,1,0,"F - 'Float_t' 0 0 levels",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetContourLevel",1538,G__TH1_GetContourLevel_0_7,102,-1,G__defined_typename("Float_t"),0,1,1,1,0,"i - 'Int_t' 0 - level",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetBin",569,G__TH1_GetBin_1_7,105,-1,G__defined_typename("Int_t"),0,3,1,1,0,
+"i - 'Int_t' 0 - binx i - 'Int_t' 0 0 biny "
+"i - 'Int_t' 0 0 binz",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetBinCenter",1178,G__TH1_GetBinCenter_2_7,102,-1,G__defined_typename("Axis_t"),0,1,1,1,0,"i - 'Int_t' 0 - bin",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetBinContent",1300,G__TH1_GetBinContent_3_7,100,-1,G__defined_typename("Stat_t"),0,1,1,1,0,"i - 'Int_t' 0 - bin",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetBinError",1091,G__TH1_GetBinError_4_7,100,-1,G__defined_typename("Stat_t"),0,1,1,1,0,"i - 'Int_t' 0 - bin",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetBinLabel",1049,G__TH1_GetBinLabel_5_7,67,-1,G__defined_typename("Text_t"),0,1,1,1,0,"i - 'Int_t' 0 - bin",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetBinLowEdge",1248,G__TH1_GetBinLowEdge_6_7,102,-1,G__defined_typename("Axis_t"),0,1,1,1,0,"i - 'Int_t' 0 - bin",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetBinWidth",1081,G__TH1_GetBinWidth_7_7,102,-1,G__defined_typename("Axis_t"),0,1,1,1,0,"i - 'Int_t' 0 - bin",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetCellContent",1403,G__TH1_GetCellContent_8_7,100,-1,G__defined_typename("Stat_t"),0,2,1,1,0,
+"i - 'Int_t' 0 - binx i - 'Int_t' 0 - biny",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetCellError",1194,G__TH1_GetCellError_9_7,100,-1,G__defined_typename("Stat_t"),0,2,1,1,0,
+"i - 'Int_t' 0 - binx i - 'Int_t' 0 - biny",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetCenter",897,G__TH1_GetCenter_0_8,121,-1,-1,0,1,1,1,0,"F - 'Axis_t' 0 - center",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetDirectory",1237,G__TH1_GetDirectory_1_8,85,G__get_linked_tagnum(&G__G__HistLN_TDirectory),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("GetEntries",1018,G__TH1_GetEntries_2_8,100,-1,G__defined_typename("Stat_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetFunction",1126,G__TH1_GetFunction_3_8,85,G__get_linked_tagnum(&G__G__HistLN_TF1),-1,0,1,1,1,0,"C - 'Text_t' 0 - name",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetDimension",1222,G__TH1_GetDimension_4_8,105,-1,G__defined_typename("Int_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetLabel",768,G__TH1_GetLabel_5_8,121,-1,-1,0,1,1,1,0,"C - 'Text_t' 0 - label",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetLowEdge",967,G__TH1_GetLowEdge_6_8,121,-1,-1,0,1,1,1,0,"F - 'Axis_t' 0 - edge",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetMaximum",1022,G__TH1_GetMaximum_7_8,102,-1,G__defined_typename("Float_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetMinimum",1020,G__TH1_GetMinimum_8_8,102,-1,G__defined_typename("Float_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetMean",673,G__TH1_GetMean_9_8,100,-1,G__defined_typename("Stat_t"),0,1,1,1,0,"i - 'Int_t' 0 1 axis",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetNbinsX",882,G__TH1_GetNbinsX_0_9,105,-1,G__defined_typename("Int_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetNbinsY",883,G__TH1_GetNbinsY_1_9,105,-1,G__defined_typename("Int_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetNbinsZ",884,G__TH1_GetNbinsZ_2_9,105,-1,G__defined_typename("Int_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetObjectInfo",1283,G__TH1_GetObjectInfo_3_9,67,-1,G__defined_typename("Text_t"),0,2,1,1,0,
+"i - 'Int_t' 0 - px i - 'Int_t' 0 - py",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetOption",921,G__TH1_GetOption_4_9,67,-1,G__defined_typename("Option_t"),0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetSumOfWeights",1509,G__TH1_GetSumOfWeights_5_9,100,-1,G__defined_typename("Stat_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetSumw2N",844,G__TH1_GetSumw2N_6_9,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetRMS",530,G__TH1_GetRMS_7_9,100,-1,G__defined_typename("Stat_t"),0,1,1,1,0,"i - 'Int_t' 0 1 axis",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetXaxis",813,G__TH1_GetXaxis_8_9,85,G__get_linked_tagnum(&G__G__HistLN_TAxis),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetYaxis",814,G__TH1_GetYaxis_9_9,85,G__get_linked_tagnum(&G__G__HistLN_TAxis),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetZaxis",815,G__TH1_GetZaxis_0_10,85,G__get_linked_tagnum(&G__G__HistLN_TAxis),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Integral",822,G__TH1_Integral_1_10,100,-1,G__defined_typename("Stat_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Integral",822,G__TH1_Integral_2_10,100,-1,G__defined_typename("Stat_t"),0,2,1,1,0,
+"i - 'Int_t' 0 - binx1 i - 'Int_t' 0 - binx2",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Integral",822,G__TH1_Integral_3_10,100,-1,G__defined_typename("Stat_t"),0,4,1,1,0,
+"i - 'Int_t' 0 - binx1 i - 'Int_t' 0 - binx2 "
+"i - 'Int_t' 0 - biny1 i - 'Int_t' 0 - biny2",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Integral",822,G__TH1_Integral_4_10,100,-1,G__defined_typename("Stat_t"),0,6,1,1,0,
+"i - 'Int_t' 0 - binx1 i - 'Int_t' 0 - binx2 "
+"i - 'Int_t' 0 - biny1 i - 'Int_t' 0 - biny2 "
+"i - 'Int_t' 0 - binz1 i - 'Int_t' 0 - binz2",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("MakeChopt",892,G__TH1_MakeChopt_5_10,105,-1,G__defined_typename("Int_t"),0,1,1,1,0,"C - 'Option_t' 0 - option",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Multiply",864,G__TH1_Multiply_6_10,121,-1,-1,0,1,1,1,0,"U 'TH1' - 0 - h1",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Multiply",864,G__TH1_Multiply_7_10,121,-1,-1,0,5,1,1,0,
+"U 'TH1' - 0 - h1 U 'TH1' - 0 - h2 "
+"f - 'Float_t' 0 1 c1 f - 'Float_t' 0 1 c2 "
+"C - 'Option_t' 0 \"\" option","*MENU*",(void*)NULL,1);
+   G__memfunc_setup("Paint",508,G__TH1_Paint_8_10,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("PaintAxis",913,G__TH1_PaintAxis_9_10,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("PaintInit",912,G__TH1_PaintInit_0_11,105,-1,G__defined_typename("Int_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("PaintPalette",1227,G__TH1_PaintPalette_1_11,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("PaintStat",920,G__TH1_PaintStat_2_11,121,-1,-1,0,2,1,1,0,
+"i - 'Int_t' 0 - dostat U 'TF1' - 0 - fit",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("PaintStat2",970,G__TH1_PaintStat2_3_11,121,-1,-1,0,2,1,1,0,
+"i - 'Int_t' 0 - dostat U 'TF1' - 0 - fit",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Print",525,G__TH1_Print_4_11,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("ProfileX",809,G__TH1_ProfileX_5_11,85,G__get_linked_tagnum(&G__G__HistLN_TProfile),-1,0,4,1,1,0,
+"C - - 0 \"_pfx\" name i - 'Int_t' 0 0 firstybin "
+"i - 'Int_t' 0 0 lastybin C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ProfileY",810,G__TH1_ProfileY_6_11,85,G__get_linked_tagnum(&G__G__HistLN_TProfile),-1,0,4,1,1,0,
+"C - - 0 \"_pfy\" name i - 'Int_t' 0 0 firstxbin "
+"i - 'Int_t' 0 0 lastxbin C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ProjectionX",1141,G__TH1_ProjectionX_7_11,85,G__get_linked_tagnum(&G__G__HistLN_TH1D),-1,0,4,1,1,0,
+"C - - 0 \"_px\" name i - 'Int_t' 0 0 firstybin "
+"i - 'Int_t' 0 0 lastybin C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ProjectionY",1142,G__TH1_ProjectionY_8_11,85,G__get_linked_tagnum(&G__G__HistLN_TH1D),-1,0,4,1,1,0,
+"C - - 0 \"_py\" name i - 'Int_t' 0 0 firstxbin "
+"i - 'Int_t' 0 0 lastxbin C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Rebin",496,G__TH1_Rebin_9_11,85,G__get_linked_tagnum(&G__G__HistLN_TH1),-1,0,2,1,1,0,
+"i - 'Int_t' 0 2 ngroup C - - 0 \"\" newname",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Reset",515,G__TH1_Reset_0_12,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SavePrimitive",1352,G__TH1_SavePrimitive_1_12,121,-1,-1,0,2,1,1,0,
+"u 'ofstream' - 1 - out C - 'Option_t' 0 - option",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Scale",488,G__TH1_Scale_2_12,121,-1,-1,0,1,1,1,0,"f - 'Float_t' 0 1 c1",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetAxisColor",1216,G__TH1_SetAxisColor_3_12,121,-1,-1,0,2,1,1,0,
+"s - 'Color_t' 0 1 color C - 'Option_t' 0 \"X\" axis",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetBarOffset",1192,G__TH1_SetBarOffset_4_12,121,-1,-1,0,1,1,1,0,"f - 'Float_t' 0 0.25 offset",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetBarWidth",1089,G__TH1_SetBarWidth_5_12,121,-1,-1,0,1,1,1,0,"f - 'Float_t' 0 0.5 width",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetBinContent",1312,G__TH1_SetBinContent_6_12,121,-1,-1,0,2,1,1,0,
+"i - 'Int_t' 0 - bin d - 'Stat_t' 0 - content",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetBinError",1103,G__TH1_SetBinError_7_12,121,-1,-1,0,2,1,1,0,
+"i - 'Int_t' 0 - bin d - 'Stat_t' 0 - error",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetBinLabel",1061,G__TH1_SetBinLabel_8_12,121,-1,-1,0,2,1,1,0,
+"i - 'Int_t' 0 - bin C - 'Text_t' 0 - label",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetBins",696,G__TH1_SetBins_9_12,121,-1,-1,0,3,1,1,0,
+"i - 'Int_t' 0 - nx f - 'Float_t' 0 - xmin "
+"f - 'Float_t' 0 - xmax",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetBins",696,G__TH1_SetBins_0_13,121,-1,-1,0,6,1,1,0,
+"i - 'Int_t' 0 - nx f - 'Float_t' 0 - xmin "
+"f - 'Float_t' 0 - xmax i - 'Int_t' 0 - ny "
+"f - 'Float_t' 0 - ymin f - 'Float_t' 0 - ymax",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetBinsLength",1306,G__TH1_SetBinsLength_1_13,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 - -","refefined in derived classes",(void*)NULL,1);
+   G__memfunc_setup("SetCellContent",1415,G__TH1_SetCellContent_2_13,121,-1,-1,0,3,1,1,0,
+"i - 'Int_t' 0 - binx i - 'Int_t' 0 - biny "
+"d - 'Stat_t' 0 - content",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetCellError",1206,G__TH1_SetCellError_3_13,121,-1,-1,0,3,1,1,0,
+"i - 'Int_t' 0 - binx i - 'Int_t' 0 - biny "
+"d - 'Stat_t' 0 - content",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetContent",1031,G__TH1_SetContent_4_13,121,-1,-1,0,1,1,1,0,"D - 'Stat_t' 0 - content",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetContour",1046,G__TH1_SetContour_5_13,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 - nlevels",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetContour",1046,G__TH1_SetContour_6_13,121,-1,-1,0,2,1,1,0,
+"i - 'Int_t' 0 - nlevels F - 'Float_t' 0 - levels",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetContourLevel",1550,G__TH1_SetContourLevel_7_13,121,-1,-1,0,2,1,1,0,
+"i - 'Int_t' 0 - level f - 'Float_t' 0 - value",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetDirectory",1249,G__TH1_SetDirectory_8_13,121,-1,-1,0,1,1,1,0,"U 'TDirectory' - 0 - dir",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetEntries",1030,G__TH1_SetEntries_9_13,121,-1,-1,0,1,1,1,0,"d - 'Stat_t' 0 - n",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetError",822,G__TH1_SetError_0_14,121,-1,-1,0,1,1,1,0,"D - 'Stat_t' 0 - error",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetLabel",780,G__TH1_SetLabel_1_14,121,-1,-1,0,1,1,1,0,"C - 'Text_t' 0 - label",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetLabelColor",1291,G__TH1_SetLabelColor_2_14,121,-1,-1,0,2,1,1,0,
+"s - 'Color_t' 0 1 color C - 'Option_t' 0 \"X\" axis",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetLabelFont",1187,G__TH1_SetLabelFont_3_14,121,-1,-1,0,2,1,1,0,
+"s - 'Style_t' 0 62 font C - 'Option_t' 0 \"X\" axis",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetLabelOffset",1395,G__TH1_SetLabelOffset_4_14,121,-1,-1,0,2,1,1,0,
+"f - 'Float_t' 0 0.005 offset C - 'Option_t' 0 \"X\" axis",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetLabelSize",1191,G__TH1_SetLabelSize_5_14,121,-1,-1,0,2,1,1,0,
+"f - 'Float_t' 0 0.02 size C - 'Option_t' 0 \"X\" axis",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetMaximum",1034,G__TH1_SetMaximum_6_14,121,-1,-1,0,1,1,1,0,"f - 'Float_t' 0 -1111 maximum","*MENU*",(void*)NULL,1);
+   G__memfunc_setup("SetMinimum",1032,G__TH1_SetMinimum_7_14,121,-1,-1,0,1,1,1,0,"f - 'Float_t' 0 -1111 minimum","*MENU*",(void*)NULL,1);
+   G__memfunc_setup("SetName",685,G__TH1_SetName_8_14,121,-1,-1,0,1,1,1,0,"C - 'Text_t' 0 - name","*MENU*",(void*)NULL,1);
+   G__memfunc_setup("SetNdivisions",1362,G__TH1_SetNdivisions_9_14,121,-1,-1,0,2,1,1,0,
+"i - 'Int_t' 0 510 n C - 'Option_t' 0 \"X\" axis",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetNormFactor",1319,G__TH1_SetNormFactor_0_15,121,-1,-1,0,1,1,1,0,"f - 'Float_t' 0 1 factor",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetOption",933,G__TH1_SetOption_1_15,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \" \" option",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetTickLength",1305,G__TH1_SetTickLength_2_15,121,-1,-1,0,2,1,1,0,
+"f - 'Float_t' 0 0.02 length C - 'Option_t' 0 \"X\" axis",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetTitleOffset",1429,G__TH1_SetTitleOffset_3_15,121,-1,-1,0,2,1,1,0,
+"f - 'Float_t' 0 1 offset C - 'Option_t' 0 \"X\" axis",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetXTitle",902,G__TH1_SetXTitle_4_15,121,-1,-1,0,1,1,1,0,"C - 'Text_t' 0 - title",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetYTitle",903,G__TH1_SetYTitle_5_15,121,-1,-1,0,1,1,1,0,"C - 'Text_t' 0 - title",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetZTitle",904,G__TH1_SetZTitle_6_15,121,-1,-1,0,1,1,1,0,"C - 'Text_t' 0 - title",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Sumw2",478,G__TH1_Sumw2_7_15,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Smooth",634,G__TH1_Smooth_8_15,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("UseCurrentStyle",1569,G__TH1_UseCurrentStyle_9_15,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("DeclFileName",1145,G__TH1_DeclFileName_0_16,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("DeclFileLine",1152,G__TH1_DeclFileLine_1_16,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ImplFileName",1171,G__TH1_ImplFileName_2_16,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ImplFileLine",1178,G__TH1_ImplFileLine_3_16,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Class_Version",1339,G__TH1_Class_Version_4_16,115,-1,G__defined_typename("Version_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Class",502,G__TH1_Class_5_16,85,G__get_linked_tagnum(&G__G__HistLN_TClass),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Dictionary",1046,G__TH1_Dictionary_6_16,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("IsA",253,G__TH1_IsA_7_16,85,G__get_linked_tagnum(&G__G__HistLN_TClass),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("ShowMembers",1132,G__TH1_ShowMembers_8_16,121,-1,-1,0,2,1,1,0,
+"u 'TMemberInspector' - 1 - insp C - - 0 - parent",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Streamer",835,G__TH1_Streamer_9_16,121,-1,-1,0,1,1,1,0,"u 'TBuffer' - 1 - b",(char*)NULL,(void*)NULL,1);
+   // automatic copy constructor
+   G__memfunc_setup("TH1",205,G__TH1_TH1_0_17,(int)('i'),G__get_linked_tagnum(&G__G__HistLN_TH1),-1,0,1,1,1,0,"u 'TH1' - 1 - -",(char*)NULL,(void*)NULL,0);
+   // automatic destructor
+   G__memfunc_setup("~TH1",331,G__TH1_wATH1_1_17,(int)('y'),-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__tag_memfunc_reset();
+}
+
+static void G__setup_memfuncTH1C(void) {
+   /* TH1C */
+   G__tag_memfunc_setup(G__get_linked_tagnum(&G__G__HistLN_TH1C));
+   G__memfunc_setup("TH1C",272,(G__InterfaceMethod)NULL,105,G__get_linked_tagnum(&G__G__HistLN_TH1C),-1,0,6,1,2,0,
+"i - 'Int_t' 0 - dim C - 'Text_t' 0 - name "
+"C - 'Text_t' 0 - title i - 'Int_t' 0 - nbinsx "
+"f - 'Axis_t' 0 - xlow f - 'Axis_t' 0 - xup",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("TH1C",272,(G__InterfaceMethod)NULL,105,G__get_linked_tagnum(&G__G__HistLN_TH1C),-1,0,5,1,2,0,
+"i - 'Int_t' 0 - dim C - 'Text_t' 0 - name "
+"C - 'Text_t' 0 - title i - 'Int_t' 0 - nbinsx "
+"F - 'Axis_t' 0 - xbins",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("TH1C",272,G__TH1C_TH1C_2_0,105,G__get_linked_tagnum(&G__G__HistLN_TH1C),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("TH1C",272,G__TH1C_TH1C_3_0,105,G__get_linked_tagnum(&G__G__HistLN_TH1C),-1,0,5,1,1,0,
+"C - 'Text_t' 0 - name C - 'Text_t' 0 - title "
+"i - 'Int_t' 0 - nbinsx f - 'Axis_t' 0 - xlow "
+"f - 'Axis_t' 0 - xup",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("TH1C",272,G__TH1C_TH1C_4_0,105,G__get_linked_tagnum(&G__G__HistLN_TH1C),-1,0,4,1,1,0,
+"C - 'Text_t' 0 - name C - 'Text_t' 0 - title "
+"i - 'Int_t' 0 - nbinsx F - 'Axis_t' 0 - xbins",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("TH1C",272,G__TH1C_TH1C_5_0,105,G__get_linked_tagnum(&G__G__HistLN_TH1C),-1,0,1,1,1,0,"u 'TH1C' - 1 - h1c",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("AddBinContent",1277,G__TH1C_AddBinContent_7_0,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 - bin",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("AddBinContent",1277,G__TH1C_AddBinContent_8_0,121,-1,-1,0,2,1,1,0,
+"i - 'Int_t' 0 - bin d - 'Stat_t' 0 - w",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Copy",411,G__TH1C_Copy_9_0,121,-1,-1,0,1,1,1,0,"u 'TObject' - 1 - hnew",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("DrawCopy",809,G__TH1C_DrawCopy_0_1,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetBinContent",1300,G__TH1C_GetBinContent_1_1,100,-1,G__defined_typename("Stat_t"),0,1,1,1,0,"i - 'Int_t' 0 - bin",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Reset",515,G__TH1C_Reset_2_1,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetBinContent",1312,G__TH1C_SetBinContent_3_1,121,-1,-1,0,2,1,1,0,
+"i - 'Int_t' 0 - bin d - 'Stat_t' 0 - content",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetBinsLength",1306,G__TH1C_SetBinsLength_4_1,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 - nx",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("operator=",937,G__TH1C_operatoreQ_5_1,117,G__get_linked_tagnum(&G__G__HistLN_TH1C),-1,1,1,1,1,0,"u 'TH1C' - 1 - h1",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("DeclFileName",1145,G__TH1C_DeclFileName_6_1,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("DeclFileLine",1152,G__TH1C_DeclFileLine_7_1,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ImplFileName",1171,G__TH1C_ImplFileName_8_1,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ImplFileLine",1178,G__TH1C_ImplFileLine_9_1,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Class_Version",1339,G__TH1C_Class_Version_0_2,115,-1,G__defined_typename("Version_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Class",502,G__TH1C_Class_1_2,85,G__get_linked_tagnum(&G__G__HistLN_TClass),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Dictionary",1046,G__TH1C_Dictionary_2_2,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("IsA",253,G__TH1C_IsA_3_2,85,G__get_linked_tagnum(&G__G__HistLN_TClass),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("ShowMembers",1132,G__TH1C_ShowMembers_4_2,121,-1,-1,0,2,1,1,0,
+"u 'TMemberInspector' - 1 - insp C - - 0 - parent",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Streamer",835,G__TH1C_Streamer_5_2,121,-1,-1,0,1,1,1,0,"u 'TBuffer' - 1 - b",(char*)NULL,(void*)NULL,1);
+   // automatic destructor
+   G__memfunc_setup("~TH1C",398,G__TH1C_wATH1C_6_2,(int)('y'),-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__tag_memfunc_reset();
+}
+
+static void G__setup_memfuncTH1S(void) {
+   /* TH1S */
+   G__tag_memfunc_setup(G__get_linked_tagnum(&G__G__HistLN_TH1S));
+   G__memfunc_setup("TH1S",288,(G__InterfaceMethod)NULL,105,G__get_linked_tagnum(&G__G__HistLN_TH1S),-1,0,6,1,2,0,
+"i - 'Int_t' 0 - dim C - 'Text_t' 0 - name "
+"C - 'Text_t' 0 - title i - 'Int_t' 0 - nbinsx "
+"f - 'Axis_t' 0 - xlow f - 'Axis_t' 0 - xup",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("TH1S",288,(G__InterfaceMethod)NULL,105,G__get_linked_tagnum(&G__G__HistLN_TH1S),-1,0,5,1,2,0,
+"i - 'Int_t' 0 - dim C - 'Text_t' 0 - name "
+"C - 'Text_t' 0 - title i - 'Int_t' 0 - nbinsx "
+"F - 'Axis_t' 0 - xbins",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("TH1S",288,G__TH1S_TH1S_2_0,105,G__get_linked_tagnum(&G__G__HistLN_TH1S),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("TH1S",288,G__TH1S_TH1S_3_0,105,G__get_linked_tagnum(&G__G__HistLN_TH1S),-1,0,5,1,1,0,
+"C - 'Text_t' 0 - name C - 'Text_t' 0 - title "
+"i - 'Int_t' 0 - nbinsx f - 'Axis_t' 0 - xlow "
+"f - 'Axis_t' 0 - xup",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("TH1S",288,G__TH1S_TH1S_4_0,105,G__get_linked_tagnum(&G__G__HistLN_TH1S),-1,0,4,1,1,0,
+"C - 'Text_t' 0 - name C - 'Text_t' 0 - title "
+"i - 'Int_t' 0 - nbinsx F - 'Axis_t' 0 - xbins",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("TH1S",288,G__TH1S_TH1S_5_0,105,G__get_linked_tagnum(&G__G__HistLN_TH1S),-1,0,1,1,1,0,"u 'TH1S' - 1 - h1s",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("AddBinContent",1277,G__TH1S_AddBinContent_7_0,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 - bin",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("AddBinContent",1277,G__TH1S_AddBinContent_8_0,121,-1,-1,0,2,1,1,0,
+"i - 'Int_t' 0 - bin d - 'Stat_t' 0 - w",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Copy",411,G__TH1S_Copy_9_0,121,-1,-1,0,1,1,1,0,"u 'TObject' - 1 - hnew",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("DrawCopy",809,G__TH1S_DrawCopy_0_1,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetBinContent",1300,G__TH1S_GetBinContent_1_1,100,-1,G__defined_typename("Stat_t"),0,1,1,1,0,"i - 'Int_t' 0 - bin",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Reset",515,G__TH1S_Reset_2_1,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetBinContent",1312,G__TH1S_SetBinContent_3_1,121,-1,-1,0,2,1,1,0,
+"i - 'Int_t' 0 - bin d - 'Stat_t' 0 - content",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("SetBinsLength",1306,G__TH1S_SetBinsLength_4_1,121,-1,-1,0,1,1,1,0,"i - 'Int_t' 0 - nx",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("operator=",937,G__TH1S_operatoreQ_5_1,117,G__get_linked_tagnum(&G__G__HistLN_TH1S),-1,1,1,1,1,0,"u 'TH1S' - 1 - h1",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("DeclFileName",1145,G__TH1S_DeclFileName_6_1,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("DeclFileLine",1152,G__TH1S_DeclFileLine_7_1,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ImplFileName",1171,G__TH1S_ImplFileName_8_1,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ImplFileLine",1178,G__TH1S_ImplFileLine_9_1,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Class_Version",1339,G__TH1S_Class_Version_0_2,115,-1,G__defined_typename("Version_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Class",502,G__TH1S_Class_1_2,85,G__get_linked_tagnum(&G__G__HistLN_TClass),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Dictionary",1046,G__TH1S_Dictionary_2_2,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("IsA",253,G__TH1S_IsA_3_2,85,G__get_linked_tagnum(&G__G__HistLN_TClass),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("ShowMembers",1132,G__TH1S_ShowMembers_4_2,121,-1,-1,0,2,1,1,0,
+"u 'TMemberInspector' - 1 - insp C - - 0 - parent",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Streamer",835,G__TH1S_Streamer_5_2,121,-1,-1,0,1,1,1,0,"u 'TBuffer' - 1 - b",(char*)NULL,(void*)NULL,1);
+   // automatic destructor
+   G__memfunc_setup("~TH1S",414,G__TH1S_wATH1S_6_2,(int)('y'),-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__tag_memfunc_reset();
+}
+
+static void G__setup_memfuncTH2(void) {
+   /* TH2 */
+   G__tag_memfunc_setup(G__get_linked_tagnum(&G__G__HistLN_TH2));
+   G__memfunc_setup("Copy20",509,(G__InterfaceMethod)NULL,121,-1,-1,0,1,1,2,0,"u 'TH2' - 1 - hnew",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Fill20",489,(G__InterfaceMethod)NULL,121,-1,-1,0,2,1,2,0,
+"f - 'Axis_t' 0 - x f - 'Axis_t' 0 - y",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Fill20",489,(G__InterfaceMethod)NULL,121,-1,-1,0,3,1,2,0,
+"f - 'Axis_t' 0 - x f - 'Axis_t' 0 - y "
+"d - 'Stat_t' 0 - w",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("TH2",206,G__TH2_TH2_3_0,105,G__get_linked_tagnum(&G__G__HistLN_TH2),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("DeclFileName",1145,G__TH2_DeclFileName_5_0,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("DeclFileLine",1152,G__TH2_DeclFileLine_6_0,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ImplFileName",1171,G__TH2_ImplFileName_7_0,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ImplFileLine",1178,G__TH2_ImplFileLine_8_0,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Class_Version",1339,G__TH2_Class_Version_9_0,115,-1,G__defined_typename("Version_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Class",502,G__TH2_Class_0_1,85,G__get_linked_tagnum(&G__G__HistLN_TClass),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Dictionary",1046,G__TH2_Dictionary_1_1,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("IsA",253,G__TH2_IsA_2_1,85,G__get_linked_tagnum(&G__G__HistLN_TClass),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("ShowMembers",1132,G__TH2_ShowMembers_3_1,121,-1,-1,0,2,1,1,0,
+"u 'TMemberInspector' - 1 - insp C - - 0 - parent",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Streamer",835,G__TH2_Streamer_4_1,121,-1,-1,0,1,1,1,0,"u 'TBuffer' - 1 - b",(char*)NULL,(void*)NULL,1);
+   // automatic copy constructor
+   G__memfunc_setup("TH2",206,G__TH2_TH2_5_1,(int)('i'),G__get_linked_tagnum(&G__G__HistLN_TH2),-1,0,1,1,1,0,"u 'TH2' - 1 - -",(char*)NULL,(void*)NULL,0);
+   // automatic destructor
+   G__memfunc_setup("~TH2",332,G__TH2_wATH2_6_1,(int)('y'),-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__tag_memfunc_reset();
+}
+
+static void G__setup_memfuncTH2C(void) {
+   /* TH2C */
+   G__tag_memfunc_setup(G__get_linked_tagnum(&G__G__HistLN_TH2C));
+   G__memfunc_setup("Fill",391,(G__InterfaceMethod)NULL,121,-1,-1,0,1,1,4,0,"f - 'Axis_t' 0 - -",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Fill",391,(G__InterfaceMethod)NULL,121,-1,-1,0,2,1,4,0,
+"f - 'Axis_t' 0 - - d - 'Stat_t' 0 - -",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Fill",391,(G__InterfaceMethod)NULL,121,-1,-1,0,4,1,4,0,
+"f - 'Axis_t' 0 - - f - 'Axis_t' 0 - - "
+"f - 'Axis_t' 0 - - d - 'Stat_t' 0 - -",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("TH2C",273,G__TH2C_TH2C_3_0,105,G__get_linked_tagnum(&G__G__HistLN_TH2C),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("TH2C",273,G__TH2C_TH2C_4_0,105,G__get_linked_tagnum(&G__G__HistLN_TH2C),-1,0,8,1,1,0,
+"C - 'Text_t' 0 - name C - 'Text_t' 0 - title "
+"i - 'Int_t' 0 - nbinsx f - 'Axis_t' 0 - xlow "
+"f - 'Axis_t' 0 - xup i - 'Int_t' 0 - nbinsy "
+"f - 'Axis_t' 0 - ylow f - 'Axis_t' 0 - yup",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("TH2C",273,G__TH2C_TH2C_5_0,105,G__get_linked_tagnum(&G__G__HistLN_TH2C),-1,0,7,1,1,0,
+"C - 'Text_t' 0 - name C - 'Text_t' 0 - title "
+"i - 'Int_t' 0 - nbinsx F - 'Axis_t' 0 - xbins "
+"i - 'Int_t' 0 - nbinsy f - 'Axis_t' 0 - ylow "
+"f - 'Axis_t' 0 - yup",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("TH2C",273,G__TH2C_TH2C_6_0,105,G__get_linked_tagnum(&G__G__HistLN_TH2C),-1,0,7,1,1,0,
+"C - 'Text_t' 0 - name C - 'Text_t' 0 - title "
+"i - 'Int_t' 0 - nbinsx f - 'Axis_t' 0 - xlow "
+"f - 'Axis_t' 0 - xup i - 'Int_t' 0 - nbinsy "
+"F - 'Axis_t' 0 - ybins",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("TH2C",273,G__TH2C_TH2C_7_0,105,G__get_linked_tagnum(&G__G__HistLN_TH2C),-1,0,6,1,1,0,
+"C - 'Text_t' 0 - name C - 'Text_t' 0 - title "
+"i - 'Int_t' 0 - nbinsx F - 'Axis_t' 0 - xbins "
+"i - 'Int_t' 0 - nbinsy F - 'Axis_t' 0 - ybins",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("TH2C",273,G__TH2C_TH2C_8_0,105,G__get_linked_tagnum(&G__G__HistLN_TH2C),-1,0,1,1,1,0,"u 'TH2C' - 1 - h2c",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Copy",411,G__TH2C_Copy_0_1,121,-1,-1,0,1,1,1,0,"u 'TObject' - 1 - hnew",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("DrawCopy",809,G__TH2C_DrawCopy_1_1,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Fill",391,G__TH2C_Fill_2_1,121,-1,-1,0,2,1,1,0,
+"f - 'Axis_t' 0 - x f - 'Axis_t' 0 - y",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Fill",391,G__TH2C_Fill_3_1,121,-1,-1,0,3,1,1,0,
+"f - 'Axis_t' 0 - x f - 'Axis_t' 0 - y "
+"d - 'Stat_t' 0 - w",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetCorrelationFactor",2049,G__TH2C_GetCorrelationFactor_4_1,100,-1,G__defined_typename("Stat_t"),0,2,1,1,0,
+"i - 'Int_t' 0 1 axis1 i - 'Int_t' 0 2 axis2",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetCovariance",1307,G__TH2C_GetCovariance_5_1,100,-1,G__defined_typename("Stat_t"),0,2,1,1,0,
+"i - 'Int_t' 0 1 axis1 i - 'Int_t' 0 2 axis2",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetMean",673,G__TH2C_GetMean_6_1,100,-1,G__defined_typename("Stat_t"),0,1,1,1,0,"i - 'Int_t' 0 1 axis",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetRMS",530,G__TH2C_GetRMS_7_1,100,-1,G__defined_typename("Stat_t"),0,1,1,1,0,"i - 'Int_t' 0 1 axis",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("operator=",937,G__TH2C_operatoreQ_8_1,117,G__get_linked_tagnum(&G__G__HistLN_TH2C),-1,1,1,1,1,0,"u 'TH2C' - 1 - h1",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("DeclFileName",1145,G__TH2C_DeclFileName_9_1,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("DeclFileLine",1152,G__TH2C_DeclFileLine_0_2,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ImplFileName",1171,G__TH2C_ImplFileName_1_2,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ImplFileLine",1178,G__TH2C_ImplFileLine_2_2,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Class_Version",1339,G__TH2C_Class_Version_3_2,115,-1,G__defined_typename("Version_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Class",502,G__TH2C_Class_4_2,85,G__get_linked_tagnum(&G__G__HistLN_TClass),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Dictionary",1046,G__TH2C_Dictionary_5_2,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("IsA",253,G__TH2C_IsA_6_2,85,G__get_linked_tagnum(&G__G__HistLN_TClass),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("ShowMembers",1132,G__TH2C_ShowMembers_7_2,121,-1,-1,0,2,1,1,0,
+"u 'TMemberInspector' - 1 - insp C - - 0 - parent",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Streamer",835,G__TH2C_Streamer_8_2,121,-1,-1,0,1,1,1,0,"u 'TBuffer' - 1 - b",(char*)NULL,(void*)NULL,1);
+   // automatic destructor
+   G__memfunc_setup("~TH2C",399,G__TH2C_wATH2C_9_2,(int)('y'),-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__tag_memfunc_reset();
+}
+
+static void G__setup_memfuncTH2S(void) {
+   /* TH2S */
+   G__tag_memfunc_setup(G__get_linked_tagnum(&G__G__HistLN_TH2S));
+   G__memfunc_setup("Fill",391,(G__InterfaceMethod)NULL,121,-1,-1,0,1,1,4,0,"f - 'Axis_t' 0 - -",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Fill",391,(G__InterfaceMethod)NULL,121,-1,-1,0,2,1,4,0,
+"f - 'Axis_t' 0 - - d - 'Stat_t' 0 - -",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Fill",391,(G__InterfaceMethod)NULL,121,-1,-1,0,4,1,4,0,
+"f - 'Axis_t' 0 - - f - 'Axis_t' 0 - - "
+"f - 'Axis_t' 0 - - d - 'Stat_t' 0 - -",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("TH2S",289,G__TH2S_TH2S_3_0,105,G__get_linked_tagnum(&G__G__HistLN_TH2S),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("TH2S",289,G__TH2S_TH2S_4_0,105,G__get_linked_tagnum(&G__G__HistLN_TH2S),-1,0,8,1,1,0,
+"C - 'Text_t' 0 - name C - 'Text_t' 0 - title "
+"i - 'Int_t' 0 - nbinsx f - 'Axis_t' 0 - xlow "
+"f - 'Axis_t' 0 - xup i - 'Int_t' 0 - nbinsy "
+"f - 'Axis_t' 0 - ylow f - 'Axis_t' 0 - yup",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("TH2S",289,G__TH2S_TH2S_5_0,105,G__get_linked_tagnum(&G__G__HistLN_TH2S),-1,0,7,1,1,0,
+"C - 'Text_t' 0 - name C - 'Text_t' 0 - title "
+"i - 'Int_t' 0 - nbinsx F - 'Axis_t' 0 - xbins "
+"i - 'Int_t' 0 - nbinsy f - 'Axis_t' 0 - ylow "
+"f - 'Axis_t' 0 - yup",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("TH2S",289,G__TH2S_TH2S_6_0,105,G__get_linked_tagnum(&G__G__HistLN_TH2S),-1,0,7,1,1,0,
+"C - 'Text_t' 0 - name C - 'Text_t' 0 - title "
+"i - 'Int_t' 0 - nbinsx f - 'Axis_t' 0 - xlow "
+"f - 'Axis_t' 0 - xup i - 'Int_t' 0 - nbinsy "
+"F - 'Axis_t' 0 - ybins",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("TH2S",289,G__TH2S_TH2S_7_0,105,G__get_linked_tagnum(&G__G__HistLN_TH2S),-1,0,6,1,1,0,
+"C - 'Text_t' 0 - name C - 'Text_t' 0 - title "
+"i - 'Int_t' 0 - nbinsx F - 'Axis_t' 0 - xbins "
+"i - 'Int_t' 0 - nbinsy F - 'Axis_t' 0 - ybins",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("TH2S",289,G__TH2S_TH2S_8_0,105,G__get_linked_tagnum(&G__G__HistLN_TH2S),-1,0,1,1,1,0,"u 'TH2S' - 1 - h2s",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Copy",411,G__TH2S_Copy_0_1,121,-1,-1,0,1,1,1,0,"u 'TObject' - 1 - hnew",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("DrawCopy",809,G__TH2S_DrawCopy_1_1,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Fill",391,G__TH2S_Fill_2_1,121,-1,-1,0,2,1,1,0,
+"f - 'Axis_t' 0 - x f - 'Axis_t' 0 - y",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Fill",391,G__TH2S_Fill_3_1,121,-1,-1,0,3,1,1,0,
+"f - 'Axis_t' 0 - x f - 'Axis_t' 0 - y "
+"d - 'Stat_t' 0 - w",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetCorrelationFactor",2049,G__TH2S_GetCorrelationFactor_4_1,100,-1,G__defined_typename("Stat_t"),0,2,1,1,0,
+"i - 'Int_t' 0 1 axis1 i - 'Int_t' 0 2 axis2",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetCovariance",1307,G__TH2S_GetCovariance_5_1,100,-1,G__defined_typename("Stat_t"),0,2,1,1,0,
+"i - 'Int_t' 0 1 axis1 i - 'Int_t' 0 2 axis2",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetMean",673,G__TH2S_GetMean_6_1,100,-1,G__defined_typename("Stat_t"),0,1,1,1,0,"i - 'Int_t' 0 1 axis",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetRMS",530,G__TH2S_GetRMS_7_1,100,-1,G__defined_typename("Stat_t"),0,1,1,1,0,"i - 'Int_t' 0 1 axis",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("operator=",937,G__TH2S_operatoreQ_8_1,117,G__get_linked_tagnum(&G__G__HistLN_TH2S),-1,1,1,1,1,0,"u 'TH2S' - 1 - h1",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("DeclFileName",1145,G__TH2S_DeclFileName_9_1,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("DeclFileLine",1152,G__TH2S_DeclFileLine_0_2,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ImplFileName",1171,G__TH2S_ImplFileName_1_2,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ImplFileLine",1178,G__TH2S_ImplFileLine_2_2,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Class_Version",1339,G__TH2S_Class_Version_3_2,115,-1,G__defined_typename("Version_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Class",502,G__TH2S_Class_4_2,85,G__get_linked_tagnum(&G__G__HistLN_TClass),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Dictionary",1046,G__TH2S_Dictionary_5_2,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("IsA",253,G__TH2S_IsA_6_2,85,G__get_linked_tagnum(&G__G__HistLN_TClass),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("ShowMembers",1132,G__TH2S_ShowMembers_7_2,121,-1,-1,0,2,1,1,0,
+"u 'TMemberInspector' - 1 - insp C - - 0 - parent",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Streamer",835,G__TH2S_Streamer_8_2,121,-1,-1,0,1,1,1,0,"u 'TBuffer' - 1 - b",(char*)NULL,(void*)NULL,1);
+   // automatic destructor
+   G__memfunc_setup("~TH2S",415,G__TH2S_wATH2S_9_2,(int)('y'),-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__tag_memfunc_reset();
+}
+
+static void G__setup_memfuncTH2F(void) {
+   /* TH2F */
+   G__tag_memfunc_setup(G__get_linked_tagnum(&G__G__HistLN_TH2F));
+   G__memfunc_setup("Fill",391,(G__InterfaceMethod)NULL,121,-1,-1,0,1,1,4,0,"f - 'Axis_t' 0 - -",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Fill",391,(G__InterfaceMethod)NULL,121,-1,-1,0,2,1,4,0,
+"f - 'Axis_t' 0 - - d - 'Stat_t' 0 - -",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Fill",391,(G__InterfaceMethod)NULL,121,-1,-1,0,4,1,4,0,
+"f - 'Axis_t' 0 - - f - 'Axis_t' 0 - - "
+"f - 'Axis_t' 0 - - d - 'Stat_t' 0 - -",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("TH2F",276,G__TH2F_TH2F_3_0,105,G__get_linked_tagnum(&G__G__HistLN_TH2F),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("TH2F",276,G__TH2F_TH2F_4_0,105,G__get_linked_tagnum(&G__G__HistLN_TH2F),-1,0,8,1,1,0,
+"C - 'Text_t' 0 - name C - 'Text_t' 0 - title "
+"i - 'Int_t' 0 - nbinsx f - 'Axis_t' 0 - xlow "
+"f - 'Axis_t' 0 - xup i - 'Int_t' 0 - nbinsy "
+"f - 'Axis_t' 0 - ylow f - 'Axis_t' 0 - yup",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("TH2F",276,G__TH2F_TH2F_5_0,105,G__get_linked_tagnum(&G__G__HistLN_TH2F),-1,0,7,1,1,0,
+"C - 'Text_t' 0 - name C - 'Text_t' 0 - title "
+"i - 'Int_t' 0 - nbinsx F - 'Axis_t' 0 - xbins "
+"i - 'Int_t' 0 - nbinsy f - 'Axis_t' 0 - ylow "
+"f - 'Axis_t' 0 - yup",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("TH2F",276,G__TH2F_TH2F_6_0,105,G__get_linked_tagnum(&G__G__HistLN_TH2F),-1,0,7,1,1,0,
+"C - 'Text_t' 0 - name C - 'Text_t' 0 - title "
+"i - 'Int_t' 0 - nbinsx f - 'Axis_t' 0 - xlow "
+"f - 'Axis_t' 0 - xup i - 'Int_t' 0 - nbinsy "
+"F - 'Axis_t' 0 - ybins",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("TH2F",276,G__TH2F_TH2F_7_0,105,G__get_linked_tagnum(&G__G__HistLN_TH2F),-1,0,6,1,1,0,
+"C - 'Text_t' 0 - name C - 'Text_t' 0 - title "
+"i - 'Int_t' 0 - nbinsx F - 'Axis_t' 0 - xbins "
+"i - 'Int_t' 0 - nbinsy F - 'Axis_t' 0 - ybins",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("TH2F",276,G__TH2F_TH2F_8_0,105,G__get_linked_tagnum(&G__G__HistLN_TH2F),-1,0,1,1,1,0,"u 'TH2F' - 1 - h2f",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Copy",411,G__TH2F_Copy_0_1,121,-1,-1,0,1,1,1,0,"u 'TObject' - 1 - hnew",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("DrawCopy",809,G__TH2F_DrawCopy_1_1,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Fill",391,G__TH2F_Fill_2_1,121,-1,-1,0,2,1,1,0,
+"f - 'Axis_t' 0 - x f - 'Axis_t' 0 - y",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Fill",391,G__TH2F_Fill_3_1,121,-1,-1,0,3,1,1,0,
+"f - 'Axis_t' 0 - x f - 'Axis_t' 0 - y "
+"d - 'Stat_t' 0 - w",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetCorrelationFactor",2049,G__TH2F_GetCorrelationFactor_4_1,100,-1,G__defined_typename("Stat_t"),0,2,1,1,0,
+"i - 'Int_t' 0 1 axis1 i - 'Int_t' 0 2 axis2",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetCovariance",1307,G__TH2F_GetCovariance_5_1,100,-1,G__defined_typename("Stat_t"),0,2,1,1,0,
+"i - 'Int_t' 0 1 axis1 i - 'Int_t' 0 2 axis2",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetMean",673,G__TH2F_GetMean_6_1,100,-1,G__defined_typename("Stat_t"),0,1,1,1,0,"i - 'Int_t' 0 1 axis",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetRMS",530,G__TH2F_GetRMS_7_1,100,-1,G__defined_typename("Stat_t"),0,1,1,1,0,"i - 'Int_t' 0 1 axis",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("operator=",937,G__TH2F_operatoreQ_8_1,117,G__get_linked_tagnum(&G__G__HistLN_TH2F),-1,1,1,1,1,0,"u 'TH2F' - 1 - h1",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("DeclFileName",1145,G__TH2F_DeclFileName_9_1,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("DeclFileLine",1152,G__TH2F_DeclFileLine_0_2,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ImplFileName",1171,G__TH2F_ImplFileName_1_2,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ImplFileLine",1178,G__TH2F_ImplFileLine_2_2,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Class_Version",1339,G__TH2F_Class_Version_3_2,115,-1,G__defined_typename("Version_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Class",502,G__TH2F_Class_4_2,85,G__get_linked_tagnum(&G__G__HistLN_TClass),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Dictionary",1046,G__TH2F_Dictionary_5_2,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("IsA",253,G__TH2F_IsA_6_2,85,G__get_linked_tagnum(&G__G__HistLN_TClass),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("ShowMembers",1132,G__TH2F_ShowMembers_7_2,121,-1,-1,0,2,1,1,0,
+"u 'TMemberInspector' - 1 - insp C - - 0 - parent",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Streamer",835,G__TH2F_Streamer_8_2,121,-1,-1,0,1,1,1,0,"u 'TBuffer' - 1 - b",(char*)NULL,(void*)NULL,1);
+   // automatic destructor
+   G__memfunc_setup("~TH2F",402,G__TH2F_wATH2F_9_2,(int)('y'),-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__tag_memfunc_reset();
+}
+
+static void G__setup_memfuncTH2D(void) {
+   /* TH2D */
+   G__tag_memfunc_setup(G__get_linked_tagnum(&G__G__HistLN_TH2D));
+   G__memfunc_setup("Fill",391,(G__InterfaceMethod)NULL,121,-1,-1,0,1,1,4,0,"f - 'Axis_t' 0 - -",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Fill",391,(G__InterfaceMethod)NULL,121,-1,-1,0,2,1,4,0,
+"f - 'Axis_t' 0 - - d - 'Stat_t' 0 - -",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Fill",391,(G__InterfaceMethod)NULL,121,-1,-1,0,4,1,4,0,
+"f - 'Axis_t' 0 - - f - 'Axis_t' 0 - - "
+"f - 'Axis_t' 0 - - d - 'Stat_t' 0 - -",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("TH2D",274,G__TH2D_TH2D_3_0,105,G__get_linked_tagnum(&G__G__HistLN_TH2D),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("TH2D",274,G__TH2D_TH2D_4_0,105,G__get_linked_tagnum(&G__G__HistLN_TH2D),-1,0,8,1,1,0,
+"C - 'Text_t' 0 - name C - 'Text_t' 0 - title "
+"i - 'Int_t' 0 - nbinsx f - 'Axis_t' 0 - xlow "
+"f - 'Axis_t' 0 - xup i - 'Int_t' 0 - nbinsy "
+"f - 'Axis_t' 0 - ylow f - 'Axis_t' 0 - yup",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("TH2D",274,G__TH2D_TH2D_5_0,105,G__get_linked_tagnum(&G__G__HistLN_TH2D),-1,0,7,1,1,0,
+"C - 'Text_t' 0 - name C - 'Text_t' 0 - title "
+"i - 'Int_t' 0 - nbinsx F - 'Axis_t' 0 - xbins "
+"i - 'Int_t' 0 - nbinsy f - 'Axis_t' 0 - ylow "
+"f - 'Axis_t' 0 - yup",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("TH2D",274,G__TH2D_TH2D_6_0,105,G__get_linked_tagnum(&G__G__HistLN_TH2D),-1,0,7,1,1,0,
+"C - 'Text_t' 0 - name C - 'Text_t' 0 - title "
+"i - 'Int_t' 0 - nbinsx f - 'Axis_t' 0 - xlow "
+"f - 'Axis_t' 0 - xup i - 'Int_t' 0 - nbinsy "
+"F - 'Axis_t' 0 - ybins",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("TH2D",274,G__TH2D_TH2D_7_0,105,G__get_linked_tagnum(&G__G__HistLN_TH2D),-1,0,6,1,1,0,
+"C - 'Text_t' 0 - name C - 'Text_t' 0 - title "
+"i - 'Int_t' 0 - nbinsx F - 'Axis_t' 0 - xbins "
+"i - 'Int_t' 0 - nbinsy F - 'Axis_t' 0 - ybins",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("TH2D",274,G__TH2D_TH2D_8_0,105,G__get_linked_tagnum(&G__G__HistLN_TH2D),-1,0,1,1,1,0,"u 'TH2D' - 1 - h2d",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Copy",411,G__TH2D_Copy_0_1,121,-1,-1,0,1,1,1,0,"u 'TObject' - 1 - hnew",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("DrawCopy",809,G__TH2D_DrawCopy_1_1,121,-1,-1,0,1,1,1,0,"C - 'Option_t' 0 \"\" option",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Fill",391,G__TH2D_Fill_2_1,121,-1,-1,0,2,1,1,0,
+"f - 'Axis_t' 0 - x f - 'Axis_t' 0 - y",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Fill",391,G__TH2D_Fill_3_1,121,-1,-1,0,3,1,1,0,
+"f - 'Axis_t' 0 - x f - 'Axis_t' 0 - y "
+"d - 'Stat_t' 0 - w",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetCorrelationFactor",2049,G__TH2D_GetCorrelationFactor_4_1,100,-1,G__defined_typename("Stat_t"),0,2,1,1,0,
+"i - 'Int_t' 0 1 axis1 i - 'Int_t' 0 2 axis2",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetCovariance",1307,G__TH2D_GetCovariance_5_1,100,-1,G__defined_typename("Stat_t"),0,2,1,1,0,
+"i - 'Int_t' 0 1 axis1 i - 'Int_t' 0 2 axis2",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetMean",673,G__TH2D_GetMean_6_1,100,-1,G__defined_typename("Stat_t"),0,1,1,1,0,"i - 'Int_t' 0 1 axis",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("GetRMS",530,G__TH2D_GetRMS_7_1,100,-1,G__defined_typename("Stat_t"),0,1,1,1,0,"i - 'Int_t' 0 1 axis",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("operator=",937,G__TH2D_operatoreQ_8_1,117,G__get_linked_tagnum(&G__G__HistLN_TH2D),-1,1,1,1,1,0,"u 'TH2D' - 1 - h1",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("DeclFileName",1145,G__TH2D_DeclFileName_9_1,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("DeclFileLine",1152,G__TH2D_DeclFileLine_0_2,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ImplFileName",1171,G__TH2D_ImplFileName_1_2,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ImplFileLine",1178,G__TH2D_ImplFileLine_2_2,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Class_Version",1339,G__TH2D_Class_Version_3_2,115,-1,G__defined_typename("Version_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Class",502,G__TH2D_Class_4_2,85,G__get_linked_tagnum(&G__G__HistLN_TClass),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Dictionary",1046,G__TH2D_Dictionary_5_2,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("IsA",253,G__TH2D_IsA_6_2,85,G__get_linked_tagnum(&G__G__HistLN_TClass),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("ShowMembers",1132,G__TH2D_ShowMembers_7_2,121,-1,-1,0,2,1,1,0,
+"u 'TMemberInspector' - 1 - insp C - - 0 - parent",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Streamer",835,G__TH2D_Streamer_8_2,121,-1,-1,0,1,1,1,0,"u 'TBuffer' - 1 - b",(char*)NULL,(void*)NULL,1);
+   // automatic destructor
+   G__memfunc_setup("~TH2D",400,G__TH2D_wATH2D_9_2,(int)('y'),-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__tag_memfunc_reset();
+}
+
+static void G__setup_memfuncTH3(void) {
+   /* TH3 */
+   G__tag_memfunc_setup(G__get_linked_tagnum(&G__G__HistLN_TH3));
+   G__memfunc_setup("Copy30",510,(G__InterfaceMethod)NULL,121,-1,-1,0,1,1,2,0,"u 'TH3' - 1 - hnew",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("TH3",207,G__TH3_TH3_1_0,105,G__get_linked_tagnum(&G__G__HistLN_TH3),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("DeclFileName",1145,G__TH3_DeclFileName_3_0,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("DeclFileLine",1152,G__TH3_DeclFileLine_4_0,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ImplFileName",1171,G__TH3_ImplFileName_5_0,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ImplFileLine",1178,G__TH3_ImplFileLine_6_0,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Class_Version",1339,G__TH3_Class_Version_7_0,115,-1,G__defined_typename("Version_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Class",502,G__TH3_Class_8_0,85,G__get_linked_tagnum(&G__G__HistLN_TClass),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Dictionary",1046,G__TH3_Dictionary_9_0,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("IsA",253,G__TH3_IsA_0_1,85,G__get_linked_tagnum(&G__G__HistLN_TClass),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("ShowMembers",1132,G__TH3_ShowMembers_1_1,121,-1,-1,0,2,1,1,0,
+"u 'TMemberInspector' - 1 - insp C - - 0 - parent",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Streamer",835,G__TH3_Streamer_2_1,121,-1,-1,0,1,1,1,0,"u 'TBuffer' - 1 - b",(char*)NULL,(void*)NULL,1);
+   // automatic copy constructor
+   G__memfunc_setup("TH3",207,G__TH3_TH3_3_1,(int)('i'),G__get_linked_tagnum(&G__G__HistLN_TH3),-1,0,1,1,1,0,"u 'TH3' - 1 - -",(char*)NULL,(void*)NULL,0);
+   // automatic destructor
+   G__memfunc_setup("~TH3",333,G__TH3_wATH3_4_1,(int)('y'),-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__tag_memfunc_reset();
+}
+
+static void G__setup_memfuncTH3C(void) {
+   /* TH3C */
+   G__tag_memfunc_setup(G__get_linked_tagnum(&G__G__HistLN_TH3C));
+   G__memfunc_setup("TH3C",274,G__TH3C_TH3C_0_0,105,G__get_linked_tagnum(&G__G__HistLN_TH3C),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("TH3C",274,G__TH3C_TH3C_1_0,105,G__get_linked_tagnum(&G__G__HistLN_TH3C),-1,0,11,1,1,0,
+"C - 'Text_t' 0 - name C - 'Text_t' 0 - title "
+"i - 'Int_t' 0 - nbinsx f - 'Axis_t' 0 - xlow "
+"f - 'Axis_t' 0 - xup i - 'Int_t' 0 - nbinsy "
+"f - 'Axis_t' 0 - ylow f - 'Axis_t' 0 - yup "
+"i - 'Int_t' 0 - nbinsz f - 'Axis_t' 0 - zlow "
+"f - 'Axis_t' 0 - zup",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("TH3C",274,G__TH3C_TH3C_2_0,105,G__get_linked_tagnum(&G__G__HistLN_TH3C),-1,0,8,1,1,0,
+"C - 'Text_t' 0 - name C - 'Text_t' 0 - title "
+"i - 'Int_t' 0 - nbinsx F - 'Axis_t' 0 - xbins "
+"i - 'Int_t' 0 - nbinsy F - 'Axis_t' 0 - ybins "
+"i - 'Int_t' 0 - nbinsz F - 'Axis_t' 0 - zbins",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("TH3C",274,G__TH3C_TH3C_3_0,105,G__get_linked_tagnum(&G__G__HistLN_TH3C),-1,0,1,1,1,0,"u 'TH3C' - 1 - h3c",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Copy",411,G__TH3C_Copy_5_0,121,-1,-1,0,1,1,1,0,"u 'TObject' - 1 - hnew",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Fill3",442,G__TH3C_Fill3_6_0,121,-1,-1,0,4,1,1,0,
+"f - 'Axis_t' 0 - x f - 'Axis_t' 0 - y "
+"f - 'Axis_t' 0 - z d - 'Stat_t' 0 - w",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Is3D",307,G__TH3C_Is3D_7_0,98,-1,G__defined_typename("Bool_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("operator=",937,G__TH3C_operatoreQ_8_0,117,G__get_linked_tagnum(&G__G__HistLN_TH3C),-1,1,1,1,1,0,"u 'TH3C' - 1 - h1",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("DeclFileName",1145,G__TH3C_DeclFileName_9_0,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("DeclFileLine",1152,G__TH3C_DeclFileLine_0_1,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ImplFileName",1171,G__TH3C_ImplFileName_1_1,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ImplFileLine",1178,G__TH3C_ImplFileLine_2_1,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Class_Version",1339,G__TH3C_Class_Version_3_1,115,-1,G__defined_typename("Version_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Class",502,G__TH3C_Class_4_1,85,G__get_linked_tagnum(&G__G__HistLN_TClass),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Dictionary",1046,G__TH3C_Dictionary_5_1,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("IsA",253,G__TH3C_IsA_6_1,85,G__get_linked_tagnum(&G__G__HistLN_TClass),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("ShowMembers",1132,G__TH3C_ShowMembers_7_1,121,-1,-1,0,2,1,1,0,
+"u 'TMemberInspector' - 1 - insp C - - 0 - parent",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Streamer",835,G__TH3C_Streamer_8_1,121,-1,-1,0,1,1,1,0,"u 'TBuffer' - 1 - b",(char*)NULL,(void*)NULL,1);
+   // automatic destructor
+   G__memfunc_setup("~TH3C",400,G__TH3C_wATH3C_9_1,(int)('y'),-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__tag_memfunc_reset();
+}
+
+static void G__setup_memfuncTH3S(void) {
+   /* TH3S */
+   G__tag_memfunc_setup(G__get_linked_tagnum(&G__G__HistLN_TH3S));
+   G__memfunc_setup("TH3S",290,G__TH3S_TH3S_0_0,105,G__get_linked_tagnum(&G__G__HistLN_TH3S),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("TH3S",290,G__TH3S_TH3S_1_0,105,G__get_linked_tagnum(&G__G__HistLN_TH3S),-1,0,11,1,1,0,
+"C - 'Text_t' 0 - name C - 'Text_t' 0 - title "
+"i - 'Int_t' 0 - nbinsx f - 'Axis_t' 0 - xlow "
+"f - 'Axis_t' 0 - xup i - 'Int_t' 0 - nbinsy "
+"f - 'Axis_t' 0 - ylow f - 'Axis_t' 0 - yup "
+"i - 'Int_t' 0 - nbinsz f - 'Axis_t' 0 - zlow "
+"f - 'Axis_t' 0 - zup",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("TH3S",290,G__TH3S_TH3S_2_0,105,G__get_linked_tagnum(&G__G__HistLN_TH3S),-1,0,8,1,1,0,
+"C - 'Text_t' 0 - name C - 'Text_t' 0 - title "
+"i - 'Int_t' 0 - nbinsx F - 'Axis_t' 0 - xbins "
+"i - 'Int_t' 0 - nbinsy F - 'Axis_t' 0 - ybins "
+"i - 'Int_t' 0 - nbinsz F - 'Axis_t' 0 - zbins",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("TH3S",290,G__TH3S_TH3S_3_0,105,G__get_linked_tagnum(&G__G__HistLN_TH3S),-1,0,1,1,1,0,"u 'TH3S' - 1 - h3s",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Copy",411,G__TH3S_Copy_5_0,121,-1,-1,0,1,1,1,0,"u 'TObject' - 1 - hnew",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Fill3",442,G__TH3S_Fill3_6_0,121,-1,-1,0,4,1,1,0,
+"f - 'Axis_t' 0 - x f - 'Axis_t' 0 - y "
+"f - 'Axis_t' 0 - z d - 'Stat_t' 0 - w",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Is3D",307,G__TH3S_Is3D_7_0,98,-1,G__defined_typename("Bool_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("operator=",937,G__TH3S_operatoreQ_8_0,117,G__get_linked_tagnum(&G__G__HistLN_TH3S),-1,1,1,1,1,0,"u 'TH3S' - 1 - h1",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("DeclFileName",1145,G__TH3S_DeclFileName_9_0,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("DeclFileLine",1152,G__TH3S_DeclFileLine_0_1,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ImplFileName",1171,G__TH3S_ImplFileName_1_1,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ImplFileLine",1178,G__TH3S_ImplFileLine_2_1,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Class_Version",1339,G__TH3S_Class_Version_3_1,115,-1,G__defined_typename("Version_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Class",502,G__TH3S_Class_4_1,85,G__get_linked_tagnum(&G__G__HistLN_TClass),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Dictionary",1046,G__TH3S_Dictionary_5_1,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("IsA",253,G__TH3S_IsA_6_1,85,G__get_linked_tagnum(&G__G__HistLN_TClass),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("ShowMembers",1132,G__TH3S_ShowMembers_7_1,121,-1,-1,0,2,1,1,0,
+"u 'TMemberInspector' - 1 - insp C - - 0 - parent",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Streamer",835,G__TH3S_Streamer_8_1,121,-1,-1,0,1,1,1,0,"u 'TBuffer' - 1 - b",(char*)NULL,(void*)NULL,1);
+   // automatic destructor
+   G__memfunc_setup("~TH3S",416,G__TH3S_wATH3S_9_1,(int)('y'),-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__tag_memfunc_reset();
+}
+
+static void G__setup_memfuncTH3F(void) {
+   /* TH3F */
+   G__tag_memfunc_setup(G__get_linked_tagnum(&G__G__HistLN_TH3F));
+   G__memfunc_setup("TH3F",277,G__TH3F_TH3F_0_0,105,G__get_linked_tagnum(&G__G__HistLN_TH3F),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("TH3F",277,G__TH3F_TH3F_1_0,105,G__get_linked_tagnum(&G__G__HistLN_TH3F),-1,0,11,1,1,0,
+"C - 'Text_t' 0 - name C - 'Text_t' 0 - title "
+"i - 'Int_t' 0 - nbinsx f - 'Axis_t' 0 - xlow "
+"f - 'Axis_t' 0 - xup i - 'Int_t' 0 - nbinsy "
+"f - 'Axis_t' 0 - ylow f - 'Axis_t' 0 - yup "
+"i - 'Int_t' 0 - nbinsz f - 'Axis_t' 0 - zlow "
+"f - 'Axis_t' 0 - zup",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("TH3F",277,G__TH3F_TH3F_2_0,105,G__get_linked_tagnum(&G__G__HistLN_TH3F),-1,0,8,1,1,0,
+"C - 'Text_t' 0 - name C - 'Text_t' 0 - title "
+"i - 'Int_t' 0 - nbinsx F - 'Axis_t' 0 - xbins "
+"i - 'Int_t' 0 - nbinsy F - 'Axis_t' 0 - ybins "
+"i - 'Int_t' 0 - nbinsz F - 'Axis_t' 0 - zbins",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("TH3F",277,G__TH3F_TH3F_3_0,105,G__get_linked_tagnum(&G__G__HistLN_TH3F),-1,0,1,1,1,0,"u 'TH3F' - 1 - h3f",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Copy",411,G__TH3F_Copy_5_0,121,-1,-1,0,1,1,1,0,"u 'TObject' - 1 - hnew",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Fill3",442,G__TH3F_Fill3_6_0,121,-1,-1,0,4,1,1,0,
+"f - 'Axis_t' 0 - x f - 'Axis_t' 0 - y "
+"f - 'Axis_t' 0 - z d - 'Stat_t' 0 - w",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Is3D",307,G__TH3F_Is3D_7_0,98,-1,G__defined_typename("Bool_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Sizeof3D",743,G__TH3F_Sizeof3D_8_0,121,-1,-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("operator=",937,G__TH3F_operatoreQ_9_0,117,G__get_linked_tagnum(&G__G__HistLN_TH3F),-1,1,1,1,1,0,"u 'TH3F' - 1 - h1",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("DeclFileName",1145,G__TH3F_DeclFileName_0_1,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("DeclFileLine",1152,G__TH3F_DeclFileLine_1_1,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ImplFileName",1171,G__TH3F_ImplFileName_2_1,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ImplFileLine",1178,G__TH3F_ImplFileLine_3_1,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Class_Version",1339,G__TH3F_Class_Version_4_1,115,-1,G__defined_typename("Version_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Class",502,G__TH3F_Class_5_1,85,G__get_linked_tagnum(&G__G__HistLN_TClass),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Dictionary",1046,G__TH3F_Dictionary_6_1,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("IsA",253,G__TH3F_IsA_7_1,85,G__get_linked_tagnum(&G__G__HistLN_TClass),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("ShowMembers",1132,G__TH3F_ShowMembers_8_1,121,-1,-1,0,2,1,1,0,
+"u 'TMemberInspector' - 1 - insp C - - 0 - parent",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Streamer",835,G__TH3F_Streamer_9_1,121,-1,-1,0,1,1,1,0,"u 'TBuffer' - 1 - b",(char*)NULL,(void*)NULL,1);
+   // automatic destructor
+   G__memfunc_setup("~TH3F",403,G__TH3F_wATH3F_0_2,(int)('y'),-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__tag_memfunc_reset();
+}
+
+static void G__setup_memfuncTH3D(void) {
+   /* TH3D */
+   G__tag_memfunc_setup(G__get_linked_tagnum(&G__G__HistLN_TH3D));
+   G__memfunc_setup("TH3D",275,G__TH3D_TH3D_0_0,105,G__get_linked_tagnum(&G__G__HistLN_TH3D),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("TH3D",275,G__TH3D_TH3D_1_0,105,G__get_linked_tagnum(&G__G__HistLN_TH3D),-1,0,11,1,1,0,
+"C - 'Text_t' 0 - name C - 'Text_t' 0 - title "
+"i - 'Int_t' 0 - nbinsx f - 'Axis_t' 0 - xlow "
+"f - 'Axis_t' 0 - xup i - 'Int_t' 0 - nbinsy "
+"f - 'Axis_t' 0 - ylow f - 'Axis_t' 0 - yup "
+"i - 'Int_t' 0 - nbinsz f - 'Axis_t' 0 - zlow "
+"f - 'Axis_t' 0 - zup",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("TH3D",275,G__TH3D_TH3D_2_0,105,G__get_linked_tagnum(&G__G__HistLN_TH3D),-1,0,8,1,1,0,
+"C - 'Text_t' 0 - name C - 'Text_t' 0 - title "
+"i - 'Int_t' 0 - nbinsx F - 'Axis_t' 0 - xbins "
+"i - 'Int_t' 0 - nbinsy F - 'Axis_t' 0 - ybins "
+"i - 'Int_t' 0 - nbinsz F - 'Axis_t' 0 - zbins",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("TH3D",275,G__TH3D_TH3D_3_0,105,G__get_linked_tagnum(&G__G__HistLN_TH3D),-1,0,1,1,1,0,"u 'TH3D' - 1 - h3d",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Copy",411,G__TH3D_Copy_5_0,121,-1,-1,0,1,1,1,0,"u 'TObject' - 1 - hnew",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Fill3",442,G__TH3D_Fill3_6_0,121,-1,-1,0,4,1,1,0,
+"f - 'Axis_t' 0 - x f - 'Axis_t' 0 - y "
+"f - 'Axis_t' 0 - z d - 'Stat_t' 0 - w",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Is3D",307,G__TH3D_Is3D_7_0,98,-1,G__defined_typename("Bool_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("operator=",937,G__TH3D_operatoreQ_8_0,117,G__get_linked_tagnum(&G__G__HistLN_TH3D),-1,1,1,1,1,0,"u 'TH3D' - 1 - h1",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("DeclFileName",1145,G__TH3D_DeclFileName_9_0,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("DeclFileLine",1152,G__TH3D_DeclFileLine_0_1,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ImplFileName",1171,G__TH3D_ImplFileName_1_1,67,-1,-1,0,0,1,1,1,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ImplFileLine",1178,G__TH3D_ImplFileLine_2_1,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Class_Version",1339,G__TH3D_Class_Version_3_1,115,-1,G__defined_typename("Version_t"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Class",502,G__TH3D_Class_4_1,85,G__get_linked_tagnum(&G__G__HistLN_TClass),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("Dictionary",1046,G__TH3D_Dictionary_5_1,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("IsA",253,G__TH3D_IsA_6_1,85,G__get_linked_tagnum(&G__G__HistLN_TClass),-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("ShowMembers",1132,G__TH3D_ShowMembers_7_1,121,-1,-1,0,2,1,1,0,
+"u 'TMemberInspector' - 1 - insp C - - 0 - parent",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("Streamer",835,G__TH3D_Streamer_8_1,121,-1,-1,0,1,1,1,0,"u 'TBuffer' - 1 - b",(char*)NULL,(void*)NULL,1);
+   // automatic destructor
+   G__memfunc_setup("~TH3D",401,G__TH3D_wATH3D_9_1,(int)('y'),-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__tag_memfunc_reset();
+}
+
+
+/*********************************************************
+* Member function information setup
+*********************************************************/
+extern "C" void G__cpp_setup_memfuncG__Hist() {
+}
+
+/*********************************************************
+* Global variable information setup for each class
+*********************************************************/
+extern "C" void G__cpp_setup_globalG__Hist() {
+
+   /* Setting up global variables */
+   G__resetplocal();
+
+
+   G__resetglobalenv();
+}
+
+/*********************************************************
+* Global function information setup for each class
+*********************************************************/
+extern "C" void G__cpp_setup_funcG__Hist() {
+   G__lastifuncposition();
+
+   G__memfunc_setup("operator*",918,G___operatormU_3_15,117,G__get_linked_tagnum(&G__G__HistLN_TH1C),-1,0,2,1,1,0,
+"f - 'Float_t' 0 - c1 u 'TH1C' - 1 - h1",(char*)NULL
+,(void*)NULL,0);
+   G__memfunc_setup("operator*",918,G___operatormU_4_15,117,G__get_linked_tagnum(&G__G__HistLN_TH1C),-1,0,2,1,1,0,
+"u 'TH1C' - 1 - h1 f - 'Float_t' 0 - c1",(char*)NULL
+,(void*)NULL,0);
+   G__memfunc_setup("operator+",919,G___operatorpL_5_15,117,G__get_linked_tagnum(&G__G__HistLN_TH1C),-1,0,2,1,1,0,
+"u 'TH1C' - 1 - h1 u 'TH1C' - 1 - h2",(char*)NULL
+,(void*)NULL,0);
+   G__memfunc_setup("operator-",921,G___operatormI_6_15,117,G__get_linked_tagnum(&G__G__HistLN_TH1C),-1,0,2,1,1,0,
+"u 'TH1C' - 1 - h1 u 'TH1C' - 1 - h2",(char*)NULL
+,(void*)NULL,0);
+   G__memfunc_setup("operator*",918,G___operatormU_7_15,117,G__get_linked_tagnum(&G__G__HistLN_TH1C),-1,0,2,1,1,0,
+"u 'TH1C' - 1 - h1 u 'TH1C' - 1 - h2",(char*)NULL
+,(void*)NULL,0);
+   G__memfunc_setup("operator/",923,G___operatordI_8_15,117,G__get_linked_tagnum(&G__G__HistLN_TH1C),-1,0,2,1,1,0,
+"u 'TH1C' - 1 - h1 u 'TH1C' - 1 - h2",(char*)NULL
+,(void*)NULL,0);
+   G__memfunc_setup("operator*",918,G___operatormU_0_16,117,G__get_linked_tagnum(&G__G__HistLN_TH1S),-1,0,2,1,1,0,
+"f - 'Float_t' 0 - c1 u 'TH1S' - 1 - h1",(char*)NULL
+,(void*)NULL,0);
+   G__memfunc_setup("operator*",918,G___operatormU_1_16,117,G__get_linked_tagnum(&G__G__HistLN_TH1S),-1,0,2,1,1,0,
+"u 'TH1S' - 1 - h1 f - 'Float_t' 0 - c1",(char*)NULL
+,(void*)NULL,0);
+   G__memfunc_setup("operator+",919,G___operatorpL_2_16,117,G__get_linked_tagnum(&G__G__HistLN_TH1S),-1,0,2,1,1,0,
+"u 'TH1S' - 1 - h1 u 'TH1S' - 1 - h2",(char*)NULL
+,(void*)NULL,0);
+   G__memfunc_setup("operator-",921,G___operatormI_3_16,117,G__get_linked_tagnum(&G__G__HistLN_TH1S),-1,0,2,1,1,0,
+"u 'TH1S' - 1 - h1 u 'TH1S' - 1 - h2",(char*)NULL
+,(void*)NULL,0);
+   G__memfunc_setup("operator*",918,G___operatormU_4_16,117,G__get_linked_tagnum(&G__G__HistLN_TH1S),-1,0,2,1,1,0,
+"u 'TH1S' - 1 - h1 u 'TH1S' - 1 - h2",(char*)NULL
+,(void*)NULL,0);
+   G__memfunc_setup("operator/",923,G___operatordI_5_16,117,G__get_linked_tagnum(&G__G__HistLN_TH1S),-1,0,2,1,1,0,
+"u 'TH1S' - 1 - h1 u 'TH1S' - 1 - h2",(char*)NULL
+,(void*)NULL,0);
+   G__memfunc_setup("operator*",918,G___operatormU_7_16,117,G__get_linked_tagnum(&G__G__HistLN_TH1F),-1,0,2,1,1,0,
+"f - 'Float_t' 0 - c1 u 'TH1F' - 1 - h1",(char*)NULL
+,(void*)NULL,0);
+   G__memfunc_setup("operator*",918,G___operatormU_8_16,117,G__get_linked_tagnum(&G__G__HistLN_TH1F),-1,0,2,1,1,0,
+"u 'TH1F' - 1 - h1 f - 'Float_t' 0 - c1",(char*)NULL
+,(void*)NULL,0);
+   G__memfunc_setup("operator+",919,G___operatorpL_9_16,117,G__get_linked_tagnum(&G__G__HistLN_TH1F),-1,0,2,1,1,0,
+"u 'TH1F' - 1 - h1 u 'TH1F' - 1 - h2",(char*)NULL
+,(void*)NULL,0);
+   G__memfunc_setup("operator-",921,G___operatormI_0_17,117,G__get_linked_tagnum(&G__G__HistLN_TH1F),-1,0,2,1,1,0,
+"u 'TH1F' - 1 - h1 u 'TH1F' - 1 - h2",(char*)NULL
+,(void*)NULL,0);
+   G__memfunc_setup("operator*",918,G___operatormU_1_17,117,G__get_linked_tagnum(&G__G__HistLN_TH1F),-1,0,2,1,1,0,
+"u 'TH1F' - 1 - h1 u 'TH1F' - 1 - h2",(char*)NULL
+,(void*)NULL,0);
+   G__memfunc_setup("operator/",923,G___operatordI_2_17,117,G__get_linked_tagnum(&G__G__HistLN_TH1F),-1,0,2,1,1,0,
+"u 'TH1F' - 1 - h1 u 'TH1F' - 1 - h2",(char*)NULL
+,(void*)NULL,0);
+   G__memfunc_setup("operator*",918,G___operatormU_4_17,117,G__get_linked_tagnum(&G__G__HistLN_TH1D),-1,0,2,1,1,0,
+"f - 'Float_t' 0 - c1 u 'TH1D' - 1 - h1",(char*)NULL
+,(void*)NULL,0);
+   G__memfunc_setup("operator*",918,G___operatormU_5_17,117,G__get_linked_tagnum(&G__G__HistLN_TH1D),-1,0,2,1,1,0,
+"u 'TH1D' - 1 - h1 f - 'Float_t' 0 - c1",(char*)NULL
+,(void*)NULL,0);
+   G__memfunc_setup("operator+",919,G___operatorpL_6_17,117,G__get_linked_tagnum(&G__G__HistLN_TH1D),-1,0,2,1,1,0,
+"u 'TH1D' - 1 - h1 u 'TH1D' - 1 - h2",(char*)NULL
+,(void*)NULL,0);
+   G__memfunc_setup("operator-",921,G___operatormI_7_17,117,G__get_linked_tagnum(&G__G__HistLN_TH1D),-1,0,2,1,1,0,
+"u 'TH1D' - 1 - h1 u 'TH1D' - 1 - h2",(char*)NULL
+,(void*)NULL,0);
+   G__memfunc_setup("operator*",918,G___operatormU_8_17,117,G__get_linked_tagnum(&G__G__HistLN_TH1D),-1,0,2,1,1,0,
+"u 'TH1D' - 1 - h1 u 'TH1D' - 1 - h2",(char*)NULL
+,(void*)NULL,0);
+   G__memfunc_setup("operator/",923,G___operatordI_9_17,117,G__get_linked_tagnum(&G__G__HistLN_TH1D),-1,0,2,1,1,0,
+"u 'TH1D' - 1 - h1 u 'TH1D' - 1 - h2",(char*)NULL
+,(void*)NULL,0);
+   G__memfunc_setup("operator*",918,G___operatormU_2_18,117,G__get_linked_tagnum(&G__G__HistLN_TH2C),-1,0,2,1,1,0,
+"f - 'Float_t' 0 - c1 u 'TH2C' - 1 - h1",(char*)NULL
+,(void*)NULL,0);
+   G__memfunc_setup("operator*",918,G___operatormU_3_18,117,G__get_linked_tagnum(&G__G__HistLN_TH2C),-1,0,2,1,1,0,
+"u 'TH2C' - 1 - h1 f - 'Float_t' 0 - c1",(char*)NULL
+,(void*)NULL,0);
+   G__memfunc_setup("operator+",919,G___operatorpL_4_18,117,G__get_linked_tagnum(&G__G__HistLN_TH2C),-1,0,2,1,1,0,
+"u 'TH2C' - 1 - h1 u 'TH2C' - 1 - h2",(char*)NULL
+,(void*)NULL,0);
+   G__memfunc_setup("operator-",921,G___operatormI_5_18,117,G__get_linked_tagnum(&G__G__HistLN_TH2C),-1,0,2,1,1,0,
+"u 'TH2C' - 1 - h1 u 'TH2C' - 1 - h2",(char*)NULL
+,(void*)NULL,0);
+   G__memfunc_setup("operator*",918,G___operatormU_6_18,117,G__get_linked_tagnum(&G__G__HistLN_TH2C),-1,0,2,1,1,0,
+"u 'TH2C' - 1 - h1 u 'TH2C' - 1 - h2",(char*)NULL
+,(void*)NULL,0);
+   G__memfunc_setup("operator/",923,G___operatordI_7_18,117,G__get_linked_tagnum(&G__G__HistLN_TH2C),-1,0,2,1,1,0,
+"u 'TH2C' - 1 - h1 u 'TH2C' - 1 - h2",(char*)NULL
+,(void*)NULL,0);
+   G__memfunc_setup("operator*",918,G___operatormU_9_18,117,G__get_linked_tagnum(&G__G__HistLN_TH2S),-1,0,2,1,1,0,
+"f - 'Float_t' 0 - c1 u 'TH2S' - 1 - h1",(char*)NULL
+,(void*)NULL,0);
+   G__memfunc_setup("operator*",918,G___operatormU_0_19,117,G__get_linked_tagnum(&G__G__HistLN_TH2S),-1,0,2,1,1,0,
+"u 'TH2S' - 1 - h1 f - 'Float_t' 0 - c1",(char*)NULL
+,(void*)NULL,0);
+   G__memfunc_setup("operator+",919,G___operatorpL_1_19,117,G__get_linked_tagnum(&G__G__HistLN_TH2S),-1,0,2,1,1,0,
+"u 'TH2S' - 1 - h1 u 'TH2S' - 1 - h2",(char*)NULL
+,(void*)NULL,0);
+   G__memfunc_setup("operator-",921,G___operatormI_2_19,117,G__get_linked_tagnum(&G__G__HistLN_TH2S),-1,0,2,1,1,0,
+"u 'TH2S' - 1 - h1 u 'TH2S' - 1 - h2",(char*)NULL
+,(void*)NULL,0);
+   G__memfunc_setup("operator*",918,G___operatormU_3_19,117,G__get_linked_tagnum(&G__G__HistLN_TH2S),-1,0,2,1,1,0,
+"u 'TH2S' - 1 - h1 u 'TH2S' - 1 - h2",(char*)NULL
+,(void*)NULL,0);
+   G__memfunc_setup("operator/",923,G___operatordI_4_19,117,G__get_linked_tagnum(&G__G__HistLN_TH2S),-1,0,2,1,1,0,
+"u 'TH2S' - 1 - h1 u 'TH2S' - 1 - h2",(char*)NULL
+,(void*)NULL,0);
+   G__memfunc_setup("operator*",918,G___operatormU_6_19,117,G__get_linked_tagnum(&G__G__HistLN_TH2F),-1,0,2,1,1,0,
+"f - 'Float_t' 0 - c1 u 'TH2F' - 1 - h1",(char*)NULL
+,(void*)NULL,0);
+   G__memfunc_setup("operator*",918,G___operatormU_7_19,117,G__get_linked_tagnum(&G__G__HistLN_TH2F),-1,0,2,1,1,0,
+"u 'TH2F' - 1 - h1 f - 'Float_t' 0 - c1",(char*)NULL
+,(void*)NULL,0);
+   G__memfunc_setup("operator+",919,G___operatorpL_8_19,117,G__get_linked_tagnum(&G__G__HistLN_TH2F),-1,0,2,1,1,0,
+"u 'TH2F' - 1 - h1 u 'TH2F' - 1 - h2",(char*)NULL
+,(void*)NULL,0);
+   G__memfunc_setup("operator-",921,G___operatormI_9_19,117,G__get_linked_tagnum(&G__G__HistLN_TH2F),-1,0,2,1,1,0,
+"u 'TH2F' - 1 - h1 u 'TH2F' - 1 - h2",(char*)NULL
+,(void*)NULL,0);
+   G__memfunc_setup("operator*",918,G___operatormU_0_20,117,G__get_linked_tagnum(&G__G__HistLN_TH2F),-1,0,2,1,1,0,
+"u 'TH2F' - 1 - h1 u 'TH2F' - 1 - h2",(char*)NULL
+,(void*)NULL,0);
+   G__memfunc_setup("operator/",923,G___operatordI_1_20,117,G__get_linked_tagnum(&G__G__HistLN_TH2F),-1,0,2,1,1,0,
+"u 'TH2F' - 1 - h1 u 'TH2F' - 1 - h2",(char*)NULL
+,(void*)NULL,0);
+   G__memfunc_setup("operator*",918,G___operatormU_3_20,117,G__get_linked_tagnum(&G__G__HistLN_TH2D),-1,0,2,1,1,0,
+"f - 'Float_t' 0 - c1 u 'TH2D' - 1 - h1",(char*)NULL
+,(void*)NULL,0);
+   G__memfunc_setup("operator*",918,G___operatormU_4_20,117,G__get_linked_tagnum(&G__G__HistLN_TH2D),-1,0,2,1,1,0,
+"u 'TH2D' - 1 - h1 f - 'Float_t' 0 - c1",(char*)NULL
+,(void*)NULL,0);
+   G__memfunc_setup("operator+",919,G___operatorpL_5_20,117,G__get_linked_tagnum(&G__G__HistLN_TH2D),-1,0,2,1,1,0,
+"u 'TH2D' - 1 - h1 u 'TH2D' - 1 - h2",(char*)NULL
+,(void*)NULL,0);
+   G__memfunc_setup("operator-",921,G___operatormI_6_20,117,G__get_linked_tagnum(&G__G__HistLN_TH2D),-1,0,2,1,1,0,
+"u 'TH2D' - 1 - h1 u 'TH2D' - 1 - h2",(char*)NULL
+,(void*)NULL,0);
+   G__memfunc_setup("operator*",918,G___operatormU_7_20,117,G__get_linked_tagnum(&G__G__HistLN_TH2D),-1,0,2,1,1,0,
+"u 'TH2D' - 1 - h1 u 'TH2D' - 1 - h2",(char*)NULL
+,(void*)NULL,0);
+   G__memfunc_setup("operator/",923,G___operatordI_8_20,117,G__get_linked_tagnum(&G__G__HistLN_TH2D),-1,0,2,1,1,0,
+"u 'TH2D' - 1 - h1 u 'TH2D' - 1 - h2",(char*)NULL
+,(void*)NULL,0);
+   G__memfunc_setup("operator*",918,G___operatormU_1_21,117,G__get_linked_tagnum(&G__G__HistLN_TH3C),-1,0,2,1,1,0,
+"f - 'Float_t' 0 - c1 u 'TH3C' - 1 - h1",(char*)NULL
+,(void*)NULL,0);
+   G__memfunc_setup("operator*",918,G___operatormU_2_21,117,G__get_linked_tagnum(&G__G__HistLN_TH3C),-1,0,2,1,1,0,
+"u 'TH3C' - 1 - h1 f - 'Float_t' 0 - c1",(char*)NULL
+,(void*)NULL,0);
+   G__memfunc_setup("operator+",919,G___operatorpL_3_21,117,G__get_linked_tagnum(&G__G__HistLN_TH3C),-1,0,2,1,1,0,
+"u 'TH3C' - 1 - h1 u 'TH3C' - 1 - h2",(char*)NULL
+,(void*)NULL,0);
+   G__memfunc_setup("operator-",921,G___operatormI_4_21,117,G__get_linked_tagnum(&G__G__HistLN_TH3C),-1,0,2,1,1,0,
+"u 'TH3C' - 1 - h1 u 'TH3C' - 1 - h2",(char*)NULL
+,(void*)NULL,0);
+   G__memfunc_setup("operator*",918,G___operatormU_5_21,117,G__get_linked_tagnum(&G__G__HistLN_TH3C),-1,0,2,1,1,0,
+"u 'TH3C' - 1 - h1 u 'TH3C' - 1 - h2",(char*)NULL
+,(void*)NULL,0);
+   G__memfunc_setup("operator/",923,G___operatordI_6_21,117,G__get_linked_tagnum(&G__G__HistLN_TH3C),-1,0,2,1,1,0,
+"u 'TH3C' - 1 - h1 u 'TH3C' - 1 - h2",(char*)NULL
+,(void*)NULL,0);
+   G__memfunc_setup("operator*",918,G___operatormU_8_21,117,G__get_linked_tagnum(&G__G__HistLN_TH3S),-1,0,2,1,1,0,
+"f - 'Float_t' 0 - c1 u 'TH3S' - 1 - h1",(char*)NULL
+,(void*)NULL,0);
+   G__memfunc_setup("operator*",918,G___operatormU_9_21,117,G__get_linked_tagnum(&G__G__HistLN_TH3S),-1,0,2,1,1,0,
+"u 'TH3S' - 1 - h1 f - 'Float_t' 0 - c1",(char*)NULL
+,(void*)NULL,0);
+   G__memfunc_setup("operator+",919,G___operatorpL_0_22,117,G__get_linked_tagnum(&G__G__HistLN_TH3S),-1,0,2,1,1,0,
+"u 'TH3S' - 1 - h1 u 'TH3S' - 1 - h2",(char*)NULL
+,(void*)NULL,0);
+   G__memfunc_setup("operator-",921,G___operatormI_1_22,117,G__get_linked_tagnum(&G__G__HistLN_TH3S),-1,0,2,1,1,0,
+"u 'TH3S' - 1 - h1 u 'TH3S' - 1 - h2",(char*)NULL
+,(void*)NULL,0);
+   G__memfunc_setup("operator*",918,G___operatormU_2_22,117,G__get_linked_tagnum(&G__G__HistLN_TH3S),-1,0,2,1,1,0,
+"u 'TH3S' - 1 - h1 u 'TH3S' - 1 - h2",(char*)NULL
+,(void*)NULL,0);
+   G__memfunc_setup("operator/",923,G___operatordI_3_22,117,G__get_linked_tagnum(&G__G__HistLN_TH3S),-1,0,2,1,1,0,
+"u 'TH3S' - 1 - h1 u 'TH3S' - 1 - h2",(char*)NULL
+,(void*)NULL,0);
+   G__memfunc_setup("operator*",918,G___operatormU_5_22,117,G__get_linked_tagnum(&G__G__HistLN_TH3F),-1,0,2,1,1,0,
+"f - 'Float_t' 0 - c1 u 'TH3F' - 1 - h1",(char*)NULL
+,(void*)NULL,0);
+   G__memfunc_setup("operator*",918,G___operatormU_6_22,117,G__get_linked_tagnum(&G__G__HistLN_TH3F),-1,0,2,1,1,0,
+"u 'TH3F' - 1 - h1 f - 'Float_t' 0 - c1",(char*)NULL
+,(void*)NULL,0);
+   G__memfunc_setup("operator+",919,G___operatorpL_7_22,117,G__get_linked_tagnum(&G__G__HistLN_TH3F),-1,0,2,1,1,0,
+"u 'TH3F' - 1 - h1 u 'TH3F' - 1 - h2",(char*)NULL
+,(void*)NULL,0);
+   G__memfunc_setup("operator-",921,G___operatormI_8_22,117,G__get_linked_tagnum(&G__G__HistLN_TH3F),-1,0,2,1,1,0,
+"u 'TH3F' - 1 - h1 u 'TH3F' - 1 - h2",(char*)NULL
+,(void*)NULL,0);
+   G__memfunc_setup("operator*",918,G___operatormU_9_22,117,G__get_linked_tagnum(&G__G__HistLN_TH3F),-1,0,2,1,1,0,
+"u 'TH3F' - 1 - h1 u 'TH3F' - 1 - h2",(char*)NULL
+,(void*)NULL,0);
+   G__memfunc_setup("operator/",923,G___operatordI_0_23,117,G__get_linked_tagnum(&G__G__HistLN_TH3F),-1,0,2,1,1,0,
+"u 'TH3F' - 1 - h1 u 'TH3F' - 1 - h2",(char*)NULL
+,(void*)NULL,0);
+   G__memfunc_setup("operator*",918,G___operatormU_2_23,117,G__get_linked_tagnum(&G__G__HistLN_TH3D),-1,0,2,1,1,0,
+"f - 'Float_t' 0 - c1 u 'TH3D' - 1 - h1",(char*)NULL
+,(void*)NULL,0);
+   G__memfunc_setup("operator*",918,G___operatormU_3_23,117,G__get_linked_tagnum(&G__G__HistLN_TH3D),-1,0,2,1,1,0,
+"u 'TH3D' - 1 - h1 f - 'Float_t' 0 - c1",(char*)NULL
+,(void*)NULL,0);
+   G__memfunc_setup("operator+",919,G___operatorpL_4_23,117,G__get_linked_tagnum(&G__G__HistLN_TH3D),-1,0,2,1,1,0,
+"u 'TH3D' - 1 - h1 u 'TH3D' - 1 - h2",(char*)NULL
+,(void*)NULL,0);
+   G__memfunc_setup("operator-",921,G___operatormI_5_23,117,G__get_linked_tagnum(&G__G__HistLN_TH3D),-1,0,2,1,1,0,
+"u 'TH3D' - 1 - h1 u 'TH3D' - 1 - h2",(char*)NULL
+,(void*)NULL,0);
+   G__memfunc_setup("operator*",918,G___operatormU_6_23,117,G__get_linked_tagnum(&G__G__HistLN_TH3D),-1,0,2,1,1,0,
+"u 'TH3D' - 1 - h1 u 'TH3D' - 1 - h2",(char*)NULL
+,(void*)NULL,0);
+   G__memfunc_setup("operator/",923,G___operatordI_7_23,117,G__get_linked_tagnum(&G__G__HistLN_TH3D),-1,0,2,1,1,0,
+"u 'TH3D' - 1 - h1 u 'TH3D' - 1 - h2",(char*)NULL
+,(void*)NULL,0);
+
+   G__resetifuncposition();
+}
+
+/*********************************************************
+* Class,struct,union,enum tag information setup
+*********************************************************/
+/* Setup class/struct taginfo */
+G__linked_taginfo G__G__HistLN_TClass = { "TClass" , 99 , -1 };
+G__linked_taginfo G__G__HistLN_TList = { "TList" , 99 , -1 };
+G__linked_taginfo G__G__HistLN_TObject = { "TObject" , 99 , -1 };
+G__linked_taginfo G__G__HistLN_TString = { "TString" , 99 , -1 };
+G__linked_taginfo G__G__HistLN_TNamed = { "TNamed" , 99 , -1 };
+G__linked_taginfo G__G__HistLN_TDirectory = { "TDirectory" , 99 , -1 };
+G__linked_taginfo G__G__HistLN_TF1 = { "TF1" , 99 , -1 };
+G__linked_taginfo G__G__HistLN_TArray = { "TArray" , 99 , -1 };
+G__linked_taginfo G__G__HistLN_TArrayF = { "TArrayF" , 99 , -1 };
+G__linked_taginfo G__G__HistLN_TAxis = { "TAxis" , 99 , -1 };
+G__linked_taginfo G__G__HistLN_TAttLine = { "TAttLine" , 99 , -1 };
+G__linked_taginfo G__G__HistLN_TAttFill = { "TAttFill" , 99 , -1 };
+G__linked_taginfo G__G__HistLN_TAttMarker = { "TAttMarker" , 99 , -1 };
+G__linked_taginfo G__G__HistLN_TH1F = { "TH1F" , 99 , -1 };
+G__linked_taginfo G__G__HistLN_TArrayC = { "TArrayC" , 99 , -1 };
+G__linked_taginfo G__G__HistLN_TArrayS = { "TArrayS" , 99 , -1 };
+G__linked_taginfo G__G__HistLN_TArrayD = { "TArrayD" , 99 , -1 };
+G__linked_taginfo G__G__HistLN_TH1D = { "TH1D" , 99 , -1 };
+G__linked_taginfo G__G__HistLN_TProfile = { "TProfile" , 99 , -1 };
+G__linked_taginfo G__G__HistLN_TH1 = { "TH1" , 99 , -1 };
+G__linked_taginfo G__G__HistLN_TH1C = { "TH1C" , 99 , -1 };
+G__linked_taginfo G__G__HistLN_TH1S = { "TH1S" , 99 , -1 };
+G__linked_taginfo G__G__HistLN_TH2 = { "TH2" , 99 , -1 };
+G__linked_taginfo G__G__HistLN_TH2C = { "TH2C" , 99 , -1 };
+G__linked_taginfo G__G__HistLN_TH2S = { "TH2S" , 99 , -1 };
+G__linked_taginfo G__G__HistLN_TH2F = { "TH2F" , 99 , -1 };
+G__linked_taginfo G__G__HistLN_TH2D = { "TH2D" , 99 , -1 };
+G__linked_taginfo G__G__HistLN_TH3 = { "TH3" , 99 , -1 };
+G__linked_taginfo G__G__HistLN_TH3C = { "TH3C" , 99 , -1 };
+G__linked_taginfo G__G__HistLN_TH3S = { "TH3S" , 99 , -1 };
+G__linked_taginfo G__G__HistLN_TH3F = { "TH3F" , 99 , -1 };
+G__linked_taginfo G__G__HistLN_TH3D = { "TH3D" , 99 , -1 };
+G__linked_taginfo G__G__HistLN_EErrorType = { "EErrorType" , 101 , -1 };
+
+extern "C" void G__cpp_setup_tagtableG__Hist() {
+
+   /* Setting up class,struct,union tag entry */
+   G__tagtable_setup(G__get_linked_tagnum(&G__G__HistLN_TH1F),sizeof(TH1F),-1,0,"1-Dim histograms (one float per channel)",G__setup_memvarTH1F,G__setup_memfuncTH1F);
+   G__tagtable_setup(G__get_linked_tagnum(&G__G__HistLN_TH1D),sizeof(TH1D),-1,0,"1-Dim histograms (one double per channel)",G__setup_memvarTH1D,G__setup_memfuncTH1D);
+   G__tagtable_setup(G__get_linked_tagnum(&G__G__HistLN_TProfile),sizeof(TProfile),-1,0,"Profile histogram class",G__setup_memvarTProfile,G__setup_memfuncTProfile);
+   G__tagtable_setup(G__get_linked_tagnum(&G__G__HistLN_TH1),sizeof(TH1),-1,0,"1-Dim histogram base class",G__setup_memvarTH1,G__setup_memfuncTH1);
+   G__tagtable_setup(G__get_linked_tagnum(&G__G__HistLN_TH1C),sizeof(TH1C),-1,0,"1-Dim histograms (one char per channel)",G__setup_memvarTH1C,G__setup_memfuncTH1C);
+   G__tagtable_setup(G__get_linked_tagnum(&G__G__HistLN_TH1S),sizeof(TH1S),-1,0,"1-Dim histograms (one short per channel)",G__setup_memvarTH1S,G__setup_memfuncTH1S);
+   G__tagtable_setup(G__get_linked_tagnum(&G__G__HistLN_TH2),sizeof(TH2),-1,0,"2-Dim histogram base class",G__setup_memvarTH2,G__setup_memfuncTH2);
+   G__tagtable_setup(G__get_linked_tagnum(&G__G__HistLN_TH2C),sizeof(TH2C),-1,0,"2-Dim histograms (one char per channel)",G__setup_memvarTH2C,G__setup_memfuncTH2C);
+   G__tagtable_setup(G__get_linked_tagnum(&G__G__HistLN_TH2S),sizeof(TH2S),-1,0,"2-Dim histograms (one short per channel)",G__setup_memvarTH2S,G__setup_memfuncTH2S);
+   G__tagtable_setup(G__get_linked_tagnum(&G__G__HistLN_TH2F),sizeof(TH2F),-1,0,"2-Dim histograms (one float per channel)",G__setup_memvarTH2F,G__setup_memfuncTH2F);
+   G__tagtable_setup(G__get_linked_tagnum(&G__G__HistLN_TH2D),sizeof(TH2D),-1,0,"2-Dim histograms (one double per channel)",G__setup_memvarTH2D,G__setup_memfuncTH2D);
+   G__tagtable_setup(G__get_linked_tagnum(&G__G__HistLN_TH3),sizeof(TH3),-1,0,"3-Dim histogram base class",G__setup_memvarTH3,G__setup_memfuncTH3);
+   G__tagtable_setup(G__get_linked_tagnum(&G__G__HistLN_TH3C),sizeof(TH3C),-1,0,"3-Dim histograms (one char per channel)",G__setup_memvarTH3C,G__setup_memfuncTH3C);
+   G__tagtable_setup(G__get_linked_tagnum(&G__G__HistLN_TH3S),sizeof(TH3S),-1,0,"3-Dim histograms (one short per channel)",G__setup_memvarTH3S,G__setup_memfuncTH3S);
+   G__tagtable_setup(G__get_linked_tagnum(&G__G__HistLN_TH3F),sizeof(TH3F),-1,0,"3-Dim histograms (one float per channel)",G__setup_memvarTH3F,G__setup_memfuncTH3F);
+   G__tagtable_setup(G__get_linked_tagnum(&G__G__HistLN_TH3D),sizeof(TH3D),-1,0,"3-Dim histograms (one double per channel)",G__setup_memvarTH3D,G__setup_memfuncTH3D);
+}
+extern "C" void G__cpp_setupG__Hist() {
+  G__check_setup_version(51111,"G__cpp_setupG__Hist()");
+  G__set_cpp_environmentG__Hist();
+  G__cpp_setup_tagtableG__Hist();
+
+  G__cpp_setup_inheritanceG__Hist();
+
+  G__cpp_setup_typetableG__Hist();
+
+  G__cpp_setup_memvarG__Hist();
+
+  G__cpp_setup_memfuncG__Hist();
+  G__cpp_setup_globalG__Hist();
+  G__cpp_setup_funcG__Hist();
+
+   if(0==G__getsizep2memfunc()) G__get_sizep2memfuncG__Hist();
+  return;
+}
+class G__cpp_setup_initG__Hist {
+  public:
+    G__cpp_setup_initG__Hist() { G__add_setup_func("G__Hist",&G__cpp_setupG__Hist); }
+   ~G__cpp_setup_initG__Hist() { G__remove_setup_func("G__Hist"); }
+};
+G__cpp_setup_initG__Hist G__cpp_setup_initializerG__Hist;
+
+//
+// File generated by /user/brun/root/bin/rootcint at Sat Dec  5 16:39:38 1998.
+// Do NOT change. Changes will be lost next time file is generated
+//
+
+#include "TBuffer.h"
+#include "TMemberInspector.h"
+#include "TError.h"
+
+//______________________________________________________________________________
+TBuffer &operator>>(TBuffer &buf, TH1F *&obj)
+{
+   // Read a pointer to an object of class TH1F.
+
+   obj = (TH1F *) buf.ReadObject(TH1F::Class());
+   return buf;
+}
+
+//______________________________________________________________________________
+void TH1F::Streamer(TBuffer &R__b)
+{
+   // Stream an object of class TH1F.
+
+   if (R__b.IsReading()) {
+      Version_t R__v = R__b.ReadVersion(); if (R__v) { }
+      TH1::Streamer(R__b);
+      TArrayF::Streamer(R__b);
+   } else {
+      R__b.WriteVersion(TH1F::IsA());
+      TH1::Streamer(R__b);
+      TArrayF::Streamer(R__b);
+   }
+}
+
+//______________________________________________________________________________
+void TH1F::ShowMembers(TMemberInspector &R__insp, char *R__parent)
+{
+   // Inspect the data members of an object of class TH1F.
+
+   TClass *R__cl  = TH1F::IsA();
+   Int_t   R__ncp = strlen(R__parent);
+   if (R__ncp || R__cl || R__insp.IsA()) { }
+   TH1::ShowMembers(R__insp, R__parent);
+   TArrayF::ShowMembers(R__insp, R__parent);
+}
+
+//______________________________________________________________________________
+TBuffer &operator>>(TBuffer &buf, TH1D *&obj)
+{
+   // Read a pointer to an object of class TH1D.
+
+   obj = (TH1D *) buf.ReadObject(TH1D::Class());
+   return buf;
+}
+
+//______________________________________________________________________________
+void TH1D::Streamer(TBuffer &R__b)
+{
+   // Stream an object of class TH1D.
+
+   if (R__b.IsReading()) {
+      Version_t R__v = R__b.ReadVersion(); if (R__v) { }
+      TH1::Streamer(R__b);
+      TArrayD::Streamer(R__b);
+   } else {
+      R__b.WriteVersion(TH1D::IsA());
+      TH1::Streamer(R__b);
+      TArrayD::Streamer(R__b);
+   }
+}
+
+//______________________________________________________________________________
+void TH1D::ShowMembers(TMemberInspector &R__insp, char *R__parent)
+{
+   // Inspect the data members of an object of class TH1D.
+
+   TClass *R__cl  = TH1D::IsA();
+   Int_t   R__ncp = strlen(R__parent);
+   if (R__ncp || R__cl || R__insp.IsA()) { }
+   TH1::ShowMembers(R__insp, R__parent);
+   TArrayD::ShowMembers(R__insp, R__parent);
+}
+
+//______________________________________________________________________________
+TBuffer &operator>>(TBuffer &buf, TProfile *&obj)
+{
+   // Read a pointer to an object of class TProfile.
+
+   obj = (TProfile *) buf.ReadObject(TProfile::Class());
+   return buf;
+}
+
+//______________________________________________________________________________
+void TProfile::Streamer(TBuffer &R__b)
+{
+   // Stream an object of class TProfile.
+
+   if (R__b.IsReading()) {
+      Version_t R__v = R__b.ReadVersion(); if (R__v) { }
+      TH1D::Streamer(R__b);
+      fBinEntries.Streamer(R__b);
+      R__b >> (Int_t&)fErrorMode;
+      R__b >> fYmin;
+      R__b >> fYmax;
+   } else {
+      R__b.WriteVersion(TProfile::IsA());
+      TH1D::Streamer(R__b);
+      fBinEntries.Streamer(R__b);
+      R__b << (Int_t)fErrorMode;
+      R__b << fYmin;
+      R__b << fYmax;
+   }
+}
+
+//______________________________________________________________________________
+void TProfile::ShowMembers(TMemberInspector &R__insp, char *R__parent)
+{
+   // Inspect the data members of an object of class TProfile.
+
+   TClass *R__cl  = TProfile::IsA();
+   Int_t   R__ncp = strlen(R__parent);
+   if (R__ncp || R__cl || R__insp.IsA()) { }
+   fBinEntries.ShowMembers(R__insp, strcat(R__parent,"fBinEntries.")); R__parent[R__ncp] = 0;
+   R__insp.Inspect(R__cl, R__parent, "fErrorMode", &fErrorMode);
+   R__insp.Inspect(R__cl, R__parent, "fYmin", &fYmin);
+   R__insp.Inspect(R__cl, R__parent, "fYmax", &fYmax);
+   TH1D::ShowMembers(R__insp, R__parent);
+}
+
+//______________________________________________________________________________
+TBuffer &operator>>(TBuffer &buf, TH1 *&obj)
+{
+   // Read a pointer to an object of class TH1.
+
+   obj = (TH1 *) buf.ReadObject(TH1::Class());
+   return buf;
+}
+
+//______________________________________________________________________________
+void TH1::ShowMembers(TMemberInspector &R__insp, char *R__parent)
+{
+   // Inspect the data members of an object of class TH1.
+
+   TClass *R__cl  = TH1::IsA();
+   Int_t   R__ncp = strlen(R__parent);
+   if (R__ncp || R__cl || R__insp.IsA()) { }
+   R__insp.Inspect(R__cl, R__parent, "fNcells", &fNcells);
+   fXaxis.ShowMembers(R__insp, strcat(R__parent,"fXaxis.")); R__parent[R__ncp] = 0;
+   fYaxis.ShowMembers(R__insp, strcat(R__parent,"fYaxis.")); R__parent[R__ncp] = 0;
+   fZaxis.ShowMembers(R__insp, strcat(R__parent,"fZaxis.")); R__parent[R__ncp] = 0;
+   R__insp.Inspect(R__cl, R__parent, "fBarOffset", &fBarOffset);
+   R__insp.Inspect(R__cl, R__parent, "fBarWidth", &fBarWidth);
+   R__insp.Inspect(R__cl, R__parent, "fEntries", &fEntries);
+   R__insp.Inspect(R__cl, R__parent, "fTsumw", &fTsumw);
+   R__insp.Inspect(R__cl, R__parent, "fTsumw2", &fTsumw2);
+   R__insp.Inspect(R__cl, R__parent, "fTsumwx", &fTsumwx);
+   R__insp.Inspect(R__cl, R__parent, "fTsumwx2", &fTsumwx2);
+   R__insp.Inspect(R__cl, R__parent, "fMaximum", &fMaximum);
+   R__insp.Inspect(R__cl, R__parent, "fMinimum", &fMinimum);
+   R__insp.Inspect(R__cl, R__parent, "fNormFactor", &fNormFactor);
+   fContour.ShowMembers(R__insp, strcat(R__parent,"fContour.")); R__parent[R__ncp] = 0;
+   fSumw2.ShowMembers(R__insp, strcat(R__parent,"fSumw2.")); R__parent[R__ncp] = 0;
+   fOption.ShowMembers(R__insp, strcat(R__parent,"fOption.")); R__parent[R__ncp] = 0;
+   R__insp.Inspect(R__cl, R__parent, "*fFunctions", &fFunctions);
+   R__insp.Inspect(R__cl, R__parent, "*fDirectory", &fDirectory);
+   R__insp.Inspect(R__cl, R__parent, "fDimension", &fDimension);
+   TNamed::ShowMembers(R__insp, R__parent);
+   TAttLine::ShowMembers(R__insp, R__parent);
+   TAttFill::ShowMembers(R__insp, R__parent);
+   TAttMarker::ShowMembers(R__insp, R__parent);
+}
+
+//______________________________________________________________________________
+TBuffer &operator>>(TBuffer &buf, TH1C *&obj)
+{
+   // Read a pointer to an object of class TH1C.
+
+   obj = (TH1C *) buf.ReadObject(TH1C::Class());
+   return buf;
+}
+
+//______________________________________________________________________________
+void TH1C::Streamer(TBuffer &R__b)
+{
+   // Stream an object of class TH1C.
+
+   if (R__b.IsReading()) {
+      Version_t R__v = R__b.ReadVersion(); if (R__v) { }
+      TH1::Streamer(R__b);
+      TArrayC::Streamer(R__b);
+   } else {
+      R__b.WriteVersion(TH1C::IsA());
+      TH1::Streamer(R__b);
+      TArrayC::Streamer(R__b);
+   }
+}
+
+//______________________________________________________________________________
+void TH1C::ShowMembers(TMemberInspector &R__insp, char *R__parent)
+{
+   // Inspect the data members of an object of class TH1C.
+
+   TClass *R__cl  = TH1C::IsA();
+   Int_t   R__ncp = strlen(R__parent);
+   if (R__ncp || R__cl || R__insp.IsA()) { }
+   TH1::ShowMembers(R__insp, R__parent);
+   TArrayC::ShowMembers(R__insp, R__parent);
+}
+
+//______________________________________________________________________________
+TBuffer &operator>>(TBuffer &buf, TH1S *&obj)
+{
+   // Read a pointer to an object of class TH1S.
+
+   obj = (TH1S *) buf.ReadObject(TH1S::Class());
+   return buf;
+}
+
+//______________________________________________________________________________
+void TH1S::Streamer(TBuffer &R__b)
+{
+   // Stream an object of class TH1S.
+
+   if (R__b.IsReading()) {
+      Version_t R__v = R__b.ReadVersion(); if (R__v) { }
+      TH1::Streamer(R__b);
+      TArrayS::Streamer(R__b);
+   } else {
+      R__b.WriteVersion(TH1S::IsA());
+      TH1::Streamer(R__b);
+      TArrayS::Streamer(R__b);
+   }
+}
+
+//______________________________________________________________________________
+void TH1S::ShowMembers(TMemberInspector &R__insp, char *R__parent)
+{
+   // Inspect the data members of an object of class TH1S.
+
+   TClass *R__cl  = TH1S::IsA();
+   Int_t   R__ncp = strlen(R__parent);
+   if (R__ncp || R__cl || R__insp.IsA()) { }
+   TH1::ShowMembers(R__insp, R__parent);
+   TArrayS::ShowMembers(R__insp, R__parent);
+}
+
+//______________________________________________________________________________
+TBuffer &operator>>(TBuffer &buf, TH2 *&obj)
+{
+   // Read a pointer to an object of class TH2.
+
+   ::Error("TH2::operator>>", "objects not inheriting from TObject need a specialized operator>> function"); if (obj) { }
+   return buf;
+}
+
+//______________________________________________________________________________
+void TH2::Streamer(TBuffer &R__b)
+{
+   // Stream an object of class TH2.
+
+   if (R__b.IsReading()) {
+      Version_t R__v = R__b.ReadVersion(); if (R__v) { }
+      R__b >> fScalefactor;
+      R__b >> fTsumwy;
+      R__b >> fTsumwy2;
+      R__b >> fTsumwxy;
+   } else {
+      R__b.WriteVersion(TH2::IsA());
+      R__b << fScalefactor;
+      R__b << fTsumwy;
+      R__b << fTsumwy2;
+      R__b << fTsumwxy;
+   }
+}
+
+//______________________________________________________________________________
+void TH2::ShowMembers(TMemberInspector &R__insp, char *R__parent)
+{
+   // Inspect the data members of an object of class TH2.
+
+   TClass *R__cl  = TH2::IsA();
+   Int_t   R__ncp = strlen(R__parent);
+   if (R__ncp || R__cl || R__insp.IsA()) { }
+   R__insp.Inspect(R__cl, R__parent, "fScalefactor", &fScalefactor);
+   R__insp.Inspect(R__cl, R__parent, "fTsumwy", &fTsumwy);
+   R__insp.Inspect(R__cl, R__parent, "fTsumwy2", &fTsumwy2);
+   R__insp.Inspect(R__cl, R__parent, "fTsumwxy", &fTsumwxy);
+}
+
+//______________________________________________________________________________
+TBuffer &operator>>(TBuffer &buf, TH2C *&obj)
+{
+   // Read a pointer to an object of class TH2C.
+
+   obj = (TH2C *) buf.ReadObject(TH2C::Class());
+   return buf;
+}
+
+//______________________________________________________________________________
+void TH2C::Streamer(TBuffer &R__b)
+{
+   // Stream an object of class TH2C.
+
+   if (R__b.IsReading()) {
+      Version_t R__v = R__b.ReadVersion(); if (R__v) { }
+      TH1C::Streamer(R__b);
+      TH2::Streamer(R__b);
+   } else {
+      R__b.WriteVersion(TH2C::IsA());
+      TH1C::Streamer(R__b);
+      TH2::Streamer(R__b);
+   }
+}
+
+//______________________________________________________________________________
+void TH2C::ShowMembers(TMemberInspector &R__insp, char *R__parent)
+{
+   // Inspect the data members of an object of class TH2C.
+
+   TClass *R__cl  = TH2C::IsA();
+   Int_t   R__ncp = strlen(R__parent);
+   if (R__ncp || R__cl || R__insp.IsA()) { }
+   TH1C::ShowMembers(R__insp, R__parent);
+   TH2::ShowMembers(R__insp, R__parent);
+}
+
+//______________________________________________________________________________
+TBuffer &operator>>(TBuffer &buf, TH2S *&obj)
+{
+   // Read a pointer to an object of class TH2S.
+
+   obj = (TH2S *) buf.ReadObject(TH2S::Class());
+   return buf;
+}
+
+//______________________________________________________________________________
+void TH2S::Streamer(TBuffer &R__b)
+{
+   // Stream an object of class TH2S.
+
+   if (R__b.IsReading()) {
+      Version_t R__v = R__b.ReadVersion(); if (R__v) { }
+      TH1S::Streamer(R__b);
+      TH2::Streamer(R__b);
+   } else {
+      R__b.WriteVersion(TH2S::IsA());
+      TH1S::Streamer(R__b);
+      TH2::Streamer(R__b);
+   }
+}
+
+//______________________________________________________________________________
+void TH2S::ShowMembers(TMemberInspector &R__insp, char *R__parent)
+{
+   // Inspect the data members of an object of class TH2S.
+
+   TClass *R__cl  = TH2S::IsA();
+   Int_t   R__ncp = strlen(R__parent);
+   if (R__ncp || R__cl || R__insp.IsA()) { }
+   TH1S::ShowMembers(R__insp, R__parent);
+   TH2::ShowMembers(R__insp, R__parent);
+}
+
+//______________________________________________________________________________
+TBuffer &operator>>(TBuffer &buf, TH2F *&obj)
+{
+   // Read a pointer to an object of class TH2F.
+
+   obj = (TH2F *) buf.ReadObject(TH2F::Class());
+   return buf;
+}
+
+//______________________________________________________________________________
+void TH2F::Streamer(TBuffer &R__b)
+{
+   // Stream an object of class TH2F.
+
+   if (R__b.IsReading()) {
+      Version_t R__v = R__b.ReadVersion(); if (R__v) { }
+      TH1F::Streamer(R__b);
+      TH2::Streamer(R__b);
+   } else {
+      R__b.WriteVersion(TH2F::IsA());
+      TH1F::Streamer(R__b);
+      TH2::Streamer(R__b);
+   }
+}
+
+//______________________________________________________________________________
+void TH2F::ShowMembers(TMemberInspector &R__insp, char *R__parent)
+{
+   // Inspect the data members of an object of class TH2F.
+
+   TClass *R__cl  = TH2F::IsA();
+   Int_t   R__ncp = strlen(R__parent);
+   if (R__ncp || R__cl || R__insp.IsA()) { }
+   TH1F::ShowMembers(R__insp, R__parent);
+   TH2::ShowMembers(R__insp, R__parent);
+}
+
+//______________________________________________________________________________
+TBuffer &operator>>(TBuffer &buf, TH2D *&obj)
+{
+   // Read a pointer to an object of class TH2D.
+
+   obj = (TH2D *) buf.ReadObject(TH2D::Class());
+   return buf;
+}
+
+//______________________________________________________________________________
+void TH2D::Streamer(TBuffer &R__b)
+{
+   // Stream an object of class TH2D.
+
+   if (R__b.IsReading()) {
+      Version_t R__v = R__b.ReadVersion(); if (R__v) { }
+      TH1D::Streamer(R__b);
+      TH2::Streamer(R__b);
+   } else {
+      R__b.WriteVersion(TH2D::IsA());
+      TH1D::Streamer(R__b);
+      TH2::Streamer(R__b);
+   }
+}
+
+//______________________________________________________________________________
+void TH2D::ShowMembers(TMemberInspector &R__insp, char *R__parent)
+{
+   // Inspect the data members of an object of class TH2D.
+
+   TClass *R__cl  = TH2D::IsA();
+   Int_t   R__ncp = strlen(R__parent);
+   if (R__ncp || R__cl || R__insp.IsA()) { }
+   TH1D::ShowMembers(R__insp, R__parent);
+   TH2::ShowMembers(R__insp, R__parent);
+}
+
+//______________________________________________________________________________
+TBuffer &operator>>(TBuffer &buf, TH3 *&obj)
+{
+   // Read a pointer to an object of class TH3.
+
+   ::Error("TH3::operator>>", "objects not inheriting from TObject need a specialized operator>> function"); if (obj) { }
+   return buf;
+}
+
+//______________________________________________________________________________
+void TH3::Streamer(TBuffer &R__b)
+{
+   // Stream an object of class TH3.
+
+   if (R__b.IsReading()) {
+      Version_t R__v = R__b.ReadVersion(); if (R__v) { }
+   } else {
+      R__b.WriteVersion(TH3::IsA());
+   }
+}
+
+//______________________________________________________________________________
+void TH3::ShowMembers(TMemberInspector &R__insp, char *R__parent)
+{
+   // Inspect the data members of an object of class TH3.
+
+   TClass *R__cl  = TH3::IsA();
+   Int_t   R__ncp = strlen(R__parent);
+   if (R__ncp || R__cl || R__insp.IsA()) { }
+}
+
+//______________________________________________________________________________
+TBuffer &operator>>(TBuffer &buf, TH3C *&obj)
+{
+   // Read a pointer to an object of class TH3C.
+
+   obj = (TH3C *) buf.ReadObject(TH3C::Class());
+   return buf;
+}
+
+//______________________________________________________________________________
+void TH3C::Streamer(TBuffer &R__b)
+{
+   // Stream an object of class TH3C.
+
+   if (R__b.IsReading()) {
+      Version_t R__v = R__b.ReadVersion(); if (R__v) { }
+      TH1C::Streamer(R__b);
+      TH3::Streamer(R__b);
+   } else {
+      R__b.WriteVersion(TH3C::IsA());
+      TH1C::Streamer(R__b);
+      TH3::Streamer(R__b);
+   }
+}
+
+//______________________________________________________________________________
+void TH3C::ShowMembers(TMemberInspector &R__insp, char *R__parent)
+{
+   // Inspect the data members of an object of class TH3C.
+
+   TClass *R__cl  = TH3C::IsA();
+   Int_t   R__ncp = strlen(R__parent);
+   if (R__ncp || R__cl || R__insp.IsA()) { }
+   TH1C::ShowMembers(R__insp, R__parent);
+   TH3::ShowMembers(R__insp, R__parent);
+}
+
+//______________________________________________________________________________
+TBuffer &operator>>(TBuffer &buf, TH3S *&obj)
+{
+   // Read a pointer to an object of class TH3S.
+
+   obj = (TH3S *) buf.ReadObject(TH3S::Class());
+   return buf;
+}
+
+//______________________________________________________________________________
+void TH3S::Streamer(TBuffer &R__b)
+{
+   // Stream an object of class TH3S.
+
+   if (R__b.IsReading()) {
+      Version_t R__v = R__b.ReadVersion(); if (R__v) { }
+      TH1S::Streamer(R__b);
+      TH3::Streamer(R__b);
+   } else {
+      R__b.WriteVersion(TH3S::IsA());
+      TH1S::Streamer(R__b);
+      TH3::Streamer(R__b);
+   }
+}
+
+//______________________________________________________________________________
+void TH3S::ShowMembers(TMemberInspector &R__insp, char *R__parent)
+{
+   // Inspect the data members of an object of class TH3S.
+
+   TClass *R__cl  = TH3S::IsA();
+   Int_t   R__ncp = strlen(R__parent);
+   if (R__ncp || R__cl || R__insp.IsA()) { }
+   TH1S::ShowMembers(R__insp, R__parent);
+   TH3::ShowMembers(R__insp, R__parent);
+}
+
+//______________________________________________________________________________
+TBuffer &operator>>(TBuffer &buf, TH3F *&obj)
+{
+   // Read a pointer to an object of class TH3F.
+
+   obj = (TH3F *) buf.ReadObject(TH3F::Class());
+   return buf;
+}
+
+//______________________________________________________________________________
+void TH3F::Streamer(TBuffer &R__b)
+{
+   // Stream an object of class TH3F.
+
+   if (R__b.IsReading()) {
+      Version_t R__v = R__b.ReadVersion(); if (R__v) { }
+      TH1F::Streamer(R__b);
+      TH3::Streamer(R__b);
+   } else {
+      R__b.WriteVersion(TH3F::IsA());
+      TH1F::Streamer(R__b);
+      TH3::Streamer(R__b);
+   }
+}
+
+//______________________________________________________________________________
+void TH3F::ShowMembers(TMemberInspector &R__insp, char *R__parent)
+{
+   // Inspect the data members of an object of class TH3F.
+
+   TClass *R__cl  = TH3F::IsA();
+   Int_t   R__ncp = strlen(R__parent);
+   if (R__ncp || R__cl || R__insp.IsA()) { }
+   TH1F::ShowMembers(R__insp, R__parent);
+   TH3::ShowMembers(R__insp, R__parent);
+}
+
+//______________________________________________________________________________
+TBuffer &operator>>(TBuffer &buf, TH3D *&obj)
+{
+   // Read a pointer to an object of class TH3D.
+
+   obj = (TH3D *) buf.ReadObject(TH3D::Class());
+   return buf;
+}
+
+//______________________________________________________________________________
+void TH3D::Streamer(TBuffer &R__b)
+{
+   // Stream an object of class TH3D.
+
+   if (R__b.IsReading()) {
+      Version_t R__v = R__b.ReadVersion(); if (R__v) { }
+      TH1D::Streamer(R__b);
+      TH3::Streamer(R__b);
+   } else {
+      R__b.WriteVersion(TH3D::IsA());
+      TH1D::Streamer(R__b);
+      TH3::Streamer(R__b);
+   }
+}
+
+//______________________________________________________________________________
+void TH3D::ShowMembers(TMemberInspector &R__insp, char *R__parent)
+{
+   // Inspect the data members of an object of class TH3D.
+
+   TClass *R__cl  = TH3D::IsA();
+   Int_t   R__ncp = strlen(R__parent);
+   if (R__ncp || R__cl || R__insp.IsA()) { }
+   TH1D::ShowMembers(R__insp, R__parent);
+   TH3::ShowMembers(R__insp, R__parent);
+}

@@ -1,0 +1,49 @@
+*CMZ :  1.03/02 25/08/97  17.05.19  by  Victor Perev
+*-- Author :    Victor Perev   25/07/97
+
+macro cint_thread
+*
+*    To generate the dictionary for all THREAD class
+*    ===============================================
+*
+* Only change the [headers], [name] and [patch] variables and the
+* "#pragma ..." statements.
+*
+
+seq -i src/*.h
+
+headers=TThread.h TConditionImp.h TCondition.h TMutex.h TMutexImp.h _
+        TPosixCondition.h TPosixMutex.h TPosixThread.h _
+        TPosixThreadFactory.h TSemaphore.h TThreadFactory.h _
+        TThreadImp.h
+
+name=Thread
+patch=THREAD
+
+application data G__LinkDef.h
+#ifdef __CINT__
+
+#pragma link off all globals;
+#pragma link off all classes;
+#pragma link off all functions;
+
+#pragma link C++ class TThread;
+#pragma link C++ class TConditionImp;
+#pragma link C++ class TCondition;
+#pragma link C++ class TMutex;
+#pragma link C++ class TMutexImp;
+#pragma link C++ class TPosixCondition;
+#pragma link C++ class TPosixMutex;
+#pragma link C++ class TPosixThread;
+#pragma link C++ class TPosixThreadFactory;
+#pragma link C++ class TSemaphore;
+#pragma link C++ class TThreadFactory;
+#pragma link C++ class TThreadImp;
+#pragma link C++ function TThreadFun;
+#endif
+G__LinkDef.h
+
+
+exec makecint [name] [patch] [headers]
+
+return

@@ -1,0 +1,23 @@
+*CMZ :  1.00/00 15/02/97  21.45.58  by  Valery Fine(fine@vxcern.cern.ch)
+*-- Author :
+macro bind_lib_winnt 1='root'   2='*.obj'
+* macro to generate a static library from the sources specified in par 2.
+
+import *
+
+message Generating library: $ROOTSYS\lib\Root_[1].lib
+Mess Creating the export/import libraries
+
+* Create module definition file
+shell $ROOTSYS\bin\BINDEXPLIB.exe Root_[1] $ROOTSYS\src\[2]* > $ROOTSYS\lib\Root_[1].def
+
+* Create the import/export libraries
+
+* shell lib /MACHINE:IX86 /out:$ROOTSYS\lib\Root_[1].lib  /def:$ROOTSYS\lib\Root_[1].def
+  shell lib /nologo /MACHINE:IX86 /out:$ROOTSYS\lib\Root_[1].lib $ROOTSYS\src\[2]* /def:$ROOTSYS\lib\Root_[1].def
+* shell lib /out:$ROOTSYS\lib\Root_[1].lib $ROOTSYS\src\[2]* /DEF:
+
+
+* shell lib /out:$ROOTSYS\lib\Root_[1].lib $ROOTSYS\src\[2]*
+
+return

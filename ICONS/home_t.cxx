@@ -1,0 +1,26 @@
+//*CMZ :  2.00/00 18/02/98  18.56.20  by  IconsAuthor
+//*-- Author :    IconsAuthor   18/02/98
+/* XPM */
+static char * home_t_xpm[] = {
+"16 16 5 1",
+" 	s None	c None",
+".	c black",
+"X	c white",
+"o	c #808080",
+"O	c #c0c0c0",
+"       . ...    ",
+"      .X..X.o   ",
+"     .XOO.X.o   ",
+"    .XO.OOX.o   ",
+"   .XO.o.OO.o   ",
+"  .XO.oOO.OO.   ",
+" .XO.oOOOO.OO.  ",
+"....oOOOOOO.... ",
+" o.oOOOOOOOO.ooo",
+"  .XOO...OOO.o  ",
+"  .XOO.o.XOO.o  ",
+"  .XOO.o.XOO.o  ",
+"  .XOO.o.XOO.o  ",
+"  .....o.....o  ",
+"   ooooo ooooo  ",
+"                "};

@@ -1,0 +1,26 @@
+*CMZ :  2.00/09 25/06/98  20.20.38  by  Fons Rademakers
+*CMZ :  1.03/04 19/09/97  11.18.20  by  Rene Brun
+*-- Author :    Rene Brun   02/10/96
+
+macro cint_eg
+*
+*    To generate the dictionary for the event generator classes
+*    ==========================================================
+*
+* Only change the [headers], [name] and [patch] variables and the
+* "#pragma ..." statements.
+*
+
+seq -i src/*.h
+
+headers=TGenerator.h TPrimary.h TAttParticle.h
+
+name=EG
+patch=EG
+
+set G__LinkDef.h -F TEXT
+ctot /$kumacs/EG_LinkDef
+
+exec makecint [name] [patch] [headers]
+
+return

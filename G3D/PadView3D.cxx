@@ -1,0 +1,103 @@
+//*CMZ :  2.00/13 29/10/98  16.13.35  by  Valery Fine(fine@mail.cern.ch)
+//*CMZ :  1.01/05 06/06/97  18.52.50  by  Fons Rademakers
+//*-- Author :    Valery Fine(fine@vxcern.cern.ch)   30/05/97
+
+/*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
+/*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
+/*-- Author :    Rene Brun   23/03/97*/
+/*************************************************************************
+ * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ *                                                                       *
+ * Permission to use, copy, modify and distribute this software and its  *
+ * documentation for non-commercial purposes is hereby granted without   *
+ * fee, provided that the above copyright notice appears in all copies   *
+ * and that both the copyright notice and this permission notice appear  *
+ * in the supporting documentation. The authors make no claims about the *
+ * suitability of this software for any purpose.                         *
+ * It is provided "as is" without express or implied warranty.           *
+ *************************************************************************/
+
+//////////////////////////////////////////////////////////////////////////
+//                                                                      //
+// TPadView3D                                                           //
+//                                                                      //
+// TPadView3D is a generic 3D viewer.                                   //
+// For a concrete viewer see TGLViewer.                                 //
+//                                                                      //
+//////////////////////////////////////////////////////////////////////////
+
+#include "TPadView3D.h"
+#include "TVirtualPad.h"
+
+
+//   ClassImp(TPadView3D)   //3-D View of TPad
+
+//______________________________________________________________________________
+TPadView3D::~TPadView3D()
+{
+  // Delete 3D viewer.
+
+  if (fParent) {
+     fParent->ResetView3D();
+     SetPad();
+  }
+}
+
+
+//  Getter's / Setter's methods for the data-members
+
+//______________________________________________________________________________
+void  TPadView3D::GetRange(Double_t min[3], Double_t max[3]) const
+{
+  memcpy(min,fViewBoxMin,sizeof(fViewBoxMin));
+  memcpy(max,fViewBoxMax,sizeof(fViewBoxMax));
+}
+//______________________________________________________________________________
+void  TPadView3D::SetRange(Double_t min[3], Double_t max[3])
+{
+  memcpy(fViewBoxMin,min,sizeof(fViewBoxMin));
+  memcpy(fViewBoxMax,max,sizeof(fViewBoxMax));
+}
+
+//______________________________________________________________________________
+void  TPadView3D::GetShift(Double_t main_shift[3], Double_t extra_shift[3]) const
+{
+  memcpy(main_shift,fTranslate,sizeof(fTranslate));
+  memcpy(extra_shift,fExtraTranslate,sizeof(fExtraTranslate));
+}
+
+//______________________________________________________________________________
+void  TPadView3D::SetShift(Double_t main_shift[3], Double_t extra_shift[3])
+{
+  memcpy(fTranslate,main_shift,sizeof(fTranslate));
+  memcpy(fExtraTranslate,extra_shift,sizeof(fExtraTranslate));
+}
+
+//______________________________________________________________________________
+void  TPadView3D::GetAngles(Double_t main_angles[3], Double_t extra_angles[3]) const
+{
+  memcpy(main_angles,fAngles,sizeof(fAngles));
+  memcpy(extra_angles,fExtraAngles,sizeof(fExtraAngles));
+}
+
+//______________________________________________________________________________
+void  TPadView3D::SetAngles(Double_t main_angles[3], Double_t extra_angles[3])
+{
+  memcpy(fAngles,main_angles,sizeof(fAngles));
+  memcpy(fExtraAngles,extra_angles,sizeof(fExtraAngles));
+}
+
+//______________________________________________________________________________
+void  TPadView3D::GetAnglesFactors(Double_t factors[3]) const
+{
+  memcpy(factors,fAnglFactor,sizeof(fAnglFactor));
+}
+//______________________________________________________________________________
+void  TPadView3D::SetAnglesFactors(Double_t factors[3])
+{
+  memcpy(fAnglFactor,factors,sizeof(fAnglFactor));
+}
+
+//______________________________________________________________________________
+void  TPadView3D::SetScale(Float_t scale){ fScale = scale;}

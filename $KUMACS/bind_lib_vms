@@ -1,0 +1,12 @@
+*CMZ :  2.00/06 21/04/98  13.07.22  by  Kaori Wada
+*CMZ :  0.80/00 23/07/96  14.28.42  by  Fons Rademakers
+*-- Author :    Rene Brun   04/06/96
+macro bind_lib 1='root'   2='*.obj'
+* macro to generate a shared library from the sources specified in par 2.
+
+message Generating library: lib[1].olb
+
+shell delete/nolog [.lib]lib[1].olb;*
+shell lib/create [.lib]lib[1].olb [.src][2]
+
+return

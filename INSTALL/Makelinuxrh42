@@ -1,0 +1,38 @@
+*CMZ :  2.20/00 22/11/98  18.43.27  by  Fons Rademakers
+*CMZ :  2.00/13 20/10/98  15.21.12  by  Fons Rademakers
+*CMZ :  2.00/11 07/08/98  13.09.47  by  Fons Rademakers
+*CMZ :  2.00/09 26/06/98  19.23.46  by  Fons Rademakers
+*-- Author :    Fons Rademakers   26/06/98
+# Makefile of ROOT for Linux with libc5 (<= RH4.2)
+
+PLATFORM      = linux
+
+CXX           = g++
+CC            = gcc
+CXXFLAGS      = -Wall -fPIC
+CFLAGS        = -Wall -fPIC
+CINTCXXFLAGS  = -Wall -fPIC -DG__REGEXP -DG__UNIX -DG__SHAREDLIB \
+                -DG__TMPFILE -DG__OSFDLL -DG__ROOT -DG__REDIRECTIO
+CINTCFLAGS    = -Wall -fPIC -DG__REGEXP -DG__UNIX -DG__SHAREDLIB \
+                -DG__TMPFILE -DG__OSFDLL -DG__ROOT -DG__REDIRECTIO
+OPT           = -g
+NOOPT         =
+LD            = g++
+LDFLAGS       = $(OPT)
+SOFLAGS       = -shared -Wl,-soname,
+SOEXT         = so
+SYSLIBS       = -lg++ -lm -ldl -rdynamic
+SYSXLIBS      = -L/usr/X11R6/lib -lX11 -lg++ -lm -ldl -rdynamic
+XLIBS         = $(ROOTSYS)/lib/libXpm.a -L/usr/X11R6/lib -lX11 -lg++
+CILIBS        = -lm -ltermcap -lbsd -ldl -lg++ -rdynamic
+
+
+##### MACROS and TARGETS #####
+
+include Make-macros
+
+
+##### DEPENDENCIES #####
+
+include Make-depend
+

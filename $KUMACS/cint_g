@@ -1,0 +1,9 @@
+*CMZ :  1.03/02 29/08/97  13.32.42  by  Fons Rademakers
+*-- Author :    Fons Rademakers   15/02/96
+
+macro cint_g
+
+exec cint_g1
+exec cint_g2
+
+return

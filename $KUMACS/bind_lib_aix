@@ -1,0 +1,19 @@
+*CMZ :  2.00/01 09/03/98  17.56.15  by  Rene Brun
+*CMZ :  2.00/00 07/03/98  15.13.01  by  Rene Brun
+*CMZ :  1.03/07 08/11/97  11.48.27  by  Rene Brun
+*-- Author :    Rene Brun   14/09/95
+macro bind_lib 1='root'   2='*.o'
+* macro to generate a shared library from the sources specified in par 2.
+
+message Generating library: $ROOTSYS/lib/lib[1].a
+
+shell /bin/rm -f $ROOTSYS/lib/lib[1].a
++IF,GCC.
+shell /usr/ccs/bin/nm -g -C $ROOTSYS/src/[2] | egrep " D "\|" B " | awk '{print $1}' > root.exp
+shell gcc -o $ROOTSYS/lib/lib[1].a -shared -Wl,-bbigtoc -Wl,-bE:root.exp  $ROOTSYS/src/[2]
++ELSE.
+shell /usr/lpp/xlC/bin/makeC++SharedLib -o $ROOTSYS/lib/lib[1].a _
+ -lX11 -lm -lPW -lld -lcurses -p 0 $ROOTSYS/src/[2]
++ENDIF.
+
+return

@@ -1,0 +1,37 @@
+*CMZ :  2.20/00 22/11/98  18.43.27  by  Fons Rademakers
+*CMZ :  2.00/12 08/10/98  17.56.44  by  Fons Rademakers
+*CMZ :  2.00/09 27/06/98  00.57.05  by  Fons Rademakers
+*-- Author :    Fons Rademakers   27/06/98
+# Makefile of ROOT for Solaris with CC
+
+PLATFORM      = solaris
+
+CXX           = /opt/SUNWspro/bin/CC
+CC            = /opt/SUNWspro/bin/cc
+CXXFLAGS      = -KPIC -I/usr/openwin/include
+CFLAGS        = -KPIC -I/usr/openwin/include
+CINTCXXFLAGS  = -KPIC -DG__REGEXP1 -DG__UNIX -DG__OSFDLL \
+                -DG__SHAREDLIB -DG__ROOT -DG__REDIRECTIO
+CINTCFLAGS    = -KPIC -DG__REGEXP1 -DG__UNIX -DG__OSFDLL \
+                -DG__SHAREDLIB -DG__ROOT -DG__REDIRECTIO
+OPT           = -g
+NOOPT         =
+LD            = $(CXX)
+LDFLAGS       = $(OPT)
+SOFLAGS       = -G
+SOEXT         = so
+SYSLIBS       = -lm -ldl
+SYSXLIBS      = -L/usr/openwin/lib -lX11 -lm -lgen -ldl -lsocket
+XLIBS         = $(ROOTSYS)/lib/libXpm.a -L/usr/openwin/lib -lX11
+CILIBS        = -lm -ltermcap -ldl -L/usr/ccs/lib -lgen
+
+
+##### MACROS and TARGETS #####
+
+include Make-macros
+
+
+##### DEPENDENCIES #####
+
+include Make-depend
+

@@ -1,0 +1,69 @@
+*CMZ :  2.20/05 13/12/98  11.16.32  by  Rene Brun
+*CMZ :  2.00/09 19/06/98  10.57.27  by  Rene Brun
+*CMZ :  2.00/06 12/05/98  15.19.41  by  Rene Brun
+*CMZ :  1.00/07 27/03/97  17.21.06  by  Rene Brun
+*-- Author :    Fons Rademakers   13/07/96
+MACRO install_rootcint 1=- 2=opt
+
+import *
+
+machine = [1]
+if [machine] = '-' then
+   machine = $MACHINE
+endif
+
+if [machine] = 'IBMPC' then
+   machine = 'WinNT'
+if [LOGFILE] = 'log' then
+   set install_rootcint.bat -xarcl
+endif
+endif
+
+EXEC setup [1] [2] [LOGFILE]
+
+SEL UTILS
+cd ..
+
++IF,SOURCE
+   CX utils/rootcint
+   sel -utils
+   return
++ELSE
+   CC utils/rootcint
++ENDIF
+
+main=$ROOTSYS/src/UTILS_rootcint.o
+
+if [machine] = 'WinNT' then
++IF,SYMANTEC
+   main=$ROOTSYS\src\UTILS_rootcint.obj
+* LINK obj[, out[, map[, lib[, def[, res]]]]]
+   exec LFLAGS
+*  Set list of obj modules
+   sh for %f in ($ROOTSYS\src\CINT_*.obj) do echo %f+ >> $ROOTSYS\bin\symantec.lnk
+   sh echo $ROOTSYS\src\UTILS_rootcint.obj >> $ROOTSYS\bin\symantec.lnk
+* Set output name of the exe file
+   SH echo $ROOTSYS\bin\rootcint.exe       >> $ROOTSYS\bin\symantec.lnk
+   SH echo NUL                     >> $ROOTSYS\bin\symantec.lnk
+   exec SystemLibs
+   SH echo NUL                     >> $ROOTSYS\bin\symantec.lnk
+   SH [LD] [LDOPT] @$ROOTSYS\bin\symantec.lnk
++ELSE
+   main=$ROOTSYS\src\UTILS_rootcint.obj
+*   sh LINK /pdb:$ROOTSYS\bin\RootCint.pdb [main] $ROOTSYS\lib\Root_Cint.lib /out:$ROOTSYS\bin\RootCint.exe
+
+   pdb = '$ROOTSYS\bin\RootCint.pdb'
+
+   sh [LD] [LDOPT] /pdb:[pdb] [main] $ROOTSYS\lib\Root_Cint.lib /out:$ROOTSYS\bin\RootCint.exe
++ENDIF
+else
+   if $OS = 'VMS' then
+      SH [LD] [LDOPT]$ROOTSYS[bin]rootcint $ROOTSYS[src]UTILS_rootcint.o,$ROOTSYS[lib]libcint/lib\
+   else
+      SH [LD] [LDOPT] $ROOTSYS/bin/rootcint [main] [CILIBS]
+   endif
+endif
+
+sel -utils
+
+RETURN

@@ -1,0 +1,38 @@
+*CMZ :  2.20/00 22/11/98  18.40.46  by  Fons Rademakers
+*CMZ :  2.00/10 27/06/98  19.20.45  by  Fons Rademakers
+*CMZ :  2.00/09 26/06/98  19.07.30  by  Fons Rademakers
+*-- Author :    Fons Rademakers   21/06/98
+macro install_linkdef
+
+cd /$kumacs
+
+set src/*.h -F TEXT
+
+ctot G__TypeInfo
+ctot BASE1_LinkDef
+ctot BASE2_LinkDef
+ctot CONT_LinkDef
+ctot G1_LinkDef
+ctot -S G2_LinkDef
+ctot G3D_LinkDef
+ctot GPAD_LinkDef
+ctot H_LinkDef
+ctot HTML_LinkDef
+ctot MATRIX_LinkDef
+ctot META_LinkDef
+ctot MINUIT_LinkDef
+ctot NET_LinkDef
+ctot PROOF_LinkDef
+ctot RINT_LinkDef
+ctot TREE_LinkDef
+ctot UNIX_LinkDef
+ctot EG_LinkDef
+ctot PYTHIA_LinkDef
+ctot VENUS_LinkDef
+ctot X11_LinkDef
+ctot X11TTF_LinkDef
+ctot GUI1_LinkDef
+ctot GUI2_LinkDef
+ctot GUI3_LinkDef
+
+shell touch -t  010100001994 src/*LinkDef* src/G__TypeInfo.h

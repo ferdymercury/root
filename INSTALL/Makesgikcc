@@ -1,0 +1,43 @@
+*CMZ :  2.20/00 22/11/98  18.43.27  by  Fons Rademakers
+*CMZ :  2.00/11 13/08/98  15.17.00  by  Fons Rademakers
+*-- Author :    Fons Rademakers   26/06/98
+# Makefile of ROOT for SGI IRIX 6.x with KCC compiler
+
+# When changing OPT to -O you can also change +K0 to +K1
+
+PLATFORM      = sgi
+
+CXX           = KCC
+CC            = cc
+CXXFLAGS      = --signed_chars --display_error_number --diag_suppress 68 \
+                --diag_suppress 191 +K0
+CFLAGS        = -signed
+CINTCXXFLAGS  = --signed_chars --display_error_number --diag_suppress 68 \
+                --diag_suppress 191 -DG__REGEXP1 -DG__UNIX -DG__SHAREDLIB \
+                -DG__OSFDLL -DG__SIGNEDCHAR -DG__DECCXX -DG__ROOT \
+                -DG__REDIRECTIO +K0
+CINTCFLAGS    = -signed -w -DG__REGEXP1 -DG__UNIX -DG__SHAREDLIB \
+                -DG__OSFDLL -DG__SIGNEDCHAR -DG__DECCXX -DG__ROOT \
+                -DG__REDIRECTIO
+OPT           = -g
+NOOPT         =
+LD            = KCC
+LDFLAGS       = $(OPT) -Wl,-u,__builtin_new -Wl,-u,__builtin_delete \
+                -Wl,-u,__nw__FUiPv
+SOFLAGS       =
+SOEXT         = so
+SYSLIBS       = -lg++ -lm -ldl
+SYSXLIBS      = -lX11 -lm -lPW -ldl
+XLIBS         = $(ROOTSYS)/lib/libXpm.a -lX11
+CILIBS        = -lm -ltermcap -lbsd -ldl
+
+
+##### MACROS and TARGETS #####
+
+include Make-macros
+
+
+##### DEPENDENCIES #####
+
+include Make-depend
+

@@ -1,0 +1,110 @@
+*CMZ :  2.20/00 04/11/98  17.07.43  by  Fons Rademakers
+*CMZ :  2.00/09 27/06/98  00.40.41  by  Fons Rademakers
+*CMZ :  2.00/06 12/05/98  15.08.57  by  Rene Brun
+*CMZ :  2.00/01 09/03/98  18.02.05  by  Rene Brun
+*CMZ :  2.00/00 19/02/98  19.16.29  by  Fons Rademakers
+*CMZ :  1.00/07 27/03/97  17.15.30  by  Rene Brun
+*-- Author :    Rene Brun   21/12/94
+macro install 1=- 2=opt  3=log
+
+OS = $OS
+if [OS] = 'WINNT' then
+   remove $ROOTSYS\lib\*.lib
+   remove $ROOTSYS\bin\*
+   remove $ROOTSYS\src\*
+   remove $ROOTSYS\tutorials\*
+   exec mkdir $ROOTSYS\tutorials
+   exec mkdir $ROOTSYS\src
+
+elseif [OS] ='VMS' then
+   sh delete/log $ROOTSYS[lib]*.lib;*
+   sh delete/log $ROOTSYS[src]*.*;*
+   sh delete/log $ROOTSYS[tutorials]*.*;*
+   exec mkdir $ROOTSYS[tutorials]
+   exec mkdir $ROOTSYS[src]
+else
+   remove $ROOTSYS/src
+   remove $ROOTSYS/tutorials
+   exec mkdir $ROOTSYS/tutorials
+   exec mkdir $ROOTSYS/src
+endif
+
+if [OS] = 'WINNT' then
+*
+*   Install BINDEXPLIB utility to make Visual C++ import and export libraries
+message ************************************
+message *   Installing BINDEXPLIB utility
+message ************************************
+exec install_makeexdll [1] [2] [3]
+endif
+*
+*   Install_cint first (ROOT requires access to some CINT includes)
+message ************************************
+message *   Installing cint
+message ************************************
+exec install_cint [1] [2] [3]
+*
+*  Install icons in $ROOTSYS/icons directory
+message ************************************
+message *   Installing icons
+message ************************************
+cd ..
+exec exporticons
+*
+*   Install ROOT library and main program
+exec install_onlyroot [1] [2] [3]
+*
+*   Install ROOT tutorials
+message ************************************
+message *   Installing tutorials
+message ************************************
+cd ..
+exec tutorials
+*
+*   Install rootx
+message ************************************
+message *   Installing rootx
+message ************************************
+cd ..
+exec install_rootx [1] [2] [3]
+*
+*   Install rootcint
+message ************************************
+message *   Installing rootcint
+message ************************************
+cd ..
+exec install_rootcint [1] [2] [3]
+*
+*   Install HBOOK to ROOT converter
+message ************************************
+message *   Installing h2root: the HBOOK to ROOT converter
+message ************************************
+exec install_h2root
+*
+*   Install GEANT to ROOT converter
+message ************************************
+message *   Installing g2root: the GEANT to ROOT converter
+message ************************************
+exec install_g2root
+*
+*   Install ROOT test examples in directory test
+message ************************************
+message *   Installing test programs in directory test
+message ************************************
+exec install_test
+*
+*   Install non-compiled system dependent source files
+message ************************************
+message *   Installing non-compiled system dependent source files
+message ************************************
+exec install_others
+*
+*   Install LinkDef headers and Makefiles
+message ************************************
+message *   Installing LinkDef headers and Makefiles
+message ************************************
+exec install_linkdef
+exec install_make
+exec install_changelog
+
+return

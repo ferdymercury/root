@@ -1,0 +1,217 @@
+*CMZ :  2.20/00 21/11/98  13.59.30  by  Fons Rademakers
+*CMZ :  2.00/09 26/06/98  08.48.33  by  Rene Brun
+*CMZ :  2.00/00 05/03/98  17.29.45  by  Fons Rademakers
+*CMZ :  1.03/08 17/11/97  12.52.49  by  Rene Brun
+*-- Author :    Rene Brun   14/09/95
+macro root_make
+* to recompile decks modified compared to the *.o files
+* and generate the individual shared libraries
+
+cmake -on
+cmake -b
+
+if $IsinBuffer('ROOT/BASE') then
+ bind_lib Base          BASE_*.o
+endif
+if $IsinBuffer('ROOT/C/') then
+ bind_lib Clib          C_*.o
+endif
+if $IsinBuffer('ROOT/CONT') then
+ bind_lib Cont          CONT_*.o
+endif
+if $IsinBuffer('ROOT/FUNC') then
+ bind_lib Func          FUNC_*.o
+endif
+if $IsinBuffer('ROOT/G/') then
+ bind_lib Graf          G_*.o
+endif
+if $IsinBuffer('ROOT/GPAD/') then
+ bind_lib Gpad          GPAD_*.o
+endif
+if $IsinBuffer('ROOT/GUI/') then
+ bind_lib Gui           GUI_*.o
+endif
+if $IsinBuffer('ROOT/G3D/') then
+ bind_lib Graf3d        G3D_*.o
+endif
+if $IsinBuffer('ROOT/H/')  then
+ bind_lib Hist          H_*.o
+endif
+if $IsinBuffer('ROOT/TREE/')  then
+ bind_lib Tree          TREE_*.o
+endif
+if $IsinBuffer('ROOT/META') then
+ bind_lib Meta          META*.o
+endif
+if $IsinBuffer('ROOT/MINU') then
+ bind_lib Minuit        MINU*.o
+endif
+if $IsinBuffer('ROOT/X11/') then
+ bind_lib GX11          X11_*.o
+endif
+if $IsinBuffer('ROOT/X11TTF') then
+ bind_lib GX11TTF       X11TTF_*.o
+endif
+if $IsinBuffer('ROOT/X3D') then
+ bind_lib X3d           X3D_*.o
+endif
+if $IsinBuffer('ROOT/POST') then
+ bind_lib Postscript    POST*.o
+endif
+if $IsinBuffer('ROOT/RINT') then
+ bind_lib Rint          RINT_*.o
+endif
+if $IsinBuffer('ROOT/HTML') then
+ bind_lib Html          HTML_*.o
+endif
+if $IsinBuffer('ROOT/UNIX') then
+ bind_lib Unix          UNIX_*.o
+endif
+if $IsinBuffer('ROOT/CINT') then
+ bind_lib Cint          CINT_*.o
+endif
+if $IsinBuffer('ROOT/WINNT') then
+ bind_lib Winnt         WINN*.o
+endif
+if $IsinBuffer('ROOT/WIN95') then
+ bind_lib Win95         WIN95_*.o
+endif
+if $IsinBuffer('ROOT/WIN32') then
+ bind_lib Win32         WIN3*.o
+endif
+if $IsinBuffer('ROOT/ZIP') then
+ bind_lib Zip           ZIP_*.o
+endif
+if $IsinBuffer('ROOT/THRE') then
+ bind_lib Thread          THRE*.o
+endif
+
+if $IsinBuffer('ROOT/GL') then
+ bind_lib RGL           GL*.o
+endif
+*if $IsinBuffer('ROOT/GLWIN32') then
+* bind_lib RGL           GL*.o
+*endif
+*if $IsinBuffer('ROOT/GLX11') then
+* bind_lib RGL           GL*.o
+*endif
+
+if $IsinBuffer('ROOT/MATRIX') then
+ bind_lib Matrix        MATRIX*.o
+endif
+if $IsinBuffer('ROOT/NET') then
+ bind_lib Net           NET_*.o
+endif
+if $IsinBuffer('ROOT/NEW') then
+ bind_lib New           NEW_*.o
+endif
+if $IsinBuffer('ROOT/PROOF') then
+ bind_lib Proof         PROOF_*.o
+endif
+
+if $IsinBuffer('ROOT/EG') then
+ bind_lib EG            EG_*.o
+endif
+if $IsinBuffer('ROOT/PYTH') then
+ bind_lib EGPythia      PYTH*.o
+endif
+if $IsinBuffer('ROOT/VENUS') then
+ bind_lib EGVenus       VENUS_*.o
+endif
+
++SELF, IF=WIN32
+* Windows system needs the second pass
+
+if $IsinBuffer('ROOT/BASE') then
+exec bind_dll Base          BASE_*.o
+endif
+if $IsinBuffer('ROOT/C/') then
+exec bind_dll Clib          C_*.o
+endif
+if $IsinBuffer('ROOT/CONT') then
+exec bind_dll Cont          CONT_*.o
+endif
+if $IsinBuffer('ROOT/FUNC') then
+exec bind_dll Func          FUNC_*.o
+endif
+if $IsinBuffer('ROOT/G/') then
+exec bind_dll Graf          G_*.o
+endif
+if $IsinBuffer('ROOT/GPAD/') then
+exec bind_dll Gpad          GPAD_*.o
+endif
+if $IsinBuffer('ROOT/GUI/') then
+exec bind_dll Gui           GUI_*.o
+endif
+if $IsinBuffer('ROOT/G3D/') then
+exec bind_dll Graf3d        G3D_*.o
+endif
+if $IsinBuffer('ROOT/H/')  then
+exec bind_dll Hist          H_*.o
+endif
+if $IsinBuffer('ROOT/TREE/')  then
+exec bind_dll Tree          TREE_*.o
+endif
+if $IsinBuffer('ROOT/META') then
+exec bind_dll Meta          META*.o
+endif
+if $IsinBuffer('ROOT/MINU') then
+exec bind_dll Minuit        MINU*.o
+endif
+if $IsinBuffer('ROOT/POST') then
+exec bind_dll Postscript    POST*.o
+endif
+if $IsinBuffer('ROOT/RINT') then
+exec bind_dll Rint          RINT_*.o
+endif
+if $IsinBuffer('ROOT/HTML') then
+exec bind_dll Html          HTML_*.o
+endif
+if $IsinBuffer('ROOT/CINT') then
+exec bind_dll Cint          CINT_*.o
+endif
+if $IsinBuffer('ROOT/WINNT') then
+exec bind_dll Winnt         WINN*.o   WSock32.lib
+endif
+if $IsinBuffer('ROOT/WIN95') then
+exec bind_dll Win95         WIN95_*.o
+endif
+if $IsinBuffer('ROOT/WIN32') then
+exec bind_dll Win32         WIN3*.o
+endif
+if $IsinBuffer('ROOT/ZIP') then
+exec bind_dll Zip           ZIP_*.o
+endif
+if $IsinBuffer('ROOT/GL') then
+exec bind_dll RGL           GL*.o  Glu32.lib OpenGL32.lib
+endif
+if $IsinBuffer('ROOT/GLWIN32') then
+exec bind_dll RGL           GL*.o  Glu32.lib OpenGL32.lib
+endif
+if $IsinBuffer('ROOT/MATRIX') then
+exec bind_dll Matrix        MATRIX_*.o
+endif
+if $IsinBuffer('ROOT/NET') then
+exec bind_dll Net           NET_*.o
+endif
+if $IsinBuffer('ROOT/PROOF') then
+exec bind_dll Proof         PROOF_*.o
+endif
+
+if $IsinBuffer('ROOT/EG') then
+exec bind_dll EG            EG_*.o
+endif
+if $IsinBuffer('ROOT/PYTH') then
+exec bind_dll EGPythia      PYTH*.o  $PYTHIA\pythia.lib
+endif
+if $IsinBuffer('ROOT/VENUS') then
+exec bind_dll EGVenus       VENUS_*.o $VENUS\venus.lib
+endif
+
++SELF.
+if $OS = 'WINNT' then
+if $BUFFERS('?') > 0 then
+**   bind_root WinNTVisualC++
+endif
+endif
+return

@@ -1,0 +1,21 @@
+*CMZ :  0.90/14 03/02/97  17.07.40  by  Rene Brun
+*-- Author :    Valery Fine(fine@vxcern.cern.ch)   02/08/96
+*
+*  1. Building LibCint.Dll and  LibCint.Dll export library
+*  -------------------------------------------------------
+macro cintdll
+   exec LFLAGS - DLL
+*    The list of the object files
+   shell for %F in ( $ROOTSYS\src\CINT_*.obj ) do echo %F+ >> $ROOTSYS\bin\symantec.lnk
+   shell echo NUL  >> $ROOTSYS\bin\symantec.lnk
+*    The name of the output file
+   shell echo $ROOTSYS\bin\Root_cint.dll >> $ROOTSYS\bin\symantec.lnk
+*    The name of the MAP file
+   shell echo NUL >> $ROOTSYS\bin\symantec.lnk
+*    The lis of the libraries
+   shell echo  USER32.LIB >> $ROOTSYS\bin\symantec.lnk
+*    The name of the DEF file
+   shell echo  $ROOTSYS\src\cintlib.def >> $ROOTSYS\bin\symantec.lnk
+   shell LINK @$ROOTSYS\bin\symantec.lnk
+
+return

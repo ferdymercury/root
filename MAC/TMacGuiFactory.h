@@ -1,0 +1,57 @@
+//*CMZ :  0.80/00 11/08/96  21.37.52  by  Fons Rademakers
+//*-- Author :    Fons Rademakers   17/02/96
+
+#ifndef ROOT_TMacGuiFactory
+#define ROOT_TMacGuiFactory
+
+/*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
+/*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
+/*-- Author :    Rene Brun   23/03/97*/
+/*************************************************************************
+ * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ *                                                                       *
+ * Permission to use, copy, modify and distribute this software and its  *
+ * documentation for non-commercial purposes is hereby granted without   *
+ * fee, provided that the above copyright notice appears in all copies   *
+ * and that both the copyright notice and this permission notice appear  *
+ * in the supporting documentation. The authors make no claims about the *
+ * suitability of this software for any purpose.                         *
+ * It is provided "as is" without express or implied warranty.           *
+ *************************************************************************/
+
+//////////////////////////////////////////////////////////////////////////
+//                                                                      //
+// TMacGuiFactory                                                       //
+//                                                                      //
+// Factory for Macintosh GUI components.                                //
+//                                                                      //
+//////////////////////////////////////////////////////////////////////////
+
+#ifndef ROOT_TGuiFactory
+#include "TGuiFactory.h"
+#endif
+
+
+class TMacGuiFactory : public TGuiFactory {
+
+public:
+   TMacGuiFactory() : TGuiFactory("MacOS", "MacOS GUI Factory") { }
+   ~TMacGuiFactory() { }
+
+   TApplicationImp *CreateApplicationImp(const char *classname, int *argc, char **argv, void *option, Int_t numOptions);
+
+   TCanvasImp *CreateCanvasImp(TCanvas *c, const char *title, UInt_t width, UInt_t height);
+   TCanvasImp *CreateCanvasImp(TCanvas *c, const char *title, Int_t x, Int_t y, UInt_t width, UInt_t height);
+
+   TBrowserImp *CreateBrowserImp(TBrowser *b, const char *title, UInt_t width, UInt_t height);
+   TBrowserImp *CreateBrowserImp(TBrowser *b, const char *title, Int_t x, Int_t y, UInt_t width, UInt_t height);
+
+   TContextMenuImp *CreateContextMenuImp(TContextMenu *c, const char *name, const char *title);
+
+   TControlBarImp *CreateControlBarImp(TControlBar *c, const char *name="", const char *title="");
+
+   ClassDef(TMacGuiFactory,0)  //Factory for Macintosh GUI components
+};
+
+#endif

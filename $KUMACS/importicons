@@ -1,0 +1,22 @@
+*CMZ :  2.00/06 12/05/98  15.08.09  by  Rene Brun
+*CMZ :  2.00/00 18/02/98  16.15.24  by  Rene Brun
+*-- Author :    Rene Brun   17/02/98
+macro importicons
+saveauthor = $AUTHOR()
+AUTH IconsAuthor
+filecase keep
+
+cd icons
+exec deleteall
+if $OS = 'VMS' then
+  cimp -a -t C++ [.icons]*.xpm
+  cimp -a -t C++ [.icons]root.mimes
+else
+  cimp -a  -t C++ $ROOTSYS/icons/*.xpm
+  cimp -a  -t C++ $ROOTSYS/icons/root.mimes
+endif
+pur
+al
+
+author [saveauthor]
+return

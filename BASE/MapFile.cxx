@@ -1,0 +1,1022 @@
+//*CMZ :  2.00/12 02/10/98  12.45.22  by  Fons Rademakers
+//*CMZ :  2.00/10 29/07/98  11.24.27  by  Rene Brun
+//*CMZ :  2.00/09 22/06/98  08.29.53  by  Rene Brun
+//*CMZ :  2.00/08 04/06/98  11.13.44  by  Fons Rademakers
+//*CMZ :  2.00/04 03/04/98  16.50.01  by  Rene Brun
+//*CMZ :  1.03/09 16/12/97  16.35.32  by  Rene Brun
+//*-- Author :    Fons Rademakers   08/07/97
+
+/*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
+/*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
+/*-- Author :    Rene Brun   23/03/97*/
+/*************************************************************************
+ * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ *                                                                       *
+ * Permission to use, copy, modify and distribute this software and its  *
+ * documentation for non-commercial purposes is hereby granted without   *
+ * fee, provided that the above copyright notice appears in all copies   *
+ * and that both the copyright notice and this permission notice appear  *
+ * in the supporting documentation. The authors make no claims about the *
+ * suitability of this software for any purpose.                         *
+ * It is provided "as is" without express or implied warranty.           *
+ *************************************************************************/
+#ifdef WIN32
+//*CMZ :  1.00/09 23/04/97  17.59.54  by  Rene Brun
+//*-- Author :    Rene Brun   23/04/97
+#if defined(__hpux) && !defined(__GNUG__)
+#pragma OPTIMIZE OFF
+#endif
+
+#if defined(_AIX) && !defined(__GNUG__)
+#endif
+
+#if defined(__alpha) && !defined(__GNUG__)
+#endif
+
+#if defined(__sun) && !defined(__GNUG__)
+#endif
+
+#if defined(__sgi) && !defined(__GNUG__)
+#endif
+
+#if defined(_linux)
+#endif
+
+#ifdef WIN32
+#pragma optimize("",off)
+#endif
+
+#endif
+//////////////////////////////////////////////////////////////////////////
+//                                                                      //
+// TMapFile                                                             //
+//                                                                      //
+// This class implements a shared memory region mapped to a file.       //
+// Objects can be placed into this shared memory area using the Add()   //
+// member function. Whenever the mapped object(s) change(s) call        //
+// Update() to put a fresh copy in the shared memory. This extra        //
+// step is necessary since it is not possible to share objects with     //
+// virtual pointers between processes (the vtbl ptr points to the       //
+// originators unique address space and can not be used by the          //
+// consumer process(es)). Consumer processes can map the memory region  //
+// from this file and access the objects stored in it via the Get()     //
+// method (which returns a copy of the object stored in the shared      //
+// memory with correct vtbl ptr set). Only objects of classes with a    //
+// Streamer() member function defined can be shared.                    //
+//                                                                      //
+//////////////////////////////////////////////////////////////////////////
+
+
+#ifdef WIN32
+#  include <windows.h>
+#  include <process.h>
+#  ifdef GetObject
+#    undef GetObject
+#  endif
+#  define HAVE_SEMOP
+#else
+#  define INVALID_HANDLE_VALUE -1
+#endif
+
+#include <fcntl.h>
+#include <errno.h>
+
+#include "TMapFile.h"
+#include "TKeyMapFile.h"
+#include "TDirectory.h"
+#include "TBrowser.h"
+#include "TString.h"
+#include "TSystem.h"
+#include "TClass.h"
+#include "mmprivate.h"
+
+#ifdef R__UNIX
+#define HAVE_SEMOP
+#include <sys/types.h>
+#include <sys/ipc.h>
+#include <sys/sem.h>
+#if defined(R__HPUX) || defined (R__ALPHA) || defined (R__SOLARIS) || defined(R__AIX) || defined(R__HIUX)
+union semun {
+   int val;                      // value for SETVAL
+   struct semid_ds *buf;         // buffer for IPC_STAT & IPC_SET
+   ushort *array;                // array for GETALL & SETALL
+};
+#endif
+#ifdef R__LINUX
+#  define       SEM_A   0200     // alter permission
+#  define       SEM_R   0400     // read permission
+#endif
+#endif
+
+
+Long_t TMapFile::fgMapAddress = 0;
+void  *TMapFile::fgMmallocDesc = 0;
+
+void *gMmallocDesc = 0;
+
+
+class TMapRec {
+
+friend class TMapFile;
+
+private:
+   char            *fName;       // object name
+   char            *fClassName;  // class name
+   TObject         *fObject;     // pointer to original object
+   void            *fBuffer;     // buffer containing object of class name
+   Int_t            fBufSize;    // buffer size
+   TMapRec         *fNext;       // next MapRec in list
+
+public:
+   TMapRec(const char *name, TObject *obj, Int_t size, void *buf);
+   ~TMapRec();
+   const char   *GetName(Long_t offset = 0) const { return (char *)((Long_t) fName + offset); }
+   const char   *GetClassName(Long_t offset = 0) const { return (char *)((Long_t) fClassName + offset); }
+   void         *GetBuffer(Long_t offset = 0) const { return (void *)((Long_t) fBuffer + offset); }
+   Int_t         GetBufSize() const { return fBufSize; }
+   TMapRec      *GetNext(Long_t offset = 0) const { return (TMapRec *)((Long_t) fNext + offset); }
+};
+
+TMapRec::TMapRec(const char *name, TObject *obj, Int_t size, void *buf)
+{
+   fName      = StrDup(name);
+   fClassName = 0;
+   fObject    = obj;
+   fBuffer    = buf;
+   fBufSize   = size;
+   fNext      = 0;
+}
+
+TMapRec::~TMapRec()
+{
+   delete [] fName;
+   delete [] fClassName;
+}
+
+
+ClassImp(TMapFile)
+
+//______________________________________________________________________________
+TMapFile::TMapFile()
+{
+   // Default ctor. Does not much except setting some basic values.
+
+   fFd          = -1;
+   fMmallocDesc = 0;
+   fFirst       = 0;
+}
+
+//______________________________________________________________________________
+TMapFile::TMapFile(const Text_t *name, const Text_t *title, Option_t *option,
+                   Int_t size, TMapFile *&newMapFile)
+{
+   // Create a memory mapped file. This opens a file (to which the
+   // memory will be mapped) and attaches a memory region to it.
+   // Option can be either: "NEW", "CREATE", "RECREATE", "UPDATE" or
+   // "READ" (see TFile). The default open mode is "READ". The size
+   // argument specifies the maximum size of shared memory file in bytes.
+   // This protected ctor is called via the static Create() method.
+
+#ifndef WIN32
+   fFd          = -1;
+   fSemaphore   = -1;
+#else
+   fFd          = (Int_t) INVALID_HANDLE_VALUE;
+   fSemaphore   = (Int_t) INVALID_HANDLE_VALUE;
+#endif
+   fMmallocDesc = 0;
+   fSize        = size;
+   fFirst       = 0;
+   fOffset      = 0;
+   fVersion     = gROOT->GetVersionInt();
+   fTitle       = StrDup(title);
+   fOption      = StrDup(option);
+   fDirectory   = 0;
+   fBrowseList  = 0;
+
+   Bool_t create = kFALSE;
+   Bool_t recreate, update, read;
+
+   {
+      TString opt = option;
+
+      if (!opt.CompareTo("NEW", TString::kIgnoreCase) ||
+          !opt.CompareTo("CREATE", TString::kIgnoreCase))
+          create = kTRUE;
+      recreate = opt.CompareTo("RECREATE", TString::kIgnoreCase)
+                 ? kFALSE : kTRUE;
+      update   = opt.CompareTo("UPDATE", TString::kIgnoreCase)
+                 ? kFALSE : kTRUE;
+      read     = opt.CompareTo("READ", TString::kIgnoreCase)
+                 ? kFALSE : kTRUE;
+      if (!create && !recreate && !update && !read) {
+         read    = kTRUE;
+         delete [] fOption;
+         fOption = StrDup("READ");
+      }
+   }
+
+   const char *fname;
+   if ((fname = gSystem->ExpandPathName(name))) {
+      fName = StrDup(fname);
+      delete [] (char*)fname;
+      fname = fName;
+   } else {
+      Error("TMapFile", "error expanding path %s", fname);
+      goto zombie;
+   }
+
+   if (recreate) {
+      if (!gSystem->AccessPathName(fname, kFileExists))
+         gSystem->Unlink(fname);
+      recreate = kFALSE;
+      create   = kTRUE;
+      delete [] fOption;
+      fOption  = StrDup("CREATE");
+   }
+   if (create && !gSystem->AccessPathName(fname, kFileExists)) {
+      Error("TMapFile", "file %s already exists", fname);
+      goto zombie;
+   }
+   if (update) {
+      if (gSystem->AccessPathName(fname, kFileExists)) {
+         Error("TMapFile", "file %s does not exist", fname);
+         goto zombie;
+      }
+      if (gSystem->AccessPathName(fname, kWritePermission)) {
+         Error("TMapFile", "no write permission, could not open file %s", fname);
+         goto zombie;
+      }
+   }
+   if (read) {
+      if (gSystem->AccessPathName(fname, kFileExists)) {
+         Error("TMapFile", "file %s does not exist", fname);
+         goto zombie;
+      }
+      if (gSystem->AccessPathName(fname, kReadPermission)) {
+         Error("TMapFile", "no read permission, could not open file %s", fname);
+         goto zombie;
+      }
+   }
+
+   // Open file to which memory will be mapped
+   if (create || update) {
+#ifndef WIN32
+      fFd = open(fname, O_RDWR | O_CREAT, 0644);
+#else
+      fFd = (Int_t) CreateFile(fname,                    // pointer to name of the file
+                     GENERIC_WRITE | GENERIC_READ,       // access (read-write) mode
+                     FILE_SHARE_WRITE | FILE_SHARE_READ, // share mode
+                     NULL,                               // pointer to security attributes
+                     OPEN_ALWAYS,                        // how to create
+                     FILE_ATTRIBUTE_TEMPORARY,           // file attributes
+                     (HANDLE) NULL);                     // handle to file with attributes to copy
+#endif
+      if (fFd == (Int_t)INVALID_HANDLE_VALUE) {
+         SysError("TMapFile", "file %s can not be opened", fname);
+         goto zombie;
+      }
+      fWritable = kTRUE;
+   } else {
+#ifndef WIN32
+      fFd = open(fname, O_RDONLY);
+#else
+      fFd = (Int_t) CreateFile(fname,                    // pointer to name of the file
+                     GENERIC_READ,                       // access (read-write) mode
+                     FILE_SHARE_WRITE | FILE_SHARE_READ, // share mode
+                     NULL,                               // pointer to security attributes
+                     OPEN_EXISTING,                      // how to create
+                     FILE_ATTRIBUTE_TEMPORARY,           // file attributes
+                     (HANDLE) NULL);                     // handle to file with attributes to copy
+#endif
+      if (fFd == (Int_t)INVALID_HANDLE_VALUE) {
+         SysError("TMapFile", "file %s can not be opened for reading", fname);
+         goto zombie;
+      }
+      fWritable = kFALSE;
+   }
+
+   // Attach memory region to file.
+   void *mapto;
+   TMapFile *mapfil;
+
+   if (((mapto = MapToAddress()) == (void *)-1) ||
+#ifndef WIN32
+       ((fMmallocDesc = mmalloc_attach(fFd, mapto, fSize)) == 0)) {
+#else
+       ((fMmallocDesc = mmalloc_attach((HANDLE) fFd, mapto, fSize)) == 0)) {
+#endif
+
+      if (mapto == (void *)-1)
+         Error("TMapFile", "no memory mapped file capability available");
+      if (fMmallocDesc == 0 && fWritable)
+         Error("TMapFile", "mapped file not in mmalloc format or\n"
+                           "already open in RW mode by another process");
+      if (fMmallocDesc == 0 && !fWritable)
+         Error("TMapFile", "mapped file not in mmalloc format");
+#ifndef WIN32
+      close(fFd);
+#else
+      CloseHandle((HANDLE) fFd);
+#endif
+      fFd = -1;
+      goto zombie;
+
+   } else if ((mapfil = (TMapFile *) mmalloc_getkey(fMmallocDesc, 0)) != 0) {
+
+      // File contains mmalloc heap. If we are in write mode and mapped
+      // file already connected in write mode switch to read-only mode.
+      // Check if ROOT versions are compatible.
+      // If so update mapped version of TMapFile to reflect current
+      // situation (only if not opened in READ mode).
+      if (mapfil->fVersion != fVersion) {
+         Error("TMapFile", "map file %s (%d) incompatible with current ROOT version (%d)",
+               fname, mapfil->fVersion, fVersion);
+         mmalloc_detach(fMmallocDesc);
+#ifndef WIN32
+         close(fFd);
+#else
+         CloseHandle((HANDLE) fFd);
+#endif
+         fFd = -1;
+         fMmallocDesc = 0;
+         goto zombie;
+      }
+
+      if (mapfil->fWritable && fWritable) {
+         Warning("TMapFile", "map file already open in write mode, opening in read-only mode");
+         fWritable = kFALSE;
+      }
+
+      fBaseAddr = mapfil->fBaseAddr;
+      fSize     = mapfil->fSize;
+
+      if (fWritable) {
+         // create new TMapFile object in mapped heap to get correct vtbl ptr
+         CreateSemaphore();
+         gMmallocDesc = fMmallocDesc;
+         TMapFile *mf = new TMapFile(*mapfil);
+         mf->fFd        = fFd;
+         mf->fSemaphore = fSemaphore;
+#ifdef WIN32
+         mf->CreateSemaphore(fSemaphore);
+#endif
+         mmalloc_setkey(fMmallocDesc, 0, mf);
+         gMmallocDesc = 0;
+         mapfil = mf;
+      } else {
+         gMmallocDesc = 0;    // make sure we are in sbrk heap
+         fOffset      = ((struct mdesc *) fMmallocDesc)->offset;
+         TMapFile *mf = new TMapFile(*mapfil, fOffset);
+         delete [] mf->fOption;
+         mf->fFd          = fFd;
+         mf->fOption      = StrDup("READ");
+         mf->fMmallocDesc = fMmallocDesc;
+         mf->fWritable    = kFALSE;
+         mapfil = mf;
+      }
+
+      // store shadow mapfile (it contains the real fFd in case map
+      // is not writable)
+      fVersion  = -1;   // make this the shadow map file
+      gROOT->GetListOfMappedFiles()->AddLast(this);
+
+   } else {
+
+      // New file. If the file is writable create a new copy of the
+      // TMapFile which will now be allocated on the memory mapped heap.
+      if (!fWritable) {
+         Error("TMapFile", "map file is not writable");
+         mmalloc_detach(fMmallocDesc);
+#ifndef WIN32
+         close(fFd);
+#else
+         CloseHandle((HANDLE) fFd);
+#endif
+         fFd = -1;
+         fMmallocDesc = 0;
+         goto zombie;
+      }
+
+      fBaseAddr = (ULong_t)((struct mdesc *) fMmallocDesc)->base;
+
+      CreateSemaphore();
+
+      gMmallocDesc = fMmallocDesc;
+
+      mapfil = new TMapFile(*this);
+      mmalloc_setkey(fMmallocDesc, 0, mapfil);
+
+      gMmallocDesc = 0;
+
+      // store shadow mapfile
+      fVersion  = -1;   // make this the shadow map file
+      gROOT->GetListOfMappedFiles()->AddLast(this);
+
+   }
+
+   mapfil->InitDirectory();
+   gROOT->GetListOfMappedFiles()->AddFirst(mapfil);
+
+   newMapFile = mapfil;
+
+   return;
+
+zombie:
+   // error in file opening occured, make this object a zombie
+   MakeZombie();
+   newMapFile   = this;
+   gMmallocDesc = 0;
+}
+
+//______________________________________________________________________________
+TMapFile::TMapFile(const TMapFile &f, Long_t offset)
+{
+   // Private copy ctor. Used by the the ctor to create a new version
+   // of TMapFile in the memory mapped heap. It's main purpose is to
+   // correctly create the string data members.
+
+   fFd          = f.fFd;
+   fVersion     = f.fVersion;
+   fName        = StrDup((char *)((long)f.fName + offset));
+   fTitle       = StrDup((char *)((long)f.fTitle + offset));
+   fOption      = StrDup((char *)((long)f.fOption + offset));
+   fMmallocDesc = f.fMmallocDesc;
+   fBaseAddr    = f.fBaseAddr;
+   fSize        = f.fSize;
+   fFirst       = f.fFirst;
+   fWritable    = f.fWritable;
+   fSemaphore   = f.fSemaphore;
+   fOffset      = offset;
+   fDirectory   = 0;
+   fBrowseList  = 0;
+#ifdef WIN32
+   CreateSemaphore(fSemaphore);
+#endif
+}
+
+//______________________________________________________________________________
+TMapFile::~TMapFile()
+{
+   // TMapFiles may not be deleted, since we want to keep the complete
+   // TMapFile object in the mapped file for later re-use. To enforce this
+   // the delete operator has been made private. Use Close() to properly
+   // terminate a TMapFile (also done via the TROOT dtor).
+
+   if (fDirectory == gDirectory) gDirectory = gROOT;
+   delete fDirectory; fDirectory = 0;
+   if (fBrowseList) fBrowseList->Delete();
+   delete fBrowseList; fBrowseList = 0;
+
+   // if shadow map file we are done here
+   if (fVersion == -1)
+      return;
+
+   // Writable mapfile is allocated in mapped memory. This object should
+   // not be deleted by ::operator delete(), because it is needed if we
+   // want to connect later to the file again.
+   if (fWritable)
+      TObject::SetDtorOnly(this);
+
+   Close("dtor");
+
+   fgMmallocDesc = fMmallocDesc;
+}
+
+//______________________________________________________________________________
+void TMapFile::InitDirectory()
+{
+   // Create the directory associated to this mapfile
+
+   gDirectory = 0;
+   fDirectory = new TDirectory();
+   fDirectory->SetName(GetName());
+   fDirectory->SetTitle(GetTitle());
+   fDirectory->Build();
+   fDirectory->SetMother(this);
+   gDirectory = fDirectory;
+}
+
+//______________________________________________________________________________
+void TMapFile::Add(TObject *obj, const char *name)
+{
+   // Add an object to the list of objects to be stored in shared memory
+   // and copy it to shared memory.
+
+   if (!fWritable || !fMmallocDesc) return;
+
+   AcquireSemaphore();
+
+   gMmallocDesc = fMmallocDesc;
+
+   const char *n;
+   if (!name || name != "")
+      n = obj->GetName();
+   else
+      n = name;
+   TMapRec *mr = new TMapRec(n, obj, 0, 0);
+   if (!fFirst) {
+      fFirst = mr;
+      fLast  = mr;
+   } else {
+      fLast->fNext = mr;
+      fLast        = mr;
+   }
+
+   gMmallocDesc = 0;
+
+   ReleaseSemaphore();
+}
+
+//______________________________________________________________________________
+void TMapFile::Update(TObject *obj)
+{
+   // Update an object (or all objects, if obj == 0) in shared memory.
+
+   if (!fWritable || !fMmallocDesc) return;
+
+   AcquireSemaphore();
+
+   gMmallocDesc = fMmallocDesc;
+
+   Bool_t all = (obj == 0) ? kTRUE : kFALSE;
+
+   TMapRec *mr = fFirst;
+   while (mr) {
+      if (all || mr->fObject == obj) {
+         TBuffer *b;
+         if (!mr->fBufSize) {
+            b = new TBuffer(TBuffer::kWrite, TBuffer::kMinimalSize);
+            mr->fClassName = StrDup(mr->fObject->ClassName());
+         } else
+            b = new TBuffer(TBuffer::kWrite, mr->fBufSize, mr->fBuffer);
+         b->MapObject(mr->fObject);  //register obj in map to handle self reference
+         mr->fObject->Streamer(*b);
+         mr->fBufSize = b->BufferSize();
+         mr->fBuffer  = b->Buffer();
+         b->DetachBuffer();
+         delete b;
+      }
+      mr = mr->fNext;
+   }
+
+   gMmallocDesc = 0;
+
+   ReleaseSemaphore();
+}
+
+//______________________________________________________________________________
+void TMapFile::Remove(TObject *obj)
+{
+   // Remove object from shared memory.
+
+   if (!fWritable || !fMmallocDesc) return;
+
+   AcquireSemaphore();
+
+   TMapRec *prev = 0, *mr = fFirst;
+   while (mr) {
+      if (mr->fObject == obj) {
+         if (mr == fFirst) {
+            fFirst = mr->fNext;
+            if (mr == fLast)
+               fLast = 0;
+         } else {
+            prev->fNext = mr->fNext;
+            if (mr == fLast)
+               fLast = prev;
+         }
+         delete mr;
+         break;
+      }
+      prev = mr;
+      mr   = mr->fNext;
+   }
+
+   ReleaseSemaphore();
+}
+
+//______________________________________________________________________________
+void TMapFile::RemoveAll()
+{
+   // Remove all objects from shared memory.
+
+   if (!fWritable || !fMmallocDesc) return;
+
+   AcquireSemaphore();
+
+   TMapRec *mr = fFirst;
+   while (mr) {
+      TMapRec *t = mr;
+      mr = mr->fNext;
+      delete t;
+   }
+   fFirst = fLast = 0;
+
+   ReleaseSemaphore();
+}
+
+//______________________________________________________________________________
+TObject *TMapFile::Get(const char *name, TObject *delObj)
+{
+   // Return pointer to object retrieved from shared memory. The object must
+   // be deleted after use. If delObj is a pointer to a previously allocated
+   // object it will be deleted. Returns 0 in case object with the given
+   // name does not exist.
+
+   if (!fMmallocDesc) return 0;
+
+   AcquireSemaphore();
+
+   delete delObj;
+
+   TObject *obj = 0;
+   TMapRec *mr = GetFirst();
+   while (OrgAddress(mr)) {
+      if (!strcmp(mr->GetName(fOffset), name)) {
+         if (!mr->fBufSize) goto release;
+         TClass *cl = gROOT->GetClass(mr->GetClassName(fOffset));
+         if (!cl) {
+            Error("Get", "unknown class %s", mr->GetClassName(fOffset));
+            goto release;
+         }
+
+         obj = (TObject *)cl->New();
+         if (!obj) {
+            Error("Get", "cannot create new object of class %s", mr->GetClassName(fOffset));
+            goto release;
+         }
+
+         TBuffer *b = new TBuffer(TBuffer::kRead, mr->fBufSize, mr->GetBuffer(fOffset));
+         b->MapObject(obj);  //register obj in map to handle self reference
+         obj->Streamer(*b);
+         b->DetachBuffer();
+         delete b;
+         goto release;
+      }
+      mr = mr->GetNext(fOffset);
+   }
+
+release:
+   ReleaseSemaphore();
+
+   return obj;
+}
+
+//______________________________________________________________________________
+void *TMapFile::GetBreakval() const
+{
+   // Return the current location in the memory region for this malloc heap which
+   // represents the end of memory in use. Returns 0 if map file was closed.
+
+   if (!fMmallocDesc) return 0;
+   return (void *)((struct mdesc *)fMmallocDesc)->breakval;
+}
+
+//______________________________________________________________________________
+#ifndef WIN32
+void TMapFile::CreateSemaphore(int)
+#else
+void TMapFile::CreateSemaphore(int pid)
+#endif
+{
+   // Create semaphore used for synchronizing access to shared memory.
+
+#ifdef HAVE_SEMOP
+#ifndef WIN32
+   // create semaphore to synchronize access (should use read/write lock)
+   fSemaphore = semget(IPC_PRIVATE, 1, SEM_R|SEM_A|(SEM_R>>3)|(SEM_A>>3)|
+                                       (SEM_R>>6)|(SEM_A>>6));
+
+   // set semaphore to 1
+   if (fSemaphore != -1) {
+      union semun set;
+      set.val = 1;
+      semctl(fSemaphore, 0, SETVAL, set);
+   }
+#else
+   char buffer[] ="ROOT_Semaphore_xxxxxxxx";
+   int lbuf = strlen(buffer);
+   if (!pid) fSemaphore = getpid();
+   fhSemaphore = CreateMutex(NULL,FALSE,itoa(fSemaphore,&buffer[lbuf-8],16));
+   if (fhSemaphore == NULL) fSemaphore = (Int_t)INVALID_HANDLE_VALUE;
+#endif
+#endif
+}
+
+//______________________________________________________________________________
+void TMapFile::DeleteSemaphore()
+{
+   // Delete the semaphore.
+
+#ifdef HAVE_SEMOP
+   // remove semaphore
+#ifndef WIN32
+   if (fSemaphore != -1) {
+      int semid  = fSemaphore;
+      fSemaphore = -1;
+      union semun set;
+      set.val = 0;
+      semctl(semid, 0, IPC_RMID, set);
+   }
+#else
+   if (fSemaphore != (Int_t)INVALID_HANDLE_VALUE) {
+      CloseHandle(fhSemaphore);
+      fhSemaphore = 0;;
+      fSemaphore  = (Int_t)INVALID_HANDLE_VALUE;
+   }
+#endif
+#endif
+}
+
+//______________________________________________________________________________
+Int_t TMapFile::AcquireSemaphore()
+{
+   // Acquire semaphore. Returns 0 of OK, -1 on error.
+
+#ifdef HAVE_SEMOP
+#ifndef WIN32
+   if (fSemaphore != -1) {
+      struct sembuf buf = { 0, -1, SEM_UNDO };
+      if (semop(fSemaphore, &buf, 1) == -1) {
+         if (errno == EIDRM)
+            fSemaphore = -1;
+         if (errno == EINTR)
+            return -1;
+      }
+   }
+#else
+   // Enter Critical section to "write" lock
+   if (fSemaphore != (Int_t)INVALID_HANDLE_VALUE)
+      WaitForSingleObject(fhSemaphore,INFINITE);
+#endif
+#endif
+   return 0;
+}
+
+//______________________________________________________________________________
+Int_t TMapFile::ReleaseSemaphore()
+{
+   // Release semaphore. Reutnrs 0 if OK, -1 on error.
+
+#ifdef HAVE_SEMOP
+#ifndef WIN32
+   if (fSemaphore != -1) {
+      struct sembuf buf = { 0, 1, SEM_UNDO };
+      if (semop(fSemaphore, &buf, 1) == -1) {
+         if (errno == EIDRM)
+            fSemaphore = -1;
+      }
+   }
+#else
+   if (fSemaphore != (Int_t)INVALID_HANDLE_VALUE)
+      ReleaseMutex(fhSemaphore);
+#endif
+#endif
+   return 0;
+}
+
+//______________________________________________________________________________
+void TMapFile::Close(Option_t *option)
+{
+   // Close a mapped file. First detach mapped memory then close file.
+   // No member functions of a TMapFile that was opened in write mode
+   // may be called after Close() (this includes, of course, "delete" which
+   // would call the dtors). The option="dtor" is only used when called
+   // via the ~TMapFile.
+
+   if (!fMmallocDesc) return;
+
+   TMapFile *shadow = FindShadowMapFile();
+   if (!shadow) {
+      Error("Close", "shadow map == 0, should never happen!");
+      return;
+   }
+
+   gROOT->GetListOfMappedFiles()->Remove(shadow);
+   gROOT->GetListOfMappedFiles()->Remove(this);
+
+   if (shadow->fWritable) {
+      fWritable = kFALSE;
+      DeleteSemaphore();
+   }
+
+   if (fMmallocDesc) {
+      if (strcmp(option, "dtor"))
+         mmalloc_detach(fMmallocDesc);
+
+      // If writable cannot access fMmallocDesc anymore since
+      // it points to the just unmapped memory region. Any further
+      // access to this TMapFile will cause a crash.
+      if (!shadow->fWritable)
+         fMmallocDesc = 0;
+   }
+
+   if (shadow->fFd != -1)
+#ifndef WIN32
+      close(shadow->fFd);
+#else
+      CloseHandle((HANDLE)shadow->fFd);
+#endif
+
+   delete shadow;
+}
+
+//______________________________________________________________________________
+TMapFile *TMapFile::FindShadowMapFile()
+{
+   // Returns shadow map file.
+
+   TObjLink *lnk = ((TList *)gROOT->GetListOfMappedFiles())->LastLink();
+   while (lnk) {
+      TMapFile *mf = (TMapFile*)lnk->GetObject();
+      if (mf->fVersion == -1 && fBaseAddr == mf->fBaseAddr && fSize == mf->fSize)
+         return mf;
+      lnk = lnk->Prev();
+   }
+   return 0;
+}
+
+//______________________________________________________________________________
+void TMapFile::Print(Option_t *)
+{
+   // Print some info about the mapped file.
+
+   Printf("Memory mapped file:   %s", fName);
+   Printf("Title:                %s", fTitle);
+   if (fMmallocDesc)
+      Printf("Option:               %s", fOption);
+   else
+      Printf("Option:               file closed");
+   Printf("Mapped Memory region: 0x%x - 0x%x (%.2f MB)", fBaseAddr, fBaseAddr + fSize,
+          (float)fSize/1048576);
+   if (fMmallocDesc)
+      Printf("Current breakval:     0x%x", ((struct mdesc *)fMmallocDesc)->breakval);
+}
+
+//______________________________________________________________________________
+Bool_t TMapFile::IsFolder()
+{
+   // Returns kTRUE in case object is a folder (i.e. contains browsable lists).
+
+   if (fMmallocDesc && fVersion > 0) return kTRUE;
+   return kFALSE;
+}
+
+//______________________________________________________________________________
+void TMapFile::Browse(TBrowser *b)
+{
+   // Browse contents of TMapFile.
+
+   if (b && fMmallocDesc) {
+
+      AcquireSemaphore();
+
+      TMapRec *mr = GetFirst();
+      TKeyMapFile *keymap;
+      if (!fBrowseList) fBrowseList = new TList();
+      while (OrgAddress(mr)) {
+         keymap = (TKeyMapFile*)fBrowseList->FindObject(mr->GetName(fOffset));
+         if (!keymap) {
+            keymap = new TKeyMapFile(mr->GetName(fOffset),mr->GetClassName(fOffset),this);
+            fBrowseList->Add(keymap);
+         }
+         b->Add(keymap, keymap->GetName());
+         mr = mr->GetNext(fOffset);
+      }
+
+      ReleaseSemaphore();
+
+   }
+}
+
+//______________________________________________________________________________
+Bool_t TMapFile::cd(const Text_t *path)
+{
+   // Cd to associated directory,
+
+   if (fDirectory)
+      return fDirectory->cd(path);
+   return kFALSE;
+}
+
+//______________________________________________________________________________
+void TMapFile::ls(Option_t *)
+{
+   // List contents of TMapFile.
+
+   if (fMmallocDesc) {
+
+      AcquireSemaphore();
+
+      Printf("%-20s %-20s %-10s", "Object", "Class", "Size");
+      if (!fFirst)
+         Printf("*** no objects stored in memory mapped file ***");
+
+      TMapRec *mr = GetFirst();
+      while (OrgAddress(mr)) {
+         Printf("%-20s %-20s %-10d", mr->GetName(fOffset),
+                mr->GetClassName(fOffset), mr->fBufSize);
+         mr = mr->GetNext(fOffset);
+      }
+
+      ReleaseSemaphore();
+
+   }
+}
+
+//______________________________________________________________________________
+TMapFile *TMapFile::Create(const Text_t *name, Option_t *option, Int_t size,
+                           const Text_t *title)
+{
+   // Create a memory mapped file. This opens a file (to which the
+   // memory will be mapped) and attaches a memory region to it.
+   // Option can be either: "NEW", "CREATE", "RECREATE", "UPDATE"
+   // or "READ" (see TFile). The default open mode is "READ". The size
+   // argument specifies the maximum size of shared memory file in bytes.
+   // TMapFile's can only be created via this method. Create() enforces that
+   // a TMapFile is always on the memory mapped heap (when in "NEW", "CREATE"
+   // or "RECREATE" are used).
+
+   TMapFile *newMapFile;
+   new TMapFile(name, title, option, size, newMapFile);
+
+   return newMapFile;
+}
+
+//______________________________________________________________________________
+void TMapFile::SetMapAddress(Long_t addr)
+{
+   // Set preferred map address. Find out preferred map address as follows:
+   // 1) Run consumer program to find the preferred map address:
+   //       $ root
+   //       root [0] m = TMapFile::Create("dummy.map", "recreate", 10000000);
+   //       root [1] m.Print()
+   //       Memory mapped file:   dummy.map
+   //       Title:
+   //       Option:               CREATE
+   //       Mapped Memory region: 0x40b4c000 - 0x40d95f00 (2.29 MB)
+   //       Current breakval:     0x40b53000
+   //       root [2] .q
+   //       $ rm dummy.map
+   //    Remember begin of mapped region, i.e. 0x40b4c000
+   //
+   // 2) Add to producer program, just before creating the TMapFile:
+   //       TMapFile::SetMapAddress(0x40b4c000);
+   //
+   // Repeat this if more than one map file is being used.
+   //
+   // The above procedure allow programs using, e.g., different number of
+   // shared libraries (that cause the default mapping address to be
+   // different) to create shared memory regions in the same location
+   // without overwriting a shared library. The above assumes the consumer
+   // program is larger (i.e. has more shared memory occupied) than the
+   // producer. If this is not true inverse the procedure.
+
+   fgMapAddress = addr;
+}
+
+//______________________________________________________________________________
+void *TMapFile::MapToAddress()
+{
+   // Return the base address at which we would like the next TMapFile's
+   // mapped data to start.
+   //
+   // For now, we let the system decide (start address 0). There are
+   // a lot of issues to deal with here to make this work reasonably,
+   // including:
+   //
+   // - Avoid memory collisions with existing mapped address spaces
+   //
+   // - Reclaim address spaces when their mmalloc heaps are unmapped
+   //
+   // - When mmalloc heaps are shared between processes they have to be
+   //   mapped at the same addresses in each
+   //
+   // Once created, a mmalloc heap that is to be mapped back in must be
+   // mapped at the original address.  I.E. each TMapFile will expect
+   // to be remapped at it's original address. This becomes a problem if
+   // the desired address is already in use.
+
+#ifdef HAVE_MMAP
+   if (TStorage::HasCustomNewDelete())
+      return (void *)fgMapAddress;
+   else
+      return (void *)-1;
+#else
+   return (void *)-1;
+#endif
+}
+
+//______________________________________________________________________________
+void TMapFile::operator delete(void *ptr)
+{
+   // Need special "operator delete" in which we close the shared memory.
+   // This has to be done after the dtor chain has been finished.
+
+   mmalloc_detach(fgMmallocDesc);
+   fgMmallocDesc = 0;
+
+   TObject::operator delete(ptr);
+}

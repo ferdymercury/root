@@ -1,0 +1,45 @@
+*CMZ :  2.20/04 08/12/98  17.02.07  by  Rene Brun
+*CMZ :  2.00/09 25/06/98  19.57.47  by  Fons Rademakers
+*-- Author :    Fons Rademakers   25/06/98
+#ifdef __CINT__
+
+#pragma link off all globals;
+#pragma link off all classes;
+#pragma link off all functions;
+
+#pragma link C++ class TBasket-;
+#pragma link C++ class TBranch-;
+#pragma link C++ class TBranchClones-;
+#pragma link C++ class TBranchObject;
+#pragma link C++ class TChain-;
+#pragma link C++ class TChainElement;
+#pragma link C++ class TCut;
+#pragma link C++ class TCutG;
+#pragma link C++ class TEventList-;
+#pragma link C++ class TLeaf-;
+#pragma link C++ class TLeafObject-;
+#pragma link C++ class TLeafB;
+#pragma link C++ class TLeafC;
+#pragma link C++ class TLeafD;
+#pragma link C++ class TLeafF;
+#pragma link C++ class TLeafI;
+#pragma link C++ class TLeafS;
+#pragma link C++ class TNtuple-;
+#pragma link C++ class TPacketGenerator;
+#pragma link C++ class TSelector;
+#pragma link C++ class TTree-;
+#pragma link C++ class TTreeFormula-;
+
+#pragma link C++ function operator+(const TCut&, const char*);
+#pragma link C++ function operator+(const char*, const TCut&);
+#pragma link C++ function operator+(const TCut&, const TCut&);
+#pragma link C++ function operator&&(const TCut&, const char*);
+#pragma link C++ function operator&&(const char*, const TCut&);
+#pragma link C++ function operator&&(const TCut&, const TCut&);
+#pragma link C++ function operator||(const TCut&, const char*);
+#pragma link C++ function operator||(const char*, const TCut&);
+#pragma link C++ function operator||(const TCut&, const TCut&);
+#pragma link C++ function operator+(const TEventList&, const TEventList&);
+#pragma link C++ function operator-(const TEventList&, const TEventList&);
+
+#endif

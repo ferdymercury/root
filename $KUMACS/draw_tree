@@ -1,0 +1,7 @@
+*CMZ :  0.80/00 20/05/96  11.46.16  by  Rene Brun
+*-- Author :    Rene Brun   02/02/95
+macro draw_tree 1='ROOT' 2='.ps'
+exec headers [1]
+message generating [1]//[2]
+shell drawtree [1] [2]
+return

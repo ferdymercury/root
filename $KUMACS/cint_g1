@@ -1,0 +1,30 @@
+*CMZ :  2.00/11 07/08/98  21.59.00  by  Rene Brun
+*CMZ :  2.00/09 25/06/98  15.10.03  by  Fons Rademakers
+*CMZ :  1.03/02 29/08/97  14.41.57  by  Rene Brun
+*-- Author :    Fons Rademakers   15/02/96
+
+macro cint_g1
+*
+*    To generate the dictionary (part 1) for all graphics classes
+*    ===================================================
+*
+* Only change the [headers], [name] and [patch] variables and the
+* "#pragma ..." statements.
+*
+
+seq -i src/*.h
+
+headers=TAttPad.h TAttCanvas.h TArc.h TArrow.h TBox.h TColor.h TDiamond.h _
+        TEllipse.h TFrame.h TGaxis.h TGraph.h TGraphErrors.h TLatex.h TLine.h _
+        TMarker.h TPolyLine.h TPolyMarker.h TText.h TPave.h TPaveLabel.h _
+        TPaveText.h TPavesText.h TF1.h TF2.h TF3.h TWbox.h
+
+name=Graf1
+patch=G
+
+set G__LinkDef.h -F TEXT
+ctot /$kumacs/G1_LinkDef
+
+exec makecint [name] [patch] [headers]
+
+return

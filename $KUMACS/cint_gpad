@@ -1,0 +1,32 @@
+*CMZ :  2.20/04 08/12/98  17.01.00  by  Rene Brun
+*CMZ :  2.20/01 01/12/98  19.11.10  by  Rene Brun
+*CMZ :  2.00/09 25/06/98  21.01.12  by  Fons Rademakers
+*CMZ :  1.03/03 02/09/97  18.22.37  by  Piotr Golonka
+*-- Author :    Fons Rademakers   15/02/96
+
+macro cint_gpad
+*
+*    To generate the dictionary for graphics classes based on TPad and TEditor
+*    =========================================================================
+*
+* Only change the [headers], [name] and [patch] variables and the
+* "#pragma ..." statements.
+*
+
+seq -i src/*.h
+
+headers=TPad.h TCanvas.h TControlBar.h TSliderBox.h TClassTree.h _
+        TFitPanel.h TFitPanelGraph.h TDrawPanelHist.h TButton.h _
+        TControlBarButton.h TGroupButton.h TDialogCanvas.h TAttLineCanvas.h _
+        TAttFillCanvas.h TAttTextCanvas.h TAttMarkerCanvas.h TSlider.h _
+        TTreeViewer.h TPaveVar.h
+
+name=GPad
+patch=GPAD
+
+set G__LinkDef.h -F TEXT
+ctot /$kumacs/GPAD_LinkDef
+
+exec makecint [name] [patch] [headers]
+
+return

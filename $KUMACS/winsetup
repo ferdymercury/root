@@ -1,0 +1,164 @@
+*CMZ :  1.03/02 28/08/97  19.25.05  by  Valery Fine(fine@mail.cern.ch)
+*-- Author :
+macro winsetup
+import *
+sh echo @echo off>firstline.tmp
+sh echo set RootVersion=[RootVersion]>>firstline.tmp
+sh echo set RootVersionN=$SUBSTRING([RootVersion],1,1)//'_'//$SUBSTRING([RootVersion],3,2)>>firstline.tmp
+application data restpart.tmp
+rem *-- Author :    Valery Fine (Fine@vxcern.cern.ch)   09/02/96
+rem ==================================================
+rem Last change 24.07.97
+rem ====================
+@echo off
+
+if "%OS%" == "Windows_NT" set RootOs=NT
+if NOT "%OS%" == "Windows_NT" set RootOs=95
+
+if "%1" =="" goto notes
+rem cd %1
+if exist root_v%RootVersion%.x86.Windows_%RootOs%.exe goto Solid
+if not exist root_v%RootVersionN%_x86_Windows_%RootOs%.exe goto TastFloppy
+echo The name of the file was corrupted with Windows Netscape
+echo Attempting to restore the original one
+ren root_v%RootVersionN%_x86_Windows_%RootOs%.exe root_v%RootVersion%.x86.Windows_%RootOs%.exe
+if exist root_v%RootVersion%.x86.Windows_%RootOs%.exe goto Solid
+
+echo.
+echo Check the name of your *.bin files.
+echo They must be root_v%RootVersion%.disk1_%RootOs%.bin AND root_v%RootVersion%.disk2_%RootOs%.bin
+echo If they are wrong, please give them a proper names and re-run setup.
+echo.
+
+:TastFloppy
+if "%1" =="" goto FloppyNotes
+if not exist root_v%RootVersion%.disk1_%RootOs%.bin goto note1
+if not exist root_v%RootVersion%.disk2_%RootOs%.bin goto note2
+rem if not exist root_v%RootVersion%.disk3_%RootOs%.bin goto note3
+
+:MakeSolid
+rem copy /b disk1_%RootOs%.bin+disk2_%RootOs%.bin+disk3_%RootOs%.bin %1\root_v%RootVersion%.x86.Windows_%RootOs%.exe
+copy /b root_v%RootVersion%.disk1_%RootOs%.bin+root_v%RootVersion%.disk2_%RootOs%.bin %1\root_v%RootVersion%.x86.Windows_%RootOs%.exe
+if "%OS%" == "Windows_NT" del  /q *_%RootOs%.bin
+if NOT "%OS%" == "Windows_NT" del  *_%RootOs%.bin
+
+:Solid
+rem Make copy of file
+copy root_v%RootVersion%.x86.Windows_%RootOs%.exe root_%RootOs%.exe
+root_%RootOs%.exe
+del root_%RootOs%.exe
+call %1\bin\restore.bat
+echo.
+echo Well! The ROOT package is ready to run.
+echo.
+pause
+cd %1\tutorials
+set HOME=%1\tutorials
+set rootsys=%1
+set CINTSYSDIR = %rootsys%\cint
+path %rootsys%\bin;%path%
+start root.exe
+goto end
+
+
+:notes
+
+echo.
+echo Wrong usage !
+echo ============
+echo.
+echo Usage: root_v%RootVersion%.setup_%RootOS%.BAT [the name of the root directory for ROOT package]
+echo =====
+echo  To install the ROOT package v. %RootVersion% from the distribution file one needs:
+echo.
+echo    1. Create (select) the root directory for your applications
+echo        For example:
+echo        -----------    c:\Win32App\root
+echo.
+echo    2. Copy from our Web site
+echo.
+echo        root_v%RootVersion%.x86.Windows_%RootOs%.exe
+echo         and
+echo        root_v%RootVersion%.setup_%RootOS%.bat
+echo.
+goto EndNotes
+
+:FloppyNotes
+echo  To install the ROOT package v. %RootVersion% from the floppy one needs:
+echo.
+echo    1. Prepare three 3.5 inch floppy disks
+echo    2. Copy  3 files from our Web site:
+echo       http:\\root.cern.ch
+echo        root_v%RootVersion%.disk1_%RootOs%.bin
+echo        root_v%RootVersion%.disk2_%RootOs%.bin
+rem echo        root_v%RootVersion%.disk3_%RootOs%.bin
+echo      and
+echo        root_v%RootVersion%.setup_%RootOS%.bat
+echo       to your 2 disks
+echo       ATTENTION: Netscape utility may CORRUPT the names of our files
+echo       =========  Please check them carefully.
+echo    3. Bring those at home
+echo    4. Create (select) the root directory for your applications
+echo        For example:
+echo        -----------    c:\Win32App\root
+echo    5. Copy all files from floppy disks to this directory
+echo    6. Make this directory the current one
+echo       For example:   cd \Win32App\root
+echo.
+
+:EndNotes
+echo    -  Type Setup as follows
+echo         root_v%RootVersion%.setup_%RootOS%.BAT [the name of the root directory for ROOT package]
+echo       to run the setup procedure
+echo.
+echo       For example:
+echo           root_v%RootVersion%.setup_%RootOS% \Win32App\root
+echo.
+echo    -  Wonder the result
+echo    -  Type on the ROOT prompt
+echo        root [0] gSystem.Load("Root_Tree.dll");
+echo        root [0] .x benchmarks.c
+echo.
+echo (Attention !!! One must launch the "benchmarks" step first to generate
+echo  ------------- some essential files the other tutorial macros use)
+
+echo
+echo.
+
+goto end
+
+:note1
+
+echo.
+echo Sorry !
+echo You've not copied neither root_v%RootVersion%.x86.Windows_%RootOs%.exe
+echo                  nor  the root_v%RootVersion%.disk1_%RootOs%.bin
+echo files into %1 directory.
+echo.
+echo Check yourself and try again
+echo       ATTENTION: Netscape utility may CORRUPT the names of our files
+echo       =========  Please check them carefully.
+
+goto end
+
+:note2
+
+echo.
+echo Sorry, You've not copied the root_v%RootVersion%.disk2_%RootOs%.bin file to %1 directory
+echo Take a cup of coffee and try again
+
+goto end
+
+:note3
+echo.
+echo Sorry, You've not copied the root_v%RootVersion%.disk3_%RootOs%.bin file to %1 directory
+echo You need a rest. Go to bed, have a sleep, then awake and try again.
+echo     Good luck !
+
+
+:end
+restpart.tmp
+
+sh copy firstline.tmp+restpart.tmp setup.bat
+sh del firstline.tmp
+sh del restpart.tmp

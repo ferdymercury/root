@@ -1,0 +1,78 @@
+*CMZ :  2.00/09 19/06/98  11.59.25  by  Valery Fine(fine@mail.cern.ch)
+*CMZ :  2.00/08 15/05/98  09.12.24  by  Valery Fine(fine@mail.cern.ch)
+*CMZ :  1.00/06 23/03/97  08.12.08  by  Rene Brun
+*-- Author :    Rene Brun   04/12/95
+macro bind_root_WinNT 1=-
+
+import *
+
+main=$ROOTSYS/src/MAIN_rmain.o
+
+*----------------------Windows/NT case---------------------------------------
++IF,SYMANTEC.
+* LINK obj[, out[, map[, lib[, def[, res]]]]]
+   exec LFLAGS
+   SH echo $ROOTSYS\src\main_rmain.obj+ >> $ROOTSYS\bin\symantec.lnk
+*   sh for %f in ($ROOTSYS\src\*G__*) do echo %f+>> $ROOTSYS\bin\symantec.lnk
+   SH echo $ROOTSYS\src\BASE_G__Base.obj+ >>$ROOTSYS\bin\symantec.lnk
+   SH echo $ROOTSYS\src\CONT_G__Cont.obj+ >>$ROOTSYS\bin\symantec.lnk
+   SH echo $ROOTSYS\src\G_G__Graf.obj+ >>$ROOTSYS\bin\symantec.lnk
+   SH echo $ROOTSYS\src\H_G__Hist.obj+ >>$ROOTSYS\bin\symantec.lnk
+   SH echo $ROOTSYS\src\META_G__Meta.obj+ >>$ROOTSYS\bin\symantec.lnk
+   SH echo $ROOTSYS\src\MINUIT_G__Minuit.obj+ >>$ROOTSYS\bin\symantec.lnk
+   SH echo $ROOTSYS\src\GPAD_G__GPad.obj+ >>$ROOTSYS\bin\symantec.lnk
+   SH echo $ROOTSYS\src\G3D_G__G3D.obj+ >>$ROOTSYS\bin\symantec.lnk
+   SH echo $ROOTSYS\src\TREE_G__Tree.obj+ >>$ROOTSYS\bin\symantec.lnk
+   SH echo $ROOTSYS\src\RINT_G__Rint.obj+ >>$ROOTSYS\bin\symantec.lnk
+   SH echo $ROOTSYS\src\HTML_G__Html.obj+ >>$ROOTSYS\bin\symantec.lnk
+*--
+*--  The next empty line to close the list of the object modules
+*
+   SH echo. >> $ROOTSYS\bin\symantec.lnk
+*
+   SH echo $ROOTSYS\bin\root.exe       >> $ROOTSYS\bin\symantec.lnk
+   SH echo NUL                     >> $ROOTSYS\bin\symantec.lnk
+   sh for %f in ($ROOTSYS\lib\*.lib) do echo %f+    >> $ROOTSYS\bin\symantec.lnk
+   exec SystemLibs [machine] $ROOTSYS\bin\symantec.lnk
+   SH echo nul                     >> $ROOTSYS\bin\symantec.lnk
+   SH LINK @$ROOTSYS\bin\symantec.lnk
++ELSE
+
+SysLibs     =
+MainObject  = $ROOTSYS\src\main_rmain.obj
+UserLibDir  = $ROOTSYS\lib
+UserLibs    = [UserLibDir]\Root_Base.lib [UserLibDir]\Root_Rint.lib [UserLibDir]\Root_Win32.lib [UserLibDir]\Root_GPad.lib
+UserObjDir  = $ROOTSYS\src
+*  UserObjs    = [UserObjDir]G__*.obj
+
++IF,RootIcon.
+UserObjs    = $ROOTSYS\Icons\RootIcon.obj
++ENDIF.
+
+ExeFile     = /out:$ROOTSYS\bin\root.exe
+LinkOptions = '/PDB:%ROOTSYS%\bin\Root_exe.pdb'
+
+* ---> for static libs;    sh echo  $ROOTSYS\src\*G__* >> $ROOTSYS\bin\microsoft.lnk
++IF,RootIcon.
+   Sh [LD] [LDOPT] [LinkOptions] [ExeFile] [MainObject] [UserObjs] [UserLibs] [SysLibs]
++ELSE
+   Sh [LD] [LDOPT] [LinkOptions] [ExeFile] [MainObject] [UserLibs] [SysLibs]
++ENDIF.
+*
+* We should build the separate version of the executable for those want call Fortran subroutines too
+* This executable module 'root4for' should be re-destributed with the MS Fortran DLL MSFRT40.DLL together
+*
+FortranIOLink =  $ROOTSYS\src\MAIN_Welcome.obj
+
++IF,RootIcon.
+  UserObjs   = [UserObjs] [FortranIOLink]
++ELSE
+  UserObjs   = [FortranIOLink]
++ENDIF.
+
+ExeFile     = /out:$ROOTSYS\bin\root4for.exe
+LinkOptions = '/PDB:%ROOTSYS%\bin\Root4for_exe.pdb'
+   Sh [LD] [LDOPT] [LinkOptions] [ExeFile] [MainObject] [UserObjs] [UserLibs] [SysLibs]
++ENDIF
+
+return

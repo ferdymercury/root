@@ -1,0 +1,56 @@
+*CMZ :  0.80/00 06/08/96  13.33.05  by  Valery Fine(fine@vxcern.cern.ch)
+*-- Author :    Fons Rademakers   15/02/96
+
+macro cint_win32
+*
+*    To generate the dictionary for the Window32 classes
+*    ===================================================
+*
+* Only change the [headers], [name] and [patch] variables and the
+* "#pragma ..." statements.
+*
+
+seq -i src/*.h
+
+headers=G__TypeInfo.h _
+        TWin32GuiFactory.h TCallBackList.h TCallBackObject.h TWin32Application.h _
+        TWin32Canvas.h TGWin32.h TGWin32Object.h TGWin32Pen.h _
+        TGWin32WindowsObject.h TGWin32PixmapObject.h TInput.h
+
+name=Win32
+patch=WIN32
+
+application data G__LinkDef.h
+#ifdef __CINT__
+
+#pragma link off all globals;
+#pragma link off all classes;
+#pragma link off all functions;
+
+// #pragma link C++ class TCallBackList-;
+// #pragma link C++ class TCallBackObject-;
+// #pragma link C++ class TContextMenuItem-;
+// #pragma link C++ class TCritSection-;
+// #pragma link C++ class TGWin32-;
+// #pragma link C++ class TGWin32ContextMenuImp-;
+// #pragma link C++ class TGWin32ControlBarImp-;
+// #pragma link C++ class TGWin32Object-;
+// #pragma link C++ class TGWin32Pen-;
+// #pragma link C++ class TGWin32PixmapObject-;
+// #pragma link C++ class TGWin32Switch-;
+// #pragma link C++ class TGWin32WindowsObject-;
+#pragma link C++ class TInput-;
+// #pragma link C++ class TMenuItem-;
+// #pragma link C++ class TWin32Application-;
+#pragma link C++ class TWin32Canvas-;
+// #pragma link C++ class TWin32Dialog-;
+#pragma link C++ class TWin32GuiFactory-;
+// #pragma link C++ class TWin32Menu-;
+
+#endif
+G__LinkDef.h
+
+
+exec makecint [name] [patch] [headers]
+
+return

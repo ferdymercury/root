@@ -1,0 +1,43 @@
+*CMZ :  2.20/00 22/11/98  18.43.27  by  Fons Rademakers
+*CMZ :  2.00/12 22/09/98  11.47.01  by  Fons Rademakers
+*-- Author :    Fons Rademakers   22/09/98
+# Makefile to build ROOT for DEC unix with cxx 6
+
+PLATFORM      = alpha
+
+# OPT         = -g
+OPT           = -O2
+NOOPT         =
+
+# Compiler:
+CXX           = cxx
+CC            = cc
+CXXFLAGS      = -nostdnew -D__osf__ -D__alpha
+CFLAGS        =
+CINTCXXFLAGS  = -nostdnew -DG__DECCXX \
+                -DG__REGEXP -DG__UNIX -DG__SHAREDLIB \
+                -DG__OSFDLL -DG__ROOT -DG__REDIRECTIO
+CINTCFLAGS    = -DG__DECCXX -DG__REGEXP -DG__UNIX -DG__SHAREDLIB \
+                -DG__OSFDLL -DG__ROOT -DG__REDIRECTIO
+
+# Linker:
+LD            = cxx
+LDFLAGS       = $(OPT)
+SOFLAGS       = -shared -Wl,-expect_unresolved,*,-soname,
+SOEXT         = so
+
+# System libraries:
+SYSLIBS       = -lm
+SYSXLIBS      = -lX11 -lm
+XLIBS         = -L$(LPATH) -lXpm -lX11
+CILIBS        = -lm -ltermcap
+
+
+##### MACROS and TARGETS #####
+
+include Make-macros
+
+
+##### DEPENDENCIES #####
+
+include Make-depend

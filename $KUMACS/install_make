@@ -1,0 +1,30 @@
+*CMZ :  2.20/02 04/12/98  10.51.16  by  Rene Brun
+*CMZ :  2.00/12 07/10/98  15.53.06  by  Fons Rademakers
+*CMZ :  2.00/11 13/08/98  15.18.03  by  Fons Rademakers
+*CMZ :  2.00/10 24/07/98  17.54.34  by  Fons Rademakers
+*CMZ :  2.00/09 27/06/98  00.58.21  by  Fons Rademakers
+*-- Author :    Fons Rademakers   26/06/98
+macro install_make
+
+cd /install
+
+set src/*.mk -F TEXT
+ctot *
+
+shell mv src/Makemacros.mk    src/Make-macros
+shell mv src/Makedepend.mk    src/Make-depend
+shell mv src/Makelinux.mk     src/Makefile.linux
+shell mv src/Makelinuxegcs.mk src/Makefile.linuxegcs
+shell mv src/Makelinuxkcc.mk  src/Makefile.linuxkcc
+shell mv src/Makelinuxdeb.mk  src/Makefile.linuxdeb
+shell mv src/Makelinuxdeb2.mk src/Makefile.linuxdeb2
+shell mv src/Makelinuxrh42.mk src/Makefile.linuxrh42
+shell mv src/Makemklinux.mk   src/Makefile.mklinux
+shell mv src/Makehpuxacc.mk   src/Makefile.hpuxacc
+shell mv src/Makehpux.mk      src/Makefile.hpux
+shell mv src/Makesgikcc.mk    src/Makefile.sgikcc
+shell mv src/Makealphacxx6.mk src/Makefile.alphacxx6
+shell mv src/Makesolaris.mk   src/Makefile.solaris
+
+shell mv src/Makelib.mk       src/Makelib
+shell chmod 755 src/Makelib

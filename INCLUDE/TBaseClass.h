@@ -1,0 +1,64 @@
+//*CMZ :  1.00/07 22/03/97  01.56.04  by  Fons Rademakers
+//*-- Author :    Rene Brun   08/02/95
+
+#ifndef ROOT_TBaseClass
+#define ROOT_TBaseClass
+
+/*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
+/*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
+/*-- Author :    Rene Brun   23/03/97*/
+/*************************************************************************
+ * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ *                                                                       *
+ * Permission to use, copy, modify and distribute this software and its  *
+ * documentation for non-commercial purposes is hereby granted without   *
+ * fee, provided that the above copyright notice appears in all copies   *
+ * and that both the copyright notice and this permission notice appear  *
+ * in the supporting documentation. The authors make no claims about the *
+ * suitability of this software for any purpose.                         *
+ * It is provided "as is" without express or implied warranty.           *
+ *************************************************************************/
+
+//////////////////////////////////////////////////////////////////////////
+//                                                                      //
+// TBaseClass                                                           //
+//                                                                      //
+// Description of a base class.                                         //
+//                                                                      //
+//////////////////////////////////////////////////////////////////////////
+
+
+#ifndef ROOT_TDictionary
+#include "TDictionary.h"
+#endif
+
+class TBrowser;
+class TClass;
+class G__BaseClassInfo;
+
+
+class TBaseClass : public TDictionary {
+
+private:
+   G__BaseClassInfo  *fInfo;      //pointer to CINT base class info
+   TClass            *fClassPtr;  //pointer to the base class TClass
+   TClass            *fClass;     //pointer to class
+
+public:
+   TBaseClass(G__BaseClassInfo *info = 0, TClass *cl = 0);
+   virtual     ~TBaseClass();
+   virtual void Browse(TBrowser *b);
+   const char  *GetName() const;
+   const char  *GetTitle() const;
+   TClass      *GetClassPointer();
+   Int_t        GetDelta() const;
+   Int_t        Compare(TObject *obj);
+   ULong_t      Hash();
+   Bool_t       IsFolder() {return kTRUE;}
+   Long_t       Property() const;
+
+   ClassDef(TBaseClass,0)  //Description of a base class
+};
+
+#endif

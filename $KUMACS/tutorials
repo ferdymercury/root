@@ -1,0 +1,55 @@
+*CMZ :  2.00/06 12/05/98  15.29.04  by  Rene Brun
+*CMZ :  0.90/10 04/12/96  11.47.29  by  Rene Brun
+*-- Author :    Rene Brun   28/11/95
+macro tutorials
+filecase keep
+curdir = $CWD()
+*
+*  Create subdirectory tutorials if it does not exist
+if $FEXIST(tutorials) = 0 then
+   message Creating directory tutorials
+   if [OS] = 'VMS' then
+     shell create/dir [.tutorials]
+   else
+     shell mkdir tutorials
+   endif
+endif
+*
+* Extract macros from cmz directory tutorials
+*
+if [OS]='VMS' then
+   set [.tutorials]*.C -f C++
+else
+   set tutorials/*.C -f C++
+endif
+
+set C++ -lan
+sel tutorials
+cd tutorials
+cx -h  *
+OS = $OS
+if [OS] = 'WINNT' then
+  lcd tutorials
+  shell if exist .rootrc del .rootrc
+  shell copy rootrc.C .rootrc
+  shell del rootrc.C
+  shell copy staff_dat.C staff.dat
+  shell del staff_dat.C
+  lcd ..
+elseif [OS] = 'VMS' then
+  shell delete/log [.tutorials]*.rootrc;*
+  shell delete/log [.tutorials]staff.dat;*
+  shell rename/log [.tutorials]rootrc.C;*
+  shell rename/log [.tutorials]staff_dat.C;* staff.dat
+else
+  shell /bin/rm -f tutorials/.rootrc
+  shell /bin/rm -f tutorials/staff.dat
+  shell /bin/mv tutorials/rootrc.C tutorials/.rootrc
+  shell /bin/mv tutorials/staff_dat.C tutorials/staff.dat
+endif
+sel -tutorials
+*
+exec sourcedir
+*
+cd [curdir]
+return

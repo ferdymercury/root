@@ -1,0 +1,251 @@
+*CMZ :  2.20/05 15/12/98  18.02.14  by  Rene Brun
+*CMZ :  2.00/09 19/06/98  10.54.47  by  Rene Brun
+*CMZ :  2.00/06 12/05/98  18.05.59  by  Rene Brun
+*CMZ :  1.00/07 27/03/97  17.18.25  by  Rene Brun
+*-- Author :    Rene Brun   19/07/96
+macro install_cint 1=- 2=opt
+
+import *
+
+message ************************************
+message *   Installing CINT  [1] [2]
+message ************************************
+
+machine = [1]
+if [machine] = '-' then
+   machine = $MACHINE
+endif
+if [OS] = 'VMS' then
+  machine = 'VMS'
+endif
+
+if [machine] = 'IBMPC' then
+   machine = 'WinNT'
+   remove $ROOTSYS\bin\cint.exe $ROOTSYS\src\CINT_* cint\include\*
+   remove $ROOTSYS\src\CINT_*
+if [LOGFILE] = 'log' then
+   set install_cint.bat -xarcl
+endif
+elseif [machine] = 'VMS' then
+   sh delete/log $ROOTSYS[bin]cint.exe;*
+   sh delete/log $ROOTSYS[src]CINT_*;*
+   sh delete/log $ROOTSYS[cint.include]*.*;*
+else
+   remove $ROOTSYS/bin/cint $ROOTSYS/src/CINT_* cint/include/*
+endif
+
+*sel . [1]
+seq .
+
+* explicitely export CINT *.h files
+cd /
+seq incint
+if [OS] = 'VMS' then
+  seq -I $ROOTSYS[src]*.h
+else
+  seq -I $ROOTSYS/src/*.h
+endif
+seq .
+
+exec setup [1] [2] [LOGFILE]
+exec cintcompiler [1] [2]
+
+sel cint
+cd /
+if [machine] = 'MAC' then
+   CX cint
+else
++IF,SOURCE.
+   CX cint
++ELSE
+   CC cint
++ENDIF
+   bind_lib Cint CINT_*.o
++SELF, IF=WIN32.
+*  Create Cint DLL library
+if [DEBUG] = 'yes' then
+ pdb = '%ROOTSYS%\bin\Root_Cint.pdb'
+else
+ pdb = 'NONE'
+endif
+   shell [LD] [SLOPT] /PDB:[pdb] [LDOUTPUTOPT]$ROOTSYS\bin\Root_Cint.[DLLSUF] $ROOTSYS\src\Cint_*.[OBJSUF] $ROOTSYS\lib\Root_Cint.exp
++SELF.
+endif
+
+* export CINT run-time includes
+if [OS] = 'VMS' then
+  exec mkdir [.cint]
+else
+  exec mkdir cint
+endif
+
+if [machine] = 'WinNT' then
+   exec mkdir cint\include
+if [LOGFILE] = 'log' then
+   set install_cintmain.bat -xarcl
+endif
+elseif [OS]='VMS' then
+  exec mkdir [.cint.include]
+else
+   exec mkdir cint/include
+endif
+
+cd /
+seq .
+seq cintinclude
+if [OS]='VMS' then
+  seq -I [.cint.include]*.h
+else
+  seq -I cint/include/*.h
+endif
+seq .
+
+* create standalone CINT, called cint
+sel cintmain
+
+if [machine] = 'WinNT' then
+   SET $ROOTSYS/src/MAIN_*.cxx -f C++
+elseif [machine] = 'MAC' then
+   SET $ROOTSYS/src/MAIN_*.cc -fe C++
+elseif [machine] = 'VMS' then
+   SET $ROOTSYS[src]MAIN_*.cc -fe C++
+else
+   SET $ROOTSYS/src/MAIN_*.cxx -f C++
+endif
+
++IF,SOURCE.
+CX /cint/cppmain
++ELSE
+CC /cint/cppmain
++ENDIF.
+sel -cintmain -cint
+
+if [OS] = 'VMS' then
+  main=$ROOTSYS[.src]//MAIN_cppmain.obj
+else
+  main=$ROOTSYS/src/MAIN_cppmain.o
+endif
+
+if [machine] = 'WinNT' then
++IF,SYMANTEC
+*
+* We need two steps here
+*
+* 1.  To build Cint DLL
+* 2.  To build Cint EXE file itself
+* --------------------------------
+*
+*  1. Building LibCint.Dll and  LibCint.lib export library
+*  -------------------------------------------------------
+*  Generate Dummy.obj
+   shell echo void Dummy4MadSymatec(){} > dum.c
+   shell sc -c -mn dum.c
+   exec LFLAGS - DLL
+   shell echo /IMPLIB:$ROOTSYS\lib\Cint_Implib.lib >> $ROOTSYS\bin\symantec.lnk
+*--
+*--  The list of the object files
+*
+   shell for %F in ( $ROOTSYS\src\CINT_*.obj ) do echo %F+ >> $ROOTSYS\bin\symantec.lnk
+*--
+*--  The dummy C routine to close the list of the object modules
+*
+   shell echo dum.obj  >> $ROOTSYS\bin\symantec.lnk
+*--
+*--  The name of the output file
+*
+   shell echo $ROOTSYS\bin\Cint_Lib.dll >> $ROOTSYS\bin\symantec.lnk
+*--
+*--  The name of the MAP file
+*
+   shell echo NUL >> $ROOTSYS\bin\symantec.lnk
+*--
+*--  The list of the libraries
+*
+   Exec SystemLibs
+*--
+*--  The name of the DEF file
+*
+   shell echo  $ROOTSYS\src\cintlib.def >> $ROOTSYS\bin\symantec.lnk
+*--
+*-- Hufff, Now we can link it.
+*
+mess   But we will not use it just know and will apply the static library only
+*   shell LINK @$ROOTSYS\bin\symantec.lnk
+
+
+*  2. Creating the Cint EXE file
+*  -------------------------------------------------------
+*   Linker flags for Symantec
+   exec LFLAGS
+*    The list of the object files
+   shell echo $ROOTSYS\src\MAIN_cppmain.obj+ >> $ROOTSYS\bin\symantec.lnk
+   shell for %F in ( $ROOTSYS\src\CINT_*.obj ) do echo %F+>> $ROOTSYS\bin\symantec.lnk
+   shell echo. >> $ROOTSYS\bin\symantec.lnk
+*    The name of the output file
+   shell echo $ROOTSYS\bin\cint.exe >> $ROOTSYS\bin\symantec.lnk
+*    The name of the MAP file
+   shell echo NUL >> $ROOTSYS\bin\symantec.lnk
+*    The list of the libraries
+   Exec SystemLibs
+*   Exec SystemLibs UserLibs=$ROOTSYS\lib\cint_lib.lib
+   shell LINK @$ROOTSYS\bin\symantec.lnk
++ELSE
+   pdb = '%ROOTSYS%\bin\Cint.pdb'
+   main=$ROOTSYS\src\MAIN_cppmain.[OBJSUF]
+   shell [LD] [CILDOPT] /pdb:[pdb] [LDOUTPUTOPT]$ROOTSYS\bin\cint[EXESUF] [main] [CILIBS]
++ENDIF
+else
+  if [OS]= 'VMS' then
+     shell [LD][CILDOPT]$ROOTSYS[bin]cint [main], $ROOTSYS[lib]libcint/lib
+  else
+     shell [LD] [CILDOPT] $ROOTSYS/bin/cint [main] [CILIBS]
+  endif
+endif
+
+
+*   Creating the MAKEINFO and iosenum.h files
+*  -------------------------------------------------------
+if $OS <> 'WINNT' then
+   if [OS] = 'VMS' then
+     message INSTALL_CINT must implement a generation of MAKEINFO and iosenum.h
+     cd ..
+     lcd cint
+     ctot -s cintutils/makeinfo
+     shell rename MAKEINFO.txt MAKEINFO
+     lcd include
+     ctot -s cintutils/iosenum.h
+     lcd ..
+     lcd ..
+   else
+    cd ..
+    lcd cint
+    ctot -s cintutils/makeinfo
+    shell mv MAKEINFO.txt MAKEINFO
+    lcd include
+    ctot -s cintutils/iosenum
+    shell mv iosenum.txt iosenum.h
+    lcd ..
+    lcd ..
+   endif
+else
+   message INSTALL_CINT must implement generation of MAKEINFO and iosenum.h
+   cd ..
+   lcd cint
+   ctot -s cintutils/makeinfo
+   shell ren MAKEINFO.txt MAKEINFO
+   lcd include
+   ctot -s cintutils/iosenum
+   shell ren iosenum.txt iosenum.h
+   lcd ..
+   lcd ..
+endif
+
+
+message ************************************
+message *   CINT installation completed
+message ************************************
+
+* back to ROOT compiler settings
+exec compiler [1] [2]
+
+return

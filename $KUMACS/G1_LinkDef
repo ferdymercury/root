@@ -1,0 +1,38 @@
+*CMZ :  2.00/11 07/08/98  21.59.00  by  Rene Brun
+*CMZ :  2.00/09 25/06/98  15.08.48  by  Fons Rademakers
+*-- Author :    Fons Rademakers   25/06/98
+#ifdef __CINT__
+
+#pragma link off all globals;
+#pragma link off all classes;
+#pragma link off all functions;
+
+
+#pragma link C++ class TArc;
+#pragma link C++ class TArrow;
+#pragma link C++ class TAttCanvas;
+#pragma link C++ class TAttPad;
+#pragma link C++ class TBox;
+#pragma link C++ class TColor;
+#pragma link C++ class TDiamond;
+#pragma link C++ class TEllipse;
+#pragma link C++ class TF1-;
+#pragma link C++ class TF2;
+#pragma link C++ class TF3;
+#pragma link C++ class TFrame;
+#pragma link C++ class TGaxis;
+#pragma link C++ class TGraph-;
+#pragma link C++ class TGraphErrors-;
+#pragma link C++ class TLatex;
+#pragma link C++ class TLine;
+#pragma link C++ class TMarker;
+#pragma link C++ class TPave;
+#pragma link C++ class TPaveLabel;
+#pragma link C++ class TPaveText;
+#pragma link C++ class TPavesText;
+#pragma link C++ class TPolyLine-;
+#pragma link C++ class TPolyMarker-;
+#pragma link C++ class TText;
+#pragma link C++ class TWbox;
+
+#endif

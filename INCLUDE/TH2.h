@@ -1,0 +1,221 @@
+//*CMZ :  2.00/10 29/07/98  22.28.16  by  Rene Brun
+//*CMZ :  1.03/09 09/12/97  20.29.40  by  Fons Rademakers
+//*-- Author :    Rene Brun   11/12/94
+
+#ifndef ROOT_TH2
+#define ROOT_TH2
+
+/*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
+/*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
+/*-- Author :    Rene Brun   23/03/97*/
+/*************************************************************************
+ * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ *                                                                       *
+ * Permission to use, copy, modify and distribute this software and its  *
+ * documentation for non-commercial purposes is hereby granted without   *
+ * fee, provided that the above copyright notice appears in all copies   *
+ * and that both the copyright notice and this permission notice appear  *
+ * in the supporting documentation. The authors make no claims about the *
+ * suitability of this software for any purpose.                         *
+ * It is provided "as is" without express or implied warranty.           *
+ *************************************************************************/
+
+//////////////////////////////////////////////////////////////////////////
+//                                                                      //
+// TH2                                                                  //
+//                                                                      //
+// 2-Dim histogram base class.                                          //
+//                                                                      //
+//////////////////////////////////////////////////////////////////////////
+
+#ifndef ROOT_TH1
+#include "TH1.h"
+#endif
+
+
+class TH2 {
+
+protected:
+   Stat_t     fScalefactor;     //Scale factor
+   Stat_t     fTsumwy;          //Total Sum of weight*Y
+   Stat_t     fTsumwy2;         //Total Sum of weight*Y*Y
+   Stat_t     fTsumwxy;         //Total Sum of weight*X*Y
+
+   virtual void    Copy20(TH2 &hnew);
+   virtual void    Fill20(Axis_t x, Axis_t y);
+   virtual void    Fill20(Axis_t x, Axis_t y, Stat_t w);
+
+public:
+   TH2();
+   virtual ~TH2();
+
+   ClassDef(TH2,1)  //2-Dim histogram base class
+};
+
+
+//______________________________________________________________________________
+
+class TH2C : public TH1C, public TH2 {
+
+private:
+   void Fill(Axis_t) { MayNotUse("Fill(Axis_t)"); }
+   void Fill(Axis_t, Stat_t) { MayNotUse("Fill(Axis_t, Stat_t)"); }
+   void Fill(Axis_t, Axis_t, Axis_t, Stat_t) { MayNotUse("Fill(Axis_t, Axis_t, Axis_t, Stat_t)"); }
+
+public:
+   TH2C();
+   TH2C(const Text_t *name,const Text_t *title,Int_t nbinsx,Axis_t xlow,Axis_t xup
+                                ,Int_t nbinsy,Axis_t ylow,Axis_t yup);
+   TH2C(const Text_t *name,const Text_t *title,Int_t nbinsx,Axis_t *xbins
+                                ,Int_t nbinsy,Axis_t ylow,Axis_t yup);
+   TH2C(const Text_t *name,const Text_t *title,Int_t nbinsx,Axis_t xlow,Axis_t xup
+                                ,Int_t nbinsy,Axis_t *ybins);
+   TH2C(const Text_t *name,const Text_t *title,Int_t nbinsx,Axis_t *xbins
+                                ,Int_t nbinsy,Axis_t *ybins);
+   TH2C(const TH2C &h2c);
+   virtual ~TH2C();
+   virtual void    Copy(TObject &hnew);
+   virtual void    DrawCopy(Option_t *option="");
+   virtual void    Fill(Axis_t x, Axis_t y) {TH1::Fill12(x,y); TH2::Fill20(x,y);}
+   virtual void    Fill(Axis_t x, Axis_t y, Stat_t w) {TH1::Fill(x,y,w); TH2::Fill20(x,y,w);}
+   virtual Stat_t  GetCorrelationFactor(Int_t axis1=1,Int_t axis2=2);
+   virtual Stat_t  GetCovariance(Int_t axis1=1,Int_t axis2=2);
+   virtual Stat_t  GetMean(Int_t axis=1);
+   virtual Stat_t  GetRMS(Int_t axis=1);
+           TH2C&   operator=(const TH2C &h1);
+   friend  TH2C    operator*(Float_t c1, TH2C &h1);
+   friend  TH2C    operator*(TH2C &h1, Float_t c1) {return operator*(c1,h1);}
+   friend  TH2C    operator+(TH2C &h1, TH2C &h2);
+   friend  TH2C    operator-(TH2C &h1, TH2C &h2);
+   friend  TH2C    operator*(TH2C &h1, TH2C &h2);
+   friend  TH2C    operator/(TH2C &h1, TH2C &h2);
+
+   ClassDef(TH2C,1)  //2-Dim histograms (one char per channel)
+};
+
+
+//______________________________________________________________________________
+
+class TH2S : public TH1S, public TH2 {
+
+private:
+   void Fill(Axis_t) { MayNotUse("Fill(Axis_t)"); }
+   void Fill(Axis_t, Stat_t) { MayNotUse("Fill(Axis_t, Stat_t)"); }
+   void Fill(Axis_t, Axis_t, Axis_t, Stat_t) { MayNotUse("Fill(Axis_t, Axis_t, Axis_t, Stat_t)"); }
+
+public:
+   TH2S();
+   TH2S(const Text_t *name,const Text_t *title,Int_t nbinsx,Axis_t xlow,Axis_t xup
+                                ,Int_t nbinsy,Axis_t ylow,Axis_t yup);
+   TH2S(const Text_t *name,const Text_t *title,Int_t nbinsx,Axis_t *xbins
+                                ,Int_t nbinsy,Axis_t ylow,Axis_t yup);
+   TH2S(const Text_t *name,const Text_t *title,Int_t nbinsx,Axis_t xlow,Axis_t xup
+                                ,Int_t nbinsy,Axis_t *ybins);
+   TH2S(const Text_t *name,const Text_t *title,Int_t nbinsx,Axis_t *xbins
+                                ,Int_t nbinsy,Axis_t *ybins);
+   TH2S(const TH2S &h2s);
+   virtual ~TH2S();
+   virtual void    Copy(TObject &hnew);
+   virtual void    DrawCopy(Option_t *option="");
+   virtual void    Fill(Axis_t x, Axis_t y) {TH1::Fill12(x,y); TH2::Fill20(x,y);}
+   virtual void    Fill(Axis_t x, Axis_t y, Stat_t w) {TH1::Fill(x,y,w); TH2::Fill20(x,y,w);}
+   virtual Stat_t  GetCorrelationFactor(Int_t axis1=1,Int_t axis2=2);
+   virtual Stat_t  GetCovariance(Int_t axis1=1,Int_t axis2=2);
+   virtual Stat_t  GetMean(Int_t axis=1);
+   virtual Stat_t  GetRMS(Int_t axis=1);
+           TH2S&   operator=(const TH2S &h1);
+   friend  TH2S    operator*(Float_t c1, TH2S &h1);
+   friend  TH2S    operator*(TH2S &h1, Float_t c1) {return operator*(c1,h1);}
+   friend  TH2S    operator+(TH2S &h1, TH2S &h2);
+   friend  TH2S    operator-(TH2S &h1, TH2S &h2);
+   friend  TH2S    operator*(TH2S &h1, TH2S &h2);
+   friend  TH2S    operator/(TH2S &h1, TH2S &h2);
+
+   ClassDef(TH2S,1)  //2-Dim histograms (one short per channel)
+};
+
+
+//______________________________________________________________________________
+
+class TH2F : public TH1F, public TH2 {
+
+private:
+   void Fill(Axis_t) { MayNotUse("Fill(Axis_t)"); }
+   void Fill(Axis_t, Stat_t) { MayNotUse("Fill(Axis_t, Stat_t)"); }
+   void Fill(Axis_t, Axis_t, Axis_t, Stat_t) { MayNotUse("Fill(Axis_t, Axis_t, Axis_t, Stat_t)"); }
+
+public:
+   TH2F();
+   TH2F(const Text_t *name,const Text_t *title,Int_t nbinsx,Axis_t xlow,Axis_t xup
+                                ,Int_t nbinsy,Axis_t ylow,Axis_t yup);
+   TH2F(const Text_t *name,const Text_t *title,Int_t nbinsx,Axis_t *xbins
+                                ,Int_t nbinsy,Axis_t ylow,Axis_t yup);
+   TH2F(const Text_t *name,const Text_t *title,Int_t nbinsx,Axis_t xlow,Axis_t xup
+                                ,Int_t nbinsy,Axis_t *ybins);
+   TH2F(const Text_t *name,const Text_t *title,Int_t nbinsx,Axis_t *xbins
+                                ,Int_t nbinsy,Axis_t *ybins);
+   TH2F(const TH2F &h2f);
+   virtual ~TH2F();
+   virtual void    Copy(TObject &hnew);
+   virtual void    DrawCopy(Option_t *option="");
+   virtual void    Fill(Axis_t x, Axis_t y) {TH1::Fill12(x,y); TH2::Fill20(x,y);}
+   virtual void    Fill(Axis_t x, Axis_t y, Stat_t w) {TH1::Fill(x,y,w); TH2::Fill20(x,y,w);}
+   virtual Stat_t  GetCorrelationFactor(Int_t axis1=1,Int_t axis2=2);
+   virtual Stat_t  GetCovariance(Int_t axis1=1,Int_t axis2=2);
+   virtual Stat_t  GetMean(Int_t axis=1);
+   virtual Stat_t  GetRMS(Int_t axis=1);
+           TH2F&   operator=(const TH2F &h1);
+   friend  TH2F    operator*(Float_t c1, TH2F &h1);
+   friend  TH2F    operator*(TH2F &h1, Float_t c1);
+   friend  TH2F    operator+(TH2F &h1, TH2F &h2);
+   friend  TH2F    operator-(TH2F &h1, TH2F &h2);
+   friend  TH2F    operator*(TH2F &h1, TH2F &h2);
+   friend  TH2F    operator/(TH2F &h1, TH2F &h2);
+
+   ClassDef(TH2F,1)  //2-Dim histograms (one float per channel)
+};
+
+
+//______________________________________________________________________________
+
+class TH2D : public TH1D, public TH2 {
+
+private:
+   void Fill(Axis_t) { MayNotUse("Fill(Axis_t)"); }
+   void Fill(Axis_t, Stat_t) { MayNotUse("Fill(Axis_t, Stat_t)"); }
+   void Fill(Axis_t, Axis_t, Axis_t, Stat_t) { MayNotUse("Fill(Axis_t, Axis_t, Axis_t, Stat_t)"); }
+
+public:
+   TH2D();
+   TH2D(const Text_t *name,const Text_t *title,Int_t nbinsx,Axis_t xlow,Axis_t xup
+                                ,Int_t nbinsy,Axis_t ylow,Axis_t yup);
+   TH2D(const Text_t *name,const Text_t *title,Int_t nbinsx,Axis_t *xbins
+                                ,Int_t nbinsy,Axis_t ylow,Axis_t yup);
+   TH2D(const Text_t *name,const Text_t *title,Int_t nbinsx,Axis_t xlow,Axis_t xup
+                                ,Int_t nbinsy,Axis_t *ybins);
+   TH2D(const Text_t *name,const Text_t *title,Int_t nbinsx,Axis_t *xbins
+                                ,Int_t nbinsy,Axis_t *ybins);
+   TH2D(const TH2D &h2d);
+   virtual ~TH2D();
+   virtual void    Copy(TObject &hnew);
+   virtual void    DrawCopy(Option_t *option="");
+   virtual void    Fill(Axis_t x, Axis_t y) {TH1::Fill12(x,y); TH2::Fill20(x,y);}
+   virtual void    Fill(Axis_t x, Axis_t y, Stat_t w) {TH1::Fill(x,y,w); TH2::Fill20(x,y,w);}
+   virtual Stat_t  GetCorrelationFactor(Int_t axis1=1,Int_t axis2=2);
+   virtual Stat_t  GetCovariance(Int_t axis1=1,Int_t axis2=2);
+   virtual Stat_t  GetMean(Int_t axis=1);
+   virtual Stat_t  GetRMS(Int_t axis=1);
+           TH2D&   operator=(const TH2D &h1);
+   friend  TH2D    operator*(Float_t c1, TH2D &h1);
+   friend  TH2D    operator*(TH2D &h1, Float_t c1) {return operator*(c1,h1);}
+   friend  TH2D    operator+(TH2D &h1, TH2D &h2);
+   friend  TH2D    operator-(TH2D &h1, TH2D &h2);
+   friend  TH2D    operator*(TH2D &h1, TH2D &h2);
+   friend  TH2D    operator/(TH2D &h1, TH2D &h2);
+
+   ClassDef(TH2D,1)  //2-Dim histograms (one double per channel)
+};
+
+#endif
+

@@ -1,0 +1,124 @@
+//*CMZ :  2.00/00 24/02/98  16.46.26  by  Fons Rademakers
+//*-- Author :    Fons Rademakers   24/02/98
+
+/*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
+/*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
+/*-- Author :    Rene Brun   23/03/97*/
+/*************************************************************************
+ * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ *                                                                       *
+ * Permission to use, copy, modify and distribute this software and its  *
+ * documentation for non-commercial purposes is hereby granted without   *
+ * fee, provided that the above copyright notice appears in all copies   *
+ * and that both the copyright notice and this permission notice appear  *
+ * in the supporting documentation. The authors make no claims about the *
+ * suitability of this software for any purpose.                         *
+ * It is provided "as is" without express or implied warranty.           *
+ *************************************************************************/
+
+//////////////////////////////////////////////////////////////////////////
+//                                                                      //
+// TRootHelpDialog                                                      //
+//                                                                      //
+// A TRootHelpDialog is used to display help text (or any text in a     //
+// dialog window). There is on OK button to popdown the dialog.         //
+//                                                                      //
+//////////////////////////////////////////////////////////////////////////
+
+#include "TRootHelpDialog.h"
+#include "TGButton.h"
+#include "TGTextView.h"
+
+
+ClassImp(TRootHelpDialog)
+
+//______________________________________________________________________________
+TRootHelpDialog::TRootHelpDialog(const TGWindow *main,
+    const char *title, UInt_t w, UInt_t h) :
+    TGTransientFrame(gClient->GetRoot(), main, w, h)
+{
+   // Create a help text dialog.
+
+   fView = new TGTextView(this, w, h, kSunkenFrame | kDoubleBorder);
+   //fView = new TGTextView(this, 10, 10, kSunkenFrame | kDoubleBorder);
+   fL1 = new TGLayoutHints(kLHintsExpandX | kLHintsExpandY, 3, 3, 3, 3);
+   AddFrame(fView, fL1);
+
+   fOK = new TGTextButton(this, "  &OK  ");
+   fL2 = new TGLayoutHints(kLHintsBottom | kLHintsCenterX, 0, 0, 5, 5);
+   AddFrame(fOK, fL2);
+
+   SetWindowName(title);
+   SetIconName(title);
+
+   MapSubwindows();
+
+   Resize(GetDefaultSize());
+
+   // position relative to the parent's window
+   Window_t wdum;
+   int ax, ay;
+   gGXW->TranslateCoordinates(main->GetId(), GetParent()->GetId(),
+                          ((TGFrame *) main)->GetWidth() - (fWidth >> 1),
+                          (((TGFrame *) main)->GetHeight() - fHeight) >> 1,
+                          ax, ay, wdum);
+   Move(ax, ay);
+   SetWMPosition(ax, ay);
+}
+
+//______________________________________________________________________________
+TRootHelpDialog::~TRootHelpDialog()
+{
+   // Delete help text dialog.
+
+   delete fView;
+   delete fOK;
+   delete fL1;
+   delete fL2;
+}
+
+//______________________________________________________________________________
+void TRootHelpDialog::Popup()
+{
+   // Show help dialog.
+
+   MapWindow();
+}
+
+//______________________________________________________________________________
+void TRootHelpDialog::SetText(const char *helpText)
+{
+   // Set help text from helpText buffer in TGTextView.
+
+   fView->LoadBuffer(helpText);
+}
+
+//______________________________________________________________________________
+void TRootHelpDialog::AddText(const char *helpText)
+{
+   // Add help text from helpText buffer to already existing text in TGTextView.
+
+   Warning("AddText", "adding text to help dialog not yet supported");
+   fView->LoadBuffer(helpText);
+}
+
+//______________________________________________________________________________
+void TRootHelpDialog::CloseWindow()
+{
+   // Called when closed via window manager action.
+
+   delete this;
+}
+
+//______________________________________________________________________________
+Bool_t TRootHelpDialog::ProcessMessage(Long_t, Long_t, Long_t)
+{
+   // Process OK button.
+
+   // Only one button and one action...
+   delete this;
+
+   return kTRUE;
+}
+

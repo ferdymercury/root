@@ -1,0 +1,45 @@
+*CMZ :  2.20/00 22/11/98  18.43.27  by  Fons Rademakers
+*CMZ :  2.00/12 22/09/98  11.51.41  by  Fons Rademakers
+*-- Author :    Fons Rademakers   22/09/98
+# Makefile of ROOT for Linux (Debian) with glibc and egcs
+# Changes for Debian 2.0:
+# libncurses does not exist, remove -lncurses
+# problems when using gcc c-compiler, change to egcc
+
+PLATFORM      = linux
+
+
+OPT           = -g -O2
+NOOPT         =
+
+# Compiler:
+CXX           = g++
+CC            = egcc
+CXXFLAGS      = -Wall -fPIC -DR__GLIBC -fno-rtti -fno-exceptions
+CFLAGS        = -Wall -fPIC -DR__GLIBC
+CINTCXXFLAGS  = -Wall -fPIC -fno-rtti -fno-exceptions \
+                -DG__REGEXP -DG__UNIX -DG__SHAREDLIB \
+                -DG__OSFDLL -DG__ROOT -DG__REDIRECTIO
+CINTCFLAGS    = -Wall -fPIC \
+                -DG__REGEXP -DG__UNIX -DG__SHAREDLIB \
+                -DG__OSFDLL -DG__ROOT -DG__REDIRECTIO
+
+# Linker:
+LD            = g++
+LDFLAGS       = $(OPT)
+SOFLAGS       = -shared -Wl,-soname,
+SOEXT         = so
+SYSLIBS       = -lm -ldl -rdynamic
+SYSXLIBS      = -L/usr/X11R6/lib -lX11 -lm -ldl -rdynamic
+XLIBS         = -lXpm -L/usr/X11R6/lib -lX11
+CILIBS        = -lm -ldl -rdynamic
+
+
+##### MACROS and TARGETS #####
+
+include Make-macros
+
+
+##### DEPENDENCIES #####
+
+include Make-depend

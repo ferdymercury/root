@@ -1,0 +1,111 @@
+//*CMZ :  1.03/09 05/12/97  12.53.43  by  Fons Rademakers
+//*-- Author :    Rene Brun   05/03/95
+
+/*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
+/*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
+/*-- Author :    Rene Brun   23/03/97*/
+/*************************************************************************
+ * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ *                                                                       *
+ * Permission to use, copy, modify and distribute this software and its  *
+ * documentation for non-commercial purposes is hereby granted without   *
+ * fee, provided that the above copyright notice appears in all copies   *
+ * and that both the copyright notice and this permission notice appear  *
+ * in the supporting documentation. The authors make no claims about the *
+ * suitability of this software for any purpose.                         *
+ * It is provided "as is" without express or implied warranty.           *
+ *************************************************************************/
+
+#include <stdio.h>
+
+#include "TVirtualPad.h"
+#include "TClass.h"
+#include "TROOT.h"
+#include "TLink.h"
+
+ClassImp(TLink)
+
+//______________________________________________________________________________
+//
+// Special TText object used to show hyperlinks.
+// In the example below created by TObject::Inspect, TLinks are used
+// to show pointers to other objects.
+// Clicking on one link, inspect the corresponding object.
+//Begin_Html
+/*
+<img src="gif/link.gif">
+*/
+//End_Html
+//
+
+//______________________________________________________________________________
+TLink::TLink() : TText()
+{
+//*-*-*-*-*-*-*-*-*-*-*Link default constructor*-*-*-*-*-*-*-*-*-*-*-*-*
+//*-*                  ============================
+
+   fLink  = 0;
+}
+
+//______________________________________________________________________________
+TLink::TLink(Float_t x, Float_t y, void *pointer)
+           : TText(x, y, "")
+{
+//*-*-*-*-*-*-*-*-*-*Constructor to define a link object*-*-*-*-*-*-*-*
+//*-*                ========================================
+// pointer points to any kind of object.
+//
+   fLink  = pointer;
+   static char line[16];
+   sprintf(line,"->%lx ", (Long_t)pointer);
+   SetTitle(line);
+}
+
+//______________________________________________________________________________
+TLink::~TLink()
+{
+//*-*-*-*-*-*-*-*-*-*-*Link default destructor*-*-*-*-*-*-*-*-*-*-*-*-*
+//*-*                  =============================
+
+}
+
+//______________________________________________________________________________
+void TLink::ExecuteEvent(Int_t event, Int_t, Int_t)
+{
+//*-*-*-*-*-*-*-*-*-*-*Execute action corresponding to one event*-*-*-*
+//*-*                  =========================================
+//  This member function is called when a link is clicked with the locator
+//
+//  If mouse is clicked on a link text, the object pointed by the link
+//  is Inspected
+//
+
+  if (event == kMouseMotion)
+     gPad->SetCursor(kHand);
+
+  if (event != kButton1Up) return;
+
+  TObject *idcur = (TObject*)fLink;
+  if (!idcur) return;
+  TClass *cl = gROOT->GetClass(GetName());
+  if (!cl) return;
+
+//*-*- make a special case for top of Collections
+//*-*-    if status word is 0 take first member
+//*-*-    otherwise go back to parent of linked list
+  if (cl->InheritsFrom(TCollection::Class())) {
+     TList *lh = (TList*)idcur;
+     if (!TestBit(kObjIsParent))  idcur = lh->First();
+     else                         idcur = lh->GetParent();
+     if (!idcur) return;
+     idcur->Inspect();
+     return;
+  }
+
+//*-*- check if link points to a TObject
+   TClass *c1 = (TClass*)cl->GetBaseClass("TObject");
+   if (!c1) return;
+
+   idcur->Inspect();
+}

@@ -1,0 +1,26 @@
+*CMZ :  2.00/09 25/06/98  20.05.04  by  Fons Rademakers
+*CMZ :  0.80/00 22/07/96  18.32.50  by  Rene Brun
+*-- Author :    Fons Rademakers   15/02/96
+
+macro cint_unix
+*
+*    To generate the dictionary for all UNIX classes
+*    ===============================================
+*
+* Only change the [headers], [name] and [patch] variables and the
+* "#pragma ..." statements.
+*
+
+seq -i src/*.h
+
+headers=TUnixSystem.h
+
+name=Unix
+patch=UNIX
+
+set G__LinkDef.h -F TEXT
+ctot /$kumacs/UNIX_LinkDef
+
+exec makecint [name] [patch] [headers]
+
+return

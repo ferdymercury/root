@@ -1,0 +1,28 @@
+*CMZ :  1.03/04 10/09/97  18.25.01  by  Piotr Golonka
+*-- Author :    Rene Brun   09/10/96
+macro install_eg
+cd ..
+sel eg
+seq eg
+set c c++ -lan
+cd eg
+
+
+cd ..
+sel eg
+seq eg
+set c c++ -lan
+cd eg
+
+
+cmake -O Primary AttParticle Generator G__EG
+bind_lib EG EG_{AttParticle,Primary,Generator,G__EG}.o
+
+cmake -O Venus G__Venus
+bind_lib EGVenus EG_{AttParticle,Primary,Generator,Venus,G__Venus}.o
+
+cmake -O MCParticle Pythia G__Pythia
+bind_lib EGPythia EG_{AttParticle,Primary,MCParticle,Pythia,Generator,G__Pythia}.o
+
+
+return

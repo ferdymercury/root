@@ -1,0 +1,76 @@
+*CMZ :  2.00/09 19/06/98  11.16.32  by  Rene Brun
+*CMZ :  2.00/06 12/05/98  17.39.23  by  Rene Brun
+*CMZ :  1.00/00 18/02/97  16.48.53  by  Fons Rademakers
+*-- Author :    Rene Brun   19/07/96
+macro importcint
+saveauthor = $AUTHOR()
+AUTH Masaharu Goto
+filecase keep
+set C -lan
+set '#include "$SEQ.h"' -inc c
+set '#include "$SEQ.h"' -inc c++
+
+**=============Import CINT include files
+cd incint
+exec deleteall
+seq .
+*
+*-- the following command must be executed two times
+*
+ci -a -k -is ~/cint/*.h ~/cint/src/*.h
+ci -a -k -is ~/cint/*.h ~/cint/src/*.h
+ci -a -k -is ~/cint/*.h ~/cint/platform/aixdlfcn/dlfcn.h
+ci -a -k     ~/cint/lib/stream/*.h
+ci -a -k     ~/cint/lib/stdstrct/*.h
+pur
+al
+
+**=============Import CINT C and C++ source files
+mess
+cd cint
+exec deleteall
+mess *** Import C files from cint directory
+ci -a -t C -is ~/cint/*.c
+ci -a -t C -is ~/cint/src/*.c
+ci -a -t C,IF=SUN -is ~/cint/src/sunos.c
+ci -a -t C,IF=WINNT -is ~/cint/src/winnt.c
+ci -a -t C,IF=MAC -is ~/cint/src/macos.c
+ci -a -t C,IF=IBM -is ~/cint/platform/aixdlfcn/dlfcn.c
+pur
+mess *** Import C++ files from cint directory
+ci -a -t C++ -is ~/cint/*.cxx
+ci -a -t C++ -is ~/cint/src/*.cxx
+ci -a -t C++,IF=MAC,KCC,VMS -is ~/cint/src/fakestrm.cxx
+ci -a -t C++,IF=BORLAND,IF=-VMS -is ~/cint/src/bcstrm.cxx
+ci -a -t C++,IF=WIN32 -is ~/cint/src/vcstrm.cxx
+ci -a -t C++,IF=-MAC,IF=-WIN32,IF=-KCC,IF=-VMS -is ~/cint/src/libstrm.cxx
+delete tmpstrm
+delete dmystrm
+delete dmystrct
+pur
+mess *** Import main programs
+ci -a -t C -is ~/cint/main/G__setup.c
+ci -a -t C,IF=CINTMAIN -is ~/cint/main/G__main.c
+ci -a -t C++,IF=CINTMAIN -is ~/cint/main/cppmain.cxx
+al
+
+**=============Import CINT Semantec definition file
+ci -a -t TEXT,IF=SYMANTEC -is ~/cint/platform/symantec/src/libcint.def
+ci -a -t TEXT,IF=WIN32,IF=-SYMANTEC -is ~/cint/platform/visual/src/libcint.def
+
+
+**=============Import CINT include files required at run time
+cd cintinclude
+exec deleteall
+seq .
+*
+*-- the following command must be executed two times
+*
+ci -a -k -is ~/cint/include/*.h
+ci -a -k -is ~/cint/include/*.h
+pur
+al
+seq .
+set c c++ -lan
+author [saveauthor]
+return

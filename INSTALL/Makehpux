@@ -1,0 +1,37 @@
+*CMZ :  2.20/03 07/12/98  09.01.29  by  Fons Rademakers
+*CMZ :  2.20/02 04/12/98  10.54.16  by  Rene Brun
+*-- Author :    Rene Brun     04/12/98
+# Makefile of ROOT for HP-UX 10.20 with CC
+
+PLATFORM      = hpux
+
+# if system is not HP-UX10.20 (eg, HP-UX 9.05) add -Dhpux9 to CXXFLAGS
+CXX           = CC
+CC            = cc
+CXXFLAGS      = +a1 -z +Z -I/usr/include/X11R5
+CFLAGS        = -Ae -z +Z -I/usr/include/X11R5
+CINTCXXFLAGS  = +a1 -z +Z -I/opt/CC/include -DG__REGEXP -DG__UNIX -DG__HPUXCPPDLL \
+                -DG__SHAREDLIB -D_POSIX2_SOURCE -DG__ROOT -DG__REDIRECTIO
+CINTCFLAGS    = -Ae -z +Z -I/opt/CC/include -DG__REGEXP -DG__UNIX -DG__HPUXCPPDLL \
+                -DG__SHAREDLIB -D_POSIX2_SOURCE -DG__ROOT -DG__REDIRECTIO
+OPT           = -g1
+NOOPT         =
+LD            = CC
+LDFLAGS       = $(OPT) +a1 -z -Wl,+s -Wl,-E
+SOFLAGS       = -b
+SOEXT         = sl
+SYSLIBS       = -lm -ldld
+SYSXLIBS      = -L/usr/lib/X11R5 -lX11 -lm -ldld
+XLIBS         = $(ROOTSYS)/lib/libXpm.a -L/usr/lib/X11R5 -lX11
+CILIBS        = -lm -Wl,-E -ldld -lcurses
+
+
+##### MACROS and TARGETS #####
+
+include Make-macros
+
+
+##### DEPENDENCIES #####
+
+include Make-depend
+

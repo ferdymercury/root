@@ -1,0 +1,32 @@
+*CMZ :  2.20/00 12/11/98  10.23.06  by  Rene Brun
+*CMZ :  2.00/10 27/06/98  10.54.35  by  Rene Brun
+*CMZ :  2.00/00 08/03/98  16.03.45  by  Rene Brun
+*CMZ :  1.03/01 11/08/97  11.08.15  by  Rene Brun
+*-- Author :    Rene Brun   09/12/95
+macro vhtmldev 1=-
+*
+*   To generate the HTML version of CMZ release notes
+*
+curdir = $CWD()
+cd $version
+version = '2.00'
+deck    = 'V2_00'
+ctot [deck]
+shel mv [deck].txt V[version]_dev.txt
+
+shell echo { > convert.dat
+shell echo gHtml = new THtml\(\)\//';'  >> convert.dat
+shell echo gHtml.Convert\(\"/user/brun/root/V[version]_dev.txt\",\"ROOT Version [version] Development Notes\"\)\//';'  >> convert.dat
+shell echo } >> convert.dat
+
+shell root.exe -b -q convert.dat
+
+shell /bin/rm V[version]_dev.txt
+shell /bin/rm convert.dat
+
+exec install_changelog
+
+shell ftpchangelog
+
+cd [curdir]
+return

@@ -1,0 +1,106 @@
+//*CMZ :  2.00/01 13/03/98  12.08.09  by  Fons Rademakers
+//*CMZ :  2.00/00 22/02/98  16.53.48  by  Fons Rademakers
+//*-- Author :    Fons Rademakers   27/12/97
+
+#ifndef ROOT_TGClient
+#define ROOT_TGClient
+
+/*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
+/*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
+/*-- Author :    Rene Brun   23/03/97*/
+/*************************************************************************
+ * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ *                                                                       *
+ * Permission to use, copy, modify and distribute this software and its  *
+ * documentation for non-commercial purposes is hereby granted without   *
+ * fee, provided that the above copyright notice appears in all copies   *
+ * and that both the copyright notice and this permission notice appear  *
+ * in the supporting documentation. The authors make no claims about the *
+ * suitability of this software for any purpose.                         *
+ * It is provided "as is" without express or implied warranty.           *
+ *************************************************************************/
+
+//////////////////////////////////////////////////////////////////////////
+//                                                                      //
+// TGClient                                                             //
+//                                                                      //
+// Window client. In client server windowing systems, like X11 this     //
+// class is used to make the initial connection to the window server.   //
+// It is the only GUI class that does not inherit from TGObject.        //
+//                                                                      //
+//////////////////////////////////////////////////////////////////////////
+
+#ifndef ROOT_TObject
+#include "TObject.h"
+#endif
+#ifndef ROOT_GuiTypes
+#include "GuiTypes.h"
+#endif
+#ifndef ROOT_TString
+#include "TString.h"
+#endif
+
+class THashList;
+class TGWindow;
+class TGPicturePool;
+class TGPicture;
+class TGMimeTypes;
+
+
+class TGClient : public TObject {
+
+protected:
+   ULong_t        fBackColor;        // default background color
+   ULong_t        fForeColor;        // default foreground color
+   ULong_t        fHilite;           // default hilite color
+   ULong_t        fShadow;           // default shadow color
+   ULong_t        fSelBackColor;     // default selection background color
+   ULong_t        fSelForeColor;     // default selection foreground color
+   ULong_t        fWhite;            // white color index
+   ULong_t        fBlack;            // black color index
+   TGWindow      *fRoot;             // root (base) window
+   Int_t          fXfd;              // file descriptor of connection to server
+   TGPicturePool *fPicturePool;      // pixmap cache
+   TGMimeTypes   *fMimeTypeList;     // mimetype list
+   Bool_t         fGlobalNeedRedraw; // true if at least one window needs to be redrawn
+   THashList     *fWlist;            // list of frames
+   EGEventType    fWaitForEvent;     // event to wait for
+   Window_t       fWaitForWindow;    // window in which to wait for event
+
+   Bool_t  ProcessOneEvent();
+   Bool_t  HandleEvent(Event_t *event);
+   Bool_t  HandleMaskEvent(Event_t *event, Window_t wid);
+   Bool_t  DoRedraw();
+
+public:
+   TGClient(const char *dpyName = 0);
+   virtual ~TGClient();
+
+   const TGWindow *GetRoot() const { return fRoot; }
+   TGWindow *GetWindowById(Window_t sw) const;
+
+   Bool_t  GetColorByName(const char *name, ULong_t &pixel) const;
+   FontStruct_t GetFontByName(const char *name) const;
+   ULong_t GetHilite(ULong_t base_color) const;
+   ULong_t GetShadow(ULong_t base_color) const;
+   void    NeedRedraw(TGWindow *w);
+   void    RegisterWindow(TGWindow *w);
+   void    UnregisterWindow(TGWindow *w);
+   Bool_t  HandleInput();
+   void    ProcessLine(TString cmd, Long_t msg, Long_t parm1, Long_t parm2);
+   void    WaitFor(TGWindow *w);
+   void    WaitForUnmap(TGWindow *w);
+
+   const TGPicturePool *GetPicturePool() const { return fPicturePool; }
+   const TGPicture *GetPicture(const char *name);
+   const TGPicture *GetPicture(const char *name, UInt_t new_width, UInt_t new_height);
+   void  FreePicture(const TGPicture *pic);
+   TGMimeTypes *GetMimeTypeList() const { return fMimeTypeList; }
+
+   ClassDef(TGClient,0)  // Class making connection to display server
+};
+
+R__EXTERN TGClient *gClient;
+
+#endif

@@ -1,0 +1,24 @@
+*CMZ :  1.00/07 07/03/97  16.10.01  by  Valery Fine(fine@vxcern.cern.ch)
+*-- Author :    Rene Brun   04/12/95
+macro setup 1=- 2=opt 3=log
+
+message setup called for machine=[1] and optimisation=[2]
+filecase keep
+set C C++ -lan
+
+exec checkenv
+exec selectsystem [1]
+exec globals [1] [2] [3]
+
+import *
+
+exec aliascreate [1]
+exec sourcedir [1]
+exec loadincludes [1]
+exec compiler [1]  [2] [LOGFILE]
+
+MESS ' '
+MESS 'Welcome to the ROOT development System'
+MESS ' '
+
+return

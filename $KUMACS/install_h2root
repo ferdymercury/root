@@ -1,0 +1,109 @@
+*CMZ :  2.00/10 29/07/98  11.20.15  by  Rene Brun
+*CMZ :  2.00/08 28/05/98  08.49.30  by  Rene Brun
+*CMZ :  2.00/04 06/04/98  09.31.28  by  Rene Brun
+*CMZ :  2.00/00 22/02/98  18.09.11  by  Valery Fine(fine@mail.cern.ch)
+*CMZ :  1.01/04 02/06/97  18.22.11  by  Rene Brun
+*-- Author :    Rene Brun   20/09/96
+MACRO install_h2root 1=- 2=opt
+
+import *
+
+machine = [1]
+if [machine] = '-' then
+   machine = $MACHINE
+endif
+
+if [machine] = 'IBMPC' then
+   machine = 'WinNT'
+if [LOGFILE] = 'log' then
+   set install_h2root.bat -xarcl
+endif
+endif
+
+if [machine] = 'WinNT' then
+EXEC setup [1] g [LOGFILE]
+else
+EXEC setup [1] [2] [LOGFILE]
+endif
+
+SEL UTILS
+cd ..
+
+sysroot = $ROOTSYS
+libcern = $CERNLIB
+
+set c c++ f77 -lan
++IF,WIN32.
++IF,SOURCE
+   CX utils/setpawc utils/tzvers utils/cfget utils/cfgeto utils/cfopei utils/cfput utils/cfputo
++ELSE
+   CC utils/setpawc utils/tzvers utils/cfget utils/cfgeto utils/cfopei utils/cfput utils/cfputo
++ENDIF.
++ENDIF.
+
++IF,SOURCE
+   CX utils/h2root
+   CX utils/hntvar2
+   sel -utils
+   return
++ELSE
+   CC utils/h2root
+   CC utils/hntvar2
++ENDIF
+
+
+main=[sysroot]/src/UTILS_h2root.o
+
+if [machine] = 'IBMRT' then
+   SH [LD] [LDOPT] [sysroot]/bin/h2root [main] _
+            [sysroot]/src/UTILS_hntvar2.o [libcern]/libpacklib.a [libcern]/libkernlib.a _
+            [LIBS] /usr/lib/libxlf.a /usr/lib/libxlf90.a
+elseif [machine] = 'SOLARIS' .OR. [machine] = 'SOLARISPC' then
+   SH [LD] [LDOPT] [sysroot]/bin/h2root [main] _
+          [sysroot]/src/UTILS_hntvar2.o _
+          [libcern]/libpacklib.a [libcern]/libkernlib.a _
+          [LIBS] -L/opt/SUNWspro/lib -lM77 -lF77 -lsunmath -lsocket -lnsl
+elseif [machine] = 'SGI' then
+   SH [LD] [LDOPT] [sysroot]/bin/h2root [main] [sysroot]/src/UTILS_hntvar2.o _
+          [libcern]/libpacklib.a [libcern]/libkernlib.a [LIBS] _
++IF,SGI64
+           -lftn
++ELSE
+          -lI77 -lF77 -lftn -lisam
++ENDIF
+elseif [machine] = 'ALPHA' then
+   SH [LD] [LDOPT] [sysroot]/bin/h2root [main] [sysroot]/src/UTILS_hntvar2.o _
+          [libcern]/libpacklib.a [libcern]/libkernlib.a [LIBS] _
+          /usr/shlib/libFutil.so /usr/shlib/libfor.so /usr/shlib/libots.so
+elseif [machine] = 'LINUX' then
+   SH [LD] [LDOPT] [sysroot]/bin/h2root [main] [sysroot]/src/UTILS_hntvar2.o _
+          [libcern]/libpacklib.a [libcern]/libkernlib.a [LIBS] /usr/lib/libf2c.a
+elseif [machine] = 'HIUX' then
+   SH [LD] [LDOPT] [sysroot]/bin/h2root [main] [sysroot]/src/UTILS_hntvar2.o _
+          [libcern]/libpacklib.a [libcern]/libkernlib.a [LIBS] -L/usr/lib -lf77 -lhfmath
+elseif [machine] = 'WinNT' then
+  SysLibs     =
+  CernLibs    = [libcern]\packlib.lib
+  UserObjDir  = [sysroot]\src
+  MainObject  = [UserObjDir]\UTILS_h2root.obj [UserObjDir]\UTILS_setpawc.obj
+  ForObject   = [UserObjDir]\UTILS_hntvar2.obj [UserObjDir]\UTILS_tzvers.obj [UserObjDir]\UTILS_cf*.obj
+  UserLibDir  = [sysroot]\lib
+  UserLibs    = [UserLibDir]\*.lib
+  UserObjs    =
+  ExeFile     = /out:[sysroot]\bin\H2Root.exe
+* on NT, h2root must be installed in debug mode (bugs in DEC Fortran)
+*  if [DEBUG] = 'yes' then
+  LinkOptions = '/PDB:%ROOTSYS%\bin\H2Root_exe.pdb'
+*  else
+*  LinkOptions = '/PDB:NONE'
+*  endif
+  Sh [LD] [LDOPT] [LinkOptions] [ExeFile] [MainObject] [ForObject] [UserObjs] [UserLibs] [CernLibs] [SysLibs]
+else
+   SH [LD] [LDOPT] [sysroot]/bin/h2root [main] [sysroot]/src/UTILS_hntvar2.o _
+        [libcern]/libpacklib.a [libcern]/libkernlib.a [LIBS]
+endif
+
+sel -utils
+set c c++ -lan
+
+RETURN

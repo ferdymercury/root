@@ -1,0 +1,69 @@
+//*CMZ :  1.00/05 20/03/97  15.34.59  by  Rene Brun
+//*-- Author :    Valery Fine(fine@vxcern.cern.ch)   16/08/96
+#ifndef ROOT_TWin32MenuItem
+#define ROOT_TWin32MenuItem
+
+/*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
+/*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
+/*-- Author :    Rene Brun   23/03/97*/
+/*************************************************************************
+ * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ *                                                                       *
+ * Permission to use, copy, modify and distribute this software and its  *
+ * documentation for non-commercial purposes is hereby granted without   *
+ * fee, provided that the above copyright notice appears in all copies   *
+ * and that both the copyright notice and this permission notice appear  *
+ * in the supporting documentation. The authors make no claims about the *
+ * suitability of this software for any purpose.                         *
+ * It is provided "as is" without express or implied warranty.           *
+ *************************************************************************/
+
+//////////////////////////////////////////////////////////////////////////
+//                                                                      //
+// TWin32MenuItem                                                       //
+//                                                                      //
+// This class defines the menu items.                                   //
+//                                                                      //
+//////////////////////////////////////////////////////////////////////////
+
+#ifndef ROOT_Rtypes
+#include "RTYPES.h"
+#endif
+
+#include "TVIRTUALMENUITEM.h"
+
+class TWin32SendClass;
+
+class TWin32MenuItem : public TVirtualMenuItem {
+
+protected:
+
+   virtual void Free(TWin32Menu *menu);          // It is like Remove(TWin32Menu) but without feed back, so it is faster
+   virtual void ExecuteEventCB(TWin32Canvas *c){;} //User click this item
+   virtual void ExecThreadCB(TWin32SendClass *command);
+
+
+public:
+
+   TWin32MenuItem();
+   TWin32MenuItem(EMenuItemType custom);
+   TWin32MenuItem(char *name,const char *title,UINT type=MF_STRING,UINT state=MF_ENABLED,Int_t id=-1);
+   TWin32MenuItem(char *name,const char *title,Win32CanvasCB callback,UINT type=MF_STRING,UINT state=MF_ENABLED,Int_t id=-1);
+   TWin32MenuItem(char *name,const char *title,Win32BrowserImpCB callback,UINT type=MF_STRING,UINT state=MF_ENABLED,Int_t id=-1);
+
+
+   virtual const char *ClassName();
+
+   virtual void ExecuteEvent(TWin32Canvas *c);            //User click this item
+
+
+   ClassDef(TWin32MenuItem,0);
+};
+
+#endif
+
+
+
+
+

@@ -1,0 +1,36 @@
+*CMZ :  2.00/00 20/02/98  01.00.52  by  Fons Rademakers
+*-- Author :    Fons Rademakers   11/08/97
+MACRO install_rootx 1=- 2=opt
+
+import *
+
+machine = [1]
+if [machine] = '-' then
+   machine = $MACHINE
+endif
+
+if [machine] = 'IBMPC' then
+   machine = 'WinNT'
+   set install_rootx.bat -xarcl
+endif
+
+* rootx not supported on Windows
+if [machine] = 'WinNT' then
+   goto end
+endif
+
+EXEC setup [1] [2] [LOGFILE]
+
+SEL ROOTX
+cd ..
+
+CC rootx/*
+
+main=$ROOTSYS/src/ROOTX_*.o
+
+SH [LD] [LDOPT] $ROOTSYS/bin/root [main] [LIBSX]
+
+sel -ROOTX
+
+end:
+RETURN

@@ -1,0 +1,11 @@
+*CMZ :  0.05/02 17/01/96  15.48.29  by  Rene Brun
+*-- Author :    Rene Brun   17/01/96
+macro make_code
+curdir = $CWD()
+find $[1]
+car [1].h -b
+shell makecode  [1].h [1].car
+cimport -a -e [1].car
+shell /bin/rm/ [1].h [1].car
+cd [curdir]
+return

@@ -1,0 +1,43 @@
+*CMZ :  2.20/06 17/12/98  14.00.40  by  Rene Brun
+*CMZ :  2.20/00 17/12/98  10.43.27  by  Rene Brun
+*-- Author :    Rene Brun   17/12/98
+# Makefile to build ROOT for DEC unix with egcs1.1
+
+PLATFORM      = alpha
+
+# OPT         = -g
+OPT           = -O2
+NOOPT         =
+
+# Compiler:
+CXX           = g++
+CC            = gcc
+CXXFLAGS      = -fPIC -fno-rtti -fno-exceptions -mcpu=ev5 -D__osf__ -D__alpha
+CFLAGS        =
+CINTCXXFLAGS  = -fPIC -fno-rtti -fno-exceptions -mcpu=ev5 \
+                -DG__REGEXP -DG__UNIX -DG__SHAREDLIB \
+                -DG__OSFDLL -DG__ROOT -DG__REDIRECTIO
+CINTCFLAGS    = -fPIC -mcpu=ev5 -DG__REGEXP -DG__UNIX -DG__SHAREDLIB \
+                -DG__OSFDLL -DG__ROOT -DG__REDIRECTIO
+
+# Linker:
+LD            = g++
+LDFLAGS       = $(OPT)
+SOFLAGS       = -shared -Wl,-expect_unresolved,*,-soname,
+SOEXT         = so
+
+# System libraries:
+SYSLIBS       = -lm -ltermcap
+SYSXLIBS      = -lX11 -lm -ltermcap
+XLIBS         = -L$(LPATH) -lXpm -lX11
+CILIBS        = -lm -ltermcap
+
+
+##### MACROS and TARGETS #####
+
+include Make-macros
+
+
+##### DEPENDENCIES #####
+
+include Make-depend

@@ -1,0 +1,26 @@
+*CMZ :  2.00/09 25/06/98  15.23.31  by  Fons Rademakers
+*CMZ :  0.90/01 07/10/96  18.19.28  by  Rene Brun
+*-- Author :    Fons Rademakers   15/02/96
+
+macro cint_html
+*
+*    To generate the dictionary for HTML classes
+*    ===========================================
+*
+* Only change the [headers], [name] and [patch] variables and the
+* "#pragma ..." statements.
+*
+
+seq -i src/*.h
+
+headers=THtml.h
+
+name=Html
+patch=HTML
+
+set G__LinkDef.h -F TEXT
+ctot /$kumacs/HTML_LinkDef
+
+exec makecint [name] [patch] [headers]
+
+return

@@ -1,0 +1,134 @@
+*CMZ :  2.20/00 26/11/98  18.13.20  by  Rene Brun
+*CMZ :  2.00/09 05/06/98  17.42.10  by  Valery Fine(fine@mail.cern.ch)
+*CMZ :  2.00/08 03/06/98  18.18.49  by  Rene Brun
+*CMZ :  2.00/02 17/03/98  10.39.47  by  Rene Brun
+*CMZ :  2.00/00 02/02/98  15.00.01  by  Valery Fine(fine@mail.cern.ch)
+*CMZ :  1.03/02 28/08/97  19.07.26  by  Valery Fine(fine@mail.cern.ch)
+*-- Author :    Rene Brun   17/02/97
+macro globals_WinNT 1=- 2=opt 3=log
+
+import *
+
+machine = [1]
+if [machine] = '-' then
+   machine = $MACHINE
+endif
+
+if [machine] = 'IBMPC' then
+   machine = 'WinNT'
+endif
+
+if [2] = 'g' then
+   cxxdbg = -g
+   ccdbg  = -g
+   f77dbg = -g
+else
+   cxxdbg = '-O'
+   ccdbg  = '-O'
+   f77dbg = -O
+endif
+
+*---------------------------------------------------------------------------
+*   Special flag to mark whether we need any log files
+   GL/CREATE LOGFILE [3]
++IF,SYMANTEC.
+   if [2] = 'g' then
+      f77opt = -G5
+   endif
+   GL/CR CXX sc
+   GL/CR CC  sc
+   GL/CR F77 'echo fl32'
+   GL/CR CXXOPT [cxxdbg]//' -p -mn -w2 -C -D_WINDOWS -S -5 -a1 -H -DWIN32 -D_SC_ -D__SC__ _
+   -D_CONSOLE=1 -DG__ANSI -D_DEBUG=1 -D_WIN32 -D_MT -DWINVER=0x0400 -I%ROOTSYS\src% _
+   -HD%ROOTSYS% -o%ROOTSYS%\src\$compfile.obj -c'
+   GL/CR CCOPT  [ccdbg]//' -p -mn -C -D_WINDOWS -S -5 -a1 -H -DWIN32 -D_SC_ -D__SC__ _
+   -D_CONSOLE=1 -D_DEBUG=1 -D_WIN32 -D_MT -DWINVER=0x0400 -I%ROOTSYS\src% _
+   -DG__ANSI -HD%ROOTSYS% -o%ROOTSYS%\src\$compfile.obj -c'
+   GL/CR F77OPT [f77opt]//' -c'
+
+   GL/CR CICXXOPT [cxxdbg]//' -WD -p -mn -w2 -C -D_WINDOWS -S -5 -a1 -H -D_SC_ _
+      -D__SC__ -DWIN32 -DG__UNIX  -DG__ROOT  -DG__WIN32 -DG__SHAREDLIB _
+      -DG__SYMANTEC -D_CONSOLE=1 -D_DEBUG=1 -D_WIN32 -D_MT -DWINVER=0x0400 _
+      -HD%ROOTSYS% -o%ROOTSYS%\src\$compfile.obj -c'
+   GL/CR CICCOPT  [ccdbg]//' -WD -p -mn -C -D_WINDOWS -S -5 -a1 -H -D_SC_ _
+      -D__SC__ -DWIN32 -D_DEBUG=1 -D_WIN32 -D_MT -DWINVER=0x0400 _
+      -DG__UNIX -DG__ROOT  -DG__WIN32  -DG__SHAREDLIB -DG__SYMANTEC _
+      -D_CONSOLE=1 -HD%ROOTSYS% -o%ROOTSYS%\src\$compfile.obj -c'
+   ALIAS/C bind_lib 'exec bind_lib_SYMANTEC' C
++ELSE
+   ObjSuf        = obj
+   SrcSuf        = cxx
+   CSrcSuf       = c
+   ForSrcSuf     = for
+   ExeSuf        = .exe
+   LibSuf        = lib
+   DllSuf        = dll
+   LdOutPutOpt   = /out:
+   CcOutPutOpt   = ' /Fo'
+   FcOutPutOpt   = [CcOutPutOpt]
+   commopt = ' -G5 -MD /V'//[RootVersion]//' '
+   RootPDB = ' -Fd%ROOTSYS%\src\Root'
+   if [2] = 'g' then
+      f77opt = '-4Nportlib -Zi'
+      cxxdbg = '-Zi'
+      ccdbg  = '-Zi'
+      ldopt  = '/INCREMENTAL:YES /DEBUG /nologo /NODEFAULTLIB:libc.lib'
+      debug  = 'yes'
+   else
+      cxxdbg = '-O2  -Zi'
+      ccdbg  = '-O2  -Zi'
+      f77opt = '-4Nportlib -Oxp -Zi'
+      ldopt  = '/INCREMENTAL:NO  /DEBUG /nologo /NODEFAULTLIB:libc.lib /NODEFAULTLIB:dfor.lib'
+      debug   = 'no'
+   endif
+
+   GL/CR SRCSUF      [SrcSuf]
+   GL/CR CSRCSUF     [CSrcSuf]
+   GL/CR FORSRCSUF   [ForSrcSuf]
+   GL/CR OBJSUF      [ObjSuf]
+   GL/CR LIBSUF      [LibSuf]
+   GL/CR EXESUF      [ExeSuf]
+   GL/CR DLLSUF      [DllSuf]
+   GL/CR LDOUTPUTOPT [LdOutPutOpt]
+   GL/CR CCOUTPUTOPT [CcOutPutOpt]
+   GL/CR FCOUTPUTOPT [FcOutPutOpt]
+
+   GL/CR DEBUG [debug]
+   GL/CR CXX cl
+   GL/CR CC  cl
+   GL/CR F77 fl32
+   GL/CR LD  link
+   GL/CR CXXOPT [cxxdbg]//[commopt]//[RootPDB]//' -DWIN32 -D_WINDOWS -DWINVER=0x0400 -nologo _
+       -Dtry=__try -Dexcept=__except -Dleave=__leave -Dfinally=__finally -DCRTAPI1=_cdecl -DCRTAPI2=_cdecl _
+       -D_X86_=1 -D_DLL  -DVISUAL_CPLUSPLUS _
+       -I%ROOTSYS%\src '//[CcOutPutOpt]//'%ROOTSYS%\src\$compfile.'//[ObjSuf]//' -c'
+
+   GL/CR CCOPT  [ccdbg]//[commopt]//[RootPDB]//' -DWIN32 -D_WINDOWS -DWINVER=0x0400 -nologo _
+       -D_X86_=1 -D_DLL -DVISUAL_CPLUSPLUS _
+       -I%ROOTSYS%\src '//[CcOutPutOpt]//'%ROOTSYS%\src\$compfile.'//[ObjSuf]//' -c'
+
+   GL/CR F77OPT [f77opt]//[commopt]//[RootPDB]//[FcOutPutOpt]//'%ROOTSYS%\src\$compfile.'//[ObjSuf]//' -c'
+
+   GL/CR LDOPT    [ldopt]
+   GL/CR CILDOPT  [ldopt]
+
+   GL/CR CICXXOPT [cxxdbg]//[commopt]//[RootPDB]//' /DLL -D_WINDOWS -D_WIN32 -DWIN32 -DWINVER=0x0400 _
+       -nologo -DG__SHAREDLIB -DG__UNIX -DG__ROOT -DG__WIN32 _
+       -Dtry=__try -Dexcept=__except -Dleave=__leave -Dfinally=__finally _
+       -DCRTAPI1=_cdecl -DCRTAPI2=_cdecl -D_X86_=1 _
+       -D_DLL '//[CcOutPutOpt]//'%ROOTSYS%\src\$compfile.'//[ObjSuf]//' -c'
+
+   GL/CR CICCOPT  [ccdbg]//[commopt]//[RootPDB]//'  /DLL -D_WINDOWS -D_WIN32 -DWIN32 -DWINVER=0x0400 _
+       -nologo -DG__SHAREDLIB -DG__UNIX -DG__ROOT -DG__WIN32 _
+       -Dtry=__try -Dexcept=__except -Dleave=__leave -Dfinally=__finally _
+       -DCRTAPI1=_cdecl -DCRTAPI2=_cdecl -D_X86_=1 _
+       -D_DLL '//[CcOutPutOpt]//'%ROOTSYS%\src\$compfile.'//[ObjSuf]//' -c'
+
+   GL/CR CILIBS  $ROOTSYS\lib\Root_Cint.[LibSuf]
+
+   GL/CR SLOPT  [ldopt]//' /DLL'
+**    GL/CR LIBS
+   ALIAS/C bind_lib 'exec bind_lib_WinNT' C
++ENDIF
+
+return

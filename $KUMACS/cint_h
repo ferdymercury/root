@@ -1,0 +1,26 @@
+*CMZ :  2.00/09 25/06/98  15.01.43  by  Fons Rademakers
+*CMZ :  1.00/06 21/03/97  19.35.43  by  Fons Rademakers
+*-- Author :    Fons Rademakers   15/02/96
+
+macro cint_h
+*
+*    To generate the dictionary for all histogram classes
+*    ====================================================
+*
+* Only change the [headers], [name] and [patch] variables and the
+* "#pragma ..." statements.
+*
+
+seq -i src/*.h
+
+headers=TH1.h TH2.h TH3.h TProfile.h
+
+name=Hist
+patch=H
+
+set G__LinkDef.h -F TEXT
+ctot /$kumacs/H_LinkDef
+
+exec makecint [name] [patch] [headers]
+
+return

@@ -1,0 +1,40 @@
+*CMZ :  2.20/00 22/11/98  18.43.27  by  Fons Rademakers
+*CMZ :  2.00/09 26/06/98  19.23.46  by  Rene Brun
+*-- Author :    Damir Buskulic   6/11/98
+# Makefile of ROOT for MkLinux with glibc
+
+PLATFORM      = linux
+
+CXX           = g++
+CC            = gcc
+CXXFLAGS      = -Wall -fsigned-char -fPIC -DR__GLIBC \
+                -I/usr/X11/include/  -I/usr/include/g++/
+CFLAGS        = -Wall -fPIC -fsigned-char -DR__GLIBC \
+                -I/usr/X11/include/  -I/usr/include/g++/
+CINTCXXFLAGS  = -Wall -fPIC -fsigned-char -DG__REGEXP -DG__UNIX -DG__SHAREDLIB \
+                -DG__OSFDLL -DG__ROOT -DG__REDIRECTIO \
+                -I/usr/include/g++/
+CINTCFLAGS    = -Wall -fPIC -fsigned-char -DG__REGEXP -DG__UNIX -DG__SHAREDLIB \
+                -DG__OSFDLL -DG__ROOT -DG__REDIRECTIO
+OPT           = -O2
+NOOPT         =
+LD            = g++
+LDFLAGS       = $(OPT)
+SOFLAGS       = -shared -Wl,-soname,
+SOEXT         = so
+SYSLIBS       = -lg++ -lm -ldl
+SYSXLIBS      = -L/usr/X11R6/lib -lX11 -lSM -lICE -lg++ -lm -ldl
+XLIBS         = -L/usr/X11R6/lib -lX11 -lSM -lICE -lXpm -lg++
+CILIBS        = -lm -ltermcap -lbsd -ldl -lg++
+
+
+
+##### MACROS and TARGETS #####
+
+include Make-macros
+
+
+##### DEPENDENCIES #####
+
+include Make-depend
+

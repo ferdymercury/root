@@ -1,0 +1,10 @@
+*CMZ :  0.80/01 16/08/96  18.43.00  by  Rene Brun
+*-- Author :
+macro remove
+OS = $OS
+if [OS] = 'WINNT' then
+  shell for %F in ([1]) do del %F > NUL
+else
+  shell /bin/rm -rf [1]
+endif
+return

@@ -1,0 +1,251 @@
+//*CMZ :  2.20/05 15/12/98  09.17.21  by  Rene Brun
+//*CMZ :  2.20/00 02/11/98  15.29.52  by  Fons Rademakers
+//*CMZ :  1.03/09 06/12/97  17.52.34  by  Fons Rademakers
+//*-- Author :    Rene Brun   12/12/94
+
+/*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
+/*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
+/*-- Author :    Rene Brun   23/03/97*/
+/*************************************************************************
+ * Copyright(c) 1995-1998, The ROOT System, All rights reserved.         *
+ * Authors: Rene Brun, Nenad Buncic, Valery Fine, Fons Rademakers.       *
+ *                                                                       *
+ * Permission to use, copy, modify and distribute this software and its  *
+ * documentation for non-commercial purposes is hereby granted without   *
+ * fee, provided that the above copyright notice appears in all copies   *
+ * and that both the copyright notice and this permission notice appear  *
+ * in the supporting documentation. The authors make no claims about the *
+ * suitability of this software for any purpose.                         *
+ * It is provided "as is" without express or implied warranty.           *
+ *************************************************************************/
+
+#include <fstream.h>
+
+#include "TROOT.h"
+#include "Strlen.h"
+#include "TVirtualPad.h"
+#include "TPostscript.h"
+#include "TGXW.h"
+#include "TPoint.h"
+ClassImp(TWbox)
+
+const Int_t kFraming = BIT(6);  // check also definition in TButton
+
+//______________________________________________________________________________
+//
+// a TWbox is a TBox with a bordersize and a bordermode.
+//
+//Begin_Html
+/*
+<img src="gif/wbox.gif">
+*/
+//End_Html
+
+//______________________________________________________________________________
+TWbox::TWbox(): TBox()
+{
+//*-*-*-*-*-*-*-*-*-*-*wbox default constructor*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+//*-*                  ========================
+
+}
+
+//______________________________________________________________________________
+TWbox::TWbox(Coord_t x1, Coord_t y1,Coord_t x2, Coord_t  y2,
+             Color_t color ,Short_t bordersize ,Short_t bordermode)
+       :TBox(x1,y1,x2,y2)
+{
+//*-*-*-*-*-*-*-*-*-*-*wbox normal constructor*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+//*-*                  =======================
+// a WBOX is a box with a bordersize and a bordermode
+// the bordersize is in pixels
+// bordermode = -1 box looks as it is behind the screen
+// bordermode = 0  no special effects
+// bordermode = 1  box looks as it is in front of the screen
+//
+   fBorderSize  = bordersize;
+   fBorderMode  = bordermode;
+   SetFillColor(color);
+   SetFillStyle(1001);
+}
+
+//______________________________________________________________________________
+TWbox::~TWbox()
+{
+//*-*-*-*-*-*-*-*-*-*-*wbox default destructor*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+//*-*                  =======================
+
+}
+
+//______________________________________________________________________________
+TWbox::TWbox(const TWbox &wbox)
+{
+   ((TWbox&)wbox).Copy(*this);
+}
+
+//______________________________________________________________________________
+void TWbox::Copy(TObject &obj)
+{
+//*-*-*-*-*-*-*-*-*-*-*Copy this wbox to wbox*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+//*-*                  ======================
+
+   TBox::Copy(obj);
+   ((TWbox&)obj).fBorderSize  = fBorderSize;
+   ((TWbox&)obj).fBorderMode  = fBorderMode;
+}
+
+//______________________________________________________________________________
+void TWbox::Draw(Option_t *option)
+{
+//*-*-*-*-*-*-*-*-*-*-*Draw this wbox with its current attributes*-*-*-*-*-*-*
+//*-*                  ==========================================
+
+   AppendPad(option);
+
+}
+
+//______________________________________________________________________________
+void TWbox::DrawWbox(Coord_t x1, Coord_t y1,Coord_t x2, Coord_t  y2,
+                     Color_t color ,Short_t bordersize ,Short_t bordermode)
+{
+//*-*-*-*-*-*-*-*-*-*-*Draw this wbox with new coordinates*-*-*-*-*-*-*-*-*-*
+//*-*                  ===================================
+   TWbox *newwbox = new TWbox(x1,y1,x2,y2,color,bordersize,bordermode);
+   newwbox->SetBit(kCanDelete);
+   newwbox->AppendPad();
+}
+
+//______________________________________________________________________________
+void TWbox::ExecuteEvent(Int_t event, Int_t px, Int_t py)
+{
+//*-*-*-*-*-*-*-*-*-*-*Execute action corresponding to one event*-*-*-*
+//*-*                  =========================================
+//  This member function is called when a WBOX object is clicked.
+//
+
+   TBox::ExecuteEvent(event, px, py);
+}
+
+//______________________________________________________________________________
+void TWbox::Paint(Option_t *)
+{
+//*-*-*-*-*-*-*-*-*-*-*Paint this wbox with its current attributes*-*-*-*-*-*-*
+//*-*                  ===========================================
+
+   PaintWbox(fX1, fY1, fX2, fY2, GetFillColor(), fBorderSize, fBorderMode);
+}
+
+//______________________________________________________________________________
+void TWbox::PaintWbox(Coord_t x1, Coord_t y1, Coord_t x2, Coord_t  y2,
+                      Color_t color, Short_t bordersize, Short_t bordermode)
+{
+//*-*-*-*-*-*-*-*-*-*-*Draw this wbox with new coordinates*-*-*-*-*-*-*-*-*-*
+//*-*                  ===================================
+
+//*-*- Draw first wbox as a normal filled box
+   TBox::PaintBox(x1, y1, x2, y2);
+
+//*-*- then paint 3d frame (depending on bordermode)
+   if (!IsTransparent())
+      PaintFrame(x1, y1, x2, y2, color, bordersize, bordermode, kTRUE);
+}
+
+//______________________________________________________________________________
+void TWbox::PaintFrame(Coord_t x1, Coord_t y1,Coord_t x2, Coord_t  y2,
+                       Color_t color, Short_t bordersize, Short_t bordermode,
+                       Bool_t tops)
+{
+   // Paint a 3D frame around a box.
+
+   if (bordermode == 0) return;
+   if (bordersize <= 0) bordersize = 2;
+
+   Short_t pxl,pyl,pxt,pyt,px1,py1,px2,py2;
+   Float_t xl, xt, yl, yt;
+
+//*-*- Compute real left bottom & top right of the box in pixels
+   px1 = gPad->XtoPixel(x1);   py1 = gPad->YtoPixel(y1);
+   px2 = gPad->XtoPixel(x2);   py2 = gPad->YtoPixel(y2);
+   if (px1 < px2) {pxl = px1; pxt = px2; xl = x1; xt = x2; }
+   else           {pxl = px2; pxt = px1; xl = x2; xt = x1;}
+   if (py1 > py2) {pyl = py1; pyt = py2; yl = y1; yt = y2;}
+   else           {pyl = py2; pyt = py1; yl = y2; yt = y1;}
+
+   if (!gPad->IsBatch()) {
+      TPoint frame[7];
+
+      // GetDarkColor() and GetLightColor() use GetFillColor()
+      Color_t oldcolor = GetFillColor();
+      SetFillColor(color);
+      TAttFill::Modify();
+
+//*-*- Draw top&left part of the box
+      frame[0].fX = pxl;                 frame[0].fY = pyl;
+      frame[1].fX = pxl + bordersize;    frame[1].fY = pyl - bordersize;
+      frame[2].fX = frame[1].fX;         frame[2].fY = pyt + bordersize;
+      frame[3].fX = pxt - bordersize;    frame[3].fY = frame[2].fY;
+      frame[4].fX = pxt;                 frame[4].fY = pyt;
+      frame[5].fX = pxl;                 frame[5].fY = pyt;
+      frame[6].fX = pxl;                 frame[6].fY = pyl;
+
+      if (bordermode == -1) gGXW->SetFillColor(GetDarkColor());
+      else                  gGXW->SetFillColor(GetLightColor());
+      gGXW->DrawFillArea(7, frame);
+
+//*-*- Draw bottom&right part of the box
+      frame[0].fX = pxl;                 frame[0].fY = pyl;
+      frame[1].fX = pxl + bordersize;    frame[1].fY = pyl - bordersize;
+      frame[2].fX = pxt - bordersize;    frame[2].fY = frame[1].fY;
+      frame[3].fX = frame[2].fX;         frame[3].fY = pyt + bordersize;
+      frame[4].fX = pxt;                 frame[4].fY = pyt;
+      frame[5].fX = pxt;                 frame[5].fY = pyl;
+      frame[6].fX = pxl;                 frame[6].fY = pyl;
+
+      if (bordermode == -1) gGXW->SetFillColor(GetLightColor());
+      else                  gGXW->SetFillColor(GetDarkColor());
+      gGXW->DrawFillArea(7, frame);
+
+//*-* If this wbox is a button, highlight it
+      if (InheritsFrom("TButton") && bordermode == -1) {
+         if (TestBit(kFraming)) {  // bit set in TButton::SetFraming
+            if (GetFillColor() != 2) gGXW->SetLineColor(2);
+            else                     gGXW->SetLineColor(4);
+            gGXW->DrawBox(px1+2,py1-2,px2-2,py2+2, TGXW::kHollow);
+         }
+      }
+      gGXW->SetFillColor(-1);
+      SetFillColor(oldcolor);
+   }
+
+   if (!gCurrentPS || !tops) return;
+
+//*-*- same for PostScript
+   Float_t dx   = (xt - xl) *Float_t(bordersize)/Float_t(pxt - pxl);
+   Int_t border = gCurrentPS->XtoPS(xt) - gCurrentPS->XtoPS(xt-dx);
+   gCurrentPS->DrawFrame(xl, yl, xt, yt, bordermode, border,
+                         Int_t(GetDarkColor()), Int_t(GetLightColor()));
+}
+
+//______________________________________________________________________________
+void TWbox::Print(Option_t *option)
+{
+//*-*-*-*-*-*-*-*-*-*-*Dump this wbox with its attributes*-*-*-*-*-*-*-*-*-*
+//*-*                  ==================================
+   TBox::Print(option);
+}
+
+//______________________________________________________________________________
+void TWbox::SavePrimitive(ofstream &out, Option_t *)
+{
+    // Save primitive as a C++ statement(s) on output stream out
+
+   if (gROOT->ClassSaved(TWbox::Class())) {
+       out<<"   ";
+   } else {
+       out<<"   TWbox *";
+   }
+   out<<"wbox = new TWbox("<<fX1<<","<<fY1<<","<<fX2<<","<<fY2<<");"<<endl;
+
+   SaveFillAttributes(out,"wbox",0,1001);
+   SaveLineAttributes(out,"wbox",1,1,1);
+
+   out<<"   wbox->Draw();"<<endl;

@@ -1,0 +1,6 @@
+*CMZ :  1.03/09 16/12/97  17.10.52  by  Rene Brun
+*-- Author :
+macro smake 1=WinNTSystem 2=WinNT
+cc [1]
+exec bind_dll [2] [2]_*.o
+return

@@ -1,0 +1,41 @@
+*CMZ :  2.00/06 12/05/98  15.27.23  by  Rene Brun
+*CMZ :  2.00/04 06/04/98  09.33.26  by  Rene Brun
+*CMZ :  2.00/00 05/03/98  17.30.45  by  Fons Rademakers
+*CMZ :  1.01/04 02/06/97  18.06.30  by  Rene Brun
+*-- Author :    Rene Brun   04/12/95
+macro selectsystem 1=-
+
+select $MACHINE
+
+machine = [1]
+if [machine] = '-' then
+   machine = $MACHINE
+endif
+
+if [machine] = 'IBMPC' then
+   machine = 'WinNT'
+endif
+
+if $OS = 'VMS' then
+  machine = 'VMS'
+endif
+
+if [machine] = 'HPUX' .OR. [machine] = 'IBMRT' .OR. [machine] = 'SOLARIS' .OR. _
+   [machine] = 'SOLARISPC' .OR. [machine] = 'ALPHA' .OR. [machine] = 'SGI' _
+   .OR. [machine] = 'SGI64' .OR. [machine] = 'LINUX' .OR. [machine] = 'HIUX' then
+   sel UNIX
+elseif [machine] = 'WinNT' then
+   sel WinNT Win32 SWAP QF_MSOFT GL
+elseif [machine] = 'MAC' then
+   sel MAC
+elseif [machine] = 'VMS' then
+   sel VMS
+else
+   mess 'selectsystem: *** Unknown machine type ***'
+endif
+
+if [machine] = 'IBMRT' then
+   select IBM
+endif
+
+return

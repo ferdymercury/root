@@ -1,0 +1,39 @@
+*CMZ :  2.20/03 07/12/98  08.58.43  by  Fons Rademakers
+*CMZ :  2.20/00 22/11/98  18.43.27  by  Fons Rademakers
+*CMZ :  2.00/12 22/09/98  11.42.57  by  Fons Rademakers
+*CMZ :  2.00/09 27/06/98  00.57.05  by  Fons Rademakers
+*-- Author :    Fons Rademakers   27/06/98
+# Makefile of ROOT for HP-UX with aCC
+
+PLATFORM      = hpux
+
+CXX           = aCC
+CC            = cc
+CXXFLAGS      = +W70,495,740,749,829 -DR__ACC -z +Z
+CFLAGS        = -Ae -z +Z
+CINTCXXFLAGS  = -z +Z -DG__REGEXP -DG__UNIX -DG__HPUXCPPDLL \
+                -DG__SHAREDLIB -D_POSIX2_SOURCE -DG__ROOT -DG__REDIRECTIO
+CINTCFLAGS    = -Ae -z +Z -DG__REGEXP -DG__UNIX -DG__HPUXCPPDLL \
+                -DG__SHAREDLIB -D_POSIX2_SOURCE -DG__ROOT -DG__REDIRECTIO \
+                -D__STDCPP__
+OPT           = -g
+NOOPT         =
+LD            = aCC
+LDFLAGS       = $(OPT) -z -Wl,+s -Wl,-E
+SOFLAGS       = -b -Wl,+vnocompatwarnings
+SOEXT         = sl
+SYSLIBS       = -lm -ldld
+SYSXLIBS      = -lX11 -lm -ldld
+XLIBS         = $(ROOTSYS)/lib/libXpm.a -lX11
+CILIBS        = -lm -Wl,-E -ldld -lcurses
+
+
+##### MACROS and TARGETS #####
+
+include Make-macros
+
+
+##### DEPENDENCIES #####
+
+include Make-depend
+

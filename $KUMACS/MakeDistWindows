@@ -1,0 +1,62 @@
+*CMZ :  1.03/08 08/11/97  14.40.05  by  Rene Brun
+*-- Author :    Valery Fine(fine@vxcern.cern.ch)   30/10/96
+macro  MakeDistWindows
+import *
+* Create INCLUDE directory since Windows has no the symbolic links features
+exec MakeInclude
+
+shell echo set ROOTVERS=[RootVersion]> MakeFistLine.tmp
+application data MakeRestPart.tmp
+
+set MACHINE=%PROCESSOR_ARCHITECTURE%
+set OSREL=%OS%
+
+set TYPE=%MACHINE%.%OSREL%
+
+set TARFILE=root_v%ROOTVERS%.%TYPE%.tar
+set EXEFILE=root_v%ROOTVERS%.%TYPE%.exe
+
+rem cd ..
+cd %ROOTSYS%
+cd bin
+ren Root_EGPythia.dll Root_EGPythia.tmp
+cd ..
+if exist %TARFILE%.gz del %TARFILE%.gz
+rem tar -cvf %TARFILE% AA_README bin/*.exe bin/*.dll include/*.h include/MAIN_rmain.cxx lib/*.lib cint tutorials/*.C tutorials/.* test/*.cxx test/*.h test/Makefile test/README
+tar cvf %TARFILE% AA_README bin/*.exe bin/*.dll include/*.h include/MAIN_rmain.cxx lib/*.lib cint tutorials/*.C tutorials/.rootrc test/*.cxx test/*.h test/Makefile test/README
+
+gzip %TARFILE%
+
+echo Creating the 'short' distribution file (only ROOT.EXE ROOT's DLLs + tutorials + CINT include files)
+
+if exist r.lzh del r.lzh
+
+%NICEPATH%\lha a -rx r bin\root.exe bin\h2root.exe bin\*.dll
+%NICEPATH%\lha a -rx r AA_REA~1 bin\restore.bat cint\MAKEINFO cint\include\*.h TUTORI~1\*.C TUTORI~1\ROOTRC~1
+%NICEPATH%\lha s -rx r
+%NICEPATH%\lha V r.exe
+ren r.exe %EXEFILE%
+copy %EXEFILE% ..\
+del %EXEFILE%
+cd bin
+ren Root_EGPythia.tmp Root_EGPythia.dll
+cd ..
+cd ..
+
+if exist root_v%ROOTVERS%.disk1_NT.bin del root_v%ROOTVERS%.disk*.*
+
+echo Split distribution by floppy size portions.
+split -b1400000 %EXEFILE% disk
+
+ren disk.001 root_v%ROOTVERS%.disk1_NT.bin
+ren disk.002 root_v%ROOTVERS%.disk2_NT.bin
+ren disk.003 root_v%ROOTVERS%.disk3_NT.bin
+
+copy %ROOTSYS%\setup.bat root_v%ROOTVERS%.setup_NT.bat
+
+MakeRestPart.tmp
+* merge the first line and the rest part of batch file
+shell  copy MakeFistLine.tmp+MakeRestPart.tmp MakeDist.bat
+shell del MakeFistLine.tmp
+shell del MakeRestPart.tmp
+return

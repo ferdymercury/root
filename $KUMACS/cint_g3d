@@ -1,0 +1,32 @@
+*CMZ :  2.20/04 08/12/98  09.35.03  by  Rene Brun
+*CMZ :  2.00/09 25/06/98  14.25.10  by  Fons Rademakers
+*CMZ :  2.00/08 27/05/98  14.58.35  by  Valery Fine(fine@mail.cern.ch)
+*CMZ :  2.00/00 20/12/97  23.45.11  by  Fons Rademakers
+*CMZ :  1.03/07 31/10/97  09.17.28  by  "Valery fine"
+*-- Author :    Fons Rademakers   15/02/96
+
+macro cint_g3d
+*
+*    To generate the dictionary for all 3D graphics classes
+*    ======================================================
+*
+* Only change the [headers], [name] and [patch] variables and the
+* "#pragma ..." statements.
+*
+
+seq -i src/*.h
+
+headers=TPolyLine3D.h TPolyMarker3D.h TGeometry.h TMaterial.h TMixture.h TNode.h _
+        TNodeDiv.h TRotMatrix.h TShape.h TBRIK.h TTRD1.h TTRD2.h TTUBE.h TCONE.h TCTUB.h TELTU.h _
+        TTUBS.h TCONS.h TTRAP.h TPARA.h TGTRA.h TPCON.h TPGON.h TSPHE.h TGLKernelABC.h _
+        TPadOpenGLView.h TPadView3D.h TMarker3DBox.h THelix.h THYPE.h
+
+name=G3D
+patch=G3D
+
+set G__LinkDef.h -F TEXT
+ctot /$kumacs/G3D_LinkDef
+
+exec makecint [name] [patch] [headers]
+
+return

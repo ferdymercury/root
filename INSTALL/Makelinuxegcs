@@ -1,0 +1,37 @@
+*CMZ :  2.20/00 22/11/98  18.43.27  by  Fons Rademakers
+*CMZ :  2.00/10 15/07/98  19.22.51  by  Fons Rademakers
+*CMZ :  2.00/09 26/06/98  19.24.14  by  Fons Rademakers
+*-- Author :    Fons Rademakers   26/06/98
+# Makefile of ROOT for Linux with glibc and egcs (RH5.1)
+
+PLATFORM      = linux
+
+CXX           = g++
+CC            = egcs
+CXXFLAGS      = -Wall -fPIC -DR__GLIBC -fno-rtti -fno-exceptions
+CFLAGS        = -Wall -fPIC -DR__GLIBC
+CINTCXXFLAGS  = -Wall -fPIC -fno-rtti -fno-exceptions -DG__REGEXP \
+                -DG__UNIX -DG__SHAREDLIB -DG__OSFDLL -DG__ROOT -DG__REDIRECTIO
+CINTCFLAGS    = -Wall -fPIC -DG__REGEXP -DG__UNIX -DG__SHAREDLIB \
+                -DG__OSFDLL -DG__ROOT -DG__REDIRECTIO
+OPT           = -g
+NOOPT         =
+LD            = g++
+LDFLAGS       = $(OPT)
+SOFLAGS       = -shared -Wl,-soname,
+SOEXT         = so
+SYSLIBS       = -lm -ldl -rdynamic
+SYSXLIBS      = -L/usr/X11R6/lib -lX11 -lm -ldl -rdynamic
+XLIBS         = $(ROOTSYS)/lib/libXpm.a -L/usr/X11R6/lib -lX11
+CILIBS        = -lm -ltermcap -lbsd -ldl -rdynamic
+
+
+##### MACROS and TARGETS #####
+
+include Make-macros
+
+
+##### DEPENDENCIES #####
+
+include Make-depend
+

@@ -1,0 +1,1043 @@
+*CMZ :  2.20/05 14/12/98  00.14.18  by  Fons Rademakers
+*CMZ :  2.20/04 08/12/98  17.03.54  by  Rene Brun
+*CMZ :  2.20/02 04/12/98  15.47.46  by  Fons Rademakers
+*CMZ :  2.20/01 01/12/98  19.13.25  by  Rene Brun
+*CMZ :  2.20/00 22/11/98  18.43.27  by  Fons Rademakers
+*CMZ :  2.00/12 08/10/98  14.42.10  by  Fons Rademakers
+*CMZ :  2.00/11 19/08/98  09.01.40  by  Rene Brun
+*CMZ :  2.00/10 23/07/98  12.50.16  by  Fons Rademakers
+*CMZ :  2.00/09 27/06/98  01.17.14  by  Fons Rademakers
+*-- Author :    Fons Rademakers   26/06/98
+##### MACROS #####
+
+ROOTLIBS      = -lNew -lBase -lCint -lClib -lCont -lFunc -lGraf -lGraf3d \
+                -lHist -lHtml -lMatrix -lMeta -lMinuit -lNet -lPostscript \
+                -lProof -lTree -lUnix -lZip
+ROOTGLIBS     = -lGpad -lGui -lGX11 -lX3d -lXpm
+RINTLIBS      = -lRint
+EGLIBS        = -lEG -lEGPythia -lEGVenus
+GLLIBS        = -lRGL
+TTFLIBS       = -lGX11TTF
+
+LPATH         = $(ROOTSYS)/lib
+
+##### utilities #####
+
+MAKEDEP       = $(ROOTSYS)/bin/makedepend
+MAKELIB       = ./Makelib
+
+##### libCint #####
+
+CINTS1        = CINT_G__setup.c CINT_g__cfunc.c CINT_memtest.c CINT_sizeof.c \
+                CINT_auxu.c CINT_gcoll.c CINT_new.c CINT_stdstrct.c \
+                CINT_cast.c CINT_global1.c CINT_newlink.c CINT_struct.c \
+                CINT_debug.c CINT_global2.c CINT_newsos.c CINT_stub.c \
+                CINT_decl.c CINT_ifunc.c CINT_oldlink.c \
+                CINT_disp.c CINT_inherit.c CINT_opr.c CINT_tmplt.c \
+                CINT_init.c CINT_parse.c CINT_typedef.c \
+                CINT_dump.c CINT_input.c CINT_pause.c CINT_val2a.c \
+                CINT_end.c CINT_intrpt.c CINT_pcode.c CINT_value.c \
+                CINT_error.c CINT_loadfile.c CINT_pragma.c CINT_var.c \
+                CINT_expr.c CINT_quote.c CINT_fread.c CINT_macro.c \
+                CINT_scrupto.c CINT_func.c CINT_malloc.c CINT_shl.c
+CINTS2        = CINT_Api.cxx CINT_Class.cxx CINT_Token.cxx \
+                CINT_Apiif.cxx CINT_DataMbr.cxx CINT_Type.cxx \
+                CINT_BaseCls.cxx CINT_Method.cxx CINT_Typedf.cxx \
+                CINT_CallFunc.cxx CINT_MethodAr.cxx
+
+ifeq ($(CXX),KCC)
+CINTS2       += CINT_fakestrm.cxx
+else
+ifeq ($(PLATFORM),linux)
+CINTS2       += CINT_libstrm.cxx
+endif
+ifeq ($(PLATFORM),hpux)
+CINTS2       += CINT_libstrm.cxx
+endif
+ifeq ($(PLATFORM),solaris)
+CINTS2       += CINT_libstrm.cxx
+endif
+ifeq ($(PLATFORM),aix)
+CINTS2       += CINT_libstrm.cxx
+endif
+ifeq ($(PLATFORM),sgi)
+CINTS2       += CINT_libstrm.cxx
+endif
+ifeq ($(PLATFORM),alpha)
+CINTS2       += CINT_libstrm.cxx
+endif
+endif
+
+ifeq ($(PLATFORM),sunos)
+CINTS1       += CINT_sunos.c
+endif
+ifeq ($(PLATFORM),aix)
+CINTS1       += CINT_dlfcn.c
+endif
+ifeq ($(PLATFORM),macos)
+CINTS1       += CINT_macos.c
+CINTS2       += CINT_fakestrm.cxx
+endif
+ifeq ($(PLATFORM),winnt)
+CINTS1       += CINT_winnt.c
+CINTS2       += CINT_vcstrm.cxx
+endif
+ifeq ($(PLATFORM),vms)
+CINTS2       += CINT_fakestrm.cxx
+endif
+
+
+CINTS         = $(CINTS1) $(CINTS2)
+CINTO         = $(CINTS1:.c=.o) $(CINTS2:.cxx=.o)
+
+CINTLIB       = $(LPATH)/libCint.$(SOEXT)
+
+##### libClib #####
+
+CLIBS         = C_Demangle.c C_keys.c C_mmcheck.c C_mvalloc.c \
+                C_Getline.c C_mcalloc.c C_mmemalign.c C_sbrksup.c \
+                C_attach.c C_mfree.c C_mmstats.c C_strtod.c \
+                C_detach.c C_mmalloc.c C_mmtrace.c C_strtok.c \
+                C_getpagesize.c C_mmapsup.c C_mrealloc.c
+
+CLIBO         = $(CLIBS:.c=.o)
+
+CLIBLIB       = $(LPATH)/libClib.$(SOEXT)
+
+##### libNew #####
+
+NEWS          = NEW_NewDelete.cxx
+
+NEWO          = $(NEWS:.cxx=.o)
+
+NEWLIB        = $(LPATH)/libNew.$(SOEXT)
+
+##### libBase #####
+
+BASEH         = TArrayC.h TArrayD.h TArrayF.h TArrayI.h TArrayL.h TArrayS.h \
+                TAttFill.h TAttAxis.h TAttFunc.h TAttHist.h TAttLine.h \
+                TAttMarker.h TAttStat.h TAttText.h TAxis.h TBaseClass.h \
+                TBuffer.h TClass.h TDataMember.h TDataType.h TDatime.h \
+                TDirectory.h TEnv.h TFile.h TFormula.h TFree.h TFunction.h \
+                TGlobal.h TKey.h TObject.h TMemberInspector.h TMethod.h \
+                TMethodArg.h TMethodCall.h TNamed.h TRealData.h TMapFile.h \
+                TMath.h TROOT.h TKeyMapFile.h TApplication.h TApplicationImp.h \
+                TBrowserImp.h TCanvasImp.h TContextMenuImp.h TControlBarImp.h \
+                TString.h TStringLong.h TObjString.h TSystem.h TRegexp.h \
+                TSysEvtHandler.h TSystemFile.h TSystemDirectory.h TStopwatch.h \
+                TStorage.h TRandom.h TBenchmark.h TTime.h TTimer.h
+BASES         = BASE_Application.cxx BASE_ApplicationImp.cxx \
+                BASE_Array.cxx BASE_ArrayC.cxx BASE_ArrayD.cxx \
+                BASE_ArrayF.cxx BASE_ArrayI.cxx BASE_ArrayL.cxx \
+                BASE_ArrayS.cxx BASE_Benchmark.cxx BASE_BrowserImp.cxx \
+                BASE_Buffer.cxx BASE_CanvasImp.cxx BASE_ClassTable.cxx \
+                BASE_ContextMenuImp.cxx BASE_ControlBarImp.cxx BASE_Datime.cxx \
+                BASE_Directory.cxx BASE_Env.cxx BASE_Error.cxx \
+                BASE_Exception.cxx BASE_File.cxx BASE_Free.cxx \
+                BASE_Key.cxx BASE_KeyMapFile.cxx BASE_Link.cxx \
+                BASE_MapFile.cxx BASE_Match.cxx BASE_Math.cxx \
+                BASE_MemberInspector.cxx BASE_Named.cxx BASE_ObjPtr.cxx \
+                BASE_ObjString.cxx BASE_Object.cxx BASE_ObjectTable.cxx \
+                BASE_Random.cxx BASE_RealData.cxx BASE_RefCnt.cxx \
+                BASE_Regexp.cxx BASE_Root.cxx BASE_Stopwatch.cxx \
+                BASE_Storage.cxx BASE_String.cxx BASE_StringLong.cxx \
+                BASE_Stringio.cxx BASE_SysEvtHandler.cxx BASE_System.cxx \
+                BASE_SystemDirectory.cxx BASE_SystemFile.cxx BASE_Time.cxx \
+                BASE_Timer.cxx
+
+BASEO         = $(BASES:.cxx=.o)
+
+BASEL1        = BASE1_LinkDef.h
+BASEL2        = BASE2_LinkDef.h
+BASEDS1       = BASE_G__Base1.cxx
+BASEDS2       = BASE_G__Base2.cxx
+BASEDS        = $(BASEDS1) $(BASEDS2)
+BASEDH        = $(BASEDS:.cxx=.h)
+BASEDO1       = $(BASEDS1:.cxx=.o)
+BASEDO2       = $(BASEDS2:.cxx=.o)
+BASEDO        = $(BASEDO1) $(BASEDO2)
+
+BASELIB       = $(LPATH)/libBase.$(SOEXT)
+
+##### libCont #####
+
+CONTH         = TArrayC.h TArrayD.h TArrayF.h TArrayI.h TArrayL.h TArrayS.h \
+                TCollection.h TSeqCollection.h TIterator.h TList.h \
+                TSortedList.h THashList.h TObjArray.h TClonesArray.h \
+                TOrdCollection.h TBtree.h THashTable.h TMap.h TClassTable.h \
+                TObjectTable.h
+CONTS         = CONT_Btree.cxx CONT_HashTable.cxx CONT_OrdCollection.cxx \
+                CONT_ClonesArray.cxx CONT_Iterator.cxx CONT_SeqCollection.cxx \
+                CONT_Collection.cxx CONT_List.cxx CONT_SortedList.cxx \
+                CONT_Map.cxx CONT_HashList.cxx CONT_ObjArray.cxx
+
+CONTO         = $(CONTS:.cxx=.o)
+
+CONTL         = CONT_LinkDef.h
+CONTDS        = CONT_G__Cont.cxx
+CONTDH        = $(CONTDS:.cxx=.h)
+CONTDO        = $(CONTDS:.cxx=.o)
+
+CONTLIB       = $(LPATH)/libCont.$(SOEXT)
+
+##### libFunc #####
+
+#FUNCH         = are part of BASE and G
+FUNCS         = FUNC_F1.cxx FUNC_F2.cxx FUNC_F3.cxx FUNC_Formula.cxx
+
+FUNCO         = $(FUNCS:.cxx=.o)
+
+FUNCLIB       = $(LPATH)/libFunc.$(SOEXT)
+
+##### libGpad #####
+
+GPADH         = TPad.h TCanvas.h TControlBar.h TSliderBox.h TFitPanel.h \
+                TFitPanelGraph.h TDrawPanelHist.h TButton.h \
+                TControlBarButton.h TGroupButton.h TDialogCanvas.h \
+                TAttLineCanvas.h TAttFillCanvas.h TAttTextCanvas.h \
+                TAttMarkerCanvas.h TSlider.h TClassTree.h \
+                TTreeViewer.h TPaveVar.h
+GPADS         = GPAD_AttFillCanvas.cxx GPAD_DrawPanelHist.cxx \
+                GPAD_AttLineCanvas.cxx GPAD_FitPanel.cxx \
+                GPAD_AttMarkerCanvas.cxx GPAD_FitPanelGraph.cxx \
+                GPAD_AttTextCanvas.cxx GPAD_Button.cxx GPAD_GroupButton.cxx \
+                GPAD_Canvas.cxx GPAD_HelpText.cxx GPAD_ControlBar.cxx \
+                GPAD_Pad.cxx GPAD_ControlBarButton.cxx  GPAD_Slider.cxx \
+                GPAD_DialogCanvas.cxx GPAD_SliderBox.cxx GPAD_ClassTree.cxx \
+                GPAD_TreeViewer.cxx GPAD_PaveVar.cxx
+
+GPADO         = $(GPADS:.cxx=.o)
+
+GPADL         = GPAD_LinkDef.h
+GPADDS        = GPAD_G__GPad.cxx
+GPADDH        = $(GPADDS:.cxx=.h)
+GPADDO        = $(GPADDS:.cxx=.o)
+
+GPADLIB       = $(LPATH)/libGpad.$(SOEXT)
+
+##### libGraf #####
+
+GRAFH         = TAttPad.h TAttCanvas.h TArc.h TArrow.h TBox.h TColor.h \
+                TDiamond.h TEllipse.h TFrame.h TGaxis.h TGraph.h \
+                TGraphErrors.h TLine.h TMarker.h TPolyLine.h TPolyMarker.h \
+                TText.h TPave.h TPaveLabel.h TPaveText.h TPavesText.h TF1.h \
+                TF2.h TF3.h TWbox.h TBrowser.h TGuiFactory.h TLego.h \
+                TLink.h TPoints.h TVirtualPad.h TPostScript.h TStyle.h \
+                TView.h TGXW.h TGXClient.h TContextMenu.h TLatex.h
+GRAFS         = G_Arc.cxx G_AttText.cxx G_PaveText.cxx G_Arrow.cxx \
+                G_Axis.cxx G_PavesText.cxx G_AttAxis.cxx G_Box.cxx \
+                G_Gaxis.cxx G_Points.cxx G_AttCanvas.cxx G_Browser.cxx \
+                G_Graph.cxx G_PolyLine.cxx G_AttFill.cxx G_Color.cxx \
+                G_GraphErrors.cxx G_PolyMarker.cxx G_AttFunc.cxx \
+                G_ContextMenu.cxx G_GuiFactory.cxx G_Style.cxx \
+                G_AttHist.cxx G_Diamond.cxx G_Lego.cxx G_Text.cxx \
+                G_AttLine.cxx G_Ellipse.cxx G_Line.cxx G_View.cxx \
+                G_AttMarker.cxx G_Frame.cxx G_Marker.cxx G_VirtualPad.cxx \
+                G_AttPad.cxx G_GXClient.cxx G_Pave.cxx G_Wbox.cxx \
+                G_AttStat.cxx G_GXW.cxx G_PaveLabel.cxx G_Latex.cxx
+
+GRAFO         = $(GRAFS:.cxx=.o)
+
+GRAFL1        = G1_LinkDef.h
+GRAFL2        = G2_LinkDef.h
+GRAFDS1       = G_G__Graf1.cxx
+GRAFDS2       = G_G__Graf2.cxx
+GRAFDS        = $(GRAFDS1) $(GRAFDS2)
+GRAFDH        = $(GRAFDS:.cxx=.h)
+GRAFDO1       = $(GRAFDS1:.cxx=.o)
+GRAFDO2       = $(GRAFDS2:.cxx=.o)
+GRAFDO        = $(GRAFDO1) $(GRAFDO2)
+
+GRAFLIB       = $(LPATH)/libGraf.$(SOEXT)
+
+##### libGraf3d #####
+
+GRAF3DH       = TPolyLine3D.h TPolyMarker3D.h TGeometry.h TMaterial.h \
+                TMixture.h TNode.h TNodeDiv.h TRotMatrix.h TShape.h TBRIK.h \
+                TTRD1.h TTRD2.h TTUBE.h TCONE.h TCTUB.h TELTU.h TTUBS.h \
+                TCONS.h TTRAP.h TPARA.h TGTRA.h TPCON.h TPGON.h TSPHE.h \
+                TGLKernelABC.h TPadOpenGLView.h TPadView3D.h TMarker3DBox.h \
+                THelix.h THYPE.h
+GRAF3DS1      = G3D_BRIK.cxx G3D_Marker3DBox.cxx G3D_PolyMarker3D.cxx \
+                G3D_CONE.cxx G3D_Material.cxx G3D_RotMatrix.cxx \
+                G3D_CONS.cxx G3D_Mixture.cxx G3D_SPHE.cxx G3D_CTUB.cxx \
+                G3D_Node.cxx G3D_Shape.cxx G3D_ELTU.cxx G3D_NodeDiv.cxx \
+                G3D_TRAP.cxx G3D_GLKernelABC.cxx G3D_PARA.cxx G3D_TRD1.cxx \
+                G3D_GLViewerImp.cxx G3D_PCON.cxx G3D_TRD2.cxx G3D_GTRA.cxx \
+                G3D_PGON.cxx G3D_TUBS.cxx G3D_PadOpenGLView.cxx \
+                G3D_Tube.cxx G3D_Geometry.cxx G3D_PadView3D.cxx G3D_Helix.cxx \
+                G3D_PolyLine3D.cxx G3D_HYPE.cxx
+GRAF3DS2      = G3D_X3DBuffer.c
+
+GRAF3DS       = $(GRAF3DS1) $(GRAF3DS2)
+GRAF3DO       = $(GRAF3DS1:.cxx=.o) $(GRAF3DS2:.c=.o)
+
+GRAF3DL       = G3D_LinkDef.h
+GRAF3DDS      = G3D_G__G3D.cxx
+GRAF3DDH      = $(GRAF3DDS:.cxx=.h)
+GRAF3DDO      = $(GRAF3DDS:.cxx=.o)
+
+GRAF3DLIB     = $(LPATH)/libGraf3d.$(SOEXT)
+
+##### libGui #####
+
+GUIH1         = TGObject.h TGClient.h TGWindow.h TGPicture.h TGDimension.h \
+                TGFrame.h TGLayout.h TGString.h TGWidget.h TGIcon.h TGLabel.h \
+                TGButton.h TGTextBuffer.h TGTextEntry.h TGMsgBox.h TGMenu.h
+GUIH2         = TGObject.h TGScrollBar.h TGCanvas.h TGListBox.h TGComboBox.h \
+                TGTab.h TGSlider.h TGPicture.h TGListView.h TGMimeTypes.h \
+                TGFSContainer.h TGFileDialog.h TGStatusBar.h TGToolTip.h \
+                TGTextView.h TGToolBar.h TGListTree.h TGText.h TGDoubleSlider.h
+GUIH3         = TRootGuiFactory.h TRootApplication.h TRootCanvas.h \
+                TRootBrowser.h TRootContextMenu.h TRootDialog.h \
+                TRootControlBar.h TRootHelpDialog.h TRootEmbeddedCanvas.h
+GUIS          = GUI_GButton.cxx GUI_GMenu.cxx GUI_GToolTip.cxx \
+                GUI_GCanvas.cxx GUI_GMimeTypes.cxx GUI_GWidget.cxx \
+                GUI_GClient.cxx GUI_GMsgBox.cxx GUI_GWindow.cxx \
+                GUI_GComboBox.cxx GUI_GObject.cxx GUI_GDimension.cxx \
+                GUI_GPicture.cxx GUI_GFSComboBox.cxx  GUI_GScrollBar.cxx \
+                GUI_GFSContainer.cxx GUI_GSlider.cxx GUI_RootApplication.cxx \
+                GUI_GFileDialog.cxx GUI_GStatusBar.cxx GUI_RootBrowser.cxx \
+                GUI_GFrame.cxx GUI_GString.cxx GUI_RootCanvas.cxx \
+                GUI_GIcon.cxx GUI_GTab.cxx GUI_RootContextMenu.cxx \
+                GUI_GLabel.cxx GUI_GText.cxx GUI_RootControlBar.cxx \
+                GUI_GLayout.cxx GUI_GTextBuffer.cxx GUI_GDoubleSlider.cxx \
+                GUI_RootDialog.cxx GUI_GListBox.cxx GUI_GTextEntry.cxx \
+                GUI_RootGuiFactory.cxx GUI_GListTree.cxx GUI_GTextView.cxx \
+                GUI_RootHelpDialog.cxx GUI_GListView.cxx GUI_GToolBar.cxx \
+                GUI_RootInitGui.cxx GUI_RootEmbeddedCanvas.cxx
+
+GUIO          = $(GUIS:.cxx=.o)
+
+GUIL1         = GUI1_LinkDef.h
+GUIL2         = GUI2_LinkDef.h
+GUIL3         = GUI3_LinkDef.h
+GUIDS1        = GUI_G__Gui1.cxx
+GUIDS2        = GUI_G__Gui2.cxx
+GUIDS3        = GUI_G__Gui3.cxx
+GUIDS         = $(GUIDS1) $(GUIDS2) $(GUIDS3)
+GUIDH         = $(GUIDS:.cxx=.h)
+GUIDO1        = $(GUIDS1:.cxx=.o)
+GUIDO2        = $(GUIDS2:.cxx=.o)
+GUIDO3        = $(GUIDS3:.cxx=.o)
+GUIDO         = $(GUIDO1) $(GUIDO2) $(GUIDO3)
+
+GUILIB        = $(LPATH)/libGui.$(SOEXT)
+
+##### libHist #####
+
+HISTH         = TH1.h TH2.h TH3.h TProfile.h
+HISTS         = H_H2.cxx H_Haxis.cxx H_H1.cxx H_H3.cxx H_Profile.cxx
+
+HISTO         = $(HISTS:.cxx=.o)
+
+HISTL         = H_LinkDef.h
+HISTDS        = H_G__Hist.cxx
+HISTDH        = $(HISTDS:.cxx=.h)
+HISTDO        = $(HISTDS:.cxx=.o)
+
+HISTLIB       = $(LPATH)/libHist.$(SOEXT)
+
+##### libHtml #####
+
+HTMLH         = THtml.h
+HTMLS         = HTML_Html.cxx
+
+HTMLO         = $(HTMLS:.cxx=.o)
+
+HTMLL         = HTML_LinkDef.h
+HTMLDS        = HTML_G__Html.cxx
+HTMLDH        = $(HTMLDS:.cxx=.h)
+HTMLDO        = $(HTMLDS:.cxx=.o)
+
+HTMLLIB       = $(LPATH)/libHtml.$(SOEXT)
+
+##### libMatrix #####
+
+MATRIXH       = TVector.h TMatrix.h TMatrixUtils.h
+MATRIXS       = MATRIX_MatrixUtils.cxx MATRIX_Matrix.cxx MATRIX_Vector.cxx
+
+MATRIXO       = $(MATRIXS:.cxx=.o)
+
+MATRIXL       = MATRIX_LinkDef.h
+MATRIXDS      = MATRIX_G__Matrix.cxx
+MATRIXDH      = $(MATRIXDS:.cxx=.h)
+MATRIXDO      = $(MATRIXDS:.cxx=.o)
+
+MATRIXLIB     = $(LPATH)/libMatrix.$(SOEXT)
+
+##### libMeta #####
+
+METAH         = TBaseClass.h TClass.h TDataMember.h TDataType.h TFunction.h \
+                TGlobal.h TMethod.h TMethodArg.h TMethodCall.h TCint.h \
+                TInterpreter.h TToggle.h TToggleGroup.h
+METAS         = META_BaseClass.cxx META_Dictionary.cxx META_Method.cxx \
+                META_Cint.cxx META_Function.cxx META_MethodArg.cxx \
+                META_Class.cxx META_MethodCall.cxx META_DataMember.cxx \
+                META_Global.cxx META_Toggle.cxx META_DataType.cxx \
+                META_Interpreter.cxx META_ToggleGroup.cxx
+
+METAO         = $(METAS:.cxx=.o)
+
+METAL         = META_LinkDef.h
+METADS        = META_G__Meta.cxx
+METADH        = $(METAADS:.cxx=.h)
+METADO        = $(METADS:.cxx=.o)
+
+METALIB       = $(LPATH)/libMeta.$(SOEXT)
+
+##### libMinuit #####
+
+MINUITH       = TMinuit.h
+MINUITS       = MINUIT_Minuit.cxx
+
+MINUITO       = $(MINUITS:.cxx=.o)
+
+MINUITL       = MINUIT_LinkDef.h
+MINUITDS      = MINUIT_G__Minuit.cxx
+MINUITDH      = $(MINUITDS:.cxx=.h)
+MINUITDO      = $(MINUITDS:.cxx=.o)
+
+MINUITLIB     = $(LPATH)/libMinuit.$(SOEXT)
+
+##### libNet #####
+
+NETH          = TInetAddress.h TServerSocket.h TSocket.h TMessage.h TMonitor.h \
+                TUrl.h TNetFile.h TWebFile.h MessageTypes.h
+NETS          = NET_Monitor.cxx NET_Socket.cxx NET_InetAddress.cxx \
+                NET_NetFile.cxx NET_Url.cxx NET_Message.cxx \
+                NET_ServerSocket.cxx NET_WebFile.cxx
+
+NETO          = $(NETS:.cxx=.o)
+
+NETL          = NET_LinkDef.h
+NETDS         = NET_G__Net.cxx
+NETDH         = $(NETDS:.cxx=.h)
+NETDO         = $(NETDS:.cxx=.o)
+
+NETLIB        = $(LPATH)/libNet.$(SOEXT)
+
+##### libPostscript #####
+
+#PSH           = is part of G
+PSS           = POSTSCRIPT_PostScript.cxx
+
+PSO           = $(PSS:.cxx=.o)
+
+PSLIB         = $(LPATH)/libPostscript.$(SOEXT)
+
+##### libProof #####
+
+PROOFH        = TProof.h TProofServ.h TSlave.h
+PROOFS        = PROOF_ProofServ.cxx PROOF_Proof.cxx PROOF_Slave.cxx
+
+PROOFO        = $(PROOFS:.cxx=.o)
+
+PROOFL        = PROOF_LinkDef.h
+PROOFDS       = PROOF_G__Proof.cxx
+PROOFDH       = $(PROOFDS:.cxx=.h)
+PROOFDO       = $(PROOFDS:.cxx=.o)
+
+PROOFLIB      = $(LPATH)/libProof.$(SOEXT)
+
+##### libRint #####
+
+RINTH         = TRint.h
+RINTS         = RINT_Rint.cxx
+
+RINTO         = $(RINTS:.cxx=.o)
+
+RINTL         = RINT_LinkDef.h
+RINTDS        = RINT_G__Rint.cxx
+RINTDH        = $(RINTDS:.cxx=.h)
+RINTDO        = $(RINTDS:.cxx=.o)
+
+RINTLIB       = $(LPATH)/libRint.$(SOEXT)
+
+##### libTree #####
+
+TREEH         = TTree.h TBranch.h TBranchClones.h TBranchObject.h TChain.h \
+                TChainElement.h TLeaf.h TLeafObject.h  TLeafB.h TLeafI.h \
+                TLeafF.h TLeafS.h TLeafD.h TLeafC.h TEventList.h TBasket.h \
+                TNtuple.h TSelector.h TTreeFormula.h TPacketGenerator.h \
+                TCut.h TCutG.h
+TREES         = TREE_Basket.cxx TREE_EventList.cxx TREE_LeafObject.cxx \
+                TREE_Branch.cxx TREE_LeafS.cxx TREE_BranchClones.cxx \
+                TREE_Leaf.cxx TREE_Ntuple.cxx TREE_BranchObject.cxx \
+                TREE_LeafB.cxx TREE_PacketGenerator.cxx TREE_Chain.cxx \
+                TREE_LeafC.cxx TREE_Selector.cxx TREE_ChainElement.cxx \
+                TREE_LeafD.cxx TREE_Tree.cxx TREE_Cut.cxx TREE_LeafF.cxx \
+                TREE_TreeFormula.cxx TREE_CutG.cxx TREE_LeafI.cxx
+
+TREEO         = $(TREES:.cxx=.o)
+
+TREEL         = TREE_LinkDef.h
+TREEDS        = TREE_G__Tree.cxx
+TREEDH        = $(TREEDS:.cxx=.h)
+TREEDO        = $(TREEDS:.cxx=.o)
+
+TREELIB       = $(LPATH)/libTree.$(SOEXT)
+
+##### libUnix #####
+
+UNIXH         = TUnixSystem.h
+UNIXS         = UNIX_UnixSystem.cxx
+
+UNIXO         = $(UNIXS:.cxx=.o)
+
+UNIXL         = UNIX_LinkDef.h
+UNIXDS        = UNIX_G__Unix.cxx
+UNIXDH        = $(UNIXDS:.cxx=.h)
+UNIXDO        = $(UNIXDS:.cxx=.o)
+
+UNIXLIB       = $(LPATH)/libUnix.$(SOEXT)
+
+##### libX11 #####
+
+X11H          = G__TypeInfo.h TGX11.h
+X11S1         = X11_GX11.cxx X11_GX11Gui.cxx X11_Rotated.cxx
+X11S2         = X11_gifdecode.c X11_gifencode.c X11_gifquantize.c
+
+X11S          = $(X11S1) $(X11S2)
+X11O          = $(X11S1:.cxx=.o) $(X11S2:.c=.o)
+
+X11L          = X11_LinkDef.h
+X11DS         = X11_G__X11.cxx
+X11DH         = $(X11DS:.cxx=.h)
+X11DO         = $(X11DS:.cxx=.o)
+
+X11LIB        = $(LPATH)/libGX11.$(SOEXT)
+
+##### libX3d #####
+
+X3DS          = X3D_x3d.c
+
+X3DO          = $(X3DS:.c=.o)
+
+X3DLIB        = $(LPATH)/libX3d.$(SOEXT)
+
+##### libZip #####
+
+ZIPS          = ZIP_Bits.c ZIP_Deflate.c ZIP_Inflate.c ZIP_Trees.c
+
+ZIPO          = $(ZIPS:.c=.o)
+
+ZIPLIB        = $(LPATH)/libZip.$(SOEXT)
+
+##### libEG #####
+
+EGH           = TGenerator.h TPrimary.h TAttParticle.h
+EGS           = EG_AttParticle.cxx EG_Generator.cxx EG_Primary.cxx
+
+EGO           = $(EGS:.cxx=.o)
+
+EGL           = EG_LinkDef.h
+EGDS          = EG_G__EG.cxx
+EGDH          = $(EGDS:.cxx=.h)
+EGDO          = $(EGDS:.cxx=.o)
+
+EGLIB         = $(LPATH)/libEG.$(SOEXT)
+
+##### libEGPythia #####
+
+PYTHIAH       = TPythia.h TMCParticle.h
+PYTHIAS       = PYTHIA_MCParticle.cxx PYTHIA_Pythia.cxx
+
+PYTHIAO       = $(PYTHIAS:.cxx=.o)
+
+PYTHIAL       = PYTHIA_LinkDef.h
+PYTHIADS      = PYTHIA_G__Pythia.cxx
+PYTHIADH      = $(PYTHIADS:.cxx=.h)
+PYTHIADO      = $(PYTHIADS:.cxx=.o)
+
+PYTHIALIB     = $(LPATH)/libEGPythia.$(SOEXT)
+
+##### libEGVenus #####
+
+VENUSH        = TVenus.h
+VENUSS        = VENUS_Venus.cxx
+
+VENUSO        = $(VENUSS:.cxx=.o)
+
+VENUSL        = VENUS_LinkDef.h
+VENUSDS       = VENUS_G__Venus.cxx
+VENUSDH       = $(VENUSDS:.cxx=.h)
+VENUSDO       = $(VENUSDS:.cxx=.o)
+
+VENUSLIB      = $(LPATH)/libEGVenus.$(SOEXT)
+
+##### libRGL #####
+
+RGLS          = GL_GLKernel.cxx
+ifeq ($(PLATFORM),winnt)
+RGLS         += GLWIN32_Win32GLKernel.cxx GLWIN32_Win32GLViewerImp.cxx
+else
+RGLS         += GLX11_RootGLKernel.cxx GLX11_RootGLViewer.cxx
+endif
+
+RGLO          = $(RGLS:.cxx=.o)
+
+RGLLIB        = $(LPATH)/libRGL.$(SOEXT)
+
+##### libGX11TTF #####
+
+X11TTFH       = TGX11TTF.h
+X11TTFS       = X11TTF_GX11TTF.cxx
+
+X11TTFO       = $(X11TTFS:.cxx=.o)
+
+X11TTFL       = X11TTF_LinkDef.h
+X11TTFDS      = X11TTF_G__X11TTF.cxx
+X11TTFDH      = $(X11TTFDS:.cxx=.h)
+X11TTFDO      = $(X11TTFDS:.cxx=.o)
+
+X11TTFLIB     = $(LPATH)/libGX11TTF.$(SOEXT)
+
+##### root.exe #####
+
+ROOTEXES      = MAIN_rmain.cxx
+ROOTEXEO      = $(ROOTEXES:.cxx=.o)
+ROOTEXE       = $(ROOTSYS)/bin/root.exe
+
+##### root #####
+
+ROOTS         = ROOTX_rootx.cxx ROOTX_rootxx.cxx
+ROOTO         = $(ROOTS:.cxx=.o)
+ROOT          = $(ROOTSYS)/bin/root
+
+##### cint #####
+
+CINTEXES      = MAIN_cppmain.cxx
+CINTEXEO      = $(CINTEXES:.cxx=.o)
+CINT          = $(ROOTSYS)/bin/cint
+
+##### rootcint #####
+
+ROOTCINTS     = UTILS_rootcint.cxx
+ROOTCINTO     = $(ROOTCINTS:.cxx=.o)
+ROOTCINT      = $(ROOTSYS)/bin/rootcint
+
+##### all #####
+
+ALLSRCS       = $(CINTS) $(CLIBS) $(NEWS) $(BASES) $(CONTS) $(FUNCS) $(GRAFS) \
+                $(GRAF3DS) $(HISTS) $(HTMLS) $(MATRIXS) $(METAS) $(MINUITS) \
+                $(NETS) $(PSS) $(PROOFS) $(RINTS) $(TREES) $(UNIXS) $(ZIPS) \
+                $(EGS) $(PYTHIAS) $(VENUSS) $(GPADS) $(X11S) $(GUIS) $(X3DS) \
+                $(RGLS) $(ROOTEXES) $(ROOTS) $(CINTEXES) $(ROOTCINTS) \
+                $(X11TTFS)
+
+ALLDICT       = $(BASEDS) $(BASEDH) $(CONTDS) $(CONTDH) $(GRAFDS) $(GRAFDH) \
+                $(GRAF3DDS) $(GRAF3DDH) $(HISTDS) $(HISTDH) $(HTMLDS) \
+                $(HTMLDH) $(MATRIXDS) $(MATRIXDH) $(METADS) $(METADH) \
+                $(MINUITDS) $(MINUITDH) $(NETDS) $(NETDH) $(PROOFDS) \
+                $(PROOFDH) $(RINTDS) $(RINTDH) $(TREEDS) $(TREEDH) \
+                $(UNIXDS) $(UNIXDH) $(EGDS) $(EGDH) $(PYTHIADS) $(PYTHIADH) \
+                $(VENUSDS) $(VENUSDH) $(GPADDS) $(GPADDH) $(X11DS) \
+                $(X11DH) $(GUIDS) $(GUIDH) $(X11TTFDS) $(X11TTFDH)
+
+ALLOBJS       = $(CINTO) $(CLIBO) $(NEWO) $(BASEO) $(BASEDO) $(CONTO) \
+                $(CONTDO) $(FUNCO) $(GRAFO) $(GRAFDO) $(GRAF3DO) $(GRAF3DDO) \
+                $(HISTO) $(HISTDO) $(HTMLO) $(HTMLDO) $(MATRIXO) $(MATRIXDO) \
+                $(METAO) $(METADO) $(MINUITO) $(MINUITDO) $(NETO) $(NETDO) \
+                $(PSO) $(PROOFO) $(PROOFDO) $(RINTO) $(RINTDO) $(TREEO) \
+                $(TREEDO) $(UNIXO) $(UNIXDO) $(ZIPO) $(EGO) $(EGDO) \
+                $(PYTHIAO) $(PYTHIADO) $(VENUSO) $(VENUSDO) $(GPADO) \
+                $(GPADDO) $(X11O) $(X11DO) $(GUIO) $(GUIDO) $(X3DO) \
+                $(RGLO) $(ROOTEXEO) $(ROOTO) $(CINTEXEO) $(ROOTCINTO) \
+                $(X11TTFO) $(X11TTFDO)
+
+ALLLIBS       = $(CLIBLIB) $(NEWLIB) $(BASELIB) $(CONTLIB) \
+                $(FUNCLIB) $(GRAFLIB) $(GRAF3DLIB) $(HISTLIB) $(HTMLLIB) \
+                $(MATRIXLIB) $(METALIB) $(MINUITLIB) $(NETLIB) $(PSLIB) \
+                $(PROOFLIB) $(RINTLIB) $(TREELIB) $(UNIXLIB) $(ZIPLIB) \
+                $(GPADLIB) $(X11LIB) $(GUILIB) $(X3DLIB) \
+                $(EGLIB) $(PYTHIALIB) $(VENUSLIB)
+ifeq ($(shell if test -d $(ROOTSYS)/ttf/include;then echo ok; fi),ok)
+ALLLIBS      += $(X11TTFLIB)
+CXXFLAGS     += -I$(ROOTSYS)/ttf/include
+endif
+ifeq ($(shell if test -d $(ROOTSYS)/opengl/include;then echo ok; fi),ok)
+ALLLIBS      += $(RGLLIB)
+CXXFLAGS     += -I$(ROOTSYS)/opengl/include
+endif
+
+
+ALLEXECS      = $(ROOTEXE) $(ROOT)
+
+
+##### RULES #####
+
+.SUFFIXES: .cxx
+
+CINT_%.o:       CINT_%.cxx
+		$(CXX) $(OPT) $(CINTCXXFLAGS) -c $<
+
+CINT_%.o:       CINT_%.c
+		$(CC) $(OPT) $(CINTCFLAGS) -c $<
+
+%.o:            %.cxx
+		$(CXX) $(OPT) $(CXXFLAGS) -c $<
+
+%.o:            %.c
+		$(CC) $(OPT) $(CFLAGS) -c $<
+
+##### TARGETS #####
+
+.PHONY:         all rootcint rootlibs rootexecs depend dist clean distclean
+
+
+all:            rootcint rootlibs rootexecs
+
+rootcint:       $(CINTLIB) $(CINT) $(ROOTCINT)
+
+rootlibs:       $(ALLLIBS) $(CINTLIB)
+
+rootexecs:      $(ALLEXECS)
+
+
+$(ROOTEXE):     $(ROOTEXEO) $(CINTLIB) $(ALLLIBS)
+		$(LD) $(LDFLAGS) -o $(ROOTEXE) $(ROOTEXEO) \
+		-L$(LPATH) $(ROOTLIBS) $(ROOTGLIBS) $(RINTLIBS) $(SYSXLIBS)
+
+
+$(ROOT):        $(ROOTO)
+		$(LD) $(LDFLAGS) -o $(ROOT) $(ROOTO) $(XLIBS)
+
+
+$(CINT):        $(CINTEXEO) $(CINTLIB)
+		$(LD) $(LDFLAGS) -o $(CINT) $(CINTEXEO) \
+		-L$(LPATH) -lCint $(CILIBS)
+
+
+$(ROOTCINT):    $(ROOTCINTO) $(CINTLIB)
+		$(LD) $(LDFLAGS) -o $(ROOTCINT) $(ROOTCINTO) \
+		-L$(LPATH) -lCint $(CILIBS)
+
+
+$(CINTLIB):     $(CINTO)
+		@$(MAKELIB) $(PLATFORM) $(LD) "$(LDFLAGS)" \
+		   "$(SOFLAGS)" libCint.$(SOEXT) $@ "$(CINTO)"
+
+
+$(CLIBLIB):     $(CLIBO)
+		@$(MAKELIB) $(PLATFORM) $(LD) "$(LDFLAGS)" \
+		   "$(SOFLAGS)" libClib.$(SOEXT) $@ "$(CLIBO)"
+
+
+$(NEWLIB):      $(NEWO)
+		@$(MAKELIB) $(PLATFORM) $(LD) "$(LDFLAGS)" \
+		   "$(SOFLAGS)" libNew.$(SOEXT) $@ "$(NEWO)"
+
+
+$(BASELIB):     $(BASEO) $(BASEDO)
+		@$(MAKELIB) $(PLATFORM) $(LD) "$(LDFLAGS)" \
+		   "$(SOFLAGS)" libBase.$(SOEXT) $@ "$(BASEO) $(BASEDO)"
+
+$(BASEDS1):     $(BASEH) $(BASEL1) $(ROOTCINT)
+		@echo "Generating dictionary $(BASEDS1)..."
+		@rootcint -f $(BASEDS1) -c $(BASEH) $(BASEL1)
+$(BASEDS2):     $(BASEH) $(BASEL2) $(ROOTCINT)
+		@echo "Generating dictionary $(BASEDS2)..."
+		@rootcint -f $(BASEDS2) -c $(BASEH) $(BASEL2)
+
+$(BASEDO1):     $(BASEDS1)
+		$(CXX) $(NOOPT) $(CXXFLAGS) -c $(BASEDS1)
+$(BASEDO2):     $(BASEDS2)
+		$(CXX) $(NOOPT) $(CXXFLAGS) -c $(BASEDS2)
+
+
+$(CONTLIB):     $(CONTO) $(CONTDO)
+		@$(MAKELIB) $(PLATFORM) $(LD) "$(LDFLAGS)" \
+		   "$(SOFLAGS)" libCont.$(SOEXT) $@ "$(CONTO) $(CONTDO)"
+
+$(CONTDS):      $(CONTH) $(CONTL) $(ROOTCINT)
+		@echo "Generating dictionary $(CONTDS)..."
+		@rootcint -f $(CONTDS) -c $(CONTH) $(CONTL)
+
+$(CONTDO):      $(CONTDS)
+		$(CXX) $(NOOPT) $(CXXFLAGS) -c $(CONTDS)
+
+
+$(FUNCLIB):     $(FUNCO)
+		@$(MAKELIB) $(PLATFORM) $(LD) "$(LDFLAGS)" \
+		   "$(SOFLAGS)" libFunc.$(SOEXT) $@ "$(FUNCO)"
+
+
+$(GPADLIB):     $(GPADO) $(GPADDO)
+		@$(MAKELIB) $(PLATFORM) $(LD) "$(LDFLAGS)" \
+		   "$(SOFLAGS)" libGpad.$(SOEXT) $@ "$(GPADO) $(GPADDO)"
+
+$(GPADDS):      $(GPADH) $(GPADL) $(ROOTCINT)
+		@echo "Generating dictionary $(GPADDS)..."
+		@rootcint -f $(GPADDS) -c $(GPADH) $(GPADL)
+
+$(GPADDO):      $(GPADDS)
+		$(CXX) $(NOOPT) $(CXXFLAGS) -c $(GPADDS)
+
+
+$(GRAFLIB):     $(GRAFO) $(GRAFDO)
+		@$(MAKELIB) $(PLATFORM) $(LD) "$(LDFLAGS)" \
+		   "$(SOFLAGS)" libGraf.$(SOEXT) $@ "$(GRAFO) $(GRAFDO)"
+
+$(GRAFDS1):     $(GRAFH) $(GRAFL1) $(ROOTCINT)
+		@echo "Generating dictionary $(GRAFDS1)..."
+		@rootcint -f $(GRAFDS1) -c $(GRAFH) $(GRAFL1)
+$(GRAFDS2):     $(GRAFH) $(GRAFL2) $(ROOTCINT)
+		@echo "Generating dictionary $(GRAFDS2)..."
+		@rootcint -f $(GRAFDS2) -c $(GRAFH) $(GRAFL2)
+
+$(GRAFDO1):     $(GRAFDS1)
+		$(CXX) $(NOOPT) $(CXXFLAGS) -c $(GRAFDS1)
+$(GRAFDO2):     $(GRAFDS2)
+		$(CXX) $(NOOPT) $(CXXFLAGS) -c $(GRAFDS2)
+
+
+$(GRAF3DLIB):   $(GRAF3DO) $(GRAF3DDO)
+		@$(MAKELIB) $(PLATFORM) $(LD) "$(LDFLAGS)" \
+		   "$(SOFLAGS)" libGraf3d.$(SOEXT) $@ "$(GRAF3DO) $(GRAF3DDO)"
+
+$(GRAF3DDS):    $(GRAF3DH) $(GRAF3DL) $(ROOTCINT)
+		@echo "Generating dictionary $(GRAF3DDS)..."
+		@rootcint -f $(GRAF3DDS) -c $(GRAF3DH) $(GRAF3DL)
+
+$(GRAF3DDO):    $(GRAF3DDS)
+		$(CXX) $(NOOPT) $(CXXFLAGS) -c $(GRAF3DDS)
+
+
+$(GUILIB):      $(GUIO) $(GUIDO)
+		@$(MAKELIB) $(PLATFORM) $(LD) "$(LDFLAGS)" \
+		   "$(SOFLAGS)" libGui.$(SOEXT) $@ "$(GUIO) $(GUIDO)"
+
+$(GUIDS1):      $(GUIH1) $(GUIL1) $(ROOTCINT)
+		@echo "Generating dictionary $(GUIDS1)..."
+		@rootcint -f $(GUIDS1) -c $(GUIH1) $(GUIL1)
+$(GUIDS2):      $(GUIH2) $(GUIL2) $(ROOTCINT)
+		@echo "Generating dictionary $(GUIDS2)..."
+		@rootcint -f $(GUIDS2) -c $(GUIH2) $(GUIL2)
+$(GUIDS3):      $(GUIH3) $(GUIL3) $(ROOTCINT)
+		@echo "Generating dictionary $(GUIDS3)..."
+		@rootcint -f $(GUIDS3) -c $(GUIH3) $(GUIL3)
+
+$(GUIDO1):      $(GUIDS1)
+		$(CXX) $(NOOPT) $(CXXFLAGS) -c $(GUIDS1)
+$(GUIDO2):      $(GUIDS2)
+		$(CXX) $(NOOPT) $(CXXFLAGS) -c $(GUIDS2)
+$(GUIDO3):      $(GUIDS3)
+		$(CXX) $(NOOPT) $(CXXFLAGS) -c $(GUIDS3)
+
+
+$(HISTLIB):     $(HISTO) $(HISTDO)
+		@$(MAKELIB) $(PLATFORM) $(LD) "$(LDFLAGS)" \
+		   "$(SOFLAGS)" libHist.$(SOEXT) $@ "$(HISTO) $(HISTDO)"
+
+$(HISTDS):      $(HISTH) $(HISTL) $(ROOTCINT)
+		@echo "Generating dictionary $(HISTDS)..."
+		@rootcint -f $(HISTDS) -c $(HISTH) $(HISTL)
+
+$(HISTDO):      $(HISTDS)
+		$(CXX) $(NOOPT) $(CXXFLAGS) -c $(HISTDS)
+
+
+$(HTMLLIB):     $(HTMLO) $(HTMLDO)
+		@$(MAKELIB) $(PLATFORM) $(LD) "$(LDFLAGS)" \
+		   "$(SOFLAGS)" libHtml.$(SOEXT) $@ "$(HTMLO) $(HTMLDO)"
+
+$(HTMLDS):      $(HTMLH) $(HTMLL) $(ROOTCINT)
+		@echo "Generating dictionary $(HTMLDS)..."
+		@rootcint -f $(HTMLDS) -c $(HTMLH) $(HTMLL)
+
+$(HTMLDO):      $(HTMLDS)
+		$(CXX) $(NOOPT) $(CXXFLAGS) -c $(HTMLDS)
+
+
+$(MATRIXLIB):   $(MATRIXO) $(MATRIXDO)
+		@$(MAKELIB) $(PLATFORM) $(LD) "$(LDFLAGS)" \
+		   "$(SOFLAGS)" libMatrix.$(SOEXT) $@ "$(MATRIXO) $(MATRIXDO)"
+
+$(MATRIXDS):    $(MATRIXH) $(MATRIXL) $(ROOTCINT)
+		@echo "Generating dictionary $(MATRIXDS)..."
+		@rootcint -f $(MATRIXDS) -c $(MATRIXH) $(MATRIXL)
+
+$(MATRIXDO):    $(MATRIXDS)
+		$(CXX) $(NOOPT) $(CXXFLAGS) -c $(MATRIXDS)
+
+
+$(METALIB):     $(METAO) $(METADO)
+		@$(MAKELIB) $(PLATFORM) $(LD) "$(LDFLAGS)" \
+		   "$(SOFLAGS)" libMeta.$(SOEXT) $@ "$(METAO) $(METADO)"
+
+$(METADS):      $(METAH) $(METAL) $(ROOTCINT)
+		@echo "Generating dictionary $(METADS)..."
+		@rootcint -f $(METADS) -c -DG__API $(METAH) $(METAL)
+
+$(METADO):      $(METADS)
+		$(CXX) $(NOOPT) $(CXXFLAGS) -c $(METADS)
+
+
+$(MINUITLIB):   $(MINUITO) $(MINUITDO)
+		@$(MAKELIB) $(PLATFORM) $(LD) "$(LDFLAGS)" \
+		   "$(SOFLAGS)" libMinuit.$(SOEXT) $@ "$(MINUITO) $(MINUITDO)"
+
+$(MINUITDS):    $(MINUITH) $(MINUITL) $(ROOTCINT)
+		@echo "Generating dictionary $(MINUITDS)..."
+		@rootcint -f $(MINUITDS) -c $(MINUITH) $(MINUITL)
+
+$(MINUITDO):    $(MINUITDS)
+		$(CXX) $(NOOPT) $(CXXFLAGS) -c $(MINUITDS)
+
+
+$(NETLIB):      $(NETO) $(NETDO)
+		@$(MAKELIB) $(PLATFORM) $(LD) "$(LDFLAGS)" \
+		   "$(SOFLAGS)" libNet.$(SOEXT) $@ "$(NETO) $(NETDO)"
+
+$(NETDS):       $(NETH) $(NETL) $(ROOTCINT)
+		@echo "Generating dictionary $(NETDS)..."
+		@rootcint -f $(NETDS) -c $(NETH) $(NETL)
+
+$(NETDO):       $(NETDS)
+		$(CXX) $(NOOPT) $(CXXFLAGS) -c $(NETDS)
+
+
+$(PSLIB):       $(PSO)
+		@$(MAKELIB) $(PLATFORM) $(LD) "$(LDFLAGS)" \
+		   "$(SOFLAGS)" libPostscript.$(SOEXT) $@ "$(PSO)"
+
+
+$(PROOFLIB):    $(PROOFO) $(PROOFDO)
+		@$(MAKELIB) $(PLATFORM) $(LD) "$(LDFLAGS)" \
+		   "$(SOFLAGS)" libProof.$(SOEXT) $@ "$(PROOFO) $(PROOFDO)"
+
+$(PROOFDS):     $(PROOFH) $(PROOFL) $(ROOTCINT)
+		@echo "Generating dictionary $(PROOFDS)..."
+		@rootcint -f $(PROOFDS) -c $(PROOFH) $(PROOFL)
+
+$(PROOFDO):     $(PROOFDS)
+		$(CXX) $(NOOPT) $(CXXFLAGS) -c $(PROOFDS)
+
+
+$(RINTLIB):     $(RINTO) $(RINTDO)
+		@$(MAKELIB) $(PLATFORM) $(LD) "$(LDFLAGS)" \
+		   "$(SOFLAGS)" libRint.$(SOEXT) $@ "$(RINTO) $(RINTDO)"
+
+$(RINTDS):      $(RINTH) $(RINTL) $(ROOTCINT)
+		@echo "Generating dictionary $(RINTDS)..."
+		@rootcint -f $(RINTDS) -c $(RINTH) $(RINTL)
+
+$(RINTDO):      $(RINTDS)
+		$(CXX) $(NOOPT) $(CXXFLAGS) -c $(RINTDS)
+
+
+$(TREELIB):     $(TREEO) $(TREEDO)
+		@$(MAKELIB) $(PLATFORM) $(LD) "$(LDFLAGS)" \
+		   "$(SOFLAGS)" libTree.$(SOEXT) $@ "$(TREEO) $(TREEDO)"
+
+$(TREEDS):      $(TREEH) $(TREEL) $(ROOTCINT)
+		@echo "Generating dictionary $(TREEDS)..."
+		@rootcint -f $(TREEDS) -c $(TREEH) $(TREEL)
+
+$(TREEDO):      $(TREEDS)
+		$(CXX) $(NOOPT) $(CXXFLAGS) -c $(TREEDS)
+
+
+$(UNIXLIB):     $(UNIXO) $(UNIXDO)
+		@$(MAKELIB) $(PLATFORM) $(LD) "$(LDFLAGS)" \
+		   "$(SOFLAGS)" libUnix.$(SOEXT) $@ "$(UNIXO) $(UNIXDO)"
+
+$(UNIXDS):      $(UNIXH) $(UNIXL) $(ROOTCINT)
+		@echo "Generating dictionary $(UNIXDS)..."
+		@rootcint -f $(UNIXDS) -c $(UNIXH) $(UNIXL)
+
+$(UNIXDO):      $(UNIXDS)
+		$(CXX) $(NOOPT) $(CXXFLAGS) -c $(UNIXDS)
+
+
+$(X11LIB):      $(X11O) $(X11DO)
+		@$(MAKELIB) $(PLATFORM) $(LD) "$(LDFLAGS)" \
+		   "$(SOFLAGS)" libGX11.$(SOEXT) $@ "$(X11O) $(X11DO)"
+
+$(X11DS):       $(X11H) $(X11L) $(ROOTCINT)
+		@echo "Generating dictionary $(X11DS)..."
+		@rootcint -f $(X11DS) -c $(X11H) $(X11L)
+
+$(X11DO):       $(X11DS)
+		$(CXX) $(NOOPT) $(CXXFLAGS) -c $(X11DS)
+
+
+$(X11TTFLIB):   $(X11TTFO) $(X11TTFDO)
+		@$(MAKELIB) $(PLATFORM) $(LD) "$(LDFLAGS)" \
+		   "$(SOFLAGS)" libGX11TTF.$(SOEXT) $@ "$(X11TTFO) $(X11TTFDO)"
+
+$(X11TTFDS):    $(X11TTFH) $(X11TTFL) $(ROOTCINT)
+		@echo "Generating dictionary $(X11TTFDS)..."
+		@rootcint -f $(X11TTFDS) -c $(X11TTFH) $(X11TTFL)
+
+$(X11TTFDO):    $(X11TTFDS)
+		$(CXX) $(NOOPT) $(CXXFLAGS) -c $(X11TTFDS)
+
+
+$(X3DLIB):      $(X3DO)
+		@$(MAKELIB) $(PLATFORM) $(LD) "$(LDFLAGS)" \
+		   "$(SOFLAGS)" libX3d.$(SOEXT) $@ "$(X3DO)"
+
+
+$(ZIPLIB):      $(ZIPO)
+		@$(MAKELIB) $(PLATFORM) $(LD) "$(LDFLAGS)" \
+		   "$(SOFLAGS)" libZip.$(SOEXT) $@ "$(ZIPO)"
+
+
+$(RGLLIB):      $(RGLO)
+		@$(MAKELIB) $(PLATFORM) $(LD) "$(LDFLAGS)" \
+		   "$(SOFLAGS)" libRGL.$(SOEXT) $@ "$(RGLO)"
+
+
+$(EGLIB):       $(EGO) $(EGDO)
+		@$(MAKELIB) $(PLATFORM) $(LD) "$(LDFLAGS)" \
+		   "$(SOFLAGS)" libEG.$(SOEXT) $@ "$(EGO) $(EGDO)"
+
+$(EGDS):        $(EGH) $(EGL) $(ROOTCINT)
+		@echo "Generating dictionary $(EGDS)..."
+		@rootcint -f $(EGDS) -c $(EGH) $(EGL)
+
+$(EGDO):        $(EGDS)
+		$(CXX) $(NOOPT) $(CXXFLAGS) -c $(EGDS)
+
+
+$(PYTHIALIB):   $(PYTHIAO) $(PYTHIADO)
+		@$(MAKELIB) $(PLATFORM) $(LD) "$(LDFLAGS)" \
+		   "$(SOFLAGS)" libEGPythia.$(SOEXT) $@ "$(PYTHIAO) $(PYTHIADO)"
+
+$(PYTHIADS):    $(PYTHIAH) $(PYTHIAL) $(ROOTCINT)
+		@echo "Generating dictionary $(PYTHIADS)..."
+		@rootcint -f $(PYTHIADS) -c $(PYTHIAH) $(PYTHIAL)
+
+$(PYTHIADO):    $(PYTHIADS)
+		$(CXX) $(NOOPT) $(CXXFLAGS) -c $(PYTHIADS)
+
+
+$(VENUSLIB):    $(VENUSO) $(VENUSDO)
+		@$(MAKELIB) $(PLATFORM) $(LD) "$(LDFLAGS)" \
+		   "$(SOFLAGS)" libEGVenus.$(SOEXT) $@ "$(VENUSO) $(VENUSDO)"
+
+$(VENUSDS):     $(VENUSH) $(VENUSL) $(ROOTCINT)
+		@echo "Generating dictionary $(VENUSDS)..."
+		@rootcint -f $(VENUSDS) -c $(VENUSH) $(VENUSL)
+
+$(VENUSDO):     $(VENUSDS)
+		$(CXX) $(NOOPT) $(CXXFLAGS) -c $(VENUSDS)
+
+
+depend:
+		$(MAKEDEP) -fMake-depend -Y -- $(CXXFLAGS) -- $(ALLSRCS) \
+		> /dev/null 2>&1
+
+dist:
+		rm -f root.tar.gz ; \
+		tar cvf root_src.tar README Make* *.c *.cxx *.h; \
+		gzip root_src.tar
+
+clean:
+		@rm -f $(ALLOBJS)
+
+distclean:      clean
+		@rm -f $(ALLDICT) $(ALLLIBS) $(CINTLIB) \
+		$(ALLEXECS) $(CINT) $(ROOTCINT)

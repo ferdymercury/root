@@ -1,0 +1,122 @@
+/*CMZ :  2.20/04 08/12/98  16.25.21  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   08/12/98*/
+/* /% C++ %/ */
+/***********************************************************************
+ * cint (C/C++ interpreter)
+ ************************************************************************
+ * Header file Class.h
+ ************************************************************************
+ * Description:
+ *  Extended Run Time Type Identification API
+ ************************************************************************
+ * Copyright(c) 1991~1996  [hp] Hewlett Packard Japan, All rights reserved
+ * Author                  Masaharu Goto (gotom@jpn.hp.com)
+ * Copyright(c) 1995~1998  Masaharu Goto (MXJ02154@niftyserve.or.jp)
+ *
+ * Permission to use, copy, modify and distribute this software and its
+ * documentation for any purpose is hereby granted without fee,
+ * provided that the above copyright notice appear in all copies and
+ * that both that copyright notice and this permission notice appear
+ * in supporting documentation.  Hewlett-Packard Japan Company makes no
+ * representations about the suitability of this software for any
+ * purpose.  It is provided "as is" without express or implied warranty.
+ ************************************************************************/
+
+
+#ifndef G__CLASSINFO_H
+#define G__CLASSINFO_H
+
+
+#include "Api.h"
+
+class G__MethodInfo;
+class G__DataMemberInfo;
+
+/*********************************************************************
+* class G__ClassInfo
+*
+*
+*********************************************************************/
+class G__ClassInfo {
+ public:
+  ~G__ClassInfo() {}
+  G__ClassInfo() { Init(); }
+  void Init();
+  G__ClassInfo(const char *classname) { Init(classname); }
+  void Init(const char *classname);
+  G__ClassInfo(int tagnumin) { Init(tagnumin); }
+  void Init(int tagnumin);
+
+  int operator==(const G__ClassInfo& a);
+  int operator!=(const G__ClassInfo& a);
+
+  const char *Name() ;
+  const char *Title() ;
+  int Size() ;
+  long Property();
+  int NDataMembers();
+  int NMethods();
+  long IsBase(const char *classname);
+  long IsBase(G__ClassInfo& a);
+  long Tagnum() { return(tagnum); }
+  G__ClassInfo EnclosingClass() ;
+  int IsValid();
+  int SetFilePos(const char *fname);
+  int Next();
+  int Linkage();
+
+  const char *FileName() ;
+  int LineNumber() ;
+
+  int IsTmplt();
+  const char* TmpltName();
+  const char* TmpltArg();
+
+
+ protected:
+  long tagnum;  // class,struct,union,enum key for cint dictionary
+
+#ifdef G__ROOTSPECIAL
+ ///////////////////////////////////////////////////////////////
+ // Following things have to be added for ROOT
+ ///////////////////////////////////////////////////////////////
+ public:
+  void SetDefFile(char *deffilein);
+  void SetDefLine(int deflinein);
+  void SetImpFile(char *impfilein);
+  void SetImpLine(int implinein);
+  void SetVersion(int versionin);
+  const char *DefFile();
+  int DefLine();
+  const char *ImpFile();
+  int ImpLine();
+  int Version();
+  void *New();
+  int InstanceCount();
+  void ResetInstanceCount();
+  void IncInstanceCount();
+  int HeapInstanceCount();
+  void IncHeapInstanceCount();
+  void ResetHeapInstanceCount();
+  int RootFlag();
+  //void SetDefaultConstructor(void* p2f);
+  G__InterfaceMethod GetInterfaceMethod(const char *fname,const char *arg
+					,long* poffset);
+  G__MethodInfo GetMethod(const char *fname,const char *arg,long* poffset);
+  G__DataMemberInfo GetDataMember(const char *name,long* poffset);
+  int HasMethod(const char *fname);
+  int HasDataMember(const char *name);
+
+ private:
+  void CheckValidRootInfo();
+#endif /* ROOTSPECIAL */
+
+
+#ifndef G__OLDIMPLEMENTATION644
+ public:
+  long ClassProperty();
+#endif
+
+};
+
+#endif
