@@ -1,3 +1,4 @@
+//*CMZ :  2.24/01 31/03/2000  08.14.14  by  Rene Brun
 //*CMZ :  2.23/12 26/01/2000  12.18.16  by  Valery Fine(fine@bnl.gov)
 //*-- Author :    Valery Fine(fine@mail.cern.ch)   24/04/99
 
@@ -79,6 +80,7 @@ TPoints3D::TPoints3D(TPoints3DABC *points) : fPoints(points)
     DoOwner();
   }
 }
+
 //______________________________________________________________________________
 TPoints3D::TPoints3D(Int_t n, Option_t *option) : fPoints( new TPointsArray3D(n,option))
 {
@@ -140,6 +142,7 @@ void TPoints3D::Copy(TObject &obj)
    else
      thatObject.fPoints = fPoints;
 }
+
 //______________________________________________________________________________
 void TPoints3D::Delete()
 {
@@ -147,12 +150,14 @@ void TPoints3D::Delete()
   if (fPoints && IsOwner()) delete fPoints;
   fPoints = 0;
 }
+
 //______________________________________________________________________________
 Bool_t TPoints3D::DoOwner(Bool_t done) {
   if (done) SetBit(kIsOwner);
   else ResetBit(kIsOwner);
   return IsOwner();
 }
+
 //______________________________________________________________________________
 void TPoints3D::ExecuteEvent(Int_t event, Int_t px, Int_t py)
 {
@@ -161,6 +166,7 @@ void TPoints3D::ExecuteEvent(Int_t event, Int_t px, Int_t py)
   if (fPoints)
       fPoints->ExecuteEvent(event,px,py);
 }
+
 //______________________________________________________________________________
 void TPoints3D::ls(Option_t *option)
 {
@@ -171,6 +177,7 @@ void TPoints3D::ls(Option_t *option)
    cout << IsA()->GetName() << " N=" <<GetN()<<" Option="<<option<<endl;
 //   IsOwner()?"Owner":"Not owner" << endl;
 }
+
 //______________________________________________________________________________
 void TPoints3D::Print(Option_t *option)
 {
@@ -179,10 +186,4 @@ void TPoints3D::Print(Option_t *option)
    cout <<"   " << IsA()->GetName() <<" Printing N=" <<GetN()<<" Option="<<option<<endl;
 //   IsOwner()?"Owner":"Not owner" << endl;
 }
-//______________________________________________________________________________
-//  $Log: TPoints3D.cxx,v $
-//  Revision 1.4  1999/12/17 23:28:40  fine
-//  clean up for the sake of docs + new class TTable3DPackedPoints introduced
-//
-//______________________________________________________________________________
 

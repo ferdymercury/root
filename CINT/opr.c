@@ -1,5 +1,5 @@
-/*CMZ :  2.23/10 10/12/99  18.00.03  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   10/12/99*/
+/*CMZ :  2.24/05 16/05/2000  12.03.48  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   16/05/2000*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -1132,7 +1132,11 @@ int *ptagnum;
   }
 
 #ifndef G__STD_NAMESPACE /* ON667 */
-  if (strncmp (name, "std::", 5) == 0) {
+  if (strncmp (name, "std::", 5) == 0
+#ifndef G__OLDIMPLEMENTATION1285
+      && G__ignore_stdnamespace
+#endif
+      ) {
     /* strip scope operator, set hash and return */
     strcpy(temp,name+5);
     strcpy(name,temp);
@@ -1275,7 +1279,11 @@ int *piout,*pspaceflag,*pmparen;
 #endif
 #ifndef G__STD_NAMESPACE /* ON780 */
 	if((isalpha(c) && strcmp(temp,"operator")!=0) ||
-	   strcmp(statement,"std:")==0) {
+	   (strcmp(statement,"std:")==0
+#ifndef G__OLDIMPLEMENTATION1285
+	    && G__ignore_stdnamespace
+#endif
+	   )) {
 #else
 	if(isalpha(c) && strcmp(temp,"operator")!=0) {
 #endif
@@ -1963,10 +1971,38 @@ G__value *defined;
       }
       sprintf(expr,"%s(%s,%s)" ,opr ,arg1 ,arg2);
       buffer = G__getfunction(expr,&ig2,G__TRYNORMAL);
+#ifdef G__OLDIMPLEMENTATION1286_YET
+      /* Need to check ANSI/ISO standard. What happens if operator
+       * function defined in a namespace is used in other namespace */
+      if(0==ig2 && -1!=expressionin.tagnum &&
+	 -1!= G__struct.parent_tagnum[expressionin.tagnum]) {
+	sprintf(expr,"%s::%s(%s,%s)"
+		,G__fulltagname(G__struct.parent_tagnum[expressionin.tagnum],1)
+		,opr ,arg1 ,arg2);
+	buffer = G__getfunction(expr,&ig2,G__TRYNORMAL);
+      }
+      if(0==ig2 && -1!=defined->tagnum &&
+	 -1!= G__struct.parent_tagnum[defined->tagnum]) {
+	sprintf(expr,"%s::%s(%s,%s)"
+		,G__fulltagname(G__struct.parent_tagnum[defined->tagnum],1)
+		,opr ,arg1 ,arg2);
+	buffer = G__getfunction(expr,&ig2,G__TRYNORMAL);
+      }
+#endif
 #ifndef G__OLDIMPLEMENTATION865
       if(0==ig2) {
+#ifndef G__OLDIMPLEMENTATION1252
+	if(-1!=defined->tagnum) {
+	  fprintf(G__serr,"Error: %s not defined for %s"
+		  ,opr,G__fulltagname(defined->tagnum,1));
+	}
+	else {
+	  fprintf(G__serr,"Error: %s not defined",expr);
+	}
+#else
 	fprintf(G__serr,"Error: %s not defined for %s"
 		,opr,G__fulltagname(defined->tagnum,1));
+#endif
 	G__genericerror((char*)NULL);
       }
 #endif

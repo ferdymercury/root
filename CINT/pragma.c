@@ -1,5 +1,5 @@
-/*CMZ :  2.23/10 10/12/99  18.00.05  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   10/12/99*/
+/*CMZ :  2.24/05 16/05/2000  12.03.50  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   16/05/2000*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -154,9 +154,13 @@ int G__pragma()
   }
 #ifndef G__OLDIMPLEMENTATION782
   else if(strcmp(command,"include_noerr")==0) {
+#ifndef __CINT__
     G__ispragmainclude = 1;
     G__include_file();
     G__ispragmainclude = 0;
+#else
+    G__fignoreline();
+#endif
     c='\n';
   }
 #endif

@@ -1,3 +1,4 @@
+//*CMZ :  2.24/00 14/02/2000  10.12.10  by  Rene Brun
 //*CMZ :  2.23/12 26/01/2000  09.24.05  by  Rene Brun
 //*CMZ :  2.23/11 11/01/2000  12.37.37  by  Rene Brun
 //*-- Author :    Valery Fine(fine@mail.cern.ch)   07/01/2000
@@ -402,9 +403,10 @@ void TAxis3D::PaintAxis(TGaxis *axis, Float_t ang)
        }
 
        axis->SetLineColor(  fAxis[i].GetAxisColor());
-       axis->SetTextFont(   fAxis[i].GetLabelFont());
-       axis->SetTextColor(  fAxis[i].GetLabelColor());
+       axis->SetTextFont(   fAxis[i].GetTitleFont());
+       axis->SetTextColor(  fAxis[i].GetTitleColor());
        axis->SetTickSize(   fAxis[i].GetTickLength());
+       axis->SetLabelColor( fAxis[i].GetLabelColor());
        axis->SetLabelFont(  fAxis[i].GetLabelFont());
        axis->SetLabelOffset(fAxis[i].GetLabelOffset()+fAxis[i].GetTickLength());
        axis->SetLabelSize(  fAxis[i].GetLabelSize());

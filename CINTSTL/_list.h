@@ -1,5 +1,5 @@
-/*CMZ :  2.23/10 10/12/99  18.00.21  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   10/12/99*/
+/*CMZ :  2.24/05 16/05/2000  12.04.01  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   16/05/2000*/
 /*
  *
  * Copyright (c) 1994
@@ -20,7 +20,7 @@
 
 #include <function.h>
 #include <algobase.h>
-#include <iterator.h>
+#include <_iterator.h>
 #include <bool.h>
 
 #ifndef Allocator
@@ -219,9 +219,11 @@ public:
     // 1. overloading resolution regarding object constness is not supported
     // 2. Implicit conversion of return type is not implemented
     iterator begin() { return(iterator((link_type)((*node).next))); }
-    //const_iterator begin() const { return(const_iterator((link_type)((*node).next))); }
     iterator end() { return(iterator(node)); }
-    //const_iterator end() const { return(const_iterator(node)); }
+#ifdef G__CONSTNESSFLAG
+    const_iterator begin() const { return(const_iterator((link_type)((*node).next))); }
+    const_iterator end() const { return(const_iterator(node)); }
+#endif
 #else
     iterator begin() { return (link_type)((*node).next); }
     const_iterator begin() const { return (link_type)((*node).next); }
@@ -229,10 +231,10 @@ public:
     const_iterator end() const { return node; }
 #endif
     reverse_iterator rbegin() { return reverse_iterator(end()); }
+    reverse_iterator rend() { return reverse_iterator(begin()); }
     const_reverse_iterator rbegin() const {
         return const_reverse_iterator(end());
     }
-    reverse_iterator rend() { return reverse_iterator(begin()); }
     const_reverse_iterator rend() const {
         return const_reverse_iterator(begin());
     }

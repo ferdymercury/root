@@ -1,24 +1,17 @@
+//*CMZ :  2.24/01 31/03/2000  08.46.15  by  Rene Brun
 //*CMZ :  2.23/12 26/01/2000  12.24.45  by  Valery Fine(fine@bnl.gov)
 //*-- Author :    Valery Fine(fine@mail.cern.ch)   05/08/98
-// $Id: TFileSet.h,v 1.5 1999/03/11 00:34:44 perev Exp $
-// $Log: TFileSet.h,v $
-// Revision 1.5  1999/03/11 00:34:44  perev
-// Tbase in new maker schema
-//
-// Revision 1.4  1998/12/26 21:40:38  fisyak
-// Add Id and Log
-//
 
 #ifndef ROOT_TFileSet
 #define ROOT_TFileSet
 
 //////////////////////////////////////////////////////////////////////////
 //                                                                      //
-// TFileSet                                                           //
+// TFileSet                                                             //
 //                                                                      //
-// TFileSet class is a class to convert the                           //
+// TFileSet class is a class to convert the                             //
 //      "native file system structure"                                  //
-// into an instance of the TDataSet class                             //
+// into an instance of the TDataSet class                               //
 //                                                                      //
 //////////////////////////////////////////////////////////////////////////
 

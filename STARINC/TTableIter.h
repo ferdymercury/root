@@ -1,3 +1,4 @@
+//*CMZ :  2.24/01 31/03/2000  08.46.15  by  Rene Brun
 //*CMZ :  2.23/12 26/01/2000  12.24.45  by  Valery Fine(fine@bnl.gov)
 //*-- Author : Valery Fine(fine@bnl.gov)   03/12/99
 #ifndef ROOT_TTableIter
@@ -8,7 +9,7 @@
 // Copyright(c) 1997~1999  Valerie Fine  (fine@bnl.gov)
 //////////////////////////////////////////////////////////////////////////
 //                                                                      //
-// TTableIter - class iterator to loop over sorted TTable's         //
+// TTableIter - class iterator to loop over sorted TTable's             //
 //                                                                      //
 //////////////////////////////////////////////////////////////////////////
 
@@ -58,14 +59,4 @@ inline Int_t TTableIter::operator()() { return Next();}
 //_____________________________________________________________________
 inline Int_t TTableIter::operator[](Int_t idx) { return Next(idx);}
 
-// $Log: TTableIter.h,v $
-// Revision 1.3  1999/12/05 06:34:16  fine
-// Several const methods for TTableSorter introduced
-//
-// Revision 1.2  1999/12/04 22:41:37  fine
-// clean up sole const methods
-//
-// Revision 1.1  1999/12/04 06:34:31  fine
-// TTableIter - table iterator to loop over sorted tables. First implementation
-//
 #endif

@@ -59,3 +59,5 @@
   // Test F112
   micky.ttrcho();
   micky.ttrinv();
+  micky.ttrla();
+}

@@ -1,3 +1,4 @@
+//*CMZ :  2.24/03 28/04/2000  12.56.45  by  Rene Brun
 //*CMZ :  2.23/12 26/01/2000  09.41.47  by  Rene Brun
 //*CMZ :  2.23/10 13/12/99  19.03.35  by  Fons Rademakers
 //*CMZ :  2.23/09 17/11/99  14.53.03  by  Rene Brun
@@ -8,17 +9,18 @@
 //*CMZ :  2.22/00 07/04/99  11.41.15  by  Rene Brun
 //*-- Author :    Rene Brun   28/11/94
 
+/*CMZ :  2.24/01 24/02/2000  11.49.40  by  Fons Rademakers*/
 /*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun and Fons Rademakers.                               *
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
  *                                                                       *
- * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
- * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
  *************************************************************************/
 
 #include <iostream.h>
@@ -581,6 +583,7 @@ void TDirectory::Delete(const char *namecycle)
 //
 //   examples:
 //     foo   : delete object named foo in memory
+//     foo*  : delete all objects with a name starting with foo
 //     foo;1 : delete cycle 1 of foo on file
 //     foo;* : delete all cycles of foo on file and also from memory
 //     *;2   : delete all objects on file having the cycle 2
@@ -601,6 +604,8 @@ void TDirectory::Delete(const char *namecycle)
    if(strcmp(name,"*T") == 0){ deleteall = 1; deletetree = 1;}
    if(strcmp(name,"T*") == 0){ deleteall = 1; deletetree = 1;}
    if(strlen(namecycle) == 0){ deleteall = 1; deletetree = 1;}
+   TRegexp re(name,kTRUE);
+   TString s;
 
 //*-*---------------------Case of Object in memory---------------------
 //                        ========================
@@ -609,7 +614,8 @@ void TDirectory::Delete(const char *namecycle)
       TIter   next(fList);
       while ((idcur = (TNamed *) next())) {
          Int_t deleteOK = 0;
-         if (deleteall || (strcmp(name,idcur->GetName()) == 0)) {
+         s = idcur->GetName();
+         if (deleteall || s.Index(re) != kNPOS) {
             deleteOK = 1;
             if (idcur->IsA() == TDirectory::Class()) {
                if (!deletetree && deleteall) deleteOK = 0;
@@ -626,7 +632,8 @@ void TDirectory::Delete(const char *namecycle)
          TIter nextkey(GetListOfKeys());
          while ((key = (TKey *) nextkey())) {
             Int_t deleteOK = 0;
-            if (deleteall || (strcmp(name,key->GetName()) == 0)) {
+            s = key->GetName();
+            if (deleteall || s.Index(re) != kNPOS) {
                if (cycle == key->GetCycle()) deleteOK = 1;
                if (cycle > 9999) deleteOK = 1;
                if (!strcmp(key->GetClassName(),"TDirectory")) {
@@ -641,8 +648,8 @@ void TDirectory::Delete(const char *namecycle)
             }
          }
          if (fModified) {
-            WriteKeys();                   //*-* Write new keys structure
-            WriteDirHeader();              //*-* Write new directory header
+            WriteKeys();            //*-* Write new keys structure
+            WriteDirHeader();       //*-* Write new directory header
             gFile->WriteFree();     //*-* Write new free segments list
             gFile->WriteHeader();   //*-* Write new file header
          }

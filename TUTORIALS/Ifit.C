@@ -1,3 +1,5 @@
+//*CMZ :  2.24/05 08/05/2000  22.10.22  by  Rene Brun
+//*CMZ :  2.24/01 06/03/2000  21.04.41  by  Rene Brun
 //*CMZ :  1.00/10 25/04/97  10.57.12  by  Rene Brun
 //*-- Author :    Rene Brun   25/04/97
 //
@@ -9,11 +11,20 @@
 //   More details on the various functions or parameters for these functions
 //   can be obtained in an interactive ROOT session with:
 //    Root > TMinuit *minuit = new TMinuit(10);
-//    Root > minuit->mnhelp("*",0)  to see the list of possible keywords
-//    Root > minuit->mnhelp("SET",0) explains most parameters
+//    Root > minuit->mnhelp("*")  to see the list of possible keywords
+//    Root > minuit->mnhelp("SET") explains most parameters
 //
 
+#include "TMinuit.h"
+
 Float_t z[5],x[5],y[5],errorz[5];
+
+//______________________________________________________________________________
+Double_t func(float x,float y,Double_t *par)
+{
+ Double_t value=( (par[0]*par[0])/(x*x)-1)/ ( par[1]+par[2]*y-par[3]*y*y);
+ return value;
+}
 
 //______________________________________________________________________________
 void fcn(Int_t &npar, Double_t *gin, Double_t &f, Double_t *par, Int_t iflag)
@@ -29,13 +40,6 @@ void fcn(Int_t &npar, Double_t *gin, Double_t &f, Double_t *par, Int_t iflag)
      chisq += delta*delta;
    }
    f = chisq;
-}
-
-//______________________________________________________________________________
-Double_t func(float x,float y,Double_t *par)
-{
- Double_t value=( (par[0]*par[0])/(x*x)-1)/ ( par[1]+par[2]*y-par[3]*y*y);
- return value;
 }
 
 //______________________________________________________________________________

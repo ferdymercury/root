@@ -1,3 +1,5 @@
+//*CMZ :  2.24/03 20/04/2000  14.02.28  by  Valery Fine(fine@bnl.gov)
+//*CMZ :  2.24/00 12/02/2000  10.51.13  by  Rene Brun
 //*CMZ :  2.23/12 26/01/2000  09.24.06  by  Rene Brun
 //*CMZ :  2.23/04 06/10/99  18.55.30  by  Rene Brun
 //*CMZ :  2.23/01 26/08/99  12.03.32  by  Rene Brun
@@ -6,17 +8,18 @@
 //*CMZ :  2.00/12 07/10/98  08.52.28  by  Valery Fine(fine@mail.cern.ch)
 //*-- Author :    Rene Brun   14/09/95
 
+/*CMZ :  2.24/01 24/02/2000  11.49.40  by  Fons Rademakers*/
 /*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun and Fons Rademakers.                               *
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
  *                                                                       *
- * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
- * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
  *************************************************************************/
 
 #include "TROOT.h"
@@ -48,6 +51,7 @@ TRotMatrix::TRotMatrix(const char *name, const char *title, Double_t *matrix)
   if (!matrix) { Error("ctor","No rotation is supplied"); return; }
 
   SetMatrix(matrix);
+  if (!gGeometry) gGeometry = new TGeometry();
   fNumber = gGeometry->GetListOfMatrices()->GetSize();
   gGeometry->GetListOfMatrices()->Add(this);
 }
@@ -69,6 +73,7 @@ TRotMatrix::TRotMatrix(const char *name, const char *title, Double_t theta, Doub
    for (i=0;i<9;i++) fMatrix[i] = 0;
    fMatrix[0] = 1;   fMatrix[4] = 1;   fMatrix[8] = 1;
 
+   if (!gGeometry) gGeometry = new TGeometry();
    fNumber = gGeometry->GetListOfMatrices()->GetSize();
    gGeometry->GetListOfMatrices()->Add(this);
 }
@@ -100,27 +105,9 @@ TRotMatrix::TRotMatrix(const char *name, const char *title, Double_t theta1, Dou
 //
 //     means:  theta1=90, theta2=90, theta3=0, phi1=0, phi2=90, phi3=0
 
-   const Double_t degrad = 0.0174532925199432958;
+   SetAngles(theta1,phi1,theta2,phi2,theta3,phi3);
 
-   fTheta  = theta1;
-   fPhi    = phi1;
-   fPsi    = theta2;
-
-   fType   = 2;
-   if (!strcmp(GetName(),"Identity")) fType = 0;
-
-   fMatrix[0] = TMath::Sin(theta1*degrad)*TMath::Cos(phi1*degrad);
-   fMatrix[1] = TMath::Sin(theta1*degrad)*TMath::Sin(phi1*degrad);
-   fMatrix[2] = TMath::Cos(theta1*degrad);
-   fMatrix[3] = TMath::Sin(theta2*degrad)*TMath::Cos(phi2*degrad);
-   fMatrix[4] = TMath::Sin(theta2*degrad)*TMath::Sin(phi2*degrad);
-   fMatrix[5] = TMath::Cos(theta2*degrad);
-   fMatrix[6] = TMath::Sin(theta3*degrad)*TMath::Cos(phi3*degrad);
-   fMatrix[7] = TMath::Sin(theta3*degrad)*TMath::Sin(phi3*degrad);
-   fMatrix[8] = TMath::Cos(theta3*degrad);
-
-   SetReflection();
-
+   if (!gGeometry) gGeometry = new TGeometry();
    fNumber = gGeometry->GetListOfMatrices()->GetSize();
    gGeometry->GetListOfMatrices()->Add(this);
 }
@@ -190,6 +177,47 @@ Double_t* TRotMatrix::GetGLMatrix(Double_t *rGLMatrix) const
        *glmatrix = 1.0;
    }
        return rGLMatrix;
+}
+
+//______________________________________________________________________________
+const Double_t* TRotMatrix::SetAngles(Double_t theta1, Double_t phi1,
+                Double_t theta2, Double_t phi2,Double_t theta3, Double_t phi3)
+{
+// theta1 is the polar angle of the x-prim axis in the main reference system
+// (MRS), theta2 and theta3 have the same meaning for the y-prim and z-prim
+// axis.
+//
+// Phi1 is the azimuthal angle of the x-prim in the MRS and phi2 and phi3
+// have the same meaning for y-prim and z-prim.
+//
+//
+// for example, the unit matrix is defined in the following way.
+//
+//     x-prim || x, y-prim || y, z-prim || z
+//
+//     means:  theta1=90, theta2=90, theta3=0, phi1=0, phi2=90, phi3=0
+
+   const Double_t degrad = 0.0174532925199432958;
+
+   fTheta  = theta1;
+   fPhi    = phi1;
+   fPsi    = theta2;
+
+   fType   = 2;
+   if (!strcmp(GetName(),"Identity")) fType = 0;
+
+   fMatrix[0] = TMath::Sin(theta1*degrad)*TMath::Cos(phi1*degrad);
+   fMatrix[1] = TMath::Sin(theta1*degrad)*TMath::Sin(phi1*degrad);
+   fMatrix[2] = TMath::Cos(theta1*degrad);
+   fMatrix[3] = TMath::Sin(theta2*degrad)*TMath::Cos(phi2*degrad);
+   fMatrix[4] = TMath::Sin(theta2*degrad)*TMath::Sin(phi2*degrad);
+   fMatrix[5] = TMath::Cos(theta2*degrad);
+   fMatrix[6] = TMath::Sin(theta3*degrad)*TMath::Cos(phi3*degrad);
+   fMatrix[7] = TMath::Sin(theta3*degrad)*TMath::Sin(phi3*degrad);
+   fMatrix[8] = TMath::Cos(theta3*degrad);
+
+   SetReflection();
+   return fMatrix;
 }
 
 //______________________________________________________________________________

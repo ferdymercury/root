@@ -1,5 +1,5 @@
-/*CMZ :  2.23/10 10/12/99  17.59.57  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   10/12/99*/
+/*CMZ :  2.24/05 16/05/2000  12.03.44  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   16/05/2000*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -28,10 +28,21 @@
 **************************************************************************/
 
 #ifndef G__OLDIMPLEMENTATION1169
-#define G__CREATEDLLREV  51111
-#define G__ACCEPTDLLREV  51415
+
+#ifdef G__CONSTNESSFLAG
+#define G__CREATEDLLREV  51428
+#define G__ACCEPTDLLREV_FROM  51111  /* should be 51428 */
+#define G__ACCEPTDLLREV_UPTO  51428
 #else
+#define G__CREATEDLLREV  51111
+#define G__ACCEPTDLLREV_FROM  51111
+#define G__ACCEPTDLLREV_UPTO  51415
+#endif
+
+#else
+
 #define G__DLLREV  51111
+
 #endif
 
 #endif

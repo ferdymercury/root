@@ -1,18 +1,21 @@
+//*CMZ :  2.24/03 29/04/2000  23.42.00  by  Rene Brun
+//*CMZ :  2.24/01 18/02/2000  13.48.23  by  Valery Fine(fine@bnl.gov)
 //*CMZ :  2.00/11 22/08/98  10.07.35  by  Rene Brun
 //*CMZ :  0.90/11 05/01/97  19.28.51  by  Valery Fine(fine@vxcern.cern.ch)
 //*-- Author :    Valery Fine(fine@vxcern.cern.ch)   01/11/96
 
+/*CMZ :  2.24/01 24/02/2000  11.49.40  by  Fons Rademakers*/
 /*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun and Fons Rademakers.                               *
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
  *                                                                       *
- * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
- * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
  *************************************************************************/
 
 #ifndef ROOT_TWin32CommCtrl
@@ -42,7 +45,7 @@ enum  EIconIndex {knClosed};
 
 class TWin32CommCtrl : protected TWin32HookViaThread, public TObject {
 private:
-   Text_t            *fWindowType;     // pointer to registered window class name (class in term of the WIN32 API not C++)
+   const Text_t      *fWindowType;     // pointer to registered window class name (class in term of the WIN32 API not C++)
    UINT               fWindowStyle;    // Specifies the style of the control window being created.
    Float_t            fXCtrl,fYCtrl;   // The coordinats of the control in the reative units
    Float_t            fWidth, fHeight; // The size of the control in the reative units (=1.0 means as large as the parent window
@@ -64,7 +67,7 @@ protected:
 
 public:
    TWin32CommCtrl(){fhwndWindow=0;} //default ctor
-   TWin32CommCtrl(TGWin32WindowsObject *winobj,Text_t *title, Float_t x,Float_t y, Float_t width, Float_t  height, Text_t *type, UInt_t style);
+   TWin32CommCtrl(TGWin32WindowsObject *winobj,const Text_t *title, Float_t x,Float_t y, Float_t width, Float_t  height, const Text_t *type, UInt_t style);
    virtual ~TWin32CommCtrl();  // default dtor
    virtual void             Add(TObject *obj, const char *name) = 0;
    virtual void             CreateAccessories() = 0;                     // Create some extra things depends of the type of the control.
@@ -73,12 +76,12 @@ public:
    virtual LRESULT APIENTRY OnCommand(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam); // CallBack function to manage the WM_COMMAND parent's msgs
    virtual LRESULT APIENTRY OnNotify(LPARAM lParam) = 0;                 // CallBack function to manage the notify messages
    UINT                     GetCommandId(){ return fItemID;}
-   virtual Text_t          *GetType(){ return fWindowType;}
+   virtual const Text_t    *GetType(){ return fWindowType;}
    virtual UInt_t           GetItemObject(RECT *rpc)= 0;                 // returns the selected item lParam value and its position
    virtual DWORD            GetStyle() { return fWindowStyle; }
    virtual UINT             SetCommandId(UINT id);                       // To set fItem
    virtual void             SetStyle(DWORD style);    // Specifies the style of the control window being created.
-   virtual void             SetType(Text_t *type){fWindowType = type;}   // pointer to registered window class name (class in tern of the WIN32 API not C++)
+   virtual void             SetType(const Text_t *type){fWindowType = type;}   // pointer to registered window class name (class in tern of the WIN32 API not C++)
    void                     SetXCtrl(Float_t x=0);
    void                     SetYCtrl(Float_t y=0);
    void                     SetWCtrl(Float_t w=1);
@@ -89,7 +92,7 @@ public:
    static   LRESULT APIENTRY HookClass(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
    virtual  LRESULT APIENTRY OnSubClassCtrl(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
-   ClassDef(TWin32CommCtrl,0)   // Basic Windows WIN32 common control class
+   // ClassDef(TWin32CommCtrl,0)   // Basic Windows WIN32 common control class
 };
 
 #endif

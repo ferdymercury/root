@@ -1,3 +1,4 @@
+/*CMZ :  2.24/05 09/05/2000  19.19.01  by  Rene Brun*/
 /*CMZ :  2.23/12 18/01/2000  14.35.46  by  Rene Brun*/
 /*CMZ :  2.22/01 29/04/99  14.46.55  by  Fons Rademakers*/
 /*CMZ :  2.22/00 30/03/99  19.24.05  by  Fons Rademakers*/
@@ -355,7 +356,7 @@ static void     search_forw(int s);     /* look forw for current string */
 #include <sys/ioctl.h>
 #endif
 
-#if defined(__linux) && defined(__powerpc)
+#if defined(__linux__) && defined(__powerpc__)
 #   define R__MKLINUX       //  MKLINUX = linux on PowerMac
 #endif
 

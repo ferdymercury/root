@@ -1,18 +1,20 @@
+//*CMZ :  2.24/03 14/04/2000  09.12.08  by  Rene Brun
 //*CMZ :  2.23/03 27/09/99  14.32.25  by  Rene Brun
 //*CMZ :  2.23/02 07/09/99  08.04.00  by  Rene Brun
 //*CMZ :  2.23/01 31/08/99  17.49.35  by  Rene Brun
 //*-- Author :    Rene Brun   31/08/99
+/*CMZ :  2.24/01 24/02/2000  11.49.40  by  Fons Rademakers*/
 /*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun and Fons Rademakers.                               *
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
  *                                                                       *
- * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
- * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
  *************************************************************************/
 
 #include "TMinuit.h"
@@ -84,14 +86,6 @@ Int_t TFitter::GetErrors(Int_t ipar,Double_t &eplus, Double_t &eminus, Double_t 
    Int_t ierr = 0;
    gMinuit->mnerrs(ipar, eplus,eminus,eparab,globcc);
    return ierr;
-}
-
-//______________________________________________________________________________
-Int_t TFitter::GetMaxIterations()
-{
-   // return the maximum number of allowed iterations
-
-   return gMinuit->GetMaxIterations();
 }
 
 //______________________________________________________________________________
@@ -186,14 +180,6 @@ void TFitter::SetFCN(void (*fcn)(Int_t &, Double_t *, Double_t &f, Double_t *, I
    // Specify the address of the fitting algorithm
 
    gMinuit->SetFCN(fcn);
-}
-
-//______________________________________________________________________________
-void TFitter::SetMaxIterations(Int_t niter)
-{
-   // set the maximum number of iterations
-
-   gMinuit->SetMaxIterations(niter);
 }
 
 //______________________________________________________________________________

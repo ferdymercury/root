@@ -1,5 +1,5 @@
-/*CMZ :  2.23/10 10/12/99  18.00.16  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   10/12/99*/
+/*CMZ :  2.24/05 16/05/2000  12.03.57  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   16/05/2000*/
 /**************************************************************************
 * carray.h
 *
@@ -308,6 +308,7 @@ carray operator +(carray& a,carray& b)
 	return(c);
 }
 
+#if (G__CINTVERSION<5014035)
 carray operator +(array& a,complex& b)
 {
 	carray c=carray(0.0 , 0.0 , a.n);
@@ -324,6 +325,7 @@ carray operator +(complex& a,array& b)
 	c=A+B;
 	return(c);
 }
+#endif
 
 
 /***********************************************
@@ -350,6 +352,7 @@ carray operator -(carray& a)
 	return(c);
 }
 
+#if (G__CINTVERSION<5014035)
 carray operator -(array& a,complex& b)
 {
 	carray c=carray(0.0 , 0.0 , a.n);
@@ -366,6 +369,7 @@ carray operator -(complex& a,array& b)
 	c=A-B;
 	return(c);
 }
+#endif
 
 
 /***********************************************
@@ -379,6 +383,7 @@ carray operator *(carray& a,carray& b)
 	c.n=a.n;
 	return(c);
 }
+#if (G__CINTVERSION<5014035)
 carray operator *(array& a,complex& b)
 {
 	carray c=carray(0.0 , 0.0 , a.n);
@@ -395,6 +400,7 @@ carray operator *(complex& a,array& b)
 	c=A*B;
 	return(c);
 }
+#endif
 
 
 /***********************************************
@@ -409,6 +415,7 @@ carray operator /(carray& a,carray& b)
 	return(c);
 }
 
+#if (G__CINTVERSION<5014035)
 carray operator /(array& a,complex& b)
 {
 	carray c=carray(0.0 , 0.0 , a.n);
@@ -425,6 +432,7 @@ carray operator /(complex& a,array& b)
 	c=A/B;
 	return(c);
 }
+#endif
 
 
 /***********************************************

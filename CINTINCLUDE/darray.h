@@ -1,5 +1,5 @@
-/*CMZ :  2.23/10 10/12/99  18.00.16  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   10/12/99*/
+/*CMZ :  2.24/05 16/05/2000  12.03.57  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   16/05/2000*/
 /**************************************************************************
 * darray.h
 *
@@ -31,7 +31,7 @@ class array  {
 	array(void);
 	array(array& X,int offset,int ndat);
 	array(double *p,int ndat,int isnew=0);
-	~array();
+	~array(); 
 
 	array& operator =(array& a);
 
@@ -73,7 +73,7 @@ array::array(array& X)
 }
 
 /***********************************************
-* Implicit conversion constructor
+* Implicit conversion constructor 
 ***********************************************/
 array::array(double x)
 {
@@ -102,7 +102,7 @@ array::array(double start,double stop,int ndat)
 }
 
 /***********************************************
-* constructor
+* constructor 
 ***********************************************/
 array::array(void)
 {
@@ -116,7 +116,7 @@ array::array(void)
 }
 
 /***********************************************
-* constructor
+* constructor 
 ***********************************************/
 array::array(double *p,int ndat,int isnew)
 {
@@ -590,6 +590,30 @@ array diff(array& a,array& b) // a : x , b : y
 	array c=array(0.0 , 0.0 , a.n);
 	int i;
 	G__ary_diff(c.dat,a.dat,b.dat,a.n);
+	c.n=a.n;
+	return(c);
+}
+
+/***********************************************
+ * max
+ ***********************************************/
+array max(array& a,array& b) // a : x , b : y
+{
+	array c=array(0.0 , 0.0 , a.n);
+	int i;
+	G__ary_max(c.dat,a.dat,b.dat,a.n);
+	c.n=a.n;
+	return(c);
+}
+
+/***********************************************
+ * min
+ ***********************************************/
+array min(array& a,array& b) // a : x , b : y
+{
+	array c=array(0.0 , 0.0 , a.n);
+	int i;
+	G__ary_min(c.dat,a.dat,b.dat,a.n);
 	c.n=a.n;
 	return(c);
 }

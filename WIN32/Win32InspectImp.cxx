@@ -1,50 +1,32 @@
+//*CMZ :  2.24/05 08/05/2000  17.24.30  by  Fons Rademakers
 //*CMZ :  2.23/02 02/09/99  15.54.29  by  Rene Brun
 //*CMZ :  2.21/00 26/12/98  22.00.07  by  Valery Fine(fine@mail.cern.ch)
 //*CMZ :  2.00/11 19/07/98  16.01.04  by  Valery Fine(fine@mail.cern.ch)
 //*CMZ :  1.03/09 07/12/97  12.33.25  by  Fons Rademakers
 //*-- Author :    Valery Fine(fine@vxcern.cern.ch)   09/12/96
 
+/*CMZ :  2.24/01 24/02/2000  11.49.40  by  Fons Rademakers*/
 /*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun and Fons Rademakers.                               *
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
  *                                                                       *
- * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
- * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
  *************************************************************************/
 
-#ifndef ROOT_TWin32InspectImp
 #include "TWin32InspectImp.h"
-#endif
-
-#ifndef ROOT_TClass
+#include "TWin32ListViewCtrl.h"
 #include "TClass.h"
-#endif
-
-#ifndef ROOT_TRealData
 #include "TRealData.h"
-#endif
-
-#ifndef ROOT_TDataType
 #include "TDataType.h"
-#endif
-
-#ifndef ROOT_TDataMember
 #include "TDataMember.h"
-#endif
-
-#ifndef ROOT_TLink
 #include "TLink.h"
-#endif
-
-#ifndef ROOT_TDatime
 #include "TDatime.h"
-#endif
-
 #include "TWinNTSystem.h"
 
 #include <commctrl.h>
@@ -69,7 +51,8 @@ TWin32InspectImp::TWin32InspectImp()
 }
 
 //______________________________________________________________________________
-TWin32InspectImp::TWin32InspectImp(TObject *obj, const char *title, UInt_t width, UInt_t height)
+TWin32InspectImp::TWin32InspectImp(const TObject *obj, const char *title,
+                                   UInt_t width, UInt_t height)
 {
     CreateWindowsObject((TGWin32 *)gVirtualX,0,0,width,height);
     CreateInspector(obj);
@@ -80,7 +63,8 @@ TWin32InspectImp::TWin32InspectImp(TObject *obj, const char *title, UInt_t width
 
 }
 //______________________________________________________________________________
-TWin32InspectImp::TWin32InspectImp(TObject *obj, const char *title, Int_t x, Int_t y, UInt_t width, UInt_t height)
+TWin32InspectImp::TWin32InspectImp(const TObject *obj, const char *title,
+                                  Int_t x, Int_t y, UInt_t width, UInt_t height)
 {
     CreateWindowsObject((TGWin32 *)gVirtualX,x,y,width,height);
     CreateInspector(obj);
@@ -91,7 +75,7 @@ TWin32InspectImp::TWin32InspectImp(TObject *obj, const char *title, Int_t x, Int
 }
 
 //______________________________________________________________________________
-void TWin32InspectImp::CreateInspector(TObject *obj)
+void TWin32InspectImp::CreateInspector(const TObject *obj)
 {
   fObject = obj;
 //  fCreated = 1;
@@ -129,10 +113,10 @@ void TWin32InspectImp::MakeTitle()
     if (cl == 0) return;
 
     char buffer[1024];
-    sprintf(buffer, "%s   :   %s:%d   -   \"%s\" ",cl->GetName(),
+    sprintf(buffer, "%s   :   %s:%d   -   \"%s\" ", cl->GetName(),
                                            fObject->GetName(),
-                                       fObject->GetUniqueID(),
-                                          fObject->GetTitle());
+                                           fObject->GetUniqueID(),
+                                           fObject->GetTitle());
     W32_SetTitle(buffer);
 }
 

@@ -1,5 +1,5 @@
-/*CMZ :  2.23/10 10/12/99  18.00.21  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   10/12/99*/
+/*CMZ :  2.24/05 16/05/2000  12.04.01  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   16/05/2000*/
 /*
  *
  * Copyright (c) 1994
@@ -423,13 +423,13 @@ public:
 #ifdef G__VISUAL
 // added for CINT VC++5.0 configuration
 
-template<class T,clas Distance>
+template<class T,class Distance>
 inline bidirectional_iterator_tag
 iterator_category(const _Bidit<T,Distance>&) {
   return bidirectional_iterator_tag();
 }
 
-template<class T,clas Distance>
+template<class T,class Distance>
 inline random_access_iterator_tag
 iterator_category(const _Ranit<T,Distance>&) {
   return random_access_iterator_tag();

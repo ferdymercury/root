@@ -1,3 +1,4 @@
+//*CMZ :  2.24/03 02/05/2000  18.37.20  by  Rene Brun
 //*CMZ :  2.22/01 03/05/99  18.07.41  by  Fons Rademakers
 //*CMZ :  2.22/00 30/03/99  17.33.56  by  Fons Rademakers
 //*CMZ :  2.00/11 17/08/98  15.14.52  by  Rene Brun
@@ -7,17 +8,18 @@
 #ifndef ROOT_Rtypes
 #define ROOT_Rtypes
 
+/*CMZ :  2.24/01 24/02/2000  11.49.40  by  Fons Rademakers*/
 /*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun and Fons Rademakers.                               *
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
  *                                                                       *
- * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
- * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -109,54 +111,80 @@ class TMemberInspector;
 extern TClass *CreateClass(const char *cname, Version_t id,
                            const char *dfil, const char *ifil,
                            Int_t dl, Int_t il);
+extern void AddClass(const char *cname, Version_t id, VoidFuncPtr_t dict);
+extern void RemoveClass(const char *cname);
+
+// Cleanup this mess once HP-UX CC has been phased out (1-1-2001)
+#if defined(R__HPUX) && !defined(R__ACC)
+#define _ClassInit_(name) \
+   class R__Init { \
+      public: \
+         R__Init() { \
+            AddClass(name::Class_Name(), name::Class_Version(), \
+                     &name::Dictionary); \
+         } \
+         ~R__Init() { \
+            RemoveClass(name::Class_Name()); \
+         } \
+         void *operator new(size_t sz) { return ::operator new(sz); } \
+         void operator delete(void *ptr) { ::operator delete(ptr); } \
+   };
+#else
+#define _ClassInit_(name) \
+   class R__Init { \
+      public: \
+         R__Init() { \
+            AddClass(name::Class_Name(), name::Class_Version(), \
+                     &name::Dictionary); \
+         } \
+         ~R__Init() { \
+            RemoveClass(name::Class_Name()); \
+         } \
+   };
+#endif
 
 #define ClassDef(name,id) \
 private: \
    static TClass *fgIsA; \
 public: \
-   static const char *DeclFileName() { return __FILE__; } \
-   static int DeclFileLine() { return __LINE__; } \
-   static const char *ImplFileName(); \
-   static int ImplFileLine(); \
-   static Version_t Class_Version() { return id; } \
    static TClass *Class(); \
+   static const char *Class_Name(); \
+   static Version_t Class_Version() { return id; } \
+   static void Dictionary(); \
    virtual TClass *IsA() const { return name::Class(); } \
    virtual void ShowMembers(TMemberInspector &insp, char *parent); \
    virtual void Streamer(TBuffer &b); \
    friend TBuffer &operator>>(TBuffer &buf, name *&obj); \
-   static void Dictionary();
-
-#define _ClassInit_(name) \
-   extern void AddClass(const char *cname, Version_t id, VoidFuncPtr_t dict); \
-   extern void RemoveClass(const char *cname); \
-   class _NAME2_(R__Init,name) { \
-      public: \
-         _NAME2_(R__Init,name)() { \
-            AddClass(_QUOTE_(name), name::Class_Version(), \
-                     &name::Dictionary); \
-         } \
-         _NAME3_(~,R__Init,name)() { \
-            RemoveClass(_QUOTE_(name)); \
-         } \
-   }; \
-   static _NAME2_(R__Init,name) _NAME2_(__gR__Init,name);
+   _ClassInit_(name) \
+   static const char *DeclFileName() { return __FILE__; } \
+   static int DeclFileLine() { return __LINE__; } \
+   static const char *ImplFileName(); \
+   static int ImplFileLine();
 
 #define _ClassImp_(name) \
    TClass *name::Class() \
       { if (!fgIsA) name::Dictionary(); return fgIsA; } \
    const char *name::ImplFileName() { return __FILE__; } \
    int name::ImplFileLine() { return __LINE__; } \
-   TClass *name::fgIsA = 0; \
-   _ClassInit_(name)
+   TClass *name::fgIsA = 0;
 
 #define ClassImp(name) \
    void name::Dictionary() { \
-      TClass *c = CreateClass(_QUOTE_(name), Class_Version(), \
+      TClass *c = CreateClass(Class_Name(), Class_Version(), \
                               DeclFileName(), ImplFileName(), \
                               DeclFileLine(), ImplFileLine()); \
       fgIsA = c; \
    } \
    _ClassImp_(name)
+
+#define ClassImp2(namespace,name) \
+   ClassImp(name); \
+   const char *namespace::name::Class_Name() { \
+          if (strlen(_QUOTE_(namespace))==0) \
+            return _QUOTE_(name); \
+          else return _QUOTE_(namespace) "::" _QUOTE_(name); \
+   } \
+   static namespace::name::R__Init _NAME2_(__gR__Init,name);
 
 //---- ClassDefT macros for templates ------------------------------------------
 // ClassDefT  corresponds to ClassDef
@@ -168,21 +196,19 @@ public: \
 private: \
    static TClass *fgIsA; \
 public: \
-   static const char *DeclFileName() { return __FILE__; } \
-   static int DeclFileLine() { return __LINE__; } \
-   static const char *ImplFileName(); \
-   static int ImplFileLine(); \
-   static Version_t Class_Version() { return id; } \
    static TClass *Class(); \
    static const char *Class_Name(); \
+   static Version_t Class_Version() { return id; } \
+   static void Dictionary(); \
    virtual TClass *IsA() const { return name::Class(); } \
    virtual void ShowMembers(TMemberInspector &, char *); \
    virtual void Streamer(TBuffer &); \
-   static void Dictionary();
+   static const char *DeclFileName() { return __FILE__; } \
+   static int DeclFileLine() { return __LINE__; } \
+   static const char *ImplFileName(); \
+   static int ImplFileLine();
 
 #define _ClassInitT_(name,Tmpl) \
-   extern void AddClass(const char *, Version_t, VoidFuncPtr_t); \
-   extern void RemoveClass(const char *); \
    template <class Tmpl> class _NAME2_(R__Init,name) { \
       public: \
          _NAME2_(R__Init,name) () { \

@@ -1,3 +1,4 @@
+//*CMZ :  2.24/05 08/05/2000  17.24.43  by  Fons Rademakers
 //*CMZ :  0.90/11 02/01/97  21.40.31  by  Valery Fine(fine@vxcern.cern.ch)
 //*-- Author :    Valery Fine(fine@vxcern.cern.ch)   09/12/96
 
@@ -11,18 +12,18 @@
 //                                                           //
 ///////////////////////////////////////////////////////////////
 
-// +SEQ,TInspectImp.
-#include "TWin32ListViewCtrl.h"
-
-// +SEQ,TGWin32WindowsObject.
+#ifndef ROOT_TInspectorImp
+#include "TInspectorImp.h"
+#endif
+#ifndef ROOT_TWin32BrowserImp
 #include "TWin32BrowserImp.h"
+#endif
 
-// class TWin32InspectImp : public TInspectImp, public TGWin32WindowsObject, protected TWin32HookViaThread {
-// class TWin32InspectImp : public TGWin32WindowsObject {
- class TWin32InspectImp : public TWin32BrowserImp {
+
+class TWin32InspectImp : public TInspectorImp, public TWin32BrowserImp {
 
 private:
-  TObject        *fObject;             // Pointer to displayed object
+  const TObject  *fObject;             // Pointer to displayed object
   TObjArray       fWin32CommCtrls;     // Array of the TWin32CommCtrl objects
   Int_t           fCreated;            // flag whether the object was created
 
@@ -34,9 +35,7 @@ private:
 protected:
 
   virtual void AddValues();
-
-
-  virtual void CreateInspector(TObject *obj);
+  virtual void CreateInspector(const TObject *obj);
   virtual void MakeHeaders();
   virtual void MakeMenu();
   virtual void MakeTitle();
@@ -44,12 +43,10 @@ protected:
   virtual void MakeToolBar();
   virtual void RecursiveRemove(TObject *obj);
 
-
-
 public:
-  TWin32InspectImp();  // default ctor
-  TWin32InspectImp(TObject *obj, const char *title, UInt_t width=400, UInt_t height=300); // Create an inspector view for TObject
-  TWin32InspectImp(TObject *obj, const char *title, Int_t x, Int_t y, UInt_t width=400, UInt_t height=300);
+  TWin32InspectImp();
+  TWin32InspectImp(const TObject *obj, const char *title, UInt_t width=400, UInt_t height=300);
+  TWin32InspectImp(const TObject *obj, const char *title, Int_t x, Int_t y, UInt_t width=400, UInt_t height=300);
   virtual ~TWin32InspectImp();
 
   virtual HWND            GetCtrlHandle(Int_t indx=kID_LISTVIEW){ return GetCommCtrl(indx)->GetWindow(); } // Return a WIN32 Window handle for selected control
@@ -57,7 +54,6 @@ public:
 
   virtual void Shift(UInt_t lParam);
   virtual void Show();
-
 
   LRESULT APIENTRY OnClose  (HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
   LRESULT APIENTRY OnCommand(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -91,6 +87,5 @@ public:
   virtual void DetailsCB(TWin32InspectImp *obj, TVirtualMenuItem *item);
   virtual void RefreshCB(TWin32InspectImp *obj, TVirtualMenuItem *item);
 };
-
 
 #endif

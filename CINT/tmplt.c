@@ -1,5 +1,5 @@
-/*CMZ :  2.23/10 10/12/99  18.00.06  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   10/12/99*/
+/*CMZ :  2.24/05 16/05/2000  12.03.50  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   16/05/2000*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -750,6 +750,9 @@ void G__declare_template()
   int c;
   char *p;
   char temp2[G__LONGLINE];
+#ifndef G__OLDIMPLEMENTATION1275
+  char temp3[G__LONGLINE];
+#endif
   int ismemvar=0;
 #ifndef G__OLDIMPLEMENTATION691
   int isforwarddecl = 0;
@@ -819,9 +822,20 @@ void G__declare_template()
      *4 template<class T> A<T>::B<T> f()
      *5 template<class T> A<T> f()
      *6 template<class T> A<T> A<T>::v;
+     *7 template<class T> A<T> { }  constructor
      *                      ^>^            */
+#ifndef G__OLDIMPLEMENTATION1275
+    c = G__fgetstream_template(temp3,">");
+    c = G__fgetname_template(temp2,"(;");
+    if(0==temp2[0]) { /* constructor template in class definition */
+      strcat(temp,"<");
+      strcat(temp,temp3);
+      strcat(temp,">");
+    }
+#else
     c = G__fgetstream_template(temp2,">");
     c = G__fgetname_template(temp2,"(;");
+#endif
     if(isspace(c)) {
       if(strcmp(temp2,"::~")==0)
 	c = G__fgetname_template(temp2+3,"(;");
@@ -840,6 +854,7 @@ void G__declare_template()
       /*1 template<class T> A<T>::f()           ::f
        *3 template<class T> A<T> A<T>::f()      A<T>::f
        *6 template<class T> A<T> A<T>::v;       A<T>::v
+       *7 template<class T> A<T> { }  constructor
        *5 template<class T> A<T> f()            f        */
       p=strchr(temp2,':');
       if(p) {
@@ -851,7 +866,11 @@ void G__declare_template()
 	}
       }
       else {
+#ifndef G__OLDIMPLEMENTATION1275
+	if(temp2[0]) strcpy(temp,temp2);
+#else
 	strcpy(temp,temp2);
+#endif
      }
     }
     else if('<'==c) {
@@ -2550,6 +2569,9 @@ int funcmatch;
 #ifndef G__OLDIMPLEMENTATION972
   int store_friendtagnum = G__friendtagnum;
 #endif
+#ifndef G__OLDIMPLEMENTATION687
+  /* int i; */
+#endif
 
   if(-1!=env_tagnum) baseclass = G__struct.baseclass[env_tagnum];
   else               baseclass = &G__globalusingnamespace;
@@ -2610,8 +2632,11 @@ int funcmatch;
       /* call the expanded template function */
 #ifndef G__OLDIMPLEMENTATION712
       store_exec_memberfunc = G__exec_memberfunc;
-      if(-1!=deftmpfunc->parent_tagnum &&
-	 'n'!=G__struct.type[deftmpfunc->parent_tagnum]) {
+      if(-1!=deftmpfunc->parent_tagnum
+#ifdef G__OLDIMPLEMENTATION1287
+	 && 'n'!=G__struct.type[deftmpfunc->parent_tagnum]
+#endif
+	 ) {
 	/* Need to do something for member function template */
 #ifndef G__OLDIMPLEMENTATION812
 	ifunc = G__struct.memfunc[deftmpfunc->parent_tagnum];

@@ -1,3 +1,5 @@
+//*CMZ :  2.24/03 18/04/2000  17.57.32  by  Fons Rademakers
+//*CMZ :  2.24/01 17/02/2000  10.25.29  by  Fons Rademakers
 //*CMZ :  2.23/12 26/01/2000  09.41.47  by  Rene Brun
 //*CMZ :  2.23/09 17/11/99  16.36.11  by  Rene Brun
 //*CMZ :  2.23/05 18/10/99  20.16.37  by  Fons Rademakers
@@ -8,17 +10,18 @@
 //*CMZ :  2.22/07 26/06/99  23.05.04  by  Rene Brun
 //*-- Author :    Fons Rademakers   22/12/95
 
+/*CMZ :  2.24/01 24/02/2000  11.49.40  by  Fons Rademakers*/
 /*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun and Fons Rademakers.                               *
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
  *                                                                       *
- * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
- * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -134,7 +137,7 @@ TApplication::TApplication(const char *appClassName,
 
    // Try to load TrueType font renderer. Only try to load if not in batch
    // mode and Root.UseTTFonts is true and Root.TTFontPath exists. Abort silently
-   // if libttf or libGX11TTF are not found in $ROOTSYS/lib.
+   // if libttf or libGX11TTF are not found in $ROOTSYS/lib or $ROOTSYS/ttf/lib.
 #if !defined(WIN32)
    if (strcmp(appClassName, "proofserv")) {
       const char *ttpath = gEnv->GetValue("Root.TTFontPath",
@@ -152,6 +155,11 @@ TApplication::TApplication(const char *appClassName,
          char *lib = TTFLIBDIR "/libttf";
 # else
          char *lib = Form("%s/lib/libttf", gRootDir);
+         p = gSystem->DynamicPathName(lib, kTRUE);
+         if (!p)
+            lib = Form("%s/ttf/lib/libttf", gRootDir);
+         else
+            delete [] p;
 # endif
          if ((p = gSystem->DynamicPathName(lib, kTRUE))) {
             delete [] p;
@@ -248,12 +256,13 @@ void TApplication::GetOptions(int *argc, char **argv)
 
    for (i = 1; i < *argc; i++) {
       if (!strcmp(argv[i], "-?") || !strncmp(argv[i], "-h", 2)) {
-         fprintf(stderr, "Usage: %s [-l] [-b] [-n] [-q] [file1.C ... fileN.C]\n", argv[0]);
+         fprintf(stderr, "Usage: %s [-l] [-b] [-n] [-q] [dir] [file1.C ... fileN.C]\n", argv[0]);
          fprintf(stderr, "Options:\n");
          fprintf(stderr, "  -b : run in batch mode without graphics\n");
          fprintf(stderr, "  -n : do not execute logon and logoff macros as specified in .rootrc\n");
          fprintf(stderr, "  -q : exit after processing command line macro files\n");
          fprintf(stderr, "  -l : do not show splash screen\n");
+         fprintf(stderr, " dir : if dir is a valid directory cd to it before executing\n");
          fprintf(stderr, "\n");
          Terminate(0);
       } else if (!strcmp(argv[i], "-b")) {
@@ -290,7 +299,7 @@ void TApplication::GetOptions(int *argc, char **argv)
       } else if (!strcmp(argv[i], "-l")) {
          // used by front-end program to not display splash screen
          argv[i] = 0;
-      } else if (!strcmp(argv[i], "-p")) {
+      } else if (!strcmp(argv[i], "-splash")) {
          // used when started by front-end program to signal that
          // splash screen can be popped down (TRint::PrintLogo())
          argv[i] = 0;

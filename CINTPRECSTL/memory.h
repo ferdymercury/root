@@ -1,5 +1,5 @@
-/*CMZ :  2.23/10 10/12/99  18.00.24  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   10/12/99*/
+/*CMZ :  2.24/05 16/05/2000  12.04.03  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   16/05/2000*/
 // lib/prec_stl/memory
 
 #pragma ifndef PREC_STL_MEMORY
@@ -12,7 +12,7 @@
 // Modified by Masaharu Goto
 // SGI KCC porting by Philippe Canal, Fermi-lab
 
-#include <cstddef>
+#include <stddef.h>
 
 #if defined(G__GNUC)
 
@@ -22,7 +22,11 @@ class __malloc_alloc_template {
   static void * allocate(size_t n);
   static void deallocate(void *p, size_t /* n */);
   static void * reallocate(void *p, size_t /* old_sz */, size_t new_sz);
+#if (G__GNUC >= 3) || ((G__GNUC == 2) && (G__GNUC_MINOR >= 95))
+  static void (* __set_malloc_handler(void (*f)()))();
+#else
   static void (* set_malloc_handler(void (*f)()))();
+#endif
 };
 
 typedef __malloc_alloc_template<0> malloc_alloc;
@@ -33,7 +37,7 @@ typedef malloc_alloc alloc;
 class allocator {
 };
 
-#else
+#else // non gcc, non HPUX compiler
 
 template <class T>
 class allocator
@@ -54,12 +58,12 @@ public:
   pointer address(reference _X) const ;
   const_pointer address(const_reference _X) const;
 #else
-#ifndef G__BORLAND
+#if !defined(G__BORLAND) && !defined(G__SUNPRO_C)
   pointer address(T& _X) const ;
   const_pointer address(const T& _X) const;
 #endif
 #endif
-#ifndef G__BORLAND
+#if !defined(G__BORLAND) && !defined(G__SUNPRO_C)
   pointer allocate(size_type _N, const void *);
 #else
   pointer allocate(size_type _N, void *);
@@ -68,9 +72,9 @@ public:
 #ifndef G__KCC
   void deallocate(void *_P, size_type);
 #else
-  void deallocate(T *_P, size_type); ???
+  void deallocate(T *_P, size_type); //???
 #endif
-#ifndef G__BORLAND
+#if !defined(G__BORLAND) && !defined(G__SUNPRO_C)
   void construct(pointer _P, const T& _V);
   void destroy(pointer _P);
   size_type max_size() const;
@@ -99,5 +103,74 @@ class allocator<void> {
 };
 
 #endif // G__GNUC
+
+/**********************************************************************
+* auto_ptr
+**********************************************************************/
+template <class X> class auto_ptr {
+private:
+  X* ptr;
+  mutable bool owns;
+  //template<class Y> struct auto_ptr_ref { };
+public:
+  typedef X element_type;
+  explicit auto_ptr(X* p = 0) : ptr(p), owns(p?true:false) {}
+  auto_ptr(const auto_ptr& a) : ptr(a.ptr), owns(a.owns) {
+    a.owns = 0;
+  }
+
+  // this implementation may not be correct
+  template <class T> auto_ptr(const auto_ptr<T>& a) {
+      owns = a.owns;
+      ptr = a.ptr;
+      a.owns = 0;
+  }
+
+#if 0
+  // this does not exist in standard.
+  template <class T> auto_ptr(T* a) {
+    ptr=a;
+    owns=true;
+  }
+#endif
+
+  auto_ptr& operator=(const auto_ptr& a) {
+    if (&a != this) {
+      if (owns) delete ptr;
+      owns = a.owns;
+      ptr = a.ptr;
+      a.owns = 0;
+    }
+    return(*this);
+  }
+
+  // this implementation may not be correct
+  template <class T> auto_ptr& operator=(const auto_ptr<T>& a) {
+    if(ptr != a.get()) {
+      if (owns) delete ptr;
+        owns = a.owns;
+      }
+      else {
+        owns = owns || a.owns ? true : false;
+      }
+    ptr = new X(*a);
+    a.owns = 0;
+    return(*this);
+  }
+
+  ~auto_ptr() {
+    if (owns) delete ptr;
+  }
+
+  X& operator*() const { return *ptr; }
+  X* operator->() const { return ptr; }
+  X* get() const { return ptr; }
+  X* release() const { owns = false; return ptr; }
+
+  // auto_ptr conversions
+  //auto_ptr(auto_ptr_ref<X>& x) { }
+  //template<class Y> operator auto_ptr_ref<Y>() { return auto_ptr_ref<Y>(); }
+  //template<class Y> operator auto_ptr<Y>() { return auto_ptr<T>(); }
+};
 
 #pragma endif

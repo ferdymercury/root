@@ -1,9 +1,10 @@
+//*CMZ :  2.24/01 31/03/2000  08.46.15  by  Rene Brun
 //*CMZ :  2.23/12 26/01/2000  12.24.45  by  Valery Fine(fine@bnl.gov)
 //*-- Author : Valery Fine   14/05/99  (E-mail: fine@bnl.gov)
 // $Id: TTablePoints.h,v 1.4 1999/12/17 23:28:41 fine Exp $
 
-#ifndef STAR_TTablePoints
-#define STAR_TTablePoints
+#ifndef ROOT_TTablePoints
+#define ROOT_TTablePoints
 // ***********************************************************************
 // * Observer to draw use ant TTable object as an element of "event" geometry
 // * Copyright(c) 1997~1999  [BNL] Brookhaven National Laboratory, STAR, All rights reserved
@@ -22,14 +23,14 @@
 // * representations about the suitability of this software for any
 // * purpose.  It is provided "as is" without express or implied warranty.
 // ************************************************************************
-#include <TPoints3DABC.h>
+#include "TPoints3DABC.h"
 #include "TTableSorter.h"
 #include "TTable.h"
 
 class TTablePoints : public TPoints3DABC
 {
   protected:
-    TTableSorter *fTableSorter;
+    TTableSorter   *fTableSorter;
     const void     *fKey;            // pointer to key value to select rows
     Int_t           fFirstRow;       // The first row to take in account
     Int_t           fSize;
@@ -67,11 +68,7 @@ inline void TTablePoints::SetTablePointer(void *table){ fRows = table;}
 //____________________________________________________________________________
 // return the pointer to the original table object
   inline void *TTablePoints::GetTable(){
-    if (fTableSorter) {
-      TTable *table = fTableSorter->GetTable();
-      if (table) return table->GetArray();
-    }
-    return 0;
+    return fTableSorter ? fTableSorter->GetTable() : 0;
   }
 //____________________________________________________________________________
   inline Int_t TTablePoints::Size() const { return fSize;}
@@ -85,21 +82,6 @@ inline void TTablePoints::SetTablePointer(void *table){ fRows = table;}
      fSize = TMath::Min(pos,idx)+1;
      return pos;
   }
-
-//____________________________________________________________________________
-// $Log: TTablePoints.h,v $
-// Revision 1.4  1999/12/17 23:28:41  fine
-// clean up for the sake of docs + new class TTable3DPackedPoints introduced
-//
-// Revision 1.3  1999/11/16 16:29:57  fine
-// TObject::GetObjectInfo() implemented
-//
-// Revision 1.2  1999/11/04 18:03:10  fine
-// new ctor for tablepoints introduced to make EventDiplay happy
-//
-// Revision 1.1  1999/05/18 20:21:25  fine
-// New class to 3D table viewer
-//____________________________________________________________________________
 
 #endif
 

@@ -1,19 +1,22 @@
+//*CMZ :  2.24/02 03/04/2000  14.31.12  by  Fons Rademakers
+//*CMZ :  2.24/01 31/03/2000  08.03.52  by  Valery Fine(fine@bnl.gov)
 //*CMZ :  2.00/12 14/09/98  17.55.56  by  Fons Rademakers
 //*CMZ :  2.00/06 12/05/98  15.40.23  by  Rene Brun
 //*CMZ :  1.03/09 16/12/97  16.42.21  by  Rene Brun
 //*-- Author :    Fons Rademakers   11/10/95
 
+/*CMZ :  2.24/01 24/02/2000  11.49.40  by  Fons Rademakers*/
 /*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun and Fons Rademakers.                               *
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
  *                                                                       *
- * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
- * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -59,7 +62,7 @@ TStopwatch::TStopwatch()
    fState         = kUndefined;
    fTotalCpuTime  = 0;
    fTotalRealTime = 0;
-
+   fCounter       = 0;
    Start();
 }
 
@@ -67,12 +70,14 @@ TStopwatch::TStopwatch()
 void TStopwatch::Start(Bool_t reset)
 {
    // Start the stopwatch. If reset is kTRUE reset the stopwatch before
-   // starting it. Use kFALSE to continue timing after a Stop() without
+   // starting it (including the stopwatch counter).
+   // Use kFALSE to continue timing after a Stop() without
    // resetting the stopwatch.
 
    if (reset) {
       fTotalCpuTime  = 0;
       fTotalRealTime = 0;
+      fCounter       = 0;
    }
    if (fState != kRunning) {
 #ifndef R__UNIX
@@ -85,6 +90,7 @@ void TStopwatch::Start(Bool_t reset)
 #endif
    }
    fState = kRunning;
+   fCounter++;
 }
 
 //______________________________________________________________________________
@@ -239,6 +245,8 @@ Double_t TStopwatch::GetCPUTime(){
 void TStopwatch::Print(Option_t *)
 {
    // Print the real and cpu time passed between the start and stop events.
+   // and the number of times (slices) this TStopwatch was called
+   // (if this number > 1)
 
    Double_t  realt = RealTime();
 
@@ -247,6 +255,10 @@ void TStopwatch::Print(Option_t *)
    Int_t  min   = Int_t(realt / 60);
    realt -= min * 60;
    Int_t  sec   = Int_t(realt);
-   Printf("Real time %d:%d:%d, CP time %.3f", hours, min, sec, CpuTime());
+   Int_t counter = Counter();
+   if (counter <= 1 )
+      Printf("Real time %d:%d:%d, CP time %.3f", hours, min, sec, CpuTime());
+   else
+      Printf("Real time %d:%d:%d, CP time %.3f, %d slices", hours, min, sec, CpuTime(),counter);
 }
 

@@ -1,5 +1,5 @@
-/*CMZ :  2.23/10 10/12/99  18.00.01  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   10/12/99*/
+/*CMZ :  2.24/05 16/05/2000  12.03.47  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   16/05/2000*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -767,6 +767,9 @@ struct G__var_array *mem;
     }
   }
   G__globalvarpointer = store_globalvarpointer;
+#ifndef G__OLDIMPLEMENTATION1264
+  G__store_struct_offset = store_struct_offset;
+#endif
   return(0);
 }
 

@@ -1,5 +1,5 @@
-/*CMZ :  2.23/10 10/12/99  18.00.24  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   10/12/99*/
+/*CMZ :  2.24/05 16/05/2000  12.04.03  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   16/05/2000*/
 // lib/prec_stl/multiset
 
 #pragma ifndef PREC_STL_MULTISET
@@ -52,10 +52,11 @@ class multiset {
   typedef typename Allocator::difference_type   difference_type;
 #endif
 
-#ifdef G__VISUAL
-  class iterator : public _Bidit<Key,difference_type>
-#else
-  class iterator : public bidirectional_iterator<Key,difference_type>
+  class iterator
+#if defined(G__VISUAL)
+	: public _Bidit<Key,difference_type>
+#elif !defined(G__SUNPRO_C)
+  	: public bidirectional_iterator<Key,difference_type>
 #endif
 	{
    public:
@@ -89,10 +90,11 @@ class multiset {
   friend bool operator!=(const multiset::iterator& x,const multiset::iterator& y)const;
 #endif
 
-#ifdef G__VISUAL
-  class reverse_iterator : public _Bidit<Key,difference_type>
-#else
-  class reverse_iterator : public bidirectional_iterator<Key,difference_type>
+  class reverse_iterator
+#if defined(G__VISUAL)
+	: public _Bidit<Key,difference_type>
+#elif !defined(G__SUNPRO_C)
+  	: public bidirectional_iterator<Key,difference_type>
 #endif
 	{
    public:
@@ -133,13 +135,15 @@ class multiset {
   //allocator_type get_allocator() const;
   // iterators:
   iterator               begin();
-  //const_iterator         begin() const;
   iterator               end();
-  //const_iterator         end() const;
   reverse_iterator       rbegin();
-  //const_reverse_iterator rbegin() const;
   reverse_iterator       rend();
-  //const_reverse_iterator rend() const;
+#ifdef G__CONSTNESSFLAG
+  const_iterator begin(void) const;
+  const_iterator end(void) const;
+  const_reverse_iterator rbegin(void) const;
+  const_reverse_iterator rend(void) const;
+#endif
 
   // capacity:
   bool          empty() const;
@@ -163,10 +167,19 @@ class multiset {
   //key_compare   key_comp() const;
   //value_compare value_comp() const;
   // multiset operations:
+#ifndef G__HPUX
   iterator  find(const Key& x) const;
+#else
+  iterator  find(const Key& x) ;
+#endif
   size_type count(const Key& x) const;
+#ifndef G__HPUX
   iterator  lower_bound(const Key& x) const;
   iterator  upper_bound(const Key& x) const;
+#else
+  iterator  lower_bound(const Key& x) ;
+  iterator  upper_bound(const Key& x) ;
+#endif
   //pair<iterator,iterator> equal_range(const Key& x) const;
 
   friend bool operator==(const multiset& x, const multiset& y);
@@ -176,7 +189,7 @@ class multiset {
   friend bool operator>=(const multiset& x, const multiset& y);
   friend bool operator<=(const multiset& x, const multiset& y);
   // specialized algorithms:
-  friend void swap(multiset& x, multiset& y);
+  //friend void swap(multiset& x, multiset& y);
 
 };
 

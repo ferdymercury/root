@@ -1,3 +1,4 @@
+//*CMZ :  2.24/03 29/04/2000  23.45.27  by  Rene Brun
 //*CMZ :  1.00/05 20/03/97  15.18.27  by  Rene Brun
 //*-- Author :
 //*CMZ :          01/01/96  20.58.05  by  Valery Fine
@@ -19,7 +20,7 @@
 #include "TWin32CallBackList.h"
 #endif
 
-ClassImp(TWin32CallBackList)
+// ClassImp(TWin32CallBackList)
 
 //______________________________________________________________________________
 TWin32CallBackList::TWin32CallBackList(UINT Idx, CallBack_t DefProc) {
@@ -139,7 +140,7 @@ LRESULT TWin32CallBackList::operator()(HWND hwnd, UINT message,
  }
 
 
-ClassImp(TCallBackObject)
+// ClassImp(TCallBackObject)
 
 #ifndef WIN32
 //______________________________________________________________________________

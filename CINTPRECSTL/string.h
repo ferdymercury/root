@@ -1,5 +1,5 @@
-/*CMZ :  2.23/10 10/12/99  18.00.24  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   10/12/99*/
+/*CMZ :  2.24/05 16/05/2000  12.04.03  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   16/05/2000*/
 // lib/prec_stl/string
 
 #pragma ifndef PREC_STL_STRING
@@ -11,7 +11,7 @@
 // string class wrapper , by Masaharu Goto
 // Template is on purposely avoided.
 
-#include <cstddef>
+#include <stddef.h>
 
 //////////////////////////////////////////////////////////////////////////
 class string {

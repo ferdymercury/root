@@ -1,15 +1,17 @@
-/*CMZ :  2.23/10 10/12/99  18.00.23  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   10/12/99*/
-namespace std {
+/*CMZ :  2.24/05 16/05/2000  12.04.02  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   16/05/2000*/
 
 #ifndef G__QUEUE_DLL
+namespace std {
 #pragma include_noerr <queue.dll>
+}
 #endif
 
 #ifdef __MAKECINT__
 #include <prec_stl/queue>
 #else
+namespace std {
 //#include <queue>
-#endif
 }
+#endif
 

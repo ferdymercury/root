@@ -1,3 +1,6 @@
+//*CMZ :  2.24/03 12/04/2000  11.23.52  by  Valery Fine(fine@bnl.gov)
+//*CMZ :  2.24/02 02/04/2000  19.28.04  by  Valery Fine(fine@bnl.gov)
+//*CMZ :  2.24/01 31/03/2000  08.34.39  by  Rene Brun
 //*CMZ :  2.23/12 26/01/2000  12.18.16  by  Valery Fine(fine@bnl.gov)
 //*-- Author :    Valery Fine(fine@mail.cern.ch)   03/07/98
 const char *gCoPyRiGhT[] = {
@@ -32,16 +35,16 @@ const char *Id = {
 
 //////////////////////////////////////////////////////////////////////////
 //                                                                      //
-// TDataSet                                                           //
+// TDataSet                                                             //
 //                                                                      //
-// TDataSet class is to create a special compound object-container:   //
+// TDataSet class is to create a special compound object-container:     //
 //                                                                      //
 // ==================================================================== //
-//    TDataSet object ::= the "named" list of TDataSet objects      //
+//    TDataSet object ::= the "named" list of TDataSet objects          //
 // ==================================================================== //
 // where the "list" (the pointer to TList object) may contain no object //
 //                                                                      //
-//  TDataSet object has a back pointer to its "parent" TDataSet     //
+//  TDataSet object has a back pointer to its "parent" TDataSet         //
 //  object, the "character" *name* and "character" *title*              //
 //                                                                      //
 //  The service this class does provide is to help the user to build    //
@@ -50,25 +53,25 @@ const char *Id = {
 //  So it is not "Container" itself rather the basement (base class)    //
 //  to built the containers.                                            //
 //                                                                      //
-//  One may derive the custom container classes from TDataSet.        //
-//  See for example TObjectSet, TTable, TNode, TFileSet         //
-//  These classes  derived from TDataSet:                             //
+//  One may derive the custom container classes from TDataSet.          //
+//  See for example TObjectSet, TTable, TNode, TFileSet                 //
+//  These classes  derived from TDataSet:                               //
 //                                                                      //
 //   Class Name                                                         //
 //   ----------                                                         //
-//  TObjectSet::public TDataSet - is a container for TObject        //
-//  TTable::    public TDataSet - is a container for the array      //
+//  TObjectSet::public TDataSet - is a container for TObject            //
+//  TTable::    public TDataSet - is a container for the array          //
 //                                    of any "plain" C-structure        //
-//  TNode::     public TDataSet - is a container for 3D objects     //
-//  TMaker::     public TDataSet - is a container for STAR "control" //
+//  TNode::     public TDataSet - is a container for 3D objects         //
+//  TMaker::     public TDataSet - is a container for STAR "control"    //
 //                                    objects                           //
 //   etc etc                                                            //
 //                                                                      //
-//  TDataSet class is a base class to implement the directory-like    //
-//  data structures and maintain it via TDataSetIter class iterator   //
+//  TDataSet class is a base class to implement the directory-like      //
+//  data structures and maintain it via TDataSetIter class iterator     //
 //                                                                      //
 // TDataSet can be iterated using an iterator object (see TDataSetIter) //
-//            or by TDataSet::Pass method (see below)                 //
+//            or by TDataSet::Pass method (see below)                   //
 //                                                                      //
 //  Terms:    Dataset       - any object from the list above            //
 //  =====     Member          is called "DataSet Member"                //
@@ -77,9 +80,9 @@ const char *Id = {
 //            member          "Structural member" if its "back pointer" //
 //                            points to this object                     //
 //                                                                      //
-//           Dataset        - we will say this TDataSet object "OWNs" //
+//           Dataset        - we will say this TDataSet object "OWNs"   //
 //            Owner           (or is an OWNER / PARENT of ) another     //
-//          (parent)          TDataSet object if the last one is its  //
+//          (parent)          TDataSet object if the last one is its    //
 //                            "Structural Member"                       //
 //                                                                      //
 //          Associated      - If some object is not "Structural member" //
@@ -87,17 +90,17 @@ const char *Id = {
 //                            "Associated Member" of this dataset       //
 //                                                                      //
 //           Orphan         - If some dataset is a member of NO other   //
-//           dataset          TDataSet object it is called an "orphan"//
+//           dataset          TDataSet object it is called an "orphan"  //
 //                            dataset object                            //
 //                                                                      //
-// - Any TDataSet object may be "Owned" by one and only one another   //
-//   TDataSet object if any.                                          //
+// - Any TDataSet object may be "Owned" by one and only one another     //
+//   TDataSet object if any.                                            //
 //                                                                      //
-// - Any TDataSet object can be the "Structural Member" of one and    //
-//   only one another TDataSet                                        //
+// - Any TDataSet object can be the "Structural Member" of one and      //
+//   only one another TDataSet                                          //
 //                                                                      //
-// - Any TDataSet object may be an "Associated Member" for any number //
-//   of other TDataSet objects if any                                 //
+// - Any TDataSet object may be an "Associated Member" for any number   //
+//   of other TDataSet objects if any                                   //
 //                                                                      //
 // - NAME issue:                                                        //
 //   Each "dataset member" is in possession of some "alpha-numerical"   //
@@ -105,7 +108,7 @@ const char *Id = {
 //   The NAME may contain any "printable" symbols but "SLASH" - "/"     //
 //   The symbol "RIGHT SLASH" - "/" can not be used as any part of the  //
 //   "DataSet Member" NAME                                              //
-//    Any DataSet  can be found by its NAME with TDataSetIter object  //
+//    Any DataSet  can be found by its NAME with TDataSetIter object    //
 //                                                                      //
 // - TITLE issue:                                                       //
 //   Each "dataset member" is in possession of the "alpha-numerical"    //
@@ -113,7 +116,7 @@ const char *Id = {
 //   reserved for the derived classes to hold there some indetification //
 //   that is special for that derived class.                            //
 //                                                                      //
-//   This means the user must be careful about  the "TDataSet         //
+//   This means the user must be careful about  the "TDataSet           //
 //   NAME and TITLE since this may cause some "side effects" of the     //
 //   particular class functions                                         //
 //                                                                      //
@@ -125,7 +128,7 @@ const char *Id = {
 //   ========                                                           //
 //   Create  DataSet is born either as "Orphan" or                      //
 //                                  as "Structural Member"              //
-//           of another TDataSet object                               //
+//           of another TDataSet object                                 //
 //                                                                      //
 //   Add     One dataset can be included into another dataset.          //
 //           Upon adding:                                               //
@@ -144,7 +147,7 @@ const char *Id = {
 //  Further information is provided my the particular method            //
 //  descriptions.                                                       //
 //                                                                      //
-//  The TDataSet class has several methods to control object('s)      //
+//  The TDataSet class has several methods to control object('s)        //
 //  memberships                                                         //
 //                                                                      //
 //////////////////////////////////////////////////////////////////////////
@@ -207,22 +210,27 @@ TDataSet::TDataSet(const TDataSet &pattern,EDataSetPass iopt)
        Add((TDataSet *)(set->Clone()));
   }
 }
+
 //______________________________________________________________________________
-TDataSet::TDataSet(TNode &){
+TDataSet::TDataSet(TNode &)
+{
   assert(0);
 }
+
 //______________________________________________________________________________
 TDataSet::~TDataSet()
 {
 //              cout << "Default destructor for " << GetName() << " - " << GetTitle() << endl;
    Shunt(0); Delete();
 }
+
 //______________________________________________________________________________
 void  TDataSet::MakeCollection()
 {
   if (!fList)
     fList = TestBit(kArray) ? (TSeqCollection *)new TObjArray : (TSeqCollection *) new TList;
 }
+
 //______________________________________________________________________________
 void TDataSet::AddAt(TDataSet *dataset,Int_t idx)
 {
@@ -240,6 +248,7 @@ void TDataSet::AddAt(TDataSet *dataset,Int_t idx)
   if (!dataset->GetRealParent()) dataset->SetParent(this);
   fList->AddAt(dataset,idx);
 }
+
 //______________________________________________________________________________
 void TDataSet::AddAtAndExpand(TDataSet *dataset, Int_t idx)
 {
@@ -258,6 +267,7 @@ void TDataSet::AddAtAndExpand(TDataSet *dataset, Int_t idx)
   if (TestBit(kArray)) ((TObjArray *) fList)->AddAtAndExpand(dataset,idx);
   else                  fList->AddAt(dataset,idx);
 }
+
 //______________________________________________________________________________
 void TDataSet::AddLast(TDataSet *dataset)
 {
@@ -293,10 +303,12 @@ void TDataSet::Browse(TBrowser *b)
    if (b)
        while ((obj = next())) b->Add(obj,obj->GetName());
 }
+
 //______________________________________________________________________________
 TObject *TDataSet::Clone() {
    return new TDataSet(*this);
 }
+
 //______________________________________________________________________________
 void TDataSet::Delete(Option_t *opt)
 {
@@ -308,26 +320,30 @@ void TDataSet::Delete(Option_t *opt)
   if(opt){/*unused*/}
 
 //      Delete list of the TDataSet
-  if (!fList) return;
-  TIter next(fList);
+  TSeqCollection     *thisList = GetCollection();
+  if (!thisList) return;
+  fList = 0;
+  TIter next(thisList);
   TDataSet *son = 0;
   //  Delete the "Structural Members" of this TDataSet only
   while ((son = (TDataSet *)next())) {
-    if (this != son->GetParent()) continue;
+    if ( (!son->IsOnHeap()) || (this != son->GetParent()) ) continue;
     // mark the object is deleted from the TDataSet dtor or Delete method
-    son->SetBit(kCanDelete); delete son;
+    son->SetBit(kCanDelete);
+    delete son;
   }
   //  Cleare list
-  fList->Clear("nodelete");
-  delete fList;
-  fList = 0;
+  thisList->Clear("nodelete");
+  delete thisList;
 }
+
 //______________________________________________________________________________
 TDataSet  *TDataSet::FindByPath(const Char_t *path) const
 {
   // Aliase for TDataSet::Find(const Char_t *path) method
    return Find(path);
 }
+
 //______________________________________________________________________________
 TDataSet *TDataSet::Find(const Char_t *path) const
 {
@@ -342,6 +358,7 @@ TDataSet *TDataSet::Find(const Char_t *path) const
   TDataSetIter next((TDataSet*)this);
   return next.Find(path);
 }
+
 //______________________________________________________________________________
 TDataSet  *TDataSet::FindByName(const Char_t *name,const Char_t *path,Option_t *opt) const
 {
@@ -364,6 +381,7 @@ TDataSet *TDataSet::FindObject(const Char_t *name,const Char_t *path,Option_t *o
   TDataSetIter next((TDataSet*)this);
   return next.FindObject(name,path,opt);
 }
+
 //______________________________________________________________________________
 TDataSet *TDataSet::First() const
 {
@@ -414,7 +432,7 @@ void TDataSet::ls(Int_t depth) const
  //                                                                 //
  //  ls(Int_t depth)                                                //
  //                                                                 //
- //  Prints the list of the this TDataSet.                        //
+ //  Prints the list of the this TDataSet.                          //
  //                                                                 //
  //  Parameter:                                                     //
  //  =========                                                      //
@@ -437,7 +455,11 @@ void TDataSet::ls(Int_t depth) const
   }
 }
 //______________________________________________________________________________
-Bool_t TDataSet::IsLocked() const {return 0;}
+Bool_t TDataSet::IsLocked() const
+{
+   return 0;
+}
+
 //______________________________________________________________________________
 Bool_t TDataSet::IsThisDir(const Char_t *dirname,int len,int ignorecase) const
 {
@@ -461,6 +483,7 @@ void TDataSet::MarkAll()
   TDataSet *set = 0;
   while ( (set = nextMark()) ) set->Mark();
 }
+
 //______________________________________________________________________________
 void TDataSet::UnMarkAll()
 {
@@ -470,6 +493,7 @@ void TDataSet::UnMarkAll()
   TDataSet *set = 0;
   while ( (set = nextMark()) ) set->Mark(kMark,kReset);
 }
+
 //______________________________________________________________________________
 void TDataSet::InvertAllMarks()
 {
@@ -490,6 +514,7 @@ Bool_t TDataSet::IsEmpty() const
    // return kTRUE if the "internal" collection has no member
    return First() ? kFALSE : kTRUE ;
 }
+
 //______________________________________________________________________________
 TString TDataSet::Path() const
 {
@@ -503,6 +528,7 @@ TString TDataSet::Path() const
    str +=  GetName();
    return str;
 }
+
 //______________________________________________________________________________
 void TDataSet::Remove(TDataSet *set)
 {
@@ -528,6 +554,7 @@ TDataSet  *TDataSet::RemoveAt(Int_t idx)
   }
   return set;
 }
+
 //______________________________________________________________________________
 EDataSetPass TDataSet::Pass(EDataSetPass ( *callback)(TDataSet *),Int_t depth)
 {
@@ -568,6 +595,7 @@ EDataSetPass TDataSet::Pass(EDataSetPass ( *callback)(TDataSet *),Int_t depth)
   }
   return condition==kUp ? kContinue:condition;
 }
+
 //______________________________________________________________________________
 EDataSetPass TDataSet::Pass(EDataSetPass ( *callback)(TDataSet *,void*),void *user,Int_t depth)
 {
@@ -609,6 +637,7 @@ EDataSetPass TDataSet::Pass(EDataSetPass ( *callback)(TDataSet *,void*),void *us
   }
   return (condition==kUp) ? kContinue:condition;
 }
+
 //______________________________________________________________________________
 Int_t TDataSet::Purge(Option_t *)
 {
@@ -633,10 +662,15 @@ Int_t TDataSet::Purge(Option_t *)
  }
  return 0;
 }
+
 //______________________________________________________________________________
-void  TDataSet::SetLock(int ){}
+void  TDataSet::SetLock(int )
+{
+}
+
 //______________________________________________________________________________
-void  TDataSet::SetParent(TDataSet *parent){
+void  TDataSet::SetParent(TDataSet *parent)
+{
 //
 //  Break the "parent" relationship with the current object parent if present
 //  parent != 0   Makes this object the "Structural Member"
@@ -646,6 +680,7 @@ void  TDataSet::SetParent(TDataSet *parent){
 //
    fParent = parent;
 }
+
 //______________________________________________________________________________
 void TDataSet::SetWrite()
 {
@@ -657,6 +692,7 @@ void TDataSet::SetWrite()
  //
  Write();
 }
+
 //______________________________________________________________________________
 void TDataSet::Shunt(TDataSet *newParent)
 {
@@ -707,6 +743,7 @@ void TDataSet::Update(TDataSet* set,UInt_t opt)
    if (!found) newset->Shunt(this);
   }
 }
+
 //______________________________________________________________________________
 void TDataSet::Update()
 {
@@ -721,6 +758,7 @@ void TDataSet::Update()
   TDataSet *set = 0;
   while(( set = next())) set->Update();
 }
+
 //______________________________________________________________________________
 void TDataSet::Sort()
 {
@@ -750,6 +788,7 @@ void TDataSet::Write(const Text_t *name, Int_t option, Int_t bufsize)
 
 
 class Copyright {public: Copyright(const Char_t *id=0){
+  if (!gSystem) return;
   if (gSystem->Getenv("No_Copyright") ||
      ( gSystem->Getenv("STAR") && !gSystem->Getenv("Copyright")) ) return;
   Int_t i = 0;
@@ -761,31 +800,3 @@ class Copyright {public: Copyright(const Char_t *id=0){
     for (Int_t l =i; l < lCopy; l++) cout << " " << gCoPyRiGhT[l] << endl;
   }}};
 static Copyright TDataSetLibraryCopyright(Id);
-
-//______________________________________________________________________________
-// $Log: TDataSet.cxx,v $
-// Revision 1.57  2000/01/12 18:07:22  fine
-//  cvs symbols have been added and copyright class introduced
-//
-// Revision 1.56  1999/10/29 23:11:19  fine
-// compilation error for Sun fixed
-//
-// Revision 1.55  1999/10/28 16:24:29  fine
-// TDataSet major correction: it may be built with TList (default) or with TObjArray
-//
-// Revision 1.54  1999/09/24 23:31:37  perev
-// Add title update in TDataSet::Update
-//
-// Revision 1.53  1999/09/04 00:28:01  fine
-// TTable::NaN from VP and gloabl dataset have been introduced
-//
-// Revision 1.52  1999/07/23 13:26:06  fine
-// Several new methods to mark the datasets have been introduced
-//
-// Revision 1.51  1999/06/26 01:40:55  fisyak
-// Add Valery's abstract buffer
-//
-// Revision 1.50  1999/06/09 22:08:53  fine
-// Comment clean up
-//______________________________________________________________________________
-

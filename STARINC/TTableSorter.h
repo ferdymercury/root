@@ -1,9 +1,11 @@
+//*CMZ :  2.24/01 31/03/2000  08.46.15  by  Rene Brun
 //*CMZ :  2.23/12 26/01/2000  16.07.13  by  Valery Fine(fine@bnl.gov)
 //*-- Author :  Valery Fine   26/01/99  (E-mail: fine@bnl.gov)
-#ifndef STAR_TTableSorter
-#define STAR_TTableSorter
+#ifndef ROOT_TTableSorter
+#define ROOT_TTableSorter
 
 #include "TNamed.h"
+#include "TTableDescriptor.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////
 //
@@ -30,7 +32,6 @@
 //
 ////////////////////////////////////////////////////////////////////////////////////////
 
-class TTable;
 class table_head_st;
 class TTableSorter : public TNamed {
  private:
@@ -45,8 +46,8 @@ class TTableSorter : public TNamed {
     typedef Int_t (*COMPAREMETHOD)(const void **, const void **);
     typedef Int_t (*SEARCHMETHOD)(const void *, const void **);
     typedef Int_t (*CALLQSORT)(const void *, const void *);
-    enum EColumnType {kNAN, kFloat, kInt, kLong, kShort, kDouble, kUInt
-                           ,kULong, kUShort, kUChar, kChar };
+//    enum EColumnType {kNAN, kFloat, kInt, kLong, kShort, kDouble, kUInt
+//                           ,kULong, kUShort, kUChar, kChar };
     void    **fSortIndex;    // Array of pointers to columns of the sorted table
     Int_t     fLastFound;    // The index of the last found index within fSortIndex
     Int_t     fFirstRow;     // first row of the table to be sorted
@@ -63,7 +64,7 @@ class TTableSorter : public TNamed {
     const TTable *fParentTable;  //!- the back pointer to the sorted table
 //#endif
     SEARCHMETHOD  fSearchMethod;   // Function selected to search values
-    EColumnType   fColType;        // data type of the selected column
+    TTable::EColumnType  fColType;        // data type of the selected column
 
     static int CompareFloat_t     (const void **, const void **);
     static int CompareInt_t       (const void **, const void **);
@@ -174,41 +175,5 @@ class TTableSorter : public TNamed {
 
     ClassDef(TTableSorter,0) // Is an "observer" class to sort the TTable objects
 };
-//______________________________________________________________________
-// $Log: TTableSorter.h,v $
-// Revision 1.24  2000/01/12 02:19:22  fine
-// new ctor with a pointer to TTable provided, internal ref to TTable has been replaced with a regular pointer
-//
-// Revision 1.23  2000/01/12 01:24:53  fine
-// several methods to use TTable class from the <converted> C program to C++
-//
-// Revision 1.22  1999/12/05 06:34:17  fine
-// Several const methods for TTableSorter introduced
-//
-// Revision 1.21  1999/12/04 22:41:37  fine
-// clean up sole const methods
-//
-// Revision 1.20  1999/12/01 14:03:35  fine
-// operator[] fixed for mixed types
-//
-// Revision 1.19  1999/12/01 01:40:04  fine
-// new access method with the Long_t parameter has been introduced to avoid the wrong cast from (long) to (double) in CINT
-//
-// Revision 1.18  1999/08/09 01:38:55  fine
-// New method GetKeyAddress has been introduced
-//
-// Revision 1.17  1999/05/18 17:59:22  fine
-// Clean up and some comments
-//
-// Revision 1.16  1999/05/18 14:41:29  fine
-// New methods: CountKey(), CountKeys(), FindFirstKey() have beent introduced
-//
-// Revision 1.15  1999/05/14 22:20:56  fine
-// CountKey and CountKeys methods have been introduced
-//
-// Revision 1.14  1999/05/14 00:30:38  fine
-// GetLastFound method has been introduced
-//
-//______________________________________________________________________
 
 #endif

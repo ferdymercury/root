@@ -1,54 +1,7 @@
+//*CMZ :  2.24/03 20/04/2000  18.44.06  by  Valery Fine(fine@bnl.gov)
+//*CMZ :  2.24/01 31/03/2000  08.46.15  by  Rene Brun
 //*CMZ :  2.23/12 26/01/2000  12.24.45  by  Valery Fine(fine@bnl.gov)
 //*-- Author : Valery Fine(fine@bnl.gov)   25/12/98
-// $Id: TVolume.h,v 1.18 1999/11/13 16:59:17 fine Exp $
-// $Log: TVolume.h,v $
-// Revision 1.18  1999/11/13 16:59:17  fine
-// TVolume and TVolumeView headers adjusted to ROOT 2.23/ not compatible with ROOT 2.22 anymore though!
-//
-// Revision 1.17  1999/08/03 14:52:23  fine
-// make up to make Linux compiler happy
-//
-// Revision 1.16  1999/07/09 01:56:38  fine
-// New method to contrsuct sub views and manage visibilities
-//
-// Revision 1.15  1999/06/09 22:09:35  fine
-// TPolyLine3D has beed redesigned
-//
-// Revision 1.14  1999/05/18 20:26:29  fine
-// comments clean up
-//
-// Revision 1.13  1999/05/13 19:57:27  fine
-// TVolume  the TShape list has been introduced, TVolume file format has been changed
-//
-// Revision 1.12  1999/04/19 00:05:15  fine
-// New class TPolylineShape has been introduced
-//
-// Revision 1.11  1999/04/13 14:26:40  fine
-// Geometry-based dataset implementation, next step
-//
-// Revision 1.10  1999/04/08 16:44:09  fine
-// Working version of the NodeView family
-//
-// Revision 1.9  1999/04/05 03:18:26  fine
-// TVolume family steps
-//
-// Revision 1.8  1999/02/04 19:22:23  fine
-// Severak drawing method have been added to draw STAR nodes
-//
-// Revision 1.7  1999/01/31 02:03:07  fine
-// TDataSetIter::Notify - new method + clean up
-//
-// Revision 1.6  1999/01/30 04:24:21  fine
-// TTable: Print memory leak fixed
-//
-// Revision 1.5  1999/01/25 23:36:41  fine
-// TDataSet fixed, TDataSetIter::operator[] introduced, TVolume with own Hash methdo
-//
-// Revision 1.4  1998/12/27 04:16:44  fine
-// *** empty log message ***
-//
-// Revision 1.2  1998/12/26 21:40:40  fisyak
-// Add Id and Log
 //
 //Copyright (C) 1998. Brookhaven National Laboratory. Valery Fine (Faine). All right reserved.
 
@@ -65,22 +18,16 @@
 
 #include "TObjectSet.h"
 
-#include <TNode.h>
+#include "TNode.h"
 
 #ifndef ROOT_TShape
-//*KEEP,TShape.
 #include "TShape.h"
-//*KEND.
 #endif
 #ifndef ROOT_TAttLine
-//*KEEP,TAttLine.
 #include "TAttLine.h"
-//*KEND.
 #endif
 #ifndef ROOT_TAttFill
-//*KEEP,TAttFill.
 #include "TAttFill.h"
-//*KEND.
 #endif
 
 class TBrowser;
@@ -124,7 +71,7 @@ class TVolume  : public TObjectSet, public TAttLine, public TAttFill, public TAt
         virtual TNode      *CreateTNode(const TVolumePosition *position=0);
         virtual void        DeletePosition(TVolumePosition *position);
         virtual Int_t       DistancetoPrimitive(Int_t px, Int_t py);
-        virtual void        Draw(Option_t *option=""); // *MENU*
+        virtual void        Draw(Option_t *depth="3"); // *MENU*
         virtual void        DrawOnly(Option_t *option="");
         virtual void        ExecuteEvent(Int_t event, Int_t px, Int_t py);
         static  TRotMatrix *GetIdentity();

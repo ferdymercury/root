@@ -1,3 +1,4 @@
+*CMZ :  2.24/01 20/03/2000  11.02.58  by  Rene Brun
 *CMZ :  2.23/05 14/10/99  19.34.47  by  Fons Rademakers
 *CMZ :  2.23/04 08/10/99  18.55.59  by  Rene Brun
 *CMZ :  2.21/06 11/02/99  08.51.45  by  Rene Brun
@@ -81,7 +82,7 @@ elseif [machine] = 'ALPHA' then
           /usr/shlib/libFutil.so /usr/shlib/libfor.so /usr/shlib/libots.so
 elseif [machine] = 'LINUX' then
    SH g77 -g -o [sysroot]/bin/g2root [main] _
-          [libcern]/libpacklib.a
+          [libcern]/libpacklib.a -lnsl
 elseif [machine] = 'WinNT' then
   libcern = $CERNLIB
 

@@ -1,71 +1,48 @@
+//*CMZ :  2.24/05 09/05/2000  19.35.52  by  Fons Rademakers
 //*CMZ :  0.90/10 05/12/96  10.22.19  by  Valery Fine(fine@vxcern.cern.ch)
 //*-- Author :    Fons Rademakers   17/03/96
 
-+SELF, IF=-WIN32.
-//_______________________________________________________
+//______________________________________________________________________________
 void edit(char *file)
 {
    char s[64], *e;
-   if (e = getenv("EDITOR"))
-      sprintf(s, "%s %s", e, file);
-   else
-      sprintf(s, "xterm -e vi %s &", file);
+   if (!strcmp(gSystem->GetName(), "WinNT")) {
+      if (e = getenv("EDITOR"))
+         sprintf(s, "start %s %s", e, file);
+      else
+         sprintf(s, "start notepad %s", file);
+   } else {
+      if (e = getenv("EDITOR"))
+         sprintf(s, "%s %s", e, file);
+      else
+         sprintf(s, "xterm -e vi %s &", file);
+   }
    gSystem.Exec(s);
 }
 
-//_______________________________________________
+//______________________________________________________________________________
 void ls(char *path=0)
 {
- char s[256] = "ls ";
- if (path) strcat(s,path);
- gSystem.Exec(s);
-}
-
-//_______________________________________________
-void dir(char *path=0)
-{
- char s[256] = "ls -l ";
- if (path) strcat(s,path);
- gSystem.Exec(s);
-}
-
-+SELF, IF=WIN32.
-//_______________________________________________
-void edit(char *file)
-{
-   char s[64], *e;
-   if (e = getenv("EDITOR"))
-      sprintf(s, "start %s %s", e, file);
-   else
-      sprintf(s, "start notepad %s", file);
+   char s[256] = (!strcmp(gSystem->GetName(), "WinNT")) ? "dir /w " : "ls ";
+   if (path) strcat(s,path);
    gSystem.Exec(s);
 }
 
-//_______________________________________________
-void ls(char *path=0)
-{
- char s[256] = "dir /w ";
- if (path) strcat(s,path);
- gSystem.Exec(s);
-}
-
-//_______________________________________________
+//______________________________________________________________________________
 void dir(char *path=0)
 {
- char s[256] = "dir ";
- if (path) strcat(s,path);
- gSystem.Exec(s);
+   char s[256] = (!strcmp(gSystem->GetName(), "WinNT")) ? "dir " : "ls -l ";
+   if (path) strcat(s,path);
+   gSystem.Exec(s);
 }
 
-+SELF.
-
-//_______________________________________________
+//______________________________________________________________________________
 char *pwd()
 {
     return gSystem.WorkingDirectory();
 }
 
-//_______________________________________________
+//______________________________________________________________________________
 char *cd(char *path=0)
 {
  if (path)
@@ -73,8 +50,7 @@ char *cd(char *path=0)
  return pwd();
 }
 
-
-//_______________________________________________
+//______________________________________________________________________________
 void bexec(char *macro)
 {
    if (gROOT->IsBatch()) printf("Processing benchmark: %s\n",macro);
@@ -90,4 +66,3 @@ void bexec(char *macro)
    if (tmacro2) tmacro2->SetTextColor(2);
    bench->Modified(); bench->Update();
 }
-

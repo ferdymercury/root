@@ -1,3 +1,4 @@
+//*CMZ :  2.24/01 01/03/2000  14.57.57  by  Rene Brun
 //*CMZ :  2.23/12 26/01/2000  09.53.03  by  Rene Brun
 //*CMZ :  2.23/09 18/11/99  12.10.58  by  Rene Brun
 //*CMZ :  2.23/02 04/09/99  09.27.43  by  Rene Brun
@@ -6,17 +7,18 @@
 //*CMZ :  2.22/00 05/04/99  18.07.15  by  Rene Brun
 //*-- Author :    Rene Brun   23/08/95
 
+/*CMZ :  2.24/01 24/02/2000  11.49.40  by  Fons Rademakers*/
 /*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun and Fons Rademakers.                               *
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
  *                                                                       *
- * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
- * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
  *************************************************************************/
 
 #include "TROOT.h"
@@ -389,16 +391,16 @@ void TF2::GetRange(Float_t &xmin, Float_t &ymin, Float_t &zmin, Float_t &xmax, F
 }
 
 //______________________________________________________________________________
-Double_t TF2::Integral(Float_t ax, Float_t bx, Float_t ay, Float_t by, Float_t epsilon)
+Double_t TF2::Integral(Double_t ax, Double_t bx, Double_t ay, Double_t by, Double_t epsilon)
 {
 // Return Integral of a 2d function in range [ax,bx],[ay,by]
 //
-   Float_t a[2], b[2];
+   Double_t a[2], b[2];
    a[0] = ax;
    b[0] = bx;
    a[1] = ay;
    b[1] = by;
-   Float_t relerr  = 0;
+   Double_t relerr  = 0;
    Double_t result = IntegralMultiple(2,a,b,epsilon,relerr);
    return result;
 }
@@ -434,7 +436,7 @@ void TF2::Paint(Option_t *option)
          fHistogram->SetBinContent(bin,EvalPar(xv,fParams));
       }
    }
-   fHistogram->Fill(fXmin-1,fYmin-1,0);  //This call to force fNentries non zero
+   ((TH2F*)fHistogram)->Fill(fXmin-1,fYmin-1,0);  //This call to force fNentries non zero
 
 //*-*- Copy Function attributes to histogram attributes
    Float_t *levels = fContour.GetArray();

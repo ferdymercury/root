@@ -1,3 +1,6 @@
+//*CMZ :  2.24/05 16/05/2000  11.52.11  by  Fons Rademakers
+//*CMZ :  2.24/03 03/05/2000  08.13.18  by  Rene Brun
+//*CMZ :  2.24/02 31/03/2000  13.00.26  by  Fons Rademakers
 //*CMZ :  2.23/12 19/01/2000  17.52.44  by  Fons Rademakers
 //*CMZ :  2.23/09 19/11/99  13.01.03  by  Fons Rademakers
 //*CMZ :  2.23/07 27/10/99  17.55.29  by  Rene Brun
@@ -8,17 +11,18 @@
 //*CMZ :  2.22/07 02/07/99  08.31.39  by  Rene Brun
 //*-- Author :    Fons Rademakers   15/09/95
 
+/*CMZ :  2.24/01 24/02/2000  11.49.40  by  Fons Rademakers*/
 /*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun and Fons Rademakers.                               *
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
  *                                                                       *
- * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
- * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -63,7 +67,6 @@ const char *gProgPath;
 
 TSystem  *gSystem;
 TSysEvtHandler *gXDisplay = 0;  // Display server event handler, set in TGClient
-
 
 ClassImp(TProcessEventTimer)
 
@@ -192,12 +195,6 @@ void TSystem::SetProgname(const char *name)
 void TSystem::SetDisplay()
 {
    // Set DISPLAY environment variable based on utmp entry. Only for UNIX.
-}
-
-//______________________________________________________________________________
-void  TSystem::CreateInspectView(TObject *)
-{
-  // Create an inspect view of the obj to perform TObject::Inspect
 }
 
 //______________________________________________________________________________
@@ -817,7 +814,7 @@ int TSystem::Umask(Int_t)
 //______________________________________________________________________________
 char *TSystem::Which(const char *, const char *, EAccessMode)
 {
-   // Find location of file in a search path.
+   // Find location of file in a search path. User must delete returned string.
 
    AbstractMethod("Which");
    return 0;
@@ -919,10 +916,17 @@ char *TSystem::DynamicPathName(const char *, Bool_t)
    return 0;
 }
 //______________________________________________________________________________
-Func_t TSystem::DynFindSymbol(const char *, const char *)
+Func_t TSystem::DynFindSymbol(const char * /*lib*/, const char *entry)
 {
+   // Find specific entry point in specified library. Specify "*" for lib
+   // to search in all libraries.
+
+#ifdef NOCINT
    AbstractMethod("DynFindSymbol");
    return 0;
+#else
+   return G__findsym(entry);
+#endif
 }
 
 //______________________________________________________________________________
@@ -1183,6 +1187,7 @@ int TSystem::CompileMacro(const char *filename, Option_t * opt)
   //
   // The possible options are:
   //     k : keep the shared library after the session end.
+  //     f : force recompilation.
   //
   // It uses the directive fMakeSharedLibs to create a shared library.
   // If loading the shared library fails, it tries to output a list of missing
@@ -1214,9 +1219,14 @@ int TSystem::CompileMacro(const char *filename, Option_t * opt)
   // In which case an external compiler will be called to create a shared
   // library.  This shared library will then be loaded and the function
   // myfunc will be called with the two arguments.  With '++' the shared library
-  // is deleted at the end of the session.  With '+' the shared library is kept.
-  // Of course the + and ++ notation will also be supported in similar way
-  // for .x and .L.
+  // is always recompiled.  With '+' the shared library is recompiled only
+  // if it does not exist yet or the macro file is newer than the shared
+  // library.
+  //
+  // HOWEVER, CompileMacro currently does NOT detect if any of the file that
+  // are included by the macro file has been changed!!!
+  //
+  // Of course the + and ++ notation is supported in similar way for .x and .L.
   //
   // Through the function TSystem::SetMakeSharedLib(), the user will be able to
   // indicate, with shell commands, how to build a shared library (a good
@@ -1262,8 +1272,10 @@ int TSystem::CompileMacro(const char *filename, Option_t * opt)
 
   // Analyze the options
   Bool_t keep = kFALSE;
+  Bool_t recompile = kFALSE;
   if (opt) {
      keep = (strchr(opt,'k')!=0);
+     recompile = (strchr(opt,'f')!=0);
   }
 
   // Get the right file names for the dictionnary and the shared library
@@ -1282,32 +1294,68 @@ int TSystem::CompileMacro(const char *filename, Option_t * opt)
   TString filename_noext = libname;
   libname.Replace( 0, libname.Last('/')+1, 0, 0);
 
+  if ( gInterpreter->IsLoaded(filename) ) {
+    // the script has already been loaded in interpreted mode
+    // Let's warn the user and unload it.
+
+    cerr << "script has already been loaded in interpreted mode" << endl;
+    cerr << "Unloading " << filename << " and compiling it" << endl;
+
+     if ( G__unloadfile( (char*) filename ) != 0 ) {
+      // We can not unload it.
+      return(G__LOADFILE_FAILURE);
+    }
+  }
+
+  Bool_t modified = kFALSE;
+  if ( !recompile ) {
+    Long_t lib_time, script_time;
+    if ( GetPathInfo( library, 0, 0, 0, &lib_time ) == 0 ) {
+
+      // If the time library is older than the script we
+      // are going to recompile !
+      GetPathInfo( filename, 0, 0, 0, &script_time );
+      modified = ( lib_time <= script_time );
+      recompile = modified;
+    } else {
+      recompile = kTRUE;
+    }
+  }
+
   if ( strlen(GetLibraries(library,"D")) != 0 ) {
     // The library has already been built and loaded.
-    // If the time library is older than the script we
-    // are going to recompile !
 
-    Long_t lib_time, script_time;
-    GetPathInfo( library, 0, 0, 0, &lib_time );
-    GetPathInfo( filename, 0, 0, 0, &script_time );
-
-    if ( lib_time > script_time ) {
+    if (modified)
+      cerr << "Modified ";
+    else
       cerr << "Unmodified ";
       cerr << "script has already been compiled and loaded. " << endl;
+    if ( !recompile ) {
+      return G__LOADFILE_SUCCESS;
     } else {
-      cerr << "Modified ";
-      cerr << "script has already been compiled and loaded. " << endl;
-      cerr << "Shared library can not be updated!." << endl;
+#ifdef R__KCC
+      cerr << "Shared library can not be updated!" << endl;
+#else
+      cerr << "It will be regenerated and reloaded!" << endl;
+#endif
+#ifdef R__KCC
+      return G__LOADFILE_DUPLICATE;
+#else
+      // the following is not working in KCC because it seems that dlclose
+      // does not properly get rid of the object.  It WILL provoke a
+      // core dump at termination.
+      if ( G__unloadfile( (char*) library.Data() ) != 0 ) {
+	// The library is being used. We can not unload it.
+	return(G__LOADFILE_FAILURE);
+      }
+      Unlink(library);
+#endif
     }
-    return G__LOADFILE_DUPLICATE;
-    // the following is not working because it seems that dlclose
-    // does not properly get rid of the object.  It WILL provoke a
-    // core dump at termination.
-    //if ( G__unloadfile( (char*) library.Data() ) != 0 ) {
-    //  // The library is being used. We can not unload it.
-    //  return(G__LOADFILE_FAILURE);
-    //}
-    //Unlink(library);
+
+  }
+  if (!recompile) {
+    // The library already exist, let's just load it.
+    return !gSystem->Load(library);
   }
 
   cerr << "Creating shared library " << library << endl;
@@ -1338,6 +1386,8 @@ int TSystem::CompileMacro(const char *filename, Option_t * opt)
   linkdefFile << "#pragma link off all globals;" << endl;
   linkdefFile << "#pragma link off all classes;" << endl;
   linkdefFile << "#pragma link off all functions;" << endl;
+  linkdefFile << "#pragma link C++ nestedclasses;" << endl;
+  linkdefFile << "#pragma link C++ nestedtypedefs;" << endl;
   linkdefFile << endl;
 
   // We want to look for a header file that has the same name as the macro

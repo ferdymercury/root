@@ -1,3 +1,7 @@
+//*CMZ :  2.24/05 15/05/2000  21.38.23  by  Rene Brun
+//*CMZ :  2.24/03 15/04/2000  11.57.35  by  Rene Brun
+//*CMZ :  2.24/02 05/04/2000  12.43.21  by  Rene Brun
+//*CMZ :  2.24/01 02/03/2000  14.19.52  by  Rene Brun
 //*CMZ :  2.23/12 26/01/2000  09.45.01  by  Rene Brun
 //*CMZ :  2.23/10 11/12/99  12.25.45  by  Rene Brun
 //*CMZ :  2.23/09 18/11/99  12.16.50  by  Rene Brun
@@ -9,17 +13,18 @@
 //*CMZ :  2.22/04 01/06/99  11.27.39  by  Rene Brun
 //*-- Author :    Rene Brun   03/02/97
 
+/*CMZ :  2.24/01 24/02/2000  11.49.40  by  Fons Rademakers*/
 /*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun and Fons Rademakers.                               *
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
  *                                                                       *
- * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
- * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -113,7 +118,7 @@ TChain::TChain(const char *name, const char *title)
    gROOT->GetListOfSpecials()->Add(this);
    fDirectory = 0;
    fNotify    = 0;
-   gROOT->cd();
+//   gROOT->cd();
 }
 
 //______________________________________________________________________________
@@ -134,7 +139,7 @@ TChain::~TChain()
 
 
 //______________________________________________________________________________
-void TChain::Add(const char *name)
+void TChain::Add(const char *name, Int_t nentries)
 {
 //       Add a new element to this chain.
 //       An element can be the name of another chain or the name of a file
@@ -144,6 +149,13 @@ void TChain::Add(const char *name)
 //      machine, subdir and tree_name are optional. If tree_name is missing,
 //      the chain name will be assumed.
 //
+//    if nentries < 0, the file is connected and the tree header read in memory
+//    to get the number of entries.
+//    if (nentries >= 0, the file is not connected, nentries is assumed to be
+//    the number of entries in the file. In this case, no check is made that
+//    the file exists and the Tree existing in the file. This second mode
+//    is interesting in case the number of entries in the file is already stored
+//    in a run data base for example.
 
    TDirectory *cursav = gDirectory;
    char *treename = (char*)GetName();
@@ -177,40 +189,44 @@ void TChain::Add(const char *name)
    }
 
    //Connect the file to get the number of entries
-   TFile *file = TFile::Open(filename);
-   if (file->IsZombie()) {
-      delete file;
-      delete [] filename;
-      return;
-   }
+   Int_t pksize = 0;
+   if (nentries <= 0) {
+      TFile *file = TFile::Open(filename);
+      if (file->IsZombie()) {
+         delete file;
+         delete [] filename;
+         return;
+      }
 
    //Check that tree with the right name exists in the file
-   TObject *obj = file->Get(treename);
-   if (obj && !obj->InheritsFrom("TTree") ) {
-      strcat(treename,"/");
-      strcat(treename,(char*)GetName());
-      obj = file->Get(treename);
-   }
-   if (!obj || !obj->InheritsFrom("TTree") ) {
-      Error("Add","cannot find tree with name %s", treename);
+      TObject *obj = file->Get(treename);
+      if (obj && !obj->InheritsFrom("TTree") ) {
+         strcat(treename,"/");
+         strcat(treename,(char*)GetName());
+         obj = file->Get(treename);
+      }
+      if (!obj || !obj->InheritsFrom("TTree") ) {
+         Error("Add","cannot find tree with name %s", treename);
+         delete file;
+         delete [] filename;
+         return;
+      }
+      TTree *tree = (TTree*)obj;
+      nentries = (Int_t)tree->GetEntries();
+      pksize   = tree->GetPacketSize();
+      delete tree;
       delete file;
-      delete [] filename;
-      return;
    }
-   TTree *tree = (TTree*)obj;
-   Int_t nentries = (Int_t)tree->GetEntries();
 
    fTreeOffset[fNtrees+1] = fTreeOffset[fNtrees] + nentries;
    fNtrees++;
    fEntries += nentries;
 
    TChainElement *element = new TChainElement(treename,filename);
-   element->SetPacketSize(tree->GetPacketSize());
+   element->SetPacketSize(pksize);
    element->SetNumberEntries(nentries);
    fFiles->Add(element);
 
-   delete tree;
-   delete file;
    delete [] filename;
    if (cursav) cursav->cd();
 }
@@ -551,17 +567,29 @@ void TChain::Merge(TFile *file, Int_t basketsize, Option_t *option)
       if (treeNumber != fTreeNumber) {
          treeNumber = fTreeNumber;
          TIter next(fTree->GetListOfBranches());
+	 Bool_t failed = kFALSE;
          while ((branch = (TBranch*)next())) {
             void *add = branch->GetAddress();
             // in case branch addresses have not been set, give a last chance
             // for simple Trees (h2root converted for example)
             if (!add) {
-               TLeaf *leaf = GetLeaf(branch->GetName());
-               if (!leaf) continue;
-               add = leaf->GetValuePointer();
-            }
-            if (add) hnew->SetBranchAddress(branch->GetName(),add);
-            else Warning("Merge","Tree branch addresses not defined");
+	       TLeaf *leaf, *new_leaf;
+	       TBranch *new_branch = hnew->GetBranch( branch->GetName() );
+	       if (!new_branch) continue;
+               TIter next_l(branch->GetListOfLeaves());
+	       while ((leaf = (TLeaf*) next_l())) {
+		 add = leaf->GetValuePointer();
+		 if (add) {
+		   new_leaf = new_branch->GetLeaf(leaf->GetName());
+		   if(new_leaf) new_leaf->SetAddress(add);
+		 } else {
+		   failed = kTRUE;
+		 }
+	       }
+            } else {
+               hnew->SetBranchAddress(branch->GetName(),add);
+	    }
+            if (failed) Warning("Merge","Tree branch addresses not defined");
          }
       }
       hnew->Fill();
@@ -596,6 +624,9 @@ void TChain::SetBranchAddress(const char *bname, void *add)
    }
 
    element->SetBaddress(add);
+
+   // invalidate current Tree
+   fTreeNumber = -1;
 }
 
 //_______________________________________________________________________
@@ -617,6 +648,9 @@ void TChain::SetBranchStatus(const char *bname, Bool_t status)
    }
 
    element->SetStatus(status);
+
+   // invalidate current Tree
+   fTreeNumber = -1;
 }
 
 //_______________________________________________________________________

@@ -1,3 +1,4 @@
+*CMZ :  2.24/01 06/03/2000  08.41.53  by  Rene Brun
 *CMZ :  2.20/00 27/11/98  12.54.48  by  Rene Brun
 *CMZ :  2.00/00 08/03/98  16.03.09  by  Rene Brun
 *CMZ :  1.03/01 11/08/97  11.08.15  by  Rene Brun
@@ -18,6 +19,7 @@ shell echo 'set TARFILE=root_%ROOTVERS%.%TYPE%.tar' > MakeDistSource.bat
 
 shell echo 'cd %ROOTSYS%' > MakeDistSource.bat
 
-shell echo 'tar -cvf %TARFILE% src/*.h src/*.c src/*.cxx src/*.f cint  tutorials/.rootrc tutorials/*.C test/*.cxx test/*.h test/Makefile test/README' > MakeDistSource.bat
+*shell echo 'tar -cvf %TARFILE% src/*.h src/*.c src/*.cxx src/*.f cint  STARtest/*.C tutorials/.rootrc tutorials/*.C test/*.cxx test/*.h test/Makefile test/README' > MakeDistSource.bat
+shell echo 'tar -cvf %TARFILE% src/*.h src/*.c src/*.cxx src/*.f cint tutorials/.rootrc tutorials/*.C test/*.cxx test/*.h test/Makefile test/README' > MakeDistSource.bat
 
 shell echo 'gzip %TARFILE%' > MakeDistSource.bat

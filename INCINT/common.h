@@ -1,5 +1,5 @@
-/*CMZ :  2.23/10 10/12/99  17.59.57  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   10/12/99*/
+/*CMZ :  2.24/05 16/05/2000  12.03.44  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   16/05/2000*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -391,6 +391,9 @@
 #define G__TOPVALUE           0x003f
 #define G__CTOR_SETGVP        0x0040
 
+#define G__THROW              0x0041
+#define G__CATCH              0x0042
+
 #define G__NOP                0xffff
 
 struct G__breakcontinue_list {
@@ -684,6 +687,9 @@ struct G__baseparam {
 #define G__TRYDESTRUCTOR    5
 #define G__CALLSTATICMEMFUNC 6
 
+#ifndef G__OLDIMPLEMENTATINO1250
+#define G__TRYIMPLICITCONSTRUCTOR 7
+#endif
 
 
 /********************************************************************
@@ -701,10 +707,10 @@ struct G__includepath {
 #ifdef G__SHAREDLIB
 
 #define G__AUTOCOMPILE
-#define G__MAX_SL 50
 
 #endif /* G__SHAREDLIB */
 
+#define G__MAX_SL 50
 
 /*********************************************************************
 * debugging flag
@@ -785,6 +791,9 @@ struct G__filetable {
 #ifndef G__OLDIMPLEMENTATION1207
   int ispermanentsl;
   G__DLLINIT initsl;
+#endif
+#ifndef G__OLDIMPLEMENTATION1273
+  struct G__dictposition *hasonlyfunc;
 #endif
 };
 

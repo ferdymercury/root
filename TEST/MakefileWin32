@@ -1,3 +1,4 @@
+*CMZ :  2.24/05 03/05/2000  11.37.53  by  Valery Fine(fine@bnl.gov)
 *CMZ :  2.21/08 11/03/99  08.00.22  by  Rene Brun
 *CMZ :  2.21/06 11/02/99  16.15.08  by  Valery Fine(fine@vxcern.cern.ch)
 *CMZ :  2.20/00 09/11/98  12.34.27  by  Valery Fine(fine@mail.cern.ch)
@@ -89,11 +90,16 @@ OBJS          = $(EVENTO) $(MAINEVENTO) $(HWORLDO) $(HSIMPLEO) $(MINEXAMO) \
                 $(TSTRINGO) $(TCOLLEXO) $(VVECTORO) $(VMATRIXO) $(VLAZYO) \
                 $(HELLOO) $(ACLOCKO) $(STRESSO) $(EVENTSO)
 
-PROGRAMS      = $(EVENT) $(HWORLD) $(HSIMPLE) $(MINEXAM) $(TSTRING) \
-                $(TCOLLEX) $(VVECTOR) $(VMATRIX) $(VLAZY) \
-                $(HELLOSO) $(ACLOCKSO) $(STRESS)
 
-all:            $(PROGRAMS)
+EXECUTABLES   = $(EVENT) $(HWORLD) $(HSIMPLE) $(MINEXAM) $(TSTRING) \
+                $(TCOLLEX) $(VVECTOR) $(VMATRIX) $(VLAZY) $(STRESS)
+
+DLLS          = $(HELLOSO) $(ACLOCKSO)
+
+PROGRAMS      = $(EXECUTABLES) $(DLLS)
+
+all:            $(DLLS) Run
+
 
 $(EVENTSO):     $(EVENTO)
                 BINDEXPLIB  $* $(EVENTO) > $*.def
@@ -150,6 +156,17 @@ $(ACLOCKSO):    $(ACLOCKO)
 
 clean:
                 @del /q $(OBJS) EventCint.$(SrcSuf) EventCint.h
+
+Run:   $(EXECUTABLES)
+!if "$OS"=="Windows_NT"
+        !-($** || pause )
+!else
+        !-$**
+!endif
+        @echo --------------------------------------------
+        @echo ------------ Complete ALL tests ------------
+        @echo --------------------------------------------
+
 
 ###
 Event.$(ObjSuf): Event.h

@@ -1,3 +1,4 @@
+//*CMZ :  2.24/01 23/03/2000  12.10.36  by  Rene Brun
 //*CMZ :  2.23/09 17/11/99  15.46.30  by  Rene Brun
 //*CMZ :  2.23/04 08/10/99  17.39.59  by  Rene Brun
 //*CMZ :  2.23/03 15/09/99  11.17.41  by  Rene Brun
@@ -9,17 +10,18 @@
 #ifndef ROOT_TMath
 #define ROOT_TMath
 
+/*CMZ :  2.24/01 24/02/2000  11.49.40  by  Fons Rademakers*/
 /*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun and Fons Rademakers.                               *
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
  *                                                                       *
- * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
- * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -171,6 +173,14 @@ public:
    static Double_t  NormCross(Double_t v1[3],Double_t v2[3],Double_t out[3]); // Calculate the Normalized Cross Product of two vectors
    static Double_t *Normal2Plane(Double_t v1[3],Double_t v2[3],Double_t v3[3], Double_t normal[3]); // Calcualte a normal vector of a plane
    static Double_t  Prob(Double_t chi2,Int_t ndf);
+
+   // Bessel functions
+   static Double_t BesselI(Int_t n,Double_t x);         // Compute integer order modified Bessel function I_n(x)
+   static Double_t BesselK(Int_t n,Double_t x);         // Compute integer order modified Bessel function K_n(x)
+   static Double_t BesselI0(Double_t x);                // Compute modified Bessel function I_0(x)
+   static Double_t BesselK0(Double_t x);                // Compute modified Bessel function K_0(x)
+   static Double_t BesselI1(Double_t x);                // Compute modified Bessel function I_1(x)
+   static Double_t BesselK1(Double_t x);                // Compute modified Bessel function K_1(x)
 
    ClassDef(TMath,0)  //Interface to math routines
 };

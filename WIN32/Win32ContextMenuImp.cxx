@@ -1,17 +1,20 @@
+//*CMZ :  2.24/03 29/04/2000  23.45.27  by  Rene Brun
+//*CMZ :  2.24/01 18/02/2000  16.56.48  by  Valery Fine(fine@bnl.gov)
 //*CMZ :  1.03/05 03/10/97  08.51.22  by  Rene Brun
 //*-- Author :    Valery Fine   22/02/96
 
+/*CMZ :  2.24/01 24/02/2000  11.49.40  by  Fons Rademakers*/
 /*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun and Fons Rademakers.                               *
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
  *                                                                       *
- * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
- * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
  *************************************************************************/
 
 #include "TWin32ContextMenuImp.h"
@@ -24,6 +27,8 @@
 #include "TContextMenu.h"
 #include "TMethod.h"
 #include "TMethodArg.h"
+#include "TDataType.h"
+#include "TMethodCall.h"
 #include "TROOT.h"
 #include "TGWin32WindowsObject.h"
 
@@ -42,7 +47,7 @@ typedef struct  {
             SIZE    size;
             } KW_BUTTONS;
 
-ClassImp(TWin32ContextMenuImp)
+// ClassImp(TWin32ContextMenuImp)
 
 //______________________________________________________________________________
 TWin32ContextMenuImp::TWin32ContextMenuImp(TContextMenu *c) :
@@ -184,17 +189,80 @@ void       TWin32ContextMenuImp::Dialog( TObject *object, TMethod *method )
 //*-* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 //*-*          Label      as STATIC control
 
-          char *label = fContextMenu->CreateArgumentTitle( argument );
+          char *argname  = fContextMenu->CreateArgumentTitle( argument );
+
+//------------------ begin of copy / paste from void TRootContextMenu::Dialog(TObject *object, TMethod *method)
+
+         const Text_t *type       = argument->GetTypeName();
+         TDataType    *datatype   = gROOT->GetType(type);
+         const Text_t *charstar   = "char*";
+         Text_t        basictype [32];
+
+         if (datatype) {
+           strcpy(basictype, datatype->GetTypeName());
+         } else {
+            if (strncmp(type, "enum", 4) != 0)
+              Warning("Dialog", "data type is not basic type, assuming (int)");
+           strcpy(basictype, "int");
+        }
+
+        if (strchr(argname, '*')) {
+           strcat(basictype, "*");
+           type = charstar;
+        }
+
+        TDataMember *m = argument->GetDataMember();
+        Text_t val[256]= "";
+        if (m && m->GetterMethod()) {
+
+         // WARNING !!!!!!!!
+         // MUST "reset" getter method!!! otherwise TAxis methods doesn't work!!!
+         Text_t gettername[256] = "";
+         strcpy(gettername, m->GetterMethod()->GetMethodName());
+         m->GetterMethod()->Init(object->IsA(), gettername, "");
+
+         // Get the current value and form it as a text:
+
+         if (!strncmp(basictype, "char*", 5)) {
+            Text_t *tdefval;
+            m->GetterMethod()->Execute(object, "", &tdefval);
+            strncpy(val, tdefval, 255);
+         } else if (!strncmp(basictype, "float", 5) ||
+                    !strncmp(basictype, "double", 6)) {
+            Double_t ddefval;
+            m->GetterMethod()->Execute(object, "", ddefval);
+            sprintf(val, "%g", ddefval);
+         } else if (!strncmp(basictype, "char", 4) ||
+                    !strncmp(basictype, "int", 3)  ||
+                    !strncmp(basictype, "long", 4) ||
+                    !strncmp(basictype, "short", 5)) {
+            Long_t ldefval;
+            m->GetterMethod()->Execute(object, "", ldefval);
+            sprintf(val, "%li", ldefval);
+         }
+
+         // Find out whether we have options ...
+
+         TList *opt;
+         if ((opt = m->GetOptions())) {
+            Warning("Dialog", "option menu not yet implemented", opt);
+         }
+
+       } else {    // if m not found ...
+         const char *tval = argument->GetDefault();
+         if (tval) strncpy(val, tval, 255);
+      }
+//------------------ end of copy / paste from void TRootContextMenu::Dialog(TObject *object, TMethod *method)
 
           lStyle              = WS_VISIBLE | WS_CHILD;
           ControlPosition.y  += VertStep;
-          ControlSize.cx      = 4*strlen(label);
+          ControlSize.cx      = 4*strlen(argname);
           MaxSize = TMath::Max(MaxSize,(Int_t)ControlSize.cx);
 
           fDialog->AttachControlItem(&ControlPosition,
                                      &ControlSize,
                                      lStyle,0,
-                                     label,
+                                     argname,
                                      wId++,kWStatic);
 //          yCurrPos += lineOffset/2;
 
@@ -217,7 +285,7 @@ void       TWin32ContextMenuImp::Dialog( TObject *object, TMethod *method )
           fDialog->AttachControlItem(&ControlPosition,
                                      &ControlSize,
                                      lStyle,0,
-                                     (char *) argument->GetDefault(),
+                                     val,            // (char *) argument->GetDefault(),
                                      wId++,kWEdit);
 
             // remember the first widget to put initial focus on it

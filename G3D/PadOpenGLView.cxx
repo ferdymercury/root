@@ -1,3 +1,4 @@
+//*CMZ :  2.24/02 03/04/2000  08.25.19  by  Rene Brun
 //*CMZ :  2.23/09 17/11/99  15.23.48  by  Rene Brun
 //*CMZ :  2.23/07 16/11/99  12.00.32  by  Rene Brun
 //*CMZ :  2.23/04 10/10/99  18.18.04  by  Fons Rademakers
@@ -7,17 +8,18 @@
 //*CMZ :  2.21/06 17/04/99  07.50.09  by  Rene Brun
 //*-- Author :    Valery Fine(fine@vxcern.cern.ch)   08/05/97
 
+/*CMZ :  2.24/01 24/02/2000  11.49.40  by  Fons Rademakers*/
 /*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun and Fons Rademakers.                               *
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
  *                                                                       *
- * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
- * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -557,8 +559,8 @@ void TPadOpenGLView::MoveModelView(const char *cmd, int mlsecc)
 //*-*                  TPadOpenGLView::MoveModelView(Char_t option, Int_t count)
 //*0*
 //*-*     int mlsecc - The total time desired to perform full "chain".
-//*-*                  It is assume thata single step is perform quite fast
-//*-*                  and mast be slow done
+//*-*                  It is assumed that a single step is performed too quickly
+//*-*                  and must be done slowly
 //*-*              = 0;  No slowdown. It is painting as fast as the
 //*-*                    present CPU allows
 //*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*

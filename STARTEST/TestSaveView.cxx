@@ -51,5 +51,3 @@ TestSaveView(const Char_t *filename="$ROOTSYS/tutorials/na49.root")
        out.close();
        iCounter++;
   }
-  cout << iCounter << " files have been create" << endl;
-};

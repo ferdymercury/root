@@ -1,3 +1,4 @@
+//*CMZ :  2.24/01 23/03/2000  12.14.37  by  Rene Brun
 //*CMZ :  2.23/04 08/10/99  17.39.59  by  Rene Brun
 //*CMZ :  2.23/03 15/09/99  11.18.05  by  Rene Brun
 //*CMZ :  2.22/08 07/07/99  11.44.39  by  Rene Brun
@@ -5,17 +6,18 @@
 //*CMZ :  2.22/03 31/05/99  09.06.17  by  Rene Brun
 //*-- Author :    Fons Rademakers   29/07/95
 
+/*CMZ :  2.24/01 24/02/2000  11.49.40  by  Fons Rademakers*/
 /*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun and Fons Rademakers.                               *
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
  *                                                                       *
- * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
- * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -1216,4 +1218,235 @@ ULong_t TMath::Hash(const void *txt, Int_t ntxt)
 ULong_t TMath::Hash(const char *txt)
 {
    return Hash(txt, Int_t(strlen(txt)));
+}
+
+//______________________________________________________________________________
+Double_t TMath::BesselI0(Double_t x)
+{
+// Computation of the modified Bessel function I_0(x) for any real x.
+//
+// The algorithm is based on the article by Abramowitz and Stegun [1]
+// as denoted in Numerical Recipes 2nd ed. on p. 230 (W.H.Press et al.).
+//
+// [1] M.Abramowitz and I.A.Stegun, Handbook of Mathematical Functions,
+//     Applied Mathematics Series vol. 55 (1964), Washington.
+//
+//--- NvE 12-mar-2000 UU-SAP Utrecht
+
+ // Parameters of the polynomial approximation
+ const Double_t p1=1.0,          p2=3.5156229,    p3=3.0899424,
+                p4=1.2067492,    p5=0.2659732,    p6=3.60768e-2,  p7=4.5813e-3;
+
+ const Double_t q1= 0.39894228,  q2= 1.328592e-2, q3= 2.25319e-3,
+                q4=-1.57565e-3,  q5= 9.16281e-3,  q6=-2.057706e-2,
+                q7= 2.635537e-2, q8=-1.647633e-2, q9= 3.92377e-3;
+
+ Double_t ax = TMath::Abs(x);
+
+ Double_t y=0, result=0;
+
+ if (ax < 3.75) {
+    y = pow(x/3.75,2);
+    result = p1+y*(p2+y*(p3+y*(p4+y*(p5+y*(p6+y*p7)))));
+ } else {
+    y = 3.75/ax;
+    result = (exp(ax)/sqrt(ax))*(q1+y*(q2+y*(q3+y*(q4+y*(q5+y*(q6+y*(q7+y*(q8+y*q9))))))));
+ }
+ return result;
+}
+
+//______________________________________________________________________________
+Double_t TMath::BesselK0(Double_t x)
+{
+// Computation of the modified Bessel function K_0(x) for positive real x.
+//
+// The algorithm is based on the article by Abramowitz and Stegun [1]
+// as denoted in Numerical Recipes 2nd ed. on p. 230 (W.H.Press et al.).
+//
+// [1] M.Abramowitz and I.A.Stegun, Handbook of Mathematical Functions,
+//     Applied Mathematics Series vol. 55 (1964), Washington.
+//
+//--- NvE 12-mar-2000 UU-SAP Utrecht
+
+ // Parameters of the polynomial approximation
+ const Double_t p1=-0.57721566,  p2=0.42278420,   p3=0.23069756,
+                p4= 3.488590e-2, p5=2.62698e-3,   p6=1.0750e-4,    p7=7.4e-5;
+
+ const Double_t q1= 1.25331414,  q2=-7.832358e-2, q3= 2.189568e-2,
+                q4=-1.062446e-2, q5= 5.87872e-3,  q6=-2.51540e-3,  q7=5.3208e-4;
+
+ if (x <= 0) {
+    printf(" *K0* Invalid argument x = %g\n",x);
+    return 0;
+ }
+
+ Double_t y=0,result=0;
+
+ if (x <= 2) {
+    y = x*x/4.;
+    result = (-log(x/2.)*TMath::BesselI0(x))+(p1+y*(p2+y*(p3+y*(p4+y*(p5+y*(p6+y*p7))))));
+ } else {
+    y = 2./x;
+    result = (exp(-x)/sqrt(x))*(q1+y*(q2+y*(q3+y*(q4+y*(q5+y*(q6+y*q7))))));
+ }
+ return result;
+}
+
+//______________________________________________________________________________
+Double_t TMath::BesselI1(Double_t x)
+{
+// Computation of the modified Bessel function I_1(x) for any real x.
+//
+// The algorithm is based on the article by Abramowitz and Stegun [1]
+// as denoted in Numerical Recipes 2nd ed. on p. 230 (W.H.Press et al.).
+//
+// [1] M.Abramowitz and I.A.Stegun, Handbook of Mathematical Functions,
+//     Applied Mathematics Series vol. 55 (1964), Washington.
+//
+//--- NvE 12-mar-2000 UU-SAP Utrecht
+
+ // Parameters of the polynomial approximation
+ const Double_t p1=0.5,          p2=0.87890594,   p3=0.51498869,
+                p4=0.15084934,   p5=2.658733e-2,  p6=3.01532e-3,  p7=3.2411e-4;
+
+ const Double_t q1= 0.39894228,  q2=-3.988024e-2, q3=-3.62018e-3,
+                q4= 1.63801e-3,  q5=-1.031555e-2, q6= 2.282967e-2,
+                q7=-2.895312e-2, q8= 1.787654e-2, q9=-4.20059e-3;
+
+ Double_t ax = TMath::Abs(x);
+
+ Double_t y=0, result=0;
+
+ if (ax < 3.75) {
+    y = pow(x/3.75,2);
+    result = x*(p1+y*(p2+y*(p3+y*(p4+y*(p5+y*(p6+y*p7))))));
+ } else {
+    y = 3.75/ax;
+    result = (exp(ax)/sqrt(ax))*(q1+y*(q2+y*(q3+y*(q4+y*(q5+y*(q6+y*(q7+y*(q8+y*q9))))))));
+    if (x < 0) result = -result;
+ }
+ return result;
+}
+
+//______________________________________________________________________________
+Double_t TMath::BesselK1(Double_t x)
+{
+// Computation of the modified Bessel function K_1(x) for positive real x.
+//
+// The algorithm is based on the article by Abramowitz and Stegun [1]
+// as denoted in Numerical Recipes 2nd ed. on p. 230 (W.H.Press et al.).
+//
+// [1] M.Abramowitz and I.A.Stegun, Handbook of Mathematical Functions,
+//     Applied Mathematics Series vol. 55 (1964), Washington.
+//
+//--- NvE 12-mar-2000 UU-SAP Utrecht
+
+ // Parameters of the polynomial approximation
+ const Double_t p1= 1.,          p2= 0.15443144,  p3=-0.67278579,
+                p4=-0.18156897,  p5=-1.919402e-2, p6=-1.10404e-3,  p7=-4.686e-5;
+
+ const Double_t q1= 1.25331414,  q2= 0.23498619,  q3=-3.655620e-2,
+                q4= 1.504268e-2, q5=-7.80353e-3,  q6= 3.25614e-3,  q7=-6.8245e-4;
+
+ if (x <= 0) {
+    printf(" *K1* Invalid argument x = %g\n",x);
+    return 0;
+ }
+
+ Double_t y=0,result=0;
+
+ if (x <= 2) {
+    y = x*x/4.;
+    result = (log(x/2.)*TMath::BesselI1(x))+(1./x)*(p1+y*(p2+y*(p3+y*(p4+y*(p5+y*(p6+y*p7))))));
+ } else {
+    y = 2./x;
+    result = (exp(-x)/sqrt(x))*(q1+y*(q2+y*(q3+y*(q4+y*(q5+y*(q6+y*q7))))));
+ }
+ return result;
+}
+
+//______________________________________________________________________________
+Double_t TMath::BesselK(Int_t n,Double_t x)
+{
+// Computation of the Integer Order Modified Bessel function K_n(x)
+// for n=0,1,2,... and positive real x.
+//
+// The algorithm uses the recurrence relation
+//
+//               K_n+1(x) = (2n/x)*K_n(x) + K_n-1(x)
+//
+// as denoted in Numerical Recipes 2nd ed. on p. 232 (W.H.Press et al.).
+//
+//--- NvE 12-mar-2000 UU-SAP Utrecht
+
+ if (x <= 0 || n < 0) {
+    printf(" *K* Invalid argument(s) (n,x) = (%d, %g)\n",n,x);
+    return 0;
+ }
+
+ if (n==0) return TMath::BesselK0(x);
+ if (n==1) return TMath::BesselK1(x);
+
+ // Perform upward recurrence for all x
+ Double_t tox = 2./x;
+ Double_t bkm = TMath::BesselK0(x);
+ Double_t bk  = TMath::BesselK1(x);
+ Double_t bkp = 0;
+ for (Int_t j=1; j<n; j++) {
+    bkp = bkm+Double_t(j)*tox*bk;
+    bkm = bk;
+    bk  = bkp;
+ }
+ return bk;
+}
+
+//______________________________________________________________________________
+Double_t TMath::BesselI(Int_t n,Double_t x)
+{
+// Computation of the Integer Order Modified Bessel function I_n(x)
+// for n=0,1,2,... and any real x.
+//
+// The algorithm uses the recurrence relation
+//
+//               I_n+1(x) = (-2n/x)*I_n(x) + I_n-1(x)
+//
+// as denoted in Numerical Recipes 2nd ed. on p. 232 (W.H.Press et al.).
+//
+//--- NvE 12-mar-2000 UU-SAP Utrecht
+
+ Int_t iacc = 40; // Increase to enhance accuracy
+ Double_t bigno = 1.e10, bigni = 1.e-10;
+
+ if (n < 0) {
+     printf(" *I* Invalid argument (n,x) = (%d, %g)\n",n,x);
+     return 0;
+ }
+
+ if (n==0) return TMath::BesselI0(x);
+ if (n==1) return TMath::BesselI1(x);
+
+ if (TMath::Abs(x) < 1.e-10) return 0;
+
+ Double_t tox = 2./TMath::Abs(x);
+ Double_t bip = 0,bim = 0;
+ Double_t bi  = 1;
+ Double_t result = 0;
+ Int_t m = 2*((n+Int_t(sqrt(Float_t(iacc*n))))); // Downward recurrence from even m
+ for (Int_t j=m; j<=1; j--) {
+    bim = bip+Double_t(j)*tox*bi;
+    bip = bi;
+    bi  = bim;
+    // Renormalise to prevent overflows
+    if (TMath::Abs(bi) > bigno)  {
+       result *= bigni;
+       bi     *= bigni;
+       bip    *= bigni;
+    }
+    if (j==n) result=bip;
+ }
+
+ result *= TMath::BesselI0(x)/bi; // Normalise with BesselI0(x)
+ if ((x < 0) && (n%2 == 1)) result = -result;
+
+ return result;
 }

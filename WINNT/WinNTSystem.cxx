@@ -1,3 +1,5 @@
+//*CMZ :  2.24/05 15/05/2000  08.54.27  by  Rene Brun
+//*CMZ :  2.24/02 06/04/2000  13.22.40  by  Valery Fine(fine@bnl.gov)
 //*CMZ :  2.23/09 19/11/99  13.08.04  by  Fons Rademakers
 //*CMZ :  2.23/07 23/10/99  12.06.34  by  Fons Rademakers
 //*CMZ :  2.23/05 19/10/99  17.29.46  by  Fons Rademakers
@@ -8,17 +10,18 @@
 //*CMZ :  2.21/01 14/01/99  13.35.40  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   15/09/95
 
+/*CMZ :  2.24/01 24/02/2000  11.49.40  by  Fons Rademakers*/
 /*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun and Fons Rademakers.                               *
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
  *                                                                       *
- * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
- * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -43,9 +46,9 @@
 #include "TException.h"
 #include "Demangle.h"
 #include "TEnv.h"
-#include "TWin32InspectImp.h"
 #include "TWin32HookViaThread.h"
 #include "TWin32Timer.h"
+#include "TGWin32Command.h"
 #include "TSocket.h"
 #include "TApplication.h"
 
@@ -270,8 +273,18 @@ Bool_t TWinNTSystem::Init()
 
 #ifndef ROOTPREFIX
    gRootDir = Getenv("ROOTSYS");
-   if (gRootDir == 0)
-      gRootDir= "/usr/local/root";
+   if (gRootDir == 0) {
+     static char lpFilename[MAX_PATH];
+     if (GetModuleFileName(NULL,                 // handle to module to find filename for
+                           lpFilename,           // pointer to buffer to receive module path
+                           sizeof(lpFilename)))  // size of buffer, in characters
+     {
+        const char *dirName = DirName(DirName(lpFilename));
+        gRootDir = StrDup(dirName);
+     } else {
+        gRootDir = 0;
+     }
+   }
 #else
    gRootDir= ROOTPREFIX;
 #endif
@@ -392,22 +405,6 @@ void TWinNTSystem::CreateIcons()
 }
 
 //______________________________________________________________________________
-void TWinNTSystem::CreateInspectView(TObject *obj)
-{
-//*-*  CreateInspectview creates a new object TInspectViewImp to display the
-//*-*  back TObject::Inspect under WIN32
-//*-*  Note: It would be better to use TINspectViewImp directly rather that via
-//*-*  TCanvasImp class
-
-    if (gROOT->IsBatch() || !gApplication) return;
-
-    //would be better to go via CINT. Should have TWin32InspectImp in dictionary
-    TWin32InspectImp *inspview = new TWin32InspectImp(obj,"Inspector", (UInt_t)400,(UInt_t)200);
-
-//    gROOT->ProcessLineFast(Form("new TWin32InspectImp(0x%lx,\"Inspector\", (UInt_t)400,(UInt_t)200);", (Long_t) obj));
-}
-
-//______________________________________________________________________________
 void  TWinNTSystem::SetShellName(const char *name)
  {
      const char *shellname = "SHELL32.DLL";
@@ -492,19 +489,17 @@ void TWinNTSystem::SetProgname(const char *name)
       else
           which = Which(Form("%s;%s",WorkingDirectory(),Getenv("PATH")), progname);
 
-      const char *dirname;
       if (which)
       {
+        const char *dirname;
         char driveletter = DriveName(which);
-        char *d = (char *)DirName(which);
+        const char *d = DirName(which);
         if (driveletter)
           dirname = Form("%c:%s",driveletter,d);
         else
-          dirname = d;
-
+          dirname = Form("%s",d);
 
         gProgPath = StrDup(dirname);
-        if (d) delete [] d;
       }
       else {
           Warning("SetProgname","Wrong Program path");
@@ -924,30 +919,45 @@ const char *TWinNTSystem::DirName(const char *pathname)
    // It creates output with 'new char []' operator. Returned string has to
    // be deleted.
 
-  char *dirNameBuffer = 0;
+  // Delete old buffer
+  if (fDirNameBuffer) {
+    // delete [] fDirNameBuffer;
+    fDirNameBuffer = 0;
+  }
 //*-*
 //*-* Create a buffer to keep the path name
 //*-*
    if (pathname) {
      if (strchr(pathname, '/') || strchr(pathname, '\\'))
      {
-        char *rslash = strrchr(pathname, '/');
-        char *bslash = strrchr(pathname, '\\');
-        char *r = max(rslash, bslash);
-        *r = '\0';                       // Terminate the name of the path with '\0'
-        r = strchr(pathname,':');        // Windows path may contain a drive letter
-
-        dirNameBuffer = new char[strlen(pathname)+1];
-        if (r) strcpy(dirNameBuffer, ++r);
-        else   strcpy(dirNameBuffer,pathname);
+       char *rslash = strrchr(pathname, '/');
+       char *bslash = strrchr(pathname, '\\');
+       char *r = max(rslash, bslash);
+       const char *ptr = pathname;
+       while (ptr <= r) {
+         if (r == ":")
+         {
+           // Windows path may contain a drive letter
+           // For NTFS ":" may be a "stream" delimiter as well
+           pathname =  ptr + 1;
+           break;
+         }
+         ptr++;
+       }
+       int len =  r - pathname;
+       if (len>0)
+       {
+         fDirNameBuffer = new char[len+1];
+         memcpy(fDirNameBuffer,pathname,len);
+         fDirNameBuffer[len] = 0;
+       }
      }
    }
-
-   if (!dirNameBuffer) {
-        dirNameBuffer = new char[1];
-        *dirNameBuffer = '\0'; // Set the empty default response
+   if (!fDirNameBuffer) {
+        fDirNameBuffer = new char[1];
+       *fDirNameBuffer = '\0'; // Set the empty default response
    }
-   return dirNameBuffer;
+   return fDirNameBuffer;
 }
 
 //______________________________________________________________________________
@@ -1216,10 +1226,14 @@ const char *TWinNTSystem::Getenv(const char *name)
 {
    // Get environment variable.
 
-  if ( ::_stricmp(name,"home")==0 )
-   return HomeDirectory();
-  else
-   return ::getenv(name);
+  const char *env = ::getenv(name);
+  if (!env) {
+     if (::_stricmp(name,"home")==0 )
+        env = HomeDirectory();
+     else if (::_stricmp(name,"rootsys")==0 )
+        env = gRootDir;
+  }
+  return env;
 }
 
 //---- Processes ---------------------------------------------------------------
@@ -1420,7 +1434,11 @@ char *TWinNTSystem::DynamicPathName(const char *lib, Bool_t quiet)
 //______________________________________________________________________________
 Func_t TWinNTSystem::DynFindSymbol(const char *module, const char *entry)
 {
+#ifdef NOCINT
    return WinNTDynFindSymbol(module,entry);
+#else
+   return TSystem::DynFindSymbol("*", entry);
+#endif
 }
 
 //______________________________________________________________________________
@@ -2377,7 +2395,10 @@ int TWinNTSystem::WinNTFilestat(const char *path, Long_t *id, Long_t *size,
    // Modtime is modification time
 
    struct stat statbuf;
-
+   if (id)      *id = 0;
+   if (size)    *size = 0;
+   if (flags)   *flags = 0;
+   if (modtime) *modtime = 0;
    if (path != 0 && stat(path, &statbuf) >= 0) {
       if (id)
          *id = (statbuf.st_dev << 24) + statbuf.st_ino;

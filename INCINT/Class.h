@@ -1,5 +1,5 @@
-/*CMZ :  2.23/10 10/12/99  17.59.57  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   10/12/99*/
+/*CMZ :  2.24/05 16/05/2000  12.03.44  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   16/05/2000*/
 /* /% C++ %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -64,6 +64,7 @@ class G__ClassInfo {
 #ifndef G__OLDIMPLEMENTATION1020
   struct G__friendtag* GetFriendInfo();
 #endif
+  void SetGlobalcomp(int globalcomp);
 #ifdef G__OLDIMPLEMENTATION1218_YET
   int IsValid() { return 0<=tagnum && tagnum<G__struct.alltag ? 1 : 0; }
 #else
@@ -103,6 +104,7 @@ class G__ClassInfo {
   int ImpLine();
   int Version();
   void *New();
+  void *New(int n);
   int InstanceCount();
   void ResetInstanceCount();
   void IncInstanceCount();

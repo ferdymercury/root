@@ -1,3 +1,4 @@
+//*CMZ :  2.24/01 01/03/2000  17.45.14  by  Rene Brun
 //*CMZ :  2.23/12 25/01/2000  14.32.27  by  Rene Brun
 //*CMZ :  2.23/11 10/01/2000  13.31.43  by  Rene Brun
 //*-- Author :    Rene Brun   07/01/2000
@@ -44,7 +45,7 @@ void exec2()
    c2->cd();
 
    //draw slice corresponding to mouse position
-   TH1 *h = (TH1*)select;
+   TH2 *h = (TH2*)select;
    Int_t biny = h->GetYaxis()->FindBin(y);
    TH1D *hp = h->ProjectionX("",biny,biny);
    char title[80];
@@ -54,3 +55,4 @@ void exec2()
    hp->Fit("gaus","ql");
    c2->Update();
    padsav->cd();
+}

@@ -1,5 +1,5 @@
-//*CMZ :  2.23/10 10/12/99  18.00.08  by  Masaharu Goto
-//*-- Author :    Masaharu Goto   10/12/99
+//*CMZ :  2.24/05 16/05/2000  12.03.52  by  Masaharu Goto
+//*-- Author :    Masaharu Goto   16/05/2000
 /* /% C++ %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -191,6 +191,17 @@ int G__DataMemberInfo::MaxIndex(int dim)
   }
 }
 ///////////////////////////////////////////////////////////////////////////
+void G__DataMemberInfo::SetGlobalcomp(int globalcomp)
+{
+  if(IsValid()) {
+    struct G__var_array *var;
+    var = (struct G__var_array*)handle;
+    var->globalcomp[index] = globalcomp;
+    if(G__NOLINK==globalcomp) var->access[index]=G__PRIVATE;
+    else                      var->access[index]=G__PUBLIC;
+  }
+}
+///////////////////////////////////////////////////////////////////////////
 int G__DataMemberInfo::IsValid()
 {
   if(handle) {
@@ -299,4 +310,196 @@ int G__DataMemberInfo::LineNumber() {
   return(-1);
 #endif
 }
+
 ///////////////////////////////////////////////////////////////////////////
+#ifdef G__ROOTSPECIAL
+
+///////////////////////////////////////////////////////////////////////////
+
+// Find the data member whose name exactly match varname
+// If this is 'augmented' to be able to interpret specified variable name
+// (for example *fN)
+// the function IsInt need to be changed to take that in consideration.
+static G__DataMemberInfo GetDataMemberFromAll(G__ClassInfo & cl, const char* varname) {
+  G__DataMemberInfo member(cl);
+  while (member.Next()) {
+    if (!strcmp(varname,member.Name())) {
+      return member;
+    }
+  }
+  // after the last Next member is now invalid.
+  return member;
+}
+
+static int IsInt(G__DataMemberInfo &member) {
+  int type = member.Type()->Type();
+  if (member.Property() & G__BIT_ISARRAY) return 0;
+  switch(type) {
+    // A lower case indicated that it is NOT a pointer to that
+    // type
+    case 'b':  // unsigned char
+    case 'c':  // char
+    case 'r':  // unsigned short
+    case 's':  // short
+    case 'h':  // unsigned int
+    case 'i':  // int
+    case 'k':  // unsigned long
+    case 'l': return 1; // long
+    default: return 0;
+  }
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+// ValidArrayIndex return a static string (so use it or copy it immediatly, do not
+// call GrabIndex twice in the same expression) containing the size of the
+// array data member.
+// In case of error, or if the size is not specified, GrabIndex returns 0.
+// If errnum is not null, *errnum updated with the error number:
+//   G__DataMemberInfo::G__VALID     : valid array index
+//   G__DataMemberInfo::G__NOT_INT   : array index is not an int
+//   G__DataMemberInfo::G__NOT_DEF   : index not defined before array
+//                                          (this IS an error for streaming to disk)
+//   G__DataMemberInfo::G__IS_PRIVATE: index exist in a parent class but is private
+//   G__DataMemberInfo::G__UNKNOWN   : index is not known
+// If errstr is not null, *errstr is updated with the address of a static
+//   string containing the part of the index with is invalid.
+const char* G__DataMemberInfo::ValidArrayIndex(int *errnum, char **errstr) {
+  const char* title;
+  //long dummy;
+
+  // Let's see if the user provided us with some information
+  // with the format: //[dimension] this is the dim of the array
+  // dimension can be an arithmetical expression containing, literal integer,
+  // the operator *,+ and - and data member of integral type.  In addition the
+  // data members used for the size of the array need to be defined prior to
+  // the array.
+
+  if (errnum) *errnum = VALID;
+  title = Title();
+
+  if ((strncmp(title, "[", 1)!=0) ||
+      (strstr(title,"]")     ==0)  ) return 0;
+
+  static char working[G__INFO_TITLELEN], indexvar[G__INFO_TITLELEN];
+  strcpy(indexvar,title+1);
+  strstr(indexvar,"]")[0] = '\0';
+
+  // now we should have indexvar=dimension
+  // Let's see if this is legal.
+  // which means a combination of data member and digit separated by '*','+','-'
+
+  // First we remove white spaces.
+  unsigned int i,j;
+  for ( i=0,j=0; i<=strlen(indexvar); i++) {
+    if (!isspace(indexvar[i])) {
+      working[j++] = indexvar[i];
+    }
+  };
+
+  // Now we go through all indentifiers
+  const char * tokenlist = "*+-";
+  char *current = working;
+  current = strtok(current,tokenlist);
+
+  while (current!=0) {
+    // Check the token
+    if (isdigit(current[0])) {
+      for(i=0;i<strlen(current);i++) {
+	if (!isdigit(current[0])) {
+	  // Error we only access integer.
+	  //NOTE: *** Need to print an error;
+	  //fprintf(stderr,"*** Datamember %s::%s: size of array (%s) is not an interger\n",
+	  //	    member.MemberOf()->Name(), member.Name(), current);
+	  if (errstr) *errstr = current;
+	  if (errnum) *errnum = NOT_INT;
+	  return 0;
+	}
+      }
+    } else { // current token is not a digit
+      // first let's see if it is a data member:
+      int found = 0;
+      G__DataMemberInfo index = GetDataMemberFromAll(*belongingclass, current );
+      if ( index.IsValid() ) {
+	if ( IsInt(index) ) {
+	  found = 1;
+	  // Let's see if it has already been wrote down in the
+	  // Streamer.
+	  // Let's see if we already wrote it down in the
+	  // streamer.
+	  G__DataMemberInfo m_local( *belongingclass);
+	  while (m_local.Next()) {
+	    if (!strcmp(m_local.Name(),Name())) {
+	      // we reached the current data member before
+	      // reaching the index so we have not wrote it yet!
+	      //NOTE: *** Need to print an error;
+	      //fprintf(stderr,"*** Datamember %s::%s: size of array (%s) has not been defined before the array \n",
+	      //	member.MemberOf()->Name(), member.Name(), current);
+	      if (errstr) *errstr = current;
+	      if (errnum) *errnum = NOT_DEF;
+	      return 0;
+	    }
+	    if (!strcmp(m_local.Name(),current) ) {
+	      break;
+	    }
+	  } // end of while (m_local.Next())
+	} else {
+	  //NOTE: *** Need to print an error;
+	  //fprintf(stderr,"*** Datamember %s::%s: size of array (%s) is not int \n",
+	  //	    member.MemberOf()->Name(), member.Name(), current);
+	  if (errstr) *errstr = current;
+	  if (errnum) *errnum = NOT_INT;
+	  return 0;
+	}
+      } else {
+	// There is no variable by this name in this class, let see
+	// the base classes!:
+
+	G__BaseClassInfo b( *belongingclass);
+	while (b.Next() && !found) {
+	  index = GetDataMemberFromAll(b, current);
+	  if ( index.IsValid() ) {
+	    if ( IsInt(index) ) {
+	      found = 1;
+	    } else {
+	      // We found a data member but it is the wrong type
+	      //NOTE: *** Need to print an error;
+	      //fprintf(stderr,"*** Datamember %s::%s: size of array (%s) is not int \n",
+	      //	member.MemberOf()->Name(), member.Name(), current);
+	      if (errnum) *errnum = NOT_INT;
+	      if (errstr) *errstr = current;
+	      return 0;
+	    }
+	    if ( found && (index.Property() & G__BIT_ISPRIVATE) ) {
+	      //NOTE: *** Need to print an error;
+	      //fprintf(stderr,"*** Datamember %s::%s: size of array (%s) is a private member of %s \n",
+	      if (errstr) *errstr = current;
+	      if (errnum) *errnum = IS_PRIVATE;
+	      return 0;
+	    }
+	  }
+	} // end of while (b.Next() && !found)
+	if (!found) {
+	  //NOTE: *** Need to print an error;
+	  //fprintf(stderr,"*** Datamember %s::%s: size of array (%s) is not known \n",
+	  //	    member.MemberOf()->Name(), member.Name(), indexvar);
+	  if (errstr) *errstr = indexvar;
+	  if (errnum) *errnum = UNKNOWN;
+	  return 0;
+	} // end of if not found
+      } // end of if is a data member of the class
+    } // end of if isdigit
+
+    current = strtok(0,tokenlist);
+  } // end of while loop on tokens	
+
+  return indexvar;
+
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+#endif // G__ROOTSPECIAL
+		
+///////////////////////////////////////////////////////////////////////////
+

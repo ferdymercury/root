@@ -1,5 +1,5 @@
-/*CMZ :  2.23/10 10/12/99  18.00.06  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   10/12/99*/
+/*CMZ :  2.24/05 16/05/2000  12.03.51  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   16/05/2000*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -63,7 +63,11 @@ char *typename;
     *p='\0';
     if(temp2==p) env_tagnum = -1; /* global scope */
 #ifndef G__STD_NAMESPACE
-    else if (strcmp (temp2, "std") == 0) env_tagnum = -1;
+    else if (strcmp (temp2, "std") == 0
+#ifndef G__OLDIMPLEMENTATION1285
+	     && G__ignore_stdnamespace
+#endif
+	     ) env_tagnum = -1;
 #endif
     else         env_tagnum = G__defined_tagname(temp2,0);
   }
@@ -908,7 +912,11 @@ char *typename;
     *p='\0';
     if(temp2==p) env_tagnum = -1; /* global scope */
 #ifndef G__STD_NAMESPACE /* ON745 */
-    else if (strcmp (temp2, "std") == 0) env_tagnum = -1;
+    else if (strcmp (temp2, "std") == 0
+#ifndef G__OLDIMPLEMENTATION1285
+	     && G__ignore_stdnamespace
+#endif
+	     ) env_tagnum = -1;
 #endif
     else         env_tagnum = G__defined_tagname(temp2,0);
   }
@@ -1185,6 +1193,12 @@ int parent_tagnum;
 {
   int ret;
   G__static_parent_tagnum = parent_tagnum;
+#ifndef G__OLDIMPLEMENTATION1284
+  if(-1==G__static_parent_tagnum && G__def_struct_member &&
+     'n'==G__struct.type[G__tagdefining]) {
+    G__static_parent_tagnum = G__tagdefining;
+  }
+#endif
   ret = G__search_typename(typename,typein,tagnum,reftype);
   G__static_parent_tagnum = -1;
   return(ret);
@@ -1288,12 +1302,22 @@ int len;
     if(G__dispsource) G__disp_mask=2;
   }
   else if(len>1 && '*'==typename[len-1]) {
+#ifndef G__OLDIMPLEMENTATION1262
+    int cin2;
+#endif
     len -=1;
     typename[len]='\0';
     fsetpos(G__ifile.fp,&pos);
     G__ifile.line_number=line;
     fseek(G__ifile.fp,refrewind,SEEK_CUR);
     if(G__dispsource) G__disp_mask=1;
+#ifndef G__OLDIMPLEMENTATION1262
+    cin2 = G__fgetc();
+    if(!isalnum(cin2)) {
+      fseek(G__ifile.fp,-1,SEEK_CUR);
+      if(G__dispsource) G__disp_mask=1;
+    }
+#endif
   }
 
   G__typenum = G__defined_typename(typename);
@@ -1329,6 +1353,16 @@ int len;
       return(0);
 #endif
     }
+#ifndef G__OLDIMPLEMENTATION1244
+    else {
+      G__typenum = G__defined_typename(typename);
+      if(-1!=G__typenum) {
+	G__reftype += G__newtype.reftype[G__typenum];
+	G__typedefnindex = G__newtype.nindex[G__typenum];
+	G__typedefindex = G__newtype.index[G__typenum];
+      }
+    }
+#endif
     G__var_type = 'u';
   }
   else {

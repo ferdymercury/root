@@ -1,3 +1,4 @@
+//*CMZ :  2.24/01 29/02/2000  08.49.35  by  Rene Brun
 //*CMZ :  2.23/12 26/01/2000  09.49.07  by  Rene Brun
 //*CMZ :  2.23/10 10/12/99  09.36.39  by  Rene Brun
 //*CMZ :  2.23/05 20/10/99  11.56.09  by  Rene Brun
@@ -70,7 +71,34 @@ TParticle::TParticle(Int_t pdg,       Int_t status,
 }
 
 //______________________________________________________________________________
-TParticle::~TParticle() {
+TParticle::TParticle(const TParticle &p)
+{
+    // copy constructor
+
+  fPdgCode     = p.fPdgCode;
+  fStatusCode  = p.fStatusCode;
+  fMother[0]   = p.fMother[0];
+  fMother[1]   = p.fMother[1];
+  fDaughter[0] = p.fDaughter[0];
+  fDaughter[1] = p.fDaughter[1];
+  fWeight      = p.fWeight;
+  fCalcMass    = p.fCalcMass;
+  fPx          = p.fPx;
+  fPy          = p.fPy;
+  fPz          = p.fPz;
+  fE           = p.fE;
+  fVx          = p.fVx;
+  fVy          = p.fVy;
+  fVz          = p.fVz;
+  fVt          = p.fVt;
+  fPolarTheta  = p.fPolarTheta;
+  fPolarPhi    = p.fPolarPhi;
+  fParticlePDG = p.fParticlePDG;
+}
+
+//______________________________________________________________________________
+TParticle::~TParticle()
+{
 }
 
 //______________________________________________________________________________

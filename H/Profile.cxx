@@ -1,3 +1,4 @@
+//*CMZ :  2.24/03 21/04/2000  20.18.00  by  Rene Brun
 //*CMZ :  2.23/12 26/01/2000  09.53.04  by  Rene Brun
 //*CMZ :  2.22/00 05/04/99  18.14.00  by  Rene Brun
 //*CMZ :  2.21/01 05/01/99  16.29.20  by  Rene Brun
@@ -5,17 +6,18 @@
 //*CMZ :  2.00/11 17/08/98  15.18.36  by  Rene Brun
 //*-- Author :    Rene Brun   29/09/95
 
+/*CMZ :  2.24/01 24/02/2000  11.49.40  by  Fons Rademakers*/
 /*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun and Fons Rademakers.                               *
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
  *                                                                       *
- * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
- * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
  *************************************************************************/
 
 #include "TProfile.h"
@@ -357,7 +359,7 @@ void TProfile::Divide(TH1 *h1)
       else    w = 0;
       fArray[bin] = w;
       z = TMath::Abs(w);
-      x = GetBinCenter(bin);
+      x = fXaxis.GetBinCenter(bin);
       fEntries++;
       fTsumw   += z;
       fTsumw2  += z*z;
@@ -434,7 +436,7 @@ void TProfile::Divide(TH1 *h1, TH1 *h2, Float_t c1, Float_t c2, Option_t *option
       else    w = 0;
       fArray[bin] = w;
       z = TMath::Abs(w);
-      x = GetBinCenter(bin);
+      x = fXaxis.GetBinCenter(bin);
       fEntries++;
       fTsumw   += z;
       fTsumw2  += z*z;
@@ -631,6 +633,46 @@ void TProfile::Multiply(TH1 *, TH1 *, Float_t, Float_t, Option_t *)
 //
 
    Error("Multiply","Multiplication of profile histograms not implemented");
+}
+
+//______________________________________________________________________________
+TH1D *TProfile::ProjectionX(const char *name, Option_t *option)
+{
+//*-*-*-*-*Project this profile into a 1-D histogram along X*-*-*-*-*-*-*
+//*-*      =================================================
+//
+//   The projection is always of the type TH1D.
+//
+//   if option "E" is specified, the errors are computed. (default)
+//
+//
+
+  TString opt = option;
+  opt.ToLower();
+  Int_t nx = fXaxis.GetNbins();
+
+// Create the projection histogram
+  char *pname = (char*)name;
+  if (strcmp(name,"_px") == 0) {
+     Int_t nch = strlen(GetName()) + 4;
+     pname = new char[nch];
+     sprintf(pname,"%s%s",GetName(),name);
+  }
+  TH1D *h1 = new TH1D(pname,GetTitle(),nx,fXaxis.GetXmin(),fXaxis.GetXmax());
+  Bool_t computeErrors = kFALSE;
+  if (opt.Contains("e")) {h1->Sumw2(); computeErrors = kTRUE;}
+  if (pname != name)  delete [] pname;
+
+// Fill the projected histogram
+  Double_t cont,err;
+  for (Int_t binx =0;binx<=nx+1;binx++) {
+     cont  = GetBinContent(binx);
+     err   = GetBinError(binx);
+     if (cont)          h1->Fill(fXaxis.GetBinCenter(binx), cont);
+     if (computeErrors) h1->SetBinError(binx,err);
+  }
+  h1->SetEntries(fEntries);
+  return h1;
 }
 
 //______________________________________________________________________________

@@ -1,3 +1,4 @@
+//*CMZ :  2.24/00 14/02/2000  10.08.44  by  Rene Brun
 //*CMZ :  2.23/09 17/11/99  14.34.29  by  Rene Brun
 //*CMZ :  2.23/04 08/10/99  22.54.26  by  Rene Brun
 //*CMZ :  2.23/02 02/09/99  17.35.27  by  Rene Brun
@@ -6,17 +7,18 @@
 //*CMZ :  2.00/08 05/06/98  14.34.43  by  Fons Rademakers
 //*-- Author :    Rene Brun   12/12/94
 
+/*CMZ :  2.24/01 24/02/2000  11.49.40  by  Fons Rademakers*/
 /*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun and Fons Rademakers.                               *
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
  *                                                                       *
- * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
- * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
  *************************************************************************/
 
 #include <fstream.h>
@@ -58,6 +60,8 @@ void TAttAxis::Copy(TAttAxis &attaxis)
    attaxis.fTickLength  = fTickLength;
    attaxis.fTitleOffset = fTitleOffset;
    attaxis.fTitleSize   = fTitleSize;
+   attaxis.fTitleColor  = fTitleColor;
+   attaxis.fTitleFont   = fTitleFont;
 }
 
 //______________________________________________________________________________
@@ -73,6 +77,8 @@ void TAttAxis::ResetAttAxis(Option_t *option)
       fTickLength  = gStyle->GetTickLength(option);
       fTitleOffset = gStyle->GetTitleOffset(option);
       fTitleSize   = gStyle->GetTitleSize(option);
+      fTitleColor  = gStyle->GetTitleTextColor();
+      fTitleFont   = gStyle->GetTitleFont();
    } else {
       fNdivisions  = 510;
       fAxisColor   = 1;
@@ -83,6 +89,8 @@ void TAttAxis::ResetAttAxis(Option_t *option)
       fTickLength  = 0.03;
       fTitleOffset = 1;
       fTitleSize   = fLabelSize;
+      fTitleColor  = 1;
+      fTitleFont   = 62;
    }
 }
 
@@ -118,6 +126,12 @@ void TAttAxis::SaveAttributes(ofstream &out, const char *name, const char *subna
    if (TMath::Abs(fTitleOffset-1) > 0.001) {
       out<<"   "<<name<<subname<<"->SetTitleOffset("<<fTitleOffset<<");"<<endl;
    }
+   if (fTitleColor != 1) {
+      out<<"   "<<name<<subname<<"->SetTitleColor("<<fTitleColor<<");"<<endl;
+   }
+   if (fTitleFont != 62) {
+      out<<"   "<<name<<subname<<"->SetTitleFont("<<fTitleFont<<");"<<endl;
+   }
 }
 
 //______________________________________________________________________________
@@ -132,7 +146,7 @@ void TAttAxis::SetAxisColor(Color_t color)
 //______________________________________________________________________________
 void TAttAxis::SetLabelColor(Color_t color)
 {
-//   Set color of labels and axis title
+//   Set color of labels
 
    fLabelColor = color;
    if (gPad) gPad->Modified();
@@ -209,6 +223,23 @@ void TAttAxis::SetTitleSize(Float_t size)
 }
 
 //______________________________________________________________________________
+void TAttAxis::SetTitleColor(Color_t color)
+{
+//   Set color of axis title
+
+   fTitleColor = color;
+   if (gPad) gPad->Modified();
+}
+
+//______________________________________________________________________________
+void TAttAxis::SetTitleFont(Style_t font)
+{
+
+   fTitleFont = font;
+   if (gPad) gPad->Modified();
+}
+
+//______________________________________________________________________________
 void TAttAxis::Streamer(TBuffer &R__b)
 {
    // Stream an object of class TAttAxis.
@@ -228,6 +259,10 @@ void TAttAxis::Streamer(TBuffer &R__b)
          R__b >> fTitleSize;
       else
          fTitleSize = fLabelSize;
+      if (R__v > 2) {
+         R__b >> fTitleColor;
+         R__b >> fTitleFont;
+      }
    } else {
       R__b.WriteVersion(TAttAxis::IsA());
       R__b << fNdivisions;
@@ -239,5 +274,7 @@ void TAttAxis::Streamer(TBuffer &R__b)
       R__b << fTickLength;
       R__b << fTitleOffset;
       R__b << fTitleSize;
+      R__b << fTitleColor;
+      R__b << fTitleFont;
    }
 }

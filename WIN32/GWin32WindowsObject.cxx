@@ -1,3 +1,6 @@
+//*CMZ :  2.24/05 07/05/2000  02.30.10  by  Fons Rademakers
+//*CMZ :  2.24/03 29/04/2000  23.45.27  by  Rene Brun
+//*CMZ :  2.24/01 04/03/2000  22.43.38  by  Valery Fine(fine@bnl.gov)
 //*CMZ :  2.23/12 26/01/2000  10.08.58  by  Rene Brun
 //*CMZ :  2.23/11 11/01/2000  08.53.01  by  Valery Fine(fine@mail.cern.ch)
 //*CMZ :  2.23/07 24/10/99  18.23.21  by  Valery Fine(fine@mail.cern.ch)
@@ -8,20 +11,20 @@
 //*CMZ :  2.21/06 12/02/99  17.22.36  by  Valery Fine(fine@vxcern.cern.ch)
 //*-- Author :    Valery Fine   11/03/96
 
+/*CMZ :  2.24/01 24/02/2000  11.49.40  by  Fons Rademakers*/
 /*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun and Fons Rademakers.                               *
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
  *                                                                       *
- * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
- * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
  *************************************************************************/
 
-#include "OptimizeOff.h"
 #include "TGWin32WindowsObject.h"
 
 #include "TGWin32PixmapObject.h"
@@ -34,7 +37,7 @@
 #include "TInterpreter.h"
 #include "TWin32SimpleEditCtrl.h"
 
-ClassImp(TGWin32WindowsObject)
+// ClassImp(TGWin32WindowsObject)
 
 ////////////////////////////////////////////////////////////////////
 //                                                                //
@@ -236,7 +239,8 @@ LRESULT APIENTRY TGWin32WindowsObject::OnRootEditInput
   fiXText = 0;
   fiYText = 0;
 //*-*        Init of string input
-  flpInstr = flpROOTString->GetTextPointer();
+ // flpInstr = StrDup(flpROOTString->GetTextPointer());
+  flpInstr = (char *)flpROOTString->GetTextPointer();
   fnCur    = 0;
   flStr    = 0;
   fInsert  = 1;
@@ -244,6 +248,7 @@ LRESULT APIENTRY TGWin32WindowsObject::OnRootEditInput
   if (!(flpInstr && lstrlen(flpInstr)))
   {
           flpROOTString->Release();
+ //         delete [] flpInstr; flpInstr = 0;
           return 0;
   }
   fLenLine = 0;
@@ -251,7 +256,8 @@ LRESULT APIENTRY TGWin32WindowsObject::OnRootEditInput
   if (fEditCtrl) {
           UnRegisterControlItem(fEditCtrl);
           delete fEditCtrl;
-          fEditCtrl =0;
+//          delete [] flpInstr; flpInstr = 0;
+          fEditCtrl = 0;
   }
   // Convert from the pixel to the relative cooridunat
   UInt_t iw,ih;
@@ -284,7 +290,7 @@ LRESULT APIENTRY TGWin32WindowsObject::OnRootEditInput
   SetFocus(fEditCtrl->GetWindow());
 
   fSetTextInput = TRUE;
-
+ // delete [] flpInstr; flpInstr = 0;
   return 0;
 }
 
@@ -592,6 +598,8 @@ LRESULT APIENTRY TGWin32WindowsObject::OnMouseButton
 //                               WM_MOUSEMOVE
 //                               WM_CONTEXTMENU
 //
+//                               WM_LBUTTONDBLCLK  WM_MBUTTONDBLCLK   WM_RBUTTONDBLCLK
+//
 
  TCanvas *canvas = 0;
 
@@ -707,6 +715,15 @@ LRESULT APIENTRY TGWin32WindowsObject::OnMouseButton
         fButton = 0;
       }
       break;
+    case WM_LBUTTONDBLCLK:
+       buttonevent = kButton1Double;
+       break;
+    case WM_MBUTTONDBLCLK:
+       buttonevent = kButton2Double;
+       break;
+    case WM_RBUTTONDBLCLK:
+       buttonevent = kButton3Double;
+       break;
     default: break;
   }
 

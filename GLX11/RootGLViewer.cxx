@@ -1,20 +1,22 @@
+//*CMZ :  2.24/01 15/03/2000  08.06.02  by  Valery Fine(fine@bnl.gov)
 //*CMZ :  2.23/02 03/09/99  11.39.45  by  Rene Brun
 //*CMZ :  2.20/00 08/02/99  14.42.15  by  Fons Rademakers
 //*CMZ :  2.00/12 01/10/98  01.24.42  by  Fons Rademakers
 //*CMZ :  2.00/00 06/03/98  14.40.30  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   15/01/98
 
+/*CMZ :  2.24/01 24/02/2000  11.49.40  by  Fons Rademakers*/
 /*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun and Fons Rademakers.                               *
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
  *                                                                       *
- * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
- * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -362,7 +364,7 @@ Bool_t TRootGLViewer::ProcessMessage(Long_t msg, Long_t parm1, Long_t)
                switch (parm1) {
                   // Handle File menu items...
                   case kFileNewViewer:
-                     fGLView->GetPad()->x3d();
+                     if (fGLView) fGLView->GetPad()->x3d();
                      break;
                   case kFileSave:
                   case kFileSaveAs:
@@ -370,6 +372,7 @@ Bool_t TRootGLViewer::ProcessMessage(Long_t msg, Long_t parm1, Long_t)
                      break;
                   case kFileCloseViewer:
                      delete fGLView;  // this in turn will delete this object
+                     fGLView = 0;
                      break;
 
                   // Handle Help menu items...
@@ -440,7 +443,7 @@ Bool_t TRootGLViewer::HandleContainerConfigure(Event_t *event)
 
    MakeCurrent();
    glViewport(0, 0, (GLint) event->fWidth, (GLint) event->fHeight);
-   fGLView->Size((Int_t) event->fWidth, (Int_t) event->fHeight);
+   if (fGLView) fGLView->Size((Int_t) event->fWidth, (Int_t) event->fHeight);
 
    Update();
 

@@ -1,5 +1,5 @@
-/*CMZ :  2.23/10 10/12/99  17.59.59  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   10/12/99*/
+/*CMZ :  2.24/05 16/05/2000  12.03.46  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   16/05/2000*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -264,7 +264,11 @@ void G__scratch_all()
 void G__free_friendtag(friendtag)
 struct G__friendtag *friendtag;
 {
-  if(friendtag) {
+  if(friendtag
+#ifndef G__OLDIMPLEMENTATION1295
+     && friendtag!=friendtag->next
+#endif
+     ) {
     G__free_friendtag(friendtag->next);
     free((void*)friendtag);
   }
@@ -602,6 +606,12 @@ int G__close_inputfiles()
       free((void*)G__srcfile[iarg].dictpos);
       G__srcfile[iarg].dictpos=(struct G__dictposition*)NULL;
     }
+#ifndef G__OLDIMPLEMENTATION1273
+    if(G__srcfile[iarg].hasonlyfunc) {
+      free((void*)G__srcfile[iarg].hasonlyfunc);
+      G__srcfile[iarg].hasonlyfunc=(struct G__dictposition*)NULL;
+    }
+#endif
     if(G__srcfile[iarg].fp) {
       fclose(G__srcfile[iarg].fp);
 #ifndef G__PHILIPPE0

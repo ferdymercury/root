@@ -1,5 +1,5 @@
-/*CMZ :  2.23/10 10/12/99  18.00.17  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   10/12/99*/
+/*CMZ :  2.24/05 16/05/2000  12.03.58  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   16/05/2000*/
 /**************************************************************************
 * complex
 *
@@ -9,9 +9,17 @@
 #ifndef G__COMPLEX
 #define G__COMPLEX
 
-#include <iostream.h>
+#ifdef __CINT__
+template<class scalar>
+int G__ateval(const complex<scalar>& x) {
+  cout << "(complex)" << x << endl;
+  return(1);
+}
+#endif
 
 namespace std {
+
+#include <iostream.h>
 
 template<class scalar>
 class complex {
@@ -100,6 +108,7 @@ scalar abs(complex<scalar>& a)
 /**************************************************************************
 * iostream
 **************************************************************************/
+
 template<class scalar>
 ostream& operator <<(ostream& ios,complex<scalar>& a)
 {
@@ -129,5 +138,6 @@ istrstream& operator >>(istrstream& ios,complex<scalar>& a)
 }
 
 } // end namespace std
+
 
 #endif

@@ -1,20 +1,22 @@
+//*CMZ :  2.24/01 03/03/2000  19.06.51  by  Fons Rademakers
 //*CMZ :  1.03/09 16/12/97  16.17.47  by  Rene Brun
 //*-- Author :    Fons Rademakers   31/10/97
 
 #ifndef ROOT_TMatrix
 #define ROOT_TMatrix
 
+/*CMZ :  2.24/01 24/02/2000  11.49.40  by  Fons Rademakers*/
 /*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun and Fons Rademakers.                               *
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
  *                                                                       *
- * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
- * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -243,8 +245,10 @@ inline Bool_t AreCompatible(const TMatrix &im1, const TMatrix &im2)
    }
 
    if (im1.fNrows  != im2.fNrows  || im1.fNcols  != im2.fNcols ||
-       im1.fRowLwb != im2.fRowLwb || im1.fColLwb != im2.fColLwb)
+       im1.fRowLwb != im2.fRowLwb || im1.fColLwb != im2.fColLwb) {
+      ::Error("AreCompatible", "matrices 1 and 2 not compatible");
       return kFALSE;
+   }
 
    return kTRUE;
 }

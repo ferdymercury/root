@@ -1,8 +1,10 @@
+//*CMZ :  2.24/03 01/05/2000  13.27.15  by  Valery Fine(fine@bnl.gov)
+//*CMZ :  2.24/01 31/03/2000  08.46.15  by  Rene Brun
 //*CMZ :  2.23/12 26/01/2000  12.24.45  by  Valery Fine(fine@bnl.gov)
-//*-- Author : Valery Fine   24/03/98
-// $Id: TTable.h,v 1.43 2000/01/21 02:09:53 fine Exp $
-#ifndef STAF_TTable
-#define STAF_TTable
+//*-- Author :    Valery Fine   24/03/98
+// $Id: TTable.h,v 1.46 2000/02/29 22:15:45 fine Exp $
+#ifndef ROOT_TTable
+#define ROOT_TTable
 
 //////////////////////////////////////////////////////////////////////////
 //                                                                      //
@@ -18,9 +20,9 @@
 #pragma Ccomment on
 #endif
 
+#include "Ttypes.h"
 #include "TDataSet.h"
 #include "TArray.h"
-#include "table_header.h"
 #include "tableDescriptor.h"
 #include "TCut.h"
 
@@ -40,44 +42,35 @@ enum ETableBits {
     kIsNotOwn         = BIT(23)   // if the TTable wrapper doesn't own the STAF table                                 // As result of the Update() method for example
 };
 class G__DataMemberInfo;
-class TXDFFile;
 class TTableDescriptor;
 class TH1;
 
-extern "C" {
-   void *ReAllocate(table_head_st *h, Int_t newsize);
-}
-
 class TTable : public TDataSet, public TArray {
-   friend class TXDFFile;
    friend class TDataSet;
+   friend class St_XDFFile;
 private:
-   Long_t         *fSize;       // Size of the one element (row) of the table
-   table_head_st  *fTableHeader;// Pointer to the STAF table header data structure
+   Long_t         fSize;       // Size of the one element (row) of the table
 
 protected:
+   Char_t    *fTable;       // Array of (fN*fSize) longs
+
    void       CopyStruct(Char_t *dest, const Char_t *src);
    Char_t    *Create();
-   virtual     void       Clear(Option_t *opt="");
-   virtual     void       Delete(Option_t *opt="");
+   virtual    void       Clear(Option_t *opt="");
+   virtual    void       Delete(Option_t *opt="");
+//   virtual    TClass    *GetRowClass(const Char_t *rowName)  const ;
    virtual Bool_t  EntryLoop(const Char_t *exprFileName,Int_t &action, TObject *obj, Int_t nentries=1000000000, Int_t firstentry=0, Option_t *option="");
-   void       LinkHeader();
-   void       SetHeadFields(const Text_t *name);
    Int_t      SetfN(Long_t len);
-   void       SetName(const Char_t *name);
    void       SetTablePointer(void *table);
    void       SetUsedRows(Int_t n);
-   void       SetTitle(const Char_t *title);
    void       SetType(const Text_t *const type);
-   void       StreamerHeader(TBuffer &b);
+   void       StreamerHeader(TBuffer &b,Version_t version=3);
    int        PointerToPointer(G__DataMemberInfo &m);
-   void       SetTableName(const Char_t *name);
-   void       SetTableType(const Char_t *type);
-   void       StreamerTable(TBuffer &b);
+   void       StreamerTable(TBuffer &b,Version_t version=3);
    virtual TTableDescriptor *GetDescriptorPointer() const;
    virtual void  SetDescriptorPointer(TTableDescriptor *list) const ;
 
-   Long_t    *fMaxIndex;   // The used capacity of this array
+   Long_t     fMaxIndex;   // The used capacity of this array
 
    void      ReAlloc(Int_t newsize);
 
@@ -85,8 +78,6 @@ public:
 
    enum EColumnType {kNAN, kFloat, kInt, kLong, kShort, kDouble, kUInt
                           ,kULong, kUShort, kUChar, kChar };
-
-   Char_t    *fTable;       // Array of (fN*fSize) longs
 
    TTable(const Text_t *name=0, Int_t size=0);
    TTable(const Text_t *name, Int_t n,Int_t size);
@@ -98,22 +89,24 @@ public:
 
    virtual     void       Adopt(Int_t n, void *array);
    virtual     void       AddAt(const void *c, Int_t i);
+   virtual     void       AsString(void *buf, const char *name, Int_t width=0) const;
               const void *At(Int_t i) const;
    virtual     void       Browse(TBrowser *b);
    virtual     void       CopySet(TTable &array);
+               Int_t      CopyRows(const TTable *srcTable, Int_t srcRow=0, Int_t dstRow=0, Int_t nRows=0, Bool_t expand=kFALSE);
    virtual     void       Draw(Option_t *opt);
    virtual     TH1       *Draw(TCut varexp, TCut selection, Option_t *option=""
                          ,Int_t nentries=1000000000, Int_t firstentry=0);
    virtual     TH1       *Draw(const Text_t *varexp, const Text_t *selection, Option_t *option=""
                               ,Int_t nentries=1000000000, Int_t firstentry=0); // *MENU*
-   virtual     void      *GetArray() const ;
-   virtual     TClass    *GetRowClass() const ;
-   virtual     Long_t     GetNRows() const;
-   virtual     Long_t     GetRowSize() const;
+               void      *GetArray()     const ;
+   virtual     TClass    *GetRowClass()  const ;
+   virtual     Long_t     GetNRows()     const;
+   virtual     Long_t     GetRowSize()   const;
    virtual     Long_t     GetTableSize() const;
-   virtual     TTableDescriptor *GeTTableDescriptors() const;
-   virtual     TTableDescriptor *GetRowDescriptors() const;
-   virtual     const Char_t *GetType() const;
+   virtual     TTableDescriptor *GetTableDescriptors() const;
+   virtual     TTableDescriptor *GetRowDescriptors()   const;
+   virtual     const Char_t *GetType()   const;
    virtual     void       Fit(const Text_t *formula ,const Text_t *varexp, const Text_t *selection="",Option_t *option="" ,Option_t *goption=""
                               ,Int_t nentries=1000000000, Int_t firstentry=0); // *MENU*
 
@@ -132,16 +125,12 @@ public:
    virtual     void       Project(const Text_t *hname, const Text_t *varexp, const Text_t *selection="", Option_t *option=""
                                  ,Int_t nentries=1000000000, Int_t firstentry=0);
 
-   virtual     Int_t      Purge(Option_t *opt="");
+   virtual    Int_t      Purge(Option_t *opt="");
 
                void      *ReAllocate(Int_t newsize);
                void      *ReAllocate();
-   virtual     table_head_st *GetHeader() const;
-   void        MakeHeader(const Char_t *prefix,const Char_t *tablename,const Char_t *suffix, FILE *fl=0); // Create header file for STAF table class
    virtual     Int_t      ReadGenericArray(TBuffer &b, void *&ii, EBufSizes membersize);
    virtual     void       SavePrimitive(ofstream &out, Option_t *option);
-   virtual     void       SetHeader(table_head_st *table);
-
    virtual     void       Set(Int_t n);
    virtual     void       Set(Int_t n, Char_t *array);
    virtual     void       SetNRows(Int_t n);
@@ -150,10 +139,6 @@ public:
    virtual     void       Update(TDataSet *set,UInt_t opt=0);
                void      *operator[](Int_t i);
                const void *operator[](Int_t i) const;
-
-
- //  ----   pams service   ------
-   static void Object(TTable *&table,const table_head_st *h);
 
 
  //  ----   Table descriptor service   ------
@@ -172,16 +157,15 @@ public:
    virtual   EColumnType  GetColumnType(Int_t columnIndex)      const;
    virtual   EColumnType  GetColumnType(const Char_t *columnName=0) const;
 
-   ClassDef(TTable,0)  // Array of the STAF structure
+   ClassDef(TTable,3)  // Array of the C structures
 };
 
-inline  table_head_st *TTable::GetHeader()const { return fTableHeader; }
+inline  void  *TTable::GetArray() const { return (void *)fTable;}
+
 inline  Bool_t TTable::IsFolder(){ return fList && fList->Last() ? kTRUE : kFALSE;}
 inline  void   TTable::Print(Option_t *) { Print((Char_t *)0,Int_t(0)); }
 
-inline  void   TTable::SetUsedRows(Int_t n) {if (fTableHeader) *fMaxIndex = n;}
-inline  void   TTable::SetTitle(const Char_t *title){SetType(title);}
-inline  void   TTable::SetHeader(table_head_st *table){fTableHeader = table;}
+inline  void   TTable::SetUsedRows(Int_t n) { fMaxIndex = n;}
 inline  void   TTable::SetNRows(Int_t n) {SetUsedRows(n);}
 //   ULong_t   &operator(){ return GetTable();}
 
@@ -190,107 +174,19 @@ inline void *TTable::operator[](Int_t i)
 {
    if (!BoundsOk("TTable::operator[]", i))
       i = 0;
-    return (void *)(fTable+i*(*fSize));
+    return (void *)(fTable+i*fSize);
 }
 
 inline const void *TTable::operator[](Int_t i) const
 {
    if (!BoundsOk("TTable::operator[]", i))
       i = 0;
-    return (const void *)(fTable+i*(*fSize));
+    return (const void *)(fTable+i*fSize);
 }
 
 inline void TTable::Draw(Option_t *opt)
 { Draw(opt, "", "", 1000000000, 0); }
 
-// $Log: TTable.h,v $
-// Revision 1.43  2000/01/21 02:09:53  fine
-// several parameters were converted to be const
-//
-// Revision 1.42  2000/01/12 01:24:52  fine
-// several methods to use TTable class from the <converted> C program to C++
-//
-// Revision 1.41  1999/11/24 00:31:26  fine
-// operator[] const has been introduced
-//
-// Revision 1.40  1999/10/28 16:24:35  fine
-// TDataSet major correction: it may be built with TList (default) or with TObjArray
-//
-// Revision 1.39  1999/10/28 00:32:55  fine
-// method At() has been removed
-//
-// Revision 1.38  1999/09/24 21:56:08  fisyak
-// Add operator [] for particular table (VF)
-//
-// Revision 1.37  1999/09/07 19:30:29  fine
-// table descriptor access has been changed. All tables are affected and must be re-compiled
-//
-// Revision 1.36  1999/09/04 00:28:02  fine
-// TTable::NaN from VP and gloabl dataset have been introduced
-//
-// Revision 1.35  1999/08/30 23:15:09  fine
-// TTable::Fit method has been introduced
-//
-// Revision 1.34  1999/08/20 13:22:25  fine
-// new method TTable::Draw
-//.
-// Revision 1.33  1999/08/12 16:41:31  fine
-// Clean up
-//
-// Revision 1.32  1999/08/12 16:39:49  fine
-// clash between TTable::GetSize and TArray::GEtSize has been resolved
-//
-// Revision 1.31  1999/08/11 14:44:39  fine
-// name clash with ROOT over enum resolved
-//
-// Revision 1.30  1999/08/11 00:42:33  fine
-// new I/O via TbaseDescriptor table has been implemented
-//
-// Revision 1.29  1999/07/01 01:45:32  fisyak
-// GetRowDescritors => GetRowDescriptors
-//
-// Revision 1.28  1999/06/26 01:40:56  fisyak
-// Add Valery's abstract buffer
-//
-// Revision 1.27  1999/06/25 01:35:54  fine
-// New streamers for TTables
-//
-// Revision 1.26  1999/02/24 17:10:58  fine
-//  TTable  New and Purge method have been introdiced, some clean up for Tmodule as well
-//
-// Revision 1.25  1999/01/28 19:13:08  fine
-// TTableSorter has been made up
-//
-// Revision 1.24  1999/01/19 03:13:32  fine
-// TDataSet::Fine and TDataSet::FindObject methods have been introduced
-//
-// Revision 1.23  1999/01/13 20:29:15  fine
-// TDataSet::Pass() method - the option kUp has been introduced
-//
-// Revision 1.22  1998/12/30 22:30:18  fine
-// TTable::PrintHrader method has been introduced
-//
-// Revision 1.21  1998/12/30 01:08:02  fisyak
-// Add Public SetNRows for used No. of rows
-//
-// Revision 1.20  1998/12/30 00:52:42  fisyak
-// Remove SetfN from public
-//
-// Revision 1.18  1998/12/29 19:37:40  fine
-// TNodeView:  new class to create refs topology of the "main" TNode object has been introduced
-//
-// Revision 1.17  1998/12/17 16:57:57  fine
-// TTable: some extra protections have been established (safe "strncat" have replaced the  unsafe  "strncpy")
-//
-// Revision 1.16  1998/12/07 20:23:12  fine
-// TTable:: working versions of the Print() and SavePrimitive methods
-//
-// Revision 1.15  1998/12/06 00:45:49  fisyak
-// Add SavePrimitive
-//
-// Revision 1.14  1998/12/06 00:38:17  fisyak
-// Add SavePrimitive
-//
+#include "TTableDescriptor.h"
 
 #endif
-

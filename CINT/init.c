@@ -1,5 +1,5 @@
-/*CMZ :  2.23/10 10/12/99  18.00.01  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   10/12/99*/
+/*CMZ :  2.24/05 16/05/2000  12.03.47  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   16/05/2000*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -722,7 +722,7 @@ char *argv[] ;
    * Get command options
    *************************************************************/
   while((c=getopt(argc,argv
-       ,"a:b:c:d:ef:gikl:n:pq:rstu:vw:x:y:z:AB:CD:EF:G:HI:KM:N:O:P:QRSTVW:X:"))
+    ,"a:b:c:d:ef:gikl:n:pq:rstu:vw:x:y:z:AB:CD:EF:G:I:KM:N:O:P:QRSTVW:X:Y:Z:"))
 	!=EOF) {
     switch(c) {
 
@@ -811,9 +811,19 @@ char *argv[] ;
       forceassignment = optarg ;
       break;
 
-    case 'H': /* Generate archived header */
+#ifndef G__OLDIMPLEMENTATION1285
+    case 'Y': /* Do not ignore std namespace or not */
+      G__ignore_stdnamespace = atoi(optarg);
+      break;
+#endif
+
+    case 'Z': /* Generate archived header */
+#ifndef G__OLDIMPLEMENTATION1278
+      G__autoload_stdheader = atoi(optarg);
+#else
       G__genericerror("Sorry, this feature has been eliminated");
       G__exit(EXIT_SUCCESS);
+#endif
       break;
 
     case 'n': /* customize G__cpplink file name
@@ -1052,7 +1062,6 @@ char *argv[] ;
       G__more(G__sout,"  -f [file] : set break file\n");
       G__more(G__sout,"  -F [assignement] : set global variable\n");
       G__more(G__sout,"  -G [tracedmp] : dump exec trace into file\n");
-      /* G__more(G__sout,"  -H : dump header information to stdout\n"); */
       G__more(G__sout,"  -i : interactively return undefined symbol value\n");
       G__more(G__sout,"  -I [includepath] : set include file search path\n");
       /* G__more(G__sout,"  -k : function key on\n"); */
@@ -1060,6 +1069,7 @@ char *argv[] ;
 #ifdef G__SHAREDLIB
       G__more(G__sout,"  -l [dynamiclinklib] : link dynamic link library\n");
 #endif
+      /* G__more(G__sout,"  -M [newdelmask] : link dynamic link library\n"); */
       G__more(G__sout,"  -n [linkname] : Specify precompiled interface method filename\n");
       G__more(G__sout,"  -N [DLL_name] : Specify DLL interface method name\n");
       G__more(G__sout,"  -O [0~4] : Loop compiler on(1~5) off(0). Default on(4)\n");
@@ -1078,6 +1088,10 @@ char *argv[] ;
       G__more(G__sout,"  -v : Bytecode compiler debug mode\n");
       G__more(G__sout,"  -X [readlinedumpfile] : Execute readline dumpfile\n");
       G__more(G__sout,"  -x 'main() {...}' : Execute argument as source code\n");
+#ifndef G__OLDIMPLEMENTATION1285
+      G__more(G__sout,"  -Y [0|1] : ignore(1) not ignore(0) std namespace (only experimental)\n");
+#endif
+      G__more(G__sout,"  -Z [0|1]: auto loading of std hdr files with DLL\n");
       G__more(G__sout,"suboptions\n");
       G__more(G__sout,"  +V : turn on class title comment mode for following source fies\n");
       G__more(G__sout,"  -V : turn off class title comment mode for following source fies\n");
@@ -1570,6 +1584,9 @@ int G__init_globals()
   G__cpplock=0;
   G__clock=0;
   G__constvar = 0;
+#ifndef G__OLDIMPLEMENTATION1250
+  G__isexplicit = 0;
+#endif
   G__unsigned = 0;
   G__ansiheader = 0;
   G__enumdef=0;
@@ -1713,37 +1730,58 @@ int G__init_globals()
   G__null.tagnum = -1;
   G__null.typenum = -1;
   G__null.ref = 0;
+#ifndef G__OLDIMPLEMENTATION1259
+  G__null.isconst = G__CONSTVAR;
+#endif
 
   G__one.obj.d = 0.0;
   G__letint(&G__one,'i',1); /* set default value */
   G__one.tagnum = -1;
   G__one.typenum = -1;
   G__one.ref = 0;
+#ifndef G__OLDIMPLEMENTATION1259
+  G__one.isconst = G__CONSTVAR;
+#endif
 
   G__letint(&G__start,'a',G__SWITCH_START);   /* set start value */
   G__start.tagnum = -1;
   G__start.typenum = -1;
   G__start.ref = 0;
+#ifndef G__OLDIMPLEMENTATION1259
+  G__start.isconst = G__CONSTVAR;
+#endif
 
   G__letint(&G__default,'z',G__SWITCH_DEFAULT); /* set default value */
   G__default.tagnum = -1;
   G__default.typenum = -1;
   G__default.ref = 0;
+#ifndef G__OLDIMPLEMENTATION1259
+  G__default.isconst = G__CONSTVAR;
+#endif
 
   G__letint(&G__block_break,'Z',G__BLOCK_BREAK); /* set default value */
   G__block_break.tagnum = -1;
   G__block_break.typenum = -1;
   G__block_break.ref = 0;
+#ifndef G__OLDIMPLEMENTATION1259
+  G__block_break.isconst = G__CONSTVAR;
+#endif
 
   G__letint(&G__block_continue,'Z',G__BLOCK_CONTINUE); /* set default value */
   G__block_continue.tagnum = -1;
   G__block_continue.typenum = -1;
   G__block_continue.ref = 0;
+#ifndef G__OLDIMPLEMENTATION1259
+  G__block_continue.isconst = G__CONSTVAR;
+#endif
 
   G__letint(&G__block_goto,'Z',G__BLOCK_BREAK); /* set default value */
   G__block_goto.tagnum = -1;
   G__block_goto.typenum = -1;
   G__block_goto.ref = 1; /* identical to G__block_break except for this */
+#ifndef G__OLDIMPLEMENTATION1259
+  G__block_goto.isconst = G__CONSTVAR;
+#endif
   G__gotolabel[0]='\0';
 
 #ifndef G__OLDIMPLEMENTATION954
@@ -1844,6 +1882,10 @@ int G__init_globals()
                              G__NOT_USING_2ARG_NEW ;
 #elif defined(G__BORLAND)
   G__is_operator_newdelete = G__NOT_USING_2ARG_NEW ;
+#elif (__SUNPRO_C>=1280)
+  G__is_operator_newdelete = G__MASK_OPERATOR_NEW |
+                             G__MASK_OPERATOR_DELETE |
+                             G__NOT_USING_2ARG_NEW ;
 #else
   G__is_operator_newdelete = 0;
 #endif
@@ -1866,6 +1908,9 @@ int G__init_globals()
 void G__platformMacro()
 {
   char temp[G__ONELINE];
+#ifdef G__CINTVERSION
+  sprintf(temp,"G__CINTVERSION=%ld",(long)G__CINTVERSION); G__getexpr(temp);
+#endif
 #ifdef __linux__
   sprintf(temp,"G__LINUX=%ld",(long)__linux__); G__getexpr(temp);
 #endif
@@ -1875,8 +1920,14 @@ void G__platformMacro()
 #ifdef __GNUC__
   sprintf(temp,"G__GNUC=%ld",(long)__GNUC__); G__getexpr(temp);
 #endif
+#ifdef __GNUC_MINOR__
+  sprintf(temp,"G__GNUC_MINOR=%ld",(long)__GNUC_MINOR__); G__getexpr(temp);
+#endif
 #ifdef __hpux
   sprintf(temp,"G__HPUX=%ld",(long)__hpux); G__getexpr(temp);
+#endif
+#ifdef __HP_aCC
+  sprintf(temp,"G__HP_aCC=%ld",(long)__HP_aCC); G__getexpr(temp);
 #endif
 #ifdef __sun
   sprintf(temp,"G__SUN=%ld",(long)__sun); G__getexpr(temp);
@@ -1922,6 +1973,11 @@ void G__platformMacro()
 #endif
 #ifdef __KCC
   sprintf(temp,"G__KCC=%ld",(long)__KCC); G__getexpr(temp);
+#endif
+#ifdef G__CONSTNESSFLAG
+/*
+  sprintf(temp,"G__CONSTNESSFLAG=1"); G__getexpr(temp);
+*/
 #endif
 }
 #endif
@@ -2025,7 +2081,8 @@ FILE* sin;
 **************************************************************************/
 char *G__cint_version()
 {
-  return "5.14.25, Nov 25 1999";
+  return(G__CINTVERSIONSTR);
+  /* return "5.14.34, Mar 10 2000"; */
 }
 #endif
 
@@ -2044,7 +2101,7 @@ FILE *fp;
 {
   fprintf(fp,"\n");
   fprintf(fp,"cint : C/C++ interpreter\n");
-  fprintf(fp,"   Copyright(c) : 1995~1999 Masaharu Goto (MXJ02154@niftyserve.or.jp)\n");
+  fprintf(fp,"   Copyright(c) : 1995~2000 Masaharu Goto (MXJ02154@niftyserve.or.jp)\n");
   fprintf(fp,"   revision     : %s by M.Goto\n\n",G__cint_version());
 
 #ifdef G__DEBUG

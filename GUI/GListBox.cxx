@@ -1,3 +1,4 @@
+//*CMZ :  2.24/02 06/04/2000  18.00.16  by  Fons Rademakers
 //*CMZ :  2.23/10 16/12/99  02.05.29  by  Fons Rademakers
 //*CMZ :  2.23/02 02/09/99  15.54.27  by  Rene Brun
 //*CMZ :  2.22/05 15/06/99  16.34.37  by  Fons Rademakers
@@ -5,17 +6,18 @@
 //*CMZ :  2.00/03 27/03/98  18.23.44  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   12/01/98
 
+/*CMZ :  2.24/01 24/02/2000  11.49.40  by  Fons Rademakers*/
 /*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun and Fons Rademakers.                               *
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
  *                                                                       *
- * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
- * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
  *************************************************************************/
 //*CMZ :  2.00/00 16/02/98  00.17.08  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   27/12/97
@@ -223,7 +225,7 @@ void TGLBContainer::AddEntry(TGLBEntry *lbe, TGLayoutHints *lhints)
 //______________________________________________________________________________
 void TGLBContainer::InsertEntry(TGLBEntry *lbe, TGLayoutHints *lhints, Int_t afterID)
 {
-   // Insert listbox entry after specified entry with id lastID. If lastID = -1
+   // Insert listbox entry after specified entry with id afterID. If afterID = -1
    // then add entry at head of list. To show entry call MapSubwindows() and
    // Layout().
 
@@ -238,7 +240,7 @@ void TGLBContainer::InsertEntry(TGLBEntry *lbe, TGLayoutHints *lhints, Int_t aft
       if (e->EntryId() == afterID) break;
    }
 
-   if (!el)
+   if (!el && afterID != -1)
       AddFrame(lbe, lhints);
    else {
       nw = new TGFrameElement;

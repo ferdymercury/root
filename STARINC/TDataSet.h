@@ -1,3 +1,4 @@
+//*CMZ :  2.24/01 31/03/2000  08.46.15  by  Rene Brun
 //*CMZ :  2.23/12 26/01/2000  12.50.28  by  Valery Fine(fine@bnl.gov)
 //*-- Author :    Valery Fine(fine@mail.cern.ch)   13/08/98
 //***********************************************************************
@@ -161,36 +162,5 @@ inline void        TDataSet::Mark()     { Mark(kMark,kSet); }
 inline void        TDataSet::UnMark()   { Mark(kMark,kReset); }
 inline void        TDataSet::Mark(UInt_t flag,EBitOpt reset){ SetBit(flag,reset); }
 
-// $Log: TDataSet.h,v $
-// Revision 1.41  2000/01/12 18:07:23  fine
-//  cvs symbols have been added and copyright class introduced
-//
-// Revision 1.40  1999/11/10 00:49:25  fine
-// comment was changed
-//
-// Revision 1.39  1999/11/06 19:09:45  fisyak
-// Clean up for Valery
-//
-// Revision 1.38  1999/11/04 18:01:19  fine
-// Copyright text introduced
-//
-// Revision 1.37  1999/10/28 16:24:29  fine
-// TDataSet major correction: it may be built with TList (default) or with TObjArray
-//
-// Revision 1.36  1999/09/04 00:28:01  fine
-// TTable::NaN from VP and gloabl dataset have been introduced
-//
-// Revision 1.35  1999/08/06 15:24:35  fine
-// UnMark method has been introduced
-//
-// Revision 1.34  1999/07/23 13:26:06  fine
-// Several new methods to mark the datasets have been introduced
-//
-// Revision 1.33  1999/06/26 01:40:55  fisyak
-// Add Valery's abstract buffer
-//
-// Revision 1.32  1999/06/09 22:08:53  fine
-// Comment clean up
-//
 
 #endif

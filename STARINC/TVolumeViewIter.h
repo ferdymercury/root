@@ -1,13 +1,9 @@
+//*CMZ :  2.24/01 31/03/2000  08.46.15  by  Rene Brun
 //*CMZ :  2.23/12 26/01/2000  12.24.45  by  Valery Fine(fine@bnl.gov)
 //*-- Author :  Valery Fine(fine@bnl.gov)   25/01/99
-// $Id: TVolumeViewIter.h,v 1.8 1999/09/23 18:31:32 fine Exp $
-// $Log: TVolumeViewIter.h,v $
-// Revision 1.8  1999/09/23 18:31:32  fine
-// CVS id adjusted
-//
 
-#ifndef STAR_TVolumeViewIter
-#define STAR_TVolumeViewIter
+#ifndef ROOT_TVolumeViewIter
+#define ROOT_TVolumeViewIter
 
 #include "TDataSetIter.h"
 #include "TVolumePosition.h"
@@ -38,4 +34,3 @@ public:
 
 
 #endif
-

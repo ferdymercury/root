@@ -1,3 +1,5 @@
+//*CMZ :  2.24/03 29/04/2000  23.45.27  by  Rene Brun
+//*CMZ :  2.24/01 18/02/2000  13.52.09  by  Valery Fine(fine@bnl.gov)
 //*CMZ :  2.23/12 26/01/2000  10.08.58  by  Rene Brun
 //*CMZ :  2.23/09 19/11/99  19.49.55  by  Valery Fine(fine@mail.cern.ch)
 //*CMZ :  2.23/03 21/09/99  11.30.34  by  Rene Brun
@@ -20,7 +22,7 @@
 #include "TSystem.h"
 
 
-ClassImp(TWin32Canvas)
+// ClassImp(TWin32Canvas)
 
 //______________________________________________________________________________
 TWin32Canvas::TWin32Canvas() {
@@ -303,7 +305,7 @@ void   TWin32Canvas::SetCanvas(const char *title){
 };
 
 //______________________________________________________________________________
-void   TWin32Canvas::SetStatusText(char *text, Int_t partidx)
+void   TWin32Canvas::SetStatusText(const char *text, Int_t partidx)
 { // Set Text into the 'npart'-th part of the status bar
    W32_SetStatusText(text,partidx);
 }

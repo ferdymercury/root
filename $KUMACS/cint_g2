@@ -1,3 +1,4 @@
+*CMZ :  2.24/01 28/02/2000  18.46.36  by  Rene Brun
 *CMZ :  2.23/04 09/10/99  22.38.06  by  Rene Brun
 *CMZ :  2.23/03 09/09/99  08.48.32  by  Rene Brun
 *CMZ :  2.23/02 06/09/99  18.59.39  by  Rene Brun
@@ -16,7 +17,8 @@ macro cint_g2
 
 seq -i src/*.h
 
-headers= TLink.h TPoints.h TLatex.h TLegend.h TLegendEntry.h
+headers= TLink.h TPoints.h TLatex.h TLegend.h TLegendEntry.h TSpline.h
+
 
 name=Graf2
 patch=G

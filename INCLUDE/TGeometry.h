@@ -1,3 +1,4 @@
+//*CMZ :  2.24/03 29/04/2000  12.26.58  by  Rene Brun
 //*CMZ :  2.23/12 31/01/2000  10.56.24  by  Rene Brun
 //*CMZ :  2.23/02 06/09/99  16.52.38  by  Fons Rademakers
 //*CMZ :  2.21/04 02/02/99  19.04.08  by  Fons Rademakers
@@ -8,17 +9,18 @@
 #ifndef ROOT_TGeometry
 #define ROOT_TGeometry
 
+/*CMZ :  2.24/01 24/02/2000  11.49.40  by  Fons Rademakers*/
 /*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun and Fons Rademakers.                               *
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
  *                                                                       *
- * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
- * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -99,6 +101,8 @@ public:
    virtual void   Local2Master(Double_t *local, Double_t *master);
    virtual void   Local2Master(Float_t *local, Float_t *master);
    virtual void   ls(Option_t *option="rsn2");
+   virtual void   Master2Local(Double_t *master, Double_t *local);
+   virtual void   Master2Local(Float_t *master, Float_t *local);
    virtual void   Node(const char *name, const char *title, const char *shapename, Double_t x=0, Double_t y=0, Double_t z=0
                         , const char *matrixname="", Option_t *option="");
    virtual Int_t  PushLevel(){return fGeomLevel++;}

@@ -1,4 +1,5 @@
-//*CMZ :  2.23/12 26/01/2000  09.24.07  by  Rene Brun
+//*CMZ :  2.24/03 20/04/2000  15.36.56  by  Fons Rademakers
+//*CMZ :  2.24/01 11/03/2000  09.18.22  by  Marthe Brun
 //*CMZ :  2.23/09 21/11/99  15.41.37  by  Fons Rademakers
 //*CMZ :  2.23/07 20/10/99  21.36.55  by  Rene Brun
 //*CMZ :  2.23/04 05/10/99  10.30.14  by  Rene Brun
@@ -8,7 +9,12 @@
 #ifndef ROOT_TLatex
 #define ROOT_TLatex
 
+#ifndef __CINT__
 #include <fstream.h>
+#else
+class ofstream;
+#endif
+
 #ifndef ROOT_TText
 #include "TText.h"
 #endif
@@ -83,6 +89,7 @@ protected:
       FormSize Anal1(TextSpec_t spec, const Char_t* t,Int_t length);
 
       void DrawLine(Float_t x1, Float_t y1, Float_t x2, Float_t y2, TextSpec_t spec);
+      void DrawParenthesis(Float_t x1, Float_t y1, Float_t r1, Float_t r2, Float_t phimin, Float_t phimax, TextSpec_t spec);
 
       FormSize FirstParse(Float_t angle, Float_t size, const Char_t *text);
 

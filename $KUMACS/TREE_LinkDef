@@ -1,3 +1,5 @@
+*CMZ :  2.24/04 05/05/2000  09.32.18  by  Rene Brun
+*CMZ :  2.24/01 17/02/2000  10.44.36  by  Fons Rademakers
 *CMZ :  2.23/12 22/01/2000  18.21.38  by  Rene Brun
 *CMZ :  2.23/10 30/11/99  16.44.33  by  Fons Rademakers
 *CMZ :  2.23/03 12/09/99  09.48.45  by  Rene Brun
@@ -35,12 +37,16 @@
 #pragma link C++ function operator+(const TCut&, const char*);
 #pragma link C++ function operator+(const char*, const TCut&);
 #pragma link C++ function operator+(const TCut&, const TCut&);
+#pragma link C++ function operator*(const TCut&, const char*);
+#pragma link C++ function operator*(const char*, const TCut&);
+#pragma link C++ function operator*(const TCut&, const TCut&);
 #pragma link C++ function operator&&(const TCut&, const char*);
 #pragma link C++ function operator&&(const char*, const TCut&);
 #pragma link C++ function operator&&(const TCut&, const TCut&);
 #pragma link C++ function operator||(const TCut&, const char*);
 #pragma link C++ function operator||(const char*, const TCut&);
 #pragma link C++ function operator||(const TCut&, const TCut&);
+#pragma link C++ function operator!(const TCut&);
 #pragma link C++ function operator+(const TEventList&, const TEventList&);
 #pragma link C++ function operator-(const TEventList&, const TEventList&);
 

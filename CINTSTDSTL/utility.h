@@ -1,14 +1,5 @@
-/*CMZ :  2.23/10 10/12/99  18.00.23  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   10/12/99*/
+/*CMZ :  2.24/05 16/05/2000  12.04.02  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   16/05/2000*/
 namespace std {
-
-#ifndef G__UTILITY_DLL
-#pragma include_noerr <utility.dll>
-#endif
-
-#ifdef __MAKECINT__
-#include <prec_stl/utility>
-#else
-#include <_utility.h>
-#endif
+#include <_utility>
 }

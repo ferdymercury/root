@@ -1,3 +1,4 @@
+/*CMZ :  2.24/01 15/03/2000  16.57.16  by  Fons Rademakers*/
 /*CMZ :  1.02/00 08/07/97  21.56.56  by  Fons Rademakers*/
 /*-- Author :*/
 
@@ -137,7 +138,7 @@ mmalloc (md, size)
   PTR result;
   size_t block, blocks, lastblocks, start;
   register size_t i;
-  struct list *next;
+  struct mmlist *next;
   register size_t log;
 
   if (size == 0)
@@ -160,9 +161,9 @@ mmalloc (md, size)
 	}
     }
 
-  if (size < sizeof (struct list))
+  if (size < sizeof (struct mmlist))
     {
-      size = sizeof (struct list);
+      size = sizeof (struct mmlist);
     }
 
   /* Determine the allocation policy based on the request size.  */
@@ -217,7 +218,7 @@ mmalloc (md, size)
 	  /* Link all fragments but the first into the free list.  */
 	  for (i = 1; i < (size_t) (BLOCKSIZE >> log); ++i)
 	    {
-	      next = (struct list *) ((char *) result + (i << log));
+	      next = (struct mmlist *) ((char *) result + (i << log));
 	      next -> next = mdp -> fraghead[log].next;
 	      next -> prev = &mdp -> fraghead[log];
 	      next -> prev -> next = next;

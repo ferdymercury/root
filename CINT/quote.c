@@ -1,5 +1,5 @@
-/*CMZ :  2.23/10 10/12/99  18.00.05  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   10/12/99*/
+/*CMZ :  2.24/05 16/05/2000  12.03.50  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   16/05/2000*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -162,6 +162,10 @@ char *string;
 	  temp[itemp2] = (char)G__int(G__checkBase(temp+itemp2 ,&hash));
 	  ++itemp2;
 	  break;
+#ifndef G__OLDIMPLEMENTATION1245
+	case '\n':
+	  break;
+#endif
 	default:
 	  temp[itemp2++] = string[itemp];
 	  break;
@@ -170,7 +174,8 @@ char *string;
       case '"':
 	if('"'==string[itemp+1]) itemp+=2;
 #ifndef G__OLDIMPLEMENTATION998
-	else G__genericerror("Error: String literal syntax error");
+	else if(G__NOLINK==G__globalcomp)
+	  G__genericerror("Error: String literal syntax error");
 #endif
       default:
 	temp[itemp2++] = string[itemp];

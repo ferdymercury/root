@@ -1,3 +1,4 @@
+//*CMZ :  2.24/01 31/03/2000  08.37.04  by  Rene Brun
 //*CMZ :  2.23/12 26/01/2000  12.08.00  by  Valery Fine(fine@bnl.gov)
 //*-- Author :
 // $Id: TPolyLineShape.cxx,v 1.21 1999/12/21 18:57:14 fine Exp $
@@ -25,14 +26,14 @@
 #include "TPoints3D.h"
 #include "TVolume.h"
 #include "TVolumePosition.h"
-#include <TTUBE.h>
-#include <TBRIK.h>
-#include <TSPHE.h>
-#include <TView.h>
-#include <TPad.h>
-#include <TPadView3D.h>
-#include <TPoint.h>
-#include <TPostScript.h>
+#include "TTUBE.h"
+#include "TBRIK.h"
+#include "TSPHE.h"
+#include "TView.h"
+#include "TPad.h"
+#include "TPadView3D.h"
+#include "TPoint.h"
+#include "TPostScript.h"
 
 //////////////////////////////////////////////////////////////////////////////////////
 //                                                                                  //
@@ -167,6 +168,7 @@ Size3D *TPolyLineShape::CreateX3DSize(Bool_t marker)
   }
   return fSizeX3D;
 }
+
 //______________________________________________________________________________
 Int_t TPolyLineShape::SetConnection(EShapeTypes connection)
 {
@@ -187,73 +189,6 @@ Int_t TPolyLineShape::SetConnection(EShapeTypes connection)
   return 0;
 }
 
-#if 0
-//______________________________________________________________________________
-static Int_t DistancetoLine(Int_t px, Int_t py, Float_t x1, Float_t y1, Float_t x2, Float_t y2, Int_t lineWidth )
-{
-//*-*-*-*-*Compute distance from point px,py to an axis of the band defined*-*-*-*
-//*-*  by pair points  (x1,y1),(x2,y2) where lineWidth is the width of the band
-//*-*  ========================================================================
-//*-*
-//*-*  Compute the closest distance of approach from point px,py to this line.
-//*-*  The distance is computed in pixels units.
-//*-*
-//*-*
-//*-*  Algorithm:
-//*-*
-//*-*    A(x1,y1)         P                             B(x2,y2)
-//*-*    ------------------------------------------------
-//*-*                     I
-//*-*                     I
-//*-*                     I
-//*-*                     I
-//*-*                    M(x,y)
-//*-*
-//*-*  Let us call  a = distance AM     A=a**2
-//*-*               b = distance BM     B=b**2
-//*-*               c = distance AB     C=c**2
-//*-*               d = distance PM     D=d**2
-//*-*               u = distance AP     U=u**2
-//*-*               v = distance BP     V=v**2     c = u + v
-//*-*
-//*-*  D = A - U
-//*-*  D = B - V  = B -(c-u)**2
-//*-*     ==> u = (A -B +C)/2c
-//*-*
-//*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
-   Float_t xl, xt, yl, yt;
-   Float_t x     = px;
-   Float_t y     = py;
-   if (x1 < x2) {xl = x1; xt = x2;}
-   else         {xl = x2; xt = x1;}
-   if (y1 < y2) {yl = y1; yt = y2;}
-   else         {yl = y2; yt = y1;}
-
-   //following algorithm only valid in the box
-   //surrounding the line
-   const Float_t boxWidth = 10;
-   if (x < xl-boxWidth || x> xt+boxWidth ||
-       y < yl-boxWidth || y> yt+boxWidth)    return 9999;
-
-   Float_t xx1   = x  - x1;
-   Float_t xx2   = x  - x2;
-   Float_t x1x2  = x1 - x2;
-   Float_t yy1   = y  - y1;
-   Float_t yy2   = y  - y2;
-   Float_t y1y2  = y1 - y2;
-   Float_t A     = xx1*xx1   + yy1*yy1;
-   Float_t B     = xx2*xx2   + yy2*yy2;
-   Float_t C     = x1x2*x1x2 + y1y2*y1y2;
-   if (C <= 0)  return 9999;
-   Float_t c     = TMath::Sqrt(C);
-   Float_t u     = (A - B + C)/(2*c);
-   Float_t D     = TMath::Abs(A - u*u);
-   if (D < 0)   return 9999;
-
-   return Int_t(TMath::Sqrt(D) - 0.5*float(lineWidth));
-}
-#endif
-
 //______________________________________________________________________________
 Int_t TPolyLineShape::DistancetoPrimitive(Int_t px, Int_t py)
 {
@@ -270,55 +205,7 @@ Int_t TPolyLineShape::DistancetoPrimitive(Int_t px, Int_t py)
    Int_t ret = fPoints->DistancetoPrimitive( px, py);
    if (ret == -1) ret = PointDistancetoPrimitive(px, py);
    return ret;
-#if 0
-   const Int_t inaxis = 7;
-   Int_t dist = 999999;
-
-   Int_t puxmin = gPad->XtoAbsPixel(gPad->GetUxmin());
-   Int_t puymin = gPad->YtoAbsPixel(gPad->GetUymin());
-   Int_t puxmax = gPad->XtoAbsPixel(gPad->GetUxmax());
-   Int_t puymax = gPad->YtoAbsPixel(gPad->GetUymax());
-
-//*-*- return if point is not in the user area
-   if (px < puxmin - inaxis) return dist;
-   if (py > puymin + inaxis) return dist;
-   if (px > puxmax + inaxis) return dist;
-   if (py < puymax - inaxis) return dist;
-
-   TView *view = gPad->GetView();
-   if (!view) return dist;
-
-   Int_t i, dsegment;
-   Float_t x1,y1,x2,y2, xndc[3];
-   Float_t xyz[6];
-   Float_t *shift = xyz;
-   Int_t offset =  3;
-   fPoints->GetXYZ(shift,0);
-   for (i=0;i<fPoints->Size()-1;i++) {
-      view->WCtoNDC(shift, xndc);
-      x1 = xndc[0];
-      y1 = xndc[1];
-      shift += offset;  offset = -offset;
-      fPoints->GetXYZ(shift,i+1);
-      view->WCtoNDC(shift, xndc);
-      x2 = xndc[0];
-      y2 = xndc[1];
-      Float_t xp1    = gPad->XtoAbsPixel(x1);
-      Float_t yp1    = gPad->YtoAbsPixel(y1);
-      Float_t xp2    = gPad->XtoAbsPixel(x2);
-      Float_t yp2    = gPad->YtoAbsPixel(y2);
-
-//      dsegment = TPoints3DABC::DistancetoLine(px,py,x1,y1,x2,y2);
-      dsegment = ::DistancetoLine(px,py,xp1,yp1,xp2,yp2,GetSizeAttribute());
-      if (dsegment < dist) {
-         dist = dsegment;
-//         printf(" %d %f %f %f %f \n",dist,x1,y1,x2,y2);
-      }
-   }
-   return dist;
-#endif
-}
-
+ }
  return 999999;
 }
 
@@ -385,13 +272,17 @@ void TPolyLineShape::ExecuteEvent(Int_t event, Int_t px, Int_t py)
 }
 
 //______________________________________________________________________________
-Color_t TPolyLineShape::GetColorAttribute() const {
+Color_t TPolyLineShape::GetColorAttribute() const
+{
   return ((TPolyLineShape *)this)->GetLineColor();
 }
+
 //______________________________________________________________________________
-Size_t TPolyLineShape::GetSizeAttribute() const {
+Size_t TPolyLineShape::GetSizeAttribute() const
+{
   return ((TPolyLineShape *)this)->GetMarkerSize();
 }
+
 //______________________________________________________________________________
 Style_t TPolyLineShape::GetStyleAttribute() const
 {
@@ -427,14 +318,9 @@ void TPolyLineShape::PaintNode(Float_t *start,Float_t *end,Option_t *option)
     TShape *shape = fShape;
     if (!shape) shape = fConnection;
 
-    gyrot(rotate,cosa,sina,mrot);
-#ifdef LINES
-    Float_t width = GetWidthFactor()*(fPoints->GetLineWidth());
-#else
-//    Float_t width = GetWidthFactor()*(fPoints->GetMarkerSize());
-      Float_t width = GetWidthFactor()*GetLineWidth();
-//==      width  *= fPoints->GetSizeAttribute();
-#endif
+    Gyrot(rotate,cosa,sina,mrot);
+
+    Float_t width = GetWidthFactor()*GetLineWidth();
 
     mrot[0][0] *= width;
     mrot[0][1] *= width;
@@ -448,13 +334,7 @@ void TPolyLineShape::PaintNode(Float_t *start,Float_t *end,Option_t *option)
     mrot[2][1] *= length;
     mrot[2][2] *= length;
 
-#ifdef LINES
-    Color_t color = fPoints->GetLineColor();
-#else
     Color_t color = GetLineColor();
-//    color = fPoints->GetColorAttribute();
-//    Color_t color = fPoints->GetMarkerColor();
-#endif
 
     TVolume node("SegmentNode","SegmentNode", shape);
     node.SetLineColor(color);
@@ -495,7 +375,7 @@ void TPolyLineShape::Paint(Option_t *opt)
 
   Bool_t rangeView = opt && opt[0] && strcmp(opt,"range")==0 ? kTRUE : kFALSE;
   TPadView3D *view3D = 0;
-  if (!rangeView  && (view3D = gPad->GetView3D()) ) {
+  if (!rangeView  && (view3D = (TPadView3D*)gPad->GetView3D()) ) {
     TString mode;
 
     mode="";
@@ -655,6 +535,7 @@ void TPolyLineShape::PaintX3DLine(Option_t *)
      if (buff)           delete    buff;
 #endif
 }
+
 //______________________________________________________________________________
 void TPolyLineShape::PaintX3DMarker(Option_t *)
 {
@@ -746,7 +627,7 @@ Double_t TPolyLineShape::Product(Double_t *v1, Double_t *v2,Int_t ndim)
 }
 
 //______________________________________________________________________________
-Double_t *TPolyLineShape::gyrot(Double_t *dirc, Double_t cosang, Double_t sinang, Double_t trans[3][3])
+Double_t *TPolyLineShape::Gyrot(Double_t *dirc, Double_t cosang, Double_t sinang, Double_t trans[3][3])
 {
 //************************************************************************
 //*                                                                      *
@@ -760,7 +641,8 @@ Double_t *TPolyLineShape::gyrot(Double_t *dirc, Double_t cosang, Double_t sinang
 //*       dirc    direct cosinuses (may be not normalised)               *
 //*       cosang, sinang - cos and sin of the rotation angle             *
 //*       tranz   rotation & shift matrix 3*3  (input/output)            *
-//*                                                                      *
+//*    ---------------------------------------------------------------   *
+//*  This code is provided by Victor Perevoztchikov                      *
 //************************************************************************
 
       Double_t ax[3];
@@ -807,6 +689,7 @@ Color_t TPolyLineShape::SetColorAttribute(Color_t color)
   }
   return currentColor;
 }
+
 //______________________________________________________________________________
 Size_t TPolyLineShape::SetSizeAttribute(Size_t size)
 {
@@ -818,6 +701,7 @@ Size_t TPolyLineShape::SetSizeAttribute(Size_t size)
   }
   return currentSize;
 }
+
 //______________________________________________________________________________
 Style_t TPolyLineShape::SetStyleAttribute(Style_t style)
 {
@@ -840,7 +724,11 @@ void TPolyLineShape::SetShape(TShape *shape)
 }
 
 //_______________________________________________________________________
-Int_t TPolyLineShape::Size() const {return fPoints ? fPoints->Size():0;}
+Int_t TPolyLineShape::Size() const
+{
+   return fPoints ? fPoints->Size():0;
+}
+
 //______________________________________________________________________________
 void TPolyLineShape::Sizeof3D() const
 {
@@ -858,15 +746,3 @@ void TPolyLineShape::Sizeof3D() const
   }
   else Error("Sizeof3D()","buffer size has not been defined yet");
 }
-
-//______________________________________________________________________________
-// $Log: TPolyLineShape.cxx,v $
-// Revision 1.21  1999/12/21 18:57:14  fine
-// compilation warning plus new type for SizeAttribute
-//
-// Revision 1.20  1999/12/17 23:28:41  fine
-// clean up for the sake of docs + new class TTable3DPackedPoints introduced
-//
-//______________________________________________________________________________
-
-

@@ -1,3 +1,5 @@
+//*CMZ :  2.24/03 20/04/2000  13.38.32  by  Fons Rademakers
+//*CMZ :  2.24/01 12/03/2000  16.07.02  by  Fons Rademakers
 //*CMZ :  2.22/01 12/05/99  16.06.10  by  Fons Rademakers
 //*CMZ :  2.21/04 05/02/99  16.43.33  by  Fons Rademakers
 //*CMZ :  2.00/10 16/07/98  13.40.44  by  Fons Rademakers
@@ -7,17 +9,18 @@
 #ifndef ROOT_TString
 #define ROOT_TString
 
+/*CMZ :  2.24/01 24/02/2000  11.49.40  by  Fons Rademakers*/
 /*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun and Fons Rademakers.                               *
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
  *                                                                       *
- * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
- * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -30,7 +33,9 @@
 //                                                                      //
 //////////////////////////////////////////////////////////////////////////
 
+#ifndef __CINT__
 #include <string.h>
+#endif
 
 #ifndef ROOT_TMath
 #include "TMath.h"
@@ -332,7 +337,7 @@ inline  unsigned Hash(const TString *s) { return s->Hash(); }
 
 extern char *Form(const char *fmt, ...);     // format in circular buffer
 extern void  Printf(const char *fmt, ...);   // format and print
-extern char *Strip(const char *str);         // strip blanks of str, free with delete []
+extern char *Strip(const char *str, char c = ' '); // strip c off str, free with delete []
 extern char *StrDup(const char *str);        // duplicate str, free with delete []
 extern char *Compress(const char *str);      // remove blanks from string, free with delele []
 extern int   EscChar(const char *src, char *dst, int dstlen, char *specchars,

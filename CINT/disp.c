@@ -1,5 +1,5 @@
-/*CMZ :  2.23/10 10/12/99  17.59.59  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   10/12/99*/
+/*CMZ :  2.24/05 16/05/2000  12.03.46  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   16/05/2000*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -65,8 +65,10 @@ int len;
   *************************************************/
   if(!fp) {
     shownline = 0;
+#ifdef G__OLDIMPLEMENTATION1300
 #ifndef G__ROOT
     if(1>dispsize) {
+#endif
 #endif
       if(store_dispsize>0) dispsize=store_dispsize;
       else {
@@ -78,8 +80,10 @@ int len;
 	if(lines)  dispcol=atoi(lines);
 	else       dispcol=80;
       }
+#ifdef G__OLDIMPLEMENTATION1300
 #ifndef G__ROOT
     }
+#endif
 #endif
     G__more_len=0;
     return(0);
@@ -242,16 +246,18 @@ struct G__ifunc_table *ifunc;
 #endif
 	}
 	else {
-	  sprintf(msg,"%-15s%4d:%-3d%3d "
-		  ,"(compiled)"
-		  ,0,0
-		  ,ifunc->busy[i]
-		  );
+	  sprintf(msg,"%-15s%4d:%-3d%3d " ,"(compiled)" ,0,0 ,ifunc->busy[i]);
 	  if(G__more(fp,msg)) return(1);
 	}
 	
 	sprintf(msg,"%s ",G__access2string(ifunc->access[i]));
 	if(G__more(fp,msg)) return(1);
+#ifndef G__OLDIMPLEMENTATION1250
+	if(ifunc->isexplicit[i]) {
+	  sprintf(msg,"explicit ");
+	  if(G__more(fp,msg)) return(1);
+	}
+#endif
 #ifndef G__NEWINHERIT
 	if(ifunc->isinherit[i]) {
 	  sprintf(msg,"inherited ");
@@ -895,7 +901,7 @@ int startin;
 #endif
 	      ,G__newtype.linenum[i]);
     else
-      sprintf(msg,"%-15s     ","(compiled)");
+      sprintf(msg,"%-15s     " ,"(compiled)");
     if(G__more(fout,msg)) return(1);
 #endif
     if('Q'==G__newtype.type[i]) {
@@ -1137,7 +1143,13 @@ struct G__Definetemplatefunc *deftmpfunc;
     else         fprintf(fout,">");
     G__more_col(1);
   }
-  sprintf(msg," func %s(",deftmpfunc->name);
+  sprintf(msg," func ");
+  if(G__more(fout,msg)) return(1);
+  if(-1!=deftmpfunc->parent_tagnum) {
+    sprintf(msg,"%s::",G__fulltagname(deftmpfunc->parent_tagnum,1));
+    if(G__more(fout,msg)) return(1);
+  }
+  sprintf(msg,"%s(",deftmpfunc->name);
   if(G__more(fout,msg)) return(1);
   def_para=deftmpfunc->def_para;
   pfuncpara = &deftmpfunc->func_para;
@@ -1316,10 +1328,20 @@ FILE *fout;
   char msg[G__ONELINE];
   int i;
   for(i=0;i<G__nfile;i++) {
+#ifndef G__OLDIMPLEMENTATION1273
+    if(G__srcfile[i].hasonlyfunc)
+      sprintf(msg,"%3d fp=0x%8lx lines=%-4d*file=\"%s\" "
+	      ,i,(long)G__srcfile[i].fp,G__srcfile[i].maxline
+	      ,G__srcfile[i].filename);
+    else
+      sprintf(msg,"%3d fp=0x%8lx lines=%-4d file=\"%s\" "
+	      ,i,(long)G__srcfile[i].fp,G__srcfile[i].maxline
+	      ,G__srcfile[i].filename);
+#else
     sprintf(msg,"%3d fp=0x%8lx lines=%-4d file=\"%s\" "
 	    ,i,(long)G__srcfile[i].fp,G__srcfile[i].maxline
-	    ,G__srcfile[i].filename
-	    );
+	    ,G__srcfile[i].filename);
+#endif
     if(G__more(fout,msg)) return(1);
     if(G__srcfile[i].prepname) {
       sprintf(msg,"cppfile=\"%s\"",G__srcfile[i].prepname);
@@ -1643,7 +1665,7 @@ long offset;
 #endif
 	      ,var->linenum[imon1]);
     else
-      sprintf(msg,"%-15s     ","(compiled)");
+      sprintf(msg,"%-15s     " ,"(compiled)");
     if(G__more(fout,msg)) return(1);
 #endif
     sprintf(msg,"%s",addspace);

@@ -1,3 +1,5 @@
+//*CMZ :  2.24/05 15/05/2000  11.42.25  by  Rene Brun
+//*CMZ :  2.24/01 17/02/2000  18.37.15  by  Fons Rademakers
 //*CMZ :  2.23/12 29/01/2000  02.57.20  by  Fons Rademakers
 //*CMZ :  2.23/09 19/11/99  14.38.09  by  Fons Rademakers
 //*CMZ :  2.21/08 18/03/99  15.14.28  by  Fons Rademakers
@@ -6,17 +8,18 @@
 //*CMZ :  2.21/02 14/01/99  17.49.58  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   11/08/97
 
+/*CMZ :  2.24/01 24/02/2000  11.49.40  by  Fons Rademakers*/
 /*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun and Fons Rademakers.                               *
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
  *                                                                       *
- * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
- * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -100,19 +103,24 @@
 //  - anonymous mode only works when the server is started via inetd.   //
 //                                                                      //
 //  When you system uses shadow passwords you have to compile rootd     //
-//  with -DSHADOWPW. Since shadow passwords can only be accessed while  //
-//  being superuser (root) this works only when the server is started   //
-//  via inetd. Another solution is to create a file ~/.rootdpass        //
-//  containing an encrypted password. If this file exists its password  //
-//  is used for authentication. This method overrides all other         //
-//  authentication methods. To create an encrypted password do          //
-//  something like:                                                     //
+//  with -DR__SHADOWPW. Since shadow passwords can only be accessed     //
+//  while being superuser (root) this works only when the server is     //
+//  started via inetd. Another solution is to create a file             //
+//  ~/.rootdpass containing an encrypted password. If this file exists  //
+//  its password is used for authentication. This method overrides      //
+//  all other authentication methods. To create an encrypted password   //
+//  do something like:                                                  //
 //     perl -e '$pw = crypt("<secretpasswd>","salt"); print "$pw\n"'    //
 //  and store this string in ~/.rootdpass.                              //
 //                                                                      //
-//  To use AFS for authentication compile rootd with the -DAFS flag.    //
+//  To use AFS for authentication compile rootd with the -DR__AFS flag. //
 //  In that case you also need to link with the AFS libraries. See      //
-//  the Makefiles for more details.
+//  the Makefiles for more details.                                     //
+//                                                                      //
+//  To use Secure Remote Passwords (SRP) for authentication compile     //
+//  rootd with the -DR__SRP flag. In that case you also need to link    //
+//  with the SRP and gmp libraries. See the Makefile for more details.  //
+//  SRP is described at: http://jafar.stanford.edu/srp/index.html.      //
 //                                                                      //
 //////////////////////////////////////////////////////////////////////////
 
@@ -134,7 +142,7 @@
 #define	F_ULOCK             LOCK_UN
 #endif
 
-#if defined(__linux) || defined(__sun) || defined(__sgi) || \
+#if defined(__linux) || defined(__linux__) || defined(__sun) || defined(__sgi) || \
     defined(_AIX) || defined(__FreeBSD__)
 #include <grp.h>
 #include <sys/types.h>
@@ -167,17 +175,23 @@ extern "C" {
 }
 #endif
 
+#if (defined(__linux__) && defined(__powerpc__) && __GNUG__>=2)
+#  if (__GNUG__==2 && __GNUC_MINOR__ >=95)
+extern "C" int initgroups(char *name, int basegid);
+#  endif
+#endif
+
 #if defined(__sun)
-#ifndef SHADOWPW
-#define SHADOWPW
+#ifndef R__SHADOWPW
+#define R__SHADOWPW
 #endif
 #endif
 
-#ifdef SHADOWPW
+#ifdef R__SHADOWPW
 #include <shadow.h>
 #endif
 
-#ifdef AFS
+#ifdef R__AFS
 //#include <afs/kautils.h>
 #define KA_USERAUTH_VERSION 1
 #define KA_USERAUTH_DOSETPAG 0x10000
@@ -185,6 +199,12 @@ extern "C" {
 extern "C" int ka_UserAuthenticateGeneral(int,char*,char*,char*,char*,int,int,int,char**);
 #endif
 
+#ifdef R__SRP
+extern "C" {
+#include <t_pwd.h>
+#include <t_server.h>
+}
+#endif
 
 #include "rootdp.h"
 
@@ -194,6 +214,7 @@ extern "C" int ka_UserAuthenticateGeneral(int,char*,char*,char*,char*,int,int,in
 const char kRootdService[] = "rootd";
 const char kRootdTab[]     = "/usr/tmp/rootdtab";
 const char kRootdPass[]    = ".rootdpass";
+const char kSRootdPass[]   = ".srootdpass";
 const int  kMAXPATHLEN     = 1024;
 
 int     gInetdFlag         = 0;
@@ -204,6 +225,7 @@ int     gAuth              = 0;
 int     gAnon              = 0;
 int     gFd                = -1;
 int     gWritable          = 0;
+int     gProtocol          = 2;       // increase when protocol changes
 double  gBytesRead         = 0;
 double  gBytesWritten      = 0;
 char    gUser[64]          = { 0 };
@@ -638,6 +660,14 @@ void RootdStat()
 }
 
 //______________________________________________________________________________
+void RootdProtocol()
+{
+   // Return rootd protocol version id.
+
+   NetSend(gProtocol, kROOTD_PROTOCOL);
+}
+
+//______________________________________________________________________________
 void RootdUser(const char *user)
 {
    // Check user id. If user id is not equal to rootd's effective uid, user
@@ -667,6 +697,153 @@ void RootdUser(const char *user)
    strcpy(gUser, user);
 
    NetSend(gAuth, kROOTD_AUTH);
+}
+
+//______________________________________________________________________________
+void RootdSRPUser(const char *user)
+{
+   // Use Secure Remote Password protocol.
+   // Check user id in $HOME/.srootdpass file.
+
+   if (!*user)
+      ErrorFatal(kErrBadUser, "RootdUser: bad user name");
+
+#ifdef R__SRP
+
+   char srootdpass[kMAXPATHLEN], srootdconf[kMAXPATHLEN];
+
+   struct passwd *pw = getpwnam(user);
+   if (!pw)
+      ErrorFatal(kErrNoUser, "RootdSRPUser: user %s unknown", user);
+
+   // If server is not started as root and remote user is not same as the
+   // one who started rootd then authetication is not ok.
+   uid_t uid = getuid();
+   if (uid && uid != pw->pw_uid)
+      ErrorFatal(kErrBadUser, "RootdSRPUser: remote user not same as effective user of rootd");
+
+   NetSend(gAuth, kROOTD_AUTH);
+
+   strcpy(gUser, user);
+
+   sprintf(srootdpass, "%s/%s", pw->pw_dir, kSRootdPass);
+   sprintf(srootdconf, "%s/%s.conf", pw->pw_dir, kSRootdPass);
+
+   FILE *fp1 = fopen(srootdpass, "r");
+   if (!fp1) {
+      NetSend(2, kROOTD_AUTH);
+      ErrorInfo("RootdSRPUser: error opening %s", srootdpass);
+      return;
+   }
+   FILE *fp2 = fopen(srootdconf, "r");
+   if (!fp2) {
+      NetSend(2, kROOTD_AUTH);
+      ErrorInfo("RootdSRPUser: error opening %s", srootdconf);
+      if (fp1) fclose(fp1);
+      return;
+   }
+
+   struct t_pw *tpw = t_openpw(fp1);
+   if (!tpw) {
+      NetSend(2, kROOTD_AUTH);
+      ErrorInfo("RootdSRPUser: unable to open password file %s", srootdpass);
+      fclose(fp1);
+      fclose(fp2);
+      return;
+   }
+
+   struct t_conf *tcnf = t_openconf(fp2);
+   if (!tcnf) {
+      NetSend(2, kROOTD_AUTH);
+      ErrorInfo("RootdSRPUser: unable to open configuration file %s", srootdconf);
+      t_closepw(tpw);
+      fclose(fp1);
+      fclose(fp2);
+      return;
+   }
+
+   struct t_server *ts = t_serveropenfromfiles(gUser, tpw, tcnf);
+   if (!ts)
+      ErrorFatal(kErrNoUser, "user %s not found SRP password file", gUser);
+
+   if (tcnf) t_closeconf(tcnf);
+   if (tpw)  t_closepw(tpw);
+   if (fp2)  fclose(fp2);
+   if (fp1)  fclose(fp1);
+
+   char hexbuf[MAXHEXPARAMLEN];
+
+   // send n to client
+   NetSend(t_tob64(hexbuf, (char*)ts->n.data, ts->n.len), kROOTD_SRPN);
+   // send g to client
+   NetSend(t_tob64(hexbuf, (char*)ts->g.data, ts->g.len), kROOTD_SRPG);
+   // send salt to client
+   NetSend(t_tob64(hexbuf, (char*)ts->s.data, ts->s.len), kROOTD_SRPSALT);
+
+   struct t_num *B = t_servergenexp(ts);
+
+   // receive A from client
+   EMessageTypes kind;
+   if (NetRecv(hexbuf, MAXHEXPARAMLEN, kind) < 0)
+      ErrorFatal(kErrFatal, "RootdSRPUser: error receiving A from client");
+   if (kind != kROOTD_SRPA)
+      ErrorFatal(kErrFatal, "RootdSRPUser: expected kROOTD_SRPA message");
+
+   unsigned char buf[MAXPARAMLEN];
+   struct t_num A;
+   A.data = buf;
+   A.len  = t_fromb64((char*)A.data, hexbuf);
+
+   // send B to client
+   NetSend(t_tob64(hexbuf, (char*)B->data, B->len), kROOTD_SRPB);
+
+   t_servergetkey(ts, &A);
+
+   // receive response from client
+   if (NetRecv(hexbuf, MAXHEXPARAMLEN, kind) < 0)
+      ErrorFatal(kErrFatal, "RootdSRPUser: error receiving response from client");
+   if (kind != kROOTD_SRPRESPONSE)
+      ErrorFatal(kErrFatal, "RootdSRPUser: expected kROOTD_SRPRESPONSE message");
+
+   unsigned char cbuf[20];
+   t_fromhex((char*)cbuf, hexbuf);
+
+   if (!t_serververify(ts, cbuf)) {
+      // authentication successful
+
+      gAuth = 1;
+
+      if (chdir(pw->pw_dir) == -1)
+         ErrorFatal(kErrFatal, "RootdSRPUser: can't change directory to %s", pw->pw_dir);
+
+      if (getuid() == 0) {
+
+         // set access control list from /etc/initgroup
+         initgroups(gUser, pw->pw_gid);
+
+         if (setresgid(pw->pw_gid, pw->pw_gid, 0) == -1)
+            ErrorFatal(kErrFatal, "RootdSRPUser: can't setgid for user %s", gUser);
+
+         if (setresuid(pw->pw_uid, pw->pw_uid, 0) == -1)
+            ErrorFatal(kErrFatal, "RootdSRPUser: can't setuid for user %s", gUser);
+
+      }
+
+      umask(022);
+
+      NetSend(gAuth, kROOTD_AUTH);
+
+      if (gDebug > 0)
+         ErrorInfo("RootdSRPUser: user %s authenticated", gUser);
+
+   } else
+      ErrorFatal(kErrBadPasswd, "RootdSRPUser: authentication failed for user %s", gUser);
+
+   t_serverclose(ts);
+
+#else
+   NetSend(2, kROOTD_AUTH);
+#endif
 }
 
 //______________________________________________________________________________
@@ -718,10 +895,10 @@ void RootdPass(const char *pass)
    char  *passw;
    char  *pass_crypt;
    struct passwd *pw;
-#ifdef SHADOWPW
+#ifdef R__SHADOWPW
    struct spwd *spw;
 #endif
-#ifdef AFS
+#ifdef R__AFS
    char  *reason;
    int    afs_auth = 0;
 #endif
@@ -752,7 +929,7 @@ void RootdPass(const char *pass)
    if (RootdCheckSpecialPass(passwd))
       goto skipauth;
 
-#ifdef AFS
+#ifdef R__AFS
    afs_auth = !ka_UserAuthenticateGeneral(
         KA_USERAUTH_VERSION + KA_USERAUTH_DOSETPAG,
         gUser,             //user name
@@ -768,7 +945,7 @@ void RootdPass(const char *pass)
       // try conventional login...
 #endif
 
-#ifdef SHADOWPW
+#ifdef R__SHADOWPW
    // System V Rel 4 style shadow passwords
    if ((spw = getspnam(gUser)) == 0) {
       ErrorInfo("RootdPass: Shadow passwd not available for user %s", gUser);
@@ -784,7 +961,7 @@ void RootdPass(const char *pass)
    if (strncmp(pass_crypt, passw, n+1) != 0)
       ErrorFatal(kErrBadPasswd, "RootdPass: invalid password for user %s", gUser);
 
-#ifdef AFS
+#ifdef R__AFS
    }  // afs_auth
 #endif
 
@@ -1035,7 +1212,8 @@ void RootdLoop()
       if (NetRecv(recvbuf, kMaxBuf, kind) < 0)
          ErrorFatal(kErrFatal, "RootdLoop: error receiving message");
 
-      if (kind != kROOTD_USER && kind != kROOTD_PASS && gAuth == 0)
+      if (kind != kROOTD_USER    && kind != kROOTD_PASS &&
+          kind != kROOTD_SRPUSER && kind != kROOTD_PROTOCOL && gAuth == 0)
          ErrorFatal(kErrNoUser, "RootdLoop: not authenticated");
 
       if (gDebug > 2 && kind != kROOTD_PASS)
@@ -1044,6 +1222,9 @@ void RootdLoop()
       switch (kind) {
          case kROOTD_USER:
             RootdUser(recvbuf);
+            break;
+         case kROOTD_SRPUSER:
+            RootdSRPUser(recvbuf);
             break;
          case kROOTD_PASS:
             RootdPass(recvbuf);
@@ -1065,6 +1246,9 @@ void RootdLoop()
             return;
          case kROOTD_STAT:
             RootdStat();
+            break;
+         case kROOTD_PROTOCOL:
+            RootdProtocol();
             break;
          default:
             ErrorFatal(kErrBadOp, "RootdLoop: received bad opcode %d", kind);
@@ -1116,7 +1300,8 @@ int main(int argc, char **argv)
    }
 
    if (gDebug > 0)
-      ErrorInfo("main: pid = %d, gInetdFlag = %d", getpid(), gInetdFlag);
+      ErrorInfo("main: pid = %d, gInetdFlag = %d, gProtocol = %d",
+                getpid(), gInetdFlag, gProtocol);
 
    // Concurrent server loop.
    // The child created by NetOpen() handles the client's request.

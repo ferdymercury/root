@@ -1,3 +1,5 @@
+*CMZ :  2.24/03 03/05/2000  19.47.54  by  Rene Brun
+*CMZ :  2.24/01 01/03/2000  16.06.21  by  Rene Brun
 *CMZ :  2.23/12 22/01/2000  18.38.56  by  Rene Brun
 *CMZ :  2.23/07 21/10/99  23.36.00  by  Rene Brun
 *CMZ :  2.23/03 26/09/99  20.19.05  by  Fons Rademakers
@@ -21,18 +23,19 @@
 #pragma link C++ class TH1D+;
 #pragma link C++ class TH1F+;
 #pragma link C++ class TH1S+;
-#pragma link C++ class TH2;
-#pragma link C++ class TH2C+;
-#pragma link C++ class TH2D+;
-#pragma link C++ class TH2F+;
-#pragma link C++ class TH2S+;
+#pragma link C++ class TH2-;
+#pragma link C++ class TH2C-;
+#pragma link C++ class TH2D-;
+#pragma link C++ class TH2F-;
+#pragma link C++ class TH2S-;
 #pragma link C++ class TH3-;
-#pragma link C++ class TH3C+;
-#pragma link C++ class TH3D+;
-#pragma link C++ class TH3F+;
-#pragma link C++ class TH3S+;
+#pragma link C++ class TH3C-;
+#pragma link C++ class TH3D-;
+#pragma link C++ class TH3F-;
+#pragma link C++ class TH3S-;
 #pragma link C++ class TPolyMarker-;
 #pragma link C++ class TProfile+;
+#pragma link C++ class TProfile2D+;
 #pragma link C++ class TSpectrum+;
 #pragma link C++ class TVirtualHistPainter;
 
@@ -119,5 +122,8 @@
 #pragma link C++ function operator-(TH3D&, TH3D&);
 #pragma link C++ function operator*(TH3D&, TH3D&);
 #pragma link C++ function operator/(TH3D&, TH3D&);
+
+#pragma link C++ function R__H(Int_t);
+#pragma link C++ function R__H(const char*);
 
 #endif

@@ -1,8 +1,8 @@
+//*CMZ :  2.24/03 29/04/2000  19.43.03  by  Fons Rademakers
+//*CMZ :  2.24/01 31/03/2000  08.23.46  by  Rene Brun
 //*CMZ :  2.23/12 26/01/2000  12.13.00  by  Valery Fine(fine@bnl.gov)
 //*-- Author : Valery Fine(fine@bnl.gov)   25/12/98
 // $Id: TNodePosition.cxx,v 1.23 1999/12/21 18:57:14 fine Exp $
-
-#include "CopyRight.h"
 
 #include <iostream.h>
 #include <iomanip.h>
@@ -64,6 +64,7 @@ TVolumePosition::TVolumePosition(TVolume *node,Double_t x, Double_t y, Double_t 
    counter++;
    if(!(counter%1000))cout<<"TVolumePosition count="<<counter<<" name="<<node->GetName()<<endl;
 
+   if (!gGeometry) new TGeometry;
    if (matrixname && strlen(matrixname)) fMatrix = gGeometry->GetRotMatrix(matrixname);
    if (!fMatrix) fMatrix = TVolume::GetIdentity();
 }
@@ -83,9 +84,11 @@ TVolumePosition::TVolumePosition(TVolume *node,Double_t x, Double_t y, Double_t 
 //*-*
 //*-*    This new node is added into the list of sons of the current node
 //*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+   if (!gGeometry) new TGeometry;
    fX[0] = x; fX[1] = y; fX[2] = z;
    if (!fMatrix) fMatrix = TVolume::GetIdentity();
 }
+
 //______________________________________________________________________________
 void TVolumePosition::Browse(TBrowser *b)
 {
@@ -101,6 +104,7 @@ void TVolumePosition::Browse(TBrowser *b)
        gPad->Update();
    }
 }
+
 //______________________________________________________________________________
 Int_t TVolumePosition::DistancetoPrimitive(Int_t, Int_t)
 {
@@ -267,6 +271,7 @@ void TVolumePosition::Paint(Option_t *)
 //*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
   Error("Paint","Position can not be painted");
 }
+
 //_______________________________________________________________________
 void TVolumePosition::Print(Option_t *)
 {
@@ -334,10 +339,11 @@ void   TVolumePosition::SetLineAttributes()
   TVolume *thisNode = GetNode();
   if (thisNode) thisNode->SetLineAttributes();
 }
+
 //_______________________________________________________________________
 void TVolumePosition::UpdatePosition(Option_t *)
 {
-  TPadView3D *view3D=gPad->GetView3D();
+  TPadView3D *view3D=(TPadView3D *)gPad->GetView3D();
 //*-*- Update translation vector and rotation matrix for new level
   if (gGeometry->GeomLevel() && fMatrix) {
      gGeometry->UpdateTempMatrix(fX[0],fX[1],fX[2]
@@ -354,73 +360,3 @@ void TVolumePosition::SetVisibility(Int_t vis)
  TVolume *node = GetNode();
  if (node) node->SetVisibility(TVolume::ENodeSEEN(vis));
 }
-
-//______________________________________________________________________________
-// $Log: TVolumePosition.cxx,v $
-// Revision 1.23  1999/12/21 18:57:14  fine
-// compilation warning plus new type for SizeAttribute
-//
-// Revision 1.22  1999/10/28 16:24:31  fine
-// TDataSet major correction: it may be built with TList (default) or with TObjArray
-//
-// Revision 1.21  1999/09/29 00:31:51  fine
-// RMath class has been repleaced with TCL one
-//
-// Revision 1.20  1999/09/27 23:45:43  fine
-// Several methods to calculate errors were introduced
-//
-// Revision 1.19  1999/09/22 03:51:50  fine
-// New method and RMath class to manage different transformation have been introduced
-//
-// Revision 1.18  1999/07/09 01:56:38  fine
-// New method to contrsuct sub views and manage visibilities
-//
-// Revision 1.17  1999/06/05 00:42:31  fine
-// SetLineAttribute methods have been introduced
-//
-// Revision 1.16  1999/04/23 22:47:34  fine
-// Node family has been adjusted for TPolyLineShape class
-//
-// Revision 1.15  1999/04/13 14:26:40  fine
-// Geometry-based dataset implementation, next step
-//
-// Revision 1.14  1999/04/08 16:44:10  fine
-// Working version of the NodeView family
-//
-// Revision 1.13  1999/04/05 03:18:27  fine
-// TVolume family steps
-//
-// Revision 1.12  1999/04/02 23:36:04  fine
-// Collapsed geometry structures has been implemeted
-//
-// Revision 1.11  1999/03/30 22:30:14  fine
-//  Visibility test has been added for Paint method
-//
-// Revision 1.10  1999/03/27 22:44:59  fine
-// Working 3D Tnode with X3d and OpenGL
-//
-// Revision 1.9  1999/02/05 16:32:30  fine
-// TVolumePostion::Draw() method has been implemented
-//
-// Revision 1.8  1999/02/04 19:22:23  fine
-// Severak drawing method have been added to draw STAR nodes
-//
-// Revision 1.7  1999/01/31 02:03:07  fine
-// TDataSetIter::Notify - new method + clean up
-//
-// Revision 1.6  1999/01/30 04:24:21  fine
-// TTable: Print memory leak fixed
-//
-// Revision 1.5  1998/12/30 22:30:17  fine
-// TTable::PrintHrader method has been introduced
-//
-// Revision 1.4  1998/12/27 03:16:52  fine
-// Flag WIN32 has been introduced for TVolume / TVolumePosition against of crashes
-//
-// Revision 1.3  1998/12/27 02:33:16  fine
-// TVolume, TVolumePosition - first working versions have been introduced *see macros/STAR_shapes.C for an example)
-//
-// Revision 1.2  1998/12/26 21:40:40  fisyak
-// Add Id and Log
-//______________________________________________________________________________
-

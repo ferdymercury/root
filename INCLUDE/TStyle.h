@@ -1,3 +1,4 @@
+//*CMZ :  2.24/03 01/05/2000  22.03.23  by  Rene Brun
 //*CMZ :  2.23/12 26/01/2000  09.24.07  by  Rene Brun
 //*CMZ :  2.23/11 04/01/2000  08.43.13  by  Rene Brun
 //*CMZ :  2.23/10 16/12/99  16.16.42  by  Rene Brun
@@ -13,17 +14,18 @@
 #ifndef ROOT_TStyle
 #define ROOT_TStyle
 
+/*CMZ :  2.24/01 24/02/2000  11.49.40  by  Fons Rademakers*/
 /*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun and Fons Rademakers.                               *
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
  *                                                                       *
- * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
- * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -78,6 +80,9 @@ private:
         Int_t         fOptFit;            //=1 if option Fit is selected
         Int_t         fErrorMarker;       //marker for error bars
         Int_t         fShowEventStatus;   //Show event status panel
+        TAttText      fAttDate;           //canvas date attribute
+        Float_t       fDateX;             //X position of the date in the canvas 9in NDC)
+        Float_t       fDateY;             //Y position of the date in the canvas 9in NDC)
         Float_t       fErrorMsize;        //marker size for error bars
         Float_t       fErrorX;            //per cent of bin width for errors along X
         Color_t       fFuncColor;         //function color
@@ -121,6 +126,7 @@ private:
         Width_t       fStatBorderSize;    //border size of Stats PaveLabel
         Style_t       fStatFont;          //font style of Stats PaveLabel
         Style_t       fStatStyle;         //fill area style of Stats PaveLabel
+        TString       fStatFormat;        //Printing format for stats
         Float_t       fStatX;             //X position of top right corner of stat box
         Float_t       fStatY;             //Y position of top right corner of stat box
         Float_t       fStatW;             //width of stat box
@@ -138,6 +144,7 @@ private:
         TArrayI       fPalette;           //Color palette
         TString       fLineStyle[30];     //String describing line style i (for postScript)
         TString       fHeaderPS;          //User defined additional Postscript header
+        TString       fFitFormat;         //Printing format for fit parameters
         Float_t       fLineScalePS;       //Line scale factor when drawing lines on Postscript
         Double_t      fTimeOffset;        //Time offset (UTC) to the beginning of an axis
 
@@ -154,7 +161,8 @@ public:
         virtual void     Copy(TObject &style);
         virtual void     cd();
 
-          Int_t          GetNdivisions(Option_t *axis="X");
+        Int_t            GetNdivisions(Option_t *axis="X");
+        TAttText        *GetAttDate() {return &fAttDate;}
         Color_t          GetAxisColor(Option_t *axis="X");
         Color_t          GetLabelColor(Option_t *axis="X");
         Style_t          GetLabelFont(Option_t *axis="X");
@@ -178,6 +186,9 @@ public:
         Int_t            GetCanvasDefX()      {return fCanvasDefX;}
         Int_t            GetCanvasDefY()      {return fCanvasDefY;}
         Int_t            GetColorPalette(Int_t i);
+        Float_t          GetDateX()           {return fDateX;}
+        Float_t          GetDateY()           {return fDateY;}
+        const char      *GetFitFormat()       const {return fFitFormat.Data();}
         Int_t            GetNumberOfColors()  {return fPalette.fN;}
         Color_t          GetPadColor()        {return fPadColor;}
         Width_t          GetPadBorderSize()   {return fPadBorderSize;}
@@ -222,6 +233,7 @@ public:
         Width_t          GetStatBorderSize() {return fStatBorderSize;}
         Style_t          GetStatFont()  {return fStatFont;}
         Style_t          GetStatStyle()  {return fStatStyle;}
+        const char      *GetStatFormat() const {return fStatFormat.Data();}
         Float_t          GetStatX()     {return fStatX;}
         Float_t          GetStatY()     {return fStatY;}
         Float_t          GetStatW()     {return fStatW;}
@@ -245,6 +257,7 @@ public:
         Float_t          GetLineScalePS() {return fLineScalePS;}
         virtual void     Reset(Option_t *option="");
 
+        void             SetFitFormat(const char *format="5.4g") {fFitFormat = format;}
         void             SetHeaderPS(const char *header);
         void             SetLineScalePS(Float_t scale=3) {fLineScalePS=scale;}
         void             SetLineStyleString(Int_t i, const char *text);
@@ -259,7 +272,7 @@ public:
         void             SetTickLength(Float_t length=0.03, Option_t *axis="X");
         void             SetTitleOffset(Float_t offset=1, Option_t *axis="X"); //set axis title offset
         void             SetTitleSize(Float_t size=0.02, Option_t *axis="X");  //set axis title size
-        void             SetOptDate(Int_t datefl=1) {fOptDate = datefl;}
+        void             SetOptDate(Int_t datefl=1);
         void             SetOptFile(Int_t file=1) {fOptFile = file;}
         void             SetOptFit(Int_t fit=1);
         void             SetOptLogx(Int_t logx=1) {fOptLogx = logx;}
@@ -269,6 +282,8 @@ public:
         void             SetOptTitle(Int_t tit=1) {fOptTitle = tit;}
         void             SetBarOffset(Float_t baroff=0.5) {fBarOffset = baroff;}
         void             SetBarWidth(Float_t barwidth=0.5) {fBarWidth = barwidth;}
+        void             SetDateX(Float_t x=0.01) {fDateX = x;}
+        void             SetDateY(Float_t y=0.01) {fDateY = y;}
         void             SetErrorMarker(Int_t marker=21) {fErrorMarker = marker;}
         void             SetErrorMsize(Float_t msize=0.05) {fErrorMsize = msize;}
         void             SetErrorX(Float_t errorx=0.5) {fErrorX = errorx;}
@@ -313,6 +328,7 @@ public:
         void             SetStatStyle(Style_t style=1001) {fStatStyle=style;}
         void             SetStatBorderSize(Width_t size=2) {fStatBorderSize=size;}
         void             SetStatFont(Style_t font=62) {fStatFont=font;}
+        void             SetStatFormat(const char *format="6.4g") {fStatFormat = format;}
         void             SetStatX(Float_t x=0)    {fStatX=x;}
         void             SetStatY(Float_t y=0)    {fStatY=y;}
         void             SetStatW(Float_t w=0.19) {fStatW=w;}

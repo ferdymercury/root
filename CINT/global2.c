@@ -1,5 +1,5 @@
-/*CMZ :  2.23/10 10/12/99  18.00.01  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   10/12/99*/
+/*CMZ :  2.24/05 16/05/2000  12.03.47  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   16/05/2000*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -102,6 +102,9 @@ short G__iscpp ;
 short G__cpplock ;
 short G__clock ;
 short G__constvar ;
+#ifndef G__OLDIMPLEMENTATION1250
+short G__isexplicit ;
+#endif
 short G__unsigned ;
 short G__ansiheader ;
 G__value G__ansipara;
@@ -112,6 +115,10 @@ long G__store_struct_offset=0;
 FILE *G__header,*G__temp1,*G__temp3,*G__temp5,*G__temp7,*G__temp8;
 FILE *G__header2;
 int G__decl;
+
+#ifndef G__OLDIMPLEMENTATION1259
+G__SIGNEDCHAR_T G__isconst;
+#endif
 
 #ifdef G__OLDIMPLEMENTATION435
 char *G__conststring[G__MAXSTRING];
@@ -409,6 +416,29 @@ int G__automaticvar=1;
 * Local variable , bytecode compiler workaround
 **************************************************************************/
 int G__xrefflag=0;
+#endif
+
+#ifndef G__OLDIMPLEMENTATION1273
+/**************************************************************************
+* Local variable , bytecode compiler workaround
+**************************************************************************/
+#ifdef G__ROOT
+int G__do_smart_unload=1;
+#else
+int G__do_smart_unload=1;
+#endif
+#endif
+
+#ifndef G__OLDIMPLEMENTATION1278
+#ifdef G__ROOT
+int G__autoload_stdheader = 0;
+#else
+int G__autoload_stdheader = 1;
+#endif
+#endif
+
+#ifndef G__OLDIMPLEMENTATION1285
+int G__ignore_stdnamespace = 1;
 #endif
 
 /*

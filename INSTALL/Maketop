@@ -70,4 +70,3 @@ install:
 	@$(INSTALLDATA) tutorials/*	   $(TUTDIR)
 	@$(INSTALLDATA) AA_* ChangeLog	   $(DOCDIR)
 	@echo "Installation done"
-

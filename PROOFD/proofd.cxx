@@ -1,20 +1,22 @@
+//*CMZ :  2.24/05 15/05/2000  11.45.40  by  Rene Brun
 //*CMZ :  2.22/10 23/07/99  15.26.15  by  Fons Rademakers
 //*CMZ :  2.22/05 04/06/99  11.24.24  by  Fons Rademakers
 //*CMZ :  2.22/01 23/04/99  10.48.15  by  Fons Rademakers
 //*CMZ :  2.21/08 18/03/99  15.13.31  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   02/02/97
 
+/*CMZ :  2.24/01 24/02/2000  11.49.40  by  Fons Rademakers*/
 /*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun and Fons Rademakers.                               *
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
  *                                                                       *
- * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
- * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -47,7 +49,7 @@
 #include <arpa/inet.h>
 #include <netdb.h>
 
-#if defined(__linux) || defined(__sun) || defined(__sgi) || defined(_AIX)
+#if defined(__linux) || defined(__linux__) || defined(__sun) || defined(__sgi) || defined(_AIX)
 #include <grp.h>
 #include <sys/types.h>
 #endif
@@ -77,6 +79,12 @@ extern "C" {
    int seteuid(uid_t euid);
    int setegid(gid_t egid);
 }
+#endif
+
+#if (defined(__linux__) && defined(__powerpc__) && __GNUG__>=2)
+#  if (__GNUG__==2 && __GNUC_MINOR__ >=95)
+extern "C" int initgroups(char *name, int basegid);
+#  endif
 #endif
 
 #if defined(sun)

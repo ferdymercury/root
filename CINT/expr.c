@@ -1,5 +1,5 @@
-/*CMZ :  2.23/10 10/12/99  17.59.59  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   10/12/99*/
+/*CMZ :  2.24/05 16/05/2000  12.03.46  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   16/05/2000*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -92,6 +92,7 @@ char *exprwithspace;
     case ';' : /* semi-column */
     case ' ' : /* space */
     case '\t' : /* tab */
+      exprnospace[iout] = '\0'; /* temporarily terminate string */
       len=strlen(exprnospace);
       if((single_quote!=0)||(double_quote!=0)||
 	 (len>=3+ipunct&&strncmp(exprnospace+ipunct,"new",3)==0)) {
@@ -1350,7 +1351,16 @@ G__value *presult;
   while(memfunc) {
     for(ifn=0;ifn<memfunc->allifunc;ifn++) {
       if(strcmp(item,memfunc->funcname[ifn])==0) {
+#ifndef G__OLDIMPLEMENTATION1289
+	if(memfunc->pentry[ifn]->tp2f) {
+	  G__letint(presult,'Y',(long)memfunc->pentry[ifn]->tp2f);
+	}
+	else {
+	  G__letint(presult,'C',(long)memfunc->funcname[ifn]);
+	}
+#else
 	G__letint(presult,'C',(long)memfunc->funcname[ifn]);
+#endif
 	presult->tagnum = -1;
 	presult->typenum= -1;
 	presult->ref=0;
@@ -1384,7 +1394,7 @@ char *item;
   int known;
   G__value result3;
   int c;
-  int store_var_typeB;
+  char store_var_typeB;
   G__value reg;
   /* char name[G__MAXNAME], *p; */ /* to handle $xxx.yyy $xxx->yyy */
   /* to prevent recursive calling of G__GetSpecialObject() */
@@ -1430,6 +1440,9 @@ char *item;
       result3.tagnum = -1;
       result3.typenum = -1;
       result3.ref = 0;
+#ifndef G__OLDIMPLEMENTATION1259
+      result3.isconst = G__CONSTVAR;
+#endif
       return(result3);
     }
   case '1':
@@ -1469,6 +1482,9 @@ char *item;
     result3.tagnum = -1;
     result3.typenum = -1;
     result3.ref = 0;
+#ifndef G__OLDIMPLEMENTATION1259
+    result3.isconst = G__CONSTVAR;
+#endif
 
 #ifdef G__ASM
     if(G__asm_noverflow) {
@@ -1496,6 +1512,9 @@ char *item;
     result3.tagnum = -1;
     result3.typenum = -1;
     result3.ref = 0;
+#ifndef G__OLDIMPLEMENTATION1259
+    result3.isconst = G__CONSTVAR;
+#endif
 
 #ifdef G__ASM
     if(G__asm_noverflow) {
@@ -1524,6 +1543,9 @@ char *item;
     result3.tagnum = -1;
     result3.typenum = -1;
     result3.ref = 0;
+#ifndef G__OLDIMPLEMENTATION1259
+    result3.isconst = G__CONSTVAR;
+#endif
 
 #ifdef G__ASM
     if(G__asm_noverflow) G__asm_gen_strip_quotation(&result3);

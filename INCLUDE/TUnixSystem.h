@@ -1,3 +1,4 @@
+//*CMZ :  2.24/02 06/04/2000  18.50.48  by  Fons Rademakers
 //*CMZ :  2.23/07 23/10/99  11.39.59  by  Fons Rademakers
 //*CMZ :  2.21/04 02/02/99  19.37.19  by  Fons Rademakers
 //*CMZ :  2.21/03 22/01/99  15.27.27  by  Fons Rademakers
@@ -8,17 +9,18 @@
 #ifndef ROOT_TUnixSystem
 #define ROOT_TUnixSystem
 
+/*CMZ :  2.24/01 24/02/2000  11.49.40  by  Fons Rademakers*/
 /*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun and Fons Rademakers.                               *
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
  *                                                                       *
- * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
- * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -57,6 +59,7 @@ protected:
                                   Long_t timeout);
    static void         UnixSignal(ESignals sig, SigHandler_t h);
    static const char  *UnixSigname(ESignals sig);
+   static void         UnixResetSignals();
    static int          UnixFilestat(const char *path, Long_t *id, Long_t *size,
                                     Long_t *flags, Long_t *modtime);
    static int          UnixTcpConnect(const char *hostname, int port);

@@ -1,3 +1,4 @@
+//*CMZ :  2.24/03 29/04/2000  23.52.19  by  Rene Brun
 //*CMZ :  2.23/04 12/10/99  16.38.20  by  Fons Rademakers
 //*CMZ :  1.01/04 02/06/97  16.26.24  by  Valery Fine(fine@vxcern.cern.ch)
 //*-- Author :    Valery Fine(fine@vxcern.cern.ch)   13/08/96
@@ -31,6 +32,7 @@
 
 #include "TBuffer.h"
 
+#ifdef NEVER
 //*-*-*-*-*-*-*-*-*-*-*-*  ShowMembers for Win32  *-*-*-*-*-*-*-*-*-*-*
 //______________________________________________________________________________
 void TWin32Application::ShowMembers(TMemberInspector &insp, char *parent){;}
@@ -189,4 +191,4 @@ TBuffer &operator>>(TBuffer &buf, TWin32TreeViewCtrl *&obj) {return buf;}
 TBuffer &operator>>(TBuffer &buf, TWin32ListViewCtrl *&obj) {return buf;}
 //______________________________________________________________________________
 TBuffer &operator>>(TBuffer &buf, TWin32CommCtrl *&obj) {return buf;}
-
+#endif

@@ -1,4 +1,4 @@
-//*CMZ :  2.23/12 31/12/99  13.51.58  by  Fons Rademakers
+//*CMZ :  2.24/01 04/02/2000  18.40.13  by  Fons Rademakers
 //*CMZ :  2.23/10 09/12/99  12.09.23  by  Fons Rademakers
 //*CMZ :  2.23/07 27/10/99  15.46.32  by  Rene Brun
 //*CMZ :  2.23/00 02/08/99  09.51.41  by  Rene Brun
@@ -10,22 +10,18 @@
 #ifndef ROOT_TThread
 #define ROOT_TThread
 
-#include <iostream.h>
-#include "Api.h"   // -I$CINTSYSDIR/src -I$CINTSYSDIR
-#include "CallFunc.h"
-
-
+/*CMZ :  2.24/01 24/02/2000  11.49.40  by  Fons Rademakers*/
 /*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun and Fons Rademakers.                               *
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
  *                                                                       *
- * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
- * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -56,50 +52,52 @@
 #endif
 
 
-enum EPriority {
-   kLowPriority,
-   kNormalPriority,
-   kHighPriority
-};
-
-enum EState {
-   kInvalidState,      	// object was not created properly
-   kNewState,          	// thread object exists but hasn't started
-   kRunningState,      	// thread is running
-   kTerminatedState,   	// thread has terminated but storage has not
-                       	// yet been reclaimed (i.e. waiting to be joined)
-   kFinishedState,   	// thread has finished
-   kCancelingState, 	// thread in process of canceling
-   kCanceledState, 	// thread has been canceled
-   kDeletingState 	// thread in process of deleting
-};
-
 class TThread : public TNamed {
 
 friend class TThreadImp;
-friend class TPosixThreadInit;
 friend class TPosixThread;
 friend class TThreadTimer;
 friend class TThreadCleaner;
 
+public:
+
+   enum EPriority {
+      kLowPriority,
+      kNormalPriority,
+      kHighPriority
+   };
+
+   enum EState {
+      kInvalidState,            // thread was not created properly
+      kNewState,                // thread object exists but hasn't started
+      kRunningState,            // thread is running
+      kTerminatedState,         // thread has terminated but storage has not
+                                // yet been reclaimed (i.e. waiting to be joined)
+      kFinishedState,           // thread has finished
+      kCancelingState,          // thread in process of canceling
+      kCanceledState,           // thread has been canceled
+      kDeletingState            // thread in process of deleting
+};
+
 private:
-//		Data members
-   TThread      *fNext;            	// pointer to next thread
-   TThread      *fPrev;            	// pointer to prev thread
-   TThread      **fHolder;            	// pointer to holder of this (delete only)
-   EPriority    fPriority;         	// thread priority
-   EState       fState;            	// thread state
-   EState       fStateComing;      	// coming thread state
-   Int_t        fId;               	// thread id
-   Bool_t       fDetached;         	// kTRUE if thread is Detached
-   Bool_t       fNamed;         	// kTRUE if thread is Named
-   Int_t        fJoinId;           	// thread id to whom can join
-   void       *(*fFcnRetn)(void *);	// void* start function of thread
+   TThread     *fNext;                  // pointer to next thread
+   TThread     *fPrev;                  // pointer to prev thread
+   TThread    **fHolder;                // pointer to holder of this (delete only)
+   EPriority    fPriority;              // thread priority
+   EState       fState;                 // thread state
+   EState       fStateComing;           // coming thread state
+   Int_t        fId;                    // thread id
+   Bool_t       fDetached;              // kTRUE if thread is Detached
+   Bool_t       fNamed;                 // kTRUE if thread is Named
+   Int_t        fJoinId;                // thread id to whom can join
+   void       *(*fFcnRetn)(void *);     // void* start function of thread
    void        (*fFcnVoid)(void *);     // void  start function of thread
    void        *fThreadArg;             // thread start function arguments
    void        *fClean;                 // support of cleanup structure
+   void        *fTsd[20];               // thread specific data container
+   char         fComm[100];             // ????
 
-   static      TThreadImp  *fgThreadImp;// static pointer to thread implementation
+   static TThreadImp  *fgThreadImp;     // static pointer to thread implementation
    static char  * volatile fgXAct;      // Action name to do by main thread
    static void ** volatile fgXArr;      // pointer to control array of void pointers for action
    static volatile Int_t  fgXAnb;       // size of array above
@@ -109,11 +107,7 @@ private:
    static TMutex        *fgXActMutex;   // mutex to protect XAction
    static TCondition    *fgXActCondi;   // Condition for  XAction
 
-   void *fTsd[20];
-
-   char  fComm[100];
-
-//		Private Member functions
+   // Private Member functions
    void         Constructor();
    static void *Fun(void *ptr);
    static Int_t XARequest(const char *xact, Int_t nb, void **ar, Int_t *iret);
@@ -122,85 +116,74 @@ private:
    void PutComm(const char *txt = NULL){fComm[0]='\0'; if (txt) strcpy(fComm,txt);};
    char *GetComm(){ return fComm;};
 
-
-//		Public Member functions
-
 public:
-   ~TThread(); // delete is forbidden for user
+   TThread(void  *(*fn)(void*), void *arg = 0, EPriority pri = kNormalPriority);
+   TThread(void   (*fn)(void*), void *arg = 0, EPriority pri = kNormalPriority);
+   TThread(const Text_t *thname, void  *(*fn)(void*), void *arg = 0, EPriority pri = kNormalPriority);
+   TThread(const Text_t *thname, void   (*fn)(void*), void *arg = 0, EPriority pri = kNormalPriority);
+   virtual ~TThread();
+
+   Int_t               Kill();
+   Int_t               Run(void *arg = 0);
+   void                SetPriority(EPriority pri);
+   EPriority           GetPriority() const { return fPriority; }
+   EState              GetState() const { return fState; }
+   Int_t               GetId() const { return fId; }
+   void                Ps();
+   void                ps() { Ps(); }
+   Int_t               GetJoindId() const { return fJoinId; }
+   void                SetJoinId(TThread *tj);
+   void                SetJoinId(Int_t jid);
+
+   static Int_t        Join(Int_t id, void **ret=0);
+   static Int_t        Join(void **ret=0);
+
+   static Int_t        Exit(void *ret = 0);
+   static TThread     *GetThread(Int_t id);
+   static TThread     *GetThread(const Text_t *name);
+
+   static Int_t        Lock();                  //User's lock of main mutex
+   static Int_t        TryLock();               //User's try lock of main mutex
+   static Int_t        UnLock();                //User's unlock of main mutex
+   static TThread     *Self();
+   static Int_t        SelfId();
+   static Int_t        Sleep(ULong_t secs, ULong_t nanos = 0);
+   static Int_t        GetTime(ULong_t *absSec, ULong_t *absNanoSec);
+
    static void   Debu(const char *txt);
    static Int_t  Delete(TThread* &th);
    static void **Tsd(void *dflt, Int_t k);
 
-   TThread(void  *(*fn)(void*), void *arg = 0,  EPriority pri = kNormalPriority);
-   TThread(void   (*fn)(void*), void *arg = 0,  EPriority pri = kNormalPriority);
-   ////////// begin changes (J.A.):
-   // additional constructors with own threadname thname
-   // as useful for invoking thread from compiled program:
-   TThread(const Text_t *thname, void  *(*fn)(void*), void *arg = 0,  EPriority pri = kNormalPriority);
-   TThread(const Text_t *thname, void   (*fn)(void*), void *arg = 0,  EPriority pri = kNormalPriority);
-   /////////////// end changes (J.A.)
-   Int_t               Run(void *arg = 0);
-   static    Int_t     Join(Int_t id,void **ret=0);
-   static    Int_t     Join(         void **ret=0);
-   Int_t               SetPriority(EPriority pri);
-   EPriority           GetPriority() ;
-   EState              GetState() const;
-   Int_t               GetId()  ;
-   Int_t               SetJoinId(TThread *tj);  //Set JoinId
-   Int_t               SetJoinId(Int_t jid);  	//Set JoinId
-   static    Int_t     Exit(void *ret = 0);	//exit from thread
-   static TThread     *GetThread(Int_t id);     //Find TThread by Id
-   static TThread     *GetThread(const Text_t *name); //Find TThread by name
+   // Cancelation
+   // There are two types of TThread cancellation:
+   //    DEFERRED     - Cancelation only in user provided cancel-points
+   //    ASYNCHRONOUS - In any point
+   //    DEFERRED is more safe, it is DEFAULT.
 
-   static Int_t        Lock();			//User's lock of main mutex
-   static Int_t        TryLock();		//User's try lock of main mutex
-   static Int_t        UnLock();		//User's unlock of main mutex
-   static TThread      *Self();			//return self TThread
-   static Int_t        SelfId();		//return self id
-   static Int_t        Sleep(ULong_t secs, ULong_t nanos = 0);
-   static Int_t        GetTime(ULong_t *absSec, ULong_t *absNanoSec);
+   static Int_t Kill(Int_t id);
+   static Int_t Kill(const Text_t *name);
+   static Int_t SetCancelOff();
+   static Int_t SetCancelOn();
+   static Int_t SetCancelAsynchronous();
+   static Int_t SetCancelDeferred();
+   static Int_t CancelPoint();
+   static Int_t CleanUpPush(void *free,void *arg=0);
+   static Int_t CleanUpPop(Int_t exe=0);
+   static Int_t CleanUp();
 
-//	Cancelation
-//	There are two types of TThread cancellation :
-//      DEFERRED     - Cancelation only in user provided cancel-points
-//	ASYNCHRONOUS - In any point
-//	DEFERRED is more safe, it is DEFAULT.
-
-   Int_t               Kill();			 //kill the thread
-   static    Int_t     Kill(Int_t id);		 //kill the thread by Id
-   static    Int_t     Kill(const Text_t *name); //kill the thread by name
-   static    Int_t     SetCancelOff(); 		 // Cancellation OFF
-   static    Int_t     SetCancelOn(); 		 // Cancellation ON
-   static    Int_t     SetCancelAsynchronous();  // Cancellation type Asynchronous
-   static    Int_t     SetCancelDeferred(); 	 // Cancellation type
-   static    Int_t     CancelPoint();            // Setcancel point
-   static    Int_t     CleanUpPush(void *free,void *arg=0); // Push user function "free" to be called in cancel case
-   static    Int_t     CleanUpPop(Int_t exe=0); // Pop user function
-   static    Int_t     CleanUp(); // Pop user function
-                             	
-//      Info
-   void                Ps();			// Analog unix ps
-   void                ps(){Ps();};		// Analog unix ps
-
-//
-//	XActions
+   // XActions
    static void Printf(const char *txt);
    static void Printf(const char *txt,Int_t i);
-   static void Printf(const char *txt,void* i){Printf(txt,(int)i);}
+   static void Printf(const char *txt,void* i) { Printf(txt,(int)i); }
 
-
-//	Compilation and dynamic link
+   // Compilation and dynamic link
    static Int_t MakeFun(char *funname);
 
    static void XAction();
 
-  ClassDef(TThread,0)  // Thread class
-
-
+   ClassDef(TThread,0)  // Thread class
 };
 
-//	Compilation and dynamic link
-//static Int_t MakeFun(char *funname);
 
 //////////////////////////////////////////////////////////////////////////
 //                                                                      //
@@ -210,25 +193,21 @@ public:
 
 class TThreadCleaner {
 public:
-
-  TThreadCleaner(){};
- ~TThreadCleaner();
+   TThreadCleaner() { }
+   ~TThreadCleaner();
 };
-
-
 
 
 //////////////////////////////////////////////////////////////////////////
 //                                                                      //
-// TThreadTimer                                                        //
+// TThreadTimer                                                         //
 //                                                                      //
 //////////////////////////////////////////////////////////////////////////
 
 class TThreadTimer : public TTimer {
-  public:
-    TThreadTimer(  Long_t ms=100 ) ;
-    Bool_t Notify();
+public:
+   TThreadTimer(Long_t ms = 100);
+   Bool_t Notify();
 };
 
 #endif
-

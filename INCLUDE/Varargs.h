@@ -1,9 +1,13 @@
+//*CMZ :  2.24/03 20/04/2000  13.40.22  by  Fons Rademakers
 //*CMZ :  0.05/02 08/01/96  14.20.24  by  Rene Brun
 //*-- Author :    Fons Rademakers   29/07/95
 
 #ifndef ROOT_Varargs
 #define ROOT_Varargs
 
+#ifdef __CINT__
+typedef char *va_list;
+#endif
 
 #if defined(sparc) && defined(__CC_ATT301__)
         extern "C" __builtin_va_arg_incr(...);
@@ -20,7 +24,9 @@ extern "C" {
 };
 
 #else
+#   ifndef __CINT__
 #   include <stdarg.h>
+#   endif
 #   if defined(sparc) && !defined(__GNUG__) && !defined(__CC_SUN21__) && !defined(__SVR4)
 #       define va_(arg) __builtin_va_alist
 #   else

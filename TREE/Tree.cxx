@@ -1,3 +1,7 @@
+//*CMZ :  2.24/05 15/05/2000  23.16.56  by  Rene Brun
+//*CMZ :  2.24/03 29/04/2000  08.49.37  by  Rene Brun
+//*CMZ :  2.24/02 07/04/2000  08.39.37  by  Rene Brun
+//*CMZ :  2.24/01 14/02/2000  12.12.42  by  Rene Brun
 //*CMZ :  2.23/12 30/01/2000  18.25.30  by  Rene Brun
 //*CMZ :  2.23/10 11/12/99  12.25.45  by  Rene Brun
 //*CMZ :  2.23/09 25/11/99  08.28.55  by  Rene Brun
@@ -10,17 +14,18 @@
 //*CMZ :  2.22/09 13/07/99  18.48.14  by  Rene Brun
 //*-- Author :    Rene Brun   12/01/96
 
+/*CMZ :  2.24/01 24/02/2000  11.49.40  by  Fons Rademakers*/
 /*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun and Fons Rademakers.                               *
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
  *                                                                       *
- * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
- * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -421,6 +426,20 @@ TBranch *TTree::Branch(const char *name, const char *classname, void *addobj, In
 //
 //    By default the branch buffers are stored in the same file as the Tree.
 //    use TBranch::SetFile to specify a different file
+//
+//      IMPORTANT NOTE about branch names
+//    In case two or more master branches contain subbranches with
+//    identical names, one must add a "." (dot) character at the end
+//    of the master branch name. This will force the name of the subbranch
+//    to be master.subbranch instead of simply subbranch.
+//    This situation happens when the top level object (say event)
+//    has two or more members referencing the same class.
+//    For example, if a Tree has two branches B1 and B2 corresponding
+//    to objects of the same class MyClass, one can do:
+//       tree.Branch("B1.","MyClass",&b1,8000,1);
+//       tree.Branch("B2.","MyClass",&b2,8000,1);
+//    if MyClass has 3 members a,b,c, the two instructions above will generate
+//    subbranches called B1.a, B1.b ,B1.c, B2.a, B2.b, B2.c
 
    gTree = this;
    TClass *cl = gROOT->GetClass(classname);
@@ -561,7 +580,10 @@ TBranch *TTree::Branch(const char *name, void *clonesaddress, Int_t bufsize, Int
 //
 //    By default the branch buffers are stored in the same file as the Tree.
 //    use TBranch::SetFile to specify a different file
-
+//
+//    By default the two members of TObject (fBits and fUniqueID) are stored
+//    on individual branches. If the splitlevel > 1, these two branches
+//    will not be created.
 
    if (clonesaddress == 0) return 0;
    char *cpointer =(char*)clonesaddress;
@@ -570,16 +592,53 @@ TBranch *TTree::Branch(const char *name, void *clonesaddress, Int_t bufsize, Int
    if (list == 0) return 0;
    gTree = this;
    if (splitlevel) {
-      TBranchClones *branch = new TBranchClones(name,clonesaddress,bufsize);
+      TBranchClones *branch = new TBranchClones(name,clonesaddress,bufsize,-1,splitlevel);
       fBranches.Add(branch);
       return branch;
    } else {
       TBranchObject *branch = new TBranchObject(name,list->ClassName(),clonesaddress,bufsize,0);
-//      fBranches.Add(branch);
+      fBranches.Add(branch);
       return branch;
    }
 }
 
+//______________________________________________________________________________
+Int_t TTree::Branch(TList *list, Int_t bufsize)
+{
+//   This new function creates one branch for each element in the list.
+//   Two cases are supported:
+//      list[i] is a TObject*: a TBranchObject is created with a branch name
+//                             being the name of the object.
+//      list[i] is a TClonesArray*: A TBranchClones is created.
+//      if list[i]->TestBit(TClonesArray::kNoSplit) is 1, the TClonesArray
+//      is not split.
+//      if list[i]->TestBit(TClonesArray::kForgetBits) is 1 and the TClonesArray
+//      is split, then no branches are created for the fBits and fUniqueID
+//      of the TObject part of the class referenced by the TClonesArray.
+//   The function returns the total number of branches created.
+
+   if (list == 0) return 0;
+   TObject *obj;
+   Int_t nbranches = GetListOfBranches()->GetEntries();
+   TObjLink *lnk = list->FirstLink();
+
+   Int_t splitlevel = 1;
+   while (lnk) {
+      obj = lnk->GetObject();
+      if (obj->InheritsFrom(TClonesArray::Class())) {
+         TClonesArray *clones = (TClonesArray*)obj;
+         splitlevel = 1;
+         if (clones->TestBit(TClonesArray::kForgetBits)) splitlevel = 2;
+         if (clones->TestBit(TClonesArray::kNoSplit))    splitlevel = 0;
+         Branch(clones->GetName(),lnk->GetObjectRef(),bufsize,splitlevel);
+      } else {
+         splitlevel = 0;
+         Branch(obj->GetName(),obj->ClassName(),lnk->GetObjectRef(),bufsize,splitlevel);
+      }
+      lnk = lnk->Next();
+   }
+   return GetListOfBranches()->GetEntries() - nbranches;
+}
 
 //______________________________________________________________________________
 void TTree::Browse(TBrowser *b)
@@ -597,7 +656,7 @@ void TTree::BuildIndex(const char *majorname, const char *minorname)
    //    var2 = minorname
    //    sel  = majorname +minorname*1e-9
    //    The standard result from TTree::Draw is stored in fV1, fV2 and fW
-   //    Thew array fW is sorted into fIndex
+   //    The array fW is sorted into fIndex
    //  Once the index is computed, one can retrieve one entry via
    //    TTree:GetEntryWithIndex(majornumber, minornumber)
    // Example:
@@ -1621,14 +1680,29 @@ void TTree::SetEstimate(Int_t n)
 //______________________________________________________________________________
 void TTree::SetName(const char *name)
 {
-//*-*-*-*-*-*-*-*-*-*-*Change the name of this Tree*-*-*-*-*-*-*-*-*-*-*
-//*-*                  ============================
+// Change the name of this Tree
+//
    if (gPad) gPad->Modified();
 
 //  Trees are named objects in a THashList.
 //  We must update the hashlist if we change the name
    if (fDirectory) fDirectory->GetList()->Remove(this);
    fName = name;
+   if (fDirectory) fDirectory->GetList()->Add(this);
+}
+
+//______________________________________________________________________________
+void TTree::SetObject(const char *name, const char *title)
+{
+// Change the name and title of this Tree
+//
+   if (gPad) gPad->Modified();
+
+//  Trees are named objects in a THashList.
+//  We must update the hashlist if we change the name
+   if (fDirectory) fDirectory->GetList()->Remove(this);
+   fName  = name;
+   fTitle = title;
    if (fDirectory) fDirectory->GetList()->Add(this);
 }
 
@@ -1660,7 +1734,7 @@ void TTree::Show(Int_t entry)
             printf("%s\n",value); break;
          } else if (leaf->IsA() == TLeafB::Class()) {
             char *value = (char*)leaf->GetValuePointer();
-            printf("%s\n",value); break;
+            printf("%d",(Int_t)value[l]);
          } else if (leaf->IsA() == TLeafS::Class()) {
             Short_t *value = (Short_t*)leaf->GetValuePointer();
             printf("%d",value[l]);

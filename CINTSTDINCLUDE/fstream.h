@@ -1,5 +1,5 @@
-/*CMZ :  2.23/10 11/12/99  13.09.10  by  Fons Rademakers*/
-/*-- Author :    Masaharu Goto   10/12/99*/
+/*CMZ :  2.24/05 16/05/2000  12.03.58  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   16/05/2000*/
 namespace std {
 #include <fstream.h>
 }

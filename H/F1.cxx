@@ -1,3 +1,6 @@
+//*CMZ :  2.24/05 16/05/2000  15.57.27  by  Rene Brun
+//*CMZ :  2.24/01 20/03/2000  13.47.17  by  Rene Brun
+//*CMZ :  2.24/00 12/02/2000  10.27.56  by  Rene Brun
 //*CMZ :  2.23/12 26/01/2000  09.53.03  by  Rene Brun
 //*CMZ :  2.23/09 25/11/99  23.43.31  by  Rene Brun
 //*CMZ :  2.23/07 27/10/99  12.30.17  by  Fons Rademakers
@@ -8,17 +11,18 @@
 //*CMZ :  2.22/10 27/07/99  15.46.21  by  Rene Brun
 //*-- Author :    Rene Brun   18/08/95
 
+/*CMZ :  2.24/01 24/02/2000  11.49.40  by  Fons Rademakers*/
 /*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun and Fons Rademakers.                               *
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
  *                                                                       *
- * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
- * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
  *************************************************************************/
 
 #include <fstream.h>
@@ -182,6 +186,82 @@ TF1::TF1(const char *name,const char *formula, Float_t xmin, Float_t xmax)
 
 
 //______________________________________________________________________________
+TF1::TF1(const char *name, Float_t xmin, Float_t xmax, Int_t npar)
+      :TFormula(), TAttLine(), TAttFill(), TAttMarker()
+{
+//*-*-*-*-*-*-*F1 constructor using name an interpreted function*-*-*-*
+//*-*          =======================================================
+//*-*
+//*-*  Creates a function of type C between xmin and xmax.
+//*-*  name is the name of an interpreted CINT cunction.
+//*-*  The function is defined with npar parameters
+//*-*  fcn must be a function of type:
+//*-*     Double_t fcn(Double_t *x, Double_t *params)
+//*-*
+//*-*  This constructor is called for functions of type C by CINT.
+//*-*
+//*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+
+   fXmin       = xmin;
+   fXmax       = xmax;
+   fNpx        = 100;
+   fType       = 2;
+   fFunction   = 0;
+   if (npar > 0 ) fNpar = npar;
+   if (fNpar) {
+      fNames      = new TString[fNpar];
+      fParams     = new Double_t[fNpar];
+      fParErrors  = new Double_t[fNpar];
+      fParMin     = new Double_t[fNpar];
+      fParMax     = new Double_t[fNpar];
+      for (int i = 0; i < fNpar; i++) {
+         fParams[i]     = 0;
+         fParErrors[i]  = 0;
+         fParMin[i]     = 0;
+         fParMax[i]     = 0;
+      }
+   } else {
+      fParErrors = 0;
+      fParMin    = 0;
+      fParMax    = 0;
+   }
+   fChisquare  = 0;
+   fIntegral   = 0;
+   fAlpha      = 0;
+   fBeta       = 0;
+   fGamma      = 0;
+   fParent     = 0;
+   fNpfits     = 0;
+   fNsave      = 0;
+   fSave       = 0;
+   fHistogram  = 0;
+   fMinimum    = -1111;
+   fMaximum    = -1111;
+   fMethodCall = 0;
+   fNdim       = 1;
+
+   TF1 *f1old = (TF1*)gROOT->GetListOfFunctions()->FindObject(name);
+   if (f1old) delete f1old;
+   SetName(name);
+   gROOT->GetListOfFunctions()->Add(this);
+
+   if (gStyle) {
+      SetLineColor(gStyle->GetFuncColor());
+      SetLineWidth(gStyle->GetFuncWidth());
+      SetLineStyle(gStyle->GetFuncStyle());
+   }
+
+   SetTitle(name);
+   if (name) {
+      fMethodCall = new TMethodCall();
+      fMethodCall->InitWithPrototype(name,"Double_t*,Double_t*");
+      fNumber = -1;
+   } else {
+      Printf("Function:%s cannot be compiled",name);
+   }
+}
+
+//______________________________________________________________________________
 TF1::TF1(const char *name,void *fcn, Float_t xmin, Float_t xmax, Int_t npar)
       :TFormula(), TAttLine(), TAttFill(), TAttMarker()
 {
@@ -240,11 +320,21 @@ TF1::TF1(const char *name,void *fcn, Float_t xmin, Float_t xmax, Int_t npar)
    fMaximum    = -1111;
    fMethodCall = 0;
    fNdim       = 1;
-   if (!fcn) return;
+
    TF1 *f1old = (TF1*)gROOT->GetListOfFunctions()->FindObject(name);
    if (f1old) delete f1old;
+   SetName(name);
+   gROOT->GetListOfFunctions()->Add(this);
 
+   if (gStyle) {
+      SetLineColor(gStyle->GetFuncColor());
+      SetLineWidth(gStyle->GetFuncWidth());
+      SetLineStyle(gStyle->GetFuncStyle());
+   }
+
+   if (!fcn) return;
    char *funcname = G__p2f2funcname(fcn);
+   SetTitle(funcname);
    if (funcname) {
       fMethodCall = new TMethodCall();
       fMethodCall->InitWithPrototype(funcname,"Double_t*,Double_t*");
@@ -252,15 +342,6 @@ TF1::TF1(const char *name,void *fcn, Float_t xmin, Float_t xmax, Int_t npar)
    } else {
       Printf("Function:%s cannot be compiled",name);
    }
-
-   SetName(name);
-   SetTitle(funcname);
-   gROOT->GetListOfFunctions()->Add(this);
-
-   if (!gStyle) return;
-   SetLineColor(gStyle->GetFuncColor());
-   SetLineWidth(gStyle->GetFuncWidth());
-   SetLineStyle(gStyle->GetFuncStyle());
 }
 
 //______________________________________________________________________________
@@ -418,7 +499,7 @@ Double_t TF1::Derivative(Double_t x, Double_t *params, Float_t epsilon)
 //*-*-*-*-*-*-*-*-*Return derivative of function at point x*-*-*-*-*-*-*-*
 //
 //    The derivative is computed by computing the value of the function
-//   at point x-epsilon and point x+epsilon.
+//   at points x-epsilon*range and x+epsilon*range (range=fXmax-fXmin).
 //   if params is NULL, use the current values of parameters
 
    Double_t xx[2];
@@ -630,7 +711,7 @@ void TF1::ExecuteEvent(Int_t event, Int_t px, Int_t py)
 }
 
 //______________________________________________________________________________
-TH1F *TF1::GetHistogram()
+TH1 *TF1::GetHistogram()
 {
 // return a pointer to the histogram used to vusualize the function
 
@@ -701,7 +782,7 @@ Double_t TF1::GetRandom()
       Double_t integ;
       Int_t intNegative = 0;
       for (i=0;i<fNpx;i++) {
-         integ = Integral(fXmin+i*dx, fXmin+i*dx+dx);
+         integ = Integral(Double_t(fXmin+i*dx), Double_t(fXmin+i*dx+dx));
          if (integ < 0) {intNegative++; integ = -integ;}
          fIntegral[i+1] = fIntegral[i] + integ;
       }
@@ -736,7 +817,11 @@ Double_t TF1::GetRandom()
    Float_t r  = gRandom->Rndm();
    bin  = TMath::BinarySearch(fNpx,fIntegral,r);
    rr = r - fIntegral[bin];
-   xx = (-fBeta[bin] + TMath::Sqrt(fBeta[bin]*fBeta[bin]+2*fGamma[bin]*rr))/fGamma[bin];
+
+   if(fGamma[bin])
+      xx = (-fBeta[bin] + TMath::Sqrt(fBeta[bin]*fBeta[bin]+2*fGamma[bin]*rr))/fGamma[bin];
+   else
+      xx = rr/fBeta[bin];
    Float_t x = fAlpha[bin] + xx;
    return x;
 }
@@ -834,7 +919,7 @@ void TF1::InitStandardFunctions()
 }
 
 //______________________________________________________________________________
-Double_t TF1::Integral(Float_t a, Float_t b, Double_t *params, Float_t epsilon)
+Double_t TF1::Integral(Double_t a, Double_t b, Double_t *params, Double_t epsilon)
 {
 //*-*-*-*-*-*-*-*-*Return Integral of function between a and b*-*-*-*-*-*-*-*
 //
@@ -977,7 +1062,7 @@ CASE2:
 }
 
 //______________________________________________________________________________
-Double_t TF1::Integral(Float_t, Float_t, Float_t, Float_t, Float_t)
+Double_t TF1::Integral(Double_t, Double_t, Double_t, Double_t, Double_t)
 {
 // Return Integral of a 2d function in range [ax,bx],[ay,by]
 //
@@ -986,7 +1071,7 @@ Double_t TF1::Integral(Float_t, Float_t, Float_t, Float_t, Float_t)
 }
 
 //______________________________________________________________________________
-Double_t TF1::Integral(Float_t, Float_t, Float_t, Float_t, Float_t, Float_t, Float_t)
+Double_t TF1::Integral(Double_t, Double_t, Double_t, Double_t, Double_t, Double_t, Double_t)
 {
 // Return Integral of a 3d function in range [ax,bx],[ay,by],[az,bz]
 //
@@ -995,7 +1080,7 @@ Double_t TF1::Integral(Float_t, Float_t, Float_t, Float_t, Float_t, Float_t, Flo
 }
 
 //______________________________________________________________________________
-Double_t TF1::IntegralMultiple(Int_t n, Float_t *a, Float_t *b, Float_t eps, Float_t &relerr)
+Double_t TF1::IntegralMultiple(Int_t n, Double_t *a, Double_t *b, Double_t eps, Double_t &relerr)
 {
 //  Adaptive Quadrature for Multiple Integrals over N-Dimensional
 //  Rectangular Regions
@@ -1007,7 +1092,7 @@ Double_t TF1::IntegralMultiple(Int_t n, Float_t *a, Float_t *b, Float_t eps, Flo
 //End_Html
 //
 // Author(s): A.C. Genz, A.A. Malik
-// converted/adaptedted by R.Brun to C++ from Fortran CERNLIB routine RADMUL (D120)
+// converted/adapted by R.Brun to C++ from Fortran CERNLIB routine RADMUL (D120)
 // The new code features many changes compared to the Fortran version.
 // Note that this function is currently called only by TF2::Integral (n=2)
 // and TF3::Integral (n=3).
@@ -1101,8 +1186,8 @@ Double_t TF1::IntegralMultiple(Int_t n, Float_t *a, Float_t *b, Float_t eps, Flo
 
 // The original algorithm expected a parameter MAXPTS
 //   where MAXPTS = Maximum number of function evaluations to be allowed.
-//   Here we set MAXPTS to 2*(the lowest possible value)
-   Int_t maxpts = 2*irlcls;
+//   Here we set MAXPTS to 1000*(the lowest possible value)
+   Int_t maxpts = 1000*irlcls;
    Int_t minpts = 1;
 
 // The original agorithm expected a working space array WK of length IWK

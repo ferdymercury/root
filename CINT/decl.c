@@ -1,5 +1,5 @@
-/*CMZ :  2.23/10 10/12/99  17.59.59  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   10/12/99*/
+/*CMZ :  2.24/05 16/05/2000  12.03.45  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   16/05/2000*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -1185,6 +1185,10 @@ int tagnum,typenum;      /* overrides global variables */
 	}
 	
 	
+#define G__OLDIMPLEMENTATION1306
+#ifndef G__OLDIMPLEMENTATION1306
+	call_constructor:
+#endif
 	/* call constructor, error if no constructor */
 	G__decl = 0;
 	store_constvar=G__constvar;
@@ -1212,7 +1216,10 @@ int tagnum,typenum;      /* overrides global variables */
 	  if(G__globalvarpointer)
 #endif
 	  {
+	    int store_constvar2 = G__constvar;
+	    G__constvar=store_constvar;
 	    G__letvariable(new_name,G__null,&G__global,G__p_local);
+	    G__constvar=store_constvar2;
 	  }
 #ifndef G__OLDIMPLEMENTATION831
 	  else if(G__asm_wholefunction) {
@@ -1345,29 +1352,78 @@ int tagnum,typenum;      /* overrides global variables */
 	} while(':'==cin && EOF!=(cin=G__fgetc())) ;
 	temp[0]='\0';
 	switch(cin) {
+#ifndef G__OLDIMPLEMENTATION1306
+	case ';':
+	  {
+	    int store_var_typexxx = G__var_type;
+	    sprintf(temp,"%s::%s"
+		    ,G__fulltagname(G__tagdefining,1),new_name+i);
+	    G__var_type = 'p';
+	    G__store_struct_offset = G__int(G__getitem(temp));
+	    G__def_struct_member = 0;
+	    G__var_type = store_var_typexxx;
+	    G__prerun = 0;
+	    sprintf(temp1,"%s()",G__fulltagname(G__tagnum,1));
+	    goto call_constructor;
+	  }
+#endif
 	case '=':
 	  if(strncmp(new_name+i,"operator",8)==0) {
 	    cin=G__fgetstream(new_name+strlen(new_name)+1,"(");
 	    new_name[strlen(new_name)] = '=';
 	    break;
 	  }
+#ifdef G__OLDIMPLEMENTATION1306
 	case ';':
+#endif
 	  /* static class object member must call constructor
-	   * TO BE IMPLEMENTED
-	   */
+	   * TO BE IMPLEMENTED */
+#ifndef G__OLDIMPLEMENtATION1296
+	  sprintf(temp,"%s::%s",G__fulltagname(G__def_tagnum,1),new_name+i);
+#else
 	  sprintf(temp,"%s::%s",G__struct.name[G__def_tagnum],new_name+i);
+#endif
 	  strcpy(new_name,temp);
 	  if('u'!=var_type||G__reftype) var_type='p';
 	  else staticclassobject=1;
 	  G__def_struct_member = store_def_struct_member;
-	  G__tagnum= -1; /* need to do this to pass letvariable scopeoperator() */
+	  G__tagnum= -1; /*do this to pass letvariable scopeoperator()*/
 	  G__def_tagnum = store_def_tagnum;
 	  G__tagdefining  = store_tagdefining;
 	  continue; /* big while(1) loop */
 	  /* If neither case, handle as member function definition
-	   * It is possible that this is initialization of class object as static
-	   * member, like 'type X::obj(1,2)' . This syntax is not handled correctly.
-	   */
+	   * It is possible that this is initialization of class object as
+	   * static member, like 'type X::obj(1,2)' . This syntax is not
+	   * handled correctly. */
+#ifndef G__OLDIMPLEMENTATION1306
+	case '(':
+	  {
+	    fpos_t xxpos;
+	    int xxlinenum = G__ifile.line_number;
+	    fgetpos(G__ifile.fp,&xxpos);
+	    /* chck if argument is type or value */
+	    G__disp_mask = 1;
+	    G__fgetname(temp,",)*&");
+	    G__disp_mask = 0;
+	    G__ifile.line_number = xxlinenum;
+	    fsetpos(G__ifile.fp,&xxpos);
+	    if(!G__istypename(temp) && -1!=G__tagdefining && -1!=G__tagnum) {
+	      int store_var_typexxx = G__var_type;
+	      sprintf(temp,"%s::%s"
+		      ,G__fulltagname(G__tagdefining,1),new_name+i);
+	      G__var_type = 'p';
+	      G__store_struct_offset = G__int(G__getitem(temp));
+	      G__def_struct_member = 0;
+	      G__var_type = store_var_typexxx;
+	      G__prerun = 0;
+	      cin = G__fgetstream_newtemplate(temp,")");
+	      cin = G__fignorestream(",;");
+	      sprintf(temp1,"%s(%s)",G__fulltagname(G__tagnum,1),temp);
+	      goto call_constructor;
+	    }
+	  }
+	  break;
+#endif
 	}
 	if(strcmp(new_name+i,"operator")==0) {
 	  sprintf(temp,"%s()(",new_name);
@@ -1497,6 +1553,9 @@ int tagnum,typenum;      /* overrides global variables */
 #endif
 	}
 #endif
+#ifndef G__OLDIMPLEMENTATION1254
+	--G__templevel;
+#endif
 	G__reftype=G__PARANORMAL;
 #ifndef G__OLDIMPLEMENTATION1093
 	if(store_prerun||0==G__static_alloc||G__IsInMacro())
@@ -1504,6 +1563,9 @@ int tagnum,typenum;      /* overrides global variables */
 	else reg=G__null;
 #else
 	reg = G__getexpr(temp);
+#endif
+#ifndef G__OLDIMPLEMENTATION1254
+	++G__templevel;
 #endif
 #ifndef G__OLDIMPLEMENTATION1093
 	G__prerun=store_prerun;
@@ -1735,7 +1797,11 @@ int tagnum,typenum;      /* overrides global variables */
 	G__prerun = 0; /* FOR RUNNING CONSTRUCTOR */
 
 	if(G__store_struct_offset) {
-	  if(temp[0] == '\0') {
+	  if(temp[0] == '\0'
+#ifndef G__OLDIMPLEMENTATION1304
+	     && -1!=G__tagnum
+#endif
+	     ) {
 	    /********************************************
 	     * type a;
 	     * call default constructor
@@ -1825,7 +1891,11 @@ int tagnum,typenum;      /* overrides global variables */
 		G__cppconstruct = 1;
 		G__var_type = var_type;
 #ifndef G__OLDIMPLEMENTATION1137
+#ifndef G__OLDIMPLEMENTATION1251
+		if(known&& (G__globalvarpointer||G__asm_noverflow)) {
+#else
 		if(G__globalvarpointer) {
+#endif
 		  G__letvariable(new_name,G__null,&G__global,G__p_local);
 		}
 		else {

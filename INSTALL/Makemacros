@@ -1,3 +1,7 @@
+*CMZ :          18/05/2000  08.47.17  by  Rene Brun
+*CMZ :  2.24/04 04/05/2000  14.43.02  by  Rene Brun
+*CMZ :  2.24/03 16/04/2000  23.07.41  by  Rene Brun
+*CMZ :  2.24/01 20/03/2000  09.51.24  by  Rene Brun
 *CMZ :  2.23/12 18/01/2000  15.01.21  by  Fons Rademakers
 *CMZ :  2.23/11 11/01/2000  08.56.39  by  Rene Brun
 *CMZ :  2.23/10 03/12/99  16.17.16  by  Fons Rademakers
@@ -145,10 +149,10 @@ NEWLIB        = $(LPATH)/libNew.$(SOEXT)
 
 BASEH         = TArrayC.h TArrayD.h TArrayF.h TArrayI.h TArrayL.h TArrayS.h \
                 TAttFill.h TAttLine.h TAttPad.h TStyle.h TBrowser.h TContextMenu.h \
-                TAttMarker.h TAttText.h TBaseClass.h TGuiFactory.h \
+                TAttMarker.h TAttText.h TBaseClass.h TGuiFactory.h TPadView3D.h \
                 TBuffer.h TClass.h TColor.h TDataMember.h TDataType.h TDatime.h \
                 TDirectory.h TEnv.h TError.h TFile.h TFormula.h TFree.h TFunction.h \
-                TGlobal.h TKey.h TObject.h TMemberInspector.h TMethod.h \
+                TGlobal.h TKey.h TObject.h TMemberInspector.h TInspectorImp.h TMethod.h \
                 TMethodArg.h TMethodCall.h TNamed.h TRealData.h TMapFile.h \
                 TMath.h TROOT.h TKeyMapFile.h TApplication.h TApplicationImp.h \
                 TBrowserImp.h TCanvasImp.h TContextMenuImp.h TControlBarImp.h \
@@ -171,14 +175,14 @@ BASES         = BASE_Application.cxx BASE_ApplicationImp.cxx BASE_Browser.cxx \
                 BASE_MemberInspector.cxx BASE_Named.cxx BASE_ObjPtr.cxx \
                 BASE_ObjString.cxx BASE_Object.cxx BASE_ObjectTable.cxx \
                 BASE_Random.cxx BASE_Random2.cxx BASE_Random3.cxx BASE_RealData.cxx \
-                BASE_RefCnt.cxx BASE_Regexp.cxx BASE_Root.cxx BASE_Stopwatch.cxx \
+                BASE_RefCnt.cxx BASE_Regexp.cxx BASE_ROOT.cxx BASE_Stopwatch.cxx \
                 BASE_Storage.cxx BASE_String.cxx BASE_StringLong.cxx \
                 BASE_Stringio.cxx BASE_SysEvtHandler.cxx BASE_System.cxx \
                 BASE_SystemDirectory.cxx BASE_SystemFile.cxx BASE_Time.cxx \
                 BASE_Timer.cxx BASE_VirtualFitter.cxx BASE_VirtualX.cxx \
                 BASE_View.cxx BASE_VirtualGL.cxx BASE_VirtualPS.cxx BASE_VirtualPad.cxx \
-                BASE_Att3D.cxx BASE_AttAxis.cxx BASE_InitGui.cxx \
-                BASE_MessageHandler.cxx BASE_Exec.cxx
+                BASE_Att3D.cxx BASE_AttAxis.cxx BASE_InitGui.cxx BASE_InspectorImp.cxx \
+                BASE_MessageHandler.cxx BASE_Exec.cxx BASE_PadView3D.cxx
 
 BASEO         = $(BASES:.cxx=.o)
 
@@ -276,7 +280,7 @@ GRAF3DH       = TPolyLine3D.h TPolyMarker3D.h TGeometry.h TMaterial.h \
                 TMixture.h TNode.h TNodeDiv.h TRotMatrix.h TShape.h TBRIK.h \
                 TTRD1.h TTRD2.h TTUBE.h TCONE.h TCTUB.h TELTU.h TTUBS.h \
                 TCONS.h TTRAP.h TPARA.h TGTRA.h TPCON.h TPGON.h TSPHE.h \
-                TPadOpenGLView.h TPadView3D.h TMarker3DBox.h \
+                TPadOpenGLView.h TMarker3DBox.h \
                 TAxis3D.h THelix.h THYPE.h TPoints3DABC.h
 GRAF3DS1      = G3D_BRIK.cxx G3D_Marker3DBox.cxx G3D_PolyMarker3D.cxx \
                 G3D_CONE.cxx G3D_Material.cxx G3D_RotMatrix.cxx \
@@ -285,7 +289,7 @@ GRAF3DS1      = G3D_BRIK.cxx G3D_Marker3DBox.cxx G3D_PolyMarker3D.cxx \
                 G3D_Axis3D.cxx G3D_TRAP.cxx G3D_PARA.cxx G3D_TRD1.cxx \
                 G3D_GLViewerImp.cxx G3D_PCON.cxx G3D_TRD2.cxx G3D_GTRA.cxx \
                 G3D_PGON.cxx G3D_TUBS.cxx G3D_PadOpenGLView.cxx \
-                G3D_Tube.cxx G3D_Geometry.cxx G3D_PadView3D.cxx G3D_Helix.cxx \
+                G3D_TUBE.cxx G3D_Geometry.cxx G3D_Helix.cxx \
                 G3D_PolyLine3D.cxx G3D_HYPE.cxx G3D_Points3DABC.cxx
 GRAF3DS2      = G3D_X3DBuffer.c
 
@@ -349,11 +353,11 @@ GUILIB        = $(LPATH)/libGui.$(SOEXT)
 
 HISTH         = TH1.h TH2.h TH3.h TPolyMarker.h TProfile.h TSpectrum.h \
                 TAxis.h TVirtualHistPainter.h \
-                TF1.h TF2.h TF3.h TFormula.h
+                TF1.h TF2.h TF3.h TFormula.h TProfile2D.h
 HISTS         = H_H1.cxx H_H2.cxx H_H3.cxx H_Haxis.cxx H_PolyMarker.cxx \
                 H_Axis.cxx H_Profile.cxx H_Spectrum.cxx \
                 H_VirtualHistPainter.cxx \
-                H_F1.cxx H_F2.cxx H_F3.cxx H_Formula.cxx
+                H_F1.cxx H_F2.cxx H_F3.cxx H_Formula.cxx H_Profile2D.cxx
 
 HISTO         = $(HISTS:.cxx=.o)
 

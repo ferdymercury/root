@@ -1,3 +1,6 @@
+//*CMZ :  2.24/03 26/04/2000  17.56.03  by  Rene Brun
+//*CMZ :  2.24/02 05/04/2000  18.06.37  by  Fons Rademakers
+//*CMZ :  2.24/01 28/02/2000  09.26.56  by  Rene Brun
 //*CMZ :  2.23/12 26/01/2000  09.41.49  by  Rene Brun
 //*CMZ :  2.23/11 22/12/99  22.13.50  by  Rene Brun
 //*CMZ :  2.23/10 17/12/99  12.30.35  by  Rene Brun
@@ -8,17 +11,18 @@
 //*CMZ :  2.22/01 16/04/99  12.26.24  by  Fons Rademakers
 //*-- Author :    Rene Brun   28/12/94
 
+/*CMZ :  2.24/01 24/02/2000  11.49.40  by  Fons Rademakers*/
 /*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun and Fons Rademakers.                               *
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
  *                                                                       *
- * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
- * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -73,7 +77,7 @@ const Int_t kMAXBUF = 0xffffff;
 ClassImp(TKey)
 
 //______________________________________________________________________________
-TKey::TKey() : TNamed(), fDatime(0)
+TKey::TKey() : TNamed(), fDatime((UInt_t)0)
 {
 //*-*-*-*-*-*-*-*-*-*-*TKey default constructor*-*-*-*-*-*-*-*-*-*-*-*-*
 //*-*                  ========================
@@ -205,6 +209,11 @@ void TKey::Browse(TBrowser *b)
    // folder in which case we don't want to re-read the folder object
    // since it might contain new objects not yet saved.
 
+   // check that key points to the current dir
+   if (fSeekPdir != gDirectory->GetSeekDir()) {
+      Error("Browse"," Key: %s is not in the current directory: %s",GetName(),gDirectory->GetName());
+      return;
+   }
    TObject *obj = gDirectory->GetList()->FindObject(GetName());
    if (obj && !obj->IsFolder()) {
       if (obj->InheritsFrom(TCollection::Class()))
@@ -431,15 +440,15 @@ TObject *TKey::ReadObj()
    fBufferRef->SetBufferOffset(fKeylen);
    TObject *obj = 0;
    TDirectory *cursav = gDirectory;
-   TClass *cl = gROOT->GetClass((const char*)fClassName);
+   TClass *cl = gROOT->GetClass(fClassName.Data());
    if (!cl) {
-      Error("ReadObj", "Unknown class %s", (const char*)fClassName);
-      return 0;
+       Error("ReadObj", "Unknown class %s", fClassName.Data());
+       return 0;
    }
    // Create an instance of this class
    obj = (TObject*)cl->New();
    if (!obj) {
-      Error("ReadObj", "Cannot create new object of class %s", (const char*)fClassName);
+      Error("ReadObj", "Cannot create new object of class %s", fClassName.Data());
       return 0;
    }
    if (kvers > 1)

@@ -1,3 +1,5 @@
+//*CMZ :  2.24/03 13/04/2000  11.53.19  by  Valery Fine(fine@bnl.gov)
+//*CMZ :  2.24/01 31/03/2000  08.25.44  by  Rene Brun
 //*CMZ :  2.23/12 26/01/2000  12.11.42  by  Valery Fine(fine@bnl.gov)
 //*-- Author :    Valery Fine(fine@mail.cern.ch)   03/07/98
 // $Id: TFileSet.cxx,v 1.8 1999/10/27 23:21:27 fine Exp $
@@ -12,26 +14,30 @@
 
 //////////////////////////////////////////////////////////////////////////
 //                                                                      //
-// TFileSet                                                           //
+// TFileSet                                                             //
 //                                                                      //
-// TFileSet class is a class to convert the                           //
+// TFileSet class is a class to convert the                             //
 //      "native file system structure"                                  //
-// into an instance of the TDataSet class                             //
+// into an instance of the TDataSet class                               //
 //                                                                      //
 //  Example:                                                            //
-//    How to convert your home directory into the OO dataset           //
+//    How to convert your home directory into the OO dataset            //
 //                                                                      //
 //  root [0] TString home = "$HOME";                                    //
-//  root [1] TFileSet set(home);                                      //
+//  root [1] TFileSet set(home);                                        //
 //  root [2] TBrowser b("MyHome",&set);                                 //
 //  root [3] set.ls("*");                                               //
 //                                                                      //
 //////////////////////////////////////////////////////////////////////////
 
 ClassImp(TFileSet)
+
 //______________________________________________________________________________
   TFileSet::TFileSet()
-    : TDataSet(){}
+           : TDataSet()
+{
+}
+
 //______________________________________________________________________________
 TFileSet::TFileSet(const TString &dirname,const Char_t *setname,Bool_t expand)
            : TDataSet()
@@ -44,7 +50,8 @@ TFileSet::TFileSet(const TString &dirname,const Char_t *setname,Bool_t expand)
   //  -----------
   //  dirname  - the name of the "native file system" directory
   //             to convert into TFileSet
-  //  setname  - the name of this TFileSet ("." by default)
+  //  setname  - the name of this TFileSet (it is the "base name"
+  //                                 of the "dirname" by default)
   //  expand   - flag whether the "dirname" must be "expanded
   //             (kTRUE by default)
   //
@@ -56,7 +63,8 @@ TFileSet::TFileSet(const TString &dirname,const Char_t *setname,Bool_t expand)
   if (gSystem->GetPathInfo(name, &id, &size, &flags, &modtime)==0) {
 
     if (!setname) {setname = strrchr(name,'/')+1;}
-    SetName(setname);
+    if (setname) SetName(setname);
+    else SetName(name);
 
     // Check if "dirname" is a directory.
     void *dir = 0;
@@ -86,14 +94,18 @@ TFileSet::TFileSet(const TString &dirname,const Char_t *setname,Bool_t expand)
        SetTitle("file");
   }
 }
+
 //______________________________________________________________________________
-TFileSet::~TFileSet(){}
+TFileSet::~TFileSet()
+{
+}
 
 //______________________________________________________________________________
 Bool_t TFileSet::IsEmpty() const
 {
  return  strcmp(GetTitle(),"file")!=0 ? kTRUE : kFALSE ;
 }
+
 //______________________________________________________________________________
 Long_t TFileSet::HasData() const
 {
@@ -107,6 +119,7 @@ Long_t TFileSet::HasData() const
    //  return !IsFolder() ;
    //  Alas TObject::IsFolder() isn't defined as "const"
 }
+
 //______________________________________________________________________________
 Bool_t TFileSet::IsFolder()
 {
@@ -115,18 +128,3 @@ Bool_t TFileSet::IsFolder()
  //
  return strcmp(GetTitle(),"file")!=0;
 }
-
-// $Log: TFileSet.cxx,v $
-// Revision 1.8  1999/10/27 23:21:27  fine
-// Clean up
-//
-// Revision 1.7  1999/06/16 14:28:35  fisyak
-// Add protection against empty directory entry
-//
-// Revision 1.6  1999/03/11 00:34:43  perev
-// Tbase in new maker schema
-//
-// Revision 1.5  1998/12/26 21:40:38  fisyak
-// Add Id and Log
-//
-

@@ -1,20 +1,22 @@
+//*CMZ :  2.24/04 04/05/2000  17.24.58  by  Fons Rademakers
 //*CMZ :  2.23/02 05/10/99  16.43.36  by  Fons Rademakers
 //*CMZ :  2.21/05 08/02/99  10.45.50  by  Rene Brun
 //*CMZ :  2.00/03 27/03/98  16.45.37  by  Reiner Rohlfs
 //*CMZ :  2.00/01 13/03/98  11.46.45  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   22/02/98
 
+/*CMZ :  2.24/01 24/02/2000  11.49.40  by  Fons Rademakers*/
 /*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun and Fons Rademakers.                               *
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
  *                                                                       *
- * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
- * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
  *************************************************************************/
 //*CMZ :  2.00/00 16/02/98  00.17.08  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   27/12/97
@@ -104,9 +106,10 @@ TGToolTip::TGToolTip(const TGWindow *p, const TBox *box, const char *text,
    Long_t delayms) : TGCompositeFrame(p, 10, 10, kHorizontalFrame | kRaisedFrame)
 {
    // Create a tool tip. P is the tool tips parent window (normally
-   // fClient->GetRoot(), f is the frame to which the tool tip is associated,
+   // fClient->GetRoot(), box is the area to which the tool tip is associated,
    // text is the tool tip one-liner and delayms is the delay in ms before
-   // the tool tip is shown.
+   // the tool tip is shown. When using this ctor with the box argument
+   // you have to use Reset(const TVirtualPad *parent).
 
    SetWindowAttributes_t attr;
    attr.fMask             = kWAOverrideRedirect | kWASaveUnder;
@@ -135,9 +138,10 @@ TGToolTip::TGToolTip(const TBox *box, const char *text,Long_t delayms)
           : TGCompositeFrame(gClient->GetRoot(), 10, 10, kHorizontalFrame | kRaisedFrame)
 {
    // Create a tool tip in the parent window gClient->GetRoot(),
-   // f is the frame to which the tool tip is associated,
+   // box is the area to which the tool tip is associated,
    // text is the tool tip one-liner and delayms is the delay in ms before
-   // the tool tip is shown.
+   // the tool tip is shown. When using this ctor with the box argument
+   // you have to use Reset(const TVirtualPad *parent).
 
    SetWindowAttributes_t attr;
    attr.fMask             = kWAOverrideRedirect | kWASaveUnder;
@@ -232,7 +236,7 @@ Bool_t TGToolTip::HandleTimer(TTimer *)
 {
    // If tool tip delay timer times out show tool tip window.
 
-   Int_t    x=0, y=0, px1=0, px2=0, py1=0, py2=0;
+   Int_t    x = 0, y = 0, px1 = 0, px2 = 0, py1 = 0, py2 = 0;
    Window_t wtarget;
 
    if (fWindow) {
@@ -267,7 +271,7 @@ Bool_t TGToolTip::HandleTimer(TTimer *)
    UInt_t  screenW, screenH;     // width and height of screen
 
    gVirtualX->GetWindowSize(gClient->GetRoot()->GetId(), screenX, screenY,
-                                                    screenW, screenH);
+                            screenW, screenH);
 
    if (x + fWidth > screenW)
       x = screenW - fWidth;

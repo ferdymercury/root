@@ -354,4 +354,3 @@ void hz_calc(Float_t ENERG, Float_t DENS, Float_t TGRAD, Float_t PTMIN, Float_t 
 
   }
 }
-

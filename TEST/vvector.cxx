@@ -1,3 +1,4 @@
+//*CMZ :  2.24/05 11/05/2000  18.13.39  by  Fons Rademakers
 //*CMZ :  2.21/02 14/01/99  17.50.27  by  Fons Rademakers
 //*CMZ :  2.00/00 17/02/98  11.46.12  by  Fons Rademakers
 //*CMZ :  1.03/09 10/12/97  11.58.49  by  Fons Rademakers
@@ -166,7 +167,7 @@ void test_element_op(int vsize)
    v(v.GetUpb()) += 1;
    Assert( !(v==pattern) && !(v != pattern) && v != pattern-1 );
    Assert( v >= pattern && !(v > pattern) && !(v >= pattern+1) );
-   Assert( v <= (Real_t)pattern+1 && !(v < pattern+1) && !(v <= pattern) );
+   Assert( v <= pattern+1.001 && !(v < pattern+1) && !(v <= pattern) );
 
    cout << "\nAssign 2*pattern to v by repeating additions" << endl;
    v = 0; v += pattern; v += pattern;

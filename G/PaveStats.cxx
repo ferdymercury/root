@@ -1,3 +1,4 @@
+//*CMZ :  2.24/03 14/04/2000  12.22.58  by  Rene Brun
 //*CMZ :  2.23/12 26/01/2000  09.31.22  by  Rene Brun
 //*CMZ :  2.23/09 09/11/99  12.11.56  by  Rene Brun
 //*CMZ :  2.23/05 18/10/99  19.08.08  by  Rene Brun
@@ -6,17 +7,18 @@
 //*CMZ :  2.21/08 15/03/99  17.38.32  by  Rene Brun
 //*-- Author :    Rene Brun   15/03/99
 
+/*CMZ :  2.24/01 24/02/2000  11.49.40  by  Fons Rademakers*/
 /*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun and Fons Rademakers.                               *
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
  *                                                                       *
- * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
- * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
  *************************************************************************/
 
 #include <fstream.h>
@@ -75,8 +77,8 @@ TPaveStats::TPaveStats(Coord_t x1, Coord_t y1,Coord_t x2, Coord_t  y2, Option_t 
 
    fOptFit  = gStyle->GetOptFit();
    fOptStat = gStyle->GetOptStat();
-   SetFormatFit();
-   SetFormatStats();
+   SetFitFormat(gStyle->GetFitFormat());
+   SetStatFormat(gStyle->GetStatFormat());
 }
 
 //______________________________________________________________________________
@@ -93,22 +95,24 @@ void TPaveStats::SaveStyle()
 //
    gStyle->SetOptFit(fOptFit);
    gStyle->SetOptStat(fOptStat);
+   gStyle->SetFitFormat(fFitFormat.Data());
+   gStyle->SetStatFormat(fStatFormat.Data());
 }
 
 //______________________________________________________________________________
-void TPaveStats::SetFormatFit(const char *form)
+void TPaveStats::SetFitFormat(const char *form)
 {
    // Change (i.e. set) the format for printing fit parameters in statistics box
 
-   fFormatFit = form;
+   fFitFormat = form;
 }
 
 //______________________________________________________________________________
-void TPaveStats::SetFormatStats(const char *form)
+void TPaveStats::SetStatFormat(const char *form)
 {
    // Change (i.e. set) the format for printing statistics
 
-   fFormatStats = form;
+   fStatFormat = form;
 }
 
 
@@ -124,11 +128,11 @@ void TPaveStats::Streamer(TBuffer &R__b)
       R__b >> fOptFit;
       R__b >> fOptStat;
       if (R__v > 1 || (gFile && gFile->GetVersion() == 22304)) {
-         fFormatFit.Streamer(R__b);
-         fFormatStats.Streamer(R__b);
+         fFitFormat.Streamer(R__b);
+         fStatFormat.Streamer(R__b);
       } else {
-         SetFormatFit();
-         SetFormatStats();
+         SetFitFormat();
+         SetStatFormat();
       }
       R__b.CheckByteCount(R__s, R__c, TPaveStats::IsA());
    } else {
@@ -136,8 +140,8 @@ void TPaveStats::Streamer(TBuffer &R__b)
       TPaveText::Streamer(R__b);
       R__b << fOptFit;
       R__b << fOptStat;
-      fFormatFit.Streamer(R__b);
-      fFormatStats.Streamer(R__b);
+      fFitFormat.Streamer(R__b);
+      fStatFormat.Streamer(R__b);
       R__b.SetByteCount(R__c, kTRUE);
    }
 }

@@ -1,3 +1,4 @@
+//*CMZ :  2.24/01 02/03/2000  15.42.41  by  Rene Brun
 //*CMZ :  2.23/12 22/01/2000  18.07.13  by  Rene Brun
 //*CMZ :  2.23/11 29/12/99  10.14.40  by  Rene Brun
 //*CMZ :  2.23/09 09/11/99  10.13.47  by  Rene Brun
@@ -7,17 +8,18 @@
 //*CMZ :  2.21/04 17/04/99  07.50.09  by  Valery Fine(fine@mail.cern.ch)
 //*-- Author :    Nenad Buncic   17/08/95
 
+/*CMZ :  2.24/01 24/02/2000  11.49.40  by  Fons Rademakers*/
 /*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun and Fons Rademakers.                               *
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
  *                                                                       *
- * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
- * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
  *************************************************************************/
 
 #include <fstream.h>
@@ -383,7 +385,7 @@ void TPolyLine3D::Paint(Option_t *option)
 //*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 
     //*-* Check whether there is some 3D view class for this TPad
-    TPadView3D *view3D = gPad->GetView3D();
+    TPadView3D *view3D = (TPadView3D*)gPad->GetView3D();
     if (view3D) view3D->PaintPolyLine(this,option);
 
     //*-* Check if option is 'x3d'.      NOTE: This is a simple checking

@@ -1,27 +1,12 @@
+//*CMZ :  2.24/05 15/05/2000  11.33.03  by  Valery Fine(fine@bnl.gov)
+//*CMZ :  2.24/03 01/05/2000  13.01.55  by  Valery Fine(fine@bnl.gov)
+//*CMZ :  2.24/02 06/04/2000  10.45.25  by  Valery Fine(fine@bnl.gov)
+//*CMZ :  2.24/01 31/03/2000  08.19.27  by  Rene Brun
 //*CMZ :  2.23/12 26/01/2000  12.10.10  by  Valery Fine(fine@bnl.gov)
-//*-- Author : Valery Fine   09/08/99  (E-mail: fine@bnl.gov)
-// $Id: TTableDescriptor.cxx,v 1.6 1999/12/03 20:51:27 fine Exp $
-// $Log: TTableDescriptor.cxx,v $
-// Revision 1.6  1999/12/03 20:51:27  fine
-// change the data-member name size from 20 to 32 to be in line with dstype.h
-//
-// Revision 1.5  1999/09/13 13:28:27  fine
-// One cast int -> uint introduced to avoid compiler warnings
-//
-// Revision 1.4  1999/08/13 16:35:53  fine
-// The artificial restrictions for tableDescriptor have been introduced since database want that
-//
-// Revision 1.3  1999/08/12 18:53:49  fine
-// clash between TTableDescriptor::GetSize and TTable::GetSize resolved
-//
-// Revision 1.2  1999/08/11 14:44:39  fine
-// name clash with ROOT over enum resolved
-//
-// Revision 1.1  1999/08/11 00:40:11  fine
-// new class TTableDescriptor
-//
-
+//*-- Author :    Valery Fine   09/08/99  (E-mail: fine@bnl.gov)
+// $Id: STAR_TTableDescriptor.cxx,v 1.9 2000/04/28 14:10:59 fine Exp $
 #include <stdlib.h>
+
 #include "TTableDescriptor.h"
 #include "TTable.h"
 #include "TClass.h"
@@ -30,57 +15,146 @@
 #include "Ttypes.h"
 
 TTableDescriptor *TTableDescriptor::fgColDescriptors = 0;
-TableImp(TableDescriptor)
+TableClassImp(TTableDescriptor,tableDescriptor_st)
 
 //______________________________________________________________________________
 void TTableDescriptor::Streamer(TBuffer &R__b)
 {
-  // This class needs a special version of Streamer because of pointers
-  if (!R__b.IsReading()) R__b.WriteVersion(TTableDescriptor::IsA());
+  // The custom Streamer for this table
+#if 0
+  Version_t R__v = 0;
+  if (R__b.IsReading())
+    R__v = R__b.ReadVersion();
+  else
+    R__b.WriteVersion(TTableDescriptor::IsA());
+#endif
   TTable::Streamer(R__b);
 }
+
 //______________________________________________________________________________
 TTableDescriptor::TTableDescriptor(const TTable *parentTable)
- : TTable("tableDescriptor",sizeof(tableDescriptor_st))
+ : TTable("tableDescriptor",sizeof(tableDescriptor_st)), fRowClass(0)
 {
-  SetType("tableDescriptor");
   if (parentTable) {
-      SetName(parentTable->GetName());
-      LearnTable(parentTable);
+     TClass *classPtr = parentTable->GetRowClass();
+     Init(classPtr);
   }
+  else MakeZombie();
+}
+
+//______________________________________________________________________________
+TTableDescriptor::TTableDescriptor(TClass *classPtr)
+ : TTable("tableDescriptor",sizeof(tableDescriptor_st)),fRowClass(0)
+{
+  // Create a descriptor of the C-structure defined by TClass
+  // TClass *classPtr must be a valid pointer to TClass object for
+  // "plain" C_struture only !!!
+  Init(classPtr);
+}
+//______________________________________________________________________________
+void TTableDescriptor::Init(TClass *classPtr)
+{
+  // Create a descriptor of the C-structure defined by TClass
+  // TClass *classPtr must be a valid pointer to TClass object for
+  // "plain" C_struture only !!!
+  SetType("tableDescriptor");
+  if (classPtr) {
+    fRowClass = classPtr; // remember my row class
+    SetName(classPtr->GetName());
+    LearnTable(classPtr);
+  }
+  else
+    MakeZombie();
 }
 //______________________________________________________________________________
 TTableDescriptor::~TTableDescriptor()
 {
+#ifdef NORESTRICTIONS
   if (!IsZombie()) {
     for (Int_t i=0;i<GetNRows();i++) {
-      Char_t *name = (Char_t *)GetColumnName(i);
+      Char_t *name = (Char_t *)ColumnName(i);
       if (name) delete [] name;
-      UInt_t  *indxArray = (UInt_t *)GetIndexArray(i);
+      UInt_t  *indxArray = (UInt_t *)IndexArray(i);
       if (indxArray) delete [] indxArray;
     }
   }
+#endif
 }
+
+//____________________________________________________________________________
+TString TTableDescriptor::CreateLeafList() const
+{
+  // Create a list of leaf to be useful for TBranch::TBranch ctor
+  const Char_t TypeMapTBranch[]="\0FIISDiisbBC";
+  Int_t maxRows = NumberOfColumns();
+  TString string;
+  for (Int_t i=0;i<maxRows;i++){
+    if (i) string += ":";
+    Int_t nDim = Dimensions(i);
+
+    UInt_t *indx = 0;
+    Int_t totalSize = 1;
+    Int_t k = 0;
+
+    if (nDim) {
+      if ( !(indx = IndexArray(i))){
+        string = "";
+        Error("CreateLeafList()","Can not create leaflist for arrays");
+        return string;
+      }
+      for (k=0;k< nDim; k++) totalSize *= indx[k];
+    }
+    const Char_t *colName = ColumnName(i);
+    if (totalSize > 1) {
+       for ( k = 0; k < totalSize; k++) {
+         Char_t buf[10];
+         sprintf(buf,"_%d",k);
+         string += colName;
+         string += buf;
+         if (k==0) {
+           string += "/";
+           string += TypeMapTBranch[ColumnType(i)];
+         }
+         if (k != totalSize -1) string += ":";
+      }
+    } else {
+       string += ColumnName(i);
+       string += "/";
+       string += TypeMapTBranch[ColumnType(i)];
+    }
+  }
+  return string;
+}
+
 //____________________________________________________________________________
 void TTableDescriptor::LearnTable(const TTable *parentTable)
 {
-//
-//  LearnTable() creates an array of the descriptors for elements of the row
-//
-//  This is to introduce an artificial restriction demanded by STAR database group
-//
-//    1. the name may be 19 symbols at most
-//    2. the number the dimension is 2 at most
-//
-//  To lift this restriction one has to provide -DNORESTRICTIONS CPP symbol and
-//  recompile code.
-//
   if (!parentTable) {
     MakeZombie();
     return;
   }
+  LearnTable(parentTable->GetRowClass());
+}
 
-  TClass *classPtr = parentTable->GetRowClass();
+//____________________________________________________________________________
+void TTableDescriptor::LearnTable(TClass *classPtr)
+{
+//
+//  LearnTable() creates an array of the descriptors for elements of the row
+//
+// It creates a descriptor of the C-structure defined by TClass
+// TClass *classPtr must be a valid pointer to TClass object for
+// "plain" C_struture only !!!
+//
+//  This is to introduce an artificial restriction demanded by STAR database group
+//
+//    1. the name may be 31 symbols at most
+//    2. the number the dimension is 3 at most
+//
+//  To lift this restriction one has to provide -DNORESTRICTIONS CPP symbol and
+//  recompile code (and debug code NOW!)
+//
+
   if (!classPtr) return;
 
   if (!classPtr->GetListOfRealData()) classPtr->BuildRealData();
@@ -129,9 +203,10 @@ void TTableDescriptor::LearnTable(const TTable *parentTable)
 #ifdef NORESTRICTIONS
                                               elementDescriptor.fIndexArray = new UInt_t(dim);
 #else
-       if (UInt_t(dim) > sizeof(elementDescriptor.fIndexArray)/sizeof(UInt_t *)) {
+       UInt_t maxDim = sizeof(elementDescriptor.fIndexArray)/sizeof(UInt_t *);
+       if (UInt_t(dim) > maxDim) {
                 Error("LearnTable","Too many dimenstions - %d", dim);
-                dim =  2;
+                dim =  maxDim;
        }
 #endif
         for( Int_t indx=0; indx < dim; indx++ ){
@@ -140,58 +215,124 @@ void TTableDescriptor::LearnTable(const TTable *parentTable)
         }
       }
     }
-    else Error("LearnTable","Wrong data type for <%s> table",parentTable->GetType());
+    else Error("LearnTable","Wrong data type for <%s> structure",classPtr->GetName());
     elementDescriptor.fSize   =  globalIndex * (elementDescriptor.fTypeSize);
     elementDescriptor.fOffset = member->GetOffset();
     AddAt(&elementDescriptor,columnIndex); columnIndex++;
   }
 }
-//____________________________________________________________________________
-const Int_t TTableDescriptor::GetColumnByName(const Char_t *columnName) const
+
+//______________________________________________________________________________
+Int_t TTableDescriptor::UpdateOffsets(const TTableDescriptor *newDescriptor)
 {
+  //                  "Schema evolution"
+  // Method updates the offsets with a new ones from another descritor
+  //
+  Int_t maxColumns = NumberOfColumns();
+  Int_t mismathes = 0;
+
+  if (   (UInt_t(maxColumns) == newDescriptor->NumberOfColumns())
+      && (memcmp(GetArray(),newDescriptor->GetArray(),sizeof(tableDescriptor_st)*GetNRows()) == 0)
+     ) return mismathes; // everything fine for sure !
+
+  // Something wrong here, we have to check things piece by piece
+  for (Int_t colCounter=0; colCounter < maxColumns; colCounter++)
+  {
+    Int_t colNewIndx = newDescriptor->ColumnByName(ColumnName(colCounter));
+    // look for analog
+    if (    colNewIndx >=0
+         && Dimensions(colCounter) == newDescriptor->Dimensions(colNewIndx)
+         && ColumnType(colCounter) == newDescriptor->ColumnType(colNewIndx)
+       )  {
+      SetOffset(newDescriptor->Offset(colNewIndx),colCounter);
+      if (colNewIndx != colCounter) {
+        printf("Schema evolution: \t%d column of the \"%s\" table has been moved to %d-th column\n",
+        colCounter,ColumnName(colCounter),colNewIndx);
+        mismathes++;
+      }
+    }
+    else {
+      printf("Schema evolution: \t%d column of the \"%s\" table has been lost\n",
+        colCounter,ColumnName(colCounter));
+      printf(" Indx = %d, name = %s \n", colNewIndx, ColumnName(colCounter));
+      SetOffset(-1,colCounter);
+      mismathes++;
+    }
+  }
+  return mismathes;
+}
+
+//____________________________________________________________________________
+const Int_t TTableDescriptor::ColumnByName(const Char_t *columnName) const
+{
+ // Find the column index but the column name
  const tableDescriptor_st *elementDescriptor = ((TTableDescriptor *)this)->GetTable();
  Int_t i = -1;
  if (!elementDescriptor) return i;
  Int_t nRows = GetNRows();
+ char *bracket = 0;
  if (nRows) {
-   for (Int_t i=0; i < nRows; i++)
-     if (strcmp(columnName,elementDescriptor->fColumnName) == 0) break;
+   char *name = StrDup(columnName);
+   if ((bracket = strchr(name,'[')) )  *bracket = 0;
+   for (i=0; i < nRows; i++,elementDescriptor++)
+     if (strcmp(name,elementDescriptor->fColumnName) == 0) break;
+   delete [] name;
  }
  if (i==nRows) i = -1;
+ // Check array
+ if (bracket && !Dimensions(i)) {
+     i = -1;
+     Warning("ColumnByName","%s column contains a scalar value",columnName);
+ }
  return i;
 }
+
 //____________________________________________________________________________
-Int_t TTableDescriptor::GetOffset(const Char_t *columnName) const
+Int_t TTableDescriptor::Offset(const Char_t *columnName) const
 {
-  Int_t indx = GetColumnByName(columnName);
-  if (indx >= 0 ) indx = GetOffset(indx);
+  // Return offset of the column defined by "columnName"
+  // Take in account index if provided
+  // Can not handle multidimensional indeces yet.
+
+   Int_t indx = ColumnByName(columnName);
+   Int_t offset = -1;
+   if (indx >= 0 ) {
+      offset = Offset(indx);
+      const char *openBracket = 0;
+      if ( (openBracket = strchr(columnName,'['))  )
+         offset += atoi(openBracket+1)*TypeSize(indx);
+   }
+   return offset;
+}
+
+//____________________________________________________________________________
+Int_t TTableDescriptor::ColumnSize(const Char_t *columnName) const
+{
+  Int_t indx = ColumnByName(columnName);
+  if (indx >= 0 ) indx = ColumnSize(indx);
   return indx;
 }
+
 //____________________________________________________________________________
-Int_t TTableDescriptor::GetColumnSize(const Char_t *columnName) const
+Int_t TTableDescriptor::TypeSize(const Char_t *columnName) const
 {
-  Int_t indx = GetColumnByName(columnName);
-  if (indx >= 0 ) indx = GetColumnSize(indx);
+  Int_t indx = ColumnByName(columnName);
+  if (indx >= 0 ) indx = TypeSize(indx);
   return indx;
 }
+
 //____________________________________________________________________________
-Int_t TTableDescriptor::GetTypeSize(const Char_t *columnName) const
+Int_t TTableDescriptor::Dimensions(const Char_t *columnName) const
 {
-  Int_t indx = GetColumnByName(columnName);
-  if (indx >= 0 ) indx = GetTypeSize(indx);
+  Int_t indx = ColumnByName(columnName);
+  if (indx >= 0 ) indx = Dimensions(indx);
   return indx;
 }
+
 //____________________________________________________________________________
-Int_t TTableDescriptor::GetDimensions(const Char_t *columnName) const
+TTable::EColumnType TTableDescriptor::ColumnType(const Char_t *columnName) const
 {
-  Int_t indx = GetColumnByName(columnName);
-  if (indx >= 0 ) indx = GetDimensions(indx);
-  return indx;
-}
-//____________________________________________________________________________
-TTable::EColumnType TTableDescriptor::GetColumnType(const Char_t *columnName) const
-{
-  Int_t indx = GetColumnByName(columnName);
-  if (indx >= 0 ) indx = GetColumnType(indx);
+  Int_t indx = ColumnByName(columnName);
+  if (indx >= 0 ) indx = ColumnType(indx);
   return EColumnType(indx);
 }

@@ -1,5 +1,5 @@
-//*CMZ :  2.23/10 10/12/99  18.00.08  by  Masaharu Goto
-//*-- Author :    Masaharu Goto   10/12/99
+//*CMZ :  2.24/05 16/05/2000  12.03.52  by  Masaharu Goto
+//*-- Author :    Masaharu Goto   16/05/2000
 /* /% C++ %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -198,6 +198,9 @@ long G__MethodInfo::Property()
     if(ifunc->ispurevirtual[index]) property|=G__BIT_ISPUREVIRTUAL;
     if(ifunc->pentry[index]->filenum<0) property|=G__BIT_ISCOMPILED;
     if(ifunc->pentry[index]->bytecode) property|=G__BIT_ISBYTECODE;
+#ifndef G__OLDIMPLEMENTATION1287
+    if(ifunc->isexplicit[index]) property|=G__BIT_ISEXPLICIT;
+#endif
     return(property);
   }
   else {
@@ -535,6 +538,64 @@ int G__MethodInfo::IsBusy()
 }
 ///////////////////////////////////////////////////////////////////////////
 
+#ifndef G__OLDIMPLEMENTATION1294
+///////////////////////////////////////////////////////////////////////////
+// Global function to set precompiled library linkage
+///////////////////////////////////////////////////////////////////////////
+extern "C" int G__SetGlobalcomp(char *funcname,char *param,int globalcomp)
+{
+  G__ClassInfo globalscope;
+  G__MethodInfo method;
+  long dummy=0;
+#ifndef G__OLDIMPLEMENTATION912
+  char classname[G__LONGLINE];
+
+  // Actually find the last :: to get the full classname, including
+  // namespace and/or containing classes.
+  strcpy(classname,funcname);
+  char *fname = 0;
+  char * tmp = classname;
+  while ( (tmp = strstr(tmp,"::")) ) {
+    fname = tmp;
+    tmp += 2;
+  }
+  if(fname) {
+    *fname=0;
+    fname+=2;
+    globalscope.Init(classname);
+  }
+  else {
+    fname = funcname;
+  }
+
+  if(strcmp(fname,"*")==0) {
+    method.Init(globalscope);
+    while(method.Next()) {
+      method.SetGlobalcomp(globalcomp);
+    }
+    return(0);
+  }
+  method=globalscope.GetMethod(fname,param,&dummy);
+
+#else
+  method=globalscope.GetMethod(funcname,param,&dummy);
+#endif
+  if(method.IsValid()) {
+    method.SetGlobalcomp(globalcomp);
+    return(0);
+  }
+  else {
+    fprintf(G__serr,"Warning: #pragma link, function %s(%s) not found"
+#ifndef G__OLDIMPLEMENTATION912
+	    ,fname,param);
+#else
+	    ,funcname,param);
+#endif
+    G__printlinenum();
+    return(1);
+  }
+}
+#else
 ///////////////////////////////////////////////////////////////////////////
 // Global function to set precompiled library linkage
 ///////////////////////////////////////////////////////////////////////////
@@ -584,4 +645,5 @@ extern "C" int G__SetGlobalcomp(char *funcname,char *param,int globalcomp)
     return(1);
   }
 }
+#endif
 ///////////////////////////////////////////////////////////////////////////

@@ -1,3 +1,5 @@
+*CMZ :  2.24/05 15/05/2000  11.32.35  by  Rene Brun
+*CMZ :  2.24/04 04/05/2000  18.14.01  by  Rene Brun
 *CMZ :  2.23/12 26/01/2000  12.25.50  by  Rene Brun
 *CMZ :  2.23/09 18/11/99  15.22.18  by  Rene Brun
 *CMZ :  2.23/04 06/10/99  11.14.25  by  Fons Rademakers
@@ -119,7 +121,7 @@ SOFLAGS       = -shared
 CXX           = g++
 CXXFLAGS      = -O -Wall -fPIC
 LD            = g++
-LDFLAGS       = -g -Wl,-u,__builtin_new -Wl,-u,__builtin_delete -Wl,-u,__nw__FUiPv
+LDFLAGS       = -g -L/usr/lib32 -Wl,-woff,134
 SOFLAGS       = -shared
 
 +SELF,IF=SGI,IF=KCC.

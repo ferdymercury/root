@@ -1,3 +1,6 @@
+//*CMZ :  2.24/05 09/05/2000  19.18.12  by  Rene Brun
+//*CMZ :  2.24/03 07/04/2000  10.33.16  by  Rene Brun
+//*CMZ :  2.24/02 06/04/2000  18.50.48  by  Fons Rademakers
 //*CMZ :  2.23/12 23/01/2000  12.45.40  by  Fons Rademakers
 //*CMZ :  2.23/09 19/11/99  13.06.21  by  Fons Rademakers
 //*CMZ :  2.23/08 28/10/99  00.49.36  by  Fons Rademakers
@@ -11,17 +14,18 @@
 //*CMZ :  2.21/05 08/02/99  12.53.47  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   15/09/95
 
+/*CMZ :  2.24/01 24/02/2000  11.49.40  by  Fons Rademakers*/
 /*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun and Fons Rademakers.                               *
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
  *                                                                       *
- * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
- * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -72,7 +76,7 @@
 #if defined(R__AIX) || defined(R__SOLARIS)
 #   include <sys/select.h>
 #endif
-#if defined(R__LINUX)
+#if defined(R__LINUX) && !defined(R__MKLINUX)
 #   define SIGSYS  SIGUNUSED       // SIGSYS does not exist in linux ??
 #   include <dlfcn.h>
 #endif
@@ -183,8 +187,6 @@ extern "C" {
 static STRUCT_UTMP *gUtmpContents;
 
 
-#include "G__ci.h"
-
 const char *kServerPath     = "/tmp";
 const char *kProtocolName   = "tcp";
 
@@ -207,7 +209,11 @@ TUnixSystem::TUnixSystem() : TSystem("Unix", "Unix System")
 
 //______________________________________________________________________________
 TUnixSystem::~TUnixSystem()
-{ }
+{
+   // Reset to original state.
+
+   UnixResetSignals();
+}
 
 //______________________________________________________________________________
 Bool_t TUnixSystem::Init()
@@ -1174,7 +1180,11 @@ void TUnixSystem::Closelog()
 //______________________________________________________________________________
 Func_t TUnixSystem::DynFindSymbol(const char *module, const char *entry)
 {
+#ifdef NOCINT
    return UnixDynFindSymbol(module,entry);
+#else
+   return TSystem::DynFindSymbol("*", entry);
+#endif
 }
 
 //______________________________________________________________________________
@@ -1524,7 +1534,7 @@ void TUnixSystem::CloseConnection(int sock)
    if (sock < 0) return;
 
 #if !defined(R__AIX) || defined(_AIX41) || defined(_AIX43)
-   ::shutdown(sock, 2);
+   //::shutdown(sock, 2);   // will also close connection of parent
 #endif
 
    while (::close(sock) == -1 && GetErrno() == EINTR)
@@ -1819,25 +1829,26 @@ int TUnixSystem::GetSockOpt(int sock, int opt, int *val)
 //---- signals -----------------------------------------------------------------
 
 static struct signal_map {
-   int code;
-   SigHandler_t handler;
-   const char *signame;
-} gSignalMap[kMAXSIGNALS] = {    // the order of the signals should be identical
-   { SIGBUS,   0, "bus error" }, // to the one in SysEvtHandler.h
-   { SIGSEGV,  0, "segmentation violation" },
-   { SIGSYS,   0, "bad argument to system call" },
-   { SIGPIPE,  0, "write on a pipe with no one to read it" },
-   { SIGILL,   0, "illegal instruction" },
-   { SIGQUIT,  0, "quit" },
-   { SIGINT,   0, "interrupt" },
-   { SIGWINCH, 0, "window size change" },
-   { SIGALRM,  0, "alarm clock" },
-   { SIGCHLD,  0, "death of a child" },
-   { SIGURG,   0, "urgent data arrived on an I/O channel" },
-   { SIGFPE,   0, "floating point exception" },
-   { SIGTERM,  0, "termination signal" },
-   { SIGUSR1,  0, "user-defined signal 1" },
-   { SIGUSR2,  0, "user-defined signal 2" }
+   int               code;
+   SigHandler_t      handler;
+   struct sigaction *oldhandler;
+   const char       *signame;
+} gSignalMap[kMAXSIGNALS] = {       // the order of the signals should be identical
+   { SIGBUS,   0, 0, "bus error" }, // to the one in SysEvtHandler.h
+   { SIGSEGV,  0, 0, "segmentation violation" },
+   { SIGSYS,   0, 0, "bad argument to system call" },
+   { SIGPIPE,  0, 0, "write on a pipe with no one to read it" },
+   { SIGILL,   0, 0, "illegal instruction" },
+   { SIGQUIT,  0, 0, "quit" },
+   { SIGINT,   0, 0, "interrupt" },
+   { SIGWINCH, 0, 0, "window size change" },
+   { SIGALRM,  0, 0, "alarm clock" },
+   { SIGCHLD,  0, 0, "death of a child" },
+   { SIGURG,   0, 0, "urgent data arrived on an I/O channel" },
+   { SIGFPE,   0, 0, "floating point exception" },
+   { SIGTERM,  0, 0, "termination signal" },
+   { SIGUSR1,  0, 0, "user-defined signal 1" },
+   { SIGUSR2,  0, 0, "user-defined signal 2" }
 };
 
 //______________________________________________________________________________
@@ -1861,7 +1872,8 @@ void TUnixSystem::UnixSignal(ESignals sig, SigHandler_t handler)
    if (gSignalMap[sig].handler != handler) {
       struct sigaction sigact;
 
-      gSignalMap[sig].handler = handler;
+      gSignalMap[sig].handler    = handler;
+      gSignalMap[sig].oldhandler = new struct sigaction();
 
 #if defined(R__SOLARIS) && !defined(R__I386) && !defined(__SunOS_5_6)
       sigact.sa_handler = (void (*)())sighandler;
@@ -1882,7 +1894,8 @@ void TUnixSystem::UnixSignal(ESignals sig, SigHandler_t handler)
 #else
       sigact.sa_flags = 0;
 #endif
-      if (sigaction(gSignalMap[sig].code, &sigact, 0) < 0)
+      if (sigaction(gSignalMap[sig].code, &sigact,
+                    gSignalMap[sig].oldhandler) < 0)
          ::SysError("TUnixSystem::UnixSignal", "sigaction");
    }
 }
@@ -1893,6 +1906,21 @@ const char *TUnixSystem::UnixSigname(ESignals sig)
    // Return the signal name associated with a signal.
 
    return gSignalMap[sig].signame;
+}
+
+//______________________________________________________________________________
+void TUnixSystem::UnixResetSignals()
+{
+   // Restore old signal handlers.
+
+   for (int sig = 0; sig < kMAXSIGNALS; sig++) {
+      if (gSignalMap[sig].oldhandler) {
+         // restore old signal handler
+         sigaction(gSignalMap[sig].code, gSignalMap[sig].oldhandler, 0);
+         delete gSignalMap[sig].oldhandler;
+         gSignalMap[sig].oldhandler = 0;
+      }
+   }
 }
 
 //---- time --------------------------------------------------------------------
@@ -2493,8 +2521,8 @@ Func_t TUnixSystem::UnixDynFindSymbol(const char *lib, const char *entry)
 #else
    if (lib || entry) { }
 
-   // Always assume symbol found
-   return (Func_t)1;
+   // Always assume symbol not found
+   return 0;
 #endif
 }
 

@@ -1,5 +1,5 @@
-//*CMZ :  2.23/10 10/12/99  18.00.08  by  Masaharu Goto
-//*-- Author :    Masaharu Goto   10/12/99
+//*CMZ :  2.24/05 16/05/2000  12.03.52  by  Masaharu Goto
+//*-- Author :    Masaharu Goto   16/05/2000
 /* /% C++ %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -68,6 +68,13 @@ void G__TypedefInfo::Init(int typenumin)
     tagnum= -1;
     typenum= -1;
     isconst= 0;
+  }
+}
+///////////////////////////////////////////////////////////////////////////
+void G__TypedefInfo::SetGlobalcomp(int globalcomp)
+{
+  if(IsValid()) {
+    G__newtype.globalcomp[typenum] = globalcomp;
   }
 }
 ///////////////////////////////////////////////////////////////////////////

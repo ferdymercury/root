@@ -1,3 +1,5 @@
+//*CMZ :  2.24/05 11/05/2000  16.11.21  by  Fons Rademakers
+//*CMZ :  2.24/03 26/04/2000  18.02.19  by  Rene Brun
 //*CMZ :  2.23/12 26/01/2000  09.45.01  by  Rene Brun
 //*CMZ :  2.23/10 11/01/2000  15.17.31by  Rene Brun
 //*CMZ :  2.23/09 24/11/99  16.44.01  by  Rene Brun
@@ -10,17 +12,18 @@
 //*CMZ :  2.22/01 18/05/99  11.42.55  by  Rene Brun
 //*-- Author :    Rene Brun   12/01/96
 
+/*CMZ :  2.24/01 24/02/2000  11.49.40  by  Fons Rademakers*/
 /*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun and Fons Rademakers.                               *
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
  *                                                                       *
- * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
- * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
  *************************************************************************/
 
 #include <string.h>
@@ -40,6 +43,7 @@
 #include "TLeafF.h"
 #include "TLeafS.h"
 #include "TLeafD.h"
+#include "TMessage.h"
 #include "TClonesArray.h"
 #include "TVirtualPad.h"
 
@@ -87,6 +91,7 @@ TBranch::TBranch(): TNamed()
    fBasketBytes    = 0;
    fBasketSeek     = 0;
    fEntryNumber    = 0;
+   fEntryBuffer    = 0;
    fNleaves        = 0;
    fTree           = 0;
    fAddress        = 0;
@@ -153,6 +158,7 @@ TBranch::TBranch(const char *name, void *address, const char *leaflist, Int_t ba
    fReadEntry      = -1;
    fWriteBasket    = 0;
    fEntryNumber    = 0;
+   fEntryBuffer    = 0;
    fEntries        = 0;
    fTotBytes       = 0;
    fZipBytes       = 0;
@@ -349,12 +355,57 @@ Int_t TBranch::Fill()
    }
    buf->ResetMap();
    Int_t lold = buf->Length();
-   basket->Update(lold);
+   Int_t objectStart = 0;
+   if ( fEntryBuffer!=0 ) {
+     if ( fEntryBuffer->IsA() == TMessage::Class() ) {
+       objectStart = 8;
+     }
+     // We are required to copy starting at the version number (so not
+     // including the class name.
+     // See if byte count is here, if not it class still be a newClass
+     const UInt_t kNewClassTag       = 0xFFFFFFFF;
+     const UInt_t kByteCountMask     = 0x40000000;  // OR the byte count with this
+     UInt_t tag, startpos = fEntryBuffer->Length();
+     fEntryBuffer->SetBufferOffset(objectStart);
+     *fEntryBuffer >> tag;
+     if ( tag & kByteCountMask ) {
+       *fEntryBuffer >> tag;
+     }
+     if ( tag == kNewClassTag ) {
+       char s[80];
+
+       fEntryBuffer->ReadString(s, 80);
+     } else {
+       fEntryBuffer->SetBufferOffset(objectStart);
+     }
+     objectStart = fEntryBuffer->Length();
+     fEntryBuffer->SetBufferOffset(startpos);
+
+     basket->Update(lold, objectStart);
+   } else  basket->Update(lold);
    fEntries++;
    fEntryNumber++;
-   for (Int_t i=0;i<fNleaves;i++) {
-      TLeaf *leaf = (TLeaf*)fLeaves.UncheckedAt(i);
-      leaf->FillBasket(*buf);
+   if ( fEntryBuffer!=0 ) {
+
+     UInt_t len, startpos = fEntryBuffer->Length();
+     if (startpos > UInt_t(objectStart)) {
+       // We assume this buffer have just been directly filled
+       // the current position in the buffer indicates the end of the object!
+       len = fEntryBuffer->Length() - objectStart;
+     } else {
+       // The buffer have been acquired either via TSocket or via
+       // TBuffer::SetBuffer(newloc,newsize)
+       // Only the actual size of the memory buffer gives us an hint about where
+       // the object ends.
+       len = fEntryBuffer->BufferSize() - objectStart;
+     }
+     buf->WriteBuf( fEntryBuffer->Buffer() + objectStart , len );
+
+   } else {
+     for (Int_t i=0;i<fNleaves;i++) {
+       TLeaf *leaf = (TLeaf*)fLeaves.UncheckedAt(i);
+       leaf->FillBasket(*buf);
+     }
    }
    Int_t lnew   = buf->Length();
    Int_t nbytes = lnew - lold;
@@ -366,7 +417,7 @@ Int_t TBranch::Fill()
    }
 
 //*-*- Should we create a new basket?
-   if (lnew +2*nsize +nbytes >= fBasketSize) {
+   if ( (lnew +2*nsize +nbytes >= fBasketSize) ) { //NOTE: we should not need that|| (fEntryBuffer!=0) ) {
       Int_t nout  = basket->WriteBuffer();    //  Write buffer
       fBasketBytes[fWriteBasket]  = basket->GetNbytes();
       fBasketSeek[fWriteBasket]   = basket->GetSeekKey();
@@ -402,7 +453,6 @@ Int_t TBranch::Fill()
       fBasketSeek[fWriteBasket]  = 0;
    }
    return nbytes;
-
 }
 
 //______________________________________________________________________________
@@ -491,8 +541,11 @@ Int_t TBranch::GetEntry(Int_t entry, Int_t getall)
 
 //     We have found the basket containing this entry.
 //     make sure basket buffers are in memory.
-   TBasket *basket = GetBasket(fReadBasket);
-   if (!basket) return 0;
+   TBasket *basket = (TBasket*)fBaskets.UncheckedAt(fReadBasket);
+   if (!basket) {
+      basket = GetBasket(fReadBasket);
+      if (!basket) return 0;
+   }
    TBuffer *buf    = basket->GetBufferRef();
 //     Set entry offset in buffer and read data from all leaves
    buf->ResetMap();
@@ -505,6 +558,9 @@ Int_t TBranch::GetEntry(Int_t entry, Int_t getall)
    if (entryOffset) bufbegin = entryOffset[entry-first];
    else             bufbegin = basket->GetKeylen() + (entry-first)*basket->GetNevBufSize();
    buf->SetBufferOffset(bufbegin);
+   char *displacement = basket->GetDisplacement();
+   if (displacement) buf->SetBufferDisplacement(displacement[entry-first]);
+   else buf->SetBufferDisplacement();
 
    for (Int_t i=0;i<fNleaves;i++) {
       TLeaf *leaf = (TLeaf*)fLeaves.UncheckedAt(i);
@@ -553,6 +609,9 @@ Int_t TBranch::GetEntryExport(Int_t entry, Int_t getall, TClonesArray *list, Int
    if (entryOffset) bufbegin = entryOffset[entry-first];
    else             bufbegin = basket->GetKeylen() + (entry-first)*basket->GetNevBufSize();
    buf->SetBufferOffset(bufbegin);
+   char *displacement = basket->GetDisplacement();
+   if (displacement) buf->SetBufferDisplacement(displacement[entry-first]);
+   else buf->SetBufferDisplacement();
 
    TLeaf *leaf = (TLeaf*)fLeaves.UncheckedAt(0);
    leaf->ReadBasketExport(*buf,list,nentries);
@@ -772,6 +831,20 @@ void TBranch::SetAutoDelete(Bool_t autodel)
    else         SetBit(kAutoDelete,0);
 }
 
+//______________________________________________________________________________
+void TBranch::SetBufferAddress(TBuffer *buf)
+{
+   // Set address of this branch directly from a TBuffer to avoid streaming.
+
+   // Check this is possible
+   if ( (fNleaves != 1)
+       || (strcmp("TLeafObject",fLeaves.UncheckedAt(0)->ClassName())!=0) ) {
+      Error("TBranch::SetAddress","Filling from a TBuffer can only be done with a not split object branch.  Request ignored.");
+   } else {
+      fReadEntry = -1;
+      fEntryBuffer = buf;
+   }
+}
 
 //______________________________________________________________________________
 void TBranch::SetCompressionLevel(Int_t level)

@@ -1,3 +1,4 @@
+//*CMZ :  2.24/01 06/03/2000  09.33.10  by  Rene Brun
 //*CMZ :  2.23/02 02/09/99  15.54.29  by  Rene Brun
 //*CMZ :  2.00/12 04/10/98  18.10.08  by  Fons Rademakers
 //*-- Author :    Valeriy Onuchin & Fons Rademakers   04/10/98
@@ -47,7 +48,7 @@ Float_t TChar::GetWidth()
 
    UInt_t w,h;
 
-   if (!gPad) return 0;
+   if (!TVirtualPad::Pad()) return 0;
 
    Float_t wh = (Float_t)gPad->XtoPixel(gPad->GetX2());
    gVirtualX->GetTextExtent(w, h, (char*)GetTitle());
@@ -63,7 +64,7 @@ Hello::Hello(const char *text) : TTimer(40, kTRUE)
    int fI = 0;
    fList = new TList();
 
-   if (!gPad)
+   if (!TVirtualPad::Pad())
       fPad = new TCanvas("Hello:canvas","ROOT says Hello!",200,200,400,200);
    else
       fPad = (TPad*)gPad;

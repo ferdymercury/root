@@ -1,5 +1,5 @@
-/*CMZ :  2.23/10 10/12/99  18.00.16  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   10/12/99*/
+/*CMZ :  2.24/05 16/05/2000  12.03.57  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   16/05/2000*/
 /*********************************************************************
 * typeinfo.h
 *
@@ -74,7 +74,7 @@ class type_info {
 };
 
 
-bool type_info::operator==(const type_info& a)
+bool type_info::operator==(const type_info& a) const
 {
   if(reftype == a.reftype && tagnum == a.tagnum && type == a.type)
     return(true);
@@ -82,13 +82,13 @@ bool type_info::operator==(const type_info& a)
     return(false);
 }
 
-bool type_info::operator!=(const type_info& a)
+bool type_info::operator!=(const type_info& a) const
 {
   if( *this == a ) return(false);
   else             return(true);
 }
 
-bool type_info::before(const type_info& a)
+bool type_info::before(const type_info& a) const
 {
   if(-1!=tagnum)
     return( tagnum < a.tagnum );
@@ -98,7 +98,7 @@ bool type_info::before(const type_info& a)
     return( type < a.type );
 }
 
-const char* type_info::name()
+const char* type_info::name() const
 {
   static char namestring[100];
   printf("%d %d %d %d\n",type,tagnum,typenum,reftype);

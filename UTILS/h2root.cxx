@@ -1,3 +1,5 @@
+//*CMZ :  2.24/03 29/04/2000  10.08.38  by  Rene Brun
+//*CMZ :  2.24/02 05/04/2000  11.47.15  by  Rene Brun
 //*CMZ :  2.23/06 21/10/99  08.38.17  by  Rene Brun
 //*CMZ :  2.22/00 06/04/99  19.07.00  by  Rene Brun
 //*CMZ :  2.21/05 08/02/99  11.08.46  by  Rene Brun
@@ -224,6 +226,7 @@ extern void convert_cwn(Int_t id);
 extern void convert_rwn(Int_t id);
 
 Int_t golower  = 1;
+Int_t bufsize  = 8000;
 
 TROOT conv("h2root","Conversion from HBOOK to ROOT");
 
@@ -231,11 +234,12 @@ int main(int argc, char **argv)
 {
   if (argc < 2) {
      printf("******Error in invoking h2root\n");
-     printf("===>  h2root file.hbook  file.root [compress] [tolower] [lrecl]\n");
+     printf("===>  h2root file.hbook  file.root [compress] [tolower] [lrecl] [bufsize]\n");
      printf("      if file.root is not given  it will be = file.root\n");
      printf("      compress = 1 by default (use 0 for no compression)\n");
      printf("      tolower  = 1 by default (use 0 to keep case of column names)\n");
      printf("      lrecl =0 by default (must be specified if >8092)\n");
+     printf("      bufsize = 8000 by default (branch buffer size)\n");
      return 1;
   }
   lq = &pawc[9];
@@ -246,6 +250,9 @@ int main(int argc, char **argv)
   char *file_out;
   Int_t compress = 1;
   int ier=0, record_size=0;
+  if (argc > 6) {
+     bufsize = atoi(argv[6]);
+  }
   if (argc > 5) {
      record_size = atoi(argv[5]);
   }
@@ -577,7 +584,7 @@ int main(int argc, char **argv)
        if (name[j] != ' ') break;
        first = j+1;
     }
-    tree->Branch(&name[first],&x[i],&name[first],8000);
+    tree->Branch(&name[first],&x[i],&name[first],bufsize);
     name += Nchar;
   }
   for(i=1;i<=nentries;i++) {
@@ -614,6 +621,9 @@ int main(int argc, char **argv)
   chtag_out = new char[nvar*Nchar+1];
   Int_t *charflag = new Int_t[nvar];
   Int_t *lenchar  = new Int_t[nvar];
+  Int_t *boolflag = new Int_t[nvar];
+  Int_t *lenbool  = new Int_t[nvar];
+  UChar_t *boolarr = new UChar_t[10000];
   x = new float[nvar];
   char *bigbuf = new char[500000];
 
@@ -632,6 +642,7 @@ int main(int argc, char **argv)
 
   Int_t bufpos = 0;
   Int_t isachar = 0;
+  Int_t isabool = 0;
   char fullname[64];
   char name[32];
   char block[32];
@@ -669,7 +680,8 @@ int main(int argc, char **argv)
      if (itype == 1 && isize == 8) strcat(fullname,"/D");
      if (itype == 2) strcat(fullname,"/I");
      if (itype == 3) strcat(fullname,"/i");
-     if (itype == 4) strcat(fullname,"/i");
+//     if (itype == 4) strcat(fullname,"/i");
+     if (itype == 4) strcat(fullname,"/b");
      if (itype == 5) strcat(fullname,"/C");
 printf("Creating branch:%s, block:%s, fullname:%s, nsub=%d, itype=%d, isize=%d, ielem=%d\n",name,block,fullname,nsub,itype,isize,ielem);
      Int_t ischar;
@@ -687,7 +699,9 @@ printf("Creating branch:%s, block:%s, fullname:%s, nsub=%d, itype=%d, isize=%d, 
 #endif
 
      }
-     TBranch *branch = tree->Branch(name,(void*)&bigbuf[bufpos],fullname,8000);
+     TBranch *branch = tree->Branch(name,(void*)&bigbuf[bufpos],fullname,bufsize);
+     boolflag[i] = -10;
+     if (itype == 4) {isabool++; boolflag[i] = bufpos; lenbool[i] = ielem;}
      bufpos += isize*ielem;
      if (ischar) {isachar++; charflag[i] = bufpos-1; lenchar[i] = isize*ielem;}
      TObjArray *ll= branch->GetListOfLeaves();
@@ -698,9 +712,21 @@ printf("Creating branch:%s, block:%s, fullname:%s, nsub=%d, itype=%d, isize=%d, 
         if (leafcount->GetMaximum() <= 0) leafcount->SetMaximum(ielem);
      }
   }
-  Int_t cf;
+  Int_t cf,l,lint;
   for(i=1;i<=nentries;i++) {
      hgnt(id,i,ier);
+     if (isabool) { // if column is boolean
+        for (j=0;j<nvar;j++) {
+           cf = boolflag[j];
+           if (cf >-1) {
+              for (l=0;l<lenbool[j];l++) {
+                 lint = (Int_t)bigbuf[cf+4*l];
+                 boolarr[l] = (UChar_t)lint;
+              }
+              memcpy(&bigbuf[cf],boolarr,lenbool[j]);
+           }
+        }
+     }
      if (isachar) { // if column is character, set terminator
         for (j=0;j<nvar;j++) {
            cf = charflag[j];
@@ -722,5 +748,8 @@ printf("Creating branch:%s, block:%s, fullname:%s, nsub=%d, itype=%d, isize=%d, 
   delete [] bigbuf;
   delete [] charflag;
   delete [] lenchar;
+  delete [] boolflag;
+  delete [] lenbool;
+  delete [] boolarr;
   delete [] chtag_out;
 }

@@ -1,3 +1,4 @@
+*CMZ :  2.24/02 31/03/2000  16.28.08  by  Valery Fine(fine@bnl.gov)
 *CMZ :  2.23/12 27/01/2000  09.42.46  by  Valery Fine(fine@bnl.gov)
 *CMZ :  2.23/05 19/10/99  19.05.01  by  Rene Brun
 *CMZ :  2.23/04 13/10/99  17.09.54  by  Fons Rademakers
@@ -243,6 +244,9 @@ exec bind_dll Hist          H_*.o
 endif
 if $IsinBuffer('ROOT/TREE/')  then
 exec bind_dll Tree          TREE_*.o
+endif
+if $IsinBuffer('ROOT/TREEPLAY') then
+exec bind_dll TreePlayer    TREEPL*.o
 endif
 if $IsinBuffer('ROOT/MINU') then
 exec bind_dll Minuit        MINU*.o

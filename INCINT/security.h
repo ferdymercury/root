@@ -1,5 +1,5 @@
-/*CMZ :  2.23/10 10/12/99  17.59.57  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   10/12/99*/
+/*CMZ :  2.24/05 16/05/2000  12.03.45  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   16/05/2000*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -85,7 +85,7 @@
 /* DON'T USE 0x80000000. THIS CAUSES PROBLEM WITH DEC ALPHA CXX COMPILER */
 
 /* Maximum function call stack depth, This limit is just for security. */
-#define G__DEFAULT_MAX_STACK_DEPTH    512
+#define G__DEFAULT_MAX_STACK_DEPTH    128
 
 #ifdef __cplusplus
 extern "C" G__UINT32 G__security;

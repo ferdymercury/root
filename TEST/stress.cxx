@@ -1,3 +1,4 @@
+//*CMZ :  2.24/03 29/04/2000  11.22.48  by  Rene Brun
 //*CMZ :  2.23/12 23/01/2000  20.01.39  by  Rene Brun
 //*CMZ :  2.23/09 17/11/99  16.18.58  by  Rene Brun
 //*CMZ :  2.23/08 01/11/99  14.33.24  by  Rene Brun
@@ -114,7 +115,6 @@
    void stress15();
    void stress16();
    void cleanup();
-   Double_t(*func)(double *, double *);
 
 
 int main(int argc, char **argv)
@@ -270,13 +270,8 @@ void stress1()
    h1form->Fit("f1form","q0");
 
    //same operation with an interpreted function f1int
-#ifndef __CINT__
-   func = f1int;
-   TF1 *f1int = new TF1("f1int",func,-10,10,9);  // this one will be compiled
-#else
-   TF1 *f1int = new TF1("f1int",f1int,-10,10,9); // this one will be interpreted
-#endif
-   f1int->SetParameters(f1params);
+   TF1 *f1 = new TF1("f1int",f1int,-10,10,9);
+   f1->SetParameters(f1params);
 
    //Create an histogram and fill it randomly with f1int
    gRandom->SetSeed(); //make sure we start with the same random numbers
@@ -294,7 +289,7 @@ void stress1()
    Int_t npar = f1form->GetNpar();
    Double_t pdiff, pdifftot = 0;
    for (Int_t i=0;i<npar;i++) {
-      pdiff = (f1form->GetParameter(i) - f1int->GetParameter(i))/f1form->GetParameter(i);
+      pdiff = (f1form->GetParameter(i) - f1->GetParameter(i))/f1form->GetParameter(i);
       pdifftot += TMath::Abs(pdiff);
    }
    // The integral in the range [-8,6] must be = 1923.74578
@@ -312,7 +307,7 @@ void stress1()
    //Save all objects in a Root file (will be checked by stress2)
    TFile local("stress.root","recreate");
    f1form->Write();
-   f1int->Write();
+   f1->Write();
    h1form->Write();
    h1int->Write();
    ntotout += local.GetBytesWritten();
@@ -456,10 +451,10 @@ void stress5()
 
    //count number of lines in ps file
    FILE *fp = fopen("stress.ps","r");
-   char line[200];
+   char line[260];
    Int_t nlines = 0;
-   Int_t nlinesGood = 1581;
-   while (fgets(line,199,fp)) {
+   Int_t nlinesGood = 952;
+   while (fgets(line,255,fp)) {
       nlines++;
    }
    fclose(fp);
@@ -1385,10 +1380,10 @@ void stress16()
 
    // Check length of Postscript file
    FILE *fp = fopen("stress_lhcb.ps","r");
-   char line[200];
+   char line[260];
    Int_t nlines = 0;
-   Int_t nlinesGood = 7612;
-   while (fgets(line,200,fp)) {
+   Int_t nlinesGood = 4023;
+   while (fgets(line,255,fp)) {
       nlines++;
    }
    fclose(fp);

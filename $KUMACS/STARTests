@@ -33,3 +33,4 @@ sel -STARTest
 exec sourcedir
 *
 cd [curdir]
+return

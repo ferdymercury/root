@@ -1,15 +1,28 @@
+//*CMZ :  2.24/03 03/05/2000  16.29.17  by  Rene Brun
+//*CMZ :  2.24/02 06/04/2000  18.22.26  by  Valery Fine(fine@bnl.gov)
 //*CMZ :  2.23/12 28/01/2000  18.48.08  by  Valery Fine(fine@bnl.gov)
-//*CMZ :          12/07/98  18.27.27  by  Valery Fine(fine@mail.cern.ch)
-// $Id: TTable.cxx,v 1.92 2000/01/21 02:09:52 fine Exp $
+// $Id: STAR_TTable.cxx,v 1.12 2000/04/28 02:11:09 fine Exp $
 //
 //*-- Author :    Valery Fine(fine@mail.cern.ch)   03/07/98
 // Copyright (C) Valery Fine (Valeri Faine) 1998. All right reserved
 //
 //////////////////////////////////////////////////////////////////////////
 //                                                                      //
-// TTable                                                             //
+// TTable                                                               //
 //                                                                      //
 // Wraps the array of the STAF C-structures (one STAF Table per element)//
+//                                                                      //
+// class TTable provides the automatic schema evolution for             //
+// the derived "table" classes saved with ROOT format.                  //
+//                                                                      //
+// "Automatic Schema evolution" provides:                               //
+//   -  skipping data-member if it is not present for the current       //
+//      implementation of the "table" but was present at the time the   //
+//      table was written;                                              //
+//   -  assign a default value ZERO for the brand-new data-members,     //
+//      those were not in the structure when the object was written but //
+//      present now;                                                    //
+//   -  trace propely any change in the order of the data-members       //
 //                                                                      //
 // Begin_Html <P ALIGN=CENTER> <IMG SRC="gif/st2tab.gif"> </P> End_Html //
 //                                                                      //
@@ -36,7 +49,6 @@
 #include "TDataMember.h"
 #include "TDataType.h"
 #include "TTable.h"
-#include "TTableElementDescriptor.h"
 #include "TTableDescriptor.h"
 
 #include "TGaxis.h"
@@ -52,27 +64,10 @@
 
 TH1 *gCurrentTableHist = 0;
 
+
 static   Int_t         fNbins[4] = {100,100,100,100};     //Number of bins per dimension
 static   Float_t       fVmin[4]  = {0,0,0,0};             //Minima of varexp columns
 static   Float_t       fVmax[4]  = {20,20,20,20};         //Maxima of varexp columns
-
-//______________________________________________________________________________
-void *ReAllocate(table_head_st *header, Int_t newsize)
-{
-  //
-  // header - "plain" C interface to re-allocate the STAF table
-  //          "this"  pointer is  supplied indirectly via
-  //          header->dsl_pointer member
-  //
-  // newsize - is a new size of the STAF table.
-  //           If it is smaller is the old one then nothing happens
-  //
- if (header && newsize)
-   return ((TTable *)header->dsl_pointer)->ReAllocate(newsize);
- else
-   return 0;
-}
-
 
 //______________________________________________________________________________
 static void ArrayLayout(Int_t *layout,Int_t *size, Int_t dim)
@@ -99,9 +94,26 @@ static void ArrayLayout(Int_t *layout,Int_t *size, Int_t dim)
   }
 }
 
+ClassImp(TTable)
+
 //______________________________________________________________________________
-static void AsString(void *buf, const char *name, Int_t width=0)
+TTableDescriptor *TTable::GetTableDescriptors() const {
+ // protected: create a new TTableDescriptor descriptor for this table
+   assert(0);
+   return new TTableDescriptor(this);
+}
+
+//______________________________________________________________________________
+void TTable::AsString(void *buf, const char *name, Int_t width) const
 {
+  //
+  // AsString represents the value provided via "void *b" with type defined
+  //          by "name"
+  //
+  //   void *buf  - the pointer to the value to be printed out.
+  //        name  - the name of the type for the value above
+  //       width  - the number of psotion to be used to print the value out
+  //
    if (!strcmp("unsigned int", name))
       cout << setw(width) << *(unsigned int *)buf;
    else if (!strcmp("int", name))
@@ -115,7 +127,7 @@ static void AsString(void *buf, const char *name, Int_t width=0)
    else if (!strcmp("short", name))
       cout <<  setw(width) << *(short *)buf;
    else if (!strcmp("unsigned char", name))
-      cout <<  setw(width) <<  *(unsigned char *)buf;
+      cout <<  setw(width) <<  hex << *(unsigned char *)buf;
    else if (!strcmp("char", name))
       cout <<   setw(width) << *(char *)buf;
    else if (!strcmp("float", name))
@@ -124,21 +136,64 @@ static void AsString(void *buf, const char *name, Int_t width=0)
       cout <<   setw(width) << setprecision(width-3) << *(double *)buf;
 }
 
-
-ClassImp(TTable)
-
-
-//______________________________________________________________________________
-TTableDescriptor *TTable::GeTTableDescriptors() const {
-    return new TTableDescriptor(this);
-}
-
 //______________________________________________________________________________
 const void *TTable::At(Int_t i) const
 {
-   if (!BoundsOk("TTable::At", i))
+ // Returns a pointer to the i-th row of the table
+   if (!BoundsOk("TTable::At", i)) {
+       Warning("TTable::At","%s.%s",GetName(),GetType());
       i = 0;
-   return (const void *)(fTable+i*(*fSize));
+   }
+   return (const void *)(fTable+i*fSize);
+}
+
+//______________________________________________________________________________
+Int_t TTable::CopyRows(const TTable *srcTable, Int_t srcRow, Int_t dstRow, Int_t nRows, Bool_t expand)
+{
+ // CopyRows copies nRows from starting from the srcRow of srcTable
+ // to the dstRow in this table upto nRows or by the end of this table.
+ //
+ // This table if automaticaly increased if expand = kTRUE.
+ // The old values of this table rows are to be destroyed and
+ // replaced with the new ones.
+ //
+ // PARAMETERS:
+ //   srcTable - a pointer to the table "donor"
+ //   srcRow   - the index of the first row of the table donor to copy from
+ //   dstRow   - the index of the first row of this table to copy to
+ //   nRows    - the total number of rows to be copied. This table will be expanded
+ //              as needed if expand = kTRUE (it is kFALSE "by default")
+ //          = 0 to copy ALL remain rows from the srcTable.
+ //   expand   - flag whether this table should reallocated if needed.
+ //
+ // RETURN:
+ //          the number of the rows been copied
+
+ assert(!TestBit(kIsNotOwn));
+ if (!(srcTable && srcTable->GetNRows()) ||
+          srcRow > srcTable->GetNRows()-1   )   return 0;
+
+
+ if (strcmp(GetType(),srcTable->GetType())) {
+   // check this table current capacity
+   if (!nRows) nRows = srcTable->GetNRows();
+   Long_t tSize = GetTableSize();
+   Int_t extraRows = (tSize - dstRow) - nRows;
+   if (extraRows < 0) {
+     if (expand) {
+       ReAllocate(tSize - extraRows);
+       extraRows = 0;
+     }
+     nRows += extraRows;
+   }
+   if (dstRow+nRows > GetNRows()) SetNRows(dstRow+nRows);
+   ::memcpy((*this)[dstRow],(*srcTable)[srcRow],GetRowSize()*nRows);
+   return nRows;
+ } else
+     Error("CopyRows",
+           "This table is <%s> but the src table has a wrong type <%s>",GetType()
+           ,srcTable->GetType());
+ return 0;
 }
 
 //______________________________________________________________________________
@@ -250,7 +305,7 @@ TH1 *TTable::Draw(const Text_t *varexp00, const Text_t *selection, Option_t *opt
    if (GetNRows() == 0 || varexp00 == 0 || varexp00[0]==0) return 0;
    TString  opt;
    Text_t *hdefault = (char *)"htemp";
-   Text_t *varexp = "";
+   Text_t *varexp="";
    Int_t i,j,action;
    Int_t hkeep = 0;
    opt = option;
@@ -394,14 +449,6 @@ TH1 *TTable::Draw(const Text_t *varexp00, const Text_t *selection, Option_t *opt
          fNbins[0] = h1->GetXaxis()->GetNbins();  // for proofserv
       } else {
          h1 = new TH1F(hname,htitle,fNbins[0],fVmin[0],fVmax[0]);
-//         h1->SetLineColor(GetLineColor());
-//         h1->SetLineWidth(GetLineWidth());
-//         h1->SetLineStyle(GetLineStyle());
-//         h1->SetFillColor(GetFillColor());
-//         h1->SetFillStyle(GetFillStyle());
-//         h1->SetMarkerStyle(GetMarkerStyle());
-//         h1->SetMarkerColor(GetMarkerColor());
-//         h1->SetMarkerSize(GetMarkerSize());
          if (!hkeep) {
             h1->SetBit(kCanDelete);
             h1->SetDirectory(0);
@@ -458,16 +505,6 @@ TH1 *TTable::Draw(const Text_t *varexp00, const Text_t *selection, Option_t *opt
                hp->SetBit(kCanDelete);
                hp->SetDirectory(0);
             }
-#if 0
-            hp->SetLineColor(GetLineColor());
-            hp->SetLineWidth(GetLineWidth());
-            hp->SetLineStyle(GetLineStyle());
-            hp->SetFillColor(GetFillColor());
-            hp->SetFillStyle(GetFillStyle());
-            hp->SetMarkerStyle(GetMarkerStyle());
-            hp->SetMarkerColor(GetMarkerColor());
-            hp->SetMarkerSize(GetMarkerSize());
-#endif
          }
 
          EntryLoop(exprFileName,action,hp,nentries, firstentry, option);
@@ -479,14 +516,6 @@ TH1 *TTable::Draw(const Text_t *varexp00, const Text_t *selection, Option_t *opt
             h2 = (TH2F*)oldh1;
          } else {
             h2 = new TH2F(hname,htitle,fNbins[1],fVmin[1], fVmax[1], fNbins[0], fVmin[0], fVmax[0]);
-#if 0
-            h2->SetLineColor(GetLineColor());
-            h2->SetFillColor(GetFillColor());
-            h2->SetFillStyle(GetFillStyle());
-            h2->SetMarkerStyle(GetMarkerStyle());
-            h2->SetMarkerColor(GetMarkerColor());
-            h2->SetMarkerSize(GetMarkerSize());
-#endif
             if (!hkeep) {
                const Int_t kNoStats = BIT(9);
                h2->SetBit(kCanDelete);
@@ -527,6 +556,7 @@ TH1 *TTable::Draw(const Text_t *varexp00, const Text_t *selection, Option_t *opt
   if (hkeep) delete [] varexp;
   return gCurrentTableHist;
 }
+
 //______________________________________________________________________________
 static void FindGoodLimits(Int_t nbins, Int_t &newbins, Float_t &xmin, Float_t &xmax)
 {
@@ -535,7 +565,7 @@ static void FindGoodLimits(Int_t nbins, Int_t &newbins, Float_t &xmin, Float_t &
 //*-*  This mathod is a stright copy of void TTree::FindGoodLimits method
 //*-*
 
-   static TGaxis gaxiftree;
+   static TGaxis gaxis_tree;
    Float_t binlow,binhigh,binwidth;
    Int_t n;
    Float_t dx = 0.1*(xmax-xmin);
@@ -544,7 +574,7 @@ static void FindGoodLimits(Int_t nbins, Int_t &newbins, Float_t &xmin, Float_t &
    if (umin < 0 && xmin >= 0) umin = 0;
    if (umax > 0 && xmax <= 0) umax = 0;
 
-   gaxiftree.Optimize(umin,umax,nbins,binlow,binhigh,n,binwidth);
+   gaxis_tree.Optimize(umin,umax,nbins,binlow,binhigh,n,binwidth);
 
    if (binwidth <= 0 || binwidth > 1.e+39) {
       xmin = -1;
@@ -820,58 +850,39 @@ Bool_t TTable::EntryLoop(const Char_t *exprFileName,Int_t &action, TObject *obj
   delete [] addressArray;
   return kTRUE;
 }
+
 //______________________________________________________________________________
-TTable::TTable(const Text_t *name, Int_t size) : TDataSet()
+TTable::TTable(const Text_t *name, Int_t size) : TDataSet(name),
+        fSize(size),fTable(0),fMaxIndex(0)
 {
    // Default TTable ctor.
-   fTableHeader = new table_head_st;
-   fSize = &fTableHeader->rbytes;
-   fMaxIndex = &fTableHeader->nok;
-   *fSize = size;
-   SetHeadFields(name);          // Define the default name and type as "unknown"
-   fTable = 0;
-   *fMaxIndex = 0;
    if (size == 0) Warning("TTable(0)","Wrong table format");
 }
 
 //______________________________________________________________________________
-TTable::TTable(const Text_t *name, Int_t n,Int_t size) : TDataSet()
+TTable::TTable(const Text_t *name, Int_t n,Int_t size) : TDataSet(name),
+        fSize(size),fTable(0),fMaxIndex(0)
 {
    // Create TTable object and set array size to n longs.
-
-   fTable = 0;
-   fTableHeader = new table_head_st;
-   LinkHeader();
-   *fSize = size;
-   SetHeadFields(name);          // Define the default name and type as "unknown"
    if (n > 0) Set(n);
-   *fMaxIndex = 0;
 }
 
 //______________________________________________________________________________
-TTable::TTable(const Text_t *name, Int_t n, Char_t *table,Int_t size) : TDataSet(name)
+TTable::TTable(const Text_t *name, Int_t n, Char_t *table,Int_t size) : TDataSet(name),
+        fSize(size),fTable(0),fMaxIndex(0)
 {
    // Create TTable object and initialize it with values of array.
 
-   fTable = 0;
-   fTableHeader = new table_head_st;
-   LinkHeader();
-   *fSize = size;
-   SetHeadFields(name);          // Define the default name and type as "unknown"
    Set(n, table);
 }
 
 //______________________________________________________________________________
 TTable::TTable(const Text_t *name, const Text_t *type, Int_t n, Char_t *array, Int_t size)
-         : TDataSet(name)
+         : TDataSet(name),fSize(size),fTable(0),fMaxIndex(0)
 {
    // Create TTable object and initialize it with values of array.
 
    fTable = array;
-   fTableHeader = new table_head_st;
-   LinkHeader();
-   *fSize = size;
-   SetHeadFields(name);
    SetType(type);
    SetfN(n);
 }
@@ -880,9 +891,9 @@ TTable::TTable(const Text_t *name, const Text_t *type, Int_t n, Char_t *array, I
 TTable::TTable(const TTable &table)
 {
    // Copy constructor.
-
-   fTable = 0;
-   *fTableHeader = *(table.fTableHeader);
+   fTable    = 0;
+   SetUsedRows(table.GetNRows());
+   fSize     = table.GetRowSize();
    Set(table.fN, table.fTable);
 }
 
@@ -909,7 +920,6 @@ TTable::~TTable()
 {
    // Delete TTable object.
    Delete();
-   SafeDelete(fTableHeader);
 }
 
 //______________________________________________________________________________
@@ -931,65 +941,34 @@ void TTable::AddAt(const void *row, Int_t i)
 
    if (!BoundsOk("TTable::AddAt", i))
       i = 0;
-   memcpy(fTable+i*(*fSize),row,*fSize);
-   *fMaxIndex = TMath::Max((Int_t)i+1,Int_t(*fMaxIndex));
+   memcpy(fTable+i*fSize,row,fSize);
+   SetUsedRows(TMath::Max((Int_t)i+1,Int_t(fMaxIndex)));
 }
-
-#if 0
-//_______________________________________________________________________
-void TTable::Append(TTable *donorTable, Int_t nRows, Int_t firstRows)
-{
- // (not tested yet )
- // TTable::Append copies the data from one table to this one
- //                  after the last used row of this table (append)
- //
- //  Int_t nRows     - the number of the "donor" rows to be appended
- //                    = 0  by defaul all "used" rows of the donor table
- //                         will be appened
- //  Int_t firstRows - the index of the first row of the donor table to
- //                    be copied into the this
- //
- // Note:  this TTable must be an "owner" the current table.
- // ----
-
-  if (!donorTable || !donorTable->GetNRows() ) return;
-  assert(!TestBit(kIsNotOwn));
-
-  // Check whether the new table has the same type
-  if (strcmp(GetTitle(),donorTable->GetTitle()) == 0 )
-  {
-    // Calculate the number of the rows to copy
-    if (!nRows) nRows = donorTable->GetNRows();
-    Int_t extraRows = firstRows+nRows - donorTable->GetNRows();
-    if (extraRows > 0) nRows -= extraRows;
-    // Calculate the size to reallocate
-    Int_t reallocate = GetNRows() + nRows - GetSize();
-    if ( reallocate > 0 ) ReAllocate(reallocate);
-    ::memcpy((*this)[GetNRows()],(*donorTable)[firstRows],GetRowSize()*nRows);
-  }
-  else
-     Error("Update",
-           "This table is <%s> but the host one has a wrong type <%s>",GetTitle()
-          ,donorTable->GetTitle());
-}
-#endif
 
 //______________________________________________________________________________
 void TTable::CopyStruct(Char_t *dest, const Char_t *src)
 {
-    ::memcpy(dest,src,*fSize*fN);
+ // Copy the C-structure src into the new location
+ // the length of the strucutre is defined by this class descriptor
+    ::memcpy(dest,src,fSize*fN);
 }
+
 //______________________________________________________________________________
 void TTable::CopySet(TTable &array)
 {
   array.Set(fN);
   CopyStruct(array.fTable,fTable);
- *(array.fTableHeader) = *fTableHeader;
 }
 
 //______________________________________________________________________________
 void *TTable::ReAllocate()
 {
+  // Reallocate this table leaving only (used rows)+1 allocated
+  // GetTableSize() = GetNRows() + 1
+  // returns a pointer to the first row of the reallocated table
+  // Note:
+  // The table is reallocated if it is an owner of the internal array
+
    ReAlloc(GetNRows()+1);
    return (void *)fTable;
 }
@@ -997,6 +976,12 @@ void *TTable::ReAllocate()
 //______________________________________________________________________________
 void *TTable::ReAllocate(Int_t newsize)
 {
+  // Reallocate this table leaving only <newsize> allocated
+  // GetTableSize() = newsize;
+  // returns a pointer to the first row of the reallocated table
+  // Note:
+  // The table is reallocated if it is an owner of the internal array
+
   if (newsize > fN) ReAlloc(newsize);
   return (void *)fTable;
 }
@@ -1004,19 +989,49 @@ void *TTable::ReAllocate(Int_t newsize)
 //______________________________________________________________________________
 void TTable::ReAlloc(Int_t newsize)
 {
-  if (!TestBit(kIsNotOwn) && fSize && newsize > 0) {
-    void *arr =  realloc(fTable,*fSize*newsize);
+  // The table is reallocated if it is an owner of the internal array
+  if (!TestBit(kIsNotOwn) && newsize > 0) {
+    void *arr = 0;
+    Int_t sleepCounter = 0;
+    while (!(arr =  realloc(fTable,fSize*newsize)))
+    {
+      sleepCounter++;
+      Warning("ReAlloc",
+              "Not enough memory to Reallocate %d bytes for table <%s::%s>. Please cancel some jobs",
+              newsize, GetType(),GetName());
+      gSystem->Sleep(1000*600);
+      if (sleepCounter > 30){
+        Error("ReAlloc","I can not wait anymore. Good bye");
+        assert(0);
+      }
+    }
     SetfN(newsize);
     fTable = (char *)arr;
   }
 }
+
 //______________________________________________________________________________
 Char_t *TTable::Create()
 {
-  if (fSize)
-       return (Char_t *)malloc(*fSize*fN);
-  return 0;
+  // Allocate a space for the new table
+  // Sleep for a while if space is not available and try again
+  void *ptr = 0;
+  Int_t sleepCounter = 0;
+  while (!(ptr = malloc(fSize*fN)))
+  {
+    sleepCounter++;
+    Warning("Create",
+              "Not enough memory to allocate %d rows for table <%s::%s>. Please cancel some jobs",
+              fN, GetType(),GetName());
+    gSystem->Sleep(1000*600);
+    if (sleepCounter > 30){
+      Error("Create","I can not wait anymore. Good bye");
+      assert(0);
+    }
+  }
+  return (Char_t *)ptr;
 }
+
 //______________________________________________________________________________
 void TTable::Browse(TBrowser *b){
   TDataSet::Browse(b);
@@ -1024,29 +1039,38 @@ void TTable::Browse(TBrowser *b){
   if (nrows == 0) nrows = 1;
   Print(0,nrows);
 }
+
 //______________________________________________________________________________
 void TTable::Clear(Option_t *opt)
 {
+  // Deletes the internal array of this class
+  // if this object does own its internal table
+
   if (!fTable) return;
   if (!opt || !opt[0]) {
     if (! TestBit(kIsNotOwn)) free(fTable);
-    fTable = 0; *fMaxIndex = 0; fN = 0;
-    return;}
+    fTable    = 0;
+    fMaxIndex = 0;
+    SetfN(0);
+    return;
+  }
 
-  if (opt[0]=='g' || opt[0]=='G') {// Clear garbage
-    if (TestBit(kIsNotOwn)) return;
-    if (fN == fMaxIndex[0])     return;
-    assert (fN>*fMaxIndex);
-    int mx = fMaxIndex[0]+1;
-    if (mx!=fN) fTable = (char*)realloc(fTable,mx*fSize[0]);
-    memset(fTable+(mx-1)*fSize[0],127,fSize[0]);
-
-    if (!fMaxIndex[0] && fN > 100)
-      Warning("Clear"," Table %s has purged from %d to zero ",GetName(),fN);
-
-    fN = mx;
-    return;}
+  //  The special case "free empty rows only"
+  if (opt[0]=='g' || opt[0]=='G')
+  { // Clear garbage
+    Int_t thisSize = GetTableSize();
+    Int_t thisRows = GetNRows();
+    Int_t sizeRow  = GetRowSize();
+    if (thisSize - thisRows > 1) {
+      ReAllocate();
+      memset(fTable+thisRows*sizeRow,127,sizeRow);
+      if (!thisRows && (thisSize  > 100))
+         Warning("Clear"," Table %s has purged from %d to zero "
+                ,GetName(),thisSize );
+    }
+  }
 }
+
 //______________________________________________________________________________
 void TTable::Delete(Option_t *opt)
 {
@@ -1057,48 +1081,73 @@ void TTable::Delete(Option_t *opt)
 //______________________________________________________________________________
 TClass  *TTable::GetRowClass() const
 {
+#if 1
+  TClass *cl = 0;
+  TTableDescriptor *dsc = GetRowDescriptors();
+  if (dsc) cl = dsc->RowClass();
+  else Error("GetRowClass()","Table descriptor of <%s::%s> table lost",
+             GetName(),GetType());
+  return cl;
+#else
  // Return TClass object defining the original STAF table
 
    TClass *tabClass = Class();
-   TClass *cl    = IsA();
-   TClass *clPrev = 0;
+   TClass *cl       = IsA();
+   TClass *clPrev   = 0;
+
    if (cl == tabClass) return 0;
-   TList *l = 0;
-   while (cl && cl != tabClass) {
-     l = cl->GetListOfBases();
-     clPrev = cl;
-     cl = 0;
-     TBaseClass *baseCl = 0;
-     if (  l &&
-           l->GetSize()==1 &&
-         ( baseCl = (TBaseClass *)l->First() ) &&
-           baseCl
-        )  cl = baseCl->GetClassPointer();
-     else assert (l->GetSize() == 1);
-   }
-   if (cl ) {
-     TString buffer = clPrev->GetName();
-     buffer.ReplaceAll("T","");
-     buffer += "_st";
-     cl = gROOT->GetClass(buffer.Data());
+
+   if ( IsA() == TTableDescriptor::Class())
+     cl = gROOT->GetClass("tableDescriptor_st");
+   else {
+     TList *l = 0;
+     while (cl && cl != tabClass) {
+       l = cl->GetListOfBases();
+       clPrev = cl;
+       cl = 0;
+       TBaseClass *baseCl = 0;
+       if (  l &&
+             l->GetSize()==1 &&
+           ( baseCl = (TBaseClass *)l->First() ) &&
+             baseCl
+          )  cl = baseCl->GetClassPointer();
+       else assert (l->GetSize() == 1);
+     }
+     if (cl ) {
+       TString buffer = clPrev->GetName();
+       buffer.ReplaceAll("St_","");
+       buffer += "_st";
+       cl = GetRowClass(buffer.Data());
+     }
    }
    return cl;
 }
+
+//______________________________________________________________________________
+TClass *TTable::GetRowClass(const Char_t *rowName)  const
+{
+  return gROOT->GetClass(rowName);
+#endif
+}
+
 //______________________________________________________________________________
 Long_t TTable::GetNRows() const {
 // Returns the number of the used rows for the wrapped table
-return *fMaxIndex;
+return fMaxIndex;
 }
+
 //______________________________________________________________________________
 Long_t TTable::GetRowSize() const {
 // Returns the size (in bytes) of one table row
-  return *fSize;
+  return fSize;
 }
+
 //______________________________________________________________________________
 Long_t TTable::GetTableSize() const {
 // Returns the number of the allocated rows
 return fN;
 }
+
 //______________________________________________________________________________
 void TTable::Fit(const Text_t *formula ,const Text_t *varexp, const Text_t *selection,Option_t *option ,Option_t *goption,Int_t nentries, Int_t firstentry)
 {
@@ -1140,26 +1189,10 @@ void TTable::Fit(const Text_t *formula ,const Text_t *varexp, const Text_t *sele
 }
 
 //______________________________________________________________________________
-void  *TTable::GetArray() const {
-//  return the void pointer to the C-structure
- return fTable; }
-//______________________________________________________________________________
-const Char_t *TTable::GetType() const {
+const Char_t *TTable::GetType() const
+{
 //Returns the type of the wrapped C-structure kept as the TNamed title
   return GetTitle();
-}
-
-//______________________________________________________________________________
-void TTable::LinkHeader()
-{
-  // Link some class data members with the STAF table header
-   if (fTableHeader)
-   {
-     fSize = &fTableHeader->rbytes;
-     fMaxIndex = &fTableHeader->nok;
-   }
-   else
-     Error("LinkHeader","wrong header !");
 }
 
 //______________________________________________________________________________
@@ -1170,22 +1203,23 @@ void TTable::ls(Option_t *option)
   IndentLevel();
   cout       <<Path()
              <<"\t --> Allocated rows: "<<fN
-             <<"\t Used rows: "<<*fMaxIndex
-             <<"\t Row size: "      << *fSize << " bytes"
+             <<"\t Used rows: "<<fMaxIndex
+             <<"\t Row size: "      << fSize << " bytes"
       <<endl;
   //  Print();
   DecreaseDirLevel();
 }
+
 //_____________________________________________________________________________
- void TTable::ls(Int_t deep)
+void TTable::ls(Int_t deep)
 {
    TDataSet::ls(deep);
    IncreaseDirLevel();
    IndentLevel();
    cout      <<Path()
              <<"\t --> Allocated rows: "<<fN
-             <<"\t Used rows: "<<*fMaxIndex
-             <<"\t Row size: " << *fSize << " bytes"
+             <<"\t Used rows: "<<fMaxIndex
+             <<"\t Row size: " << fSize << " bytes"
       <<endl;
    //   Print();
    DecreaseDirLevel();
@@ -1201,7 +1235,8 @@ extern "C" {int finite( double x );}
 #endif
 
 //______________________________________________________________________________
-Int_t TTable::NaN() {
+Int_t TTable::NaN()
+{
 //
 // return the total number of the NaN for float/double cells of this table
 // Thanks Victor Perevoztchikov
@@ -1222,23 +1257,25 @@ Int_t TTable::NaN() {
   int nrows = GetNRows  ();
   nerr =0;
   for (icol=0; icol < ncols; icol++) {// loop over cols
-    code = rowDes->GetColumnType(icol);
-    if (code!=kFloat && code!=kDouble) continue;
+     code = rowDes->GetColumnType(icol);
+     if (code!=kFloat && code!=kDouble) continue;
 
-    offset   = rowDes->GetOffset    (icol);
-    colsize  = rowDes->GetColumnSize(icol);
-    wordsize = rowDes->GetTypeSize  (icol);
-    nwords = colsize/wordsize;
-    for (irow=0; irow < nrows; irow++) { //loop over rows
-      cell = table + offset + irow*lrow;
-      for (iword=0;iword<nwords; iword++,cell+=wordsize) { //words in col
-        word = (code==kDouble) ? *(double*)cell : *(float*)cell;
-        if (::finite(word))     continue;
+     offset   = rowDes->GetOffset    (icol);
+     colsize  = rowDes->GetColumnSize(icol);
+     wordsize = rowDes->GetTypeSize  (icol);
+     nwords = colsize/wordsize;
+     for (irow=0; irow < nrows; irow++) { //loop over rows
+        cell = table + offset + irow*lrow;
+        for (iword=0;iword<nwords; iword++,cell+=wordsize) { //words in col
+           word = (code==kDouble) ? *(double*)cell : *(float*)cell;
+           if (::finite(word))     continue;
 //              ERROR FOUND
-        nerr++; colname = rowDes->GetColumnName(icol);
-        Warning("NaN"," Table %s.%s.%d\n",GetName(),colname,irow);
-  }  }  }
-return nerr;
+           nerr++; colname = rowDes->GetColumnName(icol);
+           Warning("NaN"," Table %s.%s.%d\n",GetName(),colname,irow);
+        }
+      }
+   }
+   return nerr;
 }
 
 //______________________________________________________________________________
@@ -1253,7 +1290,7 @@ TTable *TTable::New(const Char_t *name, const Char_t *type, void *array, UInt_t 
     TString t = TableType.Strip();
 //    t.ToLower();  // remove this
 
-    const Char_t *classprefix="T";
+    const Char_t *classprefix="St_";
     const Int_t extralen = strlen(classprefix) + 1;
     Char_t *classname = new Char_t[strlen(t.Data())+extralen];
     strcpy(classname,classprefix);
@@ -1271,12 +1308,6 @@ TTable *TTable::New(const Char_t *name, const Char_t *type, void *array, UInt_t 
     delete [] classname;
   }
   return table;
-}
-//______________________________________________________________________________
-void  TTable::Object(TTable *&table, const table_head_st *header )
-{
- // return a pointer to the C++ object by table header supplied;
-assert(header); table =  (TTable *)header->dsl_pointer;
 }
 
 //______________________________________________________________________________
@@ -1360,6 +1391,7 @@ Char_t *TTable::Print(Char_t *strbuf,Int_t lenbuf) const
 
   return strbuf;
 }
+
 //______________________________________________________________________________
 const Char_t *TTable::PrintHeader() const
 {
@@ -1367,8 +1399,8 @@ const Char_t *TTable::PrintHeader() const
      cout << endl << " ---------------------------------------------------------------------------------------" << endl
           <<  " " << Path()
                  <<"  Allocated rows: "<<fN
-                 <<"\t Used rows: "<<*fMaxIndex
-                 <<"\t Row size: "      << *fSize << " bytes"
+                 <<"\t Used rows: "<<fMaxIndex
+                 <<"\t Row size: "      << fSize << " bytes"
       <<endl;
      return 0;
 }
@@ -1521,7 +1553,7 @@ const Char_t *TTable::Print(Int_t row, Int_t rownumber, const Char_t *, const Ch
                         }
                         else
 //                           cout << membertype->AsString(p3pointer) << " :";
-                          ::AsString(p3pointer,membertype->GetTypeName(),width);
+                           AsString(p3pointer,membertype->GetTypeName(),width);
                            cout << " :";
                    }
                 } else if (!strcmp(member->GetFullTypeName(), "char*") ||
@@ -1546,7 +1578,7 @@ const Char_t *TTable::Print(Int_t row, Int_t rownumber, const Char_t *, const Ch
                     breakLoop = kTRUE;
                  }
                  else{
-                    ::AsString((void *)pointer,membertype->GetTypeName(),width);
+                    AsString((void *)pointer,membertype->GetTypeName(),width);
                     cout << " :";
 //                    cout << membertype->AsString((void *)pointer) <<" :";
                  }
@@ -1571,6 +1603,7 @@ const Char_t *TTable::Print(Int_t row, Int_t rownumber, const Char_t *, const Ch
   cout << "---------------------------------------------------------------------------------------" << endl;
   return 0;
  }
+
 //______________________________________________________________________________
 void TTable::Project(const Text_t *hname, const Text_t *varexp, const Text_t *selection, Option_t *option,Int_t nentries, Int_t firstentry)
 {
@@ -1602,6 +1635,7 @@ Int_t TTable::Purge(Option_t *opt)
   ReAllocate();
   return TDataSet::Purge(opt);
 }
+
 //______________________________________________________________________________
 void TTable::SavePrimitive(ofstream &out, Option_t *)
 {
@@ -1639,15 +1673,15 @@ void TTable::SavePrimitive(ofstream &out, Option_t *)
   out << "// "   << Path()
       << " Allocated rows: "<< rowNumber
       <<"  Used rows: "<<      rowNumber
-      <<"  Row size: " << *fSize << " bytes"                    << endl;
+      <<"  Row size: " << fSize << " bytes"                    << endl;
   out << "// "  << " Table: " << classPtr->GetName()<<"[0]--> "
       << classPtr->GetName()<<"["<<rowNumber-1 <<"]"            << endl;
   out << "// ====================================================================" << endl;
   out << "// ------  Test whether this table share library was loaded ------"      << endl;
-  out << "  if (!gROOT->GetClass(\"" << "T" << GetTitle() << "\")) return 0;"    << endl;
+  out << "  if (!gROOT->GetClass(\"" << "St_" << GetTitle() << "\")) return 0;"    << endl;
   out <<    classPtr->GetName() << " " << rowId << ";" << endl
-      <<  "T" <<  GetTitle() << " *" << tableId << " = new "
-      << "T" << GetTitle()
+      <<  "St_" <<  GetTitle() << " *" << tableId << " = new "
+      << "St_" << GetTitle()
       << "(\""<<GetName()<<"\"," << GetNRows() << ");" << endl
       << "//" <<endl ;
 
@@ -1735,7 +1769,7 @@ void TTable::SavePrimitive(ofstream &out, Option_t *)
 
     out << tableId << "->AddAt(&" << rowId << "," << rowCount <<");" << endl;
 
-    startRow  += *fSize;
+    startRow  += fSize;
 
   }//end of row loop
   out << "// ----------------- end of code ---------------" << endl
@@ -1779,40 +1813,6 @@ void TTable::Set(Int_t n)
    Reset();
 }
 //______________________________________________________________________________
-void TTable::SetHeadFields(const Text_t *name)
-{
-   if (name) SetName(name);      // Define "name" if supplied
-   else SetName("unknown");      // Define the default name
-   SetType("unknown");           // Define the default type
-   fTableHeader->dsl_pointer = (long)this;
-
-}
-
-//______________________________________________________________________________
-void TTable::SetName(const Char_t *name)
-{
-   SetTableName(name);
-   TDataSet::SetName(fTableHeader->name);
-}
-//______________________________________________________________________________
-void   TTable::SetTableName(const Char_t *name){
-// Fill staf table header with the table name information
- if (fTableHeader)
- {
-    fTableHeader->name[0] = '\0';
-    strncat(fTableHeader->name,name,sizeof(fTableHeader->name));
- }
-}
-//______________________________________________________________________________
-void   TTable::SetTableType(const Char_t *type){
-// Fill staf table header with the table type information
-   if (fTableHeader) {
-     fTableHeader->type[0] = '\0';
-     strncat(fTableHeader->type,type,sizeof(fTableHeader->type));
-   }
-}
-
-//______________________________________________________________________________
 void TTable::SetTablePointer(void *table)
 {
    if (fTable) free(fTable);
@@ -1822,15 +1822,16 @@ void TTable::SetTablePointer(void *table)
 //______________________________________________________________________________
 void TTable::SetType(const Text_t *const type)
 {
-   SetTableType(type);
-   TDataSet::SetTitle(fTableHeader->type);
+   SetTitle(type);
 }
+
 //______________________________________________________________________________
 int TTable::PointerToPointer(G__DataMemberInfo &m)
 {
    if (strstr(m.Type()->Name(), "**")) return 1;
    return 0;
 }
+
 //______________________________________________________________________________
 static Char_t *GetExpressionFileName()
 {
@@ -1913,52 +1914,13 @@ LETSTRY:
    delete [] fileName;
    return 0;
 }
-//______________________________________________________________________________
-void TTable::MakeHeader(const Char_t *prefix,const Char_t *tablename,
-                         const Char_t *suffix, FILE *fl)
-{
-  // *** under construction ***
-  // write out a sceleton of the class header file
-  Char_t *include = new Char_t [strlen(prefix)+strlen(tablename)+strlen(suffix)+5];
-  sprintf(include,"%s%s%s.h",prefix,tablename,suffix);
-  //*-*
-  //*-* Open file if that is not supplied via parameter
-  //
-   FILE *fp = (fl == 0 ? fopen(include, "w") : fl) ;
-   fprintf(fp, "#ifndef STAF_%s%fTable\n",prefix,tablename);
-   fprintf(fp, "#define STAF_%s%fTable\n",prefix,tablename);
-   fprintf(fp, "\n");
-   fprintf(fp, "#include \"TTable.h\"\n");
-   fprintf(fp, "\n");
-   fprintf(fp, "#include \"%s.h\"\n",tablename);
-   fprintf(fp, "\n");
-   fprintf(fp, "class T%s : public TTable\n",tablename);
-   fprintf(fp, "{\n");
-   fprintf(fp, "public:\n");
-   fprintf(fp, "  %s%s() : TTable(\"%s\",sizeof(%fst)) {SetType(\"%s\");}\n"
-          ,prefix,tablename,tablename,tablename,tablename);
-   fprintf(fp, "  %s%s(Text_t *name) : TTable(name,sizeof(%fst)) {SetType(\"%s\");}\n"
-          ,prefix,tablename,tablename,tablename);
-   fprintf(fp, "  %s%s(Int_t n): TTable(\"%s\",n,sizeof(%fst)) {SetType(\"%s\");}\n"
-          ,prefix,tablename,tablename,tablename,tablename);
-   fprintf(fp, "  %s%s(Text_t *name,Int_t n): TTable(name,n,sizeof(%fst)) {SetType(\"%s\");}\n"
-          ,prefix,tablename,tablename,tablename);
-   fprintf(fp, "  %fst *GetTable(){ return (%fst *)fTable;}\n"
-          ,tablename,tablename);
-   fprintf(fp, "\n");
-   fprintf(fp, "  ClassDef(%s%s,0) // class particle STAF tables\n"
-          ,prefix,tablename);
-   fprintf(fp, "};\n");
-   fprintf(fp, "\n");
-   fprintf(fp, "#endif  \n");
-  fclose(fp);
-  delete [] include;
-}
 
 //______________________________________________________________________________
 void TTable::Reset(Int_t c)
 {
-  if (fTable) ::memset(fTable,c,*fSize*fN);
+  // Fill the entire table with byte "c" ;
+  ///     c=0 "be default"
+  if (fTable) ::memset(fTable,c,fSize*fN);
 }
 
 //______________________________________________________________________________
@@ -1975,53 +1937,58 @@ void TTable::Set(Int_t n, Char_t *array)
    if (fN == 0) return;
    if (!fTable) fTable = Create();
    CopyStruct(fTable,array);
-   *fMaxIndex = n;
+   fMaxIndex = n;
 }
 
 //_______________________________________________________________________
-void TTable::StreamerTable(TBuffer &b)
+void TTable::StreamerTable(TBuffer &b,Version_t version)
 {
-   // Stream a TTable object.
    // Stream an object of class TTable.
-
-
    if (b.IsReading()) {
      TDataSet::Streamer(b);
      b >> fN;
-     StreamerHeader(b);
-     LinkHeader();
-    //   Create a table to fit nok rows
-     Set(*fMaxIndex);
-     //     printf(" Read:fSize = %i fN = %i \n", *fSize, fN);
+     StreamerHeader(b,version);
+     //   Create a table to fit nok rows
+     Set(fMaxIndex);
    } else {
       TDataSet::Streamer(b);
       b << fN;
-      StreamerHeader(b);
-      //      printf(" Write: fSize = %i  fN = %i head size =  %i \n", *fSize, fN, sizeof(table_head_st));
+      StreamerHeader(b,version);
    }
 }
 
 //_______________________________________________________________________
-void TTable::StreamerHeader(TBuffer &b)
+void TTable::StreamerHeader(TBuffer &b, Version_t version)
 {
+  // Read "table parameters first"
   if (b.IsReading())
   {
-   b.ReadStaticArray(fTableHeader->name);         /* table name */
-   b.ReadStaticArray(fTableHeader->type);         /* table type */
-   b >> fTableHeader->maxlen;       /* # rows allocated */
-   b >> fTableHeader->nok;          /* # rows filled */
-   b >> fTableHeader->rbytes;       /* number of bytes per row */
-   b >> fTableHeader->dsl_pointer;  /* swizzled (DS_DATASET_T*) */
-   b >> fTableHeader->data_pointer; /* swizzled (char*) */
+   long rbytes;
+   if (version < 3) {
+     // skip obsolete  STAR fields (for the sake of the backward compatibility)
+     //   char name[20];   /* table name */
+     //   char type[20];   /* table type */
+     //   long maxlen;     /* # rows allocated */
+     long len = b.Length() + (20+4) + (20+4) + 4;
+     b.SetBufferOffset(len);
+   }
+   b >> fMaxIndex;       // fTableHeader->nok;          /* # rows filled */
+   b >> rbytes;          /* number of bytes per row */
+   if (rbytes - GetRowSize()) {
+      Warning("StreamerHeader","Wrong row size: must be %d, read %d bytes\n",GetRowSize(),rbytes);
+   }
+
+   if (version < 3) {
+     // skip obsolete  STAR fields (for the sake of the backward compatibility)
+     //    long dsl_pointer;  /* swizzled (DS_DATASET_T*) */
+     //    long data_pointer; /* swizzled (char*) */
+     long len = b.Length() + (4) + (4);
+     b.SetBufferOffset(len);
+   }
   }
   else {
-   b.WriteArray(fTableHeader->name,sizeof(fTableHeader->name));    /* table name */
-   b.WriteArray(fTableHeader->type,sizeof(fTableHeader->type));    /* table type */
-   b << fTableHeader->maxlen;       /* # rows allocated */
-   b << fTableHeader->nok;          /* # rows filled */
-   b << fTableHeader->rbytes;       /* number of bytes per row */
-   b << fTableHeader->dsl_pointer;  /* swizzled (DS_DATASET_T*) */
-   b << fTableHeader->data_pointer; /* swizzled (char*) */
+    b << fMaxIndex;              //fTableHeader->nok;          /* # rows filled */
+    b << fSize;                  //  fTableHeader->rbytes;     /* number of bytes per row */
   }
 }
 
@@ -2029,11 +1996,6 @@ void TTable::StreamerHeader(TBuffer &b)
 Int_t TTable::SetfN(Long_t len)
 {
    fN = len;
-   if (fTableHeader)
-   {
-//     fTableHeader->nok = fN;
-     fTableHeader->maxlen = fN;
-   }
    return fN;
 }
 
@@ -2043,49 +2005,102 @@ Int_t TTable::SetfN(Long_t len)
 #undef StreamElelement
 #endif
 
-#define StreamElementIn(type)  case TTableElementDescriptor::_NAME2_(k,type):            \
- if (nextCol->fDimensions)                                   \
-   R__b.ReadStaticArray((_NAME2_(type,_t) *)(row+nextCol->fOffset));                      \
- else                                                        \
-   R__b >> *(_NAME2_(type,_t) *)(row+nextCol->fOffset);      \
+#define StreamElementIn(type)  case TTableDescriptor::_NAME2_(k,type):   \
+ if (evolutionOn) {                                  \
+     if (nextCol->fDimensions)  {                    \
+       if (nextCol->fOffset != UInt_t(-1))           \
+           R__b.ReadStaticArray((_NAME2_(type,_t) *)(row+nextCol->fOffset));     \
+       else {                                        \
+           _NAME2_(type,_t) *readPtrV = 0;           \
+           R__b.ReadArray(readPtrV);                 \
+           delete [] readPtrV;                       \
+           readPtrV = 0;                             \
+       }                                             \
+     }                                               \
+     else  {                                         \
+       _NAME2_(type,_t) skipBuffer;                  \
+       _NAME2_(type,_t) *readPtr =  (_NAME2_(type,_t) *)(row+nextCol->fOffset);  \
+       if (nextCol->fOffset == UInt_t(-1)) readPtr = &skipBuffer;                \
+       R__b >> *readPtr;                             \
+     }                                               \
+ } else {                                            \
+   if (nextCol->fDimensions)                         \
+     R__b.ReadStaticArray((_NAME2_(type,_t) *)(row+nextCol->fOffset));           \
+   else                                                         \
+     R__b >> *(_NAME2_(type,_t) *)(row+nextCol->fOffset);       \
+ }                                                              \
  break
 
-#define StreamElementOut(type) case TTableElementDescriptor::_NAME2_(k,type):            \
- if (nextCol->fDimensions)                                   \
+#define StreamElementOut(type) case TTableDescriptor::_NAME2_(k,type):    \
+ if (nextCol->fDimensions)                                    \
     R__b.WriteArray((_NAME2_(type,_t) *)(row+nextCol->fOffset), nextCol->fSize/sizeof(_NAME2_(type,_t))); \
- else                                                        \
-    R__b << *(_NAME2_(type,_t) *)(row+nextCol->fOffset);     \
+ else                                                         \
+    R__b << *(_NAME2_(type,_t) *)(row+nextCol->fOffset);      \
  break
 
 //______________________________________________________________________________
 TTableDescriptor  *TTable::GetRowDescriptors() const
 {
-  TTableDescriptor *dsc = GetDescriptorPointer();
+  TTableDescriptor *dsc = 0;
+  if (IsA()) dsc = GetDescriptorPointer();
   if (!dsc) {
-    dsc = GeTTableDescriptors();
+    Error("GetRowDescriptors()","%s has no dictionary !",GetName());
+    dsc = GetTableDescriptors();
     SetDescriptorPointer(dsc);
   }
   return dsc;
 }
 //______________________________________________________________________________
-TTableDescriptor *TTable::GetDescriptorPointer() const { assert(0); return 0;}
+TTableDescriptor *TTable::GetDescriptorPointer() const
+{
+   assert(0);
+   return 0;
+}
+
 //______________________________________________________________________________
-void TTable::SetDescriptorPointer(TTableDescriptor *) const { assert(0); }
+void TTable::SetDescriptorPointer(TTableDescriptor *) const
+{
+   assert(0);
+}
 
 //______________________________________________________________________________
 void TTable::Streamer(TBuffer &R__b)
 {
    // Stream an array of the "plain" C-structures
-
+   TTableDescriptor *ioDescriptor = GetRowDescriptors();
+   TTableDescriptor *currentDescriptor = ioDescriptor;
+   Version_t R__v = 0;
    if (R__b.IsReading()) {
-      Version_t R__v = R__b.ReadVersion(); if (R__v) { }
-      TTable::StreamerTable(R__b);
-      if (*fMaxIndex <= 0) return;
+      R__v = R__b.ReadVersion();
+      Bool_t evolutionOn = kFALSE;
+      if (R__v>=2) {
+         if (IsA() != TTableDescriptor::Class()) {
+            ioDescriptor =  new TTableDescriptor();
+            ioDescriptor->Streamer(R__b);
+            // compare two descriptors
+            if (ioDescriptor->UpdateOffsets(currentDescriptor)) {
+              // Remember the real descriptor
+              TString dType = "Broken:";
+              dType += GetType();
+              ioDescriptor->SetName(dType.Data());
+              Add(ioDescriptor);
+              evolutionOn = kTRUE;
+            }
+            else {
+              delete ioDescriptor;
+              ioDescriptor = currentDescriptor;
+            }
+         }
+      }
+      TTable::StreamerTable(R__b,R__v);
+      if (fMaxIndex <= 0) return;
       char *row= fTable;
-      for (Int_t indx=0;indx<*fMaxIndex;indx++) {
-        tableDescriptor_st *nextCol = GetRowDescriptors()->GetTable();
-        Int_t maxColumns = GetNumberOfColumns();
-        for (Int_t colCounter=0; colCounter < maxColumns; colCounter++)
+      Int_t maxColumns = ioDescriptor->NumberOfColumns();
+      Int_t rowSize = GetRowSize();
+      if (evolutionOn) Reset(0); // Clean table
+      for (Int_t indx=0;indx<fMaxIndex;indx++,row += rowSize) {
+        tableDescriptor_st *nextCol = ioDescriptor->GetTable();
+        for (Int_t colCounter=0; colCounter < maxColumns; colCounter++,nextCol++)
         {
           // Stream one table row supplied
           switch(nextCol->fType) {
@@ -2101,19 +2116,20 @@ void TTable::Streamer(TBuffer &R__b)
           default:
             break;
         };
-        nextCol++;
       }
-      row += GetRowSize();
      }
    } else {
-//      R__b.WriteVersion(Tev0_track2::IsA());
+      R__b.WriteVersion(TTable::IsA());
+     //      if (Class_Version()==2)
+      if (IsA() != TTableDescriptor::Class()) ioDescriptor->Streamer(R__b);
       TTable::StreamerTable(R__b);
-      if (*fMaxIndex <= 0) return;
+      if (fMaxIndex <= 0) return;
       char *row= fTable;
-      for (Int_t indx=0;indx<*fMaxIndex;indx++) {
-        tableDescriptor_st *nextCol = GetRowDescriptors()->GetTable();
-        Int_t maxColumns = GetNumberOfColumns();
-        for (Int_t colCounter=0; colCounter < maxColumns; colCounter++)
+      Int_t maxColumns = ioDescriptor->NumberOfColumns();
+      Int_t rowSize = GetRowSize();
+      for (Int_t indx=0;indx<fMaxIndex;indx++,row += rowSize) {
+        tableDescriptor_st *nextCol = ioDescriptor->GetTable();
+        for (Int_t colCounter=0; colCounter < maxColumns; colCounter++,nextCol++)
         {
           // Stream one table row supplied
           switch(nextCol->fType) {
@@ -2129,9 +2145,7 @@ void TTable::Streamer(TBuffer &R__b)
           default:
             break;
         };
-        nextCol++;
       }
-      row += GetRowSize();
      }
    }
 }
@@ -2141,7 +2155,10 @@ void TTable::Streamer(TBuffer &R__b)
 #endif
 
 //_______________________________________________________________________
-void TTable::Update(){;}
+void TTable::Update()
+{
+}
+
 //_______________________________________________________________________
 void TTable::Update(TDataSet *set, UInt_t opt)
 {
@@ -2154,7 +2171,6 @@ void TTable::Update(TDataSet *set, UInt_t opt)
     {
       TTable *table =  (TTable *)set;
       Adopt(table->GetSize(),table->GetArray());
-     *fTableHeader   = *(table->GetHeader());
       // mark that object lost the STAF table and can not delete it anymore
       table->SetBit(kIsNotOwn);
       // mark we took over of this STAF table
@@ -2168,263 +2184,21 @@ void TTable::Update(TDataSet *set, UInt_t opt)
 }
 
  //  ----   Table descriptor service   ------
-const Char_t *TTable::GetColumnName(Int_t columnIndex) const {return GetRowDescriptors()->GetColumnName(columnIndex); }
-UInt_t      *TTable::GetIndexArray(Int_t columnIndex)  const {return GetRowDescriptors()->GetIndexArray(columnIndex); }
-UInt_t       TTable::GetNumberOfColumns()              const {return GetRowDescriptors()->GetNumberOfColumns();       }
+const Char_t *TTable::GetColumnName(Int_t columnIndex) const {return GetRowDescriptors()->ColumnName(columnIndex); }
+UInt_t       *TTable::GetIndexArray(Int_t columnIndex) const {return GetRowDescriptors()->IndexArray(columnIndex); }
+UInt_t       TTable::GetNumberOfColumns()              const {return GetRowDescriptors()->NumberOfColumns();       }
 
-UInt_t       TTable::GetOffset(Int_t columnIndex)      const {return GetRowDescriptors()->GetOffset(columnIndex); }
-Int_t        TTable::GetOffset(const Char_t *columnName) const {return GetRowDescriptors()->GetOffset(columnName); }
+UInt_t       TTable::GetOffset(Int_t columnIndex)      const {return GetRowDescriptors()->Offset(columnIndex); }
+Int_t        TTable::GetOffset(const Char_t *columnName) const {return GetRowDescriptors()->Offset(columnName); }
 
-UInt_t       TTable::GetColumnSize(Int_t columnIndex)  const {return GetRowDescriptors()->GetColumnSize(columnIndex); }
-Int_t        TTable::GetColumnSize(const Char_t *columnName) const {return GetRowDescriptors()->GetColumnSize(columnName); }
+UInt_t       TTable::GetColumnSize(Int_t columnIndex)  const {return GetRowDescriptors()->ColumnSize(columnIndex); }
+Int_t        TTable::GetColumnSize(const Char_t *columnName) const {return GetRowDescriptors()->ColumnSize(columnName); }
 
-UInt_t       TTable::GetTypeSize(Int_t columnIndex)    const {return GetRowDescriptors()->GetTypeSize(columnIndex); }
-Int_t        TTable::GetTypeSize(const Char_t *columnName) const {return GetRowDescriptors()->GetTypeSize(columnName); }
+UInt_t       TTable::GetTypeSize(Int_t columnIndex)    const {return GetRowDescriptors()->TypeSize(columnIndex); }
+Int_t        TTable::GetTypeSize(const Char_t *columnName) const {return GetRowDescriptors()->TypeSize(columnName); }
 
-UInt_t       TTable::GetDimensions(Int_t columnIndex)  const {return GetRowDescriptors()->GetDimensions(columnIndex); }
-Int_t        TTable::GetDimensions(const Char_t *columnName) const {return GetRowDescriptors()->GetDimensions(columnName); }
+UInt_t       TTable::GetDimensions(Int_t columnIndex)  const {return GetRowDescriptors()->Dimensions(columnIndex); }
+Int_t        TTable::GetDimensions(const Char_t *columnName) const {return GetRowDescriptors()->Dimensions(columnName); }
 
-TTable::EColumnType  TTable::GetColumnType(Int_t columnIndex)  const {return GetRowDescriptors()->GetColumnType(columnIndex); }
-TTable::EColumnType  TTable::GetColumnType(const Char_t *columnName) const {return GetRowDescriptors()->GetColumnType(columnName); }
-
-
-// $Log: TTable.cxx,v $
-// Revision 1.92  2000/01/21 02:09:52  fine
-// several parameters were converted to be const
-//
-// Revision 1.91  2000/01/12 01:24:50  fine
-// several methods to use TTable class from the <converted> C program to C++
-//
-// Revision 1.90  1999/11/30 23:54:04  fine
-// Remove ToLower for Table types
-//
-// Revision 1.89  1999/11/10 00:23:55  fine
-// adjusted to ne ROOT 2.23
-//
-// Revision 1.88  1999/10/28 16:24:34  fine
-// TDataSet major correction: it may be built with TList (default) or with TObjArray
-//
-// Revision 1.87  1999/10/28 00:32:54  fine
-// method At() has been removed
-//
-// Revision 1.86  1999/10/22 22:53:17  fine
-// TGaxis include added
-//
-// Revision 1.85  1999/10/17 23:19:41  fine
-// The draft os TTable::Append has been added
-//
-// Revision 1.84  1999/10/12 16:20:41  fine
-// Advanced version of TTable::GetRowClass() method
-//
-// Revision 1.83  1999/10/04 14:39:07  fine
-// the fixed header size 20 was replaced with sizeof() operator
-//
-// Revision 1.82  1999/09/13 13:13:21  fine
-// One blank has been deleted to Draw method comment in place
-//
-// Revision 1.81  1999/09/08 00:18:08  fisyak
-// Add implementation for copy ctor of StObjArray
-//
-// Revision 1.80  1999/09/07 19:30:29  fine
-// table descriptor access has been changed. All tables are affected and must be re-compiled
-//
-// Revision 1.79  1999/09/04 00:28:02  fine
-// TTable::NaN from VP and gloabl dataset have been introduced
-//
-// Revision 1.78  1999/09/01 22:32:54  fine
-// TTable::Fit fixed Rene\'s bug
-//
-// Revision 1.77  1999/08/30 23:15:08  fine
-// TTable::Fit method has been introduced
-//
-// Revision 1.76  1999/08/30 00:54:54  fine
-// Working version of TTable::Draw NO crash on either system
-//
-// Revision 1.75  1999/08/29 02:01:33  fine
-// TTable::Draw clean up, G__Calc is activated since it works well but too slow
-//
-// Revision 1.74  1999/08/28 01:23:12  fine
-// TTable::Draw work well under. With no bytecode works under Linux as well
-//
-// Revision 1.73  1999/08/26 04:35:46  fine
-// TTable::Draw() works somehow for Sun but still fail for Linux
-//
-// Revision 1.72  1999/08/25 02:45:47  fine
-// StTable::Draw works under Sun and crashes under Linux
-//
-// Revision 1.71  1999/08/21 00:40:54  fine
-// GetExpressionFileName function has been introduced
-//
-// Revision 1.70  1999/08/20 13:22:24  fine
-// new method TTable::Draw
-//
-// Revision 1.69  1999/08/13 23:27:56  fisyak
-// remove endif
-//
-// Revision 1.68  1999/08/13 21:38:48  fine
-// if endif fixed
-//
-// Revision 1.67  1999/08/13 17:42:34  fine
-// Comments clean up
-//
-// Revision 1.66  1999/08/12 18:53:48  fine
-// clash between TTableDescriptor::GetSize and TTable::GetSize resolved
-//
-// Revision 1.65  1999/08/12 16:41:30  fine
-// Clean up
-//
-// Revision 1.64  1999/08/12 16:39:48  fine
-// clash between TTable::GetSize and TArray::GEtSize has been resolved
-//
-// Revision 1.63  1999/08/11 14:44:38  fine
-// name clash with ROOT over enum resolved
-//
-// Revision 1.62  1999/08/11 00:42:33  fine
-// new I/O via TbaseDescriptor table has been implemented
-//
-// Revision 1.61  1999/08/02 00:53:14  fine
-// TTable::New - protection against of zero pointers was removed by VP demand
-//
-// Revision 1.60  1999/07/07 16:44:40  fine
-// Some print statements clean ups
-//
-// Revision 1.59  1999/07/02 21:00:31  fine
-// Browse method prints empty table now
-//
-// Revision 1.58  1999/07/01 01:45:31  fisyak
-// GetRowDescritors => GetRowDescriptors
-//
-// Revision 1.57  1999/06/27 00:46:56  fine
-// Obsolete comment deleted
-//
-// Revision 1.56  1999/06/26 01:40:56  fisyak
-// Add Valery's abstract buffer
-//
-// Revision 1.55  1999/06/25 17:29:14  fine
-// Some bugs with a new Streamer fixed
-//
-// Revision 1.54  1999/06/25 01:35:53  fine
-// New streamers for TTables
-//
-// Revision 1.53  1999/05/06 02:17:37  perev
-// Supress warnings in Table if <100 rows
-//
-// Revision 1.52  1999/04/02 15:48:19  fine
-// Minor casting problem for VC++ has been solved
-//
-// Revision 1.51  1999/04/01 20:17:20  fine
-//  TTable::Browse uses GetNRows rows at most now
-//
-// Revision 1.50  1999/03/30 23:24:50  fine
-//  Some comments fixed
-//
-// Revision 1.49  1999/03/11 00:34:45  perev
-// Tbase in new maker schema
-//
-// Revision 1.48  1999/03/04 01:26:03  fine
-// minor change in the comments
-//
-// Revision 1.47  1999/02/28 20:21:43  fine
-// operator = reallocates the target table to fit used rows only, not allocated as before
-//
-// Revision 1.46  1999/02/24 17:10:57  fine
-//  TTable  New and Purge method have been introdiced, some clean up for Tmodule as well
-//
-// Revision 1.45  1999/02/22 23:54:37  fine
-// TTable::New() - method has been prepared but not activated yet
-//
-// Revision 1.44  1999/02/17 22:38:23  fisyak
-// Victor fix for short print out
-//
-// Revision 1.43  1999/02/17 16:09:41  fisyak
-// Fix Adopt
-//
-// Revision 1.42  1999/02/15 14:20:33  fisyak
-// remove staf stuff
-//
-// Revision 1.41  1999/02/04 15:38:45  fine
-//  TTable::SavePrimitive - some extra protections have been introduced. Thanks Victor Perevoztchikov
-//
-// Revision 1.40  1999/02/03 23:19:15  fine
-// TTable:: protection for SavePrimitive has been introduced
-//
-// Revision 1.39  1999/01/31 02:03:08  fine
-// TDataSetIter::Notify - new method + clean up
-//
-// Revision 1.38  1999/01/30 18:29:29  fine
-// Clean up
-//
-// Revision 1.37  1999/01/30 04:24:22  fine
-// TTable: Print memory leak fixed
-//
-// Revision 1.36  1999/01/29 19:20:55  fine
-// TTable::SavePrimitive The protection against of undefined table has been introduced
-//
-// Revision 1.35  1999/01/27 15:30:36  fine
-// ArrayIndex is renamed to ArrayLayout to reflect its function
-//
-// Revision 1.34  1998/12/30 22:30:18  fine
-// TTable::PrintHrader method has been introduced
-//
-// Revision 1.33  1998/12/21 19:45:47  fisyak
-// Move ROOT includes to non system
-//
-// Revision 1.32  1998/12/17 16:57:56  fine
-// TTable: some extra protections have been established (safe "strncat" have replaced the  unsafe  "strncpy")
-//
-// Revision 1.31  1998/12/17 14:36:51  fisyak
-// fix Print for empty tablea, fix copy ctor
-//
-// Revision 1.30  1998/12/09 20:55:28  fine
-// TTable::Print() method bug has been fixed, some cosmetic improvements
-//
-// Revision 1.29  1998/12/07 20:23:11  fine
-// TTable:: working versions of the Print() and SavePrimitive methods
-//
-// Revision 1.28  1998/12/07 03:57:42  fine
-// TTable::SavePrimitive () method has been introduced
-//
-// Revision 1.27  1998/12/06 00:38:16  fisyak
-// Add SavePrimitive
-//
-// Revision 1.25  1998/12/04 01:54:44  fine
-// TTable::Print(...) - The first version of the table browser has been introduced
-//
-// Revision 1.24  1998/10/31 00:20:14  fisyak
-// Add ds2ReallocTable
-//
-// Revision 1.23  1998/10/14 22:40:48  fine
-// TTable::ReAllocate method and "plain" C interface to that has been introduced
-//
-// Revision 1.20  1998/10/04 02:20:12  fine
-// TTable.h Some clashes with TNamed and TObject have been fixed (affected Delete() method)
-//
-// Revision 1.19  1998/09/28 01:47:48  fisyak
-// Use system includes for ROOT
-//
-// Revision 1.18  1998/09/23 20:22:24  fisyak
-// Set kIsNotOwn=23
-//
-// Revision 1.16  1998/09/21 15:43:02  fine
-// TTable::Update bug has been fixed
-//
-// Revision 1.15  1998/09/16 22:08:52  fine
-// TDataSetIter - big in dtor has been fixed
-// TTable, TDataSet - ls method has been improved
-//
-// Revision 1.14  1998/09/15 20:55:33  fisyak
-// Split TDataSet -> TDataSet + TDataSetIter
-//
-// Revision 1.11  1998/09/07 19:23:39  fine
-// TTable::Print() - malloc/free have been replaced with new [] / delete []  due a problem under Linux
-// TDataSet::~TDataSet has been changed to take in account the "structural" links. Some opt have been done too
-//
-// Revision 1.10  1998/08/18 14:05:07  fisyak
-// Add to bfc dst
-//
-// Revision 1.9  1998/07/23 22:12:00  fisyak
-// Recover after Correction for root 2.09
-//
-// Revision 1.8  1998/07/23 21:09:14  fisyak
-// Adjust for ROOT 2.09
-
+TTable::EColumnType  TTable::GetColumnType(Int_t columnIndex)  const {return GetRowDescriptors()->ColumnType(columnIndex); }
+TTable::EColumnType  TTable::GetColumnType(const Char_t *columnName) const {return GetRowDescriptors()->ColumnType(columnName); }

@@ -1,5 +1,5 @@
-/*CMZ :  2.23/10 10/12/99  18.00.00  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   10/12/99*/
+/*CMZ :  2.24/05 16/05/2000  12.03.46  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   16/05/2000*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -985,6 +985,9 @@ int memfunc_flag;
   result3.tagnum = -1;
   result3.typenum = -1;
   result3.ref = 0;
+#ifndef G__OLDIMPLEMENTATION1259
+  result3.isconst = 0;
+#endif
   result3.obj.reftype.reftype = G__PARANORMAL;
 
   *known3 = 1;
@@ -1292,6 +1295,9 @@ int memfunc_flag;
 	  switch(memfunc_flag) {
 	  case G__CALLCONSTRUCTOR:
 	  case G__TRYCONSTRUCTOR:
+#ifndef G__OLDIMPLEMENTATINO1250
+	  case G__TRYIMPLICITCONSTRUCTOR:
+#endif
 	    /* constructor for base class and class members default
 	     * constructor only */
 #ifdef G__VIRTUALBASE
@@ -1372,7 +1378,13 @@ int memfunc_flag;
 	G__store_struct_offset = store_struct_offset;
 	G__tagnum = store_tagnum;
 	if(fpara.paran && 'u'==fpara.para[0].type&&
-	   G__TRYCONSTRUCTOR==memfunc_flag) {
+#ifndef G__OLDIMPLEMENTATINO1250
+	   (G__TRYCONSTRUCTOR==memfunc_flag||
+	    G__TRYIMPLICITCONSTRUCTOR==memfunc_flag)
+#else
+	   G__TRYCONSTRUCTOR==memfunc_flag
+#endif
+	   ) {
 	  /* in case of copy constructor not found */
 	  return(fpara.para[0]);
 	}
@@ -1903,6 +1915,7 @@ int hash;
   }
 #endif
 
+#ifdef G__OLDIMPLEMENTATION1276
   if(((hash==466)&&(strcmp(funcname,"ASSERT")==0))||
      ((hash==658)&&(strcmp(funcname,"assert")==0))||
      ((hash==626)&&(strcmp(funcname,"Assert")==0))) {
@@ -1923,6 +1936,7 @@ int hash;
     }
     return(1);
   }
+#endif
 
 #ifdef G__NEVER_BUT_KEEP
   if(hash==868&&strcmp(funcname,"va_start")==0) {
@@ -2638,6 +2652,15 @@ int hash;
     return(1);
   }
 
+#ifndef G__OLDIMPLEMENTATION1273
+  if(1882==hash&&strcmp(funcname,"G__set_smartunload")==0) {
+    if(G__no_exec_compile) return(1);
+    *result7=G__null;
+    G__set_smartunload((int)G__int(libp->para[0]));
+    return(1);
+  }
+#endif
+
 #ifndef G__OLDIMPLEMENTATION832
   if(1655==hash&&strcmp(funcname,"G__charformatter")==0) {
     if(G__no_exec_compile) {
@@ -2803,6 +2826,29 @@ int hash;
     }
     return(1);
   }
+
+#ifndef G__OLDIMPLEMENTATION1276
+  if(((hash==466)&&(strcmp(funcname,"ASSERT")==0))||
+     ((hash==658)&&(strcmp(funcname,"assert")==0))||
+     ((hash==626)&&(strcmp(funcname,"Assert")==0))) {
+    if(G__no_exec_compile) return(1);
+    if(!G__int(libp->para[0])) {
+#ifndef G__FONS31
+      fprintf(G__serr ,"Assertion (%s) error: " ,libp->parameter[0]);
+      G__genericerror((char*)NULL);
+#else
+      fprintf(G__serr ,"Assertion (%s) error: FILE:%s LINE:%d\n"
+	      ,libp->parameter[0] ,G__ifile.name,G__ifile.line_number);
+#endif
+      G__letint(result7,'i',-1);
+      G__pause();
+    }
+    else {
+      G__letint(result7,'i',0);
+    }
+    return(1);
+  }
+#endif
 
   if(803==hash&&strcmp(funcname,"G__pause")==0) {
     if(G__no_exec_compile) return(1);

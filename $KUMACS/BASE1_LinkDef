@@ -1,3 +1,6 @@
+*CMZ :  2.24/05 07/05/2000  16.43.50  by  Fons Rademakers
+*CMZ :  2.24/02 05/04/2000  18.00.57  by  Fons Rademakers
+*CMZ :  2.24/01 17/03/2000  13.18.29  by  Valery Fine(fine@bnl.gov)
 *CMZ :  2.23/12 22/01/2000  18.42.48  by  Rene Brun
 *CMZ :  2.23/10 14/12/99  19.41.46  by  Fons Rademakers
 *CMZ :  2.23/09 15/11/99  11.02.20  by  Fons Rademakers
@@ -22,6 +25,7 @@
 #pragma link C++ global kFatal;
 
 #pragma link C++ enum EObjBits;
+#pragma link C++ enum EEnvLevel;
 
 #pragma link C++ global gROOT;
 #pragma link C++ global gEnv;
@@ -36,8 +40,6 @@
 #pragma link C++ global gVirtualGL;
 #pragma link C++ global gVirtualX;
 #pragma link C++ global gVirtualPS;
-
-#pragma link C++ function Pad;
 
 #pragma link C++ function Strip;
 #pragma link C++ function StrDup;
@@ -83,12 +85,14 @@
 #pragma link C++ class TContextMenu;
 #pragma link C++ class TContextMenuImp;
 #pragma link C++ class TControlBarImp;
+#pragma link C++ class TInspectorImp;
 #pragma link C++ class TDatime-;
 #pragma link C++ class TDirectory-;
 #pragma link C++ class TEnv;
 #pragma link C++ class TFile-;
 #pragma link C++ class TFileHandler;
 #pragma link C++ class TGuiFactory;
+#pragma link C++ class TPadView3D;
 #pragma link C++ class TStyle+;
 #pragma link C++ class TView;
 #pragma link C++ class TVirtualX;

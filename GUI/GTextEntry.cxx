@@ -1,3 +1,4 @@
+//*CMZ :  2.24/03 28/04/2000  16.58.33  by  Fons Rademakers
 //*CMZ :  2.23/07 21/10/99  18.30.15  by  Fons Rademakers
 //*CMZ :  2.23/04 06/10/99  11.11.14  by  Fons Rademakers
 //*CMZ :  2.23/02 02/09/99  18.05.22  by  Rene Brun
@@ -6,17 +7,18 @@
 //*CMZ :  2.00/11 03/08/98  11.58.48  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   08/01/98
 
+/*CMZ :  2.24/01 24/02/2000  11.49.40  by  Fons Rademakers*/
 /*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun and Fons Rademakers.                               *
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
  *                                                                       *
- * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
- * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
  *************************************************************************/
 //*CMZ :  2.00/00 16/02/98  00.17.08  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   27/12/97
@@ -261,6 +263,10 @@ TGTextEntry::~TGTextEntry()
 {
    // Delete a text entry widget.
 
+   if (fDeleteGC) {
+      gVirtualX->DeleteGC(fNormGC);
+      gVirtualX->DeleteGC(fSelGC);
+   }
    delete fText;
    delete fCurBlink;
 }
@@ -273,6 +279,7 @@ void TGTextEntry::Init()
    fWidgetFlags = kWidgetWantFocus | kWidgetIsEnabled;
    fSelGC       = fgDefaultSelectedGC;
    fSelbackGC   = fgDefaultSelectedBackgroundGC;
+   fDeleteGC    = kFALSE;
 
    fOffset = 0;
    fMaxLen = 255;             // TString::Length() can not exceed 255 characters
@@ -352,15 +359,25 @@ void TGTextEntry::SetFont(FontStruct_t font)
 {
    // Changes text entry font.
 
-   GCValues_t  gval;
-
    if (font != fFontStruct) {
+      GCValues_t gval;
       fFontStruct = font;
+
+      // get unique copies of the norm GC and the sel GC (if not already copied)
+      if (!fDeleteGC) {
+         GContext_t norm = gVirtualX->CreateGC(fId, 0);
+         gVirtualX->CopyGC(fNormGC, norm, 0);
+         fNormGC = norm;
+         GContext_t sel  = gVirtualX->CreateGC(fId, 0);
+         gVirtualX->CopyGC(fSelGC, sel, 0);
+         fSelGC = sel;
+      }
       gval.fMask = kGCFont;
       gval.fFont = gVirtualX->GetFontHandle(fFontStruct);
       gVirtualX->ChangeGC(fNormGC,&gval);
       gVirtualX->ChangeGC(fSelGC,&gval);
       fClient->NeedRedraw(this);
+      fDeleteGC = kTRUE;
    }
 }
 

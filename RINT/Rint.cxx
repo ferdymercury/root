@@ -1,3 +1,5 @@
+//*CMZ :  2.24/02 06/04/2000  16.22.51  by  Fons Rademakers
+//*CMZ :  2.24/01 20/03/2000  11.14.03  by  Rene Brun
 //*CMZ :  2.23/12 27/01/2000  11.14.12  by  Fons Rademakers
 //*CMZ :  2.23/11 09/01/2000  10.41.06  by  Rene Brun
 //*CMZ :  2.23/09 18/11/99  12.24.21  by  Rene Brun
@@ -12,17 +14,18 @@
 //*CMZ :  2.23/00 07/08/99  18.08.51  by  Fons Rademakers
 //*-- Author :    Rene Brun   17/02/95
 
+/*CMZ :  2.24/01 24/02/2000  11.49.40  by  Fons Rademakers*/
 /*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun and Fons Rademakers.                               *
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
  *                                                                       *
- * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
- * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -124,7 +127,8 @@ Bool_t TTermInputHandler::Notify()
 ClassImp(TRint)
 
 //______________________________________________________________________________
-TRint::TRint(const char *appClassName, int *argc, char **argv, void *options, int numOptions)
+TRint::TRint(const char *appClassName, int *argc, char **argv, void *options,
+             int numOptions, Bool_t noLogo)
        : TApplication(appClassName, argc, argv, options, numOptions)
 {
    // Create an application environment. The TRint environment provides an
@@ -138,12 +142,14 @@ TRint::TRint(const char *appClassName, int *argc, char **argv, void *options, in
 
    gBenchmark = new TBenchmark();
 
-   PrintLogo();
+   if (!noLogo)
+      PrintLogo();
 
    // Everybody expects iostream to be available, so load it...
 #ifndef WIN32
    ProcessLine("#include <iostream>");
 #endif
+
    // The following libs are also useful to have,
    // make sure they are loaded...
    gROOT->LoadClass("TGeometry",   "Graf3d");
@@ -284,15 +290,19 @@ void TRint::PrintLogo()
       Printf("\nFreeType Engine v1.1 used to render TrueType fonts.");
 #endif
 #ifdef _REENTRANT
+#ifdef R__UNIX
+   else
+#endif
+      printf("\n");
    Printf("Compiled with thread support.");
 #endif
 
    gInterpreter->PrintIntro();
 
 #ifdef R__UNIX
-   // Popup down X logo, only if started with -p option
+   // Popdown X logo, only if started with -splash option
    for (int i = 0; i < Argc(); i++)
-      if (!strcmp(Argv(i), "-p"))
+      if (!strcmp(Argv(i), "-splash"))
          kill(getppid(), SIGUSR1);
 #endif
 }

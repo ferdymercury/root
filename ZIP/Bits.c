@@ -1,3 +1,4 @@
+/*CMZ :  2.24/01 31/03/2000  12.17.43  by  Rene Brun*/
 /*CMZ :  2.23/09 24/11/99  11.25.31  by  Rene Brun*/
 /*CMZ :  2.22/01 18/05/99  11.07.56  by  Rene Brun*/
 /*CMZ :  2.00/00 08/03/98  11.27.32  by  Rene Brun*/
@@ -38,7 +39,7 @@
  *
  *      For in-memory compression, the compressed bit stream goes directly
  *      into the requested output buffer. The input data is read in blocks
- *      by the mem_read() function. The buffer is limited to 64K on 16 bit
+ *      by the R__mem_read() function. The buffer is limited to 64K on 16 bit
  *      machines.
  *
  *  INTERFACE
@@ -77,8 +78,8 @@ extern ulg R__window_size; /* size of sliding window */
 /* ===========================================================================
  *  Prototypes for local functions
  */
-local int  mem_read     OF((char *buf, unsigned size));
-local void flush_outbuf OF((unsigned w, unsigned size));
+local int  R__mem_read     OF((char *buf, unsigned size));
+local void R__flush_outbuf OF((unsigned w, unsigned size));
 
 
 /* ===========================================================================
@@ -114,8 +115,8 @@ local unsigned in_offset, out_offset;
 local unsigned in_size, out_size;
 /* Size of current input and output buffers */
 
-int (*R__read_buf) OF((char *buf, unsigned size)) = mem_read;
-/* Current input function. Set to mem_read for in-memory compression */
+int (*R__read_buf) OF((char *buf, unsigned size)) = R__mem_read;
+/* Current input function. Set to R__mem_read for in-memory compression */
 
 #ifdef DEBUG
 ulg R__bits_sent;   /* bit length of the compressed data */
@@ -127,7 +128,7 @@ ulg R__bits_sent;   /* bit length of the compressed data */
     out_buf[out_offset++] = (char) ((w) & 0xff); \
     out_buf[out_offset++] = (char) ((ush)(w) >> 8); \
   } else { \
-    flush_outbuf((w),2); \
+    R__flush_outbuf((w),2); \
   } \
 }
 
@@ -135,7 +136,7 @@ ulg R__bits_sent;   /* bit length of the compressed data */
 { if (out_offset < out_size) { \
     out_buf[out_offset++] = (char) (b); \
   } else { \
-    flush_outbuf((b),1); \
+    R__flush_outbuf((b),1); \
   } \
 }
 
@@ -143,8 +144,8 @@ ulg R__bits_sent;   /* bit length of the compressed data */
 /* ===========================================================================
  *  Prototypes for local functions
  */
-local int  mem_read     OF((char *b,    unsigned bsize));
-local void flush_outbuf OF((unsigned w, unsigned bytes));
+local int  R__mem_read     OF((char *b,    unsigned bsize));
+local void R__flush_outbuf OF((unsigned w, unsigned bytes));
 
 /* ===========================================================================
  * Initialize the bit string routines.
@@ -208,7 +209,7 @@ unsigned R__bi_reverse(unsigned code, int len)
 /* ===========================================================================
  * Flush the current output buffer.
  */
-local void flush_outbuf(unsigned w, unsigned bytes)
+local void R__flush_outbuf(unsigned w, unsigned bytes)
     /* unsigned w;      value to flush */
     /* unsigned bytes;  number of bytes to flush (0, 1 or 2) */
 {
@@ -234,7 +235,7 @@ void R__bi_windup()
         PUTBYTE(bi_buf);
     }
     if (zfile != (FILE *) NULL) {
-        flush_outbuf(0, 0);
+        R__flush_outbuf(0, 0);
     }
     bi_buf = 0;
     bi_valid = 0;
@@ -317,7 +318,7 @@ ulg R__memcompress(char *tgt, ulg tgtsize, char *src, ulg srcsize)
     crc = updcrc((char *)NULL, 0);
     crc = updcrc(src, (extent) srcsize);
 #endif
-    R__read_buf  = mem_read;
+    R__read_buf  = R__mem_read;
     in_buf    = src;
     in_size   = (unsigned)srcsize;
     in_offset = 0;
@@ -349,11 +350,11 @@ ulg R__memcompress(char *tgt, ulg tgtsize, char *src, ulg srcsize)
  * does not perform end-of-line translation, and does not update the
  * crc and input size.
  *    Note that the size of the entire input buffer is an unsigned long,
- * but the size used in mem_read() is only an unsigned int. This makes a
- * difference on 16 bit machines. mem_read() may be called several
+ * but the size used in R__mem_read() is only an unsigned int. This makes a
+ * difference on 16 bit machines. R__mem_read() may be called several
  * times for an in-memory compression.
  */
-local int mem_read(char *b, unsigned bsize)
+local int R__mem_read(char *b, unsigned bsize)
 {
     if (in_offset < in_size) {
         ulg block_size = in_size - in_offset;
@@ -405,7 +406,7 @@ void R__zip(int cxlevel, int *srcsize, char *src, int *tgtsize, char *tgt, int *
   if (*srcsize > 0xffffff) R__error("source buffer too big");
   if (error_flag != 0) return;
 
-  R__read_buf  = mem_read;
+  R__read_buf  = R__mem_read;
   in_buf    = src;
   in_size   = (unsigned) (*srcsize);
   in_offset = 0;

@@ -1,5 +1,5 @@
-/*CMZ :  2.23/10 10/12/99  17.59.57  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   10/12/99*/
+/*CMZ :  2.24/05 16/05/2000  12.03.44  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   16/05/2000*/
 /* /% C++ %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -44,6 +44,7 @@ class G__TypedefInfo : public G__TypeInfo {
   G__ClassInfo EnclosingClassOfTypedef();
 
   const char *Title() ;
+  void SetGlobalcomp(int globalcomp);
   int IsValid();
   int SetFilePos(const char* fname);
   int Next();

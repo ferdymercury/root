@@ -1,3 +1,7 @@
+//*CMZ :  2.24/03 28/04/2000  18.12.25  by  Rene Brun
+//*CMZ :  2.24/02 03/04/2000  08.41.43  by  Rene Brun
+//*CMZ :  2.24/01 01/03/2000  15.06.02  by  Rene Brun
+//*CMZ :  2.24/00 14/02/2000  10.02.52  by  Rene Brun
 //*CMZ :  2.23/12 26/01/2000  09.56.06  by  Rene Brun
 //*CMZ :  2.23/11 02/01/2000  16.30.02  by  Rene Brun
 //*CMZ :  2.23/10 22/12/99  20.52.15  by  Rene Brun
@@ -8,17 +12,18 @@
 //*CMZ :  2.23/01 31/08/99  17.29.18  by  Rene Brun
 //*-- Author :    Rene Brun   26/08/99
 
+/*CMZ :  2.24/01 24/02/2000  11.49.40  by  Fons Rademakers*/
 /*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun and Fons Rademakers.                               *
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
  *                                                                       *
- * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
- * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
  *************************************************************************/
 
 #include <stdlib.h>
@@ -749,8 +754,9 @@ void THistPainter::PaintAxis()
    TGaxis axis;
    axis.SetTextAngle(0);
    axis.SetLineColor(fXaxis->GetAxisColor());
-   axis.SetTextColor(fXaxis->GetLabelColor());
-   axis.SetTextFont(fXaxis->GetLabelFont());
+   axis.SetTextColor(fXaxis->GetTitleColor());
+   axis.SetTextFont(fXaxis->GetTitleFont());
+   axis.SetLabelColor(fXaxis->GetLabelColor());
    axis.SetLabelFont(fXaxis->GetLabelFont());
    axis.SetLabelSize(fXaxis->GetLabelSize());
    axis.SetLabelOffset(fXaxis->GetLabelOffset());
@@ -805,8 +811,9 @@ void THistPainter::PaintAxis()
    }
 //*-*- Y axis
    axis.SetLineColor(fYaxis->GetAxisColor());
-   axis.SetTextColor(fYaxis->GetLabelColor());
-   axis.SetTextFont(fYaxis->GetLabelFont());
+   axis.SetTextColor(fYaxis->GetTitleColor());
+   axis.SetTextFont(fYaxis->GetTitleFont());
+   axis.SetLabelColor(fYaxis->GetLabelColor());
    axis.SetLabelFont(fYaxis->GetLabelFont());
    axis.SetLabelSize(fYaxis->GetLabelSize());
    axis.SetLabelOffset(fYaxis->GetLabelOffset());
@@ -822,7 +829,7 @@ void THistPainter::PaintAxis()
    if (ndivy < 0) {
       nx2   = ndivy/100;
       nx1   = TMath::Max(1, ndivy%100);
-      ndivy = 100*nx2 + Int_t(Float_t(nx1)*gPad->GetAbsHNDC());
+ //     ndivy = 100*nx2 + Int_t(Float_t(nx1)*gPad->GetAbsHNDC());
       strcat(chopt, "N");
    }
    if (gPad->GetGridy()) {
@@ -1848,6 +1855,7 @@ Int_t THistPainter::PaintInit()
       Hparam.xlast = fXaxis->FindFixBin(Hparam.xmax);
       Hparam.xmin  = TMath::Log10(Hparam.xmin);
       Hparam.xmax  = TMath::Log10(Hparam.xmax);
+      if (Hparam.xlast > last) Hparam.xlast = last;
    }
 
 //*-*  Compute Y axis parameters
@@ -2301,9 +2309,10 @@ void THistPainter::PaintLegoAxis(TGaxis *axis, Float_t ang)
 
     if (TMath::Abs(x1[0] - x2[0]) >= epsil || TMath::Abs(x1[1] - x2[1]) > epsil) {
         axis->SetLineColor(fXaxis->GetAxisColor());
-        axis->SetTextFont(fXaxis->GetLabelFont());
-	axis->SetTextColor(fXaxis->GetLabelColor());
+        axis->SetTextFont(fXaxis->GetTitleFont());
+	axis->SetTextColor(fXaxis->GetTitleColor());
 	axis->SetTickSize(fXaxis->GetTickLength());
+        axis->SetLabelColor(fXaxis->GetLabelColor());
         axis->SetLabelFont(fXaxis->GetLabelFont());
 	axis->SetLabelOffset(fXaxis->GetLabelOffset()+fXaxis->GetTickLength());
         axis->SetLabelSize(fXaxis->GetLabelSize());
@@ -2335,9 +2344,10 @@ void THistPainter::PaintLegoAxis(TGaxis *axis, Float_t ang)
 
     if (TMath::Abs(y1[0] - y2[0]) >= epsil || TMath::Abs(y1[1] - y2[1]) > epsil) {
         axis->SetLineColor(fYaxis->GetAxisColor());
-        axis->SetTextFont(fYaxis->GetLabelFont());
-	axis->SetTextColor(fYaxis->GetLabelColor());
+        axis->SetTextFont(fYaxis->GetTitleFont());
+	axis->SetTextColor(fYaxis->GetTitleColor());
 	axis->SetTickSize(fYaxis->GetTickLength());
+        axis->SetLabelColor(fYaxis->GetLabelColor());
         axis->SetLabelFont(fYaxis->GetLabelFont());
 	axis->SetLabelOffset(fYaxis->GetLabelOffset()+fYaxis->GetTickLength());
         axis->SetLabelSize(fYaxis->GetLabelSize());
@@ -2380,9 +2390,10 @@ void THistPainter::PaintLegoAxis(TGaxis *axis, Float_t ang)
 
     if (TMath::Abs(z1[0] - z2[0]) >= epsil || TMath::Abs(z1[1] - z2[1]) > epsil) {
         axis->SetLineColor(fZaxis->GetAxisColor());
-        axis->SetTextFont(fZaxis->GetLabelFont());
-	axis->SetTextColor(fZaxis->GetLabelColor());
+        axis->SetTextFont(fZaxis->GetTitleFont());
+	axis->SetTextColor(fZaxis->GetTitleColor());
 	axis->SetTickSize(fZaxis->GetTickLength());
+        axis->SetLabelColor(fZaxis->GetLabelColor());
         axis->SetLabelFont(fZaxis->GetLabelFont());
 	axis->SetLabelOffset(fZaxis->GetLabelOffset());
         axis->SetLabelSize(fZaxis->GetLabelSize());
@@ -2637,6 +2648,8 @@ void THistPainter::PaintStat(Int_t dostat, TF1 *fit)
       stats->SetFillStyle(gStyle->GetStatStyle());
       stats->SetBorderSize(gStyle->GetStatBorderSize());
       stats->SetTextFont(gStyle->GetStatFont());
+      stats->SetFitFormat(gStyle->GetFitFormat());
+      stats->SetStatFormat(gStyle->GetStatFormat());
       stats->SetName("stats");
 
       stats->SetTextColor(gStyle->GetStatTextColor());
@@ -2651,27 +2664,27 @@ void THistPainter::PaintStat(Int_t dostat, TF1 *fit)
    }
    char fstats[50];
    if (print_mean) {
-      sprintf(fstats,"Mean  = %s%s","%",stats->GetFormatStats());
+      sprintf(fstats,"Mean  = %s%s","%",stats->GetStatFormat());
       sprintf(t,fstats,fH->GetMean(1));
       stats->AddText(t);
    }
    if (print_rms) {
-      sprintf(fstats,"RMS   = %s%s","%",stats->GetFormatStats());
+      sprintf(fstats,"RMS   = %s%s","%",stats->GetStatFormat());
       sprintf(t,fstats,fH->GetRMS(1));
       stats->AddText(t);
    }
    if (print_under) {
-      sprintf(fstats,"Under = %s%s","%",stats->GetFormatStats());
+      sprintf(fstats,"Under = %s%s","%",stats->GetStatFormat());
       sprintf(t,fstats,fH->GetBinContent(0));
       stats->AddText(t);
    }
    if (print_over) {
-      sprintf(fstats,"Over  = %s%s","%",stats->GetFormatStats());
+      sprintf(fstats,"Over  = %s%s","%",stats->GetStatFormat());
       sprintf(t,fstats,fH->GetBinContent(fXaxis->GetNbins()+1));
       stats->AddText(t);
    }
    if (print_integral) {
-      sprintf(fstats,"Integ = %s%s","%",stats->GetFormatStats());
+      sprintf(fstats,"Integ = %s%s","%",stats->GetStatFormat());
       sprintf(t,fstats,fH->Integral());
       stats->AddText(t);
    }
@@ -2679,22 +2692,22 @@ void THistPainter::PaintStat(Int_t dostat, TF1 *fit)
 //     Draw Fit parameters
    if (fit) {
       Int_t ndf = fit->GetNumberFitPoints() - fit->GetNpar();
-      sprintf(fstats,"Chi2 / ndf = %s%s / %d","%",stats->GetFormatFit(),ndf);
+      sprintf(fstats,"Chi2 / ndf = %s%s / %d","%",stats->GetFitFormat(),ndf);
       sprintf(t,fstats,(Float_t)fit->GetChisquare());
       if (print_fchi2) stats->AddText(t);
       if (print_fprob) {
-         sprintf(fstats,"Prob  = %s%s","%",stats->GetFormatFit());
+         sprintf(fstats,"Prob  = %s%s","%",stats->GetFitFormat());
          sprintf(t,fstats,(Float_t)TMath::Prob(fit->GetChisquare(),ndf));
          stats->AddText(t);
       }
       if (print_fval || print_ferrors) {
          for (Int_t ipar=0;ipar<fit->GetNpar();ipar++) {
             if (print_ferrors) {
-               sprintf(fstats,"%-8s = %s%s +- %s%s ",fit->GetParName(ipar),"%",stats->GetFormatFit(),"%",stats->GetFormatFit());
+               sprintf(fstats,"%-8s = %s%s +- %s%s ",fit->GetParName(ipar),"%",stats->GetFitFormat(),"%",stats->GetFitFormat());
                sprintf(t,fstats,(Float_t)fit->GetParameter(ipar)
                                ,(Float_t)fit->GetParError(ipar));
             } else {
-               sprintf(fstats,"%-8s = %s%s ",fit->GetParName(ipar),"%",stats->GetFormatFit());
+               sprintf(fstats,"%-8s = %s%s ",fit->GetParName(ipar),"%",stats->GetFitFormat());
                sprintf(t,fstats,(Float_t)fit->GetParameter(ipar));
             }
             t[63] = 0;
@@ -2725,6 +2738,7 @@ void THistPainter::PaintStat2(Int_t dostat, TF1 *fit)
    //           print only name of histogram and number of entries.
 
    if (fH->GetDimension() != 2) return;
+   TH2 *h2 = (TH2*)fH;
 
    static char t[64];
    Int_t dofit;
@@ -2776,43 +2790,45 @@ void THistPainter::PaintStat2(Int_t dostat, TF1 *fit)
       stats->SetTextColor(gStyle->GetStatTextColor());
       stats->SetTextAlign(12);
       stats->SetTextFont(gStyle->GetStatFont());
+      stats->SetFitFormat(gStyle->GetFitFormat());
+      stats->SetStatFormat(gStyle->GetStatFormat());
       stats->SetBit(kCanDelete);
    }
-   if (print_name)  stats->AddText(fH->GetName());
+   if (print_name)  stats->AddText(h2->GetName());
    if (print_entries) {
-      if (fH->GetEntries() < 1e7) sprintf(t,"Nent = %-7d",Int_t(fH->GetEntries()));
-      else                        sprintf(t,"Nent = %14.7g",Float_t(fH->GetEntries()));
+      if (h2->GetEntries() < 1e7) sprintf(t,"Nent = %-7d",Int_t(h2->GetEntries()));
+      else                        sprintf(t,"Nent = %14.7g",Float_t(h2->GetEntries()));
       stats->AddText(t);
    }
    if (print_mean) {
-      sprintf(t,"Mean x = %6.4g",fH->GetMean(1));
+      sprintf(t,"Mean x = %6.4g",h2->GetMean(1));
       stats->AddText(t);
-      sprintf(t,"Mean y = %6.4g",fH->GetMean(2));
+      sprintf(t,"Mean y = %6.4g",h2->GetMean(2));
       stats->AddText(t);
    }
    if (print_rms) {
-      sprintf(t,"RMS x  = %6.4g",fH->GetRMS(1));
+      sprintf(t,"RMS x  = %6.4g",h2->GetRMS(1));
       stats->AddText(t);
-      sprintf(t,"RMS y  = %6.4g",fH->GetRMS(2));
+      sprintf(t,"RMS y  = %6.4g",h2->GetRMS(2));
       stats->AddText(t);
    }
    if (print_under || print_over) {
       //get 3*3 under/overflows for 2d hist
       Stat_t unov[9];
 
-      unov[0] = fH->Integral(0,fH->GetXaxis()->GetFirst()-1,fH->GetYaxis()->GetLast()+1,fH->GetYaxis()->GetLast()+1);
-      unov[1] = fH->Integral(fH->GetXaxis()->GetFirst(),fH->GetXaxis()->GetLast(),fH->GetYaxis()->GetLast()+1,fH->GetYaxis()->GetLast()+1);
-      unov[2] = fH->Integral(fH->GetXaxis()->GetLast()+1,fH->GetXaxis()->GetLast()+1,fH->GetYaxis()->GetLast()+1,fH->GetYaxis()->GetLast()+1);
-      unov[3] = fH->Integral(0,fH->GetXaxis()->GetFirst()-1,fH->GetYaxis()->GetFirst(),fH->GetYaxis()->GetLast());
-      unov[4] = fH->Integral(fH->GetXaxis()->GetFirst(),fH->GetXaxis()->GetLast(),fH->GetYaxis()->GetFirst(),fH->GetYaxis()->GetLast());
-      unov[5] = fH->Integral(fH->GetXaxis()->GetLast()+1,fH->GetXaxis()->GetLast()+1,fH->GetYaxis()->GetFirst(),fH->GetYaxis()->GetLast());
-      unov[6] = fH->Integral(0,fH->GetXaxis()->GetFirst()-1,0,fH->GetYaxis()->GetFirst()-1);
-      unov[7] = fH->Integral(fH->GetXaxis()->GetFirst(),fH->GetXaxis()->GetLast(),0,fH->GetYaxis()->GetFirst()-1);
-      unov[8] = fH->Integral(fH->GetXaxis()->GetLast()+1,fH->GetXaxis()->GetLast()+1,0,fH->GetYaxis()->GetFirst()-1);
+      unov[0] = h2->Integral(0,h2->GetXaxis()->GetFirst()-1,h2->GetYaxis()->GetLast()+1,h2->GetYaxis()->GetLast()+1);
+      unov[1] = h2->Integral(h2->GetXaxis()->GetFirst(),h2->GetXaxis()->GetLast(),h2->GetYaxis()->GetLast()+1,h2->GetYaxis()->GetLast()+1);
+      unov[2] = h2->Integral(h2->GetXaxis()->GetLast()+1,h2->GetXaxis()->GetLast()+1,h2->GetYaxis()->GetLast()+1,h2->GetYaxis()->GetLast()+1);
+      unov[3] = h2->Integral(0,h2->GetXaxis()->GetFirst()-1,h2->GetYaxis()->GetFirst(),h2->GetYaxis()->GetLast());
+      unov[4] = h2->Integral(h2->GetXaxis()->GetFirst(),h2->GetXaxis()->GetLast(),h2->GetYaxis()->GetFirst(),h2->GetYaxis()->GetLast());
+      unov[5] = h2->Integral(h2->GetXaxis()->GetLast()+1,h2->GetXaxis()->GetLast()+1,h2->GetYaxis()->GetFirst(),h2->GetYaxis()->GetLast());
+      unov[6] = h2->Integral(0,h2->GetXaxis()->GetFirst()-1,0,h2->GetYaxis()->GetFirst()-1);
+      unov[7] = h2->Integral(h2->GetXaxis()->GetFirst(),h2->GetXaxis()->GetLast(),0,h2->GetYaxis()->GetFirst()-1);
+      unov[8] = h2->Integral(h2->GetXaxis()->GetLast()+1,h2->GetXaxis()->GetLast()+1,0,h2->GetYaxis()->GetFirst()-1);
 
       sprintf(t, " %7d %7d %7d\n", (Int_t)unov[0], (Int_t)unov[1], (Int_t)unov[2]);
       stats->AddText(t);
-      if (fH->GetEntries() < 1e7)
+      if (h2->GetEntries() < 1e7)
          sprintf(t, " %7d %7d %7d\n", (Int_t)unov[3], (Int_t)unov[4], (Int_t)unov[5]);
       else
          sprintf(t, " %7d %14.7g %7d\n", (Int_t)unov[3], (Float_t)unov[4], (Int_t)unov[5]);
@@ -2821,7 +2837,7 @@ void THistPainter::PaintStat2(Int_t dostat, TF1 *fit)
       stats->AddText(t);
    }
    if (print_integral) {
-      sprintf(t,"Integ  = %6.4g",fH->Integral());
+      sprintf(t,"Integ  = %6.4g",h2->Integral());
       stats->AddText(t);
    }
 

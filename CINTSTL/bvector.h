@@ -1,5 +1,5 @@
-/*CMZ :  2.23/10 10/12/99  18.00.22  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   10/12/99*/
+/*CMZ :  2.24/05 16/05/2000  12.04.02  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   16/05/2000*/
 /*
  *
  * Copyright (c) 1994
@@ -23,7 +23,7 @@
 
 #include <function.h>
 #include <algobase.h>
-#include <iterator.h>
+#include <_iterator.h>
 #include <bool.h>
 
 #ifndef Allocator

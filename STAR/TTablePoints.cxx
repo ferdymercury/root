@@ -1,6 +1,6 @@
+//*CMZ :  2.24/01 31/03/2000  08.38.46  by  Rene Brun
 //*CMZ :  2.23/12 26/01/2000  12.18.16  by  Valery Fine(fine@bnl.gov)
 //*-- Author : Valery Fine   14/05/99  (E-mail: fine@bnl.gov)
-// $Id: TTablePoints.cxx,v 1.4 1999/12/17 23:28:41 fine Exp $
 
 // ***********************************************************************
 // * Observer to draw use ant TTable object as an element of "event" geometry
@@ -25,19 +25,17 @@
 
 ///////////////////////////////////////////////////////////////////////////////////////
 //                                                                                   //
-//   Defines the TTable as an element of "event" geometry                                                                                 //
+//   Defines the TTable as an element of "event" geometry                            //
 //                                                                                   //
-//  +SEQ,TTablePoints.                                                      //
-//  +SEQ,T<your_table_name_here>.                                           //
+//  +SEQ,TTablePoints.                                                               //
+//  +SEQ,T<your_table_name_here>.                                                    //
 //                                                                                   //
-//  class T<your_table_name_here>_Points : public TTablePoints                   //
+//  class T<your_table_name_here>_Points : public TTablePoints                       //
 //  {                                                                                //
-//    protected:                                                                     //
-//       <your_table_name_here>_st   *fRows; // pointer to the STAF table           //
 //    public:                                                                        //
 //       T<your_table_name_here>_Points(TTableSorter *sorter,const void *key,Option_t *opt):
-//                TTablePoints(sorter,key,opt){}                                   //
-//       virtual  ~T<your_table_name_here>_Points(){} // default destructor        //
+//                TTablePoints(sorter,key,opt){}                                     //
+//       virtual  ~T<your_table_name_here>_Points(){} // default destructor          //
 //       virtual Float_t GetX(Int_t indx) { return ((<your_table_name_here>_st *)fRows)[Indx(idx)]-> <x>;}               //
 //       virtual Float_t GetY(Int_t indx) { return ((<your_table_name_here>_st *)fRows)[Indx(idx)]-> <y>;}               //
 //       virtual Float_t GetZ(Int_t indx) { return ((<your_table_name_here>_st *)fRows)[Indx(idx)]-> <z>;}               //
@@ -55,6 +53,7 @@ TTablePoints::TTablePoints()
   fFirstRow    = -1;
   fSize        =  0;
 }
+
 //____________________________________________________________________________
 TTablePoints::TTablePoints(TTableSorter *sorter,const void *key,Option_t *opt)
 {
@@ -101,20 +100,3 @@ Int_t TTablePoints::DistancetoPrimitive(Int_t px, Int_t py)
 //*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
    return -1;
 }
-
-//______________________________________________________________________________
-// $Log: TTablePoints.cxx,v $
-// Revision 1.4  1999/12/17 23:28:41  fine
-// clean up for the sake of docs + new class TTable3DPackedPoints introduced
-//
-// Revision 1.3  1999/11/16 16:29:57  fine
-// TObject::GetObjectInfo() implemented
-//
-// Revision 1.2  1999/11/04 18:03:10  fine
-// new ctor for tablepoints introduced to make EventDiplay happy
-//
-// Revision 1.1  1999/05/18 20:21:25  fine
-// New class to 3D table viewer
-//______________________________________________________________________________
-
-

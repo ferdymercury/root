@@ -1,3 +1,4 @@
+/*CMZ :  2.24/01 15/03/2000  17.00.08  by  Fons Rademakers*/
 /*CMZ :  2.00/12 24/09/98  13.45.45  by  Fons Rademakers*/
 /*CMZ :  1.03/09 05/12/97  14.31.41  by  Fons Rademakers*/
 /*-- Author :*/
@@ -148,10 +149,10 @@ struct alignlist
 
 /* Doubly linked lists of free fragments.  */
 
-struct list
+struct mmlist
   {
-    struct list *next;
-    struct list *prev;
+    struct mmlist *next;
+    struct mmlist *prev;
   };
 
 /* Statistics available to the user.
@@ -270,7 +271,7 @@ struct mdesc
   /* Free list headers for each fragment size.  */
   /* Free lists for each fragment size.  */
 
-  struct list fraghead[BLOCKLOG];
+  struct mmlist fraghead[BLOCKLOG];
 
   /* List of blocks allocated by memalign.  */
 

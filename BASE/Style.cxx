@@ -1,3 +1,4 @@
+//*CMZ :  2.24/03 01/05/2000  22.13.17  by  Rene Brun
 //*CMZ :  2.23/12 26/01/2000  09.41.50  by  Rene Brun
 //*CMZ :  2.23/11 04/01/2000  16.47.11  by  Rene Brun
 //*CMZ :  2.23/10 16/12/99  16.17.58  by  Rene Brun
@@ -10,17 +11,18 @@
 //*CMZ :  2.22/07 05/07/99  16.35.42  by  Rene Brun
 //*-- Author :    Rene Brun   12/12/94
 
+/*CMZ :  2.24/01 24/02/2000  11.49.40  by  Fons Rademakers*/
 /*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun and Fons Rademakers.                               *
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
  *                                                                       *
- * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
- * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
  *************************************************************************/
 
 #include <string.h>
@@ -241,6 +243,7 @@ void TStyle::Copy(TObject &obj)
    ((TStyle&)obj).fStatBorderSize = fStatBorderSize;
    ((TStyle&)obj).fStatFont       = fStatFont;
    ((TStyle&)obj).fStatStyle      = fStatStyle;
+   ((TStyle&)obj).fStatFormat     = fStatFormat;
    ((TStyle&)obj).fStatW          = fStatW;
    ((TStyle&)obj).fStatH          = fStatH ;
    ((TStyle&)obj).fStatX          = fStatX;
@@ -254,6 +257,9 @@ void TStyle::Copy(TObject &obj)
    ((TStyle&)obj).fTitleH         = fTitleH;
    ((TStyle&)obj).fTitleX         = fTitleX;
    ((TStyle&)obj).fTitleY         = fTitleY;
+   ((TStyle&)obj).fDateX          = fDateX;
+   ((TStyle&)obj).fDateY          = fDateY;
+   ((TStyle&)obj).fFitFormat      = fFitFormat;
    ((TStyle&)obj).fShowEventStatus= fShowEventStatus;
    ((TStyle&)obj).fLegoInnerR     = fLegoInnerR;
    for (Int_t i=0;i<30;i++) {
@@ -333,6 +339,8 @@ void TStyle::Reset(Option_t *)
    fStatH          = 0.16;
    fStatX          = 0.98;
    fStatY          = 0.98;
+   SetStatFormat();
+   SetFitFormat();
    fTitleColor     = fCanvasColor;
    fTitleTextColor = 1;
    fTitleFont      = 62;
@@ -346,6 +354,10 @@ void TStyle::Reset(Option_t *)
    fLegoInnerR     = 0.5;
    fHeaderPS       = "";
 
+   SetDateX();
+   SetDateY();
+   fAttDate.SetTextSize(0.025);
+   fAttDate.SetTextAlign(11);
    SetLineScalePS();
    SetLineStyleString(1,"[]");
    SetLineStyleString(2,"[12 12]");
@@ -616,6 +628,52 @@ void TStyle::SetLineStyleString(Int_t i, const char *text)
    strcat(st," 0 sd");
    if (i >= 1 && i <= 29) fLineStyle[i] = st;
    delete [] st;
+}
+
+
+//______________________________________________________________________________
+void TStyle::SetOptDate(Int_t mode)
+{
+// if mode is non null, the current date/time will be printed in the canvas.
+// The position of the date string can be controlled by:
+//    mode = 1 (default) date is printed in the bottom/left corner.
+//    mode = 2 date is printed in the bottom/right corner.
+//    mode = 3 date is printed in the top/right corner.
+//  The date position can also be controlled by:
+//    gStyle->SetDateX(x);  x in NDC
+//    gStyle->SetDateY(y);  y in NDC
+//
+//  The date text attributes can be changed with:
+//    gStyle->GetAttDate()->SetTextFont(font=62);
+//    gStyle->GetAttDate()->SetTextSize(size=0.025);
+//    gStyle->GetAttDate()->SetTextAngle(angle=0);
+//    gStyle->GetAttDate()->SetTextAlign(align=11);
+//    gStyle->GetAttDate()->SetTextColor(color=1);
+//
+//  The current date attributes can be obtained via:
+//    gStyle->GetAttDate()->GetTextxxxx();
+//
+//  When the date option is active, a text object is created when the pad
+//  paint its list of primitives. The text object is named "DATE".
+//  The DATE attributes can also be edited interactively (position
+//  and attributes) via the normal context menu.
+
+   fOptDate = mode;
+   if (mode == 1) {
+      SetDateX(0.01);
+      SetDateY(0.01);
+      fAttDate.SetTextAlign(11);
+   }
+   if (mode == 2) {
+      SetDateX(0.99);
+      SetDateY(0.01);
+      fAttDate.SetTextAlign(31);
+   }
+   if (mode == 3) {
+      SetDateX(0.99);
+      SetDateY(0.99);
+      fAttDate.SetTextAlign(33);
+   }
 }
 
 

@@ -1,3 +1,7 @@
+//*CMZ :  2.24/05 15/05/2000  20.25.48  by  Fons Rademakers
+//*CMZ :  2.24/03 18/04/2000  19.15.03  by  Valery Fine(fine@bnl.gov)
+//*CMZ :  2.24/02 05/04/2000  19.02.18  by  Rene Brun
+//*CMZ :  2.24/01 27/03/2000  16.15.56  by  Rene Brun
 //*CMZ :  2.23/12 26/01/2000  10.04.52  by  Rene Brun
 //*CMZ :  2.23/04 13/10/99  16.01.02  by  Fons Rademakers
 //*CMZ :  2.23/03 21/09/99  13.02.43  by  Rene Brun
@@ -6,17 +10,18 @@
 //*CMZ :  2.21/07 05/03/99  17.21.43  by  Rene Brun
 //*-- Author :    Nenad Buncic   18/10/95
 
+/*CMZ :  2.24/01 24/02/2000  11.49.40  by  Fons Rademakers*/
 /*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun and Fons Rademakers.                               *
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
  *                                                                       *
- * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
- * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
  *************************************************************************/
 
 #include "TROOT.h"
@@ -43,7 +48,7 @@
 THtml *gHtml = 0;
 
 const Int_t   kSpaceNum      = 1;
-const Char_t *formatStr      = "%12s %5s %s";
+const char   *formatStr      = "%12s %5s %s";
 
 enum ESortType {kCaseInsensitive, kCaseSensitive};
 enum EFileType {kSource, kInclude, kTree};
@@ -79,9 +84,9 @@ enum EFileType {kSource, kInclude, kTree};
 // user defined strings, i.e. author's name, copyright note, etc.
 // This could be defined with following environment variables:
 //
-//       Root.Html.Author     ( default: //*-- Author : )
-//       Root.Html.LastUpdate ( default: //*CMZ : )
-//       Root.Html.Copyright  ( default: // Copyright )
+//       Root.Html.Author     ( default: // Author:)
+//       Root.Html.LastUpdate ( default: // @(#))
+//       Root.Html.Copyright  ( default:  * Copyright)
 //
 //
 //
@@ -158,11 +163,11 @@ enum EFileType {kSource, kInclude, kTree};
 // Environment variables:
 // ---------------------
 //
-//   Root.Html.OutputDir    ( default: html/ )
-//   Root.Html.SourceDir    ( default: src/ )
-//   Root.Html.Author       ( default: //*-- Author : )
-//   Root.Html.LastUpdate   ( default: //*CMZ : )
-//   Root.Html.Copyright    ( default: // Copyright )
+//   Root.Html.OutputDir    ( default: htmldoc/)
+//   Root.Html.SourceDir    ( default: .:src/:include/)
+//   Root.Html.Author       ( default: // Author:)
+//   Root.Html.LastUpdate   ( default: // @(#))
+//   Root.Html.Copyright    ( default:  * Copyright)
 //   Root.Html.Description  ( default: //____________________ )
 //   Root.Html.HomePage     ( URL to the user defined home page )
 //   Root.Html.SearchEngine ( link to the search engine )
@@ -179,16 +184,19 @@ THtml::THtml()
    // will be printed and gHtml stays 0 also zombie bit will be set.
 
    fLen       = 1024;
-   fLine      = new Char_t [fLen];
-   fCounter   = new Char_t [6];
+   fLine      = new char [fLen];
+   fCounter   = new char [6];
    fEscFlag   = kFALSE;
    SetEscape();
 
+   // get prefix for source directory
+   fSourcePrefix = gEnv->GetValue( "Root.Html.SourcePrefix", "");
+
    // check for source directory
-   fSourceDir = gEnv->GetValue( "Root.Html.SourceDir", "src/" );
+   fSourceDir = gEnv->GetValue( "Root.Html.SourceDir", "./:src/:include/" );
 
    // check for output directory
-   fOutputDir = gEnv->GetValue( "Root.Html.OutputDir", "html/" );
+   fOutputDir = gEnv->GetValue( "Root.Html.OutputDir", "htmldoc/" );
 
    fXwho      = "http://consult.cern.ch/xwho/people?";
 
@@ -243,7 +251,7 @@ int CaseSensitiveSort( const void *name1, const void *name2 )
 //
 //
 
-    return( strcmp( *( (Char_t **) name1 ), *( (Char_t **) name2 )) );
+    return( strcmp( *( (char **) name1 ), *( (char **) name2 )) );
 }
 
 
@@ -263,7 +271,7 @@ int CaseInsensitiveSort( const void *name1, const void *name2 )
 //
 //
 
-    return( strcasecmp( *( (Char_t **) name1 ), *( (Char_t **) name2 )) );
+    return( strcasecmp( *( (char **) name1 ), *( (char **) name2 )) );
 }
 
 
@@ -276,18 +284,18 @@ void THtml::Class2Html( TClass *classPtr, Bool_t force )
 // Input: classPtr - pointer to the class
 
 
-    const Char_t *tab = "<!--TAB-->";
-    const Char_t *tab2 = "<!--TAB2-->  ";
-    const Char_t *tab4 = "<!--TAB4-->    ";
-    const Char_t *tab6 = "<!--TAB6-->      ";
+    const char *tab = "<!--TAB-->";
+    const char *tab2 = "<!--TAB2-->  ";
+    const char *tab4 = "<!--TAB4-->    ";
+    const char *tab6 = "<!--TAB6-->      ";
 
     gROOT->GetListOfGlobals( kTRUE );
 
     // create a filename
-    Char_t *tmp1 = gSystem->ExpandPathName( fOutputDir );
-    Char_t *tmp2 = gSystem->ConcatFileName( tmp1, classPtr->GetName() );
+    char *tmp1 = gSystem->ExpandPathName( fOutputDir );
+    char *tmp2 = gSystem->ConcatFileName( tmp1, classPtr->GetName() );
 
-    Char_t *filename = StrDup( tmp2, 6 );
+    char *filename = StrDup( tmp2, 6 );
     strcat( filename, ".html" );
 
     if( tmp1 ) delete [] tmp1;
@@ -334,11 +342,13 @@ void THtml::Class2Html( TClass *classPtr, Bool_t force )
 
             // make a link to the '.h' file
             classFile << "<h2>" << "class <a name=\"" << classPtr->GetName() << "\" href=\"";
-            classFile << GetFileName( (const Char_t * ) classPtr->GetDeclFileName() ) << "\"";
+            classFile << GetFileName( (const char * ) classPtr->GetDeclFileName() ) << "\"";
             classFile << ">" << classPtr->GetName() << "</a> ";
 
             // copy .h file to the Html output directory
-            CopyHtmlFile( GetFileName( classPtr->GetDeclFileName() ));
+            char *declf = GetSourceFileName(classPtr->GetDeclFileName());
+            CopyHtmlFile(declf);
+            delete [] declf;
 
             // make a loop on base classes
             Bool_t first = kTRUE;
@@ -356,7 +366,7 @@ void THtml::Class2Html( TClass *classPtr, Bool_t force )
                 // get a class
                 TClass *classInh = GetClass( (const char * ) inheritFrom->GetName() );
 
-                Char_t *htmlFile = GetHtmlFileName( classInh );
+                char *htmlFile = GetHtmlFileName( classInh );
 
                 if( htmlFile ) {
                     classFile << "<a href=\"";
@@ -383,7 +393,7 @@ void THtml::Class2Html( TClass *classPtr, Bool_t force )
 
             // loop to get a pointers to a method names
             const Int_t nMethods = classPtr->GetNmethods();
-            const Char_t **methodNames = new const Char_t*[3*2*nMethods];
+            const char **methodNames = new const char*[3*2*nMethods];
 
             Int_t mtype, num[3];
             mtype = num[0] = num[1] = num[2] = 0;
@@ -393,6 +403,7 @@ void THtml::Class2Html( TClass *classPtr, Bool_t force )
                 if(
                     !strcmp( method->GetName(), "Dictionary"    ) ||
                     !strcmp( method->GetName(), "Class_Version" ) ||
+                    !strcmp( method->GetName(), "Class_Name"    ) ||
                     !strcmp( method->GetName(), "DeclFileName"  ) ||
                     !strcmp( method->GetName(), "DeclFileLine"  ) ||
                     !strcmp( method->GetName(), "ImplFileName"  ) ||
@@ -428,7 +439,7 @@ void THtml::Class2Html( TClass *classPtr, Bool_t force )
                 while( '~' == *methodNames[mtype*2*nMethods+2*num[mtype]] )
                     methodNames[mtype*2*nMethods+2*num[mtype]] = "A00000001";
 
-                methodNames[mtype*2*nMethods+2*num[mtype]+1] = (Char_t *) method;
+                methodNames[mtype*2*nMethods+2*num[mtype]+1] = (char *) method;
 
                 num[mtype]++;
             }
@@ -439,7 +450,7 @@ void THtml::Class2Html( TClass *classPtr, Bool_t force )
                 if( *( methodNames+j*2*nMethods ) ) {
                     qsort( methodNames+j*2*nMethods, num[j], 2*sizeof( methodNames ), CaseInsensitiveSort );
 
-                    const Char_t *ftitle = 0;
+                    const char *ftitle = 0;
                     switch( j ) {
                         case 0: ftitle = "private:";
                                 break;
@@ -528,7 +539,7 @@ void THtml::Class2Html( TClass *classPtr, Bool_t force )
                         num[mtype]++;
 
                         if( member->GetFullTypeName() )
-                             len1 = strlen( (Char_t * ) member->GetFullTypeName() );
+                             len1 = strlen( (char * ) member->GetFullTypeName() );
                         else len1 = 0;
                         if( member->GetName() )
                              len2 = strlen( member->GetName() );
@@ -556,7 +567,7 @@ void THtml::Class2Html( TClass *classPtr, Bool_t force )
 
                     for( j = 0; j < 3; j++ ) {
                         if( memberArray[j*ndata] ) {
-                            const Char_t *ftitle = 0;
+                            const char *ftitle = 0;
                             switch( j ) {
                                 case 0: ftitle = "private:";
                                         break;
@@ -663,26 +674,26 @@ void THtml::ClassDescription( ofstream &out, TClass *classPtr, Bool_t &flag )
 //        flag     - this is a 'begin_html/end_html' flag
 //
 
-    Char_t *ptr, *key;
+    char  *ptr, *key;
     Bool_t tempFlag = kFALSE;
-    Char_t *filename = 0;
+    char  *filename = 0;
 
 
     // allocate memory
-    Char_t *nextLine    = new Char_t [256];
-    Char_t *pattern     = new Char_t [80];
+    char *nextLine    = new char [256];
+    char *pattern     = new char [80];
 
-    Char_t *lastUpdate  = new Char_t [80];
-    Char_t *author      = new Char_t [80];
-    Char_t *copyright   = new Char_t [80];
+    char *lastUpdate  = new char [80];
+    char *author      = new char [80];
+    char *copyright   = new char [80];
 
 
-    Char_t *funcName   = new Char_t [64];
+    char *funcName   = new char [64];
 
-    const Char_t *lastUpdateStr;
-    const Char_t *authorStr;
-    const Char_t *copyrightStr;
-    const Char_t *descriptionStr;
+    const char *lastUpdateStr;
+    const char *authorStr;
+    const char *copyrightStr;
+    const char *descriptionStr;
 
 
     // just in case
@@ -696,15 +707,15 @@ void THtml::ClassDescription( ofstream &out, TClass *classPtr, Bool_t &flag )
 
 
     // get environment variables
-    lastUpdateStr  = gEnv->GetValue( "Root.Html.LastUpdate", "//*CMZ :" );
-    authorStr      = gEnv->GetValue( "Root.Html.Author", "//*-- Author :" );
+    lastUpdateStr  = gEnv->GetValue( "Root.Html.LastUpdate", "// @(#)" );
+    authorStr      = gEnv->GetValue( "Root.Html.Author", "// Author:" );
     copyrightStr   = gEnv->GetValue( "Root.Html.Copyright", " * Copyright" );
     descriptionStr = gEnv->GetValue( "Root.Html.Description", "//____________________" );
 
 
     // find a .cxx file
-    Char_t *tmp1 = gSystem->Which( fSourceDir, GetFileName( classPtr->GetImplFileName() ), kReadPermission );
-    Char_t *realFilename = StrDup( tmp1, 16 );
+    char *tmp1 = GetSourceFileName(classPtr->GetImplFileName());
+    char *realFilename = StrDup( tmp1, 16 );
     if( !realFilename ) Error( "Make", "Can't find file '%s' !", tmp1 );
 
     if( tmp1 ) delete [] tmp1;
@@ -736,8 +747,8 @@ void THtml::ClassDescription( ofstream &out, TClass *classPtr, Bool_t &flag )
     if( sourceFile.good() ) {
         // open a .cxx.html file
         tmp1 = gSystem->ExpandPathName( fOutputDir );
-        Char_t *tmp2 = gSystem->ConcatFileName( tmp1, "src" );
-        Char_t *dirname = StrDup( tmp2 );
+        char *tmp2 = gSystem->ConcatFileName( tmp1, "src" );
+        char *dirname = StrDup( tmp2 );
 
         if( tmp1 ) delete [] tmp1;
         if( tmp2 ) delete [] tmp2;
@@ -767,16 +778,16 @@ void THtml::ClassDescription( ofstream &out, TClass *classPtr, Bool_t &flag )
             TMethod *method;
             TIter nextMethod( classPtr->GetListOfMethods() );
             Int_t numberOfMethods = classPtr->GetNmethods();
-            const Char_t **methodNames = new const Char_t* [2*numberOfMethods];
+            const char **methodNames = new const char* [2*numberOfMethods];
             while (( method = ( TMethod * ) nextMethod() )) {
                 methodNames[2*i]   = method->GetName();
-                methodNames[2*i+1] = ( const Char_t * ) method;
+                methodNames[2*i+1] = ( const char * ) method;
                 i++;
             }
 
 
             // write a HTML header
-            Char_t *sourceTitle = StrDup( classPtr->GetName(), 16 );
+            char *sourceTitle = StrDup( classPtr->GetName(), 16 );
             strcat( sourceTitle, " - source file" );
             WriteHtmlHeader( tempFile, sourceTitle );
             if( sourceTitle ) delete [] sourceTitle;
@@ -795,8 +806,8 @@ void THtml::ClassDescription( ofstream &out, TClass *classPtr, Bool_t &flag )
                    fLine = (char *) " ";
                    Warning("ClassDescription", "found an empty line");
                 }
-                Char_t *startOfLine = fLine;
-                Char_t *endOfLine   = fLine + strlen( fLine ) - 1;
+                char *startOfLine = fLine;
+                char *endOfLine   = fLine + strlen( fLine ) - 1;
 
 
                 // remove leading spaces
@@ -817,7 +828,7 @@ void THtml::ClassDescription( ofstream &out, TClass *classPtr, Bool_t &flag )
                     while( (*endOfLine == *startOfLine ) &&
                             ( endOfLine >= startOfLine )) endOfLine--;
                     endOfLine++;
-                    Char_t tempChar = *endOfLine;
+                    char tempChar = *endOfLine;
                     *endOfLine = 0;
 
 
@@ -893,11 +904,11 @@ void THtml::ClassDescription( ofstream &out, TClass *classPtr, Bool_t &flag )
                 else {
                     Bool_t found = kFALSE;
                     // find method name
-                    Char_t *funcName = key + len;
+                    char *funcName = key + len;
 
                     while( *funcName && isspace( *funcName ) )
                         funcName++;
-                    Char_t *nameEndPtr = funcName;
+                    char *nameEndPtr = funcName;
 
                     // In case of destructor
                     if( *nameEndPtr == '~' ) nameEndPtr++;
@@ -905,10 +916,10 @@ void THtml::ClassDescription( ofstream &out, TClass *classPtr, Bool_t &flag )
                     while( *nameEndPtr && IsName( *nameEndPtr ) )
                         nameEndPtr++;
 
-                    Char_t c1 = *nameEndPtr;
-                    Char_t pe = 0;
+                    char c1 = *nameEndPtr;
+                    char pe = 0;
 
-                    Char_t *params, *paramsEnd;
+                    char *params, *paramsEnd;
                     params = nameEndPtr;
                     paramsEnd = NULL;
 
@@ -940,8 +951,8 @@ void THtml::ClassDescription( ofstream &out, TClass *classPtr, Bool_t &flag )
                     if( nameEndPtr ) *nameEndPtr = c1;
 
                     if( method ) {
-                        Char_t *typeEnd = NULL;
-                        Char_t c2 = 0;
+                        char *typeEnd = NULL;
+                        char c2 = 0;
 
                         found = kFALSE;
 
@@ -952,7 +963,7 @@ void THtml::ClassDescription( ofstream &out, TClass *classPtr, Bool_t &flag )
                         typeEnd++;
                         c2 = *typeEnd;
                         *typeEnd = 0;
-                        Char_t *type = typeEnd - 1;
+                        char *type = typeEnd - 1;
                         while( IsName( *type ) && ( type > fLine ))
                             type--;
                         if( !IsWord( *type )) type++;
@@ -974,7 +985,7 @@ void THtml::ClassDescription( ofstream &out, TClass *classPtr, Bool_t &flag )
 
                         if( found ) {
                             ptr = strchr( nameEndPtr, '{');
-                            Char_t *semicolon = strchr( nameEndPtr, ';');
+                            char *semicolon = strchr( nameEndPtr, ';');
                             if( semicolon )
                                 if( !ptr || ( semicolon < ptr )) found = kFALSE;
 
@@ -994,7 +1005,7 @@ void THtml::ClassDescription( ofstream &out, TClass *classPtr, Bool_t &flag )
                             else if( ptr ) *ptr = 0;
 
                             if( found ) {
-                                Char_t *colonPtr = strrchr( fLine, ':');
+                                char *colonPtr = strrchr( fLine, ':');
                                 if( colonPtr > funcName ) *colonPtr = 0;
                                 if( found ) {
                                     out << "<hr>" << endl;
@@ -1027,7 +1038,7 @@ void THtml::ClassDescription( ofstream &out, TClass *classPtr, Bool_t &flag )
                                     // remove this method name from the list of methods
                                     i = 0;
                                     while( i < numberOfMethods ) {
-                                        const Char_t *mptr = methodNames[2*i];
+                                        const char *mptr = methodNames[2*i];
                                         if( mptr ) {
                                            while( *mptr == '*') mptr++;
                                            if( !strcmp( mptr, funcName )) {
@@ -1101,6 +1112,7 @@ void THtml::ClassDescription( ofstream &out, TClass *classPtr, Bool_t &flag )
                             if(
                                 !strcmp( method->GetName(), "Dictionary"    ) ||
                                 !strcmp( method->GetName(), "Class_Version" ) ||
+                                !strcmp( method->GetName(), "Class_Name"    ) ||
                                 !strcmp( method->GetName(), "DeclFileName"  ) ||
                                 !strcmp( method->GetName(), "DeclFileLine"  ) ||
                                 !strcmp( method->GetName(), "ImplFileName"  ) ||
@@ -1114,7 +1126,7 @@ void THtml::ClassDescription( ofstream &out, TClass *classPtr, Bool_t &flag )
                             out << "<!--TAB6-->      ";
                             while( len++ < maxlen+2 ) out << " ";
 
-                            Char_t *tmpstr = StrDup( method->GetReturnTypeName() );
+                            char *tmpstr = StrDup( method->GetReturnTypeName() );
                             if( tmpstr ) {
                                 ExpandKeywords( out, tmpstr, classPtr, flag );
                                 delete [] tmpstr;
@@ -1180,8 +1192,8 @@ void THtml::ClassTree( TVirtualPad *psCanvas, TClass *classPtr, Bool_t force )
 //
 
     if( psCanvas && classPtr ) {
-        Char_t *tmp1 = gSystem->ConcatFileName( gSystem->ExpandPathName( fOutputDir ), classPtr->GetName() );
-        Char_t *filename = StrDup( tmp1 , 16 );
+        char *tmp1 = gSystem->ConcatFileName( gSystem->ExpandPathName( fOutputDir ), classPtr->GetName() );
+        char *filename = StrDup( tmp1 , 16 );
 
         strcat( filename, "_Tree.ps" );
 
@@ -1214,8 +1226,8 @@ void THtml::Convert( const char *filename, const char *title, const char *dirnam
 //  NOTE: Output file name is the same as filename, but with extension .html
 //
 
-    const Char_t *dir;
-    Char_t *ptr;
+    const char *dir;
+    char *ptr;
 
     Bool_t isCommentedLine = kFALSE;
     Bool_t tempFlag = kFALSE;
@@ -1232,7 +1244,7 @@ void THtml::Convert( const char *filename, const char *title, const char *dirnam
 
 
     // find a file
-    Char_t *realFilename = gSystem->Which( fSourceDir, filename, kReadPermission );
+    char *realFilename = gSystem->Which( fSourceDir, filename, kReadPermission );
 
     if( realFilename ) {
 
@@ -1247,8 +1259,8 @@ void THtml::Convert( const char *filename, const char *title, const char *dirnam
 
             // open temp file with extension '.html'
             if( !gSystem->AccessPathName( dir )) {
-                Char_t *tmp1 = gSystem->ConcatFileName( dir, GetFileName( filename ));
-                Char_t *htmlFilename = StrDup( tmp1, 16 );
+                char *tmp1 = gSystem->ConcatFileName( dir, GetFileName( filename ));
+                char *htmlFilename = StrDup( tmp1, 16 );
                 strcat( htmlFilename, ".html" );
 
                 if( tmp1 ) delete [] tmp1;
@@ -1316,7 +1328,7 @@ void THtml::Convert( const char *filename, const char *title, const char *dirnam
 
 
 //______________________________________________________________________________
-Bool_t THtml::CopyHtmlFile( const Char_t *sourceName, const Char_t *destName )
+Bool_t THtml::CopyHtmlFile( const char *sourceName, const char *destName )
 {
 // Copy file to HTML directory
 //
@@ -1337,8 +1349,8 @@ Bool_t THtml::CopyHtmlFile( const Char_t *sourceName, const Char_t *destName )
     Int_t check = 0;
 
     // source file name
-    Char_t *tmp1 = gSystem->Which( fSourceDir, sourceName, kReadPermission );
-    Char_t *sourceFile = StrDup( tmp1, 16 );
+    char *tmp1 = gSystem->Which( fSourceDir, sourceName, kReadPermission );
+    char *sourceFile = StrDup( tmp1, 16 );
 
     if( tmp1 ) delete [] tmp1;
     tmp1 = 0;
@@ -1346,13 +1358,13 @@ Bool_t THtml::CopyHtmlFile( const Char_t *sourceName, const Char_t *destName )
     if( sourceFile ) {
 
         // destination file name
-        Char_t *tmpstr = 0;
+        char *tmpstr = 0;
         if( !*destName ) tmpstr = StrDup( GetFileName( sourceFile ), 16 );
         else tmpstr = StrDup( GetFileName( destName ), 16 );
         destName = tmpstr;
 
         tmp1 = gSystem->ConcatFileName( gSystem->ExpandPathName( fOutputDir ), destName );
-        Char_t *filename = StrDup( tmp1, 16 );
+        char *filename = StrDup( tmp1, 16 );
 
         if( tmp1 ) delete [] tmp1;
         tmp1 = 0;
@@ -1366,7 +1378,7 @@ Bool_t THtml::CopyHtmlFile( const Char_t *sourceName, const Char_t *destName )
 
         if( (sModtime != dModtime ) || check ) {
 
-            Char_t *cmd = new Char_t[256];
+            char *cmd = new char[256];
 
 #ifdef R__UNIX
             strcpy( cmd, "/bin/cp " );
@@ -1381,7 +1393,7 @@ Bool_t THtml::CopyHtmlFile( const Char_t *sourceName, const Char_t *destName )
             strcat( cmd, "\" \"" );
             strcat( cmd, filename );
             strcat( cmd, "\"");
-            Char_t *bptr = 0;
+            char *bptr = 0;
             while( bptr = strchr( cmd, '/') )
                 *bptr = '\\';
 #endif
@@ -1402,7 +1414,7 @@ Bool_t THtml::CopyHtmlFile( const Char_t *sourceName, const Char_t *destName )
 
 
 //______________________________________________________________________________
-void THtml::CreateIndex( const Char_t **classNames, Int_t numberOfClasses )
+void THtml::CreateIndex( const char **classNames, Int_t numberOfClasses )
 {
 // Create an index
 //
@@ -1413,8 +1425,8 @@ void THtml::CreateIndex( const Char_t **classNames, Int_t numberOfClasses )
 
     Int_t i, len, maxLen = 0;
 
-    Char_t *tmp1 = gSystem->ConcatFileName( gSystem->ExpandPathName( fOutputDir ), "ClassIndex.html" );
-    Char_t *filename = StrDup( tmp1 );
+    char *tmp1 = gSystem->ConcatFileName( gSystem->ExpandPathName( fOutputDir ), "ClassIndex.html" );
+    char *filename = StrDup( tmp1 );
 
     if( tmp1 ) delete [] tmp1;
     tmp1 = 0;
@@ -1437,7 +1449,7 @@ void THtml::CreateIndex( const Char_t **classNames, Int_t numberOfClasses )
         indexFile << "<h1>Index</h1>" << endl;
 
         // check for a search engine
-        const Char_t *searchEngine = gEnv->GetValue( "Root.Html.SearchEngine", "" );
+        const char *searchEngine = gEnv->GetValue( "Root.Html.SearchEngine", "" );
 
         // if exists ...
         if( *searchEngine ) {
@@ -1459,7 +1471,7 @@ void THtml::CreateIndex( const Char_t **classNames, Int_t numberOfClasses )
             TClass *classPtr = GetClass( (const char * ) classNames[i] );
 
             indexFile << "<li>";
-            Char_t *htmlFile = GetHtmlFileName( classPtr );
+            char *htmlFile = GetHtmlFileName( classPtr );
             if( htmlFile ) {
                 indexFile << "<a name=\"";
                 indexFile << classNames[i];
@@ -1507,7 +1519,7 @@ void THtml::CreateIndex( const Char_t **classNames, Int_t numberOfClasses )
 
 
 //______________________________________________________________________________
-void THtml::CreateIndexByTopic( Char_t **fileNames, Int_t numberOfNames, Int_t maxLen )
+void THtml::CreateIndexByTopic( char **fileNames, Int_t numberOfNames, Int_t maxLen )
 {
 // It creates several index files
 //
@@ -1518,20 +1530,20 @@ void THtml::CreateIndexByTopic( Char_t **fileNames, Int_t numberOfNames, Int_t m
 //
 
     ofstream outputFile;
-    Char_t *filename = NULL;
+    char *filename = NULL;
     Int_t i;
 
     for( i = 0; i < numberOfNames; i++ ) {
         if( !filename ) {
 
             // create a filename
-            Char_t *tmp1 = gSystem->ConcatFileName( gSystem->ExpandPathName( fOutputDir ), fileNames[i] );
+            char *tmp1 = gSystem->ConcatFileName( gSystem->ExpandPathName( fOutputDir ), fileNames[i] );
             filename = StrDup( tmp1, 16);
 
             if( tmp1 ) delete [] tmp1;
             tmp1 = 0;
 
-            Char_t *underlinePtr = strrchr( filename, '_');
+            char *underlinePtr = strrchr( filename, '_');
             *underlinePtr = 0;
 
             strcat( filename, "_Index.html" );
@@ -1561,7 +1573,7 @@ void THtml::CreateIndexByTopic( Char_t **fileNames, Int_t numberOfNames, Int_t m
             // write a classname to an index file
             outputFile << "<li>";
 
-            Char_t *htmlFile = GetHtmlFileName( classPtr );
+            char *htmlFile = GetHtmlFileName( classPtr );
 
             if( htmlFile ) {
                 outputFile << "<a name=\"";
@@ -1593,11 +1605,11 @@ void THtml::CreateIndexByTopic( Char_t **fileNames, Int_t numberOfNames, Int_t m
 
 
         // first base name
-        Char_t *first  = strrchr( fileNames[i], '_');
+        char *first  = strrchr( fileNames[i], '_');
         if( first ) *first = 0;
 
         // second base name
-        Char_t *second = NULL;
+        char *second = NULL;
         if( i < ( numberOfNames - 1 )) {
             second = strrchr( fileNames[i+1], '_');
             if( second ) *second = 0;
@@ -1644,7 +1656,7 @@ void THtml::CreateListOfTypes()
     // open file
     ofstream typesList;
 
-    Char_t *outFile = gSystem->ConcatFileName( gSystem->ExpandPathName( fOutputDir ), "ListOfTypes.html" );
+    char *outFile = gSystem->ConcatFileName( gSystem->ExpandPathName( fOutputDir ), "ListOfTypes.html" );
     typesList.open( outFile, ios::out );
 
 
@@ -1690,7 +1702,7 @@ void THtml::CreateListOfTypes()
                 typesList << "<a name=\"Title:";
                 typesList << type->GetTitle();
                 typesList << "\">";
-                Char_t *tempstr = StrDup( type->GetTitle() );
+                char *tempstr = StrDup( type->GetTitle() );
                 ReplaceSpecialChars( typesList, tempstr );
                 typesList << "</a>" << endl;
 
@@ -1737,7 +1749,7 @@ void THtml::DerivedClasses( ofstream &out, TClass *classPtr )
 
     // get class names
     TClass *derivedClassPtr;
-    const Char_t *derivedClassName;
+    const char *derivedClassName;
     for( Int_t i = 0; i < numberOfClasses; i++ ) {
 
         // get class name
@@ -1746,6 +1758,10 @@ void THtml::DerivedClasses( ofstream &out, TClass *classPtr )
         // get class pointer
         derivedClassPtr = GetClass( derivedClassName );
 
+        if ( !derivedClassPtr ) {
+           Warning("DerivedClasses","Can not find a definition for class <%s>",derivedClassName);
+           continue;
+        }
         // make a loop on base classes
         TBaseClass *inheritFrom;
         TIter nextBase( derivedClassPtr->GetListOfBases() );
@@ -1759,7 +1775,7 @@ void THtml::DerivedClasses( ofstream &out, TClass *classPtr )
                 }
                 if( !first ) out << ", ";
 
-                Char_t *htmlFile = GetHtmlFileName( derivedClassPtr );
+                char *htmlFile = GetHtmlFileName( derivedClassPtr );
 
                 if( htmlFile ) {
                     out << "<a href=\"";
@@ -1783,8 +1799,8 @@ void THtml::DerivedClasses( ofstream &out, TClass *classPtr )
 
 
 //______________________________________________________________________________
-void THtml::ExpandKeywords( ofstream &out, Char_t *text, TClass *ptr2class,
-                            Bool_t &flag, const Char_t *dir )
+void THtml::ExpandKeywords( ofstream &out, char *text, TClass *ptr2class,
+                            Bool_t &flag, const char *dir )
 {
 // Find keywords in text & create URLs
 //
@@ -1797,14 +1813,14 @@ void THtml::ExpandKeywords( ofstream &out, Char_t *text, TClass *ptr2class,
 //                    directory position
 //
 
-    Char_t *keyword = text;
-    Char_t *end;
-    Char_t *funcName;
-    Char_t *funcNameEnd;
-    Char_t *funcSig;
-    Char_t *funcSigEnd;
-    Char_t c, c2, c3;
-    Char_t *tempEndPtr;
+    char *keyword = text;
+    char *end;
+    char *funcName;
+    char *funcNameEnd;
+    char *funcSig;
+    char *funcSigEnd;
+    char c, c2, c3;
+    char *tempEndPtr;
     c2 = c3 = 0;
 
     Bool_t hide;
@@ -1939,7 +1955,7 @@ void THtml::ExpandKeywords( ofstream &out, Char_t *text, TClass *ptr2class,
 
             if( classPtr ) {
 
-                Char_t *htmlFile = GetHtmlFileName( classPtr );
+                char *htmlFile = GetHtmlFileName( classPtr );
 
                 if( htmlFile ) {
                     out << "<a href=\"";
@@ -1999,7 +2015,7 @@ void THtml::ExpandKeywords( ofstream &out, Char_t *text, TClass *ptr2class,
                     // look for '('
                     Bool_t isfunc = ( (*tempEndPtr == '(') || c == '(')? kTRUE: kFALSE;
                     if( !isfunc ) {
-                        Char_t *bptr = tempEndPtr + 1;
+                        char *bptr = tempEndPtr + 1;
                         while( *bptr && isspace( *bptr ) ) bptr++;
                         if( *bptr == '(') isfunc = kTRUE;
                     }
@@ -2015,13 +2031,13 @@ void THtml::ExpandKeywords( ofstream &out, Char_t *text, TClass *ptr2class,
                     else {
                         const char *anyname = gROOT->FindObjectClassName( keyword );
 
-                        const Char_t *namePtr = NULL;
+                        const char *namePtr = NULL;
                         TClass *cl  = 0;
                         TClass *cdl = 0;
 
                         if( anyname ) {
                             cl = GetClass( anyname );
-                            namePtr = ( const Char_t * ) anyname;
+                            namePtr = ( const char * ) anyname;
                             cdl = cl;
                         }
                         else if( ptr2class ) {
@@ -2035,7 +2051,7 @@ void THtml::ExpandKeywords( ofstream &out, Char_t *text, TClass *ptr2class,
                         }
 
                         if( cl ) {
-                            Char_t *htmlFile = GetHtmlFileName( cl );
+                            char *htmlFile = GetHtmlFileName( cl );
 
                             if( htmlFile ) {
                                 out << "<a href=\"";
@@ -2054,7 +2070,7 @@ void THtml::ExpandKeywords( ofstream &out, Char_t *text, TClass *ptr2class,
                             else out << keyword;
 
                             if( funcName ) {
-                                Char_t *ptr = end;
+                                char *ptr = end;
                                 ptr++;
                                 ReplaceSpecialChars( out, c );
                                 while( ptr < funcName )
@@ -2065,7 +2081,7 @@ void THtml::ExpandKeywords( ofstream &out, Char_t *text, TClass *ptr2class,
                                 if( method ) {
                                     TClass *cm = method->GetClass();
                                     if( cm ) {
-                                        Char_t *htmlFile2 = GetHtmlFileName( cm );
+                                        char *htmlFile2 = GetHtmlFileName( cm );
                                         if( htmlFile2 ) {
                                             out << "<a href=\"";
                                             if( *dir  && strncmp( htmlFile2, "http://", 7 )) out << dir;
@@ -2114,7 +2130,7 @@ void THtml::ExpandKeywords( ofstream &out, Char_t *text, TClass *ptr2class,
 
 
 //______________________________________________________________________________
-void THtml::ExpandPpLine( ofstream &out, Char_t *line )
+void THtml::ExpandPpLine( ofstream &out, char *line )
 {
 // Expand preprocessor statements
 //
@@ -2128,10 +2144,10 @@ void THtml::ExpandPpLine( ofstream &out, Char_t *line )
 //        if such file exists
 //
 
-    const Char_t *ptr;
-    const Char_t *ptrStart;
-    const Char_t *ptrEnd;
-    Char_t *fileName;
+    const char *ptr;
+    const char *ptrStart;
+    const char *ptrEnd;
+    char *fileName;
 
     Bool_t linkExist = kFALSE;
 
@@ -2143,12 +2159,12 @@ void THtml::ExpandPpLine( ofstream &out, Char_t *line )
             ptrEnd = strpbrk( ptrStart, ">\"" );
             if( ptrEnd ) {
                 Int_t len = ptrEnd - ptrStart;
-                fileName = new Char_t [len + 1];
+                fileName = new char [len + 1];
                 strncpy( fileName, ptrStart, len );
 
-                Char_t *tmpstr = gSystem->Which( fSourceDir, fileName, kReadPermission );
+                char *tmpstr = gSystem->Which( fSourceDir, fileName, kReadPermission );
                 if( tmpstr ) {
-                    Char_t *realFileName = StrDup( tmpstr );
+                    char *realFileName = StrDup( tmpstr );
 
                     if( realFileName ) {
                         CopyHtmlFile( realFileName );
@@ -2164,6 +2180,7 @@ void THtml::ExpandPpLine( ofstream &out, Char_t *line )
                     }
                     if( realFileName ) delete [] realFileName;
                     if( fileName )     delete [] fileName;
+                    delete [] tmpstr;
                 }
             }
         }
@@ -2173,7 +2190,7 @@ void THtml::ExpandPpLine( ofstream &out, Char_t *line )
 }
 
 //______________________________________________________________________________
-const Char_t *THtml::GetFileName( const Char_t *filename )
+const char *THtml::GetFileName( const char *filename )
 {
 // It discards any directory information inside filename
 //
@@ -2188,9 +2205,41 @@ const Char_t *THtml::GetFileName( const Char_t *filename )
     return( gSystem->BaseName( gSystem->UnixPathName( filename )) );
 }
 
+//______________________________________________________________________________
+char *THtml::GetSourceFileName(const char *filename)
+{
+   // Find the source file. If filename contains a path it will be used
+   // together with the possible source prefix. If not found we try
+   // old algorithm, by stripping off the path and trying to find it in the
+   // specified source search path. Returned string must be deleted by the
+   // user. In case filename is not found 0 is returned.
+
+   char *tmp1;
+#ifdef WIN32
+   if (strchr(filename, '/') || strchr(filename, '\\')) {
+#else
+   if (strchr(filename, '/')) {
+#endif
+      char *tmp;
+      if (strlen(fSourcePrefix) > 0)
+         tmp = gSystem->ConcatFileName(fSourcePrefix, filename);
+      else
+         tmp = StrDup(filename);
+      if ((tmp1 = gSystem->Which(fSourceDir, tmp, kReadPermission))) {
+         delete [] tmp;
+         return tmp1;
+      }
+      delete [] tmp;
+   }
+
+   if ((tmp1 = gSystem->Which(fSourceDir, GetFileName(filename), kReadPermission)))
+      return tmp1;
+
+   return 0;
+}
 
 //______________________________________________________________________________
-Char_t *THtml::GetHtmlFileName( TClass *classPtr )
+char *THtml::GetHtmlFileName( TClass *classPtr )
 {
 // Return real HTML filename
 //
@@ -2198,20 +2247,20 @@ Char_t *THtml::GetHtmlFileName( TClass *classPtr )
 //  Input: classPtr - pointer to a class
 //
 // Output: pointer to the string containing a full name
-//         of the corresponding HTML file
+//         of the corresponding HTML file. The string must be deleted by the user.
 //
 
-    Char_t htmlFileName [128];
+    char htmlFileName [128];
 
-    Char_t *ret  = 0;
+    char *ret  = 0;
     Bool_t found = kFALSE;
 
     if( classPtr ) {
 
-        const Char_t *filename = classPtr->GetImplFileName();
+        const char *filename = classPtr->GetImplFileName();
 
-        Char_t varName[80];
-        const Char_t *colon = strchr( filename, ':');
+        char varName[80];
+        const char *colon = strchr( filename, ':');
 
 
         // this should be a prefix
@@ -2222,8 +2271,8 @@ Char_t *THtml::GetHtmlFileName( TClass *classPtr )
             strncat( varName, filename, colon-filename );
         else strcat( varName, "Root" );
 
-
-        if( !gSystem->Which( fSourceDir, filename, kReadPermission )) {
+        char *tmp;
+        if( !(tmp = gSystem->Which( fSourceDir, filename, kReadPermission ))) {
             strcpy( htmlFileName, gEnv->GetValue( varName, "" ));
             if( !*htmlFileName ) found = kFALSE;
             else found = kTRUE;
@@ -2232,9 +2281,10 @@ Char_t *THtml::GetHtmlFileName( TClass *classPtr )
             strcpy( htmlFileName, "." );
             found = kTRUE;
         }
+        delete [] tmp;
 
         if( found ) {
-            Char_t *tmp1 = gSystem->ConcatFileName( htmlFileName, classPtr->GetName() );
+            char *tmp1 = gSystem->ConcatFileName( htmlFileName, classPtr->GetName() );
             ret = StrDup( tmp1, 16 );
             strcat( ret, ".html" );
 
@@ -2253,14 +2303,20 @@ TClass *THtml::GetClass(const char *name1, Bool_t load)
 {
 //*-*-*-*-*Return pointer to class with name*-*-*-*-*-*-*-*-*-*-*-*-*
 //*-*      =================================
-   char name[64];
+   Int_t n = strlen(name1);
+   char *name = new char[n+1];
+   strcpy(name, name1);
+   char *t = name+n-1;
+   while(*t == ' ') {
+      *t = 0;
+      if (t == name) break;
+      t--;
+   }
+   t = name;
+   while(*t == ' ') t++;
 
-   char *t = Strip(name1);
-   if (strlen (t) > 64) strncpy(name, t, 63);
-   else strcpy(name, t);
-   delete [] t;
-
-   TClass *cl = gROOT->GetClass(name,load);
+   TClass *cl = gROOT->GetClass(t,load);
+   delete [] name;
    return cl;
 }
 
@@ -2281,12 +2337,12 @@ Bool_t THtml::IsModified( TClass *classPtr, const Int_t type )
 
     Bool_t ret = kTRUE;
 
-    Char_t  sourceFile[1024], filename[1024];
-    Char_t *strPtr, *strPtr2;
+    char  sourceFile[1024], filename[1024];
+    char *strPtr, *strPtr2;
 
     switch( type ) {
        case kSource:
-          strPtr2 = gSystem->Which( fSourceDir, GetFileName( classPtr->GetImplFileName() ));
+          strPtr2 = GetSourceFileName(classPtr->GetImplFileName());
           if (strPtr2) strcpy( sourceFile, strPtr2 );
           strPtr = gSystem->ConcatFileName( gSystem->ExpandPathName( fOutputDir ), "src" );
           strcpy( filename, strPtr );
@@ -2302,7 +2358,7 @@ Bool_t THtml::IsModified( TClass *classPtr, const Int_t type )
           break;
 
        case kInclude:
-          strPtr2 = gSystem->Which( fSourceDir, GetFileName( classPtr->GetDeclFileName() ));
+          strPtr2 = GetSourceFileName(classPtr->GetDeclFileName());
           if (strPtr2) strcpy( sourceFile, strPtr2 );
           strPtr = gSystem->ConcatFileName( gSystem->ExpandPathName( fOutputDir ), GetFileName( classPtr->GetDeclFileName() ));
           strcpy( filename,strPtr );
@@ -2311,7 +2367,7 @@ Bool_t THtml::IsModified( TClass *classPtr, const Int_t type )
           break;
 
        case kTree:
-          strPtr2 = gSystem->Which( fSourceDir, GetFileName( classPtr->GetDeclFileName() ));
+          strPtr2 = GetSourceFileName(classPtr->GetDeclFileName());
           if (strPtr2) strcpy( sourceFile, strPtr2 );
           strPtr = gSystem->ConcatFileName( gSystem->ExpandPathName( fOutputDir ), GetFileName( classPtr->GetName() ));
           strcpy( filename, strPtr);
@@ -2391,7 +2447,7 @@ void THtml::MakeAll( Bool_t force )
     MakeIndex();
 
     Int_t numberOfClasses    = gClassTable->Classes();
-    const Char_t **className = new const Char_t* [numberOfClasses];
+    const char **className = new const char* [numberOfClasses];
 
     // start from begining
     gClassTable->Init();
@@ -2402,7 +2458,7 @@ void THtml::MakeAll( Bool_t force )
 
     for( i = 0; i < numberOfClasses; i++ ) {
         sprintf( fCounter, "%5d", numberOfClasses - i );
-        MakeClass( (Char_t * ) className[i], force );
+        MakeClass( (char * ) className[i], force );
     }
 
     *fCounter = 0;
@@ -2423,7 +2479,7 @@ void THtml::MakeClass(const char *className, Bool_t force )
     TClass *classPtr = GetClass( className );
 
     if( classPtr ) {
-        Char_t *htmlFile = GetHtmlFileName( classPtr );
+        char *htmlFile = GetHtmlFileName( classPtr );
         if( htmlFile && !strncmp( htmlFile, "http://", 7 )) {
            delete [] htmlFile;
            htmlFile = 0;
@@ -2444,70 +2500,72 @@ void THtml::MakeClass(const char *className, Bool_t force )
 //______________________________________________________________________________
 void THtml::MakeIndex()
 {
-// It makes an index files
+   // It makes an index files
 
-    CreateListOfTypes();
+   CreateListOfTypes();
 
-    // get total number of classes
-    Int_t numberOfClasses = gClassTable->Classes();
-
-
-    // allocate memory
-    const Char_t **classNames = new const Char_t *[numberOfClasses];
-    Char_t       **fileNames  = new       Char_t *[numberOfClasses];
+   // get total number of classes
+   Int_t numberOfClasses = gClassTable->Classes();
 
 
-    // start from begining
-    gClassTable->Init();
+   // allocate memory
+   const char **classNames = new const char *[numberOfClasses];
+   char       **fileNames  = new       char *[numberOfClasses];
 
-    // get class names
-    Int_t len = 0;
-    Int_t maxLen = 0;
-    Int_t numberOfImpFiles = 0;
+   // start from begining
+   gClassTable->Init();
 
-    for( Int_t i = 0; i < numberOfClasses; i++ ) {
+   // get class names
+   Int_t len = 0;
+   Int_t maxLen = 0;
+   Int_t numberOfImpFiles = 0;
 
-        // get class name
-        classNames[i] = gClassTable->Next();
-        len    = strlen( classNames[i] );
-        maxLen = maxLen > len ? maxLen : len;
+   for( Int_t i = 0; i < numberOfClasses; i++ ) {
 
-        // get class & filename
-        TClass *classPtr = GetClass( (const char * ) classNames[i] );
-        const char *impname = classPtr->GetImplFileName();
+      // get class name
+      classNames[i] = gClassTable->Next();
+      len    = strlen( classNames[i] );
+      maxLen = maxLen > len ? maxLen : len;
 
-        if( impname ) {
-            fileNames[numberOfImpFiles] = StrDup( impname, 16 );
+      // get class & filename
+      TClass *classPtr = GetClass( (const char * ) classNames[i] );
+      const char *impname = classPtr->GetImplFileName();
 
-            Char_t *underline = strchr( fileNames[numberOfImpFiles], '_');
-            if( underline )
-                strcpy( underline + 1, classNames[i] );
-            else {
-                strcpy( fileNames[i], "USER_" );
-                strcat( fileNames[i], classNames[i] );
+      if( impname ) {
+         fileNames[numberOfImpFiles] = StrDup( impname, 64 );
+
+         char *underline = strchr( fileNames[numberOfImpFiles], '_');
+         if( underline )
+            strcpy( underline + 1, classNames[i] );
+         else {
+            // for new ROOT install the impl file name has the form: base/src/TROOT.cxx
+            char *srcdir = strstr(fileNames[numberOfImpFiles], "/src/");
+            if (srcdir) {
+               strcpy(srcdir, "_");
+               for (char *t = fileNames[numberOfImpFiles]; (t[0] = toupper(t[0])); t++) ;
+               strcat(srcdir, classNames[i]);
+            } else {
+               strcpy( fileNames[i], "USER_" );
+               strcat( fileNames[i], classNames[i] );
             }
-            numberOfImpFiles++;
-        }
-        else cout << "WARNING class:" << classNames[i] << " has no implementation file name !" << endl;
-    }
-    maxLen += kSpaceNum;
+         }
+         numberOfImpFiles++;
+      }
+      else cout << "WARNING class:" << classNames[i] << " has no implementation file name !" << endl;
+   }
+   maxLen += kSpaceNum;
 
+   // quick sort
+   SortNames( classNames, numberOfClasses );
+   SortNames( (const char ** ) fileNames,  numberOfImpFiles );
 
+   // create an index
+   CreateIndex( classNames, numberOfClasses );
+   CreateIndexByTopic( fileNames, numberOfClasses, maxLen );
 
-    // quick sort
-    SortNames( classNames, numberOfClasses );
-    SortNames( (const Char_t ** ) fileNames,  numberOfImpFiles );
-
-
-    // create an index
-    CreateIndex( classNames, numberOfClasses );
-    CreateIndexByTopic( fileNames, numberOfClasses, maxLen );
-
-
-    // free allocated memory
-    delete [] classNames;
-    delete [] fileNames;
-
+   // free allocated memory
+   delete [] classNames;
+   delete [] fileNames;
 }
 
 
@@ -2529,7 +2587,7 @@ void THtml::MakeTree(const char *className, Bool_t force )
 
     if( classPtr ) {
 
-        Char_t *htmlFile = GetHtmlFileName( classPtr );
+        char *htmlFile = GetHtmlFileName( classPtr );
         if( htmlFile && !strncmp( htmlFile, "http://", 7 )) {
            delete [] htmlFile;
            htmlFile = 0;
@@ -2554,7 +2612,7 @@ void THtml::MakeTree(const char *className, Bool_t force )
 
 
 //______________________________________________________________________________
-void THtml::ReplaceSpecialChars( ofstream &out, const Char_t c )
+void THtml::ReplaceSpecialChars( ofstream &out, const char c )
 {
 // Replace ampersand, less-than and greater-than character
 //
@@ -2589,7 +2647,7 @@ void THtml::ReplaceSpecialChars( ofstream &out, const Char_t c )
 
 
 //______________________________________________________________________________
-void THtml::ReplaceSpecialChars( ofstream &out, const Char_t *string )
+void THtml::ReplaceSpecialChars( ofstream &out, const char *string )
 {
 // Replace ampersand, less-than and greater-than characters
 //
@@ -2599,13 +2657,13 @@ void THtml::ReplaceSpecialChars( ofstream &out, const Char_t *string )
 //
 
     if( string ) {
-        Char_t *data  = StrDup( string );
+        char *data  = StrDup( string );
         if( data ) {
-            Char_t *ptr   = NULL;
-            Char_t *start = data;
+            char *ptr   = NULL;
+            char *start = data;
 
             while (( ptr = strpbrk( start, "<&>" ))) {
-               Char_t c = *ptr;
+               char c = *ptr;
                *ptr = 0;
                out << start;
                ReplaceSpecialChars( out, c );
@@ -2618,7 +2676,7 @@ void THtml::ReplaceSpecialChars( ofstream &out, const Char_t *string )
 }
 
 //______________________________________________________________________________
-void THtml::SortNames( const Char_t **strings, Int_t num, Bool_t type )
+void THtml::SortNames( const char **strings, Int_t num, Bool_t type )
 {
 // Sort strings
 //
@@ -2637,7 +2695,7 @@ void THtml::SortNames( const Char_t **strings, Int_t num, Bool_t type )
 
 
 //______________________________________________________________________________
-Char_t *THtml::StrDup( const Char_t *s1, Int_t n )
+char *THtml::StrDup( const char *s1, Int_t n )
 {
 // Returns a pointer to a new string which is a duplicate
 // of the string to which 's1' points.  The space for the
@@ -2645,11 +2703,11 @@ Char_t *THtml::StrDup( const Char_t *s1, Int_t n )
 // string has the length of 'strlen(s1) + n'.
 
 
-   Char_t *str = 0;
+   char *str = 0;
 
    if( s1 ) {
        if( n < 0 ) n = 0;
-       str = new Char_t[ strlen( s1 ) + n + 1 ];
+       str = new char[ strlen( s1 ) + n + 1 ];
        if( str ) strcpy( str, s1 );
    }
 
@@ -2657,7 +2715,7 @@ Char_t *THtml::StrDup( const Char_t *s1, Int_t n )
 }
 
 //______________________________________________________________________________
-void THtml::WriteHtmlHeader( ofstream &out, const Char_t *title )
+void THtml::WriteHtmlHeader( ofstream &out, const char *title )
 {
 // Write HTML header
 //
@@ -2683,7 +2741,7 @@ void THtml::WriteHtmlHeader( ofstream &out, const Char_t *title )
     out << "<meta name=\"rating\" content=\"General\">" << endl;
     out << "<meta name=\"objecttype\" content=\"Manual\">" << endl;
     out << "<meta name=\"keywords\" content=\"software development, oo, object oriented, ";
-    out << "unix, x11, motif, windows nt, c++, html, rene brun, fons rademakers\">" << endl;
+    out << "unix, x11, windows, c++, html, rene brun, fons rademakers\">" << endl;
     out << "<meta name=\"description\" content=\"ROOT - An Object Oriented Framework For Large Scale Data Analysis.\">" << endl;
     out << "</head>" << endl;
 
@@ -2719,15 +2777,15 @@ void THtml::WriteHtmlFooter( ofstream &out, const char *dir, const char *lastUpd
 
         out << "<em>Author: ";
 
-        Char_t *auth = StrDup(author);
+        char *auth = StrDup(author);
 
-        Char_t *name = strtok( auth, "," );
+        char *name = strtok( auth, "," );
 
         Bool_t firstAuthor = kTRUE;
 
         do {
-            Char_t *ptr = name;
-            Char_t c;
+            char *ptr = name;
+            char c;
 
             // remove leading spaces
             while( *ptr && isspace( *ptr ) ) ptr++;
@@ -2735,7 +2793,7 @@ void THtml::WriteHtmlFooter( ofstream &out, const char *dir, const char *lastUpd
             if( !firstAuthor ) out << ", ";
 
             if( !strncmp( ptr, "Nicolas", 7 ) ) {
-                out << "<a href=http://root.cern.ch/root/nicolas/html/index.html";
+                out << "<a href=http://pcbrun.cern.ch/nicolas/index.html";
                 ptr += 12;
             } else {
                 out << "<a href="<<GetXwho();
@@ -2787,7 +2845,7 @@ void THtml::WriteHtmlFooter( ofstream &out, const char *dir, const char *lastUpd
     out << "<a href=\"http://root.cern.ch/root/Welcome.html\">ROOT page</a> - ";
 
     // link to the user home page( if exist )
-    const Char_t *userHomePage = gEnv->GetValue( "Root.Html.HomePage", "" );
+    const char *userHomePage = gEnv->GetValue( "Root.Html.HomePage", "" );
     if( *userHomePage ) {
         out << "<a href=\"";
         if( *dir ) {

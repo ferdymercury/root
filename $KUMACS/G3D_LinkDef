@@ -1,3 +1,4 @@
+*CMZ :  2.24/01 17/03/2000  13.17.31  by  Valery Fine(fine@bnl.gov)
 *CMZ :  2.23/12 22/01/2000  18.17.03  by  Rene Brun
 *CMZ :  2.23/11 11/01/2000  08.52.05  by  Rene Brun
 *CMZ :  2.23/07 21/10/99  23.09.33  by  Rene Brun
@@ -42,7 +43,6 @@
 #pragma link C++ class TTUBE-;
 #pragma link C++ class TTUBS+;
 #pragma link C++ class TPadOpenGLView;
-#pragma link C++ class TPadView3D;
 #pragma link C++ class TMarker3DBox-;
 #pragma link C++ class TPoints3DABC;
 

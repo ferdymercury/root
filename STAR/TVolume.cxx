@@ -1,106 +1,14 @@
+//*CMZ :  2.24/03 23/04/2000  18.59.40  by  Valery Fine(fine@bnl.gov)
+//*CMZ :  2.24/01 31/03/2000  08.29.26  by  Rene Brun
 //*CMZ :  2.23/12 29/01/2000  15.31.22  by  Valery Fine(fine@bnl.gov)
 //*-- Author : Valery Fine   10/12/98
-// $Id: TVolume.cxx,v 1.33 1999/11/24 18:49:27 fine Exp $
-// $Log: TVolume.cxx,v $
-// Revision 1.33  1999/11/24 18:49:27  fine
-// Some changed in TVolume dtor, GetListOfPositions removed
-//
-// Revision 1.32  1999/11/16 16:29:56  fine
-// TObject::GetObjectInfo() implemented
-//
-// Revision 1.31  1999/11/15 23:22:16  fine
-// refs to GEANT Wen site has been added
-//
-// Revision 1.30  1999/10/28 16:24:30  fine
-// TDataSet major correction: it may be built with TList (default) or with TObjArray
-//
-// Revision 1.29  1999/07/09 01:56:37  fine
-// New method to contrsuct sub views and manage visibilities
-//
-// Revision 1.28  1999/06/21 22:17:35  fine
-// Identity matrix fixed
-//
-// Revision 1.27  1999/06/14 08:45:19  fine
-// List of the shapes have been introduced for TVolumeView
-//
-// Revision 1.26  1999/06/09 22:09:34  fine
-// TPolyLine3D has beed redesigned
-//
-// Revision 1.25  1999/05/29 20:52:32  fine
-// Several method to estimat range of 3D object were introduced
-//
-// Revision 1.24  1999/05/13 19:57:26  fine
-// TVolume  the TShape list has been introduced, TVolume file format has been changed
-//
-// Revision 1.23  1999/05/12 15:46:00  fine
-// some cosmetic change fro Browse method
-//
-// Revision 1.22  1999/04/23 22:47:33  fine
-// Node family has been adjusted for TPolyLineShape class
-//
-// Revision 1.21  1999/04/15 19:44:46  fine
-//  TDataSetIter::FindObject bug has been fixed. aliases FindByName and FindByPath  introduced
-//
-// Revision 1.20  1999/04/13 14:26:39  fine
-// Geometry-based dataset implementation, next step
-//
-// Revision 1.19  1999/04/08 16:44:09  fine
-// Working version of the NodeView family
-//
-// Revision 1.18  1999/04/02 23:56:17  fine
-//  Clean up
-//
-// Revision 1.17  1999/03/30 22:30:13  fine
-//  Visibility test has been added for Paint method
-//
-// Revision 1.16  1999/03/29 19:25:23  fine
-// Visibility flag have been activated. Some working correction
-//
-// Revision 1.15  1999/03/27 22:44:59  fine
-// Working 3D Tnode with X3d and OpenGL
-//
-// Revision 1.14  1999/03/21 22:38:53  fine
-// StDataSetIter make up + new NextDataSet method introced
-//
-// Revision 1.13  1999/02/04 19:22:22  fine
-// Severak drawing method have been added to draw STAR nodes
-//
-// Revision 1.12  1999/02/04 16:26:11  fine
-// TVolumeView::Paint method has been introduced
-//
-// Revision 1.11  1999/01/31 02:03:06  fine
-// TDataSetIter::Notify - new method + clean up
-//
-// Revision 1.10  1999/01/30 04:24:20  fine
-// TTable: Print memory leak fixed
-//
-// Revision 1.9  1999/01/29 18:41:53  fine
-// TTableSorter clean up for HP machine
-//
-// Revision 1.8  1999/01/25 14:22:46  fine
-// TVolume Identity matrix improvement
-//
-// Revision 1.7  1999/01/23 18:40:53  fisyak
-// Cleanup for SL98l
-//
-// Revision 1.6  1999/01/13 20:29:14  fine
-// TDataSet::Pass() method - the option kUp has been introduced
-//
-// Revision 1.5  1998/12/27 04:16:44  fine
-// *** empty log message ***
-//
-// Revision 1.3  1998/12/27 02:33:16  fine
-// TVolume, TVolumePosition - first working versions have been introduced *see macros/STAR_shapes.C for an example)
-//
-// Revision 1.2  1998/12/26 21:40:40  fisyak
-// Add Id and Log
 //
 /*************************************************************************
  * Copyright(c) 1998, FineSoft, All rights reserved. Valery Fine (Faine) *
  *************************************************************************/
-//*KEND.
 
 #include <iostream.h>
+#include <stdlib.h>
 
 #include "TROOT.h"
 #include "TClass.h"
@@ -134,6 +42,7 @@ TVolume *gNode;
 #endif
 R__EXTERN  Size3D gSize3D;
 static TRotMatrix *gIdentity = 0;
+
 ClassImp(TVolume)
 
 //______________________________________________________________________________
@@ -164,6 +73,7 @@ TVolume::TVolume()
    fShape        = 0;
    fListOfShapes = 0;
    fVisibility   = kBothVisible;
+   if (!gGeometry) new TGeometry;
 }
 
 //______________________________________________________________________________
@@ -188,6 +98,7 @@ TVolume::TVolume(const Text_t *name, const Text_t *title, const Text_t *shapenam
    counter++;
    SetTitle(title);
    if(!(counter%1000))cout<<"TVolume count="<<counter<<" name="<<name<<endl;
+   if (!gGeometry) new TGeometry;
    Add(gGeometry->GetShape(shapename),kTRUE);
 //   fParent = gGeometry->GetCurrenTVolume();
    fOption = option;
@@ -195,16 +106,6 @@ TVolume::TVolume(const Text_t *name, const Text_t *title, const Text_t *shapenam
 
    if(!fShape) {Printf("Illegal referenced shape"); return;}
    ImportShapeAttributes();
-
-#if 0
-   if (GetParent()) {
-//      fParent->BuildListOfNodes();
-//      fParent->GetListOfNodes()->Add(this);
-   } else {
-//      gGeometry->GetListOfNodes()->Add(this);
-//      cd();
-   }
-#endif
 }
 
 
@@ -226,24 +127,15 @@ TVolume::TVolume(const Text_t *name, const Text_t *title, TShape *shape, Option_
    SetLineColor(lcolor);
 #endif
 
+   if (!gGeometry) new TGeometry;
    Add(shape,kTRUE);
    fOption = option;
    fVisibility = kBothVisible;
    SetTitle(title);
    if(!shape) {Printf("Illegal referenced shape"); return;}
    ImportShapeAttributes();
-#if 0
-   if (GetParent()) {
-//      fParent->BuildListOfNodes();
-//      fParent->GetListOfNodes()->Add(this);
-      ImportShapeAttributes();
-   } else {
-//      gGeometry->GetListOfNodes()->Add(this);
-//      cd();
-   }
-#endif
-
 }
+
 //______________________________________________________________________________
 Int_t TVolume::MapStNode2GEANTVis(ENodeSEEN  vis)
 {
@@ -255,6 +147,7 @@ Int_t TVolume::MapStNode2GEANTVis(ENodeSEEN  vis)
   const Int_t mapVis[4] = {1, -2, 0, -1 };
   return mapVis[vis];
 }
+
 //______________________________________________________________________________
 //ENodeSEEN TVolume::MapGEANT2StNodeVis(Int_t vis)
 Int_t TVolume::MapGEANT2StNodeVis(Int_t vis)
@@ -266,10 +159,11 @@ Int_t TVolume::MapGEANT2StNodeVis(Int_t vis)
   for (i =0; i<3;i++) if (mapVis[i] == vis) return i;
   return kBothVisible;
 }
+
 //______________________________________________________________________________
 TVolume::TVolume(TNode &rootNode):fShape(0),fListOfShapes(0)
 {
-  // Convert the ROOT TNode object into STAR TVolume
+  // Convert a TNode object into a TVolume
 
   SetName(rootNode.GetName());
   SetTitle(rootNode.GetTitle());
@@ -302,10 +196,11 @@ void TVolume::Add(TShape *shape, Bool_t IsMaster)
   fListOfShapes->Add(shape);
   if (IsMaster) fShape = shape;
 }
+
 //______________________________________________________________________________
 TNode *TVolume::CreateTNode(const TVolumePosition *position)
 {
-  // Convert the  STAR TVolume into ROOT TNode object
+  // Convert a TVolume object into a TNode
 
   Double_t x=0;
   Double_t y=0;
@@ -358,12 +253,8 @@ TVolume::~TVolume()
      SetPositionsList();
    }
    SafeDelete(fListOfShapes);
-#if 0
-   if (fParent)     fParent->GetListOfNodes()->Remove(this);
-   else    gGeometry->GetListOfNodes()->Remove(this);
-   if (gGeometry->GetCurrenTVolume() == this) gGeometry->SetCurrenTVolume(0);
-#endif
 }
+
 //______________________________________________________________________________
 void TVolume::Add(TVolumePosition *position)
 {
@@ -371,6 +262,7 @@ void TVolume::Add(TVolumePosition *position)
   if ( GetListOfPositions()) GetListOfPositions()->Add(position);
   else Error("Add","Can not create list of positions for the current node <%s>:<%s>",GetName(),GetTitle());
 }
+
 //______________________________________________________________________________
 TVolumePosition *TVolume::Add(TVolume *node, TVolumePosition *nodePosition)
 {
@@ -381,6 +273,7 @@ TVolumePosition *TVolume::Add(TVolume *node, TVolumePosition *nodePosition)
   Add(position);
   return position;
 }
+
 //______________________________________________________________________________
 TVolumePosition *TVolume::Add(TVolume *volume, Double_t x, Double_t y, Double_t z,
                               TRotMatrix *matrix,  UInt_t id, Option_t *)
@@ -435,17 +328,11 @@ void TVolume::Browse(TBrowser *b)
          posName += num;
          b->Add(nodePosition,posName.Data());
        }
-//       GetListOfPositions()->Browse(b);
    }
-//    if( GetCollection() ) {
-//       GetCollection()->Browse( b );
-//    }
    else {
 #ifndef WIN32
       Inspect();
 #endif
- //      Draw();
- //      gPad->Update();
     }
 }
 
@@ -552,16 +439,31 @@ void TVolume::Draw(Option_t *option)
    }
    if (!opt.Contains("same")) gPad->Clear();
 
-   AppendPad(option);
+    // Check geometry level
+
+    Int_t iopt = atoi(option);
+    TDataSet *parent = 0;
+    char buffer[10];
+    if (iopt < 0) {
+      // set the "positive option"
+      sprintf(buffer,"%d",-iopt);
+      option = buffer;
+      // select parent to draw
+      parent = this;
+      do parent = parent->GetParent();
+      while (parent && ++iopt);
+    }
+    if (parent) parent->AppendPad(option);
+    else        AppendPad(option);
 
 //*-*- Create a 3-D View
-   TView *view = gPad->GetView();
-   if (!view) {
-      view = new TView(1);
-      view->SetAutoRange(kTRUE);
-      Paint("range");
-      view->SetAutoRange(kFALSE);
-   }
+    TView *view = gPad->GetView();
+    if (!view) {
+       view = new TView(1);
+       view->SetAutoRange(kTRUE);
+       Paint("range");
+       view->SetAutoRange(kFALSE);
+    }
 }
 
 
@@ -614,6 +516,7 @@ TRotMatrix *TVolume::GetIdentity()
  }
  return gIdentity;
 }
+
 //______________________________________________________________________________
 Text_t *TVolume::GetObjectInfo(Int_t px, Int_t py)
 {
@@ -654,61 +557,6 @@ void TVolume::ImportShapeAttributes()
      volume->ImportShapeAttributes();
 }
 
-#if 0
-//______________________________________________________________________________
-void TVolume::ls(Option_t *option)
-{
-//*-*-*-*-*-*-*-*-*-*-*-*List Referenced object with current parameters*-*-*-*
-//*-*                   ===============================================
-
-   Int_t sizeX3D = 0;
-   TString opt = option;
-   opt.ToLower();
-
-   Int_t maxlevel = 15;
-   if (opt.Contains("1")) maxlevel = 1;
-   if (opt.Contains("2")) maxlevel = 2;
-   if (opt.Contains("3")) maxlevel = 3;
-   if (opt.Contains("4")) maxlevel = 4;
-   if (opt.Contains("5")) maxlevel = 5;
-   if (opt.Contains("x")) sizeX3D  = 1;
-
-   IndentLevel();
-
-   Int_t nsons = 0;
-   if (Nodes()) nsons = Nodes()->GetSize();
-   const Text_t *shapename, *matrixname;
-   if (fShape) shapename = fShape->IsA()->GetName();
-   else        shapename = "????";
-   cout<<GetName()<<":"<<GetTitle()<<" is a "<<shapename;
-   if (sizeX3D) {
-      gSize3D.numPoints = 0;
-      gSize3D.numSegs   = 0;
-      gSize3D.numPolys  = 0;
-      Sizeof3D();
-      cout<<" NumPoints="<<gSize3D.numPoints;
-      cout<<" NumSegs  ="<<gSize3D.numSegs;
-      cout<<" NumPolys ="<<gSize3D.numPolys;
-   } else {
-      cout<<" X="<<fX<<" Y="<<fY<<" Z="<<fZ;
-      if (nsons) cout<<" Sons="<<nsons;
-      if (fMatrix) matrixname   = fMatrix->GetName();
-      else         matrixname   = "Identity";
-      if(strcmp(matrixname,"Identity")) cout<<" Rot="<<matrixname;
-   }
-   cout<<endl;
-   if(!nsons) return;
-   if (gGeomLevel >= maxlevel) return;
-
-   TObject::IncreaseDirLevel();
-   gGeomLevel++;
-   Nodes()->ls(option);
-   gGeomLevel--;
-   TObject::DecreaseDirLevel();
-
-}
-#endif
-
 //______________________________________________________________________________
 void TVolume::Paint(Option_t *opt)
 {
@@ -739,8 +587,10 @@ void TVolume::PaintNodePosition(Option_t *option,TVolumePosition *pos)
   Int_t level = gGeometry->GeomLevel();
 //  if (option && option[0]=='r' && level > 3 && strcmp(option,"range") == 0) return;
   if ((!(GetVisibility() & kThisUnvisible)) && option && option[0]=='r' && level > 3 ) return;
+  Int_t iopt = atoi(option);
+  if ( (0 < iopt) && (iopt <= level) )  return;
 
-  TPadView3D *view3D=gPad->GetView3D();
+  TPadView3D *view3D = (TPadView3D*)gPad->GetView3D();
 
   TVolumePosition *position = pos;
   if (!position)   position   = &nullPosition;
@@ -793,13 +643,14 @@ void TVolume::PaintShape(Option_t *option)
       shape->SetLineWidth(GetLineWidth());
       shape->SetFillColor(GetFillColor());
       shape->SetFillStyle(GetFillStyle());
-      TPadView3D *view3D=gPad->GetView3D();
+      TPadView3D *view3D = (TPadView3D*)gPad->GetView3D();
       if (view3D)
          view3D->SetLineAttr(GetLineColor(),GetLineWidth(),option);
     }
     shape->Paint(option);
   }
 }
+
 //______________________________________________________________________________
 void TVolume::DeletePosition(TVolumePosition *position)
 {

@@ -1,3 +1,4 @@
+//*CMZ :  2.24/01 01/03/2000  17.34.39  by  Rene Brun
 //*CMZ :  2.23/12 26/01/2000  09.49.06  by  Rene Brun
 //*CMZ :  2.23/10 10/12/99  09.24.30  by  Rene Brun
 //*CMZ :  2.23/03 08/09/99  18.59.23  by  Fons Rademakers
@@ -82,6 +83,8 @@ public:
             Int_t daughter1, Int_t daughter2,
             const TLorentzVector &p,
             const TLorentzVector &v);
+
+  TParticle(const TParticle &part);
 
   virtual ~TParticle();
 

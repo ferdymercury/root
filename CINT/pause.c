@@ -1,5 +1,5 @@
-/*CMZ :  2.23/10 10/12/99  18.00.04  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   10/12/99*/
+/*CMZ :  2.24/05 16/05/2000  12.03.49  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   16/05/2000*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -698,6 +698,25 @@ G__value buf;
 }
 #endif
 
+#ifndef G__OLDIMPLEMENTATION1253
+/************************************************************************
+* G__display_tempobj()
+*
+************************************************************************/
+static void G__display_tempobj(fout)
+FILE *fout;
+{
+  struct G__tempobject_list *p = G__p_tempbuf;
+  char buf[G__ONELINE];
+  fprintf(fout,"current tempobj stack level = %d\n",G__templevel);
+  do {
+    G__valuemonitor(p->obj,buf);
+    fprintf(fout,"level%-3d %2d %s\n",p->level,p->cpplink,buf);
+    p = p->prev;
+  } while(p);
+}
+#endif
+
 #ifndef G__OLDIMPLEMENTATION577
 /************************************************************************
 * G__display_keyword()
@@ -760,7 +779,15 @@ char *filename;
        (strcmp(filename,G__srcfile[i].filename)==0)
 #endif
        ) {
+#ifndef G__OLDIMPLEMENTATION1273
+      if(G__srcfile[i].hasonlyfunc && G__do_smart_unload) {
+	G__smart_unload(i);
+	flag = 0;
+      }
+      else flag=1;
+#else
       flag=1;
+#endif
       j=i;
       while(-1!=G__srcfile[j].included_from) j=G__srcfile[j].included_from;
       break;
@@ -769,11 +796,13 @@ char *filename;
 
   if(flag) {
     for(i=j;i<G__nfile;i++) {
-      if(G__srcfile[i].prepname) storecpp[storen] = 1;
-      else                       storecpp[storen] = 0;
-      storefname[storen] = (char*)malloc(strlen(G__srcfile[i].filename)+1);
-      strcpy(storefname[storen],G__srcfile[i].filename);
-      ++storen;
+      if(G__srcfile[i].filename[0]) {
+	if(G__srcfile[i].prepname) storecpp[storen] = 1;
+	else                       storecpp[storen] = 0;
+	storefname[storen] = (char*)malloc(strlen(G__srcfile[i].filename)+1);
+	strcpy(storefname[storen],G__srcfile[i].filename);
+	++storen;
+      }
     }
   }
   else {
@@ -1431,6 +1460,12 @@ char *com;
       break;
     case '\\':
       ++i;
+#ifndef G__OLDIMPLEMENTATION1245
+      if(0==com[i] || '\n'==com[i]) {
+	--i;
+	strcpy(com+i,G__input("> "));
+      }
+#endif
       break;
 #ifndef G__OLDIMPLEMENTATION1113
     case '/':
@@ -1665,6 +1700,13 @@ int  *more;
     else if(strncmp("newtypes",com,4)==0) {
       G__more_pause((FILE*)NULL,1);
       G__display_newtypes(G__sout,stringb);
+    }
+#endif
+
+#ifndef G__OLDIMPLEMENTATION1253
+    else if(strncmp("tempobj",com,5)==0) {
+      fprintf(G__sout,"!!!Display temp object stack!!!\n");
+      G__display_tempobj(G__sout);
     }
 #endif
 
@@ -1936,8 +1978,8 @@ int  *more;
     }
 
     else if(strncmp("dasm",com,4)==0) {
-#ifdef G__ASM_DBG
-      G__dasm(G__sout);
+#if defined(G__ASM_DBG) || !defined(G__OLDIMPLEMENTATION1270)
+      G__dasm(G__sout,0);
 #endif
     }
 
@@ -2204,6 +2246,20 @@ int  *more;
          G__in_pause=1;
          G__valuemonitor(buf,syscom);
          G__in_pause=0;
+#ifndef G__OLDIMPLEMENTATION1259
+	 if(buf.isconst&(G__CONSTVAR|G__CONSTFUNC)) {
+	   char tmp[G__ONELINE];
+	   sprintf(tmp,"(const %s",syscom+1);
+	   strcpy(syscom,tmp);
+	 }
+	 if(buf.isconst&G__PCONSTVAR) {
+	   char tmp2[G__ONELINE];
+	   char *ptmp = strchr(syscom,')');
+	   strcpy(tmp2,ptmp);
+	   strcpy(ptmp,"const");
+	   strcat(syscom,tmp2);
+	 }
+#endif
 #ifndef G__OLDIMPLEMENTATION1079
          if(buf.type && 0==G__atevaluate(buf)) fprintf(G__sout,"%s\n",syscom);
 #else
@@ -2221,7 +2277,14 @@ int  *more;
     }
 
 #ifndef G__OLDIMPLEMENTATION1108
-    else if (strncmp("Lall",com,2)==0) {
+    else if(
+#ifndef G__OLDIMPLEMENTATION1273
+	    (G__do_smart_unload && strncmp("L",com,1)==0) ||
+	    strncmp("Lall",com,2)==0
+#else
+	    strncmp("Lall",com,2)==0
+#endif
+	    ) {
       temp=0;
       while(isspace(string[temp])) temp++;
       G__UnlockCriticalSection();
@@ -2234,7 +2297,7 @@ int  *more;
 #endif
 
 #ifndef G__FONS4
-    else if (strncmp("L",com,1)==0) {
+    else if (strncmp("L",com,1)==0 || strncmp("Load",com,4)==0) {
       /*******************************************************
        * Load(Re-Load) a C/C++ source file.
        *******************************************************/
@@ -3134,6 +3197,20 @@ int  *more;
       G__in_pause=1;
       G__valuemonitor(buf,syscom);
       G__in_pause=0;
+#ifndef G__OLDIMPLEMENTATION1259
+      if(buf.isconst&(G__CONSTVAR|G__CONSTFUNC)) {
+	char tmp[G__ONELINE];
+	sprintf(tmp,"(const %s",syscom+1);
+	strcpy(syscom,tmp);
+      }
+      if(buf.isconst&G__PCONSTVAR) {
+	char tmp2[G__ONELINE];
+	char *ptmp = strchr(syscom,')');
+	strcpy(tmp2,ptmp);
+	strcpy(ptmp,"const");
+	strcat(syscom,tmp2);
+      }
+#endif
 #ifndef G__OLDIMPLEMENTATION1079
       if(buf.type && 0==G__atevaluate(buf)) fprintf(G__sout,"%s\n",syscom);
 #else
@@ -3251,6 +3328,20 @@ int  *more;
 	G__in_pause=1;
 	G__valuemonitor(buf,syscom);
 	G__in_pause=0;
+#ifndef G__OLDIMPLEMENTATION1259
+	if(buf.isconst&(G__CONSTVAR|G__CONSTFUNC)) {
+	  char tmp[G__ONELINE];
+	  sprintf(tmp,"(const %s",syscom+1);
+	  strcpy(syscom,tmp);
+	}
+	if(buf.isconst&G__PCONSTVAR) {
+	  char tmp2[G__ONELINE];
+	  char *ptmp = strchr(syscom,')');
+	  strcpy(tmp2,ptmp);
+	  strcpy(ptmp,"const");
+	  strcat(syscom,tmp2);
+	}
+#endif
 	G__RESET_TEMPENV;
 #ifndef G__OLDIMPLEMENTATION1004
 	if(-1==G__func_now) G__p_local=0;
@@ -3419,6 +3510,20 @@ int  *more;
 	  G__in_pause=1;
 	  G__valuemonitor(buf,syscom);
 	  G__in_pause=0;
+#ifndef G__OLDIMPLEMENTATION1259
+	  if(buf.isconst&(G__CONSTVAR|G__CONSTFUNC)) {
+	    char tmp[G__ONELINE];
+	    sprintf(tmp,"(const %s",syscom+1);
+	    strcpy(syscom,tmp);
+	  }
+	  if(buf.isconst&G__PCONSTVAR) {
+	    char tmp2[G__ONELINE];
+	    char *ptmp = strchr(syscom,')');
+	    strcpy(tmp2,ptmp);
+	   strcpy(ptmp,"const");
+	   strcat(syscom,tmp2);
+	  }
+#endif
 #ifdef G__OLDIMPLEMENTATION850
 	  if(buf.type) fprintf(G__sout,"%s\n",syscom);
 	  if('u'==buf.type && buf.obj.i) {
@@ -3562,6 +3667,18 @@ int iout;
   }
   return(0);
 }
+
+#ifndef G__OLDIMPLEMENTATION1273
+/**************************************************************************
+* G__set_smartunload()
+*
+**************************************************************************/
+void G__set_smartunload(smartunload)
+int smartunload;
+{
+  G__do_smart_unload = smartunload;
+}
+#endif
 
 
 /*

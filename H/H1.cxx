@@ -1,4 +1,5 @@
-//*CMZ :          19/02/2000  11.30.33  by  Fons Rademakers
+//*CMZ :  2.24/03 03/05/2000  19.48.55  by  Rene Brun
+//*CMZ :  2.24/01 08/03/2000  09.40.18  by  Rene Brun
 //*CMZ :  2.23/12 01/02/2000  15.53.35  by  Rene Brun
 //*CMZ :  2.23/11 02/01/2000  15.55.56  by  Rene Brun
 //*CMZ :  2.23/10 17/12/99  10.02.17  by  Rene Brun
@@ -12,17 +13,18 @@
 //*CMZ :  2.23/00 30/07/99  20.04.37  by  Fons Rademakers
 //*-- Author :    Rene Brun   26/12/94
 
+/*CMZ :  2.24/01 24/02/2000  11.49.40  by  Fons Rademakers*/
 /*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun and Fons Rademakers.                               *
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
  *                                                                       *
- * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
- * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
  *************************************************************************/
 
 #include <stdlib.h>
@@ -53,26 +55,51 @@
 //*-*  ROOT supports the following histogram types:
 //*-*
 //*-*   1-D histograms:
-//*-*      TH1C : histograms with one byte per channel. Maximum bin content = 255
-//*-*      TH1S : histograms with one short per channel. Maximum bin content = 65535
-//*-*      TH1F : histograms with one float per channel. Maximum precision 7 digits
+//*-*      TH1C : histograms with one byte per channel.   Maximum bin content = 255
+//*-*      TH1S : histograms with one short per channel.  Maximum bin content = 65535
+//*-*      TH1F : histograms with one float per channel.  Maximum precision 7 digits
 //*-*      TH1D : histograms with one double per channel. Maximum precision 14 digits
 //*-*
 //*-*   2-D histograms:
-//*-*      TH2C : histograms with one byte per channel. Maximum bin content = 255
-//*-*      TH2S : histograms with one short per channel. Maximum bin content = 65535
-//*-*      TH2F : histograms with one float per channel. Maximum precision 7 digits
+//*-*      TH2C : histograms with one byte per channel.   Maximum bin content = 255
+//*-*      TH2S : histograms with one short per channel.  Maximum bin content = 65535
+//*-*      TH2F : histograms with one float per channel.  Maximum precision 7 digits
 //*-*      TH2D : histograms with one double per channel. Maximum precision 14 digits
 //*-*
 //*-*   3-D histograms:
-//*-*      TH3C : histograms with one byte per channel. Maximum bin content = 255
-//*-*      TH3S : histograms with one short per channel. Maximum bin content = 65535
-//*-*      TH3F : histograms with one float per channel. Maximum precision 7 digits
+//*-*      TH3C : histograms with one byte per channel.   Maximum bin content = 255
+//*-*      TH3S : histograms with one short per channel.  Maximum bin content = 65535
+//*-*      TH3F : histograms with one float per channel.  Maximum precision 7 digits
 //*-*      TH3D : histograms with one double per channel. Maximum precision 14 digits
 //*-*
 //*-*   Profile histograms: See class TProfile
 //*-*
 //*-*- All histogram classes are derived from the base class TH1
+//*-*
+//*-*                             TH1
+//*-*                              ^
+//*-*                              |
+//*-*                              |
+//*-*                              |
+//*-*      -----------------------------------------------------
+//*-*             |                |       |      |      |     |
+//*-*             |                |      TH1C   TH1S   TH1F  TH1D
+//*-*             |                |                           |
+//*-*             |                |                           |
+//*-*             |               TH2                        TProfile
+//*-*             |                |
+//*-*             |                |
+//*-*             |                ------------------------------
+//*-*             |                        |      |      |      |
+//*-*             |                       TH2C   TH2S   TH2F   TH2D
+//*-*             |
+//*-*            TH3
+//*-*             |
+//*-*             |
+//*-*             ------------------------------
+//*-*                     |      |      |      |
+//*-*                    TH3C   TH3S   TH3F   TH3D
+//*-*
 //*-*   The TH*C classes also inherit from the array class TArrayC.
 //*-*   The TH*S classes also inherit from the array class TArrayS.
 //*-*   The TH*F classes also inherit from the array class TArrayF.
@@ -108,6 +135,8 @@
 */
 //End_Html
 //*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+
+Bool_t TH1::fgAddDirectory = kTRUE;
 
 Foption_t Foption;
 
@@ -245,7 +274,7 @@ void TH1::Build()
 
    UseCurrentStyle();
 
-   if (gDirectory) {
+   if (fgAddDirectory && gDirectory) {
       TH1 *hold = (TH1*)gDirectory->GetList()->FindObject(GetName());
       if (hold) {
          Warning("Build","Replacing existing histogram: %s",GetName());
@@ -422,6 +451,23 @@ void TH1::AddBinContent(Int_t, Stat_t)
 }
 
 //______________________________________________________________________________
+void TH1::AddDirectory(Bool_t add)
+{
+// Sets the flag controlling the automatic add of histograms in memory
+//
+// By default (fAddDirectory = kTRUE), histograms are automatically added
+// to the list of objects in memory.
+// Note that one histogram can be removed from its support directory
+// by calling h->SetDirectory(0) or h->SetDirectory(dir) to add it
+// to the list of objects in the directory dir.
+//
+//  NOTE that this is a static function. To call it, use;
+//     TH1::AddDirectory
+
+   fgAddDirectory = add;
+}
+
+//______________________________________________________________________________
 Double_t TH1::ComputeIntegral()
 {
 //  Compute integral (cumulative sum of bins)
@@ -494,6 +540,9 @@ void TH1::Copy(TObject &obj)
    fXaxis.Copy(((TH1&)obj).fXaxis);
    fYaxis.Copy(((TH1&)obj).fYaxis);
    fZaxis.Copy(((TH1&)obj).fZaxis);
+   fXaxis.SetParent(this);
+   fYaxis.SetParent(this);
+   fZaxis.SetParent(this);
    fContour.Copy(((TH1&)obj).fContour);
    fSumw2.Copy(((TH1&)obj).fSumw2);
 //   fFunctions->Copy(((TH1&)obj).fFunctions);
@@ -830,6 +879,7 @@ void TH1::Eval(TF1 *f1, Option_t *option)
    Int_t stat,add,bin,binx,biny,binz,nbinsx, nbinsy, nbinsz;
    if (!f1) return;
    Double_t fu;
+   Double_t e=0;
    TString opt = option;
    opt.ToLower();
    if (opt.Contains("a")) add  = 1;
@@ -839,6 +889,7 @@ void TH1::Eval(TF1 *f1, Option_t *option)
    nbinsx  = fXaxis.GetNbins();
    nbinsy  = fYaxis.GetNbins();
    nbinsz  = fZaxis.GetNbins();
+   if (!add) Reset();
 
    for (binz=1;binz<=nbinsz;binz++) {
       x[2]  = fZaxis.GetBinCenter(binz);
@@ -849,8 +900,9 @@ void TH1::Eval(TF1 *f1, Option_t *option)
             x[0]  = fXaxis.GetBinCenter(binx);
             fu = f1->Eval(x[0],x[1],x[2]);
             if (stat) fu = gRandom->Poisson(fu);
-            if (add) AddBinContent(bin,fu);
-            else     SetBinContent(bin,fu);
+            if (fSumw2.fN) e = fSumw2.fArray[bin];
+            AddBinContent(bin,fu);
+            if (fSumw2.fN) fSumw2.fArray[bin] = e+ fu*fu;
          }
       }
    }
@@ -886,7 +938,6 @@ Int_t TH1::Fill(Axis_t x)
 //*-*
 //*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 
-   if (fDimension !=1) return -2;
    Int_t bin;
    fEntries++;
    bin =fXaxis.FindBin(x);
@@ -914,11 +965,6 @@ Int_t TH1::Fill(Axis_t x, Stat_t w)
 //*-* by w^2 in the bin corresponding to x.
 //*-*
 //*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
-
-   //authorize calling this function for 2-d histograms. assume weight=1
-   if (fDimension == 2) {
-      return Fill12(x, w);
-   }
 
    Int_t bin;
    fEntries++;
@@ -971,146 +1017,6 @@ void TH1::FillN(Int_t ntimes, Axis_t *x, Double_t *w, Int_t stride)
 }
 
 //______________________________________________________________________________
-Int_t TH1::Fill12(Axis_t x,Axis_t y)
-{
-//*-*-*-*-*-*-*-*-*-*-*Increment cell defined by x,y by 1*-*-*-*-*-*-*-*-*-*
-//*-*                  ==================================
-//*-*
-//*-* if x or/and y is less than the low-edge of the corresponding axis first bin,
-//*-*   the Underflow cell is incremented.
-//*-* if x or/and y is greater than the upper edge of corresponding axis last bin,
-//*-*   the Overflow cell is incremented.
-//*-*
-//*-* If the storage of the sum of squares of weights has been triggered,
-//*-* via the function Sumw2, then the sum of the squares of weights is incremented
-//*-* by 1in the cell corresponding to x,y.
-//*-*
-//*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
-   Int_t binx, biny, bin;
-   fEntries++;
-   binx = fXaxis.FindBin(x);
-   biny = fYaxis.FindBin(y);
-   bin  = biny*(fXaxis.GetNbins()+2) + binx;
-   AddBinContent(bin);
-   if (fSumw2.fN) ++fSumw2.fArray[bin];
-   if (binx == 0 || binx > fXaxis.GetNbins()) return -1;
-   if (biny == 0 || biny > fYaxis.GetNbins()) return -1;
-   ++fTsumw;
-   ++fTsumw2;
-   fTsumwx  += x;
-   fTsumwx2 += x*x;
-   return bin;
-}
-
-//______________________________________________________________________________
-Int_t TH1::Fill(Axis_t x, Axis_t y, Stat_t w)
-{
-//*-*-*-*-*-*-*-*-*-*-*Increment cell defined by x,y by a weight w*-*-*-*-*-*
-//*-*                  ===========================================
-//*-*
-//*-* if x or/and y is less than the low-edge of the corresponding axis first bin,
-//*-*   the Underflow cell is incremented.
-//*-* if x or/and y is greater than the upper edge of corresponding axis last bin,
-//*-*   the Overflow cell is incremented.
-//*-*
-//*-* If the storage of the sum of squares of weights has been triggered,
-//*-* via the function Sumw2, then the sum of the squares of weights is incremented
-//*-* by w^2 in the cell corresponding to x,y.
-//*-*
-//*-* NB: function only valid for a TH2x object
-//*-*
-//*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
-
-   //authorize calling this function for 3-d histograms. assume weight=1
-   if (fDimension == 3) {
-      return Fill(x, y, w, 1);
-   }
-
-   Int_t binx, biny, bin;
-   fEntries++;
-   binx = fXaxis.FindBin(x);
-   biny = fYaxis.FindBin(y);
-   bin  = biny*(fXaxis.GetNbins()+2) + binx;
-   AddBinContent(bin,w);
-   if (fSumw2.fN) fSumw2.fArray[bin] += w*w;
-   if (binx == 0 || binx > fXaxis.GetNbins()) return -1;
-   if (biny == 0 || biny > fYaxis.GetNbins()) return -1;
-   Stat_t z= (w > 0 ? w : -w);
-   fTsumw   += z;
-   fTsumw2  += z*z;
-   fTsumwx  += z*x;
-   fTsumwx2 += z*x*x;
-   return bin;
-}
-
-//______________________________________________________________________________
-Int_t TH1::Fill(Axis_t x, Axis_t y, Axis_t z, Stat_t w)
-{
-//*-*-*-*-*-*-*-*-*-*-*Increment cell defined by x,y,z by a weight w*-*-*-*-*
-//*-*                  =============================================
-//*-*
-//*-* If the storage of the sum of squares of weights has been triggered,
-//*-* via the function Sumw2, then the sum of the squares of weights is incremented
-//*-* by w^2 in the cell corresponding to x,y,z.
-//*-*
-//*-* NB: function only valid for a TH3x object
-//*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
-   Int_t binx, biny, binz, bin;
-   fEntries++;
-   binx = fXaxis.FindBin(x);
-   biny = fYaxis.FindBin(y);
-   binz = fZaxis.FindBin(z);
-   bin  =  binx + (fXaxis.GetNbins()+2)*(biny + (fYaxis.GetNbins()+2)*binz);
-   AddBinContent(bin,w);
-   if (fSumw2.fN) fSumw2.fArray[bin] += w*w;
-   if (binx == 0 || binx > fXaxis.GetNbins()) return -1;
-   if (biny == 0 || biny > fYaxis.GetNbins()) return -1;
-   if (binz == 0 || binz > fZaxis.GetNbins()) return -1;
-   return bin;
-}
-
-//______________________________________________________________________________
-void TH1::FillN(Int_t ntimes, Axis_t *x, Axis_t *y, Double_t *w, Int_t stride)
-{
-//*-*-*-*-*-*-*Fill a 2-D histogram with an array of values and weights*-*-*-*
-//*-*          ========================================================
-//*-*
-//*-* ntimes:  number of entries in arrays x and w (array size must be ntimes*stride)
-//*-* x:       array of x values to be histogrammed
-//*-* y:       array of y values to be histogrammed
-//*-* w:       array of weights
-//*-* stride:  step size through arrays x, y and w
-//*-*
-//*-* If the storage of the sum of squares of weights has been triggered,
-//*-* via the function Sumw2, then the sum of the squares of weights is incremented
-//*-* by w[i]^2 in the cell corresponding to x[i],y[i].
-//*-* if w is NULL each entry is assumed a weight=1
-//*-*
-//*-* NB: function only valid for a TH2x object
-//*-*
-//*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
-   Int_t binx, biny, bin, i;
-   fEntries += ntimes;
-   Double_t ww = 1;
-   ntimes *= stride;
-   for (i=0;i<ntimes;i+=stride) {
-      binx = fXaxis.FindBin(x[i]);
-      biny = fYaxis.FindBin(y[i]);
-      bin  = biny*(fXaxis.GetNbins()+2) + binx;
-      if (w) ww = w[i];
-      AddBinContent(bin,ww);
-      if (fSumw2.fN) fSumw2.fArray[bin] += ww*ww;
-      if (binx == 0 || binx > fXaxis.GetNbins()) continue;
-      if (biny == 0 || biny > fYaxis.GetNbins()) continue;
-      Stat_t z= (ww > 0 ? ww : -ww);
-      fTsumw   += z;
-      fTsumw2  += z*z;
-      fTsumwx  += z*x[i];
-      fTsumwx2 += z*x[i]*x[i];
-   }
-}
-
-//______________________________________________________________________________
 void TH1::FillRandom(const char *fname, Int_t ntimes)
 {
 //*-*-*-*-*-*-*Fill histogram following distribution in function fname*-*-*-*
@@ -1129,62 +1035,37 @@ void TH1::FillRandom(const char *fname, Int_t ntimes)
 //*-*
 //*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-**-*-*-*-*-*-*-*
 
-   Int_t bin, binx, biny, binz, ibin, loop;
-   Double_t r1, x, y,z, xv[3];
+   Int_t bin, binx, ibin, loop;
+   Double_t r1, x, xv[1];
 //*-*- Search for fname in the list of ROOT defined functions
    TF1 *f1 = (TF1*)gROOT->GetFunction(fname);
    if (!f1) { Error("FillRandom", "Unknown function: %s",fname); return; }
 
 //*-*- Allocate temporary space to store the integral and compute integral
    Int_t nbinsx = GetNbinsX();
-   Int_t nbinsy = GetNbinsY();
-   Int_t nbinsz = GetNbinsZ();
-   Int_t nxy    = nbinsx*nbinsy;
-   Int_t nbins  = nxy*nbinsz;
 
-   Double_t *integral = new Double_t[nbins+1];
+   Double_t *integral = new Double_t[nbinsx+1];
    ibin = 0;
    integral[ibin] = 0;
-   for (binz=1;binz<=nbinsz;binz++) {
-      xv[2] = fZaxis.GetBinCenter(binz);
-      for (biny=1;biny<=nbinsy;biny++) {
-         xv[1] = fYaxis.GetBinCenter(biny);
-         for (binx=1;binx<=nbinsx;binx++) {
-            xv[0] = fXaxis.GetBinCenter(binx);
-            ibin++;
-            integral[ibin] = integral[ibin-1] + f1->Eval(xv[0],xv[1],xv[2]);
-         }
-      }
+   for (binx=1;binx<=nbinsx;binx++) {
+      xv[0] = fXaxis.GetBinCenter(binx);
+      ibin++;
+      integral[ibin] = integral[ibin-1] + f1->Eval(xv[0]);
    }
 
 //*-*- Normalize integral to 1
-   if (integral[nbins] == 0 ) {
+   if (integral[nbinsx] == 0 ) {
       Error("FillRandom", "Integral = zero"); return;
    }
-   for (bin=1;bin<=nbins;bin++)  integral[bin] /= integral[nbins];
+   for (bin=1;bin<=nbinsx;bin++)  integral[bin] /= integral[nbinsx];
 
 //*-*--------------Start main loop ntimes
-   if (fDimension < 2) nbinsy = -1;
-   if (fDimension < 3) nbinsz = -1;
-   Bool_t profile = kFALSE;
-   if (IsA() == TProfile::Class()) profile = kTRUE;
    for (loop=0;loop<ntimes;loop++) {
       r1 = gRandom->Rndm(loop);
-      ibin = TMath::BinarySearch(nbins,&integral[0],r1);
-      binz = ibin/nxy;
-      biny = (ibin - nxy*binz)/nbinsx;
-      binx = 1 + ibin - nbinsx*(biny + nbinsy*binz);
-      if (nbinsz) binz++;
-      if (nbinsy) biny++;
-      x    = GetBinCenter(binx);
-      y    = GetBinCenter(biny);
-      z    = GetBinCenter(binz);
-      if (fDimension == 1) {
-         if (profile) Fill(x,y,1.);
-         else         Fill(x, 1.);
-      }
-      else if (fDimension == 2) Fill(x,y, 1.);
-      else if (fDimension == 3) Fill(x,y,z, 1.);
+      ibin = TMath::BinarySearch(nbinsx,&integral[0],r1);
+      binx = 1 + ibin;
+      x    = fXaxis.GetBinCenter(binx);
+      Fill(x, 1.);
   }
   delete [] integral;
 }
@@ -1214,22 +1095,10 @@ void TH1::FillRandom(TH1 *h, Int_t ntimes)
    if (h->ComputeIntegral() == 0) return;
 
    Int_t loop;
-   Axis_t x,y,z;
-   if (fDimension == 1) {
-      for (loop=0;loop<ntimes;loop++) {
-         x = h->GetRandom();
-         Fill(x);
-      }
-   } else if (fDimension == 2) {
-      for (loop=0;loop<ntimes;loop++) {
-         h->GetRandom2(x,y);
-         Fill(x,y,1.);
-      }
-   } else {
-      for (loop=0;loop<ntimes;loop++) {
-         h->GetRandom3(x,y,z);
-         Fill(x,y,z,1.);
-      }
+   Axis_t x;
+   for (loop=0;loop<ntimes;loop++) {
+      x = h->GetRandom();
+      Fill(x);
    }
 }
 
@@ -1447,9 +1316,16 @@ void TH1::Fit(const char *fname ,Option_t *option ,Option_t *goption, Float_t xx
       arglist[0] = 0; hFitter->ExecuteCommand("SET PRINT", arglist,1);
    }
 
+//*-*- Compute sum of squares of errors in the bin range
+   Double_t ey, sumw2=0;
+   for (i=xfirst;i<=xlast;i++) {
+      ey = GetBinError(i);
+      sumw2 += ey*ey;
+   }
+
 //*-*- Perform minimization
-   arglist[0] = hFitter->GetMaxIterations();
-   arglist[1] = 1; //epsilon
+   arglist[0] = TVirtualFitter::GetMaxIterations();
+   arglist[1] = sumw2*TVirtualFitter::GetPrecision();
    hFitter->ExecuteCommand("MIGRAD",arglist,2);
    if (Foption.More) {
       hFitter->ExecuteCommand("IMPROVE",arglist,0);
@@ -1489,11 +1365,14 @@ void TH1::Fit(const char *fname ,Option_t *option ,Option_t *goption, Float_t xx
 //*-*- Store fitted function in histogram functions list and draw
    if (!Foption.Nostore) {
       if (!Foption.Plus) {
+         TList *ldel = new TList();
          TIter next(fFunctions, kIterBackward);
          TObject *obj;
          while ((obj = next())) {
-            if (obj->InheritsFrom(TF1::Class())) delete obj;
+            if (obj->InheritsFrom(TF1::Class())) ldel->Add(obj);
          }
+         ldel->Delete();
+         delete ldel;
       }
       if (GetDimension() < 2) {
          fnew1 = new TF1();
@@ -1526,298 +1405,6 @@ void TH1::FitPanel()
 //*-*   See class TFitPanel for example
 
    if (fPainter) fPainter->FitPanel();
-}
-
-//______________________________________________________________________________
-void TH1::FitSlicesX(TF1 *f1, Int_t binmin, Int_t binmax, Int_t cut, Option_t *option)
-{
-// Project slices along X in case of a 2-D histogram, then fit each slice
-// with function f1 and make a histogram for each fit parameter
-// Only bins along Y between binmin and binmax are considered.
-// if f1=0, a gaussian is assumed
-// Before invoking this function, one can set a subrange to be fitted along X
-// via f1->SetRange(xmin,xmax)
-// The argument option (default="QNR") can be used to change the fit options.
-//     "Q" means Quiet mode
-//     "N" means do not show the result of the fit
-//     "R" means fit the function in the specified function range
-//
-// Note that the generated histograms are added to the list of objects
-// in the current directory. It is the user's responsability to delete
-// these histograms.
-//
-//  Example: Assume a 2-d histogram h2
-//   Root > h2->FitSlicesX(); produces 4 TH1D histograms
-//          with h2_0 containing parameter 0(Constant) for a Gaus fit
-//                    of each bin in Y projected along X
-//          with h2_1 containing parameter 1(Mean) for a gaus fit
-//          with h2_2 containing parameter 2(RMS)  for a gaus fit
-//          with h2_chi2 containing the chisquare/number of degrees of freedom for a gaus fit
-//
-//   Root > h2->FitSlicesX(0,15,22,10);
-//          same as above, but only for bins 15 to 22 along Y
-//          and only for bins in Y for which the corresponding projection
-//          along X has more than cut bins filled.
-//
-
-   //only valid for 2-D histogram
-   if (fDimension != 2) {
-      Error("FitSlicesX", "Function only valid for 2-D histograms");
-      return;
-   }
-
-   Int_t nbins  = fYaxis.GetNbins();
-   if (binmin < 1) binmin = 1;
-   if (binmax > nbins) binmax = nbins;
-   if (binmax < binmin) {binmin = 1; binmax = nbins;}
-
-   //default is to fit with a gaussian
-   if (f1 == 0) {
-      f1 = (TF1*)gROOT->GetFunction("gaus");
-      if (f1 == 0) f1 = new TF1("gaus","gaus",fXaxis.GetXmin(),fXaxis.GetXmax());
-      else         f1->SetRange(fXaxis.GetXmin(),fXaxis.GetXmax());
-   }
-   const char *fname = f1->GetName();
-   Int_t npar = f1->GetNpar();
-   Double_t *parsave = new Double_t[npar];
-   f1->GetParameters(parsave);
-
-   //Create one histogram for each function parameter
-   Int_t ipar;
-   char name[80], title[80];
-   TH1D *hlist[25];
-   for (ipar=0;ipar<npar;ipar++) {
-      sprintf(name,"%s_%d",GetName(),ipar);
-      sprintf(title,"Fitted value of par[%d]=%s",ipar,f1->GetParName(ipar));
-      hlist[ipar] = new TH1D(name,title, nbins, fYaxis.GetXmin(), fYaxis.GetXmax());
-      hlist[ipar]->GetXaxis()->SetTitle(fYaxis.GetTitle());
-   }
-   sprintf(name,"%s_chi2",GetName());
-   TH1D *hchi2 = new TH1D(name,"chisquare", nbins, fYaxis.GetXmin(), fYaxis.GetXmax());
-   hchi2->GetXaxis()->SetTitle(fYaxis.GetTitle());
-
-   //Loop on all bins in Y, generate a projection along X
-   Int_t bin;
-   Int_t nentries;
-   for (bin=binmin;bin<=binmax;bin++) {
-      TH1D *hpx = ProjectionX("_temp",bin,bin,"e");
-      if (hpx == 0) continue;
-      nentries = Int_t(hpx->GetEntries());
-      if (nentries == 0 || nentries < cut) {delete hpx; continue;}
-      f1->SetParameters(parsave);
-      hpx->Fit(fname,option);
-      Int_t npfits = f1->GetNumberFitPoints();
-      if (npfits > npar && npfits >= cut) {
-         for (ipar=0;ipar<npar;ipar++) {
-            hlist[ipar]->Fill(fYaxis.GetBinCenter(bin),f1->GetParameter(ipar));
-            hlist[ipar]->SetBinError(bin,f1->GetParError(ipar));
-         }
-         hchi2->Fill(fYaxis.GetBinCenter(bin),f1->GetChisquare()/(npfits-npar));
-      }
-      delete hpx;
-   }
-   delete [] parsave;
-}
-
-//______________________________________________________________________________
-void TH1::FitSlicesY(TF1 *f1, Int_t binmin, Int_t binmax, Int_t cut, Option_t *option)
-{
-// Project slices along Y in case of a 2-D histogram, then fit each slice
-// with function f1 and make a histogram for each fit parameter
-// Only bins along X between binmin and binmax are considered.
-// if f1=0, a gaussian is assumed
-// Before invoking this function, one can set a subrange to be fitted along Y
-// via f1->SetRange(ymin,ymax)
-// The argument option (default="QNR") can be used to change the fit options.
-//     "Q" means Quiet mode
-//     "N" means do not show the result of the fit
-//     "R" means fit the function in the specified function range
-//
-// Note that the generated histograms are added to the list of objects
-// in the current directory. It is the user's responsability to delete
-// these histograms.
-//
-//  Example: Assume a 2-d histogram h2
-//   Root > h2->FitSlicesY(); produces 4 TH1D histograms
-//          with h2_0 containing parameter 0(Constant) for a Gaus fit
-//                    of each bin in X projected along Y
-//          with h2_1 containing parameter 1(Mean) for a gaus fit
-//          with h2_2 containing parameter 2(RMS)  for a gaus fit
-//          with h2_chi2 containing the chisquare/number of degrees of freedom for a gaus fit
-//
-//   Root > h2->FitSlicesY(0,15,22,10);
-//          same as above, but only for bins 15 to 22 along X
-//          and only for bins in X for which the corresponding projection
-//          along Y has more than cut bins filled.
-//
-// A complete example of this function is given in begin_html <a href="examples/fitslicesy.C.html">tutorial:fitslicesy.C</a> end_html
-// with the following output:
-//Begin_Html
-/*
-<img src="gif/fitslicesy.gif">
-*/
-//End_Html
-
-   //only valid for 2-D histogram
-   if (fDimension != 2) {
-      Error("FitSlicesY", "Function only valid for 2-D histograms");
-      return;
-   }
-
-   Int_t nbins  = fXaxis.GetNbins();
-   if (binmin < 1) binmin = 1;
-   if (binmax > nbins) binmax = nbins;
-   if (binmax < binmin) {binmin = 1; binmax = nbins;}
-
-   //default is to fit with a gaussian
-   if (f1 == 0) {
-      f1 = (TF1*)gROOT->GetFunction("gaus");
-      if (f1 == 0) f1 = new TF1("gaus","gaus",fYaxis.GetXmin(),fYaxis.GetXmax());
-      else         f1->SetRange(fYaxis.GetXmin(),fYaxis.GetXmax());
-   }
-   const char *fname = f1->GetName();
-   Int_t npar = f1->GetNpar();
-   Double_t *parsave = new Double_t[npar];
-   f1->GetParameters(parsave);
-
-   //Create one histogram for each function parameter
-   Int_t ipar;
-   char name[80], title[80];
-   TH1D *hlist[25];
-   for (ipar=0;ipar<npar;ipar++) {
-      sprintf(name,"%s_%d",GetName(),ipar);
-      sprintf(title,"Fitted value of par[%d]=%s",ipar,f1->GetParName(ipar));
-      hlist[ipar] = new TH1D(name,title, nbins, fXaxis.GetXmin(), fXaxis.GetXmax());
-      hlist[ipar]->GetXaxis()->SetTitle(fXaxis.GetTitle());
-   }
-   sprintf(name,"%s_chi2",GetName());
-   TH1D *hchi2 = new TH1D(name,"chisquare", nbins, fXaxis.GetXmin(), fXaxis.GetXmax());
-   hchi2->GetXaxis()->SetTitle(fXaxis.GetTitle());
-
-   //Loop on all bins in X, generate a projection along Y
-   Int_t bin;
-   Int_t nentries;
-   for (bin=binmin;bin<=binmax;bin++) {
-      TH1D *hpy = ProjectionY("_temp",bin,bin,"e");
-      if (hpy == 0) continue;
-      nentries = Int_t(hpy->GetEntries());
-      if (nentries == 0 || nentries < cut) {delete hpy; continue;}
-      f1->SetParameters(parsave);
-      hpy->Fit(fname,option);
-      Int_t npfits = f1->GetNumberFitPoints();
-      if (npfits > npar && npfits >= cut) {
-         for (ipar=0;ipar<npar;ipar++) {
-            hlist[ipar]->Fill(fXaxis.GetBinCenter(bin),f1->GetParameter(ipar));
-            hlist[ipar]->SetBinError(bin,f1->GetParError(ipar));
-         }
-         hchi2->Fill(fXaxis.GetBinCenter(bin),f1->GetChisquare()/(npfits-npar));
-      }
-      delete hpy;
-   }
-   delete [] parsave;
-}
-
-//______________________________________________________________________________
-void TH1::FitSlicesZ(TF1 *f1, Int_t binminx, Int_t binmaxx, Int_t binminy, Int_t binmaxy, Int_t cut, Option_t *option)
-{
-// Project slices along Z in case of a 3-D histogram, then fit each slice
-// with function f1 and make a 2-d histogram for each fit parameter
-// Only cells in the bin range [binminx,binmaxx] and [binminy,binmaxy] are considered.
-// if f1=0, a gaussian is assumed
-// Before invoking this function, one can set a subrange to be fitted along Z
-// via f1->SetRange(zmin,zmax)
-// The argument option (default="QNR") can be used to change the fit options.
-//     "Q" means Quiet mode
-//     "N" means do not show the result of the fit
-//     "R" means fit the function in the specified function range
-//
-//
-//  Example: Assume a 3-d histogram h3
-//   Root > h3->FitSlicesZ(); produces 4 TH2D histograms
-//          with h3_0 containing parameter 0(Constant) for a Gaus fit
-//                    of each cell in X,Y projected along Z
-//          with h3_1 containing parameter 1(Mean) for a gaus fit
-//          with h3_2 containing parameter 2(RMS)  for a gaus fit
-//          with h3_chi2 containing the chisquare/number of degrees of freedom for a gaus fit
-//
-//   Root > h3->Fit(0,15,22,0,0,10);
-//          same as above, but only for bins 15 to 22 along X
-//          and only for cells in X,Y for which the corresponding projection
-//          along Z has more than cut bins filled.
-
-   //only valid for 3-D histogram
-   if (fDimension != 3) {
-      Error("FitSlicesZ", "Function only valid for 3-D histograms");
-      return;
-   }
-
-   Int_t nbinsx  = fXaxis.GetNbins();
-   Int_t nbinsy  = fYaxis.GetNbins();
-   Int_t nbinsz  = fZaxis.GetNbins();
-   if (binminx < 1) binminx = 1;
-   if (binmaxx > nbinsx) binmaxx = nbinsx;
-   if (binmaxx < binminx) {binminx = 1; binmaxx = nbinsx;}
-   if (binminy < 1) binminy = 1;
-   if (binmaxy > nbinsy) binmaxy = nbinsy;
-   if (binmaxy < binminy) {binminy = 1; binmaxy = nbinsy;}
-
-   //default is to fit with a gaussian
-   if (f1 == 0) {
-      f1 = (TF1*)gROOT->GetFunction("gaus");
-      if (f1 == 0) f1 = new TF1("gaus","gaus",fZaxis.GetXmin(),fZaxis.GetXmax());
-      else         f1->SetRange(fZaxis.GetXmin(),fZaxis.GetXmax());
-   }
-   const char *fname = f1->GetName();
-   Int_t npar = f1->GetNpar();
-   Double_t *parsave = new Double_t[npar];
-   f1->GetParameters(parsave);
-
-   //Create one 2-d histogram for each function parameter
-   Int_t ipar;
-   char name[80], title[80];
-   TH2D *hlist[25];
-   for (ipar=0;ipar<npar;ipar++) {
-      sprintf(name,"%s_%d",GetName(),ipar);
-      sprintf(title,"Fitted value of par[%d]=%s",ipar,f1->GetParName(ipar));
-      hlist[ipar] = new TH2D(name,title, nbinsx, fXaxis.GetXmin(), fXaxis.GetXmax()
-                                       , nbinsy, fYaxis.GetXmin(), fYaxis.GetXmax());
-   }
-   sprintf(name,"%s_chi2",GetName());
-   TH2D *hchi2 = new TH2D(name,"chisquare", nbinsx, fXaxis.GetXmin(), fXaxis.GetXmax()
-                                          , nbinsy, fYaxis.GetXmin(), fYaxis.GetXmax());
-
-   //Loop on all cells in X,Y generate a projection along Z
-   TH1D *hpz = new TH1D("R_temp","_temp",nbinsz, fZaxis.GetXmin(), fZaxis.GetXmax());
-   Int_t bin,binx,biny,binz;
-   for (biny=binminy;biny<=binmaxy;biny++) {
-      Float_t y = fYaxis.GetBinCenter(biny);
-      for (binx=binminx;binx<=binmaxx;binx++) {
-         Float_t x = fXaxis.GetBinCenter(binx);
-         hpz->Reset();
-         Int_t nfill = 0;
-         for (binz=1;binz<=nbinsz;binz++) {
-            bin = GetBin(binx,biny,binz);
-            Float_t w = GetBinContent(bin);
-            if (w == 0) continue;
-            hpz->Fill(fZaxis.GetBinCenter(binz),w);
-            hpz->SetBinError(binz,GetBinError(bin));
-            nfill++;
-         }
-         if (nfill < cut) continue;
-         f1->SetParameters(parsave);
-         hpz->Fit(fname,option);
-         Int_t npfits = f1->GetNumberFitPoints();
-         if (npfits > npar && npfits >= cut) {
-            for (ipar=0;ipar<npar;ipar++) {
-               hlist[ipar]->Fill(x,y,f1->GetParameter(ipar));
-               hlist[ipar]->SetCellError(binx,biny,f1->GetParError(ipar));
-            }
-            hchi2->Fill(x,y,f1->GetChisquare()/(npfits-npar));
-         }
-      }
-   }
-   delete [] parsave;
-   delete hpz;
 }
 
 //______________________________________________________________________________
@@ -2331,68 +1918,6 @@ Axis_t TH1::GetRandom()
 }
 
 //______________________________________________________________________________
-void TH1::GetRandom2(Axis_t &x, Axis_t &y)
-{
-// return 2 random numbers along axis x and y distributed according
-// the cellcontents of a 2-dim histogram
-
-   if (fDimension != 2) {
-      Error("GetRandom","Function only valid for 2-d histograms");
-      return;
-   }
-   Int_t nbinsx = GetNbinsX();
-   Int_t nbinsy = GetNbinsY();
-   Int_t nbins  = nbinsx*nbinsy;
-   Double_t integral;
-   if (fIntegral) {
-      if (fIntegral[nbins+1] != fEntries) integral = ComputeIntegral();
-   } else {
-      integral = ComputeIntegral();
-      if (integral == 0 || fIntegral == 0) return;
-   }
-   Float_t r1 = gRandom->Rndm();
-   Int_t ibin = TMath::BinarySearch(nbins,&fIntegral[0],r1);
-   Int_t biny = ibin/nbinsx;
-   Int_t binx = ibin - nbinsx*biny;
-   x = fXaxis.GetBinLowEdge(binx+1)
-      +fXaxis.GetBinWidth(binx+1)*(fIntegral[ibin+1]-r1)/(fIntegral[ibin+1] - fIntegral[ibin]);
-   y = fYaxis.GetBinLowEdge(biny+1) + fYaxis.GetBinWidth(biny+1)*gRandom->Rndm();
-}
-
-//______________________________________________________________________________
-void TH1::GetRandom3(Axis_t &x, Axis_t &y, Axis_t &z)
-{
-// return 3 random numbers along axis x , y and z distributed according
-// the cellcontents of a 3-dim histogram
-
-   if (fDimension != 3) {
-      Error("GetRandom","Function only valid for 3-d histograms");
-      return;
-   }
-   Int_t nbinsx = GetNbinsX();
-   Int_t nbinsy = GetNbinsY();
-   Int_t nbinsz = GetNbinsZ();
-   Int_t nxy    = nbinsx*nbinsy;
-   Int_t nbins  = nxy*nbinsz;
-   Double_t integral;
-   if (fIntegral) {
-      if (fIntegral[nbins+1] != fEntries) integral = ComputeIntegral();
-   } else {
-      integral = ComputeIntegral();
-      if (integral == 0 || fIntegral == 0) return;
-   }
-   Float_t r1 = gRandom->Rndm();
-   Int_t ibin = TMath::BinarySearch(nbins,&fIntegral[0],r1);
-   Int_t binz = ibin/nxy;
-   Int_t biny = (ibin - nxy*binz)/nbinsx;
-   Int_t binx = ibin - nbinsx*(biny + nbinsy*binz);
-   x = fXaxis.GetBinLowEdge(binx+1)
-      +fXaxis.GetBinWidth(binx+1)*(fIntegral[ibin+1]-r1)/(fIntegral[ibin+1] - fIntegral[ibin]);
-   y = fYaxis.GetBinLowEdge(biny+1) + fYaxis.GetBinWidth(biny+1)*gRandom->Rndm();
-   z = fZaxis.GetBinLowEdge(binz+1) + fZaxis.GetBinWidth(binz+1)*gRandom->Rndm();
-}
-
-//______________________________________________________________________________
 Stat_t TH1::GetBinContent(Int_t)
 {
 //*-*-*-*-*-*-*Return content of global bin number bin*-*-*-*-*-*-*-*-*-*-*-*
@@ -2566,501 +2091,6 @@ void TH1::Paint(Option_t *option)
 
    if (!fPainter) fPainter = TVirtualHistPainter::HistPainter(this);
    if (fPainter) fPainter->Paint(option);
-}
-
-//______________________________________________________________________________
-TProfile *TH1::ProfileX(const char *name, Int_t firstybin, Int_t lastybin, Option_t *option)
-{
-//*-*-*-*-*Project a 2-D histogram into a profile histogram along X*-*-*-*-*-*
-//*-*      ========================================================
-//
-//   The projection is made from the channels along the Y axis
-//   ranging from firstybin to lastybin included.
-//
-
-// Check if this is a 2-d histogram
-  if (GetDimension() != 2) {
-     Error("ProfileX","Not a 2-D histogram");
-     return 0;
-  }
-  TString opt = option;
-  opt.ToLower();
-  Int_t nx = fXaxis.GetNbins();
-  Int_t ny = fYaxis.GetNbins();
-  if (firstybin < 0) firstybin = 0;
-  if (lastybin > ny) lastybin = ny+1;
-
-// Create the profile histogram
-  char *pname = (char*)name;
-  if (strcmp(name,"_pfx") == 0) {
-     Int_t nch = strlen(GetName()) + 5;
-     pname = new char[nch];
-     sprintf(pname,"%s%s",GetName(),name);
-  }
-  TProfile *h1 = new TProfile(pname,GetTitle(),nx,fXaxis.GetXmin(),fXaxis.GetXmax(),option);
-  if (pname != name)  delete [] pname;
-
-// Fill the profile histogram
-  Double_t cont;
-  Double_t entries = 0;
-  for (Int_t binx =0;binx<=nx+1;binx++) {
-     for (Int_t biny=firstybin;biny<=lastybin;biny++) {
-        cont =  GetCellContent(binx,biny);
-        if (cont) {
-           h1->Fill(fXaxis.GetBinCenter(binx),fYaxis.GetBinCenter(biny), cont);
-           entries += cont;
-        }
-     }
-  }
-  h1->SetEntries(entries);
-  return h1;
-}
-
-//______________________________________________________________________________
-TProfile *TH1::ProfileY(const char *name, Int_t firstxbin, Int_t lastxbin, Option_t *option)
-{
-//*-*-*-*-*Project a 2-D histogram into a profile histogram along Y*-*-*-*-*-*
-//*-*      ========================================================
-//
-//   The projection is made from the channels along the X axis
-//   ranging from firstxbin to lastxbin included.
-//
-
-// Check if this is a 2-d histogram
-  if (GetDimension() != 2) {
-     Error("ProfileY","Not a 2-D histogram");
-     return 0;
-  }
-  TString opt = option;
-  opt.ToLower();
-  Int_t nx = fXaxis.GetNbins();
-  Int_t ny = fYaxis.GetNbins();
-  if (firstxbin < 0) firstxbin = 0;
-  if (lastxbin > nx) lastxbin = nx+1;
-
-// Create the projection histogram
-  char *pname = (char*)name;
-  if (strcmp(name,"_pfy") == 0) {
-     Int_t nch = strlen(GetName()) + 5;
-     pname = new char[nch];
-     sprintf(pname,"%s%s",GetName(),name);
-  }
-  TProfile *h1 = new TProfile(pname,GetTitle(),nx,fYaxis.GetXmin(),fYaxis.GetXmax(),option);
-  if (pname != name)  delete [] pname;
-
-// Fill the profile histogram
-  Double_t cont;
-  Double_t entries = 0;
-  for (Int_t biny =0;biny<=ny+1;biny++) {
-     for (Int_t binx=firstxbin;binx<=lastxbin;binx++) {
-        cont =  GetCellContent(binx,biny);
-        if (cont) {
-           h1->Fill(fYaxis.GetBinCenter(biny),fXaxis.GetBinCenter(binx), cont);
-           entries += cont;
-        }
-     }
-  }
-  h1->SetEntries(entries);
-  return h1;
-}
-
-//______________________________________________________________________________
-TH1D *TH1::ProjectionX(const char *name, Int_t firstybin, Int_t lastybin, Option_t *option)
-{
-//*-*-*-*-*Project a 2-D histogram into a 1-D histogram along X*-*-*-*-*-*-*
-//*-*      ====================================================
-//
-//   The projection is always of the type TH1D.
-//   The projection is made from the channels along the Y axis
-//   ranging from firstybin to lastybin included.
-//
-//   if option "E" is specified, the errors are computed.
-//
-
-// Check if this is a 2-d histogram
-  if (GetDimension() != 2) {
-     Error("ProjectionX","Not a 2-D histogram");
-     return 0;
-  }
-  TString opt = option;
-  opt.ToLower();
-  Int_t nx = fXaxis.GetNbins();
-  Int_t ny = fYaxis.GetNbins();
-  if (firstybin < 0) firstybin = 0;
-  if (lastybin > ny) lastybin = ny+1;
-
-// Create the projection histogram
-  char *pname = (char*)name;
-  if (strcmp(name,"_px") == 0) {
-     Int_t nch = strlen(GetName()) + 4;
-     pname = new char[nch];
-     sprintf(pname,"%s%s",GetName(),name);
-  }
-  TH1D *h1 = new TH1D(pname,GetTitle(),nx,fXaxis.GetXmin(),fXaxis.GetXmax());
-  Bool_t computeErrors = kFALSE;
-  if (opt.Contains("e")) {h1->Sumw2(); computeErrors = kTRUE;}
-  if (pname != name)  delete [] pname;
-
-// Fill the projected histogram
-  Double_t cont,err,err2;
-  Double_t entries = 0;
-  for (Int_t binx =0;binx<=nx+1;binx++) {
-     err2 = 0;
-     for (Int_t biny=firstybin;biny<=lastybin;biny++) {
-        cont  = GetCellContent(binx,biny);
-        err   = GetCellError(binx,biny);
-        err2 += err*err;
-        if (cont) {
-           h1->Fill(fXaxis.GetBinCenter(binx), cont);
-           entries += cont;
-        }
-     }
-     if (computeErrors) h1->SetBinError(binx,TMath::Sqrt(err2));
-  }
-  h1->SetEntries(entries);
-  return h1;
-}
-
-//______________________________________________________________________________
-TH1D *TH1::ProjectionY(const char *name, Int_t firstxbin, Int_t lastxbin, Option_t *option)
-{
-//*-*-*-*-*Project a 2-D histogram into a 1-D histogram along Y*-*-*-*-*-*-*
-//*-*      ====================================================
-//
-//   The projection is always of the type TH1D.
-//   The projection is made from the channels along the X axis
-//   ranging from firstxbin to lastxbin included.
-//
-//   if option "E" is specified, the errors are computed.
-//
-
-// Check if this is a 2-d histogram
-  if (GetDimension() != 2) {
-     Error("ProjectionY","Not a 2-D histogram");
-     return 0;
-  }
-  TString opt = option;
-  opt.ToLower();
-  Int_t nx = fXaxis.GetNbins();
-  Int_t ny = fYaxis.GetNbins();
-  if (firstxbin < 0) firstxbin = 0;
-  if (lastxbin > nx) lastxbin = nx+1;
-
-// Create the projection histogram
-  char *pname = (char*)name;
-  if (strcmp(name,"_py") == 0) {
-     Int_t nch = strlen(GetName()) + 4;
-     pname = new char[nch];
-     sprintf(pname,"%s%s",GetName(),name);
-  }
-  TH1D *h1 = new TH1D(pname,GetTitle(),ny,fYaxis.GetXmin(),fYaxis.GetXmax());
-  Bool_t computeErrors = kFALSE;
-  if (opt.Contains("e")) {h1->Sumw2(); computeErrors = kTRUE;}
-  if (pname != name)  delete [] pname;
-
-// Fill the projected histogram
-  Double_t cont,err,err2;
-  Double_t entries = 0;
-  for (Int_t biny =0;biny<=ny+1;biny++) {
-     err2 = 0;
-     for (Int_t binx=firstxbin;binx<=lastxbin;binx++) {
-        cont  = GetCellContent(binx,biny);
-        err   = GetCellError(binx,biny);
-        err2 += err*err;
-        if (cont) {
-           h1->Fill(fYaxis.GetBinCenter(biny), cont);
-           entries += cont;
-        }
-     }
-     if (computeErrors) h1->SetBinError(biny,TMath::Sqrt(err2));
-  }
-  h1->SetEntries(entries);
-  return h1;
-}
-
-//______________________________________________________________________________
-TH1D *TH1::ProjectionZ(const char *name, Int_t ixmin, Int_t ixmax, Int_t iymin, Int_t iymax, Option_t *option)
-{
-//*-*-*-*-*Project a 3-D histogram into a 1-D histogram along Z*-*-*-*-*-*-*
-//*-*      ====================================================
-//
-//   The projection is always of the type TH1D.
-//   The projection is made from the cells along the X axis
-//   ranging from ixmin to ixmax and iymin to iymax included.
-//
-//   if option "E" is specified, the errors are computed.
-//
-//   code from Paola Collins & Hans Dijkstra
-
-  if (GetDimension() != 3){
-     Error("ProjectionZ", "Not a 3-D histogram");
-     return 0;
-  }
-
-  TString opt = option;
-  opt.ToLower();
-  Int_t nx = GetNbinsX();
-  Int_t ny = GetNbinsY();
-  Int_t nz = GetNbinsZ();
-  if (ixmin < 0)  ixmin = 0;
-  if (ixmax > nx) ixmax = nx+1;
-  if (iymin < 0)  iymin = 0;
-  if (iymax > ny) iymax = ny+1;
-
-// Create the projection histogram
-  char *pname = (char*)name;
-  if (strcmp(name,"_pz") == 0) {
-     Int_t nch = strlen(GetName()) + 4;
-     pname = new char[nch];
-     sprintf(pname,"%s%s",GetName(),name);
-  }
-  TH1D *h1 = new TH1D(pname,GetTitle(),nz,fZaxis.GetXmin(),fZaxis.GetXmax());
-  Bool_t computeErrors = kFALSE;
-  if (opt.Contains("e")) {h1->Sumw2(); computeErrors = kTRUE;}
-  if (pname != name)  delete [] pname;
-
-// Fill the projected histogram
-  Float_t cont,e,e1;
-  Double_t entries  = 0;
-  Double_t newerror = 0;
-  for (Int_t ixbin=ixmin;ixbin<=ixmax;ixbin++){
-     for (Int_t iybin=iymin;iybin<=iymax;iybin++){
-        for (Int_t binz=0;binz<=(nz+1);binz++){
-           Int_t bin = GetBin(ixbin,iybin,binz);
-           cont = GetBinContent(bin);
-           if (computeErrors) {
-              e        = GetBinError(bin);
-              e1       = h1->GetBinError(binz);
-              newerror = TMath::Sqrt(e*e + e1*e1);
-           }
-           if (cont) {
-              h1->Fill(fZaxis.GetBinCenter(binz), cont);
-              entries += cont;
-           }
-           if (computeErrors) h1->SetBinError(binz,newerror);
-        }
-     }
-  }
-  h1->SetEntries(entries);
-  return h1;
-}
-
-//______________________________________________________________________________
-TH1 *TH1::Project3D(Option_t *option)
-{
-   // Project a 3-d histogram into 1 or 2-d histograms depending on the
-   // option parameter
-   // option may contain a combination of the characters x,y,z,e
-   // option = "x" return the x projection into a TH1D histogram
-   // option = "y" return the y projection into a TH1D histogram
-   // option = "z" return the z projection into a TH1D histogram
-   // option = "xy" return the x versus y projection into a TH2D histogram
-   // option = "yx" return the y versus x projection into a TH2D histogram
-   // option = "xz" return the x versus z projection into a TH2D histogram
-   // option = "zx" return the z versus x projection into a TH2D histogram
-   // option = "yz" return the y versus z projection into a TH2D histogram
-   // option = "zy" return the z versus y projection into a TH2D histogram
-   //
-   // If option contains the string "e", errors are computed
-   //
-   // The projection is made for the selected bins only
-
-  if (GetDimension() != 3) {
-     Error("Project3D", "Not a 3-D histogram");
-     return 0;
-  }
-
-  TString opt = option; opt.ToLower();
-  Int_t ixmin = fXaxis.GetFirst();
-  Int_t ixmax = fXaxis.GetLast();
-  Int_t iymin = fYaxis.GetFirst();
-  Int_t iymax = fYaxis.GetLast();
-  Int_t izmin = fZaxis.GetFirst();
-  Int_t izmax = fZaxis.GetLast();
-  Int_t nx = ixmax-ixmin+1;
-  Int_t ny = iymax-iymin+1;
-  Int_t nz = izmax-izmin+1;
-  Int_t pcase = 0;
-  if (opt.Contains("x"))  pcase = 1;
-  if (opt.Contains("y"))  pcase = 2;
-  if (opt.Contains("z"))  pcase = 3;
-  if (opt.Contains("xy")) pcase = 4;
-  if (opt.Contains("yx")) pcase = 5;
-  if (opt.Contains("xz")) pcase = 6;
-  if (opt.Contains("zx")) pcase = 7;
-  if (opt.Contains("yz")) pcase = 8;
-  if (opt.Contains("zy")) pcase = 9;
-
-// Create the projection histogram
-  TH1 *h = 0;
-  Int_t nch = strlen(GetName()) +opt.Length() +2;
-  char *name = new char[nch];
-  sprintf(name,"%s_%s",GetName(),option);
-  nch = strlen(GetTitle()) +opt.Length() +2;
-  char *title = new char[nch];
-  sprintf(title,"%s_%s",GetTitle(),option);
-  switch (pcase) {
-     case 1:
-        h = new TH1D(name,title,nx,fXaxis.GetBinLowEdge(ixmin),fXaxis.GetBinUpEdge(ixmax));
-        break;
-
-     case 2:
-        h = new TH1D(name,title,ny,fYaxis.GetBinLowEdge(iymin),fYaxis.GetBinUpEdge(iymax));
-        break;
-
-     case 3:
-        h = new TH1D(name,title,nz,fZaxis.GetBinLowEdge(izmin),fZaxis.GetBinUpEdge(izmax));
-        break;
-
-     case 4:
-        h = new TH2D(name,title,ny,fYaxis.GetBinLowEdge(iymin),fYaxis.GetBinUpEdge(iymax)
-                               ,nx,fXaxis.GetBinLowEdge(ixmin),fXaxis.GetBinUpEdge(ixmax));
-        break;
-
-     case 5:
-        h = new TH2D(name,title,nx,fXaxis.GetBinLowEdge(ixmin),fXaxis.GetBinUpEdge(ixmax)
-                               ,ny,fYaxis.GetBinLowEdge(iymin),fYaxis.GetBinUpEdge(iymax));
-        break;
-
-     case 6:
-        h = new TH2D(name,title,nz,fZaxis.GetBinLowEdge(izmin),fZaxis.GetBinUpEdge(izmax)
-                               ,nx,fXaxis.GetBinLowEdge(ixmin),fXaxis.GetBinUpEdge(ixmax));
-        break;
-
-     case 7:
-        h = new TH2D(name,title,nx,fXaxis.GetBinLowEdge(ixmin),fXaxis.GetBinUpEdge(ixmax)
-                               ,nz,fZaxis.GetBinLowEdge(izmin),fZaxis.GetBinUpEdge(izmax));
-        break;
-
-     case 8:
-        h = new TH2D(name,title,nz,fZaxis.GetBinLowEdge(izmin),fZaxis.GetBinUpEdge(izmax)
-                               ,ny,fYaxis.GetBinLowEdge(iymin),fYaxis.GetBinUpEdge(iymax));
-        break;
-
-     case 9:
-        h = new TH2D(name,title,ny,fYaxis.GetBinLowEdge(iymin),fYaxis.GetBinUpEdge(iymax)
-                               ,nz,fZaxis.GetBinLowEdge(izmin),fZaxis.GetBinUpEdge(izmax));
-        break;
-
-     }
-  delete [] name;
-  delete [] title;
-  if (h == 0) return h;
-
-  Bool_t computeErrors = kFALSE;
-  if (opt.Contains("e")) {h->Sumw2(); computeErrors = kTRUE;}
-
-// Fill the projected histogram
-  Float_t cont,e,e1;
-  Double_t entries  = 0;
-  Double_t newerror = 0;
-  for (Int_t ixbin=ixmin;ixbin<=ixmax;ixbin++){
-     Int_t ix = ixbin-ixmin+1;
-     for (Int_t iybin=iymin;iybin<=iymax;iybin++){
-        Int_t iy = iybin-iymin+1;
-        for (Int_t izbin=izmin;izbin<=izmax;izbin++){
-           Int_t iz = izbin-izmin+1;
-           Int_t bin = GetBin(ixbin,iybin,izbin);
-           cont = GetBinContent(bin);
-           switch (pcase) {
-           case 1:
-              if (cont) h->Fill(fXaxis.GetBinCenter(ixbin), cont);
-              if (computeErrors) {
-                 e        = GetBinError(bin);
-                 e1       = h->GetBinError(ix);
-                 newerror = TMath::Sqrt(e*e + e1*e1);
-                 h->SetBinError(ix,newerror);
-              }
-              break;
-
-           case 2:
-              if (cont) h->Fill(fYaxis.GetBinCenter(iybin), cont);
-              if (computeErrors) {
-                 e        = GetBinError(bin);
-                 e1       = h->GetBinError(iy);
-                 newerror = TMath::Sqrt(e*e + e1*e1);
-                 h->SetBinError(iy,newerror);
-              }
-              break;
-
-           case 3:
-              if (cont) h->Fill(fZaxis.GetBinCenter(izbin), cont);
-              if (computeErrors) {
-                 e        = GetBinError(bin);
-                 e1       = h->GetBinError(iz);
-                 newerror = TMath::Sqrt(e*e + e1*e1);
-                 h->SetBinError(iz,newerror);
-              }
-              break;
-
-           case 4:
-              if (cont) h->Fill(fYaxis.GetBinCenter(iybin),fXaxis.GetBinCenter(ixbin), cont);
-              if (computeErrors) {
-                 e        = GetBinError(bin);
-                 e1       = h->GetCellError(iy,ix);
-                 newerror = TMath::Sqrt(e*e + e1*e1);
-                 h->SetCellError(iy,ix,newerror);
-              }
-              break;
-
-           case 5:
-              if (cont) h->Fill(fXaxis.GetBinCenter(ixbin),fYaxis.GetBinCenter(iybin), cont);
-              if (computeErrors) {
-                 e        = GetBinError(bin);
-                 e1       = h->GetCellError(ix,iy);
-                 newerror = TMath::Sqrt(e*e + e1*e1);
-                 h->SetCellError(ix,iy,newerror);
-              }
-              break;
-
-           case 6:
-              if (cont) h->Fill(fZaxis.GetBinCenter(izbin),fXaxis.GetBinCenter(ixbin), cont);
-              if (computeErrors) {
-                 e        = GetBinError(bin);
-                 e1       = h->GetCellError(iz,ix);
-                 newerror = TMath::Sqrt(e*e + e1*e1);
-                 h->SetCellError(iz,ix,newerror);
-              }
-              break;
-
-           case 7:
-              if (cont) h->Fill(fXaxis.GetBinCenter(ixbin),fZaxis.GetBinCenter(izbin), cont);
-              if (computeErrors) {
-                 e        = GetBinError(bin);
-                 e1       = h->GetCellError(ix,iz);
-                 newerror = TMath::Sqrt(e*e + e1*e1);
-                 h->SetCellError(ix,iz,newerror);
-              }
-              break;
-
-           case 8:
-              if (cont) h->Fill(fZaxis.GetBinCenter(izbin),fYaxis.GetBinCenter(iybin), cont);
-              if (computeErrors) {
-                 e        = GetBinError(bin);
-                 e1       = h->GetCellError(iz,iy);
-                 newerror = TMath::Sqrt(e*e + e1*e1);
-                 h->SetCellError(iz,iy,newerror);
-              }
-              break;
-
-           case 9:
-              if (cont) h->Fill(fYaxis.GetBinCenter(iybin),fZaxis.GetBinCenter(izbin), cont);
-              if (computeErrors) {
-                 e        = GetBinError(bin);
-                 e1       = h->GetCellError(iy,iz);
-                 newerror = TMath::Sqrt(e*e + e1*e1);
-                 h->SetCellError(iy,iz,newerror);
-              }
-              break;
-           }
-           if (cont) {
-              entries += cont;
-           }
-        }
-     }
-  }
-  h->SetEntries(entries);
-  return h;
 }
 
 //______________________________________________________________________________
@@ -3709,11 +2739,6 @@ void TH1::GetStats(Stat_t *stats)
    // stats[1] = sumw2
    // stats[2] = sumwx
    // stats[3] = sumwx2
-   // stats[4] = sumwy   if 2-d or 3-d
-   // stats[5] = sumwy2
-   // stats[6] = sumwxy
-   // stats[7] = sumwz   if 3-d
-   // stats[8] = sumwz2
    //
    // If no axis-subrange is specified (via TAxis::SetRange), the array stats
    // is simply a copy of the statistics quantities computed at filling time.
@@ -3721,67 +2746,24 @@ void TH1::GetStats(Stat_t *stats)
    // from the bin contents in the current axis range.
 
    // Loop on bins (possibly including underflows/overflows)
-   Int_t bin, binx, biny, binz;
+   Int_t bin, binx;
    Stat_t w;
-   Float_t x,y,z;
-   if (fDimension == 1) {
-      if (fTsumw == 0 || fXaxis.TestBit(TAxis::kAxisRange)) {
-         for (bin=0;bin<4;bin++) stats[bin] = 0;
-         for (binx=fXaxis.GetFirst();binx<=fXaxis.GetLast();binx++) {
-            x = fXaxis.GetBinCenter(binx);
-            w = TMath::Abs(GetBinContent(binx));
-            stats[0] += w;
-            stats[1] += w*w;
-            stats[2] += w*x;
-            stats[3] += w*x*x;
-         }
-      } else {
-         stats[0] = fTsumw;
-         stats[1] = fTsumw2;
-         stats[2] = fTsumwx;
-         stats[3] = fTsumwx2;
+   Float_t x;
+   if (fTsumw == 0 || fXaxis.TestBit(TAxis::kAxisRange)) {
+      for (bin=0;bin<4;bin++) stats[bin] = 0;
+      for (binx=fXaxis.GetFirst();binx<=fXaxis.GetLast();binx++) {
+         x = fXaxis.GetBinCenter(binx);
+         w = TMath::Abs(GetBinContent(binx));
+         stats[0] += w;
+         stats[1] += w*w;
+         stats[2] += w*x;
+         stats[3] += w*x*x;
       }
-   }
-   if (fDimension == 2) {
-      for (bin=0;bin<7;bin++) stats[bin] = 0;
-      for (biny=fYaxis.GetFirst();biny<=fYaxis.GetLast();biny++) {
-         y = fYaxis.GetBinCenter(biny);
-         for (binx=fXaxis.GetFirst();binx<=fXaxis.GetLast();binx++) {
-            bin = GetBin(binx,biny);
-            x = fXaxis.GetBinCenter(binx);
-            w = TMath::Abs(GetBinContent(bin));
-            stats[0] += w;
-            stats[1] += w*w;
-            stats[2] += w*x;
-            stats[3] += w*x*x;
-            stats[4] += w*y;
-            stats[5] += w*y*y;
-            stats[6] += w*x*y;
-         }
-      }
-   }
-   if (fDimension == 3) {
-      for (bin=0;bin<9;bin++) stats[bin] = 0;
-      for (binz=fZaxis.GetFirst();binz<=fZaxis.GetLast();binz++) {
-         z = fZaxis.GetBinCenter(binz);
-         for (biny=fYaxis.GetFirst();biny<=fYaxis.GetLast();biny++) {
-            y = fYaxis.GetBinCenter(biny);
-            for (binx=fXaxis.GetFirst();binx<=fXaxis.GetLast();binx++) {
-               bin = GetBin(binx,biny,binz);
-               x = fXaxis.GetBinCenter(binx);
-               w = TMath::Abs(GetBinContent(bin));
-               stats[0] += w;
-               stats[1] += w*w;
-               stats[2] += w*x;
-               stats[3] += w*x*x;
-               stats[4] += w*y;
-               stats[5] += w*y*y;
-               stats[6] += w*x*y;
-               stats[7] += w*z;
-               stats[8] += w*z*z;
-            }
-         }
-      }
+   } else {
+      stats[0] = fTsumw;
+      stats[1] = fTsumw2;
+      stats[2] = fTsumwx;
+      stats[3] = fTsumwx2;
    }
 }
 
@@ -3820,16 +2802,7 @@ Stat_t TH1::Integral()
 {
 //Return integral of bin contents. Only bins in the bins range are considered.
 
-   if (fDimension == 1) {
-      return Integral(fXaxis.GetFirst(),fXaxis.GetLast());
-   } else if (fDimension ==2) {
-      return Integral(fXaxis.GetFirst(),fXaxis.GetLast(),
-                      fYaxis.GetFirst(),fYaxis.GetLast());
-   } else {
-      return Integral(fXaxis.GetFirst(),fXaxis.GetLast(),
-                      fYaxis.GetFirst(),fYaxis.GetLast(),
-                      fZaxis.GetFirst(),fZaxis.GetLast());
-   }
+   return Integral(fXaxis.GetFirst(),fXaxis.GetLast());
 }
 
 //______________________________________________________________________________
@@ -3837,89 +2810,13 @@ Stat_t TH1::Integral(Int_t binx1, Int_t binx2)
 {
 //Return integral of bin contents between binx1 and binx2 for a 1-D histogram
 
-   Int_t nbinsx = GetNbinsX();
-   Int_t nbinsy = GetNbinsY();
-   Int_t nbinsz = GetNbinsZ();
-   if (fDimension < 2) nbinsy = -1;
-   if (fDimension < 3) nbinsz = -1;
    if (binx1 < 0) binx1 = 0;
-   if (binx2 > nbinsx+1) binx2 = nbinsx+1;
-   if (binx2 < binx1)    binx2 = nbinsx;
    Stat_t integral = 0;
 
 //*-*- Loop on bins in specified range
-   Int_t bin, binx, biny, binz;
-   for (binz=0;binz<=nbinsz+1;binz++) {
-      for (biny=0;biny<=nbinsy+1;biny++) {
-         for (binx=binx1;binx<=binx2;binx++) {
-            bin = binx +(nbinsx+2)*(biny + (nbinsy+2)*binz);
-            integral += GetBinContent(bin);
-         }
-      }
-   }
-   return integral;
-}
-
-//______________________________________________________________________________
-Stat_t TH1::Integral(Int_t binx1, Int_t binx2, Int_t biny1, Int_t biny2)
-{
-//Return integral of bin contents in range [binx1,binx2],[biny1,biny2]
-// for a 2-D histogram
-
-   Int_t nbinsx = GetNbinsX();
-   Int_t nbinsy = GetNbinsY();
-   Int_t nbinsz = GetNbinsZ();
-   if (fDimension < 2) nbinsy = -1;
-   if (fDimension < 3) nbinsz = -1;
-   if (binx1 < 0) binx1 = 0;
-   if (binx2 > nbinsx+1) binx2 = nbinsx+1;
-   if (binx2 < binx1)    binx2 = nbinsx;
-   if (biny1 < 0) biny1 = 0;
-   if (biny2 > nbinsy+1) biny2 = nbinsy+1;
-   if (biny2 < biny1)    biny2 = nbinsy;
-   Stat_t integral = 0;
-
-//*-*- Loop on bins in specified range
-   Int_t bin, binx, biny, binz;
-   for (binz=0;binz<=nbinsz+1;binz++) {
-      for (biny=biny1;biny<=biny2;biny++) {
-         for (binx=binx1;binx<=binx2;binx++) {
-            bin = binx +(nbinsx+2)*(biny + (nbinsy+2)*binz);
-            integral += GetBinContent(bin);
-         }
-      }
-   }
-   return integral;
-}
-
-//______________________________________________________________________________
-Stat_t TH1::Integral(Int_t binx1, Int_t binx2, Int_t biny1, Int_t biny2, Int_t binz1, Int_t binz2)
-{
-//Return integral of bin contents in range [binx1,binx2],[biny1,biny2],[binz1,binz2]
-// for a 3-D histogram
-
-   Int_t nbinsx = GetNbinsX();
-   Int_t nbinsy = GetNbinsY();
-   Int_t nbinsz = GetNbinsZ();
-   if (fDimension < 2) nbinsy = -1;
-   if (fDimension < 3) nbinsz = -1;
-   if (binx1 < 0) binx1 = 0;
-   if (binx2 > nbinsx+1) binx2 = nbinsx+1;
-   if (biny1 < 0) biny1 = 0;
-   if (biny2 > nbinsy+1) biny2 = nbinsy+1;
-   if (binz1 < 0) binz1 = 0;
-   if (binz2 > nbinsz+1) binz2 = nbinsz+1;
-   Stat_t integral = 0;
-
-//*-*- Loop on bins in specified range
-   Int_t bin, binx, biny, binz;
-   for (binz=binz1;binz<=binz2;binz++) {
-      for (biny=biny1;biny<=biny2;biny++) {
-         for (binx=binx1;binx<=binx2;binx++) {
-            bin = binx +(nbinsx+2)*(biny + (nbinsy+2)*binz);
-            integral += GetBinContent(bin);
-         }
-      }
+   Int_t binx;
+   for (binx=binx1;binx<=binx2;binx++) {
+      integral += GetBinContent(binx);
    }
    return integral;
 }
@@ -3998,7 +2895,7 @@ void TH1::SetContour(Int_t  nlevels, Float_t *levels)
      Float_t zmin = GetMinimum();
      Float_t zmax = GetMaximum();
      Float_t dz   = (zmax-zmin)/Float_t(nlevels);
-     if (gPad->GetLogz()) {
+     if (gPad && gPad->GetLogz()) {
         if (zmax <= 0) return;
         if (zmin <= 0) zmin = 0.001*zmax;
         zmin = TMath::Log10(zmin);
@@ -4288,13 +3185,27 @@ void TH1::SetError(Stat_t *error)
 //______________________________________________________________________________
 void TH1::SetName(const char *name)
 {
-//*-*-*-*-*-*-*-*-*-*-*Change the name of this histogram*-*-*-*-*-*-*-*-*-*-*
-//*-*                  =================================
+// Change the name of this histogram
+//
 
 //  Histograms are named objects in a THashList.
 //  We must update the hashlist if we change the name
    if (fDirectory) fDirectory->GetList()->Remove(this);
    fName = name;
+   if (fDirectory) fDirectory->GetList()->Add(this);
+}
+
+//______________________________________________________________________________
+void TH1::SetObject(const char *name, const char *title)
+{
+// Change the name and title of this histogram
+//
+
+//  Histograms are named objects in a THashList.
+//  We must update the hashlist if we change the name
+   if (fDirectory) fDirectory->GetList()->Remove(this);
+   fName  = name;
+   fTitle = title;
    if (fDirectory) fDirectory->GetList()->Add(this);
 }
 
@@ -4429,20 +3340,6 @@ ClassImp(TH1C)
 TH1C::TH1C(): TH1(), TArrayC()
 {
    fDimension = 1;
-}
-
-//______________________________________________________________________________
-TH1C::TH1C(Int_t dim,const char *name,const char *title,Int_t nbins,Axis_t xlow,Axis_t xup)
-     : TH1(name,title,nbins,xlow,xup), TArrayC()
-{
-   fDimension = dim;
-}
-
-//______________________________________________________________________________
-TH1C::TH1C(Int_t dim,const char *name,const char *title,Int_t nbins,Axis_t *xbins)
-     : TH1(name,title,nbins,xbins), TArrayC()
-{
-   fDimension = dim;
 }
 
 //______________________________________________________________________________
@@ -4602,20 +3499,6 @@ TH1S::TH1S(): TH1(), TArrayS()
 }
 
 //______________________________________________________________________________
-TH1S::TH1S(Int_t dim,const char *name,const char *title,Int_t nbins,Axis_t xlow,Axis_t xup)
-     : TH1(name,title,nbins,xlow,xup), TArrayS()
-{
-   fDimension = dim;
-}
-
-//______________________________________________________________________________
-TH1S::TH1S(Int_t dim,const char *name,const char *title,Int_t nbins,Axis_t *xbins)
-     : TH1(name,title,nbins,xbins), TArrayS()
-{
-   fDimension = dim;
-}
-
-//______________________________________________________________________________
 TH1S::TH1S(const char *name,const char *title,Int_t nbins,Axis_t xlow,Axis_t xup)
      : TH1(name,title,nbins,xlow,xup), TArrayS(nbins+2)
 {
@@ -4771,20 +3654,6 @@ TH1F::TH1F(): TH1(), TArrayF()
 }
 
 //______________________________________________________________________________
-TH1F::TH1F(Int_t dim,const char *name,const char *title,Int_t nbins,Axis_t xlow,Axis_t xup)
-     : TH1(name,title,nbins,xlow,xup), TArrayF()
-{
-   fDimension = dim;
-}
-
-//______________________________________________________________________________
-TH1F::TH1F(Int_t dim,const char *name,const char *title,Int_t nbins,Axis_t *xbins)
-     : TH1(name,title,nbins,xbins), TArrayF()
-{
-   fDimension = dim;
-}
-
-//______________________________________________________________________________
 TH1F::TH1F(const char *name,const char *title,Int_t nbins,Axis_t xlow,Axis_t xup)
      : TH1(name,title,nbins,xlow,xup), TArrayF(nbins+2)
 {
@@ -4920,20 +3789,6 @@ TH1D::TH1D(): TH1(), TArrayD()
 }
 
 //______________________________________________________________________________
-TH1D::TH1D(Int_t dim,const char *name,const char *title,Int_t nbins,Axis_t xlow,Axis_t xup)
-     : TH1(name,title,nbins,xlow,xup), TArrayD()
-{
-   fDimension = dim;
-}
-
-//______________________________________________________________________________
-TH1D::TH1D(Int_t dim,const char *name,const char *title,Int_t nbins,Axis_t *xbins)
-     : TH1(name,title,nbins,xbins), TArrayD()
-{
-   fDimension = dim;
-}
-
-//______________________________________________________________________________
 TH1D::TH1D(const char *name,const char *title,Int_t nbins,Axis_t xlow,Axis_t xup)
      : TH1(name,title,nbins,xlow,xup), TArrayD(nbins+2)
 {
@@ -5055,3 +3910,26 @@ TH1D operator/(TH1D &h1, TH1D &h2)
    hnew.SetDirectory(0);
    return hnew;
 }
+
+//______________________________________________________________________________
+TH1 *R__H(Int_t hid)
+{
+   //return pointer to histogram with name
+   //   hid if id >=0
+   //   h_id if id <0
+
+   char hname[20];
+   if(hid >= 0) sprintf(hname,"h%d",hid);
+   else         sprintf(hname,"h_%d",hid);
+   return (TH1*)gDirectory->Get(hname);
+}
+
+//______________________________________________________________________________
+TH1 *R__H(const char * hname)
+{
+   //return pointer to histogram with name hname
+
+   return (TH1*)gDirectory->Get(hname);
+}
+
+

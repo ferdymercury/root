@@ -1,5 +1,5 @@
-/*CMZ :  2.23/10 10/12/99  17.59.59  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   10/12/99*/
+/*CMZ :  2.24/05 16/05/2000  12.03.45  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   16/05/2000*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -248,6 +248,23 @@ char *file;
 #endif
 #endif
 
+#ifndef G__OLDIMPLEMENTATION1247
+  long asm_inst_g[G__MAXINST]; /* p-code instruction buffer */
+  G__value asm_stack_g[G__MAXSTACK]; /* data stack */
+  char asm_name[G__ASM_FUNCNAMEBUF];
+
+  long *store_asm_inst;
+  G__value *store_asm_stack;
+  char *store_asm_name;
+  int store_asm_name_p;
+  struct G__param *store_asm_param;
+  /* int store_asm_exec; */
+  int store_asm_noverflow;
+  int store_asm_cp;
+  int store_asm_dt;
+  int store_asm_index; /* maybe unneccessary */
+#endif
+
   int len;
 
   static int filenum = G__MAXFILE-1;
@@ -316,8 +333,41 @@ char *file;
 #endif
 #endif
 
+#ifndef G__OLDIMPLEMENTATION1247
+  store_asm_inst = G__asm_inst;
+  store_asm_stack = G__asm_stack;
+  store_asm_name = G__asm_name;
+  store_asm_name_p = G__asm_name_p;
+  store_asm_param  = G__asm_param ;
+  /* store_asm_exec  = G__asm_exec ; */
+  store_asm_noverflow  = G__asm_noverflow ;
+  store_asm_cp  = G__asm_cp ;
+  store_asm_dt  = G__asm_dt ;
+  store_asm_index  = G__asm_index ;
+
+  G__asm_inst = asm_inst_g;
+  G__asm_stack = asm_stack_g;
+  G__asm_name = asm_name;
+  G__asm_name_p = 0;
+  /* G__asm_param ; */
+  G__asm_exec = 0 ;
+#endif
+
     /* execution */
     buf = G__exec_statement();
+
+#ifndef G__OLDIMPLEMENTATION1247
+  G__asm_inst = store_asm_inst;
+  G__asm_stack = store_asm_stack;
+  G__asm_name = store_asm_name;
+  G__asm_name_p = store_asm_name_p;
+  G__asm_param  = store_asm_param ;
+  /* G__asm_exec  = store_asm_exec ; */
+  G__asm_noverflow  = store_asm_noverflow ;
+  G__asm_cp  = store_asm_cp ;
+  G__asm_dt  = store_asm_dt ;
+  G__asm_index  = store_asm_index ;
+#endif
 
     /**********************************************
      * restore interrpret signal handling
@@ -362,6 +412,7 @@ char *file;
 #ifndef G__OLDIMPLEMENTATION1035
     G__UnlockCriticalSection();
 #endif
+
     return(buf);
   }
   else {

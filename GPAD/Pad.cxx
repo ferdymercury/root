@@ -1,4 +1,6 @@
-//*CMZ :          01/02/2000  16.35.53  by  Rene Brun
+//*CMZ :  2.24/03 01/05/2000  21.38.19  by  Rene Brun
+//*CMZ :  2.24/01 20/03/2000  10.24.48  by  Rene Brun
+//*CMZ :  2.24/00 01/02/2000  16.35.53  by  Rene Brun
 //*CMZ :  2.23/11 09/01/2000  16.04.36  by  Rene Brun
 //*CMZ :  2.23/10 16/12/99  10.32.49  by  Rene Brun
 //*CMZ :  2.23/09 25/11/99  18.49.46  by  Rene Brun
@@ -11,17 +13,18 @@
 //*CMZ :  2.23/00 03/08/99  12.04.05  by  Rene Brun
 //*-- Author :    Rene Brun   12/12/94
 
+/*CMZ :  2.24/01 24/02/2000  11.49.40  by  Fons Rademakers*/
 /*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun and Fons Rademakers.                               *
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
  *                                                                       *
- * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
- * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
  *************************************************************************/
 
 #include <string.h>
@@ -54,7 +57,6 @@
 #include "TDiamond.h"
 #include "TGroupButton.h"
 #include "TBrowser.h"
-#include "TPadView3D.h"
 #include "TVirtualGL.h"
 #include "TString.h"
 #include "TLine.h"
@@ -65,6 +67,8 @@
 #include "TFrame.h"
 #include "TGaxis.h"
 #include "TExec.h"
+#include "TPadView3D.h"
+#include "TDatime.h"
 
 const Int_t kDistanceMaximum = 5;
 
@@ -277,7 +281,10 @@ TPad::~TPad()
    DeleteToolTip(fTip);
    SafeDelete(fPrimitives);
    SafeDelete(fExecs);
-   if (fPadView3D) { fPadView3D->SetPad(); fPadView3D = 0; }
+   if (fPadView3D) {
+      fPadView3D->SetPad();
+      fPadView3D = 0;
+   }
 }
 
 //______________________________________________________________________________
@@ -298,7 +305,7 @@ void TPad::AddExec(const char *name, const char*command)
 //  Root > hpx.Draw()
 //  Root > c1.AddExec("ex1",".x exec1.C")
 //   At this point you can use the mouse to click on the contour of
-//   the histogram hpx. When teh mouse is clicked, the bin number and its
+//   the histogram hpx. When the mouse is clicked, the bin number and its
 //   contents are printed.
 //  Example2 of use of exec1.C
 //  ==========================
@@ -886,6 +893,7 @@ void TPad::CreateNewPolyLine(Int_t event, Int_t px, Int_t py, Int_t mode)
 
    switch (event) {
 
+   case kButton1Double:
    case kButton1Down:
       if (npoints == 0) {
          gVirtualX->SetLineColor(-1);
@@ -894,6 +902,10 @@ void TPad::CreateNewPolyLine(Int_t event, Int_t px, Int_t py, Int_t mode)
          gVirtualX->DrawLine(px1old, py1old, pxold, pyold);
       }
       // stop collecting new points if new point is close ( < 5 pixels) of previous point
+      if (event == kButton1Double) {
+         px = px1old;
+         py = py1old;
+      }
       dp = TMath::Abs(px-px1old) +TMath::Abs(py-py1old);
       if (npoints && dp < 5) {
          gPad->Modified(kTRUE);
@@ -2198,7 +2210,7 @@ void TPad::Paint(Option_t *option)
 
 //*-*   Start OpenGL Model if present
    if (fPadView3D)
-        fPadView3D->PaintBeginModel(option);
+       fPadView3D->PaintBeginModel(option);
 //   else
    PaintBorder(GetFillColor(), kTRUE);
 
@@ -2211,8 +2223,7 @@ void TPad::Paint(Option_t *option)
       lnk = (TObjOptLink*)lnk->Next();
    }
 
-   if (fPadView3D)
-   {
+   if (fPadView3D) {
 //*-*   Finish 3D Model
        fPadView3D->PaintEnd(option);
 //*-*   Start 3D scene
@@ -2357,10 +2368,28 @@ void TPad::PaintModified()
    cd();
    if (IsModified() || IsTransparent()) {
        if (fPadView3D)
-           fPadView3D->PaintBeginModel();
+#if 1
+         fPadView3D->PaintBeginModel();
+#else
+         gROOT->ProcessLine(Form("((TPadView3D *)0x%lx)->PaintBeginModel();",(Long_t)fPadView3D));
+#endif
        PaintBorder(GetFillColor(), kTRUE);
    }
 
+   if (fCanvas == this && gStyle->GetOptDate()) {
+      if (!fPrimitives->FindObject("DATE")) {
+          TDatime dt;
+          TText *tdate = new TText(gStyle->GetDateX(),gStyle->GetDateY(),dt.AsString());
+          tdate->SetName("DATE");
+          tdate->SetTextSize( gStyle->GetAttDate()->GetTextSize());
+          tdate->SetTextFont( gStyle->GetAttDate()->GetTextFont());
+          tdate->SetTextColor(gStyle->GetAttDate()->GetTextColor());
+          tdate->SetTextAlign(gStyle->GetAttDate()->GetTextAlign());
+          tdate->SetTextAngle(gStyle->GetAttDate()->GetTextAngle());
+          tdate->SetNDC();
+          tdate->Draw();
+       }
+   }
    TObjOptLink *lnk = (TObjOptLink*)GetListOfPrimitives()->FirstLink();
    TObject *obj;
 
@@ -2376,8 +2405,17 @@ void TPad::PaintModified()
 
    if (IsModified() && fPadView3D)
    {
+#if 1
+//*-*   Finish 3D Model
        fPadView3D->PaintEnd();
+//*-*   Start 3D scene
        fPadView3D->PaintScene();
+#else
+//*-*   Finish 3D Model
+       gROOT->ProcessLine(Form("((TPadView3D *)0x%lx)->PaintEnd();",(Long_t)fPadView3D));
+//*-*   Start 3D scene
+       gROOT->ProcessLine(Form("((TPadView3D *)0x%lx)->PaintScene();",(Long_t)fPadView3D));
+#endif
    }
 
    if (padsav) padsav->cd();
@@ -2988,8 +3026,8 @@ void TPad::Print(const char *filename, Option_t *option)
          return;
       }
       Update();
-      Int_t canvasid = GetCanvas()->GetCanvasID();
-      gVirtualX->SelectWindow(canvasid);
+      Int_t wid = (this == GetCanvas()) ? GetCanvas()->GetCanvasID() : GetPixmapID();
+      gVirtualX->SelectWindow(wid);
       gVirtualX->WriteGIF(psname);
       Printf("GIF file: %s has been created.",psname);
       return;
@@ -3010,7 +3048,7 @@ void TPad::Print(const char *filename, Option_t *option)
       return;
    }
 
-   // in case we read directly from a Root file and teh canvas
+   // in case we read directly from a Root file and the canvas
    // is not on the screen, set batch mode
    Bool_t noScreen = kFALSE;
    if (!GetCanvas()->IsBatch() && GetCanvas()->GetCanvasID() == -1) {
@@ -4005,7 +4043,8 @@ void TPad::x3d(Option_t *option)
 #endif
    {
       // Disconnect the previous 3D context
-      if (fPadView3D) fPadView3D->SetPad(0);
+      if (fPadView3D)
+         fPadView3D->SetPad(0);
       fPadView3D = gVirtualGL->CreatePadGLView(this);
       if (!fPadView3D) {
 #ifdef WIN32

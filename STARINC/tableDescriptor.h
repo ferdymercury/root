@@ -1,3 +1,4 @@
+//*CMZ :  2.24/01 18/02/2000  20.19.15  by  Valery Fine(fine@bnl.gov)
 //*CMZ :  2.23/12 26/01/2000  09.42.35  by  Valery Fine(fine@mail.cern.ch)
 //*-- Author :
 /* tableDescriptor.h */
@@ -35,19 +36,19 @@
 
 /*  This is to introduce an artificial restriction demanded by STAR database group
  *
- *    1. the name may be 19 symbols at most
- *    2. the number of the dimensions is 2 at most
+ *    1. the name may be 31 symbols at most
+ *    2. the number of the dimensions is 3 at most
  *
  *  To lift this restriction one has to provide -DNORESTRICTIONS CPP symbol and
  *  recompile code.
  */
 typedef struct tableDescriptor_st {
 #ifdef NORESTRICTIONS
-    char         *fColumnName; /* The name of this data-member                                          */
-    unsigned int *fIndexArray; /* The array of the sizes for each dimensions fIndexArray[fDimensions] */
+    char         *fColumnName; /* The name of this data-member                                         */
+    unsigned int *fIndexArray; /* The array of the sizes for each dimensions fIndexArray[fDimensions]  */
 #else
     char         fColumnName[32];  /* The name of this data-member: see dstype.h for dsl compatible mode */
-    unsigned int fIndexArray[2];   /* The array of the sizes for each dimensions fIndexArray[fDimensions] */
+    unsigned int fIndexArray[3];   /* The array of the sizes for each dimensions fIndexArray[fDimensions]*/
 #endif
     unsigned int fOffset;      /* The first byte in the row of this column                              */
     unsigned int fSize;        /* The full size of the selected column in bytes                         */
@@ -59,3 +60,4 @@ typedef struct tableDescriptor_st {
 // Revision 1.6  2000/01/12 18:07:25  fine
 //  cvs symbols have been added and copyright class introduced
 //"
+#endif /* TABLEDESCRIPTOR_H */

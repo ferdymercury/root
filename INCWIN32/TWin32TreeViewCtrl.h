@@ -1,18 +1,21 @@
+//*CMZ :  2.24/03 29/04/2000  23.42.00  by  Rene Brun
+//*CMZ :  2.24/01 18/02/2000  13.44.47  by  Valery Fine(fine@bnl.gov)
 //*CMZ :  2.00/11 22/08/98  10.07.35  by  Rene Brun
 //*CMZ :  0.90/07 28/11/96  17.16.21  by  Valery Fine(fine@vxcern.cern.ch)
 //*-- Author :    Valery Fine(fine@vxcern.cern.ch)   01/11/96
 
+/*CMZ :  2.24/01 24/02/2000  11.49.40  by  Fons Rademakers*/
 /*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun and Fons Rademakers.                               *
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
  *                                                                       *
- * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
- * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
  *************************************************************************/
 
 #ifndef ROOT_TWin32TreeViewCtrl
@@ -54,8 +57,8 @@ protected:
 
 public:
    TWin32TreeViewCtrl(){fhwndWindow=0;} //default ctor
-   TWin32TreeViewCtrl(TGWin32WindowsObject *winobj,Text_t *title, Float_t x=0,Float_t y=0, Float_t width=1, Float_t  height=1,
-                          Text_t *type=WC_TREEVIEW,
+   TWin32TreeViewCtrl(TGWin32WindowsObject *winobj,const Text_t *title, Float_t x=0,Float_t y=0, Float_t width=1, Float_t  height=1,
+                          const Text_t *type=WC_TREEVIEW,
                           UInt_t style=(DWORD) WS_VISIBLE |  TVS_HASLINES | TVS_HASBUTTONS | TVS_LINESATROOT );
   ~TWin32TreeViewCtrl();
   virtual void Add(TObject *obj, const char *name);
@@ -68,7 +71,7 @@ public:
   virtual void   OpenItem(HTREEITEM item);             // Open the new folder and close the old one if any
   virtual void   Shift(UInt_t lParam=0);               // Shift items to add a next one
 
-  ClassDef(TWin32TreeViewCtrl,0)  // TreeView Class is used to build TBrowserImp for Win32
+  // ClassDef(TWin32TreeViewCtrl,0)  // TreeView Class is used to build TBrowserImp for Win32
 
 };
 

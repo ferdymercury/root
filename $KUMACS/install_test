@@ -1,3 +1,4 @@
+*CMZ :  2.24/01 01/03/2000  13.22.04  by  Valery Fine(fine@bnl.gov)
 *CMZ :  2.23/09 19/11/99  12.39.26  by  Fons Rademakers
 *CMZ :  2.23/08 30/10/99  22.42.13  by  Rene Brun
 *CMZ :  2.23/07 22/10/99  14.39.55  by  Rene Brun
@@ -384,6 +385,9 @@ shell echo 'cd \$ROOTSYS/..' >> MakeDist
 shell echo 'tar cvf \$TARFILE root/AA_README root/ChangeLog root/bin \\' >> MakeDist
 shell echo '   root/include/\*.h root/include/MAIN_rmain.cxx root/lib \\' >> MakeDist
 shell echo '   root/cint root/tutorials/.rootrc root/tutorials/\*.C \\' >> MakeDist
++SELF, IF=STAR.
+shell echo '   root/STARTest/\*.C \\' >> MakeDist
++SELF.
 shell echo '   root/test/\*.cxx root/test/\*.h root/test/Makefile \\' >> MakeDist
 shell echo '   root/test/README root/macros root/icons \\' >> MakeDist
 shell echo '   root/AA_LICENSE root/AA_CREDITS' >> MakeDist
@@ -413,6 +417,9 @@ shell echo 'cd \$ROOTSYS' >> MakeDistSource
 shell echo 'tar cvf \$TARFILE --exclude cint/MAKEINFO --exclude cint/include/iosenum.h \\' >> MakeDistSource
 shell echo '   src/\*.h src/\*.c src/\*.cxx src/\*.f src/Make\* \\' >> MakeDistSource
 shell echo '   cint tutorials/.rootrc tutorials/\*.C configure config.in \\' >> MakeDistSource
++SELF, IF=STAR.
+shell echo '   STARTest/\*.C \\' >> MakeDistSource
++SELF.
 shell echo '   test/\*.cxx test/\*.h test/README ChangeLog AA_INSTALL \\' >> MakeDistSource
 shell echo '   AA_ARCHS Makefile.in Makefile' >> MakeDistSource
 

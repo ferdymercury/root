@@ -1,3 +1,4 @@
+//*CMZ :  2.24/02 06/04/2000  11.35.59  by  Fons Rademakers
 //*CMZ :  2.23/10 14/12/99  19.13.31  by  Fons Rademakers
 //*CMZ :  2.23/09 17/11/99  16.17.59  by  Rene Brun
 //*CMZ :  2.00/13 29/10/98  08.31.32  by  Fons Rademakers
@@ -6,17 +7,18 @@
 //*CMZ :  2.00/07 18/05/98  02.04.37  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   22/09/95
 
+/*CMZ :  2.24/01 24/02/2000  11.49.40  by  Fons Rademakers*/
 /*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun and Fons Rademakers.                               *
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
  *                                                                       *
- * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
- * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -99,7 +101,7 @@ TEnv *gEnv;
 
 static struct BoolNameTable_t {
    const char *fName;
-   int         fValue;
+   Int_t       fValue;
 } boolNames[]= {
    { "TRUE",  1 },
    { "FALSE", 0 },
@@ -126,7 +128,7 @@ protected:
 public:
    TEnvParser(TEnv *e, FILE *f) : fIfp(f), fEnv(e) { }
    virtual void KeyValue(const TString&, const TString&, const TString&) { }
-   virtual void Char(int) { }
+   virtual void Char(Int_t) { }
    void Parse();
 };
 
@@ -245,7 +247,7 @@ private:
 public:
    TWriteEnvParser(TEnv *e, FILE *f, FILE *of) : TEnvParser(e, f), fOfp(of) { }
    void KeyValue(const TString &name, const TString &value, const TString &type);
-   void Char(int c) { fputc(c, fOfp); }
+   void Char(Int_t c) { fputc(c, fOfp); }
 };
 
 //______________________________________________________________________________
@@ -367,7 +369,7 @@ void TEnvRec::ChangeValue(const TString &v, const char *, EEnvLevel l)
 }
 
 //______________________________________________________________________________
-int TEnvRec::Compare(TObject *op)
+Int_t TEnvRec::Compare(TObject *op)
 {
    // Comparison function for resources.
 
@@ -437,7 +439,9 @@ TEnv::TEnv(const char *name)
 {
    // Create a resource table and read the (possibly) three resource files, i.e
    // $ROOTSYS/system<name> (or ROOTETCDIR/system<name>), $HOME/<name> and
-   // ./<name>. Where in the case of TRint <name> is ".rootrc".
+   // ./<name>. ROOT always reads ".rootrc" (in TROOT::InitSystem()). You can
+   // read additional user defined resource files by creating addtional TEnv
+   // object.
 
    if (strlen(name) == 0)
       fTable = 0;
@@ -510,7 +514,7 @@ const char *TEnv::Getvalue(const char *name)
 }
 
 //______________________________________________________________________________
-int TEnv::GetValue(const char *name, int dflt)
+Int_t TEnv::GetValue(const char *name, Int_t dflt)
 {
    // Returns the integer value for a resource. If the resource is not found
    // return the dflt value.
@@ -523,7 +527,7 @@ int TEnv::GetValue(const char *name, int dflt)
          cp++;
       if (*cp) {
          BoolNameTable_t *bt;
-         if (isdigit((int)*cp))
+         if (isdigit((int)*cp) || *cp == '-' || *cp == '+')
             return atoi(cp);
          while (isalpha((int)*cp))
             *cp2++ = toupper((int)*cp++);
@@ -745,7 +749,7 @@ void TEnv::SetValue(const char *name, EEnvLevel level)
 }
 
 //______________________________________________________________________________
-void TEnv::SetValue(const char *name, int value)
+void TEnv::SetValue(const char *name, Int_t value)
 {
    // Set or create an integer resource value.
 

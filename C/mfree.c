@@ -1,3 +1,4 @@
+/*CMZ :  2.24/01 15/03/2000  16.57.59  by  Fons Rademakers*/
 /*CMZ :  1.02/00 08/07/97  21.56.42  by  Fons Rademakers*/
 /*-- Author :*/
 
@@ -38,7 +39,7 @@ __mmalloc_free (mdp, ptr)
   int type;
   size_t block, blocks;
   register size_t i;
-  struct list *prev, *next;
+  struct mmlist *prev, *next;
 
   block = BLOCK (ptr);
 
@@ -137,7 +138,7 @@ __mmalloc_free (mdp, ptr)
       mdp -> heapstats.bytes_free += 1 << type;
 
       /* Get the address of the first free fragment in this block.  */
-      prev = (struct list *)
+      prev = (struct mmlist *)
 	((char *) ADDRESS(block) +
 	 (mdp -> heapinfo[block].busy.info.frag.first << type));
 
@@ -172,7 +173,7 @@ __mmalloc_free (mdp, ptr)
 	  /* If some fragments of this block are free, link this
 	     fragment into the fragment list after the first free
 	     fragment of this block. */
-	  next = (struct list *) ptr;
+	  next = (struct mmlist *) ptr;
 	  next -> next = prev -> next;
 	  next -> prev = prev;
 	  prev -> next = next;
@@ -187,7 +188,7 @@ __mmalloc_free (mdp, ptr)
 	  /* No fragments of this block are free, so link this
 	     fragment into the fragment list and announce that
 	     it is the first free fragment of this block. */
-	  prev = (struct list *) ptr;
+	  prev = (struct mmlist *) ptr;
 	  mdp -> heapinfo[block].busy.info.frag.nfree = 1;
 	  mdp -> heapinfo[block].busy.info.frag.first =
 	    RESIDUAL (ptr, BLOCKSIZE) >> type;

@@ -1,3 +1,4 @@
+*CMZ :  2.24/01 14/02/2000  20.34.18  by  Fons Rademakers
 *CMZ :  2.00/08 28/05/98  09.07.28  by  Rene Brun
 *CMZ :  2.00/04 07/04/98  15.26.35  by  Fons Rademakers
 *CMZ :  1.03/02 29/08/97  11.54.00  by  Fons Rademakers
@@ -30,6 +31,10 @@ if $AFS <> '$AFS' then
  -laudit $AFS/lib/afs/util.a'
 else
    extralibs =
+endif
+
+if $SRP <> '$SRP' then
+   extralibs = [extralibs]//' -L$SRP/lib -lsrp -lgmp'
 endif
 
 +IF,GLIBC.

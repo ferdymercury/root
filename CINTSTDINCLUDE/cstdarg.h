@@ -1,5 +1,5 @@
-/*CMZ :  2.23/10 10/12/99  18.00.17  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   10/12/99*/
+/*CMZ :  2.24/05 16/05/2000  12.03.58  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   16/05/2000*/
 namespace std {
 #include <stdarg.h>
 }

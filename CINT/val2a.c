@@ -1,5 +1,5 @@
-/*CMZ :  2.23/10 10/12/99  18.00.06  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   10/12/99*/
+/*CMZ :  2.24/05 16/05/2000  12.03.51  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   16/05/2000*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -58,6 +58,32 @@ char *temp;
 	sprintf(temp,"(%s)%.17e" ,G__newtype.name[buf.typenum] ,buf.obj.d);
       break;
 #endif /* ON719 */
+#ifndef G__OLDIMPLEMENTATION1255
+  case 'b':
+    if(G__in_pause)
+      sprintf(temp,"(unsigned char)%u",(unsigned char)buf.obj.i);
+    else
+      sprintf(temp,"(unsignedchar)%u",(unsigned char)buf.obj.i);
+    break;
+  case 'r':
+    if(G__in_pause)
+      sprintf(temp,"(unsigned short)%u",(unsigned short)buf.obj.i);
+    else
+      sprintf(temp,"(unsignedshort)%u",(unsigned short)buf.obj.i);
+    break;
+  case 'h':
+    if(G__in_pause)
+      sprintf(temp,"(unsigned int)%u",(unsigned int)buf.obj.i);
+    else
+      sprintf(temp,"(unsignedint)%u",(unsigned int)buf.obj.i);
+    break;
+  case 'k':
+    if(G__in_pause)
+      sprintf(temp,"(unsigned long)%lu",(unsigned long)buf.obj.i);
+    else
+      sprintf(temp,"(unsignedlong)%lu",(unsigned long)buf.obj.i);
+    break;
+#endif
     default:
       if(islower(buf.type)) {
 #ifndef G__OLDIMPLEMENTATION719

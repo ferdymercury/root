@@ -1,3 +1,4 @@
+/*CMZ :  2.24/05 11/05/2000  17.42.24  by  Valery Fine(fine@bnl.gov)*/
 /*CMZ :  2.20/00 07/11/98  19.53.38  by  Valery Fine(fine@mail.cern.ch)*/
 /*CMZ :  2.00/00 23/02/98  16.46.09  by  Valery Fine(fine@mail.cern.ch)*/
 /*-- Author :*/
@@ -379,7 +380,7 @@ DumpExternalsObjects(PIMAGE_SYMBOL pSymbolTable, PIMAGE_SECTION_HEADER pSectionH
 /*
   Check whether it is "Scalar deleting destructor"
  */
-            if (!strstr(s,"@@UAEPAXI@Z") && !strstr(s,"real@"))
+            if (!strstr(s,"@@UAEPAXI@Z") && !strstr(s,"@@QAEPAXI@Z") && !strstr(s,"real@"))
             {
               fprintf(fout, "\t%s", s);
               SectChar = pSectionHeaders[pSymbolTable->SectionNumber-1].Characteristics;

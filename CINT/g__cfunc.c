@@ -1,5 +1,5 @@
-/*CMZ :  2.23/10 10/12/99  18.00.00  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   10/12/99*/
+/*CMZ :  2.24/05 16/05/2000  12.03.47  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   16/05/2000*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -19,6 +19,7 @@
  * representations about the suitability of this software for any
  * purpose.  It is provided "as is" without express or implied warranty.
  ************************************************************************/
+
 
 /* ANSI C */
 #include <ctype.h>
@@ -84,10 +85,12 @@ G__COMPLETIONLIST G__completionlist[] = {
 #else
 	{"abs",(void (*)())abs},
 #endif
+#ifndef G__NOMATHLIB
 #if defined(acos) || !defined(G__FUNCPOINTER)
 	{"acos",NULL},
 #else
 	{"acos",(void (*)())acos},
+#endif
 #endif
 #ifndef G__OLDIMPLEMENTATION467
 #if defined(asctime) || !defined(G__FUNCPOINTER)
@@ -96,6 +99,7 @@ G__COMPLETIONLIST G__completionlist[] = {
 	{"asctime",(void (*)())asctime},
 #endif
 #endif
+#ifndef G__NOMATHLIB
 #if defined(asin) || !defined(G__FUNCPOINTER)
 	{"asin",NULL},
 #else
@@ -111,6 +115,7 @@ G__COMPLETIONLIST G__completionlist[] = {
 #else
 	{"atan2",(void (*)())atan2},
 #endif
+#endif/* G__NOMATHLIB */
 #if defined(atof) || !defined(G__FUNCPOINTER)
 	{"atof",NULL},
 #else
@@ -146,6 +151,7 @@ G__COMPLETIONLIST G__completionlist[] = {
 #else
 	{"clock",(void (*)())clock},
 #endif
+#ifndef G__NOMATHLIB
 #if defined(cos) || !defined(G__FUNCPOINTER)
 	{"cos",NULL},
 #else
@@ -156,6 +162,7 @@ G__COMPLETIONLIST G__completionlist[] = {
 #else
 	{"cosh",(void (*)())cosh},
 #endif
+#endif /* G__NOMATHLIB */
 #if defined(ctime) || !defined(G__FUNCPOINTER)
 	{"ctime",NULL},
 #else
@@ -173,6 +180,7 @@ G__COMPLETIONLIST G__completionlist[] = {
 	{"div",(void (*)())div},
 #endif
 #endif
+#ifndef G__NOMATHLIB
 #if defined(exp) || !defined(G__FUNCPOINTER)
 	{"exp",NULL},
 #else
@@ -183,6 +191,7 @@ G__COMPLETIONLIST G__completionlist[] = {
 #else
 	{"fabs",(void (*)())fabs},
 #endif
+#endif /* G__NOMATHLIB */
 #if defined(fclose) || !defined(G__FUNCPOINTER)
 	{"fclose",NULL},
 #else
@@ -218,6 +227,7 @@ G__COMPLETIONLIST G__completionlist[] = {
 #else
 	{"fgets",(void (*)())fgets},
 #endif
+#ifndef G__NOMATHLIB
 #if defined(floor) || !defined(G__FUNCPOINTER)
 	{"floor",NULL},
 #else
@@ -228,6 +238,7 @@ G__COMPLETIONLIST G__completionlist[] = {
 #else
 	{"fmod",(void (*)())fmod},
 #endif
+#endif /* G__NOMATHLIB */
 #if defined(fopen) || !defined(G__FUNCPOINTER)
 	{"fopen",NULL},
 #else
@@ -370,11 +381,13 @@ G__COMPLETIONLIST G__completionlist[] = {
 #else
 	{"labs",(void (*)())labs},
 #endif
+#ifndef G__NOMATHLIB
 #if defined(ldexp) || !defined(G__FUNCPOINTER)
 	{"ldexp",NULL},
 #else
 	{"ldexp",(void (*)())ldexp},
 #endif
+#endif /* G__NOMATHLIB */
 #if !defined(G__NONANSI) && !defined(G__SUNOS4)
 #if defined(ldiv) || !defined(G__FUNCPOINTER)
 	{"ldiv",NULL},
@@ -394,6 +407,7 @@ G__COMPLETIONLIST G__completionlist[] = {
 	{"localtime",(void (*)())localtime},
 #endif
 #endif
+#ifndef G__NOMATHLIB
 #if defined(log) || !defined(G__FUNCPOINTER)
 	{"log",NULL},
 #else
@@ -404,6 +418,7 @@ G__COMPLETIONLIST G__completionlist[] = {
 #else
 	{"log10",(void (*)())log10},
 #endif
+#endif /* G__NOMATHLIB */
 #if defined(malloc) || !defined(G__FUNCPOINTER)
 	{"malloc",NULL},
 #else
@@ -466,11 +481,13 @@ G__COMPLETIONLIST G__completionlist[] = {
 #else
 	{"perror",(void (*)())perror},
 #endif
+#ifndef G__NOMATHLIB
 #if defined(pow) || !defined(G__FUNCPOINTER)
 	{"pow",NULL},
 #else
 	{"pow",(void (*)())pow},
 #endif
+#endif/* G__NOMATHLIB */
 #if defined(putc) || !defined(G__FUNCPOINTER)
 	{"putc",NULL},
 #else
@@ -533,6 +550,7 @@ G__COMPLETIONLIST G__completionlist[] = {
 #else
 	{"setvbuf",(void (*)())setvbuf},
 #endif
+#ifndef G__NOMATHLIB
 #if defined(sin) || !defined(G__FUNCPOINTER)
 	{"sin",NULL},
 #else
@@ -548,6 +566,7 @@ G__COMPLETIONLIST G__completionlist[] = {
 #else
 	{"sqrt",(void (*)())sqrt},
 #endif
+#endif /* G__NOMATHLIB */
 #if defined(srand) || !defined(G__FUNCPOINTER)
 	{"srand",NULL},
 #else
@@ -665,6 +684,7 @@ G__COMPLETIONLIST G__completionlist[] = {
 #else
 	{"system",(void (*)())system},
 #endif
+#ifndef G__NOMATHLIB
 #if defined(tan) || !defined(G__FUNCPOINTER)
 	{"tan",NULL},
 #else
@@ -675,6 +695,7 @@ G__COMPLETIONLIST G__completionlist[] = {
 #else
 	{"tanh",(void (*)())tanh},
 #endif
+#endif/* G__NOMATHLIB */
 #if defined(time) || !defined(G__FUNCPOINTER)
 	{"time",NULL},
 #else
@@ -803,6 +824,7 @@ G__COMPLETIONLIST G__completionlist[] = {
 	{"G__getmakeinfo",NULL},
 	{"G__set_atpause",NULL},
 	{"G__set_aterror",NULL},
+	{"G__set_smartunload",NULL},
 	{"G__AddConsole",NULL},
 	{"G__FreeConsole",NULL},
 	{"G__typeid",NULL},
@@ -1012,6 +1034,7 @@ int hash;
   * high priority routines 2
   ******************************************************************/
 
+#ifndef G__NOMATHLIB
   if((hash==342)&&(strcmp(funcname,"pow")==0)) {
 #ifndef G__MASKERROR
     if(2!=libp->paran) {
@@ -1199,6 +1222,7 @@ int hash;
     G__letint(result7,'i',(long)abs((int)G__int(libp->para[0])));
     return(1);
   }
+#endif /* G__NOMATHLIB */
 
   if((hash==426)&&(strcmp(funcname,"atof")==0)) {
 #ifndef G__MASKERROR
@@ -3359,13 +3383,17 @@ void G__list_sut(fp) FILE *fp; {
    fprintf(fp,"/* List of sut----------------------------------------------------------------*/\n");
    fprintf(fp,"   void abort();\n");
    fprintf(fp,"   int abs(int n);\n");
+#ifndef G__NOMATHLIB
    fprintf(fp,"   double acos(double arg);\n");
    fprintf(fp,"   double asin(double arg);\n");
+#endif /* G__NOMATHLIB */
 #ifndef G__OLDIMPLEMENTATION467
    fprintf(fp,"   char* asctime(struct tm* timestruct);\n");
 #endif
+#ifndef G__NOMATHLIB
    fprintf(fp,"   double atan(double arg);\n");
    fprintf(fp,"   double atan2(double num,double den);\n");
+#endif /* G__NOMATHLIB */
    fprintf(fp,"   double atof(char *string);\n");
    fprintf(fp,"   int atoi(char *string);\n");
    fprintf(fp,"   long atol(char *string);\n");
@@ -3373,15 +3401,19 @@ void G__list_sut(fp) FILE *fp; {
    fprintf(fp,"   double ceil(double z);\n");
    fprintf(fp,"   void clearerr(FILE *fp);\n");
    fprintf(fp,"   clock_t clock();\n");
+#ifndef G__NOMATHLIB
    fprintf(fp,"   double cos(double radian);\n");
    fprintf(fp,"   double cosh(double value);\n");
+#endif /* G__NOMATHLIB */
    fprintf(fp,"   char *ctime(time_t *timeptr);\n");
    fprintf(fp,"   double difftime(time_t newtime,time_t oldtime);\n");
 #if !defined(G__NONANSI) && !defined(G__SUNOS4)
    fprintf(fp,"   div_t div(int numerator,int denominator);\n");
 #endif
+#ifndef G__NOMATHLIB
    fprintf(fp,"   double exp(double z);\n");
    fprintf(fp,"   double fabs(double z);\n");
+#endif /* G__NOMATHLIB */
    fprintf(fp,"   int fclose(FILE *fp);\n");
    fprintf(fp,"   int feof(FILE *fp);\n");
    fprintf(fp,"   int ferror(FILE *fp);\n");
@@ -3389,8 +3421,10 @@ void G__list_sut(fp) FILE *fp; {
    fprintf(fp,"   int fgetc(FILE *fp);\n");
    fprintf(fp,"   int fgetpos(FILE *fp,fpos_t *position);\n");
    fprintf(fp,"   char *fgets(char *string,int n,FILE *fp);\n");
+#ifndef G__NOMATHLIB
    fprintf(fp,"   double floor(double z);\n");
    fprintf(fp,"   double fmod(double number,double divisor);\n");
+#endif /* G__NOMATHLIB */
    fprintf(fp,"   FILE *fopen(char *file,char *mode);\n");
    fprintf(fp,"   int fputc(int character,FILE *fp);\n");
    fprintf(fp,"   int fputs(char *string,FILE *fp);\n");
@@ -3421,7 +3455,9 @@ void G__list_sut(fp) FILE *fp; {
    fprintf(fp,"   int isupper(int c);\n");
    fprintf(fp,"   int isxdigit(int c);\n");
    fprintf(fp,"   long labs(long n);\n");
+#ifndef G__NOMATHLIB
    fprintf(fp,"   double ldexp(double number,int n);\n");
+#endif /* G__NOMATHLIB */
 #if !defined(G__NONANSI) && !defined(G__SUNOS4)
    fprintf(fp,"   ldiv_t ldiv(long numerator,long denominator);\n");
 #endif
@@ -3429,8 +3465,10 @@ void G__list_sut(fp) FILE *fp; {
    fprintf(fp,"   struct lconv* localeconv();\n");
    fprintf(fp,"   struct tm* localtime(time_t* timeptr);\n");
 #endif
+#ifndef G__NOMATHLIB
    fprintf(fp,"   double log(double z);\n");
    fprintf(fp,"   double log10(double z);\n");
+#endif /* G__NOMATHLIB */
    fprintf(fp,"   void *malloc(size_t size);\n");
    fprintf(fp,"   int mblen(char *address,size_t number);\n");
    fprintf(fp,"   size_t mbstowcs(wchar_t *widechar,char *multibyte,size_t number);\n");
@@ -3443,7 +3481,9 @@ void G__list_sut(fp) FILE *fp; {
 #ifndef G__OLDIMPLEMENTATION467
    fprintf(fp,"   time_t mktime(struct tm *timeptr);\n");
 #endif
+#ifndef G__NOMATHLIB
    fprintf(fp,"   double modf(double real,double *ip);\n");
+#endif /* G__NOMATHLIB */
    fprintf(fp,"   void perror(char *string);\n");
    fprintf(fp,"   double pow(double z,double x);\n");
    fprintf(fp,"   int putc(int character,FILE *fp);\n");
@@ -3460,9 +3500,11 @@ void G__list_sut(fp) FILE *fp; {
    fprintf(fp,"   char* setlocale(int position,char *locale);\n");
 #endif
    fprintf(fp,"   int setvbuf(FILE *fp,char *buffer,int mode,size_t size);\n");
+#ifndef G__NOMATHLIB
    fprintf(fp,"   double sin(double radian);\n");
    fprintf(fp,"   double sinh(double value);\n");
    fprintf(fp,"   double sqrt(double z);\n");
+#endif /* G__NOMATHLIB */
    fprintf(fp,"   void srand(unsigned int seed);\n");
    fprintf(fp,"   char *strcat(char *string1,char *string2);\n");
    fprintf(fp,"   char *strchr(char *string,int character);\n");
@@ -3488,8 +3530,10 @@ void G__list_sut(fp) FILE *fp; {
    fprintf(fp,"   unsigned long strtoul(char *sprt,char **tailptr,int base);\n");
    fprintf(fp,"   size_t strxfrm(char *string1,char *string2,size_t n);\n");
    fprintf(fp,"   int system(char *program);\n");
+#ifndef G__NOMATHLIB
    fprintf(fp,"   double tan(double radian);\n");
    fprintf(fp,"   double tanh(double value);\n");
+#endif /* G__NOMATHLIB */
    fprintf(fp,"   time_t time(time_t *tp);\n");
    fprintf(fp,"   FILE *tmpfile();\n");
    fprintf(fp,"   char *tmpnam(char *name);\n");
@@ -3545,6 +3589,7 @@ void G__list_sut(fp) FILE *fp; {
    fprintf(fp,"   void G__set_atpause(void* p2f);\n");
    fprintf(fp,"   void G__set_aterror(void (*p2f)());\n");
    fprintf(fp,"   void G__set_ignoreinclude(int (*p2f)(char* fname,char* expandedfname));\n");
+   fprintf(fp,"   void G__set_smartload(int smartunload);\n");
    fprintf(fp,"   int G__AddConsole();\n");
    fprintf(fp,"   int G__FreeConsole();\n");
    /* fprintf(fp,"   char* G__type2string();\n"); */

@@ -1,5 +1,5 @@
-//*CMZ :  2.23/10 10/12/99  18.00.08  by  Masaharu Goto
-//*-- Author :    Masaharu Goto   10/12/99
+//*CMZ :  2.24/05 16/05/2000  12.03.52  by  Masaharu Goto
+//*-- Author :    Masaharu Goto   16/05/2000
 /* /% C++ %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -126,6 +126,7 @@ long G__ClassInfo::Property()
     case 'c': property |= G__BIT_ISCLASS; break;
     case 's': property |= G__BIT_ISSTRUCT; break;
     case 'u': property |= G__BIT_ISUNION; break;
+    case 'n': property |= G__BIT_ISNAMESPACE; break;
     }
     if(G__struct.istypedefed[tagnum]) property |= G__BIT_ISTYPEDEF;
     if(G__struct.isabstract[tagnum]) property |= G__BIT_ISABSTRACT;
@@ -225,6 +226,13 @@ G__ClassInfo G__ClassInfo::EnclosingClass()
   else {
     G__ClassInfo enclosingclass;
     return(enclosingclass);
+  }
+}
+///////////////////////////////////////////////////////////////////////////
+void G__ClassInfo::SetGlobalcomp(int globalcomp)
+{
+  if(IsValid()) {
+    G__struct.globalcomp[tagnum] = globalcomp;
   }
 }
 ///////////////////////////////////////////////////////////////////////////
@@ -691,6 +699,77 @@ void* G__ClassInfo::New()
       G__store_struct_offset = (long)p;
       sprintf(temp,"%s()",G__struct.name[tagnum]);
       G__getfunction(temp,&known,G__CALLCONSTRUCTOR);
+      G__store_struct_offset = store_struct_offset;
+      G__tagnum = (int)store_tagnum;
+    }
+    return(p);
+  }
+  else {
+    return((void*)NULL);
+  }
+}
+///////////////////////////////////////////////////////////////////////////
+void* G__ClassInfo::New(int n)
+{
+  if(IsValid() && n>0 ) {
+#ifdef G__OLDIMPLEMENTATION1218
+    long property;
+#endif
+    void *p;
+    G__value buf=G__null;
+#ifndef G__OLDIMPLEMENTATION1218
+    if (!class_property) Property();
+    if(class_property&G__BIT_ISCPPCOMPILED) {
+#else
+    property = Property();
+    if(property&G__BIT_ISCPPCOMPILED) {
+#endif
+      // C++ precompiled class,struct
+      struct G__param para;
+      G__InterfaceMethod defaultconstructor;
+      para.paran=0;
+#ifndef G__OLDIMPLEMENTATION1218
+      if(!G__struct.rootspecial[tagnum]) CheckValidRootInfo();
+#else
+      CheckValidRootInfo();
+#endif
+      defaultconstructor
+	=(G__InterfaceMethod)G__struct.rootspecial[tagnum]->defaultconstructor;
+      if(defaultconstructor) {
+	if(n) G__cpp_aryconstruct = n;
+	(*defaultconstructor)(&buf,(char*)NULL,&para,0);
+	G__cpp_aryconstruct = 0;
+	p = (void*)G__int(buf);
+      }
+      else {
+	p = (void*)NULL;
+      }
+    }
+#ifndef G__OLDIMPLEMENTATION1218
+    else if(class_property&G__BIT_ISCCOMPILED) {
+#else
+    else if(property&G__BIT_ISCCOMPILED) {
+#endif
+      // C precompiled class,struct
+      p = malloc(G__struct.size[tagnum]*n);
+    }
+    else {
+      // Interpreted class,struct
+      int i;
+      long store_struct_offset;
+      long store_tagnum;
+      char temp[G__ONELINE];
+      int known=0;
+      p = malloc(G__struct.size[tagnum]*n);
+      store_tagnum = G__tagnum;
+      store_struct_offset = G__store_struct_offset;
+      G__store_struct_offset = (long)p;
+      sprintf(temp,"%s()",G__struct.name[tagnum]);
+      for(i=0;i<n;i++) {
+	G__getfunction(temp,&known,G__CALLCONSTRUCTOR);
+	if(!known) break;
+	G__store_struct_offset += G__struct.size[tagnum];
+      }
       G__store_struct_offset = store_struct_offset;
       G__tagnum = (int)store_tagnum;
     }

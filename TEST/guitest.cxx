@@ -1,3 +1,4 @@
+//*CMZ :  2.24/03 28/04/2000  16.55.47  by  Fons Rademakers
 //*CMZ :  2.23/04 02/10/99  17.05.38  by  Fons Rademakers
 //*CMZ :  2.23/03 23/09/99  17.43.59  by  Fons Rademakers
 //*CMZ :  2.23/02 02/09/99  15.54.29  by  Rene Brun
@@ -125,6 +126,7 @@ private:
    Bool_t               fFillHistos;
    TH1F                *fHpx;
    TH2F                *fHpxpy;
+   TList               *fCleanup;
 
    void FillHistos();
 
@@ -410,6 +412,9 @@ TestDialog::TestDialog(const TGWindow *p, const TGWindow *main, UInt_t w,
    // Create a dialog window. A dialog window pops up with respect to its
    // "main" window.
 
+   // Used to store GUI elements that need to be deleted in the ctor.
+   fCleanup = new TList;
+
    fFrame1 = new TGHorizontalFrame(this, 60, 20, kFixedWidth);
 
    fOkButton = new TGTextButton(fFrame1, "&Ok", 1);
@@ -515,8 +520,10 @@ TestDialog::TestDialog(const TGWindow *p, const TGWindow *main, UInt_t w,
    fF4 = new TGCompositeFrame(tf, 60, 20, kVerticalFrame);
    fF4->AddFrame(bt = new TGTextButton(fF4, "A&dd Entry", 90), fL3);
    bt->Associate(this);
+   fCleanup->Add(bt);
    fF4->AddFrame(bt = new TGTextButton(fF4, "Remove &Entry", 91), fL3);
    bt->Associate(this);
+   fCleanup->Add(bt);
    fF4->AddFrame(fListBox = new TGListBox(fF4, 89), fL3);
    fF4->AddFrame(fCheckMulti = new TGCheckButton(fF4, "&Mutli Selectable", 92), fL3);
    fCheckMulti->Associate(this);
@@ -553,6 +560,8 @@ TestDialog::TestDialog(const TGWindow *p, const TGWindow *main, UInt_t w,
 
       TGTextEntry  *tent = new TGTextEntry(fF6, tbuf);
       tent->Resize(50, tent->GetDefaultHeight());
+      tent->SetFont("-adobe-courier-bold-r-*-*-14-*-*-*-*-*-iso8859-1");
+      fCleanup->Add(tent);
       fF6->AddFrame(tent);
    }
    fF6->Resize(fF6->GetDefaultSize());
@@ -566,14 +575,17 @@ TestDialog::TestDialog(const TGWindow *p, const TGWindow *main, UInt_t w,
    fF7->AddFrame(bt = new TGTextButton(fF7, "Remove Tab", 101));
    bt->Associate(this);
    bt->Resize(90, bt->GetDefaultHeight());
+   fCleanup->Add(bt);
 
    fF7->AddFrame(bt = new TGTextButton(fF7, "Add Tab", 103));
    bt->Associate(this);
    bt->Resize(90, bt->GetDefaultHeight());
+   fCleanup->Add(bt);
 
    fF7->AddFrame(bt = new TGTextButton(fF7, "Remove Tab 5", 102));
    bt->Associate(this);
    bt->Resize(90, bt->GetDefaultHeight());
+   fCleanup->Add(bt);
 
    fF7->Resize(fF6->GetDefaultSize());
 
@@ -605,6 +617,8 @@ TestDialog::~TestDialog()
 {
    // Delete test dialog widgets.
 
+   fCleanup->Delete();
+   delete fCleanup;
    delete fOkButton;
    delete fCancelButton;
    delete fStartB; delete fStopB;
@@ -614,9 +628,9 @@ TestDialog::~TestDialog()
    delete fRad1; delete fRad2;
    delete fTxt1; delete fTxt2;
    delete fEc1; delete fEc2;
+   delete fListBox; delete fCheckMulti;
    delete fF1; delete fF2; delete fF3; delete fF4; delete fF5;
    delete fF6; delete fF7;
-   delete fListBox;
    delete fCombo;
    delete fTab;
    delete fL3; delete fL4;

@@ -1,3 +1,4 @@
+//*CMZ :  2.24/01 07/03/2000  16.50.27  by  Rene Brun
 //*CMZ :  2.23/12 26/01/2000  09.57.11  by  Rene Brun
 //*CMZ :  2.23/07 27/10/99  10.47.27  by  Fons Rademakers
 //*CMZ :  2.20/00 12/11/98  17.11.54  by  Fons Rademakers
@@ -6,17 +7,18 @@
 //*CMZ :  1.03/04 29/09/97  19.08.23  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   10/08/95
 
+/*CMZ :  2.24/01 24/02/2000  11.49.40  by  Fons Rademakers*/
 /*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun and Fons Rademakers.                               *
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
  *                                                                       *
- * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
- * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -54,6 +56,9 @@ THashList::THashList(Int_t capacity, Int_t rehash)
    // rate to about 1. The higher the collision rate, i.e. the longer the
    // linked lists, the longer lookup will take. If rehash=0 the table will
    // NOT automatically be rehashed. Use Rehash() for manual rehashing.
+   // WARNING !!!
+   // If the name of an object in the HashList is modified, The hashlist
+   // must be Rehashed
 
    fTable = new THashTable(capacity, rehash);
 }
@@ -70,6 +75,9 @@ THashList::THashList(TObject *parent, Int_t capacity, Int_t rehash)
    // rate to about 1. The higher the collision rate, i.e. the longer the
    // linked lists, the longer lookup will take. If rehash=0 the table will
    // NOT automatically be rehashed. Use Rehash() for manual rehashing.
+   // WARNING !!!
+   // If the name of an object in the HashList is modified, The hashlist
+   // must be Rehashed
 
    fTable = new THashTable(capacity, rehash);
 }

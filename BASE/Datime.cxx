@@ -1,3 +1,5 @@
+//*CMZ :  2.24/02 05/04/2000  16.41.59  by  Fons Rademakers
+//*CMZ :  2.24/01 24/03/2000  17.40.18  by  Fons Rademakers
 //*CMZ :  2.23/09 03/11/99  12.06.07  by  Fons Rademakers
 //*CMZ :  2.21/06 15/02/99  13.14.27  by  Rene Brun
 //*CMZ :  2.21/04 29/01/99  13.55.19  by  Fons Rademakers
@@ -5,17 +7,18 @@
 //*CMZ :  2.00/05 19/04/98  03.02.26  by  Fons Rademakers
 //*-- Author :    Rene Brun   05/01/95
 
+/*CMZ :  2.24/01 24/02/2000  11.49.40  by  Fons Rademakers*/
 /*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun and Fons Rademakers.                               *
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
  *                                                                       *
- * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
- * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -73,6 +76,23 @@ TDatime::TDatime(Int_t year, Int_t month, Int_t day,
 }
 
 //______________________________________________________________________________
+TDatime::TDatime(const char *sqlDateTime)
+{
+   // Expects as input a string in SQL date/time compatible format, like:
+   // yyyy-mm-dd hh:mm:ss.
+
+   Int_t yy, mm, dd, hh, mi, ss;
+
+   if (sscanf(sqlDateTime, "%d-%d-%d %d:%d:%d", &yy, &mm, &dd, &hh, &mi, &ss) == 6)
+      Set(yy, mm, dd, hh, mi, ss);
+   else {
+      Error("TDatime(sqlDatTime)", "input string not in right format, set"
+            " to current date/time");
+      Set();
+   }
+}
+
+//______________________________________________________________________________
 const char *TDatime::AsString() const
 {
    // Return the date & time as a string (ctime() format).
@@ -88,6 +108,28 @@ const char *TDatime::AsString() const
       Error("TDatime::AsString", "could not get time string");
       return defaulttime;
    }
+}
+
+//______________________________________________________________________________
+const char *TDatime::AsSQLString() const
+{
+   // Return the date & time in SQL compatible string format, like:
+   // 1997-01-15 20:16:28. The returned string buffer is static and
+   // will bew reused.
+
+   static char sqldate[20];
+
+   UInt_t year  = fDatime>>26;
+   UInt_t month = (fDatime<<6)>>28;
+   UInt_t day   = (fDatime<<10)>>27;
+   UInt_t hour  = (fDatime<<15)>>27;
+   UInt_t min   = (fDatime<<20)>>26;
+   UInt_t sec   = (fDatime<<26)>>26;
+
+   sprintf(sqldate, "%04d-%02d-%02d %02d:%02d:%02d", (year+1995), month, day,
+           hour, min, sec);
+
+   return sqldate;
 }
 
 //______________________________________________________________________________
@@ -237,12 +279,12 @@ void TDatime::Set(Int_t date, Int_t time)
 void TDatime::Set(Int_t year, Int_t month, Int_t day,
                   Int_t hour, Int_t min, Int_t sec)
 {
-   // Set date and time. Year may be xx where 95 <= xx <= 99.
+   // Set date and time. Year may be xx where 95 <= xx <= 199 (199 being 2099).
    // The year must be >= 1995.
 
-   if (year < 100) year += 1900;
+   if (year < 200) year += 1900;
    if (year < 1995) {
-      Error("TDatime::Set", "year smaller than 1995");
+      Error("TDatime::Set", "year must be >= 1995");
       return;
    }
 

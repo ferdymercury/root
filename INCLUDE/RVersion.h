@@ -1,5 +1,5 @@
 /*CMZ :          11/10/99  12.00.00    by  Rene Brun*/
-/*-- Author :    Rene Brun   01/02/2000*/
+/*-- Author :    Rene Brun   16/05/2000*/
 #ifndef ROOT_RVersion
 #define ROOT_RVersion
 
@@ -16,8 +16,8 @@
  *
 */
 
-#define ROOT_RELEASE "2.23/12"
-#define ROOT_VERSION_CODE 136972
+#define ROOT_RELEASE "2.24/05"
+#define ROOT_VERSION_CODE 137221
 #define ROOT_VERSION(a,b,c) (((a) << 16) + ((b) << 8) + (c))
 
 #endif

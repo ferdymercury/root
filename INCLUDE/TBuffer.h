@@ -1,3 +1,4 @@
+//*CMZ :  2.24/03 26/04/2000  20.51.21  by  Fons Rademakers
 //*CMZ :  2.23/12 31/01/2000  18.34.35  by  Rene Brun
 //*CMZ :  2.23/09 14/11/99  15.53.54  by  Rene Brun
 //*CMZ :  2.23/07 25/10/99  10.22.06  by  Rene Brun
@@ -11,17 +12,18 @@
 #ifndef ROOT_TBuffer
 #define ROOT_TBuffer
 
+/*CMZ :  2.24/01 24/02/2000  11.49.40  by  Fons Rademakers*/
 /*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun and Fons Rademakers.                               *
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
  *                                                                       *
- * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
- * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -31,8 +33,6 @@
 // Buffer base class used for serializing objects.                      //
 //                                                                      //
 //////////////////////////////////////////////////////////////////////////
-
-#include <string.h>   // for memcpy
 
 #ifndef ROOT_TObject
 #include "TObject.h"
@@ -48,14 +48,16 @@ class TExMap;
 class TBuffer : public TObject {
 
 protected:
-   Bool_t  fMode;       //Read or write mode
-   Int_t   fVersion;    //Buffer format version
-   Int_t   fBufSize;    //Size of buffer
-   char   *fBuffer;     //Buffer used to store objects
-   char   *fBufCur;     //Current position in buffer
-   char   *fBufMax;     //End of buffer
-   Int_t   fMapCount;   //Number of objects or classes in map
-   Int_t   fMapSize;    //Default size of map
+   Bool_t  fMode;          //Read or write mode
+   Int_t   fVersion;       //Buffer format version
+   Int_t   fBufSize;       //Size of buffer
+   char   *fBuffer;        //Buffer used to store objects
+   char   *fBufCur;        //Current position in buffer
+   char   *fBufMax;        //End of buffer
+   Int_t   fMapCount;      //Number of objects or classes in map
+   Int_t   fMapSize;       //Default size of map
+   Int_t   fDisplacement;  //Value to be added to the map offsets
+
    union {
       TExMap *fReadMap;    //Map containing id,object references during reading
       TExMap *fWriteMap;   //Map containing object,id pairs during writing
@@ -95,7 +97,7 @@ public:
    void     SetReadParam(Int_t mapsize);
    void     SetWriteMode();
    void     SetWriteParam(Int_t mapsize);
-   void     SetBuffer(void *buf);
+   void     SetBuffer(void *buf, UInt_t bufsiz = 0);
    void     SetBufferOffset(Int_t offset = 0) { fBufCur = fBuffer+offset; }
 
    char    *Buffer() const { return fBuffer; }
@@ -123,6 +125,9 @@ public:
 
    TObject *ReadObject(const TClass *cl);
    void     WriteObject(const TObject *obj);
+
+   void     SetBufferDisplacement(Int_t skipped = -1)
+            { fDisplacement = (skipped==-1) ? 0 : (Int_t)(Length() - skipped); }
 
    Int_t    ReadArray(Char_t   *&c);
    Int_t    ReadArray(UChar_t  *&c);

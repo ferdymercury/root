@@ -1,3 +1,4 @@
+//*CMZ :  2.24/03 29/04/2000  23.42.00  by  Rene Brun
 //*CMZ :  0.80/01 16/08/96  17.29.41  by  Rene Brun
 //*-- Author :    Valery Fine(fine@vxcern.cern.ch)   16/08/96
 #ifndef ROOT_TGWin32Pen
@@ -33,7 +34,7 @@ public:
    void SetColor(COLORREF cindex=1);
    HGDIOBJ GetWin32Pen();
 
-   ClassDef(TGWin32Pen,0)  // Pen class for Win32 interface
+   // ClassDef(TGWin32Pen,0)  // Pen class for Win32 interface
 };
 
 #endif

@@ -1,5 +1,5 @@
-//*CMZ :  2.23/10 11/12/99  16.03.44  by  Rene Brun
-//*-- Author :    Masaharu Goto   10/12/99
+//*CMZ :  2.24/05 16/05/2000  12.03.53  by  Masaharu Goto
+//*-- Author :    Masaharu Goto   16/05/2000
 /* /% C++ %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)

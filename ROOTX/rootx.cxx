@@ -1,3 +1,4 @@
+//*CMZ :  2.24/01 17/02/2000  10.25.29  by  Fons Rademakers
 //*CMZ :  2.23/12 18/01/2000  16.43.53  by  Rene Brun
 //*CMZ :  2.23/09 19/11/99  13.29.23  by  Fons Rademakers
 //*CMZ :  2.21/05 08/02/99  12.42.39  by  Fons Rademakers
@@ -254,12 +255,13 @@ static void PrintUsage(char *pname)
 {
    // This is a copy of the text in TApplication::GetOptions().
 
-   fprintf(stderr, "Usage: %s [-l] [-b] [-n] [-q] [file1.C ... fileN.C]\n", pname);
+   fprintf(stderr, "Usage: %s [-l] [-b] [-n] [-q] [dir] [file1.C ... fileN.C]\n", pname);
    fprintf(stderr, "Options:\n");
    fprintf(stderr, "  -b : run in batch mode without graphics\n");
    fprintf(stderr, "  -n : do not execute logon and logoff macros as specified in .rootrc\n");
    fprintf(stderr, "  -q : exit after processing command line macro files\n");
    fprintf(stderr, "  -l : do not show splash screen\n");
+   fprintf(stderr, " dir : if dir is a valid directory cd to it before executing\n");
    fprintf(stderr, "\n");
 }
 
@@ -358,7 +360,7 @@ int main(int argc, char **argv)
    sprintf(arg0, "%s/bin/root.exe", getenv("ROOTSYS"));
 #endif
    argvv[0] = arg0;
-   argvv[1] = (char *) "-p";
+   argvv[1] = (char *) "-splash";
 
    int iargc = argc;
    if (iargc > kMAXARGS-2) iargc = kMAXARGS-2;

@@ -1,8 +1,9 @@
+//*CMZ :  2.24/01 31/03/2000  08.46.15  by  Rene Brun
 //*CMZ :  2.23/12 26/01/2000  12.24.45  by  Valery Fine(fine@bnl.gov)
 //*-- Author :
 //////////////////////////////////////////////////////////////////////////
 //                                                                      //
-// TPointsArray3D                                                     //
+// TPointsArray3D                                                       //
 //                                                                      //
 // A 3-D PolyLine.                                                      //
 //                                                                      //
@@ -10,14 +11,11 @@
 #ifndef ROOT_TPointsArray3D
 #define ROOT_TPointsArray3D
 
-// $Id: TPointsArray3D.h,v 1.3 1999/12/21 18:57:14 fine Exp $
 
 #include "TPoints3DABC.h"
 
 #ifndef ROOT_TString
-//*KEEP,TSTRING.
 #include "TString.h"
-//*KEND.
 #endif
 
 
@@ -79,8 +77,4 @@ inline void      TPointsArray3D::SetOption(Option_t *option)                {fOp
 
 inline Int_t     TPointsArray3D::Size() const                               {return fLastPoint+1;}
 
-// $Log: TPointsArray3D.h,v $
-// Revision 1.3  1999/12/21 18:57:14  fine
-// compilation warning plus new type for SizeAttribute
-//
 #endif

@@ -1,3 +1,6 @@
+/*CMZ :  2.24/03 23/04/2000  21.41.03  by  Rene Brun*/
+/*CMZ :  2.24/02 07/04/2000  08.24.34  by  Rene Brun*/
+/*CMZ :  2.24/01 31/03/2000  12.15.31  by  Rene Brun*/
 /*CMZ :  2.23/09 24/11/99  11.28.32  by  Rene Brun*/
 /*CMZ :  2.00/00 08/03/98  11.27.33  by  Rene Brun*/
 /*CMZ :  1.00/03 14/03/97  18.15.11  by  Rene Brun*/
@@ -229,7 +232,7 @@ typedef unsigned long     ulg;  /*  predefined on some systems) & match zip  */
 #endif                  /* 32K for zip's deflate method */
 
 #ifndef NEXTBYTE        /* default is to simply get a byte from stdin */
-#  define NEXTBYTE ReadByte()
+#  define NEXTBYTE R__ReadByte()
 #endif
 
 #ifndef FPRINTF
@@ -237,7 +240,7 @@ typedef unsigned long     ulg;  /*  predefined on some systems) & match zip  */
 #endif
 
 #ifndef FLUSH           /* default is to simply write the buffer to stdout */
-#  define FLUSH(n) WriteData(n)  /* return value not used */
+#  define FLUSH(n) R__WriteData(n)  /* return value not used */
 #endif
 /* Warning: the fwrite above might not work on 16-bit compilers, since
    0x8000 might be interpreted as -32,768 by the library function. */
@@ -287,8 +290,8 @@ int R__Inflate_block OF((int *));
 int R__Inflate OF((void));
 int R__Inflate_free OF((void));
 
-static int  ReadByte();
-static void WriteData OF((int));
+static int  R__ReadByte();
+static void R__WriteData OF((int));
 
 /* The inflate algorithm uses a sliding 32K byte window on the uncompressed
    stream to find repeated byte strings.  This is implemented here as a
@@ -1181,7 +1184,7 @@ void R__unzip(int *srcsize, uch *src, int *tgtsize, uch *tgt, int *irep)
   *irep = isize;
 }
 
-static int ReadByte ()
+static int R__ReadByte ()
 {
   int k;
   if(ibufcnt-- <= 0)
@@ -1191,10 +1194,9 @@ static int ReadByte ()
   return k;
 }
 
-static void WriteData(int n)
+static void R__WriteData(int n)
 {
-  if( obufcnt < n )  n = obufcnt;
-  memcpy(obufptr, R__slide, n);
+  if( obufcnt >= n ) memcpy(obufptr, R__slide, n);
   obufptr += n;
   obufcnt -= n;
 }

@@ -1,3 +1,4 @@
+//*CMZ :  2.24/01 20/03/2000  09.40.48  by  Rene Brun
 //*CMZ :  2.23/12 26/01/2000  11.46.02  by  Rene Brun
 //*CMZ :  2.23/11 09/01/2000  16.03.38  by  Rene Brun
 //*CMZ :  2.23/04 10/10/99  17.30.18  by  Fons Rademakers
@@ -10,17 +11,18 @@
 #ifndef ROOT_TVirtualPad
 #define ROOT_TVirtualPad
 
+/*CMZ :  2.24/01 24/02/2000  11.49.40  by  Fons Rademakers*/
 /*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun and Fons Rademakers.                               *
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
  *                                                                       *
- * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
- * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -53,15 +55,15 @@ class TObject;
 class TObjLink;
 class TView;
 class TCanvas;
-class TPadView3D;
 class TH1F;
 class TFrame;
 class TBox;
+class TPadView3D;
 
 class TVirtualPad : public TObject, public TAttLine, public TAttFill, public TAttPad {
 
 protected:
-   Bool_t       fResizing;        //!true when resizing the pad
+   Bool_t       fResizing;         //!true when resizing the pad
 
 public:
    TVirtualPad();
@@ -232,19 +234,16 @@ public:
 
    virtual void     x3d(Option_t *option="") = 0;
 
+   static TVirtualPad *&Pad();
+
    ClassDef(TVirtualPad,1)  //Abstract base class for Pads and Canvases
 };
 
-
 #ifndef __CINT__
+#define gPad (TVirtualPad::Pad())
+
 R__EXTERN void **(*gThreadTsd)(void*,Int_t);
 #endif
 R__EXTERN Int_t (*gThreadXAR)(const char *xact, Int_t nb, void **ar, Int_t *iret);
 
-extern TVirtualPad *&Pad();
-
-#define gPad (Pad())
-
 #endif
-
-

@@ -1,3 +1,5 @@
+*CMZ :  2.24/02 06/04/2000  19.48.56  by  Fons Rademakers
+*CMZ :  2.24/01 07/03/2000  17.07.37  by  Rene Brun
 *CMZ :  2.23/10 11/12/99  16.07.14  by  Rene Brun
 *CMZ :  2.23/09 25/11/99  08.53.33  by  Rene Brun
 *CMZ :  2.23/07 22/10/99  19.28.13  by  Fons Rademakers
@@ -54,7 +56,7 @@ ci -a -t C++,IF=BORLAND,IF=-VMS -is ~/cint/src/bcstrm.cxx
 ci -a -t C++,IF=WIN32 -is ~/cint/src/vcstrm.cxx
 ci -a -t C++,IF=KCC -is ~/cint/src/kccstrm.cxx
 ci -a -t C++,IF=SOLARIS,IF=CC5 -is ~/cint/src/sunstrm.cxx
-ci -a -t C++,IF=-MAC,IF=-WIN32,IF=-VMS -is ~/cint/src/libstrm.cxx
+ci -a -t C++,IF=-MAC,IF=-WIN32,IF=-VMS,IF=-KCC -is ~/cint/src/libstrm.cxx
 delete tmpstrm
 delete dmystrm
 delete dmystrct
@@ -93,7 +95,8 @@ ci -a -k -is ~/cint/include/cassert ~/cint/include/cctype ~/cint/include/cerrno 
              ~/cint/include/cstdio ~/cint/include/cstdlib ~/cint/include/cstring _
              ~/cint/include/ctime ~/cint/include/cwchar ~/cint/include/cwctype _
              ~/cint/include/iostream ~/cint/include/istream ~/cint/include/ostream _
-             ~/cint/include/sstream ~/cint/include/fstream ~/cint/include/iosfwd
+             ~/cint/include/sstream ~/cint/include/fstream ~/cint/include/iosfwd _
+             ~/cint/include/exception ~/cint/include/_iostream
 ci -a -k -is ~/cint/include/cassert ~/cint/include/cctype ~/cint/include/cerrno _
              ~/cint/include/cfloat ~/cint/include/climits ~/cint/include/clocale _
              ~/cint/include/cmath ~/cint/include/complex ~/cint/include/csetjmp _
@@ -101,7 +104,8 @@ ci -a -k -is ~/cint/include/cassert ~/cint/include/cctype ~/cint/include/cerrno 
              ~/cint/include/cstdio ~/cint/include/cstdlib ~/cint/include/cstring _
              ~/cint/include/ctime ~/cint/include/cwchar ~/cint/include/cwctype _
              ~/cint/include/iostream ~/cint/include/istream ~/cint/include/ostream _
-             ~/cint/include/sstream ~/cint/include/fstream ~/cint/include/iosfwd
+             ~/cint/include/sstream ~/cint/include/fstream ~/cint/include/iosfwd _
+             ~/cint/include/exception ~/cint/include/_iostream
 pur
 al
 **=============Import CINT STL include files required at run time
@@ -126,13 +130,21 @@ ci -a -k -is ~/cint/stl/algorithm ~/cint/stl/bitset ~/cint/stl/bool ~/cint/stl/d
              ~/cint/stl/list ~/cint/stl/map ~/cint/stl/memory ~/cint/stl/multimap _
              ~/cint/stl/multiset ~/cint/stl/numeric ~/cint/stl/pair ~/cint/stl/queue _
              ~/cint/stl/set ~/cint/stl/stack ~/cint/stl/string ~/cint/stl/utility _
-             ~/cint/stl/valarray ~/cint/stl/vector
+             ~/cint/stl/valarray ~/cint/stl/vector ~/cint/stl/_algorithm _
+             ~/cint/stl/_autocontainer ~/cint/stl/_bitset ~/cint/stl/_deque _
+             ~/cint/stl/_iterator ~/cint/stl/_list ~/cint/stl/_map ~/cint/stl/_memory _
+             ~/cint/stl/_multimap ~/cint/stl/_multiset ~/cint/stl/_set ~/cint/stl/_stack _
+             ~/cint/stl/_utility ~/cint/stl/_vector
 ci -a -k -is ~/cint/stl/algorithm ~/cint/stl/bitset ~/cint/stl/bool ~/cint/stl/deque _
              ~/cint/stl/functional ~/cint/stl/iterator ~/cint/stl/limits _
              ~/cint/stl/list ~/cint/stl/map ~/cint/stl/memory ~/cint/stl/multimap _
              ~/cint/stl/multiset ~/cint/stl/numeric ~/cint/stl/pair ~/cint/stl/queue _
              ~/cint/stl/set ~/cint/stl/stack ~/cint/stl/string ~/cint/stl/utility _
-             ~/cint/stl/valarray ~/cint/stl/vector
+             ~/cint/stl/valarray ~/cint/stl/vector ~/cint/stl/_algorithm _
+             ~/cint/stl/_autocontainer ~/cint/stl/_bitset ~/cint/stl/_deque _
+             ~/cint/stl/_iterator ~/cint/stl/_list ~/cint/stl/_map ~/cint/stl/_memory _
+             ~/cint/stl/_multimap ~/cint/stl/_multiset ~/cint/stl/_set ~/cint/stl/_stack _
+             ~/cint/stl/_utility ~/cint/stl/_vector
 pur
 al
 **=============Import CINT STL include files required for precompilation
@@ -148,7 +160,7 @@ ci -a -k -is ~/cint/lib/prec_stl/algorithm ~/cint/lib/prec_stl/bitset _
              ~/cint/lib/prec_stl/set ~/cint/lib/prec_stl/stack _
              ~/cint/lib/prec_stl/string ~/cint/lib/prec_stl/utility _
              ~/cint/lib/prec_stl/valarray ~/cint/lib/prec_stl/vector _
-             ~/cint/lib/prec_stl/numeric
+             ~/cint/lib/prec_stl/numeric ~/cint/lib/prec_stl/exception
 ci -a -k -is ~/cint/lib/prec_stl/algorithm ~/cint/lib/prec_stl/bitset _
              ~/cint/lib/prec_stl/deque ~/cint/lib/prec_stl/functional _
              ~/cint/lib/prec_stl/limits ~/cint/lib/prec_stl/iterator _
@@ -158,7 +170,7 @@ ci -a -k -is ~/cint/lib/prec_stl/algorithm ~/cint/lib/prec_stl/bitset _
              ~/cint/lib/prec_stl/set ~/cint/lib/prec_stl/stack _
              ~/cint/lib/prec_stl/string ~/cint/lib/prec_stl/utility _
              ~/cint/lib/prec_stl/valarray ~/cint/lib/prec_stl/vector _
-             ~/cint/lib/prec_stl/numeric
+             ~/cint/lib/prec_stl/numeric ~/cint/lib/prec_stl/exception
 pur
 al
 **=============Reset

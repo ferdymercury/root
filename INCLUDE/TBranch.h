@@ -1,3 +1,5 @@
+//*CMZ :  2.24/03 25/04/2000  14.15.54  by  Rene Brun
+//*CMZ :  2.24/01 05/03/2000  16.06.35  by  Rene Brun
 //*CMZ :  2.23/12 31/01/2000  10.52.05  by  Rene Brun
 //*CMZ :  2.23/09 24/11/99  16.40.35  by  Rene Brun
 //*CMZ :  2.23/08 31/10/99  09.43.05  by  Rene Brun
@@ -11,17 +13,18 @@
 #ifndef ROOT_TBranch
 #define ROOT_TBranch
 
+/*CMZ :  2.24/01 24/02/2000  11.49.40  by  Fons Rademakers*/
 /*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun and Fons Rademakers.                               *
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
  *                                                                       *
- * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
- * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -93,6 +96,7 @@ protected:
     char        *fAddress;        //Address of 1st leaf (variable or object)
     TDirectory  *fDirectory;      //Pointer to directory where this branch buffers are stored
     TString     fFileName;        //Name of file where buffers are stored ("" if in same file as Tree header)
+    TBuffer     *fEntryBuffer;    //!Buffer used to directly pass the content without streaming
 
 public:
     TBranch();
@@ -102,34 +106,34 @@ public:
     virtual void    Browse(TBrowser *b);
     virtual void    DropBaskets();
     virtual Int_t   Fill();
-    char            *GetAddress() {return fAddress;}
+    virtual char    *GetAddress() {return fAddress;}
     virtual Int_t   GetBasketSize() {return fBasketSize;}
     virtual Int_t   GetCompressionLevel() {return fCompress;}
     virtual Int_t   GetEntry(Int_t entry=0, Int_t getall = 0);
     virtual Int_t   GetEntryExport(Int_t entry, Int_t getall, TClonesArray *list, Int_t n);
             Int_t   GetEvent(Int_t entry=0) {return GetEntry(entry);}
-    virtual Int_t   GetEntryOffsetLen() {return fEntryOffsetLen;}
-    TLeaf           *GetLeaf(const char *name);
-    TBasket         *GetBasket(Int_t basket);
-    Int_t           *GetBasketBytes() {return fBasketBytes;}
-    Seek_t          GetBasketSeek(Int_t basket);
+            Int_t   GetEntryOffsetLen() {return fEntryOffsetLen;}
+    virtual TLeaf   *GetLeaf(const char *name);
+            TBasket *GetBasket(Int_t basket);
+            Int_t   *GetBasketBytes() {return fBasketBytes;}
+    virtual Seek_t  GetBasketSeek(Int_t basket);
     TDirectory      *GetDirectory() {return fDirectory;}
-    TFile           *GetFile(Int_t mode=0);
-    const char    *GetFileName() const {return fFileName.Data();}
-    Int_t           GetOffset() {return fOffset;}
-    Int_t           GetReadBasket() {return fReadBasket;}
-    Int_t           GetReadEntry() {return fReadEntry;}
-    Int_t           GetWriteBasket() {return fWriteBasket;}
-    virtual Stat_t  GetTotBytes() {return fTotBytes;}
-    virtual Stat_t  GetZipBytes() {return fZipBytes;}
-    Int_t           GetEntryNumber() {return fEntryNumber;}
+    virtual TFile   *GetFile(Int_t mode=0);
+    const char      *GetFileName() const {return fFileName.Data();}
+            Int_t   GetOffset() {return fOffset;}
+            Int_t   GetReadBasket() {return fReadBasket;}
+            Int_t   GetReadEntry() {return fReadEntry;}
+            Int_t   GetWriteBasket() {return fWriteBasket;}
+            Stat_t  GetTotBytes() {return fTotBytes;}
+            Stat_t  GetZipBytes() {return fZipBytes;}
+            Int_t   GetEntryNumber() {return fEntryNumber;}
     TObjArray       *GetListOfBaskets() {return &fBaskets;}
     TObjArray       *GetListOfBranches() {return &fBranches;}
     TObjArray       *GetListOfLeaves() {return &fLeaves;}
-    virtual Int_t   GetMaxBaskets()  {return fMaxBaskets;}
-    virtual Int_t   GetNleaves() {return fNleaves;}
-    virtual Stat_t  GetEntries() {return fEntries;}
-    TTree           *GetTree() {return fTree;}
+            Int_t   GetMaxBaskets()  {return fMaxBaskets;}
+            Int_t   GetNleaves() {return fNleaves;}
+            Stat_t  GetEntries() {return fEntries;}
+           TTree   *GetTree() {return fTree;}
     virtual Int_t   GetRow(Int_t row);
     Bool_t          IsAutoDelete();
     Bool_t          IsFolder();
@@ -140,6 +144,7 @@ public:
     virtual void    SetAddress(void *add);
     virtual void    SetAutoDelete(Bool_t autodel=kTRUE);
     virtual void    SetBasketSize(Int_t buffsize) {fBasketSize=buffsize;}
+    virtual void    SetBufferAddress(TBuffer *entryBuffer);
     virtual void    SetCompressionLevel(Int_t level=1);
     virtual void    SetEntryOffsetLen(Int_t len) {fEntryOffsetLen = len;}
     virtual void    SetFile(TFile *file=0);

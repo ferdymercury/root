@@ -1,5 +1,5 @@
-/*CMZ :  2.23/10 10/12/99  18.00.05  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   10/12/99*/
+/*CMZ :  2.24/05 16/05/2000  12.03.50  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   16/05/2000*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -95,9 +95,6 @@ typedef void* G__SHLHANDLE;
 #define G__COMPLETION    "G__completionlist"
 #define G__DLL_REVISION  "G__dll_revision"
 
-G__SHLHANDLE G__sl_handle[G__MAX_SL];
-short G__allsl=0;
-
 #define G__CALL_SETUP(setupfunc)  \
     sharedlib_func=(int (*)())G__shl_findsym(&G__sl_handle[allsl],setupfunc,TYPE_PROCEDURE);   \
     if(sharedlib_func!=NULL) (*sharedlib_func)()
@@ -108,6 +105,8 @@ typedef void* G__SHLHANDLE;
 
 #endif /* G__SHAREDLIB */
 
+G__SHLHANDLE G__sl_handle[G__MAX_SL];
+short G__allsl=0;
 
 #ifdef G__DLL_SYM_UNDERSCORE
 static int G__sym_underscore=1;
@@ -564,7 +563,21 @@ TYPE_PROCEDURE);
 #endif /* G__SHAREDLIB */
 }
 
-
+#ifndef G__OLDIMPLEMENTATION1273
+/***********************************************************************
+* G__smart_shl_unload()
+***********************************************************************/
+void G__smart_shl_unload(allsl)
+int allsl;
+{
+  if(G__sl_handle[allsl]) {
+    if(G__dlclose(G__sl_handle[allsl]) == -1) {
+      fprintf(G__serr,"Error: Dynamic link library unloading error\n");
+    }
+    G__sl_handle[allsl]=0;
+  }
+}
+#endif
 
 #ifdef G__SHAREDLIB
 /***********************************************************************
@@ -736,7 +749,8 @@ char *shlfile;
   sharedlib_func=
     (int (*)())G__shl_findsym(&G__sl_handle[allsl],dllid,TYPE_PROCEDURE);
 #ifndef G__OLDIMPLEMENTATION1169
-  if(sharedlib_func && (*sharedlib_func)()>G__ACCEPTDLLREV) {
+  if(sharedlib_func && (*sharedlib_func)()>G__ACCEPTDLLREV_UPTO
+     && (*sharedlib_func)()<G__ACCEPTDLLREV_FROM) {
 #else
   if(sharedlib_func && (*sharedlib_func)()!=G__DLLREV) {
 #endif
@@ -749,7 +763,8 @@ char *shlfile;
   sharedlib_func=
     (int (*)())G__shl_findsym(&G__sl_handle[allsl],dllid,TYPE_PROCEDURE);
 #ifndef G__OLDIMPLEMENTATION1169
-  if(sharedlib_func && (*sharedlib_func)()>G__ACCEPTDLLREV) {
+  if(sharedlib_func && (*sharedlib_func)()>G__ACCEPTDLLREV_UPTO
+     && (*sharedlib_func)()<G__ACCEPTDLLREV_FROM) {
 #else
   if(sharedlib_func && (*sharedlib_func)()!=G__DLLREV) {
 #endif
@@ -762,7 +777,8 @@ char *shlfile;
   sharedlib_func=
     (int (*)())G__shl_findsym(&G__sl_handle[allsl],dllid,TYPE_PROCEDURE);
 #ifndef G__OLDIMPLEMENTATION1169
-  if(sharedlib_func && (*sharedlib_func)()>G__ACCEPTDLLREV) {
+  if(sharedlib_func && (*sharedlib_func)()>G__ACCEPTDLLREV_UPTO
+     && (*sharedlib_func)()<G__ACCEPTDLLREV_FROM) {
 #else
   if(sharedlib_func && (*sharedlib_func)()!=G__DLLREV) {
 #endif
@@ -775,7 +791,8 @@ char *shlfile;
   sharedlib_func=
     (int (*)())G__shl_findsym(&G__sl_handle[allsl],dllid,TYPE_PROCEDURE);
 #ifndef G__OLDIMPLEMENTATION1169
-  if(sharedlib_func && (*sharedlib_func)()>G__ACCEPTDLLREV) {
+  if(sharedlib_func && (*sharedlib_func)()>G__ACCEPTDLLREV_UPTO
+     && (*sharedlib_func)()<G__ACCEPTDLLREV_FROM) {
 #else
   if(sharedlib_func && (*sharedlib_func)()!=G__DLLREV) {
 #endif
@@ -1052,7 +1069,7 @@ int *known3;
 
   if(result3.obj.i==0) {
     fprintf(G__serr
-	    ,"Error: Pointer to function 0x%lx can not access from interpreter(1) FILE:%s LINE:%d\n"
+	    ,"Error: Can not access pointer to function 0x%lx from interpreter(1) FILE:%s LINE:%d\n"
 	    ,G__int(result3)
 	    ,G__ifile.name,G__ifile.line_number);
     return(G__null);
@@ -1108,7 +1125,7 @@ int *known3;
   /* appropreate function not found */
   if(result7[0]=='\0') {
     fprintf(G__serr
-	    ,"Error: Pointer to function 0x%lx can not access from interpreter(2) FILE:%s LINE:%d\n"
+	    ,"Error: Can not access pointer to function 0x%lx from interpreter(2) FILE:%s LINE:%d\n"
 	    ,G__int(result3)
 	    ,G__ifile.name,G__ifile.line_number);
     return(G__null);

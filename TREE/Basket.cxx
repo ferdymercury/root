@@ -1,3 +1,4 @@
+//*CMZ :  2.24/03 27/04/2000  09.44.02  by  Rene Brun
 //*CMZ :  2.23/12 26/01/2000  09.45.01  by  Rene Brun
 //*CMZ :  2.23/11 07/01/2000  17.37.56  by  Rene Brun
 //*CMZ :  2.23/09 24/11/99  11.25.31  by  Rene Brun
@@ -7,17 +8,18 @@
 //*CMZ :  2.22/02 20/05/99  18.10.52  by  Rene Brun
 //*CMZ :  2.22/01 18/05/99  12.37.47  by  Rene Brun
 //*-- Author :    Rene Brun   19/01/96
+/*CMZ :  2.24/01 24/02/2000  11.49.40  by  Fons Rademakers*/
 /*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun and Fons Rademakers.                               *
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
  *                                                                       *
- * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
- * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
  *************************************************************************/
 
 #include "TBasket.h"
@@ -31,6 +33,8 @@ R__EXTERN  TBranch *gBranch;
 extern "C" void R__zip (Int_t cxlevel, Int_t *nin, char *bufin, Int_t *lout, char *bufout, Int_t *nout);
 extern "C" void R__unzip(Int_t *nin, char *bufin, Int_t *lout, char *bufout, Int_t *nout);
 
+const UInt_t kDisplacementMask = 0xFF000000;  // In the streamer the two highest bytes of
+                                             // the fEntryOffset are used to stored displacement.
 
 ClassImp(TBasket)
 
@@ -44,6 +48,7 @@ ClassImp(TBasket)
 TBasket::TBasket()
 {
 //               Default contructor
+   fDisplacement  = 0;
    fEntryOffset   = 0;
    fZipBuffer     = 0;
    fBufferRef     = 0;
@@ -64,6 +69,7 @@ TBasket::TBasket(const char *name, const char *title, TBranch *branch)
    fNevBufSize  = branch->GetEntryOffsetLen();
    fNevBuf      = 0;
    fEntryOffset = 0;  //Must be set to 0 before calling Sizeof
+   fDisplacement= 0;  //Must be set to 0 before calling Sizeof
    fBuffer      = 0;  //Must be set to 0 before calling Sizeof
    fBufferRef   = new TBuffer(TBuffer::kWrite, fBufferSize);
    fHeaderOnly  = kTRUE;
@@ -86,10 +92,12 @@ TBasket::~TBasket()
 //          Basket destructor
 //
 
-   if (fEntryOffset) delete [] fEntryOffset;
-   if (fZipBuffer)   delete [] fZipBuffer;
+   if (fDisplacement) delete [] fDisplacement;
+   if (fEntryOffset)  delete [] fEntryOffset;
+   if (fZipBuffer)    delete [] fZipBuffer;
 //   if (fBufferRef)   delete fBufferRef; //this is done in the TKey destructor
 //   fBufferRef   = 0;
+   fDisplacement= 0;
    fEntryOffset = 0;
    fZipBuffer   = 0;
 }
@@ -112,10 +120,12 @@ Int_t TBasket::DropBuffers()
 
    if (!fBuffer && !fBufferRef) return 0;
 //   delete [] fBuffer;
-   if (fEntryOffset) delete [] fEntryOffset;
-   if (fBufferRef)   delete fBufferRef;
+   if (fDisplacement) delete [] fDisplacement;
+   if (fEntryOffset)  delete [] fEntryOffset;
+   if (fBufferRef)    delete fBufferRef;
    fBufferRef   = 0;
    fBuffer      = 0;
+   fDisplacement= 0;
    fEntryOffset = 0;
    fBranch->GetTree()->IncrementTotalBuffers(-fBufferSize);
    return fBufferSize;
@@ -163,7 +173,7 @@ void TBasket::ReadBasketBuffers(Seek_t pos, Int_t len, TFile *file)
       R__unzip(&nin, &buffer[fKeylen], &fObjlen, objbuf, &nout);
       if (nout != fObjlen) Error("Read", "fObjlen = %d, nout = %d", fObjlen, nout);
       delete [] buffer;
-      fBufferRef->SetBuffer(fBuffer);
+      fBufferRef->SetBuffer(fBuffer, fObjlen+fKeylen );
    } else {
       fBuffer = fBufferRef->Buffer();
    }
@@ -177,6 +187,13 @@ void TBasket::ReadBasketBuffers(Seek_t pos, Int_t len, TFile *file)
    fEntryOffset = 0;
    fBufferRef->SetBufferOffset(fLast);
    fBufferRef->ReadArray(fEntryOffset);
+   delete [] fDisplacement;
+   fDisplacement = 0;
+   if (fBufferRef->Length() != fBufferRef->BufferSize()) {
+     // There is more data in the buffer!  It is the diplacement
+     // array.
+     fBufferRef->ReadArray(fDisplacement);
+   }
 }
 
 //_______________________________________________________________________
@@ -236,6 +253,16 @@ void TBasket::Streamer(TBuffer &b)
          delete [] fEntryOffset;
          fEntryOffset = new Int_t[fNevBufSize];
          if (fNevBuf) b.ReadArray(fEntryOffset);
+	 if (flag>20) {
+	   fDisplacement = new char[fNevBufSize];
+	   Int_t i,tmp;
+	   for(i=0; i<fNevBuf; i++) {
+	     tmp = fEntryOffset[i];
+	     fEntryOffset[i] &= ~kDisplacementMask;
+	     fDisplacement[i] = (((UInt_t)tmp) & kDisplacementMask)
+	       >> (8*(sizeof(Int_t)-sizeof(char)));
+	   }
+	 }	
       }
       if (flag == 1 || flag > 10) {
          fBufferRef = new TBuffer(TBuffer::kRead,fBufferSize);
@@ -257,11 +284,24 @@ void TBasket::Streamer(TBuffer &b)
       flag = 1;
       if (!fEntryOffset)  flag  = 2;
       if (fBufferRef)     flag += 10;
+      if (fDisplacement)  flag += 20;
       if (fHeaderOnly)    flag  = 0;
       b << flag;
       if (fHeaderOnly) return;
       if (fEntryOffset && fNevBuf) {
-         b.WriteArray(fEntryOffset, fNevBuf);
+         if (fDisplacement) {
+	   char move = (8*(sizeof(Int_t)-sizeof(char)));
+	   for(Int_t i=0; i<fNevBuf; i++) {
+	     fEntryOffset[i] = fEntryOffset[i]&~kDisplacementMask +
+	       fDisplacement[i] << move;
+	   }
+	 }
+	 b.WriteArray(fEntryOffset, fNevBuf);
+         if (fDisplacement) {
+	   for(Int_t i=0; i<fNevBuf; i++) {
+	     fEntryOffset[i] = fEntryOffset[i]&~kDisplacementMask;
+	   }
+	 }	
       }
       if (fBufferRef) {
          char *buf  = fBufferRef->Buffer();
@@ -271,7 +311,7 @@ void TBasket::Streamer(TBuffer &b)
 }
 
 //_______________________________________________________________________
-void TBasket::Update(Int_t offset)
+void TBasket::Update(Int_t offset, Int_t disp)
 {
 //    Update basket header and EntryOffset table
 
@@ -280,12 +320,27 @@ void TBasket::Update(Int_t offset)
          Int_t newsize = TMath::Max(10,2*fNevBufSize);
          Int_t *newoff = (Int_t*)TStorage::ReAlloc(fEntryOffset,
                                newsize*sizeof(Int_t),fNevBufSize*sizeof(Int_t));
+	 if (fDisplacement) {
+	    char *newdisp = (char*)TStorage::ReAlloc(fDisplacement,
+                               newsize*sizeof(char),fNevBufSize*sizeof(char));
+	    fDisplacement = newdisp;
+	 }
          fEntryOffset  = newoff;
          fNevBufSize   = newsize;
          //Update branch only for the first 10 baskets
          if (fBranch->GetWriteBasket() < 10) fBranch->SetEntryOffsetLen(newsize);
+
       }
       fEntryOffset[fNevBuf] = offset;
+
+      if (disp>=0) {
+	if (!fDisplacement) {
+	  fDisplacement = new char[fNevBufSize];
+	  for (Int_t i = 0; i<fNevBufSize; i++) fDisplacement[i] = -1;
+	}
+	fDisplacement[fNevBuf] = disp;
+	fBufferRef->SetBufferDisplacement(disp);
+      }
    }
 
    fNevBuf++;
@@ -309,6 +364,10 @@ Int_t TBasket::WriteBuffer()
    if (fEntryOffset) {
       fBufferRef->WriteArray(fEntryOffset,fNevBuf+1);
       delete [] fEntryOffset; fEntryOffset = 0;
+      if (fDisplacement) {
+	fBufferRef->WriteArray(fDisplacement,fNevBuf+1);
+	delete [] fDisplacement; fDisplacement = 0;
+      }
    }
 
    Int_t lbuf, nout;
@@ -325,7 +384,6 @@ Int_t TBasket::WriteBuffer()
       char *objbuf = fBufferRef->Buffer() + fKeylen;
       Int_t bufmax = buflen-fKeylen;
       R__zip(cxlevel, &fObjlen, objbuf, &bufmax, &fBuffer[fKeylen], &nout);
-//printf("R__zip:%s, bufmax=%d, fObjlen=%d, fKeylen=%d, nout=%d\n",GetName(),bufmax,fObjlen,fKeylen,nout);
       if (nout >= fObjlen) {
          delete [] fBuffer;
          fBuffer = fBufferRef->Buffer();

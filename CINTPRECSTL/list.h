@@ -1,5 +1,5 @@
-/*CMZ :  2.23/10 10/12/99  18.00.24  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   10/12/99*/
+/*CMZ :  2.24/05 16/05/2000  12.04.03  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   16/05/2000*/
 // lib/prec_stl/list
 
 #pragma ifndef PREC_STL_LIST
@@ -47,10 +47,11 @@ class list {
   typedef typename Allocator::difference_type       difference_type;
 #endif
 
-#ifdef G__VISUAL
-  class iterator : public _Bidit<T,difference_type>
-#else
-  class iterator : public bidirectional_iterator<T,difference_type>
+  class iterator
+#if defined(G__VISUAL)
+    	: public _Bidit<T,difference_type>
+#elif !defined(G__SUNPRO_C)
+  	: public bidirectional_iterator<T,difference_type>
 #endif
 	{
    public:
@@ -76,10 +77,11 @@ class list {
 #if 0
   typedef reverse_iterator<iterator> reverse_iterator;
 #else
-#ifdef G__VISUAL
-  class reverse_iterator : public _Bidit<T,difference_type>
-#else
-  class reverse_iterator : public bidirectional_iterator<T,difference_type>
+  class reverse_iterator
+#if defined(G__VISUAL)
+	: public _Bidit<T,difference_type>
+#elif !defined(G__SUNPRO_C)
+  	: public bidirectional_iterator<T,difference_type>
 #endif
 	{
    public:
@@ -117,6 +119,12 @@ class list {
   iterator end() ;
   reverse_iterator rbegin() ;
   reverse_iterator rend() ;
+#ifdef G__CONSTNESSFLAG
+  const_iterator begin(void) const;
+  const_iterator end(void) const;
+  const_reverse_iterator rbegin(void) const;
+  const_reverse_iterator rend(void) const;
+#endif
   bool empty() const ;
   size_type size() const ;
   size_type max_size() const ;
@@ -134,7 +142,16 @@ class list {
   void pop_front();
   void pop_back();
   list(size_type n,const T& value=T()) ;
-  //list(const T* first,const T* last) ;
+#if 0
+  template <class InputIterator>
+    deque(InputIterator first, InputIterator last,
+         const Allocator& = Allocator());
+#else
+#if defined(G__GNUC)
+  list(const T* first,const T* last) ;
+#endif
+  list(const_iterator first, const_iterator last) ;
+#endif
   list(const list& x) ;
   ~list() ;
   list& operator=(const list& x) ;

@@ -1,3 +1,4 @@
+//*CMZ :  2.24/03 29/04/2000  23.45.27  by  Rene Brun
 //*CMZ :  2.23/11 07/01/2000  08.17.58  by  Valery Fine(fine@mail.cern.ch)
 //*CMZ :  2.23/02 02/09/99  15.54.29  by  Rene Brun
 //*CMZ :  2.00/08 26/05/98  10.27.16  by  Rene Brun
@@ -16,7 +17,7 @@
 
 #include <commctrl.h>
 
-ClassImp(TWin32ControlBarImp)
+// ClassImp(TWin32ControlBarImp)
 
 //______________________________________________________________________________
 /////

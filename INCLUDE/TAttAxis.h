@@ -1,3 +1,4 @@
+//*CMZ :  2.24/00 14/02/2000  09.46.24  by  Rene Brun
 //*CMZ :  2.23/04 08/10/99  22.49.34  by  Rene Brun
 //*CMZ :  2.23/00 28/07/99  14.43.40  by  Fons Rademakers
 //*CMZ :  2.00/00 03/03/98  11.22.59  by  Rene Brun
@@ -7,17 +8,18 @@
 #ifndef ROOT_TAttAxis
 #define ROOT_TAttAxis
 
+/*CMZ :  2.24/01 24/02/2000  11.49.40  by  Fons Rademakers*/
 /*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun and Fons Rademakers.                               *
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
  *                                                                       *
- * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
- * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -55,6 +57,8 @@ protected:
         Float_t      fTickLength;   //length of tick marks
         Float_t      fTitleOffset;  //offset of axis title
         Float_t      fTitleSize;    //size of axis title
+        Color_t      fTitleColor;   //color of axis title
+        Style_t      fTitleFont;    //font for axis title
 
 public:
         TAttAxis();
@@ -69,6 +73,8 @@ public:
         virtual Float_t  GetTitleOffset() {return fTitleOffset;}
         virtual Float_t  GetTitleSize()   {return fTitleSize;}
         virtual Float_t  GetTickLength()  {return fTickLength;}
+        virtual Color_t  GetTitleColor()  {return fTitleColor;}
+        virtual Style_t  GetTitleFont()   {return fTitleFont;}
         virtual void     ResetAttAxis(Option_t *option="");
         virtual void     SaveAttributes(ofstream &out, const char *name, const char *subname);
         virtual void     SetNdivisions(Int_t n=510);           // *MENU*
@@ -80,8 +86,10 @@ public:
         virtual void     SetTickLength(Float_t length=0.03);   // *MENU*
         virtual void     SetTitleOffset(Float_t offset=1);     // *MENU*
         virtual void     SetTitleSize(Float_t size=.005);      // *MENU*
+        virtual void     SetTitleColor(Color_t color=1);       // *MENU*
+        virtual void     SetTitleFont(Style_t font=62);        // *MENU*
 
-        ClassDef(TAttAxis,2)  //Axis attributes
+        ClassDef(TAttAxis,3)  //Axis attributes
 };
 
 #endif

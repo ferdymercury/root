@@ -1,5 +1,5 @@
-/*CMZ :  2.23/10 10/12/99  17.59.57  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   10/12/99*/
+/*CMZ :  2.24/05 16/05/2000  12.03.44  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   16/05/2000*/
 /* /% C++ %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -54,6 +54,8 @@
 
 #define G__BIT_ISGLOBALVAR       0x00800000
 #define G__BIT_ISLOCALVAR        0x01000000
+#define G__BIT_ISEXPLICIT        0x04000000
+#define G__BIT_ISNAMESPACE       0x08000000
 
 
 

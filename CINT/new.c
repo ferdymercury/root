@@ -1,5 +1,5 @@
-/*CMZ :  2.23/10 10/12/99  18.00.02  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   10/12/99*/
+/*CMZ :  2.24/05 16/05/2000  12.03.48  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   16/05/2000*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -52,6 +52,9 @@ char *expression;
 #endif
   char construct[G__LONGLINE];
   char *type;
+#ifndef G__OLDIMPLEMENTATION1246
+  char *basictype;
+#endif
   char *initializer;
   char *arrayindex;
   int p=0;
@@ -119,6 +122,13 @@ char *expression;
       initializer=NULL;
     }
   }
+#ifndef G__OLDIMPLEMENTATION1246
+  if(initializer) *initializer = 0;
+  basictype = G__strrstr(type,"::");
+  if(initializer) *initializer = '(';
+  if(!basictype) basictype = type;
+  else basictype += 2;
+#endif
 #ifndef G__OLDIMPLEMENTATION1052
   typenum = G__defined_typename(type);
   if(-1!=typenum) tagnum = G__newtype.tagnum[typenum];
@@ -129,7 +139,11 @@ char *expression;
     *arrayindex='\0';
 #ifndef G__OLDIMPLEMENTATION1052
     if(-1!=tagnum) sprintf(construct,"%s()",G__struct.name[tagnum]);
+#ifndef G__OLDIMPLEMENTATION1246
+    else sprintf(construct,"%s()",basictype);
+#else
     else sprintf(construct,"%s()",type);
+#endif
 #else
     sprintf(construct,"%s()",type);
 #endif
@@ -162,7 +176,11 @@ char *expression;
 #ifndef G__OLDIMPLEMENTATION1052
       if(-1!=tagnum) sprintf(construct,"%s%s"
 			     ,G__struct.name[tagnum],initializer);
+#ifndef G__OLDIMPLEMENTATION1246
+      else strcpy(construct,basictype);
+#else
       else strcpy(construct,type);
+#endif
 #else
       strcpy(construct,type);
 #endif
@@ -172,7 +190,11 @@ char *expression;
       pinc=1;
 #ifndef G__OLDIMPLEMENTATION1052
       if(-1!=tagnum) sprintf(construct,"%s()",G__struct.name[tagnum]);
+#ifndef G__OLDIMPLEMENTATION1246
+      else sprintf(construct,"%s()",basictype);
+#else
       else sprintf(construct,"%s()",type);
+#endif
 #else
       sprintf(construct,"%s()",type);
 #endif

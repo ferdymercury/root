@@ -1,50 +1,14 @@
+//*CMZ :  2.24/01 21/03/2000  00.05.58  by  Unknown
 //*CMZ :  2.23/12 26/01/2000  12.24.44  by  Valery Fine(fine@bnl.gov)
 //*-- Author :  Valery Fine(fine@bnl.gov)   25/09/99
-#ifndef STAR_TCL
-#define STAR_TCL
+#ifndef ROOT_TCL
+#define ROOT_TCL
 //
 // The set of methods to work with the plain matrix / vector
 // "derived" from  http://wwwinfo.cern.ch/asdoc/shortwrupsdir/f110/top.html
 //
 // $Id: TCL.h,v 1.9 1999/12/17 23:28:39 fine Exp $
 // $Log: TCL.h,v $
-// Revision 1.9  1999/12/17 23:28:39  fine
-// clean up for the sake of docs + new class St_Table3DPackedPoints introduced
-//
-// Revision 1.8  1999/12/08 18:08:03  fine
-// void * zero operation have been introduced
-//
-// Revision 1.7  1999/11/18 14:35:20  fine
-// Class comment introduced
-//
-// Revision 1.6  1999/11/09 01:10:46  fine
-// new method int *ucopy(const *int, ...) has been introduced
-//
-// Revision 1.5  1999/10/27 23:57:57  fine
-// Clean up: const has been introduced instead of non-const
-//
-// Revision 1.4  1999/10/17 20:45:57  fine
-// vadd methods added
-//
-// Revision 1.3  1999/09/29 02:30:49  fine
-// Change return type from void to float/double
-//
-// Revision 1.2  1999/09/29 00:31:51  fine
-// RMath class has been replaced with TCL one
-//
-// Revision 1.1  1999/09/28 19:45:10  fine
-// RMath class has been renamed to TCL - STAR CERN Library
-//
-// Revision 1.6  1999/09/27 23:45:43  fine
-// Several methods to calculate errors were introduced
-//
-// Revision 1.5  1999/09/26 02:48:50  fine
-// F112 CERNLIB package (TR matrix) has been added. No micky test yet
-//
-// Revision 1.4  1999/09/23 18:32:11  fine
-// double prec for float matrices was introduced
-//
-//
 
 #include "Rtypes.h"
 #include <string.h>
@@ -73,21 +37,20 @@ class TCL  {
     static double *ucopy(const double *a, double *b, int n);
     static void  **ucopy(const void **a, void  **b, int n);
 
-    static float  *uzero(float *a,  int n1, int n2);
-    static double *uzero(double *a, int n1, int n2);
-    static void  **uzero(void **a,  int n1, int n2);
-
     static float  *vzero(float *a,  int n2);
     static double *vzero(double *a, int n2);
     static void  **vzero(void **a,  int n2);
 
-    static float  *vadd(const float *b,  const float *c,  float *a, int n);
+    static float  *vadd(const float *b,  const float  *c,  float *a, int n);
     static double *vadd(const double *b, const double *c, double *a, int n);
 
     static float  *vadd(const float *b,  const double *c, float *a, int n);
-    static double *vadd(const double *b, const float *c,  double *a, int n);
+    static double *vadd(const double *b, const float  *c,double *a, int n);
 
-    static float  *vsub(const float *a,  const float *b,  float *x, int n);
+    static float   vdot(const float  *b, const float  *a, int n);
+    static double  vdot(const double *b, const double *a, int n);
+
+    static float  *vsub(const float *a, const float  *b, float *x, int n);
     static double *vsub(const double *a, const double *b, double *x, int n);
 
     static float  *vcopyn(const float *a,  float *x, int n);
@@ -425,6 +388,22 @@ inline double *TCL::vadd(const double *b, const float *c,  double *a, int n)
 }
 
 //________________________________________________________
+inline float  TCL::vdot(const float  *b, const float *a, int n)
+{
+ float x=0;
+ if (n>0)
+  for (int i=0;i<n;i++,a++,b++) x += (*a) * (*b);
+ return x;
+}
+//________________________________________________________
+inline double TCL::vdot(const double *b, const double *a, int n)
+{
+ double  x=0;
+ if (n>0)
+  for (int i=0;i<n;i++,a++,b++) x += (*a) * (*b);
+ return x;
+}
+//________________________________________________________
 inline float *TCL::vsub(const float *a, const float *b, float *x, int n)
 {
   if (n <= 0) return 0;
@@ -453,30 +432,6 @@ inline double *TCL::vcopyn(const double *a, double *x, int n)
   if (n <= 0) return 0;
   for (int i=0;i<n;i++) x[i] = -a[i];
   return x;
-}
-
-//________________________________________________________
-inline float *TCL::uzero(float *a, int n1, int n2)
-{
-  // Attention: n1, n2 is "Fortran-like index
-  // namely the first element has index "1"
-  return vzero(&a[n1-1],n2-n1+1);
-}
-
-//________________________________________________________
-inline double *TCL::uzero(double *a, int n1, int n2)
-{
-  // Attention: n1, n2 is "Fortran-like index
-  // namely the first element has index "1"
-  return vzero(&a[n1-1],n2-n1+1);
-}
-
-//________________________________________________________
-inline void **TCL::uzero(void **a, int n1, int n2)
-{
-  // Attention: n1, n2 is "Fortran-like index
-  // namely the first element has index "1"
-  return vzero(&a[n1-1],n2-n1+1);
 }
 
 //________________________________________________________

@@ -1,5 +1,5 @@
-/*CMZ :  2.23/10 10/12/99  18.00.06  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   10/12/99*/
+/*CMZ :  2.24/05 16/05/2000  12.03.50  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   16/05/2000*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -21,6 +21,7 @@
  ************************************************************************/
 
 #include "common.h"
+
 
 
 #ifndef G__OLDIMPLEMENTATION1087
@@ -86,7 +87,11 @@ int G__using_namespace()
     int basetagnum,envtagnum;
     c=G__fgetstream_template(buf,";");
 #ifndef G__STD_NAMESPACE /* ON676 */
-    if(';'==c && strcmp(buf,"std")==0) return 1;
+    if(';'==c && strcmp(buf,"std")==0
+#ifndef G__OLDIMPLEMENTATION1285
+       && G__ignore_stdnamespace
+#endif
+       ) return 1;
 #endif
     basetagnum = G__defined_tagname(buf,2);
     if(G__def_struct_member) {
@@ -395,7 +400,11 @@ int noerror;
     *p='\0';
     if(p==temp) env_tagnum = -1;  /* global scope */
 #ifndef G__STD_NAMESPACE /* ON667 */
-    else if (strcmp (temp, "std") == 0) {
+    else if (strcmp (temp, "std") == 0
+#ifndef G__OLDIMPLEMENTATION1285
+	     && G__ignore_stdnamespace
+#endif
+	     ) {
       env_tagnum = -1;
       tagname += 5;
     }
@@ -591,7 +600,11 @@ int type;
       strcpy(atom_tagname,p+2);
       *p = '\0';
 #ifndef G__STD_NAMESPACE /* ON667 */
-      if (strcmp (temp, "std") == 0) G__struct.parent_tagnum[i] = -1;
+      if (strcmp (temp, "std") == 0
+#ifndef G__OLDIMPLEMENTATION1285
+	  && G__ignore_stdnamespace
+#endif
+	  ) G__struct.parent_tagnum[i] = -1;
       else G__struct.parent_tagnum[i] = G__defined_tagname(temp,0);
 #else
       G__struct.parent_tagnum[i] = G__defined_tagname(temp,0);
@@ -980,7 +993,11 @@ char type;
     }
   }
 #ifndef G__STD_NAMESPACE /* ON667 */
-  else if('n'==type && strcmp(tagname,"std")==0) {
+  else if('n'==type && strcmp(tagname,"std")==0
+#ifndef G__OLDIMPLEMENTATION1285
+	  && G__ignore_stdnamespace
+#endif
+	  ) {
     /* namespace std, treat as global scope, namespace has no effect. */
     G__var_type='p';
     G__exec_statement();

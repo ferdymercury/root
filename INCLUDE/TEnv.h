@@ -1,3 +1,4 @@
+//*CMZ :  2.24/02 05/04/2000  18.32.18  by  Fons Rademakers
 //*CMZ :  2.23/12 26/01/2000  09.24.07  by  Rene Brun
 //*CMZ :  2.00/10 28/07/98  10.46.05  by  Fons Rademakers
 //*CMZ :  1.03/09 04/12/97  19.37.51  by  Fons Rademakers
@@ -6,17 +7,18 @@
 #ifndef ROOT_TEnv
 #define ROOT_TEnv
 
+/*CMZ :  2.24/01 24/02/2000  11.49.40  by  Fons Rademakers*/
 /*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun and Fons Rademakers.                               *
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
  *                                                                       *
- * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
- * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -136,30 +138,30 @@ private:
 
 public:
    TEnv(const char *name="");
-   ~TEnv();
+   virtual ~TEnv();
 
-   TOrdCollection   *GetTable() { return fTable; }
-   Bool_t            Defined(const char *name)
-                             { return Getvalue(name) != 0; }
+   TOrdCollection     *GetTable() { return fTable; }
+   Bool_t              Defined(const char *name)
+                                  { return Getvalue(name) != 0; }
 
-   int               GetValue(const char *name, int dflt);
-   const char       *GetValue(const char *name, const char *dflt);
-   TObject          *GetValue(const char *name, TObject *dflt);
+   virtual Int_t       GetValue(const char *name, Int_t dflt);
+   virtual const char *GetValue(const char *name, const char *dflt);
+   virtual TObject    *GetValue(const char *name, TObject *dflt);
 
-   void              SetValue(const char *name, const char *value,
-                              EEnvLevel level = kEnvChange, const char *type = 0);
-   void              SetValue(const char *name, const TString &value,
-                              EEnvLevel level, const char *type);
-   void              SetValue(const char *name, EEnvLevel level = kEnvChange);
-   void              SetValue(const char *name, int value);
-   void              SetValue(const char *name, double value);
+   virtual void        SetValue(const char *name, const char *value,
+                                EEnvLevel level = kEnvChange, const char *type = 0);
+   virtual void        SetValue(const char *name, const TString &value,
+                                EEnvLevel level, const char *type);
+   virtual void        SetValue(const char *name, EEnvLevel level = kEnvChange);
+   virtual void        SetValue(const char *name, Int_t value);
+   virtual void        SetValue(const char *name, Double_t value);
 
-   TEnvRec          *Lookup(const char *n);
-   void              ReadFile(const char *fname, EEnvLevel level);
-   void              Save();
-   void              SaveLevel(EEnvLevel level);
-   void              Print(Option_t *option="");
-   void              PrintEnv(EEnvLevel level = kEnvAll);
+   virtual TEnvRec    *Lookup(const char *n);
+   virtual void        ReadFile(const char *fname, EEnvLevel level);
+   virtual void        Save();
+   virtual void        SaveLevel(EEnvLevel level);
+   virtual void        Print(Option_t *option="");
+   virtual void        PrintEnv(EEnvLevel level = kEnvAll);
 
    ClassDef(TEnv,0)  //Handle ROOT configuration resources
 };

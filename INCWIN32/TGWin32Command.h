@@ -1,3 +1,4 @@
+//*CMZ :  2.24/01 18/02/2000  14.07.53  by  Valery Fine(fine@bnl.gov)
 //*CMZ :  2.23/04 12/10/99  00.19.57  by  Fons Rademakers
 //*CMZ :  2.23/02 02/09/99  15.39.27  by  Rene Brun
 //*CMZ :  2.00/00 20/02/98  16.27.42  by  Valery Fine(fine@mail.cern.ch)
@@ -247,19 +248,20 @@ private:
 public:
 
     TGWin32DrawText(int x, int y, const char *text, TVirtualX::ETextMode mode=TVirtualX::kClear, int code=IX_TEXT)
-                : TGWin32Command(code,ROOT_Text){
-    fX = x;
-    fY = y;
-    fText = text;
-    fMode = mode;
-}
+                : TGWin32Command(code,ROOT_Text)
+    {
+      fX = x;
+      fY = y;
+      fText = text;
+      fMode = mode;
+    }
 
-int   GetX(){return fX;}
-int   GetY(){return fY;}
-void  SetSize(SIZE *lpSize){fX = lpSize->cx;fY = lpSize->cy;}
-TVirtualX::ETextMode GetMode(){ return fMode;}
+    int   GetX(){return fX;}
+    int   GetY(){return fY;}
+    void  SetSize(SIZE *lpSize){fX = lpSize->cx;fY = lpSize->cy;}
+    TVirtualX::ETextMode GetMode(){ return fMode;}
 
-const char *GetText(){return fText;}
+    const char *GetText(){return fText;}
 };
 
 //______________________________________________________________________________
@@ -328,12 +330,12 @@ private:
    LONG fX;      // x cursor position (initial and queried)
    LONG fY;      // y cursor postion
    Int_t fBreakKey; // Flag to mark whether user did inter line or cancel input
-   Text_t *fText;  // Text buffer to transfer init value and accept result
+   const Text_t *fText;  // Text buffer to transfer init value and accept result
 
 
 public:
 
-  TGWin32GetString(int x, int y, Text_t *string, int code = IX_REQST) : TGWin32Command(code,ROOT_Input){
+  TGWin32GetString(int x, int y, const Text_t *string, int code = IX_REQST) : TGWin32Command(code,ROOT_Input){
      fX = x;
      fY = y;
      fBreakKey = -1;
@@ -343,7 +345,7 @@ public:
    int  GetX(){return fX;}
    int  GetY(){return fY;}
    Int_t GetBreakKey(){ return fBreakKey;}
-   Text_t *GetTextPointer(){ return fText;}
+   const Text_t *GetTextPointer(){ return fText;}
    void IncBreakKey(){ fBreakKey++;}
    void SetXY(POINT *xy){ fX = xy->x; fY = xy->y;}
 };

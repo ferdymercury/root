@@ -1,3 +1,4 @@
+//*CMZ :  2.24/03 25/04/2000  12.40.04  by  Fons Rademakers
 //*CMZ :  2.23/12 26/01/2000  09.24.07  by  Rene Brun
 //*CMZ :  2.23/11 20/12/99  12.08.36  by  Rene Brun
 //*CMZ :  2.22/07 05/07/99  15.37.31  by  Fons Rademakers
@@ -9,17 +10,18 @@
 #ifndef ROOT_TCollection
 #define ROOT_TCollection
 
+/*CMZ :  2.24/01 24/02/2000  11.49.40  by  Fons Rademakers*/
 /*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun and Fons Rademakers.                               *
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
  *                                                                       *
- * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
- * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -89,13 +91,13 @@ public:
    virtual TObject   *FindObject(const char *name) const;
    TObject           *operator()(const char *name) const;
    virtual TObject   *FindObject(TObject *obj) const;
-   virtual const char  *GetName() const {return fName.Data();}
+   virtual const char *GetName() const { return fName.Data(); }
    TObject           *GetParent() const { return fParent; }
    virtual Int_t      GetSize() const { return fSize; }
    virtual Int_t      GrowBy(Int_t delta) const;
    Bool_t             IsArgNull(const char *where, TObject *obj) const;
-   Bool_t             IsEmpty() const { return GetSize() <= 0; }
-   Bool_t             IsFolder() {return kTRUE;}
+   virtual Bool_t     IsEmpty() const { return GetSize() <= 0; }
+   Bool_t             IsFolder() { return kTRUE; }
    virtual void       ls(Option_t *option="");
    virtual TIterator *MakeIterator(Bool_t dir = kIterForward) const = 0;
    virtual TIterator *MakeReverseIterator() const { return MakeIterator(kIterBackward); }
@@ -106,7 +108,7 @@ public:
    virtual void       RemoveAll(TCollection *col);
    void               RemoveAll() { Clear(); }
    void               SetCurrentCollection();
-   virtual void       SetName(const char *name) {fName = name;}
+   virtual void       SetName(const char *name) { fName = name; }
    void               SetParent(TObject *parent) { fParent = parent; }
    virtual void       Write(const char *name=0, Int_t option=0, Int_t bufsize=0);
 

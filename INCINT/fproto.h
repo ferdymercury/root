@@ -1,5 +1,5 @@
-/*CMZ :  2.23/10 10/12/99  17.59.57  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   10/12/99*/
+/*CMZ :  2.24/05 16/05/2000  12.03.44  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   16/05/2000*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -275,7 +275,7 @@ void G__fsigusr2 G__P((void));
 int G__errorprompt G__P((char *nameoferror));
 int G__call_interruptfunc G__P((char *func));
 
-void G__include_file G__P((void));
+int G__include_file G__P((void));
 int G__getcintsysdir G__P((void));
 int G__preprocessor G__P((char *outname,char *inname,int cppflag,char *macros,char *undeflist,char *ppopt,char *includepath));
 int G__difffile G__P((char *file1,char *file2));
@@ -475,7 +475,7 @@ G__value G__getreserved G__P((char *item,void** ptr,void** ppdict));
 G__value G__getreserved G__P((char *item,void *ptr));
 G__value G__getreserved G__P((char *item));
 */
-int G__dasm G__P((FILE *fout));
+int G__dasm G__P((FILE *fout,int isthrow));
 G__value G__getrsvd G__P((int i));
 int G__read_setmode G__P((int *pmode));
 int G__pragma G__P((void));
@@ -559,6 +559,7 @@ char *G__gettemplatearg G__P((int n,struct G__Templatearg *def_para));
 void G__freetemplatearg G__P((struct G__Templatearg *def_para));
 void G__freetemplatefunc G__P((struct G__Definetemplatefunc *deftmpfunc));
 int G__templatefunc G__P((G__value *result,char *funcname,struct G__param *libp,int hash,int funcmatch));
+int G__matchtemplatefunc G__P((struct G__Definetemplatefunc *deftmpfunc,struct G__param *libp,struct G__Charlist *pcall_para,int funcmatch));
 int G__createtemplatefunc G__P((char *funcname,struct G__Templatearg *targ,int line_number,fpos_t *ppos));
 void G__define_type G__P((void));
 #ifdef G__OLDIMPLEMENtATION408
@@ -684,6 +685,26 @@ void G__resolve_jumptable_bytecode G__P(());
 
 extern void G__LockCriticalSection G__P(());
 extern void G__UnlockCriticalSection G__P(());
+
+#ifdef G__EXCEPTIONWRAPPER
+/*********************************************************************
+* G__ExceptionWrapper
+*********************************************************************/
+extern int G__ExceptionWrapper G__P((G__InterfaceMethod funcp
+				     ,G__value* result7
+				     ,char* funcname
+				     ,struct G__param *libp
+				     ,int hash));
+#endif
+
+#ifndef G__OLDIMPLEMENTATION1271
+extern int G__gen_linksystem G__P((char* headerfile));
+#endif
+
+#ifndef G__OLDIMPLEMENTATION1273
+extern void G__smart_shl_unload G__P((int allsl));
+extern void G__smart_unload G__P((int ifn));
+#endif
 
 #ifndef G__OLDIMPLEMENTATION873
 extern struct G__dictposition* G__get_dictpos G__P((char* fname));

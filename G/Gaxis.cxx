@@ -1,28 +1,27 @@
+//*CMZ :  2.24/03 23/04/2000  11.14.50  by  Rene Brun
+//*CMZ :  2.24/02 03/04/2000  12.44.06  by  Rene Brun
+//*CMZ :  2.24/00 14/02/2000  09.58.44  by  Rene Brun
 //*CMZ :  2.23/12 26/01/2000  09.31.21  by  Rene Brun
 //*CMZ :  2.23/11 06/01/2000  10.12.10  by  Rene Brun
 //*CMZ :  2.23/10 11/12/99  12.25.44  by  Rene Brun
 //*CMZ :  2.23/09 22/11/99  17.01.12  by  Rene Brun
 //*CMZ :  2.23/08 30/10/99  11.54.10  by  Rene Brun
-//*CMZ :  2.23/07 27/10/99  12.33.15  by  Fons Rademakers
-//*CMZ :  2.23/05 18/10/99  10.09.43  by  Rene Brun
-//*CMZ :  2.23/04 12/10/99  08.05.27  by  Rene Brun
-//*CMZ :  2.23/03 15/09/99  17.52.59  by  Rene Brun
-//*CMZ :  2.23/02 07/09/99  16.16.53  by  Rene Brun
 //*CMZ :  2.22/07 28/06/99  18.14.09  by  Rene Brun
 //*CMZ :  2.22/01 17/05/99  13.39.37  by  Rene Brun
 //*-- Author :    Rene Brun, Olivier Couet   12/12/94
 
+/*CMZ :  2.24/01 24/02/2000  11.49.40  by  Fons Rademakers*/
 /*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun and Fons Rademakers.                               *
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
  *                                                                       *
- * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
- * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
  *************************************************************************/
 
 #include <stdlib.h>
@@ -58,11 +57,11 @@ ClassImp(TGaxis)
 //
 //  c1->Range(-10,-1,10,1);
 //
-//  TGaxis *axis1 = new TGaxis(-5,-0.2,6,-0.2,-6,8,510,"");
+//  TGaxis *axis1 = new TGaxis(-4.5,-0.2,5.5,-0.2,-6,8,510,"");
 //  axis1->SetName("axis1");
 //  axis1->Draw();
 //
-//  TGaxis *axis2 = new TGaxis(-5,0.2,6,0.2,0.001,10000,510,"G");
+//  TGaxis *axis2 = new TGaxis(-4.5,0.2,5.5,0.2,0.001,10000,510,"G");
 //  axis2->SetName("axis2");
 //  axis2->Draw();
 //
@@ -74,7 +73,7 @@ ClassImp(TGaxis)
 //  axis4->SetName("axis4");
 //  axis4->Draw();
 //
-//  TGaxis *axis5 = new TGaxis(-5,-0.6,6,-0.6,1.2,1.32,80506,"-+");
+//  TGaxis *axis5 = new TGaxis(-4.5,-0.6,5.5,-0.6,1.2,1.32,80506,"-+");
 //  axis5->SetName("axis5");
 //  axis5->SetLabelSize(0.03);
 //  axis5->SetTextFont(72);
@@ -82,7 +81,7 @@ ClassImp(TGaxis)
 //
 //  axis5->Draw();
 //
-//  TGaxis *axis6 = new TGaxis(-5,0.6,6,0.6,100,900,50510,"-");
+//  TGaxis *axis6 = new TGaxis(-4.5,0.6,5.5,0.6,100,900,50510,"-");
 //  axis6->SetName("axis6");
 //  axis6->Draw();
 //
@@ -90,6 +89,12 @@ ClassImp(TGaxis)
 //  axis7->SetName("axis7");
 //  axis7->SetLabelOffset(0.01);
 //  axis7->Draw();
+//
+//  //one can make axis going top->bottom. However because of a long standing
+//  //problem, the two x values should not be equal
+//  TGaxis *axis8 = new TGaxis(6.5,0.8,6.499,-0.8,0,90,50510,"-");
+//  axis8->SetName("axis8");
+//  axis8->Draw();
 //}
 //Begin_Html
 /*
@@ -110,6 +115,7 @@ TGaxis::TGaxis(): TLine(), TAttText(11,0,1,62,0.040)
    fLabelOffset = 0.005;
    fLabelSize   = 0.040;
    fLabelFont   = 62;
+   fLabelColor  = 1;
    fTickSize    = 0.030;
    fTitleOffset = 1;
    fTitleSize   = fLabelSize;
@@ -138,6 +144,7 @@ TGaxis::TGaxis(Float_t xmin, Float_t ymin, Float_t xmax, Float_t ymax,
    fLabelOffset = 0.005;
    fLabelSize   = 0.040;
    fLabelFont   = 62;
+   fLabelColor  = 1;
    fTickSize    = 0.030;
    fTitleOffset = 1;
    fTitleSize   = fLabelSize;
@@ -212,6 +219,7 @@ TGaxis::TGaxis(Float_t xmin, Float_t ymin, Float_t xmax, Float_t ymax,
    fLabelOffset = 0.005;
    fLabelSize   = 0.040;
    fLabelFont   = 62;
+   fLabelColor  = 1;
    fTickSize    = 0.030;
    fTitleOffset = 1;
    fTitleSize   = fLabelSize;
@@ -257,6 +265,7 @@ void TGaxis::DrawAxis(Float_t xmin, Float_t ymin, Float_t xmax, Float_t ymax,
    newaxis->SetTitleSize(fTitleSize);
    newaxis->SetTitleOffset(fTitleOffset);
    newaxis->SetLabelFont(fLabelFont);
+   newaxis->SetLabelColor(fLabelColor);
    newaxis->SetLabelSize(fLabelSize);
    newaxis->SetLabelOffset(fLabelOffset);
    newaxis->SetTickSize(fTickSize);
@@ -784,6 +793,7 @@ void TGaxis::PaintAxis(Float_t xmin, Float_t ymin, Float_t xmax, Float_t ymax,
 
    charheight = GetLabelSize();
    textaxis->SetTextFont(GetLabelFont());
+   textaxis->SetTextColor(GetLabelColor());
    textaxis->SetTextSize (charheight);
    textaxis->SetTextAngle(GetTextAngle());
    if (!OptionUp && !OptionDown && !OptionY) {
@@ -1832,6 +1842,9 @@ void TGaxis::Streamer(TBuffer &R__b)
       R__b >> fTitleOffset;
       R__b >> fTitleSize;
       R__b >> fLabelFont;
+      if (R__v > 2) {
+         R__b >> fLabelColor;
+      }
       fChopt.Streamer(R__b);
       fName.Streamer(R__b);
       fTitle.Streamer(R__b);
@@ -1855,6 +1868,7 @@ void TGaxis::Streamer(TBuffer &R__b)
       R__b << fTitleOffset;
       R__b << fTitleSize;
       R__b << fLabelFont;
+      R__b << fLabelColor;
       fChopt.Streamer(R__b);
       fName.Streamer(R__b);
       fTitle.Streamer(R__b);

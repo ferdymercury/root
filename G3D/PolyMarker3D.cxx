@@ -1,3 +1,4 @@
+//*CMZ :  2.24/01 28/03/2000  14.29.04  by  Rene Brun
 //*CMZ :  2.23/12 22/01/2000  18.08.34  by  Rene Brun
 //*CMZ :  2.23/11 29/12/99  08.33.18  by  Rene Brun
 //*CMZ :  2.23/10 26/11/99  09.07.10  by  Rene Brun
@@ -9,17 +10,18 @@
 //*CMZ :  2.22/01 20/05/99  09.09.42  by  Rene Brun
 //*-- Author :    Nenad Buncic   21/08/95
 
+/*CMZ :  2.24/01 24/02/2000  11.49.40  by  Fons Rademakers*/
 /*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun and Fons Rademakers.                               *
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
  *                                                                       *
- * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
- * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
  *************************************************************************/
 
 #include <fstream.h>
@@ -273,7 +275,7 @@ void TPolyMarker3D::Paint(Option_t *option)
 {
 //*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*Paint PolyMarker*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 //*-*                            ================
-    TPadView3D *view3D = gPad->GetView3D();
+    TPadView3D *view3D = (TPadView3D*)gPad->GetView3D();
     if (view3D) view3D->PaintPolyMarker(this,option);
     //*-* Check if option is 'x3d'.      NOTE: This is a simple checking
     //                                         but since there is no other
@@ -354,13 +356,13 @@ void TPolyMarker3D::PaintH3(TH1 *h, Option_t *option)
 
    Int_t in, bin, binx, biny, binz;
 
-   Int_t nx  = h->GetXaxis()->GetNbins();
-   Int_t ny  = h->GetYaxis()->GetNbins();
-   Int_t nz  = h->GetZaxis()->GetNbins();
+   TAxis *xaxis = h->GetXaxis();
+   TAxis *yaxis = h->GetYaxis();
+   TAxis *zaxis = h->GetZaxis();
    Int_t entry = 0;
-   for (binz=1;binz<=nz;binz++) {
-      for (biny=1;biny<=ny;biny++) {
-         for (binx=1;binx<=nx;binx++) {
+   for (binz=zaxis->GetFirst();binz<=zaxis->GetLast();binz++) {
+      for (biny=yaxis->GetFirst();biny<=yaxis->GetLast();biny++) {
+         for (binx=xaxis->GetFirst();binx<=xaxis->GetLast();binx++) {
             bin = h->GetBin(binx,biny,binz);
             for (in=0;in<h->GetBinContent(bin);in++) {
                entry++;
@@ -375,12 +377,12 @@ void TPolyMarker3D::PaintH3(TH1 *h, Option_t *option)
       gPad->Range(-1,-1,1,1);
       view = new TView(1);
    }
-   view->SetRange(h->GetXaxis()->GetXmin(),
-                  h->GetYaxis()->GetXmin(),
-                  h->GetZaxis()->GetXmin(),
-                  h->GetXaxis()->GetXmax(),
-                  h->GetYaxis()->GetXmax(),
-                  h->GetZaxis()->GetXmax());
+   view->SetRange(xaxis->GetBinLowEdge(xaxis->GetFirst()),
+                  yaxis->GetBinLowEdge(yaxis->GetFirst()),
+                  zaxis->GetBinLowEdge(zaxis->GetFirst()),
+                  xaxis->GetBinUpEdge(xaxis->GetLast()),
+                  yaxis->GetBinUpEdge(yaxis->GetLast()),
+                  zaxis->GetBinUpEdge(zaxis->GetLast()));
 
    if (entry == 0) return;
    TPolyMarker3D *pm3d    = new TPolyMarker3D(entry);
@@ -391,15 +393,15 @@ void TPolyMarker3D::PaintH3(TH1 *h, Option_t *option)
 
    entry = 0;
    Float_t x,y,z,xw,yw,zw,xp,yp,zp;
-   for (binz=1;binz<=nz;binz++) {
-      z  = h->GetZaxis()->GetBinLowEdge(binz);
-      zw = h->GetZaxis()->GetBinWidth(binz);
-      for (biny=1;biny<=ny;biny++) {
-         y  = h->GetYaxis()->GetBinLowEdge(biny);
-         yw = h->GetYaxis()->GetBinWidth(biny);
-         for (binx=1;binx<=nx;binx++) {
-            x  = h->GetXaxis()->GetBinLowEdge(binx);
-            xw = h->GetXaxis()->GetBinWidth(binx);
+   for (binz=zaxis->GetFirst();binz<=zaxis->GetLast();binz++) {
+      z  = zaxis->GetBinLowEdge(binz);
+      zw = zaxis->GetBinWidth(binz);
+      for (biny=yaxis->GetFirst();biny<=yaxis->GetLast();biny++) {
+         y  = yaxis->GetBinLowEdge(biny);
+         yw = yaxis->GetBinWidth(biny);
+         for (binx=xaxis->GetFirst();binx<=xaxis->GetLast();binx++) {
+            x  = xaxis->GetBinLowEdge(binx);
+            xw = xaxis->GetBinWidth(binx);
             bin = h->GetBin(binx,biny,binz);
             for (in=0;in<h->GetBinContent(bin);in++) {
                xp = x + xw*gRandom->Rndm(in);

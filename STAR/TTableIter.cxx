@@ -1,3 +1,4 @@
+//*CMZ :  2.24/01 31/03/2000  08.27.26  by  Rene Brun
 //*CMZ :  2.23/12 26/01/2000  12.18.16  by  Valery Fine(fine@bnl.gov)
 //*-- Author :  Valery Fine(fine@bnl.gov)   03/12/99
 // Copyright(c) 1997~1999  [BNL] Brookhaven National Laboratory, STAR, All rights reserved
@@ -6,7 +7,7 @@
 // $Id: TTableIter.cxx,v 1.4 1999/12/29 18:43:03 fine Exp $
 //////////////////////////////////////////////////////////////////////////
 //                                                                      //
-// TTableIter - class iterator to loop over sorted TTable's         //
+// TTableIter - class iterator to loop over sorted TTable's             //
 //                                                                      //
 //////////////////////////////////////////////////////////////////////////
 
@@ -14,36 +15,38 @@
 #include "TTableSorter.h"
 
 ClassImp(TTableIter)
+
 //_____________________________________________________________________
 TTableIter::TTableIter(const TTableSorter *table, Float_t &keyvalue)
-: fTableSorter(table), fIndx(0), fFirstIndx(0)
+           : fTableSorter(table), fIndx(0), fFirstIndx(0)
 {
   CountKey(keyvalue);
 }
+
 //_____________________________________________________________________
 TTableIter::TTableIter(const TTableSorter *table, Long_t &keyvalue)
-: fTableSorter(table), fIndx(0), fFirstIndx(0)
+           : fTableSorter(table), fIndx(0), fFirstIndx(0)
 {
   CountKey(keyvalue);
 }
 
 //_____________________________________________________________________
 TTableIter::TTableIter(const TTableSorter *table, Int_t &keyvalue)
-: fTableSorter(table), fIndx(0), fFirstIndx(0)
+           : fTableSorter(table), fIndx(0), fFirstIndx(0)
 {
   CountKey(keyvalue);
 }
 
 //_____________________________________________________________________
 TTableIter::TTableIter(const TTableSorter *table, Short_t &keyvalue)
-: fTableSorter(table), fIndx(0), fFirstIndx(0)
+           : fTableSorter(table), fIndx(0), fFirstIndx(0)
 {
   CountKey(keyvalue);
 }
 
 //_____________________________________________________________________
 TTableIter::TTableIter(const TTableSorter *table, Double_t &keyvalue)
-: fTableSorter(table), fIndx(0), fFirstIndx(0)
+           : fTableSorter(table), fIndx(0), fFirstIndx(0)
 {
   CountKey(keyvalue);
 }
@@ -83,7 +86,8 @@ Int_t TTableIter::CountKey(Double_t &keyvalue)
 }
 
 //_____________________________________________________________________
-Int_t TTableIter::Next(){
+Int_t TTableIter::Next()
+{
    Int_t rowIndx = -1;
    if (fIndx < fTotalKeys) {
      rowIndx = fTableSorter->GetIndex(UInt_t(fFirstIndx+fIndx));
@@ -93,7 +97,8 @@ Int_t TTableIter::Next(){
 }
 
 //_____________________________________________________________________
-Int_t TTableIter::Next(Int_t idx){
+Int_t TTableIter::Next(Int_t idx)
+{
    Int_t rowIndx = -1;
    if (idx < fTotalKeys)
      rowIndx = fTableSorter->GetIndex(UInt_t(fFirstIndx+idx));
@@ -101,7 +106,8 @@ Int_t TTableIter::Next(Int_t idx){
 }
 
 //_____________________________________________________________________
-Int_t TTableIter::Reset(Int_t indx){
+Int_t TTableIter::Reset(Int_t indx)
+{
    Int_t oldIdx = fIndx;
    fIndx = TMath::Min(indx,fTotalKeys);
    return oldIdx;

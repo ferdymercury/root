@@ -3,9 +3,7 @@
 /********************************************************
 * G__cpp_kcciostream.C
 ********************************************************/
-//*KEEP,kccstrm.
 #include "kccstrm.h"
-//*KEND.
 
 #ifdef __linux__
 // actually only needed for KCC 3.4

@@ -1,5 +1,5 @@
-/*CMZ :  2.23/10 10/12/99  18.00.16  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   10/12/99*/
+/*CMZ :  2.24/05 16/05/2000  12.03.57  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   16/05/2000*/
 #ifndef G__STDIO_H
 #define G__STDIO_H
 #ifndef NULL
@@ -26,4 +26,5 @@ typedef unsigned int size_t;
 #ifdef __cplusplus
 #include <bool.h>
 #endif
+#pragma include_noerr <stdfunc.dll>
 #endif

@@ -1,5 +1,5 @@
-/*CMZ :  2.23/10 10/12/99  18.00.24  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   10/12/99*/
+/*CMZ :  2.24/05 16/05/2000  12.04.03  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   16/05/2000*/
 // lib/prec_stl/map
 
 #pragma ifndef PREC_STL_MAP
@@ -53,10 +53,11 @@ class map {
   typedef typename Allocator::difference_type       difference_type;
 #endif
 
-#ifdef G__VISUAL
-  class iterator : public _Bidit<T,difference_type>
-#else
-  class iterator : public bidirectional_iterator<T,difference_type>
+  class iterator
+#if defined(G__VISUAL)
+	: public _Bidit<T,difference_type>
+#elif !defined(G__SUNPRO_C)
+  	: public bidirectional_iterator<T,difference_type>
 #endif
 	{
    public:
@@ -86,10 +87,11 @@ class map {
   friend bool operator!=(const map::iterator& x,const map::iterator& y)const;
 #endif
 
-#ifdef G__VISUAL
-  class reverse_iterator : public _Bidit<T,difference_type>
-#else
-  class reverse_iterator : public bidirectional_iterator<T,difference_type>
+  class reverse_iterator
+#if defined(G__VISUAL)
+	: public _Bidit<T,difference_type>
+#elif !defined(G__SUNPRO_C)
+  	: public bidirectional_iterator<T,difference_type>
 #endif
 	{
    public:
@@ -128,13 +130,15 @@ class map {
   map& operator=(const map& x);
   // iterators:
   iterator               begin();
-  //const_iterator         begin() const;
   iterator               end();
-  //const_iterator         end() const;
   reverse_iterator       rbegin();
-  //const_reverse_iterator rbegin() const;
   reverse_iterator       rend();
-  //const_reverse_iterator rend() const;
+#ifdef G__CONSTNESSFLAG
+  const_iterator begin(void) const;
+  const_iterator end(void) const;
+  const_reverse_iterator rbegin(void) const;
+  const_reverse_iterator rend(void) const;
+#endif
   // capacity:
   bool      empty() const;
   size_type size() const;

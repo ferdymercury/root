@@ -1,3 +1,4 @@
+*CMZ :  2.24/01 28/02/2000  18.47.44  by  Rene Brun
 *CMZ :  2.23/12 22/01/2000  18.19.42  by  Rene Brun
 *CMZ :  2.23/04 09/10/99  22.38.25  by  Rene Brun
 *CMZ :  2.23/03 09/09/99  08.48.50  by  Rene Brun
@@ -16,5 +17,11 @@
 #pragma link C++ class TLegendEntry+;
 #pragma link C++ class TLink+;
 #pragma link C++ class TPoints+;
+#pragma link C++ class TSpline+;
+#pragma link C++ class TSpline5-;
+#pragma link C++ class TSpline3-;
+#pragma link C++ class TSplinePoly+;
+#pragma link C++ class TSplinePoly5+;
+#pragma link C++ class TSplinePoly3+;
 
 #endif

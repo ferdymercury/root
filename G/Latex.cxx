@@ -1,4 +1,4 @@
-//*CMZ :  2.23/12 26/01/2000  09.31.22  by  Rene Brun
+//*CMZ :  2.24/01 27/03/2000  16.15.22  by  Rene Brun
 //*CMZ :  2.23/10 15/12/99  19.13.07  by  Rene Brun
 //*CMZ :  2.23/09 22/11/99  17.06.03  by  Rene Brun
 //*CMZ :  2.23/07 24/10/99  17.28.51  by  Fons Rademakers
@@ -9,17 +9,18 @@
 //*CMZ :  2.00/13 29/10/98  16.58.54  by  Rene Brun
 //*-- Author :    Nicolas Brun   07/08/98
 
+/*CMZ :  2.24/01 24/02/2000  11.49.40  by  Fons Rademakers*/
 /*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun and Fons Rademakers.                               *
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
  *                                                                       *
- * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
- * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
  *************************************************************************/
 
 #include <stdio.h>
@@ -27,6 +28,7 @@
 #include "TROOT.h"
 #include "TLatex.h"
 #include "TVirtualPad.h"
+#include "TARC.h"
 
 ClassImp(TLatex)
 
@@ -34,7 +36,7 @@ ClassImp(TLatex)
 //
 //   TLatex : to draw Mathematical Formula
 //
-//   This class has been implemented by begin_html <a href="http://root.cern.ch/root/nicolas/html/index.html">Nicolas Brun</a> end_html.
+//   This class has been implemented by begin_html <a href="http://pcbrun.cern.ch/nicolas/index.html">Nicolas Brun</a> end_html.
 //   ========================================================
 //
 //   TLatex's purpose is to write mathematical equations
@@ -87,6 +89,7 @@ ClassImp(TLatex)
 //   #[]{....} or "a la" Latex #left[.....#right] : big square brackets
 //   #{}{....} or              #left{.....#right} : big curly brackets
 //   #||{....} or              #left|.....#right| : big absolute value symbol
+//   #(){....} or              #left(.....#right) : big parenthesis
 //
 //   ** Greek Letters
 //   ----------------
@@ -363,8 +366,9 @@ const char *tab3[] = { "bar","vec","dot","hat","ddot","acute","grave","check"};
       Int_t OpSpec          = -1;   // position of a special character
       Int_t OpAbove         = -1;   // position of a vector/overline
       Int_t OpSquareBracket = 0 ;   // position of a "[]{" operator (#[]{arg})
-      Int_t OpBigCurly      = 0 ;   // position of a "{}{" operator  (big curly bracket #{}{arg})
+      Int_t OpBigCurly      = 0 ;   // position of a "{}{" operator (big curly bracket #{}{arg})
       Int_t OpAbs           = 0 ;   // position of a "||{" operator (absolute value) (#||{arg})
+      Int_t OpParen         = 0 ;   // position of a "(){" operator (big parenthesis #(){arg})
       Int_t AbovePlace      = 0 ;   // true if subscripts must be written above and not after
       Int_t OpBox           = 0 ;   // position of #Box
       Bool_t OpFound = kFALSE;
@@ -487,6 +491,11 @@ const char *tab3[] = { "bar","vec","dot","hat","ddot","acute","grave","check"};
                   if (i>0 && OpCloseCurly==-2) OpCloseCurly=i-1;
                   continue;
                }
+               if (strncmp(buf,"(){",3)==0) {
+                  OpParen=1; OpFound = kTRUE;
+                  if (i>0 && OpCloseCurly==-2) OpCloseCurly=i-1;
+                  continue;
+               }
                if (!OpBox && strncmp(buf,"Box",3)==0) {
                   OpBox=1; OpFound = kTRUE;
                   if (i>0 && OpCloseCurly==-2) OpCloseCurly=i-1;
@@ -571,7 +580,14 @@ const char *tab3[] = { "bar","vec","dot","hat","ddot","acute","grave","check"};
         // when increasing prop values, the lower indice position is lower
 
          if (!fShow) {
-            fs1 = Anal1(spec,text,min);
+            Int_t ltext = min ;
+            if (min >= 2 && strncmp(&text[min-2],"{}",2)==0) {
+               // upper and lower indice before the character
+               // like with chemical element
+               sprintf(&text[ltext-2],"I ") ;
+               ltext-- ;
+            }
+            fs1 = Anal1(spec,text,ltext);
             fs2 = Anal1(specNewSize,text+min+1,max-min-1);
             fs3 = Anal1(specNewSize,text+max+1,length-max-1);
             Savefs(&fs1);
@@ -619,7 +635,13 @@ const char *tab3[] = { "bar","vec","dot","hat","ddot","acute","grave","check"};
                Analyse(x+addW1,y+addH1,specNewSize,text+min+1,max-min-1);
             }
 
-            Analyse(x+pos,y,spec,text,min);
+            if (min >= 2 && strncmp(&text[min-2],"{}",2)==0) {
+               sprintf(&text[min-2],"  ") ;
+               Analyse(x+pos,y,spec,text,min-1);
+            }
+            else {
+               Analyse(x+pos,y,spec,text,min);
+            }
          }
 
          if (!AbovePlace) {
@@ -656,7 +678,14 @@ const char *tab3[] = { "bar","vec","dot","hat","ddot","acute","grave","check"};
         }
         // When increasing prop, the upper indice position is higher
         if(!fShow) {
-            fs1 = Anal1(spec,text,OpPower);
+            Int_t ltext = OpPower ;
+            if (ltext >= 2 && strncmp(&text[ltext-2],"{}",2)==0) {
+               // upper and lower indice before the character
+               // like with chemical element
+               sprintf(&text[ltext-2],"I ") ;
+               ltext-- ;
+            }
+            fs1 = Anal1(spec,text,ltext);
             fs2 = Anal1(specNewSize,text+OpPower+1,length-OpPower-1);
             Savefs(&fs1);
             Savefs(&fs2);
@@ -677,7 +706,13 @@ const char *tab3[] = { "bar","vec","dot","hat","ddot","acute","grave","check"};
 
                Analyse(x+pos2,y-fs1.Dessus()*prop-fs2.Dessous(),specNewSize,text+OpPower+1,length-OpPower-1);
             }
-            Analyse(x+pos,y,spec,text,OpPower);
+            if (OpPower >= 2 && strncmp(&text[OpPower-2],"{}",2)==0) {
+               sprintf(&text[OpPower-2],"  ") ;
+               Analyse(x+pos,y,spec,text,OpPower-1);
+            }
+            else {
+               Analyse(x+pos,y,spec,text,OpPower);
+            }
          }
 
          if (!AbovePlace)
@@ -693,7 +728,14 @@ const char *tab3[] = { "bar","vec","dot","hat","ddot","acute","grave","check"};
          Float_t fpos = fFactorPos ;
          // When increasing prop, the lower indice position is lower
          if(!fShow) {
-            fs1 = Anal1(spec,text,OpUnder);
+            Int_t ltext = OpUnder ;
+            if (ltext >= 2 && strncmp(&text[ltext-2],"{}",2)==0) {
+               // upper and lower indice before the character
+               // like with chemical element
+               sprintf(&text[ltext-2],"I ") ;
+               ltext-- ;
+            }
+            fs1 = Anal1(spec,text,ltext);
             fs2 = Anal1(specNewSize,text+OpUnder+1,length-OpUnder-1);
             Savefs(&fs1);
             Savefs(&fs2);
@@ -713,7 +755,13 @@ const char *tab3[] = { "bar","vec","dot","hat","ddot","acute","grave","check"};
 
                Analyse(x+pos2,y+fs1.Dessous()*prop+fs2.Dessus(),specNewSize,text+OpUnder+1,length-OpUnder-1);
             }
-            Analyse(x+pos,y,spec,text,OpUnder);
+            if (OpUnder >= 2 && strncmp(&text[OpUnder-2],"{}",2)==0) {
+               sprintf(&text[OpUnder-2],"  ") ;
+               Analyse(x+pos,y,spec,text,OpUnder-1);
+            }
+            else {
+               Analyse(x+pos,y,spec,text,OpUnder);
+            }
          }
          if (!AbovePlace)
              result = FormSize(fs1.Width()+xfpos+fs2.Width(),fs1.Dessus(),
@@ -744,7 +792,8 @@ const char *tab3[] = { "bar","vec","dot","hat","ddot","acute","grave","check"};
          TextSpec_t NewSpec = spec;
          NewSpec.font = 122;
          char letter = 97 + OpGreek;
-         Float_t yoffset = GetHeight()*spec.size/20.; // Greek letter too low
+ //        Float_t yoffset = GetHeight()*spec.size/20.; // Greek letter too low
+         Float_t yoffset = 0.; // Greek letter too low
          if (OpGreek>25) letter -= 58;
          if (!fShow) {
             fs1 = Anal1(NewSpec,&letter,1);
@@ -881,6 +930,33 @@ const char *tab3[] = { "bar","vec","dot","hat","ddot","acute","grave","check"};
             DrawLine(x+l2+fs1.Width()+2*l,y+fs1.Dessous(),x+l2+fs1.Width()+l,y+fs1.Dessous(),spec);
          }
          result = FormSize(fs1.Width()+3*l,fs1.Dessus(),fs1.Dessous());
+      }
+      else if (OpParen) {  // operator #(){arg}
+         Float_t l = GetHeight()*spec.size/4;
+         Float_t radius2,radius1 , dw, l2 = l/2 ;
+         const Float_t PI = 3.141592 ;
+         Float_t angle = 35 ;
+         if (!fShow) {
+            fs1 = Anal1(spec,text+3,length-3);
+            Savefs(&fs1);
+            radius2 = fs1.Height() ;
+            radius1 = radius2  * 2 / 3;
+            dw = radius1*(1 - TMath::Cos(PI*angle/180)) ;
+         }
+         else {
+            fs1 = Readfs();
+            radius2 = fs1.Height() ;
+            radius1 = radius2  * 2 / 3;
+            dw = radius1*(1 - TMath::Cos(PI*angle/180)) ;
+            Float_t x1 = x+l2+radius1 ;
+            Float_t x2 = x+5*l2+2*dw+fs1.Width()-radius1 ;
+            Float_t y1 = y - (fs1.Dessus() - fs1.Dessous())/2. ;
+            DrawParenthesis(x1,y1,radius1,radius2,180-angle,180+angle,spec) ;
+            DrawParenthesis(x2,y1,radius1,radius2,360-angle,360+angle,spec) ;
+            Analyse(x+3*l2+dw,y,spec,text+3,length-3);
+         }
+        // result = FormSize(fs1.Width()+3*l,fs1.Dessus(),fs1.Dessous());
+         result = FormSize(fs1.Width()+3*l+2*dw,fs1.Dessus(),fs1.Dessous());
       }
       else if (OpAbs) {  // operator #||{arg}
          Float_t l = GetHeight()*spec.size/4;
@@ -1152,8 +1228,8 @@ TLatex *TLatex::DrawLatex(Coord_t x, Coord_t y, const char *text)
 void TLatex::DrawLine(Float_t x1, Float_t y1, Float_t x2, Float_t y2, TextSpec_t spec)
 {
 // Draw a line in a Latex formula
-      Float_t sinang  = TMath::Sin(spec.angle/180*3.14259);
-      Float_t cosang  = TMath::Cos(spec.angle/180*3.14259);
+      Float_t sinang  = TMath::Sin(spec.angle/180*3.141592);
+      Float_t cosang  = TMath::Cos(spec.angle/180*3.141592);
       Float_t Xorigin = (Float_t)gPad->XtoAbsPixel(fX);
       Float_t Yorigin = (Float_t)gPad->YtoAbsPixel(fY);
       Float_t X  = gPad->AbsPixeltoX(Int_t((x1-Xorigin)*cosang+(y1-Yorigin)*sinang+Xorigin));
@@ -1167,6 +1243,42 @@ void TLatex::DrawLine(Float_t x1, Float_t y1, Float_t x2, Float_t y2, TextSpec_t
       SetLineColor(spec.color);
       TAttLine::Modify();
       gPad->PaintLine(X,Y,X2,Y2);
+}
+//______________________________________________________________________________
+void TLatex::DrawParenthesis(Float_t x1, Float_t y1, Float_t r1, Float_t r2,
+                     Float_t  phimin, Float_t  phimax, TextSpec_t spec )
+{
+// Draw an arc of ellipse in a Latex formula (right or left parenthesis)
+   Float_t sinang  = TMath::Sin(spec.angle/180*3.141592);
+   Float_t cosang  = TMath::Cos(spec.angle/180*3.141592);
+   Float_t Xorigin = (Float_t)gPad->XtoAbsPixel(fX);
+   Float_t Yorigin = (Float_t)gPad->YtoAbsPixel(fY);
+   Float_t X  = gPad->AbsPixeltoX(Int_t((x1-Xorigin)*cosang+(y1-Yorigin)*sinang+Xorigin));
+   Float_t Y  = gPad->AbsPixeltoY(Int_t((x1-Xorigin)*-sinang+(y1-Yorigin)*cosang+Yorigin));
+   Float_t R1 = (Float_t)TMath::Abs( (gPad->AbsPixeltoX(Int_t(r1))- gPad->AbsPixeltoX(0)) ) ;
+   Float_t R2 = (Float_t)TMath::Abs( (gPad->AbsPixeltoY(Int_t(r2))- gPad->AbsPixeltoY(0)) ) ;
+
+   const Int_t np = 100;
+   const Float_t PI = 3.141592;
+   Float_t theta = spec.angle ;
+   Float_t dphi = (phimax-phimin)*PI/(180*np);
+   Float_t ct   = TMath::Cos(PI*theta/180);
+   Float_t st   = TMath::Sin(PI*theta/180);
+   Float_t x[np+3], y[np+3];
+   Float_t angle,dx,dy ;
+
+   SetLineColor(spec.color);
+   TAttLine::Modify();  //Change line attributes only if necessary
+
+   for (Int_t i=0;i<=np;i++) {
+      angle = phimin*PI/180 + Float_t(i)*dphi;
+      dx    = R1*TMath::Cos(angle);
+      dy    = R2*TMath::Sin(angle);
+      x[i] = X + dx*ct - dy*st;
+      y[i] = Y + dx*st + dy*ct;
+   }
+   gPad->PaintPolyLine(np+1,x,y);
+
 }
 
 //______________________________________________________________________________
@@ -1271,27 +1383,27 @@ Int_t TLatex::CheckLatexSyntax(TString &text)
 {
    // Check if the Latex syntax is correct
 
-   const Char_t *kWord1[] = {"^{","_{","#color{","#font{","#sqrt{","#[]{","#{}{","#||{",
+   const Char_t *kWord1[] = {"{}^{","{}_{","^{","_{","#color{","#font{","#sqrt{","#[]{","#{}{","#||{",
                        "#bar{","#vec{","#dot{","#hat{","#ddot{","#acute{","#grave{","#check{",
-                       "\\color{","\\font{","\\sqrt{","\\[]{","\\{}{","\\||{",
+                       "\\color{","\\font{","\\sqrt{","\\[]{","\\{}{","\\||{","#(){","\\(){",
                        "\\bar{","\\vec{","\\dot{","\\hat{","\\ddot{","\\acute{","\\grave{","\\check{"}; // check for }
    const Char_t *kWord2[] = {"#color[","#font[","#sqrt[","\\color[","\\font[","\\sqrt["}; // check for ]{ + }
    const Char_t *kWord3[] = {"#frac{","\\frac{"} ; // check for }{ then }
-   const Char_t *kLeft1[] = {"#left[","\\left[","#left{","\\left{","#left|","\\left|"} ;
-   const Char_t *kLeft2[] = {"#[]{","#[]{","#{}{","#{}{","#||{","#||{"} ;
-   const Char_t *kRight[] = {"#right]","\\right]","#right}","\\right}","#right|","\\right|"} ;
-   Int_t lkWord1[] = {2,2,7,6,6,4,4,4,
+   const Char_t *kLeft1[] = {"#left[","\\left[","#left{","\\left{","#left|","\\left|","#left(","\\left("} ;
+   const Char_t *kLeft2[] = {"#[]{","#[]{","#{}{","#{}{","#||{","#||{","#(){","#(){"} ;
+   const Char_t *kRight[] = {"#right]","\\right]","#right}","\\right}","#right|","\\right|","#right)","\\right)"} ;
+   Int_t lkWord1[] = {4,4,2,2,7,6,6,4,4,4,
                       5,5,5,5,6,7,7,7,
-                      7,6,6,4,4,4,
+                      7,6,6,4,4,4,4,4,
                       5,5,5,5,6,7,7,7} ;
    Int_t lkWord2[] = {7,6,6,7,6,6} ;
    Int_t lkWord3[] = {6,6} ;
-   Int_t NkWord1 = 30, NkWord2 = 6, NkWord3 = 2 ;
+   Int_t NkWord1 = 34, NkWord2 = 6, NkWord3 = 2 ;
    Int_t nLeft1 , nRight , nOfLeft, nOfRight;
    Int_t lLeft1 = 6 ;
    Int_t lLeft2 = 4 ;
    Int_t lRight = 7 ;
-   nLeft1  = nRight   = 6 ;
+   nLeft1  = nRight   = 8 ;
    nOfLeft = nOfRight = 0 ;
 
    Int_t i,k ;

@@ -1,5 +1,5 @@
-/*CMZ :  2.23/10 10/12/99  18.00.04  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   10/12/99*/
+/*CMZ :  2.24/05 16/05/2000  12.03.49  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   16/05/2000*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -38,6 +38,7 @@ int G__asm_optimize3 G__P((int *start));
 #ifdef G__ASM_DBG
 int G__asm_step=0;
 #endif
+
 
 #define G__TUNEUP_W_SECURITY
 
@@ -713,12 +714,27 @@ long localmem;
 #ifndef G__OLDIMPLEMENTATION804
       result->ref = 0;
 #endif
+#ifdef G__EXCEPTIONWRAPPER
+      G__asm_exec=0;
+      G__ExceptionWrapper(pfunc,result,funcname,&fpara,G__asm_inst[pc+2]);
+      G__asm_exec=1;
+#else
       (*pfunc)(result,funcname,&fpara,G__asm_inst[pc+2]);
+#endif
       pc+=5;
 #ifndef G__OLDIMPLEMENTATION907
       if(result->type) ++sp;
 #else
       ++sp;
+#endif
+#ifndef G__OLDIMPLEMENTATION1270
+      if(G__return==G__RETURN_TRY) {
+	if(G__CATCH!=G__dasm(G__serr,1)) {
+	  G__asm_exec=0;
+	  return(1);
+	}
+	G__asm_exec=1;
+      }
 #endif
       if(G__return!=G__RETURN_NON) {
 	G__asm_exec=0;
@@ -1545,6 +1561,15 @@ long localmem;
 #else
       ++sp;
 #endif
+#ifndef G__OLDIMPLEMENTATION1270
+      if(G__return==G__RETURN_TRY) {
+	if(G__CATCH!=G__dasm(G__serr,1)) {
+	  G__asm_exec=0;
+	  return(1);
+	}
+	G__asm_exec=1;
+      }
+#endif
       if(G__return!=G__RETURN_NON) {
 	G__asm_exec=0;
 	return(1);
@@ -1708,8 +1733,14 @@ long localmem;
 #endif
       G__asm_stack[sp-1].typenum = -1;
       G__asm_stack[sp-1].tagnum = G__asm_inst[pc+1];
+#ifndef G__OLDIMPLEMENTATION1290
+      if(G__asm_stack[sp-1].ref==G__asm_stack[sp-1].obj.i)
+	G__asm_stack[sp-1].ref += G__asm_inst[pc+2];
+#endif
       G__asm_stack[sp-1].obj.i += G__asm_inst[pc+2];
+#ifdef G__OLDIMPLEMENTATION1290
       G__asm_stack[sp-1].ref += G__asm_inst[pc+2];
+#endif
       pc+=3;
 #ifdef G__ASM_DBG
       break;
@@ -2005,6 +2036,15 @@ long localmem;
       G__store_struct_offset = store_struct_offset;
       G__tagnum = store_tagnum;
       pc+=3;
+#ifndef G__OLDIMPLEMENTATION1270
+      if(G__return==G__RETURN_TRY) {
+	if(G__CATCH!=G__dasm(G__serr,1)) {
+	  G__asm_exec=0;
+	  return(1);
+	}
+	G__asm_exec=1;
+      }
+#endif
 #ifdef G__ASM_DBG
       break;
 #else
@@ -2200,6 +2240,48 @@ long localmem;
       goto pcode_parse_start;
 #endif
 #endif /* ON1073 */
+
+#ifndef G__OLDIMPLEMENTATION1270
+    case G__THROW:
+      /***************************************
+      * inst
+      * 0 THROW
+      * stack
+      * sp-1    <-
+      * sp
+      ***************************************/
+      G__exceptionbuffer = G__asm_stack[sp-1];
+      if('U'==G__exceptionbuffer.type) G__exceptionbuffer.type='u';
+      G__return = G__RETURN_TRY;
+      --sp;
+      pc+=1;
+#ifndef G__OLDIMPLEMENTATION1281
+      return(1);
+#else
+#ifdef G__ASM_DBG
+      break;
+#else
+      goto pcode_parse_start;
+#endif
+#endif
+
+    case G__CATCH:
+      /***************************************
+      * inst
+      * 0 CATCH
+      * 1 filenum
+      * 2 linenum
+      * 3 pos
+      * 4  "
+      ***************************************/
+      pc+=5;
+      /* Do nothing here and skip catch block for normal execution */
+#ifdef G__ASM_DBG
+      break;
+#else
+      goto pcode_parse_start;
+#endif
+#endif
 
 #ifdef G__NEVER_BUT_KEEP
     case G__NOP:
@@ -5112,7 +5194,7 @@ G__value *pbuf;
 
 #ifndef G__OLDIMPLEMENTATION1164
 /******************************************************************
-* G__abortbytecode()
+* G__suspendbytecode()
 ******************************************************************/
 void G__suspendbytecode()
 {
@@ -7224,7 +7306,7 @@ int *start;
 #ifdef G__ASM_DBG
       if(G__asm_dbg) {
 	var = (struct G__var_array*)G__asm_inst[pc+4];
-	fprintf(G__serr,"%3x: LDST_VAR_P index=%d %s\n"
+	fprintf(G__serr,"%3lx: LDST_VAR_P index=%ld %s\n"
 		,pc,G__asm_inst[pc+1]
 		,var->varnamebuf[G__asm_inst[pc+1]]);
       }
@@ -7246,7 +7328,7 @@ int *start;
 #ifdef G__ASM_DBG
       if(G__asm_dbg) {
 	var = (struct G__var_array*)G__asm_inst[pc+4];
-	fprintf(G__serr,"%3x: LDST_MSTR_P index=%d %s\n"
+	fprintf(G__serr,"%3lx: LDST_MSTR_P index=%d %s\n"
 		,pc,G__asm_inst[pc+1]
 		,var->varnamebuf[G__asm_inst[pc+1]]);
       }
@@ -7270,7 +7352,7 @@ int *start;
 #ifdef G__ASM_DBG
       if(G__asm_dbg) {
 	var = (struct G__var_array*)G__asm_inst[pc+6];
-	fprintf(G__serr,"%3x: LDST_VAR_INDEX index=%d %s\n"
+	fprintf(G__serr,"%3lx: LDST_VAR_INDEX index=%d %s\n"
 		,pc,G__asm_inst[pc+3]
 		,var->varnamebuf[G__asm_inst[pc+3]]);
       }
@@ -7296,7 +7378,7 @@ int *start;
 #ifdef G__ASM_DBG
       if(G__asm_dbg) {
 	var = (struct G__var_array*)G__asm_inst[pc+8];
-	fprintf(G__serr,"%3x: LDST_VAR_INDEX_OPR index=%d %s\n"
+	fprintf(G__serr,"%3lx: LDST_VAR_INDEX_OPR index=%d %s\n"
 		,pc,G__asm_inst[pc+5]
 		,var->varnamebuf[G__asm_inst[pc+5]]);
       }
@@ -7315,7 +7397,7 @@ int *start;
       * sp    G__null
       ***************************************/
 #ifdef G__ASM_DBG
-      if(G__asm_dbg) fprintf(G__serr,"%3x: OP2_OPTIMIZED \n",pc);
+      if(G__asm_dbg) fprintf(G__serr,"%3lx: OP2_OPTIMIZED \n",pc);
 #endif
       pc+=2;
       break;
@@ -7330,7 +7412,7 @@ int *start;
       * sp    G__null     <-
       ***************************************/
 #ifdef G__ASM_DBG
-      if(G__asm_dbg) fprintf(G__serr,"%3x: OP1_OPTIMIZED \n",pc);
+      if(G__asm_dbg) fprintf(G__serr,"%3lx: OP1_OPTIMIZED \n",pc);
 #endif
       pc+=2;
       break;
@@ -7355,7 +7437,7 @@ int *start;
       var_type = G__asm_inst[pc+3];
 #ifdef G__ASM_DBG
       if(G__asm_dbg) {
-	fprintf(G__serr,"%3x: LD_VAR index=%d paran=%d point %c %s\n"
+	fprintf(G__serr,"%3lx: LD_VAR index=%d paran=%d point %c %s\n"
 		,pc,G__asm_inst[pc+1],G__asm_inst[pc+2]
 		,G__asm_inst[pc+3]
 		,var->varnamebuf[G__asm_inst[pc+1]]);
@@ -7393,7 +7475,7 @@ int *start;
       * sp+1             <-
       ***************************************/
 #ifdef G__ASM_DBG
-      if(G__asm_dbg) fprintf(G__serr,"%3x: LD %g from %x \n"
+      if(G__asm_dbg) fprintf(G__serr,"%3lx: LD %g from %x \n"
 			     ,pc
 			     ,G__double(G__asm_stack[G__asm_inst[pc+1]])
 			     ,G__asm_inst[pc+1]);
@@ -7411,7 +7493,7 @@ int *start;
       *  clear stack pointer
       ***************************************/
 #ifdef G__ASM_DBG
-      if(G__asm_dbg) fprintf(G__serr,"%3x: CL %d\n",pc,G__asm_inst[pc+1]);
+      if(G__asm_dbg) fprintf(G__serr,"%3lx: CL %d\n",pc,G__asm_inst[pc+1]);
 #endif
       /* no optimize */
       pc+=2;
@@ -7429,12 +7511,12 @@ int *start;
       ***************************************/
 #ifdef G__ASM_DBG
       if(isprint(G__asm_inst[pc+1])) {
-	if(G__asm_dbg) fprintf(G__serr,"%3x: OP2 '%c'%d \n" ,pc
+	if(G__asm_dbg) fprintf(G__serr,"%3lx: OP2 '%c'%d \n" ,pc
 		,G__asm_inst[pc+1],G__asm_inst[pc+1]);
       }
       else {
 	if(G__asm_dbg)
-	  fprintf(G__serr,"%3x: OP2 %d \n",pc,G__asm_inst[pc+1]);
+	  fprintf(G__serr,"%3lx: OP2 %d \n",pc,G__asm_inst[pc+1]);
       }
 #endif
       /* need optimization */
@@ -7462,7 +7544,7 @@ int *start;
       var_type = G__asm_inst[pc+3];
 #ifdef G__ASM_DBG
       if(G__asm_dbg) {
-	fprintf(G__serr,"%3x: ST_VAR index=%d paran=%d point %c %s\n"
+	fprintf(G__serr,"%3lx: ST_VAR index=%d paran=%d point %c %s\n"
 		,pc,G__asm_inst[pc+1],G__asm_inst[pc+2]
 		,G__asm_inst[pc+3]
 		,var->varnamebuf[G__asm_inst[pc+1]]);
@@ -7504,7 +7586,7 @@ int *start;
       var_type = G__asm_inst[pc+3];
 #ifdef G__ASM_DBG
       if(G__asm_dbg) {
-	fprintf(G__serr,"%3x: LD_MSTR index=%d paran=%d point %c %s\n"
+	fprintf(G__serr,"%3lx: LD_MSTR index=%d paran=%d point %c %s\n"
 		,pc,G__asm_inst[pc+1],G__asm_inst[pc+2]
 		,G__asm_inst[pc+3]
 		,var->varnamebuf[G__asm_inst[pc+1]]);
@@ -7539,7 +7621,7 @@ int *start;
       ***************************************/
 #ifdef G__ASM_DBG
       if(G__asm_dbg) {
-	fprintf(G__serr,"%3x: CMPJMP (0x%lx)%d (0x%lx)%d to %lx\n"
+	fprintf(G__serr,"%3lx: CMPJMP (0x%lx)%d (0x%lx)%d to %lx\n"
 		,pc
 		,G__asm_inst[pc+2],*(int *)G__asm_inst[pc+2]
 		,G__asm_inst[pc+3],*(int *)G__asm_inst[pc+3]
@@ -7558,7 +7640,7 @@ int *start;
       * sp           <- sp-paran
       ***************************************/
 #ifdef G__ASM_DBG
-      if(G__asm_dbg) fprintf(G__serr,"%3x: PUSHSTROS\n" ,pc);
+      if(G__asm_dbg) fprintf(G__serr,"%3lx: PUSHSTROS\n" ,pc);
 #endif
       /* no optmization */
       ++pc;
@@ -7573,7 +7655,7 @@ int *start;
       * sp
       ***************************************/
 #ifdef G__ASM_DBG
-      if(G__asm_dbg) fprintf(G__serr,"%3x: SETSTROS\n",pc);
+      if(G__asm_dbg) fprintf(G__serr,"%3lx: SETSTROS\n",pc);
 #endif
       /* no optmization */
       ++pc;
@@ -7587,7 +7669,7 @@ int *start;
       * sp           <- sp-paran
       ***************************************/
 #ifdef G__ASM_DBG
-      if(G__asm_dbg) fprintf(G__serr,"%3x: POPSTROS\n" ,pc);
+      if(G__asm_dbg) fprintf(G__serr,"%3lx: POPSTROS\n" ,pc);
 #endif
       /* no optmization */
       ++pc;
@@ -7613,7 +7695,7 @@ int *start;
       var_type = G__asm_inst[pc+3];
 #ifdef G__ASM_DBG
       if(G__asm_dbg) {
-	fprintf(G__serr,"%3x: ST_MSTR index=%d paran=%d point %c %s\n"
+	fprintf(G__serr,"%3lx: ST_MSTR index=%d paran=%d point %c %s\n"
 		,pc,G__asm_inst[pc+1],G__asm_inst[pc+2]
 		,G__asm_inst[pc+3]
 		,var->varnamebuf[G__asm_inst[pc+1]]);
@@ -7646,7 +7728,7 @@ int *start;
       * 3 next_pc
       ***************************************/
 #ifdef G__ASM_DBG
-      if(G__asm_dbg) fprintf(G__serr,"%3x: INCJMP *(int*)0x%lx+%d %d\n"
+      if(G__asm_dbg) fprintf(G__serr,"%3lx: INCJMP *(int*)0x%lx+%d %d\n"
 			     ,pc ,G__asm_inst[pc+1] ,G__asm_inst[pc+2]
 			     ,G__asm_inst[pc+3]);
 #endif
@@ -7663,7 +7745,7 @@ int *start;
       * sp
       ***************************************/
 #ifdef G__ASM_DBG
-      if(G__asm_dbg) fprintf(G__serr,"%3x: CNDJMP to %x\n"
+      if(G__asm_dbg) fprintf(G__serr,"%3lx: CNDJMP to %x\n"
 			     ,pc ,G__asm_inst[pc+1]);
 #endif
       /* no optimization */
@@ -7680,7 +7762,7 @@ int *start;
       ***************************************/
 #ifdef G__ASM_DBG
       if(G__asm_dbg) {
-	fprintf(G__serr,"%3x: CMP2 '%c' \n" ,pc ,G__asm_inst[pc+1]);
+	fprintf(G__serr,"%3lx: CMP2 '%c' \n" ,pc ,G__asm_inst[pc+1]);
       }
 #endif
       /* need optimization, but not high priority */
@@ -7694,7 +7776,7 @@ int *start;
       * 1 next_pc
       ***************************************/
 #ifdef G__ASM_DBG
-      if(G__asm_dbg) fprintf(G__serr,"%3x: JMP %x\n" ,pc,G__asm_inst[pc+1]);
+      if(G__asm_dbg) fprintf(G__serr,"%3lx: JMP %x\n" ,pc,G__asm_inst[pc+1]);
 #endif
       /* no optimization */
       pc+=2;
@@ -7709,7 +7791,7 @@ int *start;
       * sp+1            <-
       ***************************************/
 #ifdef G__ASM_DBG
-      if(G__asm_dbg) fprintf(G__serr,"%3x: PUSHCPY\n",pc);
+      if(G__asm_dbg) fprintf(G__serr,"%3lx: PUSHCPY\n",pc);
 #endif
       /* no optimization */
       ++pc;
@@ -7724,7 +7806,7 @@ int *start;
       * sp
       ***************************************/
 #ifdef G__ASM_DBG
-      if(G__asm_dbg) fprintf(G__serr,"%3x: POP\n" ,pc);
+      if(G__asm_dbg) fprintf(G__serr,"%3lx: POP\n" ,pc);
 #endif
       /* no optimization */
       ++pc;
@@ -7746,11 +7828,11 @@ int *start;
       ***************************************/
 #ifdef G__ASM_DBG
       if(G__asm_inst[pc+1]<G__MAXSTRUCT) {
-	if(G__asm_dbg) fprintf(G__serr,"%3x: LD_FUNC %s paran=%d\n" ,pc
+	if(G__asm_dbg) fprintf(G__serr,"%3lx: LD_FUNC %s paran=%d\n" ,pc
 		,"compiled",G__asm_inst[pc+3]);
       }
       else {
-	if(G__asm_dbg) fprintf(G__serr,"%3x: LD_FUNC %s paran=%d\n" ,pc
+	if(G__asm_dbg) fprintf(G__serr,"%3lx: LD_FUNC %s paran=%d\n" ,pc
 		,(char *)G__asm_inst[pc+1],G__asm_inst[pc+3]);
       }
 #endif
@@ -7763,7 +7845,7 @@ int *start;
       * 0 RETURN
       ***************************************/
 #ifdef G__ASM_DBG
-      if(G__asm_dbg) fprintf(G__serr,"%3x: RETURN\n" ,pc);
+      if(G__asm_dbg) fprintf(G__serr,"%3lx: RETURN\n" ,pc);
 #endif
       /* no optimization */
       pc++;
@@ -7783,7 +7865,7 @@ int *start;
       ***************************************/
 #ifdef G__ASM_DBG
       if(G__asm_dbg) {
-	fprintf(G__serr,"%3x: CAST to %c type%d tag%d\n" ,pc
+	fprintf(G__serr,"%3lx: CAST to %c type%d tag%d\n" ,pc
 		,(char)G__asm_inst[pc+1],G__asm_inst[pc+2],G__asm_inst[pc+3]);
       }
 #endif
@@ -7802,11 +7884,11 @@ int *start;
       ***************************************/
 #ifdef G__ASM_DBG
       if(isprint(G__asm_inst[pc+1])){
-	if(G__asm_dbg) fprintf(G__serr,"%3x: OP1 '%c'%d\n",pc
+	if(G__asm_dbg) fprintf(G__serr,"%3lx: OP1 '%c'%d\n",pc
 		,G__asm_inst[pc+1],G__asm_inst[pc+1] );
       }
       else {
-	if(G__asm_dbg) fprintf(G__serr,"%3x: OP1 %d\n",pc,G__asm_inst[pc+1]);
+	if(G__asm_dbg) fprintf(G__serr,"%3lx: OP1 %d\n",pc,G__asm_inst[pc+1]);
       }
 #endif
       /* need optimization */
@@ -7986,7 +8068,7 @@ int *start;
       * sp
       ***************************************/
 #ifdef G__ASM_DBG
-      if(G__asm_dbg) fprintf(G__serr,"%3x: LETVVAL\n" ,pc);
+      if(G__asm_dbg) fprintf(G__serr,"%3lx: LETVVAL\n" ,pc);
 #endif
       /* no optimization */
       ++pc;
@@ -8000,7 +8082,7 @@ int *start;
       ***************************************/
 #ifdef G__ASM_DBG
       if(G__asm_dbg) {
-	fprintf(G__serr,"%3x: ADDSTROS %d\n" ,pc,G__asm_inst[pc+1]);
+	fprintf(G__serr,"%3lx: ADDSTROS %d\n" ,pc,G__asm_inst[pc+1]);
       }
 #endif
       /* no optimization */
@@ -8017,7 +8099,7 @@ int *start;
       * sp
       ***************************************/
 #ifdef G__ASM_DBG
-      if(G__asm_dbg) fprintf(G__serr,"%3x: LETPVAL\n" ,pc);
+      if(G__asm_dbg) fprintf(G__serr,"%3lx: LETPVAL\n" ,pc);
 #endif
       /* no optimization */
       ++pc;
@@ -8028,7 +8110,7 @@ int *start;
       * 0 FREETEMP
       ***************************************/
 #ifdef G__ASM_DBG
-      if(G__asm_dbg) fprintf(G__serr,"%3x: FREETEMP\n" ,pc);
+      if(G__asm_dbg) fprintf(G__serr,"%3lx: FREETEMP\n" ,pc);
 #endif
       /* no optimization */
       ++pc;
@@ -8039,7 +8121,7 @@ int *start;
       * 0 SETTEMP
       ***************************************/
 #ifdef G__ASM_DBG
-      if(G__asm_dbg) fprintf(G__serr,"%3x: SETTEMP\n" ,pc);
+      if(G__asm_dbg) fprintf(G__serr,"%3lx: SETTEMP\n" ,pc);
 #endif
       /* no optimization */
       ++pc;
@@ -8051,7 +8133,7 @@ int *start;
       * 0 GETRSVD
       ***************************************/
 #ifdef G__ASM_DBG
-      if(G__asm_dbg) fprintf(G__serr,"%3x: GETRSVD\n" ,pc);
+      if(G__asm_dbg) fprintf(G__serr,"%3lx: GETRSVD\n" ,pc);
 #endif
       /* no optimization */
       ++pc;
@@ -8066,7 +8148,7 @@ int *start;
       * sp
       ***************************************/
 #ifdef G__ASM_DBG
-      if(G__asm_dbg) fprintf(G__serr,"%3x: TOPNTR\n" ,pc);
+      if(G__asm_dbg) fprintf(G__serr,"%3lx: TOPNTR\n" ,pc);
 #endif
       /* no optimization */
       ++pc;
@@ -8077,7 +8159,7 @@ int *start;
       * 0 NOT
       ***************************************/
 #ifdef G__ASM_DBG
-      if(G__asm_dbg) fprintf(G__serr,"%3x: NOT\n" ,pc);
+      if(G__asm_dbg) fprintf(G__serr,"%3lx: NOT\n" ,pc);
 #endif
       /* no optimization */
       ++pc;
@@ -8089,7 +8171,7 @@ int *start;
       * 1 next_pc
       ***************************************/
 #ifdef G__ASM_DBG
-      if(G__asm_dbg) fprintf(G__serr,"%3x: !ISDEFAULTPARA JMP %x\n"
+      if(G__asm_dbg) fprintf(G__serr,"%3lx: !ISDEFAULTPARA JMP %x\n"
 			     ,pc,G__asm_inst[pc+1]);
 #endif
       pc+=2;
@@ -8111,7 +8193,7 @@ int *start;
 #ifdef G__ASM_DBG
       if(G__asm_dbg) {
 	var = (struct G__var_array*)G__asm_inst[pc+4];
-	fprintf(G__serr,"%3x: LDST_LVAR_P index=%d %s\n"
+	fprintf(G__serr,"%3lx: LDST_LVAR_P index=%d %s\n"
 		,pc,G__asm_inst[pc+1]
 		,var->varnamebuf[G__asm_inst[pc+1]]);
       }
@@ -8139,7 +8221,7 @@ int *start;
       var_type = G__asm_inst[pc+3];
 #ifdef G__ASM_DBG
       if(G__asm_dbg) {
-	fprintf(G__serr,"%3x: LD_LVAR index=%d paran=%d point %c %s\n"
+	fprintf(G__serr,"%3lx: LD_LVAR index=%d paran=%d point %c %s\n"
 		,pc,G__asm_inst[pc+1],G__asm_inst[pc+2]
 		,G__asm_inst[pc+3]
 		,var->varnamebuf[G__asm_inst[pc+1]]);
@@ -8203,7 +8285,7 @@ int *start;
       var_type = G__asm_inst[pc+3];
 #ifdef G__ASM_DBG
       if(G__asm_dbg) {
-	fprintf(G__serr,"%3x: ST_LVAR index=%d paran=%d point %c %s\n"
+	fprintf(G__serr,"%3lx: ST_LVAR index=%d paran=%d point %c %s\n"
 		,pc,G__asm_inst[pc+1],G__asm_inst[pc+2]
 		,G__asm_inst[pc+3]
 		,var->varnamebuf[G__asm_inst[pc+1]]);
@@ -8253,7 +8335,7 @@ int *start;
       ***************************************/
 #ifdef G__ASM_DBG
       if(G__asm_dbg) {
-	fprintf(G__serr,"%3x: REWINDSTACK %d\n" ,pc,G__asm_inst[pc+1]);
+	fprintf(G__serr,"%3lx: REWINDSTACK %d\n" ,pc,G__asm_inst[pc+1]);
       }
 #endif
       /* no optimization */
@@ -8270,7 +8352,7 @@ int *start;
       ***************************************/
 #ifdef G__ASM_DBG
       if(G__asm_dbg) {
-	fprintf(G__serr,"%3x: CND1JMP  to %x\n" ,pc ,G__asm_inst[pc+1]);
+	fprintf(G__serr,"%3lx: CND1JMP  to %x\n" ,pc ,G__asm_inst[pc+1]);
       }
 #endif
       /* no optimization */
@@ -8296,7 +8378,7 @@ int *start;
       * sp
       ***************************************/
 #ifdef G__ASM_DBG
-      if(G__asm_dbg) fprintf(G__serr,"%3x: LD_IFUNC %s paran=%d\n" ,pc
+      if(G__asm_dbg) fprintf(G__serr,"%3lx: LD_IFUNC %s paran=%d\n" ,pc
 			     ,(char *)G__asm_inst[pc+1],G__asm_inst[pc+3]);
 #endif
       /* need optimization, later */
@@ -8313,7 +8395,7 @@ int *start;
       * sp
       ***************************************/
 #ifdef G__ASM_DBG
-      if(G__asm_dbg) fprintf(G__serr,"%3x: NEWALLOC size(%d)\n"
+      if(G__asm_dbg) fprintf(G__serr,"%3lx: NEWALLOC size(%d)\n"
 			     ,pc,G__asm_inst[pc+1]);
 #endif
       /* no optimization */
@@ -8330,7 +8412,7 @@ int *start;
       * sp       <-
       ***************************************/
 #ifdef G__ASM_DBG
-      if(G__asm_dbg) fprintf(G__serr,"%3x: SET_NEWALLOC\n" ,pc);
+      if(G__asm_dbg) fprintf(G__serr,"%3lx: SET_NEWALLOC\n" ,pc);
 #endif
       /* no optimization */
       pc+=3;
@@ -8343,7 +8425,7 @@ int *start;
       * 1 isarray
       ***************************************/
 #ifdef G__ASM_DBG
-      if(G__asm_dbg) fprintf(G__serr,"%3x: DELETEFREE\n",pc);
+      if(G__asm_dbg) fprintf(G__serr,"%3lx: DELETEFREE\n",pc);
 #endif
       /* no optimization */
       pc+=2;
@@ -8359,7 +8441,7 @@ int *start;
       * sp       <-   sp
       ***************************************/
 #ifdef G__ASM_DBG
-      if(G__asm_dbg) fprintf(G__serr,"%3x: SWAP\n",pc);
+      if(G__asm_dbg) fprintf(G__serr,"%3lx: SWAP\n",pc);
 #endif
       /* no optimization */
       ++pc;
@@ -8379,7 +8461,7 @@ int *start;
       * sp       <-   sp
       ***************************************/
 #ifdef G__ASM_DBG
-      if(G__asm_dbg) fprintf(G__serr,"%3x: BASECONV %d %d\n",pc
+      if(G__asm_dbg) fprintf(G__serr,"%3lx: BASECONV %d %d\n",pc
 			     ,G__asm_inst[pc+1],G__asm_inst[pc+2]);
 #endif
       /* no optimization */
@@ -8394,7 +8476,7 @@ int *start;
       * sp       <-  sp
       ***************************************/
 #ifdef G__ASM_DBG
-      if(G__asm_dbg) fprintf(G__serr,"%3x: STORETEMP\n",pc);
+      if(G__asm_dbg) fprintf(G__serr,"%3lx: STORETEMP\n",pc);
 #endif
       /* no optimization */
       ++pc;
@@ -8410,7 +8492,7 @@ int *start;
       ***************************************/
 #ifdef G__ASM_DBG
       if(G__asm_dbg) {
-	fprintf(G__serr,"%3x: ALLOCTEMP %s\n",pc
+	fprintf(G__serr,"%3lx: ALLOCTEMP %s\n",pc
 		,G__struct.name[G__asm_inst[pc+1]]);
       }
 #endif
@@ -8428,7 +8510,7 @@ int *start;
       ***************************************/
 #ifdef G__ASM_DBG
       if(G__asm_dbg) {
-	fprintf(G__serr,"%3x: POPTEMP %s\n" ,pc
+	fprintf(G__serr,"%3lx: POPTEMP %s\n" ,pc
 		,G__struct.name[G__asm_inst[pc+1]]);
       }
 #endif
@@ -8448,7 +8530,7 @@ int *start;
       * sp      <-  sp
       ***************************************/
 #ifdef G__ASM_DBG
-      if(G__asm_dbg) fprintf(G__serr,"%3x: REORDER paran=%d ig25=%d\n"
+      if(G__asm_dbg) fprintf(G__serr,"%3lx: REORDER paran=%d ig25=%d\n"
 			     ,pc ,G__asm_inst[pc+1],G__asm_inst[pc+2]);
 #endif
       /* no optimization */
@@ -8465,7 +8547,7 @@ int *start;
       * sp+1   <-
       ***************************************/
 #ifdef G__ASM_DBG
-      if(G__asm_dbg) fprintf(G__serr,"%3x: LD_THIS %s\n"
+      if(G__asm_dbg) fprintf(G__serr,"%3lx: LD_THIS %s\n"
 			     ,pc ,G__struct.name[G__tagnum]);
 #endif
       /* no optimization */
@@ -8482,7 +8564,7 @@ int *start;
       ***************************************/
 #ifdef G__ASM_DBG
       if(G__asm_dbg) {
-	fprintf(G__serr,"%3x: RTN_FUNC %d\n" ,pc ,G__asm_inst[pc+1]);
+	fprintf(G__serr,"%3lx: RTN_FUNC %d\n" ,pc ,G__asm_inst[pc+1]);
       }
 #endif
       /* no optimization */
@@ -8494,7 +8576,7 @@ int *start;
       * 0 SETMEMFUNCENV:
       ***************************************/
 #ifdef G__ASM_DBG
-      if(G__asm_dbg) fprintf(G__serr,"%3x: SETMEMFUNCENV\n",pc);
+      if(G__asm_dbg) fprintf(G__serr,"%3lx: SETMEMFUNCENV\n",pc);
 #endif
       /* no optimization */
       pc+=1;
@@ -8505,7 +8587,7 @@ int *start;
       * 0 RECMEMFUNCENV:
       ***************************************/
 #ifdef G__ASM_DBG
-      if(G__asm_dbg) fprintf(G__serr,"%3x: RECMEMFUNCENV\n" ,pc);
+      if(G__asm_dbg) fprintf(G__serr,"%3lx: RECMEMFUNCENV\n" ,pc);
 #endif
       /* no optimization */
       pc+=1;
@@ -8516,7 +8598,7 @@ int *start;
       * 0 ADDALLOCTABLE:
       ***************************************/
 #ifdef G__ASM_DBG
-      if(G__asm_dbg) fprintf(G__serr,"%3x: ADDALLOCTABLE\n" ,pc);
+      if(G__asm_dbg) fprintf(G__serr,"%3lx: ADDALLOCTABLE\n" ,pc);
 #endif
       /* no optimization */
       pc+=1;
@@ -8527,7 +8609,7 @@ int *start;
       * 0 DELALLOCTABLE:
       ***************************************/
 #ifdef G__ASM_DBG
-      if(G__asm_dbg) fprintf(G__serr,"%3x: DELALLOCTABLE\n" ,pc);
+      if(G__asm_dbg) fprintf(G__serr,"%3lx: DELALLOCTABLE\n" ,pc);
 #endif
       /* no optimization */
       pc+=1;
@@ -8541,7 +8623,7 @@ int *start;
       ***************************************/
 #ifdef G__ASM_DBG
       if(G__asm_dbg) {
-	fprintf(G__serr,"%3x: BASECONSTRUCT tagnum=%d isarray=%d\n"
+	fprintf(G__serr,"%3lx: BASECONSTRUCT tagnum=%d isarray=%d\n"
 		,pc,G__asm_inst[pc+1],G__asm_inst[pc+2]);
       }
 #endif
@@ -8556,7 +8638,7 @@ int *start;
       * 2 var
       ***************************************/
 #ifdef G__ASM_DBG
-      if(G__asm_dbg) fprintf(G__serr,"%3x: REDECL\n",pc);
+      if(G__asm_dbg) fprintf(G__serr,"%3lx: REDECL\n",pc);
 #endif
       /* no optimization */
       pc+=3;
@@ -8567,7 +8649,7 @@ int *start;
       * 0 TOVALUE:
       ***************************************/
 #ifdef G__ASM_DBG
-      if(G__asm_dbg) fprintf(G__serr,"%3x: TOVALUE\n",pc);
+      if(G__asm_dbg) fprintf(G__serr,"%3lx: TOVALUE\n",pc);
 #endif
       /* no optimization */
       ++pc;
@@ -8589,7 +8671,7 @@ int *start;
       * sp
       ***************************************/
 #ifdef G__ASM_DBG
-      if(G__asm_dbg) fprintf(G__serr,"%3x: INIT_REF\n",pc);
+      if(G__asm_dbg) fprintf(G__serr,"%3lx: INIT_REF\n",pc);
 #endif
       pc+=5;
       break;
@@ -8605,7 +8687,7 @@ int *start;
       * sp
       ***************************************/
 #ifdef G__ASM_DBG
-      if(G__asm_dbg) fprintf(G__serr,"%3x: LETNEWVAL\n" ,pc);
+      if(G__asm_dbg) fprintf(G__serr,"%3lx: LETNEWVAL\n" ,pc);
 #endif
       /* no optimization */
       ++pc;
@@ -8621,7 +8703,7 @@ int *start;
       * sp
       ***************************************/
 #ifdef G__ASM_DBG
-      if(G__asm_dbg) fprintf(G__serr,"%3x: SETGVP\n" ,pc);
+      if(G__asm_dbg) fprintf(G__serr,"%3lx: SETGVP\n" ,pc);
 #endif
       /* no optimization */
       pc+=2;
@@ -8636,7 +8718,7 @@ int *start;
       * 2 var_array pointer
       ***************************************/
 #ifdef G__ASM_DBG
-      if(G__asm_dbg) fprintf(G__serr,"%3x: CTOR_SETGVP\n",pc);
+      if(G__asm_dbg) fprintf(G__serr,"%3lx: CTOR_SETGVP\n",pc);
 #endif
       /* no optimization */
       pc+=3;
@@ -8648,18 +8730,51 @@ int *start;
       * 0 TOPVALUE:
       ***************************************/
 #ifdef G__ASM_DBG
-      if(G__asm_dbg) fprintf(G__serr,"%3x: TOPVALUE\n",pc);
+      if(G__asm_dbg) fprintf(G__serr,"%3lx: TOPVALUE\n",pc);
 #endif
       /* no optimization */
       ++pc;
       break;
+
+#ifndef G__OLDIMPLEMENTATION1270
+    case G__THROW:
+      /***************************************
+      * inst
+      * 0 THROW
+      * stack
+      * sp-1    <-
+      * sp
+      ***************************************/
+      pc+=1;
+#ifdef G__ASM_DBG
+      if(G__asm_dbg) fprintf(G__serr,"%3lx: THROW\n",pc);
+#endif
+      /* no optimization */
+      break;
+
+    case G__CATCH:
+      /***************************************
+      * inst
+      * 0 CATCH
+      * 1 filenum
+      * 2 linenum
+      * 3 pos
+      * 4  "
+      ***************************************/
+      pc+=5;
+#ifdef G__ASM_DBG
+      if(G__asm_dbg) fprintf(G__serr,"%3lx: CATCH\n",pc);
+#endif
+      /* no optimization */
+      break;
+#endif
 
     case G__NOP:
       /***************************************
       * 0 NOP
       ***************************************/
 #ifdef G__ASM_DBG
-      if(G__asm_dbg) fprintf(G__serr,"%3x: NOP\n" ,pc);
+      if(G__asm_dbg) fprintf(G__serr,"%3lx: NOP\n" ,pc);
 #endif
       /* no optimization */
       ++pc;
@@ -8685,17 +8800,18 @@ int *start;
 }
 #endif
 
-#ifdef G__ASM_DBG
+#if defined(G__ASM_DBG) || !defined(G__OLDIMPLEMENTATION1270)
 /****************************************************************
 * G__dasm()
 *
 *  Disassembler
 *
 ****************************************************************/
-int G__dasm(fout)
+int G__dasm(fout,isthrow)
 FILE *fout;
+int isthrow;
 {
-  int pc;               /* instruction program counter */
+  unsigned int pc;               /* instruction program counter */
   int illegal=0;
   struct G__var_array *var;
 
@@ -8717,13 +8833,13 @@ FILE *fout;
       * stack
       * sp          <-
       ***************************************/
-#ifdef G__ASM_DBG
-      var = (struct G__var_array*)G__asm_inst[pc+4];
-      if(!var) return(1);
-      fprintf(fout,"%3x: LDST_VAR_P index=%d %s\n"
-	      ,pc,G__asm_inst[pc+1]
-	      ,var->varnamebuf[G__asm_inst[pc+1]]);
-#endif
+      if(0==isthrow) {
+	var = (struct G__var_array*)G__asm_inst[pc+4];
+	if(!var) return(1);
+	fprintf(fout,"%3x: LDST_VAR_P index=%ld %s\n"
+		,pc,G__asm_inst[pc+1]
+		,var->varnamebuf[G__asm_inst[pc+1]]);
+      }
       pc+=5;
       break;
 
@@ -8738,13 +8854,13 @@ FILE *fout;
       * stack
       * sp          <-
       ***************************************/
-#ifdef G__ASM_DBG
-      var = (struct G__var_array*)G__asm_inst[pc+4];
-      if(!var) return(1);
-      fprintf(fout,"%3x: LDST_MSTR_P index=%d %s\n"
-	      ,pc,G__asm_inst[pc+1]
-	      ,var->varnamebuf[G__asm_inst[pc+1]]);
-#endif
+      if(0==isthrow) {
+	var = (struct G__var_array*)G__asm_inst[pc+4];
+	if(!var) return(1);
+	fprintf(fout,"%3x: LDST_MSTR_P index=%ld %s\n"
+		,pc,G__asm_inst[pc+1]
+		,var->varnamebuf[G__asm_inst[pc+1]]);
+      }
       pc+=5;
       break;
 
@@ -8761,13 +8877,13 @@ FILE *fout;
       * stack
       * sp          <-
       ***************************************/
-#ifdef G__ASM_DBG
-      var = (struct G__var_array*)G__asm_inst[pc+6];
-      if(!var) return(1);
-      fprintf(fout,"%3x: LDST_VAR_INDEX index=%d %s\n"
-	      ,pc,G__asm_inst[pc+3]
-	      ,var->varnamebuf[G__asm_inst[pc+3]]);
-#endif
+      if(0==isthrow) {
+	var = (struct G__var_array*)G__asm_inst[pc+6];
+	if(!var) return(1);
+	fprintf(fout,"%3x: LDST_VAR_INDEX index=%ld %s\n"
+		,pc,G__asm_inst[pc+3]
+		,var->varnamebuf[G__asm_inst[pc+3]]);
+      }
       pc+=G__asm_inst[pc+4];
       break;
 
@@ -8786,13 +8902,13 @@ FILE *fout;
       * stack
       * sp          <-
       ***************************************/
-#ifdef G__ASM_DBG
-      var = (struct G__var_array*)G__asm_inst[pc+8];
-      if(!var) return(1);
-      fprintf(fout,"%3x: LDST_VAR_INDEX_OPR index=%d %s\n"
-	      ,pc,G__asm_inst[pc+5]
-	      ,var->varnamebuf[G__asm_inst[pc+5]]);
-#endif
+      if(0==isthrow) {
+	var = (struct G__var_array*)G__asm_inst[pc+8];
+	if(!var) return(1);
+	fprintf(fout,"%3x: LDST_VAR_INDEX_OPR index=%ld %s\n"
+		,pc,G__asm_inst[pc+5]
+		,var->varnamebuf[G__asm_inst[pc+5]]);
+      }
       pc+=G__asm_inst[pc+6];
       break;
 
@@ -8806,9 +8922,9 @@ FILE *fout;
       * sp-1  a           <-
       * sp    G__null
       ***************************************/
-#ifdef G__ASM_DBG
-      fprintf(fout,"%3x: OP2_OPTIMIZED \n",pc);
-#endif
+      if(0==isthrow) {
+	fprintf(fout,"%3x: OP2_OPTIMIZED \n",pc);
+      }
       pc+=2;
       break;
 
@@ -8821,9 +8937,9 @@ FILE *fout;
       * sp-1  a
       * sp    G__null     <-
       ***************************************/
-#ifdef G__ASM_DBG
-      fprintf(fout,"%3x: OP1_OPTIMIZED \n",pc);
-#endif
+      if(0==isthrow) {
+	fprintf(fout,"%3x: OP1_OPTIMIZED \n",pc);
+      }
       pc+=2;
       break;
 
@@ -8841,12 +8957,14 @@ FILE *fout;
       * sp-1
       * sp
       ***************************************/
-      var = (struct G__var_array*)G__asm_inst[pc+4];
-      if(!var) return(1);
-      fprintf(fout,"%3x: LD_VAR index=%d paran=%d point %c %s\n"
-	      ,pc,G__asm_inst[pc+1],G__asm_inst[pc+2]
-	      ,G__asm_inst[pc+3]
-	      ,var->varnamebuf[G__asm_inst[pc+1]]);
+      if(0==isthrow) {
+	var = (struct G__var_array*)G__asm_inst[pc+4];
+	if(!var) return(1);
+	fprintf(fout,"%3x: LD_VAR index=%ld paran=%ld point %c %s\n"
+		,pc,G__asm_inst[pc+1],G__asm_inst[pc+2]
+		,(char)G__asm_inst[pc+3]
+		,var->varnamebuf[G__asm_inst[pc+1]]);
+      }
       pc+=5;
       break;
 
@@ -8859,10 +8977,12 @@ FILE *fout;
       * sp    a
       * sp+1             <-
       ***************************************/
-      fprintf(fout,"%3x: LD %g from %x \n"
-			     ,pc
-			     ,G__double(G__asm_stack[G__asm_inst[pc+1]])
-			     ,G__asm_inst[pc+1]);
+      if(0==isthrow) {
+	fprintf(fout,"%3x: LD %g from %lx \n"
+		,pc
+		,G__double(G__asm_stack[G__asm_inst[pc+1]])
+		,G__asm_inst[pc+1]);
+      }
       pc+=2;
       break;
 
@@ -8871,7 +8991,9 @@ FILE *fout;
       * 0 CL
       *  clear stack pointer
       ***************************************/
-      fprintf(fout,"%3x: CL %d\n",pc,G__asm_inst[pc+1]);
+      if(0==isthrow) {
+	fprintf(fout,"%3x: CL %ld\n",pc,G__asm_inst[pc+1]);
+      }
       pc+=2;
       break;
 
@@ -8885,11 +9007,13 @@ FILE *fout;
       * sp-1  b          <-
       * sp
       ***************************************/
-      if(isprint(G__asm_inst[pc+1]))
-	fprintf(fout,"%3x: OP2 '%c'%d \n" ,pc
-		,G__asm_inst[pc+1],G__asm_inst[pc+1]);
-      else
-	fprintf(fout,"%3x: OP2 %d \n",pc,G__asm_inst[pc+1]);
+      if(0==isthrow) {
+	if(isprint(G__asm_inst[pc+1]))
+	  fprintf(fout,"%3x: OP2 '%c'%ld \n" ,pc
+		  ,(char)G__asm_inst[pc+1],G__asm_inst[pc+1]);
+	else
+	  fprintf(fout,"%3x: OP2 %ld \n",pc,G__asm_inst[pc+1]);
+      }
       pc+=2;
       break;
 
@@ -8907,12 +9031,14 @@ FILE *fout;
       * sp-1
       * sp
       ***************************************/
-      var = (struct G__var_array*)G__asm_inst[pc+4];
-      if(!var) return(1);
-      fprintf(fout,"%3x: ST_VAR index=%d paran=%d point %c %s\n"
-	      ,pc,G__asm_inst[pc+1],G__asm_inst[pc+2]
-	      ,G__asm_inst[pc+3]
-	      ,var->varnamebuf[G__asm_inst[pc+1]]);
+      if(0==isthrow) {
+	var = (struct G__var_array*)G__asm_inst[pc+4];
+	if(!var) return(1);
+	fprintf(fout,"%3x: ST_VAR index=%ld paran=%ld point %c %s\n"
+		,pc,G__asm_inst[pc+1],G__asm_inst[pc+2]
+		,(char)G__asm_inst[pc+3]
+		,var->varnamebuf[G__asm_inst[pc+1]]);
+      }
       pc+=5;
       break;
 
@@ -8930,12 +9056,14 @@ FILE *fout;
       * sp-1
       * sp
       ***************************************/
-      var = (struct G__var_array*)G__asm_inst[pc+4];
-      if(!var) return(1);
-      fprintf(fout,"%3x: LD_MSTR index=%d paran=%d point %c %s\n"
-	      ,pc,G__asm_inst[pc+1],G__asm_inst[pc+2]
-	      ,G__asm_inst[pc+3]
-	      ,var->varnamebuf[G__asm_inst[pc+1]]);
+      if(0==isthrow) {
+	var = (struct G__var_array*)G__asm_inst[pc+4];
+	if(!var) return(1);
+	fprintf(fout,"%3x: LD_MSTR index=%ld paran=%ld point %c %s\n"
+		,pc,G__asm_inst[pc+1],G__asm_inst[pc+2]
+		,(char)G__asm_inst[pc+3]
+		,var->varnamebuf[G__asm_inst[pc+1]]);
+      }
       pc+=5;
       break;
 
@@ -8947,11 +9075,13 @@ FILE *fout;
       * 3 *b
       * 4 next_pc
       ***************************************/
-      fprintf(fout,"%3x: CMPJMP (0x%lx)%d (0x%lx)%d to %lx\n"
-	      ,pc
-	      ,G__asm_inst[pc+2],*(int *)G__asm_inst[pc+2]
-	      ,G__asm_inst[pc+3],*(int *)G__asm_inst[pc+3]
-	      ,G__asm_inst[pc+4]);
+      if(0==isthrow) {
+	fprintf(fout,"%3x: CMPJMP (0x%lx)%d (0x%lx)%d to %lx\n"
+		,pc
+		,G__asm_inst[pc+2],*(int *)G__asm_inst[pc+2]
+		,G__asm_inst[pc+3],*(int *)G__asm_inst[pc+3]
+		,G__asm_inst[pc+4]);
+      }
       pc+=5;
       break;
 
@@ -8962,7 +9092,9 @@ FILE *fout;
       * stack
       * sp           <- sp-paran
       ***************************************/
-      fprintf(fout,"%3x: PUSHSTROS\n" ,pc);
+      if(0==isthrow) {
+	fprintf(fout,"%3x: PUSHSTROS\n" ,pc);
+      }
       ++pc;
       break;
 
@@ -8974,7 +9106,9 @@ FILE *fout;
       * sp-1         <- sp-paran
       * sp
       ***************************************/
-      fprintf(fout,"%3x: SETSTROS\n",pc);
+      if(0==isthrow) {
+	fprintf(fout,"%3x: SETSTROS\n",pc);
+      }
       ++pc;
       break;
 
@@ -8985,7 +9119,9 @@ FILE *fout;
       * stack
       * sp           <- sp-paran
       ***************************************/
-      fprintf(fout,"%3x: POPSTROS\n" ,pc);
+      if(0==isthrow) {
+	fprintf(fout,"%3x: POPSTROS\n" ,pc);
+      }
       ++pc;
       break;
 
@@ -9003,12 +9139,14 @@ FILE *fout;
       * sp-1
       * sp
       ***************************************/
-      var = (struct G__var_array*)G__asm_inst[pc+4];
-      if(!var) return(1);
-      fprintf(fout,"%3x: ST_MSTR index=%d paran=%d point %c %s\n"
-	      ,pc,G__asm_inst[pc+1],G__asm_inst[pc+2]
-	      ,G__asm_inst[pc+3]
-	      ,var->varnamebuf[G__asm_inst[pc+1]]);
+      if(0==isthrow) {
+	var = (struct G__var_array*)G__asm_inst[pc+4];
+	if(!var) return(1);
+	fprintf(fout,"%3x: ST_MSTR index=%ld paran=%ld point %c %s\n"
+		,pc,G__asm_inst[pc+1],G__asm_inst[pc+2]
+		,(char)G__asm_inst[pc+3]
+		,var->varnamebuf[G__asm_inst[pc+1]]);
+      }
       pc+=5;
       break;
 
@@ -9019,9 +9157,11 @@ FILE *fout;
       * 2 increment
       * 3 next_pc
       ***************************************/
-      fprintf(fout,"%3x: INCJMP *(int*)0x%lx+%d %d\n"
-	      ,pc ,G__asm_inst[pc+1] ,G__asm_inst[pc+2]
-	      ,G__asm_inst[pc+3]);
+      if(0==isthrow) {
+	fprintf(fout,"%3x: INCJMP *(int*)0x%lx+%ld %ld\n"
+		,pc ,G__asm_inst[pc+1] ,G__asm_inst[pc+2]
+		,G__asm_inst[pc+3]);
+      }
       pc+=4;
       break;
 
@@ -9033,8 +9173,9 @@ FILE *fout;
       * sp-1         <-
       * sp
       ***************************************/
-      fprintf(fout,"%3x: CNDJMP to %x\n"
-	      ,pc ,G__asm_inst[pc+1]);
+      if(0==isthrow) {
+	fprintf(fout,"%3x: CNDJMP to %lx\n" ,pc ,G__asm_inst[pc+1]);
+      }
       pc+=2;
       break;
 
@@ -9046,7 +9187,9 @@ FILE *fout;
       * sp-1         <-
       * sp
       ***************************************/
-      fprintf(fout,"%3x: CMP2 '%c' \n" ,pc ,G__asm_inst[pc+1]);
+      if(0==isthrow) {
+	fprintf(fout,"%3x: CMP2 '%c' \n" ,pc ,(char)G__asm_inst[pc+1]);
+      }
       pc+=2;
       break;
 
@@ -9055,7 +9198,9 @@ FILE *fout;
       * 0 JMP
       * 1 next_pc
       ***************************************/
-      fprintf(fout,"%3x: JMP %x\n" ,pc,G__asm_inst[pc+1]);
+      if(0==isthrow) {
+	fprintf(fout,"%3x: JMP %lx\n" ,pc,G__asm_inst[pc+1]);
+      }
       pc+=2;
       break;
 
@@ -9067,7 +9212,9 @@ FILE *fout;
       * sp
       * sp+1            <-
       ***************************************/
-      fprintf(fout,"%3x: PUSHCPY\n",pc);
+      if(0==isthrow) {
+	fprintf(fout,"%3x: PUSHCPY\n",pc);
+      }
       ++pc;
       break;
 
@@ -9079,7 +9226,9 @@ FILE *fout;
       * sp-1            <-
       * sp
       ***************************************/
-      fprintf(fout,"%3x: POP\n" ,pc);
+      if(0==isthrow) {
+	fprintf(fout,"%3x: POP\n" ,pc);
+      }
       ++pc;
       break;
 
@@ -9097,12 +9246,14 @@ FILE *fout;
       * sp-1
       * sp
       ***************************************/
-      if(G__asm_inst[pc+1]<G__MAXSTRUCT)
-	fprintf(fout,"%3x: LD_FUNC %s paran=%d\n" ,pc
-		,"compiled",G__asm_inst[pc+3]);
-      else
-	fprintf(fout,"%3x: LD_FUNC %s paran=%d\n" ,pc
-		,(char *)G__asm_inst[pc+1],G__asm_inst[pc+3]);
+      if(0==isthrow) {
+	if(G__asm_inst[pc+1]<G__MAXSTRUCT)
+	  fprintf(fout,"%3x: LD_FUNC %s paran=%ld\n" ,pc
+		  ,"compiled",G__asm_inst[pc+3]);
+	else
+	  fprintf(fout,"%3x: LD_FUNC %s paran=%ld\n" ,pc
+		  ,(char *)G__asm_inst[pc+1],G__asm_inst[pc+3]);
+      }
       pc+=5;
       break;
 
@@ -9110,7 +9261,9 @@ FILE *fout;
       /***************************************
       * 0 RETURN
       ***************************************/
-      fprintf(fout,"%3x: RETURN\n" ,pc);
+      if(0==isthrow) {
+	fprintf(fout,"%3x: RETURN\n" ,pc);
+      }
       pc++;
       return(0);
       break;
@@ -9126,8 +9279,10 @@ FILE *fout;
       * sp-1    <- cast on this
       * sp
       ***************************************/
-      fprintf(fout,"%3x: CAST to %c type%d tag%d\n" ,pc
-	      ,(char)G__asm_inst[pc+1],G__asm_inst[pc+2],G__asm_inst[pc+3]);
+      if(0==isthrow) {
+	fprintf(fout,"%3x: CAST to %c type%ld tag%ld\n" ,pc
+		,(char)G__asm_inst[pc+1],G__asm_inst[pc+2],G__asm_inst[pc+3]);
+      }
       pc+=5;
       break;
 
@@ -9140,11 +9295,13 @@ FILE *fout;
       * sp-1  a
       * sp    G__null     <-
       ***************************************/
-      if(isprint(G__asm_inst[pc+1]))
-	fprintf(fout,"%3x: OP1 '%c'%d\n",pc
-		,G__asm_inst[pc+1],G__asm_inst[pc+1] );
-      else
-	fprintf(fout,"%3x: OP1 %d\n",pc,G__asm_inst[pc+1]);
+      if(0==isthrow) {
+	if(isprint(G__asm_inst[pc+1]))
+	  fprintf(fout,"%3x: OP1 '%c'%ld\n",pc
+		  ,(char)G__asm_inst[pc+1],G__asm_inst[pc+1] );
+	else
+	  fprintf(fout,"%3x: OP1 %ld\n",pc,G__asm_inst[pc+1]);
+      }
       pc+=2;
       break;
 
@@ -9157,7 +9314,9 @@ FILE *fout;
       * sp-1  b          <-
       * sp
       ***************************************/
-      fprintf(fout,"%3x: LETVVAL\n" ,pc);
+      if(0==isthrow) {
+	fprintf(fout,"%3x: LETVVAL\n" ,pc);
+      }
       ++pc;
       break;
 
@@ -9167,7 +9326,9 @@ FILE *fout;
       * 0 ADDSTROS
       * 1 addoffset
       ***************************************/
-      fprintf(fout,"%3x: ADDSTROS %d\n" ,pc,G__asm_inst[pc+1]);
+      if(0==isthrow) {
+	fprintf(fout,"%3x: ADDSTROS %ld\n" ,pc,G__asm_inst[pc+1]);
+      }
       pc+=2;
       break;
 
@@ -9180,7 +9341,9 @@ FILE *fout;
       * sp-1  b          <-
       * sp
       ***************************************/
-      fprintf(fout,"%3x: LETPVAL\n" ,pc);
+      if(0==isthrow) {
+	fprintf(fout,"%3x: LETPVAL\n" ,pc);
+      }
       ++pc;
       break;
 
@@ -9188,7 +9351,9 @@ FILE *fout;
       /***************************************
       * 0 FREETEMP
       ***************************************/
-      fprintf(fout,"%3x: FREETEMP\n" ,pc);
+      if(0==isthrow) {
+	fprintf(fout,"%3x: FREETEMP\n" ,pc);
+      }
       ++pc;
       break;
 
@@ -9196,7 +9361,9 @@ FILE *fout;
       /***************************************
       * 0 SETTEMP
       ***************************************/
-      fprintf(fout,"%3x: SETTEMP\n" ,pc);
+      if(0==isthrow) {
+	fprintf(fout,"%3x: SETTEMP\n" ,pc);
+      }
       ++pc;
       break;
 
@@ -9205,7 +9372,9 @@ FILE *fout;
       /***************************************
       * 0 GETRSVD
       ***************************************/
-      fprintf(fout,"%3x: GETRSVD %d\n" ,pc);
+      if(0==isthrow) {
+	fprintf(fout,"%3x: GETRSVD\n" ,pc);
+      }
       ++pc;
       break;
 
@@ -9217,7 +9386,9 @@ FILE *fout;
       * sp-1  a          <-
       * sp
       ***************************************/
-      fprintf(fout,"%3x: TOPNTR\n" ,pc);
+      if(0==isthrow) {
+	fprintf(fout,"%3x: TOPNTR\n" ,pc);
+      }
       ++pc;
       break;
 
@@ -9225,7 +9396,9 @@ FILE *fout;
       /***************************************
       * 0 NOT
       ***************************************/
-      fprintf(fout,"%3x: NOT\n" ,pc);
+      if(0==isthrow) {
+	fprintf(fout,"%3x: NOT\n" ,pc);
+      }
       ++pc;
       break;
 
@@ -9234,9 +9407,9 @@ FILE *fout;
       * 0 ISDEFAULTPARA
       * 1 next_pc
       ***************************************/
-#ifdef G__ASM_DBG
-      fprintf(G__serr,"%3x: !ISDEFAULTPARA JMP %x\n",pc,G__asm_inst[pc+1]);
-#endif
+      if(0==isthrow) {
+	fprintf(G__serr,"%3x: !ISDEFAULTPARA JMP %lx\n",pc,G__asm_inst[pc+1]);
+      }
       pc+=2;
       break;
 
@@ -9252,13 +9425,13 @@ FILE *fout;
       * stack
       * sp          <-
       ***************************************/
-#ifdef G__ASM_DBG
-      var = (struct G__var_array*)G__asm_inst[pc+4];
-      if(!var) return(1);
-      fprintf(fout,"%3x: LDST_LVAR_P index=%d %s\n"
-	      ,pc,G__asm_inst[pc+1]
-	      ,var->varnamebuf[G__asm_inst[pc+1]]);
-#endif
+      if(0==isthrow) {
+	var = (struct G__var_array*)G__asm_inst[pc+4];
+	if(!var) return(1);
+	fprintf(fout,"%3x: LDST_LVAR_P index=%ld %s\n"
+		,pc,G__asm_inst[pc+1]
+		,var->varnamebuf[G__asm_inst[pc+1]]);
+      }
       pc+=5;
       break;
 
@@ -9276,12 +9449,14 @@ FILE *fout;
       * sp-1
       * sp
       ***************************************/
-      var = (struct G__var_array*)G__asm_inst[pc+4];
-      if(!var) return(1);
-      fprintf(fout,"%3x: LD_LVAR index=%d paran=%d point %c %s\n"
-	      ,pc,G__asm_inst[pc+1],G__asm_inst[pc+2]
-	      ,G__asm_inst[pc+3]
-	      ,var->varnamebuf[G__asm_inst[pc+1]]);
+      if(0==isthrow) {
+	var = (struct G__var_array*)G__asm_inst[pc+4];
+	if(!var) return(1);
+	fprintf(fout,"%3x: LD_LVAR index=%ld paran=%ld point %c %s\n"
+		,pc,G__asm_inst[pc+1],G__asm_inst[pc+2]
+		,(char)G__asm_inst[pc+3]
+		,var->varnamebuf[G__asm_inst[pc+1]]);
+      }
       pc+=5;
       break;
 
@@ -9299,12 +9474,14 @@ FILE *fout;
       * sp-1
       * sp
       ***************************************/
-      var = (struct G__var_array*)G__asm_inst[pc+4];
-      if(!var) return(1);
-      fprintf(fout,"%3x: ST_LVAR index=%d paran=%d point %c %s\n"
-	      ,pc,G__asm_inst[pc+1],G__asm_inst[pc+2]
-	      ,G__asm_inst[pc+3]
-	      ,var->varnamebuf[G__asm_inst[pc+1]]);
+      if(0==isthrow) {
+	var = (struct G__var_array*)G__asm_inst[pc+4];
+	if(!var) return(1);
+	fprintf(fout,"%3x: ST_LVAR index=%ld paran=%ld point %c %s\n"
+		,pc,G__asm_inst[pc+1],G__asm_inst[pc+2]
+		,(char)G__asm_inst[pc+3]
+		,var->varnamebuf[G__asm_inst[pc+1]]);
+      }
       pc+=5;
       break;
 #endif
@@ -9319,7 +9496,9 @@ FILE *fout;
       * sp-1                | rewind
       * sp              <- ..
       ***************************************/
-      fprintf(fout,"%3x: REWINDSTACK %d\n" ,pc,G__asm_inst[pc+1]);
+      if(0==isthrow) {
+	fprintf(fout,"%3x: REWINDSTACK %ld\n" ,pc,G__asm_inst[pc+1]);
+      }
       pc+=2;
       break;
 
@@ -9331,7 +9510,9 @@ FILE *fout;
       * sp-1         <-
       * sp
       ***************************************/
-      fprintf(fout,"%3x: CND1JMP  to %x\n" ,pc ,G__asm_inst[pc+1]);
+      if(0==isthrow) {
+	fprintf(fout,"%3x: CND1JMP  to %lx\n" ,pc ,G__asm_inst[pc+1]);
+      }
       pc+=2;
       break;
 
@@ -9353,8 +9534,10 @@ FILE *fout;
       * sp-1
       * sp
       ***************************************/
-      fprintf(fout,"%3x: LD_IFUNC %s paran=%d\n" ,pc
-	      ,(char *)G__asm_inst[pc+1],G__asm_inst[pc+3]);
+      if(0==isthrow) {
+	fprintf(fout,"%3x: LD_IFUNC %s paran=%ld\n" ,pc
+		,(char *)G__asm_inst[pc+1],G__asm_inst[pc+3]);
+      }
       pc+=8;
       break;
 
@@ -9367,8 +9550,10 @@ FILE *fout;
       * sp-1     <- pinc
       * sp
       ***************************************/
-      fprintf(fout,"%3x: NEWALLOC size(%d)\n"
-	      ,pc,G__asm_inst[pc+1]);
+      if(0==isthrow) {
+	fprintf(fout,"%3x: NEWALLOC size(%ld)\n"
+		,pc,G__asm_inst[pc+1]);
+      }
       pc+=3;
       break;
 
@@ -9381,7 +9566,9 @@ FILE *fout;
       * sp-1        G__store_struct_offset
       * sp       <-
       ***************************************/
-      fprintf(fout,"%3x: SET_NEWALLOC\n" ,pc);
+      if(0==isthrow) {
+	fprintf(fout,"%3x: SET_NEWALLOC\n" ,pc);
+      }
       pc+=3;
       break;
 
@@ -9391,7 +9578,9 @@ FILE *fout;
       * 0 G__DELETEFREE
       * 1 isarray
       ***************************************/
-      fprintf(fout,"%3x: DELETEFREE\n",pc);
+      if(0==isthrow) {
+	fprintf(fout,"%3x: DELETEFREE\n",pc);
+      }
       pc+=2;
       break;
 
@@ -9404,7 +9593,9 @@ FILE *fout;
       * sp-1          sp-2
       * sp       <-   sp
       ***************************************/
-      fprintf(fout,"%3x: SWAP\n",pc);
+      if(0==isthrow) {
+	fprintf(fout,"%3x: SWAP\n",pc);
+      }
       ++pc;
       break;
 
@@ -9421,8 +9612,10 @@ FILE *fout;
       * sp-1          sp-2
       * sp       <-   sp
       ***************************************/
-      fprintf(fout,"%3x: BASECONV %d %d\n",pc
-	      ,G__asm_inst[pc+1],G__asm_inst[pc+2]);
+      if(0==isthrow) {
+	fprintf(fout,"%3x: BASECONV %ld %ld\n",pc
+		,G__asm_inst[pc+1],G__asm_inst[pc+2]);
+      }
       pc+=3;
       break;
 
@@ -9433,7 +9626,9 @@ FILE *fout;
       * sp-1
       * sp       <-  sp
       ***************************************/
-      fprintf(fout,"%3x: STORETEMP\n",pc);
+      if(0==isthrow) {
+	fprintf(fout,"%3x: STORETEMP\n",pc);
+      }
       ++pc;
       break;
 
@@ -9445,7 +9640,9 @@ FILE *fout;
       * sp-1
       * sp       <-  sp
       ***************************************/
-      fprintf(fout,"%3x: ALLOCTEMP %s\n",pc,G__struct.name[G__asm_inst[pc+1]]);
+      if(0==isthrow) {
+	fprintf(fout,"%3x: ALLOCTEMP %s\n",pc,G__struct.name[G__asm_inst[pc+1]]);
+      }
       pc+=2;
       break;
 
@@ -9457,7 +9654,9 @@ FILE *fout;
       * sp-1
       * sp      <-  sp
       ***************************************/
-      fprintf(fout,"%3x: POPTEMP %s\n" ,pc,G__struct.name[G__asm_inst[pc+1]]);
+      if(0==isthrow) {
+	fprintf(fout,"%3x: POPTEMP %s\n" ,pc,G__struct.name[G__asm_inst[pc+1]]);
+      }
       pc+=2;
       break;
 
@@ -9472,8 +9671,10 @@ FILE *fout;
       * sp-1    <-  sp-2
       * sp      <-  sp
       ***************************************/
-      fprintf(fout,"%3x: REORDER paran=%d ig25=%d\n"
-	      ,pc ,G__asm_inst[pc+1],G__asm_inst[pc+2]);
+      if(0==isthrow) {
+	fprintf(fout,"%3x: REORDER paran=%ld ig25=%ld\n"
+		,pc ,G__asm_inst[pc+1],G__asm_inst[pc+2]);
+      }
       pc+=3;
       break;
 
@@ -9486,8 +9687,10 @@ FILE *fout;
       * sp
       * sp+1   <-
       ***************************************/
-      fprintf(fout,"%3x: LD_THIS %s\n"
-			     ,pc ,G__struct.name[G__tagnum]);
+      if(0==isthrow) {
+	fprintf(fout,"%3x: LD_THIS %s\n"
+		,pc ,G__struct.name[G__tagnum]);
+      }
       pc+=2;
       break;
 
@@ -9499,7 +9702,9 @@ FILE *fout;
       * sp-1   -> return this
       * sp
       ***************************************/
-      fprintf(fout,"%3x: RTN_FUNC %d\n" ,pc ,G__asm_inst[pc+1]);
+      if(0==isthrow) {
+	fprintf(fout,"%3x: RTN_FUNC %ld\n" ,pc ,G__asm_inst[pc+1]);
+      }
       pc+=2;
       break;
 
@@ -9507,7 +9712,9 @@ FILE *fout;
       /***************************************
       * 0 SETMEMFUNCENV:
       ***************************************/
-      fprintf(fout,"%3x: SETMEMFUNCENV\n",pc);
+      if(0==isthrow) {
+	fprintf(fout,"%3x: SETMEMFUNCENV\n",pc);
+      }
       pc+=1;
       break;
 
@@ -9515,7 +9722,9 @@ FILE *fout;
       /***************************************
       * 0 RECMEMFUNCENV:
       ***************************************/
-      fprintf(fout,"%3x: RECMEMFUNCENV\n" ,pc);
+      if(0==isthrow) {
+	fprintf(fout,"%3x: RECMEMFUNCENV\n" ,pc);
+      }
       pc+=1;
       break;
 
@@ -9523,7 +9732,9 @@ FILE *fout;
       /***************************************
       * 0 ADDALLOCTABLE:
       ***************************************/
-      fprintf(fout,"%3x: ADDALLOCTABLE\n" ,pc);
+      if(0==isthrow) {
+	fprintf(fout,"%3x: ADDALLOCTABLE\n" ,pc);
+      }
       pc+=1;
       break;
 
@@ -9531,7 +9742,9 @@ FILE *fout;
       /***************************************
       * 0 DELALLOCTABLE:
       ***************************************/
-      fprintf(fout,"%3x: DELALLOCTABLE\n" ,pc);
+      if(0==isthrow) {
+	fprintf(fout,"%3x: DELALLOCTABLE\n" ,pc);
+      }
       pc+=1;
       break;
 
@@ -9541,8 +9754,10 @@ FILE *fout;
       * 1 tagnum
       * 2 isarray
       ***************************************/
-      fprintf(fout,"%3x: BASECONSTRUCT tagnum=%d isarray=%d\n"
-	      ,pc,G__asm_inst[pc+1],G__asm_inst[pc+2]);
+      if(0==isthrow) {
+	fprintf(fout,"%3x: BASECONSTRUCT tagnum=%ld isarray=%ld\n"
+		,pc,G__asm_inst[pc+1],G__asm_inst[pc+2]);
+      }
       pc+=3;
       break;
 
@@ -9552,7 +9767,9 @@ FILE *fout;
       * 1 ig15
       * 2 var
       ***************************************/
-      fprintf(fout,"%3x: REDECL\n",pc);
+      if(0==isthrow) {
+	fprintf(fout,"%3x: REDECL\n",pc);
+      }
       pc+=3;
       break;
 
@@ -9560,7 +9777,9 @@ FILE *fout;
       /***************************************
       * 0 TOVALUE:
       ***************************************/
-      fprintf(fout,"%3x: TOVALUE\n",pc);
+      if(0==isthrow) {
+	fprintf(fout,"%3x: TOVALUE\n",pc);
+      }
       ++pc;
       break;
 
@@ -9579,9 +9798,9 @@ FILE *fout;
       * sp-1
       * sp
       ***************************************/
-#ifdef G__ASM_DBG
-      if(G__asm_dbg) fprintf(G__serr,"%3x: INIT_REF\n",pc);
-#endif
+      if(0==isthrow) {
+	if(G__asm_dbg) fprintf(G__serr,"%3x: INIT_REF\n",pc);
+      }
       pc+=5;
       break;
 #endif
@@ -9595,7 +9814,9 @@ FILE *fout;
       * sp-1  b          <-
       * sp
       ***************************************/
-      fprintf(fout,"%3x: LETNEWVAL\n" ,pc);
+      if(0==isthrow) {
+	fprintf(fout,"%3x: LETNEWVAL\n" ,pc);
+      }
       ++pc;
       break;
 
@@ -9608,8 +9829,10 @@ FILE *fout;
       * sp-1  b          <-
       * sp
       ***************************************/
-      fprintf(fout,"%3x: SETGVP\n" ,pc);
-      /* no optimization */
+      if(0==isthrow) {
+	fprintf(fout,"%3x: SETGVP\n" ,pc);
+	/* no optimization */
+      }
       pc+=2;
       break;
 
@@ -9617,7 +9840,9 @@ FILE *fout;
       /***************************************
       * 0 TOPVALUE:
       ***************************************/
-      fprintf(fout,"%3x: TOPVALUE\n",pc);
+      if(0==isthrow) {
+	fprintf(fout,"%3x: TOPVALUE\n",pc);
+      }
       ++pc;
       break;
 
@@ -9629,8 +9854,60 @@ FILE *fout;
       * 1 index
       * 2 var_array pointer
       ***************************************/
-      fprintf(fout,"%3x: CTOR_SETGVP\n",pc);
+      if(0==isthrow) {
+	fprintf(fout,"%3x: CTOR_SETGVP\n",pc);
+      }
       pc+=3;
+      break;
+#endif
+
+#ifndef G__OLDIMPLEMENTATION1270
+    case G__THROW:
+      /***************************************
+      * inst
+      * 0 THROW
+      * stack
+      * sp-1    <-
+      * sp
+      ***************************************/
+      if(0==isthrow) {
+	fprintf(fout,"%3x: THROW\n" ,pc);
+      }
+      pc+=1;
+      break;
+
+    case G__CATCH:
+      /***************************************
+      * inst
+      * 0 CATCH
+      * 1 filenum
+      * 2 linenum
+      * 3 pos
+      * 4  "
+      ***************************************/
+      if(0==isthrow) {
+	fprintf(fout,"%3x: CATCH\n" ,pc);
+      }
+      else {
+	fpos_t store_pos;
+	struct G__input_file store_ifile = G__ifile;
+	char statement[G__LONGLINE];
+	fpos_t pos = (fpos_t)G__asm_inst[pc+3];
+	fgetpos(G__ifile.fp,&store_pos);
+	G__ifile.filenum = G__asm_inst[pc+1];
+	G__ifile.line_number = G__asm_inst[pc+2];
+	strcpy(G__ifile.name,G__srcfile[G__ifile.filenum].filename);
+	G__ifile.fp = G__srcfile[G__ifile.filenum].fp;
+	fsetpos(G__ifile.fp,&pos);
+	G__asm_exec = 0;
+	G__return=G__RETURN_NON;
+	G__exec_catch(statement);
+
+	G__ifile = store_ifile;
+	fsetpos(G__ifile.fp,&store_pos);
+	return(G__CATCH);
+      }
+      pc+=5;
       break;
 #endif
 
@@ -9638,7 +9915,9 @@ FILE *fout;
       /***************************************
       * 0 NOP
       ***************************************/
-      fprintf(fout,"%3x: NOP\n" ,pc);
+      if(0==isthrow) {
+	fprintf(fout,"%3x: NOP\n" ,pc);
+      }
       ++pc;
       break;
 
@@ -9648,7 +9927,7 @@ FILE *fout;
       * This is a double check and should
       * never happen.
       ***************************************/
-      fprintf(fout,"%3x: illegal instruction 0x%lx\t%d\n"
+      fprintf(fout,"%3x: illegal instruction 0x%lx\t%ld\n"
 	      ,pc,G__asm_inst[pc],G__asm_inst[pc]);
       ++pc;
       ++illegal;

@@ -1,3 +1,6 @@
+//*CMZ :  2.24/05 15/05/2000  22.11.45  by  Rene Brun
+//*CMZ :  2.24/02 07/04/2000  08.36.28  by  Rene Brun
+//*CMZ :  2.24/01 05/03/2000  16.09.35  by  Rene Brun
 //*CMZ :  2.23/12 30/01/2000  18.23.46  by  Rene Brun
 //*CMZ :  2.23/10 16/12/99  17.39.57  by  Rene Brun
 //*CMZ :  2.23/09 24/11/99  19.16.54  by  Rene Brun
@@ -10,17 +13,18 @@
 #ifndef ROOT_TTree
 #define ROOT_TTree
 
+/*CMZ :  2.24/01 24/02/2000  11.49.40  by  Fons Rademakers*/
 /*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun and Fons Rademakers.                               *
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
  *                                                                       *
- * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
- * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -121,8 +125,8 @@ protected:
     TVirtualTreePlayer *fPlayer;      //Pointer to current Tree player
 
 protected:
-    const   char  *GetNameByIndex(TString &varexp, Int_t *index,Int_t colindex);
-    virtual void    MakeIndex(TString &varexp, Int_t *index);
+    const   char    *GetNameByIndex(TString &varexp, Int_t *index,Int_t colindex);
+    virtual void     MakeIndex(TString &varexp, Int_t *index);
 
 public:
     // TTree status bits
@@ -137,9 +141,10 @@ public:
     virtual void      AddTotBytes(Int_t tot) {fTotBytes += tot;}
     virtual void      AddZipBytes(Int_t zip) {fZipBytes += zip;}
     virtual void      AutoSave();
-    TBranch          *Branch(const char *name, void *clonesaddress, Int_t bufsize=32000, Int_t splitlevel=1);
-    TBranch          *Branch(const char *name, const char *classname, void *addobj, Int_t bufsize=32000, Int_t splitlevel=1);
-    TBranch          *Branch(const char *name, void *address, const char *leaflist, Int_t bufsize=32000);
+    virtual TBranch  *Branch(const char *name, void *clonesaddress, Int_t bufsize=32000, Int_t splitlevel=1);
+    virtual TBranch  *Branch(const char *name, const char *classname, void *addobj, Int_t bufsize=32000, Int_t splitlevel=1);
+    virtual TBranch  *Branch(const char *name, void *address, const char *leaflist, Int_t bufsize=32000);
+    virtual Int_t     Branch(TList *list, Int_t bufsize=32000);
     virtual void      Browse(TBrowser *b);
     virtual void      BuildIndex(const char *majorname, const char *minorname);
     virtual TTree    *CloneTree(Int_t nentries=-1, Option_t *option="");
@@ -152,7 +157,7 @@ public:
                        ,Int_t nentries=1000000000, Int_t firstentry=0);
     virtual void      Draw(const char *varexp, const char *selection, Option_t *option=""
                        ,Int_t nentries=1000000000, Int_t firstentry=0); // *MENU*
-    void              DropBuffers(Int_t nbytes);
+    virtual void      DropBuffers(Int_t nbytes);
     virtual Int_t     Fill();
     virtual void      Fit(const char *formula ,const char *varexp, const char *selection="",Option_t *option="" ,Option_t *goption=""
                        ,Int_t nentries=1000000000, Int_t firstentry=0); // *MENU*
@@ -227,6 +232,7 @@ public:
     virtual void      SetMaxEntryLoop(Int_t maxev=1000000000) {fMaxEntryLoop = maxev;} // *MENU*
     virtual void      SetMaxVirtualSize(Int_t size=0) {fMaxVirtualSize = size;} // *MENU*
     virtual void      SetName(const char *name); // *MENU*
+    virtual void      SetObject(const char *name, const char *title);
     virtual void      SetScanField(Int_t n=50) {fScanField = n;} // *MENU*
     virtual void      SetTimerInterval(Int_t msec=333) {fTimerInterval=msec;}
     virtual void      SetUpdate(Int_t freq=0) {fUpdate = freq;}

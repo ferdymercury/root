@@ -1,3 +1,4 @@
+//*CMZ :  2.24/03 03/05/2000  19.56.29  by  Rene Brun
 //*CMZ :  2.23/12 27/01/2000  12.11.15  by  Fons Rademakers
 //*CMZ :  2.23/09 14/11/99  15.53.52  by  Rene Brun
 //*CMZ :  2.23/07 12/11/99  16.31.00  by  Rene Brun
@@ -8,17 +9,18 @@
 //*CMZ :  2.22/03 31/05/99  09.10.45  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   04/05/96
 
+/*CMZ :  2.24/01 24/02/2000  11.49.40  by  Fons Rademakers*/
 /*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun and Fons Rademakers.                               *
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
  *                                                                       *
- * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
- * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -39,6 +41,16 @@
 #include "TMath.h"
 #include "TError.h"
 
+#if defined(__linux) && defined(__i386__)
+// #define USE_BSWAPCPY
+#endif
+
+#ifdef USE_BSWAPCPY
+#include "Bswapcpy.h"
+#endif
+
+
+
 const UInt_t kNullTag           = 0;
 const UInt_t kNewClassTag       = 0xFFFFFFFF;
 const UInt_t kClassMask         = 0x80000000;  // OR the class index with this
@@ -53,7 +65,6 @@ Int_t TBuffer::fgMapSize   = kMapSize;
 
 
 ClassImp(TBuffer)
-
 //______________________________________________________________________________
 TBuffer::TBuffer(EMode mode, Int_t bufsiz, void *buf)
 {
@@ -79,6 +90,7 @@ TBuffer::TBuffer(EMode mode, Int_t bufsiz, void *buf)
    fMapCount = 0;
    fMapSize  = fgMapSize;
    fReadMap  = 0;
+   fDisplacement = 0;
 
    if (buf)
       fBuffer = (char *)buf;
@@ -105,12 +117,13 @@ TBuffer::~TBuffer()
 }
 
 //______________________________________________________________________________
-void TBuffer::SetBuffer(void *buf)
+void TBuffer::SetBuffer(void *buf, UInt_t newsiz)
 {
    // Set buffer address
 
    fBuffer = (char *)buf;
    fBufCur = fBuffer;
+   if (newsiz > 0) fBufSize = newsiz;
    fBufMax = fBuffer + fBufSize;
 }
 
@@ -315,6 +328,7 @@ void TBuffer::ResetMap()
       fReadMap = 0;
    }
    fMapCount = 0;
+   fDisplacement = 0;
 }
 
 //______________________________________________________________________________
@@ -495,8 +509,13 @@ Int_t TBuffer::ReadArray(Short_t *&h)
    if (!h) h = new Short_t[n];
 
 #ifdef R__BYTESWAP
+# ifdef USE_BSWAPCPY
+   bswapcpy16(h, fBufCur, n);
+   fBufCur += sizeof(Short_t)*n;
+# else
    for (int i = 0; i < n; i++)
       frombuf(fBufCur, &h[i]);
+# endif
 #else
    Int_t l = sizeof(Short_t)*n;
    memcpy(h, fBufCur, l);
@@ -523,8 +542,13 @@ Int_t TBuffer::ReadArray(Int_t *&ii)
    if (!ii) ii = new Int_t[n];
 
 #ifdef R__BYTESWAP
+# ifdef USE_BSWAPCPY
+   bswapcpy32(ii, fBufCur, n);
+   fBufCur += sizeof(Int_t)*n;
+# else
    for (int i = 0; i < n; i++)
       frombuf(fBufCur, &ii[i]);
+# endif
 #else
    Int_t l = sizeof(Int_t)*n;
    memcpy(ii, fBufCur, l);
@@ -551,8 +575,13 @@ Int_t TBuffer::ReadArray(Long_t *&ll)
    if (!ll) ll = new Long_t[n];
 
 #ifdef R__BYTESWAP
+# if defined(USE_BSWAPCPY) && !defined(R__B64)
+   bswapcpy32(ll, fBufCur, n);
+   fBufCur += sizeof(Long_t)*n;
+# else
    for (int i = 0; i < n; i++)
       frombuf(fBufCur, &ll[i]);
+# endif
 #else
    Int_t l = sizeof(Long_t)*n;
    memcpy(ll, fBufCur, l);
@@ -561,7 +590,6 @@ Int_t TBuffer::ReadArray(Long_t *&ll)
 
    return n;
 }
-
 //______________________________________________________________________________
 Int_t TBuffer::ReadArray(Float_t *&f)
 {
@@ -579,8 +607,13 @@ Int_t TBuffer::ReadArray(Float_t *&f)
    if (!f) f = new Float_t[n];
 
 #ifdef R__BYTESWAP
+# ifdef USE_BSWAPCPY
+   bswapcpy32(f, fBufCur, n);
+   fBufCur += sizeof(Float_t)*n;
+# else
    for (int i = 0; i < n; i++)
       frombuf(fBufCur, &f[i]);
+# endif
 #else
    Int_t l = sizeof(Float_t)*n;
    memcpy(f, fBufCur, l);
@@ -655,8 +688,13 @@ Int_t TBuffer::ReadStaticArray(Short_t *h)
    if (!h) return 0;
 
 #ifdef R__BYTESWAP
+# ifdef USE_BSWAPCPY
+   bswapcpy16(h, fBufCur, n);
+   fBufCur += sizeof(Short_t)*n;
+# else
    for (int i = 0; i < n; i++)
       frombuf(fBufCur, &h[i]);
+# endif
 #else
    Int_t l = sizeof(Short_t)*n;
    memcpy(h, fBufCur, l);
@@ -682,8 +720,13 @@ Int_t TBuffer::ReadStaticArray(Int_t *ii)
    if (!ii) return 0;
 
 #ifdef R__BYTESWAP
+# ifdef USE_BSWAPCPY
+   bswapcpy32(ii, fBufCur, n);
+   fBufCur += sizeof(Int_t)*n;
+# else
    for (int i = 0; i < n; i++)
       frombuf(fBufCur, &ii[i]);
+# endif
 #else
    Int_t l = sizeof(Int_t)*n;
    memcpy(ii, fBufCur, l);
@@ -709,8 +752,13 @@ Int_t TBuffer::ReadStaticArray(Long_t *ll)
    if (!ll) return 0;
 
 #ifdef R__BYTESWAP
+# if defined(USE_BSWAPCPY) && !defined(R__B64)
+   bswapcpy32(ll, fBufCur, n);
+   fBufCur += sizeof(Long_t)*n;
+# else
    for (int i = 0; i < n; i++)
       frombuf(fBufCur, &ll[i]);
+# endif
 #else
    Int_t l = sizeof(Long_t)*n;
    memcpy(ll, fBufCur, l);
@@ -736,8 +784,13 @@ Int_t TBuffer::ReadStaticArray(Float_t *f)
    if (!f) return 0;
 
 #ifdef R__BYTESWAP
+# ifdef USE_BSWAPCPY
+   bswapcpy32(f, fBufCur, n);
+   fBufCur += sizeof(Float_t)*n;
+# else
    for (int i = 0; i < n; i++)
       frombuf(fBufCur, &f[i]);
+# endif
 #else
    Int_t l = sizeof(Float_t)*n;
    memcpy(f, fBufCur, l);
@@ -794,8 +847,13 @@ void TBuffer::ReadFastArray(Short_t *h, Int_t n)
    if (!n) return;
 
 #ifdef R__BYTESWAP
+# ifdef USE_BSWAPCPY
+   bswapcpy16(h, fBufCur, n);
+   fBufCur += sizeof(Short_t)*n;
+# else
    for (int i = 0; i < n; i++)
       frombuf(fBufCur, &h[i]);
+# endif
 #else
    Int_t l = sizeof(Short_t)*n;
    memcpy(h, fBufCur, l);
@@ -811,6 +869,10 @@ void TBuffer::ReadFastArray(Int_t *ii, Int_t n)
    if (!n) return;
 
 #ifdef R__BYTESWAP
+# ifdef USE_BSWAPCPY
+   bswapcpy32(ii, fBufCur, n);
+   fBufCur += sizeof(Int_t)*n;
+# else
    char *sw = (char*)ii;
    for (int i = 0; i < n; i++) {
 //      frombuf(fBufCur, &ii[i]);
@@ -821,6 +883,7 @@ void TBuffer::ReadFastArray(Int_t *ii, Int_t n)
       fBufCur += 4;
       sw += 4;
    }
+# endif
 #else
    Int_t l = sizeof(Int_t)*n;
    memcpy(ii, fBufCur, l);
@@ -836,8 +899,13 @@ void TBuffer::ReadFastArray(Long_t *ll, Int_t n)
    if (!n) return;
 
 #ifdef R__BYTESWAP
+# if defined(USE_BSWAPCPY) && !defined(R__B64)
+   bswapcpy32(ll, fBufCur, n);
+   fBufCur += sizeof(Long_t)*n;
+# else
    for (int i = 0; i < n; i++)
       frombuf(fBufCur, &ll[i]);
+# endif
 #else
    Int_t l = sizeof(Long_t)*n;
    memcpy(ll, fBufCur, l);
@@ -853,6 +921,10 @@ void TBuffer::ReadFastArray(Float_t *f, Int_t n)
    if (!n) return;
 
 #ifdef R__BYTESWAP
+# ifdef USE_BSWAPCPY
+   bswapcpy32(f, fBufCur, n);
+   fBufCur += sizeof(Float_t)*n;
+# else
    char *sw = (char*)f;
    for (int i = 0; i < n; i++) {
 //      frombuf(fBufCur, &f[i]);
@@ -863,6 +935,7 @@ void TBuffer::ReadFastArray(Float_t *f, Int_t n)
       fBufCur += 4;
       sw += 4;
    }
+# endif
 #else
    Int_t l = sizeof(Float_t)*n;
    memcpy(f, fBufCur, l);
@@ -924,8 +997,13 @@ void TBuffer::WriteArray(const Short_t *h, Int_t n)
    if (fBufCur + l > fBufMax) Expand(TMath::Max(2*fBufSize, fBufSize+l));
 
 #ifdef R__BYTESWAP
+# ifdef USE_BSWAPCPY
+   bswapcpy16(fBufCur, h, n);
+   fBufCur += l;
+# else
    for (int i = 0; i < n; i++)
       tobuf(fBufCur, h[i]);
+# endif
 #else
    memcpy(fBufCur, h, l);
    fBufCur += l;
@@ -949,8 +1027,13 @@ void TBuffer::WriteArray(const Int_t *ii, Int_t n)
    if (fBufCur + l > fBufMax) Expand(TMath::Max(2*fBufSize, fBufSize+l));
 
 #ifdef R__BYTESWAP
+# ifdef USE_BSWAPCPY
+   bswapcpy32(fBufCur, ii, n);
+   fBufCur += l;
+# else
    for (int i = 0; i < n; i++)
       tobuf(fBufCur, ii[i]);
+# endif
 #else
    memcpy(fBufCur, ii, l);
    fBufCur += l;
@@ -974,8 +1057,13 @@ void TBuffer::WriteArray(const Long_t *ll, Int_t n)
    if (fBufCur + l > fBufMax) Expand(TMath::Max(2*fBufSize, fBufSize+l));
 
 #ifdef R__BYTESWAP
+# if defined(USE_BSWAPCPY) && !defined(R__B64)
+   bswapcpy32(fBufCur, ll, n);
+   fBufCur += l;
+# else
    for (int i = 0; i < n; i++)
       tobuf(fBufCur, ll[i]);
+# endif
 #else
    memcpy(fBufCur, ll, l);
    fBufCur += l;
@@ -999,8 +1087,13 @@ void TBuffer::WriteArray(const Float_t *f, Int_t n)
    if (fBufCur + l > fBufMax) Expand(TMath::Max(2*fBufSize, fBufSize+l));
 
 #ifdef R__BYTESWAP
+# ifdef USE_BSWAPCPY
+   bswapcpy32(fBufCur, f, n);
+   fBufCur += l;
+# else
    for (int i = 0; i < n; i++)
       tobuf(fBufCur, f[i]);
+# endif
 #else
    memcpy(fBufCur, f, l);
    fBufCur += l;
@@ -1058,8 +1151,13 @@ void TBuffer::WriteFastArray(const Short_t *h, Int_t n)
    if (fBufCur + l > fBufMax) Expand(TMath::Max(2*fBufSize, fBufSize+l));
 
 #ifdef R__BYTESWAP
+# ifdef USE_BSWAPCPY
+   bswapcpy16(fBufCur, h, n);
+   fBufCur += l;
+# else
    for (int i = 0; i < n; i++)
       tobuf(fBufCur, h[i]);
+# endif
 #else
    memcpy(fBufCur, h, l);
    fBufCur += l;
@@ -1076,8 +1174,13 @@ void TBuffer::WriteFastArray(const Int_t *ii, Int_t n)
    if (fBufCur + l > fBufMax) Expand(TMath::Max(2*fBufSize, fBufSize+l));
 
 #ifdef R__BYTESWAP
+# ifdef USE_BSWAPCPY
+   bswapcpy32(fBufCur, ii, n);
+   fBufCur += l;
+# else
    for (int i = 0; i < n; i++)
       tobuf(fBufCur, ii[i]);
+# endif
 #else
    memcpy(fBufCur, ii, l);
    fBufCur += l;
@@ -1095,8 +1198,13 @@ void TBuffer::WriteFastArray(const Long_t *ll, Int_t n)
    if (fBufCur + l > fBufMax) Expand(TMath::Max(2*fBufSize, fBufSize+l));
 
 #ifdef R__BYTESWAP
+# if defined(USE_BSWAPCPY) && !defined(R__B64)
+   bswapcpy32(fBufCur, ll, n);
+   fBufCur += l;
+# else
    for (int i = 0; i < n; i++)
       tobuf(fBufCur, ll[i]);
+# endif
 #else
    memcpy(fBufCur, ll, l);
    fBufCur += l;
@@ -1114,8 +1222,13 @@ void TBuffer::WriteFastArray(const Float_t *f, Int_t n)
    if (fBufCur + l > fBufMax) Expand(TMath::Max(2*fBufSize, fBufSize+l));
 
 #ifdef R__BYTESWAP
+# ifdef USE_BSWAPCPY
+   bswapcpy32(fBufCur, f, n);
+   fBufCur += l;
+# else
    for (int i = 0; i < n; i++)
       tobuf(fBufCur, f[i]);
+# endif
 #else
    memcpy(fBufCur, f, l);
    fBufCur += l;
@@ -1189,9 +1302,10 @@ TObject *TBuffer::ReadObject(const TClass *clReq)
    if (!clRef) {
 
       // got a reference to an already read object
-      if (fVersion > 0)
+      if (fVersion > 0) {
+         tag += fDisplacement;
          tag = CheckObject(tag, clReq);
-      else {
+      } else {
          if (tag > (UInt_t)fReadMap->GetSize()) {
             Error("ReadObject", "object tag too large, I/O buffer corrupted");
             // exception
@@ -1326,9 +1440,10 @@ TClass *TBuffer::ReadClass(const TClass *clReq, UInt_t *objTag)
       // got a tag to an already seen class
       UInt_t clTag = (tag & ~kClassMask);
 
-      if (fVersion > 0)
+      if (fVersion > 0) {
+         clTag += fDisplacement;
          clTag = CheckObject(clTag, clReq, kTRUE);
-      else {
+      } else {
          if (clTag == 0 || clTag > (UInt_t)fReadMap->GetSize()) {
             Error("ReadClass", "illegal class tag=%d (0<tag<=%d), I/O buffer corrupted",
                   clTag, fReadMap->GetSize());

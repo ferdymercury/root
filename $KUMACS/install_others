@@ -1,3 +1,5 @@
+*CMZ :  2.24/03 29/04/2000  09.35.50  by  Fons Rademakers
+*CMZ :  2.24/01 24/02/2000  15.30.33  by  Fons Rademakers
 *CMZ :  2.23/10 11/12/99  16.42.32  by  Rene Brun
 *CMZ :  2.23/08 02/11/99  08.45.25  by  Rene Brun
 *CMZ :  2.21/08 11/03/99  08.18.46  by  Rene Brun
@@ -40,6 +42,16 @@ cx thread
 sel -thread
 sel -posix
 
+sel roots
+seq roots
+cx roots
+sel -roots
+
+sel star
+seq starinc
+cx star
+sel -star
+
 +IF,UNIX.
 *      install WinNT and MAC sources
 sel -unix
@@ -53,6 +65,9 @@ cx utils/setpawc
 sel mac
 cx mac cint/macos cint/fakestrm
 sel -mac
+sel vms
+cx vms
+sel -vms
 sel -winnt -win32
 sel unix
 +ENDIF.

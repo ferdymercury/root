@@ -1,3 +1,4 @@
+//*CMZ :  2.24/03 16/04/2000  11.58.25  by  Rene Brun
 //*CMZ :  2.23/12 31/01/2000  10.23.31  by  Rene Brun
 //*CMZ :  2.00/09 23/06/98  14.58.30  by  Rene Brun
 //*CMZ :  1.03/06 24/10/97  15.37.37  by  Fons Rademakers
@@ -6,17 +7,18 @@
 #ifndef ROOT_TArrayF
 #define ROOT_TArrayF
 
+/*CMZ :  2.24/01 24/02/2000  11.49.40  by  Fons Rademakers*/
 /*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun and Fons Rademakers.                               *
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
  *                                                                       *
- * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
- * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -50,7 +52,7 @@ public:
    void       Copy(TArrayF &array) {array.Set(fN); for (Int_t i=0;i<fN;i++) array.fArray[i] = fArray[i];}
    Float_t   *GetArray() const { return fArray; }
    Stat_t     GetSum() const {Stat_t sum=0; for (Int_t i=0;i<fN;i++) sum+=fArray[i]; return sum;}
-   void       Reset() {for (Int_t i=0;i<fN;i++) fArray[i] = 0;}
+   void       Reset()  {memset(fArray,0,fN*sizeof(Float_t));}
    void       Set(Int_t n);
    void       Set(Int_t n, Float_t *array);
    Float_t   &operator[](Int_t i);

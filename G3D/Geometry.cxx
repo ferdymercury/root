@@ -1,3 +1,4 @@
+//*CMZ :  2.24/03 29/04/2000  12.36.51  by  Rene Brun
 //*CMZ :  2.23/12 26/01/2000  09.24.05  by  Rene Brun
 //*CMZ :  2.23/11 11/01/2000  12.14.46  by  Rene Brun
 //*CMZ :  2.23/02 06/09/99  16.55.10  by  Fons Rademakers
@@ -6,17 +7,18 @@
 //*CMZ :  2.00/00 03/07/98  15.45.57  by  Fons Rademakers
 //*-- Author :    Rene Brun   22/09/95
 
+/*CMZ :  2.24/01 24/02/2000  11.49.40  by  Fons Rademakers*/
 /*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun and Fons Rademakers.                               *
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
  *                                                                       *
- * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
- * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
  *************************************************************************/
 
 #include "TROOT.h"
@@ -396,9 +398,8 @@ void TGeometry::Local2Master(Float_t *local, Float_t *master)
   }
   else
      memcpy(master,local,sizeof(Float_t)* kVectorSize);
-
-
 }
+
 //______________________________________________________________________________
 void TGeometry::ls(Option_t *option)
 {
@@ -425,6 +426,68 @@ void TGeometry::ls(Option_t *option)
    }
 }
 
+//______________________________________________________________________________
+void TGeometry::Master2Local(Double_t *master, Double_t *local)
+{
+//*-*-*-*-*Convert one point from master system to local reference system*-*-*
+//*-*      ==============================================================
+//
+//  Note that before invoking this function, the global rotation matrix
+//  and translation vector for this node must have been computed.
+//  This is automatically done by the Paint functions.
+//  Otherwise TNode::UpdateMatrix should be called before.
+
+  if (GeomLevel()) {
+     Double_t x,y,z;
+     Double_t bomb = GetBomb();
+//   Double_t *matrix      = fMatrix->GetMatrix();
+     Double_t *matrix = &fRotMatrix[GeomLevel()][0];
+
+     Double_t xms = master[0] - bomb*fX;
+     Double_t yms = master[1] - bomb*fY;
+     Double_t zms = master[2] - bomb*fZ;
+
+     x = xms*matrix[0] + yms*matrix[1] + zms*matrix[2];
+     y = xms*matrix[3] + yms*matrix[4] + zms*matrix[5];
+     z = xms*matrix[6] + yms*matrix[7] + zms*matrix[8];
+
+     local[0] = x; local[1] = y; local[2] = z;
+  }
+  else
+     memcpy(local,master,sizeof(Double_t)* kVectorSize);
+}
+
+//______________________________________________________________________________
+void TGeometry::Master2Local(Float_t *master, Float_t *local)
+{
+//*-*-*-*-*Convert one point from master system to local reference system*-*-*
+//*-*      ==============================================================
+//
+//  Note that before invoking this function, the global rotation matrix
+//  and translation vector for this node must have been computed.
+//  This is automatically done by the Paint functions.
+//  Otherwise TNode::UpdateMatrix should be called before.
+
+ if (GeomLevel()) {
+    Float_t x,y,z;
+    Float_t bomb = GetBomb();
+
+//   Double_t *matrix      = fMatrix->GetMatrix();
+    Double_t *matrix = &fRotMatrix[GeomLevel()][0];
+
+    Double_t xms = master[0] - bomb*fX;
+    Double_t yms = master[1] - bomb*fY;
+    Double_t zms = master[2] - bomb*fZ;
+
+    x = xms*matrix[0] + yms*matrix[1] + zms*matrix[2];
+    y = xms*matrix[3] + yms*matrix[4] + zms*matrix[5];
+    z = xms*matrix[6] + yms*matrix[7] + zms*matrix[8];
+
+    local[0] = x; local[1] = y; local[2] = z;
+  }
+  else
+     memcpy(local,master,sizeof(Float_t)* kVectorSize);
+}
 
 //______________________________________________________________________________
 void TGeometry::Node(const char *name, const char *title, const char *shapename, Double_t x, Double_t y, Double_t z, const char *matrixname, Option_t *option)

@@ -1,3 +1,4 @@
+//*CMZ :  2.24/03 29/04/2000  23.42.00  by  Rene Brun
 //*CMZ :  1.00/05 20/03/97  15.34.59  by  Rene Brun
 //*-- Author :    Valery Fine(fine@vxcern.cern.ch)   16/08/96
 #ifndef ROOT_TContextMenuItem
@@ -34,7 +35,7 @@ public:
    void ExecCommandThread(TWin32SendClass *command){
      printf("TContextMenuItem must not call ExecCommandThread function !!! \n");}   // It is empty for this class
 
-   ClassDef(TContextMenuItem,0)
+  // ClassDef(TContextMenuItem,0)
 };
 
 #endif

@@ -1,5 +1,5 @@
-/*CMZ :  2.23/10 10/12/99  18.00.24  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   10/12/99*/
+/*CMZ :  2.24/05 16/05/2000  12.04.03  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   16/05/2000*/
 // lib/prec_stl/vector
 
 #pragma ifndef PREC_STL_VECTOR
@@ -47,10 +47,11 @@ class vector {
 #if 0
   typedef reverse_iterator<iterator> reverse_iterator;
 #else
-#ifdef G__VISUAL
-  class reverse_iterator : public _Ranit<T,difference_type>
-#else
-  class reverse_iterator : public random_access_iterator<T,difference_type>
+  class reverse_iterator
+#if defined(G__VISUAL)
+	: public _Ranit<T,difference_type>
+#elif !defined(G__SUNPRO_C)
+    	: public random_access_iterator<T,difference_type>
 #endif
 	{
    public:
@@ -77,7 +78,7 @@ class vector {
   friend bool operator!=(const vector::reverse_iterator& x
                         ,const vector::reverse_iterator& y) const;
 
-  typedef reverse_iterator const_reverse_iterator;
+  typedef const reverse_iterator const_reverse_iterator;
 
 #if 0
   friend random_access_iterator_tag
@@ -90,6 +91,12 @@ class vector {
   iterator end(void) ;
   reverse_iterator rbegin(void) ;
   reverse_iterator rend(void) ;
+#ifdef G__CONSTNESSFLAG
+  const_iterator begin(void) const;
+  const_iterator end(void) const;
+  const_reverse_iterator rbegin(void) const;
+  const_reverse_iterator rend(void) const;
+#endif
   size_type size(void) const ;
   size_type max_size(void) const ;
   size_type capacity(void) const ;

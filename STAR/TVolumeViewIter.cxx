@@ -1,31 +1,8 @@
+//*CMZ :  2.24/01 31/03/2000  08.39.34  by  Rene Brun
 //*CMZ :  2.23/12 26/01/2000  12.18.15  by  Valery Fine(fine@bnl.gov)
 //*-- Author : Valery Fine(fine@bnl.gov)   25/01/99
-// $Id: TVolumeViewIter.cxx,v 1.9 1999/10/17 20:45:34 fine Exp $
-// $Log: TVolumeViewIter.cxx,v $
-// Revision 1.9  1999/10/17 20:45:34  fine
-// some clean up
-//
-// Revision 1.8  1999/04/23 00:09:20  fine
-// Working verion of PolyLineShape. Some correction for TVolume family as well
-//
-// Revision 1.7  1999/04/13 14:26:41  fine
-// Geometry-based dataset implementation, next step
-//
-// Revision 1.6  1999/04/08 16:44:11  fine
-// Working version of the NodeView family
-//
-// Revision 1.5  1999/04/05 03:18:28  fine
-// TVolume family steps
-//
-// Revision 1.4  1999/04/02 23:36:05  fine
-// Collapsed geometry structures has been implemeted
-//
-// Revision 1.3  1999/03/29 19:25:26  fine
-// Visibility flag have been activated. Some working correction
-//
 
 #include "TVolumeViewIter.h"
-// +SEQ,TClonesArray.
 #include "TObjArray.h"
 #include "TVolumeView.h"
 #include "TDataSetIter.h"
@@ -50,7 +27,8 @@ ClassImp(TVolumeViewIter)
 //______________________________________________________________________________
 TVolumeViewIter::TVolumeViewIter(TVolumeView *view, Int_t depth, Bool_t dir):
            TDataSetIter(view,depth,dir),fPositions(0)
-{ }
+{
+}
 
 //______________________________________________________________________________
 TVolumeViewIter::~TVolumeViewIter()
@@ -159,6 +137,7 @@ void TVolumeViewIter::ResetPosition(Int_t level, TVolumePosition *newPosition)
   if (newPosition)
      *thisPosition =  *newPosition;
 }
+
 //______________________________________________________________________________
 void TVolumeViewIter::Reset(TDataSet *l,Int_t depth)
 {
@@ -190,5 +169,4 @@ TVolumePosition *TVolumeViewIter::SetPositionAt(TVolumePosition &curPosition)
     }
    return position;
 }
-
 

@@ -1,3 +1,4 @@
+//*CMZ :  2.24/01 14/02/2000  11.40.34  by  Rene Brun
 //*CMZ :  2.23/12 22/01/2000  17.53.37  by  Rene Brun
 //*CMZ :  2.23/04 04/10/99  14.43.36  by  Rene Brun
 //*CMZ :  2.23/02 02/09/99  15.54.26  by  Rene Brun
@@ -6,17 +7,18 @@
 //*CMZ :  2.00/12 02/09/98  17.38.50  by  Fons Rademakers
 //*-- Author :    Rene Brun   12/12/94
 
+/*CMZ :  2.24/01 24/02/2000  11.49.40  by  Fons Rademakers*/
 /*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun and Fons Rademakers.                               *
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
  *                                                                       *
- * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
- * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
  *************************************************************************/
 
 #include <fstream.h>
@@ -372,11 +374,14 @@ void TPolyLine::PaintPolyLine(Int_t n, Float_t *x, Float_t *y, Option_t *option)
 {
 //*-*-*-*-*-*-*-*-*Draw this polyline with new coordinates*-*-*-*-*-*-*-*-*-*
 //*-*              =======================================
-
+//
+//  if option = 'f' or 'F' the fill area is drawn
+//  default is to draw the lines only
 
    TAttLine::Modify();  //Change line attributes only if necessary
    TAttFill::Modify();  //Change fill area attributes only if necessary
-   gPad->PaintPolyLine(n,x,y,option);
+   if (*option == 'f' || *option == 'F') gPad->PaintFillArea(n,x,y,option);
+   else                                  gPad->PaintPolyLine(n,x,y,option);
 }
 
 //______________________________________________________________________________

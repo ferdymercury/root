@@ -1,4 +1,4 @@
-//*CMZ :  2.23/12 26/01/2000  11.47.51  by  Rene Brun
+//*CMZ :  2.24/01 04/02/2000  18.40.13  by  Fons Rademakers
 //*CMZ :  2.23/09 10/11/99  18.43.38  by  Fons Rademakers
 //*CMZ :  2.23/07 27/10/99  15.48.40  by  Rene Brun
 //*CMZ :  2.23/00 27/10/99  13.01.52  by  Rene Brun
@@ -7,17 +7,18 @@
 //*CMZ :  2.22/06 21/06/99  17.53.19  by  Rene Brun
 //*-- Author :    Fons Rademakers   02/07/97
 
+/*CMZ :  2.24/01 24/02/2000  11.49.40  by  Fons Rademakers*/
 /*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun and Fons Rademakers.                               *
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
  *                                                                       *
- * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
- * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -39,56 +40,88 @@
 #include "TThreadImp.h"
 #include "TThreadFactory.h"
 #include "TCanvas.h"
+#include "TError.h"
+#include "CallFunc.h"
 
 
 TThreadImp     *TThread::fgThreadImp = 0;
 TThread        *TThread::fgMain = 0;
 TMutex         *TThread::fgMainMutex;
-char  *volatile TThread::fgXAct = NULL;
+char  *volatile TThread::fgXAct = 0;
 TMutex         *TThread::fgXActMutex;
 TCondition     *TThread::fgXActCondi;
-void **volatile TThread::fgXArr = NULL;
+void **volatile TThread::fgXArr = 0;
 volatile Int_t  TThread::fgXAnb = 0;
 volatile Int_t  TThread::fgXArt = 0;
 ClassImp(TThread)
 
 //______________________________________________________________________________
-void      TThread::Debu(const char *txt)
+void TThread::Debu(const char *txt)
 {
-  fprintf(stderr,"TThread::Debu %s %d \n",txt,fgMain->fId);
+   fprintf(stderr,"TThread::Debu %s %d \n",txt,fgMain->fId);
 }
 
-Int_t     TThread::GetId()  { return fId; }
-
-
-Int_t     TThread::SetPriority(EPriority pri){ fPriority=pri;return 0;}
-EPriority TThread::GetPriority() {return fPriority;}
-
-EState    TThread::GetState  () const {return fState;};
-Int_t     TThread::SetJoinId (Int_t jid)    {fJoinId = jid;   return 0;}
-Int_t     TThread::SetJoinId (TThread *tj)  {return SetJoinId(tj->fId);}
-
- TThread  *TThread::GetThread(Int_t id)
+//______________________________________________________________________________
+void TThread::SetPriority(EPriority pri)
 {
-  TThread *myth;
+   // Set thread priority.
 
-  for (myth = fgMain; myth && (myth->fId!= id); myth=myth->fNext){};
-  return myth;
+   fPriority = pri;
 }
 
- TThread  *TThread::GetThread(const Text_t *name)
+//______________________________________________________________________________
+void TThread::SetJoinId(Int_t jid)
 {
-  TThread *myth;
+   // Set id of thread to join.
 
-  for (myth = fgMain; myth && (strcmp(name,myth->GetName())); myth=myth->fNext){};
-  return myth;
-}
- TThread  *TThread::Self()
-{
-  return GetThread(SelfId());
+   fJoinId = jid;
 }
 
- Int_t TThread::Join(void **ret){ return TThread::Join(0,ret);}
+//______________________________________________________________________________
+void TThread::SetJoinId(TThread *tj)
+{
+   // Set thread to join.
+
+   SetJoinId(tj->fId);
+}
+
+//______________________________________________________________________________
+TThread *TThread::GetThread(Int_t id)
+{
+   // Static method to find a thread by id.
+
+   TThread *myth;
+
+   for (myth = fgMain; myth && (myth->fId!= id); myth=myth->fNext){};
+   return myth;
+}
+
+//______________________________________________________________________________
+TThread *TThread::GetThread(const Text_t *name)
+{
+   // Static method to find a thread by name.
+
+   TThread *myth;
+
+   for (myth = fgMain; myth && (strcmp(name,myth->GetName())); myth=myth->fNext){};
+   return myth;
+}
+
+//______________________________________________________________________________
+TThread *TThread::Self()
+{
+   // Static method returning pointer to current thred.
+
+   return GetThread(SelfId());
+}
+
+//______________________________________________________________________________
+Int_t TThread::Join(void **ret)
+{
+   // Static method to join thread. (rdm?)
+
+   return TThread::Join(0, ret);
+}
 
 
 //
@@ -98,26 +131,35 @@ Int_t     TThread::SetJoinId (TThread *tj)  {return SetJoinId(tj->fId);}
 
 // construct a Detached thread running a given function.
 
-TThread::TThread(void *(*fn)(void*), void* arg, EPriority pri)
+//______________________________________________________________________________
+TThread::TThread(void *(*fn)(void*), void *arg, EPriority pri)
 {
-    fDetached = kFALSE;
-    fFcnVoid = NULL;
-    fFcnRetn = fn;
-    fPriority = pri;
-    fThreadArg = arg;
-    Constructor();
-    fNamed = kFALSE;
+   // Create a thread. Specify the function or static class method
+   // to be executed by the thread, and a pointer to the argument structure.
+   // The user functions should return a void*.
+
+   fDetached  = kFALSE;
+   fFcnVoid   = 0;
+   fFcnRetn   = fn;
+   fPriority  = pri;
+   fThreadArg = arg;
+   Constructor();
+   fNamed     = kFALSE;
 }
 
-TThread::TThread(void  (*fn)(void*), void* arg, EPriority pri)
+//______________________________________________________________________________
+TThread::TThread(void (*fn)(void*), void *arg, EPriority pri)
 {
-    fDetached = kTRUE;
-    fFcnRetn = NULL;
-    fFcnVoid = fn;
-    fPriority = pri;
-    fThreadArg = arg;
-    Constructor();
-    fNamed = kFALSE;
+   // Create a thread. Specify the function or class method
+   // to be executed by the thread, and a pointer to the argument structure.
+
+   fDetached  = kTRUE;
+   fFcnRetn   = 0;
+   fFcnVoid   = fn;
+   fPriority  = pri;
+   fThreadArg = arg;
+   Constructor();
+   fNamed     = kFALSE;
 }
 
 ////////// begin changes (J.A.):
@@ -125,11 +167,14 @@ TThread::TThread(void  (*fn)(void*), void* arg, EPriority pri)
    // as useful for invoking thread with name from compiled program:
 
 
-TThread::TThread(const Text_t *thname, void *(*fn)(void*), void* arg, EPriority pri){
+//______________________________________________________________________________
+TThread::TThread(const Text_t *thname, void *(*fn)(void*), void *arg, EPriority pri)
+{
+   // Create thread with a name. For the ..... //till here
   SetName(thname); // set TNamed name to thname anyway, will be overwritten
   //if G__p2f2funcname-method recognizes true name of fn (call by interpreter)
   fDetached = kFALSE;
-    fFcnVoid = NULL;
+    fFcnVoid = 0;
     fFcnRetn = fn;
     fPriority = pri;
     fThreadArg = arg;
@@ -145,7 +190,7 @@ TThread::TThread(const Text_t *thname, void (*fn)(void*), void* arg, EPriority p
   SetName(thname); // set TNamed name to thname anyway, will be overwritten
   //if G__p2f2funcname-method recognizes true name of fn (call by interpreter)
   fDetached = kTRUE;
-  fFcnRetn = NULL;
+  fFcnRetn = 0;
   fFcnVoid = fn;
   fPriority = pri;
   fThreadArg = arg;
@@ -178,7 +223,7 @@ void TThread::Constructor() {
     fTsd[0] = gPad;
 
     if (fgMain) fgMain->fPrev = this;
-    fNext = fgMain; fPrev=NULL; fgMain = this;
+    fNext = fgMain; fPrev=0; fgMain = this;
 
     UnLock();
     PutComm();
@@ -202,7 +247,7 @@ TThread::~TThread()
   if (fgMain == this) fgMain = fNext;
  UnLock();
  PutComm();
-  if (fHolder) *(fHolder) = NULL;
+  if (fHolder) *(fHolder) = 0;
  }
 
 
@@ -256,8 +301,8 @@ if (arg) fThreadArg = arg;
   PutComm("Run: MainMutex locking");
   Lock();
   PutComm("Run: MainMutex locked");
-  if (fFcnVoid) fname=G__p2f2funcname((void*)fFcnVoid);
-  if (fFcnRetn) fname=G__p2f2funcname((void*)fFcnRetn);
+  if (fFcnVoid) fname=G__p2f2funcname(fFcnVoid);
+  if (fFcnRetn) fname=G__p2f2funcname(fFcnRetn);
   if(!fNamed)
     if (fname) SetName(fname);
 
@@ -383,7 +428,7 @@ unsigned long TThread::Call(void *p2f,void *arg) {
       }
     }
     else {
-      cerr << "no overloading parameter matches" << endl;
+      ::Error("TThread:Call", "no overloading parameter matches");
     }
   }
 
@@ -402,14 +447,14 @@ unsigned long TThread::Call(void *p2f,void *arg) {
     case G__COMPILEDINTERFACEMETHOD: // using interface method
     case G__BYTECODEFUNC:            // bytecode version of interpreted func
       fFunc.SetArg((long)arg);
-      return fFunc.ExecInt((void*)NULL);
+      return fFunc.ExecInt((void*)0);
 
     case G__COMPILEDTRUEFUNC: // using true pointer to function
     case G__UNKNOWNFUNC: // this case will never happen
       return (*(int (*)(void*))iPointer2Function)(arg);
   }
 
-  cerr << "TThread::Call. *** Something very WRONG ****" << endl;
+  ::Error("TThread::Call", "*** Something very WRONG ***");
 
   return 0xffffffff;
 }
@@ -442,7 +487,7 @@ void *TThread::Fun(void *ptr) {
   if (th->fDetached) { //Detached, non joinable thread
 
     TThread::Call((void*)th->fFcnVoid,arg);
-    ret = NULL;
+    ret = 0;
     th->fState = kFinishedState;
   } else             { //UnDetached, joinable thread
     ret = (void*)TThread::Call((void*)th->fFcnRetn,arg);
@@ -516,7 +561,7 @@ void TThread::Printf(const char *txt,Int_t in) {
   void *arr[3];
 
   arr[1] = (void*)txt; arr[2] = &in;
-  if (XARequest("PRTF", 3, arr, NULL)) return;
+  if (XARequest("PRTF", 3, arr, 0)) return;
 
   fprintf(stderr,txt,in);
 }
@@ -609,7 +654,7 @@ void TThread::XAction()
 
   }
 
-  fgXAct = NULL;
+  fgXAct = 0;
   fgXActCondi->Signal();
 
 }

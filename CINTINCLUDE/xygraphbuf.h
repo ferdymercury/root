@@ -1,5 +1,5 @@
-/*CMZ :  2.23/10 10/12/99  18.00.16  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   10/12/99*/
+/*CMZ :  2.24/05 16/05/2000  12.03.57  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   16/05/2000*/
 /***************************************************************************
 * xygraphbuf.h
 *
@@ -395,3 +395,4 @@ arrayostream arraycout=arrayostream(stdout);
 arrayostream arraycerr=arrayostream(stderr);
 arrayistream arraycin=arrayistream(stdin);
 
+#endif

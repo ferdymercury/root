@@ -1,3 +1,4 @@
+//*CMZ :  2.24/03 20/04/2000  17.13.39  by  Fons Rademakers
 //*CMZ :  2.23/12 28/01/2000  19.14.53  by  Rene Brun
 //*CMZ :  2.23/00 12/08/99  14.12.32  by  Rene Brun
 //*CMZ :  2.22/02 26/05/99  09.41.15  by  Rene Brun
@@ -19,7 +20,9 @@
 #ifndef ROOT_TVector2
 #define ROOT_TVector2
 
+#ifndef __CINT__
 #include <limits.h>
+#endif
 
 #include "TMath.h"
 #include "TObject.h"
@@ -49,7 +52,7 @@ public:
   TVector2&       operator  = (TVector2 const & v);
   TVector2&       operator += (TVector2 const & v);
   TVector2&       operator -= (TVector2 const & v);
-  Double_t   operator *= (TVector2 const & v);
+  Double_t        operator *= (TVector2 const & v);
   TVector2&       operator *= (Double_t s);
   TVector2&       operator /= (Double_t s);
 
@@ -60,11 +63,11 @@ public:
   friend TVector2       operator + (Double_t  , const TVector2&);
   friend TVector2       operator - (const TVector2&, const TVector2&);
   friend TVector2       operator - (const TVector2&, Double_t  );
-  friend Double_t  operator * (const TVector2&, const TVector2&);
+  friend Double_t       operator * (const TVector2&, const TVector2&);
   friend TVector2       operator * (const TVector2&, Double_t  );
   friend TVector2       operator * (Double_t  , const TVector2&);
   friend TVector2       operator / (const TVector2&, Double_t  );
-  friend Double_t  operator ^ (const TVector2&, const TVector2&);
+  friend Double_t       operator ^ (const TVector2&, const TVector2&);
 
                                         // ****** setters
   void Set(TVector2& v);

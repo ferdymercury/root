@@ -1,3 +1,5 @@
+//*CMZ :  2.24/03 29/04/2000  23.42.00  by  Rene Brun
+//*CMZ :  2.24/01 18/02/2000  13.44.47  by  Valery Fine(fine@bnl.gov)
 //*CMZ :  0.90/11 02/01/97  15.08.41  by  Valery Fine(fine@vxcern.cern.ch)
 //*-- Author :    Valery Fine(fine@vxcern.cern.ch)   09/12/96
 
@@ -29,8 +31,8 @@ protected:
 
 public:
    TWin32InspectView(){fhwndWindow=0;} //default ctor
-   TWin32InspectView(TGWin32WindowsObject *winobj,Text_t *title, Float_t x=0,Float_t y=0, Float_t width=1, Float_t  height=1,
-                          Text_t *type= WC_LISTVIEW,
+   TWin32InspectView(TGWin32WindowsObject *winobj,const Text_t *title, Float_t x=0,Float_t y=0, Float_t width=1, Float_t  height=1,
+                          const Text_t *type= WC_LISTVIEW,
                           UInt_t style=(DWORD) WS_VISIBLE | LVS_REPORT | LVS_SINGLESEL | LVS_AUTOARRANGE );
 
   virtual void Add(TObject *obj, char const *name);
@@ -39,7 +41,7 @@ public:
   virtual UInt_t           GetItemObject(RECT *rpc);    // returns the selected TObject item (lParam) and its position
   void                     ResetIndex(){fiLastCreated = -1;} // Resset the item index to open a new list
   void                     Shift(UInt_t lParam = 0){ ResetIndex();}         // Shift items (this causes clearing the control area)
-  ClassDef(TWin32InspectView,0)  // TWin32InspectView Class is used to build TWin32InspectImp for Win32
+  // ClassDef(TWin32InspectView,0)  // TWin32InspectView Class is used to build TWin32InspectImp for Win32
 
 };
 

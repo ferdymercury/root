@@ -1,38 +1,8 @@
+//*CMZ :  2.24/05 08/05/2000  12.40.25  by  Valery Fine(fine@bnl.gov)
+//*CMZ :  2.24/01 31/03/2000  08.13.15  by  Rene Brun
 //*CMZ :  2.23/12 26/01/2000  12.33.30  by  Valery Fine(fine@bnl.gov)
 //*-- Author :    Valery Fine(fine@mail.cern.ch)   03/07/98
 // Copyright (C) Valery Fine (Valeri Faine) 1998. All right reserved
-// $Id: TDataSetIter.cxx,v 1.33 1999/12/29 02:36:59 fine Exp $
-// $Log: TDataSetIter.cxx,v $
-// Revision 1.33  1999/12/29 02:36:59  fine
-// remove warning to make Linux happy
-//
-// Revision 1.32  1999/12/28 23:32:01  fine
-// TDataSetIter  operator++ removed to avoid a future problem
-//
-// Revision 1.31  1999/12/28 21:24:07  fine
-// TDataSetIter opeartor * and operator ++ have been implemented
-//
-// Revision 1.30  1999/10/28 16:24:30  fine
-// TDataSet major correction: it may be built with TList (default) or with TObjArray
-//
-// Revision 1.29  1999/08/28 01:25:17  fine
-// TDataSetIter::Find now can find itself
-//
-// Revision 1.28  1999/05/14 21:28:30  fine
-// Reset - protection against of the ZERO pointer has been introduced
-//
-// Revision 1.27  1999/04/30 13:15:56  fisyak
-// Ad StObject, modification StArray for StRootEvent
-//
-// Revision 1.26  1999/04/16 16:35:35  perev
-// last tips for StTree and TDataSetIter
-//
-// Revision 1.25  1999/04/15 19:44:45  fine
-//  TDataSetIter::FindObject bug has been fixed. aliases FindByName and FindByPath  introduced
-//
-// Revision 1.24  1999/04/08 16:44:08  fine
-// Working version of the NodeView family
-//
 
 #include <iostream.h>
 #include <iomanip.h>
@@ -51,20 +21,20 @@
 #  define strcasecmp(arg1,arg2) stricmp(arg1,arg2)
 #endif
 
-const TDataSet *TDataSetIter::fNullDataSet = (TDataSet *)(-1);
+TDataSet *TDataSetIter::fNullDataSet = (TDataSet *)(-1);
 
 ClassImp(TDataSetIter)
 
 //////////////////////////////////////////////////////////////////////////
 //                                                                      //
-// TDataSetIter                                                       //
+// TDataSetIter                                                         //
 //                                                                      //
-// TDataSetIter is a class iterator to navigate TDataSet objects    //
+// TDataSetIter is a class iterator to navigate TDataSet objects        //
 // via 4 internal pointers :                                            //
 //                                                                      //
 //  1. fRootDataSet    - "root" dataset                                 //
 //  2. fWorkingDataSet - Working dataset                                //
-//  3. fDataSet        - the last selected TDataSet                   //
+//  3. fDataSet        - the last selected TDataSet                     //
 //  4. fNext           - TIter for the the list of the "root" dataset   //
 //                                                                      //
 //////////////////////////////////////////////////////////////////////////
@@ -113,6 +83,7 @@ TDataSetIter::~TDataSetIter()
      SafeDelete(fNext);
   fDepth = 0;
 }
+
 //______________________________________________________________________________
 TDataSet *TDataSetIter::Add(TDataSet *set, TDataSet *dataset)
 {
@@ -120,15 +91,15 @@ TDataSet *TDataSetIter::Add(TDataSet *set, TDataSet *dataset)
  //                                                                           //
  // Add - adds the set to the dataset defined with the second parameters      //
  //                                                                           //
- // TDataSet dataset != 0 - Add the set to the TDataSet *dataset          //
+ // TDataSet dataset != 0 - Add the set to the TDataSet *dataset              //
  //                                                                           //
- //                     = 0 - (by default) to the current TDataSet defined  //
+ //                     = 0 - (by default) to the current TDataSet defined    //
  //                          with fWorkingDataSet data member                 //
  //                                                                           //
  //  returns  the pointer to set is success or ZERO poiner                    //
  //  =======                                                                  //
  //                                                                           //
- //  Note: If this TDataSetIter is empty (i.e. Cwd() returns 0), the "set"  //
+ //  Note: If this TDataSetIter is empty (i.e. Cwd() returns 0), the "set"    //
  //        becomes the "root" dataset of this iterator                        //                                                                         //
  ///////////////////////////////////////////////////////////////////////////////
 
@@ -161,9 +132,9 @@ TDataSet *TDataSetIter::Add(TDataSet *dataset, const Char_t *path)
  //                                                                           //
  // Add                                                                       //
  //                                                                           //
- // Char_t path != 0 - Add a TDataSet dataset to the TDataSet dataset     //
+ // Char_t path != 0 - Add a TDataSet dataset to the TDataSet dataset         //
  //                    defined with "path"                                    //
- //              = 0 - (by default) to the current TDataSet defined         //
+ //              = 0 - (by default) to the current TDataSet defined           //
  //                     with fWorkingDataSet data member                      //
  //                                                                           //
  //  returns the dataset is success or ZERO pointer                           //
@@ -180,15 +151,15 @@ TDataSet *TDataSetIter::Add(TDataSet *dataset, const Char_t *path)
 TDataSet *TDataSetIter::Cd(const Char_t *dirname){
 /////////////////////////////////////////////////////////////////////
 //                                                                 //
-// TDataSet *TDataSetIter::Cd(const Char_t *dirname)           //
+// TDataSet *TDataSetIter::Cd(const Char_t *dirname)               //
 //                                                                 //
 // Change the current working directory to dirname                 //
 //                                                                 //
-// Returns the pointer to the new "working" TDataSet             //
+// Returns the pointer to the new "working" TDataSet               //
 // =======   0,  if the new directory doesn't exist.               //
 //                                                                 //
 // Remark:  The name = ".." has a special meaning.                 //
-// ------   TDataSetIter::Cd("..") returns the parent set        //
+// ------   TDataSetIter::Cd("..") returns the parent set          //
 //          But one still can not use ".." as a legal part         //
 //          of the full path                                       //
 /////////////////////////////////////////////////////////////////////
@@ -200,20 +171,21 @@ TDataSet *TDataSetIter::Cd(const Char_t *dirname){
   if (set) fWorkingDataSet = set;
   return set;
 }
+
 //______________________________________________________________________________
 TDataSet *TDataSetIter::Cd(TDataSet *ds)
 {
 /////////////////////////////////////////////////////////////////////
 //                                                                 //
-// TDataSet *TDataSetIter::Cd(const TDataSet *ds)            //
+// TDataSet *TDataSetIter::Cd(const TDataSet *ds)                  //
 //                                                                 //
 // Make:  Cwd() = ds;                                              //
 // Look for the first occurence of the "ds" pointer for the current//
-// TDataSet in respect of the Cwd() if any                       //
+// TDataSet in respect of the Cwd() if any                         //
 //                                                                 //
 // Change the current working directory to ds if present           //
 //                                                                 //
-// Returns the pointer to the new "working" TDataSet (i.e. ds)   //
+// Returns the pointer to the new "working" TDataSet (i.e. ds)     //
 // =======   0,  if the new directory doesn't exist.               //
 //                                                                 //
 /////////////////////////////////////////////////////////////////////
@@ -314,8 +286,6 @@ TDataSet *TDataSetIter::FindObject(TDataSet *set,const Char_t *path,Option_t *op
   //             = "by default" - checks all links
   //
   if (!set) return 0;
-//  Bool_t optl = opt ? strcmp(opt,"-l") == 0 || strcmp(opt,"-L") == 0 : kFALSE;
-//  Bool_t opts = opt ? strcmp(opt,"-s") == 0 || strcmp(opt,"-S") == 0 : kFALSE;
 
   TDataSet *startset = 0;
   if (path) startset = Find(path);
@@ -402,11 +372,12 @@ void TDataSetIter::Notify(TDataSet *)
   //
   //  Notify(TDataSet *dataset)
   //
-  //  This dummy method is called when TDataSetIter::Find dive in "dataset"
+  //  This dummy method is called when TDataSetIter::Find dives in "dataset"
   //  to look for thew next level of the dataset's
   //  printf("void TDataSetIter::Notify(TDataSet *) level: %d %s\n",fDepth,ds->GetName());
   //
 }
+
 //______________________________________________________________________________
 Int_t TDataSetIter::Rmdir(TDataSet *dataset,Option_t *)
 {
@@ -439,48 +410,46 @@ TDataSet *TDataSetIter::Next( EDataSetPass mode)
 
   if (fMaxDepth==1) fDataSet = fNext ? NextDataSet(*fNext) :0;
   else {
-    // Check the whether the next level does exist
-    Bool_t mustNotify = kFALSE;
-    if (fDepth==0) {fDepth = 1; mustNotify = kTRUE;}
-    if (fDataSet && fDataSet != fNullDataSet &&
-        (fDepth < fMaxDepth || fMaxDepth ==0) && mode == kContinue )
-    {
-      // create the next level iterator, go deeper
-      TSeqCollection *list  = fDataSet->GetCollection();
-      // Look for the next level
-      if (list && list->GetSize() ) {
-         fDepth++;
-         mustNotify = kTRUE;
-         if (fDepth >= 100) {
-            Error("Next()"
-                  ," too many (%d) nested levels of your TDataSet has been detected",fDepth);
-           return 0;
+     // Check the whether the next level does exist
+     if (fDepth==0) fDepth = 1;
+     if (fDataSet && fDataSet != fNullDataSet &&
+         (fDepth < fMaxDepth || fMaxDepth ==0) && mode == kContinue )
+     {
+       // create the next level iterator, go deeper
+       TSeqCollection *list  = fDataSet->GetCollection();
+       // Look for the next level
+       if (list && list->GetSize() ) {
+          fDepth++;
+          if (fDepth >= 100) {
+             Error("Next()"
+                   ," too many (%d) nested levels of your TDataSet has been detected",fDepth);
+            return 0;
+          }
+          fNextSet[fDepth-1] = new TIter(list);
+       }
+     }
+
+     // Pick the next object of the current level
+     TIter *next = fNextSet[fDepth-1];
+     if (next) {
+        fDataSet = 0;
+        if (mode != kUp) fDataSet = NextDataSet(*next);
+
+        // Go upstair if the current one has been escaped
+        if (!fDataSet) {
+           // go backwards direction
+           while (!fDataSet && fDepth > 1) {
+           fDepth--;
+           delete next;
+           next =  fNextSet[fDepth-1];
+           TDataSet *set = NextDataSet(*next);
+           if (set)
+              fDataSet = set;
          }
-         fNextSet[fDepth-1] = new TIter(list);
-      }
-    }
-
-    // Pick the next object of the current level
-    TIter *next = fNextSet[fDepth-1];
-    if (next) {
-      fDataSet = 0;
-      if (mode != kUp) fDataSet = NextDataSet(*next);
-
-      // Go upstair if the current one has been escaped
-      if (!fDataSet) {
-        // go backwards direction
-        while (!fDataSet && fDepth > 1) {
-          fDepth--;
-          delete next;
-          next =  fNextSet[fDepth-1];
-          TDataSet *set = NextDataSet(*next);
-          if (set)
-             fDataSet = set;
-        }
-      }
-    }
-  }
-  return (TDataSet *)fDataSet;
+       }
+     }
+   }
+   return (TDataSet *)fDataSet;
 }
 //______________________________________________________________________________
 TDataSet *TDataSetIter::NextDataSet(TIter &next){
@@ -516,7 +485,7 @@ TDataSet *TDataSetIter::Find(const Char_t *path, TDataSet *rootset,
 //                                                                            //
 // "relative path": the search is done against of fWorkingDataSet data mem    //
 // "absolute path": the search is done against of fRootDataSet    data mem    //
-// "empty path"   : no search is done just next TDataSet is returned if any //
+// "empty path"   : no search is done just next TDataSet is returned if any   //
 //                                                                            //
 //  Remark: This version can not treat any "special name" like "..", ".", etc //
 //  ------                                                                    //
@@ -651,15 +620,15 @@ TDataSet *TDataSetIter::Shunt(TDataSet *set, TDataSet *dataset)
  //                                                                           //
  // Shunt - moves the set to the dataset defined with the second parameters   //
  //                                                                           //
- // TDataSet dataset != 0 - Add the set to the TDataSet *dataset          //
+ // TDataSet dataset != 0 - Add the set to the TDataSet *dataset              //
  //                                                                           //
- //                     = 0 - (by default) to the current TDataSet defined  //
+ //                     = 0 - (by default) to the current TDataSet defined    //
  //                          with fWorkingDataSet data member                 //
  //                                                                           //
  //  returns  the pointer to set if successful or ZERO pointer                //
  //  =======                                                                  //
  //                                                                           //
- //  Note: If this TDataSetIter is empty (i.e. Cwd() returns 0), the "set"  //
+ //  Note: If this TDataSetIter is empty (i.e. Cwd() returns 0), the "set"    //
  //        becomes the "root" dataset of this iterator                        //                                                                         //
  ///////////////////////////////////////////////////////////////////////////////
 
@@ -692,10 +661,10 @@ TDataSet *TDataSetIter::Shunt(TDataSet *dataset, const Char_t *path)
  //                                                                           //
  // Shunt                                                                     //
  //                                                                           //
- // Char_t path != 0 - Move a TDataSet dataset from its parent to           //
- //                    the TDataSet dataset                                 //
+ // Char_t path != 0 - Move a TDataSet dataset from its parent to             //
+ //                    the TDataSet dataset                                   //
  //                    defined with "path"                                    //
- //              = 0 - (by default) to the current TDataSet defined         //
+ //              = 0 - (by default) to the current TDataSet defined           //
  //                    with fWorkingDataSet data member                       //
  //                                                                           //
  //  returns the dataset is success or ZERO pointer                           //
@@ -707,6 +676,7 @@ TDataSet *TDataSetIter::Shunt(TDataSet *dataset, const Char_t *path)
  if (path && strlen(path)) set = Find(path);
  return Shunt(dataset,set);
 }
+
 //______________________________________________________________________________
 TDataSet *TDataSetIter::operator[](const Char_t *path)
 {

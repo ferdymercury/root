@@ -1,20 +1,22 @@
+//*CMZ :  2.24/05 07/05/2000  16.38.50  by  Fons Rademakers
 //*CMZ :  2.23/02 03/09/99  12.28.47  by  Rene Brun
 //*CMZ :  2.00/08 25/05/98  17.04.16  by  Fons Rademakers
 //*CMZ :  2.00/00 05/03/98  20.16.15  by  Fons Rademakers
 //*CMZ :  1.03/09 06/12/97  17.23.26  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   15/11/95
 
+/*CMZ :  2.24/01 24/02/2000  11.49.40  by  Fons Rademakers*/
 /*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun and Fons Rademakers.                               *
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
  *                                                                       *
- * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
- * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -35,6 +37,7 @@
 #include "TBrowserImp.h"
 #include "TContextMenuImp.h"
 #include "TControlBarImp.h"
+#include "TInspectorImp.h"
 
 TGuiFactory *gGuiFactory = 0;
 TGuiFactory *gBatchGuiFactory = 0;
@@ -51,7 +54,7 @@ TGuiFactory::TGuiFactory(const char *name, const char *title)
 //______________________________________________________________________________
 TApplicationImp *TGuiFactory::CreateApplicationImp(const char *classname, int *argc, char **argv, void *options, Int_t numOptions)
 {
-   // Create a batch version of TApplicationImp
+   // Create a batch version of TApplicationImp.
 
    return new TApplicationImp(classname, argc, argv, options, numOptions);
 }
@@ -59,7 +62,7 @@ TApplicationImp *TGuiFactory::CreateApplicationImp(const char *classname, int *a
 //______________________________________________________________________________
 TCanvasImp *TGuiFactory::CreateCanvasImp(TCanvas *c, const char *title, UInt_t width, UInt_t height)
 {
-   // Create a batch version of TCanvasImp
+   // Create a batch version of TCanvasImp.
 
    return new TCanvasImp(c, title, width, height);
 }
@@ -67,7 +70,7 @@ TCanvasImp *TGuiFactory::CreateCanvasImp(TCanvas *c, const char *title, UInt_t w
 //______________________________________________________________________________
 TCanvasImp *TGuiFactory::CreateCanvasImp(TCanvas *c, const char *title, Int_t x, Int_t y, UInt_t width, UInt_t height)
 {
-   // Create a batch version of TCanvasImp
+   // Create a batch version of TCanvasImp.
 
    return new TCanvasImp(c, title, x, y, width, height);
 }
@@ -75,7 +78,7 @@ TCanvasImp *TGuiFactory::CreateCanvasImp(TCanvas *c, const char *title, Int_t x,
 //______________________________________________________________________________
 TBrowserImp *TGuiFactory::CreateBrowserImp(TBrowser *b, const char *title, UInt_t width, UInt_t height)
 {
-   // Create a batch version of TBrowserImp
+   // Create a batch version of TBrowserImp.
 
    return new TBrowserImp(b, title, width, height);
 }
@@ -83,7 +86,7 @@ TBrowserImp *TGuiFactory::CreateBrowserImp(TBrowser *b, const char *title, UInt_
 //______________________________________________________________________________
 TBrowserImp *TGuiFactory::CreateBrowserImp(TBrowser *b, const char *title, Int_t x, Int_t y, UInt_t width, UInt_t height)
 {
-   // Create a batch version of TBrowserImp
+   // Create a batch version of TBrowserImp.
 
    return new TBrowserImp(b, title, x, y, width, height);
 }
@@ -91,7 +94,7 @@ TBrowserImp *TGuiFactory::CreateBrowserImp(TBrowser *b, const char *title, Int_t
 //______________________________________________________________________________
 TContextMenuImp *TGuiFactory::CreateContextMenuImp(TContextMenu *c, const char *, const char *)
 {
-   // Create a batch version of TContextMenuImp
+   // Create a batch version of TContextMenuImp.
 
    return new TContextMenuImp(c);
 }
@@ -99,7 +102,7 @@ TContextMenuImp *TGuiFactory::CreateContextMenuImp(TContextMenu *c, const char *
 //______________________________________________________________________________
 TControlBarImp *TGuiFactory::CreateControlBarImp(TControlBar *c, const char *title)
 {
-   // Create a batch version of TControlBarImp
+   // Create a batch version of TControlBarImp.
 
    return new TControlBarImp(c, title);
 }
@@ -107,8 +110,16 @@ TControlBarImp *TGuiFactory::CreateControlBarImp(TControlBar *c, const char *tit
 //______________________________________________________________________________
 TControlBarImp *TGuiFactory::CreateControlBarImp(TControlBar *c, const char *title, Int_t x, Int_t y)
 {
-   // Create a batch version of TControlBarImp
+   // Create a batch version of TControlBarImp.
 
    return new TControlBarImp(c, title, x, y);
+}
+
+//______________________________________________________________________________
+TInspectorImp *TGuiFactory::CreateInspectorImp(const TObject *obj, UInt_t width, UInt_t height)
+{
+   // Create a batch version of TInspectorImp.
+
+   return new TInspectorImp(obj, width, height);
 }
 

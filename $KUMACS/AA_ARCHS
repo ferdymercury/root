@@ -1,3 +1,4 @@
+*CMZ :  2.24/03 18/04/2000  10.49.09  by  Rene Brun
 *CMZ :  2.23/12 26/01/2000  11.22.40  by  Rene Brun
 *CMZ :  2.23/09 19/11/99  12.28.03  by  Fons Rademakers
 *-- Author :    Fons Rademakers   09/11/99
@@ -25,7 +26,9 @@ osfkcc               for DEC Unix KCC same as alphakcc
 solaris              for Solaris CC
 solarisCC5.0         for Solaris CC 5.0
 solarisegcs          for Solaris egcs 1.1.x
+solarisgcc           for Solaris gcc 2.8.1
 solariskcc           for Solaris KCC
+sgicc                for SGI IRIX 6.x CC
 sgikcc               for SGI IRIX 6.x KCC
 sgiegcs              for SGI IRIX 6.x egcs 1.1.x
 sgi64egcs            for SGI IRIX 6.4 egcs 1.1.x

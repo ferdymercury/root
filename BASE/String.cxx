@@ -1,3 +1,4 @@
+//*CMZ :  2.24/01 12/03/2000  16.07.02  by  Fons Rademakers
 //*CMZ :  2.23/09 20/11/99  11.13.25  by  Fons Rademakers
 //*CMZ :  2.22/02 24/05/99  17.08.12  by  Fons Rademakers
 //*CMZ :  2.21/04 05/02/99  16.43.33  by  Fons Rademakers
@@ -5,17 +6,18 @@
 //*CMZ :  2.00/05 07/04/98  22.35.08  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   04/08/95
 
+/*CMZ :  2.24/01 24/02/2000  11.49.40  by  Fons Rademakers*/
 /*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun and Fons Rademakers.                               *
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
  *                                                                       *
- * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
- * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -1171,10 +1173,10 @@ void Printf(const char* va_(fmt), ...)
 }
 
 //______________________________________________________________________________
-char *Strip(const char *s)
+char *Strip(const char *s, char c)
 {
-   // Strip leading and trailing blanks from a string. The returned string
-   // has to be deleted by the user.
+   // Strip leading and trailing c (blanks by default) from a string.
+   // The returned string has to be deleted by the user.
 
    int l = strlen(s);
    char *buf = new char[l+1];
@@ -1184,14 +1186,14 @@ char *Strip(const char *s)
       return buf;
    }
 
-   // get rid of leading blanks
+   // get rid of leading c's
    const char *t1 = s;
-   while (*t1 == ' ')
+   while (*t1 == c)
       t1++;
 
-   // get rid of trailing blanks
+   // get rid of trailing c's
    const char *t2 = s + l - 1;
-   while (*t2 == ' ' && t2 > s)
+   while (*t2 == c && t2 > s)
       t2--;
 
    if (t1 > t2) {

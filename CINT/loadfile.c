@@ -1,5 +1,5 @@
-/*CMZ :  2.23/10 10/12/99  18.00.02  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   10/12/99*/
+/*CMZ :  2.24/05 16/05/2000  12.03.48  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   16/05/2000*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -90,7 +90,7 @@ int fentry;
     G__tmpnam(prepname);
     fpout = fopen(prepname,"wb");
     if(!fpout) {
-      fprintf(G__serr,"tmp file %s can not open",prepname);
+      fprintf(G__serr,"cannot open tmp file %s",prepname);
       G__genericerror((char*)NULL);
       prepname[0] = 0;
       return;
@@ -154,8 +154,9 @@ char *filename;
 *            ^--------------------------------^    load "header.h"
 *
 ******************************************************************/
-void G__include_file()
+int G__include_file()
 {
+  int result;
   int c;
   char filename[G__MAXFILENAME];
   int i=0;
@@ -163,11 +164,13 @@ void G__include_file()
   /* char sysinclude[G__MAXFILENAME]; */
   int store_cpp;
   int store_globalcomp;
-#ifndef G__OLDIMPLEMENTATION460
   int expandflag=0;
-#endif
 
-  while((c=G__fgetc())!='\n' && c!='\r') {
+  while((c=G__fgetc())!='\n' && c!='\r'
+#ifndef G__OLDIMPLEMENTATION1261
+	&& c!='#'
+#endif
+	) {
     switch(c) {
     case '<':
       if(storeit==0) storeit=1;
@@ -188,7 +191,6 @@ void G__include_file()
       }
       break;
     default:
-#ifndef G__OLDIMPLEMENTATION460
       if(!isspace(c)) {
 	if(1==storeit) {
 	  filename[i++]=c;
@@ -204,12 +206,6 @@ void G__include_file()
       else if(expandflag) {
 	storeit = -1;
       }
-#else
-      if(storeit==1 && !isspace(c)) {
-	filename[i++]=c;
-	filename[i]='\0';
-      }
-#endif
       break;
     }
   }
@@ -227,9 +223,12 @@ void G__include_file()
       G__kindofheader=G__USERHEADER;
     }
     else {
-      fprintf(G__serr,"Error: #include %s  can not expand",filename);
+      fprintf(G__serr,"Error: cannot expand #include %s",filename);
       G__genericerror(NULL);
-      return;
+#ifndef G__OLDIMPLEMENTATION1261
+      if('#'==c) G__fignoreline();
+#endif
+      return(G__LOADFILE_FAILURE);
     }
   }
 #endif
@@ -238,18 +237,33 @@ void G__include_file()
   G__cpp=G__include_cpp;
 
   if(G__USERHEADER==G__kindofheader) {
-    G__loadfile(filename);
+    result = G__loadfile(filename);
   }
   else {
     /* <xxx.h> , 'xxx.h' */
     store_globalcomp=G__globalcomp;
     /* G__globalcomp=G__NOLINK; */
-    G__loadfile(filename);
+    result = G__loadfile(filename);
     G__globalcomp=store_globalcomp;
   }
   G__kindofheader = G__USERHEADER;
 
   G__cpp=store_cpp;
+
+#ifndef G__OLDIMPLEMENTATION1261
+  if('#'==c) {
+    if(G__LOADFILE_FAILURE==result && G__ispragmainclude) {
+      G__ispragmainclude=0;
+      c = G__fgetname(filename,"\n\r");
+      if('\n'!=c && '\r'!=c) result = G__include_file();
+    }
+    else {
+      G__fignoreline();
+    }
+  }
+#endif
+
+  return(result);
 }
 
 /******************************************************************
@@ -294,7 +308,7 @@ char *item;
   /* Open MAKEINFO file */
   fp = fopen(makeinfo,"r");
   if(!fp) {
-    fprintf(G__serr,"Error: %s can not open.\n",makeinfo);
+    fprintf(G__serr,"Error: cannot open %s\n",makeinfo);
     fprintf(G__serr,
      "!!! There are examples of MAKEINFO files under %s/platform/ !!!\n"
 	    ,G__cintsysdir);
@@ -334,10 +348,14 @@ int G__getcintsysdir()
   char *env;
   if('*'==G__cintsysdir[0]) {
 #if defined(G__ROOT)
-# ifdef CINTINCDIR
-    env = CINTINCDIR;
+# ifdef ROOTBUILD
+    env = "cint";
 # else
+#  ifdef CINTINCDIR
+    env = CINTINCDIR;
+#  else
     env=getenv("ROOTSYS");
+#  endif
 # endif
 #elif defined(G__WILDC)
     env=getenv("WILDCDIR");
@@ -353,10 +371,14 @@ int G__getcintsysdir()
       strcpy(&G__cintsysdir[strlen(G__cintsysdir)-1],".cint]");*/
       sprintf(G__cintsysdir,"%s[cint]",env);
 #else
-# ifdef CINTINCDIR
-      sprintf(G__cintsysdir, "%s", CINTINCDIR);
+# ifdef ROOTBUILD
+      sprintf(G__cintsysdir, "%s", env);
 # else
+#  ifdef CINTINCDIR
+      sprintf(G__cintsysdir, "%s", CINTINCDIR);
+#  else
       sprintf(G__cintsysdir, "%s%scint", env, G__psep);
+#  endif
 # endif
 #endif
 
@@ -370,6 +392,22 @@ int G__getcintsysdir()
       sprintf(G__cintsysdir,".");
       return(EXIT_SUCCESS);
 #else
+#ifndef G__OLDIMPLEMENTATION1314
+#ifdef G__WIN32
+      HMODULE hmodule;
+      if(GetModuleFileName(hmodule,G__cintsysdir,G__MAXFILENAME)) {
+        char *p = G__strrstr(G__cintsysdir,G__psep);
+        if(p) *p = 0;
+# ifdef G__ROOT
+        p = G__strrstr(G__cintsysdir,G__psep);
+        if(p) *p = 0;
+	strcat(G__cintsysdir,G__psep);
+	strcat(G__cintsysdir,"cint");
+# endif
+	return(EXIT_SUCCESS);
+      }
+#endif
+#endif
 #if defined(G__ROOT)
       fprintf(G__serr,"Warning: environment variable ROOTSYS is not set. Standard include files ignored\n");
 #elif defined(G__WILDC)
@@ -514,6 +552,55 @@ char* filename;
 }
 #endif
 
+#ifndef G__OLDIMPLEMENTATION1273
+/******************************************************************
+* G__smart_unload()
+******************************************************************/
+void G__smart_unload(ifn)
+int ifn;
+{
+  struct G__dictposition *dictpos= G__srcfile[ifn].dictpos;
+  struct G__dictposition *hasonlyfunc = G__srcfile[ifn].hasonlyfunc;
+  struct G__ifunc_table *ifunc;
+  struct G__var_array *var;
+  int nfile;
+  int allsl;
+
+  if(G__nfile == hasonlyfunc->nfile) {
+    var = &G__global;
+    while(var->next) var=var->next;
+    if(var == hasonlyfunc->var && var->allvar == hasonlyfunc->ig15) {
+      G__scratch_upto(G__srcfile[ifn].dictpos);
+      return;
+    }
+  }
+
+  /* disable functions */
+  ifunc = dictpos->ifunc;
+  ifn = dictpos->ifn;
+  while(ifunc && (ifunc!=hasonlyfunc->ifunc || ifn!=hasonlyfunc->ifn)) {
+    ifunc->hash[ifn] = 0;
+    if(++ifn>=G__MAXIFUNC) {
+      ifunc = ifunc->next;
+      ifn = 0;
+    }
+  }
+
+  /* disable file entry */
+  for(nfile=dictpos->nfile;nfile<hasonlyfunc->nfile;nfile++) {
+    G__srcfile[nfile].hash = 0;
+    G__srcfile[nfile].filename[0] = 0;
+    if(G__srcfile[nfile].fp) fclose(G__srcfile[nfile].fp);
+    G__srcfile[nfile].fp = 0;
+  }
+
+  /* unload shared library */
+  for(allsl=dictpos->allsl;allsl<hasonlyfunc->allsl;allsl++) {
+    G__smart_shl_unload(allsl);
+  }
+}
+#endif
+
 
 /******************************************************************
 * G__unloadfile(filename)
@@ -574,7 +661,16 @@ char *filename;
     return(G__UNLOADFILE_FAILURE);
   }
 
+#ifndef G__OLDIMPLEMENTATION1273
+  if(G__srcfile[ifn].hasonlyfunc && G__do_smart_unload) {
+    G__smart_unload(ifn);
+  }
+  else {
+    G__scratch_upto(G__srcfile[ifn].dictpos);
+  }
+#else
   G__scratch_upto(G__srcfile[ifn].dictpos);
+#endif
 
   if(G__debug) {
     fprintf(G__serr,"File=%s unloaded\n",filename);
@@ -670,6 +766,65 @@ Copyright (C) Microsoft Corp 1984-1997. All rights reserved.
   return(0);
 }
 
+#ifndef G__OLDIMPLEMENTATION1273
+/******************************************************************
+*  G__checkIfOnlyFunction()
+******************************************************************/
+static void G__checkIfOnlyFunction(fentry)
+int fentry;
+{
+  struct G__var_array *var;
+  struct G__Deffuncmacro *deffuncmacro;
+  struct G__Definedtemplateclass *definedtemplateclass;
+  struct G__Definetemplatefunc *definedtemplatefunc;
+  struct G__dictposition* dictpos = G__srcfile[fentry].dictpos;
+  int varflag = 1;
+
+  var = &G__global;
+  while(var->next) var=var->next;
+
+  if(dictpos->var == var && dictpos->ig15 == var->allvar) {
+    varflag = 1;
+  }
+  else {
+    struct G__var_array *var2 = dictpos->var;
+    int ig152 = dictpos->ig15;
+    while(var2 && (var2 != var || ig152 != var->allvar)) {
+      if('p'!=var2->type[ig152]) {
+	varflag = 0;
+	break;
+      }
+      if(++ig152>=G__MEMDEPTH) {
+	var2 = var2->next;
+	ig152=0;
+      }
+    }
+  }
+
+  deffuncmacro = &G__deffuncmacro;
+  while(deffuncmacro->next) deffuncmacro=deffuncmacro->next;
+
+  definedtemplateclass = &G__definedtemplateclass;
+  while(definedtemplateclass->next)
+    definedtemplateclass=definedtemplateclass->next;
+
+  definedtemplatefunc = &G__definedtemplatefunc;
+  while(definedtemplatefunc->next)
+    definedtemplatefunc=definedtemplatefunc->next;
+
+  if(dictpos->tagnum == G__struct.alltag &&
+     dictpos->typenum == G__newtype.alltype &&
+     varflag &&
+     dictpos->deffuncmacro == deffuncmacro &&
+     dictpos->definedtemplateclass == definedtemplateclass &&
+     dictpos->definedtemplatefunc == definedtemplatefunc) {
+    G__srcfile[fentry].hasonlyfunc =
+      (struct G__dictposition*)malloc(sizeof(struct G__dictposition));
+    G__store_dictposition(G__srcfile[fentry].hasonlyfunc);
+  }
+}
+#endif
+
 /******************************************************************
 * G__loadfile(filename)
 *
@@ -755,6 +910,9 @@ char *filenamein;
   *************************************************/
   if ( len>1&& (strcmp(filename+len-1,"+")==0 ) ) {
     if (len>2 && (strcmp(filename+len-2,"++")==0 ) ) {
+#ifndef G__OLDIMPLEMENTATION1303
+      compiler_option = "kf";
+#endif
       len -= 2;
     } else {
       compiler_option = "k";
@@ -991,6 +1149,12 @@ char *filenamein;
 #else
 	G__ifile.fp = fopen(G__ifile.name,"rb");
 #endif
+#ifndef G__OLDIMPLEMENTATION1271
+	if(G__ifile.fp && G__autoload_stdheader) {
+	  G__globalcomp=G__store_globalcomp;
+	  G__gen_linksystem(filename);
+	}
+#endif
 	G__globalcomp=G__NOLINK;
       }
       if(G__ifile.fp) break;
@@ -1006,6 +1170,12 @@ char *filenamein;
 	G__ifile.fp = fopen(G__ifile.name,"r");
 #else
 	G__ifile.fp = fopen(G__ifile.name,"rb");
+#endif
+#ifndef G__OLDIMPLEMENTATION1271
+	if(G__ifile.fp && G__autoload_stdheader) {
+	  G__globalcomp=G__store_globalcomp;
+	  G__gen_linksystem(filename);
+	}
 #endif
 	G__globalcomp=G__NOLINK;
       }
@@ -1042,6 +1212,12 @@ char *filenamein;
 #else
 	G__ifile.fp = fopen(G__ifile.name,"rb");
 #endif
+#ifndef G__OLDIMPLEMENTATION1271
+	if(G__ifile.fp && G__autoload_stdheader) {
+	  G__globalcomp=G__store_globalcomp;
+	  G__gen_linksystem(filename);
+	}
+#endif
 	G__globalcomp=G__NOLINK;
       }
       if(G__ifile.fp) break;
@@ -1057,6 +1233,12 @@ char *filenamein;
 	G__ifile.fp = fopen(G__ifile.name,"r");
 #else
 	G__ifile.fp = fopen(G__ifile.name,"rb");
+#endif
+#ifndef G__OLDIMPLEMENTATION1271
+	if(G__ifile.fp && G__autoload_stdheader) {
+	  G__globalcomp=G__store_globalcomp;
+	  G__gen_linksystem(filename);
+	}
 #endif
 	G__globalcomp=G__NOLINK;
       }
@@ -1106,7 +1288,7 @@ char *filenamein;
 
      G__ifile.fp = fopen(G__ifile.name,"r");
      /*G__globalcomp=G__store_globalcomp;*/
-      }
+   }
    if(G__ifile.fp) break;
 
        /**********************************************
@@ -1229,11 +1411,11 @@ char *filenamein;
     G__globalcomp=G__store_globalcomp;
 #ifndef G__OLDIMPLEMENTATION782
     if(0==G__ispragmainclude) {
-      fprintf(G__serr,"Error: source file \"%s\" cannot open ", filename);
+      fprintf(G__serr,"Error: cannot open file \"%s\" ", filename);
       G__genericerror((char*)NULL);
     }
 #else
-    fprintf(G__serr,"Error: source file \"%s\" cannot open ", filename);
+    fprintf(G__serr,"Error: cannot open file \"%s\" ", filename);
     G__genericerror((char*)NULL);
 #endif
     G__iscpp=store_iscpp;
@@ -1312,6 +1494,9 @@ char *filenamein;
 #ifndef G__OLDIMPLEMENTATION1207
     G__srcfile[fentry].ispermanentsl = G__ispermanentsl;
     G__srcfile[fentry].initsl = (G__DLLINIT)NULL;
+#endif
+#ifndef G__OLDIMPLEMENTATION1273
+    G__srcfile[fentry].hasonlyfunc = (struct G__dictposition*)NULL;
 #endif
   }
 
@@ -1499,6 +1684,10 @@ char *filenamein;
     G__iscpp = store_iscpp;
   }
 #endif
+#endif
+
+#ifndef G__OLDIMPLEMENTATION1273
+  G__checkIfOnlyFunction(fentry);
 #endif
 
   return(G__LOADFILE_SUCCESS);

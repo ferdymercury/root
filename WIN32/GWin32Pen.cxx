@@ -1,3 +1,4 @@
+//*CMZ :  2.24/03 29/04/2000  23.45.27  by  Rene Brun
 //*CMZ :  1.03/09 16/12/97  11.46.39  by  Valery Fine(fine@mail.cern.ch)
 //*-- Author :    Valery Fine   19/01/96
 
@@ -7,7 +8,7 @@
 #include "TGWin32Pen.h"
 #endif
 
-ClassImp(TGWin32Pen)
+// ClassImp(TGWin32Pen)
 
 //______________________________________________________________________________
 TGWin32Pen::TGWin32Pen(){

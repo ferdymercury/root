@@ -1,3 +1,4 @@
+//*CMZ :  2.24/03 29/04/2000  23.42.00  by  Rene Brun
 //*CMZ :  1.00/07 27/03/97  18.11.12  by  Rene Brun
 //*-- Author :    Valery Fine(fine@vxcern.cern.ch)   16/08/96
 ////////////////////////////////////////////////////////////////////////////////
@@ -73,7 +74,7 @@ class TWin32ContextMenuImp : protected TWin32HookViaThread, public TContextMenuI
     TGWin32WindowsObject   *GetWinObject(){ return fWindowObj;}
     void                    SetWinObject(TGWin32WindowsObject *winobj){fWindowObj=winobj;}
 
-    ClassDef(TWin32ContextMenuImp,0) //Context sensitive popup menu implementation
+    // ClassDef(TWin32ContextMenuImp,0) //Context sensitive popup menu implementation
 };
 #endif
 

@@ -1,3 +1,4 @@
+//*CMZ :  2.24/03 29/04/2000  23.45.27  by  Rene Brun
 //*CMZ :  1.03/01 25/07/97  13.42.27  by  Valery Fine(fine@vxcern.cern.ch)
 //*-- Author :    Valery Fine   13/03/96
 
@@ -21,7 +22,7 @@
 #endif
 
 
-ClassImp(TContextMenuItem)
+// ClassImp(TContextMenuItem)
 
 //______________________________________________________________________________
 TContextMenuItem::TContextMenuItem(){;} // default ctor

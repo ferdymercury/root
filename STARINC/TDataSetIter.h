@@ -1,3 +1,4 @@
+//*CMZ :  2.24/01 31/03/2000  08.46.15  by  Rene Brun
 //*CMZ :  2.23/12 26/01/2000  12.24.44  by  Valery Fine(fine@bnl.gov)
 //*-- Author :    Valery Fine(fine@mail.cern.ch)   13/08/98
 
@@ -9,22 +10,19 @@
 //                                                                      //
 // $Id: TDataSetIter.h,v 1.20 1999/12/29 02:37:00 fine Exp $
 //
-// TDataSetIter                                                       //
+// TDataSetIter                                                         //
 //                                                                      //
-// Iterator of TDataSet lists.                                        //
+// Iterator of TDataSet lists.                                          //
 //                                                                      //
-// Provides "standard" features of the TIter class for TDataSet object//
+// Provides "standard" features of the TIter class for TDataSet object  //
 //                             and                                      //
-// allows navigating TDataSet structure using the custom "directory"  //
-//    notation (see TDataSet::Find(const Char *path) method)          //
+// allows navigating TDataSet structure using the custom "directory"    //
+//    notation (see TDataSet::Find(const Char *path) method)            //
 //                                                                      //
 //////////////////////////////////////////////////////////////////////////
 
-//*KEEP,TList.
 #include "TList.h"
-//*KEEP,TNamed.
 #include "TNamed.h"
-//*KEND.
 
 #include "TDataSet.h"
 
@@ -35,13 +33,14 @@ protected:
    Int_t            fDepth;           // the current depth of the passing
    Int_t            fMaxDepth;        // the max depth of the passing (=1 by default)
 
-   const TDataSet *fDataSet;        // Pointer to the last selected TDataSet
-   TDataSet       *fRootDataSet;    // Pointer to the root TDataSet
-   TDataSet       *fWorkingDataSet; // Pointer to the working TDataSet
+   TDataSet       *fDataSet;          // Pointer to the last selected TDataSet
+   TDataSet       *fRootDataSet;      // Pointer to the root TDataSet
+   TDataSet       *fWorkingDataSet;   // Pointer to the working TDataSet
    TDataSet       *NextDataSet(TIter &next);
    TDataSet       *NextDataSet(Int_t nDataSet);
-   static const TDataSet *fNullDataSet;
-   const TDataSet *GetNullSet();    // return a fake pointer == -1 casted to (TDataSet *)
+   TDataSet       *GetNullSet();      // return a fake pointer == -1 casted to (TDataSet *)
+
+   static TDataSet *fNullDataSet;
 public:
   TDataSetIter(TDataSet *l=0, Int_t depth=1, Bool_t dir=kIterForward);
   TDataSetIter(TDataSet *l, Bool_t dir);
@@ -90,26 +89,14 @@ public:
 
   virtual TDataSet    *Next( EDataSetPass mode=kContinue);
   virtual TDataSet    *Next(const Char_t *path, TDataSet *rootset=0,Bool_t mkdir=kFALSE){return Find(path,rootset,mkdir);}
-  virtual void           Notify(TDataSet *dataset);
-  const Option_t *GetOption() const                                      { return fNext ? fNext->GetOption():0; }
-  virtual void           Reset(TDataSet *l=0,Int_t depth=0);
-  virtual const TDataSet *operator *() const ;
+  virtual void        Notify(TDataSet *dataset);
+   const  Option_t   *GetOption() const                                      { return fNext ? fNext->GetOption():0; }
+  virtual void        Reset(TDataSet *l=0,Int_t depth=0);
+  virtual TDataSet   *operator *() const ;
   ClassDef(TDataSetIter,0) // class-iterator to navigate TDataSet structure
 };
 
-inline const TDataSet *TDataSetIter::operator *() const { return fDataSet == fNullDataSet ? fWorkingDataSet : fDataSet; }
-inline const TDataSet *TDataSetIter::GetNullSet() { return fNullDataSet; } // return a fake pointer == -1 casted to (TDataSet *)
-
-//__________________________________________________
-// $Log: TDataSetIter.h,v $
-// Revision 1.20  1999/12/29 02:37:00  fine
-// remove warning to make Linux happy
-//
-// Revision 1.19  1999/12/28 23:32:01  fine
-// TDataSetIter  operator++ removed to avoid a future problem
-//
-// Revision 1.18  1999/12/28 21:24:07  fine
-// TDataSetIter opeartor * and operator ++ have been implemented
-//__________________________________________________
+inline TDataSet *TDataSetIter::operator *() const { return fDataSet == fNullDataSet ? fWorkingDataSet : fDataSet; }
+inline TDataSet *TDataSetIter::GetNullSet() { return (TDataSet *)fNullDataSet; } // return a fake pointer == -1 casted to (TDataSet *)
 #endif
 

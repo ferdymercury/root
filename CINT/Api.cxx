@@ -1,5 +1,5 @@
-//*CMZ :  2.23/10 10/12/99  18.00.08  by  Masaharu Goto
-//*-- Author :    Masaharu Goto   10/12/99
+//*CMZ :  2.24/05 16/05/2000  12.03.51  by  Masaharu Goto
+//*-- Author :    Masaharu Goto   16/05/2000
 /* /% C++ %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -316,6 +316,13 @@ int G__IncludePathInfo::Next() {
 ////////////////////////////////////////////////////////////////////
 
 #ifdef G__EXCEPTIONWRAPPER
+#ifdef G__STD_EXCEPTION
+#include <exception>
+#include <typeinfo>
+#ifndef __hpux
+using namespace std;
+#endif
+#endif
 /*********************************************************************
 * G__ExceptionWrapper
 *********************************************************************/
@@ -329,10 +336,27 @@ extern "C" int G__ExceptionWrapper(G__InterfaceMethod funcp
     (*funcp)(result7,funcname,libp,hash);
     return 1;
   }
+#ifdef G__STD_EXCEPTION
+  catch(exception& x) {
+    char buf[G__LONGLINE];
+#ifdef G__VISUAL
+    sprintf(buf,"new exception(\"%s\")",x.what());
+#else
+    char buf2[G__ONELINE];
+    int ox=0;
+    strcpy(buf2,typeid(x).name());
+    while(isdigit(buf2[ox])) ++ox; /* why need this ??? */
+    sprintf(buf,"new %s(*(%s*)%ld)",buf2+ox,buf2+ox,(long)(&x));
+#endif
+    G__exceptionbuffer = G__getexpr(buf);
+    G__exceptionbuffer.ref = G__exceptionbuffer.obj.i;
+    G__return = G__RETURN_TRY;
+  }
+#endif
   catch(...) {
     G__genericerror("Error: C++ exception caught");
-    return 0;
   }
+  return 0;
 }
 #endif
 ////////////////////////////////////////////////////////////////////

@@ -1,5 +1,5 @@
-/*CMZ :  2.23/10 10/12/99  18.00.24  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   10/12/99*/
+/*CMZ :  2.24/05 16/05/2000  12.04.03  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   16/05/2000*/
 // lib/prec_stl/deque
 
 #pragma ifndef PREC_STL_DEQUE
@@ -43,10 +43,11 @@ class deque {
   typedef typename Allocator::const_pointer         const_pointer;
 #endif
 
-#ifdef G__VISUAL
-  class iterator : public _Ranit<T,difference_type>
-#else
-  class iterator : public random_access_iterator<T,difference_type>
+  class iterator
+#if defined(G__VISUAL)
+	: public _Ranit<T,difference_type>
+#elif !defined(G__SUNPRO_C)
+  	: public random_access_iterator<T,difference_type>
 #endif
 	{
    public:
@@ -75,10 +76,11 @@ class deque {
                         ,const deque::iterator& y) const;
 #endif
 
-#ifdef G__VISUAL
-  class reverse_iterator : public _Ranit<T,difference_type>
-#else
-  class reverse_iterator : public random_access_iterator<T,difference_type>
+  class reverse_iterator
+#if defined(G__VISUAL)
+	: public _Ranit<T,difference_type>
+#elif !defined(G__SUNPRO_C)
+	: public random_access_iterator<T,difference_type>
 #endif
 	{
    public:
@@ -86,7 +88,11 @@ class deque {
 #if !defined(G__BORLAND) && !defined(G__KCC)
     reverse_iterator& operator=(const reverse_iterator& x) ;
 #endif
+#ifdef G__HPUX
+    T& operator*() ;
+#else
     T& operator*() const ;
+#endif
     reverse_iterator& operator++();
     reverse_iterator operator++(int a);
     reverse_iterator& operator--();
@@ -112,11 +118,16 @@ class deque {
   template <class InputIterator>
     deque(InputIterator first, InputIterator last,
          const Allocator& = Allocator());
+#else
+#if defined(G__GNUC)
+  deque(const T* first,const T* last) ;
+#endif
+  deque(const_iterator first, const_iterator last);
 #endif
   deque(const deque& x);
   ~deque();
   deque& operator=(const deque& x);
-#if 0
+#if defined(G__KCC)
   template <class InputIterator>
    void assign(InputIterator first, InputIterator last);
 #endif
@@ -126,13 +137,15 @@ class deque {
   //allocator_type get_allocator() const;
   // iterators:
   iterator               begin();
-  //const_iterator         begin() const;
   iterator               end();
-  //const_iterator         end() const;
   reverse_iterator       rbegin();
-  //const_reverse_iterator rbegin() const;
   reverse_iterator       rend();
-  //const_reverse_iterator rend() const;
+#ifdef G__CONSTNESSFLAG
+  const_iterator begin(void) const;
+  const_iterator end(void) const;
+  const_reverse_iterator rbegin(void) const;
+  const_reverse_iterator rend(void) const;
+#endif
   // _lib.deque.capacity_ capacity:
   size_type size() const;
   size_type max_size() const;

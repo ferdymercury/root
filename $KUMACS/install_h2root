@@ -1,3 +1,4 @@
+*CMZ :  2.24/01 20/03/2000  11.00.43  by  Rene Brun
 *CMZ :  2.23/05 14/10/99  19.34.30  by  Fons Rademakers
 *CMZ :  2.21/06 11/02/99  08.40.00  by  Rene Brun
 *CMZ :  2.21/05 08/02/99  11.09.31  by  Rene Brun
@@ -77,7 +78,7 @@ elseif [machine] = 'ALPHA' then
           /usr/shlib/libFutil.so /usr/shlib/libfor.so /usr/shlib/libots.so
 elseif [machine] = 'LINUX' then
    SH [LD] [LDOPT] [sysroot]/bin/h2root [main] [sysroot]/src/UTILS_hntvar2.o _
-          [libcern]/libpacklib.a [libcern]/libkernlib.a [LIBS] -lg2c
+          [libcern]/libpacklib.a [libcern]/libkernlib.a [LIBS] -lnsl -lg2c
 elseif [machine] = 'HPUX' then
 +IF,EGCS.
    SH [LD] [LDOPT] [sysroot]/bin/h2root [main] [sysroot]/src/UTILS_hntvar2.o _

@@ -1,3 +1,4 @@
+//*CMZ :  2.24/05 08/05/2000  22.25.19  by  Rene Brun
 //*CMZ :  0.90/13 23/01/97  12.39.54  by  Rene Brun
 //*-- Author :    Rene Brun   23/09/96
 {
@@ -9,18 +10,18 @@
 
    TPaveLabel *pl = new TPaveLabel(3,22.2,17,23.7,"Dynamic linking from Shared libraries","br");
    pl->SetFillColor(18);
-   pl->SetTextSize(0.7);
+   pl->SetTextSize(0.4);
    pl->Draw();
    TText t(0,0,"a");
    t.SetTextFont(62);
    t.SetTextSize(0.025);
    t.SetTextAlign(12);
-   t.DrawText(2,20,"The "standard" ROOT executable module can dynamically");
+   t.DrawText(2,20,"The \"standard\" ROOT executable module can dynamically");
    t.DrawText(2,19,"load user@'s specific code from shared libraries.");
    t.SetTextFont(72);
    t.SetTextSize(0.026);
-   t.DrawText(3,16,"Root >  gSystem->Load("na49.sl")");
-   t.DrawText(3,15,"Root >  gSystem->Load("mylib.sl")");
+   t.DrawText(3,16,"Root >  gSystem->Load(\"na49.sl\")");
+   t.DrawText(3,15,"Root >  gSystem->Load(\"mylib.sl\")");
    t.DrawText(3,14,"Root >  T49Event event");
    t.DrawText(3,13,"Root >  event.xxxxxxx");
 

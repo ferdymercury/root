@@ -1,3 +1,7 @@
+//*CMZ :  2.24/05 10/05/2000  08.57.04  by  Rene Brun
+//*CMZ :  2.24/03 05/05/2000  14.09.44  by  Rene Brun
+//*CMZ :  2.24/02 06/04/2000  20.17.34  by  Fons Rademakers
+//*CMZ :  2.24/01 28/02/2000  09.30.16  by  Rene Brun
 //*CMZ :  2.23/12 26/01/2000  09.41.50  by  Rene Brun
 //*CMZ :  2.23/10 26/11/99  09.05.07  by  Rene Brun
 //*CMZ :  2.23/09 24/11/99  12.02.29  by  Rene Brun
@@ -9,17 +13,18 @@
 //*CMZ :  2.23/00 07/08/99  14.56.09  by  Fons Rademakers
 //*-- Author :    Rene Brun   08/12/94
 
+/*CMZ :  2.24/01 24/02/2000  11.49.40  by  Fons Rademakers*/
 /*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun and Fons Rademakers.                               *
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
  *                                                                       *
- * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
- * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
  *************************************************************************/
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -99,7 +104,6 @@
 #include "TGlobal.h"
 #include "TFunction.h"
 #include "TVirtualPad.h"
-#include "TNode.h"
 #include "TBrowser.h"
 #include "TSystemDirectory.h"
 #include "TApplication.h"
@@ -123,6 +127,50 @@
 //*-*x18.6 macros/layout_root
 
 
+//-------- Names of next three routines are a small homage to CMZ --------------
+//______________________________________________________________________________
+static Int_t IVERSQ()
+{
+   // Return version id as an integer, i.e. "2.22/04" -> 22204.
+
+   Int_t maj, min, cycle;
+   sscanf(ROOT_RELEASE, "%d.%d/%d", &maj, &min, &cycle);
+   return 10000*maj + 100*min + cycle;
+}
+
+//______________________________________________________________________________
+static Int_t IDATQQ()
+{
+   // Return built date as integer, i.e. "Apr 28 2000" -> 20000428.
+
+   static const char *months[] = {"Jan","Feb","Mar","Apr","May",
+                                  "Jun","Jul","Aug","Sep","Oct",
+                                  "Nov","Dec"};
+
+   char  sm[12];
+   Int_t yy, mm=0, dd;
+   sscanf(__DATE__, "%s %d %d", sm, &dd, &yy);
+   for (int i = 0; i < 12; i++)
+      if (!strncmp(sm, months[i], 3)) {
+         mm = i+1;
+         break;
+      }
+   return 10000*yy + 100*mm + dd;
+}
+
+//______________________________________________________________________________
+static Int_t ITIMQQ()
+{
+   // Return built time as integer (with min precision), i.e.
+   // "17:32:37" -> 1732.
+
+   Int_t hh, mm, ss;
+   sscanf(__TIME__, "%d:%d:%d", &hh, &mm, &ss);
+   return 100*hh + mm;
+}
+//------------------------------------------------------------------------------
+
+
 TROOT      *gROOT;         // The ROOT of EVERYTHING
 TRandom    *gRandom;       // Global pointer to random generator
 
@@ -134,7 +182,6 @@ Int_t       gDebug;
 
 Bool_t        TROOT::fgRootInit = kFALSE;
 VoidFuncPtr_t TROOT::fgMakeDefCanvas = 0;
-
 
 
 ClassImp(TROOT)
@@ -165,10 +212,6 @@ TROOT::TROOT(const char *name, const char *title, VoidFuncPtr_t *initfunc)
    // executed at the end of the constructor. This way one can easily
    // extend the ROOT system without adding permanent dependencies
    // (e.g. the graphics system is initialized via such a function).
-
-#include "versqq.h"
-#include "dateqq.h"
-#include "timeqq.h"
 
    if (fgRootInit) {
       Warning("TROOT", "only one instance of TROOT allowed");
@@ -205,10 +248,10 @@ TROOT::TROOT(const char *name, const char *title, VoidFuncPtr_t *initfunc)
 
    TSystemDirectory *workdir = new TSystemDirectory("workdir",gSystem->WorkingDirectory());
 
-   fVersion     = VERSQQ;
-   fVersionInt  = Int_t(IVERSQ);
-   fVersionDate = Int_t(IDATQQ);
-   fVersionTime = Int_t(ITIMQQ);
+   fVersion     = ROOT_RELEASE;
+   fVersionInt  = IVERSQ();
+   fVersionDate = IDATQQ();
+   fVersionTime = ITIMQQ();
    fApplication = 0;
    fClasses     = new THashList(this,300,2);
    fColors      = new TObjArray(1000);
@@ -341,6 +384,9 @@ TROOT::~TROOT()
       // Remove shared libraries produced by the TSystem::CompileMacro() call
       gSystem->CleanCompiledMacros();
 
+      // Cleanup system class
+      delete gSystem;
+
       // Prints memory stats
       TStorage::PrintStatistics();
 
@@ -436,8 +482,10 @@ TObject *TROOT::FindObject(const char *name, void *&where)
    }
    if (!temp && TClassTable::GetDict("TGeometry")) {
       TObjArray *loc = (TObjArray*)ProcessLineFast(Form("TGeometry::Get(\"%s\")",name));
-      temp  = loc->At(0);
-      where = loc->At(1);
+      if (loc) {
+         temp  = loc->At(0);
+         where = loc->At(1);
+      }
    }
    if (!temp && gDirectory) {
       temp  = gDirectory->Get(name);
@@ -482,9 +530,19 @@ TClass *TROOT::GetClass(const char *name, Bool_t load)
 //*-*-*-*-*Return pointer to class with name*-*-*-*-*-*-*-*-*-*-*-*-*
 //*-*      =================================
 
-   TClass *cl = (TClass*)GetListOfClasses()->FindObject(name);
+   if (!GetListOfClasses()) return 0;
 
+   TClass *cl = (TClass*)GetListOfClasses()->FindObject(name);
    if (cl) return cl;
+
+   TDataType *objType = gROOT->GetType(name,load);
+   if (objType) {
+     const Char_t *typdfName = objType->GetTypeName();
+     if (typdfName && strcmp(typdfName,name)) {
+       cl = GetClass(typdfName,load);
+       return cl;
+     }
+   }
 
    if (!load) return 0;
 
@@ -916,8 +974,9 @@ void TROOT::ls(Option_t *option)
 //*-*  attached to the ROOT linked list.
 //*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 
-   TObject::SetDirLevel();
-   GetList()->ForEach(TObject,ls)(option);
+//   TObject::SetDirLevel();
+//   GetList()->ForEach(TObject,ls)(option);
+   TDirectory::ls(option);
 }
 
 //______________________________________________________________________________

@@ -1,3 +1,4 @@
+//*CMZ :  2.24/05 07/05/2000  17.07.09  by  Fons Rademakers
 //*CMZ :  2.23/07 23/10/99  12.06.47  by  Fons Rademakers
 //*CMZ :  2.23/04 11/10/99  03.23.25  by  Fons Rademakers
 //*CMZ :  2.21/04 29/01/99  13.35.07  by  Valery Fine(fine@mail.cern.ch)
@@ -111,7 +112,6 @@ public:
    void              SetProgname(const char *name);
    const char       *GetError();
    const char       *Hostname();
-   void              CreateInspectView(TObject *obj);  // Create an inspect view of the obj to perform TObject::Inspect
 
    HIMAGELIST GetSmallIconList() { return fhSmallIconList; }
    HICON   GetSmallIcon(Int_t IconIdx) {return fhSmallIconList  ? ImageList_GetIcon(fhSmallIconList,IconIdx,ILD_NORMAL):0; }

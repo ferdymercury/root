@@ -40,3 +40,4 @@ include Make-macros
 
 ##### DEPENDENCIES #####
 
+include Make-depend

@@ -1,5 +1,5 @@
-/*CMZ :  2.23/10 10/12/99  17.59.57  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   10/12/99*/
+/*CMZ :  2.24/05 16/05/2000  12.03.45  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   16/05/2000*/
 /********************************************************************
 * sunstrm.h
 ********************************************************************/
@@ -27,7 +27,7 @@ extern void G__set_cpp_environmentG__stream();
 
 #include "iostrm.h"
 #include "fstrm.h"
-#include "strstrm.h"
+#include "sstrm.h"
 
 #ifndef G__MEMFUNCBODY
 #endif
@@ -56,10 +56,14 @@ extern G__linked_taginfo G__G__streamLN_basic_istreamlEcharcOchar_traitslEchargR
 extern G__linked_taginfo G__G__streamLN_basic_filebuflEcharcOchar_traitslEchargRsPgR;
 extern G__linked_taginfo G__G__streamLN_basic_ifstreamlEcharcOchar_traitslEchargRsPgR;
 extern G__linked_taginfo G__G__streamLN_basic_ofstreamlEcharcOchar_traitslEchargRsPgR;
-extern G__linked_taginfo G__G__streamLN_strstreambuf;
-extern G__linked_taginfo G__G__streamLN_istrstream;
-extern G__linked_taginfo G__G__streamLN_ostrstream;
-extern G__linked_taginfo G__G__streamLN_strstreambuf;
+extern G__linked_taginfo G__G__streamLN_string;
+extern G__linked_taginfo G__G__streamLN_allocatorlEchargR;
+extern G__linked_taginfo G__G__streamLN_allocatorlEwchar_tgR;
+extern G__linked_taginfo G__G__streamLN_basic_stringbuflEcharcOchar_traitslEchargRcOallocatorlEchargRsPgR;
+extern G__linked_taginfo G__G__streamLN_basic_istringstreamlEcharcOchar_traitslEchargRcOallocatorlEchargRsPgR;
+extern G__linked_taginfo G__G__streamLN_basic_ostringstreamlEcharcOchar_traitslEchargRcOallocatorlEchargRsPgR;
+extern G__linked_taginfo G__G__streamLN_basic_stringstreamlEcharcOchar_traitslEchargRcOallocatorlEchargRsPgR;
+extern G__linked_taginfo G__G__streamLN_basic_iostreamlEcharcOchar_traitslEchargRsPgR;
 typedef char_traits<char> G__char_traitslEchargR;
 typedef basic_istream<char,char_traits<char> > G__basic_istreamlEcharcOchar_traitslEchargRsPgR;
 typedef basic_ios<char,char_traits<char> > G__basic_ioslEcharcOchar_traitslEchargRsPgR;
@@ -76,4 +80,10 @@ typedef basic_istream<char,char_traits<char> >::sentry G__basic_istreamlEcharcOc
 typedef basic_filebuf<char,char_traits<char> > G__basic_filebuflEcharcOchar_traitslEchargRsPgR;
 typedef basic_ifstream<char,char_traits<char> > G__basic_ifstreamlEcharcOchar_traitslEchargRsPgR;
 typedef basic_ofstream<char,char_traits<char> > G__basic_ofstreamlEcharcOchar_traitslEchargRsPgR;
---------------------------------------------------------------------------------
+typedef allocator<char> G__allocatorlEchargR;
+typedef allocator<wchar_t> G__allocatorlEwchar_tgR;
+typedef basic_stringbuf<char,char_traits<char>,allocator<char> > G__basic_stringbuflEcharcOchar_traitslEchargRcOallocatorlEchargRsPgR;
+typedef basic_istringstream<char,char_traits<char>,allocator<char> > G__basic_istringstreamlEcharcOchar_traitslEchargRcOallocatorlEchargRsPgR;
+typedef basic_ostringstream<char,char_traits<char>,allocator<char> > G__basic_ostringstreamlEcharcOchar_traitslEchargRcOallocatorlEchargRsPgR;
+typedef basic_stringstream<char,char_traits<char>,allocator<char> > G__basic_stringstreamlEcharcOchar_traitslEchargRcOallocatorlEchargRsPgR;
+typedef basic_iostream<char,char_traits<char> > G__basic_iostreamlEcharcOchar_traitslEchargRsPgR;

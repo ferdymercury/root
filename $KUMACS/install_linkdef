@@ -1,3 +1,4 @@
+*CMZ :  2.24/03 29/04/2000  19.46.47  by  Fons Rademakers
 *CMZ :  2.23/05 19/10/99  18.52.12  by  Rene Brun
 *CMZ :  2.23/04 11/10/99  02.22.43  by  Fons Rademakers
 *CMZ :  2.23/03 22/09/99  16.33.47  by  Rene Brun
@@ -48,6 +49,7 @@ ctot RFIO_LinkDef
 ctot THREAD_LinkDef
 ctot WIN32_LinkDef
 ctot WINNT_LinkDef
+ctot STAR_LinkDef
 
 shell 'touch -t 199401010000 src/*LinkDef* src/G__TypeInfo.h; if [ $? != 0 ];then _
        touch -t 010100001994 src/*LinkDef* src/G__TypeInfo.h; fi'

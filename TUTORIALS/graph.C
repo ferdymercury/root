@@ -1,3 +1,4 @@
+//*CMZ :  2.24/01 28/03/2000  12.39.19  by  Rene Brun
 //*CMZ :  2.23/10 06/12/99  08.47.26  by  Rene Brun
 //*CMZ :  2.23/07 23/10/99  13.02.23  by  Fons Rademakers
 //*CMZ :  1.02/00 16/07/97  15.55.01  by  Rene Brun
@@ -40,4 +41,5 @@
    c1->GetFrame()->SetBorderSize(12);
    gr->GetHistogram()->SetXTitle("X title");
    gr->GetHistogram()->SetYTitle("Y title");
+   c1->Modified();
 }

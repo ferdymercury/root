@@ -1,3 +1,4 @@
+//*CMZ :  2.24/01 01/03/2000  14.59.44  by  Rene Brun
 //*CMZ :  2.23/12 31/01/2000  10.54.23  by  Rene Brun
 //*CMZ :  2.23/09 05/11/99  17.42.26  by  Rene Brun
 //*CMZ :  2.23/03 22/09/99  15.51.06  by  Rene Brun
@@ -10,17 +11,18 @@
 #ifndef ROOT_TF1
 #define ROOT_TF1
 
+/*CMZ :  2.24/01 24/02/2000  11.49.40  by  Fons Rademakers*/
 /*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun and Fons Rademakers.                               *
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
  *                                                                       *
- * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
- * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
  *************************************************************************/
 
 
@@ -48,8 +50,8 @@
 #include "TMethodCall.h"
 #endif
 
-class TH1F;
 class TF1;
+class TH1;
 
 class TF1 : public TFormula, public TAttLine, public TAttFill, public TAttMarker {
 
@@ -70,7 +72,7 @@ protected:
    Double_t    *fBeta;       //!Array beta.  is approximated by x = alpha +beta*r *gamma*r**2
    Double_t    *fGamma;      //!Array gamma.
    TObject     *fParent;     //Parent object hooking this function (if one)
-   TH1F        *fHistogram;  //Pointer to histogram used for visualisation
+   TH1         *fHistogram;  //Pointer to histogram used for visualisation
    Float_t     fMaximum;     //Maximum value for plotting
    Float_t     fMinimum;     //Minimum value for plotting
    TMethodCall *fMethodCall; //Pointer to MethodCall in case of interpreted function
@@ -79,6 +81,7 @@ protected:
 public:
    TF1();
    TF1(const char *name, const char *formula, Float_t xmin=0, Float_t xmax=1);
+   TF1(const char *name, Float_t xmin, Float_t xmax, Int_t npar);
    TF1(const char *name, void *fcn, Float_t xmin, Float_t xmax, Int_t npar);
    TF1(const char *name, Double_t (*fcn)(Double_t *, Double_t *), Float_t xmin=0, Float_t xmax=1, Int_t npar=0);
    TF1(const TF1 &f1);
@@ -95,7 +98,7 @@ public:
    virtual Double_t EvalPar(Double_t *x, Double_t *params=0);
    virtual void     ExecuteEvent(Int_t event, Int_t px, Int_t py);
        Double_t     GetChisquare() {return fChisquare;}
-           TH1F    *GetHistogram();
+           TH1     *GetHistogram();
           Int_t     GetNDF() {return fNpfits-fNpar;}
           Int_t     GetNpx() {return fNpx;}
     TMethodCall    *GetMethodCall() {return fMethodCall;}
@@ -114,10 +117,10 @@ public:
         Float_t     GetXmax() {return fXmax;}
    virtual void     InitArgs(Double_t *x, Double_t *params);
    static  void     InitStandardFunctions();
-   virtual Double_t Integral(Float_t a, Float_t b, Double_t *params=0, Float_t epsilon=0.000001);
-   virtual Double_t Integral(Float_t ax, Float_t bx, Float_t ay, Float_t by, Float_t epsilon=0.000001);
-   virtual Double_t Integral(Float_t ax, Float_t bx, Float_t ay, Float_t by, Float_t az, Float_t bz, Float_t epsilon=0.000001);
-   virtual Double_t IntegralMultiple(Int_t n, Float_t *a, Float_t *b, Float_t epsilon, Float_t &relerr);
+   virtual Double_t Integral(Double_t a, Double_t b, Double_t *params=0, Double_t epsilon=0.000001);
+   virtual Double_t Integral(Double_t ax, Double_t bx, Double_t ay, Double_t by, Double_t epsilon=0.000001);
+   virtual Double_t Integral(Double_t ax, Double_t bx, Double_t ay, Double_t by, Double_t az, Double_t bz, Double_t epsilon=0.000001);
+   virtual Double_t IntegralMultiple(Int_t n, Double_t *a, Double_t *b, Double_t epsilon, Double_t &relerr);
    virtual void     Paint(Option_t *option="");
    virtual void     Print(Option_t *option="");
    virtual void     Save(Float_t xmin, Float_t xmax);

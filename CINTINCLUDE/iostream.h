@@ -1,5 +1,5 @@
-/*CMZ :  2.23/10 10/12/99  18.00.16  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   10/12/99*/
+/*CMZ :  2.24/05 16/05/2000  12.03.57  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   16/05/2000*/
 /* /% C++ %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -31,9 +31,14 @@
 #pragma ifndef G__TMPLTIOS
 #pragma include <iosenum.h>
 #pragma endif
+#pragma ifndef G__SSTREAM_H
 typedef ostrstream ostringstream;
 typedef istrstream istringstream;
 //typedef strstream stringstream;
+#pragma else
+typedef ostringstream ostrstream;
+typedef istringstream istrstream;
+#pragma endif
 #pragma endif
 #pragma endif
 
@@ -453,86 +458,17 @@ ostream& ostream::form(char *format ...) {
 * function is fully supported.
 *********************************************************************/
 class G__CINT_ENDL { int dmy; } endl;
-ostream& operator<<(ostream& ostr,G__CINT_ENDL& i) {return(endl(ostr));}
-
 class G__CINT_ENDS { int dmy; } ends;
-ostream& operator<<(ostream& ostr,G__CINT_ENDS& i) {return(ends(ostr));}
-
 class G__CINT_FLUSH { int dmy; } flush;
-ostream& operator<<(ostream& ostr,G__CINT_FLUSH& i) {return(flush(ostr));}
-
 class G__CINT_ws { int dmy; } ws;
-istream& operator>>(istream& istr,G__CINT_ws& i) {return(ws(istr));}
-
 class G__CINT_WS { int dmy; } WS;
-istream& operator>>(istream& istr,G__CINT_WS& i) {return(WS(istr));}
-
 class G__CINT_HEX { int dmy; } hex;
-ostream& operator<<(ostream& ostr,G__CINT_HEX& i) {
-  ostr.unsetf(ios::dec);
-  ostr.unsetf(ios::oct);
-  ostr.setf(ios::hex);
-  return(ostr);
-}
-istream& operator>>(istream& istr,G__CINT_HEX& i) {
-  ostr.unsetf(ios::dec);
-  ostr.unsetf(ios::oct);
-  istr.setf(ios::hex);
-  return(istr);
-}
-
 class G__CINT_DEC { int dmy; } dec;
-ostream& operator<<(ostream& ostr,G__CINT_DEC& i) {
-  ostr.unsetf(ios::hex);
-  ostr.unsetf(ios::oct);
-  ostr.setf(ios::dec);
-  return(ostr);
-}
-istream& operator>>(istream& istr,G__CINT_DEC& i) {
-  ostr.unsetf(ios::hex);
-  ostr.unsetf(ios::oct);
-  istr.setf(ios::dec);
-  return(istr);
-}
-
 class G__CINT_OCT { int dmy; } oct;
-ostream& operator<<(ostream& ostr,G__CINT_OCT& i) {
-  ostr.unsetf(ios::hex);
-  ostr.unsetf(ios::dec);
-  ostr.setf(ios::oct);
-  return(ostr);
-}
-istream& operator>>(istream& istr,G__CINT_OCT& i) {
-  ostr.unsetf(ios::hex);
-  ostr.unsetf(ios::dec);
-  istr.setf(ios::oct);
-  return(istr);
-}
-
 class G__CINT_NOSUPPORT { int dmy; } ;
-ostream& operator<<(ostream& ostr,G__CINT_NOSUPPORT& i) {
-  fprintf(stderr,"Limitation: dec,hex,oct manipurator not supported\n");
-  return(ostr);
-}
-istream& operator<<(istream& istr,G__CINT_NOSUPPORT& i) {
-  fprintf(stderr,"Limitation: dec,hex,oct manipurator not supported\n");
-  return(istr);
-}
 
-// Value evaluation
-template<class T> int G__ateval(const T* x) {return(0);}
-template<class T> int G__ateval(const T& x) {return(0);}
-int G__ateval(const char* x) {return(0);}
-int G__ateval(const void* x) {return(0);}
-int G__ateval(const double x) {return(0);}
-int G__ateval(const float x) {return(0);}
-int G__ateval(const char x) {return(0);}
-int G__ateval(const short x) {return(0);}
-int G__ateval(const int x) {return(0);}
-int G__ateval(const long x) {return(0);}
-int G__ateval(const unsigned char x) {return(0);}
-int G__ateval(const unsigned short x) {return(0);}
-int G__ateval(const unsigned int x) {return(0);}
-int G__ateval(const unsigned long x) {return(0);}
+#ifndef G__STD_IOSTREAM
+#include <_iostream>
+#endif
 
 #endif

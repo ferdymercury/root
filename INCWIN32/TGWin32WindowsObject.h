@@ -1,3 +1,5 @@
+//*CMZ :  2.24/03 29/04/2000  23.42.00  by  Rene Brun
+//*CMZ :  2.24/01 02/03/2000  13.25.21  by  Valery Fine(fine@bnl.gov)
 //*CMZ :  2.23/09 18/11/99  19.36.58  by  Valery Fine(fine@mail.cern.ch)
 //*CMZ :  2.23/07 24/10/99  18.22.52  by  Valery Fine(fine@mail.cern.ch)
 //*CMZ :  2.23/02 02/09/99  15.39.27  by  Rene Brun
@@ -84,7 +86,7 @@ protected:
     TWin32SimpleEditCtrl *fEditCtrl;     // Edit control object to enter text
     Int_t              fiXText, fiYText; // Coord the current caret
     Char_t             fch;              // entered symbol
-    Char_t           *flpInstr;          // Input line buffer
+    Char_t            *flpInstr;         // Input line buffer
     int                fnCur,            // Current text cursor postion
                        flStr,            // Current length of the entered string
                        fLenLine,         // Pixel length of the entered string
@@ -152,6 +154,8 @@ protected:
       return ((TGWin32WindowsObject *)obj)->OnMouseActivate(hwnd, uMsg, wParam, lParam);};
 
   //    Message ID: WM_LBUTTONDOWN(UP) WM_MBUTTONDOWN(UP) WM_RBUTTONDOWN(UP)
+  //                ================== ================== ==================
+  //                WM_LBUTTONDBLCLK  WM_MBUTTONDBLCLK   WM_RBUTTONDBLCLK
   //                ================== ================== ==================
   //                WM_MOUSEMOVE
   //                ============
@@ -353,7 +357,7 @@ public:
 
 //    LPTHREAD_START_ROUTINE  ROOT_MsgLoop(HANDLE ThrSem);
 
-    ClassDef(TGWin32WindowsObject,0)  //Interface to Win32
+    // ClassDef(TGWin32WindowsObject,0)  //Interface to Win32
  };
 
 #endif

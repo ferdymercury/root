@@ -1,3 +1,4 @@
+//*CMZ :  2.24/01 06/03/2000  09.33.10  by  Rene Brun
 //*CMZ :  2.23/02 02/09/99  17.26.16  by  Rene Brun
 //*CMZ :  2.00/12 07/10/98  13.01.02  by  Fons Rademakers
 //*-- Author :    Valeriy Onuchin & Fons Rademakers   04/10/98
@@ -43,7 +44,7 @@ private:
    TPad    *fPad;   // pad  where box is in
 
 public:
-   TetrisBox(Int_t x=0, Int_t y=0, UInt_t type=0, TPad *pad=(TPad*)gPad);
+   TetrisBox(Int_t x=0, Int_t y=0, UInt_t type=0, TPad *pad=(TPad*)TVirtualPad::Pad());
    virtual ~TetrisBox() { }
 
    Int_t   GetX()                  { return fX; }
@@ -95,8 +96,8 @@ protected:
    void    GetXxYy(int index,int &x,int&y) { x = fBoxes[index]->GetX()-fX;
                                              y = fBoxes[index]->GetY()-fY; }
 public:
-   TetrisPiece(TPad *pad = (TPad*)gPad)            { Initialize(GetRandomType()%11, pad); }
-   TetrisPiece(UInt_t type, TPad *pad=(TPad*)gPad) { Initialize(type%11, pad); }
+   TetrisPiece(TPad *pad = (TPad*)TVirtualPad::Pad())  { Initialize(GetRandomType()%11, pad); }
+   TetrisPiece(UInt_t type, TPad *pad=(TPad*)TVirtualPad::Pad())  { Initialize(type%11, pad); }
    virtual ~TetrisPiece();
 
    void    SetX(int index,int value)      { fBoxes[index]->SetX(value); }

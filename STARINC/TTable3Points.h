@@ -1,26 +1,17 @@
+//*CMZ :  2.24/03 21/04/2000  16.16.30  by  Valery Fine(fine@bnl.gov)
+//*CMZ :  2.24/01 31/03/2000  08.46.15  by  Rene Brun
 //*CMZ :  2.23/12 26/01/2000  12.24.45  by  Valery Fine(fine@bnl.gov)
 //*-- Author : Valery Fine   10/05/99  (E-mail: fine@bnl.gov)
-// $Id: TTable3Points.h,v 1.2 1999/11/04 18:03:04 fine Exp $
-// $Log: TTable3Points.h,v $
-// Revision 1.2  1999/11/04 18:03:04  fine
-// new ctor for tablepoints introduced to make EventDiplay happy
-//
-// Revision 1.1  1999/05/18 20:21:24  fine
-// New class to 3D table viewer
-//
 
-#ifndef STAR_TTable3Points
-#define STAR_TTable3Points
+#ifndef ROOT_TTable3Points
+#define ROOT_TTable3Points
 
-#include <TObjArray.h>
 #include "TTablePoints.h"
-
-class TTableElementDescriptor;
 
 class TTable3Points :  public TTablePoints
 {
-  private:
-       TObjArray   *fArrayOfColumnDesciptors;
+  protected:
+        ULong_t   *fColumnOffset; //!
 
   public:
         enum EPointDirection {kXPoints,kYPoints,kZPoints,kTotalSize};
@@ -34,7 +25,6 @@ class TTable3Points :  public TTablePoints
         virtual void    SetXColumn(const Char_t *xName){ SetAnyColumn(xName,kXPoints);}
         virtual void    SetYColumn(const Char_t *yName){ SetAnyColumn(yName,kYPoints);}
         virtual void    SetZColumn(const Char_t *zName){ SetAnyColumn(zName,kZPoints);}
-        virtual TTableElementDescriptor *GetDescriptor(EPointDirection idx) const;
         virtual Int_t   GetTotalKeys(){ return -1;}
         virtual Int_t   GetKey(Int_t ){return -1;}
         virtual Int_t   SetKeyByIndx(Int_t ){return -1;}

@@ -1,3 +1,4 @@
+//*CMZ :  2.24/01 24/03/2000  11.14.18  by  Valery Fine(fine@bnl.gov)
 //*CMZ :  2.23/12 26/01/2000  09.24.06  by  Rene Brun
 //*CMZ :  2.23/02 03/09/99  11.39.45  by  Rene Brun
 //*CMZ :  2.22/01 19/05/99  19.23.00  by  Rene Brun
@@ -5,17 +6,18 @@
 //*CMZ :  2.21/06 10/02/99  19.10.17  by  Rene Brun
 //*-- Author :    Rene Brun   13/06/97
 
+/*CMZ :  2.24/01 24/02/2000  11.49.40  by  Fons Rademakers*/
 /*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun and Fons Rademakers.                               *
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
  *                                                                       *
- * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
- * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
  *************************************************************************/
 
 #include "TSPHE.h"
@@ -351,7 +353,7 @@ void TSPHE::SetEllipse(Float_t *factors){
   if (factors[0] > 0) faX = factors[0];
   if (factors[1] > 0) faY = factors[1];
   if (factors[2] > 0) faZ = factors[2];
-  MakeTableOfCoSin();
+//  MakeTableOfCoSin();
 }
 
 //______________________________________________________________________________
@@ -388,17 +390,17 @@ void TSPHE::SetPoints(Float_t *buff)
             Float_t zi = fRmin*sithet;
             for (j = 0; j < n; j++)
             {
-                buff[indx++] = zi * fCoTab[j];
-                buff[indx++] = zi * fSiTab[j];
-                buff[indx++] = z;
+                buff[indx++] = faX*zi * fCoTab[j];
+                buff[indx++] = faY*zi * fSiTab[j];
+                buff[indx++] = faZ*z;
             }
             z = fRmax * fCoThetaTab[i];
             zi = fRmax*sithet;
             for (j = 0; j < n; j++)
             {
-                buff[indx++] = zi * fCoTab[j];
-                buff[indx++] = zi * fSiTab[j];
-                buff[indx++] = z;
+                buff[indx++] = faX*zi * fCoTab[j];
+                buff[indx++] = faY*zi * fSiTab[j];
+                buff[indx++] = faZ*z;
             }
         }
     }

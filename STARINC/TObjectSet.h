@@ -1,24 +1,17 @@
+//*CMZ :  2.24/01 31/03/2000  08.46.15  by  Rene Brun
 //*CMZ :  2.23/12 26/01/2000  12.24.45  by  Valery Fine(fine@bnl.gov)
 //*-- Author : Valery Fine(fine@bnl.gov)   25/12/98
-// $Id: TObjectSet.h,v 1.7 1999/05/07 21:35:31 fine Exp $
-// $Log: TObjectSet.h,v $
-// Revision 1.7  1999/05/07 21:35:31  fine
-// Fix some first implemenation bugs
-//
-// Revision 1.6  1999/05/07 17:53:18  fine
-// owner bit has been introduced to deal with the embedded objects
-//
-#ifndef STAR_TObjectSet
-#define STAR_TObjectSet
+#ifndef ROOT_TObjectSet
+#define ROOT_TObjectSet
 
 #include "TDataSet.h"
 
 //////////////////////////////////////////////////////////////////////////////////////
 //                                                                                  //
-//  TObjectSet  - is a container TDataSet                                       //
+//  TObjectSet  - is a container TDataSet                                           //
 //                  This means this object has an extra pointer to an embedded      //
 //                  TObject.                                                        //
-//  Terminology:    This TOvjectSet may be an OWNER of the embeded TObject        //
+//  Terminology:    This TOvjectSet may be an OWNER of the embeded TObject          //
 //                  If the container is the owner it can delete the embeded object  //
 //                  otherwsie it leaves that object "as is"                         //
 //                                                                                  //

@@ -1,3 +1,4 @@
+*CMZ :  2.24/01 31/03/2000  09.17.21  by  Rene Brun
 *CMZ :  2.23/04 12/10/99  12.04.59  by  Fons Rademakers
 *CMZ :  2.20/03 04/12/98  18.47.15  by  Fons Rademakers
 *CMZ :  2.20/00 25/11/98  18.16.03  by  Fons Rademakers
@@ -40,16 +41,23 @@ seq .
 *
 exec setup [1] [2] [LOGFILE]
 
+if [machine] <> 'WinNT' then
 if $XPM <> '$XPM' then
    remove $ROOTSYS/lib/libXpm.*
    shell cp $XPM/libXpm.* $ROOTSYS/lib
    shell chmod 555 $ROOTSYS/lib/libXpm.*
 endif
 
+if $FEXIST(lib/libXpm.a) = 0 then
+  mess There is no $ROOTSYS/lib/libXpm.*, Please check your files
+  exit
+endif
+
 if $FEXIST(ttf) = 1 then
    remove $ROOTSYS/lib/libttf.*
    shell cp ttf/lib/libttf.* $ROOTSYS/lib
    shell chmod 555 $ROOTSYS/lib/libttf.*
+endif
 endif
 
 cd /

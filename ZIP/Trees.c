@@ -1,3 +1,4 @@
+/*CMZ :  2.24/01 31/03/2000  12.15.31  by  Rene Brun*/
 /*CMZ :  2.23/09 24/11/99  11.23.02  by  Rene Brun*/
 /*CMZ :  2.00/00 08/03/98  11.27.33  by  Rene Brun*/
 /*CMZ :  1.03/09 08/12/97  20.57.07  by  Fons Rademakers*/
@@ -297,17 +298,17 @@ extern unsigned near R__strstart; /* window offset of current string */
  * Local (static) routines in this file.
  */
 
-local void init_block     OF((void));
-local void pqdownheap     OF((ct_data near *tree, int k));
-local void gen_bitlen     OF((tree_desc near *desc));
-local void gen_codes      OF((ct_data near *tree, int max_code));
-local void build_tree     OF((tree_desc near *desc));
-local void scan_tree      OF((ct_data near *tree, int max_code));
-local void send_tree      OF((ct_data near *tree, int max_code));
-local int  build_bl_tree  OF((void));
-local void send_all_trees OF((int lcodes, int dcodes, int blcodes));
-local void compress_block OF((ct_data near *ltree, ct_data near *dtree));
-local void set_file_type  OF((void));
+local void R__init_block     OF((void));
+local void R__pqdownheap     OF((ct_data near *tree, int k));
+local void R__gen_bitlen     OF((tree_desc near *desc));
+local void R__gen_codes      OF((ct_data near *tree, int max_code));
+local void R__build_tree     OF((tree_desc near *desc));
+local void R__scan_tree      OF((ct_data near *tree, int max_code));
+local void R__send_tree      OF((ct_data near *tree, int max_code));
+local int  R__build_bl_tree  OF((void));
+local void R__send_all_trees OF((int lcodes, int dcodes, int blcodes));
+local void R__compress_block OF((ct_data near *ltree, ct_data near *dtree));
+local void R__set_file_type  OF((void));
 
 
 #ifndef DEBUG
@@ -402,7 +403,7 @@ void R__ct_init(ush *attr, int *method)
      * tree construction to get a canonical Huffman tree (longest code
      * all ones)
      */
-    gen_codes((ct_data near *)static_ltree, L_CODES+1);
+    R__gen_codes((ct_data near *)static_ltree, L_CODES+1);
 
     /* The static distance tree is trivial: */
     for (n = 0; n < D_CODES; n++) {
@@ -411,13 +412,13 @@ void R__ct_init(ush *attr, int *method)
     }
 
     /* Initialize the first block of the first file: */
-    init_block();
+    R__init_block();
 }
 
 /* ===========================================================================
  * Initialize a new block.
  */
-local void init_block()
+local void R__init_block()
 {
     int n; /* iterates over tree elements */
 
@@ -444,7 +445,7 @@ local void init_block()
 {\
     top = heap[SMALLEST]; \
     heap[SMALLEST] = heap[heap_len--]; \
-    pqdownheap(tree, SMALLEST); \
+    R__pqdownheap(tree, SMALLEST); \
 }
 
 /* ===========================================================================
@@ -461,7 +462,7 @@ local void init_block()
  * when the heap property is re-established (each father smaller than its
  * two sons).
  */
-local void pqdownheap(ct_data near *tree, int k)
+local void R__pqdownheap(ct_data near *tree, int k)
     /* ct_data near *tree;   the tree to restore */
     /* int k;                node to move down */
 {
@@ -497,7 +498,7 @@ local void pqdownheap(ct_data near *tree, int k)
  *     The length opt_len is updated; static_len is also updated if stree is
  *     not null.
  */
-local void gen_bitlen(tree_desc near *desc)
+local void R__gen_bitlen(tree_desc near *desc)
     /* tree_desc near *desc;  the tree descriptor */
 {
     ct_data near *tree  = desc->dyn_tree;
@@ -582,7 +583,7 @@ local void gen_bitlen(tree_desc near *desc)
  * OUT assertion: the field code is set for all tree elements of non
  *     zero code length.
  */
-local void gen_codes (ct_data near *tree, int max_code)
+local void R__gen_codes (ct_data near *tree, int max_code)
     /* ct_data near *tree;         the tree to decorate */
     /* int max_code;               largest code with non zero frequency */
 {
@@ -602,7 +603,7 @@ local void gen_codes (ct_data near *tree, int max_code)
      */
     Assert (code + bl_count[MAX_BITS]-1 == (1<<MAX_BITS)-1,
             "inconsistent bit counts");
-    Tracev((stderr,"\ngen_codes: max_code %d ", max_code));
+    Tracev((stderr,"\nR__gen_codes: max_code %d ", max_code));
 
     for (n = 0;  n <= max_code; n++) {
         int len = tree[n].Len;
@@ -623,7 +624,7 @@ local void gen_codes (ct_data near *tree, int max_code)
  *     and corresponding code. The length opt_len is updated; static_len is
  *     also updated if stree is not null. The field max_code is set.
  */
-local void build_tree(tree_desc near *desc)
+local void R__build_tree(tree_desc near *desc)
     /* tree_desc near *desc;  the tree descriptor */
 {
     ct_data near *tree   = desc->dyn_tree;
@@ -665,7 +666,7 @@ local void build_tree(tree_desc near *desc)
     /* The elements heap[heap_len/2+1 .. heap_len] are leaves of the tree,
      * establish sub-heaps of increasing lengths:
      */
-    for (n = heap_len/2; n >= 1; n--) pqdownheap(tree, n);
+    for (n = heap_len/2; n >= 1; n--) R__pqdownheap(tree, n);
 
     /* Construct the Huffman tree by repeatedly combining the least two
      * frequent nodes.
@@ -689,7 +690,7 @@ local void build_tree(tree_desc near *desc)
 #endif
         /* and insert the new node in the heap */
         heap[SMALLEST] = node++;
-        pqdownheap(tree, SMALLEST);
+        R__pqdownheap(tree, SMALLEST);
 
     } while (heap_len >= 2);
 
@@ -698,10 +699,10 @@ local void build_tree(tree_desc near *desc)
     /* At this point, the fields freq and dad are set. We can now
      * generate the bit lengths.
      */
-    gen_bitlen((tree_desc near *)desc);
+    R__gen_bitlen((tree_desc near *)desc);
 
     /* The field len is now set, we can generate the bit codes */
-    gen_codes ((ct_data near *)tree, max_code);
+    R__gen_codes ((ct_data near *)tree, max_code);
 }
 
 /* ===========================================================================
@@ -710,7 +711,7 @@ local void build_tree(tree_desc near *desc)
  * counts. (The contribution of the bit length codes will be added later
  * during the construction of bl_tree.)
  */
-local void scan_tree (ct_data near *tree, int max_code)
+local void R__scan_tree (ct_data near *tree, int max_code)
     /* ct_data near *tree;  the tree to be scanned */
     /* int max_code;        and its largest code of non zero frequency */
 {
@@ -754,7 +755,7 @@ local void scan_tree (ct_data near *tree, int max_code)
  * Send a literal or distance tree in compressed form, using the codes in
  * bl_tree.
  */
-local void send_tree (ct_data near *tree, int max_code)
+local void R__send_tree (ct_data near *tree, int max_code)
     /* ct_data near *tree;  the tree to be scanned */
     /* int max_code;        and its largest code of non zero frequency */
 {
@@ -804,16 +805,16 @@ local void send_tree (ct_data near *tree, int max_code)
  * Construct the Huffman tree for the bit lengths and return the index in
  * bl_order of the last bit length code to send.
  */
-local int build_bl_tree()
+local int R__build_bl_tree()
 {
     int max_blindex;  /* index of last bit length code of non zero freq */
 
     /* Determine the bit length frequencies for literal and distance trees */
-    scan_tree((ct_data near *)dyn_ltree, l_desc.max_code);
-    scan_tree((ct_data near *)dyn_dtree, d_desc.max_code);
+    R__scan_tree((ct_data near *)dyn_ltree, l_desc.max_code);
+    R__scan_tree((ct_data near *)dyn_dtree, d_desc.max_code);
 
     /* Build the bit length tree: */
-    build_tree((tree_desc near *)(&bl_desc));
+    R__build_tree((tree_desc near *)(&bl_desc));
     /* opt_len now includes the length of the tree representations, except
      * the lengths of the bit lengths codes and the 5+5+4 bits for the counts.
      */
@@ -837,7 +838,7 @@ local int build_bl_tree()
  * lengths of the bit length codes, the literal tree and the distance tree.
  * IN assertion: lcodes >= 257, dcodes >= 1, blcodes >= 4.
  */
-local void send_all_trees(int lcodes, int dcodes, int blcodes)
+local void R__send_all_trees(int lcodes, int dcodes, int blcodes)
     /* int lcodes, dcodes, blcodes;  number of codes for each tree */
 {
     int rank;                    /* index in bl_order */
@@ -856,10 +857,10 @@ local void send_all_trees(int lcodes, int dcodes, int blcodes)
     }
     Tracev((stderr, "\nbl tree: sent %ld", R__bits_sent));
 
-    send_tree((ct_data near *)dyn_ltree, lcodes-1); /* send the literal tree */
+    R__send_tree((ct_data near *)dyn_ltree, lcodes-1); /* send the literal tree */
     Tracev((stderr, "\nlit tree: sent %ld", R__bits_sent));
 
-    send_tree((ct_data near *)dyn_dtree, dcodes-1); /* send the distance tree */
+    R__send_tree((ct_data near *)dyn_dtree, dcodes-1); /* send the distance tree */
     Tracev((stderr, "\ndist tree: sent %ld", R__bits_sent));
 }
 
@@ -879,13 +880,13 @@ ulg R__flush_block(char *buf, ulg stored_len, int eof)
     flag_buf[last_flags] = flags; /* Save the flags for the last 8 items */
 
      /* Check if the file is ascii or binary */
-    if (*R__file_type == (ush)UNKNOWN) set_file_type();
+    if (*R__file_type == (ush)UNKNOWN) R__set_file_type();
 
     /* Construct the literal and distance trees */
-    build_tree((tree_desc near *)(&l_desc));
+    R__build_tree((tree_desc near *)(&l_desc));
     Tracev((stderr, "\nlit data: dyn %ld, stat %ld", opt_len, static_len));
 
-    build_tree((tree_desc near *)(&d_desc));
+    R__build_tree((tree_desc near *)(&d_desc));
     Tracev((stderr, "\ndist data: dyn %ld, stat %ld", opt_len, static_len));
     /* At this point, opt_len and static_len are the total bit lengths of
      * the compressed block data, excluding the tree representations.
@@ -894,7 +895,7 @@ ulg R__flush_block(char *buf, ulg stored_len, int eof)
     /* Build the bit length tree for the above two trees, and get the index
      * in bl_order of the last bit length code to send.
      */
-    max_blindex = build_bl_tree();
+    max_blindex = R__build_bl_tree();
 
     /* Determine the best encoding. Compute first the block length in bytes */
     opt_lenb = (opt_len+3+7)>>3;
@@ -950,17 +951,17 @@ ulg R__flush_block(char *buf, ulg stored_len, int eof)
     } else if (static_lenb == opt_lenb) {
 #endif
         R__send_bits((STATIC_TREES<<1)+eof, 3);
-        compress_block( (ct_data near *)static_ltree,
+        R__compress_block( (ct_data near *)static_ltree,
                         (ct_data near *)static_dtree );
         compressed_len += 3 + static_len;
     } else {
         R__send_bits((DYN_TREES<<1)+eof, 3);
-        send_all_trees(l_desc.max_code+1, d_desc.max_code+1, max_blindex+1);
-        compress_block((ct_data near *)dyn_ltree, (ct_data near *)dyn_dtree);
+        R__send_all_trees(l_desc.max_code+1, d_desc.max_code+1, max_blindex+1);
+        R__compress_block((ct_data near *)dyn_ltree, (ct_data near *)dyn_dtree);
         compressed_len += 3 + opt_len;
     }
     Assert (compressed_len == R__bits_sent, "bad compressed size");
-    init_block();
+    R__init_block();
 
     if (eof) {
 #if defined(PGP) && !defined(MMAP)
@@ -1040,7 +1041,7 @@ int R__ct_tally (int dist, int lc)
 /* ===========================================================================
  * Send the block data compressed using the given Huffman trees
  */
-local void compress_block(ct_data near *ltree, ct_data near *dtree)
+local void R__compress_block(ct_data near *ltree, ct_data near *dtree)
     /* ct_data near *ltree;  literal tree */
     /* ct_data near *dtree;  distance tree */
 {
@@ -1092,7 +1093,7 @@ local void compress_block(ct_data near *ltree, ct_data near *dtree)
  * IN assertion: the fields freq of dyn_ltree are set and the total of all
  * frequencies does not exceed 64K (to fit in an int on 16 bit machines).
  */
-local void set_file_type()
+local void R__set_file_type()
 {
     int n = 0;
     unsigned ascii_freq = 0;

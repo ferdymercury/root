@@ -1,3 +1,4 @@
+//*CMZ :  2.24/03 12/04/2000  19.08.26  by  Rene Brun
 //*CMZ :  2.23/11 07/01/2000  12.55.12  by  Rene Brun
 //*-- Author :    Rene Brun   07/01/2000
 void exec1()
@@ -15,7 +16,8 @@ void exec1()
    if (!select) return;
    if (select->InheritsFrom("TH1")) {
       TH1 *h = (TH1*)select;
-      Float_t x = gPad->PadtoX(gPad->AbsPixeltoX(px));
+      Float_t xx = gPad->AbsPixeltoX(px);
+      Float_t x  = gPad->PadtoX(xx);
       Int_t binx = h->GetXaxis()->FindBin(x);
       printf("event=%d, hist:%s, bin=%d, content=%f\n",event,h->GetName(),binx,h->GetBinContent(binx));
    }

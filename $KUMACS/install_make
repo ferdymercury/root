@@ -1,3 +1,5 @@
+*CMZ :  2.24/03 18/04/2000  10.50.13  by  Rene Brun
+*CMZ :  2.24/01 16/03/2000  08.18.12  by  Rene Brun
 *CMZ :  2.23/12 16/01/2000  12.32.53  by  Rene Brun
 *CMZ :  2.23/09 19/11/99  12.27.10  by  Fons Rademakers
 *CMZ :  2.23/07 22/10/99  16.53.40  by  Fons Rademakers
@@ -28,6 +30,7 @@ shell mv src/Makemklinux.mk      src/Makefile.mklinux
 shell mv src/Makehpux.mk         src/Makefile.hpux
 shell mv src/Makehpuxacc.mk      src/Makefile.hpuxacc
 shell mv src/Makehpuxegcs.mk     src/Makefile.hpuxegcs
+shell mv src/Makesgicc.mk        src/Makefile.sgicc
 shell mv src/Makesgi64egcs.mk    src/Makefile.sgi64egcs
 shell mv src/Makesgiegcs.mk      src/Makefile.sgiegcs
 shell mv src/Makesgikcc.mk       src/Makefile.sgikcc
@@ -37,6 +40,7 @@ shell mv src/Makealphakcc.mk     src/Makefile.alphakcc
 shell mv src/Makesolaris.mk      src/Makefile.solaris
 shell mv src/MakesolarisCC5.mk   src/Makefile.solarisCC5.0
 shell mv src/Makesolarisegcs.mk  src/Makefile.solarisegcs
+shell mv src/Makesolarisgcc.mk   src/Makefile.solarisgcc
 shell mv src/Makesolariskcc.mk   src/Makefile.solariskcc
 shell mv src/Makelynxos.mk       src/Makefile.lynxos
 shell mv src/Makefreebsd.mk      src/Makefile.freebsd

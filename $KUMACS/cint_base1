@@ -1,3 +1,5 @@
+*CMZ :  2.24/05 07/05/2000  16.44.33  by  Fons Rademakers
+*CMZ :  2.24/01 17/03/2000  13.19.18  by  Valery Fine(fine@bnl.gov)
 *CMZ :  2.23/04 09/10/99  22.36.28  by  Rene Brun
 *CMZ :  2.23/03 26/09/99  20.18.17  by  Fons Rademakers
 *CMZ :  2.23/01 31/08/99  16.01.49  by  Rene Brun
@@ -26,7 +28,8 @@ headers=TArrayC.h TArrayD.h TArrayF.h TArrayI.h TArrayL.h TArrayS.h _
         TContextMenuImp.h TControlBarImp.h TError.h TVirtualFitter.h _
         TString.h TStringLong.h TObjString.h TSystem.h TSysEvtHandler.h _
         TSystemFile.h TStopwatch.h TRandom.h TBenchmark.h TTime.h TTimer.h _
-        TView.h TVirtualPad.h TVirtualX.h TVirtualGL.h TVirtualPS.h TAttAxis.h
+        TPadView3D.h TView.h TVirtualPad.h TVirtualX.h TVirtualGL.h _
+        TVirtualPS.h TAttAxis.h TInspectorImp.h
 
 name=Base1
 patch=BASE

@@ -1,8 +1,9 @@
+//*CMZ :  2.24/01 31/03/2000  08.46.15  by  Rene Brun
 //*CMZ :  2.23/12 26/01/2000  09.42.35  by  Valery Fine(fine@mail.cern.ch)
 //*-- Author :
-#ifndef STAR_St_PolyLineShape
-#define STAR_St_PolyLineShape
-// $Id: St_PolyLineShape.h,v 1.14 1999/12/21 18:57:14 fine Exp $
+#ifndef ROOT_TPolyLineShape
+#define ROOT_TPolyLineShape
+// $Id: TPolyLineShape.h,v 1.14 1999/12/21 18:57:14 fine Exp $
 // ***********************************************************************
 // *  C++ class library to define an abstract 3D shape os STAR "event" geometry
 // * Copyright(c) 1997~1999  [BNL] Brookhaven National Laboratory, STAR, All rights reserved
@@ -22,8 +23,8 @@
 // * purpose.  It is provided "as is" without express or implied warranty.
 // ************************************************************************
 
-#include <TShape.h>
-#include <TAttMarker.h>
+#include "TShape.h"
+#include "TAttMarker.h"
 
 class TPoints3DABC;
 class TVirtualPad;
@@ -71,7 +72,7 @@ public:
    virtual void         Paint3d(Option_t *opt);
    virtual void         PaintX3DLine(Option_t *opt="");
    virtual void         PaintX3DMarker(Option_t *opt="");
-   static Double_t     *gyrot(Double_t *dirc, Double_t cosang,Double_t sinang, Double_t trans[3][3]);
+   static Double_t     *Gyrot(Double_t *dirc, Double_t cosang,Double_t sinang, Double_t trans[3][3]);
    virtual void         PaintPoints(Int_t n, Float_t *p=0, Option_t *opt="");
    virtual void         PaintPolyMarker(Int_t n, Float_t *p=0, Marker_t m=0, Option_t *opt="");
    static Float_t       Product(Float_t *v1, Float_t *v2,Int_t ndim=3);
@@ -87,15 +88,6 @@ public:
    virtual void         Sizeof3D() const;
    ClassDef(TPolyLineShape,0) // the base class to define an abstract 3D shape of STAR "event" geometry
 };
-//______________________________________________________________________________
-// $Log: TPolyLineShape.h,v $
-// Revision 1.14  1999/12/21 18:57:14  fine
-// compilation warning plus new type for SizeAttribute
-//
-// Revision 1.13  1999/12/17 23:28:41  fine
-// clean up for the sake of docs + new class TTable3DPackedPoints introduced
-//
-//______________________________________________________________________________
 
 
 #endif

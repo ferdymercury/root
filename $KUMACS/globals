@@ -1,3 +1,5 @@
+*CMZ :  2.24/03 28/04/2000  08.22.31  by  Rene Brun
+*CMZ :  2.24/01 27/03/2000  17.36.29  by  Rene Brun
 *CMZ :  2.23/12 18/01/2000  13.39.26  by  Fons Rademakers
 *CMZ :  2.23/09 18/11/99  15.03.25  by  Rene Brun
 *CMZ :  2.23/08 02/11/99  09.17.44  by  Rene Brun
@@ -24,11 +26,13 @@ endif
 
 cxxdef =
 
+* OpenGL support
 if $FEXIST(opengl) = 1 then
    cxxdef = [cxxdef]//' -I$ROOTSYS/opengl/include'
    SEL GL
 endif
 
+* TrueType font support
 if $FEXIST(ttf) = 1 then
    cxxdef = [cxxdef]//' -I$ROOTSYS/ttf/include'
    SEL X11TTF
@@ -41,7 +45,12 @@ endif
 
 * only needed for rootd and proofd on AFS
 if $AFS <> '$AFS' then
-   cxxdef = [cxxdef]//' -DAFS'
+   cxxdef = [cxxdef]//' -DR__AFS'
+endif
+
+* only needed for rootd and proofd with Secure Remote Password
+if $SRP <> '$SRP' then
+   cxxdef = [cxxdef]//' -DR__SRP -I$SRP/include'
 endif
 
 * set to threads system lib (in machine specific area below)
@@ -140,7 +149,7 @@ if [machine] = 'HPUX' then
    GL/CR CICXXOPT [cxxdbg]//' +a1 -z +Z -I/opt/CC/include _
            -DG__REGEXP -DG__UNIX -DG__HPUXCPPDLL -DG__SHAREDLIB _
            -D_POSIX2_SOURCE -DG__ROOT -DG__REDIRECTIO -c'
-   GL/CR CICCOPT  [ccdbg]//' -Ae -z +Z -I/opt/CC/include  _
+   GL/CR CICCOPT  [ccdbg]//' -Wp,-H10000 -Ae -z +Z -I/opt/CC/include  _
            -DG__REGEXP -DG__UNIX -DG__HPUXCPPDLL -DG__SHAREDLIB _
            -D_POSIX2_SOURCE -DG__ROOT -DG__REDIRECTIO -c'
    GL/CR CILDOPT  [cxxdbg]//' +a1 -z -Wl,+s -Wl,-E -o'
@@ -415,7 +424,7 @@ elseif [machine] = 'SGI' then
    GL/CR CC  cc
    Gl/CR LD  'KCC -32'
    cxxdbg = [cxxdbg]//' --signed_chars --display_error_number --diag_suppress 68 _
-                        --diag_suppress 191 --diag_suppress 837 --no_exceptions'
+                        --diag_suppress 191 --diag_suppress 837'
    if [2] = 'g' then
       cxxdbg = [cxxdbg]//' +K0'
    else
@@ -447,7 +456,7 @@ elseif [machine] = 'SGI' then
    GL/CR F77OPT '-n32 -static -g -c '
    GL/CR LIBS   '-L$ROOTSYS/lib '//[rlibs]//' -lm -lPW -ldl'
    GL/CR PLIBS  '-L$ROOTSYS/lib '//[plibs]//' -lm -lPW -ldl'
-   GL/CR LIBSX  '-lXpm -lX11'
+   GL/CR LIBSX  '$ROOTSYS/lib/libXpm.a -lX11'
 
    GL/CR CICXXOPT [cxxdbg]//' -n32 -signed -w -DIRIX64 -DG__REGEXP1 -DG__UNIX -DG__SHAREDLIB _
                  -DG__OSFDLL -DG__SIGNEDCHAR -DG__ROOT -DG__REDIRECTIO -c'
@@ -486,8 +495,8 @@ elseif [machine] = 'LINUX' then
    GL/CR F77 g77
    GL/CR F77OPT [f77dbg]//' -c'
 +ELSE.
-   GL/CR F77 fort77
-   GL/CR F77OPT [f77dbg]//' -Nx800 -NC200 -c'
+   GL/CR F77 g77
+   GL/CR F77OPT [f77dbg]//' -c'
 +ENDIF.
 +IF,KCC.
    GL/CR CXX KCC

@@ -1,3 +1,4 @@
+//*CMZ :  2.24/03 29/04/2000  23.42.00  by  Rene Brun
 //*CMZ :  2.23/02 02/09/99  15.39.27  by  Rene Brun
 //*CMZ :  1.03/09 08/12/97  15.54.30  by  Fons Rademakers
 //*-- Author :    Valery Fine(fine@vxcern.cern.ch)   16/08/96
@@ -90,7 +91,7 @@ public:
     virtual void      Win32CreateObject();
     HBITMAP           GetBitmap(); // Return the Handle of the BITMAP data structure
 
-    ClassDef(TGWin32PixmapObject, 0)  // Pixmap GDI objects for Win32
+    // ClassDef(TGWin32PixmapObject, 0)  // Pixmap GDI objects for Win32
    };
 
 #endif

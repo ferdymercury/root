@@ -1,3 +1,6 @@
+//*CMZ :  2.24/04 04/05/2000  09.23.21  by  Rene Brun
+//*CMZ :  2.24/03 15/04/2000  18.54.04  by  Rene Brun
+//*CMZ :  2.24/01 28/03/2000  09.21.55  by  Rene Brun
 //*CMZ :  2.23/12 26/01/2000  09.31.21  by  Rene Brun
 //*CMZ :  2.23/11 12/01/2000  09.21.19  by  Rene Brun
 //*CMZ :  2.23/10 22/12/99  20.52.42  by  Rene Brun
@@ -10,17 +13,18 @@
 //*CMZ :  2.23/00 16/08/99  09.20.37  by  Rene Brun
 //*-- Author :    Rene Brun, Olivier Couet   12/12/94
 
+/*CMZ :  2.24/01 24/02/2000  11.49.40  by  Fons Rademakers*/
 /*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun and Fons Rademakers.                               *
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
  *                                                                       *
- * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
- * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
  *************************************************************************/
 
 #include <string.h>
@@ -103,6 +107,7 @@ TGraph::TGraph(): TNamed(), TAttLine(), TAttFill(), TAttMarker()
    fHistogram = 0;
    fMaximum = -1111;
    fMinimum = -1111;
+   SetBit(kClipFrame);
 }
 
 //______________________________________________________________________________
@@ -579,11 +584,13 @@ void TGraph::Fit(const char *fname, Option_t *option, Option_t *)
    grFitter = TVirtualFitter::Fitter(this);
    grFitter->Clear();
 
-   if (!gROOT->GetFunction("gaus")) {
+/*
+      if (!gROOT->GetFunction("gaus")) {
       grF1 = new TF1("gaus","gaus",xmin,xmax);
       grF1 = new TF1("expo","expo",xmin,xmax);
       for (i=0;i<10;i++) grF1 = new TF1(Form("pol%d",i),Form("pol%d",i),xmin,xmax);
    }
+*/
 
 //*-*- Get pointer to the function by searching in the list of functions in ROOT
    grF1 = (TF1*)gROOT->GetFunction(fname);
@@ -651,10 +658,16 @@ void TGraph::Fit(const char *fname, Option_t *option, Option_t *)
       else                 { arglist[0] = 0; grFitter->ExecuteCommand("SET PRINT", arglist,1); }
    }
 
+//*-*- Compute sum of squares of errors in the bin range
+   Double_t ey, sumw2=0;
+   for (i=xfirst;i<=xlast;i++) {
+      ey = GetErrorY(i);
+      sumw2 += ey*ey;
+   }
 //*-*- Perform minimization
    if (!InheritsFrom("TGraphErrors")) SetBit(kFitInit);
-   arglist[0] = 5000;   //MaxIterations
-   arglist[1] = 1e-2;   //epsilon
+   arglist[0] = TVirtualFitter::GetMaxIterations();
+   arglist[1] = sumw2*TVirtualFitter::GetPrecision();
    grFitter->ExecuteCommand("MIGRAD",arglist,2);
    if (fitOption.Errors) {
       grFitter->ExecuteCommand("HESSE",arglist,0);
@@ -794,8 +807,8 @@ TAxis *TGraph::GetXaxis()
 {
    // Get x axis of the graph.
 
-   if (fHistogram) return fHistogram->GetXaxis();
-   return 0;
+   if (!gPad) return 0;
+   return GetHistogram()->GetXaxis();
 }
 
 //______________________________________________________________________________
@@ -803,8 +816,8 @@ TAxis *TGraph::GetYaxis()
 {
    // Get y axis of the graph.
 
-   if (fHistogram) return fHistogram->GetYaxis();
-   return 0;
+   if (!gPad) return 0;
+   return GetHistogram()->GetYaxis();
 }
 
 //______________________________________________________________________________
@@ -927,7 +940,7 @@ void TGraph::InitGaus()
 
 //*-*- Compute mean value and RMS of the graph in the given range
    allcha = sumx = sumx2 = 0;
-   for (bin=xfirst;bin<xlast;bin++) {
+   for (bin=xfirst;bin<=xlast;bin++) {
       x       = fX[bin];
       val     = fY[bin];
       sumx   += val*x;
@@ -1011,7 +1024,7 @@ void TGraph::LeastSquareFit(Int_t n, Int_t m, Double_t *a)
 	b[m + l*20 - 21] = zero;
 	da[l-1]          = zero;
     }
-    for (k = xfirst; k < xlast; ++k) {
+    for (k = xfirst; k <= xlast; ++k) {
 	xk     = fX[k];
 	yk     = fY[k];
 	power  = one;
@@ -1060,7 +1073,7 @@ void TGraph::LeastSquareLinearFit(Int_t ndata, Double_t &a0, Double_t &a1, Int_t
     n     = TMath::Abs(ndata);
     ifail = -2;
     xbar  = ybar = x2bar = xybar = 0;
-    for (i = xfirst; i < xlast; ++i) {
+    for (i = xfirst; i <= xlast; ++i) {
 	xk = fX[i];
 	yk = fY[i];
 	if (ndata < 0) {
@@ -1480,6 +1493,8 @@ void TGraph::PaintGraph(Int_t npoints, Float_t *x, Float_t *y, Option_t *chopt)
            xlow  = x[i-1] - dbar;
            xhigh = x[i-1] + dbar;
            yhigh = y[i-1];
+           if (xlow  < uxmin) continue;
+           if (xhigh > uxmax) continue;
            if (!OptionOne) ylow = TMath::Max((Float_t)0,gPad->GetUymin());
            else            ylow = gPad->GetUymin();
            xwork[0] = xlow;
@@ -1489,7 +1504,7 @@ void TGraph::PaintGraph(Int_t npoints, Float_t *x, Float_t *y, Option_t *chopt)
            ComputeLogs(2, OptionZ);
            if (yworkl[0] < gPad->GetUymin()) yworkl[0] = gPad->GetUymin();
            if (yworkl[1] < gPad->GetUymin()) continue;
-           if (yworkl[1] > gPad->GetUymax()) yworkl[0] = gPad->GetUymax();
+           if (yworkl[1] > gPad->GetUymax()) yworkl[1] = gPad->GetUymax();
            if (yworkl[0] > gPad->GetUymax()) continue;
 
            gPad->PaintBox(xworkl[0],yworkl[0],xworkl[1],yworkl[1], "B");

@@ -1,3 +1,8 @@
+//*CMZ :  2.24/05 15/05/2000  11.18.29  by  Rene Brun
+//*CMZ :  2.24/03 02/05/2000  18.28.52  by  Rene Brun
+//*CMZ :  2.24/02 05/04/2000  17.07.58  by  Rene Brun
+//*CMZ :  2.24/01 20/03/2000  14.07.22  by  Rene Brun
+//*CMZ :  2.24/00 12/02/2000  16.17.51  by  Rene Brun
 //*CMZ :  2.23/12 26/01/2000  15.34.36  by  Rene Brun
 //*CMZ :  2.23/11 12/01/2000  11.01.23  by  Rene Brun
 //*CMZ :  2.23/10 16/12/99  17.45.07  by  Rene Brun
@@ -8,17 +13,18 @@
 //*CMZ :  2.22/09 13/07/99  18.48.14  by  Rene Brun
 //*-- Author :    Rene Brun   12/01/96
 
+/*CMZ :  2.24/01 24/02/2000  11.49.40  by  Fons Rademakers*/
 /*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun and Fons Rademakers.                               *
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
  *                                                                       *
- * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
- * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -621,7 +627,7 @@ void TTreePlayer::DrawSelect(const char *varexp0, const char *selection, Option_
    char *hname = (char*)strstr(varexp0,">>");
    TH1 *oldh1 = 0;
    TEventList *elist = 0;
-   char htitle[256]; htitle[0] = '\0';
+   char htitle[2560]; htitle[0] = '\0';
    Bool_t profile = kFALSE;
 
    fHistogram = 0;
@@ -742,7 +748,7 @@ void TTreePlayer::DrawSelect(const char *varexp0, const char *selection, Option_
          h1->SetMarkerStyle(fTree->GetMarkerStyle());
          h1->SetMarkerColor(fTree->GetMarkerColor());
          h1->SetMarkerSize(fTree->GetMarkerSize());
-         h1->SetBit(TH1::kCanRebin);
+         if (!opt.Contains("same"))h1->SetBit(TH1::kCanRebin);
          if (!hkeep) {
             h1->SetBit(kCanDelete);
             h1->SetDirectory(0);
@@ -871,7 +877,7 @@ void TTreePlayer::DrawSelect(const char *varexp0, const char *selection, Option_
             h2->SetMarkerStyle(fTree->GetMarkerStyle());
             h2->SetMarkerColor(fTree->GetMarkerColor());
             h2->SetMarkerSize(fTree->GetMarkerSize());
-            h2->SetBit(TH1::kCanRebin);
+            if (!opt.Contains("same"))h2->SetBit(TH1::kCanRebin);
             if (!hkeep) {
                h2->SetBit(kCanDelete);
                h2->SetBit(TH1::kNoStats);
@@ -940,7 +946,7 @@ void TTreePlayer::DrawSelect(const char *varexp0, const char *selection, Option_
          h3->SetMarkerStyle(fTree->GetMarkerStyle());
          h3->SetMarkerColor(fTree->GetMarkerColor());
          h3->SetMarkerSize(fTree->GetMarkerSize());
-         h3->SetBit(TH1::kCanRebin);
+         if (!opt.Contains("same"))h3->SetBit(TH1::kCanRebin);
          if (!hkeep) {
             h3->SetBit(kCanDelete);
             h3->SetBit(TH1::kNoStats);
@@ -1220,7 +1226,7 @@ void TTreePlayer::Fit(const char *formula ,const char *varexp, const char *selec
 //  If varexp contains >>hnew , the new histogram created is called hnew
 //  and it is kept in the current directory.
 //  Example:
-//    tree.Fit(pol4,sqrt(x)>>hsqrt,y>0)
+//    tree.Fit("pol4","sqrt(x)>>hsqrt","y>0")
 //    will fit sqrt(x) and save the histogram as "hsqrt" in the current
 //    directory.
 //
@@ -1384,10 +1390,8 @@ Int_t TTreePlayer::MakeClass(const char *classname)
    fprintf(fp,"#ifndef %s_h\n",classname);
    fprintf(fp,"#define %s_h\n",classname);
    fprintf(fp,"\n");
-   fprintf(fp,"#if !defined(__CINT__) || defined(__MAKECINT__)\n");
-   fprintf(fp,"#include <TTree.h>\n");
+   fprintf(fp,"#include <TChain.h>\n");
    fprintf(fp,"#include <TFile.h>\n");
-   fprintf(fp,"#endif\n");
 
 // First loop on all leaves to generate dimension declarations
    Int_t len, lenb,l;
@@ -1411,7 +1415,7 @@ Int_t TTreePlayer::MakeClass(const char *classname)
    fprintf(fp,"class %s {\n",classname);
    fprintf(fp,"   public :\n");
    fprintf(fp,"   TTree          *fTree;    //pointer to the analyzed TTree or TChain\n");
-   fprintf(fp,"   TTree          *fCurrent; //pointer to the current TTree\n");
+   fprintf(fp,"   Int_t           fCurrent; //current Tree number in a TChain\n");
    fprintf(fp,"//Declaration of leaves types\n");
    TLeaf *leafcount;
    TLeafObject *leafobj;
@@ -1427,11 +1431,13 @@ Int_t TTreePlayer::MakeClass(const char *classname)
       len = leaf->GetLen();
       leafcount =leaf->GetLeafCount();
       TBranch *branch = leaf->GetBranch();
+      branchname[0] = 0;
+      strcpy(branchname,branch->GetName());
+      Int_t nch = strlen(branchname);
       if (!branches.FindObject(branch)) branches.Add(branch);
       else leafStatus[l] = 1;
       if ( branch->GetNleaves() > 1) {
          // More than one leaf for the branch we need to distinguish them
-         strcpy(branchname,branch->GetName());
          strcat(branchname,".");
          strcat(branchname,leaf->GetTitle());
          if (leafcount) {
@@ -1441,7 +1447,9 @@ Int_t TTreePlayer::MakeClass(const char *classname)
          }
       } else {
          if (leafcount) strcpy(branchname,branch->GetName());
-         else           strcpy(branchname,leaf->GetTitle());
+         else {
+            if (branchname[nch-1] == '.') strcat(branchname,leaf->GetTitle());
+         }
       }
       char *twodim = (char*)strstr(leaf->GetTitle(),"][");
       bname = branchname;
@@ -1463,8 +1471,27 @@ Int_t TTreePlayer::MakeClass(const char *classname)
          Int_t kmax = 0;
          if (blen[lenb-1] == '_') {blen[lenb-1] = 0; kmax = 1;}
          else                     sprintf(blen,"%d",len);
-         if (twodim) {
-            fprintf(fp,"   %-15s %s[%d]%s;\n",leaf->GetTypeName(), branchname,len,(char*)(twodim+1));
+	 // Dimensions can be in the branchname for a split Object with a fix length C array.
+	 // Theses dimensions HAVE TO be placed after the dimension explicited by leafcount
+	 char *dimInName = (char*) strstr(branchname,"[");
+	 char *dimensions = 0;
+	 if ( twodim || dimInName ) {
+	   int dimlen = 0;
+	   if (dimInName) dimlen += strlen(dimInName) + 1;
+	   if (twodim)    dimlen += strlen(twodim) + 1;
+	   dimensions = new char[dimlen];
+	   if (dimInName) {
+	     strcpy(dimensions,dimInName);
+	     dimInName[0] = 0; // terminate branchname before the array dimensions.
+	   } else dimensions[0] = 0;
+	   if (twodim) strcat(dimensions,(char*)(twodim+1));
+	 }
+         if (dimensions) {
+            if (kmax) fprintf(fp,"   %-15s %s[kMax%s]%s;\n",leaf->GetTypeName(),
+			                                    branchname,blen,dimensions);
+	    else      fprintf(fp,"   %-15s %s[%d]%s;\n",leaf->GetTypeName(),
+			                                branchname,len,dimensions);
+	    delete dimensions;
          } else {
             if (kmax) fprintf(fp,"   %-15s %s[kMax%s];\n",leaf->GetTypeName(), branchname,blen);
             else      fprintf(fp,"   %-15s %s[%d];\n",leaf->GetTypeName(), branchname,len);
@@ -1494,7 +1521,8 @@ Int_t TTreePlayer::MakeClass(const char *classname)
 // generate class member functions prototypes
    fprintf(fp,"\n");
    fprintf(fp,"   %s(TTree *tree=0);\n",classname);
-   fprintf(fp,"   ~%s() {;}\n",classname);
+   fprintf(fp,"   ~%s();\n",classname);
+   fprintf(fp,"   Int_t Cut(Int_t entry);\n");
    fprintf(fp,"   Int_t GetEntry(Int_t entry);\n");
    fprintf(fp,"   Int_t LoadTree(Int_t entry);\n");
    fprintf(fp,"   void  Init(TTree *tree);\n");
@@ -1526,6 +1554,14 @@ Int_t TTreePlayer::MakeClass(const char *classname)
    fprintf(fp,"}\n");
    fprintf(fp,"\n");
 
+// generate code for class destructor()
+   fprintf(fp,"%s::~%s()\n",classname,classname);
+   fprintf(fp,"{\n");
+   fprintf(fp,"   if (!fTree) return;\n");
+   fprintf(fp,"   delete fTree->GetCurrentFile();\n");
+   fprintf(fp,"}\n");
+   fprintf(fp,"\n");
+
 // generate code for class member function GetEntry()
    fprintf(fp,"Int_t %s::GetEntry(Int_t entry)\n",classname);
    fprintf(fp,"{\n");
@@ -1542,8 +1578,10 @@ Int_t TTreePlayer::MakeClass(const char *classname)
    fprintf(fp,"   if (!fTree) return -5;\n");
    fprintf(fp,"   Int_t centry = fTree->LoadTree(entry);\n");
    fprintf(fp,"   if (centry < 0) return centry;\n");
-   fprintf(fp,"   if (fTree->GetTree() != fCurrent) {\n");
-   fprintf(fp,"      fCurrent = fTree->GetTree();\n");
+   fprintf(fp,"   if (fTree->IsA() != TChain::Class()) return centry;\n");
+   fprintf(fp,"   TChain *chain = (TChain*)fTree;\n");
+   fprintf(fp,"   if (chain->GetTreeNumber() != fCurrent) {\n");
+   fprintf(fp,"      fCurrent = chain->GetTreeNumber();\n");
    fprintf(fp,"      Notify();\n");
    fprintf(fp,"   }\n");
    fprintf(fp,"   return centry;\n");
@@ -1557,7 +1595,7 @@ Int_t TTreePlayer::MakeClass(const char *classname)
    fprintf(fp,"//   Set branch addresses\n");
    fprintf(fp,"   if (tree == 0) return;\n");
    fprintf(fp,"   fTree    = tree;\n");
-   fprintf(fp,"   fCurrent = 0;\n");
+   fprintf(fp,"   fCurrent = -1;\n");
    fprintf(fp,"\n");
    for (l=0;l<nleaves;l++) {
       if (leafStatus[l]) continue;
@@ -1643,6 +1681,16 @@ Int_t TTreePlayer::MakeClass(const char *classname)
    fprintf(fp,"   if (!fTree) return;\n");
    fprintf(fp,"   fTree->Show(entry);\n");
    fprintf(fp,"}\n");
+
+// generate code for class member function Cut()
+   fprintf(fp,"Int_t %s::Cut(Int_t entry)\n",classname);
+   fprintf(fp,"{\n");
+   fprintf(fp,"// This function may be called from Loop.\n");
+   fprintf(fp,"// returns  1 if entry is accepted.\n");
+   fprintf(fp,"// returns -1 otherwise.\n");
+
+   fprintf(fp,"   return 1;\n");
+   fprintf(fp,"}\n");
    fprintf(fp,"#endif // #ifdef %s_cxx\n",classname);
    fprintf(fp,"\n");
 
@@ -1650,6 +1698,9 @@ Int_t TTreePlayer::MakeClass(const char *classname)
 // generate code for class member function Loop()
    fprintf(fpc,"#define %s_cxx\n",classname);
    fprintf(fpc,"#include \"%s\"\n",thead);
+   fprintf(fpc,"#include \"%s\"\n","TH2.h");
+   fprintf(fpc,"#include \"%s\"\n","TStyle.h");
+   fprintf(fpc,"#include \"%s\"\n","TCanvas.h");
    fprintf(fpc,"\n");
    fprintf(fpc,"void %s::Loop()\n",classname);
    fprintf(fpc,"{\n");
@@ -1672,9 +1723,10 @@ Int_t TTreePlayer::MakeClass(const char *classname)
    fprintf(fpc,"   if (fTree == 0) return;\n");
    fprintf(fpc,"\n   Int_t nentries = Int_t(fTree->GetEntries());\n");
    fprintf(fpc,"\n   Int_t nbytes = 0, nb = 0;\n");
-   fprintf(fpc,"   for (Int_t i=0; i<nentries;i++) {\n");
-   fprintf(fpc,"      if (LoadTree(i) < 0) break;\n");
-   fprintf(fpc,"      nb = fTree->GetEntry(i);   nbytes += nb;\n");
+   fprintf(fpc,"   for (Int_t jentry=0; jentry<nentries;jentry++) {\n");
+   fprintf(fpc,"      Int_t ientry = LoadTree(jentry); //in case of a TChain, ientry is the entry number in the current file\n");
+   fprintf(fpc,"      nb = fTree->GetEntry(jentry);   nbytes += nb;\n");
+   fprintf(fpc,"      // if (Cut(ientry) < 0) continue;\n");
    fprintf(fpc,"   }\n");
    fprintf(fpc,"}\n");
 
@@ -1798,13 +1850,29 @@ Int_t TTreePlayer::MakeCode(const char *filename)
          leafobj = (TLeafObject*)leaf;
          if (leafobj->GetClass()) head = headOK;
          else                     head = headcom;
-         fprintf(fp,"%s%-15s *%s;\n",head,leafobj->GetTypeName(), leafobj->GetName());
+         fprintf(fp,"%s%-15s *%s = 0;\n",head,leafobj->GetTypeName(), leafobj->GetName());
          continue;
       }
       if (leafcount) {
          len = leafcount->GetMaximum();
-         if (twodim) {
-            fprintf(fp,"   %-15s %s[%d]%s;\n",leaf->GetTypeName(), branchname,len,(char*)(twodim+1));
+	 // Dimensions can be in the branchname for a split Object with a fix length C array.
+	 // Theses dimensions HAVE TO be placed after the dimension explicited by leafcount
+	 char *dimInName = (char*) strstr(branchname,"[");
+	 char *dimensions = 0;
+	 if ( twodim || dimInName ) {
+	   int dimlen = 0;
+	   if (dimInName) dimlen += strlen(dimInName) + 1;
+	   if (twodim)    dimlen += strlen(twodim) + 1;
+	   dimensions = new char[dimlen];
+	   if (dimInName) {
+	     strcpy(dimensions,dimInName);
+	     dimInName[0] = 0; // terminate branchname before the array dimensions.
+	   } else dimensions[0] = 0;
+	   if (twodim) strcat(dimensions,(char*)(twodim+1));
+	 }
+         if (dimensions) {
+            fprintf(fp,"   %-15s %s[%d]%s;\n",leaf->GetTypeName(), branchname,len,dimensions);
+	    delete dimensions;
          } else {
             fprintf(fp,"   %-15s %s[%d];\n",leaf->GetTypeName(), branchname,len);
          }
@@ -1843,6 +1911,7 @@ Int_t TTreePlayer::MakeCode(const char *filename)
       if (brak) *brak = 0;
       head = headOK;
       if (branch->IsA() == TBranchObject::Class()) {
+         strcpy(branchname,branch->GetName());
          leafobj = (TLeafObject*)leaf;
          if (!leafobj->GetClass()) head = headcom;
       }
@@ -1981,7 +2050,10 @@ void TTreePlayer::Scan(const char *varexp, const char *selection, Option_t *,
       if (fTree->GetScanField() > 0 && fSelectedRows > 0) {
          if (fSelectedRows%fTree->GetScanField() == 0) {
             fprintf(stderr,"Type <CR> to continue or q to quit ==> ");
-            int answer = getchar();
+            int answer, readch;
+            readch = getchar();
+            answer = readch;
+            while (readch != '\n' && readch != EOF) readch = getchar();
             if (answer == 'q' || answer == 'Q') break;
          }
       }
@@ -2165,7 +2237,7 @@ void TTreePlayer::TakeAction(Int_t nfill, Int_t &npoints, Int_t &action, TObject
   Int_t i;
   if      (action ==  1) ((TH1*)obj)->FillN(nfill,fV1,fW);
   else if (action ==  2) {
-     TH1 *h2 = (TH1*)obj;
+     TH2 *h2 = (TH2*)obj;
      for(i=0;i<nfill;i++) h2->Fill(fV2[i],fV1[i],fW[i]);
   }
   else if (action ==  4) ((TProfile*)obj)->FillN(nfill,fV2,fV1,fW);
@@ -2199,12 +2271,12 @@ void TTreePlayer::TakeAction(Int_t nfill, Int_t &npoints, Int_t &action, TObject
      }
 
      pm->Draw();
-     TH1 *h2 = (TH1*)obj;
+     TH2 *h2 = (TH2*)obj;
      for(i=0;i<nfill;i++) h2->Fill(fV2[i],fV1[i],fW[i]);
   }
 //----------------------------------------------------------
     else if (action ==  3) {
-     TH1 *h3 =(TH1*)obj;
+     TH3 *h3 =(TH3*)obj;
      for(i=0;i<nfill;i++) h3->Fill(fV3[i],fV2[i],fV1[i],fW[i]);
   }
   else if (action == 13) {
@@ -2214,7 +2286,7 @@ void TTreePlayer::TakeAction(Int_t nfill, Int_t &npoints, Int_t &action, TObject
      pm3d->SetMarkerSize(fTree->GetMarkerSize());
      for (i=0;i<nfill;i++) { pm3d->SetPoint(i,fV3[i],fV2[i],fV1[i]);}
      pm3d->Draw();
-     TH1 *h3 =(TH1*)obj;
+     TH3 *h3 =(TH3*)obj;
      for(i=0;i<nfill;i++) h3->Fill(fV3[i],fV2[i],fV1[i],fW[i]);
   }
   else if (action < 0) {
@@ -2281,7 +2353,7 @@ void TTreePlayer::TakeEstimate(Int_t nfill, Int_t &, Int_t action, TObject *obj,
      if (fVmin[1] >= fVmax[1]) { fVmin[1] -= 1; fVmax[1] += 1;}
      FindGoodLimits(nchans,fNbins[1],fVmin[1],fVmax[1]);
 
-     TH1 *h2 = (TH1*)obj;
+     TH2 *h2 = (TH2*)obj;
      h2->SetBins(fNbins[1],fVmin[1],fVmax[1],fNbins[0],fVmin[0],fVmax[0]);
      for(i=0;i<nfill;i++) h2->Fill(fV2[i],fV1[i],fW[i]);
      fHistogram = h2;
@@ -2314,7 +2386,7 @@ void TTreePlayer::TakeEstimate(Int_t nfill, Int_t &, Int_t action, TObject *obj,
      if (fVmin[1] >= fVmax[1]) { fVmin[1] -= 1; fVmax[1] += 1;}
      FindGoodLimits(nchans,fNbins[1],fVmin[1],fVmax[1]);
 
-     TH1 *h2 = (TH1*)obj;
+     TH2 *h2 = (TH2*)obj;
      h2->SetBins(fNbins[1],fVmin[1],fVmax[1],fNbins[0],fVmin[0],fVmax[0]);
      if (!strstr(option,"same") && !strstr(option,"goff")) {
         h2->DrawCopy(option);
@@ -2348,7 +2420,7 @@ void TTreePlayer::TakeEstimate(Int_t nfill, Int_t &, Int_t action, TObject *obj,
      }
      fHistogram = h2;
 //__________________________3D scatter plot_______________________
-  } else if (action == 13) {
+  } else if (action == 3 || action == 13) {
      for (i=0;i<nfill;i++) {
         if (fVmin[0] > fV1[i]) fVmin[0] = fV1[i];
         if (fVmax[0] < fV1[i]) fVmax[0] = fV1[i];
@@ -2365,8 +2437,13 @@ void TTreePlayer::TakeEstimate(Int_t nfill, Int_t &, Int_t action, TObject *obj,
      if (fVmin[2] >= fVmax[2]) { fVmin[2] -= 1; fVmax[2] += 1;}
      FindGoodLimits(nchans,fNbins[2],fVmin[2],fVmax[2]);
 
-     TH1 *h3 = (TH1*)obj;
+     TH3 *h3 = (TH3*)obj;
      h3->SetBins(fNbins[2],fVmin[2],fVmax[2],fNbins[1],fVmin[1],fVmax[1],fNbins[0],fVmin[0],fVmax[0]);
+     if (!h3->TestBit(kCanDelete)) {
+        for (i=0;i<nfill;i++) h3->Fill(fV3[i],fV2[i],fV1[i],1.);
+     }
+     fHistogram = h3;
+     if (action == 3) return;
      if (!strstr(option,"same") && !strstr(option,"goff")) {
         h3->DrawCopy(option);
         gPad->Update();
@@ -2383,9 +2460,5 @@ void TTreePlayer::TakeEstimate(Int_t nfill, Int_t &, Int_t action, TObject *obj,
      pm3d->SetMarkerSize(fTree->GetMarkerSize());
      for (i=0;i<nfill;i++) { pm3d->SetPoint(i,fV3[i],fV2[i],fV1[i]);}
      if (!fDraw && !strstr(option,"goff")) pm3d->Draw();
-     if (!h3->TestBit(kCanDelete)) {
-        for (i=0;i<nfill;i++) h3->Fill(fV3[i],fV2[i],fV1[i],1.);
-     }
-     fHistogram = h3;
   }
 }

@@ -1,20 +1,22 @@
+//*CMZ :  2.24/01 11/03/2000  15.58.21  by  Rene Brun
 //*CMZ :  2.23/12 26/01/2000  10.02.18  by  Rene Brun
 //*CMZ :  2.21/07 02/04/99  16.21.51  by  Fons Rademakers
 //*CMZ :  2.00/11 17/08/98  12.24.23  by  Rene Brun
 //*CMZ :  1.03/08 17/11/97  17.44.55  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   13/06/96
 
+/*CMZ :  2.24/01 24/02/2000  11.49.40  by  Fons Rademakers*/
 /*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun and Fons Rademakers.                               *
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
  *                                                                       *
- * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
- * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -329,18 +331,22 @@ EReturnType TMethodCall::ReturnType()
       G__TypedefInfo type(func->GetReturnTypeName());
       const char *name = type.TrueName();
 
-      if (!strcmp("unsigned int", name)   || !strcmp("int", name)   ||
-          !strcmp("unsigned long", name)  || !strcmp("long", name)  ||
-          !strcmp("unsigned short", name) || !strcmp("short", name) ||
-          !strcmp("unsigned char", name)  || !strcmp("char", name)  ||
+      if (!strcmp("unsigned int", name)   || !strcmp("int", name)     ||
+          !strcmp("unsigned long", name)  || !strcmp("long", name)    ||
+          !strcmp("unsigned short", name) || !strcmp("short", name)   ||
+          !strcmp("unsigned char", name)  || !strcmp("char", name)    ||
+          !strcmp("UInt_t", name)         || !strcmp("Int_t", name)   ||
+          !strcmp("ULong_t", name)        || !strcmp("Long_t", name)  ||
+          !strcmp("UShort_t", name)       || !strcmp("Short_t", name) ||
+          !strcmp("UChar_t", name)        || !strcmp("Char_t", name)  ||
           strstr(name, "enum"))
          fRetType = kLong;
-      else if (!strcmp("float", name)  || !strcmp("double", name))
+      else if (!strcmp("float", name)   || !strcmp("double", name)    ||
+               !strcmp("Float_t", name) || !strcmp("Double_t", name))
          fRetType = kDouble;
       else
          fRetType = kOther;
    }
-
    return fRetType;
 }
 

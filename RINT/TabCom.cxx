@@ -1,3 +1,4 @@
+//*CMZ :  2.24/02 31/03/2000  13.35.25  by  Valery Fine(fine@bnl.gov)
 //*CMZ :  2.23/09 10/11/99  18.35.42  by  Fons Rademakers
 //*CMZ :  2.23/06 21/10/99  08.21.17  by  Rene Brun
 //*CMZ :  2.23/05 20/10/99  12.29.18  by  Fons Rademakers
@@ -7,17 +8,18 @@
 //*CMZ :  2.22/05 15/06/99  16.10.16  by  Fons Rademakers
 //*-- Author :    Christian Lacunza <lacunza@cdfsg6.lbl.gov>   27/04/99
 
+/*CMZ :  2.24/01 24/02/2000  11.49.40  by  Fons Rademakers*/
 /*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun and Fons Rademakers.                               *
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
  *                                                                       *
- * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
- * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
  *************************************************************************/
 
 ////////////////////////////////////////////////////////////////////////////
@@ -276,7 +278,7 @@ const TSeqCol* TTabCom::GetListOfClasses( void )
           strstream   cmd;
           const char* tmpfilename = tmpnam(0);
           cmd << ".class > " << tmpfilename << endl;
-          gROOT->ProcessLine( cmd.str() ); // memory leak cmd.str()
+          gROOT->ProcessLineSync( cmd.str() ); // memory leak cmd.str()
 
           // open the file
           ifstream file1( tmpfilename );
@@ -379,7 +381,11 @@ const TSeqCol* TTabCom::GetListOfEnvVars()
           const char* tmpfilename = tmpnam(0);
           strstream  cmd;
 
-          cmd << "/bin/env > " << tmpfilename << endl;
+#ifndef WIN32
+         cmd << "/bin/env > " << tmpfilename << endl;
+#else
+         cmd << "set > " << tmpfilename << endl;
+#endif
           gSystem->Exec( cmd.str() ); // memory leak cmd.str()
 
           // open the file
@@ -696,7 +702,7 @@ TString TTabCom::DetermineClass( const char varName[] )
      strstream   cmd;
      const char* tmpfile = tmpnam(0);
      cmd << "gROOT->ProcessLine(\"" << varName << "\"); > " << tmpfile << endl;
-     gROOT->ProcessLine(cmd.str()); // memory leak cmd.str()
+     gROOT->ProcessLineSync(cmd.str()); // memory leak cmd.str()
      // the type of the variable whose name is "varName"
      // should now be stored on disk in the file "tmpfile"
 
@@ -827,7 +833,7 @@ TString TTabCom::GetSysIncludePath( void )
      const char* tmpfilename = tmpnam(0);
      strstream cmd;
      cmd << "gROOT->ProcessLine(\".include\"); > " << tmpfilename << endl;
-     gROOT->ProcessLine( cmd.str() ); // memory leak cmd.str()
+     gROOT->ProcessLineSync( cmd.str() ); // memory leak cmd.str()
 
      // open the tmp file
      ifstream file1( tmpfilename );

@@ -1,3 +1,6 @@
+/*CMZ :  2.24/05 09/05/2000  19.15.52  by  Rene Brun*/
+/*CMZ :  2.24/03 13/04/2000  10.17.23  by  Rene Brun*/
+/*CMZ :  2.24/01 22/03/2000  17.20.23  by  Fons Rademakers*/
 /*CMZ :  2.23/12 17/01/2000  11.16.01  by  Rene Brun*/
 /*CMZ :  2.23/09 17/11/99  15.43.42  by  Rene Brun*/
 /*CMZ :  2.23/04 12/10/99  08.22.04  by  Rene Brun*/
@@ -84,14 +87,17 @@
 #   endif
 #endif
 
-#if defined(__linux) && !defined(__powerpc)
+#if defined(__linux) && !defined(__powerpc__)
 #   define R__LINUX
 #   define R__UNIX
 #   define R__BYTESWAP
+#   ifndef __i486__
+#      define __i486__          /* turn off if you really want to run on an i386 */
+#   endif
 #   define NEED_SIGJMP
 #endif
 
-#if defined(__linux) && defined(__powerpc)
+#if defined(__linux__) && defined(__powerpc__)
 #   define R__MKLINUX
 #   define R__LINUX
 #   define R__UNIX

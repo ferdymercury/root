@@ -1,519 +1,13 @@
+//*CMZ :  2.24/01 31/03/2000  08.24.31  by  Rene Brun
 //*CMZ :  2.23/12 28/01/2000  18.40.48  by  Valery Fine(fine@bnl.gov)
-//*-- Author :  Valery Fine(fine@bnl.gov)   25/09/99
+//*-- Author :    Valery Fine(fine@bnl.gov)   25/09/99
 //
 // The set of methods to work with the plain matrix / vector
 // "derived" from  http://wwwinfo.cern.ch/asdoc/shortwrupsdir/f110/top.html
 // "derived" from  http://wwwinfo.cern.ch/asdoc/shortwrupsdir/f112/top.html
 //
-// $Id: TCL.cxx,v 1.6 1999/10/27 23:57:56 fine Exp $
+// $Id: TCL.cxx,v 1.7 2000/01/28 23:40:17 fine Exp $
 // $Log: TCL.cxx,v $
-// Revision 1.6  1999/10/27 23:57:56  fine
-// Clean up: const has been introduced instead of non-const
-//
-// Revision 1.5  1999/10/17 20:45:55  fine
-// vadd methods added
-//
-// Revision 1.4  1999/09/29 02:30:48  fine
-// Change return type from void to float/double
-//
-// Revision 1.2  1999/09/29 00:31:49  fine
-// RMath class has been repleaced with TCL one
-//
-// Revision 1.1  1999/09/28 19:45:10  fine
-// RMath class has been renamed to TCL - STAR CERN Library
-//
-// Revision 1.7  1999/09/27 23:45:42  fine
-// Several methods to calculate errors were introduced
-//
-// Revision 1.6  1999/09/27 00:14:46  fine
-// some bugs for double have been fixed
-//
-// Revision 1.5  1999/09/26 23:37:50  fine
-// Bug fixes for F112
-//
-// Revision 1.4  1999/09/26 02:48:50  fine
-// F112 CERNLIB package (TR matrix) has been added. No micky test yet
-//
-// Revision 1.3  1999/09/23 18:32:11  fine
-// double prec for float matrices was introduced
-//
-//
-
-// http://wwwinfo.cern.ch/asdoc/shortwrupsdir/f110/top.html
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////
-/* begin_html
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<!-- saved from url=(0056)http://wwwinfo.cern.ch/asdoc/shortwrupsdir/f112/top.html -->
-<!--Converted with LaTeX2HTML 96.1-e (April 9, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds --><HTML><HEAD><TITLE>Manipulation of Triangular and Symmetric Matrices</TITLE>
-<META content="text/html; charset=windows-1251" http-equiv=Content-Type>
-<META content="Manipulation of Triangular and Symmetric Matrices "
-name=description>
-<META content=top name=keywords>
-<META content=document name=resource-type>
-<META content=global name=distribution>
-<META content="MSHTML 5.00.2314.1000" name=GENERATOR></HEAD>
-<BODY lang=EN>
-<P>
-<H2>F112: Manipulation of Triangular and Symmetric Matrices </H2>
-<TABLE border=1>
-  <TBODY>
-  <TR>
-    <TD align=left>Author(s): W. Hart
-    <TD align=left>Library: KERNLIB
-  <TR>
-    <TD align=left>Submitter:
-    <TD align=left>Submitted: 01.01.1975
-  <TR>
-    <TD align=left>Language: Fortran
-    <TD align=left>Revised: 12.12.1986 </TR></TBODY></TABLE><BR><!-- KEY VALUE="operation symmetric triangular matrix " -->
-<P>At CERN, matrices are often stored row-wise (TC-convention); furthermore,
-symmetric matrices are stored packed as the lower left triangular part only,
-i.e., the <I>I</I>th diagonal element is found in position
-<I>I</I>(<I>I</I>+1)/2. The <TT>TR</TT>-package performs many of the frequently
-required operations associated with such matrices without resorting to expanding
-into the unpacked square form. In all the following routines an <IMG
-align=middle alt=tex2html_wrap_inline295 height=20 src="gif/trpack_files/img1.gif"
-width=52> <I>symmetric</I> matrix is taken to be stored in the packed form with
-<I>M</I>(<I>M</I>+1)/2 elements.
-<P>Some of these operations produce and require the manipulation of <I>lower
-triangular</I> matrices which have all elements zero above the leading diagonal.
-These are also stored in the packed form with all the zeros dropped; therefore,
-care has to be taken in the interpretation of a packed matrix as to whether it
-represents a symmetric or lower triangular array. To facilitate this distinction
-in the Write-up, the following nomenclature has been adopted:
-<DL compact>
-  <DT>A,B,C
-  <DD>unpacked rectangular matrices (row-wise storage)
-  <DT>Q,R,S,T
-  <DD>packed symmetric matrices
-  <DT>V,W
-  <DD>packed lower triangular matrices </DD></DL>On 32-bit machines the
-calculations are performed internally in double-precision mode.
-<P>
-<P><B>Structure:</B>
-<P><TT>SUBROUTINE</TT> subprograms <BR>User Entry Names:
-<TABLE cols=8>
-  <COLGROUP>
-  <COL align=left>
-  <COL align=left>
-  <COL align=left>
-  <COL align=left>
-  <COL align=left>
-  <COL align=left>
-  <COL align=left>
-  <COL align=left>
-  <TBODY>
-  <TR>
-    <TD align=left noWrap vAlign=baseline><A name=TRCHUL><TT>TRCHUL</TT></A>,
-    </TD>
-    <TD align=left noWrap vAlign=baseline><A name=TRCHLU><TT>TRCHLU</TT></A>,
-    </TD>
-    <TD align=left noWrap vAlign=baseline><A name=TRSMUL><TT>TRSMUL</TT></A>,
-    </TD>
-    <TD align=left noWrap vAlign=baseline><A name=TRSMLU><TT>TRSMLU</TT></A>,
-    </TD>
-    <TD align=left noWrap vAlign=baseline><A name=TRINV><TT>TRINV</TT></A>,
-</TD>
-    <TD align=left noWrap vAlign=baseline><A name=TRSINV><TT>TRSINV</TT></A>,
-    </TD>
-    <TD align=left noWrap vAlign=baseline><A name=TRLA><TT>TRLA</TT></A>, </TD>
-    <TD align=left noWrap vAlign=baseline><A name=TRLTA><TT>TRLTA</TT></A>,
-  </TD></TR>
-  <TR>
-    <TD align=left noWrap vAlign=baseline><A name=TRAL><TT>TRAL</TT></A>, </TD>
-    <TD align=left noWrap vAlign=baseline><A name=TRALT><TT>TRALT</TT></A>,
-</TD>
-    <TD align=left noWrap vAlign=baseline><A name=TRSA><TT>TRSA</TT></A>, </TD>
-    <TD align=left noWrap vAlign=baseline><A name=TRAS><TT>TRAS</TT></A>, </TD>
-    <TD align=left noWrap vAlign=baseline><A name=TRSAT><TT>TRSAT</TT></A>,
-</TD>
-    <TD align=left noWrap vAlign=baseline><A name=TRATS><TT>TRATS</TT></A>,
-</TD>
-    <TD align=left noWrap vAlign=baseline><A name=TRAAT><TT>TRAAT</TT></A>,
-</TD>
-    <TD align=left noWrap vAlign=baseline><A name=TRATA><TT>TRATA</TT></A>,
-  </TD></TR>
-  <TR>
-    <TD align=left noWrap vAlign=baseline><A name=TRASAT><TT>TRASAT</TT></A>,
-    </TD>
-    <TD align=left noWrap vAlign=baseline><A name=TRATSA><TT>TRATSA</TT></A>,
-    </TD>
-    <TD align=left noWrap vAlign=baseline><A name=TRQSQ><TT>TRQSQ</TT></A>,
-</TD>
-    <TD align=left noWrap vAlign=baseline><A name=TRPCK><TT>TRPCK</TT></A>,
-</TD>
-    <TD align=left noWrap vAlign=baseline><A name=TRUPCK><TT>TRUPCK</TT></A>
-    </TD>
-    <TD align=left noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline></TD></TR></TBODY></TABLE>
-<P>
-<P><B>Usage:</B>
-<P><B>Choleski Decomposition</B> <BR>
-<TABLE cols=4>
-  <COLGROUP>
-  <COL align=middle>
-  <COL align=left>
-  <COL align=middle>
-  <COL align=left>
-  <TBODY>
-  <TR>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><TT>CALL TRCHUL(S,W,M)</TT> </TD>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><IMG align=bottom
-      alt=tex2html_wrap_inline299 height=12 src="gif/trpack_files/img2.gif"
-      width=72> </TD></TR>
-  <TR>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><TT>CALL TRCHLU(S,V,M)</TT> </TD>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><IMG align=bottom
-      alt=tex2html_wrap_inline301 height=12 src="gif/trpack_files/img3.gif"
-      width=61> </TD></TR></TBODY></TABLE><BR><TT>S</TT> is an <IMG align=middle
-alt=tex2html_wrap_inline303 height=18 src="gif/trpack_files/img4.gif" width=36>
-<I>positive semi-definite</I> symmetric matrix (e.g., error or weight matrix)
-and the routines calculate the complementary lower triangular Choleski factors.
-It is allowed to overwrite <TT>S</TT> by <TT>W</TT> or <TT>V</TT>.
-<P><B>Symmetric Multiplication of Lower Triangular Matrices</B> <BR>
-<TABLE cols=6>
-  <COLGROUP>
-  <COL align=middle>
-  <COL align=left>
-  <COL align=middle>
-  <COL align=left>
-  <COL align=middle>
-  <COL align=left>
-  <TBODY>
-  <TR>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><TT>CALL TRSMUL(W,S,M)</TT> </TD>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><IMG align=bottom
-      alt=tex2html_wrap_inline307 height=12 src="gif/trpack_files/img6.gif"
-      width=42> </TD>
-    <TD align=middle noWrap vAlign=baseline><IMG align=bottom
-      alt=tex2html_wrap_inline305 height=9 src="gif/trpack_files/img5.gif" width=14>
-    </TD>
-    <TD align=left noWrap vAlign=baseline><B>S</B> </TD></TR>
-  <TR>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><TT>CALL TRSMLU(W,R,M)</TT> </TD>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><IMG align=bottom
-      alt=tex2html_wrap_inline309 height=12 src="gif/trpack_files/img7.gif"
-      width=41> </TD>
-    <TD align=middle noWrap vAlign=baseline><IMG align=bottom
-      alt=tex2html_wrap_inline305 height=9 src="gif/trpack_files/img5.gif" width=14>
-    </TD>
-    <TD align=left noWrap vAlign=baseline><B>R</B>
-</TD></TR></TBODY></TABLE><BR><TT>W</TT> is an <IMG align=middle
-alt=tex2html_wrap_inline311 height=18 src="gif/trpack_files/img8.gif" width=36>
-lower triangular matrix and <TT>S</TT>, <TT>R</TT> the two symmetric products of
-the multiplication of <TT>W</TT> by its transpose. It is allowed to overwrite
-<TT>W</TT> by either <TT>S</TT> or <TT>R</TT>.
-<P><B>Lower Triangular Matrix Inversion</B> <BR>
-<TABLE cols=6>
-  <COLGROUP>
-  <COL align=middle>
-  <COL align=left>
-  <COL align=middle>
-  <COL align=left>
-  <COL align=middle>
-  <COL align=left>
-  <TBODY>
-  <TR>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><TT>CALL TRINV(W,V,M)</TT> </TD>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><IMG align=bottom
-      alt=tex2html_wrap_inline315 height=13 src="gif/trpack_files/img10.gif"
-      width=35> </TD>
-    <TD align=middle noWrap vAlign=baseline><IMG align=bottom
-      alt=tex2html_wrap_inline313 height=9 src="gif/trpack_files/img9.gif" width=14>
-    </TD>
-    <TD align=left noWrap vAlign=baseline><B>V</B>
-</TD></TR></TBODY></TABLE><BR><TT>W</TT> is an <IMG align=middle
-alt=tex2html_wrap_inline317 height=18 src="gif/trpack_files/img11.gif" width=36>
-lower triangular matrix which is inverted into <TT>V</TT> (the inverse of a
-lower triangular matrix is lower triangular). <TT>W</TT> <I>may have rows and
-columns of zeros</I> as produced by the Choleski decomposition of a weight
-matrix with unmeasured variables. It is allowed to overwrite <TT>W</TT> by
-<TT>V</TT>.
-<P><B>Symmetric Matrix Inversion</B> <BR>
-<TABLE cols=6>
-  <COLGROUP>
-  <COL align=middle>
-  <COL align=left>
-  <COL align=middle>
-  <COL align=left>
-  <COL align=middle>
-  <COL align=left>
-  <TBODY>
-  <TR>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><TT>CALL TRSINV(S,R,M)</TT> </TD>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><IMG align=bottom
-      alt=tex2html_wrap_inline321 height=13 src="gif/trpack_files/img13.gif"
-      width=25> </TD>
-    <TD align=middle noWrap vAlign=baseline><IMG align=bottom
-      alt=tex2html_wrap_inline319 height=9 src="gif/trpack_files/img12.gif"
-      width=14> </TD>
-    <TD align=left noWrap vAlign=baseline><B>R</B>
-</TD></TR></TBODY></TABLE><BR><TT>S</TT> is an <IMG align=middle
-alt=tex2html_wrap_inline323 height=18 src="gif/trpack_files/img14.gif" width=36>
-<I>positive semi-definite</I> symmetric matrix which is inverted into <TT>R</TT>
-(also stored packed). It is permissible to overwrite <TT>S</TT> by <TT>R</TT>.
-<P><B>Triangular - Rectangular Multiplication</B> <BR>
-<TABLE cols=6>
-  <COLGROUP>
-  <COL align=middle>
-  <COL align=left>
-  <COL align=middle>
-  <COL align=left>
-  <COL align=middle>
-  <COL align=left>
-  <TBODY>
-  <TR>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><TT>CALL TRLA (W,A,B,M,N)</TT> </TD>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><IMG align=bottom
-      alt=tex2html_wrap_inline327 height=11 src="gif/trpack_files/img16.gif"
-      width=30> </TD>
-    <TD align=middle noWrap vAlign=baseline><IMG align=bottom
-      alt=tex2html_wrap_inline325 height=9 src="gif/trpack_files/img15.gif"
-      width=14> </TD>
-    <TD align=left noWrap vAlign=baseline><B>B</B> </TD></TR>
-  <TR>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><TT>CALL TRLTA(W,A,B,M,N)</TT> </TD>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><IMG align=bottom
-      alt=tex2html_wrap_inline329 height=12 src="gif/trpack_files/img17.gif"
-      width=37> </TD>
-    <TD align=middle noWrap vAlign=baseline><IMG align=bottom
-      alt=tex2html_wrap_inline325 height=9 src="gif/trpack_files/img15.gif"
-      width=14> </TD>
-    <TD align=left noWrap vAlign=baseline><B>B</B> </TD></TR>
-  <TR>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><TT>CALL TRAL (A,V,B,M,N)</TT> </TD>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><B>AV</B> </TD>
-    <TD align=middle noWrap vAlign=baseline><IMG align=bottom
-      alt=tex2html_wrap_inline325 height=9 src="gif/trpack_files/img15.gif"
-      width=14> </TD>
-    <TD align=left noWrap vAlign=baseline><B>B</B> </TD></TR>
-  <TR>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><TT>CALL TRALT(A,V,B,M,N)</TT> </TD>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><IMG align=bottom
-      alt=tex2html_wrap_inline331 height=12 src="gif/trpack_files/img18.gif"
-      width=28> </TD>
-    <TD align=middle noWrap vAlign=baseline><IMG align=bottom
-      alt=tex2html_wrap_inline325 height=9 src="gif/trpack_files/img15.gif"
-      width=14> </TD>
-    <TD align=left noWrap vAlign=baseline><B>B</B>
-</TD></TR></TBODY></TABLE><BR><TT>A</TT> and <TT>B</TT> are <IMG align=middle
-alt=tex2html_wrap_inline333 height=18 src="gif/trpack_files/img19.gif" width=36>
-rectangular matrices, <TT>W</TT> is an <IMG align=middle
-alt=tex2html_wrap_inline335 height=18 src="gif/trpack_files/img20.gif" width=36>
-lower triangular matrix, and <TT>V</TT> is an <IMG align=middle
-alt=tex2html_wrap_inline337 height=18 src="gif/trpack_files/img21.gif" width=36>
-lower triangular matrix. In each call it is allowed to overwrite <TT>A</TT> by
-<TT>B</TT>.
-<P><B>Symmetric - Rectangular Multiplication</B> <BR>
-<TABLE cols=6>
-  <COLGROUP>
-  <COL align=middle>
-  <COL align=left>
-  <COL align=middle>
-  <COL align=left>
-  <COL align=middle>
-  <COL align=left>
-  <TBODY>
-  <TR>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><TT>CALL TRSA (S,A,C,M,N)</TT> </TD>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><B>SA</B> </TD>
-    <TD align=middle noWrap vAlign=baseline><IMG align=bottom
-      alt=tex2html_wrap_inline339 height=9 src="gif/trpack_files/img22.gif"
-      width=14> </TD>
-    <TD align=left noWrap vAlign=baseline><B>C</B> </TD></TR>
-  <TR>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><TT>CALL TRAS (A,R,C,M,N)</TT> </TD>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><B>AR</B> </TD>
-    <TD align=middle noWrap vAlign=baseline><IMG align=bottom
-      alt=tex2html_wrap_inline339 height=9 src="gif/trpack_files/img22.gif"
-      width=14> </TD>
-    <TD align=left noWrap vAlign=baseline><B>C</B> </TD></TR>
-  <TR>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><TT>CALL TRSAT(S,B,C,M,N)</TT> </TD>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><IMG align=bottom
-      alt=tex2html_wrap_inline341 height=12 src="gif/trpack_files/img23.gif"
-      width=25> </TD>
-    <TD align=middle noWrap vAlign=baseline><IMG align=bottom
-      alt=tex2html_wrap_inline339 height=9 src="gif/trpack_files/img22.gif"
-      width=14> </TD>
-    <TD align=left noWrap vAlign=baseline><B>C</B> </TD></TR>
-  <TR>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><TT>CALL TRATS(B,R,C,M,N)</TT> </TD>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><IMG align=bottom
-      alt=tex2html_wrap_inline343 height=12 src="gif/trpack_files/img24.gif"
-      width=31> </TD>
-    <TD align=middle noWrap vAlign=baseline><IMG align=bottom
-      alt=tex2html_wrap_inline339 height=9 src="gif/trpack_files/img22.gif"
-      width=14> </TD>
-    <TD align=left noWrap vAlign=baseline><B>C</B>
-</TD></TR></TBODY></TABLE><BR><TT>A</TT> and <TT>C</TT> are <IMG align=middle
-alt=tex2html_wrap_inline345 height=18 src="gif/trpack_files/img25.gif" width=36>
-rectangular matrices, <TT>B</TT> is an <IMG align=middle
-alt=tex2html_wrap_inline347 height=18 src="gif/trpack_files/img26.gif" width=36>
-matrix, <TT>S</TT> is an <IMG align=middle alt=tex2html_wrap_inline349 height=18
-src="gif/trpack_files/img27.gif" width=36> symmetrix matrix, and <TT>R</TT> is an
-<IMG align=middle alt=tex2html_wrap_inline351 height=18
-src="gif/trpack_files/img28.gif" width=36> symmetric matrix. It is <I>not</I>
-allowed to overwrite <TT>A</TT> or <TT>B</TT> by the product matrix <TT>C</TT>.
-<P><B>Symmetric Multiplication of Rectangular Matrices</B> <BR>
-<TABLE cols=6>
-  <COLGROUP>
-  <COL align=middle>
-  <COL align=left>
-  <COL align=middle>
-  <COL align=left>
-  <COL align=middle>
-  <COL align=left>
-  <TBODY>
-  <TR>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><TT>CALL TRAAT(A,S,M,N)</TT> </TD>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><IMG align=bottom
-      alt=tex2html_wrap_inline355 height=12 src="gif/trpack_files/img30.gif"
-      width=30> </TD>
-    <TD align=middle noWrap vAlign=baseline><IMG align=bottom
-      alt=tex2html_wrap_inline353 height=9 src="gif/trpack_files/img29.gif"
-      width=14> </TD>
-    <TD align=left noWrap vAlign=baseline><B>S</B> </TD></TR>
-  <TR>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><TT>CALL TRATA(B,R,M,N)</TT> </TD>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><IMG align=bottom
-      alt=tex2html_wrap_inline357 height=12 src="gif/trpack_files/img31.gif"
-      width=29> </TD>
-    <TD align=middle noWrap vAlign=baseline><IMG align=bottom
-      alt=tex2html_wrap_inline353 height=9 src="gif/trpack_files/img29.gif"
-      width=14> </TD>
-    <TD align=left noWrap vAlign=baseline><B>R</B>
-</TD></TR></TBODY></TABLE><BR><TT>A</TT> is an <IMG align=middle
-alt=tex2html_wrap_inline359 height=18 src="gif/trpack_files/img32.gif" width=36>
-matrix, <TT>B</TT> is an <IMG align=middle alt=tex2html_wrap_inline361 height=18
-src="gif/trpack_files/img33.gif" width=36> matrix, <TT>S</TT> is an <IMG
-align=middle alt=tex2html_wrap_inline363 height=18 src="gif/trpack_files/img34.gif"
-width=36> symmetric matrix, and <TT>R</TT> is an <IMG align=middle
-alt=tex2html_wrap_inline365 height=18 src="gif/trpack_files/img35.gif" width=36>
-symmetric matrix. No overwriting is allowed.
-<P><B>Transformation of Symmetric Matrix </B><BR>
-<TABLE cols=6>
-  <COLGROUP>
-  <COL align=middle>
-  <COL align=left>
-  <COL align=middle>
-  <COL align=left>
-  <COL align=middle>
-  <COL align=left>
-  <TBODY>
-  <TR>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><TT>CALL TRASAT(A,S,R,M,N)</TT> </TD>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><IMG align=bottom
-      alt=tex2html_wrap_inline369 height=12 src="gif/trpack_files/img37.gif"
-      width=40> </TD>
-    <TD align=middle noWrap vAlign=baseline><IMG align=bottom
-      alt=tex2html_wrap_inline367 height=9 src="gif/trpack_files/img36.gif"
-      width=14> </TD>
-    <TD align=left noWrap vAlign=baseline><B>R</B> </TD></TR>
-  <TR>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><TT>CALL TRATSA(B,S,R,M,N)</TT> </TD>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><IMG align=bottom
-      alt=tex2html_wrap_inline371 height=12 src="gif/trpack_files/img38.gif"
-      width=39> </TD>
-    <TD align=middle noWrap vAlign=baseline><IMG align=bottom
-      alt=tex2html_wrap_inline367 height=9 src="gif/trpack_files/img36.gif"
-      width=14> </TD>
-    <TD align=left noWrap vAlign=baseline><B>R</B> </TD></TR>
-  <TR>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><TT>CALL TRQSQ (Q,T,R,M)</TT> </TD>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><B>QTQ</B> </TD>
-    <TD align=middle noWrap vAlign=baseline><IMG align=bottom
-      alt=tex2html_wrap_inline367 height=9 src="gif/trpack_files/img36.gif"
-      width=14> </TD>
-    <TD align=left noWrap vAlign=baseline><B>R</B>
-</TD></TR></TBODY></TABLE><BR><TT>A</TT> is an <IMG align=middle
-alt=tex2html_wrap_inline373 height=18 src="gif/trpack_files/img39.gif" width=36>
-matrix, <TT>B</TT> is an <IMG align=middle alt=tex2html_wrap_inline375 height=18
-src="gif/trpack_files/img40.gif" width=36> matrix, <TT>S</TT> is an <IMG
-align=middle alt=tex2html_wrap_inline377 height=18 src="gif/trpack_files/img41.gif"
-width=36> symmetric matrix, and <TT>R</TT>, <TT>Q</TT>, <TT>T</TT> are <IMG
-align=middle alt=tex2html_wrap_inline379 height=18 src="gif/trpack_files/img42.gif"
-width=36> symmetric matrices. No overwriting is allowed.
-<P><B>Packing and Unpacking a Symmetric Matrix</B> <BR>
-<TABLE cols=6>
-  <COLGROUP>
-  <COL align=middle>
-  <COL align=left>
-  <COL align=middle>
-  <COL align=left>
-  <COL align=middle>
-  <COL align=left>
-  <TBODY>
-  <TR>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><TT>CALL TRPCK (A,S,M)</TT> </TD>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><B>A</B> </TD>
-    <TD align=middle noWrap vAlign=baseline><IMG align=bottom
-      alt=tex2html_wrap_inline381 height=9 src="gif/trpack_files/img43.gif"
-      width=14> </TD>
-    <TD align=left noWrap vAlign=baseline><B>S</B> </TD></TR>
-  <TR>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><TT>CALL TRUPCK(S,A,M)</TT> </TD>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><B>S</B> </TD>
-    <TD align=middle noWrap vAlign=baseline><IMG align=bottom
-      alt=tex2html_wrap_inline381 height=9 src="gif/trpack_files/img43.gif"
-      width=14> </TD>
-    <TD align=left noWrap vAlign=baseline><B>A</B>
-</TD></TR></TBODY></TABLE><BR><TT>A</TT> is an <IMG align=middle
-alt=tex2html_wrap_inline383 height=18 src="gif/trpack_files/img44.gif" width=36>
-unpacked symmetric matrix (all <IMG align=bottom alt=tex2html_wrap_inline385
-height=13 src="gif/trpack_files/img45.gif" width=15> elements) and <TT>S</TT> is the
-same matrix stored packed. Overwriting is allowed for both <TT>TRPCK</TT> and
-<TT>TRUPCK</TT>. <BR><IMG align=bottom alt=tex2html_wrap_inline387 height=7
-src="gif/trpack_files/img46.gif" width=6> <BR>
-<HR>
-<P>
-<ADDRESS>Michel Goossens Wed Jun 5 05:00:56 METDST 1996 </ADDRESS></BODY></HTML>
-end_html
-*/
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #include <assert.h>
@@ -521,11 +15,12 @@ end_html
 #include "TMath.h"
 
 ClassImp(TCL)
+
 #define TCL_MXMAD(n_,a,b,c,i,j,k)                       \
     /* Local variables */                                \
     int l, m, n, ia, ic, ib, ja, jb, iia, iib, ioa, iob; \
                                                          \
-    /* Parameter adjustments */                          \
+    /* Parameter adjuTments */                          \
     --a;  --b;  --c;                                     \
     /* Function Body */                                  \
 /*                      MXMAD MXMAD1 MXMAD2 MXMAD3 MXMPY MXMPY1 MXMPY2 MXMPY3 MXMUB MXMUB1 MXMUB2 MXMUB3 */ \
@@ -566,305 +61,6 @@ ClassImp(TCL)
 //___________________________________________________________________________
 float *TCL::mxmad_0_(int n_, const float *a, const float *b, float *c, int i, int j, int k)
 {
-////////////////////////////////////////////////////////////////////////////////////////////////////////
-/* begin_html
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<!-- saved from url=(0056)http://wwwinfo.cern.ch/asdoc/shortwrupsdir/f110/top.html -->
-<!--Converted with LaTeX2HTML 96.1-e (April 9, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds --><HTML><HEAD><TITLE>TC Matrix Manipulation Package</TITLE>
-<META content="text/html; charset=windows-1251" http-equiv=Content-Type>
-<META content="TC Matrix Manipulation Package" name=description>
-<META content=top name=keywords>
-<META content=document name=resource-type>
-<META content=global name=distribution>
-<META content="MSHTML 5.00.2314.1000" name=GENERATOR></HEAD>
-<BODY lang=EN>
-<P>
-<H2>F110: TC Matrix Manipulation Package</H2>
-<TABLE border=1>
-  <TBODY>
-  <TR>
-    <TD align=left>Author(s): TC
-    <TD align=left>Library: KERNLIB
-  <TR>
-    <TD align=left>Submitter: C. Letertre
-    <TD align=left>Submitted: 01.08.1969
-  <TR>
-    <TD align=left>Language: Fortran
-    <TD align=left>Revised: 07.03.1989 </TR></TBODY></TABLE><BR><!-- KEY VALUE="tc manipulation matrix row-wise " -->
-<P>
-<DIV align=center>
-<P align=center><IMG align=bottom alt=tex2html_wrap271 height=96
-src="gif/tcpack_files/img1.gif" width=555> </P></DIV>The routines of <TT>MXPACK</TT>
-compute the product of two matrices or the product of their transposed matrices
-and may add or subtract to the resultant matrix a third one, add or subtract one
-matrix from another, or transfer a matrix, its negative, or a multiple of it,
-transpose a given matrix, build up a unit matrix, multiply a matrix by a
-diagonal (from left or from right) and may add the result to another matrix, add
-to square matrix the multiple of a diagonal matrix, compute the products <IMG
-align=bottom alt=tex2html_wrap_inline191 height=12 src="gif/tcpack_files/img2.gif"
-width=79> ( <IMG align=bottom alt=tex2html_wrap_inline193 height=12
-src="gif/tcpack_files/img3.gif" width=16> denotes the transpose of <IMG align=bottom
-alt=tex2html_wrap_inline195 height=11 src="gif/tcpack_files/img4.gif" width=12> )
-and <IMG align=bottom alt=tex2html_wrap_inline197 height=12
-src="gif/tcpack_files/img5.gif" width=79> . It is assumed that matrices are stored
-<B>row-wise without gaps</B>, contrary to the Fortran convention.
-<P>
-<P><B>Structure:</B>
-<P><TT>SUBROUTINE</TT> subprograms <BR>User Entry Names:
-<TABLE cols=8>
-  <COLGROUP>
-  <COL align=left>
-  <COL align=left>
-  <COL align=left>
-  <COL align=left>
-  <COL align=left>
-  <COL align=left>
-  <COL align=left>
-  <COL align=left>
-  <TBODY>
-  <TR>
-    <TD align=left noWrap vAlign=baseline><A name=MXMAD><TT>MXMAD</TT></A>,
-</TD>
-    <TD align=left noWrap vAlign=baseline><A name=MXMAD1><TT>MXMAD1</TT></A>,
-    </TD>
-    <TD align=left noWrap vAlign=baseline><A name=MXMAD2><TT>MXMAD2</TT></A>,
-    </TD>
-    <TD align=left noWrap vAlign=baseline><A name=MXMAD3><TT>MXMAD3</TT></A>,
-    </TD>
-    <TD align=left noWrap vAlign=baseline><A name=MXMPY><TT>MXMPY</TT></A>,
-</TD>
-    <TD align=left noWrap vAlign=baseline><A name=MXMPY1><TT>MXMPY1</TT></A>,
-    </TD>
-    <TD align=left noWrap vAlign=baseline><A name=MXMPY2><TT>MXMPY2</TT></A>,
-    </TD>
-    <TD align=left noWrap vAlign=baseline><A name=MXMPY3><TT>MXMPY3</TT></A>,
-    </TD></TR>
-  <TR>
-    <TD align=left noWrap vAlign=baseline><A name=MXMUB><TT>MXMUB</TT></A>,
-</TD>
-    <TD align=left noWrap vAlign=baseline><A name=MXMUB1><TT>MXMUB1</TT></A>,
-    </TD>
-    <TD align=left noWrap vAlign=baseline><A name=MXMUB2><TT>MXMUB2</TT></A>,
-    </TD>
-    <TD align=left noWrap vAlign=baseline><A name=MXMUB3><TT>MXMUB3</TT></A>,
-    </TD>
-    <TD align=left noWrap vAlign=baseline><A name=MXTRP><TT>MXTRP</TT></A>,
-</TD>
-    <TD align=left noWrap vAlign=baseline><A name=MXUTY><TT>MXUTY</TT></A>,
-</TD>
-    <TD align=left noWrap vAlign=baseline><A name=MXMLRT><TT>MXMLRT</TT></A>,
-    </TD>
-    <TD align=left noWrap vAlign=baseline><A name=MXMLTR><TT>MXMLTR</TT></A>
-    </TD></TR></TBODY></TABLE>
-<P>
-<P><B>Usage:</B>
-<P><B>Matrix Multiplication</B> <BR>
-<TABLE cols=4>
-  <COLGROUP>
-  <COL align=middle>
-  <COL align=left>
-  <COL align=middle>
-  <COL align=left>
-  <TBODY>
-  <TR>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><TT>CALL MXMPY(A,B,C,NI,NJ,NK)</TT>
-    </TD>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><IMG align=middle
-      alt=tex2html_wrap_inline199 height=25 src="gif/tcpack_files/img6.gif"
-      width=132> </TD></TR>
-  <TR>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><TT>CALL MXMPY1(A,Q,C,NI,NJ,NK)</TT>
-    </TD>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><IMG align=middle
-      alt=tex2html_wrap_inline201 height=24 src="gif/tcpack_files/img7.gif"
-      width=67> \ ( <IMG align=middle alt=tex2html_wrap_inline203 height=22
-      src="gif/tcpack_files/img8.gif" width=12> is <IMG align=middle
-      alt=tex2html_wrap_inline205 height=18 src="gif/tcpack_files/img9.gif"
-      width=52> ) </TD></TR>
-  <TR>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><TT>CALL MXMPY2(P,B,C,NI,NJ,NK)</TT>
-    </TD>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><IMG align=bottom
-      alt=tex2html_wrap_inline207 height=13 src="gif/tcpack_files/img10.gif"
-      width=66> \ ( <IMG align=bottom alt=tex2html_wrap_inline209 height=11
-      src="gif/tcpack_files/img11.gif" width=10> is <IMG align=middle
-      alt=tex2html_wrap_inline211 height=18 src="gif/tcpack_files/img12.gif"
-      width=52> ) </TD></TR>
-  <TR>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><TT>CALL MXMPY3(P,Q,C,NI,NJ,NK)</TT>
-    </TD>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><IMG align=middle
-      alt=tex2html_wrap_inline213 height=24 src="gif/tcpack_files/img13.gif"
-      width=71> </TD></TR></TBODY></TABLE><BR>If <IMG align=bottom
-alt=tex2html_wrap_inline215 height=10 src="gif/tcpack_files/img14.gif" width=46> ,
-<IMG align=bottom alt=tex2html_wrap_inline217 height=11
-src="gif/tcpack_files/img15.gif" width=11> will be filled with zeros. <BR><B>Matrix
-Multiplication and Addition</B> <BR>
-<TABLE cols=4>
-  <COLGROUP>
-  <COL align=middle>
-  <COL align=left>
-  <COL align=middle>
-  <COL align=left>
-  <TBODY>
-  <TR>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><TT>CALL MXMAD(A,B,C,NI,NJ,NK)</TT>
-    </TD>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><IMG align=middle
-      alt=tex2html_wrap_inline219 height=25 src="gif/tcpack_files/img16.gif"
-      width=188> </TD></TR>
-  <TR>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><TT>CALL MXMAD1(A,Q,C,NI,NJ,NK)</TT>
-    </TD>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><IMG align=middle
-      alt=tex2html_wrap_inline221 height=24 src="gif/tcpack_files/img17.gif"
-      width=100> </TD></TR>
-  <TR>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><TT>CALL MXMAD2(P,B,C,NI,NJ,NK)</TT>
-    </TD>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><IMG align=middle
-      alt=tex2html_wrap_inline223 height=26 src="gif/tcpack_files/img18.gif"
-      width=98> </TD></TR>
-  <TR>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><TT>CALL MXMAD3(P,Q,C,NI,NJ,NK)</TT>
-    </TD>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><IMG align=middle
-      alt=tex2html_wrap_inline225 height=24 src="gif/tcpack_files/img19.gif"
-      width=104> </TD></TR></TBODY></TABLE><BR>If <IMG align=bottom
-alt=tex2html_wrap_inline227 height=10 src="gif/tcpack_files/img20.gif" width=46> ,
-<IMG align=bottom alt=tex2html_wrap_inline229 height=11
-src="gif/tcpack_files/img21.gif" width=11> will not be changed. <BR>
-<P><B>Matrix Multiplication and Subtraction</B> <BR>
-<TABLE cols=4>
-  <COLGROUP>
-  <COL align=middle>
-  <COL align=left>
-  <COL align=middle>
-  <COL align=left>
-  <TBODY>
-  <TR>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><TT>CALL MXMUB(A,B,C,NI,NJ,NK)</TT>
-    </TD>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><IMG align=middle
-      alt=tex2html_wrap_inline231 height=25 src="gif/tcpack_files/img22.gif"
-      width=188> </TD></TR>
-  <TR>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><TT>CALL MXMUB1(A,Q,C,NI,NJ,NK)</TT>
-    </TD>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><IMG align=middle
-      alt=tex2html_wrap_inline233 height=24 src="gif/tcpack_files/img23.gif"
-      width=100> </TD></TR>
-  <TR>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><TT>CALL MXMUB2(P,B,C,NI,NJ,NK)</TT>
-    </TD>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><IMG align=middle
-      alt=tex2html_wrap_inline235 height=24 src="gif/tcpack_files/img24.gif"
-      width=98> </TD></TR>
-  <TR>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><TT>CALL MXMUB3(P,Q,C,NI,NJ,NK)</TT>
-    </TD>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><IMG align=middle
-      alt=tex2html_wrap_inline237 height=24 src="gif/tcpack_files/img25.gif"
-      width=104> </TD></TR></TBODY></TABLE><BR>If <IMG align=bottom
-alt=tex2html_wrap_inline239 height=10 src="gif/tcpack_files/img26.gif" width=46> ,
-<IMG align=bottom alt=tex2html_wrap_inline241 height=11
-src="gif/tcpack_files/img27.gif" width=11> will be replaced by <IMG align=middle
-alt=tex2html_wrap_inline243 height=20 src="gif/tcpack_files/img28.gif" width=23> .
-<BR><B>Matrix Transposition</B> <BR>
-<TABLE cols=4>
-  <COLGROUP>
-  <COL align=middle>
-  <COL align=left>
-  <COL align=middle>
-  <COL align=left>
-  <TBODY>
-  <TR>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><TT>CALL MXTRP(A,B,NI,NJ)</TT> </TD>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><IMG align=middle
-      alt=tex2html_wrap_inline245 height=25 src="gif/tcpack_files/img29.gif"
-      width=94> </TD></TR></TBODY></TABLE><BR><B>Unity Matrix</B> <BR>
-<TABLE cols=4>
-  <COLGROUP>
-  <COL align=middle>
-  <COL align=left>
-  <COL align=middle>
-  <COL align=left>
-  <TBODY>
-  <TR>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><TT>CALL MXUTY(A,NI)</TT> </TD>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><IMG align=middle
-      alt=tex2html_wrap_inline247 height=25 src="gif/tcpack_files/img30.gif"
-      width=193> </TD></TR></TBODY></TABLE><BR><B>Matrix Multiplication</B> <BR>
-<TABLE cols=4>
-  <COLGROUP>
-  <COL align=middle>
-  <COL align=left>
-  <COL align=middle>
-  <COL align=left>
-  <TBODY>
-  <TR>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><TT>CALL MXMLRT(A,B,X,M,N)</TT> </TD>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><IMG align=middle
-      alt=tex2html_wrap_inline249 height=25 src="gif/tcpack_files/img31.gif"
-      width=294> </TD></TR>
-  <TR>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><TT>CALL MXMLTR(A,B,X,N,M)</TT> </TD>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><IMG align=middle
-      alt=tex2html_wrap_inline251 height=25 src="gif/tcpack_files/img32.gif"
-      width=294> </TD></TR></TBODY></TABLE>
-<P>
-<P><B>Notes:</B>
-<P>In the formulae above, <IMG align=middle alt=tex2html_wrap_inline253
-height=25 src="gif/tcpack_files/img33.gif" width=34> <I>etc</I> denotes the ensemble
-of elements of the matrix <IMG align=bottom alt=tex2html_wrap_inline255
-height=11 src="gif/tcpack_files/img34.gif" width=12> <I>etc</I> with the row index
-<I>i</I> and the column index <I>j</I>. The Fortran variables <TT>NI</TT>,
-<TT>NJ</TT> and <TT>NK</TT> specify the dimensions associated with the indices
-<I>i</I>,<I>j</I> and <I>k</I>. If <TT>DIMENSION A(NJ,NI)</TT> reserves space
-for the matrix <IMG align=bottom alt=tex2html_wrap_inline265 height=11
-src="gif/tcpack_files/img35.gif" width=12> , then the element <IMG align=middle
-alt=tex2html_wrap_inline267 height=23 src="gif/tcpack_files/img36.gif" width=22> is
-contained in <TT>A(J,I)</TT>. <BR><IMG align=bottom alt=tex2html_wrap_inline269
-height=7 src="gif/tcpack_files/img37.gif" width=6> <BR>
-<HR>
-
-<P>
-<ADDRESS>Michel Goossens Wed Jun 5 04:52:43 METDST 1996 </ADDRESS></BODY></HTML>
-end_html
-*/
-////////////////////////////////////////////////////////////////////////////////////////////////////////
   TCL_MXMAD(n_,a,b,c,i,j,k)
   return c;
 } /* mxmad_ */
@@ -921,7 +117,7 @@ float *TCL::mxmlrt_0_(int n__, const float *a, const float *b, float *c, int ni,
 
 // --      ENTRY MXMLRT */
 // --                C = A(I,J) X B(J,J) X A*(J,I) */
-// --                A* STANDS FOR A-TRANSPOSED */
+// --                A* TANDS FOR A-TRANSPOSED */
 // Begin_Html <P ALIGN=CENTER> <IMG SRC="gif/tcpack_files/img31.gif"> </P> End_Html //
 //             mxmlrt (A,B,C,NI,NJ)     IS EQUIVALENT TO */
 //             CALL MXMPY (A,B,X,NI,NJ,NJ) */
@@ -1002,485 +198,10 @@ double *TCL::mxtrp(const double *a, double *b, int i, int j)
 //___________________________________________________________________________
 //
 //            TRPACK
-/*
-begin_html
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<!-- saved from url=(0056)http://wwwinfo.cern.ch/asdoc/shortwrupsdir/f112/top.html -->
-<!--Converted with LaTeX2HTML 96.1-e (April 9, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds --><HTML><HEAD><TITLE>Manipulation of Triangular and Symmetric Matrices</TITLE>
-<META content="text/html; charset=windows-1251" http-equiv=Content-Type>
-<META content="Manipulation of Triangular and Symmetric Matrices "
-name=description>
-<META content=top name=keywords>
-<META content=document name=resource-type>
-<META content=global name=distribution>
-<META content="MSHTML 5.00.2314.1000" name=GENERATOR></HEAD>
-<BODY lang=EN>
-<P>
-<H2>F112: Manipulation of Triangular and Symmetric Matrices </H2>
-<TABLE border=1>
-  <TBODY>
-  <TR>
-    <TD align=left>Author(s): W. Hart
-    <TD align=left>Library: KERNLIB
-  <TR>
-    <TD align=left>Submitter:
-    <TD align=left>Submitted: 01.01.1975
-  <TR>
-    <TD align=left>Language: Fortran
-    <TD align=left>Revised: 12.12.1986 </TR></TBODY></TABLE><BR><!-- KEY VALUE="operation symmetric triangular matrix " -->
-<P>At CERN, matrices are often stored row-wise (TC-convention); furthermore,
-symmetric matrices are stored packed as the lower left triangular part only,
-i.e., the <I>I</I>th diagonal element is found in position
-<I>I</I>(<I>I</I>+1)/2. The <TT>TR</TT>-package performs many of the frequently
-required operations associated with such matrices without resorting to expanding
-into the unpacked square form. In all the following routines an <IMG
-align=middle alt=tex2html_wrap_inline295 height=20 src="trpack_files/MxMItalic.gif"
-width=52> <I>symmetric</I> matrix is taken to be stored in the packed form with
-<I>M</I>(<I>M</I>+1)/2 elements.
-<P>Some of these operations produce and require the manipulation of <I>lower
-triangular</I> matrices which have all elements zero above the leading diagonal.
-These are also stored in the packed form with all the zeros dropped; therefore,
-care has to be taken in the interpretation of a packed matrix as to whether it
-represents a symmetric or lower triangular array. To facilitate this distinction
-in the Write-up, the following nomenclature has been adopted:
-<DL compact>
-  <DT>A,B,C
-  <DD>unpacked rectangular matrices (row-wise storage)
-  <DT>Q,R,S,T
-  <DD>packed symmetric matrices
-  <DT>V,W
-  <DD>packed lower triangular matrices </DD></DL>On 32-bit machines the
-calculations are performed internally in double-precision mode.
-<P>
-<P><B>Structure:</B>
-<P><TT>SUBROUTINE</TT> subprograms <BR>User Entry Names:
-<TABLE cols=8>
-  <COLGROUP>
-  <COL align=left>
-  <COL align=left>
-  <COL align=left>
-  <COL align=left>
-  <COL align=left>
-  <COL align=left>
-  <COL align=left>
-  <COL align=left>
-  <TBODY>
-  <TR>
-    <TD align=left noWrap vAlign=baseline><A name=TRCHUL><TT>TRCHUL</TT></A>,
-    </TD>
-    <TD align=left noWrap vAlign=baseline><A name=TRCHLU><TT>TRCHLU</TT></A>,
-    </TD>
-    <TD align=left noWrap vAlign=baseline><A name=TRSMUL><TT>TRSMUL</TT></A>,
-    </TD>
-    <TD align=left noWrap vAlign=baseline><A name=TRSMLU><TT>TRSMLU</TT></A>,
-    </TD>
-    <TD align=left noWrap vAlign=baseline><A name=TRINV><TT>TRINV</TT></A>,
-</TD>
-    <TD align=left noWrap vAlign=baseline><A name=TRSINV><TT>TRSINV</TT></A>,
-    </TD>
-    <TD align=left noWrap vAlign=baseline><A name=TRLA><TT>TRLA</TT></A>, </TD>
-    <TD align=left noWrap vAlign=baseline><A name=TRLTA><TT>TRLTA</TT></A>,
-  </TD></TR>
-  <TR>
-    <TD align=left noWrap vAlign=baseline><A name=TRAL><TT>TRAL</TT></A>, </TD>
-    <TD align=left noWrap vAlign=baseline><A name=TRALT><TT>TRALT</TT></A>,
-</TD>
-    <TD align=left noWrap vAlign=baseline><A name=TRSA><TT>TRSA</TT></A>, </TD>
-    <TD align=left noWrap vAlign=baseline><A name=TRAS><TT>TRAS</TT></A>, </TD>
-    <TD align=left noWrap vAlign=baseline><A name=TRSAT><TT>TRSAT</TT></A>,
-</TD>
-    <TD align=left noWrap vAlign=baseline><A name=TRATS><TT>TRATS</TT></A>,
-</TD>
-    <TD align=left noWrap vAlign=baseline><A name=TRAAT><TT>TRAAT</TT></A>,
-</TD>
-    <TD align=left noWrap vAlign=baseline><A name=TRATA><TT>TRATA</TT></A>,
-  </TD></TR>
-  <TR>
-    <TD align=left noWrap vAlign=baseline><A name=TRASAT><TT>TRASAT</TT></A>,
-    </TD>
-    <TD align=left noWrap vAlign=baseline><A name=TRATSA><TT>TRATSA</TT></A>,
-    </TD>
-    <TD align=left noWrap vAlign=baseline><A name=TRQSQ><TT>TRQSQ</TT></A>,
-</TD>
-    <TD align=left noWrap vAlign=baseline><A name=TRPCK><TT>TRPCK</TT></A>,
-</TD>
-    <TD align=left noWrap vAlign=baseline><A name=TRUPCK><TT>TRUPCK</TT></A>
-    </TD>
-    <TD align=left noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline></TD></TR></TBODY></TABLE>
-<P>
-<P><B>Usage:</B>
-<P><B>Choleski Decomposition</B> <BR>
-<TABLE cols=4>
-  <COLGROUP>
-  <COL align=middle>
-  <COL align=left>
-  <COL align=middle>
-  <COL align=left>
-  <TBODY>
-  <TR>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><TT>CALL TRCHUL(S,W,M)</TT> </TD>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><IMG align=bottom
-      alt=tex2html_wrap_inline299 height=12 src="trpack_files/img2.gif"
-      width=72> </TD></TR>
-  <TR>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><TT>CALL TRCHLU(S,V,M)</TT> </TD>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><IMG align=bottom
-      alt=tex2html_wrap_inline301 height=12 src="trpack_files/img3.gif"
-      width=61> </TD></TR></TBODY></TABLE><BR><TT>S</TT> is an <IMG align=middle
-alt=tex2html_wrap_inline303 height=18 src="trpack_files/MxM.gif" width=36>
-<I>positive semi-definite</I> symmetric matrix (e.g., error or weight matrix)
-and the routines calculate the complementary lower triangular Choleski factors.
-It is allowed to overwrite <TT>S</TT> by <TT>W</TT> or <TT>V</TT>.
-<P><B>Symmetric Multiplication of Lower Triangular Matrices</B> <BR>
-<TABLE cols=6>
-  <COLGROUP>
-  <COL align=middle>
-  <COL align=left>
-  <COL align=middle>
-  <COL align=left>
-  <COL align=middle>
-  <COL align=left>
-  <TBODY>
-  <TR>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><TT>CALL TRSMUL(W,S,M)</TT> </TD>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><IMG align=bottom
-      alt=tex2html_wrap_inline307 height=12 src="trpack_files/img6.gif"
-      width=42> </TD>
-    <TD align=middle noWrap vAlign=baseline><IMG align=bottom
-      alt=tex2html_wrap_inline305 height=9 src="trpack_files/arrow.gif" width=14>
-    </TD>
-    <TD align=left noWrap vAlign=baseline><B>S</B> </TD></TR>
-  <TR>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><TT>CALL TRSMLU(W,R,M)</TT> </TD>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><IMG align=bottom
-      alt=tex2html_wrap_inline309 height=12 src="trpack_files/img7.gif"
-      width=41> </TD>
-    <TD align=middle noWrap vAlign=baseline><IMG align=bottom
-      alt=tex2html_wrap_inline305 height=9 src="trpack_files/arrow.gif" width=14>
-    </TD>
-    <TD align=left noWrap vAlign=baseline><B>R</B>
-</TD></TR></TBODY></TABLE><BR><TT>W</TT> is an <IMG align=middle
-alt=tex2html_wrap_inline311 height=18 src="trpack_files/MxM.gif" width=36>
-lower triangular matrix and <TT>S</TT>, <TT>R</TT> the two symmetric products of
-the multiplication of <TT>W</TT> by its transpose. It is allowed to overwrite
-<TT>W</TT> by either <TT>S</TT> or <TT>R</TT>.
-<P><B>Lower Triangular Matrix Inversion</B> <BR>
-<TABLE cols=6>
-  <COLGROUP>
-  <COL align=middle>
-  <COL align=left>
-  <COL align=middle>
-  <COL align=left>
-  <COL align=middle>
-  <COL align=left>
-  <TBODY>
-  <TR>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><TT>CALL TRINV(W,V,M)</TT> </TD>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><IMG align=bottom
-      alt=tex2html_wrap_inline315 height=13 src="trpack_files/img10.gif"
-      width=35> </TD>
-    <TD align=middle noWrap vAlign=baseline><IMG align=bottom
-      alt=tex2html_wrap_inline313 height=9 src="trpack_files/arrow.gif" width=14>
-    </TD>
-    <TD align=left noWrap vAlign=baseline><B>V</B>
-</TD></TR></TBODY></TABLE><BR><TT>W</TT> is an <IMG align=middle
-alt=tex2html_wrap_inline317 height=18 src="trpack_files/MxM.gif" width=36>
-lower triangular matrix which is inverted into <TT>V</TT> (the inverse of a
-lower triangular matrix is lower triangular). <TT>W</TT> <I>may have rows and
-columns of zeros</I> as produced by the Choleski decomposition of a weight
-matrix with unmeasured variables. It is allowed to overwrite <TT>W</TT> by
-<TT>V</TT>.
-<P><B>Symmetric Matrix Inversion</B> <BR>
-<TABLE cols=6>
-  <COLGROUP>
-  <COL align=middle>
-  <COL align=left>
-  <COL align=middle>
-  <COL align=left>
-  <COL align=middle>
-  <COL align=left>
-  <TBODY>
-  <TR>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><TT>CALL TRSINV(S,R,M)</TT> </TD>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><IMG align=bottom
-      alt=tex2html_wrap_inline321 height=13 src="trpack_files/img13.gif"
-      width=25> </TD>
-    <TD align=middle noWrap vAlign=baseline><IMG align=bottom
-      alt=tex2html_wrap_inline319 height=9 src="trpack_files/arrow.gif"
-      width=14> </TD>
-    <TD align=left noWrap vAlign=baseline><B>R</B>
-</TD></TR></TBODY></TABLE><BR><TT>S</TT> is an <IMG align=middle
-alt=tex2html_wrap_inline323 height=18 src="trpack_files/MxM.gif" width=36>
-<I>positive semi-definite</I> symmetric matrix which is inverted into <TT>R</TT>
-(also stored packed). It is permissible to overwrite <TT>S</TT> by <TT>R</TT>.
-<P><B>Triangular - Rectangular Multiplication</B> <BR>
-<TABLE cols=6>
-  <COLGROUP>
-  <COL align=middle>
-  <COL align=left>
-  <COL align=middle>
-  <COL align=left>
-  <COL align=middle>
-  <COL align=left>
-  <TBODY>
-  <TR>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><TT>CALL TRLA (W,A,B,M,N)</TT> </TD>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><IMG align=bottom
-      alt=tex2html_wrap_inline327 height=11 src="trpack_files/img16.gif"
-      width=30> </TD>
-    <TD align=middle noWrap vAlign=baseline><IMG align=bottom
-      alt=tex2html_wrap_inline325 height=9 src="trpack_files/arrow.gif"
-      width=14> </TD>
-    <TD align=left noWrap vAlign=baseline><B>B</B> </TD></TR>
-  <TR>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><TT>CALL TRLTA(W,A,B,M,N)</TT> </TD>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><IMG align=bottom
-      alt=tex2html_wrap_inline329 height=12 src="trpack_files/img17.gif"
-      width=37> </TD>
-    <TD align=middle noWrap vAlign=baseline><IMG align=bottom
-      alt=tex2html_wrap_inline325 height=9 src="trpack_files/arrow.gif"
-      width=14> </TD>
-    <TD align=left noWrap vAlign=baseline><B>B</B> </TD></TR>
-  <TR>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><TT>CALL TRAL (A,V,B,M,N)</TT> </TD>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><B>AV</B> </TD>
-    <TD align=middle noWrap vAlign=baseline><IMG align=bottom
-      alt=tex2html_wrap_inline325 height=9 src="trpack_files/arrow.gif"
-      width=14> </TD>
-    <TD align=left noWrap vAlign=baseline><B>B</B> </TD></TR>
-  <TR>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><TT>CALL TRALT(A,V,B,M,N)</TT> </TD>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><IMG align=bottom
-      alt=tex2html_wrap_inline331 height=12 src="trpack_files/img18.gif"
-      width=28> </TD>
-    <TD align=middle noWrap vAlign=baseline><IMG align=bottom
-      alt=tex2html_wrap_inline325 height=9 src="trpack_files/arrow.gif"
-      width=14> </TD>
-    <TD align=left noWrap vAlign=baseline><B>B</B>
-</TD></TR></TBODY></TABLE><BR><TT>A</TT> and <TT>B</TT> are <IMG align=middle
-alt=tex2html_wrap_inline333 height=18 src="trpack_files/MxN.gif" width=36>
-rectangular matrices, <TT>W</TT> is an <IMG align=middle
-alt=tex2html_wrap_inline335 height=18 src="trpack_files/MxM.gif" width=36>
-lower triangular matrix, and <TT>V</TT> is an <IMG align=middle
-alt=tex2html_wrap_inline337 height=18 src="trpack_files/MxN.gif" width=36>
-lower triangular matrix. In each call it is allowed to overwrite <TT>A</TT> by
-<TT>B</TT>.
-<P><B>Symmetric - Rectangular Multiplication</B> <BR>
-<TABLE cols=6>
-  <COLGROUP>
-  <COL align=middle>
-  <COL align=left>
-  <COL align=middle>
-  <COL align=left>
-  <COL align=middle>
-  <COL align=left>
-  <TBODY>
-  <TR>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><TT>CALL TRSA (S,A,C,M,N)</TT> </TD>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><B>SA</B> </TD>
-    <TD align=middle noWrap vAlign=baseline><IMG align=bottom
-      alt=tex2html_wrap_inline339 height=9 src="trpack_files/arrow.gif"
-      width=14> </TD>
-    <TD align=left noWrap vAlign=baseline><B>C</B> </TD></TR>
-  <TR>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><TT>CALL TRAS (A,R,C,M,N)</TT> </TD>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><B>AR</B> </TD>
-    <TD align=middle noWrap vAlign=baseline><IMG align=bottom
-      alt=tex2html_wrap_inline339 height=9 src="trpack_files/arrow.gif"
-      width=14> </TD>
-    <TD align=left noWrap vAlign=baseline><B>C</B> </TD></TR>
-  <TR>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><TT>CALL TRSAT(S,B,C,M,N)</TT> </TD>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><IMG align=bottom
-      alt=tex2html_wrap_inline341 height=12 src="trpack_files/img23.gif"
-      width=25> </TD>
-    <TD align=middle noWrap vAlign=baseline><IMG align=bottom
-      alt=tex2html_wrap_inline339 height=9 src="trpack_files/arrow.gif"
-      width=14> </TD>
-    <TD align=left noWrap vAlign=baseline><B>C</B> </TD></TR>
-  <TR>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><TT>CALL TRATS(B,R,C,M,N)</TT> </TD>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><IMG align=bottom
-      alt=tex2html_wrap_inline343 height=12 src="trpack_files/img24.gif"
-      width=31> </TD>
-    <TD align=middle noWrap vAlign=baseline><IMG align=bottom
-      alt=tex2html_wrap_inline339 height=9 src="trpack_files/arrow.gif"
-      width=14> </TD>
-    <TD align=left noWrap vAlign=baseline><B>C</B>
-</TD></TR></TBODY></TABLE><BR><TT>A</TT> and <TT>C</TT> are <IMG align=middle
-alt=tex2html_wrap_inline345 height=18 src="trpack_files/MxN.gif" width=36>
-rectangular matrices, <TT>B</TT> is an <IMG align=middle
-alt=tex2html_wrap_inline347 height=18 src="trpack_files/NxM.gif" width=36>
-matrix, <TT>S</TT> is an <IMG align=middle alt=tex2html_wrap_inline349 height=18
-src="trpack_files/MxM.gif" width=36> symmetrix matrix, and <TT>R</TT> is an
-<IMG align=middle alt=tex2html_wrap_inline351 height=18
-src="trpack_files/NxN.gif" width=36> symmetric matrix. It is <I>not</I>
-allowed to overwrite <TT>A</TT> or <TT>B</TT> by the product matrix <TT>C</TT>.
-<P><B>Symmetric Multiplication of Rectangular Matrices</B> <BR>
-<TABLE cols=6>
-  <COLGROUP>
-  <COL align=middle>
-  <COL align=left>
-  <COL align=middle>
-  <COL align=left>
-  <COL align=middle>
-  <COL align=left>
-  <TBODY>
-  <TR>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><TT>CALL TRAAT(A,S,M,N)</TT> </TD>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><IMG align=bottom
-      alt=tex2html_wrap_inline355 height=12 src="trpack_files/img30.gif"
-      width=30> </TD>
-    <TD align=middle noWrap vAlign=baseline><IMG align=bottom
-      alt=tex2html_wrap_inline353 height=9 src="trpack_files/arrow.gif"
-      width=14> </TD>
-    <TD align=left noWrap vAlign=baseline><B>S</B> </TD></TR>
-  <TR>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><TT>CALL TRATA(B,R,M,N)</TT> </TD>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><IMG align=bottom
-      alt=tex2html_wrap_inline357 height=12 src="trpack_files/img31.gif"
-      width=29> </TD>
-    <TD align=middle noWrap vAlign=baseline><IMG align=bottom
-      alt=tex2html_wrap_inline353 height=9 src="trpack_files/arrow.gif"
-      width=14> </TD>
-    <TD align=left noWrap vAlign=baseline><B>R</B>
-</TD></TR></TBODY></TABLE><BR><TT>A</TT> is an <IMG align=middle
-alt=tex2html_wrap_inline359 height=18 src="trpack_files/img32.gif" width=36>
-matrix, <TT>B</TT> is an <IMG align=middle alt=tex2html_wrap_inline361 height=18
-src="trpack_files/NxM.gif" width=36> matrix, <TT>S</TT> is an <IMG
-align=middle alt=tex2html_wrap_inline363 height=18 src="trpack_files/MxM.gif"
-width=36> symmetric matrix, and <TT>R</TT> is an <IMG align=middle
-alt=tex2html_wrap_inline365 height=18 src="trpack_files/MxM.gif" width=36>
-symmetric matrix. No overwriting is allowed.
-<P><B>Transformation of Symmetric Matrix </B><BR>
-<TABLE cols=6>
-  <COLGROUP>
-  <COL align=middle>
-  <COL align=left>
-  <COL align=middle>
-  <COL align=left>
-  <COL align=middle>
-  <COL align=left>
-  <TBODY>
-  <TR>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><TT>CALL TRASAT(A,S,R,M,N)</TT> </TD>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><IMG align=bottom
-      alt=tex2html_wrap_inline369 height=12 src="trpack_files/img37.gif"
-      width=40> </TD>
-    <TD align=middle noWrap vAlign=baseline><IMG align=bottom
-      alt=tex2html_wrap_inline367 height=9 src="trpack_files/arrow.gif"
-      width=14> </TD>
-    <TD align=left noWrap vAlign=baseline><B>R</B> </TD></TR>
-  <TR>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><TT>CALL TRATSA(B,S,R,M,N)</TT> </TD>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><IMG align=bottom
-      alt=tex2html_wrap_inline371 height=12 src="trpack_files/img38.gif"
-      width=39> </TD>
-    <TD align=middle noWrap vAlign=baseline><IMG align=bottom
-      alt=tex2html_wrap_inline367 height=9 src="trpack_files/arrow.gif"
-      width=14> </TD>
-    <TD align=left noWrap vAlign=baseline><B>R</B> </TD></TR>
-  <TR>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><TT>CALL TRQSQ (Q,T,R,M)</TT> </TD>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><B>QTQ</B> </TD>
-    <TD align=middle noWrap vAlign=baseline><IMG align=bottom
-      alt=tex2html_wrap_inline367 height=9 src="trpack_files/arrow.gif"
-      width=14> </TD>
-    <TD align=left noWrap vAlign=baseline><B>R</B>
-</TD></TR></TBODY></TABLE><BR><TT>A</TT> is an <IMG align=middle
-alt=tex2html_wrap_inline373 height=18 src="trpack_files/MxN.gif" width=36>
-matrix, <TT>B</TT> is an <IMG align=middle alt=tex2html_wrap_inline375 height=18
-src="trpack_files/NxM.gif" width=36> matrix, <TT>S</TT> is an <IMG
-align=middle alt=tex2html_wrap_inline377 height=18 src="trpack_files/NxN.gif"
-width=36> symmetric matrix, and <TT>R</TT>, <TT>Q</TT>, <TT>T</TT> are <IMG
-align=middle alt=tex2html_wrap_inline379 height=18 src="trpack_files/MxM.gif"
-width=36> symmetric matrices. No overwriting is allowed.
-<P><B>Packing and Unpacking a Symmetric Matrix</B> <BR>
-<TABLE cols=6>
-  <COLGROUP>
-  <COL align=middle>
-  <COL align=left>
-  <COL align=middle>
-  <COL align=left>
-  <COL align=middle>
-  <COL align=left>
-  <TBODY>
-  <TR>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><TT>CALL TRPCK (A,S,M)</TT> </TD>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><B>A</B> </TD>
-    <TD align=middle noWrap vAlign=baseline><IMG align=bottom
-      alt=tex2html_wrap_inline381 height=9 src="trpack_files/arrow.gif"
-      width=14> </TD>
-    <TD align=left noWrap vAlign=baseline><B>S</B> </TD></TR>
-  <TR>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><TT>CALL TRUPCK(S,A,M)</TT> </TD>
-    <TD align=middle noWrap vAlign=baseline></TD>
-    <TD align=left noWrap vAlign=baseline><B>S</B> </TD>
-    <TD align=middle noWrap vAlign=baseline><IMG align=bottom
-      alt=tex2html_wrap_inline381 height=9 src="trpack_files/arrow.gif"
-      width=14> </TD>
-    <TD align=left noWrap vAlign=baseline><B>A</B>
-</TD></TR></TBODY></TABLE><BR><TT>A</TT> is an <IMG align=middle
-alt=tex2html_wrap_inline383 height=18 src="trpack_files/img44.gif" width=36>
-unpacked symmetric matrix (all <IMG align=bottom alt=tex2html_wrap_inline385
-height=13 src="trpack_files/img45.gif" width=15> elements) and <TT>S</TT> is the
-same matrix stored packed. Overwriting is allowed for both <TT>TRPCK</TT> and
-<TT>TRUPCK</TT>. <BR><IMG align=bottom alt=tex2html_wrap_inline387 height=7
-src="trpack_files/img46.gif" width=6> <BR>
-<HR>
-
-<P>
-<ADDRESS>Michel Goossens Wed Jun 5 05:00:56 METDST 1996 </ADDRESS></BODY></HTML>
-end_html
-*/
-//
 //___________________________________________________________________________
 //___________________________________________________________________________
 
-#define TCL_TRAAT(a, s, m, n)          \
+#define TCL_TRAAT(a, s, m, n)           \
    /* Local variables */                \
    int ipiv, i, j, ipivn, ia, is, iat;  \
    double sum;                          \
@@ -1579,7 +300,7 @@ double *TCL::tral(double *a, double *u, double *b, int m, int n)
 #undef TCL_TRAL
 
 //____________________________________________________________
-#define TCL_TRALT(a, u, b, m, n) \
+#define TCL_TRALT(a, u, b, m, n)  \
     int indu, j, k, ia, ib, iu;   \
     double sum;                   \
     --b;    --u;    --a;          \
@@ -1588,14 +309,14 @@ double *TCL::tral(double *a, double *u, double *b, int m, int n)
     do {                          \
       iu = indu;                  \
       for (j = 1; j <= n; ++j) {  \
-            ia = ib;                  \
-            sum = 0.;                 \
+            ia = ib;              \
+            sum = 0.;             \
             for (k = j; k <= n; ++k) {\
           sum += a[ia] * u[iu];   \
           --ia;   --iu;           \
-            }                         \
-            b[ib] = sum;              \
-            --ib;                     \
+            }                     \
+            b[ib] = sum;          \
+            --ib;                 \
       }                           \
     } while (ib > 0);             \
     ++b;
@@ -1759,7 +480,7 @@ float *TCL::trata(float *a, float *r__, int m, int n)
      int i__, j, ia, mn, ir, iat;
      double sum;
 
-    /* Parameter adjustments */
+    /* Parameter adjuTments */
     --r__;    --a;
 
     /* Function Body */
@@ -1795,7 +516,7 @@ float *TCL::trats(float *a, float *s, float *b, int m, int n)
 /* CERN PROGLIB# F112    TRATS           .VERSION KERNFOR  4.15  861204 */
 /* ORIG. 18/12/74 WH */
 
-    /* Parameter adjustments */
+    /* Parameter adjuTments */
     --b;    --s;    --a;
 
     /* Function Body */
@@ -1841,7 +562,7 @@ float *TCL::trats(float *a, float *s, float *b, int m, int n)
 /* ORIG. 18/12/74 WH */
 
 
-    /* Parameter adjustments */
+    /* Parameter adjuTments */
     --r__;    --s;    --a;
 
     /* Function Body */
@@ -1897,7 +618,7 @@ float *TCL::trchlu(float *a, float *b, int n)
 /* ORIG. 18/12/74 W.HART */
 
 
-    /* Parameter adjustments */
+    /* Parameter adjuTments */
     --b;    --a;
 
     /* Function Body */
@@ -1947,7 +668,7 @@ L42:
     /* Local variables */
      int ipiv, kpiv, i__;
      double r__;
-     int nstep;
+     int nTep;
      double dc;
      int id, kd;
      double sum;
@@ -1957,7 +678,7 @@ L42:
 /* ORIG. 18/12/74 WH */
 
 
-    /* Parameter adjustments */
+    /* Parameter adjuTments */
     --b;    --a;
 
     /* Function Body */
@@ -1974,14 +695,14 @@ L42:
         if (r__ == 0.)  goto L42;
         id = ipiv;
         kd = kpiv;
-        nstep = i__;
+        nTep = i__;
 
         do {
-          kd += nstep;
-          id += nstep;
-          ++nstep;
+          kd += nTep;
+          id += nTep;
+          ++nTep;
           sum += b[id] * b[kd];
-        } while  (nstep < n);
+        } while  (nTep < n);
 
 L40:
         sum = a[kpiv] - sum;
@@ -2012,10 +733,10 @@ L42:
      int lhor, ipiv, lver, j;
      double sum = 0;
      double r__ = 0;
-     int mx, ndstep, ind;
+     int mx, ndTep, ind;
 
 
-    /* Parameter adjustments */
+    /* Parameter adjuTments */
     --s;    --t;
 
     /* Function Body */
@@ -2027,7 +748,7 @@ L42:
       r__ = 0.;
       if (t[ipiv] > 0.) r__ = 1. / t[ipiv];
       s[ipiv] = r__;
-      ndstep = n;
+      ndTep = n;
       ind = mx - n + i;
 
       while (ind != ipiv) {
@@ -2045,8 +766,8 @@ L42:
           } while  (lhor < ind);
         }
         s[ind] = -sum * r__;
-        --ndstep;
-        ind -= ndstep;
+        --ndTep;
+        ind -= ndTep;
       }
 
       ipiv -= i;
@@ -2068,7 +789,7 @@ L42:
 /* ORIG. 18/12/74 WH */
 
 
-    /* Parameter adjustments */
+    /* Parameter adjuTments */
     --b;    --a;    --u;
 
     /* Function Body */
@@ -2102,14 +823,14 @@ L42:
 /* trlta.F -- translated by f2c (version 19970219).
 // Subroutine */float *TCL::trlta(float *u, float *a, float *b, int m, int n)
 {
-     int ipiv, mxpn, i__, nstep, ia, ib, iu, mx;
+     int ipiv, mxpn, i__, nTep, ia, ib, iu, mx;
      double sum;
 
 /* CERN PROGLIB# F112    TRLTA           .VERSION KERNFOR  4.15  861204 */
 /* ORIG. 18/12/74 WH */
 
 
-    /* Parameter adjustments */
+    /* Parameter adjuTments */
     --b;    --a;    --u;
 
     /* Function Body */
@@ -2125,7 +846,7 @@ L42:
 
       do {
         iu = ipiv;
-        nstep = i__;
+        nTep = i__;
         ++ib;
         ia = ib;
 
@@ -2133,8 +854,8 @@ L42:
         do {
           sum += a[ia] * u[iu];
           ia += n;
-          iu += nstep;
-          ++nstep;
+          iu += nTep;
+          ++nTep;
         } while (ia <= mx);
 
         b[ib] = sum;
@@ -2154,7 +875,7 @@ float *TCL::trpck(float *s, float *u, int n)
  // ORIG. 18/12/74 WH */
   int i__, ia, ind, ipiv;
 
-   /* Parameter adjustments */
+   /* Parameter adjuTments */
     --u;    --s;
 
     /* Function Body */
@@ -2187,7 +908,7 @@ float *TCL::trqsq(float *q, float *s, float *r__, int m)
      int iq, ir, is, iqq;
      double sum;
 
-    /* Parameter adjustments */
+    /* Parameter adjuTments */
     --r__;    --s;    --q;
 
     /* Function Body */
@@ -2248,7 +969,7 @@ float *TCL::trsa(float *s, float *a, float *b, int m, int n)
      int inds, i__, j, k, ia, ib, is;
      double sum;
 
-  /* Parameter adjustments */
+  /* Parameter adjuTments */
     --b;    --a;    --s;
 
     /* Function Body */
@@ -2306,7 +1027,7 @@ float *TCL::trsa(float *s, float *a, float *b, int m, int n)
      int lhor, lver, i__, k, l, ind;
      double sum;
 
-    /* Parameter adjustments */
+    /* Parameter adjuTments */
     --s;    --u;
 
     /* Function Body */
@@ -2337,7 +1058,7 @@ float *TCL::trsa(float *s, float *a, float *b, int m, int n)
      int lhor, lver, lpiv, i__, j, k, ind;
      double sum;
 
-    /* Parameter adjustments */
+    /* Parameter adjuTments */
     --gi;    --g;
 
     /* Function Body */
@@ -2368,7 +1089,7 @@ float *TCL::trupck(float *u, float *s, int m)
 
     int i__, im, is, iu, iv, ih, m2;
 
-    /* Parameter adjustments */
+    /* Parameter adjuTments */
     --s;    --u;
 
     /* Function Body */
@@ -2419,7 +1140,7 @@ float *TCL::trupck(float *u, float *s, int m)
 /* ORIG. 18/12/74 WH */
 
 
-    /* Parameter adjustments */
+    /* Parameter adjuTments */
     --b;    --a;    --s;
 
     /* Function Body */
@@ -2470,7 +1191,7 @@ double *TCL::trata(double *a, double *r__, int m, int n)
 /* ORIG. 18/12/74 WH */
 
 
-    /* Parameter adjustments */
+    /* Parameter adjuTments */
     --r__;    --a;
 
     /* Function Body */
@@ -2509,7 +1230,7 @@ double *TCL::trats(double *a, double *s, double *b, int m, int n)
 /* CERN PROGLIB# F112    TRATS           .VERSION KERNFOR  4.15  861204 */
 /* ORIG. 18/12/74 WH */
 
-    /* Parameter adjustments */
+    /* Parameter adjuTments */
     --b;    --s;    --a;
 
     /* Function Body */
@@ -2555,7 +1276,7 @@ double *TCL::trats(double *a, double *s, double *b, int m, int n)
 /* ORIG. 18/12/74 WH */
 
 
-    /* Parameter adjustments */
+    /* Parameter adjuTments */
     --r__;    --s;    --a;
 
     /* Function Body */
@@ -2611,7 +1332,7 @@ double *TCL::trchlu(double *a, double *b, int n)
 /* ORIG. 18/12/74 W.HART */
 
 
-    /* Parameter adjustments */
+    /* Parameter adjuTments */
     --b;    --a;
 
     /* Function Body */
@@ -2661,7 +1382,7 @@ double *TCL::trchul(double *a, double *b, int n)
     /* Local variables */
      int ipiv, kpiv, i__;
      double r__;
-     int nstep;
+     int nTep;
      double dc;
      int id, kd;
      double sum;
@@ -2671,7 +1392,7 @@ double *TCL::trchul(double *a, double *b, int n)
 /* ORIG. 18/12/74 WH */
 
 
-    /* Parameter adjustments */
+    /* Parameter adjuTments */
     --b;    --a;
 
     /* Function Body */
@@ -2688,14 +1409,14 @@ double *TCL::trchul(double *a, double *b, int n)
         if (r__ == (double)0.)  goto L42;
         id = ipiv;
         kd = kpiv;
-        nstep = i__;
+        nTep = i__;
 
         do {
-          kd += nstep;
-          id += nstep;
-          ++nstep;
+          kd += nTep;
+          id += nTep;
+          ++nTep;
           sum += b[id] * b[kd];
-        } while  (nstep < n);
+        } while  (nTep < n);
 
 L40:
         sum = a[kpiv] - sum;
@@ -2724,10 +1445,10 @@ double *TCL::trinv(double *t, double *s, int n)
 //
      int lhor, ipiv, lver,  j;
      double r__;
-     int mx, ndstep, ind;
+     int mx, ndTep, ind;
      double sum;
 
-    /* Parameter adjustments */
+    /* Parameter adjuTments */
     --s;    --t;
 
     /* Function Body */
@@ -2739,7 +1460,7 @@ double *TCL::trinv(double *t, double *s, int n)
       r__ = 0.;
       if (t[ipiv] > 0.)  r__ = (double)1. / t[ipiv];
       s[ipiv] = r__;
-      ndstep = n;
+      ndTep = n;
       ind = mx - n + i;
 
       while (ind != ipiv) {
@@ -2757,8 +1478,8 @@ double *TCL::trinv(double *t, double *s, int n)
           } while  (lhor < ind);
         }
         s[ind] = -sum * r__;
-        --ndstep;
-        ind -= ndstep;
+        --ndTep;
+        ind -= ndTep;
       }
 
       ipiv -= i;
@@ -2779,7 +1500,7 @@ double *TCL::trinv(double *t, double *s, int n)
      int ipiv, ia, ib, iu;
      double sum;
 
-  /* Parameter adjustments */
+  /* Parameter adjuTments */
     --b;    --a;    --u;
 
     /* Function Body */
@@ -2815,10 +1536,10 @@ double *TCL::trlta(double *u, double *a, double *b, int m, int n)
 // CERN PROGLIB# F112    TRLTA           .VERSION KERNFOR  4.15  861204
 // ORIG. 18/12/74 WH
 
-     int ipiv, mxpn, i__, nstep, ia, ib, iu, mx;
+     int ipiv, mxpn, i__, nTep, ia, ib, iu, mx;
      double sum;
 
-    /* Parameter adjustments */
+    /* Parameter adjuTments */
     --b;    --a;    --u;
 
     /* Function Body */
@@ -2834,7 +1555,7 @@ double *TCL::trlta(double *u, double *a, double *b, int m, int n)
 
       do {
         iu = ipiv;
-        nstep = i__;
+        nTep = i__;
         ++ib;
         ia = ib;
 
@@ -2842,8 +1563,8 @@ double *TCL::trlta(double *u, double *a, double *b, int m, int n)
         do {
           sum += a[ia] * u[iu];
           ia += n;
-          iu += nstep;
-          ++nstep;
+          iu += nTep;
+          ++nTep;
         } while (ia <= mx);
 
         b[ib] = sum;
@@ -2862,7 +1583,7 @@ double *TCL::trlta(double *u, double *a, double *b, int m, int n)
  // ORIG. 18/12/74 WH */
   int i__, ia, ind, ipiv;
 
-   /* Parameter adjustments */
+   /* Parameter adjuTments */
     --u;    --s;
 
     /* Function Body */
@@ -2894,7 +1615,7 @@ double *TCL::trqsq(double *q, double *s, double *r__, int m)
      int iq, ir, is, iqq;
      double sum;
 
-    /* Parameter adjustments */
+    /* Parameter adjuTments */
     --r__;    --s;    --q;
 
     /* Function Body */
@@ -2954,7 +1675,7 @@ double *TCL::trsa(double *s, double *a, double *b, int m, int n)
      int inds, i__, j, k, ia, ib, is;
      double sum;
 
-  /* Parameter adjustments */
+  /* Parameter adjuTments */
     --b;    --a;    --s;
 
     /* Function Body */
@@ -3013,7 +1734,7 @@ double *TCL::trsa(double *s, double *a, double *b, int m, int n)
      int lhor, lver, i__, k, l, ind;
      double sum;
 
-    /* Parameter adjustments */
+    /* Parameter adjuTments */
     --s;    --u;
 
     /* Function Body */
@@ -3044,7 +1765,7 @@ double *TCL::trsa(double *s, double *a, double *b, int m, int n)
      int lhor, lver, lpiv, i__, j, k, ind;
      double sum;
 
-    /* Parameter adjustments */
+    /* Parameter adjuTments */
     --gi;    --g;
 
     /* Function Body */
@@ -3075,7 +1796,7 @@ double *TCL::trsa(double *s, double *a, double *b, int m, int n)
 
     int i__, im, is, iu, iv, ih, m2;
 
-    /* Parameter adjustments */
+    /* Parameter adjuTments */
     --s;    --u;
 
     /* Function Body */
@@ -3122,7 +1843,7 @@ double *TCL::trsat(double *s, double *a, double *b, int m, int n)
      int inds, i__, j, k, ia, ib, mn, is;
      double sum;
 
-    /* Parameter adjustments */
+    /* Parameter adjuTments */
     --b;    --a;    --s;
 
     /* Function Body */

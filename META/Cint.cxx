@@ -1,3 +1,5 @@
+//*CMZ :  2.24/02 05/04/2000  19.02.41  by  Rene Brun
+//*CMZ :  2.24/01 11/03/2000  09.33.33  by  Rene Brun
 //*CMZ :  2.23/12 01/02/2000  08.21.40  by  Rene Brun
 //*CMZ :  2.23/09 19/11/99  17.54.35  by  Rene Brun
 //*CMZ :  2.23/07 25/10/99  19.00.09  by  Fons Rademakers
@@ -8,17 +10,18 @@
 //*CMZ :  2.22/06 22/06/99  19.15.13  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   01/03/96
 
+/*CMZ :  2.24/01 24/02/2000  11.49.40  by  Fons Rademakers*/
 /*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun and Fons Rademakers.                               *
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
  *                                                                       *
- * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
- * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -159,6 +162,49 @@ void TCint::ExecThreadCB(TWin32SendClass *command)
 #else
    if (command) { }
 #endif
+}
+
+//______________________________________________________________________________
+Bool_t TCint::IsLoaded(const char* filename) const
+{
+   // Return true if the file has already been loaded by cint.
+
+   // We will try in this order:
+   //   actual filename
+   //   filename as a path relative to
+   //            the include path
+   //            the shared library path
+
+   G__SourceFileInfo file(filename);
+   if (file.IsValid()) { return kTRUE; };
+
+   char *next = gSystem->Which(TROOT::GetMacroPath(), filename, kReadPermission);
+   if (next) {
+     file.Init(next);
+     if (file.IsValid()) { return kTRUE; };
+   }
+
+   TString incPath = gSystem->GetIncludePath(); // of the form -Idir1  -Idir2 -Idir3
+   incPath.Append(":").Prepend(" ");
+   incPath.ReplaceAll(" -I",":");       // of form :dir1 :dir2:dir3
+   while ( incPath.Index(" :") != -1 ) {
+     incPath.ReplaceAll(" :",":");
+   }
+   incPath.Prepend(".:");
+   incPath.Append(":$ROOTSYS/cint/include:$ROOTSYS/cint/stl");
+   next = gSystem->Which(incPath, filename, kReadPermission);
+   if (next) {
+     file.Init(next);
+     if (file.IsValid()) { return kTRUE; };
+   }
+
+   next = gSystem->DynamicPathName(filename,kTRUE);
+   if (next) {
+     file.Init(next);
+     if (file.IsValid()) { return kTRUE; };
+   }
+
+   return kFALSE;
 }
 
 //______________________________________________________________________________
@@ -432,6 +478,8 @@ void TCint::UpdateListOfTypes()
          // (as is done in UpdateListOfGlobals())
          if (!d)
             gROOT->fTypes->Add(new TDataType(a));
+         else
+            delete a;
       } else
          delete a;
 
@@ -694,9 +742,7 @@ void TCint::Execute(TObject *obj, TClass *cl, TMethod *method, TObjArray *params
            G__TypeInfo type( arg->GetFullTypeName() );
            TObjString *nxtpar = (TObjString *)next();
            if (i) complete += ',';
-//           if (i) complete.Append(',');
-//           if (!strncmp( type.TrueName(), "char", 4 ))
-           if (!strncmp( type.TrueName(), "(unknown)", 9 ))
+           if (strstr( type.TrueName(), "char" ))
            {
                TString chpar('\"');
                chpar += (nxtpar->String()).ReplaceAll("\"","\\\"");

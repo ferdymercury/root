@@ -1,3 +1,4 @@
+//*CMZ :  2.24/01 11/03/2000  16.35.44  by  Rene Brun
 //*CMZ :  2.00/11 26/08/98  19.04.20  by  Rene Brun
 //*CMZ :  1.03/01 18/08/97  09.09.54  by  Rene Brun
 //*-- Author :    Rene Brun   26/08/98
@@ -16,9 +17,10 @@
    TLatex l;
    l.SetTextAlign(12);
    l.SetTextSize(0.04);
-   l.DrawLatex(0.1,0.8,"1)   C(x) = d #sqrt{#frac{2}{#lambdaD}}  #int^{x}_{0}cos(#frac{#pi}{2}t^{2})dt");
-   l.DrawLatex(0.1,0.6,"2)   C(x) = d #sqrt{#frac{2}{#lambdaD}}  #int^{x}cos(#frac{#pi}{2}t^{2})dt");
-   l.DrawLatex(0.1,0.4,"3)   R = |A|^{2} = #frac{1}{2}(#[]{#frac{1}{2}+C(V)}^{2}+#[]{#frac{1}{2}+S(V)}^{2})");
-   l.DrawLatex(0.1,0.2,"4)   F(t) = #sum_{i=-#infty}^{#infty}A(i)cos#[]{#frac{i}{t+i}}");
+   l.DrawLatex(0.1,0.9,"1)   C(x) = d #sqrt{#frac{2}{#lambdaD}}  #int^{x}_{0}cos(#frac{#pi}{2}t^{2})dt");
+   l.DrawLatex(0.1,0.7,"2)   C(x) = d #sqrt{#frac{2}{#lambdaD}}  #int^{x}cos(#frac{#pi}{2}t^{2})dt");
+   l.DrawLatex(0.1,0.5,"3)   R = |A|^{2} = #frac{1}{2}#left(#[]{#frac{1}{2}+C(V)}^{2}+#[]{#frac{1}{2}+S(V)}^{2}#right)");
+   l.DrawLatex(0.1,0.3,"4)   F(t) = #sum_{i=-#infty}^{#infty}A(i)cos#[]{#frac{i}{t+i}}");
+   l.DrawLatex(0.1,0.1,"5)   {}_{3}^{7}Li");
    c1->Print("latex.ps");
 }

@@ -1,5 +1,5 @@
-/*CMZ :  2.23/10 10/12/99  18.00.05  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   10/12/99*/
+/*CMZ :  2.24/05 16/05/2000  12.03.50  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   16/05/2000*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -770,6 +770,12 @@ int nfile;
       free((void*)G__srcfile[G__nfile].dictpos);
       G__srcfile[G__nfile].dictpos=(struct G__dictposition*)NULL;
     }
+#ifndef G__OLDIMPLEMENTATION1273
+    if(G__srcfile[G__nfile].hasonlyfunc) {
+      free((void*)G__srcfile[G__nfile].hasonlyfunc);
+      G__srcfile[G__nfile].hasonlyfunc=(struct G__dictposition*)NULL;
+    }
+#endif
 #ifndef G__OLDIMPLEMENTATION1207
 #ifdef G__SHAREDLIB
     if(G__srcfile[G__nfile].ispermanentsl) {

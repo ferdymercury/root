@@ -1,5 +1,5 @@
-/*CMZ :  2.23/10 10/12/99  17.59.55  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   10/12/99*/
+/*CMZ :  2.24/05 16/05/2000  12.03.43  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   16/05/2000*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -23,14 +23,37 @@
 #ifndef G__CI_H
 #define G__CI_H
 
+#define G__CINTVERSION 5014038
+#define G__CINTVERSIONSTR  "5.14.38, May 5 2000"
+
 /**********************************************************************
 * SPECIAL CHANGES and CINT CORE COMPILATION SWITCH
 **********************************************************************/
+
+/* Define G__CONSTNESSFLAG for activating function overloading by
+ * object constness. */
+#define G__CONSTNESSFLAG
+#ifndef G__CONSTNESSFLAG
+#define G__OLDIMPLEMENTATION1258 /* create func entry w/wo func constness */
+#define G__OLDIMPLEMENTATION1259 /* add isconst in G__value and set it */
+#define G__OLDIMPLEMENTATION1260 /* use isconst info for func overloading */
+#endif
+
+/* New function overloading resolution algorithm which is closer to
+ * ANSI/ISO standard is implemented from cint5.14.35. This is a major
+ * change and there are some risks. Define following macro in order to
+ * use old algorithm. */
+/* #define G__OLDIMPLEMENTATION1290 */
+
 /* Define G__EXCEPTIONWRAPPER for activating C++ exception catching
  * when calling precompiled function. It is better to define this macro
  * in platform dependency file OTHMACRO flag.
  */
 /* #define G__EXCEPTIONWRAPPER */
+/* #define G__STD_EXCEPTION */
+#if defined(G__STD_EXCEPTION) && !defined(G__EXCEPTIONWRAPPER)
+#define G__EXCEPTIONWRAPPER
+#endif
 
 /* If you define G__REFCONV in platform dependency file, bug fix for
  * reference argument conversion is activated. Reason of not making
@@ -63,6 +86,7 @@
 
 
 #define G__OLDIMPLEMENTATION834 /* THIS MODIFICATION IS TURNED OFF */
+
 
 #ifndef G__OLDIMPLEMENTATION1231
 /**************************************************************************
@@ -617,6 +641,9 @@ typedef struct {
 #ifdef G__REFERENCETYPE2
   long ref;
 #endif
+#ifndef G__OLDIMPLEMENTATION1259
+  G__SIGNEDCHAR_T isconst;
+#endif
 } G__value ;
 
 
@@ -880,6 +907,9 @@ struct G__ifunc_table {
   G__SIGNEDCHAR_T reftype[G__MAXIFUNC];
   short para_nu[G__MAXIFUNC];
   G__SIGNEDCHAR_T isconst[G__MAXIFUNC];
+#ifndef G__OLDIMPLEMENTATION1250
+  G__SIGNEDCHAR_T isexplicit[G__MAXIFUNC];
+#endif
 
   /* number and type of function parameter */
   /* G__inheritclass() depends on type of following members */
@@ -964,6 +994,9 @@ struct G__ifunc_table_VMS {
   G__SIGNEDCHAR_T reftype[G__MAXIFUNC];
   short para_nu[G__MAXIFUNC];
   G__SIGNEDCHAR_T isconst[G__MAXIFUNC];
+#ifndef G__OLDIMPLEMENTATION1250
+  G__SIGNEDCHAR_T isexplicit[G__MAXIFUNC];
+#endif
 
   /* number and type of function parameter */
   /* G__inheritclass() depends on type of following members */
@@ -1590,6 +1623,10 @@ extern G__EXPORT int G__lasterror_linenum G__P(());
 
 #ifndef G__OLDIMPLEMENTATION1207
 extern G__EXPORT int G__loadsystemfile G__P((G__CONST char* filename));
+#endif
+
+#ifndef G__OLDIMPLEMENTATION1207
+extern G__EXPORT void G__set_smartunload G__P((int smartunload));
 #endif
 
 #ifndef G__OLDIMPLEMENTATION1210

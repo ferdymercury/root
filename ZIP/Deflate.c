@@ -1,3 +1,4 @@
+/*CMZ :  2.24/01 31/03/2000  12.15.30  by  Rene Brun*/
 /*CMZ :  2.23/09 24/11/99  11.23.02  by  Rene Brun*/
 /*CMZ :  2.00/00 08/03/98  11.27.32  by  Rene Brun*/
 /*CMZ :  0.80/00 12/08/96   1.23.37  by  Fons Rademakers*/
@@ -264,10 +265,10 @@ local config configuration_table[10] = {
  *  Prototypes for local functions.
  */
 
-local void fill_window   OF((void));
-local ulg R__Deflate_fast   OF((void));
+local void R__fill_window    OF((void));
+local ulg  R__Deflate_fast   OF((void));
 
-      int  longest_match OF((IPos cur_match));
+      int  R__longest_match  OF((IPos cur_match));
 #ifdef ASMV
       void match_init OF((void)); /* asm code initialization */
 #endif
@@ -379,7 +380,7 @@ void R__lm_init (int pack_level, ush *flags)
     /* Make sure that we always have enough lookahead. This is important
      * if input comes from a device such as a tty.
      */
-    while (lookahead < MIN_LOOKAHEAD && !eofile) fill_window();
+    while (lookahead < MIN_LOOKAHEAD && !eofile) R__fill_window();
 
     ins_h = 0;
     for (j=0; j<MIN_MATCH-1; j++) UPDATE_HASH(ins_h, R__window[j]);
@@ -420,7 +421,7 @@ void R__lm_free()
  * if desired.  A 68000 version is in amiga/match_68.a -- this could be used
  * with other 68000 based systems such as Macintosh with a little effort.
  */
-int longest_match(IPos cur_match)
+int R__longest_match(IPos cur_match)
     /* IPos cur_match; */                       /* current match */
 {
     unsigned chain_length = R__max_chain_length;   /* max hash chain length */
@@ -578,7 +579,7 @@ local void check_match(IPos start, IPos match, int length)
  *    file reads are performed for at least two bytes (required for the
  *    translate_eol option).
  */
-local void fill_window()
+local void R__fill_window()
 {
     register unsigned n, m;
     unsigned more = (unsigned)(R__window_size - (ulg)lookahead - (ulg)R__strstart);
@@ -668,8 +669,8 @@ local ulg R__Deflate_fast()
              * of window index 0 (in particular we have to avoid a match
              * of the string with itself at the start of the input file).
              */
-            match_length = longest_match (hash_head);
-            /* longest_match() sets match_start */
+            match_length = R__longest_match (hash_head);
+            /* R__longest_match() sets match_start */
             if (match_length > lookahead) match_length = lookahead;
         }
         if (match_length >= MIN_MATCH) {
@@ -717,7 +718,7 @@ local ulg R__Deflate_fast()
          * for the next match, plus MIN_MATCH bytes to insert the
          * string following the next match.
          */
-        while (lookahead < MIN_LOOKAHEAD && !eofile) fill_window();
+        while (lookahead < MIN_LOOKAHEAD && !eofile) R__fill_window();
 
     }
     return FLUSH_BLOCK(1); /* eof */
@@ -760,8 +761,8 @@ ulg R__Deflate()
              * of window index 0 (in particular we have to avoid a match
              * of the string with itself at the start of the input file).
              */
-            match_length = longest_match (hash_head);
-            /* longest_match() sets match_start */
+            match_length = R__longest_match (hash_head);
+            /* R__longest_match() sets match_start */
             if (match_length > lookahead) match_length = lookahead;
 
             /* Ignore a length 3 match if it is too distant: */
@@ -828,7 +829,7 @@ ulg R__Deflate()
          * for the next match, plus MIN_MATCH bytes to insert the
          * string following the next match.
          */
-        while (lookahead < MIN_LOOKAHEAD && !eofile) fill_window();
+        while (lookahead < MIN_LOOKAHEAD && !eofile) R__fill_window();
     }
     if (match_available) R__ct_tally (0, R__window[R__strstart-1]);
 

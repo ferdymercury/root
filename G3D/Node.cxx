@@ -1,3 +1,5 @@
+//*CMZ :  2.24/03 01/05/2000  17.09.22  by  Rene Brun
+//*CMZ :  2.24/01 02/03/2000  15.42.41  by  Rene Brun
 //*CMZ :  2.23/12 26/01/2000  09.24.06  by  Rene Brun
 //*CMZ :  2.23/09 21/11/99  19.58.22  by  Fons Rademakers
 //*CMZ :  2.22/01 17/04/99  07.50.09  by  Rene Brun
@@ -6,17 +8,18 @@
 //*CMZ :  2.00/11 22/08/98  12.26.40  by  Rene Brun
 //*-- Author :    Rene Brun   14/09/95
 
+/*CMZ :  2.24/01 24/02/2000  11.49.40  by  Fons Rademakers*/
 /*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun and Fons Rademakers.                               *
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
  *                                                                       *
- * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
- * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
  *************************************************************************/
 
 #include <iostream.h>
@@ -546,6 +549,62 @@ void TNode::ls(Option_t *option)
 }
 
 //______________________________________________________________________________
+void TNode::Master2Local(Double_t *master, Double_t *local)
+{
+//*-*-*-*-*Convert one point from master system to local reference system*-*-*
+//*-*      ==============================================================
+//
+//  Note that before invoking this function, the global rotation matrix
+//  and translation vector for this node must have been computed.
+//  This is automatically done by the Paint functions.
+//  Otherwise TNode::UpdateMatrix should be called before.
+
+   Double_t x,y,z;
+   Float_t bomb = gGeometry->GetBomb();
+
+   Double_t *matrix      = &gRotMatrix[gGeomLevel][0];
+   Double_t *translation = &gTranslation[gGeomLevel][0];
+
+   Double_t xms = master[0] - bomb*translation[0];
+   Double_t yms = master[1] - bomb*translation[1];
+   Double_t zms = master[2] - bomb*translation[2];
+
+   x = xms*matrix[0] + yms*matrix[3] + zms*matrix[6];
+   y = xms*matrix[1] + yms*matrix[4] + zms*matrix[7];
+   z = xms*matrix[2] + yms*matrix[5] + zms*matrix[8];
+
+   local[0] = x; local[1] = y; local[2] = z;
+}
+
+//______________________________________________________________________________
+void TNode::Master2Local(Float_t *master, Float_t *local)
+{
+//*-*-*-*-*Convert one point from master system to local reference system*-*-*
+//*-*      ==============================================================
+//
+//  Note that before invoking this function, the global rotation matrix
+//  and translation vector for this node must have been computed.
+//  This is automatically done by the Paint functions.
+//  Otherwise TNode::UpdateMatrix should be called before.
+
+   Float_t x,y,z;
+   Float_t bomb = gGeometry->GetBomb();
+
+   Double_t *matrix      = &gRotMatrix[gGeomLevel][0];
+   Double_t *translation = &gTranslation[gGeomLevel][0];
+
+   Double_t xms = master[0] - bomb*translation[0];
+   Double_t yms = master[1] - bomb*translation[1];
+   Double_t zms = master[2] - bomb*translation[2];
+
+   x = xms*matrix[0] + yms*matrix[3] + zms*matrix[6];
+   y = xms*matrix[1] + yms*matrix[4] + zms*matrix[7];
+   z = xms*matrix[2] + yms*matrix[5] + zms*matrix[8];
+
+   local[0] = x; local[1] = y; local[2] = z;
+}
+
+//______________________________________________________________________________
 void TNode::Paint(Option_t *option)
 {
 //*-*-*-*-*-*-*-*-*-*-*-*Paint Referenced node with current parameters*-*-*-*
@@ -558,7 +617,7 @@ void TNode::Paint(Option_t *option)
 //*-*
 //*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 
-   TPadView3D *view3D=gPad->GetView3D();
+   TPadView3D *view3D = (TPadView3D*)gPad->GetView3D();
 
    Int_t level = gGeometry->GeomLevel();
 // restrict the levels for "range" option
@@ -626,14 +685,29 @@ void TNode::RecursiveRemove(TObject *obj)
 //______________________________________________________________________________
 void TNode::SetName(const char *name)
 {
-//*-*-*-*-*-*-*-*-*-*-*Change the name of this Node*-*-*-*-*-*-*-*-*-*-*
-//*-*                  ============================
+// Change the name of this Node
+//
    if (gPad) gPad->Modified();
 
 //  Nodes are named objects in a THashList.
 //  We must update the hashlist if we change the name
    if (fParent) fParent->GetListOfNodes()->Remove(this);
    fName = name;
+   if (fParent) fParent->GetListOfNodes()->Add(this);
+}
+
+//______________________________________________________________________________
+void TNode::SetObject(const char *name, const char *title)
+{
+// Change the name and title of this Node
+//
+   if (gPad) gPad->Modified();
+
+//  Nodes are named objects in a THashList.
+//  We must update the hashlist if we change the name
+   if (fParent) fParent->GetListOfNodes()->Remove(this);
+   fName  = name;
+   fTitle = title;
    if (fParent) fParent->GetListOfNodes()->Add(this);
 }
 

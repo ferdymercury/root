@@ -1,3 +1,4 @@
+//*CMZ :  2.24/03 29/04/2000  23.42.00  by  Rene Brun
 //*CMZ :  0.80/01 16/08/96  17.29.40  by  Rene Brun
 //*-- Author :    Valery Fine(fine@vxcern.cern.ch)   16/08/96
 #ifndef ROOT_TCritSection
@@ -36,6 +37,6 @@ public:
     void      XW_WaitSemaphore(){;}
     void      XW_CreateSemaphore(){;}
 
-    ClassDef(TCritSection,0)
+    // ClassDef(TCritSection,0)
 };
 #endif

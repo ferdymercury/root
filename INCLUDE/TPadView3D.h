@@ -1,3 +1,4 @@
+//*CMZ :  2.24/01 02/03/2000  15.18.16  by  Rene Brun
 //*CMZ :  2.22/02 20/05/99  17.55.05  by  Rene Brun
 //*CMZ :  2.22/01 10/05/99  12.05.38  by  Valery Fine(fine@mail.cern.ch)
 //*CMZ :  2.21/04 01/02/99  21.05.37  by  Valery Fine(fine@mail.cern.ch)
@@ -7,17 +8,18 @@
 #ifndef ROOT_TPadView3D
 #define ROOT_TPadView3D
 
+/*CMZ :  2.24/01 24/02/2000  11.49.40  by  Fons Rademakers*/
 /*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
- * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun and Fons Rademakers.                               *
+ * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
+ * All rights reserved.                                                  *
  *                                                                       *
- * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
- * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
+ * For the licensing terms see $ROOTSYS/LICENSE.                         *
+ * For the list of contributors see $ROOTSYS/README/CREDITS.             *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -81,7 +83,7 @@ class TPadView3D
    virtual void PopMatrix() { }
    virtual void SetAttNode(TNode *node, Option_t *opt="");
    virtual void SetLineAttr(Color_t color, Int_t width, Option_t *opt="");
-   void SetPad(TVirtualPad *pad=0) { fParent = pad; }
+           void SetPad(TVirtualPad *pad=0) { fParent = pad; }
    virtual void UpdateNodeMatrix(TNode *node, Option_t *opt="");
    virtual void UpdatePosition(Double_t x,Double_t y,Double_t z,TRotMatrix *matrix, Option_t *opt="");
    virtual void UpdateView() { }
