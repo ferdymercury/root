@@ -1,7 +1,7 @@
 /*****************************************************************************
  * Project: BaBar detector at the SLAC PEP-II B-factory
  * Package: RooFitCore
- *    File: $Id: RooDouble.rdl,v 1.1 2002/03/07 06:22:21 verkerke Exp $
+ *    File: $Id: RooDouble.rdl,v 1.2 2002/03/11 07:41:02 verkerke Exp $
  * Authors:
  *   WV, Wouter Verkerke, UC Santa Barbara, verkerke@slac.stanford.edu
  *   DK, David Kirkby, UC Irvine, davidk@slac.stanford.edu
@@ -14,20 +14,20 @@
 #define ROO_DOUBLE
 
 #include "Rtypes.h"
-#include "TObject.h"
+#include "TNamed.h"
 
-class RooDouble : public TObject {
+class RooDouble : public TNamed {
 public:
 
   RooDouble() {} ;
-  RooDouble(Double_t value) : TObject(), _value(value) {} ;
-  RooDouble(const RooDouble& other) : TObject(other), _value(other._value) {}
+  RooDouble(Double_t value) : TNamed(), _value(value) {} ;
+  RooDouble(const RooDouble& other) : TNamed(other), _value(other._value) {}
   virtual ~RooDouble() {} ;
 
   // Double_t cast operator 
   inline operator Double_t() const { return _value ; }
   RooDouble& operator=(Double_t value) { _value = value ; return *this ; }
-
+  
   // Sorting interface ;
   Int_t Compare(const TObject* other) const ;
   virtual Bool_t IsSortable() const { return kTRUE ; }
