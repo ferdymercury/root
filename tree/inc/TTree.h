@@ -1,4 +1,4 @@
-// @(#)root/tree:$Name:  $:$Id: TTree.h,v 1.76 2005/01/12 18:06:26 brun Exp $
+// @(#)root/tree:$Name:  $:$Id: TTree.h,v 1.77 2005/01/25 19:58:14 brun Exp $
 // Author: Rene Brun   12/01/96
 
 /*************************************************************************
@@ -191,6 +191,7 @@ public:
                           ,Long64_t nentries=1000000000, Long64_t firstentry=0);
     virtual Long64_t     Draw(const char *varexp, const char *selection, Option_t *option=""
                           ,Long64_t nentries=1000000000, Long64_t firstentry=0); // *MENU*
+    virtual void         DropBaskets();
     virtual void         DropBuffers(Int_t nbytes);
     virtual Int_t        Fill();
     virtual TBranch     *FindBranch(const char *name);
