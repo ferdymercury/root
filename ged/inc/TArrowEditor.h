@@ -38,6 +38,10 @@ protected:
    TGComboBox           *fOptionCombo;      // arrow shapes combo box
    TGNumberEntry        *fAngleEntry;       // opening angle entry
    TGNumberEntry        *fSizeEntry;        // size entry
+   TGNumberEntry        *fStartPointXEntry; // start point x entry
+   TGNumberEntry        *fEndPointXEntry;   // end point x entry
+   TGNumberEntry        *fStartPointYEntry; // start point y entry
+   TGNumberEntry        *fEndPointYEntry;   // end point y entry
 
    virtual void   ConnectSignals2Slots();
    TGComboBox    *BuildOptionComboBox(TGFrame* parent, Int_t id);
@@ -54,6 +58,10 @@ public:
    virtual void   DoAngle();
    virtual void   DoOption(Int_t id);
    virtual void   DoSize();
+   virtual void   DoStartPointX();
+   virtual void   DoEndPointX();
+   virtual void   DoStartPointY();
+   virtual void   DoEndPointY();
 
    ClassDef(TArrowEditor,0)  // GUI for editing arrow attributes
 };
