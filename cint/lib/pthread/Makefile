@@ -8,8 +8,7 @@
 # platform/cygwin51_gcc3_so
 #  Platform dependent information for Cygwin_NT-5.1
 #  using gcc-3.00
-#  Build libcint.dll instead of G__ci.a. And creates multi-thread safe DLLs.
-#  Based on Christoph Bugel's proposal about multi-threading.
+#  Build libcint.dll instead of G__ci.a
 ############################################################
 
 # Tools
