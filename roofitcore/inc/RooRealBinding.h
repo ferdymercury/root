@@ -1,7 +1,7 @@
 /*****************************************************************************
  * Project: RooFit                                                           *
  * Package: RooFitCore                                                       *
- *    File: $Id: RooRealBinding.rdl,v 1.5 2002/09/05 04:33:52 verkerke Exp $
+ *    File: $Id: RooRealBinding.rdl,v 1.6 2004/04/05 22:44:12 wverkerke Exp $
  * Authors:                                                                  *
  *   WV, Wouter Verkerke, UC Santa Barbara, verkerke@slac.stanford.edu       *
  *   DK, David Kirkby,    UC Irvine,         dkirkby@uci.edu                 *
@@ -24,7 +24,7 @@ class RooArgSet;
 
 class RooRealBinding : public RooAbsFunc {
 public:
-  RooRealBinding(const RooAbsReal& func, const RooArgSet &vars, const RooArgSet* nset=0, Bool_t clipInvalid=kFALSE);
+  RooRealBinding(const RooAbsReal& func, const RooArgSet &vars, const RooArgSet* nset=0, Bool_t clipInvalid=kFALSE, const TNamed* rangeName=0);
   virtual ~RooRealBinding();
 
   virtual Double_t operator()(const Double_t xvector[]) const;
@@ -38,6 +38,7 @@ protected:
   const RooArgSet *_nset;
   mutable Bool_t _xvecValid;
   Bool_t _clipInvalid ;
+  const TNamed* _rangeName ; //!
 
   ClassDef(RooRealBinding,0) // RooAbsReal interface adaptor
 };
