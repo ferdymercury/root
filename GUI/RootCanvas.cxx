@@ -1,35 +1,22 @@
-//*CMZ :  2.22/08 07/07/99  18.00.42  by  Rene Brun
-//*CMZ :  2.21/08 11/03/99  16.29.53  by  Fons Rademakers
-//*CMZ :  2.21/05 09/02/99  15.41.56  by  Fons Rademakers
-//*CMZ :  2.20/05 14/12/98  01.16.26  by  Fons Rademakers
-//*CMZ :  2.20/02 03/12/98  08.20.16  by  Rene Brun
-//*CMZ :  2.20/01 02/12/98  10.42.50  by  Rene Brun
-//*CMZ :  2.20/00 05/11/98  14.45.51  by  Fons Rademakers
-//*CMZ :  2.00/13 29/10/98  17.11.06  by  Fons Rademakers
-//*CMZ :  2.00/12 21/09/98  18.20.00  by  Fons Rademakers
-//*CMZ :  2.00/11 25/08/98  01.49.42  by  Fons Rademakers
-//*CMZ :  2.00/10 18/07/98  19.05.44  by  Fons Rademakers
-//*CMZ :  2.00/06 22/04/98  08.09.39  by  Rene Brun
-//*CMZ :  2.00/03 27/03/98  18.34.46  by  Fons Rademakers
-//*CMZ :  2.00/00 06/03/98  17.28.43  by  Fons Rademakers
+//*CMZ :  2.23/12 26/01/2000  12.06.45  by  Rene Brun
+//*CMZ :  2.23/11 06/01/2000  16.12.31  by  Rene Brun
+//*CMZ :  2.23/03 26/09/99  13.53.35  by  Fons Rademakers
+//*CMZ :  2.23/02 26/09/99  13.51.36  by  Rene Brun
+//*CMZ :  2.23/01 27/08/99  09.00.26  by  Rene Brun
+//*CMZ :  2.23/00 16/08/99  14.03.20  by  Rene Brun
 //*-- Author :    Fons Rademakers   15/01/98
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -57,7 +44,7 @@
 #include "TClassTree.h"
 #include "TMarker.h"
 #include "TStyle.h"
-#include "TGXW.h"
+#include "TVirtualX.h"
 #include "TApplication.h"
 #include "TFile.h"
 #include "TInterpreter.h"
@@ -97,6 +84,7 @@ enum ERootCanvasCommands {
    kInterrupt,
 
    kOptionEventStatus,
+   kOptionAutoExec,
    kOptionAutoResize,
    kOptionResizeCanvas,
    kOptionMoveOpaque,
@@ -176,11 +164,11 @@ TRootContainer::TRootContainer(TRootCanvas *c, Window_t id, const TGWindow *p)
 
    fCanvas = c;
 
-   gGXW->GrabButton(fId, kAnyButton, kAnyModifier,
+   gVirtualX->GrabButton(fId, kAnyButton, kAnyModifier,
                     kButtonPressMask | kButtonReleaseMask,
                     kNone, kNone);
 
-   gGXW->SelectInput(fId, kKeyPressMask | kKeyReleaseMask | kExposureMask |
+   gVirtualX->SelectInput(fId, kKeyPressMask | kKeyReleaseMask | kExposureMask |
                      kPointerMotionMask | kStructureNotifyMask | kLeaveWindowMask);
 }
 
@@ -264,6 +252,7 @@ void TRootCanvas::CreateCanvas(const char *name)
 
    fOptionMenu = new TGPopupMenu(fClient->GetRoot());
    fOptionMenu->AddEntry("&Event Status",         kOptionEventStatus);
+   fOptionMenu->AddEntry("&Pad Auto Exec",        kOptionAutoExec);
    fOptionMenu->AddSeparator();
    fOptionMenu->AddEntry("&Auto Resize Canvas",   kOptionAutoResize);
    fOptionMenu->AddEntry("&Resize Canvas",        kOptionResizeCanvas);
@@ -333,8 +322,8 @@ void TRootCanvas::CreateCanvas(const char *name)
    // Create canvas and canvas container that will host the ROOT graphics
    fCanvasWindow = new TGCanvas(this, GetWidth()+4, GetHeight()+4,
                                 kSunkenFrame | kDoubleBorder);
-   fCanvasID = gGXW->InitWindow((ULong_t)fCanvasWindow->GetViewPort()->GetId());
-   Window_t win = gGXW->GetWindowID(fCanvasID);
+   fCanvasID = gVirtualX->InitWindow((ULong_t)fCanvasWindow->GetViewPort()->GetId());
+   Window_t win = gVirtualX->GetWindowID(fCanvasID);
    fCanvasContainer = new TRootContainer(this, win, fCanvasWindow->GetViewPort());
    fCanvasWindow->SetContainer(fCanvasContainer);
    fCanvasLayout = new TGLayoutHints(kLHintsExpandX | kLHintsExpandY);
@@ -353,6 +342,7 @@ void TRootCanvas::CreateCanvas(const char *name)
 
    SetWindowName(name);
    SetIconName(name);
+   SetIconPixmap("macro_s.xpm");
    SetClassHints("Canvas", "Canvas");
 
    SetMWMHints(kMWMDecorAll, kMWMFuncAll, kMWMInputModeless);
@@ -421,7 +411,7 @@ void TRootCanvas::GetWindowGeometry(Int_t &x, Int_t &y, UInt_t &w, UInt_t &h)
    // Gets the size and position of the window containing the canvas. This
    // size includes the menubar and borders.
 
-   gGXW->GetWindowSize(fId, x, y, w, h);
+   gVirtualX->GetWindowSize(fId, x, y, w, h);
 
    // Get position of window on the screen. For this we need to get the parent
    // of the ROOT canvas, i.e. the window managed by the window manager and get
@@ -429,13 +419,13 @@ void TRootCanvas::GetWindowGeometry(Int_t &x, Int_t &y, UInt_t &w, UInt_t &h)
    UInt_t wdum, hdum;
    Window_t id = fId;
    do {
-      gGXW->GetWindowSize(id, x, y, wdum, hdum);
-      id = gGXW->GetParent(id);
+      gVirtualX->GetWindowSize(id, x, y, wdum, hdum);
+      id = gVirtualX->GetParent(id);
    } while (id != gClient->GetRoot()->GetId());
 }
 
 //______________________________________________________________________________
-void TRootCanvas::SetStatusText(Text_t *txt, Int_t partidx)
+void TRootCanvas::SetStatusText(const char *txt, Int_t partidx)
 {
    // Set text in status bar.
 
@@ -449,6 +439,7 @@ Bool_t TRootCanvas::ProcessMessage(Long_t msg, Long_t parm1, Long_t)
 
    TRootHelpDialog *hd;
    TList *lc;
+   TVirtualPad *savepad;
 
    switch (GET_MSG(msg)) {
 
@@ -511,7 +502,10 @@ Bool_t TRootCanvas::ProcessMessage(Long_t msg, Long_t parm1, Long_t)
                      fCanvas->Print();
                      break;
                   case kFileCloseCanvas:
+                     savepad = gPad;
+                     gPad = 0;        // hide gPad from CINT
                      gInterpreter->DeleteGlobal(fCanvas);
+                     gPad = savepad;  // restore gPad for ROOT
                      delete fCanvas;  // this in turn will delete this object
                      break;
                   case kFileQuit:
@@ -541,7 +535,7 @@ Bool_t TRootCanvas::ProcessMessage(Long_t msg, Long_t parm1, Long_t)
                      {
                         TVirtualPad *padsav = gPad->GetCanvas();
                         TCanvas *m = new TCanvas("colors","Color Table");
-                        gROOT->DisplayColorTable();
+                        TPad::DrawColorTable();
                         m->Update();
                         padsav->cd();
                      }
@@ -580,6 +574,14 @@ Bool_t TRootCanvas::ProcessMessage(Long_t msg, Long_t parm1, Long_t)
                      } else {
                         HideFrame(fStatusBar);
                         fOptionMenu->UnCheckEntry(kOptionEventStatus);
+                     }
+                     break;
+                  case kOptionAutoExec:
+                     fCanvas->ToggleAutoExec();
+                     if (fCanvas->GetAutoExec()) {
+                        fOptionMenu->CheckEntry(kOptionAutoExec);
+                     } else {
+                        fOptionMenu->UnCheckEntry(kOptionAutoExec);
                      }
                      break;
                   case kOptionAutoResize:
@@ -690,7 +692,8 @@ Bool_t TRootCanvas::ProcessMessage(Long_t msg, Long_t parm1, Long_t)
                         } else {
                            sprintf(cdef,"%s","ClassTree");
                         }
-                        new TClassTree(cdef);
+                        new TClassTree(cdef,"TObject");
+                        fCanvas->Update();
                      }
                      break;
 
@@ -917,7 +920,7 @@ Bool_t TRootCanvas::HandleContainerKey(Event_t *event)
       fButton = event->fCode;
       UInt_t keysym;
       char str[2];
-      gGXW->LookupString(event, str, sizeof(str), keysym);
+      gVirtualX->LookupString(event, str, sizeof(str), keysym);
       if (str[0] == 3)   // ctrl-c sets the interrupt flag
          gROOT->SetInterrupt();
       fCanvas->HandleInput(kKeyPress, str[0], 0);

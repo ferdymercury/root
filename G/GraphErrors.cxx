@@ -1,26 +1,23 @@
+//*CMZ :  2.23/12 22/01/2000  17.46.26  by  Rene Brun
+//*CMZ :  2.23/09 08/11/99  19.14.53  by  Rene Brun
+//*CMZ :  2.23/04 08/10/99  15.02.52  by  Rene Brun
+//*CMZ :  2.23/02 03/09/99  18.59.17  by  Rene Brun
 //*CMZ :  2.21/07 01/03/99  09.32.45  by  Rene Brun
 //*CMZ :  2.21/06 12/02/99  15.31.46  by  Rene Brun
 //*CMZ :  2.20/05 15/12/98  09.17.20  by  Rene Brun
-//*CMZ :  2.00/08 19/05/98  11.12.07  by  Rene Brun
-//*CMZ :  1.03/09 06/12/97  17.22.07  by  Fons Rademakers
 //*-- Author :    Rene Brun   15/09/96
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 #include <string.h>
@@ -28,9 +25,6 @@
 
 #include "TROOT.h"
 #include "TGraphErrors.h"
-#include "TH1.h"
-#include "TLine.h"
-#include "TText.h"
 #include "TStyle.h"
 #include "TMath.h"
 #include "TVirtualPad.h"
@@ -183,9 +177,12 @@ void TGraphErrors::Paint(Option_t *option)
    tx   = 0.50*s2x;
    ty   = 0.50*s2y;
 
+   gPad->SetBit(kClipFrame, TestBit(kClipFrame));
    for (Int_t i=0;i<fNpoints;i++) {
       x  = gPad->XtoPad(fX[i]);
       y  = gPad->YtoPad(fY[i]);
+      if (x < gPad->GetUxmin()) continue;
+      if (x > gPad->GetUxmax()) continue;
       if (y < gPad->GetUymin()) continue;
       if (y > gPad->GetUymax()) continue;
       ex = fEX[i];
@@ -217,6 +214,7 @@ void TGraphErrors::Paint(Option_t *option)
          gPad->PaintLine(x-tx,ylow2,x+tx,ylow2);
       }
    }
+   gPad->ResetBit(kClipFrame);
 }
 
 
@@ -313,17 +311,20 @@ void TGraphErrors::Streamer(TBuffer &b)
 {
    // Stream an object of class TGraphErrors.
 
+   UInt_t R__s, R__c;
    if (b.IsReading()) {
-      b.ReadVersion();  //Version_t v = b.ReadVersion();
+      b.ReadVersion(&R__s, &R__c);
       TGraph::Streamer(b);
       fEX = new Float_t[fNpoints];
       fEY = new Float_t[fNpoints];
       b.ReadFastArray(fEX,fNpoints);
       b.ReadFastArray(fEY,fNpoints);
+      b.CheckByteCount(R__s, R__c, TGraphErrors::IsA());
    } else {
-      b.WriteVersion(TGraphErrors::IsA());
+      R__c = b.WriteVersion(TGraphErrors::IsA(), kTRUE);
       TGraph::Streamer(b);
       b.WriteFastArray(fEX,fNpoints);
       b.WriteFastArray(fEY,fNpoints);
+      b.SetByteCount(R__c, kTRUE);
    }
 }

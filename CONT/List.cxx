@@ -1,29 +1,23 @@
+//*CMZ :  2.23/12 26/01/2000  09.57.11  by  Rene Brun
+//*CMZ :  2.23/08 01/11/99  21.38.07  by  Fons Rademakers
+//*CMZ :  2.23/07 27/10/99  10.47.27  by  Fons Rademakers
 //*CMZ :  2.22/07 05/07/99  18.54.53  by  Fons Rademakers
 //*CMZ :  2.22/01 18/05/99  12.44.57  by  Fons Rademakers
 //*CMZ :  2.21/01 12/01/99  11.47.03  by  Fons Rademakers
 //*CMZ :  2.20/00 12/11/98  13.57.41  by  Fons Rademakers
-//*CMZ :  2.00/13 20/10/98  12.33.43  by  Fons Rademakers
-//*CMZ :  2.00/11 17/08/98  15.18.35  by  Rene Brun
-//*CMZ :  2.00/00 05/03/98  18.02.38  by  Fons Rademakers
-//*CMZ :  1.03/09 03/12/97  02.13.01  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   10/08/95
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -165,7 +159,7 @@ void TList::AddBefore(TObject *before, TObject *obj)
    if (IsArgNull("AddBefore", obj)) return;
 
    if (!before)
-      AddFirst(obj);
+      TList::AddFirst(obj);
    else {
       Int_t    idx;
       TObjLink *t = FindLink(before, idx);
@@ -174,7 +168,7 @@ void TList::AddBefore(TObject *before, TObject *obj)
          return;
       }
       if (t == fFirst)
-         AddFirst(obj);
+         TList::AddFirst(obj);
       else {
          NewLink(obj, t->Prev());
          fSize++;
@@ -192,10 +186,10 @@ void TList::AddBefore(TObjLink *before, TObject *obj)
    if (IsArgNull("AddBefore", obj)) return;
 
    if (!before)
-      AddFirst(obj);
+      TList::AddFirst(obj);
    else {
       if (before == fFirst)
-         AddFirst(obj);
+         TList::AddFirst(obj);
       else {
          NewLink(obj, before->Prev());
          fSize++;
@@ -211,7 +205,7 @@ void TList::AddAfter(TObject *after, TObject *obj)
    if (IsArgNull("AddAfter", obj)) return;
 
    if (!after)
-      AddLast(obj);
+      TList::AddLast(obj);
    else {
       Int_t    idx;
       TObjLink *t = FindLink(after, idx);
@@ -220,7 +214,7 @@ void TList::AddAfter(TObject *after, TObject *obj)
          return;
       }
       if (t == fLast)
-         AddLast(obj);
+         TList::AddLast(obj);
       else {
          NewLink(obj, t);
          fSize++;
@@ -238,10 +232,10 @@ void TList::AddAfter(TObjLink *after, TObject *obj)
    if (IsArgNull("AddAfter", obj)) return;
 
    if (!after)
-      AddLast(obj);
+      TList::AddLast(obj);
    else {
       if (after == fLast)
-         AddLast(obj);
+         TList::AddLast(obj);
       else {
          NewLink(obj, after);
          fSize++;
@@ -258,9 +252,9 @@ void TList::AddAt(TObject *obj, Int_t idx)
 
    TObjLink *lnk = LinkAt(idx);
    if (!lnk)
-      AddLast(obj);
+      TList::AddLast(obj);
    else if (lnk == fFirst)
-      AddFirst(obj);
+      TList::AddFirst(obj);
    else {
       NewLink(obj, lnk->Prev());
       fSize++;
@@ -373,7 +367,7 @@ void TList::DeleteLink(TObjLink *lnk)
 }
 
 //______________________________________________________________________________
-TObject *TList::FindObject(const Text_t *name) const
+TObject *TList::FindObject(const char *name) const
 {
    // Find an object in this list using its name. Requires a sequential
    // scan till the object has been found. Returns 0 if object with specified
@@ -508,6 +502,10 @@ TObject *TList::Remove(TObject *obj)
 
    if (!lnk) return 0;
 
+   // return object found, which may be (pointer wise) different than the
+   // input object (depending on what IsEqual() is doing)
+   TObject *ob = lnk->GetObject();
+
    if (lnk == fFirst) {
       fFirst = lnk->Next();
       if (lnk == fLast) fLast = fFirst;
@@ -525,7 +523,7 @@ TObject *TList::Remove(TObject *obj)
    fSize--;
    fCache = 0;
 
-   return obj;
+   return ob;
 }
 
 //______________________________________________________________________________

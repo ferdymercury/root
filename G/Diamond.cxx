@@ -1,24 +1,21 @@
+//*CMZ :  2.23/04 04/10/99  14.45.54  by  Rene Brun
+//*CMZ :  2.23/02 02/09/99  15.54.25  by  Rene Brun
 //*CMZ :  2.20/05 15/12/98  09.17.20  by  Rene Brun
 //*CMZ :  2.00/00 11/02/98  16.27.40  by  Rene Brun
 //*CMZ :  1.03/09 10/12/97  12.24.29  by  Rene Brun
 //*-- Author :    Rene Brun   22/06/96
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 #include <stdlib.h>
@@ -27,7 +24,7 @@
 #include "TROOT.h"
 #include "TDiamond.h"
 #include "TVirtualPad.h"
-#include "TGXW.h"
+#include "TVirtualX.h"
 #include "TClass.h"
 #include "TMath.h"
 
@@ -154,6 +151,8 @@ void TDiamond::ExecuteEvent(Int_t event, Int_t px, Int_t py)
    Bool_t opaque  = gPad->OpaqueMoving();
    Bool_t ropaque = gPad->OpaqueResizing();
 
+   if (!gPad->IsEditable()) return;
+
    parent = gPad;
 
 again:
@@ -162,13 +161,13 @@ again:
 
    case kButton1Down:
 
-      gGXW->SetLineColor(-1);
+      gVirtualX->SetLineColor(-1);
       TAttLine::Modify();  //Change line attributes only if necessary
       if (GetFillColor())
-         gGXW->SetLineColor(GetFillColor());
+         gVirtualX->SetLineColor(GetFillColor());
       else
-         gGXW->SetLineColor(1);
-      gGXW->SetLineWidth(2);
+         gVirtualX->SetLineColor(1);
+      gVirtualX->SetLineWidth(2);
 
       // No break !!!
 
@@ -265,43 +264,43 @@ again:
       y[2] = py2;
       y[1] = y[3] = (py1+py2)/2;
       if (T) {
-         for (i=0;i<4;i++) gGXW->DrawLine(x[i], y[i], x[i+1], y[i+1]);
+         for (i=0;i<4;i++) gVirtualX->DrawLine(x[i], y[i], x[i+1], y[i+1]);
          py2 += py - pyold;
          if (py2 > py1-kMinSize) { py2 = py1-kMinSize; wy = py2; }
          if (py2 < py2p) { py2 = py2p; wy = py2; }
          y[2] = py2;
          y[1] = y[3] = (py1+py2)/2;
-         for (i=0;i<4;i++) gGXW->DrawLine(x[i], y[i], x[i+1], y[i+1]);
+         for (i=0;i<4;i++) gVirtualX->DrawLine(x[i], y[i], x[i+1], y[i+1]);
       }
       if (B) {
-         for (i=0;i<4;i++) gGXW->DrawLine(x[i], y[i], x[i+1], y[i+1]);
+         for (i=0;i<4;i++) gVirtualX->DrawLine(x[i], y[i], x[i+1], y[i+1]);
          py1 += py - pyold;
          if (py1 < py2+kMinSize) { py1 = py2+kMinSize; wy = py1; }
          if (py1 > py1p) { py1 = py1p; wy = py1; }
          y[0] = y[4] = py1;
          y[1] = y[3] = (py1+py2)/2;
-         for (i=0;i<4;i++) gGXW->DrawLine(x[i], y[i], x[i+1], y[i+1]);
+         for (i=0;i<4;i++) gVirtualX->DrawLine(x[i], y[i], x[i+1], y[i+1]);
       }
       if (L) {
-         for (i=0;i<4;i++) gGXW->DrawLine(x[i], y[i], x[i+1], y[i+1]);
+         for (i=0;i<4;i++) gVirtualX->DrawLine(x[i], y[i], x[i+1], y[i+1]);
          px1 += px - pxold;
          if (px1 > px2-kMinSize) { px1 = px2-kMinSize; wx = px1; }
          if (px1 < px1p) { px1 = px1p; wx = px1; }
          x[3] = px1;
          x[0] = x[2] = x[4] = (px1+px2)/2;
-         for (i=0;i<4;i++) gGXW->DrawLine(x[i], y[i], x[i+1], y[i+1]);
+         for (i=0;i<4;i++) gVirtualX->DrawLine(x[i], y[i], x[i+1], y[i+1]);
       }
       if (R) {
-         for (i=0;i<4;i++) gGXW->DrawLine(x[i], y[i], x[i+1], y[i+1]);
+         for (i=0;i<4;i++) gVirtualX->DrawLine(x[i], y[i], x[i+1], y[i+1]);
          px2 += px - pxold;
          if (px2 < px1+kMinSize) { px2 = px1+kMinSize; wx = px2; }
          if (px2 > px2p) { px2 = px2p; wx = px2; }
          x[1] = px2;
           x[0] = x[2] = x[4] = (px1+px2)/2;
-         for (i=0;i<4;i++) gGXW->DrawLine(x[i], y[i], x[i+1], y[i+1]);
+         for (i=0;i<4;i++) gVirtualX->DrawLine(x[i], y[i], x[i+1], y[i+1]);
       }
       if (INSIDE) {
-         for (i=0;i<4;i++) gGXW->DrawLine(x[i], y[i], x[i+1], y[i+1]);
+         for (i=0;i<4;i++) gVirtualX->DrawLine(x[i], y[i], x[i+1], y[i+1]);
          Int_t dx = px - pxold;
          Int_t dy = py - pyold;
          px1 += dx; py1 += dy; px2 += dx; py2 += dy;
@@ -315,13 +314,13 @@ again:
          y[0] = y[4] = py1;
          y[2] = py2;
          y[1] = y[3] = (py1+py2)/2;
-         for (i=0;i<4;i++) gGXW->DrawLine(x[i], y[i], x[i+1], y[i+1]);
+         for (i=0;i<4;i++) gVirtualX->DrawLine(x[i], y[i], x[i+1], y[i+1]);
       }
 
       if (wx || wy) {
          if (wx) px = wx;
          if (wy) py = wy;
-         gGXW->Warp(px, py);
+         gVirtualX->Warp(px, py);
       }
 
       pxold = px;
@@ -354,8 +353,8 @@ again:
       if (T || L || R || B)
          gPad->Modified(kTRUE);
 
-      gGXW->SetLineColor(-1);
-      gGXW->SetLineWidth(-1);
+      gVirtualX->SetLineColor(-1);
+      gVirtualX->SetLineWidth(-1);
 
       break;
 
@@ -365,7 +364,7 @@ again:
 
       while (1) {
          px = py = 0;
-         event = gGXW->RequestLocator(1, 1, px, py);
+         event = gVirtualX->RequestLocator(1, 1, px, py);
 
          ExecuteEvent(kButton1Motion, px, py);
 

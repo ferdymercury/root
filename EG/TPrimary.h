@@ -1,22 +1,20 @@
+//*CMZ :  2.23/12 26/01/2000  09.49.06  by  Rene Brun
+//*CMZ :  2.23/03 08/09/99  18.59.56  by  Fons Rademakers
+//*CMZ :  2.23/01 26/08/99  12.30.54  by  Rene Brun
 //*CMZ :  1.03/03 08/09/97  10.27.37  by  Rene Brun
 //*-- Author :    Ola Nordmann   21/09/95
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -36,13 +34,16 @@
 #ifndef ROOT_TAttLine
 #include "TAttLine.h"
 #endif
+#ifndef ROOT_TAtt3D
+#include "TAtt3D.h"
+#endif
 #ifndef ROOT_X3DBuffer
 #include "X3DBuffer.h"
 #endif
 
 class TAttParticle;
 
-class TPrimary : public TObject, public TAttLine {
+class TPrimary : public TObject, public TAttLine, public TAtt3D {
 
  protected:
         Int_t         fPart;         //Particle id produced
@@ -65,13 +66,13 @@ class TPrimary : public TObject, public TAttLine {
         TPrimary(Int_t part, Int_t first, Int_t second, Int_t gener,
                  Double_t px, Double_t py, Double_t pz,
                  Double_t etot, Double_t vx, Double_t vy, Double_t vz,
-                 Double_t time, Double_t timend, Text_t *type = "");
+                 Double_t time, Double_t timend, const char *type = "");
         virtual ~TPrimary();
         virtual Int_t         DistancetoPrimitive(Int_t px, Int_t py);
         virtual void          ExecuteEvent(Int_t event, Int_t px, Int_t py);
         virtual const TAttParticle  *GetParticle() const;
-        virtual const Text_t *GetName() const;
-        virtual const Text_t *GetTitle() const;
+        virtual const char   *GetName() const;
+        virtual const char   *GetTitle() const;
         virtual Int_t         GetFirstMother() { return fFirstMother; }
         virtual Int_t         GetSecondMother() { return fSecondMother; }
         virtual Int_t         GetGeneration() { return fGeneration; }
@@ -84,8 +85,7 @@ class TPrimary : public TObject, public TAttLine {
         virtual Double_t      GetZPosition() { return fVz; }
         virtual Double_t      GetTime() { return fTime; }
         virtual Double_t      GetTimeEnd() { return fTimeEnd; }
-        virtual const Text_t  *GetType() const { return fType.Data(); }
-        virtual Bool_t        Is3D() {return kTRUE;}
+        virtual const char   *GetType() const { return fType.Data(); }
         virtual void          Paint(Option_t *option = "");
         virtual void          Print(Option_t *option = "");
         virtual void          Sizeof3D() const;

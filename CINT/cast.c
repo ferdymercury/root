@@ -1,5 +1,5 @@
-/*CMZ :  2.22/10 23/07/99  14.42.13  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   23/07/99*/
+/*CMZ :  2.23/10 10/12/99  17.59.59  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   10/12/99*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -9,15 +9,13 @@
  * Description:
  *  Type casting
  ************************************************************************
- * Copyright(c) 1991~1996  [hp] Hewlett Packard Japan, All rights reserved
- * Author                  Masaharu Goto (gotom@jpn.hp.com)
- * Copyright(c) 1995~1998  Masaharu Goto (MXJ02154@niftyserve.or.jp)
+ * Copyright(c) 1995~1999  Masaharu Goto (MXJ02154@niftyserve.or.jp)
  *
  * Permission to use, copy, modify and distribute this software and its
  * documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies and
  * that both that copyright notice and this permission notice appear
- * in supporting documentation.  Hewlett-Packard Japan Company makes no
+ * in supporting documentation.  The author makes no
  * representations about the suitability of this software for any
  * purpose.  It is provided "as is" without express or implied warranty.
  ************************************************************************/
@@ -42,6 +40,9 @@ int *ptype;
 #ifndef G__OLDIMPLEMENTATION1050
     else if(0==castflag && 0==G__oprovld &&
 	    (G__SECURE_MARGINAL_CAST&G__security) &&
+#ifndef G__OLDIMPLEMENTATION1176
+             (islower(*ptype) || islower(result3->type)) &&
+#endif
 	    'i'!=result3->type && 'l'!=result3->type && 'Y'!=result3->type) {
       G__genericerror("Error: illegal type cast");
       return;
@@ -92,7 +93,6 @@ G__value G__castvalue(casttype,result3)
 char *casttype;
 G__value result3;
 {
-
   int lenitem,castflag,type;
   int tagnum;
   long offset;
@@ -355,7 +355,13 @@ G__value result3;
     }
 
     if(type=='\0') {
+#ifndef G__OLDIMPLEMENTATION1188
+      int store_var_type=G__var_type;
       result3.typenum=G__defined_typename(casttype);
+      G__var_type=store_var_type;
+#else
+      result3.typenum=G__defined_typename(casttype);
+#endif
       if(result3.typenum== -1) {
 	tagnum=G__defined_tagname(casttype,0);
 	if(tagnum== -1) type='Y'; /* checked */
@@ -372,6 +378,15 @@ G__value result3;
 	    G__castclass(&result3,tagnum,castflag,&lenitem);
 	  }
 	}
+#ifndef G__OLDIMPLEMENTATION1188
+	else if('u'==store_result.type) {
+	  char ttt[G__ONELINE];
+	  G__fundamental_conversion_operator(type,-1,result3.typenum
+					     ,reftype,isconst
+					     ,&store_result,ttt);
+	  return(store_result);
+        }
+#endif
       }
     }
     G__var_type = 'p';

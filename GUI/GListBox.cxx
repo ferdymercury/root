@@ -1,25 +1,21 @@
+//*CMZ :  2.23/10 16/12/99  02.05.29  by  Fons Rademakers
+//*CMZ :  2.23/02 02/09/99  15.54.27  by  Rene Brun
 //*CMZ :  2.22/05 15/06/99  16.34.37  by  Fons Rademakers
 //*CMZ :  2.00/06 26/04/98  15.13.32  by  Fons Rademakers
 //*CMZ :  2.00/03 27/03/98  18.23.44  by  Fons Rademakers
-//*CMZ :  2.00/00 16/02/98  02.36.01  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   12/01/98
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 //*CMZ :  2.00/00 16/02/98  00.17.08  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   27/12/97
@@ -107,8 +103,8 @@ TGTextLBEntry::TGTextLBEntry(const TGWindow *p, TGString *s, Int_t id,
 
    int max_ascent, max_descent;
 
-   fTWidth  = gGXW->TextWidth(fFontStruct, fText->GetString(), fText->GetLength());
-   gGXW->GetFontProperties(fFontStruct, max_ascent, max_descent);
+   fTWidth  = gVirtualX->TextWidth(fFontStruct, fText->GetString(), fText->GetLength());
+   gVirtualX->GetFontProperties(fFontStruct, max_ascent, max_descent);
    fTHeight = max_ascent + max_descent;
    Resize(fTWidth, fTHeight + 1);
 }
@@ -136,17 +132,17 @@ void TGTextLBEntry::DoRedraw()
    x = 3;
    y = (fHeight - fTHeight) >> 1;
 
-   gGXW->GetFontProperties(fFontStruct, max_ascent, max_descent);
+   gVirtualX->GetFontProperties(fFontStruct, max_ascent, max_descent);
 
    if (fActive) {
       SetBackgroundColor(fgDefaultSelectedBackground);
-      gGXW->ClearWindow(fId);
-      gGXW->SetForeground(fNormGC, fgSelPixel);
+      gVirtualX->ClearWindow(fId);
+      gVirtualX->SetForeground(fNormGC, fgSelPixel);
       fText->Draw(fId, fNormGC, x, y + max_ascent);
    } else {
       SetBackgroundColor(fBkcolor);
-      gGXW->ClearWindow(fId);
-      gGXW->SetForeground(fNormGC, fgBlackPixel);
+      gVirtualX->ClearWindow(fId);
+      gVirtualX->SetForeground(fNormGC, fgBlackPixel);
       fText->Draw(fId, fNormGC, x, y + max_ascent);
    }
 }
@@ -161,8 +157,8 @@ void TGTextLBEntry::SetText(TGString *new_text)
    fTextChanged = kTRUE;
 
    int max_ascent, max_descent;
-   fTWidth = gGXW->TextWidth(fFontStruct, fText->GetString(), fText->GetLength());
-   gGXW->GetFontProperties(fFontStruct, max_ascent, max_descent);
+   fTWidth = gVirtualX->TextWidth(fFontStruct, fText->GetString(), fText->GetLength());
+   gVirtualX->GetFontProperties(fFontStruct, max_ascent, max_descent);
    fTHeight = max_ascent + max_descent;
 
    Resize(fTWidth, fTHeight + 1);
@@ -193,7 +189,7 @@ TGLBContainer::TGLBContainer(const TGWindow *p, UInt_t w, UInt_t h,
 
    // SetLayoutManager(new TGColumnLayout(this, 0));
 
-   gGXW->GrabButton(fId, kAnyButton, kAnyModifier,
+   gVirtualX->GrabButton(fId, kAnyButton, kAnyModifier,
                     kButtonPressMask | kButtonReleaseMask |
                     kPointerMotionMask, kNone, kNone);
 }
@@ -395,7 +391,7 @@ Bool_t TGLBContainer::GetSelection(Int_t id)
    while ((el = (TGFrameElement *) next())) {
       f = (TGLBEntry *) el->fFrame;
       if (f->EntryId() == id)
-         return f->Active();
+         return f->IsActive();
    }
 
    return kFALSE;
@@ -414,7 +410,7 @@ void TGLBContainer::GetSelectedEntries(TList *selected)
    TIter next(fList);
    while ((el = (TGFrameElement *) next())) {
       f = (TGLBEntry *) el->fFrame;
-      if (f->Active())
+      if (f->IsActive())
          selected->Add(f);
    }
 }
@@ -453,7 +449,7 @@ Bool_t TGLBContainer::HandleButton(Event_t *event)
             f = (TGLBEntry *) el->fFrame;
             if (f->GetId() == (Window_t)event->fUser[0]) {    // fUser[0] == child window
                f->Toggle();
-               fChangeStatus = f->Active() ? 1 : 0;
+               fChangeStatus = f->IsActive() ? 1 : 0;
                SendMessage(fMsgWindow, MK_MSG(kC_CONTAINER, kCT_ITEMCLICK),
                            f->EntryId(), 0);
                break;
@@ -503,7 +499,7 @@ Bool_t TGLBContainer::HandleMotion(Event_t *event)
          while ((el = (TGFrameElement *) next())) {
             f = (TGLBEntry *) el->fFrame;
             if (f->GetId() == (Window_t)event->fUser[0]) {   // fUser[0] = child window
-               if (fChangeStatus != f->Active() ? 1 : 0) {
+               if (fChangeStatus != f->IsActive() ? 1 : 0) {
                   f->Toggle();
                   SendMessage(fMsgWindow, MK_MSG(kC_CONTAINER, kCT_ITEMCLICK),
                               f->EntryId(), 0);
@@ -605,9 +601,9 @@ void TGListBox::InitListBox()
 
    fVScrollbar->Associate(this);
 
-   gGXW->SelectInput(fVScrollbar->GetId(), kButtonPressMask |
+   gVirtualX->SelectInput(fVScrollbar->GetId(), kButtonPressMask |
                      kButtonReleaseMask | kPointerMotionMask);
-   gGXW->SelectInput(fLbc->GetId(), kButtonPressMask |
+   gVirtualX->SelectInput(fLbc->GetId(), kButtonPressMask |
                      kButtonReleaseMask /*| kPointerMotionMask */);
 }
 
@@ -618,15 +614,15 @@ void TGListBox::DrawBorder()
 
    switch (fOptions & (kSunkenFrame | kRaisedFrame | kDoubleBorder)) {
       case kSunkenFrame | kDoubleBorder:
-         gGXW->DrawLine(fId, fgShadowGC, 0, 0, fWidth-2, 0);
-         gGXW->DrawLine(fId, fgShadowGC, 0, 0, 0, fHeight-2);
-         gGXW->DrawLine(fId, fgBlackGC, 1, 1, fWidth-3, 1);
-         gGXW->DrawLine(fId, fgBlackGC, 1, 1, 1, fHeight-3);
+         gVirtualX->DrawLine(fId, fgShadowGC, 0, 0, fWidth-2, 0);
+         gVirtualX->DrawLine(fId, fgShadowGC, 0, 0, 0, fHeight-2);
+         gVirtualX->DrawLine(fId, fgBlackGC, 1, 1, fWidth-3, 1);
+         gVirtualX->DrawLine(fId, fgBlackGC, 1, 1, 1, fHeight-3);
 
-         gGXW->DrawLine(fId, fgHilightGC, 0, fHeight-1, fWidth-1, fHeight-1);
-         gGXW->DrawLine(fId, fgHilightGC, fWidth-1, fHeight-1, fWidth-1, 0);
-         gGXW->DrawLine(fId, fgBckgndGC,  1, fHeight-2, fWidth-2, fHeight-2);
-         gGXW->DrawLine(fId, fgBckgndGC,  fWidth-2, 1, fWidth-2, fHeight-2);
+         gVirtualX->DrawLine(fId, fgHilightGC, 0, fHeight-1, fWidth-1, fHeight-1);
+         gVirtualX->DrawLine(fId, fgHilightGC, fWidth-1, fHeight-1, fWidth-1, 0);
+         gVirtualX->DrawLine(fId, fgBckgndGC,  1, fHeight-2, fWidth-2, fHeight-2);
+         gVirtualX->DrawLine(fId, fgBckgndGC,  fWidth-2, 1, fWidth-2, fHeight-2);
          break;
 
       default:

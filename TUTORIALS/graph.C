@@ -1,3 +1,5 @@
+//*CMZ :  2.23/10 06/12/99  08.47.26  by  Rene Brun
+//*CMZ :  2.23/07 23/10/99  13.02.23  by  Fons Rademakers
 //*CMZ :  1.02/00 16/07/97  15.55.01  by  Rene Brun
 //*-- Author :    Rene Brun   28/03/96
 {
@@ -10,10 +12,8 @@
    c1->SetFillColor(42);
    c1->SetGridx();
    c1->SetGridy();
-   c1->GetFrame()->SetFillColor(21);
-   c1->GetFrame()->SetBorderSize(12);
 
-   Int_t n = 20;
+   const Int_t n = 20;
    Float_t x[n], y[n];
    for (Int_t i=0;i<n;i++) {
      x[i] = i*0.1;
@@ -36,6 +36,8 @@
    //when typing <CR> at the keyboard. In a macro, one must force TCanvas::Update.
 
    c1->Update();
+   c1->GetFrame()->SetFillColor(21);
+   c1->GetFrame()->SetBorderSize(12);
    gr->GetHistogram()->SetXTitle("X title");
    gr->GetHistogram()->SetYTitle("Y title");
 }

@@ -1,36 +1,24 @@
+//*CMZ :  2.23/12 26/01/2000  09.41.47  by  Rene Brun
+//*CMZ :  2.23/10 13/12/99  19.03.35  by  Fons Rademakers
+//*CMZ :  2.23/09 17/11/99  14.53.03  by  Rene Brun
+//*CMZ :  2.23/05 18/10/99  20.16.37  by  Fons Rademakers
+//*CMZ :  2.23/02 06/09/99  12.34.19  by  Fons Rademakers
 //*CMZ :  2.22/05 04/06/99  13.10.28  by  Rene Brun
 //*CMZ :  2.22/02 03/06/99  08.47.05  by  Fons Rademakers
 //*CMZ :  2.22/00 07/04/99  11.41.15  by  Rene Brun
-//*CMZ :  2.21/01 07/02/99  19.32.56  by  Fons Rademakers
-//*CMZ :  2.20/05 14/12/98  15.00.52  by  Rene Brun
-//*CMZ :  2.20/04 09/12/98  19.25.20  by  Rene Brun
-//*CMZ :  2.20/00 26/11/98  13.22.39  by  Rene Brun
-//*CMZ :  2.00/13 28/10/98  18.51.12  by  Rene Brun
-//*CMZ :  2.00/12 06/10/98  15.21.50  by  Fons Rademakers
-//*CMZ :  2.00/11 09/08/98  10.59.45  by  Rene Brun
-//*CMZ :  2.00/10 28/07/98  20.07.20  by  Fons Rademakers
-//*CMZ :  2.00/08 04/06/98  19.11.26  by  Fons Rademakers
-//*CMZ :  2.00/04 03/04/98  16.20.46  by  Rene Brun
-//*CMZ :  2.00/00 05/03/98  18.02.38  by  Fons Rademakers
-//*CMZ :  1.03/09 07/12/97  00.20.36  by  Fons Rademakers
 //*-- Author :    Rene Brun   28/11/94
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 #include <iostream.h>
@@ -38,7 +26,8 @@
 #include "Strlen.h"
 #include "TDirectory.h"
 #include "TMapFile.h"
-#include "TProofServ.h"
+#include "TClassTable.h"
+#include "TInterpreter.h"
 #include "THashList.h"
 #include "TBrowser.h"
 #include "TFile.h"
@@ -47,10 +36,10 @@
 #include "TROOT.h"
 #include "TError.h"
 #include "Bytes.h"
+#include "TRegexp.h"
 
 
 TDirectory    *gDirectory;      //Pointer to current directory in memory
-const Int_t kCloseDirectory = BIT(7);
 
 //______________________________________________________________________________
 //Begin_Html
@@ -88,7 +77,7 @@ TDirectory::TDirectory() : TNamed()
 }
 
 //______________________________________________________________________________
-TDirectory::TDirectory(const Text_t *name, const Text_t *title, Option_t *classname)
+TDirectory::TDirectory(const char *name, const char *title, Option_t *classname)
            : TNamed(name, title)
 {
 //*-*-*-*-*-*-*-*-*-*-*-* Create a new Directory *-*-*-*-*-*-*-*-*-*-*-*-*-*
@@ -286,7 +275,7 @@ void TDirectory::Build()
 }
 
 //______________________________________________________________________________
-Bool_t TDirectory::cd(const Text_t *path)
+Bool_t TDirectory::cd(const char *path)
 {
    // Change current directory to "this" directory . Using path one can
    // change the current directory to "path". The absolute path syntax is:
@@ -299,7 +288,7 @@ Bool_t TDirectory::cd(const Text_t *path)
 }
 
 //______________________________________________________________________________
-Bool_t TDirectory::cd1(const Text_t *path)
+Bool_t TDirectory::cd1(const char *path)
 {
    // Change current directory to "this" directory . Using path one can
    // change the current directory to "path". The absolute path syntax is:
@@ -316,7 +305,7 @@ Bool_t TDirectory::cd1(const Text_t *path)
 
    TDirectory *savdir = gDirectory;
 
-   char *s = strchr(path, ':');
+   char *s = (char*)strchr(path, ':');
    if (s) {
       *s = '\0';
       TDirectory *f = (TDirectory *)gROOT->GetListOfFiles()->FindObject(path);
@@ -352,14 +341,14 @@ Bool_t TDirectory::cd1(const Text_t *path)
    }
 
    TObject *obj;
-   char *slash = strchr(path,'/');
+   char *slash = (char*)strchr(path,'/');
    if (!slash) {                     // we are at the lowest level
       if (!strcmp(path, "..")) {
          if (fMother && fMother->InheritsFrom(TDirectory::Class()))
             ((TDirectory*)fMother)->cd();
          return kTRUE;
       }
-      obj = Get((char*)path);
+      obj = Get(path);
       if (!obj) {
          Error("cd","Unknown directory %s", path);
          return kFALSE;
@@ -376,7 +365,7 @@ Bool_t TDirectory::cd1(const Text_t *path)
 
    char subdir[128];
    strcpy(subdir,path);
-   slash = strchr(subdir,'/');
+   slash = (char*)strchr(subdir,'/');
    *slash = 0;
    //Get object with path from current directory/file
    if (!strcmp(subdir, "..")) {
@@ -406,7 +395,7 @@ Bool_t TDirectory::cd1(const Text_t *path)
 }
 
 //______________________________________________________________________________
-Bool_t TDirectory::Cd(const Text_t *path)
+Bool_t TDirectory::Cd(const char *path)
 {
    // Change current directory to "path". The absolute path syntax is:
    // file.root:/dir1/dir2
@@ -418,7 +407,7 @@ Bool_t TDirectory::Cd(const Text_t *path)
 }
 
 //______________________________________________________________________________
-Bool_t TDirectory::Cd1(const Text_t *path)
+Bool_t TDirectory::Cd1(const char *path)
 {
    // Change current directory to "path". The path syntax is:
    // file.root:/dir1/dir2
@@ -430,7 +419,7 @@ Bool_t TDirectory::Cd1(const Text_t *path)
 
    TDirectory *savdir = gDirectory;
 
-   char *s = strchr(path, ':');
+   char *s = (char*)strchr(path, ':');
    if (s) {
       *s = '\0';
       TDirectory *f = (TDirectory *)gROOT->GetListOfFiles()->FindObject(path);
@@ -460,14 +449,14 @@ Bool_t TDirectory::Cd1(const Text_t *path)
    }
 
    TObject *obj;
-   char *slash = strchr(path,'/');
+   char *slash = (char*)strchr(path,'/');
    if (!slash) {                     // we are at the lowest level
       if (!strcmp(path, "..")) {
          if (gDirectory->fMother && gDirectory->fMother->InheritsFrom(TDirectory::Class()))
             ((TDirectory*)gDirectory->fMother)->cd();
          return kTRUE;
       }
-      obj = gDirectory->Get((char*)path);
+      obj = gDirectory->Get(path);
       if (!obj) {
          ::Error("TDirectory::Cd","Unknown directory %s", path);
          return kFALSE;
@@ -576,7 +565,7 @@ void TDirectory::DeleteAll(Option_t *)
 }
 
 //______________________________________________________________________________
-void TDirectory::Delete(const Text_t *namecycle)
+void TDirectory::Delete(const char *namecycle)
 {
 //*-*-*-*-*-*-*-* Delete Objects or/and keys in a directory *-*-*-*-*-*-*-*
 //*-*             =========================================
@@ -603,7 +592,7 @@ void TDirectory::Delete(const Text_t *namecycle)
    cd();
 
    Short_t  cycle;
-   Text_t   name[256];
+   char     name[256];
    DecodeNameCycle(namecycle, name, cycle);
 
    Int_t deleteall    = 0;
@@ -693,7 +682,7 @@ void TDirectory::FillBuffer(char *&buffer)
 }
 
 //______________________________________________________________________________
-TObject *TDirectory::Get(const Text_t *namecycle)
+TObject *TDirectory::Get(const char *namecycle)
 {
 //*-*-*-*-*-*-*-* return pointer to object identified by namecycle*-*-*-*-*-*
 //*-*             ================================================
@@ -709,7 +698,7 @@ TObject *TDirectory::Get(const Text_t *namecycle)
 // WARNING: Never use TDirectory::Get when namecycle is a directory itself.
 
    Short_t  cycle;
-   Text_t   name[256];
+   char     name[256];
 
    TDirectory *cursav = gDirectory;
    cd();
@@ -755,14 +744,15 @@ TObject *TDirectory::Get(const Text_t *namecycle)
    cursav->cd();
 
    // If we are on a PROOF server try to get object from client
-   if (gProofServ && !idcur)
-      idcur = gProofServ->Get(namecycle);
-
+   if (!idcur && TClassTable::GetDict("TProofServ")) {
+      if (gROOT->ProcessLineFast("TProofServ::IsActive()"))
+         idcur = (TObject *) gROOT->ProcessLineFast(Form("TProofServ::This()->Get(\"%s\")", namecycle));
+   }
    return idcur;
 }
 
 //______________________________________________________________________________
-TKey *TDirectory::GetKey(const Text_t *name, const Short_t cycle)
+TKey *TDirectory::GetKey(const char *name, const Short_t cycle)
 {
 //*-*-*-*-*-*-*-*-*-*-*Return pointer to key with name,cycle*-*-*-*-*-*-*-*
 //*-*                  =====================================
@@ -817,7 +807,7 @@ const char *TDirectory::GetPath() const
 }
 
 //______________________________________________________________________________
-TDirectory *TDirectory::mkdir(const Text_t *name, const Text_t *title)
+TDirectory *TDirectory::mkdir(const char *name, const char *title)
 {
    // Create a sub-directory and return a pointer to the created directory.
    // Returns 0 in case of error.
@@ -841,27 +831,53 @@ void TDirectory::ls(Option_t *option)
 //  Indentation is used to identify the directory tree
 //  Subdirectories are listed first, then objects in memory, then objects on the file
 //
-//  If option contains "m" only memory objects are listed.
-//  If option contains "d" only disk objects are listed.
+//  The option can has the following format:
+//     [-d |-m][<regexp>]
+//  Option -d means: only list objects in the file
+//         -m means: only list objects in memory
+//  The <regexp> will be used to match the name of the objects.
 //  By default memory and disk objects are listed.
 //
    IndentLevel();
    cout <<ClassName()<<"*\t\t"<<GetName()<<"\t"<<GetTitle()<<endl;
    TObject::IncreaseDirLevel();
-   TString opt = option;
-   opt.ToLower();
-   if (!opt.Contains("d")) {
+
+   TString opta = option;
+   TString opt  = opta.Strip(TString::kBoth);
+   Bool_t memobj  = kTRUE;
+   Bool_t diskobj = kTRUE;
+   TString reg = "*";
+   if (opt.BeginsWith("-m")) {
+      diskobj = kFALSE;
+      if (opt.Length() > 2)
+         reg = opt(2,opt.Length());
+   } else if (opt.BeginsWith("-d")) {
+      memobj  = kFALSE;
+      if (opt.Length() > 2)
+         reg = opt(2,opt.Length());
+   } else if (!opt.IsNull())
+      reg = opt;
+
+   TRegexp re(reg, kTRUE);
+
+   if (memobj) {
       TObject *obj;
       TIter nextobj(fList);
-      while ((obj = (TObject *) nextobj()))
+      while ((obj = (TObject *) nextobj())) {
+         TString s = obj->GetName();
+         if (s.Index(re) == kNPOS) continue;
          obj->ls(option);            //*-* Loop on all the objects in memory
+      }
    }
 
-   if (!opt.Contains("m")) {
+   if (diskobj) {
       TKey *key;
       TIter next(GetListOfKeys());
-      while ((key = (TKey *) next()))
+      while ((key = (TKey *) next())) {
+         TString s = key->GetName();
+         if (s.Index(re) == kNPOS) continue;
          key->ls();                 //*-* Loop on all the keys
+      }
    }
    TObject::DecreaseDirLevel();
 }
@@ -1119,7 +1135,7 @@ void TDirectory::Streamer(TBuffer &b)
 }
 
 //______________________________________________________________________________
-void TDirectory::Write(const Text_t *, Int_t opt, Int_t bufsiz)
+void TDirectory::Write(const char *, Int_t opt, Int_t bufsiz)
 {
    // Write all objects in memory to disk.
    // Loop on all objects in memory (including subdirectories).
@@ -1196,7 +1212,7 @@ void TDirectory::WriteKeys()
 }
 
 //______________________________________________________________________________
-void TDirectory::EncodeNameCycle(Text_t *buffer, const Text_t *name, Short_t cycle)
+void TDirectory::EncodeNameCycle(char *buffer, const char *name, Short_t cycle)
 {
    // Encode the name and cycle into buffer like: "aap;2".
 
@@ -1207,7 +1223,7 @@ void TDirectory::EncodeNameCycle(Text_t *buffer, const Text_t *name, Short_t cyc
 }
 
 //______________________________________________________________________________
-void TDirectory::DecodeNameCycle(const Text_t *buffer, Text_t *name, Short_t &cycle)
+void TDirectory::DecodeNameCycle(const char *buffer, char *name, Short_t &cycle)
 {
    // Decode a namecycle "aap;2" into name "aap" and cycle "2".
 

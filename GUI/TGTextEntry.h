@@ -1,27 +1,24 @@
+//*CMZ :  2.23/04 06/10/99  11.11.14  by  Fons Rademakers
+//*CMZ :  2.23/02 01/09/99  17.15.26  by  Fons Rademakers
+//*CMZ :  2.23/01 31/08/99  19.08.35  by  Fons Rademakers
 //*CMZ :  2.21/06 11/02/99  16.48.10  by  Valery Fine(fine@vxcern.cern.ch)
 //*CMZ :  2.00/04 06/04/98  10.07.45  by  Fons Rademakers
-//*CMZ :  2.00/00 23/02/98  16.26.51  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   08/01/98
 
 #ifndef ROOT_TGTextEntry
 #define ROOT_TGTextEntry
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -52,6 +49,10 @@ class TGTextEntry : public TGFrame, public TGWidget {
 
 friend class TGClient;
 
+public:
+   enum   EEchoMode { kNormal, kNoEcho, kPassword };
+   enum   EInsertMode { kInsert, kReplace };
+
 protected:
    TGTextBuffer     *fText;              // text buffer
    Int_t             fStartX;            // selection begin in pixels
@@ -59,7 +60,7 @@ protected:
    Int_t             fStartIX;           // selection begin in characters
    Int_t             fEndIX;             // selection end in characters
    Bool_t            fSelectionOn;       // selection status (on/off)
-
+   Int_t             fOffset;            // start position of text (in pixels)
    Int_t             fCursorX;           // cursor position in pixels
    Int_t             fCursorIX;          // cursor position in characters
    Bool_t            fCursorOn;          // cursor status (on/off)
@@ -67,16 +68,49 @@ protected:
    GContext_t        fNormGC;            // normal drawing context
    GContext_t        fSelGC, fSelbackGC; // selection mode drawing contexts
    TBlinkTimer      *fCurBlink;          // cursor blink timer
+   Int_t             fMaxLen;            // maximum length of text
+   Bool_t            fEdited;            // kFALSE, if the line edit's contents have not been changed since the construction
+   Bool_t            fFrameDrawn;        // kTRUE draw itself inside a two-pixel frame, kFALSE draw without any frame
+   EEchoMode         fEchoMode;          // echo mode (kNormal(default), kNoEcho, kPassword)
+   EInsertMode       fInsertMode;        // text insertion mode (kInsert(default) , kReplace)
+   ETextJustification fAlignment;        // alignment mode available (kTextLeft(default), kTextRight, kTextCenterX defined in TGWidget.h)
 
+   static TString      *fgClipboardText; // application clipboard text
    static Cursor_t      fgDefaultCursor;
    static GContext_t    fgDefaultGC;
    static GContext_t    fgDefaultSelectedGC;
    static GContext_t    fgDefaultSelectedBackgroundGC;
    static FontStruct_t  fgDefaultFontStruct;
 
-   virtual void DoRedraw();
-   Int_t GetCharacterIndex(Int_t xcoord);
-   void  PastePrimary(Window_t wid, Atom_t property, Bool_t del);
+            Int_t       GetCharacterIndex(Int_t xcoord);
+   virtual  void        DoRedraw();
+   virtual  Bool_t      IsCursorOutOfFrame();
+   virtual  void        PastePrimary(Window_t wid, Atom_t property, Bool_t del);
+
+            void        MarkWord(Int_t pos);
+            Int_t       MinMark() const { return fStartIX < fEndIX ? fStartIX : fEndIX; }
+            Int_t       MaxMark() const { return fStartIX > fEndIX ? fStartIX : fEndIX; }
+
+   virtual  void        UpdateOffset();
+   virtual  void        ScrollByChar();
+   virtual  void        Init();
+   virtual  void        SetCursorPosition(Int_t pos);
+            void        NewMark(Int_t pos);
+            TString     GetDisplayText() const;
+
+            void        CursorLeft(Bool_t mark = kFALSE , Int_t steps = 1);
+            void        CursorRight(Bool_t mark = kFALSE , Int_t steps = 1);
+            void        CursorWordForward(Bool_t mark = kFALSE);
+            void        CursorWordBackward(Bool_t mark = kFALSE);
+            void        Backspace();
+            void        Del();
+            void        Remove();
+            void        Home(Bool_t mark = kFALSE);
+            void        End(Bool_t mark = kFALSE);
+            void        Cut();
+            void        CopyText() const;
+            void        Paste();
+   virtual  void        Insert(const char *);
 
 public:
    TGTextEntry(const TGWindow *p, TGTextBuffer *text, Int_t id = -1,
@@ -84,21 +118,55 @@ public:
                FontStruct_t font = fgDefaultFontStruct,
                UInt_t option = kSunkenFrame | kDoubleBorder,
                ULong_t back = fgWhitePixel);
+
+   TGTextEntry(const TGWindow *parent, const char *text,  Int_t id = -1);
+   TGTextEntry(const TString &contents, const TGWindow *parent,  Int_t id = -1);
+
    virtual ~TGTextEntry();
 
-   TGTextBuffer *GetBuffer() const { return fText; }
+   virtual  Bool_t      HandleButton(Event_t *event);
+   virtual  Bool_t      HandleDoubleClick(Event_t *event);
+   virtual  Bool_t      HandleMotion(Event_t *event);
+   virtual  Bool_t      HandleKey(Event_t *event);
+   virtual  Bool_t      HandleFocusChange(Event_t *event);
+   virtual  Bool_t      HandleSelection(Event_t *event);
+   virtual  Bool_t      HandleTimer(TTimer *t);
+   virtual  Bool_t      HandleConfigureNotify(Event_t *event);
+   virtual  void        DrawBorder();
+   virtual  void        SetState(Bool_t state);
+   virtual  void        SetFont(FontStruct_t  font);
+            void        SetFont(const char* fontName);
+       TGTextBuffer    *GetBuffer() const { return fText; }
+   const    char       *GetText() const { return fText->GetString(); }
+   virtual  void        SetText(const char *text);
+   virtual  void        SetFrameDrawn(Bool_t flag = kTRUE);
+   virtual  void        AppendText(const char *text);
+   virtual  void        InsertText(const char *text, Int_t pos);
+   virtual  void        RemoveText(Int_t start, Int_t end);
+            Bool_t      IsFrameDrawn() const       { return fFrameDrawn; }
+            Bool_t      IsEdited() const           { return fEdited; }
+   virtual  void        SetEchoMode(EEchoMode mode = kNormal);
+       EEchoMode        GetEchoMode() const        { return fEchoMode; }
+   virtual  void        SetInsertMode(EInsertMode mode = kInsert);
+       EInsertMode      GetInsertMode() const      { return fInsertMode; }
+   virtual  void        SetAlignment(ETextJustification mode = kTextLeft);
+   ETextJustification   GetAlignment() const       { return fAlignment; }
+            void        SetEnabled(Bool_t flag = kTRUE) { SetState( flag ); }
+            Int_t       GetCursorPosition() const  { return fCursorIX; }
+            Bool_t      HasMarkedText() const  { return fSelectionOn && (fStartIX != fEndIX); }
+            TString     GetMarkedText() const;
+            void        SetEdited(Bool_t flag = kTRUE) { fEdited = flag; }
+            Int_t       GetMaxLength() const    { return fMaxLen; }
+   virtual  void        SetMaxLength(Int_t maxlen);
+            void        SelectAll();
+            void        Deselect();
+            void        Clear(Option_t *option="");
+   virtual  void        SetFocus();
+//            Bool_t      HasFocus();
+   virtual  void        TextChanged(const char* text = 0);      //*SIGNAL*
+   virtual  void        ReturnPressed();                          //*SIGNAL*
 
-   virtual Bool_t HandleButton(Event_t *event);
-   virtual Bool_t HandleDoubleClick(Event_t *event);
-   virtual Bool_t HandleMotion(Event_t *event);
-   virtual Bool_t HandleKey(Event_t *event);
-   virtual Bool_t HandleFocusChange(Event_t *event);
-   virtual Bool_t HandleSelection(Event_t *event);
-   virtual Bool_t HandleTimer(TTimer *t);
-   virtual void   DrawBorder();
-   virtual void   SetState(Bool_t state);
-
-   ClassDef(TGTextEntry,0)  // One line text entry widget
+   ClassDef(TGTextEntry,0) // The TGTextEntry widget is a simple line editor for inputting text
 };
 
 #endif

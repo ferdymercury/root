@@ -1,17 +1,8 @@
+//*CMZ :          02/09/99  15.54.23  by  Rene Brun
 //*CMZ :  2.00/13 30/10/98  09.19.13  by  Rene Brun
 //*CMZ :  2.00/12 09/10/98  10.41.34  by  Rene Brun
 //*CMZ :  2.00/11 26/08/98  19.10.44  by  Rene Brun
 //*CMZ :  2.00/10 30/07/98  16.57.22  by  Rene Brun
-//*CMZ :  2.00/09 27/06/98  09.23.55  by  Rene Brun
-//*CMZ :  2.00/08 05/06/98  14.36.25  by  Rene Brun
-//*CMZ :  2.00/07 19/05/98  08.15.23  by  Rene Brun
-//*CMZ :  2.00/06 15/05/98  11.58.22  by  Rene Brun
-//*CMZ :  2.00/05 20/04/98  18.52.58  by  Rene Brun
-//*CMZ :  2.00/04 07/04/98  16.02.38  by  Rene Brun
-//*CMZ :  2.00/03 27/03/98  19.02.24  by  Rene Brun
-//*CMZ :  2.00/02 23/03/98  16.23.28  by  Rene Brun
-//*CMZ :  2.00/01 15/03/98  16.47.52  by  Rene Brun
-//*CMZ :  2.00/00 08/03/98  16.09.16  by  Rene Brun
 //*-- Author :    Rene Brun   08/03/98
 //________________________________________________________________________
 //
@@ -133,7 +124,7 @@
 //
 - TGX11: changed calling sequence of GetWindowID().
 
-- TGXW: added GetWindowID() to TGXW so it can be used from the
+- TVirtualX: added GetWindowID() to TVirtualX so it can be used from the
   GUI classes.
 
 - TGFrame: made TGFrame(TGClient *, Window_t, const TGWindow * = 0) public
@@ -437,10 +428,10 @@
   (would only disconnect from the shared memory segment).
 
 - ROOT native GUI: support now key symbols. For example:
-    frame->BindKey(this, gGXW->KeysymToKeycode(kKey_Up), kAnyModifier);
+    frame->BindKey(this, gVirtualX->KeysymToKeycode(kKey_Up), kAnyModifier);
   All defined key symbols can be found in the file KeySymbols.h.
 
-- TGXW: prototype of TGXW::LookupString() is changed from:
+- TVirtualX: prototype of TVirtualX::LookupString() is changed from:
      LookupString(Event_t *event, char *buf, Int_t buflen, Int_t &keysym);
   to
      LookupString(Event_t *event, char *buf, Int_t buflen, UInt_t &keysym);
@@ -1944,8 +1935,8 @@ A - A completely new set of GUI classes
 
     These new GUI classes provide a full OO GUI framework as opposed to
     a simple wrapper around Motif. All GUI elements do their drawing
-    via the TGXW abstract base class. Depending on the platfrom
-    where you run ROOT the concrete graphics class (inheriting from TGXW)
+    via the TVirtualX abstract base class. Depending on the platfrom
+    where you run ROOT the concrete graphics class (inheriting from TVirtualX)
     is either TGX11 or TGWin32. All GUI widgets are created from
     "first principles", i.e. they only use routines like DrawLine,
     FillRectangle, CopyPixmap, etc. and therefore the TGX11 implementation
@@ -1954,7 +1945,7 @@ A - A completely new set of GUI classes
     with the ROOT libraries in the $ROOTSYS/lib directory.]
     Another advantage of this approach is that porting to a new, non
     X11/Win32, platform requires only the implementation of an appropriate
-    version of TGXW (and TSystem for the OS interface).
+    version of TVirtualX (and TSystem for the OS interface).
 
     All GUI classes are now fully scriptable and accessable via the
     interpreter. This allows for fast prototyping of widget layouts.

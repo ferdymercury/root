@@ -1,3 +1,4 @@
+/*CMZ :  2.23/04 10/10/99  16.54.38  by  Fons Rademakers*/
 /*CMZ :  2.00/09 26/06/98  17.24.25  by  Fons Rademakers*/
 /*CMZ :  0.90/01 07/10/96  18.12.35  by  Rene Brun*/
 /*-- Author :    Nenad Buncic   01/11/95*/
@@ -6,12 +7,6 @@
 #define ROOT_X3DBuffer
 
 #include "DllImport.h"
-
-#ifndef __CINT__
-#ifdef __cplusplus
-extern "C" {
-#endif
-#endif
 
 typedef struct _x3d_data_ {
       int  numPoints;
@@ -29,16 +24,14 @@ typedef struct _x3d_sizeof_ {
       int  numPolys;
 } Size3D;
 
+#ifdef __cplusplus
+extern "C" int AllocateX3DBuffer ();
+extern "C" void FillX3DBuffer (X3DBuffer *buff);
+#else
 extern int AllocateX3DBuffer ();
 extern void FillX3DBuffer (X3DBuffer *buff);
+#endif
 
 R__EXTERN Size3D gSize3D;
-
-#ifndef __CINT__
-#ifdef __cplusplus
-}
-#endif
-#endif
-
 
 #endif

@@ -1,9 +1,9 @@
-/*CMZ :  2.22/10 23/07/99  14.42.34  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   23/07/99*/
+/*CMZ :  2.23/10 10/12/99  18.00.24  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   10/12/99*/
 // lib/prec_stl/valarray
 
-#ifndef PREC_STL_VALARRAY
-#define PREC_STL_VALARRAY
+#pragma ifndef PREC_STL_VALARRAY
+#pragma define PREC_STL_VALARRAY
 #pragma link off global PREC_STL_VALARRAY;
 #pragma link C++ nestedtypedef;
 #pragma link C++ nestedclass;
@@ -11,6 +11,8 @@
 // Imported from ANSI/ISO C++ 1997/Nov draft
 // Got some ideas from Scott Snyder, Fermi-lab
 // Modified by Masaharu Goto
+
+// G__NOINTOPR to be implemented, 1999/10/10 gotom
 
 #include <stdlib.h>
 
@@ -63,7 +65,7 @@ template<class T> class valarray {
   // _lib.valarray.unary_ unary operators:
   valarray<T> operator+() const;
   valarray<T> operator-() const;
-#ifndef G__BORLAND
+#if !defined(G__BORLAND) && !defined(G__KCC)
   valarray<T> operator~() const;
   valarray<T> operator!() const;
 #endif
@@ -76,7 +78,7 @@ template<class T> class valarray {
   valarray<T>& operator/= (const valarray<T>&);
   valarray<T>& operator+= (const valarray<T>&);
   valarray<T>& operator-= (const valarray<T>&);
-#ifndef G__BORLAND
+#if !defined(G__BORLAND) && !defined(G__KCC)
   valarray<T>& operator%= (const T&);
   valarray<T>& operator^= (const T&);
   valarray<T>& operator&= (const T&);
@@ -94,7 +96,7 @@ template<class T> class valarray {
   // _lib.valarray.members_ member functions:
   size_t size() const;
   T    sum() const;
-#ifdef G__BORLAND
+#if defined(G__BORLAND) || defined(G__KCC)
   friend T min(const valarray<T>&) const;
   friend T max(const valarray<T>&) const;
 #else
@@ -149,7 +151,7 @@ template<class T> class valarray {
   friend valarray<T> operator>>(const T&, const valarray<T>&);
 #endif
   friend valarray<bool> operator&& (const valarray<T>&, const valarray<T>&);
-#ifdef G__BORLAND
+#if defined(G__BORLAND) || defined(G__KCC)
   friend valarray<T> operator&&(const valarray<T>&, const T&);
   friend valarray<T> operator&&(const T&, const valarray<T>&);
 #else
@@ -157,7 +159,7 @@ template<class T> class valarray {
   friend valarray<bool> operator&&(const T&, const valarray<T>&);
 #endif
   friend valarray<bool> operator|| (const valarray<T>&, const valarray<T>&);
-#ifdef G__BORLAND
+#if defined(G__BORLAND) || defined(G__KCC)
   friend valarray<T> operator||(const valarray<T>&, const T&);
   friend valarray<T> operator||(const T&, const valarray<T>&);
 #else
@@ -206,5 +208,5 @@ template<class T> class valarray {
 };
 
 
-#endif
+#pragma endif
 

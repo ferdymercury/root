@@ -1,19 +1,10 @@
+*CMZ :  2.23/12 26/01/2000  12.25.50  by  Rene Brun
+*CMZ :  2.23/09 18/11/99  15.22.18  by  Rene Brun
+*CMZ :  2.23/04 06/10/99  11.14.25  by  Fons Rademakers
+*CMZ :  2.23/03 27/09/99  15.01.05  by  Fons Rademakers
+*CMZ :  2.23/02 01/09/99  15.32.49  by  Rene Brun
 *CMZ :  2.22/07 06/07/99  08.18.49  by  Rene Brun
 *CMZ :  2.22/05 08/06/99  16.25.51  by  Fons Rademakers
-*CMZ :  2.22/01 11/05/99  09.08.02  by  Rene Brun
-*CMZ :  2.21/07 04/03/99  18.06.22  by  Rene Brun
-*CMZ :  2.21/04 05/02/99  11.19.10  by  Fons Rademakers
-*CMZ :  2.20/00 21/11/98  21.14.38  by  Rene Brun
-*CMZ :  2.00/13 29/10/98  13.27.18  by  Rene Brun
-*CMZ :  2.00/12 09/10/98  10.22.49  by  Rene Brun
-*CMZ :  2.00/10 29/07/98  11.38.31  by  Rene Brun
-*CMZ :  2.00/09 17/06/98  11.22.46  by  Fons Rademakers
-*CMZ :  2.00/08 24/05/98  21.23.31  by  Rene Brun
-*CMZ :  2.00/07 15/05/98  19.36.15  by  Fons Rademakers
-*CMZ :  2.00/06 25/04/98  09.06.57  by  Rene Brun
-*CMZ :  2.00/01 12/03/98  20.15.52  by  Fons Rademakers
-*CMZ :  2.00/00 07/03/98  15.20.36  by  Fons Rademakers
-*CMZ :  1.03/09 16/12/97  17.11.12  by  Rene Brun
 *-- Author :
 ObjSuf        = o
 SrcSuf        = cxx
@@ -74,7 +65,11 @@ SOFLAGS       = -shared
 # Solaris
 CXX           = CC
 CXXFLAGS      = -O -KPIC
+#or next line for CC5
+#CXXFLAGS      = -O -KPIC -D__SunOS_5_6 -library=iostream,no%Cstd
 LD            = CC
+#or next line for CC5
+#LDFLAGS       = -g -library=iostream,no%Cstd -o
 LDFLAGS       = -g
 SOFLAGS       = -G
 
@@ -96,9 +91,9 @@ SOFLAGS       = -G
 
 +SELF,IF=SGI,IF=-GCC,IF=-KCC,IF=-EGCS.
 # SGI
-CXX           = CC
+CXX           = CC -n32
 CXXFLAGS      = -O
-LD            = CC
+LD            = CC -n32
 LDFLAGS       = -g
 SOFLAGS       = -shared
 
@@ -132,8 +127,7 @@ SOFLAGS       = -shared
 CXX           = KCC -32
 CXXFLAGS      = -O
 LD            = KCC -32
-LDFLAGS       = -g -Wl,-u,__builtin_new -Wl,-u,__builtin_delete -Wl,-u,__nw__FUiPv \
-                --no_exceptions
+LDFLAGS       = -g
 SOFLAGS       =
 
 +SELF,IF=ALPHA,IF=GCC.
@@ -305,7 +299,7 @@ all:            $(PROGRAMS)
 
 $(EVENT):       $(EVENTO) $(MAINEVENTO)
 +IF,IBMRT.
-		/usr/lpp/xlC/bin/makeC++SharedLib $(OutPutOpt) $(EVENTSO) $(LIBS) -p 0 $(EVENTO)
+		/usr/ibmcxx/bin/makeC++SharedLib $(OutPutOpt) $(EVENTSO) $(LIBS) -p 0 $(EVENTO)
 +ELSEIF,ALPHACXX.
 # due to a bug in cxx/ld under osf3.xx, one cannot use cxx to generate
 # a shared library. One must use ld instead.
@@ -319,7 +313,7 @@ $(EVENT):       $(EVENTO) $(MAINEVENTO)
 		@echo "$(EVENT) done"
 
 $(HWORLD):      $(HWORLDO)
-		$(LD) $(LDFLAGS) $(HWORLDO) $(GLIBS) $(OutPutOpt) $(HWORLD)
+		$(LD) $(LDFLAGS) $(HWORLDO) $(LIBS) $(OutPutOpt) $(HWORLD)
 		@echo "$(HWORLD) done"
 
 $(HSIMPLE):     $(HSIMPLEO)
@@ -359,12 +353,12 @@ $(GUITEST):     $(GUITESTO)
 		@echo "$(GUITEST) done"
 
 $(STRESS):      $(STRESSO) $(EVENT)
-		$(LD) $(LDFLAGS) $(STRESSO) $(EVENTLIB) $(GLIBS) $(OutPutOpt) $(STRESS)
+		$(LD) $(LDFLAGS) $(STRESSO) $(EVENTLIB) $(LIBS) $(OutPutOpt) $(STRESS)
 		@echo "$(STRESS) done"
 
 $(HELLOSO):     $(HELLOO)
 +IF,IBMRT.
-		/usr/lpp/xlC/bin/makeC++SharedLib $(OutPutOpt) $(HELLOSO) $(LIBS) -p 0 $(HELLOO)
+		/usr/ibmcxx/bin/makeC++SharedLib $(OutPutOpt) $(HELLOSO) $(LIBS) -p 0 $(HELLOO)
 +ELSEIF,ALPHACXX.
 # due to a bug in cxx/ld under osf3.xx, one cannot use cxx to generate
 # a shared library. One must use ld instead.
@@ -377,7 +371,7 @@ $(HELLOSO):     $(HELLOO)
 
 $(ACLOCKSO):    $(ACLOCKO)
 +IF,IBMRT.
-		/usr/lpp/xlC/bin/makeC++SharedLib $(OutPutOpt) $(ACLOCKSO) $(LIBS) -p 0 $(ACLOCKO)
+		/usr/ibmcxx/bin/makeC++SharedLib $(OutPutOpt) $(ACLOCKSO) $(LIBS) -p 0 $(ACLOCKO)
 +ELSEIF,ALPHACXX.
 # due to a bug in cxx/ld under osf3.xx, one cannot use cxx to generate
 # a shared library. One must use ld instead.
@@ -390,7 +384,7 @@ $(ACLOCKSO):    $(ACLOCKO)
 
 $(TETRISSO):    $(TETRISO)
 +IF,IBMRT.
-		/usr/lpp/xlC/bin/makeC++SharedLib $(OutPutOpt) $(TETRISSO) $(LIBS) -p 0 $(TETRISO)
+		/usr/ibmcxx/bin/makeC++SharedLib $(OutPutOpt) $(TETRISSO) $(GLIBS) -p 0 $(TETRISO)
 +ELSEIF,ALPHACXX.
 # due to a bug in cxx/ld under osf3.xx, one cannot use cxx to generate
 # a shared library. One must use ld instead.

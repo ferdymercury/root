@@ -1,24 +1,21 @@
+//*CMZ :  2.23/12 26/01/2000  09.49.06  by  Rene Brun
+//*CMZ :  2.23/01 26/08/99  12.29.57  by  Rene Brun
 //*CMZ :  2.22/03 31/05/99  17.06.36  by  Rene Brun
 //*CMZ :  2.22/01 03/05/99  09.32.35  by  Rene Brun
 //*CMZ :  1.03/04 17/09/97  13.02.46  by  Piotr Golonka
 //*-- Author :    Ola Nordmann   21/09/95
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -58,7 +55,7 @@ class TGenerator : public TNamed {
  public:
 
         TGenerator(){}; //Used by Dictionary
-        TGenerator(Text_t *name, Text_t *title="Generator class");
+        TGenerator(const char *name, const char *title="Generator class");
         virtual ~TGenerator();
         virtual void            Browse(TBrowser *b);
         virtual Int_t           DistancetoPrimitive(Int_t px, Int_t py);

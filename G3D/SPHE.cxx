@@ -1,36 +1,28 @@
+//*CMZ :  2.23/12 26/01/2000  09.24.06  by  Rene Brun
+//*CMZ :  2.23/02 03/09/99  11.39.45  by  Rene Brun
 //*CMZ :  2.22/01 19/05/99  19.23.00  by  Rene Brun
 //*CMZ :  2.21/07 21/02/99  19.07.06  by  Valery Fine(fine@mail.cern.ch)
 //*CMZ :  2.21/06 10/02/99  19.10.17  by  Rene Brun
-//*CMZ :  2.21/00 03/01/99  23.12.57  by  Valery Fine(fine@mail.cern.ch)
-//*CMZ :  2.00/12 07/10/98  10.34.52  by  Rene Brun
-//*CMZ :  2.00/09 24/06/98  13.04.43  by  Rene Brun
-//*CMZ :  2.00/08 04/06/98  11.26.04  by  Rene Brun
-//*CMZ :  1.01/05 13/06/97  08.31.19  by  Rene Brun
 //*-- Author :    Rene Brun   13/06/97
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 #include "TSPHE.h"
 #include "TNode.h"
 #include "TView.h"
 #include "TVirtualPad.h"
-#include "TGLKernelABC.h"
+#include "TVirtualGL.h"
 
 
 ClassImp(TSPHE)
@@ -75,7 +67,7 @@ TSPHE::TSPHE()
 
 
 //______________________________________________________________________________
-TSPHE::TSPHE(Text_t *name, Text_t *title, Text_t *material, Float_t rmin, Float_t rmax, Float_t themin,
+TSPHE::TSPHE(const char *name, const char *title, const char *material, Float_t rmin, Float_t rmax, Float_t themin,
              Float_t themax, Float_t phimin, Float_t phimax)
      : TShape(name, title,material)
 {
@@ -101,7 +93,7 @@ TSPHE::TSPHE(Text_t *name, Text_t *title, Text_t *material, Float_t rmin, Float_
 
 
 //______________________________________________________________________________
-TSPHE::TSPHE(Text_t *name, Text_t *title, Text_t *material, Float_t rmax)
+TSPHE::TSPHE(const char *name, const char *title, const char *material, Float_t rmax)
      : TShape(name, title,material)
 {
 //*-*-*-*-*-*-*-*-*-*-*-*-*SPHE shape "simplified" constructor*-*-*-*-*-*-*-*-*-*-*-*-*
@@ -470,7 +462,7 @@ void TSPHE::MakeTableOfCoSin()
 //_______________________________________________________________________
 void TSPHE::PaintGLPoints(Float_t *vertex)
 {
- gGLKernel->PaintCone(vertex,-(GetNumberOfDivisions()+1),fNz+1);
+ gVirtualGL->PaintCone(vertex,-(GetNumberOfDivisions()+1),fNz+1);
 }
 
 //______________________________________________________________________________
@@ -498,8 +490,9 @@ void TSPHE::Streamer(TBuffer &b)
 {
 //*-*-*-*-*-*-*-*-*Stream a class object*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 //*-*              =========================================
+   UInt_t R__s, R__c;
    if (b.IsReading()) {
-      Version_t v = b.ReadVersion();
+      Version_t v = b.ReadVersion(&R__s, &R__c);
       TShape::Streamer(b);
       b >> fRmin;    // minimum radius
       b >> fRmax;    // maximum radius
@@ -515,8 +508,9 @@ void TSPHE::Streamer(TBuffer &b)
         b >> faZ;
       }
       SetNumberOfDivisions (tNdiv); // XXX added by RvdE
+      b.CheckByteCount(R__s, R__c, TSPHE::IsA());
    } else {
-      b.WriteVersion(TSPHE::IsA());
+      R__c = b.WriteVersion(TSPHE::IsA(), kTRUE);
       TShape::Streamer(b);
       b << fRmin;    // minimum radius
       b << fRmax;    // maximum radius
@@ -528,6 +522,7 @@ void TSPHE::Streamer(TBuffer &b)
       b << faX;
       b << faY;
       b << faZ;
+      b.SetByteCount(R__c, kTRUE);
    }
 }
 

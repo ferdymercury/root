@@ -1,25 +1,22 @@
+//*CMZ :  2.23/12 28/01/2000  16.58.03  by  Fons Rademakers
+//*CMZ :  2.23/10 16/12/99  02.02.43  by  Fons Rademakers
+//*CMZ :  2.23/03 21/09/99  11.23.11  by  Rene Brun
+//*CMZ :  2.23/00 08/08/99  21.48.43  by  Fons Rademakers
 //*CMZ :  2.22/01 26/04/99  11.56.30  by  Rene Brun
 //*CMZ :  2.20/04 09/12/98  19.25.23  by  Rene Brun
-//*CMZ :  2.20/00 09/11/98  17.56.09  by  Rene Brun
-//*CMZ :  1.03/09 10/12/97  10.02.07  by  Rene Brun
 //*-- Author :    Fons Rademakers   13/02/97
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -186,10 +183,8 @@ Int_t TProof::ConnectFile(const TFile *file)
 
    if (!IsValid()) return 0;
 
-   char str[300];
-   sprintf(str, "TFile *f = new TFile(\"%s\", \"%s\")", file->GetName(),
-           file->GetOption());
-   return SendCommand(str, kAll);
+   return SendCommand(Form("new TFile(\"%s\", \"%s\");", file->GetName(),
+                      file->GetOption()), kAll);
 }
 
 //______________________________________________________________________________
@@ -552,7 +547,7 @@ Int_t TProof::Collect(TMonitor *mon)
                if (horg)
                   horg->Add(h);
                else
-                  gDirectory->Append(h);
+                  h->SetDirectory(gDirectory);
             }
             break;
 
@@ -579,7 +574,7 @@ Int_t TProof::Collect(TMonitor *mon)
                Int_t  nentries;
                Stat_t firstentry, processed;
                sl = FindSlave(s);
-               fTree->GetNextPacket(sl, nentries, firstentry, processed);
+               fTree->GetPlayer()->GetNextPacket(sl, nentries, firstentry, processed);
                TMessage answ(kPROOF_GETPACKET);
                answ << nentries << firstentry << processed;
                s->Send(answ);
@@ -901,11 +896,21 @@ Int_t TProof::SetParallel(Int_t nodes)
 }
 
 //______________________________________________________________________________
-Bool_t TProof::Active()
+Bool_t TProof::IsActive()
 {
    // Static function that returns kTRUE in case a PROOF connection exists
    // with more than 1 active slave. When only one active slave we run in
    // sequential mode.
 
    return (gProof && gProof->GetNumberOfActiveSlaves() > 1) ? kTRUE : kFALSE;
+}
+
+//______________________________________________________________________________
+TProof *TProof::This()
+{
+   // Static function returning pointer to global object gProof.
+   // Mainly for use via CINT, where the gProof symbol might be
+   // deleted from the symbol table.
+
+   return gProof;
 }

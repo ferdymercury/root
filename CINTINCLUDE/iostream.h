@@ -1,5 +1,5 @@
-/*CMZ :  2.22/10 23/07/99  14.42.26  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   23/07/99*/
+/*CMZ :  2.23/10 10/12/99  18.00.16  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   10/12/99*/
 /* /% C++ %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -9,15 +9,13 @@
  * Description:
  *  CINT iostream header file
  ************************************************************************
- * Copyright(c) 1991~1996  [hp] Hewlett Packard Japan, All rights reserved
- * Author                  Masaharu Goto (gotom@jpn.hp.com)
- * Copyright(c) 1995~1998  Masaharu Goto (MXJ02154@niftyserve.or.jp)
+ * Copyright(c) 1995~1999  Masaharu Goto (MXJ02154@niftyserve.or.jp)
  *
  * Permission to use, copy, modify and distribute this software and its
  * documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies and
  * that both that copyright notice and this permission notice appear
- * in supporting documentation.  Hewlett-Packard Japan Company makes no
+ * in supporting documentation.  The author makes no
  * representations about the suitability of this software for any
  * purpose.  It is provided "as is" without express or implied warranty.
  ************************************************************************/
@@ -29,10 +27,14 @@
 *********************************************************************/
 #pragma setstream
 #pragma ifdef G__IOSTREAM_H
+#pragma ifndef G__KCC
+#pragma ifndef G__TMPLTIOS
 #pragma include <iosenum.h>
+#pragma endif
 typedef ostrstream ostringstream;
 typedef istrstream istringstream;
 //typedef strstream stringstream;
+#pragma endif
 #pragma endif
 
 #include <bool.h>
@@ -467,30 +469,42 @@ istream& operator>>(istream& istr,G__CINT_WS& i) {return(WS(istr));}
 
 class G__CINT_HEX { int dmy; } hex;
 ostream& operator<<(ostream& ostr,G__CINT_HEX& i) {
+  ostr.unsetf(ios::dec);
+  ostr.unsetf(ios::oct);
   ostr.setf(ios::hex);
   return(ostr);
 }
 istream& operator>>(istream& istr,G__CINT_HEX& i) {
+  ostr.unsetf(ios::dec);
+  ostr.unsetf(ios::oct);
   istr.setf(ios::hex);
   return(istr);
 }
 
 class G__CINT_DEC { int dmy; } dec;
 ostream& operator<<(ostream& ostr,G__CINT_DEC& i) {
+  ostr.unsetf(ios::hex);
+  ostr.unsetf(ios::oct);
   ostr.setf(ios::dec);
   return(ostr);
 }
 istream& operator>>(istream& istr,G__CINT_DEC& i) {
+  ostr.unsetf(ios::hex);
+  ostr.unsetf(ios::oct);
   istr.setf(ios::dec);
   return(istr);
 }
 
 class G__CINT_OCT { int dmy; } oct;
 ostream& operator<<(ostream& ostr,G__CINT_OCT& i) {
+  ostr.unsetf(ios::hex);
+  ostr.unsetf(ios::dec);
   ostr.setf(ios::oct);
   return(ostr);
 }
 istream& operator>>(istream& istr,G__CINT_OCT& i) {
+  ostr.unsetf(ios::hex);
+  ostr.unsetf(ios::dec);
   istr.setf(ios::oct);
   return(istr);
 }

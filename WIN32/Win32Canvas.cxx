@@ -1,9 +1,9 @@
+//*CMZ :  2.23/12 26/01/2000  10.08.58  by  Rene Brun
+//*CMZ :  2.23/09 19/11/99  19.49.55  by  Valery Fine(fine@mail.cern.ch)
+//*CMZ :  2.23/03 21/09/99  11.30.34  by  Rene Brun
+//*CMZ :  2.23/01 27/08/99  08.53.44  by  Rene Brun
+//*CMZ :  2.23/00 16/08/99  14.04.57  by  Rene Brun
 //*CMZ :  2.21/06 12/02/99  18.12.35  by  Valery Fine(fine@vxcern.cern.ch)
-//*CMZ :  2.20/01 01/12/98  23.47.56  by  Rene Brun
-//*CMZ :  2.00/13 29/10/98  17.46.25  by  Fons Rademakers
-//*CMZ :  2.00/12 01/10/98  11.42.09  by  Valery Fine(fine@mail.cern.ch)
-//*CMZ :  2.00/00 16/01/98  15.16.39  by  Fons Rademakers
-//*CMZ :  1.03/09 16/12/97  11.51.59  by  Valery Fine(fine@mail.cern.ch)
 //*-- Author :    Valery Fine   05/01/96
 
 #include "TWin32Canvas.h"
@@ -17,6 +17,7 @@
 #include "TBrowser.h"
 #include "TClassTree.h"
 #include "TInterpreter.h"
+#include "TSystem.h"
 
 
 ClassImp(TWin32Canvas)
@@ -50,17 +51,15 @@ TWin32Canvas::TWin32Canvas(TCanvas *c, const char *name, Int_t x, Int_t y, UInt_
 //______________________________________________________________________________
 TWin32Canvas::~TWin32Canvas() {
     if ( fCanvasImpID == -1) return;
-//    gGXW->SelectWindow(fCanvasImpID);    //select current canvas
-//    gGXW->CloseWindow();
-    ((TGWin32 *)gGXW)->RemoveWindow((TGWin32Switch *)fCanvasImpID);
+//    gVirtualX->SelectWindow(fCanvasImpID);    //select current canvas
+//    gVirtualX->CloseWindow();
+    ((TGWin32 *)gVirtualX)->RemoveWindow((TGWin32Switch *)fCanvasImpID);
     fCanvasImpID = -1;
 
 #ifdef UUU
    TCanvas *canvas = obj->Canvas();
    if(canvas) { // delete canvas;
-       char cmd[]= "TCanvas *c=(TCanvas *)0x1234567890123456; delete c;";
-       sprintf(cmd,"TCanvas *c=(TCanvas *)%#16x; delete c;",canvas);
-       gInterpreter->ProcessLineAsynch(cmd);
+      gROOT->ProcessLineAsynch(Form("TCanvas *c=(TCanvas *)0x%lx; delete c;",(Long_t)canvas));
    }
 #endif
 
@@ -94,11 +93,11 @@ TWin32Menu *PopUpMenu;
  fStaticMenuItems[i++] = new TWin32MenuItem("Edit","&Edit",kSubMenu);
  fStaticMenuItems[i++] = new TWin32MenuItem("View","&View",kSubMenu);
  fStaticMenuItems[i++] = new TWin32MenuItem("Options","&Options",kSubMenu);
- fStaticMenuItems[i++] = new TWin32MenuItem("Help","&Help",HelpCB,kString | kRightJustify);
- Int_t iMainMenuEnd = i-1;
-
  fStaticMenuItems[i++] = new TWin32MenuItem("Inspector","&Inspector",kSubMenu);
  fStaticMenuItems[i++] = new TWin32MenuItem("Classes","&Classes",kSubMenu);
+
+ fStaticMenuItems[i++] = new TWin32MenuItem("Help","&Help",HelpCB,kString | kRightJustify);
+ Int_t iMainMenuEnd = i-1;
 
 //*-*   Items for the File Menu
 
@@ -159,8 +158,21 @@ TWin32Menu *PopUpMenu;
  int iOptFit = i;
  fStaticMenuItems[i++] = new TWin32MenuItem("FitParams","Fit &Params",OptFitCB);
  int iCanEditHist = i;
- fStaticMenuItems[i++] = new TWin32MenuItem("CanEditHistograms","Can Edit &Histograms",CanEditHistogramsCB);
+ fStaticMenuItems[i++] = new TWin32MenuItem("CanEditHistograms","&Can Edit Histograms",CanEditHistogramsCB);
  Int_t iOptionMenuEnd = i-1;
+
+//*-*   Items for the Inspect Menu
+
+ Int_t iInspectMenuStart = i;
+ fStaticMenuItems[i++] = new TWin32MenuItem("ROOT","&ROOT",ROOTInspectCB);
+ fStaticMenuItems[i++] = new TWin32MenuItem("StarBrowser","&Start Browser",BrowserCB);
+ Int_t iInspectMenuEnd = i-1;
+
+//*-*   Items for the Class Menu
+
+ Int_t iClassesMenuStart = i;
+ fStaticMenuItems[i++] = new TWin32MenuItem("ClassTree","&Class Tree",FullTreeCB);
+ Int_t iClassesMenuEnd = i-1;
 
  Int_t iEndOfMenu =  i-1;
 
@@ -196,6 +208,16 @@ TWin32Menu *PopUpMenu;
 //*-* Options
    PopUpMenu = fStaticMenuItems[kMOptions]->GetPopUpItem();
      for (i=iOptionMenuStart;i<=iOptionMenuEnd; i++)
+       PopUpMenu->Add(fStaticMenuItems[i]);
+
+//*-* Inspector
+   PopUpMenu = fStaticMenuItems[kMInspector]->GetPopUpItem();
+     for (i=iInspectMenuStart;i<=iInspectMenuEnd; i++)
+       PopUpMenu->Add(fStaticMenuItems[i]);
+
+//*-* Inspector
+   PopUpMenu = fStaticMenuItems[kMClasses]->GetPopUpItem();
+     for (i=iClassesMenuStart;i<=iClassesMenuEnd; i++)
        PopUpMenu->Add(fStaticMenuItems[i]);
 
 //*-*  Create main menu
@@ -269,9 +291,9 @@ void   TWin32Canvas::CreateStatusBar(Int_t *parts, Int_t nparts)
 //______________________________________________________________________________
 void   TWin32Canvas::SetCanvas(Int_t x, Int_t y,UInt_t w, UInt_t h){
    fCanvasImp = this;
-   CreateWindowsObject((TGWin32 *)gGXW, x, y, w, h);
+   CreateWindowsObject((TGWin32 *)gVirtualX, x, y, w, h);
    TGWin32WindowsObject *winobj = (TGWin32WindowsObject *)this;
-   fCanvasImpID = gGXW->InitWindow((ULong_t)winobj);
+   fCanvasImpID = gVirtualX->InitWindow((ULong_t)winobj);
    W32_Set(x, y, w, h);
 };
 
@@ -281,7 +303,7 @@ void   TWin32Canvas::SetCanvas(const char *title){
 };
 
 //______________________________________________________________________________
-void   TWin32Canvas::SetStatusText(Text_t *text, Int_t partidx)
+void   TWin32Canvas::SetStatusText(char *text, Int_t partidx)
 { // Set Text into the 'npart'-th part of the status bar
    W32_SetStatusText(text,partidx);
 }
@@ -337,6 +359,12 @@ void TWin32Canvas::CloseCB(TWin32Canvas *obj, TVirtualMenuItem *item)
 {
 
    // delete the TCanvas, which in turn will delete its TCanvasImp
+
+   TVirtualPad *savepad = gPad;
+   gPad = 0;                         // hide gPad from CINT
+   gInterpreter->DeleteGlobal(obj->Canvas());
+   gPad = savepad;                   // restore gPad for ROOT
+   // delete the TCanvas, which in turn will delete its TCanvasImp
    delete obj->Canvas();
 }
 //______________________________________________________________________________
@@ -348,7 +376,7 @@ void TWin32Canvas::EditorCB(TWin32Canvas *obj, TVirtualMenuItem *item)
 //______________________________________________________________________________
 void TWin32Canvas::HelpCB(TWin32Canvas *obj, TVirtualMenuItem *item)
 {
-   printf(" HelpCanvas \n");
+   gSystem->Exec("explorer http://root.cern.ch/root/html/ClassIndex.html");
 }
 
 //______________________________________________________________________________
@@ -375,14 +403,25 @@ void TWin32Canvas::QuitCB(TWin32Canvas *obj, TVirtualMenuItem *item)
    gApplication->Terminate(0);
 }
 
+#define MAX_file_name 512
+
+//______________________________________________________________________________
+static const Char_t *Extension(char *file, const char *ex)
+{
+// Append a standard extenstion to the file name if any
+  if (!strchr(file,'.')) {
+     strncat(file,".",MAX_file_name);
+     strncat(file,ex,MAX_file_name);
+  }
+  return file;
+}
+
 //______________________________________________________________________________
 void TWin32Canvas::SaveAsCB(TWin32Canvas *obj, TVirtualMenuItem *item)
 {
 //--->     obj->Canvas()->Print("EPS");
 //   obj->RootExec("Exec Save As...");
 
-
-#define MAX_file_name 512
 
    OPENFILENAME *lpOpenBuffer = new OPENFILENAME;
 
@@ -391,12 +430,44 @@ void TWin32Canvas::SaveAsCB(TWin32Canvas *obj, TVirtualMenuItem *item)
 
    lpOpenBuffer->hInstance         = NULL;
 
-   {
-    static char filter[] =
-    "C++ macro (*.cpp,*.cxx)\0*.cpp.*.cxx\0Postscript (*.ps)\0*.ps\0Encapsulated Postscript (*.eps)\0*.eps\0ROOT file (*.root)\0*.root\0";
 
-    lpOpenBuffer->lpstrFilter       = filter;
+     static const char filter[] = {
+ //
+ //    File format    \0           acceptable extension
+ //                         ( the last extension is used as default )
+     "C++ macro (*.cpp,*.cxx,*.C)\0*.cpp,*.cxx,*.C\0"
+     "Postscript (*.ps)\0*.ps\0"
+     "Encapsulated Postscript (*.eps)\0*.eps\0"
+     "ROOT file (*.root)\0*.root\0"
+     "\0"};
+
+   static const Char_t **extensions = 0;
+   // Create array of the default file extensions
+   if (!extensions) {
+      Int_t i = 0;
+      Int_t lFilter = sizeof(filter);
+      // Count the number of different files
+      Int_t lExts = 0;
+      for (i=0;i<lFilter;i++) if (!filter[i]) lExts++;
+
+      lExts >> 1;
+      // create extensions
+      extensions = new const Char_t *[lExts];
+      lFilter--;
+      Int_t s = 1;
+      lExts = 0;
+      for (i=0;i<lFilter;i++) {
+         if (filter[i]) continue;
+         s = -s;
+         if (s > 0) continue;
+         extensions[lExts] = strrchr(&filter[i]+1,'.');
+         if (extensions[lExts]) extensions[lExts]++;
+         lExts++;
+      }
    }
+
+   lpOpenBuffer->lpstrFilter       = filter;
+
    lpOpenBuffer->lpstrCustomFilter = NULL;
    lpOpenBuffer->nMaxCustFilter    = NULL;
    lpOpenBuffer->nFilterIndex      = 1;
@@ -413,7 +484,7 @@ void TWin32Canvas::SaveAsCB(TWin32Canvas *obj, TVirtualMenuItem *item)
    lpOpenBuffer->lpstrFileTitle    = NULL;
    lpOpenBuffer->nMaxFileTitle     = NULL;
    lpOpenBuffer->lpstrInitialDir   = NULL;
-   lpOpenBuffer->lpstrTitle        = "Save the selected Cancas/Pad as";
+   lpOpenBuffer->lpstrTitle        = "Save the selected Canvas/Pad as";
    lpOpenBuffer->Flags             = OFN_HIDEREADONLY    | OFN_LONGNAMES |
                                      OFN_OVERWRITEPROMPT ;
    lpOpenBuffer->nFileOffset       = NULL;
@@ -423,32 +494,17 @@ void TWin32Canvas::SaveAsCB(TWin32Canvas *obj, TVirtualMenuItem *item)
    lpOpenBuffer->lpfnHook          = NULL;
    lpOpenBuffer->lpTemplateName    = NULL;
 
-   if ( GetSaveFileName(lpOpenBuffer))
+   if ( GetSaveFileName(lpOpenBuffer)) ;
+ //      SetDlgItemText(hwnd,Id+1,lpOpenBuffer->lpstrFile);
 
-//   SetDlgItemText(hwnd,Id+1,lpOpenBuffer->lpstrFile);
+   Int_t exIndx = lpOpenBuffer->nFilterIndex;
+   const char *option = extensions[exIndx-1];
 
-    switch (lpOpenBuffer->nFilterIndex) {
-      case 1:
-        obj->Canvas()->Print(lpOpenBuffer->lpstrFile,"cxx");
-        break;
-      case 2:
-        obj->Canvas()->Print(lpOpenBuffer->lpstrFile,"ps");
-        break;
-      case 3:
-        obj->Canvas()->Print(lpOpenBuffer->lpstrFile,"eps");
-        break;
-      case 4:
-        obj->Canvas()->Print(lpOpenBuffer->lpstrFile,"root");
-        break;
-      default:
-        obj->Canvas()->Print(lpOpenBuffer->lpstrFile,"cxx");
-        break;
-   };
+   if (exIndx==1) option = "cxx";
+   obj->Canvas()->Print(Extension(lpOpenBuffer->lpstrFile,extensions[exIndx-1]),option);
 
  delete [] lpOpenBuffer->lpstrFile;
  delete lpOpenBuffer;
-
-
 }
 
 //______________________________________________________________________________
@@ -473,7 +529,7 @@ void TWin32Canvas::ColorsCB(TWin32Canvas *obj, TVirtualMenuItem *item)
    gROOT->SetDefCanvasName("DisplayColors");
    (gROOT->GetMakeDefCanvas())();
    gROOT->SetDefCanvasName(defcanvas);
-   gROOT->DisplayColorTable();
+   TPad::DrawColorTable();
    gPad->Update();
    padsav->cd();
 }
@@ -602,8 +658,16 @@ void TWin32Canvas::BrowserCB(TWin32Canvas *obj, TVirtualMenuItem *item)
 
 //______________________________________________________________________________
 void TWin32Canvas::FullTreeCB(TWin32Canvas *obj, TVirtualMenuItem *item)
-{ ;
-   TClassTree *newClassTree = new TClassTree("ClassTree");
+{
+  char cdef[64];
+  TList *lc = (TList*)gROOT->GetListOfCanvases();
+  if (lc->FindObject("ClassTree"))
+     sprintf(cdef,"ClassTree_%d",lc->GetSize()+1);
+   else
+     sprintf(cdef,"%s","ClassTree");
+
+   new TClassTree(cdef,"TObject");
+   obj->Canvas()->Update();
 }
 
 //______________________________________________________________________________

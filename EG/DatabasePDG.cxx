@@ -1,70 +1,81 @@
+//*CMZ :  2.23/12 26/01/2000  09.49.06  by  Rene Brun
+//*CMZ :  2.23/10 15/12/99  17.36.04  by  Rene Brun
+//*CMZ :  2.23/00 07/08/99  17.38.51  by  Fons Rademakers
 //*CMZ :  2.22/09 13/07/99  13.07.53  by  Rene Brun
 //*CMZ :  2.22/06 18/06/99  11.18.50  by  Rene Brun
 //*CMZ :  2.22/02 25/05/99  14.46.19  by  Rene Brun
-//*CMZ :  2.22/01 21/04/99  10.52.04  by  Rene Brun
-//*CMZ :  2.21/06 21/04/99  09.41.47  by  Pasha Murat
 //*-- Author :    Pasha Murat   12/02/99
 
 #include "TDatabasePDG.h"
+#ifdef WIN32
+#include <strstrea.h>
+#else
+#include <strstream.h>
+#endif
 
+////////////////////////////////////////////////////////////////////////
+//
+//  Particle data base manager
+//
+//  This manager can create automatically a list of particles precompiled
+//  from a Particle data Group table (see Init function)
+//  or one can read a list of particles from a table via ReadPDGTable.
+//  To use the second option, do:
+//     - TDatabasePDG *pdg = new TDatabasePDG();
+//     - pdg->ReadPDGtable(filename)
+//  an example of a pdg table can be found in $ROOTSYS/tutorials/pdg.dat
+//
+//  See TParticlePDG for the description of a static particle.
+//  See TParticle for the description of a dynamic particle.
+//
+////////////////////////////////////////////////////////////////////////
 
 static Double_t kPlankGeV=6.58212202e-25;
 
+TDatabasePDG  *TDatabasePDG::fgInstance = 0;
+
+
 ClassImp(TDatabasePDG)
 
-TDatabasePDG*  TDatabasePDG::fgInstance = 0;
-
-
 //______________________________________________________________________________
-TDatabasePDG::TDatabasePDG()
-             :TNamed("PDGDB","The PDG particle data base")
+TDatabasePDG::TDatabasePDG() : TNamed("PDGDB","The PDG particle data base")
 {
-    fParticleList = 0;
-    if (fgInstance) Warning("TDatabasePDG", "object already instantiated");
-    else            fgInstance    = this;
+   // Create PDG database.
+
+   fParticleList = 0;
+   if (fgInstance) Warning("TDatabasePDG", "object already instantiated");
+   else            fgInstance = this;
 }
 
 //______________________________________________________________________________
 TDatabasePDG::~TDatabasePDG()
 {
-  if (fParticleList == 0) return;
-  fParticleList->Delete();
-  delete fParticleList;
+   // Cleanup the PDG database.
+
+   if (fParticleList == 0) return;
+   fParticleList->Delete();
+   delete fParticleList;
 }
 
-//------------------------------------------------------------------------------
-TDatabasePDG::Cleaner::Cleaner()
-{
-}
-
-//------------------------------------------------------------------------------
-TDatabasePDG::Cleaner::~Cleaner()
-{
-  if (TDatabasePDG::fgInstance) {
-     delete TDatabasePDG::fgInstance;
-     TDatabasePDG::fgInstance = 0;
-  }
-}
-
-//------------------------------------------------------------------------------
-void TDatabasePDG::AddParticle(const Text_t *name, const Text_t *title,
+//______________________________________________________________________________
+void TDatabasePDG::AddParticle(const char *name, const char *title,
                                Double_t mass, Bool_t stable,
                                Double_t width, Double_t charge,
-                               Text_t *type, Int_t PDGcode)
+                               const char *type, Int_t PDGcode)
 {
-//
-//  Particle definition normal constructor. If the particle is set to be
-//  stable, the decay width parameter does have no meaning and can be set to
-//  any value. The parameters granularity, LowerCutOff and HighCutOff are
-//  used for the construction of the mean free path look up tables. The
-//  granularity will be the number of logwise energy points for which the
-//  mean free path will be calculated.
-//
+   //
+   //  Particle definition normal constructor. If the particle is set to be
+   //  stable, the decay width parameter does have no meaning and can be set to
+   //  any value. The parameters granularity, LowerCutOff and HighCutOff are
+   //  used for the construction of the mean free path look up tables. The
+   //  granularity will be the number of logwise energy points for which the
+   //  mean free path will be calculated.
+   //
 
-  if (fParticleList == 0) Init();
-  TParticlePDG* p = new TParticlePDG(name, title, mass, stable, width,
-                                     charge, type, PDGcode);
-  fParticleList->Add(p);
+   if (fParticleList == 0) Init();
+   TParticlePDG* p = new TParticlePDG(name, title, mass, stable, width,
+                                      charge, type, PDGcode);
+   fParticleList->Add(p);
 }
 
 //______________________________________________________________________________
@@ -239,14 +250,14 @@ Int_t TDatabasePDG::ConvertIsajetToPdg(Int_t isaNumber)
 //______________________________________________________________________________
 void TDatabasePDG::Init()
 {
-//
-//  Defines particles according to the Particle Data Group
-//
-//  For questions regarding distribution or content of the MC particle
-//  codes, contact
-//  Gary Wagman (GSWagman@LBL.BITNET, LBL::GSWagman, or GSWagman@LBL.GOV).
-//  (510)486-6610
-//
+   //
+   //  Defines particles according to the Particle Data Group
+   //
+   //  For questions regarding distribution or content of the MC particle
+   //  codes, contact
+   //  Gary Wagman (GSWagman@LBL.BITNET, LBL::GSWagman, or GSWagman@LBL.GOV).
+   //  (510)486-6610
+   //
 
    if (fParticleList == 0) {
       fParticleList = new THashList();
@@ -1588,7 +1599,7 @@ void TDatabasePDG::Init()
                                       0.,"Meson", 40443));
    fParticleList->Add(new TParticlePDG("Upsilon(4S)0","M047",
                                       10.5800,kFALSE, 1.0e-2,
-                                      0.,"Meson", 40553));
+                                      0.,"Meson", 300553));
    fParticleList->Add(new TParticlePDG("N(1710)0","B014",
                                       1.71,kFALSE, .1,
                                       0.,"Baryon", 42112));
@@ -1647,46 +1658,163 @@ void TDatabasePDG::Init()
 
 }
 
-
 //______________________________________________________________________________
-TParticlePDG* TDatabasePDG::GetParticle(const Text_t *name)
+TDatabasePDG *TDatabasePDG::Instance()
 {
-//
-//  Get a pointer to the particle object according to the name given
-//
-  if (fParticleList == 0) Init();
-  TParticlePDG *def = (TParticlePDG *)fParticleList->FindObject(name);
-  if (!def) {
-      fParticleList->Error("Particle","No match for %s exists !",name);
-  }
-  return def;
+   // static function returning a pointer to a class instance
+
+   if (!fgInstance) fgInstance = new TDatabasePDG;
+   return fgInstance;
 }
 
 //______________________________________________________________________________
-TParticlePDG* TDatabasePDG::GetParticle(Int_t PDGcode)
+TParticlePDG *TDatabasePDG::GetParticle(const char *name)
 {
-//
-//  Get a pointer to the particle object according to the MC code number
-//
-  if (fParticleList == 0) Init();
-  TIter next(fParticleList);
-  TParticlePDG *p;
-  while ((p = (TParticlePDG *)next())) {
-    if (p->PdgCode() == PDGcode) return p;
-  }
-  fParticleList->Error("Particle","No match for PDG code %d exists !",PDGcode);
-  return 0;
+   //
+   //  Get a pointer to the particle object according to the name given
+   //
+
+   if (fParticleList == 0) Init();
+   TParticlePDG *def = (TParticlePDG *)fParticleList->FindObject(name);
+   if (!def) {
+      Error("GetParticle","No match for %s exists!",name);
+   }
+   return def;
 }
 
+//______________________________________________________________________________
+TParticlePDG *TDatabasePDG::GetParticle(Int_t PDGcode)
+{
+   //
+   //  Get a pointer to the particle object according to the MC code number
+   //
+
+   if (fParticleList == 0) Init();
+   TIter next(fParticleList);
+   TParticlePDG *p;
+   while ((p = (TParticlePDG *)next())) {
+      if (p->PdgCode() == PDGcode) return p;
+   }
+   Error("GetParticle","No match for PDG code %d exists!",PDGcode);
+   return 0;
+}
 
 //______________________________________________________________________________
 void TDatabasePDG::Print(Option_t *option)
 {
-  if (fParticleList == 0) Init();
-  TIter next(fParticleList);
-  TParticlePDG *p;
-  while ((p = (TParticlePDG *)next())) {
-    p->Print(option);
+   // Print contents of PDG database.
+
+   if (fParticleList == 0) Init();
+   TIter next(fParticleList);
+   TParticlePDG *p;
+   while ((p = (TParticlePDG *)next())) {
+      p->Print(option);
+   }
+}
+//______________________________________________________________________________
+void TDatabasePDG::ReadPDGTable(const char *filename)
+{
+   // read list of particles from a file
+   // if the particle list does not exist, it is created, otherwise
+   // particles are added to the existing list
+   // See $ROOTSYS/tutorials/pdg.dat to see the file format
+
+  if (fParticleList == 0) {
+     fParticleList = new THashList();
   }
+
+  const Float_t HBARC = 197.327*1.e-3*1.e-13; // GeV*cm
+
+  FILE *ifl = fopen(filename,"r");
+  if (ifl == 0) {
+    Error("ReadPDGTable","Could not open PDG particle file %s",filename);
+    return;
+  }
+
+  char line[512];
+  while ( fgets(line,512,ifl) ) {
+    if (strlen(line) >= 511) {
+       Error("ReadPDGTable","input line is too long");
+       return;
+    }
+    istrstream linestr(line);
+    TString opcode;
+    char subcode;
+    linestr >> opcode >> subcode;
+
+    if( opcode == "end" )
+      break;
+
+    else if( opcode == "add" ) {
+      switch (subcode) {
+	case 'p':
+	  {
+	    TString classname;
+	    linestr >> classname;
+	    // if (classname == "Collision" || classname == "Parton")
+	    if (classname == "Collision" )
+	      continue;
+	
+	    TString name;
+	    int type;
+	    float mass, width, cut, charge, spin, lifetime;
+	
+	    linestr >> name >> type;
+	    linestr >> mass >> width >> cut >> charge;
+	    linestr >> spin >> lifetime;
+	
+	    charge /= 3.0;
+	    if (classname != "Meson")
+	      spin /= 2.0;
+	
+	    // lifetime is c*tau (mm)
+	    if (lifetime > 0.0 && width < 1e-10)
+	      width = HBARC / (lifetime/10.0);
+
+	    Bool_t stable = (lifetime <= 0);
+
+            TParticlePDG *p = new TParticlePDG(name, name, mass, stable, width,
+                                      charge, classname.Data(), type);
+	    fParticleList->Add(p);
+	    break;
+	  }
+	
+	case 'c':
+	  {
+	    int     ptype, nchild;
+	    float   bf;
+	    TString decayer;
+	
+	    linestr >> ptype >> bf >> decayer >> nchild;
+	    TParticlePDG *parent = GetParticle(ptype);
+	    if (parent == 0) continue;
+	
+	    TList *kids = new TList();
+	
+	    int i;
+	    for(i=0; i<nchild; i++ )
+	    {
+	      int ctype;
+	      linestr >> ctype;
+	      TParticlePDG* secondary = GetParticle(ctype);
+	      if( secondary ==0 ) break;
+	      kids->Add(secondary);
+	    }
+	
+	    //parent->AddDecay(bf, kids ); // Not yet implemented
+	    break;
+	  }
+	
+	case 'd':
+	  break;
+	
+	default:
+	  Error("ReadPDGTable","unknown subcode %d for operation add",subcode);
+	  break;
+	}
+     }
+  }
+
+  fclose(ifl);
 }
 

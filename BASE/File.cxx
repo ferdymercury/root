@@ -1,35 +1,23 @@
+//*CMZ :  2.23/12 31/01/2000  18.38.57  by  Rene Brun
+//*CMZ :  2.23/10 01/01/2000  00.09.28by  Fons Rademakers
+//*CMZ :  2.23/09 19/11/99  14.37.18  by  Fons Rademakers
+//*CMZ :  2.23/03 10/10/99  15.45.04  by  Fons Rademakers
 //*CMZ :  2.22/05 06/06/99  11.20.30  by  Fons Rademakers
 //*CMZ :  2.22/01 03/06/99  08.58.11  by  Fons Rademakers
 //*CMZ :  2.22/00 07/04/99  11.40.43  by  Rene Brun
-//*CMZ :  2.21/07 19/02/99  11.07.09  by  Fons Rademakers
-//*CMZ :  2.21/03 20/01/99  18.10.03  by  Fons Rademakers
-//*CMZ :  2.21/01 11/01/99  16.37.57  by  Fons Rademakers
-//*CMZ :  2.20/00 08/11/98  11.00.56  by  Rene Brun
-//*CMZ :  2.00/12 02/10/98  22.58.48  by  Rene Brun
-//*CMZ :  2.00/11 01/10/98  11.24.36  by  Rene Brun
-//*CMZ :  2.00/10 28/07/98  15.44.30  by  Fons Rademakers
-//*CMZ :  2.00/06 09/05/98  18.59.22  by  Fons Rademakers
-//*CMZ :  2.00/04 03/04/98  16.47.11  by  Rene Brun
-//*CMZ :  2.00/00 05/03/98  18.02.38  by  Fons Rademakers
-//*CMZ :  1.03/09 10/12/97  09.03.00  by  Rene Brun
 //*-- Author :    Rene Brun   28/11/94
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 #include <iostream.h>
@@ -53,9 +41,10 @@
 #include "TKey.h"
 #include "TDatime.h"
 #include "TSystem.h"
-#include "TProof.h"
 #include "TError.h"
 #include "Bytes.h"
+#include "TInterpreter.h"
+#include "TClassTable.h"
 
 TFile *gFile;                 //Pointer to current file
 
@@ -85,7 +74,7 @@ TFile::TFile() : TDirectory()
 }
 
 //1_____________________________________________________________________________
-TFile::TFile(const Text_t *fname1, Option_t *option, const Text_t *ftitle, Int_t compress)
+TFile::TFile(const char *fname1, Option_t *option, const char *ftitle, Int_t compress)
            :TDirectory()
 {
 //*-*-*-*-*-*-*-*-*-*-*-*File Constructor*-*--*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
@@ -406,7 +395,7 @@ void TFile::Init(Bool_t create)
       frombuf(buffer, &fSeekParent);
       frombuf(buffer, &fSeekKeys);
       delete [] header;
-      if (fNbytesName < 10 || fNbytesName > 300) {
+      if (fNbytesName < 10 || fNbytesName > 1000) {
          Error("Init","Cannot read directory info");
          goto zombie;
       }
@@ -421,9 +410,11 @@ void TFile::Init(Bool_t create)
    }
    gROOT->GetListOfFiles()->Add(this);
 
-   if (gProof)
-      gProof->ConnectFile(this);
-
+   if (TClassTable::GetDict("TProof")) {
+      if (gROOT->ProcessLineFast("TProof::IsActive()"))
+         gROOT->ProcessLineFast(Form("TProof::This()->ConnectFile((TFile *)0x%lx);",
+                                (Long_t)this));
+   }
    return;
 
 zombie:
@@ -482,14 +473,17 @@ void TFile::Close(Option_t *)
 
    gROOT->GetListOfFiles()->Remove(this);
 
-   if (gProof)
-      gProof->DisConnectFile(this);
+   if (TClassTable::GetDict("TProof")) {
+      if (gROOT->ProcessLineFast("TProof::IsActive()"))
+         gROOT->ProcessLineFast(Form("TProof::This()->DisConnectFile((TFile *)0x%lx);",
+                                (Long_t)this));
+   }
 
    TCollection::EmptyGarbageCollection();
 }
 
 //______________________________________________________________________________
-void TFile::Delete(const Text_t *namecycle)
+void TFile::Delete(const char *namecycle)
 {
 //*-*-*-*-*-*-*-*-*-*-*-*-*Delete object namecycle*-*-*-*-*-*-*-*-*-*-*-*-*-*
 //*-*                      =======================
@@ -559,7 +553,7 @@ Int_t TFile::GetBestBuffer()
 //  Returns mean value + one standard deviation.
 //
 
-   if (!fWritten) return 1024;
+   if (!fWritten) return TBuffer::kInitialSize;
    Double_t mean = fSumBuffer/fWritten;
    Double_t rms2 = TMath::Abs(fSum2Buffer/fSumBuffer -mean*mean);
    return (Int_t)(mean + TMath::Sqrt(rms2));
@@ -606,6 +600,54 @@ Float_t TFile::GetCompressionFactor()
    }
    delete [] header;
    return uncomp/comp;
+}
+
+//______________________________________________________________________________
+Int_t TFile::GetRecordHeader(char *buf, Seek_t first, Int_t maxbytes, Int_t &nbytes, Int_t &objlen, Int_t &keylen)
+{
+//*-*-*-*-*-*-*-*-*Read the logical record header starting at position first
+//*-*              =========================================================
+// maxbytes bytes are read into buf
+// the function reads nread bytes where nread is the minimum of maxbytes
+// and the number of bytes before the end of file.
+// the function returns nread.
+// In output arguments:
+//    nbytes : number of bytes in record
+//             if negative, this is a deleted record
+//             if 0, cannot read record, wrong value of argument first
+//    objlen : uncompressed object size
+//    keylen : length of logical record header
+// Note that the arguments objlen and keylen are returned only if maxbytes >=16
+
+   if (first < fBEGIN) return 0;
+   if (first > fEND)   return 0;
+   Seek(first);
+   Int_t nread = maxbytes;
+   if (first+maxbytes > fEND) nread = fEND-maxbytes;
+   if (nread < 4) {
+      Warning("GetRecordHeader","parameter maxbytes=%d must be >= 4",nread);
+      return nread;
+   }
+   ReadBuffer(buf,nread);
+   Version_t versionkey;
+   Short_t  klen;
+   UInt_t   datime;
+   Int_t    nb,olen;
+   char *buffer = buf;
+   frombuf(buffer,&nb);
+   nbytes = nb;
+   if (nb < 0) return nread;
+//   const Int_t headerSize = Int_t(sizeof(nb) +sizeof(versionkey) +sizeof(olen) +sizeof(datime) +sizeof(klen));
+   const Int_t headerSize = 16;
+   if (nread < headerSize) return nread;
+   frombuf(buffer, &versionkey);
+   frombuf(buffer, &olen);
+   frombuf(buffer, &datime);
+   frombuf(buffer, &klen);
+   if (!olen) olen = nbytes-klen;
+   objlen = olen;
+   keylen = klen;
+   return nread;
 }
 
 //______________________________________________________________________________
@@ -765,8 +807,8 @@ Bool_t TFile::ReadBuffer(char *buf, int len)
 
    if (IsOpen()) {
       ssize_t siz;
-      while ((siz = SysRead(fD, buf, len)) < 0 && errno == EINTR)
-         errno = 0;
+      while ((siz = SysRead(fD, buf, len)) < 0 && TSystem::GetErrno() == EINTR)
+         TSystem::ResetErrno();
       if (siz < 0) {
          SysError("ReadBuffer", "error reading from file %s", GetName());
          return kTRUE;
@@ -799,12 +841,10 @@ void TFile::ReadFree()
    char *buffer = headerfree->GetBuffer();
    headerfree->ReadBuffer(buffer);
    buffer =  headerfree->GetBuffer();
-   char *psave = buffer;
-   Int_t nwritten = fNbytesFree - headerfree->GetKeylen();
    while(1) {
       TFree *afree = new TFree();
       afree->ReadBuffer(buffer);
-      if (buffer-psave >= nwritten) break;
+      if (afree->GetLast() > fEND) break;
    }
    delete headerfree;
 }
@@ -963,7 +1003,7 @@ void TFile::SumBuffer(Int_t bufsize)
 }
 
 //______________________________________________________________________________
-void TFile::Write(const Text_t *, Int_t opt, Int_t bufsiz)
+void TFile::Write(const char *, Int_t opt, Int_t bufsiz)
 {
 //*-*-*-*-*-*-*-*-*-*Write memory objects to this file*-*-*-*-*-*-*-*-*-*
 //*-*                =================================
@@ -1008,8 +1048,8 @@ Bool_t TFile::WriteBuffer(const char *buf, int len)
    if (IsOpen() && fWritable) {
       ssize_t siz;
       gSystem->IgnoreInterrupt();
-      while ((siz = SysWrite(fD, buf, len)) < 0 && errno == EINTR)
-         errno = 0;
+      while ((siz = SysWrite(fD, buf, len)) < 0 && TSystem::GetErrno() == EINTR)
+         TSystem::ResetErrno();
       gSystem->IgnoreInterrupt(kFALSE);
       if (siz < 0) {
          SysError("WriteBuffer", "error writing to file %s", GetName());
@@ -1096,7 +1136,7 @@ void TFile::WriteHeader()
 }
 
 //______________________________________________________________________________
-TFile *TFile::Open(const Text_t *name, Option_t *option, const Text_t *ftitle, Int_t compress)
+TFile *TFile::Open(const char *name, Option_t *option, const char *ftitle, Int_t compress)
 {
    // Static member function allowing the creation/opening of either a
    // TFile, TNetFile, TWebFile or a TRFIOFile. The returned type of TFile
@@ -1108,8 +1148,7 @@ TFile *TFile::Open(const Text_t *name, Option_t *option, const Text_t *ftitle, I
    // via a normal TFile. To force the opening of a local file via a
    // TNetFile use either TNetFile directly or specify as host "localhost".
 
-   static Bool_t RFIO_loaded = kFALSE;
-   TFile *f=0;
+   TFile *f = 0;
 
    if (!strncmp(name, "root:", 5)) {
       TUrl url(name);
@@ -1126,20 +1165,7 @@ TFile *TFile::Open(const Text_t *name, Option_t *option, const Text_t *ftitle, I
                           option, ftitle, compress);
       }
    } else if (!strncmp(name, "rfio:", 5)) {
-      if (!RFIO_loaded) {
-         char *p, *lib = Form("%s/lib/libRFIO", gRootDir);
-         if ((p = gSystem->DynamicPathName(lib, kTRUE))) {
-            delete [] p;
-            if (gSystem->Load(lib)) {
-               ::Error("TFile::Open", "cannot load RFIO interface library %s", lib);
-               return 0;
-            }
-            RFIO_loaded = kTRUE;
-         } else {
-            ::Error("TFile::Open", "cannot find RFIO interface library %s", lib);
-            return 0;
-         }
-      }
+      if (gROOT->LoadClass("TRFIOFile", "RFIO")) return 0;
       f = (TFile*) gROOT->ProcessLineFast(Form("new TRFIOFile(\"%s\",\"%s\",\"%s\",%d)",
           name, option, ftitle, compress));
    } else if (!strncmp(name, "hpss:", 5)) {

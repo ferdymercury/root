@@ -1,35 +1,38 @@
+*CMZ :  2.23/09 19/11/99  18.31.59  by  Fons Rademakers
+*CMZ :  2.23/04 29/09/99  18.30.42  by  Fons Rademakers
+*CMZ :  2.23/00 08/08/99  16.17.53  by  Fons Rademakers
 *CMZ :  2.22/09 09/07/99  09.32.33  by  Rene Brun
 *CMZ :  2.22/01 11/05/99  09.08.02  by  Rene Brun
 *CMZ :  2.22/00 29/03/99  17.50.20  by  Fons Rademakers
-*CMZ :  2.21/01 11/01/99  13.00.13  by  Fons Rademakers
 *-- Author :    Fons Rademakers   11/01/99
 # Makefile of ROOT for HP-UX 10.x with egcs-1.1.1
+
+include ../Makefile.config
 
 PLATFORM      = hpux
 
 CXX           = g++
 CC            = gcc
-CXXFLAGS      = -fPIC -I/usr/include/X11R5
-CFLAGS        = -fPIC -I/usr/include/X11R5
-CINTCXXFLAGS  = -fPIC -DG__REGEXP -DG__UNIX \
+CXXFLAGS      = -fPIC -I/usr/include/X11R5 $(EXTRA_CXXFLAGS)
+CFLAGS        = -fPIC -I/usr/include/X11R5 $(EXTRA_CFLAGS)
+CINTCXXFLAGS  = -fPIC -DG__REGEXP -DG__UNIX $(EXTRA_CXXFLAGS) \
                 -DG__SHAREDLIB -D_POSIX2_SOURCE -DG__ROOT -DG__REDIRECTIO
-CINTCFLAGS    = -fPIC -DG__REGEXP -DG__UNIX \
+CINTCFLAGS    = -fPIC -DG__REGEXP -DG__UNIX $(EXTRA_CFLAGS) \
                 -DG__SHAREDLIB -D_POSIX2_SOURCE -DG__ROOT -DG__REDIRECTIO
 OPT           = -O
 NOOPT         =
 LD            = g++
-LDFLAGS       = $(OPT)
+LDFLAGS       = $(OPT) $(EXTRA_LDFLAGS)
 SOFLAGS       = -shared -fPIC
 SOEXT         = sl
 SYSLIBS       = -lm -ldld
-SYSXLIBS      = -L/usr/lib/X11R5 -L/usr/lib -lX11 -lm -ldld
-XLIBS         = $(ROOTSYS)/lib/libXpm.a -L/usr/lib/X11R5 -lX11
+XLIBS         = ../lib/libXpm.a -L/usr/lib/X11R5 -lX11
 CILIBS        = -L/usr/lib -lm -ldld
 F77           = f77
 F77FLAGS      = $(OPT) -K +ppu
 F77LIBS       = -lf
 
-VPATH         = $(ROOTSYS)/include
+VPATH         = ../include
 
 
 ##### MACROS and TARGETS #####

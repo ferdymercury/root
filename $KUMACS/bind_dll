@@ -1,8 +1,10 @@
+*CMZ :  2.23/08 01/11/99  19.29.27  by  Rene Brun
+*CMZ :  2.23/04 10/10/99  21.15.07  by  Fons Rademakers
 *CMZ :  2.00/09 05/06/98  17.41.33  by  Valery Fine(fine@mail.cern.ch)
 *CMZ :  2.00/08 15/05/98  09.11.43  by  Valery Fine(fine@mail.cern.ch)
 *CMZ :  1.01/04 01/06/97  14.45.18  by  Valery Fine(fine@vxcern.cern.ch)
 *-- Author :
-macro bind_dll  1='root'   2='*.obj' 3='-' 4='-' 5='-' 6='-'
+macro bind_dll  1='root'   2='*.obj' 3='' 4='' 5='' 6='' 7='' 8='' 9=''
 Mess Creating the Root_[1].dll DLL library
 import *
 
@@ -12,29 +14,38 @@ import *
 LastSystemLib = COMCTL32.LIB
 ExtraLibs = [LastSystemLib]
 
-if [3] <> '-' then
-  ExtraLibs = [LastSystemLib]//' '//[3]
-  if [4] <> '-' then
-     ExtraLibs = [LastSystemLib]//' '//[3]//' '//[4]
-     if [5] <> '-' then
-        ExtraLibs = [LastSystemLib]//' '//[3]//' '//[4]//' '//[5]
-        if [6] <> '-' then
-          ExtraLibs = [LastSystemLib]//' '//[3]//' '//[4]//' '//[5]//' '//[6]
-       endif
-     endif
-  endif
-  Mess This DLL is linked with [ExtraLibs] libraries
-endif
-
 SysLibs = 'msvcrt.lib oldnames.lib '// _
           'kernel32.lib advapi32.lib '// _
           'user32.lib gdi32.lib comdlg32.lib winspool.lib '// _
           [ExtraLibs]
 
-UserLibs = $ROOTSYS\lib\*.lib
-
 pdb = $ROOTSYS\bin\Root_[1].pdb
 
-shell [LD] [SLOPT] /PDB:[pdb] [LDOUTPUTOPT]$ROOTSYS\bin\Root_[1].[DLLSUF] $ROOTSYS\src\[2]* $ROOTSYS\lib\Root_[1].exp [UserLibs] [SysLibs]
+UserLibs = $ROOTSYS\lib\*.lib
 
++IF,NEWBIND
+if [1] = 'Cint' then
+  shell [LD] [SLOPT] /PDB:[pdb] [LDOUTPUTOPT]$ROOTSYS\bin\Root_[1].[DLLSUF] _
+    $ROOTSYS\src\[2]* $ROOTSYS\lib\Root_[1].exp [SysLibs]
+elseif [1] = 'Core' then
+  shell [LD] [SLOPT] /PDB:[pdb] [LDOUTPUTOPT]$ROOTSYS\bin\Root_[1].[DLLSUF] _
+    [COREOBJS] $ROOTSYS\lib\Root_[1].exp $ROOTSYS\lib\Root_Cint.lib [SysLibs] WSock32.lib
+else
+  shell [LD] [SLOPT] /PDB:[pdb] [LDOUTPUTOPT]$ROOTSYS\bin\Root_[1].[DLLSUF] _
+    $ROOTSYS\src\[2]* $ROOTSYS\lib\Root_[1].exp [3] [4] [5] [6] [7] [8] [9] _
+    $ROOTSYS\lib\Root_Core.lib $ROOTSYS\lib\Root_Cint.lib [SysLibs]
+endif
++ELSE
+if [1] = 'Cint' then
+  shell [LD] [SLOPT] /PDB:[pdb] [LDOUTPUTOPT]$ROOTSYS\bin\Root_[1].[DLLSUF] _
+    $ROOTSYS\src\[2]* $ROOTSYS\lib\Root_[1].exp  [UserLibs] [SysLibs]
+elseif [1] = 'Core' then
+  shell [LD] [SLOPT] /PDB:[pdb] [LDOUTPUTOPT]$ROOTSYS\bin\Root_[1].[DLLSUF] _
+    [COREOBJS] $ROOTSYS\lib\Root_[1].exp [UserLibs] [SysLibs] WSock32.lib
+else
+  shell [LD] [SLOPT] /PDB:[pdb] [LDOUTPUTOPT]$ROOTSYS\bin\Root_[1].[DLLSUF] _
+    $ROOTSYS\src\[2]* $ROOTSYS\lib\Root_[1].exp [3] [4] [5] [6] [7] [8] [9] _
+    [UserLibs] [SysLibs]
+endif
++ENDIF
 return

@@ -1,5 +1,5 @@
-/*CMZ :  2.22/10 23/07/99  14.42.17  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   23/07/99*/
+/*CMZ :  2.23/10 10/12/99  18.00.03  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   10/12/99*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -9,15 +9,13 @@
  * Description:
  *  Unary and binary operator handling
  ************************************************************************
- * Copyright(c) 1991~1996  [hp] Hewlett Packard Japan, All rights reserved
- * Author                  Masaharu Goto (gotom@jpn.hp.com)
- * Copyright(c) 1995~1998  Masaharu Goto (MXJ02154@niftyserve.or.jp)
+ * Copyright(c) 1995~1999  Masaharu Goto (MXJ02154@niftyserve.or.jp)
  *
  * Permission to use, copy, modify and distribute this software and its
  * documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies and
  * that both that copyright notice and this permission notice appear
- * in supporting documentation.  Hewlett-Packard Japan Company makes no
+ * in supporting documentation.  The author makes no
  * representations about the suitability of this software for any
  * purpose.  It is provided "as is" without express or implied warranty.
  ************************************************************************/
@@ -348,7 +346,9 @@ G__value *defined;
   if((G__isdouble(expressionin))||(G__isdouble(*defined))) {
     fexpression=G__double(expressionin);
     fdefined=G__double(*defined);
+#ifndef G__OLDIMPLEMENTATION1132
     defined->typenum = -1;
+#endif
     switch(operator) {
     case '\0':
       defined->ref=expressionin.ref;
@@ -1512,6 +1512,13 @@ G__value *pios;
   sprintf(buf,"rdstate()" /* ,pios->obj.i */ );
   result = G__getfunction(buf,&ig2,G__TRYMEMFUNC);
 
+#ifndef G__OLDIMPLEMENTATION1161
+  if(0==ig2) {
+    sprintf(buf,"operator int()" /* ,pios->obj.i */ );
+    result = G__getfunction(buf,&ig2,G__TRYMEMFUNC);
+  }
+#endif
+
   /* restore environment */
   G__store_struct_offset = store_struct_offset;
   G__tagnum = store_tagnum;
@@ -2373,7 +2380,11 @@ G__value *rval;
   if(G__asm_loopcompile<3) return(opr);
 
 #ifndef G__OLDIMPLEMENTATION1007
-  if(0==rval->type) {
+  if(0==rval->type
+#ifndef G__OLDIMPLEMENTATION1007
+     && 0==G__xrefflag
+#endif
+     ) {
     G__genericerror("Error: Binary operator oprand missing");
   }
 #endif

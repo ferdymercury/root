@@ -1,3 +1,5 @@
+//*CMZ :  2.23/04 04/10/99  10.57.23  by  Rene Brun
+//*CMZ :  2.23/02 02/09/99  15.54.29  by  Rene Brun
 //*CMZ :  2.00/12 07/10/98  12.56.55  by  Fons Rademakers
 //*-- Author :    Valeriy Onuchin & Fons Rademakers   04/10/98
 
@@ -19,7 +21,7 @@
 //  End_Html
 ///////////////////////////////////////////////////////////////////
 
-#include <TGXW.h>
+#include <TVirtualX.h>
 #include <TGClient.h>
 #include <KeySymbols.h>
 #include <TRootCanvas.h>
@@ -800,7 +802,7 @@ void InfoPad::PaintModified()
       TAttText::Modify();
 
       // get text width and height (in pixels)
-      gGXW->GetTextExtent(w,h,(char*)text->GetTitle());
+      gVirtualX->GetTextExtent(w,h,(char*)text->GetTitle());
       float x = 1-w/wW/2- 2*GetBorderSize()/wW;
       text->SetX(x);        // draw right  side aligned
       text->SetY(0.5);
@@ -820,11 +822,11 @@ KeyHandler::KeyHandler() : TGFrame(gClient->GetRoot(),0,0)
    TRootCanvas *main_frame = (TRootCanvas*)(gTetris->GetCanvasImp());
 
    // bind arrow keys and space-bar key
-   main_frame->BindKey(this, gGXW->KeysymToKeycode(kKey_Up),    kAnyModifier);
-   main_frame->BindKey(this, gGXW->KeysymToKeycode(kKey_Left),  kAnyModifier);
-   main_frame->BindKey(this, gGXW->KeysymToKeycode(kKey_Right), kAnyModifier);
-   main_frame->BindKey(this, gGXW->KeysymToKeycode(kKey_Down),  kAnyModifier);
-   main_frame->BindKey(this, gGXW->KeysymToKeycode(kKey_Space), kAnyModifier);
+   main_frame->BindKey(this, gVirtualX->KeysymToKeycode(kKey_Up),    kAnyModifier);
+   main_frame->BindKey(this, gVirtualX->KeysymToKeycode(kKey_Left),  kAnyModifier);
+   main_frame->BindKey(this, gVirtualX->KeysymToKeycode(kKey_Right), kAnyModifier);
+   main_frame->BindKey(this, gVirtualX->KeysymToKeycode(kKey_Down),  kAnyModifier);
+   main_frame->BindKey(this, gVirtualX->KeysymToKeycode(kKey_Space), kAnyModifier);
 }
 
 Bool_t KeyHandler::HandleKey(Event_t *event)
@@ -834,7 +836,7 @@ Bool_t KeyHandler::HandleKey(Event_t *event)
    char tmp[1];
    UInt_t keysym;
 
-   gGXW->LookupString(event, tmp, sizeof(tmp), keysym);
+   gVirtualX->LookupString(event, tmp, sizeof(tmp), keysym);
 
    if (event->fType == kGKeyPress) {
       switch ((EKeySym)keysym) {
@@ -894,7 +896,7 @@ Tetris::Tetris() :
    // Tetris constructor
 
    gTetris = this;
-   fIsEditable = kIsNotEditable;
+   fIsEditable = kFALSE;
 
    //-----------  play board ------------
    fBoard            = new  TetrisBoard(0.35,0.05,0.7,0.95);

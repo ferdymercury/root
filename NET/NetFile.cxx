@@ -1,26 +1,22 @@
+//*CMZ :  2.23/12 26/01/2000  10.05.48  by  Rene Brun
+//*CMZ :  2.23/09 19/11/99  14.37.54  by  Fons Rademakers
 //*CMZ :  2.22/05 04/06/99  18.59.13  by  Rene Brun
 //*CMZ :  2.22/01 15/04/99  18.04.56  by  Fons Rademakers
 //*CMZ :  2.20/00 08/11/98  11.48.36  by  Rene Brun
 //*CMZ :  2.00/06 25/04/98  00.47.27  by  Fons Rademakers
-//*CMZ :  1.03/09 08/12/97  13.09.17  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   14/08/97
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -60,7 +56,9 @@
 //                                                                      //
 //////////////////////////////////////////////////////////////////////////
 
+#ifndef R__LYNXOS
 #include <sys/stat.h>
+#endif
 #include <errno.h>
 
 #include "TNetFile.h"
@@ -104,7 +102,7 @@ char *TNetFile::fgPasswd;
 ClassImp(TNetFile)
 
 //______________________________________________________________________________
-TNetFile::TNetFile(const char *url, Option_t *option, const Text_t *ftitle, Int_t compress)
+TNetFile::TNetFile(const char *url, Option_t *option, const char *ftitle, Int_t compress)
          : TFile(url, "NET", ftitle, compress), fUrl(url)
 {
    // Create a NetFile object. A net file is the same as a TFile
@@ -466,8 +464,8 @@ Bool_t TNetFile::ReadBuffer(char *buf, int len)
       goto end;
    }
 
-   while ((n = fSocket->RecvRaw(buf, len)) < 0 && errno == EINTR)
-      errno = 0;
+   while ((n = fSocket->RecvRaw(buf, len)) < 0 && TSystem::GetErrno() == EINTR)
+      TSystem::ResetErrno();
 
    if (n != len) {
       Error("ReadBuffer", "error receiving buffer of length %d, got %d", len, n);
@@ -552,8 +550,8 @@ Int_t TNetFile::Recv(Int_t &status, EMessageTypes &kind)
    if (!fSocket) return -1;
 
    Int_t hdr[3], n;
-   while ((n = fSocket->RecvRaw(hdr, sizeof(hdr))) < 0 && errno == EINTR)
-      errno = 0;
+   while ((n = fSocket->RecvRaw(hdr, sizeof(hdr))) < 0 && TSystem::GetErrno() == EINTR)
+      TSystem::ResetErrno();
    if (n <= 0)
       return -1;
 

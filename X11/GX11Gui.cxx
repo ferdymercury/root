@@ -1,26 +1,22 @@
+//*CMZ :  2.23/12 18/01/2000  14.23.04  by  Fons Rademakers
+//*CMZ :  2.23/07 27/10/99  11.43.57  by  Rene Brun
+//*CMZ :  2.23/03 25/09/99  20.18.45  by  Fons Rademakers
 //*CMZ :  2.20/00 18/11/98  22.52.13  by  Fons Rademakers
 //*CMZ :  2.00/12 05/10/98  18.43.49  by  Fons Rademakers
 //*CMZ :  2.00/06 09/05/98  19.18.45  by  Fons Rademakers
-//*CMZ :  2.00/01 12/03/98  19.28.48  by  Fons Rademakers
-//*CMZ :  2.00/00 04/03/98  19.37.23  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   28/12/97
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -28,7 +24,7 @@
 // TGX11 (GUI related part)                                             //
 //                                                                      //
 // This class is the basic interface to the X11 graphics system. It is  //
-// an implementation of the abstract TGXW class. The companion class    //
+// an implementation of the abstract TVirtualX class. The companion class    //
 // for Win32 is TGWin32.                                                //
 //                                                                      //
 // This file contains the implementation of the GUI methods of the      //
@@ -47,6 +43,7 @@
 #include "TROOT.h"
 #include "TError.h"
 #include "TException.h"
+#include "TClassTable.h"
 #include "KeySymbols.h"
 
 
@@ -260,6 +257,14 @@ void TGX11::ResizeWindow(Window_t id, UInt_t w, UInt_t h)
    // Resize the window.
 
    XResizeWindow(fDisplay, (Window) id, w, h);
+}
+
+//______________________________________________________________________________
+void TGX11::IconifyWindow(Window_t id)
+{
+   // Iconify the window.
+
+   XIconifyWindow(fDisplay, (Window) id, DefaultScreen(fDisplay));
 }
 
 //______________________________________________________________________________
@@ -693,6 +698,12 @@ Int_t TGX11::OpenDisplay(const char *dpyName)
    // in case of failure (cannot connect to display dpyName). It also
    // initializes the TGX11 class via Init(). Called from TGClient ctor.
 
+#ifdef _REENTRANT
+      // very first call before any X-call !!
+      if (!XInitThreads())
+         Warning("OpenDisplay", "system has no X11 thread support");
+#endif
+
    Display *dpy;
    if (!(dpy = XOpenDisplay(dpyName)))
       return -1;
@@ -723,7 +734,7 @@ void TGX11::CloseDisplay()
 Display_t TGX11::GetDisplay()
 {
    // Returns handle to display (might be usefull in some cases where
-   // direct X11 manipulation outside of TGXW is needed, e.g. GL interface).
+   // direct X11 manipulation outside of TVirtualX is needed, e.g. GL interface).
 
    return (Display_t) fDisplay;
 }
@@ -771,7 +782,8 @@ Window_t TGX11::GetParent(Window_t id)
 FontStruct_t TGX11::LoadQueryFont(const char *font_name)
 {
    // Load font and query font. If font is not found 0 is returned,
-   // otherwise a opaque pointer to the FontStruct_t.
+   // otherwise an opaque pointer to the FontStruct_t.
+   // Free the loaded font using DeleteFont().
 
    XFontStruct *fs = XLoadQueryFont(fDisplay, (char *)font_name);
    return (FontStruct_t) fs;
@@ -792,7 +804,7 @@ FontH_t TGX11::GetFontHandle(FontStruct_t fs)
 //______________________________________________________________________________
 void TGX11::DeleteFont(FontStruct_t fs)
 {
-   // Explicitely delete font structure.
+   // Explicitely delete font structure obtained with LoadQueryFont().
 
    XFreeFont(fDisplay, (XFontStruct *) fs);
 }
@@ -1615,6 +1627,19 @@ void TGX11::SetIconName(Window_t id, char *name)
 }
 
 //______________________________________________________________________________
+void TGX11::SetIconPixmap(Window_t id, Pixmap_t pic)
+{
+   // Set pixmap the WM can use when the window is iconized.
+
+   XWMHints hints;
+
+   hints.flags = IconPixmapHint;
+   hints.icon_pixmap = (Pixmap) pic;
+
+   XSetWMHints(fDisplay, (Window) id, &hints);
+}
+
+//______________________________________________________________________________
 void TGX11::SetClassHints(Window_t id, char *className, char *resourceName)
 {
    // Set the windows class and resource name.
@@ -1768,12 +1793,21 @@ void TGX11::GetGCValues(GContext_t gc, GCValues_t &gval)
 FontStruct_t TGX11::GetFontStruct(FontH_t fh)
 {
    // Retrieve associated font structure once we have the font handle.
+   // Free returned FontStruct_t using FreeFontStruct().
 
    XFontStruct *fs;
 
    fs = XQueryFont(fDisplay, (Font) fh);
 
    return (FontStruct_t) fs;
+}
+
+//______________________________________________________________________________
+void TGX11::FreeFontStruct(FontStruct_t fs)
+{
+   // Free font structure returned by GetFontStruct().
+
+   XFreeFontInfo(0, (XFontStruct *) fs, 1);
 }
 
 //______________________________________________________________________________

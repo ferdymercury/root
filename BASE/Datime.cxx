@@ -1,26 +1,21 @@
+//*CMZ :  2.23/09 03/11/99  12.06.07  by  Fons Rademakers
 //*CMZ :  2.21/06 15/02/99  13.14.27  by  Rene Brun
 //*CMZ :  2.21/04 29/01/99  13.55.19  by  Fons Rademakers
 //*CMZ :  2.00/12 15/09/98  00.46.10  by  Rene Brun
 //*CMZ :  2.00/05 19/04/98  03.02.26  by  Fons Rademakers
-//*CMZ :  1.03/09 05/12/97  12.04.17  by  Fons Rademakers
 //*-- Author :    Rene Brun   05/01/95
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -56,6 +51,25 @@ TDatime::TDatime()
    // Create a TDatime and set it to the current time.
 
    Set();
+}
+
+//______________________________________________________________________________
+TDatime::TDatime(Int_t date, Int_t time)
+{
+   // Create a TDatime and set it to the specified date and time.
+   // See Set() about the date, time format.
+
+   Set(date, time);
+}
+
+//______________________________________________________________________________
+TDatime::TDatime(Int_t year, Int_t month, Int_t day,
+                 Int_t hour, Int_t min, Int_t sec)
+{
+   // Create a TDatime and set it to the specified year, month,
+   // day, time, hour, minute and second. See Set() about the format.
+
+   Set(year, month, day, hour, min, sec);
 }
 
 //______________________________________________________________________________

@@ -1,7 +1,11 @@
+*CMZ :  2.23/12 22/01/2000  18.42.48  by  Rene Brun
+*CMZ :  2.23/10 14/12/99  19.41.46  by  Fons Rademakers
+*CMZ :  2.23/09 15/11/99  11.02.20  by  Fons Rademakers
+*CMZ :  2.23/04 09/10/99  22.37.16  by  Rene Brun
+*CMZ :  2.23/03 26/09/99  20.18.36  by  Fons Rademakers
+*CMZ :  2.23/01 31/08/99  16.02.16  by  Rene Brun
 *CMZ :  2.22/05 10/06/99  09.00.07  by  Rene Brun
 *CMZ :  2.22/00 08/04/99  17.10.24  by  Rene Brun
-*CMZ :  2.00/13 13/10/98  20.07.14  by  Fons Rademakers
-*CMZ :  2.00/09 21/06/98  20.10.38  by  Fons Rademakers
 *-- Author :    Fons Rademakers   21/06/98
 #ifdef __CINT__
 
@@ -11,6 +15,11 @@
 
 #pragma link C++ global kTRUE;
 #pragma link C++ global kFALSE;
+#pragma link C++ global kNPOS;
+#pragma link C++ global kWarning;
+#pragma link C++ global kError;
+#pragma link C++ global kSysError;
+#pragma link C++ global kFatal;
 
 #pragma link C++ enum EObjBits;
 
@@ -23,9 +32,18 @@
 #pragma link C++ global gRandom;
 #pragma link C++ global gDebug;
 #pragma link C++ global gErrorIgnoreLevel;
+#pragma link C++ global gStyle;
+#pragma link C++ global gVirtualGL;
+#pragma link C++ global gVirtualX;
+#pragma link C++ global gVirtualPS;
+
+#pragma link C++ function Pad;
 
 #pragma link C++ function Strip;
 #pragma link C++ function StrDup;
+#pragma link C++ function Compress;
+#pragma link C++ function EscChar;
+#pragma link C++ function UnEscChar;
 #pragma link C++ function operator+(const TString&,const TString&);
 #pragma link C++ function operator+(const TString&,const char*);
 #pragma link C++ function operator+(const char*,const TString&);
@@ -40,21 +58,29 @@
 //#pragma link C++ function operator>>(TBuffer&,const TObject*&);
 //#pragma link C++ function operator<<(TBuffer&,const TObject*);
 
+#pragma link C++ function operator==(const TDatime&,const TDatime&);
+#pragma link C++ function operator!=(const TDatime&,const TDatime&);
+#pragma link C++ function operator<(const TDatime&,const TDatime&);
+#pragma link C++ function operator<=(const TDatime&,const TDatime&);
+#pragma link C++ function operator>(const TDatime&,const TDatime&);
+#pragma link C++ function operator>=(const TDatime&,const TDatime&);
+
 #pragma link C++ class TApplication;
 #pragma link C++ class TApplicationImp;
-#pragma link C++ class TAttAxis-;
 #pragma link C++ class TAttFill;
-#pragma link C++ class TAttFunc;
-#pragma link C++ class TAttHist;
 #pragma link C++ class TAttLine;
 #pragma link C++ class TAttMarker;
-#pragma link C++ class TAttStat;
+#pragma link C++ class TAttPad-;
+#pragma link C++ class TAttAxis-;
 #pragma link C++ class TAttText;
-#pragma link C++ class TAxis-;
+#pragma link C++ class TAtt3D;
 #pragma link C++ class TBenchmark;
+#pragma link C++ class TBrowser;
 #pragma link C++ class TBrowserImp;
 #pragma link C++ class TBuffer;
 #pragma link C++ class TCanvasImp;
+#pragma link C++ class TColor+;
+#pragma link C++ class TContextMenu;
 #pragma link C++ class TContextMenuImp;
 #pragma link C++ class TControlBarImp;
 #pragma link C++ class TDatime-;
@@ -62,6 +88,13 @@
 #pragma link C++ class TEnv;
 #pragma link C++ class TFile-;
 #pragma link C++ class TFileHandler;
-#pragma link C++ class TFormula-;
+#pragma link C++ class TGuiFactory;
+#pragma link C++ class TStyle+;
+#pragma link C++ class TView;
+#pragma link C++ class TVirtualX;
+#pragma link C++ class TVirtualFitter;
+#pragma link C++ class TVirtualPad;
+#pragma link C++ class TVirtualGL;
+#pragma link C++ class TVirtualPS;
 
 #endif

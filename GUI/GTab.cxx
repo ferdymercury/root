@@ -1,27 +1,20 @@
+//*CMZ :  2.23/02 02/09/99  15.54.27  by  Rene Brun
+//*CMZ :  2.23/01 24/08/99  19.39.06  by  Fons Rademakers
 //*CMZ :  2.22/05 09/06/99  18.30.40  by  Fons Rademakers
 //*CMZ :  2.22/04 03/06/99  18.57.13  by  Rene Brun
-//*CMZ :  2.21/04 03/02/99  11.31.17  by  Fons Rademakers
-//*CMZ :  2.00/12 02/10/98  15.14.26  by  Fons Rademakers
-//*CMZ :  2.00/11 03/08/98  12.17.47  by  Fons Rademakers
-//*CMZ :  2.00/00 17/02/98  18.55.16  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   13/01/98
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 //*CMZ :  2.00/00 16/02/98  00.17.08  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   27/12/97
@@ -77,8 +70,8 @@ TGTabElement::TGTabElement(const TGWindow *p, TGString *text, UInt_t w, UInt_t h
    fFontStruct  = font;
 
    int max_ascent, max_descent;
-   fTWidth = gGXW->TextWidth(fFontStruct, fText->GetString(), fText->GetLength());
-   gGXW->GetFontProperties(fFontStruct, max_ascent, max_descent);
+   fTWidth = gVirtualX->TextWidth(fFontStruct, fText->GetString(), fText->GetLength());
+   gVirtualX->GetFontProperties(fFontStruct, max_ascent, max_descent);
    fTHeight = max_ascent + max_descent;
    Resize(TMath::Max(fTWidth+12, (UInt_t)45), fTHeight+6);
 }
@@ -96,17 +89,17 @@ void TGTabElement::DrawBorder()
 {
    // Draw little tab element.
 
-   gGXW->DrawLine(fId, fgHilightGC, 0, fHeight-1, 0, 2);
-   gGXW->DrawLine(fId, fgHilightGC, 0, 2, 2, 0);
-   gGXW->DrawLine(fId, fgHilightGC, 2, 0, fWidth-3, 0);
-   gGXW->DrawLine(fId, fgShadowGC,  fWidth-2, 1, fWidth-2, fHeight-1);
-   gGXW->DrawLine(fId, fgBlackGC, fWidth-2, 1, fWidth-1, 2);
-   gGXW->DrawLine(fId, fgBlackGC, fWidth-1, 2, fWidth-1, fHeight-2);
-   gGXW->DrawLine(fId, fgHilightGC, fWidth-1, fHeight-1, fWidth-1, fHeight-1);
+   gVirtualX->DrawLine(fId, fgHilightGC, 0, fHeight-1, 0, 2);
+   gVirtualX->DrawLine(fId, fgHilightGC, 0, 2, 2, 0);
+   gVirtualX->DrawLine(fId, fgHilightGC, 2, 0, fWidth-3, 0);
+   gVirtualX->DrawLine(fId, fgShadowGC,  fWidth-2, 1, fWidth-2, fHeight-1);
+   gVirtualX->DrawLine(fId, fgBlackGC, fWidth-2, 1, fWidth-1, 2);
+   gVirtualX->DrawLine(fId, fgBlackGC, fWidth-1, 2, fWidth-1, fHeight-2);
+   gVirtualX->DrawLine(fId, fgHilightGC, fWidth-1, fHeight-1, fWidth-1, fHeight-1);
 
    if (fText) {
       int max_ascent, max_descent;
-      gGXW->GetFontProperties(fFontStruct, max_ascent, max_descent);
+      gVirtualX->GetFontProperties(fFontStruct, max_ascent, max_descent);
       fText->Draw(fId, fNormGC, 6, max_ascent+3);
    }
 }
@@ -128,8 +121,8 @@ void TGTabElement::SetText(TGString *text)
    fText = text;
 
    int max_ascent, max_descent;
-   fTWidth = gGXW->TextWidth(fFontStruct, fText->GetString(), fText->GetLength());
-   gGXW->GetFontProperties(fFontStruct, max_ascent, max_descent);
+   fTWidth = gVirtualX->TextWidth(fFontStruct, fText->GetString(), fText->GetLength());
+   gVirtualX->GetFontProperties(fFontStruct, max_ascent, max_descent);
    fTHeight = max_ascent + max_descent;
 
    fClient->NeedRedraw(this);
@@ -231,7 +224,7 @@ TGTab::TGTab(const TGWindow *p, UInt_t w, UInt_t h,
    fFontStruct = font;
 
    int max_ascent, max_descent;
-   gGXW->GetFontProperties(fFontStruct, max_ascent, max_descent);
+   gVirtualX->GetFontProperties(fFontStruct, max_ascent, max_descent);
    fTabh = max_ascent + max_descent + 6;
 
    SetLayoutManager(new TGTabLayout(this));
@@ -241,7 +234,7 @@ TGTab::TGTab(const TGWindow *p, UInt_t w, UInt_t h,
                        kVerticalFrame | kRaisedFrame | kDoubleBorder);
    AddFrame(fContainer, 0);
 
-   gGXW->SelectInput(fId, kButtonPressMask);
+   gVirtualX->SelectInput(fId, kButtonPressMask);
 }
 
 //______________________________________________________________________________
@@ -254,8 +247,8 @@ TGTab::~TGTab()
    TIter next(fList);
 
    while ((el = (TGFrameElement *) next())) {
-       delete el->fFrame;
-       // delete el->fLayout; // el->fLayout is NULL!
+      delete el->fFrame;
+      // delete el->fLayout; // el->fLayout is NULL!
    }
 
    fRemoved->Delete();

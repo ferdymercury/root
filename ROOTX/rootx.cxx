@@ -1,9 +1,9 @@
+//*CMZ :  2.23/12 18/01/2000  16.43.53  by  Rene Brun
+//*CMZ :  2.23/09 19/11/99  13.29.23  by  Fons Rademakers
 //*CMZ :  2.21/05 08/02/99  12.42.39  by  Fons Rademakers
 //*CMZ :  2.21/04 27/01/99  09.57.44  by  Fons Rademakers
 //*CMZ :  2.00/10 23/07/98  14.34.20  by  akiya miyamoto
 //*CMZ :  2.00/07 15/05/98  16.46.09  by  Rene Brun
-//*CMZ :  2.00/06 12/05/98  16.28.21  by  Rene Brun
-//*CMZ :  2.00/00 07/03/98  17.28.02  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   19/02/98
 
 //////////////////////////////////////////////////////////////////////////
@@ -19,6 +19,10 @@
 // (depending on the platform).                                         //
 //                                                                      //
 //////////////////////////////////////////////////////////////////////////
+
+#ifdef HAVE_CONFIG
+#include "config.h"
+#endif
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -36,8 +40,14 @@
 #define HAVE_UTMPX_H
 #define UTMP_NO_ADDR
 #endif
-#if defined(__alpha) || defined(_AIX) || defined(__FreeBSD__)
+#if defined(__alpha) || defined(_AIX) || defined(__FreeBSD__) || defined(__Lynx__)
 #define UTMP_NO_ADDR
+#endif
+
+#ifdef __sun
+#   if __SUNPRO_CC > 0x420
+#      define GLOBAL_ERRNO
+#   endif
 #endif
 
 #ifndef __VMS
@@ -73,6 +83,24 @@ static STRUCT_UTMP *gUtmpContents;
 static int          gBatch  = 0;
 static int          gNoLogo = 0;
 
+
+static int GetErrno()
+{
+#ifdef GLOBAL_ERRNO
+   return ::errno;
+#else
+   return errno;
+#endif
+}
+
+static void ResetErrno()
+{
+#ifdef GLOBAL_ERRNO
+   ::errno = 0;
+#else
+   errno = 0;
+#endif
+}
 
 static int ReadUtmp()
 {
@@ -160,35 +188,37 @@ static void SetDisplay()
 
 static void SetLibraryPath()
 {
+#ifndef ROOTLIBDIR
    // Set library path for the different platforms.
 
    static char msg[512];
 
-#if defined(__linux) || defined(__alpha) || defined(__sgi) || defined(__sun) || \
-    defined(__FreeBSD__)
+#  if defined(__linux) || defined(__alpha) || defined(__sgi) || \
+      defined(__sun) || defined(__FreeBSD__)
    if (getenv("LD_LIBRARY_PATH"))
       sprintf(msg, "LD_LIBRARY_PATH=%s/lib:%s", getenv("ROOTSYS"),
                                                 getenv("LD_LIBRARY_PATH"));
    else
-#if defined(__sun)
+#  if defined(__sun)
       sprintf(msg, "LD_LIBRARY_PATH=%s/lib:/usr/dt/lib", getenv("ROOTSYS"));
-#else
+#  else
       sprintf(msg, "LD_LIBRARY_PATH=%s/lib", getenv("ROOTSYS"));
-#endif
-#elif defined(__hpux)  || defined(_HIUX_SOURCE)
+#  endif
+#  elif defined(__hpux)  || defined(_HIUX_SOURCE)
    if (getenv("SHLIB_PATH"))
       sprintf(msg, "SHLIB_PATH=%s/lib:%s", getenv("ROOTSYS"),
                                            getenv("SHLIB_PATH"));
    else
       sprintf(msg, "SHLIB_PATH=%s/lib", getenv("ROOTSYS"));
-#elif defined(_AIX)
+#  elif defined(_AIX)
    if (getenv("LIBPATH"))
       sprintf(msg, "LIBPATH=%s/lib:%s", getenv("ROOTSYS"),
                                         getenv("LIBPATH"));
    else
       sprintf(msg, "LIBPATH=%s/lib:/lib:/usr/lib", getenv("ROOTSYS"));
-#endif
+#  endif
    putenv((char *)msg);
+#endif
 }
 
 static void SigUsr1(int)
@@ -207,9 +237,9 @@ static void WaitChild(int childpid)
 
    do {
       while (waitpid(childpid, &status, WUNTRACED) < 0) {
-         if (errno != EINTR)
+         if (GetErrno() != EINTR)
             break;
-         errno = 0;
+         ResetErrno();
       }
       if (WIFSTOPPED(status)) {         // child got ctlr-Z
          raise(SIGTSTP);                // stop also parent
@@ -239,11 +269,13 @@ int main(int argc, char **argv)
    char *argvv[kMAXARGS];
    char  arg0[256];
 
+#ifndef ROOTPREFIX
    if (!getenv("ROOTSYS")) {
       fprintf(stderr, "%s: ROOTSYS not set. Set it before trying to run %s.\n",
               argv[0], argv[0]);
       return 1;
    }
+#endif
 
    // In batch mode don't show splash screen
    int i;
@@ -320,7 +352,11 @@ int main(int argc, char **argv)
    // Child is going to overlay itself with the actual ROOT module...
 
    // Build argv vector
+#ifdef ROOTBINDIR
+   sprintf(arg0, "%s/root.exe", ROOTBINDIR);
+#else
    sprintf(arg0, "%s/bin/root.exe", getenv("ROOTSYS"));
+#endif
    argvv[0] = arg0;
    argvv[1] = (char *) "-p";
 
@@ -337,8 +373,14 @@ int main(int argc, char **argv)
    execv(arg0, argvv);
 
    // Exec failed
-   fprintf(stderr, "%s: can't start ROOT -- check that %s/root.exe exists!\n",
+#ifndef ROOTBINDIR
+   fprintf(stderr,
+	   "%s: can't start ROOT -- check that %s/bin/root.exe exists!\n",
            argv[0], getenv("ROOTSYS"));
+#else
+   fprintf(stderr, "%s: can't start ROOT -- check that %s/root.exe exists!\n",
+           argv[0], ROOTBINDIR);
+#endif
 
    return 1;
 }

@@ -1,3 +1,5 @@
+//*CMZ :  2.23/12 26/01/2000  09.24.07  by  Rene Brun
+//*CMZ :  2.23/01 26/08/99  12.02.48  by  Rene Brun
 //*CMZ :  2.21/00 02/01/99  21.56.23  by  Valery Fine(fine@mail.cern.ch)
 //*CMZ :  2.00/12 07/10/98  08.52.48  by  Valery Fine(fine@mail.cern.ch)
 //*CMZ :  1.03/09 05/12/97  13.26.56  by  Fons Rademakers
@@ -6,22 +8,17 @@
 #ifndef ROOT_TRotMatrix
 #define ROOT_TRotMatrix
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -56,9 +53,9 @@ protected:
 
 public:
    TRotMatrix();
-   TRotMatrix(Text_t *name, Text_t *title, Double_t *matrix);
-   TRotMatrix(Text_t *name, Text_t *title, Double_t theta, Double_t phi, Double_t psi);
-   TRotMatrix(Text_t *name, Text_t *title, Double_t theta1, Double_t phi1,
+   TRotMatrix(const char *name, const char *title, Double_t *matrix);
+   TRotMatrix(const char *name, const char *title, Double_t theta, Double_t phi, Double_t psi);
+   TRotMatrix(const char *name, const char *title, Double_t theta1, Double_t phi1,
                                            Double_t theta2, Double_t phi2,
                                            Double_t theta3, Double_t phi3);
    virtual ~TRotMatrix();
@@ -72,12 +69,12 @@ public:
    virtual Double_t* GetGLMatrix(Double_t *rGLMatrix) const ;  // Convert this matrix to the OpenGL [4x4]
    virtual Bool_t    IsReflection() const {return TestBit(kReflection);}  // Return kTRUE if this matrix defines the reflection
    virtual void      SetMatrix(const Double_t *matrix);
-   virtual void      SetName(const Text_t *name);
+   virtual void      SetName(const char *name);
 
    ClassDef(TRotMatrix,1)  //Rotation Matrix for 3-D geometry objects
 };
 
-inline void TRotMatrix::SetName(const Text_t *) { }
+inline void TRotMatrix::SetName(const char *) { }
 
 #endif
 

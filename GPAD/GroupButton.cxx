@@ -1,36 +1,33 @@
+//*CMZ :  2.23/12 26/01/2000  09.35.28  by  Rene Brun
+//*CMZ :  2.23/04 04/10/99  11.11.22  by  Rene Brun
+//*CMZ :  2.23/02 17/09/99  09.26.15  by  Rene Brun
+//*CMZ :  2.23/00 16/08/99  18.31.45  by  Rene Brun
 //*CMZ :  2.20/05 15/12/98  09.17.21  by  Rene Brun
 //*CMZ :  2.20/00 13/11/98  18.43.35  by  Fons Rademakers
-//*CMZ :  2.00/11 08/08/98  22.49.30  by  Rene Brun
-//*CMZ :  1.03/09 09/12/97  16.15.45  by  Fons Rademakers
 //*-- Author :    Rene Brun   01/07/96
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 #include <fstream.h>
 
 #include "TROOT.h"
+#include "TBox.h"
 #include "TGroupButton.h"
-#include "TGXW.h"
+#include "TVirtualX.h"
 #include "TDialogCanvas.h"
 #include "TCanvas.h"
 #include "TText.h"
-#include "TPaveLabel.h"
 #include "TInterpreter.h"
 
 #include <string.h>
@@ -55,7 +52,7 @@ TGroupButton::TGroupButton(): TButton()
 }
 
 //______________________________________________________________________________
-TGroupButton::TGroupButton(const Text_t *groupname, const Text_t *title, const Text_t *method, Coord_t x1, Coord_t y1,Coord_t x2, Coord_t  y2)
+TGroupButton::TGroupButton(const char *groupname, const char *title, const char *method, Coord_t x1, Coord_t y1,Coord_t x2, Coord_t  y2)
            :TButton(title,method,x1,y1,x2,y2)
 {
 //*-*-*-*-*-*-*-*-*-*-*GroupButton normal constructor*-*-*-*-*-*-*-*-*-*-*-*
@@ -73,7 +70,7 @@ TGroupButton::~TGroupButton()
 }
 
 //______________________________________________________________________________
-void TGroupButton::DisplayColorTable(const Text_t *action, Float_t x0, Float_t y0, Float_t wc, Float_t hc)
+void TGroupButton::DisplayColorTable(const char *action, Float_t x0, Float_t y0, Float_t wc, Float_t hc)
 {
 //*-*-*-*-*-*-*-*-*-*-*Display Color Table in an attribute canvas*-*-*-*-*-*-*
 //*-*                  ==========================================
@@ -134,8 +131,8 @@ void TGroupButton::ExecuteAction()
       Int_t npixels = Int_t((YtoPixel(0) - YtoPixel(1))*text->GetTextSize());
       Float_t dy;
       pad = gROOT->GetSelectedPad();
-      if (obj->InheritsFrom(TPaveLabel::Class())) {
-         TPaveLabel *pl = (TPaveLabel*)obj;
+      if (obj->InheritsFrom("TPaveLabel::Class()")) {
+         TBox *pl = (TBox*)obj;
          dy = pad->AbsPixeltoY(0) - pad->AbsPixeltoY(npixels);
          sprintf(params,"%f",dy/(pl->GetY2() - pl->GetY1()));
       } else {
@@ -154,7 +151,7 @@ void TGroupButton::ExecuteEvent(Int_t event, Int_t px, Int_t py)
 //*-*  This member function is called when a Button object is clicked.
 //*-*
 
-   if (fMother->GetCanvas()->IsEditable()) {
+   if (fMother->IsEditable()) {
       TPad::ExecuteEvent(event,px,py);
       return;
    }

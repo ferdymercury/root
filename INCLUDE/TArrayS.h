@@ -1,3 +1,4 @@
+//*CMZ :  2.23/12 31/01/2000  10.23.55  by  Rene Brun
 //*CMZ :  2.00/09 23/06/98  14.58.53  by  Rene Brun
 //*CMZ :  1.03/06 24/10/97  15.37.14  by  Fons Rademakers
 //*-- Author :    Rene Brun   06/03/95
@@ -5,22 +6,17 @@
 #ifndef ROOT_TArrayS
 #define ROOT_TArrayS
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -39,7 +35,7 @@
 class TArrayS : public TArray {
 
 public:
-   Short_t    *fArray;       //Array of fN shorts
+   Short_t    *fArray;       //[fN] Array of fN shorts
 
    TArrayS();
    TArrayS(Int_t n);

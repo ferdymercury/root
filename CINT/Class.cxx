@@ -1,5 +1,5 @@
-//*CMZ :  2.22/10 23/07/99  14.42.21  by  Masaharu Goto
-//*-- Author :    Masaharu Goto   23/07/99
+//*CMZ :  2.23/10 10/12/99  18.00.08  by  Masaharu Goto
+//*-- Author :    Masaharu Goto   10/12/99
 /* /% C++ %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -9,15 +9,14 @@
  * Description:
  *  Extended Run Time Type Identification API
  ************************************************************************
- * Copyright(c) 1991~1996  [hp] Hewlett Packard Japan, All rights reserved
- * Author                  Masaharu Goto (gotom@jpn.hp.com)
- * Copyright(c) 1995~1998  Masaharu Goto (MXJ02154@niftyserve.or.jp)
+ * Author                  Masaharu Goto
+ * Copyright(c) 1995~1999  Masaharu Goto (MXJ02154@niftyserve.or.jp)
  *
  * Permission to use, copy, modify and distribute this software and its
  * documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies and
  * that both that copyright notice and this permission notice appear
- * in supporting documentation.  Hewlett-Packard Japan Company makes no
+ * in supporting documentation.  The author makes no
  * representations about the suitability of this software for any
  * purpose.  It is provided "as is" without express or implied warranty.
  ************************************************************************/
@@ -33,6 +32,9 @@
 void G__ClassInfo::Init()
 {
   tagnum = -1;
+#ifndef G__OLDIMPLEMENTATION1218
+  class_property = 0;
+#endif
 }
 ///////////////////////////////////////////////////////////////////////////
 void G__ClassInfo::Init(const char *classname)
@@ -42,11 +44,17 @@ void G__ClassInfo::Init(const char *classname)
 #else
   tagnum = G__defined_tagname(classname,2);
 #endif
+#ifndef G__OLDIMPLEMENTATION1218
+  class_property = 0;
+#endif
 }
 ///////////////////////////////////////////////////////////////////////////
 void G__ClassInfo::Init(int tagnumin)
 {
   tagnum = tagnumin;
+#ifndef G__OLDIMPLEMENTATION1218
+  class_property = 0;
+#endif
 }
 ///////////////////////////////////////////////////////////////////////////
 int G__ClassInfo::operator==(const G__ClassInfo& a)
@@ -104,8 +112,15 @@ int G__ClassInfo::Size()
 ///////////////////////////////////////////////////////////////////////////
 long G__ClassInfo::Property()
 {
+#ifndef G__OLDIMPLEMENTATION1218
+  if (class_property) return class_property;
+#else
   long property=0;
+#endif
   if(IsValid()) {
+#ifndef G__OLDIMPLEMENTATION1218
+    long property=0;
+#endif
     switch(G__struct.type[tagnum]) {
     case 'e': property |= G__BIT_ISENUM; break;
     case 'c': property |= G__BIT_ISCLASS; break;
@@ -120,6 +135,9 @@ long G__ClassInfo::Property()
     case G__NOLINK: break;
     default: break;
     }
+#ifndef G__OLDIMPLEMENTATION1218
+    class_property = property;
+#endif
     return(property);
   }
   else {
@@ -210,6 +228,7 @@ G__ClassInfo G__ClassInfo::EnclosingClass()
   }
 }
 ///////////////////////////////////////////////////////////////////////////
+#ifndef G__OLDIMPLEMENTATION1218_YET
 int G__ClassInfo::IsValid()
 {
   if(0<=tagnum && tagnum<G__struct.alltag) {
@@ -219,18 +238,25 @@ int G__ClassInfo::IsValid()
     return(0);
   }
 }
+#endif
 ///////////////////////////////////////////////////////////////////////////
 int G__ClassInfo::SetFilePos(const char *fname)
 {
   struct G__dictposition* dict=G__get_dictpos((char*)fname);
   if(!dict) return(0);
   tagnum=dict->tagnum-1;
+#ifndef G__OLDIMPLEMENTATION1218
+  class_property = 0;
+#endif
   return(1);
 }
 ///////////////////////////////////////////////////////////////////////////
 int G__ClassInfo::Next()
 {
   ++tagnum;
+#ifndef G__OLDIMPLEMENTATION1218
+  class_property = 0;
+#endif
   return(IsValid());
 }
 ///////////////////////////////////////////////////////////////////////////
@@ -614,16 +640,27 @@ int G__ClassInfo::HasDataMember(const char *name)
 void* G__ClassInfo::New()
 {
   if(IsValid()) {
+#ifdef G__OLDIMPLEMENTATION1218
     long property;
+#endif
     void *p;
     G__value buf=G__null;
+#ifndef G__OLDIMPLEMENTATION1218
+    if (!class_property) Property();
+    if(class_property&G__BIT_ISCPPCOMPILED) {
+#else
     property = Property();
     if(property&G__BIT_ISCPPCOMPILED) {
+#endif
       // C++ precompiled class,struct
       struct G__param para;
       G__InterfaceMethod defaultconstructor;
       para.paran=0;
+#ifndef G__OLDIMPLEMENTATION1218
+      if(!G__struct.rootspecial[tagnum]) CheckValidRootInfo();
+#else
       CheckValidRootInfo();
+#endif
       defaultconstructor
 	=(G__InterfaceMethod)G__struct.rootspecial[tagnum]->defaultconstructor;
       if(defaultconstructor) {
@@ -634,7 +671,11 @@ void* G__ClassInfo::New()
 	p = (void*)NULL;
       }
     }
+#ifndef G__OLDIMPLEMENTATION1218
+    else if(class_property&G__BIT_ISCCOMPILED) {
+#else
     else if(property&G__BIT_ISCCOMPILED) {
+#endif
       // C precompiled class,struct
       p = malloc(G__struct.size[tagnum]);
     }

@@ -1,24 +1,23 @@
+//*CMZ :  2.23/12 26/01/2000  09.45.01  by  Rene Brun
+//*CMZ :  2.23/09 22/11/99  17.15.18  by  Rene Brun
+//*CMZ :  2.23/08 01/11/99  21.36.07  by  Rene Brun
+//*CMZ :  2.23/03 10/09/99  20.00.31  by  Rene Brun
+//*CMZ :  2.23/00 30/07/99  17.19.12  by  Rene Brun
 //*CMZ :  2.00/13 03/03/99  14.18.31  by  Rene Brun
 //*CMZ :  2.00/11 23/10/98  12.22.59  by  Rene Brun
-//*CMZ :  1.03/09 08/12/97  13.45.37  by  Fons Rademakers
 //*-- Author :    Rene Brun   27/01/96
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -32,7 +31,7 @@
 #include "TClass.h"
 #include "TMethodCall.h"
 #include "TDataType.h"
-#include "TTreeFormula.h"
+
 
 ClassImp(TLeafObject)
 
@@ -46,7 +45,7 @@ TLeafObject::TLeafObject(): TLeaf()
 }
 
 //______________________________________________________________________________
-TLeafObject::TLeafObject(const Text_t *name, const Text_t *type)
+TLeafObject::TLeafObject(const char *name, const char *type)
        :TLeaf(name,type)
 {
 //*-*-*-*-*-*-*-*-*-*-*-*-*Create a LeafObject*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
@@ -79,7 +78,8 @@ void TLeafObject::FillBasket(TBuffer &b)
    } else {
      if (fClass) {
         object = (TObject *)fClass->New();
-        object->SetBit(kZombie);
+        object->SetBit(kInvalidObject);
+        object->SetUniqueID(123456789);
         object->Streamer(b);
         delete object;
      } else {
@@ -110,7 +110,7 @@ TMethodCall *TLeafObject::GetMethodCall(char *name)
 }
 
 //______________________________________________________________________________
-const Text_t *TLeafObject::GetTypeName() const
+const char *TLeafObject::GetTypeName() const
 {
 //*-*-*-*-*-*-*-*Returns name of leaf type*-*-*-*-*-*-*-*-*-*-*-*
 //*-*            =========================
@@ -119,70 +119,34 @@ const Text_t *TLeafObject::GetTypeName() const
 }
 
 //______________________________________________________________________________
-Float_t TLeafObject::GetValue(Int_t i, TTreeFormula *f)
-{
-//*-*-*-*-*-*-*-*Returns result of leaf method*-*-*-*-*-*-*-*-*-*-*-*
-//*-*            =============================
-
-   if (!f) return 0;
-   TMethodCall *m = f->GetMethodCall(i);
-   if (!m) return 0;
-
-   void *thisobj = GetObject();
-
-   EReturnType r = m->ReturnType();
-
-   if (r == kLong) {
-      Long_t l;
-      m->Execute(thisobj, l);
-      return (Float_t) l;
-   }
-   if (r == kDouble) {
-      Double_t d;
-      m->Execute(thisobj, d);
-      return (Float_t) d;
-   }
-   m->Execute(thisobj);
-   return 0;
-}
-
-
-//______________________________________________________________________________
-void TLeafObject::Print(Option_t *option)
-{
-//*-*-*-*-*-*-*-*-*-*-*Print a description of this leaf*-*-*-*-*-*-*-*-*
-//*-*                  ================================
-
-   TLeaf::Print(option);
-
-}
-
-
-//______________________________________________________________________________
 void TLeafObject::ReadBasket(TBuffer &b)
 {
 //*-*-*-*-*-*-*-*-*-*-*Read leaf elements from Basket input buffer*-*-*-*-*-*
 //*-*                  ===========================================
 
    if (fClass) {
-      if (fObjAddress) {
-         TObject *oldobject = (TObject*)(*fObjAddress);
-         delete oldobject;
-      } else {
+      TObject *object;
+      if (!fObjAddress) {
          Long_t *voidobj = new Long_t[1];
-         fObjAddress = (void **)voidobj;
+         fObjAddress  = (void **)voidobj;
+         *fObjAddress = (TObject *)fClass->New();
       }
-      TObject *object = (TObject *)fClass->New();
-      if (object) {
-         object->Streamer(b);
-         // in case we had written a null pointer a Zombie object was created
-         // we must delete it
-         if (object->IsZombie()) {
+      object = (TObject*)(*fObjAddress);
+      if (fBranch->IsAutoDelete()) {
+         delete object;
+         object = (TObject *)fClass->New();
+      }
+      if (!object) return;
+      object->Streamer(b);
+      // in case we had written a null pointer a Zombie object was created
+      // we must delete it
+      if (object->TestBit(kInvalidObject)) {
+         if (object->GetUniqueID() == 123456789) {
             delete object;
             object = 0;
          }
-         *fObjAddress = object;
       }
+      *fObjAddress = object;
    } else GetBranch()->SetAddress(0);
 }
 

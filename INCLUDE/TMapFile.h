@@ -1,33 +1,25 @@
+//*CMZ :  2.23/12 26/01/2000  09.24.07  by  Rene Brun
+//*CMZ :  2.23/10 17/12/99  11.19.35  by  Rene Brun
 //*CMZ :  2.22/02 17/05/99  16.36.47  by  Fons Rademakers
 //*CMZ :  2.21/08 15/03/99  08.40.02  by  Fons Rademakers
 //*CMZ :  2.21/07 05/03/99  15.21.25  by  Fons Rademakers
 //*CMZ :  2.21/06 15/02/99  19.21.42  by  Fons Rademakers
-//*CMZ :  2.20/00 01/11/98  11.31.53  by  Fons Rademakers
-//*CMZ :  2.00/12 02/10/98  12.14.03  by  Fons Rademakers
-//*CMZ :  2.00/10 27/07/98  16.26.11  by  Fons Rademakers
-//*CMZ :  2.00/08 22/05/98  17.58.57  by  Fons Rademakers
-//*CMZ :  1.03/09 05/12/97  12.47.14  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   08/07/97
 
 #ifndef ROOT_TMapFile
 #define ROOT_TMapFile
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -49,11 +41,17 @@
 //                                                                      //
 //////////////////////////////////////////////////////////////////////////
 
+#ifdef WIN32
+#include "Windows4Root.h"
+#endif
 #ifndef ROOT_TObject
 #include "TObject.h"
 #endif
 #ifndef ROOT_TROOT
 #include "TROOT.h"
+#endif
+#if !defined(__MMPRIVATE_H) && !defined(__CINT__)
+#include "mmprivate.h"
 #endif
 
 
@@ -73,7 +71,7 @@ private:
    char       *fOption;         //Directory creation options
    void       *fMmallocDesc;    //Pointer to mmalloc descriptor
    ULong_t     fBaseAddr;       //Base address of mapped memory region
-   Int_t       fSize;           //Size of memory mapped region
+   Int_t       fSize;           //Original start size of memory mapped region
    TMapRec    *fFirst;          //List of streamed objects is shared memory
    TMapRec    *fLast;           //Last object in list of shared objects
    Long_t      fOffset;         //Offset in bytes for region mapped by reader
@@ -83,13 +81,16 @@ private:
    Int_t       fSemaphore;      //Modification semaphore (or getpid() for WIN32)
    ULong_t     fhSemaphore;     //HANDLE of WIN32 Mutex object to implement semaphore
    TObject    *fGetting;        //Don't deadlock in update mode, when from Get() Add() is called
+   Int_t       fWritten;        //Number of objects written sofar
+   Double_t    fSumBuffer;      //Sum of buffer sizes of objects written sofar
+   Double_t    fSum2Buffer;     //Sum of squares of buffer sizes of objects written so far
 
    static Long_t fgMapAddress;  //Map to this address, set address via SetMapAddress()
    static void  *fgMmallocDesc; //Used in Close() and operator delete()
 
 protected:
    TMapFile();
-   TMapFile(const Text_t *name, const Text_t *title, Option_t *option, Int_t size, TMapFile *&newMapFile);
+   TMapFile(const char *name, const char *title, Option_t *option, Int_t size, TMapFile *&newMapFile);
    TMapFile(const TMapFile &f, Long_t offset = 0);
    void       operator=(const TMapFile &rhs);  // not implemented
 
@@ -97,6 +98,8 @@ protected:
    void       InitDirectory();
    TObject   *Remove(TObject *obj, Bool_t lock);
    TObject   *Remove(const char *name, Bool_t lock);
+   void       SumBuffer(Int_t bufsize);
+   Int_t      GetBestBuffer();
 
    void   CreateSemaphore(Int_t pid=0);
    Int_t  AcquireSemaphore();
@@ -130,7 +133,7 @@ public:
    void         *OrgAddress(void *addr) const { return (void *)((Long_t)addr - fOffset); }
    void          Print(Option_t *option="");
    void          ls(Option_t *option="");
-   Bool_t        cd(const Text_t *path = 0);
+   Bool_t        cd(const char *path = 0);
 
    void          Add(TObject *obj, const char *name = "");
    void          Update(TObject *obj = 0);
@@ -139,7 +142,7 @@ public:
    void          RemoveAll();
    TObject      *Get(const char *name, TObject *retObj = 0);
 
-   static TMapFile *Create(const Text_t *name, Option_t *option="READ", Int_t size=kDefaultMapSize, const Text_t *title="");
+   static TMapFile *Create(const char *name, Option_t *option="READ", Int_t size=kDefaultMapSize, const char *title="");
    static TMapFile *WhichMapFile(void *addr);
    static void      SetMapAddress(Long_t addr);
 
@@ -182,6 +185,16 @@ public:
 
 
 //______________________________________________________________________________
+inline void *TMapFile::GetBreakval() const
+{
+   // Return the current location in the memory region for this malloc heap which
+   // represents the end of memory in use. Returns 0 if map file was closed.
+
+   if (!fMmallocDesc) return 0;
+   return (void *)((struct mdesc *)fMmallocDesc)->breakval;
+}
+
+//______________________________________________________________________________
 inline TMapFile *TMapFile::WhichMapFile(void *addr)
 {
    if (!gROOT || !gROOT->GetListOfMappedFiles()) return 0;
@@ -191,7 +204,7 @@ inline TMapFile *TMapFile::WhichMapFile(void *addr)
       TMapFile *mf = (TMapFile*)lnk->GetObject();
       if (!mf) return 0;
       if ((ULong_t)addr >= mf->fBaseAddr + mf->fOffset &&
-          (ULong_t)addr <  mf->fBaseAddr + mf->fOffset + mf->fSize)
+          (ULong_t)addr <  (ULong_t)mf->GetBreakval() + mf->fOffset)
          return mf;
       lnk = lnk->Prev();
    }

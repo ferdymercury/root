@@ -1,3 +1,5 @@
+//*CMZ :  2.23/11 07/01/2000  08.17.58  by  Valery Fine(fine@mail.cern.ch)
+//*CMZ :  2.23/02 02/09/99  15.54.29  by  Rene Brun
 //*CMZ :  2.00/08 26/05/98  10.27.16  by  Rene Brun
 //*CMZ :  2.00/00 22/02/98  23.32.45  by  Fons Rademakers
 //*CMZ :  1.03/09 16/12/97  11.51.12  by  Valery Fine(fine@mail.cern.ch)
@@ -14,8 +16,61 @@
 
 #include <commctrl.h>
 
-
 ClassImp(TWin32ControlBarImp)
+
+//______________________________________________________________________________
+/////
+//
+// WidestBtn Function
+//     Calculates the width, in pixels of the widest button in the
+//     toolbar. Since toolbar controls use the same with for all
+//     buttons, the return value is used when sending the
+//     TB_SETBUTTONWIDTH message;
+//
+// Accepts:
+//    LPTSTR *: Address of the array of button text strings.
+//    HWND: The handle to the parent window.
+//
+// Returns:
+//    An INT value representing the minimum width, in pixels,
+//    a button must be to allow room for the button text.
+/////
+
+static INT WINAPI HeightBtn(HWND hwndOwner,LPTSTR pszStrArray, Int_t &height)
+{
+// The toolbar reserves pixels for space between buttons,
+// text, etc. This value is added to the return value
+// to compensate.
+#define EXTRA_PIXELS 20
+   const Int_t yExtraPixel = 20;
+   const Int_t xExtraPixel = 10;
+
+   INT      i;
+   SIZE     sz;
+   LOGFONT  lf;
+   HFONT    hFont;
+   HDC      hdc;
+
+   // Get the font used to display button text, the select it into
+   // a device context to be passed to GetTextExtentPoint32.
+   SystemParametersInfo(SPI_GETICONTITLELOGFONT,sizeof(LOGFONT),&lf,0);
+
+   hdc = GetDC(hwndOwner);
+   hFont = CreateFontIndirect(&lf);
+   SelectObject(hdc,hFont);
+
+   GetTextExtentPoint32(hdc, pszStrArray,
+                           strlen(pszStrArray), &sz);
+   // Release the DC and font now that we're done.
+   ReleaseDC(hwndOwner, hdc);
+   DeleteObject(hFont);
+
+   // Return the sum of the string width, the border and extra pixels.
+   height = sz.cy + GetSystemMetrics(SM_CYBORDER) + yExtraPixel;
+   return   sz.cx + GetSystemMetrics(SM_CXBORDER) + xExtraPixel;
+}
+#undef EXTRA_PIXELS
+
 
 
 //______________________________________________________________________________
@@ -26,6 +81,9 @@ TWin32ControlBarImp::TWin32ControlBarImp(TControlBar *c, Int_t x, Int_t y) :
    fYpos    = y;
    fHwndTB  = 0;
    fCreated = 0;
+
+   fLastWidth  = 0;
+   fLastHeight = 0;
 }
 
 //______________________________________________________________________________
@@ -40,11 +98,11 @@ void TWin32ControlBarImp::Create(){
 //        fDialogFrame = new TDialogFrame();
 
 //*-* Create the parent window;
-//    CreateWindowsObject((TGWin32 *)gGXW,x,y,w,h);
+//    CreateWindowsObject((TGWin32 *)gVirtualX,x,y,w,h);
     if (fXpos == -999)
-       CreateWindowsObject((TGWin32 *)gGXW,0,0,400,500);
+       CreateWindowsObject((TGWin32 *)gVirtualX,0,0,400,500);
     else
-       CreateWindowsObject((TGWin32 *)gGXW,fXpos,fYpos,400,500);
+       CreateWindowsObject((TGWin32 *)gVirtualX,fXpos,fYpos,400,500);
     fCreated = 1;
 
 }
@@ -114,11 +172,14 @@ TControlBarButton *TWin32ControlBarImp::GetButton(Int_t id){
 }
 
 //______________________________________________________________________________
-void TWin32ControlBarImp::Hide(){ ; }
+void TWin32ControlBarImp::Hide(){
+   ShowWindow(GetWindow(),SW_HIDE);
+}
 
 //______________________________________________________________________________
 void TWin32ControlBarImp::Show(){
    if (!fCreated) Create();
+   ShowWindow(GetWindow(),SW_SHOW);
    if(fHwndTB) ShowWindow(fHwndTB, SW_SHOW); }
 
 //______________________________________________________________________________
@@ -164,7 +225,6 @@ LRESULT APIENTRY TWin32ControlBarImp::OnMouseButton(HWND hwnd, UINT uMsg, WPARAM
   //                ============
     return DefWindowProc(hwnd, uMsg, wParam, lParam);
 }
-
 //______________________________________________________________________________
 LRESULT APIENTRY TWin32ControlBarImp::OnCreate(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
@@ -176,14 +236,15 @@ LRESULT APIENTRY TWin32ControlBarImp::OnCreate(HWND hwnd, UINT uMsg, WPARAM wPar
 //*-*  Create a toolbar that the user can customize and that has a tooltip
 //*-*  associated with it.
 
-    Int_t ID_TOOLBAR = 1;
-
-    if (fHwndTB = CreateWindowEx(0,TOOLBARCLASSNAME, (LPSTR) NULL,
+    UInt_t ID_TOOLBAR = 1;
+    if (fHwndTB =
+              CreateWindowEx(0,TOOLBARCLASSNAME, (LPSTR) NULL,
+              CCS_NODIVIDER |
               WS_CHILD | TBSTYLE_TOOLTIPS | TBSTYLE_WRAPABLE | CCS_ADJUSTABLE ,
               CW_USEDEFAULT, CW_USEDEFAULT, 0, 0, hwnd, (HMENU) ID_TOOLBAR,
               fWin32Mother->GetWin32Instance(),
-              this)){
-
+              this))
+    {
 
       SendMessage(fHwndTB, TB_BUTTONSTRUCTSIZE, (WPARAM) sizeof(TBBUTTON), 0);
 
@@ -191,11 +252,11 @@ LRESULT APIENTRY TWin32ControlBarImp::OnCreate(HWND hwnd, UINT uMsg, WPARAM wPar
 
       TBADDBITMAP tbab;
       tbab.hInst = HINST_COMMCTRL;
-      tbab.nID   = IDB_STD_LARGE_COLOR;
+//      tbab.nID   = IDB_STD_LARGE_COLOR;
+      tbab.nID   = IDB_STD_SMALL_COLOR;
       Int_t NUM_BUTTON_BITMAPS = 1;
       Int_t Bmp_Image_Idx = SendMessage(fHwndTB, TB_ADDBITMAP, (WPARAM) NUM_BUTTON_BITMAPS,
                                        (LPARAM) &tbab);
-
 //*-*   Filling Windos NT toolbar datastructure
 
       TIter next(fControlBar->GetListOfButtons());
@@ -205,7 +266,9 @@ LRESULT APIENTRY TWin32ControlBarImp::OnCreate(HWND hwnd, UINT uMsg, WPARAM wPar
       Int_t NUM_BUTTONS = 1;
 
 //      Int_t groupflag = TBSTYLE_CHECKGROUP;
-
+      Int_t dxButton  = -1;
+      Int_t nextWidth = -1;
+      Int_t dyButton  =  0;
       while(button = (TControlBarButton *)next()) {
         Int_t istridx;  // Index of the button string
 
@@ -213,11 +276,11 @@ LRESULT APIENTRY TWin32ControlBarImp::OnCreate(HWND hwnd, UINT uMsg, WPARAM wPar
 
         istridx = SendMessage(fHwndTB,TB_ADDSTRING, (WPARAM) 0, (LPARAM) (LPSTR) button->GetName());
 
-    //*-*  Fill the TBBUTON array with button information, and add the buttons to the
+    //*-*  Fill the TBBUTTON array with button information, and add the buttons to the
     //*-*  toolbar
 
         tbb.iBitmap    = STD_PROPERTIES; // Bmp_Image_Idx;
-        tbb.idCommand = ++button_counter;
+        tbb.idCommand  = ++button_counter;
         tbb.fsState = TBSTATE_ENABLED | TBSTATE_WRAP;
         tbb.fsStyle = TBSTYLE_CHECK;
         tbb.dwData = 0;
@@ -227,6 +290,8 @@ LRESULT APIENTRY TWin32ControlBarImp::OnCreate(HWND hwnd, UINT uMsg, WPARAM wPar
 
         SendMessage(fHwndTB,TB_ADDBUTTONS, (WPARAM) NUM_BUTTONS,
                                            (LPARAM) (LPTBBUTTON) &tbb);
+        nextWidth = HeightBtn(fHwndTB,(LPSTR) button->GetName(),dyButton);
+        if (nextWidth > dxButton) dxButton =  nextWidth;
 
 #ifdef draft
    //*-*  Create separator. Separator allows adjust the size of the ToolBar
@@ -244,6 +309,8 @@ LRESULT APIENTRY TWin32ControlBarImp::OnCreate(HWND hwnd, UINT uMsg, WPARAM wPar
      }
 
 //*-*   Now we can determinate the initial size of the parent window
+//*-*   The TB_SETBUTTONSIZE sets the size of the buttons to be added to a toolbar.
+         SendMessage(fHwndTB,TB_SETBUTTONSIZE, 0, (LPARAM) MAKELONG(dxButton, dyButton));
 
 //*-*   Take number of buttons
 
@@ -264,7 +331,8 @@ LRESULT APIENTRY TWin32ControlBarImp::OnCreate(HWND hwnd, UINT uMsg, WPARAM wPar
      fButtonSize.bottom -= fButtonSize.top;
      fButtonSize.top     = 0;
 
-#ifndef draft
+
+#ifdef draft
  //*-*   Define the size of a button-separator in the ToolBar
 
      RECT separatorsize;
@@ -281,15 +349,18 @@ LRESULT APIENTRY TWin32ControlBarImp::OnCreate(HWND hwnd, UINT uMsg, WPARAM wPar
       fNumCol = TMath::Max(1,TMath::Min(button_counter,(button_counter + fNumRow-1)/fNumRow));
      }
 //*-*  Re-size of the parent window
-     fWin32WindowSize.left  = fNumCol*fButtonSize.right;
-     fWin32WindowSize.bottom=fNumRow*fButtonSize.bottom+3;
-     OnSize(hwnd,WM_SIZE,0,MAKELPARAM(fWin32WindowSize.left,fWin32WindowSize.bottom));
+     fWin32WindowSize.left  = 0;
+     fWin32WindowSize.right   = fNumCol*fButtonSize.right;
+     fWin32WindowSize.bottom  = fNumRow*fButtonSize.bottom;
+     fResizeFlag = kTRUE;
+
+
+     OnSize(hwnd,WM_SIZE,0,MAKELPARAM(fWin32WindowSize.right,fWin32WindowSize.bottom));
 
 //*-*
 //*-* Define the total size of the non-client area of the parent window
 //*-*
-     RECT windowsize;
-     GetWindowRect(hwnd,&windowsize);
+     RECT windowsize = fWin32WindowSize;
 
      fTotalXNCCDiff = windowsize.right  - windowsize.left;
      fTotalYNCCDiff = windowsize.bottom - windowsize.top;
@@ -298,6 +369,7 @@ LRESULT APIENTRY TWin32ControlBarImp::OnCreate(HWND hwnd, UINT uMsg, WPARAM wPar
                         GetWindowLong(hwnd,GWL_STYLE),
                         FALSE,
                         GetWindowLong(hwnd,GWL_EXSTYLE));
+
 
      fTotalXNCCDiff -= windowsize.right  - windowsize.left; // total size of the non-client area of the window
      fTotalXNCCDiff = -fTotalXNCCDiff;
@@ -330,8 +402,10 @@ LRESULT APIENTRY TWin32ControlBarImp::OnGetMinMaxInfo(HWND hwnd, UINT uMsg, WPAR
 //*-* minimum or maximum tracking size.
   LPMINMAXINFO lpmmi = (LPMINMAXINFO) lParam; // address of structure
 
-//*-* Set minimum size of tne window to be equal to the simgle buttom size
-  lpmmi->ptMinTrackSize.x = fButtonSize.right + fTotalXNCCDiff-1;
+//*-* Set minimum size of tne window to be equal to the single buttom size
+//  lpmmi->ptMinTrackSize.x = fButtonSize.right + fTotalXNCCDiff-1;
+ //  lpmmi->ptMinTrackSize.x = fButtonSize.right + fTotalXNCCDiff;
+  return DefWindowProc(hwnd, uMsg, wParam, lParam);
   return 0;
 }
 //______________________________________________________________________________
@@ -374,63 +448,79 @@ LRESULT APIENTRY TWin32ControlBarImp::OnSize     (HWND hwnd, UINT uMsg, WPARAM w
 
     if (!fHwndTB) return DefWindowProc(hwnd, uMsg, wParam, lParam);
 
-//*-* Adjust the size of the Control bar
+//*-* remember the last size the size of the Control bar
 
-    Int_t nWidth  = LOWORD(lParam);  // width of client area
-    Int_t nHeight = HIWORD(lParam);  // height of client area
+    fLastWidth  = LOWORD(lParam);  // width of client area
+    fLastHeight = HIWORD(lParam);  // height of client area
 
+    return 0;
+}
+
+//______________________________________________________________________________
+LRESULT APIENTRY TWin32ControlBarImp::OnExitSizeMove(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+//    Message ID: WM_EXITSIZEMOVE
+    Int_t nWidth = fLastWidth - fWin32WindowSize.right;  // user delta
     Int_t ixdir = 0; // flag whether windows is being changing along x-direction
-    if (nWidth > fWin32WindowSize.right)      ixdir = +1;
-    else if (nWidth < fWin32WindowSize.right) ixdir = -1;
+    if      (nWidth > 0)   ixdir = +1;
+    else if (nWidth < 0) { ixdir = -1; nWidth = -nWidth; }
 
+    Int_t nHeight = fLastHeight - fWin32WindowSize.bottom;
     Int_t iydir = 0; // flag whether windows is being changing along y-direction
-    if (nHeight > fWin32WindowSize.bottom)      iydir = +1;
-    else if (nHeight < fWin32WindowSize.bottom) iydir = -1;
+    if      (nHeight > 0)  iydir = +1;
+    else if (nHeight < 0) {iydir = -1; nHeight = -nHeight; }
 
 //*-*  If both the size is being changed both directions
-    if (ixdir*iydir != 0) //*-*  follows the "controlbar orientation"
-
-    {
+    if (ixdir*iydir)  { //*-*  follows the "controlbar orientation"
       if (fControlBar->GetOrientation() == 1) ixdir = 0;
       else iydir = 0;
     }
 //*-* Define direction
     Int_t button_counter = fControlBar->GetListOfButtons()->GetSize();
-    Int_t row = 0;
-    Int_t col = 0;
 
-    if (ixdir != 0) {
+    Int_t addButton = 0;
 //*-* Change windows size in this direction
-        nWidth = fWin32WindowSize.right + ixdir*fButtonSize.right;
-        col = nWidth/fButtonSize.right;
-        col = TMath::Max(1,TMath::Min(button_counter,col));
-        row = TMath::Max(1,TMath::Min(button_counter,(button_counter + col-1)/col));
-//*-* Check whether the number of the rows was affected and asjust the number of the cols
-        if (row-fNumRow)
-        {
-            col = TMath::Max(1,TMath::Min(button_counter,(button_counter + row - 1)/row));
-            fNumRow = row; fNumCol = col;
-        }
-    }
-    else if (iydir != 0){
-        nHeight = fWin32WindowSize.bottom + iydir*fButtonSize.bottom;
-        row = nHeight/fButtonSize.bottom;
-        row = TMath::Max(1,TMath::Min(button_counter,row));
-        col = TMath::Max(1,TMath::Min(button_counter,(button_counter + row - 1)/row));
-//*-* Check whether the number of the columns was affected and adjust the number of the  rows
-        if (col-fNumCol)
-        {
-            row = TMath::Max(1,TMath::Min(button_counter,(button_counter + col-1)/col));
-            fNumRow = row;
-            fNumCol = col;
-        }
+    if (ixdir) {
+       addButton = ixdir*(nWidth + fButtonSize.right - 1)/fButtonSize.right;
+       fNumCol += addButton;
+       if (fNumCol < 1)                   { fNumCol = 1; fNumRow =  button_counter;        }
+       else if (fNumCol > button_counter) { fNumCol = button_counter; fNumRow = 1;         }
+       else                               { fNumRow = (button_counter + fNumCol-1)/fNumCol;}
     }
 
-    fWin32WindowSize.right  = nWidth  = fNumCol*fButtonSize.right;
-    fWin32WindowSize.bottom = nHeight = fNumRow*fButtonSize.bottom+3;
+    if (iydir) {
+       addButton = iydir*(nHeight + fButtonSize.bottom - 1)/fButtonSize.bottom;
+       fNumRow  += addButton;
+       if (fNumRow < 1)                   { fNumRow  = 1; fNumCol =  button_counter;       }
+       else if (fNumRow > button_counter) { fNumRow  = button_counter; fNumCol = 1;        }
+       else                               { fNumCol = (button_counter + fNumRow-1)/fNumRow;}
+    }
+
     fResizeFlag = kTRUE;
 
-    return 0;
+    fWin32WindowSize.right  = fNumCol*fButtonSize.right  + 1;
+    fWin32WindowSize.bottom = fNumRow*fButtonSize.bottom + 2;
+
+    RECT rect;
+    GetWindowRect(hwnd,&rect);
+    MoveWindow(hwnd,rect.left,rect.top,
+               fWin32WindowSize.right  + fTotalXNCCDiff,
+               fWin32WindowSize.bottom + fTotalYNCCDiff,
+               TRUE);
+
+    SendMessage(fHwndTB,TB_SETROWS,MAKEWPARAM(fNumRow+1, TRUE),(LPARAM)&rect);
+// second approach
+    fNumRow = SendMessage(fHwndTB,TB_GETROWS,0,0);
+    fNumCol = (button_counter + fNumRow-1)/fNumRow;
+    fWin32WindowSize.right  = fNumCol*fButtonSize.right  + 1;
+    fWin32WindowSize.bottom = fNumRow*fButtonSize.bottom + 2;
+
+    GetWindowRect(hwnd,&rect);
+    MoveWindow(hwnd,rect.left,rect.top,
+               fWin32WindowSize.right  + fTotalXNCCDiff,
+               fWin32WindowSize.bottom + fTotalYNCCDiff,
+               TRUE);
+   return 0;
 }
 
 //______________________________________________________________________________
@@ -444,37 +534,6 @@ LRESULT APIENTRY TWin32ControlBarImp::OnEraseBkgnd(HWND hwnd, UINT uMsg, WPARAM 
     FillRect(hdc, &rect, (HBRUSH) (COLOR_BACKGROUND+1));
     return 1;
 }
-
-//______________________________________________________________________________
-LRESULT APIENTRY TWin32ControlBarImp::OnExitSizeMove(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam){
-//*-*    Message ID: WM_EXITSIZEMOVE
-//*-*                ===============
-//    SetControlSize();
-//    return 0;
-//}
-
-//______________________________________________________________________________/
-//void TWin32ControlBarImp::SetControlSize()
-//{
-    if (!fResizeFlag)     return DefWindowProc(hwnd, uMsg, wParam, lParam);
-
-    fResizeFlag = kFALSE;
-//    SetWindowPos(hwnd,NULL, 0,0,
-//                 fWin32WindowSize.right  +fTotalXNCCDiff,
-//                 fWin32WindowSize.bottom+fTotalYNCCDiff,SWP_NOMOVE | SWP_NOZORDER );
-
-    RECT rect;
-    GetWindowRect(hwnd,&rect);
-
-    MoveWindow(hwnd,rect.left,rect.top,
-               fWin32WindowSize.right  +fTotalXNCCDiff,
-               fWin32WindowSize.bottom+fTotalYNCCDiff,
-               TRUE);
-
-    SendMessage(fHwndTB,TB_SETROWS,MAKEWPARAM(fNumRow, TRUE),(LPARAM)&rect);
-    return 0;
-}
-
 
 //______________________________________________________________________________
 LRESULT APIENTRY TWin32ControlBarImp::OnSizing     (HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam){

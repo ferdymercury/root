@@ -1,25 +1,29 @@
+*CMZ :  2.23/09 19/11/99  18.31.59  by  Fons Rademakers
+*CMZ :  2.23/04 29/09/99  18.30.42  by  Fons Rademakers
+*CMZ :  2.23/00 08/08/99  16.17.53  by  Fons Rademakers
 *CMZ :  2.21/05 08/02/99  12.22.12  by  Fons Rademakers
 *-- Author :    A.Yu.Isupov   08/02/99
 # Makefile of ROOT for FreeBSD
+
+include ../Makefile.config
 
 PLATFORM      = fbsd
 
 CXX           = g++
 CC            = gcc
-CXXFLAGS      = -pipe -W -Wall -fPIC
-CFLAGS        = -pipe -W -Wall -fPIC
-CINTCXXFLAGS  = -pipe -W -Wall -fPIC -DG__REGEXP \
+CXXFLAGS      = -pipe -W -Wall -fPIC $(EXTRA_CXXFLAGS)
+CFLAGS        = -pipe -W -Wall -fPIC $(EXTRA_CFLAGS)
+CINTCXXFLAGS  = -pipe -W -Wall -fPIC -DG__REGEXP $(EXTRA_CXXFLAGS) \
                 -DG__UNIX -DG__SHAREDLIB -DG__ROOT -DG__REDIRECTIO -DG__OSFDLL
 CINTCFLAGS    = -pipe -W -Wall -fPIC -DG__REGEXP -DG__UNIX -DG__SHAREDLIB \
-                -DG__ROOT -DG__REDIRECTIO -DG__OSFDLL
+                -DG__ROOT -DG__REDIRECTIO -DG__OSFDLL $(EXTRA_CFLAGS)
 OPT           = -O
 NOOPT         =
 LD            = g++
-LDFLAGS       = $(OPT)
+LDFLAGS       = $(OPT) $(EXTRA_LDFLAGS)
 SOFLAGS       = -shared -Wl,-x
 SOEXT         = so
 SYSLIBS       = -lg++ -lm
-SYSXLIBS      = -L/usr/X11R6/lib -lX11 -lg++ -lm
 XLIBS         = -L/usr/X11R6/lib -lXpm -lX11 -lg++
 CILIBS        = -lm -ltermcap -lg++
 

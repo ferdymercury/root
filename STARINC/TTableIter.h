@@ -1,0 +1,71 @@
+//*CMZ :  2.23/12 26/01/2000  12.24.45  by  Valery Fine(fine@bnl.gov)
+//*-- Author : Valery Fine(fine@bnl.gov)   03/12/99
+#ifndef ROOT_TTableIter
+#define ROOT_TTableIter
+// $Id: TTableIter.h,v 1.3 1999/12/05 06:34:16 fine Exp $
+// Copyright(c) 1997~1999  [BNL] Brookhaven National Laboratory, STAR, All rights reserved
+// Author                  Valerie Fine  (fine@bnl.gov)
+// Copyright(c) 1997~1999  Valerie Fine  (fine@bnl.gov)
+//////////////////////////////////////////////////////////////////////////
+//                                                                      //
+// TTableIter - class iterator to loop over sorted TTable's         //
+//                                                                      //
+//////////////////////////////////////////////////////////////////////////
+
+#include "TObject.h"
+
+class TTableSorter;
+
+class TTableIter : public TObject {
+ private:
+       const TTableSorter *fTableSorter;
+       Int_t  fIndx;
+       Int_t  fTotalKeys;
+       Int_t  fFirstIndx;
+ protected:
+   TTableIter(){;}
+   TTableIter(const TTableIter &){;}
+
+ public:
+   TTableIter(const TTableSorter *table, Float_t  &keyvalue);
+   TTableIter(const TTableSorter *table, Double_t &keyvalue);
+   TTableIter(const TTableSorter *table, Int_t    &keyvalue);
+   TTableIter(const TTableSorter *table, Long_t   &keyvalue);
+   TTableIter(const TTableSorter *table, Short_t  &keyvalue);
+
+   virtual ~TTableIter(){;}
+
+   Int_t CountKey(Float_t &keyvalue);
+   Int_t CountKey(Long_t &keyvalue);
+   Int_t CountKey(Int_t &keyvalue);
+   Int_t CountKey(Short_t &keyvalue);
+   Int_t CountKey(Double_t &keyvalue);
+
+   Int_t GetNRows() const;
+   Int_t Next();
+   Int_t Next(Int_t idx);
+   Int_t Reset(Int_t indx=0);
+   Int_t operator()();
+   Int_t operator[](Int_t idx);
+   ClassDef(TTableIter,0) // Iterator over "sorted" TTable objects
+};
+
+//_____________________________________________________________________
+inline Int_t TTableIter::GetNRows() const { return fTotalKeys;}
+//_____________________________________________________________________
+inline Int_t TTableIter::operator()() { return Next();}
+
+//_____________________________________________________________________
+inline Int_t TTableIter::operator[](Int_t idx) { return Next(idx);}
+
+// $Log: TTableIter.h,v $
+// Revision 1.3  1999/12/05 06:34:16  fine
+// Several const methods for TTableSorter introduced
+//
+// Revision 1.2  1999/12/04 22:41:37  fine
+// clean up sole const methods
+//
+// Revision 1.1  1999/12/04 06:34:31  fine
+// TTableIter - table iterator to loop over sorted tables. First implementation
+//
+#endif

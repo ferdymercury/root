@@ -1,26 +1,21 @@
+//*CMZ :  2.23/12 26/01/2000  10.08.57  by  Rene Brun
+//*CMZ :  2.23/02 02/09/99  15.54.28  by  Rene Brun
+//*CMZ :  2.23/01 26/08/99  12.01.09  by  Rene Brun
 //*CMZ :  2.21/06 11/02/99  19.01.46  by  Valery Fine(fine@vxcern.cern.ch)
 //*CMZ :  2.00/12 03/10/98  19.19.24  by  Valery Fine(fine@mail.cern.ch)
-//*CMZ :  2.00/11 19/08/98  08.46.03  by  Rene Brun
-//*CMZ :  2.00/00 22/02/98  17.42.04  by  Valery Fine(fine@mail.cern.ch)
-//*CMZ :  1.03/09 16/12/97  11.49.34  by  Valery Fine(fine@mail.cern.ch)
 //*-- Author :    Valery Fine   28/11/94
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 
@@ -185,7 +180,7 @@ unsigned int _stdcall ROOT_MsgLoop(HANDLE ThrSem)
     }
 
 
-    ((TGWin32 *) gGXW)->SetMsgThreadID(0);
+    ((TGWin32 *) gVirtualX)->SetMsgThreadID(0);
     if (msg.wParam) ReleaseSemaphore((HANDLE) msg.wParam, 1, NULL);
 
     _endthreadex(0);
@@ -196,7 +191,7 @@ unsigned int _stdcall ROOT_MsgLoop(HANDLE ThrSem)
 ClassImp(TGWin32)
 
 //______________________________________________________________________________
-TGWin32::TGWin32(Text_t *name, Text_t *title) : TGXW(name,title)
+TGWin32::TGWin32(const char *name, const char *title) : TVirtualX(name,title)
 {
 //*-*-*-*-*-*-*-*-*-*-*-*-*-*Normal Constructor*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 //*-*                        ==================                              *-*
@@ -562,7 +557,7 @@ Int_t TGWin32::CreatROOTThread()
   }
 }
 //______________________________________________________________________________
-TGWin32::TGWin32() : TGXW()
+TGWin32::TGWin32() : TVirtualX()
 {
 //*-*-*-*-*-*-*-*-*-*-*-*Default Constructor *-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 //*-*                    ===================
@@ -790,7 +785,7 @@ void  TGWin32::DrawPolyMarker(int n, TPoint *xy){
       ->W32_DrawPolyMarker(n, xy);
 }
 //______________________________________________________________________________
-void  TGWin32::DrawText(int x, int y, float angle, float mgn, const char *text, TGXW::ETextMode mode){
+void  TGWin32::DrawText(int x, int y, float angle, float mgn, const char *text, TVirtualX::ETextMode mode){
 
 //*-*-*-*-*-*-*-*-*-*-*Draw a text string using current font*-*-*-*-*-*-*-*-*-*
 //*-*                  =====================================
@@ -1000,7 +995,7 @@ void  TGWin32::SetDoubleBufferON(){
       ->W32_SetDoubleBufferON();
 }
 //______________________________________________________________________________
-void  TGWin32::SetDrawMode(TGXW::EDrawMode mode){
+void  TGWin32::SetDrawMode(TVirtualX::EDrawMode mode){
      SafeCallWin32
       ->W32_SetDrawMode(mode);
 }
@@ -1479,7 +1474,7 @@ void  TGWin32::SetTextColor(Color_t cindex){
 
 }
 //______________________________________________________________________________
-Int_t  TGWin32::SetTextFont(char *fontname, TGXW::ETextSetMode mode){
+Int_t  TGWin32::SetTextFont(char *fontname, TVirtualX::ETextSetMode mode){
   return 1;
 }
 //______________________________________________________________________________

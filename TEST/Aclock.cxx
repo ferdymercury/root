@@ -1,3 +1,4 @@
+//*CMZ :  2.23/11 03/01/2000  10.12.05  by  Rene Brun
 //*CMZ :  2.00/12 04/10/98  18.09.49  by  Fons Rademakers
 //*-- Author :    Valeriy Onuchin & Fons Rademakers   04/10/98
 
@@ -113,13 +114,13 @@ void ClockHand::Move(Float_t clock_angle)
 }
 
 
-Aclock::Aclock() : TTimer(500, kTRUE)
+Aclock::Aclock(Int_t csize) : TTimer(500, kTRUE)
 {
    // Create a clock. Clock will be drawn in the current pad. If there
    // is no pad it will create a new canvas.
 
    if (!gPad || gPad->InheritsFrom("TCanvas"))
-      fPad = new TCanvas("Aclock:canvas","xclock",-100,100);
+      fPad = new TCanvas("Aclock:canvas","xclock",-csize,csize);
    else
       fPad = (TPad*)gPad;
 

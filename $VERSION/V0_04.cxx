@@ -1,4 +1,4 @@
-//*CMZ :          22/07/96  18.20.11  by  Rene Brun
+//*CMZ :          02/09/99  15.59.26  by  Rene Brun
 //*-- Author :    Rene Brun   08/11/95
 //
 // 22/07/96  18.19.03  by  Rene Brun
@@ -333,7 +333,7 @@
   If successfull, it returns the name of the corresponding class.
   This function is used by the THtml parser.
 
-- Rename dynamic variables ROOT and GXW to gROOT and gGXW.
+- Rename dynamic variables ROOT and GXW to gROOT and gVirtualX.
 
 - Implement two new member functions in TClass:
   GetDataMember(name) returns a pointer to the data member object with name.
@@ -533,7 +533,7 @@ like a last change in this part.
 
 - Class TH1 and TText: modified the move cursor in ExecuteEvent().
 
-- Class GXW: return correctly the window geometry (based on the window
+- Class VirtualX: return correctly the window geometry (based on the window
   and not the double buffer window, which may be larger).
 
 - Class TRWindow: installed a resize action to track ConfigureNotify events
@@ -625,7 +625,7 @@ like a last change in this part.
   could also trigger a pad range change. Therefore execute PaintInit() in
   ExecuteEvent() and Recalculate the range before redrawing the pad.
 
-- Class TGXW: Set the window bit gravity to NorthWestGravity. This prevents
+- Class TVirtualX: Set the window bit gravity to NorthWestGravity. This prevents
   X from clearing the bitmap incase it is resized. The default behaviour
   (of clearing the resized window) was causing a white flash in
   TObject::Inspect().

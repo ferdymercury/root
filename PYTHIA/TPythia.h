@@ -1,3 +1,6 @@
+//*CMZ :  2.23/12 26/01/2000  10.11.08  by  Rene Brun
+//*CMZ :  2.23/05 20/10/99  15.18.16  by  Rene Brun
+//*CMZ :  2.23/01 26/08/99  12.29.57  by  Rene Brun
 //*CMZ :  2.22/03 31/05/99  17.05.40  by  Rene Brun
 //*CMZ :  2.22/01 26/04/99  16.43.28  by  Rene Brun
 //*CMZ :  1.03/09 11/12/97  09.32.59  by  Rene Brun
@@ -6,22 +9,17 @@
 #ifndef ROOT_TPythia
 #define ROOT_TPythia
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -41,7 +39,7 @@ class TPrimary;
 class TPythia : public TGenerator {
 
 private:
-   void                Unsupported(Text_t *name)
+   void                Unsupported(const char *name)
                               {printf("TPythia::%s unsupported !\n",name);}
 
    virtual TPrimary   *GetPrimary(Int_t) {Unsupported("GetPrimary");return 0;};
@@ -51,7 +49,7 @@ public:
                        TPythia();
    virtual            ~TPythia();
 
-   virtual void        Initialize(char *frame, char *beam, char *target, float win);
+   virtual void        Initialize(const char *frame, const char *beam, const char *target, float win);
 
    virtual Int_t       ImportParticles(TClonesArray *particles, Option_t *option="");
    virtual TObjArray  *ImportParticles(Option_t *option="");
@@ -164,8 +162,8 @@ public:
    virtual void        SetKFDP(Int_t idc, Int_t j, Int_t value);
 
    //common LUDAT4 access:
-   virtual Text_t     *GetCHAF(Int_t kc) const;
-   virtual void        SetCHAF(Int_t kc,Text_t *value);
+   virtual char       *GetCHAF(Int_t kc) const;
+   virtual void        SetCHAF(Int_t kc,char *value);
 
    //common LUDATR access:
    virtual void        SetMRLU(Int_t key, Int_t seed);
@@ -175,14 +173,14 @@ public:
    virtual Float_t     GetRRLU(Int_t key) const;
 
    // pythia and lujets subroutines access:
-   virtual void        PyStat(Int_t mstat=1);
-   virtual void        PyTest(Int_t key=1);
-   virtual void        PyEvnt();
-   virtual void        LuList(Int_t mlist=1);
-   virtual void        LuExec();
-   virtual Int_t       LuComp(Int_t kf);
+   virtual void        Pystat(Int_t mstat=1);
+   virtual void        Pytest(Int_t key=1);
+   virtual void        Pyevnt();
+   virtual void        Lulist(Int_t mlist=1);
+   virtual void        Luexec();
+   virtual Int_t       Lucomp(Int_t kf);
 
-   virtual void        PyInit(char *frame, char *beam, char *target, float win);
+   virtual void        Pyinit(char *frame, char *beam, char *target, float win);
 
    virtual void        GenerateEvent();
 

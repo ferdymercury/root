@@ -1,5 +1,5 @@
-//*CMZ :  2.22/10 23/07/99  14.42.23  by  Masaharu Goto
-//*-- Author :    Masaharu Goto   23/07/99
+//*CMZ :  2.23/10 10/12/99  18.00.11  by  Masaharu Goto
+//*-- Author :    Masaharu Goto   10/12/99
 /********************************************************
 * vcstrm.cxx
 ********************************************************/
@@ -33,7 +33,7 @@ extern "C" int G__cpp_dllrevG__stream() { return(51111); }
 *********************************************************/
 
 /* streambuf */
-static int G__streambuf_overflow_0_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__streambuf_overflow_0_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__letint(result7,105,(long)((streambuf*)(G__getstructoffset()))->overflow((int)G__int(libp->para[0])));
@@ -45,22 +45,22 @@ static int G__streambuf_overflow_0_0(G__value *result7,char *funcname,struct G__
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__streambuf_underflow_1_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__streambuf_underflow_1_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((streambuf*)(G__getstructoffset()))->underflow());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__streambuf_pbackfail_2_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__streambuf_pbackfail_2_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((streambuf*)(G__getstructoffset()))->pbackfail((int)G__int(libp->para[0])));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__streambuf_sync_3_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__streambuf_sync_3_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((streambuf*)(G__getstructoffset()))->sync());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__streambuf_seekoff_4_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__streambuf_seekoff_4_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 3:
       G__letint(result7,108,(long)((streambuf*)(G__getstructoffset()))->seekoff((streamoff)G__int(libp->para[0]),(ios::seek_dir)G__int(libp->para[1])
@@ -73,7 +73,7 @@ static int G__streambuf_seekoff_4_0(G__value *result7,char *funcname,struct G__p
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__streambuf_seekpos_5_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__streambuf_seekpos_5_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 2:
       G__letint(result7,108,(long)((streambuf*)(G__getstructoffset()))->seekpos((streampos)G__int(libp->para[0]),(int)G__int(libp->para[1])));
@@ -85,69 +85,69 @@ static int G__streambuf_seekpos_5_0(G__value *result7,char *funcname,struct G__p
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__streambuf_xsputn_6_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__streambuf_xsputn_6_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((streambuf*)(G__getstructoffset()))->xsputn((const char*)G__int(libp->para[0]),(int)G__int(libp->para[1])));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__streambuf_xsgetn_7_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__streambuf_xsgetn_7_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((streambuf*)(G__getstructoffset()))->xsgetn((char*)G__int(libp->para[0]),(int)G__int(libp->para[1])));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__streambuf_in_avail_8_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__streambuf_in_avail_8_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((streambuf*)(G__getstructoffset()))->in_avail());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__streambuf_out_waiting_9_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__streambuf_out_waiting_9_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((streambuf*)(G__getstructoffset()))->out_waiting());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__streambuf_sgetc_0_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__streambuf_sgetc_0_1(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((streambuf*)(G__getstructoffset()))->sgetc());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__streambuf_snextc_1_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__streambuf_snextc_1_1(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((streambuf*)(G__getstructoffset()))->snextc());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__streambuf_sbumpc_2_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__streambuf_sbumpc_2_1(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((streambuf*)(G__getstructoffset()))->sbumpc());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__streambuf_stossc_3_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__streambuf_stossc_3_1(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((streambuf*)(G__getstructoffset()))->stossc();
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__streambuf_sputbackc_4_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__streambuf_sputbackc_4_1(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((streambuf*)(G__getstructoffset()))->sputbackc((char)G__int(libp->para[0])));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__streambuf_sputc_5_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__streambuf_sputc_5_1(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((streambuf*)(G__getstructoffset()))->sputc((int)G__int(libp->para[0])));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__streambuf_sputn_6_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__streambuf_sputn_6_1(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((streambuf*)(G__getstructoffset()))->sputn((const char*)G__int(libp->para[0]),(int)G__int(libp->para[1])));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__streambuf_sgetn_7_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__streambuf_sgetn_7_1(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((streambuf*)(G__getstructoffset()))->sgetn((char*)G__int(libp->para[0]),(int)G__int(libp->para[1])));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
 // automatic destructor
-static int G__streambuf_wAstreambuf_1_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__streambuf_wAstreambuf_1_2(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
    if(G__getaryconstruct())
      if(G__PVOID==G__getgvp())
        delete[] (streambuf *)(G__getstructoffset());
@@ -162,7 +162,7 @@ static int G__streambuf_wAstreambuf_1_2(G__value *result7,char *funcname,struct 
 
 
 /* ostream */
-static int G__ostream_ostream_0_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__ostream_ostream_0_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
    ostream *p=NULL;
       p = new((void*)G__getgvp()) ostream((streambuf*)G__int(libp->para[0]));
       result7->obj.i = (long)p;
@@ -172,18 +172,18 @@ static int G__ostream_ostream_0_0(G__value *result7,char *funcname,struct G__par
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__ostream_opfx_2_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__ostream_opfx_2_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((ostream*)(G__getstructoffset()))->opfx());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__ostream_osfx_3_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__ostream_osfx_3_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((ostream*)(G__getstructoffset()))->osfx();
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__ostream_flush_4_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__ostream_flush_4_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       {
         ostream& obj=((ostream*)(G__getstructoffset()))->flush();
          result7->ref=(long)(&obj); result7->obj.i=(long)(&obj);
@@ -191,12 +191,28 @@ static int G__ostream_flush_4_0(G__value *result7,char *funcname,struct G__param
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__ostream_tellp_5_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__ostream_seekp_5_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
+      {
+        ostream& obj=((ostream*)(G__getstructoffset()))->seekp((streampos)G__int(libp->para[0]));
+         result7->ref=(long)(&obj); result7->obj.i=(long)(&obj);
+      }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__ostream_seekp_6_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
+      {
+        ostream& obj=((ostream*)(G__getstructoffset()))->seekp((streamoff)G__int(libp->para[0]),(ios::seek_dir)G__int(libp->para[1]));
+         result7->ref=(long)(&obj); result7->obj.i=(long)(&obj);
+      }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__ostream_tellp_7_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,108,(long)((ostream*)(G__getstructoffset()))->tellp());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__ostream_put_6_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__ostream_put_8_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       {
         ostream& obj=((ostream*)(G__getstructoffset()))->put((char)G__int(libp->para[0]));
          result7->ref=(long)(&obj); result7->obj.i=(long)(&obj);
@@ -204,7 +220,7 @@ static int G__ostream_put_6_0(G__value *result7,char *funcname,struct G__param *
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__ostream_operatorlElE_7_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__ostream_operatorlElE_9_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       {
         ostream& obj=((ostream*)(G__getstructoffset()))->operator<<((char)G__int(libp->para[0]));
          result7->ref=(long)(&obj); result7->obj.i=(long)(&obj);
@@ -212,7 +228,7 @@ static int G__ostream_operatorlElE_7_0(G__value *result7,char *funcname,struct G
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__ostream_operatorlElE_8_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__ostream_operatorlElE_0_1(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       {
         ostream& obj=((ostream*)(G__getstructoffset()))->operator<<((unsigned char)G__int(libp->para[0]));
          result7->ref=(long)(&obj); result7->obj.i=(long)(&obj);
@@ -220,7 +236,7 @@ static int G__ostream_operatorlElE_8_0(G__value *result7,char *funcname,struct G
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__ostream_operatorlElE_9_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__ostream_operatorlElE_1_1(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       {
         ostream& obj=((ostream*)(G__getstructoffset()))->operator<<((const char*)G__int(libp->para[0]));
          result7->ref=(long)(&obj); result7->obj.i=(long)(&obj);
@@ -228,7 +244,7 @@ static int G__ostream_operatorlElE_9_0(G__value *result7,char *funcname,struct G
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__ostream_operatorlElE_0_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__ostream_operatorlElE_2_1(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       {
         ostream& obj=((ostream*)(G__getstructoffset()))->operator<<((int)G__int(libp->para[0]));
          result7->ref=(long)(&obj); result7->obj.i=(long)(&obj);
@@ -236,7 +252,7 @@ static int G__ostream_operatorlElE_0_1(G__value *result7,char *funcname,struct G
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__ostream_operatorlElE_1_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__ostream_operatorlElE_3_1(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       {
         ostream& obj=((ostream*)(G__getstructoffset()))->operator<<((long)G__int(libp->para[0]));
          result7->ref=(long)(&obj); result7->obj.i=(long)(&obj);
@@ -244,7 +260,7 @@ static int G__ostream_operatorlElE_1_1(G__value *result7,char *funcname,struct G
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__ostream_operatorlElE_2_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__ostream_operatorlElE_4_1(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       {
         ostream& obj=((ostream*)(G__getstructoffset()))->operator<<((double)G__double(libp->para[0]));
          result7->ref=(long)(&obj); result7->obj.i=(long)(&obj);
@@ -252,7 +268,7 @@ static int G__ostream_operatorlElE_2_1(G__value *result7,char *funcname,struct G
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__ostream_operatorlElE_3_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__ostream_operatorlElE_5_1(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       {
         ostream& obj=((ostream*)(G__getstructoffset()))->operator<<((float)G__double(libp->para[0]));
          result7->ref=(long)(&obj); result7->obj.i=(long)(&obj);
@@ -260,7 +276,7 @@ static int G__ostream_operatorlElE_3_1(G__value *result7,char *funcname,struct G
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__ostream_operatorlElE_4_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__ostream_operatorlElE_6_1(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       {
         ostream& obj=((ostream*)(G__getstructoffset()))->operator<<((unsigned int)G__int(libp->para[0]));
          result7->ref=(long)(&obj); result7->obj.i=(long)(&obj);
@@ -268,7 +284,7 @@ static int G__ostream_operatorlElE_4_1(G__value *result7,char *funcname,struct G
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__ostream_operatorlElE_5_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__ostream_operatorlElE_7_1(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       {
         ostream& obj=((ostream*)(G__getstructoffset()))->operator<<((unsigned long)G__int(libp->para[0]));
          result7->ref=(long)(&obj); result7->obj.i=(long)(&obj);
@@ -276,7 +292,7 @@ static int G__ostream_operatorlElE_5_1(G__value *result7,char *funcname,struct G
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__ostream_operatorlElE_6_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__ostream_operatorlElE_8_1(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       {
         ostream& obj=((ostream*)(G__getstructoffset()))->operator<<((void*)G__int(libp->para[0]));
          result7->ref=(long)(&obj); result7->obj.i=(long)(&obj);
@@ -284,7 +300,7 @@ static int G__ostream_operatorlElE_6_1(G__value *result7,char *funcname,struct G
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__ostream_operatorlElE_7_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__ostream_operatorlElE_9_1(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       {
         ostream& obj=((ostream*)(G__getstructoffset()))->operator<<((streambuf*)G__int(libp->para[0]));
          result7->ref=(long)(&obj); result7->obj.i=(long)(&obj);
@@ -292,7 +308,7 @@ static int G__ostream_operatorlElE_7_1(G__value *result7,char *funcname,struct G
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__ostream_operatorlElE_8_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__ostream_operatorlElE_0_2(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       {
         ostream& obj=((ostream*)(G__getstructoffset()))->operator<<((short)G__int(libp->para[0]));
          result7->ref=(long)(&obj); result7->obj.i=(long)(&obj);
@@ -300,7 +316,7 @@ static int G__ostream_operatorlElE_8_1(G__value *result7,char *funcname,struct G
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__ostream_operatorlElE_9_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__ostream_operatorlElE_1_2(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       {
         ostream& obj=((ostream*)(G__getstructoffset()))->operator<<((unsigned short)G__int(libp->para[0]));
          result7->ref=(long)(&obj); result7->obj.i=(long)(&obj);
@@ -308,7 +324,7 @@ static int G__ostream_operatorlElE_9_1(G__value *result7,char *funcname,struct G
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__ostream_operatorlElE_0_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__ostream_operatorlElE_2_2(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       {
         ostream& obj=((ostream*)(G__getstructoffset()))->operator<<((ostream& (*)(ostream&))G__int(libp->para[0]));
          result7->ref=(long)(&obj); result7->obj.i=(long)(&obj);
@@ -316,7 +332,7 @@ static int G__ostream_operatorlElE_0_2(G__value *result7,char *funcname,struct G
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__ostream_write_1_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__ostream_write_3_2(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       {
         ostream& obj=((ostream*)(G__getstructoffset()))->write((const char*)G__int(libp->para[0]),(int)G__int(libp->para[1]));
          result7->ref=(long)(&obj); result7->obj.i=(long)(&obj);
@@ -325,7 +341,7 @@ static int G__ostream_write_1_2(G__value *result7,char *funcname,struct G__param
 }
 
 // automatic destructor
-static int G__ostream_wAostream_2_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__ostream_wAostream_4_2(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
    if(G__getaryconstruct())
      if(G__PVOID==G__getgvp())
        delete[] (ostream *)(G__getstructoffset());
@@ -340,107 +356,107 @@ static int G__ostream_wAostream_2_2(G__value *result7,char *funcname,struct G__p
 
 
 /* ios */
-static int G__ios_flags_2_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
-      G__letint(result7,108,(long)((ios*)(G__getstructoffset()))->flags());
+static int G__ios_flags_2_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,108,(long)((const ios*)(G__getstructoffset()))->flags());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__ios_flags_3_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__ios_flags_3_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,108,(long)((ios*)(G__getstructoffset()))->flags((long)G__int(libp->para[0])));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__ios_setf_4_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__ios_setf_4_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,108,(long)((ios*)(G__getstructoffset()))->setf((long)G__int(libp->para[0]),(long)G__int(libp->para[1])));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__ios_setf_5_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__ios_setf_5_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,108,(long)((ios*)(G__getstructoffset()))->setf((long)G__int(libp->para[0])));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__ios_unsetf_6_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__ios_unsetf_6_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,108,(long)((ios*)(G__getstructoffset()))->unsetf((long)G__int(libp->para[0])));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__ios_width_7_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
-      G__letint(result7,105,(long)((ios*)(G__getstructoffset()))->width());
+static int G__ios_width_7_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((const ios*)(G__getstructoffset()))->width());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__ios_width_8_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__ios_width_8_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((ios*)(G__getstructoffset()))->width((int)G__int(libp->para[0])));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__ios_tie_9_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__ios_tie_9_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((ios*)(G__getstructoffset()))->tie((ostream*)G__int(libp->para[0])));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__ios_tie_0_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__ios_tie_0_1(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((ios*)(G__getstructoffset()))->tie());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__ios_fill_1_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__ios_fill_1_1(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,99,(long)((ios*)(G__getstructoffset()))->fill((char)G__int(libp->para[0])));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__ios_fill_2_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
-      G__letint(result7,99,(long)((ios*)(G__getstructoffset()))->fill());
+static int G__ios_fill_2_1(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,99,(long)((const ios*)(G__getstructoffset()))->fill());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__ios_precision_3_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__ios_precision_3_1(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((ios*)(G__getstructoffset()))->precision((int)G__int(libp->para[0])));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__ios_precision_4_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
-      G__letint(result7,105,(long)((ios*)(G__getstructoffset()))->precision());
+static int G__ios_precision_4_1(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((const ios*)(G__getstructoffset()))->precision());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__ios_rdstate_5_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
-      G__letint(result7,105,(long)((ios*)(G__getstructoffset()))->rdstate());
+static int G__ios_rdstate_5_1(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((const ios*)(G__getstructoffset()))->rdstate());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__ios_operatorsPvoidmU_6_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__ios_operatorsPvoidmU_6_1(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,89,(long)((ios*)(G__getstructoffset()))->operator void*());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__ios_operatornO_7_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
-      G__letint(result7,105,(long)((ios*)(G__getstructoffset()))->operator!());
+static int G__ios_operatornO_7_1(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((const ios*)(G__getstructoffset()))->operator!());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__ios_eof_8_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
-      G__letint(result7,105,(long)((ios*)(G__getstructoffset()))->eof());
+static int G__ios_eof_8_1(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((const ios*)(G__getstructoffset()))->eof());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__ios_fail_9_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
-      G__letint(result7,105,(long)((ios*)(G__getstructoffset()))->fail());
+static int G__ios_fail_9_1(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((const ios*)(G__getstructoffset()))->fail());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__ios_bad_0_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
-      G__letint(result7,105,(long)((ios*)(G__getstructoffset()))->bad());
+static int G__ios_bad_0_2(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((const ios*)(G__getstructoffset()))->bad());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__ios_good_1_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
-      G__letint(result7,105,(long)((ios*)(G__getstructoffset()))->good());
+static int G__ios_good_1_2(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((const ios*)(G__getstructoffset()))->good());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__ios_clear_2_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__ios_clear_2_2(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -454,12 +470,12 @@ static int G__ios_clear_2_2(G__value *result7,char *funcname,struct G__param *li
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__ios_rdbuf_3_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__ios_rdbuf_3_2(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((ios*)(G__getstructoffset()))->rdbuf());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__ios_iword_4_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__ios_iword_4_2(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       {
         long& obj=((ios*)(G__getstructoffset()))->iword((int)G__int(libp->para[0]));
          result7->ref=(long)(&obj); result7->obj.i=(long)(obj);
@@ -467,7 +483,7 @@ static int G__ios_iword_4_2(G__value *result7,char *funcname,struct G__param *li
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__ios_pword_5_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__ios_pword_5_2(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       {
         void*& obj=((ios*)(G__getstructoffset()))->pword((int)G__int(libp->para[0]));
          result7->ref=(long)(&obj); result7->obj.i=(long)(obj);
@@ -475,17 +491,17 @@ static int G__ios_pword_5_2(G__value *result7,char *funcname,struct G__param *li
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__ios_bitalloc_6_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__ios_bitalloc_6_2(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,108,(long)((ios*)(G__getstructoffset()))->bitalloc());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__ios_xalloc_7_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__ios_xalloc_7_2(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((ios*)(G__getstructoffset()))->xalloc());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__ios_sync_with_stdio_9_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__ios_sync_with_stdio_9_2(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((ios*)(G__getstructoffset()))->sync_with_stdio();
    return(1 || funcname || hash || result7 || libp) ;
@@ -493,7 +509,7 @@ static int G__ios_sync_with_stdio_9_2(G__value *result7,char *funcname,struct G_
 
 
 /* istream */
-static int G__istream_istream_0_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__istream_istream_0_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
    istream *p=NULL;
       p = new((void*)G__getgvp()) istream((streambuf*)G__int(libp->para[0]));
       result7->obj.i = (long)p;
@@ -503,23 +519,39 @@ static int G__istream_istream_0_0(G__value *result7,char *funcname,struct G__par
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__istream_ipfx_2_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__istream_ipfx_2_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((istream*)(G__getstructoffset()))->ipfx((int)G__int(libp->para[0])));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__istream_isfx_3_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__istream_isfx_3_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((istream*)(G__getstructoffset()))->isfx();
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__istream_tellg_4_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__istream_seekg_4_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
+      {
+        istream& obj=((istream*)(G__getstructoffset()))->seekg((streampos)G__int(libp->para[0]));
+         result7->ref=(long)(&obj); result7->obj.i=(long)(&obj);
+      }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__istream_seekg_5_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
+      {
+        istream& obj=((istream*)(G__getstructoffset()))->seekg((streamoff)G__int(libp->para[0]),(ios::seek_dir)G__int(libp->para[1]));
+         result7->ref=(long)(&obj); result7->obj.i=(long)(&obj);
+      }
+   return(1 || funcname || hash || result7 || libp) ;
+}
+
+static int G__istream_tellg_6_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,108,(long)((istream*)(G__getstructoffset()))->tellg());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__istream_operatorgRgR_5_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__istream_operatorgRgR_7_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       {
         istream& obj=((istream*)(G__getstructoffset()))->operator>>((istream& (*)(istream&))G__int(libp->para[0]));
          result7->ref=(long)(&obj); result7->obj.i=(long)(&obj);
@@ -527,7 +559,7 @@ static int G__istream_operatorgRgR_5_0(G__value *result7,char *funcname,struct G
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__istream_operatorgRgR_6_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__istream_operatorgRgR_8_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       {
         istream& obj=((istream*)(G__getstructoffset()))->operator>>((char*)G__int(libp->para[0]));
          result7->ref=(long)(&obj); result7->obj.i=(long)(&obj);
@@ -535,7 +567,7 @@ static int G__istream_operatorgRgR_6_0(G__value *result7,char *funcname,struct G
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__istream_operatorgRgR_7_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__istream_operatorgRgR_9_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       {
         istream& obj=((istream*)(G__getstructoffset()))->operator>>((unsigned char*)G__int(libp->para[0]));
          result7->ref=(long)(&obj); result7->obj.i=(long)(&obj);
@@ -543,87 +575,87 @@ static int G__istream_operatorgRgR_7_0(G__value *result7,char *funcname,struct G
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__istream_operatorgRgR_8_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__istream_operatorgRgR_0_1(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       {
-        istream& obj=((istream*)(G__getstructoffset()))->operator>>(libp->para[0].ref?*(unsigned char*)libp->para[0].ref:G__Muchar(libp->para[0]));
+        istream& obj=((istream*)(G__getstructoffset()))->operator>>(*(unsigned char*)G__UCharref(&libp->para[0]));
          result7->ref=(long)(&obj); result7->obj.i=(long)(&obj);
       }
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__istream_operatorgRgR_9_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__istream_operatorgRgR_1_1(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       {
-        istream& obj=((istream*)(G__getstructoffset()))->operator>>(libp->para[0].ref?*(char*)libp->para[0].ref:G__Mchar(libp->para[0]));
+        istream& obj=((istream*)(G__getstructoffset()))->operator>>(*(char*)G__Charref(&libp->para[0]));
          result7->ref=(long)(&obj); result7->obj.i=(long)(&obj);
       }
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__istream_operatorgRgR_0_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__istream_operatorgRgR_2_1(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       {
-        istream& obj=((istream*)(G__getstructoffset()))->operator>>(libp->para[0].ref?*(short*)libp->para[0].ref:G__Mshort(libp->para[0]));
+        istream& obj=((istream*)(G__getstructoffset()))->operator>>(*(short*)G__Shortref(&libp->para[0]));
          result7->ref=(long)(&obj); result7->obj.i=(long)(&obj);
       }
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__istream_operatorgRgR_1_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__istream_operatorgRgR_3_1(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       {
-        istream& obj=((istream*)(G__getstructoffset()))->operator>>(libp->para[0].ref?*(int*)libp->para[0].ref:G__Mint(libp->para[0]));
+        istream& obj=((istream*)(G__getstructoffset()))->operator>>(*(int*)G__Intref(&libp->para[0]));
          result7->ref=(long)(&obj); result7->obj.i=(long)(&obj);
       }
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__istream_operatorgRgR_2_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__istream_operatorgRgR_4_1(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       {
-        istream& obj=((istream*)(G__getstructoffset()))->operator>>(libp->para[0].ref?*(long*)libp->para[0].ref:G__Mlong(libp->para[0]));
+        istream& obj=((istream*)(G__getstructoffset()))->operator>>(*(long*)G__Longref(&libp->para[0]));
          result7->ref=(long)(&obj); result7->obj.i=(long)(&obj);
       }
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__istream_operatorgRgR_3_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__istream_operatorgRgR_5_1(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       {
-        istream& obj=((istream*)(G__getstructoffset()))->operator>>(libp->para[0].ref?*(unsigned short*)libp->para[0].ref:G__Mushort(libp->para[0]));
+        istream& obj=((istream*)(G__getstructoffset()))->operator>>(*(unsigned short*)G__UShortref(&libp->para[0]));
          result7->ref=(long)(&obj); result7->obj.i=(long)(&obj);
       }
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__istream_operatorgRgR_4_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__istream_operatorgRgR_6_1(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       {
-        istream& obj=((istream*)(G__getstructoffset()))->operator>>(libp->para[0].ref?*(unsigned int*)libp->para[0].ref:G__Muint(libp->para[0]));
+        istream& obj=((istream*)(G__getstructoffset()))->operator>>(*(unsigned int*)G__UIntref(&libp->para[0]));
          result7->ref=(long)(&obj); result7->obj.i=(long)(&obj);
       }
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__istream_operatorgRgR_5_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__istream_operatorgRgR_7_1(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       {
-        istream& obj=((istream*)(G__getstructoffset()))->operator>>(libp->para[0].ref?*(unsigned long*)libp->para[0].ref:G__Mulong(libp->para[0]));
+        istream& obj=((istream*)(G__getstructoffset()))->operator>>(*(unsigned long*)G__ULongref(&libp->para[0]));
          result7->ref=(long)(&obj); result7->obj.i=(long)(&obj);
       }
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__istream_operatorgRgR_6_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__istream_operatorgRgR_8_1(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       {
-        istream& obj=((istream*)(G__getstructoffset()))->operator>>(libp->para[0].ref?*(float*)libp->para[0].ref:G__Mfloat(libp->para[0]));
+        istream& obj=((istream*)(G__getstructoffset()))->operator>>(*(float*)G__Floatref(&libp->para[0]));
          result7->ref=(long)(&obj); result7->obj.i=(long)(&obj);
       }
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__istream_operatorgRgR_7_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__istream_operatorgRgR_9_1(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       {
-        istream& obj=((istream*)(G__getstructoffset()))->operator>>(libp->para[0].ref?*(double*)libp->para[0].ref:G__Mdouble(libp->para[0]));
+        istream& obj=((istream*)(G__getstructoffset()))->operator>>(*(double*)G__Doubleref(&libp->para[0]));
          result7->ref=(long)(&obj); result7->obj.i=(long)(&obj);
       }
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__istream_operatorgRgR_8_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__istream_operatorgRgR_0_2(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       {
         istream& obj=((istream*)(G__getstructoffset()))->operator>>((streambuf*)G__int(libp->para[0]));
          result7->ref=(long)(&obj); result7->obj.i=(long)(&obj);
@@ -631,7 +663,7 @@ static int G__istream_operatorgRgR_8_1(G__value *result7,char *funcname,struct G
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__istream_get_9_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__istream_get_1_2(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 3:
       {
@@ -650,7 +682,7 @@ static int G__istream_get_9_1(G__value *result7,char *funcname,struct G__param *
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__istream_getline_0_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__istream_getline_2_2(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 3:
       {
@@ -669,7 +701,7 @@ static int G__istream_getline_0_2(G__value *result7,char *funcname,struct G__par
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__istream_getline_1_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__istream_getline_3_2(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 3:
       {
@@ -688,7 +720,7 @@ static int G__istream_getline_1_2(G__value *result7,char *funcname,struct G__par
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__istream_get_2_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__istream_get_4_2(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 2:
       {
@@ -706,33 +738,33 @@ static int G__istream_get_2_2(G__value *result7,char *funcname,struct G__param *
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__istream_get_3_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__istream_get_5_2(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       {
-        istream& obj=((istream*)(G__getstructoffset()))->get(libp->para[0].ref?*(unsigned char*)libp->para[0].ref:G__Muchar(libp->para[0]));
+        istream& obj=((istream*)(G__getstructoffset()))->get(*(unsigned char*)G__UCharref(&libp->para[0]));
          result7->ref=(long)(&obj); result7->obj.i=(long)(&obj);
       }
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__istream_get_4_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__istream_get_6_2(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       {
-        istream& obj=((istream*)(G__getstructoffset()))->get(libp->para[0].ref?*(char*)libp->para[0].ref:G__Mchar(libp->para[0]));
+        istream& obj=((istream*)(G__getstructoffset()))->get(*(char*)G__Charref(&libp->para[0]));
          result7->ref=(long)(&obj); result7->obj.i=(long)(&obj);
       }
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__istream_get_5_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__istream_get_7_2(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((istream*)(G__getstructoffset()))->get());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__istream_peek_6_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__istream_peek_8_2(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((istream*)(G__getstructoffset()))->peek());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__istream_ignore_7_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__istream_ignore_9_2(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 2:
       {
@@ -756,7 +788,7 @@ static int G__istream_ignore_7_2(G__value *result7,char *funcname,struct G__para
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__istream_read_8_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__istream_read_0_3(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       {
         istream& obj=((istream*)(G__getstructoffset()))->read((char*)G__int(libp->para[0]),(int)G__int(libp->para[1]));
          result7->ref=(long)(&obj); result7->obj.i=(long)(&obj);
@@ -764,12 +796,12 @@ static int G__istream_read_8_2(G__value *result7,char *funcname,struct G__param 
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__istream_gcount_9_2(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__istream_gcount_1_3(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((istream*)(G__getstructoffset()))->gcount());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__istream_putback_0_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__istream_putback_2_3(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       {
         istream& obj=((istream*)(G__getstructoffset()))->putback((char)G__int(libp->para[0]));
          result7->ref=(long)(&obj); result7->obj.i=(long)(&obj);
@@ -778,7 +810,7 @@ static int G__istream_putback_0_3(G__value *result7,char *funcname,struct G__par
 }
 
 // automatic destructor
-static int G__istream_wAistream_2_3(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__istream_wAistream_4_3(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
    if(G__getaryconstruct())
      if(G__PVOID==G__getgvp())
        delete[] (istream *)(G__getstructoffset());
@@ -793,7 +825,7 @@ static int G__istream_wAistream_2_3(G__value *result7,char *funcname,struct G__p
 
 
 /* iostream */
-static int G__iostream_iostream_0_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__iostream_iostream_0_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
    iostream *p=NULL;
       p = new((void*)G__getgvp()) iostream((streambuf*)G__int(libp->para[0]));
       result7->obj.i = (long)p;
@@ -804,7 +836,7 @@ static int G__iostream_iostream_0_0(G__value *result7,char *funcname,struct G__p
 }
 
 // automatic destructor
-static int G__iostream_wAiostream_3_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__iostream_wAiostream_3_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
    if(G__getaryconstruct())
      if(G__PVOID==G__getgvp())
        delete[] (iostream *)(G__getstructoffset());
@@ -819,7 +851,7 @@ static int G__iostream_wAiostream_3_0(G__value *result7,char *funcname,struct G_
 
 
 /* filebuf */
-static int G__filebuf_filebuf_0_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__filebuf_filebuf_0_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
    filebuf *p=NULL;
    if(G__getaryconstruct())
      if(G__PVOID==G__getgvp())
@@ -837,7 +869,7 @@ static int G__filebuf_filebuf_0_0(G__value *result7,char *funcname,struct G__par
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__filebuf_filebuf_1_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__filebuf_filebuf_1_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
    filebuf *p=NULL;
       p = new((void*)G__getgvp()) filebuf((int)G__int(libp->para[0]));
       result7->obj.i = (long)p;
@@ -847,7 +879,7 @@ static int G__filebuf_filebuf_1_0(G__value *result7,char *funcname,struct G__par
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__filebuf_filebuf_2_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__filebuf_filebuf_2_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
    filebuf *p=NULL;
       p = new((void*)G__getgvp()) filebuf(
 (int)G__int(libp->para[0]),(char*)G__int(libp->para[1])
@@ -859,17 +891,17 @@ static int G__filebuf_filebuf_2_0(G__value *result7,char *funcname,struct G__par
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__filebuf_is_open_3_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__filebuf_is_open_3_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((filebuf*)(G__getstructoffset()))->is_open());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__filebuf_fd_4_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__filebuf_fd_4_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((filebuf*)(G__getstructoffset()))->fd());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__filebuf_open_5_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__filebuf_open_5_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 3:
       G__letint(result7,85,(long)((filebuf*)(G__getstructoffset()))->open((const char*)G__int(libp->para[0]),(int)G__int(libp->para[1])
@@ -882,17 +914,17 @@ static int G__filebuf_open_5_0(G__value *result7,char *funcname,struct G__param 
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__filebuf_attach_6_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__filebuf_attach_6_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((filebuf*)(G__getstructoffset()))->attach((int)G__int(libp->para[0])));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__filebuf_close_7_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__filebuf_close_7_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((filebuf*)(G__getstructoffset()))->close());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__filebuf_overflow_9_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__filebuf_overflow_9_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__letint(result7,105,(long)((filebuf*)(G__getstructoffset()))->overflow((int)G__int(libp->para[0])));
@@ -904,29 +936,29 @@ static int G__filebuf_overflow_9_0(G__value *result7,char *funcname,struct G__pa
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__filebuf_underflow_0_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__filebuf_underflow_0_1(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((filebuf*)(G__getstructoffset()))->underflow());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__filebuf_sync_1_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__filebuf_sync_1_1(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,105,(long)((filebuf*)(G__getstructoffset()))->sync());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__filebuf_seekoff_2_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__filebuf_seekoff_2_1(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,108,(long)((filebuf*)(G__getstructoffset()))->seekoff((streamoff)G__int(libp->para[0]),(ios::seek_dir)G__int(libp->para[1])
 ,(int)G__int(libp->para[2])));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__filebuf_setbuf_3_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__filebuf_setbuf_3_1(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((filebuf*)(G__getstructoffset()))->setbuf((char*)G__int(libp->para[0]),(int)G__int(libp->para[1])));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
 // automatic destructor
-static int G__filebuf_wAfilebuf_4_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__filebuf_wAfilebuf_4_1(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
    if(G__getaryconstruct())
      if(G__PVOID==G__getgvp())
        delete[] (filebuf *)(G__getstructoffset());
@@ -941,7 +973,7 @@ static int G__filebuf_wAfilebuf_4_1(G__value *result7,char *funcname,struct G__p
 
 
 /* ifstream */
-static int G__ifstream_ifstream_0_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__ifstream_ifstream_0_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
    ifstream *p=NULL;
    if(G__getaryconstruct())
      if(G__PVOID==G__getgvp())
@@ -959,7 +991,7 @@ static int G__ifstream_ifstream_0_0(G__value *result7,char *funcname,struct G__p
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__ifstream_ifstream_1_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__ifstream_ifstream_1_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
    ifstream *p=NULL;
    switch(libp->paran) {
    case 3:
@@ -981,7 +1013,7 @@ static int G__ifstream_ifstream_1_0(G__value *result7,char *funcname,struct G__p
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__ifstream_ifstream_2_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__ifstream_ifstream_2_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
    ifstream *p=NULL;
       p = new((void*)G__getgvp()) ifstream((int)G__int(libp->para[0]));
       result7->obj.i = (long)p;
@@ -991,7 +1023,7 @@ static int G__ifstream_ifstream_2_0(G__value *result7,char *funcname,struct G__p
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__ifstream_ifstream_3_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__ifstream_ifstream_3_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
    ifstream *p=NULL;
       p = new((void*)G__getgvp()) ifstream(
 (int)G__int(libp->para[0]),(char*)G__int(libp->para[1])
@@ -1003,33 +1035,33 @@ static int G__ifstream_ifstream_3_0(G__value *result7,char *funcname,struct G__p
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__ifstream_setbuf_5_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__ifstream_setbuf_5_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((ifstream*)(G__getstructoffset()))->setbuf((char*)G__int(libp->para[0]),(int)G__int(libp->para[1])));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__ifstream_rdbuf_6_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
-      G__letint(result7,85,(long)((ifstream*)(G__getstructoffset()))->rdbuf());
+static int G__ifstream_rdbuf_6_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,85,(long)((const ifstream*)(G__getstructoffset()))->rdbuf());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__ifstream_attach_7_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__ifstream_attach_7_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((ifstream*)(G__getstructoffset()))->attach((int)G__int(libp->para[0]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__ifstream_fd_8_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
-      G__letint(result7,105,(long)((ifstream*)(G__getstructoffset()))->fd());
+static int G__ifstream_fd_8_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((const ifstream*)(G__getstructoffset()))->fd());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__ifstream_is_open_9_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
-      G__letint(result7,105,(long)((ifstream*)(G__getstructoffset()))->is_open());
+static int G__ifstream_is_open_9_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((const ifstream*)(G__getstructoffset()))->is_open());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__ifstream_open_0_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__ifstream_open_0_1(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 3:
       G__setnull(result7);
@@ -1048,14 +1080,14 @@ static int G__ifstream_open_0_1(G__value *result7,char *funcname,struct G__param
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__ifstream_close_1_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__ifstream_close_1_1(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((ifstream*)(G__getstructoffset()))->close();
    return(1 || funcname || hash || result7 || libp) ;
 }
 
 // automatic destructor
-static int G__ifstream_wAifstream_2_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__ifstream_wAifstream_2_1(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
    if(G__getaryconstruct())
      if(G__PVOID==G__getgvp())
        delete[] (ifstream *)(G__getstructoffset());
@@ -1070,7 +1102,7 @@ static int G__ifstream_wAifstream_2_1(G__value *result7,char *funcname,struct G_
 
 
 /* ofstream */
-static int G__ofstream_ofstream_0_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__ofstream_ofstream_0_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
    ofstream *p=NULL;
    if(G__getaryconstruct())
      if(G__PVOID==G__getgvp())
@@ -1088,7 +1120,7 @@ static int G__ofstream_ofstream_0_0(G__value *result7,char *funcname,struct G__p
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__ofstream_ofstream_1_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__ofstream_ofstream_1_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
    ofstream *p=NULL;
    switch(libp->paran) {
    case 3:
@@ -1110,7 +1142,7 @@ static int G__ofstream_ofstream_1_0(G__value *result7,char *funcname,struct G__p
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__ofstream_ofstream_2_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__ofstream_ofstream_2_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
    ofstream *p=NULL;
       p = new((void*)G__getgvp()) ofstream((int)G__int(libp->para[0]));
       result7->obj.i = (long)p;
@@ -1120,7 +1152,7 @@ static int G__ofstream_ofstream_2_0(G__value *result7,char *funcname,struct G__p
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__ofstream_ofstream_3_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__ofstream_ofstream_3_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
    ofstream *p=NULL;
       p = new((void*)G__getgvp()) ofstream(
 (int)G__int(libp->para[0]),(char*)G__int(libp->para[1])
@@ -1132,33 +1164,33 @@ static int G__ofstream_ofstream_3_0(G__value *result7,char *funcname,struct G__p
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__ofstream_setbuf_5_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__ofstream_setbuf_5_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((ofstream*)(G__getstructoffset()))->setbuf((char*)G__int(libp->para[0]),(int)G__int(libp->para[1])));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__ofstream_rdbuf_6_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
-      G__letint(result7,85,(long)((ofstream*)(G__getstructoffset()))->rdbuf());
+static int G__ofstream_rdbuf_6_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,85,(long)((const ofstream*)(G__getstructoffset()))->rdbuf());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__ofstream_attach_7_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__ofstream_attach_7_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((ofstream*)(G__getstructoffset()))->attach((int)G__int(libp->para[0]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__ofstream_fd_8_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
-      G__letint(result7,105,(long)((ofstream*)(G__getstructoffset()))->fd());
+static int G__ofstream_fd_8_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((const ofstream*)(G__getstructoffset()))->fd());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__ofstream_is_open_9_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
-      G__letint(result7,105,(long)((ofstream*)(G__getstructoffset()))->is_open());
+static int G__ofstream_is_open_9_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((const ofstream*)(G__getstructoffset()))->is_open());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__ofstream_open_0_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__ofstream_open_0_1(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 3:
       G__setnull(result7);
@@ -1177,14 +1209,14 @@ static int G__ofstream_open_0_1(G__value *result7,char *funcname,struct G__param
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__ofstream_close_1_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__ofstream_close_1_1(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((ofstream*)(G__getstructoffset()))->close();
    return(1 || funcname || hash || result7 || libp) ;
 }
 
 // automatic destructor
-static int G__ofstream_wAofstream_2_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__ofstream_wAofstream_2_1(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
    if(G__getaryconstruct())
      if(G__PVOID==G__getgvp())
        delete[] (ofstream *)(G__getstructoffset());
@@ -1199,7 +1231,7 @@ static int G__ofstream_wAofstream_2_1(G__value *result7,char *funcname,struct G_
 
 
 /* fstream */
-static int G__fstream_fstream_0_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__fstream_fstream_0_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
    fstream *p=NULL;
    if(G__getaryconstruct())
      if(G__PVOID==G__getgvp())
@@ -1217,7 +1249,7 @@ static int G__fstream_fstream_0_0(G__value *result7,char *funcname,struct G__par
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__fstream_fstream_1_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__fstream_fstream_1_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
    fstream *p=NULL;
    switch(libp->paran) {
    case 3:
@@ -1236,7 +1268,7 @@ static int G__fstream_fstream_1_0(G__value *result7,char *funcname,struct G__par
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__fstream_fstream_2_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__fstream_fstream_2_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
    fstream *p=NULL;
       p = new((void*)G__getgvp()) fstream((int)G__int(libp->para[0]));
       result7->obj.i = (long)p;
@@ -1246,7 +1278,7 @@ static int G__fstream_fstream_2_0(G__value *result7,char *funcname,struct G__par
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__fstream_fstream_3_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__fstream_fstream_3_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
    fstream *p=NULL;
       p = new((void*)G__getgvp()) fstream(
 (int)G__int(libp->para[0]),(char*)G__int(libp->para[1])
@@ -1258,33 +1290,33 @@ static int G__fstream_fstream_3_0(G__value *result7,char *funcname,struct G__par
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__fstream_setbuf_5_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__fstream_setbuf_5_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((fstream*)(G__getstructoffset()))->setbuf((char*)G__int(libp->para[0]),(int)G__int(libp->para[1])));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__fstream_rdbuf_6_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
-      G__letint(result7,85,(long)((fstream*)(G__getstructoffset()))->rdbuf());
+static int G__fstream_rdbuf_6_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,85,(long)((const fstream*)(G__getstructoffset()))->rdbuf());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__fstream_attach_7_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__fstream_attach_7_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((fstream*)(G__getstructoffset()))->attach((int)G__int(libp->para[0]));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__fstream_fd_8_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
-      G__letint(result7,105,(long)((fstream*)(G__getstructoffset()))->fd());
+static int G__fstream_fd_8_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((const fstream*)(G__getstructoffset()))->fd());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__fstream_is_open_9_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
-      G__letint(result7,105,(long)((fstream*)(G__getstructoffset()))->is_open());
+static int G__fstream_is_open_9_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((const fstream*)(G__getstructoffset()))->is_open());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__fstream_open_0_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__fstream_open_0_1(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 3:
       G__setnull(result7);
@@ -1299,14 +1331,14 @@ static int G__fstream_open_0_1(G__value *result7,char *funcname,struct G__param 
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__fstream_close_1_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__fstream_close_1_1(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       G__setnull(result7);
       ((fstream*)(G__getstructoffset()))->close();
    return(1 || funcname || hash || result7 || libp) ;
 }
 
 // automatic destructor
-static int G__fstream_wAfstream_2_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__fstream_wAfstream_2_1(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
    if(G__getaryconstruct())
      if(G__PVOID==G__getgvp())
        delete[] (fstream *)(G__getstructoffset());
@@ -1321,7 +1353,7 @@ static int G__fstream_wAfstream_2_1(G__value *result7,char *funcname,struct G__p
 
 
 /* strstreambuf */
-static int G__strstreambuf_strstreambuf_0_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__strstreambuf_strstreambuf_0_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
    strstreambuf *p=NULL;
    if(G__getaryconstruct())
      if(G__PVOID==G__getgvp())
@@ -1339,7 +1371,7 @@ static int G__strstreambuf_strstreambuf_0_0(G__value *result7,char *funcname,str
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__strstreambuf_strstreambuf_1_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__strstreambuf_strstreambuf_1_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
    strstreambuf *p=NULL;
       p = new((void*)G__getgvp()) strstreambuf((int)G__int(libp->para[0]));
       result7->obj.i = (long)p;
@@ -1349,7 +1381,7 @@ static int G__strstreambuf_strstreambuf_1_0(G__value *result7,char *funcname,str
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__strstreambuf_strstreambuf_2_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__strstreambuf_strstreambuf_2_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
    strstreambuf *p=NULL;
    switch(libp->paran) {
    case 3:
@@ -1368,7 +1400,7 @@ static int G__strstreambuf_strstreambuf_2_0(G__value *result7,char *funcname,str
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__strstreambuf_freeze_3_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__strstreambuf_freeze_3_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
    switch(libp->paran) {
    case 1:
       G__setnull(result7);
@@ -1382,24 +1414,24 @@ static int G__strstreambuf_freeze_3_0(G__value *result7,char *funcname,struct G_
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__strstreambuf_str_4_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__strstreambuf_str_4_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,67,(long)((strstreambuf*)(G__getstructoffset()))->str());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__strstreambuf_setbuf_9_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__strstreambuf_setbuf_9_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,85,(long)((strstreambuf*)(G__getstructoffset()))->setbuf((char*)G__int(libp->para[0]),(int)G__int(libp->para[1])));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__strstreambuf_seekoff_0_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__strstreambuf_seekoff_0_1(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,108,(long)((strstreambuf*)(G__getstructoffset()))->seekoff((streamoff)G__int(libp->para[0]),(ios::seek_dir)G__int(libp->para[1])
 ,(int)G__int(libp->para[2])));
    return(1 || funcname || hash || result7 || libp) ;
 }
 
 // automatic destructor
-static int G__strstreambuf_wAstrstreambuf_1_1(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__strstreambuf_wAstrstreambuf_1_1(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
    if(G__getaryconstruct())
      if(G__PVOID==G__getgvp())
        delete[] (strstreambuf *)(G__getstructoffset());
@@ -1414,7 +1446,7 @@ static int G__strstreambuf_wAstrstreambuf_1_1(G__value *result7,char *funcname,s
 
 
 /* istrstream */
-static int G__istrstream_istrstream_0_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__istrstream_istrstream_0_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
    istrstream *p=NULL;
       p = new((void*)G__getgvp()) istrstream((char*)G__int(libp->para[0]));
       result7->obj.i = (long)p;
@@ -1424,7 +1456,7 @@ static int G__istrstream_istrstream_0_0(G__value *result7,char *funcname,struct 
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__istrstream_istrstream_1_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__istrstream_istrstream_1_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
    istrstream *p=NULL;
       p = new((void*)G__getgvp()) istrstream((char*)G__int(libp->para[0]),(int)G__int(libp->para[1]));
       result7->obj.i = (long)p;
@@ -1434,18 +1466,18 @@ static int G__istrstream_istrstream_1_0(G__value *result7,char *funcname,struct 
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__istrstream_rdbuf_3_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
-      G__letint(result7,85,(long)((istrstream*)(G__getstructoffset()))->rdbuf());
+static int G__istrstream_rdbuf_3_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,85,(long)((const istrstream*)(G__getstructoffset()))->rdbuf());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__istrstream_str_4_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__istrstream_str_4_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,67,(long)((istrstream*)(G__getstructoffset()))->str());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
 // automatic destructor
-static int G__istrstream_wAistrstream_5_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__istrstream_wAistrstream_5_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
    if(G__getaryconstruct())
      if(G__PVOID==G__getgvp())
        delete[] (istrstream *)(G__getstructoffset());
@@ -1460,7 +1492,7 @@ static int G__istrstream_wAistrstream_5_0(G__value *result7,char *funcname,struc
 
 
 /* ostrstream */
-static int G__ostrstream_ostrstream_0_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__ostrstream_ostrstream_0_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
    ostrstream *p=NULL;
    switch(libp->paran) {
    case 3:
@@ -1479,7 +1511,7 @@ static int G__ostrstream_ostrstream_0_0(G__value *result7,char *funcname,struct 
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__ostrstream_ostrstream_1_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__ostrstream_ostrstream_1_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
    ostrstream *p=NULL;
    if(G__getaryconstruct())
      if(G__PVOID==G__getgvp())
@@ -1497,23 +1529,23 @@ static int G__ostrstream_ostrstream_1_0(G__value *result7,char *funcname,struct 
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__ostrstream_pcount_3_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
-      G__letint(result7,105,(long)((ostrstream*)(G__getstructoffset()))->pcount());
+static int G__ostrstream_pcount_3_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((const ostrstream*)(G__getstructoffset()))->pcount());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__ostrstream_rdbuf_4_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
-      G__letint(result7,85,(long)((ostrstream*)(G__getstructoffset()))->rdbuf());
+static int G__ostrstream_rdbuf_4_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,85,(long)((const ostrstream*)(G__getstructoffset()))->rdbuf());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__ostrstream_str_5_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__ostrstream_str_5_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,67,(long)((ostrstream*)(G__getstructoffset()))->str());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
 // automatic destructor
-static int G__ostrstream_wAostrstream_6_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__ostrstream_wAostrstream_6_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
    if(G__getaryconstruct())
      if(G__PVOID==G__getgvp())
        delete[] (ostrstream *)(G__getstructoffset());
@@ -1528,7 +1560,7 @@ static int G__ostrstream_wAostrstream_6_0(G__value *result7,char *funcname,struc
 
 
 /* strstream */
-static int G__strstream_strstream_0_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__strstream_strstream_0_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
    strstream *p=NULL;
    if(G__getaryconstruct())
      if(G__PVOID==G__getgvp())
@@ -1546,7 +1578,7 @@ static int G__strstream_strstream_0_0(G__value *result7,char *funcname,struct G_
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__strstream_strstream_1_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__strstream_strstream_1_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
    strstream *p=NULL;
       p = new((void*)G__getgvp()) strstream(
 (char*)G__int(libp->para[0]),(int)G__int(libp->para[1])
@@ -1558,23 +1590,23 @@ static int G__strstream_strstream_1_0(G__value *result7,char *funcname,struct G_
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__strstream_pcount_3_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
-      G__letint(result7,105,(long)((strstream*)(G__getstructoffset()))->pcount());
+static int G__strstream_pcount_3_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,105,(long)((const strstream*)(G__getstructoffset()))->pcount());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__strstream_rdbuf_4_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
-      G__letint(result7,85,(long)((strstream*)(G__getstructoffset()))->rdbuf());
+static int G__strstream_rdbuf_4_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
+      G__letint(result7,85,(long)((const strstream*)(G__getstructoffset()))->rdbuf());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G__strstream_str_5_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__strstream_str_5_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       G__letint(result7,67,(long)((strstream*)(G__getstructoffset()))->str());
    return(1 || funcname || hash || result7 || libp) ;
 }
 
 // automatic destructor
-static int G__strstream_wAstrstream_6_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G__strstream_wAstrstream_6_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
    if(G__getaryconstruct())
      if(G__PVOID==G__getgvp())
        delete[] (strstream *)(G__getstructoffset());
@@ -1589,7 +1621,7 @@ static int G__strstream_wAstrstream_6_0(G__value *result7,char *funcname,struct 
 
 
 /* Setting up global function */
-static int G___dec_0_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G___dec_0_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       {
         ios& obj=dec(*(ios*)libp->para[0].ref);
          result7->ref=(long)(&obj); result7->obj.i=(long)(&obj);
@@ -1597,7 +1629,7 @@ static int G___dec_0_0(G__value *result7,char *funcname,struct G__param *libp,in
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G___endl_1_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G___endl_1_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       {
         ostream& obj=endl(*(ostream*)libp->para[0].ref);
          result7->ref=(long)(&obj); result7->obj.i=(long)(&obj);
@@ -1605,7 +1637,7 @@ static int G___endl_1_0(G__value *result7,char *funcname,struct G__param *libp,i
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G___ends_2_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G___ends_2_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       {
         ostream& obj=ends(*(ostream*)libp->para[0].ref);
          result7->ref=(long)(&obj); result7->obj.i=(long)(&obj);
@@ -1613,7 +1645,7 @@ static int G___ends_2_0(G__value *result7,char *funcname,struct G__param *libp,i
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G___flush_3_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G___flush_3_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       {
         ostream& obj=flush(*(ostream*)libp->para[0].ref);
          result7->ref=(long)(&obj); result7->obj.i=(long)(&obj);
@@ -1621,7 +1653,7 @@ static int G___flush_3_0(G__value *result7,char *funcname,struct G__param *libp,
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G___hex_4_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G___hex_4_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       {
         ios& obj=hex(*(ios*)libp->para[0].ref);
          result7->ref=(long)(&obj); result7->obj.i=(long)(&obj);
@@ -1629,7 +1661,7 @@ static int G___hex_4_0(G__value *result7,char *funcname,struct G__param *libp,in
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G___oct_5_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G___oct_5_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       {
         ios& obj=oct(*(ios*)libp->para[0].ref);
          result7->ref=(long)(&obj); result7->obj.i=(long)(&obj);
@@ -1637,7 +1669,7 @@ static int G___oct_5_0(G__value *result7,char *funcname,struct G__param *libp,in
    return(1 || funcname || hash || result7 || libp) ;
 }
 
-static int G___ws_6_0(G__value *result7,char *funcname,struct G__param *libp,int hash) {
+static int G___ws_6_0(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash) {
       {
         istream& obj=ws(*(istream*)libp->para[0].ref);
          result7->ref=(long)(&obj); result7->obj.i=(long)(&obj);
@@ -1784,15 +1816,11 @@ extern "C" void G__cpp_setup_inheritanceG__stream() {
 
    /* Setting up class inheritance */
    if(0==G__getnumbaseclass(G__get_linked_tagnum(&G__G__streamLN_ostream))) {
-     ostream *G__Lderived;
-     G__Lderived=(ostream*)0x1000;
      {
        G__inheritance_setup(G__get_linked_tagnum(&G__G__streamLN_ostream),G__get_linked_tagnum(&G__G__streamLN_ios),(long)G__2vbo_ostream_ios_0,1,3);
      }
    }
    if(0==G__getnumbaseclass(G__get_linked_tagnum(&G__G__streamLN_istream))) {
-     istream *G__Lderived;
-     G__Lderived=(istream*)0x1000;
      {
        G__inheritance_setup(G__get_linked_tagnum(&G__G__streamLN_istream),G__get_linked_tagnum(&G__G__streamLN_ios),(long)G__2vbo_istream_ios_0,1,3);
      }
@@ -2129,7 +2157,7 @@ static void G__setup_memfuncstreambuf(void) {
    G__memfunc_setup("seekpos",762,G__streambuf_seekpos_5_0,108,-1,G__defined_typename("streampos"),0,2,1,1,0,
 "l - 'streampos' 0 - - i - - 0 ios::in|ios::out -",(char*)NULL,(void*)NULL,1);
    G__memfunc_setup("xsputn",690,G__streambuf_xsputn_6_0,105,-1,-1,0,2,1,1,0,
-"C - - 0 - s i - - 0 - n",(char*)NULL,(void*)NULL,1);
+"C - - 10 - s i - - 0 - n",(char*)NULL,(void*)NULL,1);
    G__memfunc_setup("xsgetn",665,G__streambuf_xsgetn_7_0,105,-1,-1,0,2,1,1,0,
 "C - - 0 - s i - - 0 - n",(char*)NULL,(void*)NULL,1);
    G__memfunc_setup("in_avail",835,G__streambuf_in_avail_8_0,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
@@ -2141,7 +2169,7 @@ static void G__setup_memfuncstreambuf(void) {
    G__memfunc_setup("sputbackc",960,G__streambuf_sputbackc_4_1,105,-1,-1,0,1,1,1,0,"c - - 0 - c",(char*)NULL,(void*)NULL,0);
    G__memfunc_setup("sputc",559,G__streambuf_sputc_5_1,105,-1,-1,0,1,1,1,0,"i - - 0 - c",(char*)NULL,(void*)NULL,0);
    G__memfunc_setup("sputn",570,G__streambuf_sputn_6_1,105,-1,-1,0,2,1,1,0,
-"C - - 0 - s i - - 0 - n",(char*)NULL,(void*)NULL,0);
+"C - - 10 - s i - - 0 - n",(char*)NULL,(void*)NULL,0);
    G__memfunc_setup("sgetn",545,G__streambuf_sgetn_7_1,105,-1,-1,0,2,1,1,0,
 "C - - 0 - s i - - 0 - n",(char*)NULL,(void*)NULL,0);
    // automatic destructor
@@ -2156,26 +2184,29 @@ static void G__setup_memfuncostream(void) {
    G__memfunc_setup("opfx",445,G__ostream_opfx_2_0,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
    G__memfunc_setup("osfx",448,G__ostream_osfx_3_0,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
    G__memfunc_setup("flush",546,G__ostream_flush_4_0,117,G__get_linked_tagnum(&G__G__streamLN_ostream),-1,1,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("tellp",545,G__ostream_tellp_5_0,108,-1,G__defined_typename("streampos"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("put",345,G__ostream_put_6_0,117,G__get_linked_tagnum(&G__G__streamLN_ostream),-1,1,1,1,1,0,"c - - 0 - c",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("operator<<",996,G__ostream_operatorlElE_7_0,117,G__get_linked_tagnum(&G__G__streamLN_ostream),-1,1,1,1,1,0,"c - - 0 - c",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("operator<<",996,G__ostream_operatorlElE_8_0,117,G__get_linked_tagnum(&G__G__streamLN_ostream),-1,1,1,1,1,0,"b - - 0 - c",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("operator<<",996,G__ostream_operatorlElE_9_0,117,G__get_linked_tagnum(&G__G__streamLN_ostream),-1,1,1,1,1,0,"C - - 0 - -",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("operator<<",996,G__ostream_operatorlElE_0_1,117,G__get_linked_tagnum(&G__G__streamLN_ostream),-1,1,1,1,1,0,"i - - 0 - a",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("operator<<",996,G__ostream_operatorlElE_1_1,117,G__get_linked_tagnum(&G__G__streamLN_ostream),-1,1,1,1,1,0,"l - - 0 - -",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("operator<<",996,G__ostream_operatorlElE_2_1,117,G__get_linked_tagnum(&G__G__streamLN_ostream),-1,1,1,1,1,0,"d - - 0 - -",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("operator<<",996,G__ostream_operatorlElE_3_1,117,G__get_linked_tagnum(&G__G__streamLN_ostream),-1,1,1,1,1,0,"f - - 0 - -",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("operator<<",996,G__ostream_operatorlElE_4_1,117,G__get_linked_tagnum(&G__G__streamLN_ostream),-1,1,1,1,1,0,"h - - 0 - a",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("operator<<",996,G__ostream_operatorlElE_5_1,117,G__get_linked_tagnum(&G__G__streamLN_ostream),-1,1,1,1,1,0,"k - - 0 - -",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("operator<<",996,G__ostream_operatorlElE_6_1,117,G__get_linked_tagnum(&G__G__streamLN_ostream),-1,1,1,1,1,0,"Y - - 0 - -",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("operator<<",996,G__ostream_operatorlElE_7_1,117,G__get_linked_tagnum(&G__G__streamLN_ostream),-1,1,1,1,1,0,"U 'streambuf' - 0 - -",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("operator<<",996,G__ostream_operatorlElE_8_1,117,G__get_linked_tagnum(&G__G__streamLN_ostream),-1,1,1,1,1,0,"s - - 0 - i",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("operator<<",996,G__ostream_operatorlElE_9_1,117,G__get_linked_tagnum(&G__G__streamLN_ostream),-1,1,1,1,1,0,"r - - 0 - i",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("operator<<",996,G__ostream_operatorlElE_0_2,117,G__get_linked_tagnum(&G__G__streamLN_ostream),-1,1,1,1,1,0,"Q - 'ostream& (*)(ostream&)' 0 - f",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("write",555,G__ostream_write_1_2,117,G__get_linked_tagnum(&G__G__streamLN_ostream),-1,1,2,1,1,0,
-"C - - 0 - s i - - 0 - n",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("seekp",536,G__ostream_seekp_5_0,117,G__get_linked_tagnum(&G__G__streamLN_ostream),-1,1,1,1,1,0,"l - 'streampos' 0 - p",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("seekp",536,G__ostream_seekp_6_0,117,G__get_linked_tagnum(&G__G__streamLN_ostream),-1,1,2,1,1,0,
+"l - 'streamoff' 0 - o i 'ios::seek_dir' - 0 - d",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("tellp",545,G__ostream_tellp_7_0,108,-1,G__defined_typename("streampos"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("put",345,G__ostream_put_8_0,117,G__get_linked_tagnum(&G__G__streamLN_ostream),-1,1,1,1,1,0,"c - - 0 - c",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("operator<<",996,G__ostream_operatorlElE_9_0,117,G__get_linked_tagnum(&G__G__streamLN_ostream),-1,1,1,1,1,0,"c - - 0 - c",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("operator<<",996,G__ostream_operatorlElE_0_1,117,G__get_linked_tagnum(&G__G__streamLN_ostream),-1,1,1,1,1,0,"b - - 0 - c",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("operator<<",996,G__ostream_operatorlElE_1_1,117,G__get_linked_tagnum(&G__G__streamLN_ostream),-1,1,1,1,1,0,"C - - 10 - -",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("operator<<",996,G__ostream_operatorlElE_2_1,117,G__get_linked_tagnum(&G__G__streamLN_ostream),-1,1,1,1,1,0,"i - - 0 - a",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("operator<<",996,G__ostream_operatorlElE_3_1,117,G__get_linked_tagnum(&G__G__streamLN_ostream),-1,1,1,1,1,0,"l - - 0 - -",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("operator<<",996,G__ostream_operatorlElE_4_1,117,G__get_linked_tagnum(&G__G__streamLN_ostream),-1,1,1,1,1,0,"d - - 0 - -",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("operator<<",996,G__ostream_operatorlElE_5_1,117,G__get_linked_tagnum(&G__G__streamLN_ostream),-1,1,1,1,1,0,"f - - 0 - -",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("operator<<",996,G__ostream_operatorlElE_6_1,117,G__get_linked_tagnum(&G__G__streamLN_ostream),-1,1,1,1,1,0,"h - - 0 - a",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("operator<<",996,G__ostream_operatorlElE_7_1,117,G__get_linked_tagnum(&G__G__streamLN_ostream),-1,1,1,1,1,0,"k - - 0 - -",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("operator<<",996,G__ostream_operatorlElE_8_1,117,G__get_linked_tagnum(&G__G__streamLN_ostream),-1,1,1,1,1,0,"Y - - 0 - -",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("operator<<",996,G__ostream_operatorlElE_9_1,117,G__get_linked_tagnum(&G__G__streamLN_ostream),-1,1,1,1,1,0,"U 'streambuf' - 0 - -",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("operator<<",996,G__ostream_operatorlElE_0_2,117,G__get_linked_tagnum(&G__G__streamLN_ostream),-1,1,1,1,1,0,"s - - 0 - i",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("operator<<",996,G__ostream_operatorlElE_1_2,117,G__get_linked_tagnum(&G__G__streamLN_ostream),-1,1,1,1,1,0,"r - - 0 - i",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("operator<<",996,G__ostream_operatorlElE_2_2,117,G__get_linked_tagnum(&G__G__streamLN_ostream),-1,1,1,1,1,0,"Q - 'ostream& (*)(ostream&)' 0 - f",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("write",555,G__ostream_write_3_2,117,G__get_linked_tagnum(&G__G__streamLN_ostream),-1,1,2,1,1,0,
+"C - - 10 - s i - - 0 - n",(char*)NULL,(void*)NULL,0);
    // automatic destructor
-   G__memfunc_setup("~ostream",889,G__ostream_wAostream_2_2,(int)('y'),-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("~ostream",889,G__ostream_wAostream_4_2,(int)('y'),-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
    G__tag_memfunc_reset();
 }
 
@@ -2219,44 +2250,47 @@ static void G__setup_memfuncistream(void) {
    G__memfunc_setup("istream",757,G__istream_istream_0_0,105,G__get_linked_tagnum(&G__G__streamLN_istream),-1,0,1,1,1,0,"U 'streambuf' - 0 - -",(char*)NULL,(void*)NULL,0);
    G__memfunc_setup("ipfx",439,G__istream_ipfx_2_0,105,-1,-1,0,1,1,1,0,"i - - 0 - noskipws",(char*)NULL,(void*)NULL,0);
    G__memfunc_setup("isfx",442,G__istream_isfx_3_0,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("tellg",536,G__istream_tellg_4_0,108,-1,G__defined_typename("streampos"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("operator>>",1000,G__istream_operatorgRgR_5_0,117,G__get_linked_tagnum(&G__G__streamLN_istream),-1,1,1,1,1,0,"Q - 'istream& (*)(istream&)' 0 - f",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("operator>>",1000,G__istream_operatorgRgR_6_0,117,G__get_linked_tagnum(&G__G__streamLN_istream),-1,1,1,1,1,0,"C - - 0 - -",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("operator>>",1000,G__istream_operatorgRgR_7_0,117,G__get_linked_tagnum(&G__G__streamLN_istream),-1,1,1,1,1,0,"B - - 0 - -",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("operator>>",1000,G__istream_operatorgRgR_8_0,117,G__get_linked_tagnum(&G__G__streamLN_istream),-1,1,1,1,1,0,"b - - 1 - c",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("operator>>",1000,G__istream_operatorgRgR_9_0,117,G__get_linked_tagnum(&G__G__streamLN_istream),-1,1,1,1,1,0,"c - - 1 - c",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("operator>>",1000,G__istream_operatorgRgR_0_1,117,G__get_linked_tagnum(&G__G__streamLN_istream),-1,1,1,1,1,0,"s - - 1 - -",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("operator>>",1000,G__istream_operatorgRgR_1_1,117,G__get_linked_tagnum(&G__G__streamLN_istream),-1,1,1,1,1,0,"i - - 1 - -",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("operator>>",1000,G__istream_operatorgRgR_2_1,117,G__get_linked_tagnum(&G__G__streamLN_istream),-1,1,1,1,1,0,"l - - 1 - -",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("operator>>",1000,G__istream_operatorgRgR_3_1,117,G__get_linked_tagnum(&G__G__streamLN_istream),-1,1,1,1,1,0,"r - - 1 - -",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("operator>>",1000,G__istream_operatorgRgR_4_1,117,G__get_linked_tagnum(&G__G__streamLN_istream),-1,1,1,1,1,0,"h - - 1 - -",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("operator>>",1000,G__istream_operatorgRgR_5_1,117,G__get_linked_tagnum(&G__G__streamLN_istream),-1,1,1,1,1,0,"k - - 1 - -",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("operator>>",1000,G__istream_operatorgRgR_6_1,117,G__get_linked_tagnum(&G__G__streamLN_istream),-1,1,1,1,1,0,"f - - 1 - -",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("operator>>",1000,G__istream_operatorgRgR_7_1,117,G__get_linked_tagnum(&G__G__streamLN_istream),-1,1,1,1,1,0,"d - - 1 - -",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("operator>>",1000,G__istream_operatorgRgR_8_1,117,G__get_linked_tagnum(&G__G__streamLN_istream),-1,1,1,1,1,0,"U 'streambuf' - 0 - -",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("get",320,G__istream_get_9_1,117,G__get_linked_tagnum(&G__G__streamLN_istream),-1,1,3,1,1,0,
+   G__memfunc_setup("seekg",527,G__istream_seekg_4_0,117,G__get_linked_tagnum(&G__G__streamLN_istream),-1,1,1,1,1,0,"l - 'streampos' 0 - p",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("seekg",527,G__istream_seekg_5_0,117,G__get_linked_tagnum(&G__G__streamLN_istream),-1,1,2,1,1,0,
+"l - 'streamoff' 0 - o i 'ios::seek_dir' - 0 - d",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("tellg",536,G__istream_tellg_6_0,108,-1,G__defined_typename("streampos"),0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("operator>>",1000,G__istream_operatorgRgR_7_0,117,G__get_linked_tagnum(&G__G__streamLN_istream),-1,1,1,1,1,0,"Q - 'istream& (*)(istream&)' 0 - f",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("operator>>",1000,G__istream_operatorgRgR_8_0,117,G__get_linked_tagnum(&G__G__streamLN_istream),-1,1,1,1,1,0,"C - - 0 - -",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("operator>>",1000,G__istream_operatorgRgR_9_0,117,G__get_linked_tagnum(&G__G__streamLN_istream),-1,1,1,1,1,0,"B - - 0 - -",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("operator>>",1000,G__istream_operatorgRgR_0_1,117,G__get_linked_tagnum(&G__G__streamLN_istream),-1,1,1,1,1,0,"b - - 1 - c",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("operator>>",1000,G__istream_operatorgRgR_1_1,117,G__get_linked_tagnum(&G__G__streamLN_istream),-1,1,1,1,1,0,"c - - 1 - c",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("operator>>",1000,G__istream_operatorgRgR_2_1,117,G__get_linked_tagnum(&G__G__streamLN_istream),-1,1,1,1,1,0,"s - - 1 - -",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("operator>>",1000,G__istream_operatorgRgR_3_1,117,G__get_linked_tagnum(&G__G__streamLN_istream),-1,1,1,1,1,0,"i - - 1 - -",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("operator>>",1000,G__istream_operatorgRgR_4_1,117,G__get_linked_tagnum(&G__G__streamLN_istream),-1,1,1,1,1,0,"l - - 1 - -",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("operator>>",1000,G__istream_operatorgRgR_5_1,117,G__get_linked_tagnum(&G__G__streamLN_istream),-1,1,1,1,1,0,"r - - 1 - -",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("operator>>",1000,G__istream_operatorgRgR_6_1,117,G__get_linked_tagnum(&G__G__streamLN_istream),-1,1,1,1,1,0,"h - - 1 - -",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("operator>>",1000,G__istream_operatorgRgR_7_1,117,G__get_linked_tagnum(&G__G__streamLN_istream),-1,1,1,1,1,0,"k - - 1 - -",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("operator>>",1000,G__istream_operatorgRgR_8_1,117,G__get_linked_tagnum(&G__G__streamLN_istream),-1,1,1,1,1,0,"f - - 1 - -",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("operator>>",1000,G__istream_operatorgRgR_9_1,117,G__get_linked_tagnum(&G__G__streamLN_istream),-1,1,1,1,1,0,"d - - 1 - -",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("operator>>",1000,G__istream_operatorgRgR_0_2,117,G__get_linked_tagnum(&G__G__streamLN_istream),-1,1,1,1,1,0,"U 'streambuf' - 0 - -",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("get",320,G__istream_get_1_2,117,G__get_linked_tagnum(&G__G__streamLN_istream),-1,1,3,1,1,0,
 "C - - 0 - - i - - 0 - lim "
 "c - - 0 '\\n' delim",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("getline",744,G__istream_getline_0_2,117,G__get_linked_tagnum(&G__G__streamLN_istream),-1,1,3,1,1,0,
+   G__memfunc_setup("getline",744,G__istream_getline_2_2,117,G__get_linked_tagnum(&G__G__streamLN_istream),-1,1,3,1,1,0,
 "C - - 0 - b i - - 0 - lim "
 "c - - 0 '\\n' delim",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("getline",744,G__istream_getline_1_2,117,G__get_linked_tagnum(&G__G__streamLN_istream),-1,1,3,1,1,0,
+   G__memfunc_setup("getline",744,G__istream_getline_3_2,117,G__get_linked_tagnum(&G__G__streamLN_istream),-1,1,3,1,1,0,
 "B - - 0 - b i - - 0 - lim "
 "c - - 0 '\\n' delim",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("get",320,G__istream_get_2_2,117,G__get_linked_tagnum(&G__G__streamLN_istream),-1,1,2,1,1,0,
+   G__memfunc_setup("get",320,G__istream_get_4_2,117,G__get_linked_tagnum(&G__G__streamLN_istream),-1,1,2,1,1,0,
 "u 'streambuf' - 1 - sb c - - 0 '\\n' delim",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("get",320,G__istream_get_3_2,117,G__get_linked_tagnum(&G__G__streamLN_istream),-1,1,1,1,1,0,"b - - 1 - c",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("get",320,G__istream_get_4_2,117,G__get_linked_tagnum(&G__G__streamLN_istream),-1,1,1,1,1,0,"c - - 1 - c",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("get",320,G__istream_get_5_2,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("peek",421,G__istream_peek_6_2,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("ignore",644,G__istream_ignore_7_2,117,G__get_linked_tagnum(&G__G__streamLN_istream),-1,1,2,1,1,0,
+   G__memfunc_setup("get",320,G__istream_get_5_2,117,G__get_linked_tagnum(&G__G__streamLN_istream),-1,1,1,1,1,0,"b - - 1 - c",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("get",320,G__istream_get_6_2,117,G__get_linked_tagnum(&G__G__streamLN_istream),-1,1,1,1,1,0,"c - - 1 - c",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("get",320,G__istream_get_7_2,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("peek",421,G__istream_peek_8_2,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("ignore",644,G__istream_ignore_9_2,117,G__get_linked_tagnum(&G__G__streamLN_istream),-1,1,2,1,1,0,
 "i - - 0 1 n i - - 0 EOF delim",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("read",412,G__istream_read_8_2,117,G__get_linked_tagnum(&G__G__streamLN_istream),-1,1,2,1,1,0,
+   G__memfunc_setup("read",412,G__istream_read_0_3,117,G__get_linked_tagnum(&G__G__streamLN_istream),-1,1,2,1,1,0,
 "C - - 0 - s i - - 0 - n",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("gcount",656,G__istream_gcount_9_2,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
-   G__memfunc_setup("putback",746,G__istream_putback_0_3,117,G__get_linked_tagnum(&G__G__streamLN_istream),-1,1,1,1,1,0,"c - - 0 - c",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("gcount",656,G__istream_gcount_1_3,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
+   G__memfunc_setup("putback",746,G__istream_putback_2_3,117,G__get_linked_tagnum(&G__G__streamLN_istream),-1,1,1,1,1,0,"c - - 0 - c",(char*)NULL,(void*)NULL,0);
    // automatic destructor
-   G__memfunc_setup("~istream",883,G__istream_wAistream_2_3,(int)('y'),-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
+   G__memfunc_setup("~istream",883,G__istream_wAistream_4_3,(int)('y'),-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,1);
    G__tag_memfunc_reset();
 }
 
@@ -2280,7 +2314,7 @@ static void G__setup_memfuncfilebuf(void) {
    G__memfunc_setup("is_open",749,G__filebuf_is_open_3_0,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
    G__memfunc_setup("fd",202,G__filebuf_fd_4_0,105,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
    G__memfunc_setup("open",434,G__filebuf_open_5_0,85,G__get_linked_tagnum(&G__G__streamLN_filebuf),-1,0,3,1,1,0,
-"C - - 0 - name i - - 0 - om "
+"C - - 10 - name i - - 0 - om "
 "i - - 0 openprot prot",(char*)NULL,(void*)NULL,0);
    G__memfunc_setup("attach",629,G__filebuf_attach_6_0,85,G__get_linked_tagnum(&G__G__streamLN_filebuf),-1,0,1,1,1,0,"i - - 0 - fd",(char*)NULL,(void*)NULL,0);
    G__memfunc_setup("close",534,G__filebuf_close_7_0,85,G__get_linked_tagnum(&G__G__streamLN_filebuf),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
@@ -2302,7 +2336,7 @@ static void G__setup_memfuncifstream(void) {
    G__tag_memfunc_setup(G__get_linked_tagnum(&G__G__streamLN_ifstream));
    G__memfunc_setup("ifstream",859,G__ifstream_ifstream_0_0,105,G__get_linked_tagnum(&G__G__streamLN_ifstream),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
    G__memfunc_setup("ifstream",859,G__ifstream_ifstream_1_0,105,G__get_linked_tagnum(&G__G__streamLN_ifstream),-1,0,3,1,1,0,
-"C - - 0 - name i - - 0 ios::in mode "
+"C - - 10 - name i - - 0 ios::in mode "
 "i - - 0 filebuf::openprot prot",(char*)NULL,(void*)NULL,0);
    G__memfunc_setup("ifstream",859,G__ifstream_ifstream_2_0,105,G__get_linked_tagnum(&G__G__streamLN_ifstream),-1,0,1,1,1,0,"i - - 0 - fd",(char*)NULL,(void*)NULL,0);
    G__memfunc_setup("ifstream",859,G__ifstream_ifstream_3_0,105,G__get_linked_tagnum(&G__G__streamLN_ifstream),-1,0,3,1,1,0,
@@ -2315,7 +2349,7 @@ static void G__setup_memfuncifstream(void) {
    G__memfunc_setup("fd",202,G__ifstream_fd_8_0,105,-1,-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
    G__memfunc_setup("is_open",749,G__ifstream_is_open_9_0,105,-1,-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
    G__memfunc_setup("open",434,G__ifstream_open_0_1,121,-1,-1,0,3,1,1,0,
-"C - - 0 - - i - - 0 ios::in - "
+"C - - 10 - - i - - 0 ios::in - "
 "i - - 0 filebuf::openprot -",(char*)NULL,(void*)NULL,0);
    G__memfunc_setup("close",534,G__ifstream_close_1_1,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
    // automatic destructor
@@ -2328,7 +2362,7 @@ static void G__setup_memfuncofstream(void) {
    G__tag_memfunc_setup(G__get_linked_tagnum(&G__G__streamLN_ofstream));
    G__memfunc_setup("ofstream",865,G__ofstream_ofstream_0_0,105,G__get_linked_tagnum(&G__G__streamLN_ofstream),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
    G__memfunc_setup("ofstream",865,G__ofstream_ofstream_1_0,105,G__get_linked_tagnum(&G__G__streamLN_ofstream),-1,0,3,1,1,0,
-"C - - 0 - name i - - 0 ios::out mode "
+"C - - 10 - name i - - 0 ios::out mode "
 "i - - 0 filebuf::openprot prot",(char*)NULL,(void*)NULL,0);
    G__memfunc_setup("ofstream",865,G__ofstream_ofstream_2_0,105,G__get_linked_tagnum(&G__G__streamLN_ofstream),-1,0,1,1,1,0,"i - - 0 - fd",(char*)NULL,(void*)NULL,0);
    G__memfunc_setup("ofstream",865,G__ofstream_ofstream_3_0,105,G__get_linked_tagnum(&G__G__streamLN_ofstream),-1,0,3,1,1,0,
@@ -2341,7 +2375,7 @@ static void G__setup_memfuncofstream(void) {
    G__memfunc_setup("fd",202,G__ofstream_fd_8_0,105,-1,-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
    G__memfunc_setup("is_open",749,G__ofstream_is_open_9_0,105,-1,-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
    G__memfunc_setup("open",434,G__ofstream_open_0_1,121,-1,-1,0,3,1,1,0,
-"C - - 0 - - i - - 0 ios::out - "
+"C - - 10 - - i - - 0 ios::out - "
 "i - - 0 filebuf::openprot -",(char*)NULL,(void*)NULL,0);
    G__memfunc_setup("close",534,G__ofstream_close_1_1,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
    // automatic destructor
@@ -2354,7 +2388,7 @@ static void G__setup_memfuncfstream(void) {
    G__tag_memfunc_setup(G__get_linked_tagnum(&G__G__streamLN_fstream));
    G__memfunc_setup("fstream",754,G__fstream_fstream_0_0,105,G__get_linked_tagnum(&G__G__streamLN_fstream),-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
    G__memfunc_setup("fstream",754,G__fstream_fstream_1_0,105,G__get_linked_tagnum(&G__G__streamLN_fstream),-1,0,3,1,1,0,
-"C - - 0 - name i - - 0 - mode "
+"C - - 10 - name i - - 0 - mode "
 "i - - 0 filebuf::openprot prot",(char*)NULL,(void*)NULL,0);
    G__memfunc_setup("fstream",754,G__fstream_fstream_2_0,105,G__get_linked_tagnum(&G__G__streamLN_fstream),-1,0,1,1,1,0,"i - - 0 - fd",(char*)NULL,(void*)NULL,0);
    G__memfunc_setup("fstream",754,G__fstream_fstream_3_0,105,G__get_linked_tagnum(&G__G__streamLN_fstream),-1,0,3,1,1,0,
@@ -2367,7 +2401,7 @@ static void G__setup_memfuncfstream(void) {
    G__memfunc_setup("fd",202,G__fstream_fd_8_0,105,-1,-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
    G__memfunc_setup("is_open",749,G__fstream_is_open_9_0,105,-1,-1,0,0,1,1,8,"",(char*)NULL,(void*)NULL,0);
    G__memfunc_setup("open",434,G__fstream_open_0_1,121,-1,-1,0,3,1,1,0,
-"C - - 0 - - i - - 0 - - "
+"C - - 10 - - i - - 0 - - "
 "i - - 0 filebuf::openprot -",(char*)NULL,(void*)NULL,0);
    G__memfunc_setup("close",534,G__fstream_close_1_1,121,-1,-1,0,0,1,1,0,"",(char*)NULL,(void*)NULL,0);
    // automatic destructor
@@ -2455,6 +2489,7 @@ extern "C" void G__cpp_setup_globalG__stream() {
 
    G__memvar_setup((void*)G__PVOID,112,0,0,-1,-1,-1,1,"G__IOSTREAM_H=0",1,(char*)NULL);
    G__memvar_setup((void*)G__PVOID,112,0,0,-1,-1,-1,1,"G__MANIP_SUPPORT=0",1,(char*)NULL);
+   G__memvar_setup((void*)G__PVOID,112,0,0,-1,-1,-1,1,"G__OLDIMPLEMENTATION762=0",1,(char*)NULL);
    G__memvar_setup((void*)(&cin),117,0,0,G__get_linked_tagnum(&G__G__streamLN_istream),-1,-1,1,"cin=",0,(char*)NULL);
    G__memvar_setup((void*)(&cout),117,0,0,G__get_linked_tagnum(&G__G__streamLN_ostream),-1,-1,1,"cout=",0,(char*)NULL);
    G__memvar_setup((void*)(&cerr),117,0,0,G__get_linked_tagnum(&G__G__streamLN_ostream),-1,-1,1,"cerr=",0,(char*)NULL);

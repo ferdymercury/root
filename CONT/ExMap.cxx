@@ -1,23 +1,20 @@
+//*CMZ :  2.23/09 07/11/99  16.09.07  by  Fons Rademakers
+//*CMZ :  2.23/07 26/10/99  18.24.59  by  Rene Brun
 //*CMZ :  2.22/08 07/07/99  13.26.14  by  Fons Rademakers
 //*CMZ :  2.22/02 27/05/99  16.44.34  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   26/05/99
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -77,6 +74,30 @@ void TExMap::Add(ULong_t hash, Long_t key, Long_t value)
 }
 
 //______________________________________________________________________________
+Long_t &TExMap::operator()(ULong_t hash, Long_t key)
+{
+   // Return a reference to the value belonging to the key with the
+   // specified hash value. If the key does not exist it will be added.
+
+   static Long_t err;
+   if (!fTable) {
+      Error("operator()", "fTable==0, should never happen");
+      return err;
+   }
+
+   Int_t slot = FindElement(hash, key);
+   if (fTable[slot] == 0) {
+      fTable[slot] = new Assoc_t(hash, key, 0);
+      fTally++;
+      if (HighWaterMark()) {
+         Expand(2 * fSize);
+         slot = FindElement(hash, key);
+      }
+   }
+   return fTable[slot]->fValue;
+}
+
+//______________________________________________________________________________
 void TExMap::Delete(Option_t *)
 {
    // Delete all entries stored in the TExMap.
@@ -96,11 +117,18 @@ Long_t TExMap::GetValue(ULong_t hash, Long_t key)
    // Return the value belonging to specified key and hash value. If key not
    // found return 0.
 
-   Int_t slot = FindElement(hash, key);
+   if (!fTable) return 0;
+
+   Int_t slot = Int_t(hash % fSize);
+   for (int n = 0; n < fSize; n++) {
+      if (!fTable[slot]) return 0;
+      if (key == fTable[slot]->fKey) return fTable[slot]->fValue;
+      if (++slot == fSize) slot = 0;
+   }
+
    if (fTable[slot])
       return fTable[slot]->fValue;
-   else
-      return 0;
+   return 0;
 }
 
 //______________________________________________________________________________
@@ -136,21 +164,13 @@ Int_t TExMap::FindElement(ULong_t hash, Long_t key)
    // Find an entry with specified hash and key in the TExMap.
    // Returns the slot of the key or the next empty slot.
 
-   Int_t  slot;
-   Long_t slotKey = 0;
+   if (!fTable) return 0;
 
-   if (!fTable)
-      return 0;
-
-   slot = Int_t(hash % fSize);
+   Int_t slot = Int_t(hash % fSize);
    for (int n = 0; n < fSize; n++) {
-      if (fTable[slot]) slotKey = fTable[slot]->fKey;
-      if (!fTable[slot])
-         break;
-      if (key == slotKey)
-         break;
-      if (++slot == fSize)
-         slot = 0;
+      if (!fTable[slot]) return slot;
+      if (key == fTable[slot]->fKey) return slot;
+      if (++slot == fSize) slot = 0;
    }
    return slot;
 }

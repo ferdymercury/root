@@ -1,9 +1,9 @@
-/*CMZ :  2.22/10 23/07/99  14.42.33  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   23/07/99*/
+/*CMZ :  2.23/10 10/12/99  18.00.24  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   10/12/99*/
 // lib/prec_stl/list
 
-#ifndef PREC_STL_LIST
-#define PREC_STL_LIST
+#pragma ifndef PREC_STL_LIST
+#pragma define PREC_STL_LIST
 #pragma link off global PREC_STL_LIST;
 #pragma link C++ nestedtypedef;
 #pragma link C++ nestedclass;
@@ -11,6 +11,7 @@
 // Imported from ANSI/ISO C++ 1997/Nov draft
 // Got some ideas from Scott Snyder, Fermi-lab
 // Modified by Masaharu Goto
+// SGI KCC porting by Philippe Canal, Fermi-lab
 
 #include <iterator>
 #include <memory>
@@ -55,7 +56,7 @@ class list {
    public:
     iterator() ;
     iterator(const iterator& x) ;
-#ifndef G__BORLAND
+#if !defined(G__BORLAND) && !defined(G__KCC)
     iterator& operator=(const iterator& x) ;
 #endif
     T& operator*() const ;
@@ -83,7 +84,7 @@ class list {
 	{
    public:
     reverse_iterator(const reverse_iterator& x) ;
-#ifndef G__BORLAND
+#if !defined(G__BORLAND) && !defined(G__KCC)
     reverse_iterator& operator=(const reverse_iterator& x) ;
 #endif
     T& operator*() const ;
@@ -114,8 +115,8 @@ class list {
   list() ;
   iterator begin() ;
   iterator end() ;
-  const_reverse_iterator rbegin() const;
-  const_reverse_iterator rend() const;
+  reverse_iterator rbegin() ;
+  reverse_iterator rend() ;
   bool empty() const ;
   size_type size() const ;
   size_type max_size() const ;
@@ -169,5 +170,5 @@ class list {
   //friend bidirectional_iterator_tag iterator_category(list::iterator x);
 };
 
-#endif
+#pragma endif
 

@@ -1,5 +1,8 @@
-//*CMZ :          16/12/97  16.35.32  by  Rene Brun
+//*CMZ :          03/09/99  12.17.01  by  Rene Brun
 //*-- Author :    Rene Brun   09/09/96
+//
+// 03/09/1999  12.11.16  by  Rene Brun
+//
 //
 // 16/12/1997  16.33.59  by  Rene Brun
 //
@@ -354,8 +357,8 @@ history file (sequential history from the developpers) below.
   This protects various cases when objects in canvas or browser are deleted
   from the canvas or browser context menu or from the command line.
 
-- Move declaration of gGXW from cint_x11 to cint_g.
-  This makes gGXW accessible under Windows.
+- Move declaration of gVirtualX from cint_x11 to cint_g.
+  This makes gVirtualX accessible under Windows.
 
 - Correct TH3x::Fill functions. The bin number was not correctly computed.
   (thanks to Glenn Cooper).
@@ -545,7 +548,7 @@ history file (sequential history from the developpers) below.
   This new version fixes a problem in WinNtSystem onder Windows95 when the
   environnement variable HOME is not set.
 
-- Merge with Fons version of 18 November. Class TGXW modified.
+- Merge with Fons version of 18 November. Class TVirtualX modified.
   New global gGXBatch introduced.
 
 - Change name of tutorial geomfile to geometry.
@@ -986,7 +989,7 @@ history file (sequential history from the developpers) below.
   of the canvas toolbar.
 
 - Modify TMotifCanvas to invoke TMarker::DisplayMarkersTypes.
-  Direct call to TColor::DisplayColorTable.
+  Direct call to TPad::DrawColorTable.
 
 - Fix bug in TGraph::PaintGraph. Repalce obsolete call to gPad->DrawLine
   by gPad->PaintLine. This solves a problem reported by Nick van Eijndhoven

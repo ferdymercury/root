@@ -1,3 +1,5 @@
+*CMZ :  2.23/10 11/12/99  16.42.32  by  Rene Brun
+*CMZ :  2.23/08 02/11/99  08.45.25  by  Rene Brun
 *CMZ :  2.21/08 11/03/99  08.18.46  by  Rene Brun
 *CMZ :  2.00/00 05/03/98  17.24.47  by  Fons Rademakers
 *CMZ :  1.01/02 13/05/97  10.16.47  by  Rene Brun
@@ -18,6 +20,12 @@ sel -ibm
 sel sun
 cx cint/sunos
 sel -sun
+sel solaris cc5
+cx cint/sunstrm
+sel -solaris -cc5
+sel kcc
+cx cint/kccstrm
+sel -kcc
 sel eg
 seq eg
 cx eg

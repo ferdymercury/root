@@ -1,30 +1,24 @@
+//*CMZ :  2.23/12 01/02/2000  08.21.40  by  Rene Brun
+//*CMZ :  2.23/09 19/11/99  17.54.35  by  Rene Brun
+//*CMZ :  2.23/07 25/10/99  19.00.09  by  Fons Rademakers
+//*CMZ :  2.23/04 13/10/99  17.06.39  by  Fons Rademakers
+//*CMZ :  2.23/03 17/09/99  15.41.13  by  Rene Brun
+//*CMZ :  2.23/01 26/08/99  12.20.27  by  Rene Brun
 //*CMZ :  2.22/07 02/07/99  08.34.09  by  Rene Brun
 //*CMZ :  2.22/06 22/06/99  19.15.13  by  Fons Rademakers
-//*CMZ :  2.22/05 15/06/99  12.37.08  by  Fons Rademakers
-//*CMZ :  2.22/01 23/04/99  17.06.28  by  Fons Rademakers
-//*CMZ :  2.21/03 19/01/99  18.33.32  by  Fons Rademakers
-//*CMZ :  2.00/13 29/10/98  08.32.37  by  Fons Rademakers
-//*CMZ :  2.00/10 28/07/98  12.50.40  by  Fons Rademakers
-//*CMZ :  2.00/05 20/04/98  15.13.21  by  Fons Rademakers
-//*CMZ :  1.03/09 12/12/97  19.27.01  by  Rene Brun
 //*-- Author :    Fons Rademakers   01/03/96
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -70,10 +64,23 @@ R__EXTERN int optind;
 #include "fproto.h"
 #include "Api.h"
 
-extern "C" int ScriptCompiler(const char* filename) {
-   return gSystem->CompileMacro(filename);
+extern "C" void G__clearfilebusy(int);
+
+extern "C" int ScriptCompiler(const char* filename, const char* opt) {
+   return gSystem->CompileMacro(filename, opt);
 }
 
+extern "C" int IgnoreInclude(const char* fname,const char* expandedfname) {
+   return gROOT->IgnoreInclude(fname,expandedfname);
+}
+
+extern "C" void TCint_UpdateClassInfo(char* c ,Long_t l) {
+  TCint::UpdateClassInfo(c,l);
+}
+
+extern "C" void* TCint_FindObject(char * c, G__ClassInfo *ci, void ** p1, void ** p2) {
+  return TCint::FindObject(c,ci,p1,p2);
+}
 // It is a "fantom" method to synchronize user keyboard input
 // and ROOT prompt line (for WIN32)
 const char *fantomline = "TRint::EndOfLineAction();";
@@ -90,7 +97,9 @@ TCint::TCint(const char *name, const char *title) : TInterpreter(name, title)
    fPrompt[0] = 0;
 
    G__RegisterScriptCompiler(&ScriptCompiler);
-   G__InitGetSpecialObject(&TCint::FindObject);
+   G__set_ignoreinclude(&IgnoreInclude);
+   G__InitUpdateClassInfo(&TCint_UpdateClassInfo);
+   G__InitGetSpecialObject(&TCint_FindObject);
 
    ResetAll();
 #ifndef WIN32
@@ -105,6 +114,15 @@ TCint::~TCint()
 
    if (fMore != -1)
       G__scratch_all();
+}
+
+//______________________________________________________________________________
+void TCint::ClearFileBusy()
+{
+   // Reset CINT internal state in case a previous action was not correctly terminated
+   // by G__init_cint() and G__dlmod().
+
+   G__clearfilebusy(0);
 }
 
 //______________________________________________________________________________
@@ -217,7 +235,26 @@ Long_t TCint::Calc(const char *line)
 
    Long_t result;
 
+#ifdef WIN32
+   // Test on ApplicationImp not being 0 is needed because only at end of
+   // TApplication ctor the IsLineProcessing flag is set to 0, so before
+   // we can not use it.
+   if (gApplication && gApplication->GetApplicationImp()) {
+      while (gROOT->IsLineProcessing() && !gApplication) {
+         Warning("Calc", "waiting for CINT thread to free");
+         gSystem->Sleep(500);
+      }
+      gROOT->SetLineIsProcessing();
+   }
+#endif
+
    result = (Long_t) G__int(G__calc((char *)line));
+
+#ifdef WIN32
+   if (gApplication && gApplication->GetApplicationImp())
+      gROOT->SetLineHasBeenProcessed();
+#endif
+
    return result;
 }
 
@@ -360,6 +397,41 @@ void TCint::UpdateListOfGlobalFunctions()
             delete f;
          }
          gROOT->fGlobalFunctions->Add(new TFunction(a));
+      } else
+         delete a;
+
+      last++;
+   }
+}
+
+//______________________________________________________________________________
+void TCint::UpdateListOfTypes()
+{
+   // Update the list of pointers to datatype (typedef) definitions. This
+   // function is called by TROOT::GetListOfTypes().
+
+   G__TypedefInfo *a;
+   int last  = 0;
+   int ntype = 0;
+
+   // find the number of typedefs
+   G__TypedefInfo t;
+   while (t.Next()) ntype++;
+
+   for (int i = 0; i < ntype; i++) {
+      a = new G__TypedefInfo();
+      a->Next();   // initial positioning
+
+      for (int j = 0; j < last; j++)
+         a->Next();
+
+      // if name cannot be obtained no use to put in list
+      if (a->IsValid() && a->Name()) {
+         TDataType *d = (TDataType *)gROOT->fTypes->FindObject(a->Name());
+         // only add new types, don't delete old ones with the same name
+         // (as is done in UpdateListOfGlobals())
+         if (!d)
+            gROOT->fTypes->Add(new TDataType(a));
       } else
          delete a;
 
@@ -511,43 +583,7 @@ void TCint::CreateListOfMethodArgs(TFunction *m)
 }
 
 //______________________________________________________________________________
-void TCint::CreateListOfTypes()
-{
-   // Create list of pointers to datatype (typedef) definitions. This
-   // function is called by TROOT::GetListOfTypes().
-
-   if (!gROOT->fTypes) {
-
-      gROOT->fTypes = new TList(gROOT);
-
-      G__TypedefInfo *a;
-      int last  = 0;
-      int ntype = 0;
-
-      // find the number of typedefs
-      G__TypedefInfo t;
-      while (t.Next()) ntype++;
-
-      for (int i = 0; i < ntype; i++) {
-         a = new G__TypedefInfo();
-         a->Next();   // initial positioning
-
-         for (int j = 0; j < last; j++)
-            a->Next();
-
-         // if name cannot be obtained no use to put in list
-         if (a->IsValid() && a->Name())
-            gROOT->fTypes->Add(new TDataType(a));
-         else
-            delete a;
-
-         last++;
-      }
-   }
-}
-
-//______________________________________________________________________________
-void *TCint::GetInterfaceMethod(TClass *cl, Text_t *method, Text_t *params)
+void *TCint::GetInterfaceMethod(TClass *cl, char *method, char *params)
 {
    // Return pointer to CINT interface function for a method of a class with
    // parameters params (params is a string of actual arguments, not formal
@@ -566,7 +602,7 @@ void *TCint::GetInterfaceMethod(TClass *cl, Text_t *method, Text_t *params)
 }
 
 //______________________________________________________________________________
-void *TCint::GetInterfaceMethodWithPrototype(TClass *cl, Text_t *method, Text_t *proto)
+void *TCint::GetInterfaceMethodWithPrototype(TClass *cl, char *method, char *proto)
 {
    // Return pointer to CINT interface function for a method of a class with
    // a certain prototype, i.e. "char*,int,float". If the class is 0 the global
@@ -585,7 +621,7 @@ void *TCint::GetInterfaceMethodWithPrototype(TClass *cl, Text_t *method, Text_t 
 }
 
 //______________________________________________________________________________
-void TCint::Execute(Text_t *function, Text_t *params)
+void TCint::Execute(const char *function, const char *params)
 {
    // Execute a global function with arguments params.
 
@@ -594,14 +630,14 @@ void TCint::Execute(Text_t *function, Text_t *params)
    G__ClassInfo cl;
 
    // set pointer to interface method and arguments
-   func.SetFunc(&cl, function, params, &offset);
+   func.SetFunc(&cl, (char*)function, (char*)params, &offset);
 
    // call function
    func.Exec(0);
 }
 
 //______________________________________________________________________________
-void TCint::Execute(TObject *obj, TClass *cl, Text_t *method, Text_t *params)
+void TCint::Execute(TObject *obj, TClass *cl, const char *method, const char *params)
 {
    // Execute a method from class cl with arguments params.
 
@@ -610,7 +646,7 @@ void TCint::Execute(TObject *obj, TClass *cl, Text_t *method, Text_t *params)
    G__CallFunc func;
 
    // set pointer to interface method and arguments
-   func.SetFunc(cl->GetClassInfo(), method, params, &offset);
+   func.SetFunc(cl->GetClassInfo(), (char*)method, (char*)params, &offset);
 
    // call function
    address = (void*)((Long_t)obj + offset);
@@ -645,7 +681,7 @@ void TCint::Execute(TObject *obj, TClass *cl, TMethod *method, TObjArray *params
       return;
    }
 
-   const Text_t *listpar = "";
+   const char *listpar = "";
    TString complete(10);
 
    if (params)
@@ -655,25 +691,27 @@ void TCint::Execute(TObject *obj, TClass *cl, TMethod *method, TObjArray *params
        for (Int_t i = 0; i < argc; i ++)
        {
            TMethodArg *arg = (TMethodArg *) argList->At( i );
-           G__TypedefInfo type( arg->GetFullTypeName() );
+           G__TypeInfo type( arg->GetFullTypeName() );
            TObjString *nxtpar = (TObjString *)next();
-           if (i) complete.Append(',');
-           if (!strncmp( type.TrueName(), "char", 4 ))
+           if (i) complete += ',';
+//           if (i) complete.Append(',');
+//           if (!strncmp( type.TrueName(), "char", 4 ))
+           if (!strncmp( type.TrueName(), "(unknown)", 9 ))
            {
                TString chpar('\"');
-               chpar.Append((nxtpar->String()).ReplaceAll("\"","\\\""));
+               chpar += (nxtpar->String()).ReplaceAll("\"","\\\"");
                // At this point we have to check if string contains \\"
                // and apply some more sophisticated parser. Not implemented yet!
-               complete.Append(chpar);
-               complete.Append('\"');
+               complete += chpar;
+               complete += '\"';
            }
            else
-               complete.Append(nxtpar->String());
+               complete += nxtpar->String();
        }
        listpar = complete.Data();
    }
 
-   Execute(obj, cl, (Text_t *)method->GetName(), (char *)listpar);
+   Execute(obj, cl, (char *)method->GetName(), (char *)listpar);
 }
 
 //______________________________________________________________________________
@@ -694,7 +732,7 @@ const char *TCint::TypeName(const char *typeDesc)
 
    static char t[64];
    char *s;
-   if (!strstr(typeDesc, "(*)(") && (s = strchr(typeDesc, ' ')))
+   if (!strstr(typeDesc, "(*)(") && (s = (char*)strchr(typeDesc, ' ')))
       strcpy(t, s+1);
    else
       strcpy(t, typeDesc);
@@ -718,6 +756,29 @@ void *TCint::FindObject(char *item, G__ClassInfo *type, void **prevObj,
 
    if (*prevObj) type->Init(((TObject *)*prevObj)->ClassName());
    return *prevObj;
+}
+
+//______________________________________________________________________________
+void TCint::UpdateClassInfo(char *item, Long_t tagnum)
+{
+   // Static function called by CINT when it changes the tagnum for
+   // a class (e.g. after re-executing the setup function). In such
+   // cases we have to update the tagnum in the G__ClassInfo used by
+   // the TClass for class "item".
+
+   if (gROOT && gROOT->GetListOfClasses()) {
+      TClass *cl = gROOT->GetClass(item, kFALSE);
+      if (cl) {
+         G__ClassInfo *info = cl->GetClassInfo();
+         if (info && info->Tagnum() != tagnum) {
+            info->Init((int)tagnum);
+            if (cl->fBase)
+               cl->fBase->Delete();
+            delete cl->fBase;
+            cl->fBase = 0;
+         }
+      }
+   }
 }
 
 //______________________________________________________________________________
@@ -746,13 +807,26 @@ const char* TCint::GetSharedLibs()
            strstr(filename,".dl")  != 0 ||
            strstr(filename,".so")  != 0 ||
            strstr(filename,".dll") != 0 ||
-           strstr(filename,".DLL") != 0))
-         fSharedLibs.Append(filename).Append(" ");
+           strstr(filename,".DLL") != 0)) {
+         if (!fSharedLibs.IsNull())
+            fSharedLibs.Append(" ");
+         fSharedLibs.Append(filename);
+      }
 
       cursor.Next();
    }
 
    return fSharedLibs;
+}
+
+//______________________________________________________________________________
+void TCint::AddIncludePath(const char *path)
+{
+  // Add the given path to the list of directory in which the interpreter
+  // look for include files.
+
+  G__add_ipath((char*)path);
+
 }
 
 //______________________________________________________________________________

@@ -1,22 +1,18 @@
+//*CMZ :  2.23/12 26/01/2000  10.14.03  by  Rene Brun
 //*CMZ :  1.03/04 19/09/97  12.49.54  by  Piotr Golonka
 //*-- Author :    Ola Nordmann   21/09/95
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 
@@ -41,11 +37,11 @@ typedef struct {
 COMMON_BLOCK_DEF(FILES_DEF,FILES);
 
 typedef struct {
-  Text_t fnch[80];
+  char   fnch[80];
   Int_t  nfnch;
-  Text_t fnhi[80];
+  char   fnhi[80];
   Int_t  nfnhi;
-  Text_t fndt[80];
+  char   fndt[80];
   Int_t  nfndt;
 } CFNAME_DEF;
 
@@ -485,8 +481,8 @@ COMMON_BLOCK_DEF(COPEN_DEF,COPEN);
 #define VCOMMON_MXIDCO 99
 
 typedef struct {
-  Text_t  xvaria[6];
-  Text_t  yvaria[6];
+  char    xvaria[6];
+  char    yvaria[6];
   Int_t   normal;
   Float_t xminim;
   Float_t xmaxim;
@@ -501,7 +497,7 @@ typedef struct {
   Int_t   nrtrig;
   Float_t trmin[VCOMMON_MXTRIG];
   Float_t trmax[VCOMMON_MXTRIG];
-  Text_t  trvari[VCOMMON_MXTRIG][6];
+  char    trvari[VCOMMON_MXTRIG][6];
 } P11_DEF;
 
 #define P11 COMMON_BLOCK(P11,p11)

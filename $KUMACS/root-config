@@ -1,3 +1,6 @@
+*CMZ :  2.23/04 11/10/99  14.11.51  by  Rene Brun
+*CMZ :  2.23/03 27/09/99  01.17.03  by  Fons Rademakers
+*CMZ :  2.23/02 06/09/99  08.13.15  by  Rene Brun
 *CMZ :  2.22/05 08/06/99  16.08.28  by  Fons Rademakers
 *-- Author :    Fons Rademakers   06/06/99
 #!/bin/sh
@@ -11,15 +14,9 @@ versdef="\
 ### ROOT libraries ###
 
 newlib="-lNew"
-+SELF,IF=IBMRT.
-rootlibs="-lRoot -lCint"
-rootglibs=
-+SELF,IF=-IBMRT.
-rootlibs="-lBase -lCint -lClib -lCont -lFunc -lGraf -lGraf3d -lHist \
-          -lHtml -lMatrix -lMeta -lMinuit -lNet -lPhysics -lPostscript \
-          -lProof -lRint -lTree -lUnix -lZip"
-rootglibs="-lGpad -lGui -lGX11 -lX3d"
-+SELF.
+rootlibs="-lCore -lCint -lHist -lGraf -lGraf3d -lGpad -lTree -lRint \
+          -lPostscript -lMatrix -lPhysics"
+rootglibs="-lGui"
 
 ### machine dependent settings ###
 
@@ -27,76 +24,73 @@ rootglibs="-lGpad -lGui -lGX11 -lX3d"
 #HP-UX with CC
 auxcflags="+a1"
 auxlibs="-lm -ldld"
-auxglibs="-L/usr/lib/X11R5 -lXpm -lX11 -lm -ldld"
+auxglibs=${auxlibs}
 
 +SELF,IF=HPUX,IF=ACC.
 # HP-UX 10.x with aCC
 auxcflags="+W823"
 auxlibs="-lm -ldld"
-auxglibs="-lXpm -lX11 -lm -ldld"
+auxglibs=${auxlibs}
 
 +SELF,IF=HPUX,IF=EGCS.
 # HP-UX 10.x with g++
 auxcflags=
 auxlibs="-lm -ldld"
-auxglibs="-lXpm -lX11 -lm -ldld"
+auxglibs=${auxlibs}
 
 +SELF,IF=IBMRT,IF=-GCC.
 # IBM AIX
 auxcflags="-qnoro -qnoroconst -qmaxmem=-1"
-auxlibs="-lm -lld -lcurses"
-auxglibs="-lXpm -lX11 -lm -lPW -lld -lcurses"
+auxlibs=
+auxglibs=${auxlibs}
 
 +SELF,IF=IBMRT,IF=GCC.
 # IBM AIX with GCC
 auxcflags="-fsigned-char"
-auxlibs="-lm -lld -lcurses"
-auxglibs="-lXpm -lX11 -lg++ -lm -lPW -lld -lcurses"
+auxlibs=
+auxglibs=${auxlibs}
 
 +SELF,IF=SOLARIS,IF=-GCC.
 # Solaris
 auxcflags=
 auxlibs="-L/usr/ccs/lib -lm -lsocket -lgen -ldl -lsunmath"
-auxglibs="-L/usr/openwin/lib -L/usr/ccs/lib -lXpm -lX11 -lm \
-          -lgen -ldl -lsocket -lsunmath"
+auxglibs=${auxlibs}
 
 +SELF,IF=SOLARIS,IF=GCC.
 # Solaris
 auxcflags=
 auxlibs="-L/usr/ccs/lib -lg++ -lm -lsocket -lgen -ldl"
-auxglibs="-L/usr/openwin/lib -L/usr/ccs/lib -lXpm -lX11 -lg++ -lm \
-          -lgen -ldl -lsocket"
+auxglibs=${auxlibs}
 
 +SELF,IF=SOLARISPC.
 # Solaris
 auxcflags=
 auxlibs="-L/usr/ccs/lib -lm -lsocket -lgen -ldl"
-auxglibs="-L/usr/openwin/lib -L/usr/ccs/lib -lXpm -lX11 -lm \
-          -lgen -ldl -lsocket"
+auxglibs=${auxlibs}
 
 +SELF,IF=SGI,IF=-GCC,IF=-KCC,IF=-EGCS.
 # SGI
 auxcflags=
 auxlibs="-lm -ldl"
-auxglibs="-lXpm -lX11 -lm -lPW -ldl"
+auxglibs=${auxlibs}
 
 +SELF,IF=SGI,IF=EGCS.
 # SGI with EGCS
 auxcflags="-fsigned-char"
 auxlibs="-lstdc++ -lm"
-auxglibs="-lXpm -lX11 -lstdc++ -lm"
+auxglibs=${auxlibs}
 
 +SELF,IF=SGI,IF=EGCS,IF=SGI64.
 # SGI 6.4 with EGCS
 auxcflags="-fsigned-char"
 auxlibs="-lg++ -lm -lgen"
-auxglibs="-lXpm -lX11 -lg++ -lm -lPW"
+auxglibs=${auxlibs}
 
 +SELF,IF=SGI,IF=GCC.
 # SGI with GCC
 auxcflags="-fsigned-char"
 auxlibs="-lg++ -lm -ldl"
-auxglibs="-lXpm -lX11 -lg++ -lm -lPW -ldl"
+auxglibs=${auxlibs}
 
 +SELF,IF=SGI,IF=KCC.
 # SGI with KCC
@@ -104,67 +98,67 @@ auxcflags="--signed_chars --display_error_number \
            --diag_suppress 68 --diag_suppress 191 --diag_suppress 837 \
            --no_exceptions"
 auxlibs="-lm -ldl"
-auxglibs="-lXpm -lX11 -lm -lPW -ldl"
+auxglibs=${auxlibs}
 
 +SELF,IF=ALPHA,IF=GCC.
 # Alpha/OSF with g++
 auxcflags=
 auxlibs="-lg++ -lm"
-auxglibs="-lXpm -lX11 -lg++ -lm -lPW"
+auxglibs=${auxlibs}
 
 +SELF,IF=ALPHA,IF=EGCS.
 # Alpha/OSF with egcs
 auxcflags="-mcpu=ev5 -D__osf__ -D__alpha"
 auxlibs="-ltermcap -lm"
-auxglibs="-lXpm -lX11 -ltermcap -lm"
+auxglibs=${auxlibs}
 
 +SELF,IF=ALPHA,IF=KCC.
 # Alpha/OSF with kai compiler (not yet valid)
 auxcflags="-mcpu=ev5 -D__osf__ -D__alpha"
 auxlibs="-ltermcap -lm"
-auxglibs="-lXpm -lX11 -ltermcap -lm"
+auxglibs=${auxlibs}
 
 +SELF,IF=ALPHA,IF=-GCC,IF=-EGCS,IF=-KCC,IF=CXX6.
 # Alpha/OSF with cxx6
 auxcflags="-nostdnew -D__osf__ -D__alpha"
 auxlibs="-lm"
-auxglibs="-lXpm -lX11 -lm -lPW"
+auxglibs=${auxlibs}
 
 +SELF,IF=ALPHA,IF=-GCC,IF=-EGCS,IF=-KCC,IF=-CXX6.
 # Alpha/OSF with cxx5
 auxcflags="-oldcxx -D__osf__ -D__alpha"
 auxlibs="-lm"
-auxglibs="-lXpm -lX11 -lm -lPW"
+auxglibs=${auxlibs}
 
 +SELF,IF=LINUX,IF=-EGCS,IF=-KCC.
 # Linux with gcc 2.7.2.x
 auxcflags=
 auxlibs="-lg++ -lm -ldl -rdynamic"
-auxglibs="-L/usr/X11R6/lib -lXpm -lX11 -lg++ -lm -ldl -rdynamic"
+auxglibs=${auxlibs}
 
 +SELF,IF=LINUX,IF=EGCS.
 # Linux with egcs
 auxcflags=
 auxlibs="-lm -ldl -rdynamic"
-auxglibs="-L/usr/X11R6/lib -lXpm -lX11 -lm -ldl -rdynamic"
+auxglibs=${auxlibs}
 
 +SELF,IF=LINUX,IF=KCC.
 # Linux with the KAI compiler
 auxcflags="--signed_chars -D_EXTERN_INLINE=inline --diag_suppress 191"
 auxlibs="-lm -ldl -rdynamic"
-auxglibs="-L/usr/X11R6/lib -lXpm -lX11 -lm -ldl -rdynamic"
+auxglibs=${auxlibs}
 
 +SELF,IF=MkLinux.
 # MkLinux with glibc
 auxcflags="-fsigned-char -I/usr/X11/include  -I/usr/include/g++"
 auxlibs="-lm -ldl -rdynamic"
-auxglibs="-L/usr/X11R6/lib -lXpm -lX11 -lm -ldl -rdynamic"
+auxglibs=${auxlibs}
 
 +SELF,IF=HIUX.
 # Hitachi HIUX
 auxcflags=
 auxlibs="-lm -ldld"
-auxglibs="-lXpm -lX11 -lm -ldld"
+auxglibs=${auxlibs}
 
 +SELF.
 ### end of machine dependent settings ###

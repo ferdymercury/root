@@ -1,3 +1,4 @@
+//*CMZ :  2.23/12 26/01/2000  10.11.08  by  Rene Brun
 //*CMZ :  2.00/00 18/02/98  09.22.30  by  Rene Brun
 //*CMZ :  1.03/09 08/12/97  21.17.18  by  Fons Rademakers
 //*-- Author :    Piotr Golonka   17/09/97
@@ -35,7 +36,7 @@ void TMCParticle::ls(Option_t *)
 }
 
 //______________________________________________________________________________
-const Text_t *TMCParticle::GetName() const
+const char *TMCParticle::GetName() const
 {
    // Return name of this particle via Pythia
 

@@ -1,3 +1,4 @@
+/*CMZ :  2.23/09 24/11/99  11.23.02  by  Rene Brun*/
 /*CMZ :  2.00/00 08/03/98  11.27.32  by  Rene Brun*/
 /*CMZ :  0.80/00 12/08/96   1.23.37  by  Fons Rademakers*/
 /*-- Author :*/
@@ -311,7 +312,7 @@ void R__lm_init (int pack_level, ush *flags)
 {
     register unsigned j;
 
-    if (pack_level < 1 || pack_level > 9) error("bad pack level");
+    if (pack_level < 1 || pack_level > 9) R__error("bad pack level");
 
     /* Do not slide the window if the whole input is already in memory
      * (window_size > 0)
@@ -326,13 +327,13 @@ void R__lm_init (int pack_level, ush *flags)
 #ifdef DYN_ALLOC
     if (R__window == NULL) {
         R__window = (uch*) fcalloc(WSIZE,   2*sizeof(uch));
-        if (R__window == NULL) error("window allocation");
+        if (R__window == NULL) R__error("window allocation");
     }
     if (R__prev == NULL) {
         R__prev   = (Pos*) fcalloc(WSIZE,     sizeof(Pos));
         R__head   = (Pos*) fcalloc(HASH_SIZE, sizeof(Pos));
         if (R__prev == NULL || R__head == NULL) {
-            error("hash table allocation");
+            R__error("hash table allocation");
         }
     }
 #endif /* DYN_ALLOC */
@@ -368,7 +369,7 @@ void R__lm_init (int pack_level, ush *flags)
 #ifndef MAXSEG_64K
     if (sizeof(int) > 2) j <<= 1; /* Can read 64K in one step */
 #endif
-    lookahead = (*read_buf)((char*)R__window, j);
+    lookahead = (*R__read_buf)((char*)R__window, j);
 
     if (lookahead == 0 || lookahead == (unsigned)EOF) {
        eofile = 1, lookahead = 0;
@@ -557,7 +558,7 @@ local void check_match(IPos start, IPos match, int length)
         fprintf(stderr,
             " start %d, match %d, length %d\n",
             start, match, length);
-        error("invalid match");
+        R__error("invalid match");
     }
     if (verbose > 1) {
         fprintf(stderr,"\\[%d,%d]", start-match, length);
@@ -623,7 +624,7 @@ local void fill_window()
     }
     /* At this point, more >= 2 */
     if (!eofile) {
-        n = (*read_buf)((char*)R__window+R__strstart+lookahead, more);
+        n = (*R__read_buf)((char*)R__window+R__strstart+lookahead, more);
         if (n == 0 || n == (unsigned)EOF) {
             eofile = 1;
         } else {

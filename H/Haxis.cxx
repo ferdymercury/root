@@ -1,3 +1,5 @@
+//*CMZ :  2.23/12 14/01/2000  16.37.46  by  Rene Brun
+//*CMZ :  2.23/11 30/12/99  11.45.45  by  Rene Brun
 //*CMZ :  2.21/02 15/01/99  18.00.26  by  Rene Brun
 //*CMZ :  0.03/01 07/12/95  11.51.20  by  Fons Rademakers
 //*-- Author :    Rene Brun   18/05/95
@@ -101,6 +103,16 @@ Float_t TH1::GetTitleOffset( Option_t *axis)
 }
 
 //______________________________________________________________________________
+Float_t TH1::GetTitleSize( Option_t *axis)
+{
+   Int_t ax = AxisChoice(axis);
+   if (ax == 1) return fXaxis.GetTitleSize();
+   if (ax == 2) return fYaxis.GetTitleSize();
+   if (ax == 3) return fZaxis.GetTitleSize();
+   return 0;
+}
+
+//______________________________________________________________________________
 void TH1::SetNdivisions(Int_t n, Option_t *axis)
 {
    Int_t ax = AxisChoice(axis);
@@ -126,8 +138,8 @@ void TH1::SetAxisRange(Float_t xmin, Float_t xmax, Option_t *axis)
    if (ax == 1) theAxis = GetXaxis();
    if (ax == 2) theAxis = GetYaxis();
    if (ax == 3) theAxis = GetZaxis();
-   Int_t bin1 = theAxis->FindBin(xmin);
-   Int_t bin2 = theAxis->FindBin(xmax);
+   Int_t bin1 = theAxis->FindFixBin(xmin);
+   Int_t bin2 = theAxis->FindFixBin(xmax);
    theAxis->SetRange(bin1, bin2);
 }
 
@@ -183,4 +195,13 @@ void TH1::SetTitleOffset(Float_t offset, Option_t *axis)
    if (ax == 1) fXaxis.SetTitleOffset(offset);
    if (ax == 2) fYaxis.SetTitleOffset(offset);
    if (ax == 3) fZaxis.SetTitleOffset(offset);
+}
+
+//______________________________________________________________________________
+void TH1::SetTitleSize(Float_t size, Option_t *axis)
+{
+   Int_t ax = AxisChoice(axis);
+   if (ax == 1) fXaxis.SetTitleSize(size);
+   if (ax == 2) fYaxis.SetTitleSize(size);
+   if (ax == 3) fZaxis.SetTitleSize(size);
 }

@@ -1,3 +1,4 @@
+/*CMZ :  2.23/12 17/01/2000  17.44.34  by  Rene Brun*/
 /*CMZ :  2.00/06 12/05/98  16.01.47  by  Rene Brun*/
 /*CMZ :  2.00/04 06/04/98  20.43.58  by  Fons Rademakers*/
 /*CMZ :  1.02/00 23/07/97  19.45.12  by  Valery Fine(fine@vxcern.cern.ch)*/
@@ -57,7 +58,9 @@ mmalloc_setkey (md, keynum, key)
       mdp -> keys [keynum] = key;
 #ifndef WIN32
 #ifndef VMS
+#ifndef R__LYNXOS
       msync((void *)mdp, sizeof(struct mdesc), MS_ASYNC);
+#endif
 #endif
 #endif
       result++;

@@ -1,9 +1,9 @@
-/*CMZ :  2.22/10 23/07/99  14.42.34  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   23/07/99*/
+/*CMZ :  2.23/10 10/12/99  18.00.24  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   10/12/99*/
 // lib/prec_stl/stack
 
-#ifndef PREC_STL_STACK
-#define PREC_STL_STACK
+#pragma ifndef PREC_STL_STACK
+#pragma define PREC_STL_STACK
 #pragma link off global PREC_STL_STACK;
 #pragma link C++ nestedtypedef;
 #pragma link C++ nestedclass;
@@ -48,7 +48,7 @@ class stack {
 #endif
 };
 
-#endif
+#pragma endif
 
 
 

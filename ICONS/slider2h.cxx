@@ -1,8 +1,7 @@
-//*CMZ :  2.00/04 30/03/98  15.02.28  by  Fons Rademakers
-//*CMZ :  2.00/00 18/02/98  18.56.20  by  IconsAuthor
-//*-- Author :    IconsAuthor   18/02/98
+//*CMZ :  2.23/04 04/10/99  20.39.44  by  Fons Rademakers
+//*-- Author :    IconsAuthor   04/10/99
 /* XPM */
-static char *slider2h_xpm[] = {
+const char *slider2h_xpm[] = {
 "14 11 4 1",
 "       c white",
 ".      c #c0c0c0",

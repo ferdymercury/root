@@ -1,28 +1,23 @@
+//*CMZ :  2.23/12 26/01/2000  09.31.22  by  Rene Brun
+//*CMZ :  2.23/09 22/11/99  17.27.42  by  Rene Brun
+//*CMZ :  2.23/04 04/10/99  14.41.35  by  Rene Brun
+//*CMZ :  2.23/02 24/09/99  22.10.49  by  Rene Brun
 //*CMZ :  2.22/02 21/05/99  10.59.52  by  Rene Brun
 //*CMZ :  2.22/01 19/05/99  12.47.17  by  Rene Brun
 //*CMZ :  2.20/05 15/12/98  09.17.21  by  Rene Brun
-//*CMZ :  2.20/01 02/12/98  18.03.03  by  Fons Rademakers
-//*CMZ :  2.00/11 08/08/98  22.20.54  by  Rene Brun
-//*CMZ :  2.00/00 11/02/98  13.14.46  by  Rene Brun
-//*CMZ :  1.03/09 10/12/97  09.32.36  by  Rene Brun
 //*-- Author :    Nicolas Brun   12/12/94
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 #include <fstream.h>
@@ -31,10 +26,9 @@
 #include "TROOT.h"
 #include "TVirtualPad.h"
 #include "TText.h"
-#include "TGXW.h"
+#include "TVirtualX.h"
 #include "TMath.h"
 
-const Int_t kTextNDC = BIT(14);
 
 ClassImp(TText)
 
@@ -68,7 +62,7 @@ TText::TText(): TNamed(), TAttText()
 //*-*                  ========================
 }
 //______________________________________________________________________________
-TText::TText(Coord_t x, Coord_t y, const Text_t *text) : TNamed("",text), TAttText()
+TText::TText(Coord_t x, Coord_t y, const char *text) : TNamed("",text), TAttText()
 {
 //*-*-*-*-*-*-*-*-*-*-*Text normal constructor*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 //*-*                  =======================
@@ -119,7 +113,7 @@ Int_t TText::DistancetoPrimitive(Int_t px, Int_t py)
       ptx    = gPad->XtoAbsPixel(fX);
       pty    = gPad->YtoAbsPixel(fY);
    }
-   const Text_t *text = GetTitle();
+   const char *text = GetTitle();
    Int_t len    = strlen(text);
    Float_t fh   = (fTextSize*gPad->GetAbsHNDC())*Float_t(gPad->GetWh());
    Int_t h      = Int_t(fh/2);
@@ -204,17 +198,7 @@ Int_t TText::DistancetoPrimitive(Int_t px, Int_t py)
 }
 
 //______________________________________________________________________________
-void TText::Draw(Option_t *option)
-{
-//*-*-*-*-*-*-*-*-*-*-*Draw this text with its current attributes*-*-*-*-*-*-*
-//*-*                  ==========================================
-
-   AppendPad(option);
-
-}
-
-//______________________________________________________________________________
-TText *TText::DrawText(Coord_t x, Coord_t y, const Text_t *text)
+TText *TText::DrawText(Coord_t x, Coord_t y, const char *text)
 {
 //*-*-*-*-*-*-*-*-*-*-*Draw this text with new coordinates*-*-*-*-*-*-*-*-*-*
 //*-*                  ===================================
@@ -227,7 +211,7 @@ TText *TText::DrawText(Coord_t x, Coord_t y, const Text_t *text)
 }
 
 //______________________________________________________________________________
-TText *TText::DrawTextNDC(Coord_t x, Coord_t y, const Text_t *text)
+TText *TText::DrawTextNDC(Coord_t x, Coord_t y, const char *text)
 {
 //*-*-*-*-*-*-*-*-*-*-*Draw this text with new coordinates in NDC*-*-*-*-*-*
 //*-*                  ==========================================
@@ -249,7 +233,7 @@ void TText::ExecuteEvent(Int_t event, Int_t px, Int_t py)
    static Bool_t resize,turn;
    Int_t dx, dy;
    Int_t kMaxDiff = 8;
-   const Text_t *text = GetTitle();
+   const char *text = GetTitle();
    Int_t len    = strlen(text);
    Float_t sizetowin = gPad->GetAbsHNDC()*Float_t(gPad->GetWh());
    Float_t fh   = (fTextSize*sizetowin);
@@ -264,10 +248,13 @@ void TText::ExecuteEvent(Int_t event, Int_t px, Int_t py)
    Ax = Ay = 0;
    Float_t lambda, x2,y2,xy;
    Float_t dpx,dpy,xp1,yp1;
+
+   if (!gPad->IsEditable()) return;
+
    switch (event) {
 
    case kButton1Down:
-      gGXW->SetTextColor(-1);  // invalidate current text color (use xor mode)
+      gVirtualX->SetTextColor(-1);  // invalidate current text color (use xor mode)
       TAttText::Modify();  //*-*Change text attributes only if necessary
 
       // No break !!!
@@ -332,7 +319,7 @@ void TText::ExecuteEvent(Int_t event, Int_t px, Int_t py)
       break;
 
    case kButton1Motion:
-      gGXW->DrawText(px1, py1, theta, gGXW->GetTextMagnitude(), GetTitle(), TGXW::kClear);
+      gVirtualX->DrawText(px1, py1, theta, gVirtualX->GetTextMagnitude(), GetTitle(), TVirtualX::kClear);
       if (turn) {
          norm = TMath::Sqrt(Double_t((py-py1)*(py-py1)+(px-px1)*(px-px1)));
          if (norm>0) {
@@ -385,7 +372,7 @@ void TText::ExecuteEvent(Int_t event, Int_t px, Int_t py)
          dx = px - pxold;  px1 += dx;
          dy = py - pyold;  py1 += dy;
       }
-      gGXW->DrawText(px1, py1, theta, gGXW->GetTextMagnitude(), GetTitle(), TGXW::kClear);
+      gVirtualX->DrawText(px1, py1, theta, gVirtualX->GetTextMagnitude(), GetTitle(), TVirtualX::kClear);
       pxold = px;  pyold = py;
       break;
 
@@ -403,7 +390,7 @@ void TText::ExecuteEvent(Int_t event, Int_t px, Int_t py)
       }
       fTextAngle = theta;
       gPad->Modified(kTRUE);
-      gGXW->SetTextColor(-1);
+      gVirtualX->SetTextColor(-1);
       break;
 
    case kButton1Locate:
@@ -412,7 +399,7 @@ void TText::ExecuteEvent(Int_t event, Int_t px, Int_t py)
 
       while (1) {
          px = py = 0;
-         event = gGXW->RequestLocator(1, 1, px, py);
+         event = gVirtualX->RequestLocator(1, 1, px, py);
 
          ExecuteEvent(kButton1Motion, px, py);
 
@@ -445,7 +432,7 @@ void TText::Paint(Option_t *)
 }
 
 //______________________________________________________________________________
-void TText::PaintText(Coord_t x, Coord_t y, const Text_t *text)
+void TText::PaintText(Coord_t x, Coord_t y, const char *text)
 {
 //*-*-*-*-*-*-*-*-*-*-*Draw this text with new coordinates*-*-*-*-*-*-*-*-*-*
 //*-*                  ===================================
@@ -456,7 +443,7 @@ void TText::PaintText(Coord_t x, Coord_t y, const Text_t *text)
 }
 
 //______________________________________________________________________________
-void TText::PaintTextNDC(Coord_t u, Coord_t v, const Text_t *text)
+void TText::PaintTextNDC(Coord_t u, Coord_t v, const char *text)
 {
 //*-*-*-*-*-*-*-*-*-*-*Draw this text with new coordinates in NDC*-*-*-*-*-*-*
 //*-*                  ==========================================

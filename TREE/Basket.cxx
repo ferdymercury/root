@@ -1,30 +1,23 @@
+//*CMZ :  2.23/12 26/01/2000  09.45.01  by  Rene Brun
+//*CMZ :  2.23/11 07/01/2000  17.37.56  by  Rene Brun
+//*CMZ :  2.23/09 24/11/99  11.25.31  by  Rene Brun
+//*CMZ :  2.23/04 02/10/99  12.25.35  by  Rene Brun
 //*CMZ :  2.22/07 30/06/99  11.37.44  by  Rene Brun
 //*CMZ :  2.22/06 17/06/99  09.42.13  by  Rene Brun
 //*CMZ :  2.22/02 20/05/99  18.10.52  by  Rene Brun
 //*CMZ :  2.22/01 18/05/99  12.37.47  by  Rene Brun
-//*CMZ :  2.00/13 26/03/99  20.03.21  by  Rene Brun
-//*CMZ :  2.00/12 05/10/98  23.58.00  by  Rene Brun
-//*CMZ :  2.00/08 04/06/98  12.05.44  by  Rene Brun
-//*CMZ :  2.00/06 15/05/98  10.51.24  by  Rene Brun
-//*CMZ :  2.00/00 19/02/98  15.07.07  by  Rene Brun
-//*CMZ :  1.03/09 21/01/98  09.01.01  by  Fons Rademakers
 //*-- Author :    Rene Brun   19/01/96
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 #include "TBasket.h"
@@ -35,8 +28,9 @@
 
 R__EXTERN  TBranch *gBranch;
 
-extern "C" void mmzip (Int_t cxlevel, Int_t *nin, char *bufin, Int_t *lout, char *bufout, Int_t *nout);
-extern "C" void mmuzip(Int_t *nin, char *bufin, Int_t *lout, char *bufout, Int_t *nout);
+extern "C" void R__zip (Int_t cxlevel, Int_t *nin, char *bufin, Int_t *lout, char *bufout, Int_t *nout);
+extern "C" void R__unzip(Int_t *nin, char *bufin, Int_t *lout, char *bufout, Int_t *nout);
+
 
 ClassImp(TBasket)
 
@@ -54,11 +48,11 @@ TBasket::TBasket()
    fZipBuffer     = 0;
    fBufferRef     = 0;
    fBuffer        = 0;
-   fWritingBuffer = kFALSE;
+   fHeaderOnly    = kFALSE;
 }
 
 //_______________________________________________________________________
-TBasket::TBasket(const Text_t *name, const Text_t *title, TBranch *branch)
+TBasket::TBasket(const char *name, const char *title, TBranch *branch)
 {
 //            Basket normal constructor
 //
@@ -72,7 +66,7 @@ TBasket::TBasket(const Text_t *name, const Text_t *title, TBranch *branch)
    fEntryOffset = 0;  //Must be set to 0 before calling Sizeof
    fBuffer      = 0;  //Must be set to 0 before calling Sizeof
    fBufferRef   = new TBuffer(TBuffer::kWrite, fBufferSize);
-   fWritingBuffer = kTRUE;
+   fHeaderOnly  = kTRUE;
    fLast        = 0; // RDK: Must initialize before calling Streamer()
    Streamer(*fBufferRef);
    fKeylen      = fBufferRef->Length();
@@ -81,7 +75,7 @@ TBasket::TBasket(const Text_t *name, const Text_t *title, TBranch *branch)
    fBuffer      = 0;
    fBranch      = branch;
    fZipBuffer   = 0;
-   fWritingBuffer = kFALSE;
+   fHeaderOnly  = kFALSE;
    if (fNevBufSize) fEntryOffset = new Int_t[fNevBufSize];
    branch->GetTree()->IncrementTotalBuffers(fBufferSize);
 }
@@ -141,15 +135,7 @@ Int_t TBasket::GetEntryPointer(Int_t entry)
 }
 
 //_______________________________________________________________________
-void TBasket::Print(Option_t *option)
-{
-//            Print Basket parameters
-//
-   TNamed::Print(option);
-}
-
-//_______________________________________________________________________
-void TBasket::ReadBasketBuffers()
+void TBasket::ReadBasketBuffers(Seek_t pos, Int_t len, TFile *file)
 {
 //*-*-*-*-*-*-*-*-*Read basket buffers in memory and cleanup*-*-*-*-*-*-*
 //*-*              =========================================
@@ -159,25 +145,27 @@ void TBasket::ReadBasketBuffers()
 //       in memory up to fMaxVirtualSize.
 
    TDirectory *cursav = gDirectory;
-   fBranch->GetDirectory()->cd();
+   gBranch->GetDirectory()->cd();
 
-   if (fBranch->GetTree()->MemoryFull(fBufferSize)) fBranch->DropBaskets();
+   if (gBranch->GetTree()->MemoryFull(fBufferSize)) gBranch->DropBaskets();
 
-   fBufferRef = new TBuffer(TBuffer::kRead, fObjlen+fKeylen);
+   fBufferRef = new TBuffer(TBuffer::kRead, len);
+   char *buffer = fBufferRef->Buffer();
+   file->Seek(pos);
+   file->ReadBuffer(buffer,len);
+   Streamer(*fBufferRef);
    if (fObjlen > fNbytes-fKeylen) {
-      fBuffer = new char[fNbytes];
-      TKey::ReadFile();                    //Read object structure from file
-      memcpy(fBufferRef->Buffer(),fBuffer,fKeylen);
-      char *objbuf = fBufferRef->Buffer() + fKeylen;
+      fBuffer = new char[fObjlen+fKeylen];
+      memcpy(fBuffer,buffer,fKeylen);
+      char *objbuf = fBuffer + fKeylen;
       Int_t nin = fNbytes-fKeylen;
       Int_t nout;
-      mmuzip(&nin, &fBuffer[fKeylen], &fObjlen, objbuf, &nout);
+      R__unzip(&nin, &buffer[fKeylen], &fObjlen, objbuf, &nout);
       if (nout != fObjlen) Error("Read", "fObjlen = %d, nout = %d", fObjlen, nout);
-      delete [] fBuffer;
-      fBuffer = 0;
+      delete [] buffer;
+      fBufferRef->SetBuffer(fBuffer);
    } else {
       fBuffer = fBufferRef->Buffer();
-      TKey::ReadFile();                    // Remember, TBasket inherits from TKey
    }
    cursav->cd();
 
@@ -192,51 +180,20 @@ void TBasket::ReadBasketBuffers()
 }
 
 //_______________________________________________________________________
-void TBasket::ReadBasketBuffers(char *buf)
+Int_t TBasket::ReadBasketBytes(Seek_t pos, TFile *file)
 {
 //*-*-*-*-*-*-*-*-*Read basket buffers in memory and cleanup*-*-*-*-*-*-*
 //*-*              =========================================
 //
-//       Read a basket buffer from buf. Check if buffers of previous ReadBasket
-//       should not be dropped. Remember, we keep buffers
-//       in memory up to fMaxVirtualSize.
-   TDirectory *cursav = gDirectory;
-   fBranch->GetDirectory()->cd();
+//       Read first bytes of a logical record starting at position pos
+//       return record length (first 4 bytes of record)
 
-   if (fBranch->GetTree()->MemoryFull(fBufferSize)) fBranch->DropBaskets();
-
-   fBufferRef = new TBuffer(TBuffer::kRead, fObjlen+fKeylen);
-   if (fObjlen > fNbytes-fKeylen) {
-      fBuffer = new char[fNbytes];
-      memcpy(fBufferRef->Buffer(),buf,fKeylen);
-      char *objbuf = fBufferRef->Buffer() + fKeylen;
-      Int_t nin = fNbytes-fKeylen;
-      Int_t nout;
-      mmuzip(&nin, &buf[fKeylen], &fObjlen, objbuf, &nout);
-      if (nout != fObjlen) Error("Read", "fObjlen = %d, nout = %d", fObjlen, nout);
-      delete [] fBuffer;
-      fBuffer = 0;
-   } else {
-      fBuffer = fBufferRef->Buffer();
-      memcpy(fBuffer,buf,fNbytes);
-   }
-   cursav->cd();
-
-   fBranch->GetTree()->IncrementTotalBuffers(fBufferSize);
-
-//        read offsets table
-   if (!fBranch->GetEntryOffsetLen()) return;
-   delete [] fEntryOffset;
-   fEntryOffset = 0;
-   fBufferRef->SetBufferOffset(fLast);
-   fBufferRef->ReadArray(fEntryOffset);
-
-}
-
-//_______________________________________________________________________
-void TBasket::Reset(Option_t *)
-{
-
+   const Int_t len = 128;
+   char buffer[len];
+   Int_t keylen;
+   file->GetRecordHeader(buffer, pos,len, fNbytes, fObjlen, keylen);
+   fKeylen = keylen;
+   return fNbytes;
 }
 
 //_______________________________________________________________________
@@ -273,7 +230,8 @@ void TBasket::Streamer(TBuffer &b)
       b >> fNevBuf;
       b >> fLast;
       b >> flag;
-     if (!flag) return;
+      if (fLast > fBufferSize) fBufferSize = fLast;
+      if (!flag) return;
       if (flag%10 != 2) {
          delete [] fEntryOffset;
          fEntryOffset = new Int_t[fNevBufSize];
@@ -290,17 +248,18 @@ void TBasket::Streamer(TBuffer &b)
    } else {
       TKey::Streamer(b);   //this must be first
       b.WriteVersion(TBasket::IsA());
+      if (fBufferRef && !fHeaderOnly) fLast = fBufferRef->Length();
+      if (fLast > fBufferSize) fBufferSize = fLast;
       b << fBufferSize;
       b << fNevBufSize;
       b << fNevBuf;
-      if (fBufferRef && !fWritingBuffer) fLast = fBufferRef->Length();
       b << fLast;
       flag = 1;
       if (!fEntryOffset)  flag  = 2;
       if (fBufferRef)     flag += 10;
-      if (fWritingBuffer) flag  = 0;
+      if (fHeaderOnly)    flag  = 0;
       b << flag;
-      if (fWritingBuffer) return;
+      if (fHeaderOnly) return;
       if (fEntryOffset && fNevBuf) {
          b.WriteArray(fEntryOffset, fNevBuf);
       }
@@ -356,7 +315,7 @@ Int_t TBasket::WriteBuffer()
    lbuf       = fBufferRef->Length();
    fObjlen    = lbuf - fKeylen;
 
-   fWritingBuffer = kTRUE;
+   fHeaderOnly = kTRUE;
    fCycle = fBranch->GetWriteBasket();
    Int_t cxlevel = fBranch->GetCompressionLevel();
    if (cxlevel) {
@@ -365,9 +324,9 @@ Int_t TBasket::WriteBuffer()
       fBuffer = new char[buflen];
       char *objbuf = fBufferRef->Buffer() + fKeylen;
       Int_t bufmax = buflen-fKeylen;
-      mmzip(cxlevel, &fObjlen, objbuf, &bufmax, &fBuffer[fKeylen], &nout);
-//printf("mmzip:%s, bufmax=%d, fObjlen=%d, fKeylen=%d, nout=%d\n",GetName(),bufmax,fObjlen,fKeylen,nout);
-      if (nout > fObjlen) {
+      R__zip(cxlevel, &fObjlen, objbuf, &bufmax, &fBuffer[fKeylen], &nout);
+//printf("R__zip:%s, bufmax=%d, fObjlen=%d, fKeylen=%d, nout=%d\n",GetName(),bufmax,fObjlen,fKeylen,nout);
+      if (nout >= fObjlen) {
          delete [] fBuffer;
          fBuffer = fBufferRef->Buffer();
          Create(fObjlen);
@@ -392,7 +351,7 @@ Int_t TBasket::WriteBuffer()
 //  TKey::WriteFile calls FillBuffer. TBasket inherits from TKey, hence
 //  TBasket::FillBuffer is called.
    TKey::WriteFile(0);
-   fWritingBuffer = kFALSE;
+   fHeaderOnly = kFALSE;
 
    cursav->cd();
    return fKeylen+nout;

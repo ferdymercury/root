@@ -1,3 +1,4 @@
+//*CMZ :  2.23/03 08/09/99  18.50.35  by  Fons Rademakers
 //*CMZ :  2.00/11 17/08/98  16.02.25  by  Rene Brun
 //*CMZ :  2.00/00 06/03/98  15.29.58  by  Rene Brun
 //*-- Author :    Ping Yeh   19/12/97
@@ -5,22 +6,17 @@
 #ifndef ROOT_THelix
 #define ROOT_THelix
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -83,7 +79,6 @@ public:
 // virtual void    DrawHelix(Int_t n, Float_t *p, Option_t *option="");
 // virtual void    ExecuteEvent(Int_t event, Int_t px, Int_t py);
    Option_t       *GetOption() const {return fOption.Data();}
-   virtual Bool_t  Is3D() {return kTRUE;}
 // virtual void    ls(Option_t *option="");
    virtual void    Paint(Option_t *option="") { TPolyLine3D::Paint(option); }
 // virtual void    PaintPolyLine(Int_t n, Float_t *p, Option_t *option="");

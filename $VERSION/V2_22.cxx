@@ -1,15 +1,10 @@
+//*CMZ :          24/11/99  11.25.31  by  Rene Brun
 //*CMZ :  2.22/10 28/07/99  10.25.01  by  Rene Brun
 //*CMZ :  2.22/09 13/07/99  19.08.41  by  Rene Brun
 //*CMZ :  2.22/08 07/07/99  18.53.14  by  Rene Brun
 //*CMZ :  2.22/07 06/07/99  09.04.33  by  Rene Brun
-//*CMZ :  2.22/06 23/06/99  08.36.20  by  Rene Brun
-//*CMZ :  2.22/05 15/06/99  17.34.57  by  Rene Brun
-//*CMZ :  2.22/04 03/06/99  19.13.54  by  Rene Brun
-//*CMZ :  2.22/03 31/05/99  19.12.56  by  Rene Brun
-//*CMZ :  2.22/02 28/05/99  18.55.03  by  Rene Brun
-//*CMZ :  2.22/01 20/05/99  16.53.54  by  Rene Brun
-//*CMZ :  2.22/00 09/04/99  18.10.52  by  Rene Brun
 //*-- Author :    Rene Brun   09/04/99
+//
 //________________________________________________________________________
 //
 //::>          VERSION  2.22/10   28/07/99 10.25.01
@@ -912,9 +907,9 @@
   The new version of DrawCopy is able to copy the fit part of a TH1.
 
 - Modify TGX11::SetFillColor to set the member fFillColor.
-  fFillColor is used by TGXW::GetFillColor.
+  fFillColor is used by TVirtualX::GetFillColor.
 
-- Modify TH1::PaintBoxes to restore TGXW::SetFillColor after each box.
+- Modify TH1::PaintBoxes to restore TVirtualX::SetFillColor after each box.
 
 - Add new function in class TGenerator:
    Int_t ImportParticles(TClonesArray *particles, Option_t *option).
@@ -1085,7 +1080,7 @@
   uncompressed buffer (this in case of byte data types).
   When this happens, the buffer is written in uncompressed mode.
   The message generated in the above case was:
-     mmzip: output buffer too small for in-memory compression
+     R__zip: output buffer too small for in-memory compression
   With this modification, users should not see this message anymore.
 
 - Several changes in class TH1

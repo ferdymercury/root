@@ -1,3 +1,4 @@
+*CMZ :  2.23/04 04/10/99  19.53.33  by  Fons Rademakers
 *CMZ :  2.21/03 20/01/99  12.27.46  by  Fons Rademakers
 *CMZ :  0.90/06 20/11/96  11.39.50  by  Fons Rademakers
 *-- Author :    Fons Rademakers   20/11/96
@@ -7,7 +8,11 @@ macro bind_lib 1='root'   2='*' 3='' 4='' 5=''
 message Generating library: $ROOTSYS/lib/lib[1].so
 
 shell /bin/rm -f $ROOTSYS/lib/lib[1].so
-shell g++ -shared -Wl,-soname,lib[1].so -o $ROOTSYS/lib/lib[1].so $ROOTSYS/src/[2] [3] [4] [5]
+if [1] = 'Core' then
+   shell g++ -shared -Wl,-soname,lib[1].so -o $ROOTSYS/lib/lib[1].so [COREOBJS] [3] [4] [5]
+else
+   shell g++ -shared -Wl,-soname,lib[1].so -o $ROOTSYS/lib/lib[1].so $ROOTSYS/src/[2] [3] [4] [5]
+endif
 shell chmod 555 $ROOTSYS/lib/lib[1].so
 
 return

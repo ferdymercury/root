@@ -1,24 +1,20 @@
+//*CMZ :  2.23/02 02/09/99  15.54.27  by  Rene Brun
+//*CMZ :  2.23/01 23/08/99  18.42.35  by  Fons Rademakers
 //*CMZ :  2.22/05 10/06/99  19.26.10  by  Fons Rademakers
 //*CMZ :  2.00/06 23/04/98  13.09.22  by  Fons Rademakers
-//*CMZ :  2.00/01 13/03/98  12.09.51  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   25/02/98
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 //*CMZ :  2.00/00 16/02/98  00.17.08  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   27/12/97
@@ -66,20 +62,20 @@ ClassImp(TGListTree)
 static Int_t FontHeight(FontStruct_t f)
 {
    int max_ascent, max_descent;
-   gGXW->GetFontProperties(f, max_ascent, max_descent);
+   gVirtualX->GetFontProperties(f, max_ascent, max_descent);
    return max_ascent + max_descent;
 }
 
 static Int_t FontAscent(FontStruct_t f)
 {
    int max_ascent, max_descent;
-   gGXW->GetFontProperties(f, max_ascent, max_descent);
+   gVirtualX->GetFontProperties(f, max_ascent, max_descent);
    return max_ascent;
 }
 
 static Int_t FontTextWidth(FontStruct_t f, const char *c)
 {
-   return gGXW->TextWidth(f, c, strlen(c));
+   return gVirtualX->TextWidth(f, c, strlen(c));
 }
 
 
@@ -162,34 +158,35 @@ TGListTree::TGListTree(TGWindow *p, UInt_t w, UInt_t h, UInt_t options,
    gcv.fLineStyle = kLineSolid;
    gcv.fLineWidth = 0;
    gcv.fFillStyle = kFillSolid;
-   gcv.fFont = gGXW->GetFontHandle(fFont);
+   gcv.fFont = gVirtualX->GetFontHandle(fFont);
    gcv.fBackground = fgWhitePixel;
    gcv.fForeground = fgBlackPixel;
 
    gcv.fMask = kGCLineStyle  | kGCLineWidth  | kGCFillStyle |
                kGCForeground | kGCBackground | kGCFont;
-   fDrawGC = gGXW->CreateGC(fId, &gcv);
+   fDrawGC = gVirtualX->CreateGC(fId, &gcv);
 
    gcv.fLineStyle = kLineOnOffDash;
    gcv.fForeground = fGrayPixel;
-   fLineGC = gGXW->CreateGC(fId, &gcv);
-   gGXW->SetDashes(fLineGC, 0, "\x1\x1", 2);
+   fLineGC = gVirtualX->CreateGC(fId, &gcv);
+   gVirtualX->SetDashes(fLineGC, 0, "\x1\x1", 2);
 
    gcv.fBackground = fgDefaultSelectedBackground;
    gcv.fForeground = fgWhitePixel;
    gcv.fLineStyle = kLineSolid;
    gcv.fMask = kGCLineStyle  | kGCLineWidth  | kGCFillStyle |
                kGCForeground | kGCBackground | kGCFont;
-   fHighlightGC = gGXW->CreateGC(fId, &gcv);
+   fHighlightGC = gVirtualX->CreateGC(fId, &gcv);
 
    fFirst = fSelected = 0;
+   fDefw = fDefh = 1;
 
    fHspacing = 2;
    fVspacing = 2;  // 0;
    fIndent   = 3;  // 0;
    fMargin   = 2;
 
-   gGXW->GrabButton(fId, kAnyButton, kAnyModifier,
+   gVirtualX->GrabButton(fId, kAnyButton, kAnyModifier,
                     kButtonPressMask | kButtonReleaseMask,
                     kNone, kNone);
 }
@@ -201,9 +198,9 @@ TGListTree::~TGListTree()
 
    TGListTreeItem *item, *sibling;
 
-   gGXW->DeleteGC(fDrawGC);
-   gGXW->DeleteGC(fLineGC);
-   gGXW->DeleteGC(fHighlightGC);
+   gVirtualX->DeleteGC(fDrawGC);
+   gVirtualX->DeleteGC(fLineGC);
+   gVirtualX->DeleteGC(fHighlightGC);
    item = fFirst;
    while (item) {
       if (item->fFirstchild) PDeleteChildren(item->fFirstchild);
@@ -314,7 +311,7 @@ void TGListTree::DoRedraw()
 {
    // Redraw list tree.
 
-   gGXW->ClearWindow(fId);
+   gVirtualX->ClearWindow(fId);
    Draw(0, (Int_t)fHeight);
 }
 
@@ -438,22 +435,22 @@ void TGListTree::DrawItem(TGListTreeItem *item, Int_t x, Int_t y, Int_t *xroot,
          xc = *xroot;
 
          if (item->fNextsibling)
-            gGXW->DrawLine(fId, fLineGC, xc, y, xc, y+height);
+            gVirtualX->DrawLine(fId, fLineGC, xc, y, xc, y+height);
          else
-            gGXW->DrawLine(fId, fLineGC, xc, y, xc, yline);
+            gVirtualX->DrawLine(fId, fLineGC, xc, y, xc, yline);
 
          TGListTreeItem *p = item->fParent;
          while (p) {
             xc -= (fIndent + (Int_t)item->fPicWidth);
             if (p->fNextsibling)
-               gGXW->DrawLine(fId, fLineGC, xc, y, xc, y+height);
+               gVirtualX->DrawLine(fId, fLineGC, xc, y, xc, y+height);
             p = p->fParent;
          }
-         gGXW->DrawLine(fId, fLineGC, *xroot, yline, xpic/*xbranch*/, yline);
+         gVirtualX->DrawLine(fId, fLineGC, *xroot, yline, xpic/*xbranch*/, yline);
          DrawNode(item, *xroot, yline);
       }
       if (item->fOpen && item->fFirstchild)
-         gGXW->DrawLine(fId, fLineGC, xbranch, ybranch/*yline*/,
+         gVirtualX->DrawLine(fId, fLineGC, xbranch, ybranch/*yline*/,
                         xbranch, y+height);
 
       // if (pic)
@@ -480,17 +477,17 @@ void TGListTree::DrawItemName(TGListTreeItem *item)
 
    width = FontTextWidth(fFont, item->fText);
    if (item->fActive || item == fSelected) {
-      gGXW->SetForeground(fDrawGC, fgDefaultSelectedBackground);
-      gGXW->FillRectangle(fId, fDrawGC,
+      gVirtualX->SetForeground(fDrawGC, fgDefaultSelectedBackground);
+      gVirtualX->FillRectangle(fId, fDrawGC,
                           item->fXtext, item->fYtext, width, FontHeight(fFont));
-      gGXW->SetForeground(fDrawGC, fgBlackPixel);
-      gGXW->DrawString(fId, fHighlightGC,
+      gVirtualX->SetForeground(fDrawGC, fgBlackPixel);
+      gVirtualX->DrawString(fId, fHighlightGC,
                        item->fXtext, item->fYtext + FontAscent(fFont),
                        item->fText, item->fLength);
    } else {
-      gGXW->FillRectangle(fId, fHighlightGC,
+      gVirtualX->FillRectangle(fId, fHighlightGC,
                           item->fXtext, item->fYtext, width, FontHeight(fFont));
-      gGXW->DrawString(fId, fDrawGC,
+      gVirtualX->DrawString(fId, fDrawGC,
                        item->fXtext, item->fYtext + FontAscent(fFont),
                        item->fText, item->fLength);
    }
@@ -502,17 +499,17 @@ void TGListTree::DrawNode(TGListTreeItem *item, Int_t x, Int_t y)
    // Draw node (little + in box).
 
    if (item->fFirstchild) {
-      gGXW->DrawLine(fId, fHighlightGC, x, y-2, x, y+2);
-      gGXW->SetForeground(fHighlightGC, fgBlackPixel);
-      gGXW->DrawLine(fId, fHighlightGC, x-2, y, x+2, y);
+      gVirtualX->DrawLine(fId, fHighlightGC, x, y-2, x, y+2);
+      gVirtualX->SetForeground(fHighlightGC, fgBlackPixel);
+      gVirtualX->DrawLine(fId, fHighlightGC, x-2, y, x+2, y);
       if (!item->fOpen)
-         gGXW->DrawLine(fId, fHighlightGC, x, y-2, x, y+2);
-      gGXW->SetForeground(fHighlightGC, fGrayPixel);
-      gGXW->DrawLine(fId, fHighlightGC, x-4, y-4, x+4, y-4);
-      gGXW->DrawLine(fId, fHighlightGC, x+4, y-4, x+4, y+4);
-      gGXW->DrawLine(fId, fHighlightGC, x-4, y+4, x+4, y+4);
-      gGXW->DrawLine(fId, fHighlightGC, x-4, y-4, x-4, y+4);
-      gGXW->SetForeground(fHighlightGC, fgWhitePixel);
+         gVirtualX->DrawLine(fId, fHighlightGC, x, y-2, x, y+2);
+      gVirtualX->SetForeground(fHighlightGC, fGrayPixel);
+      gVirtualX->DrawLine(fId, fHighlightGC, x-4, y-4, x+4, y-4);
+      gVirtualX->DrawLine(fId, fHighlightGC, x+4, y-4, x+4, y+4);
+      gVirtualX->DrawLine(fId, fHighlightGC, x-4, y+4, x+4, y+4);
+      gVirtualX->DrawLine(fId, fHighlightGC, x-4, y-4, x-4, y+4);
+      gVirtualX->SetForeground(fHighlightGC, fgWhitePixel);
   }
 }
 

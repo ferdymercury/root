@@ -1,26 +1,23 @@
+//*CMZ :  2.23/12 26/01/2000  09.24.06  by  Rene Brun
+//*CMZ :  2.23/09 11/11/99  08.41.51  by  Rene Brun
+//*CMZ :  2.23/07 25/10/99  15.19.53  by  Fons Rademakers
+//*CMZ :  2.23/03 17/09/99  15.41.13  by  Rene Brun
+//*CMZ :  2.23/01 26/08/99  12.17.02  by  Rene Brun
 //*CMZ :  2.22/07 02/07/99  08.44.41  by  Rene Brun
 //*CMZ :  2.22/05 14/06/99  12.42.21  by  Fons Rademakers
-//*CMZ :  2.22/01 19/04/99  19.46.29  by  Fons Rademakers
-//*CMZ :  2.21/03 19/01/99  18.27.39  by  Fons Rademakers
-//*CMZ :  1.03/09 06/12/97  19.23.29  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   01/03/96
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 #ifndef ROOT_TCint
@@ -74,6 +71,8 @@ public:
    TCint(const char *name, const char *title);
    virtual ~TCint();
 
+   void    AddIncludePath(const char *path);
+   void    ClearFileBusy();
    void    EndOfLineAction();
    Int_t   GetMore() const { return fMore; }
    char   *GetPrompt() { return fPrompt; }
@@ -94,22 +93,23 @@ public:
    void    SaveGlobalsContext();
    void    UpdateListOfGlobals();
    void    UpdateListOfGlobalFunctions();
+   void    UpdateListOfTypes();
    void    SetClassInfo(TClass *cl);
    Long_t  Calc(const char *line);
    void    CreateListOfBaseClasses(TClass *cl);
    void    CreateListOfDataMembers(TClass *cl);
    void    CreateListOfMethods(TClass *cl);
    void    CreateListOfMethodArgs(TFunction *m);
-   void    CreateListOfTypes();
-   void   *GetInterfaceMethod(TClass *cl, Text_t *method, Text_t *params);
-   void   *GetInterfaceMethodWithPrototype(TClass *cl, Text_t *method, Text_t *proto);
-   void    Execute(Text_t *function, Text_t *params);
-   void    Execute(TObject *obj, TClass *cl, Text_t *method, Text_t *params);
+   void   *GetInterfaceMethod(TClass *cl, char *method, char *params);
+   void   *GetInterfaceMethodWithPrototype(TClass *cl, char *method, char *proto);
+   void    Execute(const char *function, const char *params);
+   void    Execute(TObject *obj, TClass *cl, const char *method, const char *params);
    void    Execute(TObject *obj, TClass *cl, TMethod *method, TObjArray *params);
    Int_t   ExecuteMacro(const char *filename);
    const char *TypeName(const char *typeDesc);
 
-   static void  *FindObject(char *name, G__ClassInfo *type, void **prevObj, void **assocPtr);
+   static void *FindObject(char *name, G__ClassInfo *type, void **prevObj, void **assocPtr);
+   static void  UpdateClassInfo(char *name, Long_t tagnum);
    static void  UpdateAllCanvases();
 
    ClassDef(TCint,0)  //Interface to CINT C/C++ interpreter

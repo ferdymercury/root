@@ -1,0 +1,153 @@
+//*CMZ :  2.23/12 26/01/2000  12.24.45  by  Valery Fine(fine@bnl.gov)
+//*-- Author : Valery Fine(fine@bnl.gov)   25/12/98
+// $Id: TVolume.h,v 1.18 1999/11/13 16:59:17 fine Exp $
+// $Log: TVolume.h,v $
+// Revision 1.18  1999/11/13 16:59:17  fine
+// TVolume and TVolumeView headers adjusted to ROOT 2.23/ not compatible with ROOT 2.22 anymore though!
+//
+// Revision 1.17  1999/08/03 14:52:23  fine
+// make up to make Linux compiler happy
+//
+// Revision 1.16  1999/07/09 01:56:38  fine
+// New method to contrsuct sub views and manage visibilities
+//
+// Revision 1.15  1999/06/09 22:09:35  fine
+// TPolyLine3D has beed redesigned
+//
+// Revision 1.14  1999/05/18 20:26:29  fine
+// comments clean up
+//
+// Revision 1.13  1999/05/13 19:57:27  fine
+// TVolume  the TShape list has been introduced, TVolume file format has been changed
+//
+// Revision 1.12  1999/04/19 00:05:15  fine
+// New class TPolylineShape has been introduced
+//
+// Revision 1.11  1999/04/13 14:26:40  fine
+// Geometry-based dataset implementation, next step
+//
+// Revision 1.10  1999/04/08 16:44:09  fine
+// Working version of the NodeView family
+//
+// Revision 1.9  1999/04/05 03:18:26  fine
+// TVolume family steps
+//
+// Revision 1.8  1999/02/04 19:22:23  fine
+// Severak drawing method have been added to draw STAR nodes
+//
+// Revision 1.7  1999/01/31 02:03:07  fine
+// TDataSetIter::Notify - new method + clean up
+//
+// Revision 1.6  1999/01/30 04:24:21  fine
+// TTable: Print memory leak fixed
+//
+// Revision 1.5  1999/01/25 23:36:41  fine
+// TDataSet fixed, TDataSetIter::operator[] introduced, TVolume with own Hash methdo
+//
+// Revision 1.4  1998/12/27 04:16:44  fine
+// *** empty log message ***
+//
+// Revision 1.2  1998/12/26 21:40:40  fisyak
+// Add Id and Log
+//
+//Copyright (C) 1998. Brookhaven National Laboratory. Valery Fine (Faine). All right reserved.
+
+//////////////////////////////////////////////////////////////////////////
+//                                                                      //
+// TVolume                                                              //
+//                                                                      //
+// Description of parameters to position a 3-D geometry object          //
+//                                                                      //
+//////////////////////////////////////////////////////////////////////////
+
+#ifndef ROOT_TVolume
+#define ROOT_TVolume
+
+#include "TObjectSet.h"
+
+#include <TNode.h>
+
+#ifndef ROOT_TShape
+//*KEEP,TShape.
+#include "TShape.h"
+//*KEND.
+#endif
+#ifndef ROOT_TAttLine
+//*KEEP,TAttLine.
+#include "TAttLine.h"
+//*KEND.
+#endif
+#ifndef ROOT_TAttFill
+//*KEEP,TAttFill.
+#include "TAttFill.h"
+//*KEND.
+#endif
+
+class TBrowser;
+class TVolumePosition;
+class TRotMatrix;
+class TList;
+
+class TVolume  : public TObjectSet, public TAttLine, public TAttFill, public TAtt3D {
+ public:
+  enum ENodeSEEN {kBothVisible  = 00,                              //'00'
+                  kSonUnvisible =  1,                              //'01'
+                  kThisUnvisible=  2,                              //'10'
+                  kNoneVisible  = kThisUnvisible | kSonUnvisible}; //'11'
+ protected:
+   TShape         *fShape;         //Pointer to the "master" shape definition
+   TList          *fListOfShapes;  //Pointer to the list of the shape definitions
+   TString         fOption;        //List of options if any
+   ENodeSEEN       fVisibility;    //Visibility flag  00 - everything visible,
+                                   //                 10 - this unvisible, but sons are visible
+                                   //                 01 - this visible but sons
+                                   //                 11 - neither this nor its sons are visible
+
+   virtual void             Add(TVolumePosition *position);
+   virtual TVolumePosition *Add(TVolume *node, TVolumePosition *nodePosition);
+   virtual Int_t            DistancetoNodePrimitive(Int_t px, Int_t py,TVolumePosition *position=0);
+           void             SetPositionsList(TList *list=0){AddObject((TObject *)list);}
+   virtual void             PaintNodePosition(Option_t *option="",TVolumePosition *postion=0);
+   friend class TPolyLineShape;
+ public:
+        TVolume();
+        TVolume(const Text_t *name, const Text_t *title, const Text_t *shapename, Option_t *option="");
+        TVolume(const Text_t *name, const Text_t *title, TShape *shape, Option_t *option="");
+        TVolume(TNode &node);
+        virtual ~TVolume();
+        virtual TVolumePosition *Add(TVolume *node, Double_t x=0, Double_t y=0, Double_t z=0, TRotMatrix *matrix=0, UInt_t id=0, Option_t *option="");
+        virtual TVolumePosition *Add(TVolume *node, Double_t x, Double_t y, Double_t z,  const Text_t *matrixname,  UInt_t id=0, Option_t *option="");
+        static  Int_t       MapStNode2GEANTVis(ENodeSEEN  vis);
+        static  Int_t       MapGEANT2StNodeVis(Int_t vis);
+        virtual void        Add(TShape *shape, Bool_t IsMaster=kFALSE);
+        virtual void        Browse(TBrowser *b);
+        virtual TNode      *CreateTNode(const TVolumePosition *position=0);
+        virtual void        DeletePosition(TVolumePosition *position);
+        virtual Int_t       DistancetoPrimitive(Int_t px, Int_t py);
+        virtual void        Draw(Option_t *option=""); // *MENU*
+        virtual void        DrawOnly(Option_t *option="");
+        virtual void        ExecuteEvent(Int_t event, Int_t px, Int_t py);
+        static  TRotMatrix *GetIdentity();
+        virtual Text_t     *GetObjectInfo(Int_t px, Int_t py);
+        const   Option_t   *GetOption() const { return fOption.Data();}
+                TShape     *GetShape()  const {return fShape;}
+                TList      *GetListOfShapes()  const {return fListOfShapes;}
+        virtual void        GetLocalRange(Float_t *min, Float_t *max);
+        virtual ENodeSEEN   GetVisibility() const {return fVisibility;}
+        virtual TList      *GetListOfPositions()  { return (TList *)(GetObject());}
+        virtual ULong_t     Hash() { return TObject::Hash();}
+        virtual void        ImportShapeAttributes();
+        virtual Bool_t      IsMarked();
+        virtual Bool_t      Is3D()  {return kTRUE;}
+        virtual TList      *Nodes() const { return GetList(); }
+        virtual void        Paint(Option_t *option="");
+        virtual void        PaintShape(Option_t *option="");
+        virtual void        SetVisibility(ENodeSEEN vis=TVolume::kBothVisible); // *MENU*
+        virtual void        Sizeof3D() const;
+
+        ClassDef(TVolume,1)  //Description of parameters to position a 3-D geometry object
+};
+
+inline Bool_t TVolume::IsMarked(){ return TestBit(kMark); }
+
+#endif

@@ -1,25 +1,21 @@
+//*CMZ :  2.23/09 19/11/99  13.07.20  by  Fons Rademakers
 //*CMZ :  2.21/01 13/01/99  15.19.34  by  Fons Rademakers
 //*CMZ :  2.00/09 28/05/98  14.31.39  by  Kaori Wada
 //*CMZ :  2.00/06 13/05/98  08.37.31  by  Kaori Wada
 //*CMZ :  1.03/09 16/12/97  17.59.20  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   15/09/95
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -159,7 +155,7 @@ void TVmsSystem::SetProgname(const char *name)
 const char *TVmsSystem::GetError()
 {
    // Return system error string.
-   return strerror(errno);
+   return strerror(GetErrno());
 
 }
 
@@ -1195,11 +1191,11 @@ int TVmsSystem::AcceptConnection(int sock)
 
    int soc = -1;
 
-   while ((soc = ::accept(sock, 0, 0)) == -1 && errno == EINTR)
-      errno = 0;
+   while ((soc = ::accept(sock, 0, 0)) == -1 && GetErrno() == EINTR)
+      ResetErrno();
 
    if (soc == -1) {
-      if (errno == EWOULDBLOCK)
+      if (GetErrno() == EWOULDBLOCK)
          return -2;
       else {
          SysError("AcceptConnection", "accept");
@@ -1221,8 +1217,8 @@ void TVmsSystem::CloseConnection(int sock)
    ::shutdown(sock, 2);
 #endif
 
-   while (::close(sock) == -1 && errno == EINTR)
-      errno = 0;
+   while (::close(sock) == -1 && GetErrno() == EINTR)
+      ResetErrno();
 }
 
 //______________________________________________________________________________
@@ -1302,7 +1298,7 @@ int TVmsSystem::RecvRaw(int sock, void *buf, int length, int opt)
 
    int n;
    if ((n = VmsRecv(sock, buf, length, flag)) <= 0) {
-      if (n == -1 && errno != EINTR)
+      if (n == -1 && GetErrno() != EINTR)
          Error("RecvRaw", "cannot receive buffer");
       return n;
    }
@@ -1664,11 +1660,11 @@ if (readready->IsSet(0)) {
     }
 
    if (retcode == -1) {
-      if (errno == EINTR) {
-         errno = 0;  // errno is not self reseting
+      if (GetErrno() == EINTR) {
+         ResetErrno();  // errno is not self reseting
          return -2;
       }
-      if (errno == EBADF)
+      if (GetErrno() == EBADF)
          return -3;
       return -1;
    }
@@ -2031,7 +2027,7 @@ int TVmsSystem::VmsRecv(int sock, void *buffer, int length, int flag)
    // and errno == EWOULDBLOCK, -3 in case of MSG_OOB and errno == EINVAL
    // and -4 in case of kNonBlock and errno == EWOULDBLOCK.
 
-   errno = 0;
+   ResetErrno();
 
    if (sock < 0) return -1;
 
@@ -2043,15 +2039,15 @@ int TVmsSystem::VmsRecv(int sock, void *buffer, int length, int flag)
          if (nrecv == 0)
             break;        // EOF
          if (flag == MSG_OOB) {
-            if (errno == EWOULDBLOCK)
+            if (GetErrno() == EWOULDBLOCK)
                return -2;
-            else if (errno == EINVAL)
+            else if (GetErrno() == EINVAL)
                return -3;
          }
-         if (errno == EWOULDBLOCK)
+         if (GetErrno() == EWOULDBLOCK)
             return -4;
          else {
-            if (errno != EINTR)
+            if (GetErrno() != EINTR)
                ::SysError("TVmsSystem::VmsRecv", "recv");
             return -1;
          }

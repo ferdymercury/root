@@ -1,27 +1,22 @@
+//*CMZ :  2.23/12 26/01/2000  10.02.18  by  Rene Brun
+//*CMZ :  2.23/07 25/10/99  18.52.17  by  Fons Rademakers
+//*CMZ :  2.23/01 27/08/99  15.29.11  by  Rene Brun
 //*CMZ :  2.22/05 15/06/99  13.20.12  by  Fons Rademakers
 //*CMZ :  2.20/00 09/11/98  11.21.56  by  Fons Rademakers
 //*CMZ :  2.00/12 25/09/98  17.42.23  by  Rene Brun
-//*CMZ :  2.00/10 18/07/98  12.49.09  by  Fons Rademakers
-//*CMZ :  2.00/00 05/03/98  20.11.34  by  Fons Rademakers
-//*CMZ :  1.03/09 11/12/97  09.18.46  by  Rene Brun
 //*-- Author :    Fons Rademakers   04/02/95
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -226,9 +221,9 @@ TDataMember::TDataMember(G__DataMemberInfo *info, TClass *cl) : TDictionary()
          } else {
             fDataType = gROOT->GetType("Int_t");
          }
-         if (!fDataType)
-            Error("TDataMember", "basic data type %s not found in list of basic types",
-                  GetTypeName());
+//         if (!fDataType)
+//            Error("TDataMember", "basic data type %s not found in list of basic types",
+//                  GetTypeName());
       }
    }
 
@@ -243,14 +238,14 @@ TDataMember::TDataMember(G__DataMemberInfo *info, TClass *cl) : TDictionary()
    // value , string  or enum.
    // One can also specify implicitly names of Getter/Setter methods.
 
-   Text_t cmt[2048];
-   Text_t opt[2048];
-   Text_t *opt_ptr = 0;
-   Text_t *ptr1    = 0;
-   Text_t *ptr2    = 0;
-   Text_t *ptr3    = 0;
-   Text_t *tok     = 0;
-   Int_t cnt       = 0;
+   char cmt[2048];
+   char opt[2048];
+   char *opt_ptr = 0;
+   char *ptr1    = 0;
+   char *ptr2    = 0;
+   char *ptr3    = 0;
+   char *tok     = 0;
+   Int_t cnt     = 0;
    Int_t token_cnt;
    Int_t i;
 
@@ -262,7 +257,7 @@ TDataMember::TDataMember(G__DataMemberInfo *info, TClass *cl) : TDictionary()
 
       //let's cut the part lying between {}
       ptr1 = strtok(opt_ptr  ,"{}");  //starts tokenizing:extracts "*OPTION={"
-      ptr1 = strtok((Text_t*)0,"{}"); //And now we have what we need in ptr1!!!
+      ptr1 = strtok((char*)0,"{}");   //And now we have what we need in ptr1!!!
 
       //and save it:
       strcpy(opt,ptr1);
@@ -271,14 +266,14 @@ TDataMember::TDataMember(G__DataMemberInfo *info, TClass *cl) : TDictionary()
       // We'll put'em in an array for convenience;
       // You have to do it in this manner because you cannot use nested 'strtok'
 
-      Text_t *tokens[256];           // a storage for these sub-tokens.
+      char *tokens[256];           // a storage for these sub-tokens.
       token_cnt = 0;
       cnt       = 0;
 
       do {                          //tokenizing loop
-         ptr1=strtok((Text_t*) (cnt++ ? 0:opt),";");
+         ptr1=strtok((char*) (cnt++ ? 0:opt),";");
          if (ptr1){
-            tok=new Text_t[strlen(ptr1)+1];
+            tok=new char[strlen(ptr1)+1];
             strcpy(tok,ptr1);
             tokens[token_cnt]=tok;
             token_cnt++;
@@ -300,7 +295,7 @@ TDataMember::TDataMember(G__DataMemberInfo *info, TClass *cl) : TDictionary()
 
          if (strstr(tokens[i],"SetMethod")) {
             ptr1 = strtok(tokens[i],"\"");
-            ptr1 = strtok((Text_t*)0,"\"");    //name of Setter in ptr1
+            ptr1 = strtok((char*)0,"\"");    //name of Setter in ptr1
             if (GetClass()->GetMethod(ptr1,"1"))
                 fValueSetter = new TMethodCall(GetClass(),ptr1,"1");
          }
@@ -314,9 +309,9 @@ TDataMember::TDataMember(G__DataMemberInfo *info, TClass *cl) : TDictionary()
       for (i=0;i<token_cnt;i++) {
          if (strstr(tokens[i],"Items")) {
             ptr1 = strtok(tokens[i],"()");
-            ptr1 = strtok((Text_t*)0,"()");
+            ptr1 = strtok((char*)0,"()");
 
-            Text_t opt[2048];  //and save it!
+            char opt[2048];  //and save it!
             strcpy(opt,ptr1);
 
             //now parse it...
@@ -326,7 +321,7 @@ TDataMember::TDataMember(G__DataMemberInfo *info, TClass *cl) : TDictionary()
             //It's not elegant but works.
 
             do {
-               ptr1 = strtok(opt_cnt++ ? (Text_t*)0:opt,","); //options extraction
+               ptr1 = strtok(opt_cnt++ ? (char*)0:opt,","); //options extraction
                if (ptr1) {
                   TOptionListItem *it = new TOptionListItem(this,1,0,0,ptr1,"");
                   optionlist->Add(it);
@@ -359,7 +354,7 @@ TDataMember::TDataMember(G__DataMemberInfo *info, TClass *cl) : TDictionary()
             //We'll try to find global enum existing in ROOT...
             Long_t l;
             Int_t  *value;
-            TGlobal *enumval = gROOT->GetGlobal(ptr1,1);
+            TGlobal *enumval = gROOT->GetGlobal(ptr1,kTRUE);
             if (enumval){
                 value = (Int_t*)(enumval->GetAddress());
                 l     = (Long_t)(*value);
@@ -387,11 +382,11 @@ TDataMember::TDataMember(G__DataMemberInfo *info, TClass *cl) : TDictionary()
 
       TGlobal *global = 0;
       TDataMember::fOptions = new TList();
-      Text_t etypename[65];
+      char etypename[65];
       strncpy(etypename,this->GetTypeName(),64); //save the typename!!! must do it!
 
-      const Text_t *gtypename = 0;
-      TList *globals = (TList*)(gROOT->GetListOfGlobals(1)); //get all globals
+      const char *gtypename = 0;
+      TList *globals = (TList*)(gROOT->GetListOfGlobals(kTRUE)); //get all globals
       if (!globals) return;
 
       TIter nextglobal(globals);                //iterate through all global to find
@@ -400,7 +395,7 @@ TDataMember::TDataMember(G__DataMemberInfo *info, TClass *cl) : TDictionary()
          if (strcmp(gtypename,etypename)==0) {
             Int_t *value = (Int_t*)(global->GetAddress());
             Long_t l     = (Long_t)(*value);
-            Text_t enumItem[128];
+            char enumItem[128];
             strcpy(enumItem,global->GetName());
             TOptionListItem *it = new TOptionListItem(this,l,0,0,enumItem,enumItem);
             fOptions->Add(it);
@@ -563,9 +558,9 @@ TMethodCall  *TDataMember::GetterMethod()
       // try to find the name of Getter by applying "Get" and "Is"
       // as a prefix
 
-      const Text_t *dataname = GetName();
+      const char *dataname = GetName();
 
-      Text_t gettername[64];
+      char gettername[64];
       sprintf(gettername, "Get%s", dataname+1);
       if (strstr(gettername, "Is")) sprintf(gettername, "%s", dataname+1);
       if (GetClass()->GetMethod(gettername, ""))
@@ -586,9 +581,9 @@ TMethodCall   *TDataMember::SetterMethod()
       // we strip the fist character of name of data field ('f') and then
       // try to find the name of Setter by applying "Set" as a prefix
 
-      const Text_t *dataname = GetName();
+      const char *dataname = GetName();
 
-      Text_t settername[64];
+      char settername[64];
       sprintf(settername, "Set%s", dataname+1);
       if (strstr(settername, "Is")) sprintf(settername, "Set%s", dataname+3);
       if (GetClass()->GetMethod(settername, "1"))
@@ -600,7 +595,7 @@ TMethodCall   *TDataMember::SetterMethod()
 
 //______________________________________________________________________________
 TOptionListItem::TOptionListItem(TDataMember *d, Long_t val, Long_t valmask,
-                 Long_t tglmask,Text_t *name, Text_t *label)
+                 Long_t tglmask,const char *name, const char *label)
 {
    fDataMember    = d;
    fValue         = val;
@@ -608,14 +603,14 @@ TOptionListItem::TOptionListItem(TDataMember *d, Long_t val, Long_t valmask,
    fToggleMaskBit = tglmask;
    if (name){
 
-      fOptName = new Text_t[strlen(name)+1];
+      fOptName = new char[strlen(name)+1];
       strcpy(fOptName,name);
 
    } else fOptName = 0;
 
    if(label){
 
-      fOptLabel = new Text_t[strlen(label)+1];
+      fOptLabel = new char[strlen(label)+1];
       strcpy(fOptLabel,label);
 
    } else fOptLabel = 0;

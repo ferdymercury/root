@@ -1,43 +1,26 @@
-//*CMZ :  2.22/10 27/07/99  17.07.51  by  Rene Brun
-//*CMZ :  2.22/09 12/07/99  17.47.57  by  Rene Brun
-//*CMZ :  2.22/07 05/07/99  16.41.12  by  Rene Brun
-//*CMZ :  2.22/05 15/06/99  16.20.19  by  Rene Brun
-//*CMZ :  2.22/02 26/05/99  12.35.40  by  Rene Brun
-//*CMZ :  2.22/00 17/05/99  08.50.46  by  Rene Brun
-//*CMZ :  2.21/07 02/03/99  17.04.25  by  Rene Brun
-//*CMZ :  2.21/06 15/02/99  09.00.59  by  Rene Brun
-//*CMZ :  2.21/03 22/01/99  08.42.02  by  Rene Brun
-//*CMZ :  2.21/02 18/01/99  13.51.25  by  Rene Brun
-//*CMZ :  2.21/01 11/01/99  08.34.24  by  Rene Brun
-//*CMZ :  2.20/06 17/12/98  09.41.02  by  Rene Brun
-//*CMZ :  2.20/05 15/12/98  09.17.20  by  Rene Brun
-//*CMZ :  2.20/00 01/12/98  09.22.49  by  Rene Brun
-//*CMZ :  2.00/13 20/10/98  16.41.59  by  Rene Brun
-//*CMZ :  2.00/12 01/10/98  09.10.09  by  Rene Brun
-//*CMZ :  2.00/06 15/09/98  02.06.32  by  Rene Brun
-//*CMZ :  2.00/05 08/04/98  12.34.10  by  Rene Brun
-//*CMZ :  2.00/04 06/04/98  13.29.37  by  Rene Brun
-//*CMZ :  2.00/02 16/03/98  09.36.40  by  Rene Brun
-//*CMZ :  2.00/00 05/03/98  18.02.39  by  Fons Rademakers
-//*CMZ :  1.03/09 15/12/97  09.17.18  by  Rene Brun
+//*CMZ :  2.23/12 26/01/2000  09.31.21  by  Rene Brun
+//*CMZ :  2.23/11 12/01/2000  09.21.19  by  Rene Brun
+//*CMZ :  2.23/10 22/12/99  20.52.42  by  Rene Brun
+//*CMZ :  2.23/09 25/11/99  23.49.39  by  Rene Brun
+//*CMZ :  2.23/07 22/10/99  09.21.53  by  Rene Brun
+//*CMZ :  2.23/04 12/10/99  15.48.30  by  Rene Brun
+//*CMZ :  2.23/03 22/09/99  15.47.11  by  Rene Brun
+//*CMZ :  2.23/02 07/09/99  14.51.02  by  Rene Brun
+//*CMZ :  2.23/01 31/08/99  16.58.39  by  Rene Brun
+//*CMZ :  2.23/00 16/08/99  09.20.37  by  Rene Brun
 //*-- Author :    Rene Brun, Olivier Couet   12/12/94
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 #include <string.h>
@@ -47,31 +30,28 @@
 #include "TGraph.h"
 #include "TGaxis.h"
 #include "TH1.h"
-#include "TLine.h"
-#include "TText.h"
+#include "TF1.h"
 #include "TStyle.h"
 #include "TMath.h"
 #include "Foption.h"
-#include "TMinuit.h"
+#include "TVirtualFitter.h"
 #include "TVirtualPad.h"
-#include "TInterpreter.h"
+#include "TVirtualHistPainter.h"
 
 const Int_t NPMAX = 204;
-const Int_t kNoStats   = BIT(9);
-const Int_t kClipFrame = BIT(10);
-const Int_t kFitInit   = BIT(19);
 
 static Float_t xwork[NPMAX];
 static Float_t ywork[NPMAX];
 static Float_t xworkl[NPMAX];
 static Float_t yworkl[NPMAX];
 
-R__EXTERN TH1 *gCurrentHist;
-R__EXTERN TF1 *gF1;
-R__EXTERN Foption_t Foption;
+TF1 *grF1 = 0;
+Foption_t fitOption;
 
 static Int_t xfirst,xlast;
 static Float_t xmin, xmax, ymin, ymax;
+
+TVirtualFitter *grFitter;
 
 extern void GraphFitChisquare(Int_t &npar, Double_t *gin, Double_t &f, Double_t *u, Int_t flag);
 extern void H1LeastSquareSeqnd(Int_t n, Double_t *a, Int_t idim, Int_t &ifail, Int_t k, Double_t *b);
@@ -129,7 +109,7 @@ TGraph::TGraph(): TNamed(), TAttLine(), TAttFill(), TAttMarker()
 TGraph::TGraph(Int_t n, Float_t *x, Float_t *y)
        : TNamed("Graph","Graph"), TAttLine(), TAttFill(), TAttMarker()
 {
-//*-*-*-*-*-*-*-*-*-*-*Graph normal constructor-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+//*-*-*-*-*-*-*-*-*-*-*Graph normal constructor with floats-*-*-*-*-*-*-*-*-*
 //*-*                  ========================
 
    if (n <= 0) {
@@ -153,6 +133,37 @@ TGraph::TGraph(Int_t n, Float_t *x, Float_t *y)
 }
 
 //______________________________________________________________________________
+TGraph::TGraph(Int_t n, Double_t *x, Double_t *y)
+       : TNamed("Graph","Graph"), TAttLine(), TAttFill(), TAttMarker()
+{
+//*-*-*-*-*-*-*-*-*-*-*Graph normal constructor with doubles-*-*-*-*-*-*-*-*
+//*-*                  ========================
+//
+// Note that the arrays of doubles are copied into arrays of floats.
+// this functions is provided for conveniency in case the original user array
+// are doubles. Internally TGraph is working with floats.
+
+   if (n <= 0) {
+      Error("TGraph", "illegal number of points (%d)", n);
+      return;
+   }
+
+   fFunctions = new TList(this);
+   fHistogram = 0;
+   fNpoints   = n;
+   fX         = new Float_t[n];
+   fY         = new Float_t[n];
+   fMaximum   = -1111;
+   fMinimum   = -1111;
+   SetBit(kClipFrame);
+   if (!x || !y) return;
+   for (Int_t i=0;i<n;i++) {
+      fX[i] = x[i];
+      fY[i] = y[i];
+   }
+}
+
+//______________________________________________________________________________
 TGraph::~TGraph()
 {
 //*-*-*-*-*-*-*-*-*-*-*Graph default destructor-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
@@ -166,6 +177,13 @@ TGraph::~TGraph()
    fFunctions = 0;
    delete fHistogram;
    fHistogram = 0;
+}
+
+//______________________________________________________________________________
+void TGraph::Browse(TBrowser *)
+{
+    Draw("alp");
+    gPad->Update();
 }
 
 
@@ -205,7 +223,6 @@ Int_t TGraph::DistancetoPrimitive(Int_t px, Int_t py)
 //  Compute the closest distance of approach from point px,py to this line.
 //  The distance is computed in pixels units.
 //
-
 
 //*-*- Are we on the axis?
    Int_t distance;
@@ -303,10 +320,12 @@ void TGraph::ExecuteEvent(Int_t event, Int_t px, Int_t py)
    static Int_t dpx, dpy;
    static Int_t *x=0, *y=0;
 
+   if (!gPad->IsEditable()) return;
+
    switch (event) {
 
    case kButton1Down:
-      gGXW->SetLineColor(-1);
+      gVirtualX->SetLineColor(-1);
       TAttLine::Modify();  //Change line attributes only if necessary
       px1 = gPad->XtoAbsPixel(gPad->GetX1());
       py1 = gPad->YtoAbsPixel(gPad->GetY1());
@@ -321,10 +340,10 @@ void TGraph::ExecuteEvent(Int_t event, Int_t px, Int_t py)
       for (i=0;i<fNpoints;i++) {
          pxp = gPad->XtoAbsPixel(gPad->XtoPad(fX[i]));
          pyp = gPad->YtoAbsPixel(gPad->YtoPad(fY[i]));
-         gGXW->DrawLine(pxp-4, pyp-4, pxp+4,  pyp-4);
-         gGXW->DrawLine(pxp+4, pyp-4, pxp+4,  pyp+4);
-         gGXW->DrawLine(pxp+4, pyp+4, pxp-4,  pyp+4);
-         gGXW->DrawLine(pxp-4, pyp+4, pxp-4,  pyp-4);
+         gVirtualX->DrawLine(pxp-4, pyp-4, pxp+4,  pyp-4);
+         gVirtualX->DrawLine(pxp+4, pyp-4, pxp+4,  pyp+4);
+         gVirtualX->DrawLine(pxp+4, pyp+4, pxp-4,  pyp+4);
+         gVirtualX->DrawLine(pxp-4, pyp+4, pxp-4,  pyp-4);
          x[i] = pxp;
          y[i] = pyp;
          d   = TMath::Abs(pxp-px) + TMath::Abs(pyp-py);
@@ -376,58 +395,58 @@ void TGraph::ExecuteEvent(Int_t event, Int_t px, Int_t py)
    case kButton1Motion:
       if (MIDDLE) {
          for(i=0;i<fNpoints-1;i++) {
-            gGXW->DrawLine(x[i]+dpx, y[i]+dpy, x[i+1]+dpx, y[i+1]+dpy);
+            gVirtualX->DrawLine(x[i]+dpx, y[i]+dpy, x[i+1]+dpx, y[i+1]+dpy);
             pxp = x[i]+dpx;
             pyp = y[i]+dpy;
-            gGXW->DrawLine(pxp-4, pyp-4, pxp+4,  pyp-4);
-            gGXW->DrawLine(pxp+4, pyp-4, pxp+4,  pyp+4);
-            gGXW->DrawLine(pxp+4, pyp+4, pxp-4,  pyp+4);
-            gGXW->DrawLine(pxp-4, pyp+4, pxp-4,  pyp-4);
+            gVirtualX->DrawLine(pxp-4, pyp-4, pxp+4,  pyp-4);
+            gVirtualX->DrawLine(pxp+4, pyp-4, pxp+4,  pyp+4);
+            gVirtualX->DrawLine(pxp+4, pyp+4, pxp-4,  pyp+4);
+            gVirtualX->DrawLine(pxp-4, pyp+4, pxp-4,  pyp-4);
          }
          pxp = x[fNpoints-1]+dpx;
          pyp = y[fNpoints-1]+dpy;
-         gGXW->DrawLine(pxp-4, pyp-4, pxp+4,  pyp-4);
-         gGXW->DrawLine(pxp+4, pyp-4, pxp+4,  pyp+4);
-         gGXW->DrawLine(pxp+4, pyp+4, pxp-4,  pyp+4);
-         gGXW->DrawLine(pxp-4, pyp+4, pxp-4,  pyp-4);
+         gVirtualX->DrawLine(pxp-4, pyp-4, pxp+4,  pyp-4);
+         gVirtualX->DrawLine(pxp+4, pyp-4, pxp+4,  pyp+4);
+         gVirtualX->DrawLine(pxp+4, pyp+4, pxp-4,  pyp+4);
+         gVirtualX->DrawLine(pxp-4, pyp+4, pxp-4,  pyp-4);
          dpx += px - pxold;
          dpy += py - pyold;
          pxold = px;
          pyold = py;
          for(i=0;i<fNpoints-1;i++) {
-            gGXW->DrawLine(x[i]+dpx, y[i]+dpy, x[i+1]+dpx, y[i+1]+dpy);
+            gVirtualX->DrawLine(x[i]+dpx, y[i]+dpy, x[i+1]+dpx, y[i+1]+dpy);
             pxp = x[i]+dpx;
             pyp = y[i]+dpy;
-            gGXW->DrawLine(pxp-4, pyp-4, pxp+4,  pyp-4);
-            gGXW->DrawLine(pxp+4, pyp-4, pxp+4,  pyp+4);
-            gGXW->DrawLine(pxp+4, pyp+4, pxp-4,  pyp+4);
-            gGXW->DrawLine(pxp-4, pyp+4, pxp-4,  pyp-4);
+            gVirtualX->DrawLine(pxp-4, pyp-4, pxp+4,  pyp-4);
+            gVirtualX->DrawLine(pxp+4, pyp-4, pxp+4,  pyp+4);
+            gVirtualX->DrawLine(pxp+4, pyp+4, pxp-4,  pyp+4);
+            gVirtualX->DrawLine(pxp-4, pyp+4, pxp-4,  pyp-4);
          }
          pxp = x[fNpoints-1]+dpx;
          pyp = y[fNpoints-1]+dpy;
-         gGXW->DrawLine(pxp-4, pyp-4, pxp+4,  pyp-4);
-         gGXW->DrawLine(pxp+4, pyp-4, pxp+4,  pyp+4);
-         gGXW->DrawLine(pxp+4, pyp+4, pxp-4,  pyp+4);
-         gGXW->DrawLine(pxp-4, pyp+4, pxp-4,  pyp-4);
+         gVirtualX->DrawLine(pxp-4, pyp-4, pxp+4,  pyp-4);
+         gVirtualX->DrawLine(pxp+4, pyp-4, pxp+4,  pyp+4);
+         gVirtualX->DrawLine(pxp+4, pyp+4, pxp-4,  pyp+4);
+         gVirtualX->DrawLine(pxp-4, pyp+4, pxp-4,  pyp-4);
       } else {
-         if (px1old) gGXW->DrawLine(px1old, py1old, pxold,  pyold);
-         if (px2old) gGXW->DrawLine(pxold,  pyold,  px2old, py2old);
-         gGXW->DrawLine(pxold-4, pyold-4, pxold+4,  pyold-4);
-         gGXW->DrawLine(pxold+4, pyold-4, pxold+4,  pyold+4);
-         gGXW->DrawLine(pxold+4, pyold+4, pxold-4,  pyold+4);
-         gGXW->DrawLine(pxold-4, pyold+4, pxold-4,  pyold-4);
+         if (px1old) gVirtualX->DrawLine(px1old, py1old, pxold,  pyold);
+         if (px2old) gVirtualX->DrawLine(pxold,  pyold,  px2old, py2old);
+         gVirtualX->DrawLine(pxold-4, pyold-4, pxold+4,  pyold-4);
+         gVirtualX->DrawLine(pxold+4, pyold-4, pxold+4,  pyold+4);
+         gVirtualX->DrawLine(pxold+4, pyold+4, pxold-4,  pyold+4);
+         gVirtualX->DrawLine(pxold-4, pyold+4, pxold-4,  pyold-4);
          pxold = px;
          pxold = TMath::Max(pxold, px1);
          pxold = TMath::Min(pxold, px2);
          pyold = py;
          pyold = TMath::Max(pyold, py2);
          pyold = TMath::Min(pyold, py1);
-         if (px1old) gGXW->DrawLine(px1old, py1old, pxold,  pyold);
-         if (px2old) gGXW->DrawLine(pxold,  pyold,  px2old, py2old);
-         gGXW->DrawLine(pxold-4, pyold-4, pxold+4,  pyold-4);
-         gGXW->DrawLine(pxold+4, pyold-4, pxold+4,  pyold+4);
-         gGXW->DrawLine(pxold+4, pyold+4, pxold-4,  pyold+4);
-         gGXW->DrawLine(pxold-4, pyold+4, pxold-4,  pyold-4);
+         if (px1old) gVirtualX->DrawLine(px1old, py1old, pxold,  pyold);
+         if (px2old) gVirtualX->DrawLine(pxold,  pyold,  px2old, py2old);
+         gVirtualX->DrawLine(pxold-4, pyold-4, pxold+4,  pyold-4);
+         gVirtualX->DrawLine(pxold+4, pyold-4, pxold+4,  pyold+4);
+         gVirtualX->DrawLine(pxold+4, pyold+4, pxold-4,  pyold+4);
+         gVirtualX->DrawLine(pxold-4, pyold+4, pxold-4,  pyold-4);
       }
       break;
 
@@ -463,14 +482,14 @@ void TGraph::ExecuteEvent(Int_t event, Int_t px, Int_t py)
       delete [] x; x = 0;
       delete [] y; y = 0;
       gPad->Modified(kTRUE);
-      gGXW->SetLineColor(-1);
+      gVirtualX->SetLineColor(-1);
 
    }
 
 }
 
 //______________________________________________________________________________
-void TGraph::Fit(Text_t *fname, Option_t *option, Option_t *)
+void TGraph::Fit(const char *fname, Option_t *option, Option_t *)
 {
 //*-*-*-*-*-*-*-*-*-*-*Fit this graph with function fname*-*-*-*-*-*-*-*-*-*
 //*-*                  ==================================
@@ -514,36 +533,36 @@ void TGraph::Fit(Text_t *fname, Option_t *option, Option_t *)
 //   Parameter 5 is fixed to 100.
 //
 
-   Int_t i, ierf, npar,nvpar,nparx,icstat;
+   Int_t i, npar,nvpar,nparx;
    Double_t par, we, al, bl;
    Double_t eplus,eminus,eparab,globcc,amin,edm,errdef,werr;
    TF1 *fnew1;
 
    Double_t *arglist = new Double_t[100];
-//  Decode string choptin and fill Foption structure
-   Foption.Quiet   = 0;
-   Foption.Verbose = 0;
-   Foption.Bound   = 0;
-   Foption.Like    = 0;
-   Foption.W1      = 0;
-   Foption.Errors  = 0;
-   Foption.Range   = 0;
-   Foption.Gradient= 0;
-   Foption.Nograph = 0;
-   Foption.Nostore = 0;
-   Foption.Plus    = 0;
+//  Decode string choptin and fill fitOption structure
+   fitOption.Quiet   = 0;
+   fitOption.Verbose = 0;
+   fitOption.Bound   = 0;
+   fitOption.Like    = 0;
+   fitOption.W1      = 0;
+   fitOption.Errors  = 0;
+   fitOption.Range   = 0;
+   fitOption.Gradient= 0;
+   fitOption.Nograph = 0;
+   fitOption.Nostore = 0;
+   fitOption.Plus    = 0;
 
    TString opt = option;
    opt.ToUpper();
 
-   if (opt.Contains("Q")) Foption.Quiet   = 1;
-   if (opt.Contains("V")){Foption.Verbose = 1; Foption.Quiet   = 0;}
-   if (opt.Contains("W")) Foption.W1      = 1;
-   if (opt.Contains("E")) Foption.Errors  = 1;
-   if (opt.Contains("R")) Foption.Range   = 1;
-   if (opt.Contains("N")) Foption.Nostore = 1;
-   if (opt.Contains("0")) Foption.Nograph = 1;
-   if (opt.Contains("+")) Foption.Plus    = 1;
+   if (opt.Contains("Q")) fitOption.Quiet   = 1;
+   if (opt.Contains("V")){fitOption.Verbose = 1; fitOption.Quiet   = 0;}
+   if (opt.Contains("W")) fitOption.W1      = 1;
+   if (opt.Contains("E")) fitOption.Errors  = 1;
+   if (opt.Contains("R")) fitOption.Range   = 1;
+   if (opt.Contains("N")) fitOption.Nostore = 1;
+   if (opt.Contains("0")) fitOption.Nograph = 1;
+   if (opt.Contains("+")) fitOption.Plus    = 1;
 
    xmin    = fX[0];
    xmax    = fX[fNpoints-1];
@@ -557,60 +576,64 @@ void TGraph::Fit(Text_t *fname, Option_t *option, Option_t *)
    }
 
 //*-*- Check if Minuit is initialized and create special functions
-   if (!gMinuit) gMinuit = new TMinuit(25);
+   grFitter = TVirtualFitter::Fitter(this);
+   grFitter->Clear();
+
    if (!gROOT->GetFunction("gaus")) {
-      gF1 = new TF1("gaus","gaus",xmin,xmax);
-      gF1 = new TF1("expo","expo",xmin,xmax);
-      for (i=0;i<10;i++) gF1 = new TF1(Form("pol%d",i),Form("pol%d",i),xmin,xmax);
+      grF1 = new TF1("gaus","gaus",xmin,xmax);
+      grF1 = new TF1("expo","expo",xmin,xmax);
+      for (i=0;i<10;i++) grF1 = new TF1(Form("pol%d",i),Form("pol%d",i),xmin,xmax);
    }
-   gMinuit->mncler();
-   gMinuit->SetObjectFit(this);
 
 //*-*- Get pointer to the function by searching in the list of functions in ROOT
-   gF1 = gROOT->GetFunction(fname);
-   if (!gF1) { Printf("Unknown function: %s",fname); return; }
-   npar = gF1->GetNpar();
+   grF1 = (TF1*)gROOT->GetFunction(fname);
+   if (!grF1) { Printf("Unknown function: %s",fname); return; }
+   npar = grF1->GetNpar();
    if (npar <=0) { Printf("Illegal number of parameters = %d",npar); return; }
 
 //*-*- Check that function has same dimension as histogram
-   if (gF1->GetNdim() > 1) {
+   if (grF1->GetNdim() > 1) {
       Printf("Error function %s is not 1-D",fname); return; }
 
 //*-*- Is a Fit range specified?
-   if (Foption.Range) {
-      gF1->GetRange(xmin, xmax);
-      xfirst = 1;
-      xlast  = fNpoints;
+   if (fitOption.Range) {
+      grF1->GetRange(xmin, xmax);
+      xfirst = fNpoints +1;
+      xlast  = -1;
+      for (i=0;i<fNpoints;i++) {
+         if (fX[i] >= xmin && xfirst > i) xfirst = i;
+         if (fX[i] <= xmax  && xlast < i) xlast  = i;
+      }
    } else {
-      gF1->SetRange(xmin, xmax);
-      xfirst = 1;
-      xlast  = fNpoints;
+      grF1->SetRange(xmin, xmax);
+      xfirst = 0;
+      xlast  = fNpoints-1;
    }
 
 //*-*- If case of a predefined function, then compute initial values of parameters
-   Int_t special = gF1->GetNumber();
+   Int_t special = grF1->GetNumber();
    if      (special == 100)      InitGaus();
    else if (special == 200)      InitExpo();
    else if (special == 299+npar) InitPolynom();
 
 //*-*- Set error criterion for chisquare
    arglist[0] = 1;
-   gMinuit->SetFCN(GraphFitChisquare);
-   gMinuit->mnexcm("SET ERR",arglist,1,ierf);
+   grFitter->SetFCN(GraphFitChisquare);
+   grFitter->ExecuteCommand("SET ERR",arglist,1);
 
 //*-*- Some initialisations
-   if (!Foption.Verbose) {
+   if (!fitOption.Verbose) {
       arglist[0] = -1;
-      gMinuit->mnexcm("SET PRINT", arglist,1,ierf);
+      grFitter->ExecuteCommand("SET PRINT", arglist,1);
       arglist[0] = 0;
-      gMinuit->mnexcm("SET NOW",   arglist,0,ierf);
+      grFitter->ExecuteCommand("SET NOW",   arglist,0);
    }
 
 //*-*- Transfer names and initial values of parameters to Minuit
    Int_t nfixed = 0;
    for (i=0;i<npar;i++) {
-      par = gF1->GetParameter(i);
-      gF1->GetParLimits(i,al,bl);
+      par = grF1->GetParameter(i);
+      grF1->GetParLimits(i,al,bl);
       if (al*bl != 0 && al >= bl) {
          al = bl = 0;
          arglist[nfixed] = i+1;
@@ -618,53 +641,61 @@ void TGraph::Fit(Text_t *fname, Option_t *option, Option_t *)
       }
       we  = 0.3*TMath::Abs(par);
       if (we <= TMath::Abs(par)*1e-6) we = 1;
-      gMinuit->mnparm(i,gF1->GetParName(i),par,we,al,bl,ierf);
+      grFitter->SetParameter(i,grF1->GetParName(i),par,we,al,bl);
    }
-   if(nfixed > 0)gMinuit->mnexcm("FIX",arglist,nfixed,ierf); // Otto
+   if(nfixed > 0)grFitter->ExecuteCommand("FIX",arglist,nfixed); // Otto
 
 //*-*- Reset Print level
-   if (!Foption.Quiet) {
-      if (Foption.Verbose) { arglist[0] = 2; gMinuit->mnexcm("SET PRINT", arglist,1,ierf); }
-      else                 { arglist[0] = 0; gMinuit->mnexcm("SET PRINT", arglist,1,ierf); }
+   if (!fitOption.Quiet) {
+      if (fitOption.Verbose) { arglist[0] = 2; grFitter->ExecuteCommand("SET PRINT", arglist,1); }
+      else                 { arglist[0] = 0; grFitter->ExecuteCommand("SET PRINT", arglist,1); }
    }
 
 //*-*- Perform minimization
-   SetBit(kFitInit);
+   if (!InheritsFrom("TGraphErrors")) SetBit(kFitInit);
    arglist[0] = 5000;   //MaxIterations
    arglist[1] = 1e-2;   //epsilon
-   gMinuit->mnexcm("MIGRAD",arglist,2,ierf);
-   if (Foption.Errors) {
-      gMinuit->mnexcm("HESSE",arglist,0,ierf);
-      gMinuit->mnexcm("MINOS",arglist,0,ierf);
+   grFitter->ExecuteCommand("MIGRAD",arglist,2);
+   if (fitOption.Errors) {
+      grFitter->ExecuteCommand("HESSE",arglist,0);
+      grFitter->ExecuteCommand("MINOS",arglist,0);
    }
 
 //*-*- Get return status
+   char parName[50];
    for (i=0;i<npar;i++) {
-      gMinuit->mnpout(i,gF1->GetParName(i), par,we,al,bl,ierf);
-      if (Foption.Errors) werr = we;
+      grFitter->GetParameter(i,parName, par,we,al,bl);
+      if (fitOption.Errors) werr = we;
       else {
-         gMinuit->mnerrs(i,eplus,eminus,eparab,globcc);
+         grFitter->GetErrors(i,eplus,eminus,eparab,globcc);
          if (eplus > 0 && eminus < 0) werr = 0.5*(eplus-eminus);
          else                         werr = we;
       }
-      gF1->SetParameter(i,par);
-      gF1->SetParError(i,werr);
+      grF1->SetParameter(i,par);
+      grF1->SetParError(i,werr);
    }
-   gMinuit->mnstat(amin,edm,errdef,nvpar,nparx,icstat);
-   gF1->SetChisquare(amin);
+   grFitter->GetStats(amin,edm,errdef,nvpar,nparx);
+   grF1->SetChisquare(amin);
 
 //*-*- Print final values of parameters.
-   if (!Foption.Quiet) {
-      if (Foption.Errors) gMinuit->mnprin(4,amin);
-      else                gMinuit->mnprin(3,amin);
+   if (!fitOption.Quiet) {
+      if (fitOption.Errors) grFitter->PrintResults(4,amin);
+      else                grFitter->PrintResults(3,amin);
    }
    delete [] arglist;
 
 //*-*- Store fitted function in histogram functions list and draw
-   if (!Foption.Nostore) {
-      if (!Foption.Plus) fFunctions->Delete();
+   if (!fitOption.Nostore) {
+      if (!fFunctions) fFunctions = new TList(this);
+      if (!fitOption.Plus) {
+         TIter next(fFunctions, kIterBackward);
+         TObject *obj;
+         while ((obj = next())) {
+            if (obj->InheritsFrom(TF1::Class())) delete obj;
+         }
+      }
       fnew1 = new TF1();
-      gF1->Copy(*fnew1);
+      grF1->Copy(*fnew1);
       fFunctions->Add(fnew1);
       fnew1->SetParent(this);
       fnew1->Save(xmin,xmax);
@@ -687,15 +718,13 @@ void TGraph::FitPanel()
       gROOT->SetSelectedPad(gPad->GetSelectedPad());
    }
    TList *lc = (TList*)gROOT->GetListOfCanvases();
-   if (!lc->FindObject("fitpanelgraph")) {
-      char cmd[] = "TFitPanelGraph *fitpanel = new TFitPanelGraph(\"fitpanelgraph\",\"Fit Panel\",300,400);";
-      gInterpreter->ProcessLine(cmd);
+   if (!lc->FindObject("R__fitpanelgraph")) {
+      gROOT->ProcessLine("TFitPanelGraph *R__fitpanel = "
+                         "new TFitPanelGraph(\"R__fitpanelgraph\",\"Fit Panel\","
+                         "300,400);");
       return;
    }
-   char cmdupd[] = "fitpanelgraph->SetDefaults(); fitpanelgraph->Show();";
-   gInterpreter->ProcessLine(cmdupd);
-
-
+   gROOT->ProcessLine("R__fitpanelgraph->SetDefaults(); R__fitpanelgraph->Show();");
 }
 
 //______________________________________________________________________________
@@ -716,6 +745,19 @@ Float_t TGraph::GetErrorY(Int_t)
 
    return -1;
 
+}
+
+//______________________________________________________________________________
+TF1 *TGraph::GetFunction(const char *name)
+{
+//*-*-*-*-*Return pointer to function with name*-*-*-*-*-*-*-*-*-*-*-*-*
+//*-*      ===================================
+//
+// Functions such as TGraph::Fit store the fitted function in the list of
+// functions of this graph.
+
+   if (fFunctions) return 0;
+   return (TF1*)fFunctions->FindObject(name);
 }
 
 //______________________________________________________________________________
@@ -770,19 +812,35 @@ void GraphFitChisquare(Int_t &npar, Double_t *gin, Double_t &f, Double_t *u, Int
 {
 //*-*-*-*-*-*Minimization function for Graphs using a Chisquare method*-*-*-*-*
 //*-*        =========================================================
-
-   Double_t cu,eu,fu,fsum;
+//
+// The algorithm uses a parabolic approximation for the derivative at point x.
+// The function is called at points x-ex, x and x+ex where ex is the
+// error along x.
+// In case of a TGraphErrors object, ex is directly taken as the specified
+// error at a point.
+// In case of a TGraph object, the error in x is not set (ex=0).
+// same for ey, the error along y.
+//
+// The chisquare is computed as the sum of the quantity below at each point:
+//
+//                     (y - f(x))**2
+//         -----------------------------------
+//         ey**2 + ((f(x+ex) - f(x-ex))/2)**2
+//
+// where x and y are the point coordinates
+//
+   Double_t cu,eu,ex,ey,eux,fu,fsum,fm,fp;
    Double_t dersum[25], grad[25];
    static Double_t eysum[50];
-   Double_t x[1];
-   Float_t errormax;
+   Double_t x[1], xx[1];
+   Float_t xm,xp,errormax;
    Int_t bin, k, npfits, nparts, part;
 
-   TGraph *gr    = (TGraph*)gMinuit->GetObjectFit();
+   TGraph *gr    = (TGraph*)grFitter->GetObjectFit();
    Int_t n       = gr->GetN();
    Float_t *gx   = gr->GetX();
    Float_t *gy   = gr->GetY();
-   npar          = gF1->GetNpar();
+   npar          = grF1->GetNpar();
    Float_t cumin = gy[0];
    Float_t cumax = gy[0];
    if (flag == 2) for (k=0;k<npar;k++) dersum[k] = gin[k] = 0;
@@ -790,38 +848,49 @@ void GraphFitChisquare(Int_t &npar, Double_t *gin, Double_t &f, Double_t *u, Int
    if (nparts == 0)  nparts = 1;
    if (nparts > 40)  nparts = 40;
 
-   Float_t fxmin = gF1->GetXmin();
-   Float_t fxmax = gF1->GetXmax();
+   Float_t fxmin = grF1->GetXmin();
+   Float_t fxmax = grF1->GetXmax();
    Float_t dfx   = (fxmax - fxmin)/nparts;
-   if (gr->TestBit(kFitInit)) {
+   if (gr->TestBit(TGraph::kFitInit)) {
       for (part=0;part<nparts;part++) { eysum[part] = 0;}
    }
 
-   gF1->InitArgs(x,u);
+   grF1->InitArgs(x,u);
    npfits = 0;
    f      = 0;
    for (bin=0;bin<n;bin++) {
       x[0] = gx[bin];
-      if (Foption.Range) {
+      if (fitOption.Range) {
          if (x[0] < fxmin) continue;
          if (x[0] > fxmax) continue;
       }
       cu   = gy[bin];
-      fu   = gF1->EvalPar(x,u);
-      eu   = gr->GetErrorY(bin);
-      if (Foption.W1) eu = 1;
-      if (eu < 0) {
+      fu   = grF1->EvalPar(x,u);
+      ex   = gr->GetErrorX(bin);
+      ey   = gr->GetErrorY(bin);
+      if (fitOption.W1) {ex = 0; ey = 1;}
+      if (ey < 0) {
          part = Int_t((x[0] - fxmin)/dfx);
          if (part < 0) part = 0;
          if (part >= nparts) part = nparts-1;
-         if (gr->TestBit(kFitInit)) {
+         eu = 1;
+         if (gr->TestBit(TGraph::kFitInit)) {
             eysum[part] += (cu-fu)*(cu-fu);
             if (cu < cumin) cumin = cu;
             if (cu > cumax) cumax = cu;
          } else {
             eu = eysum[part];
+            eu *= eu;
          }
+      } else {
+         xm = x[0] - ex; if (xm < fxmin) xm = fxmin;
+         xp = x[0] + ex; if (xp > fxmax) xp = fxmax;
+         xx[0] = xm; fm = grF1->EvalPar(xx,u);
+         xx[0] = xp; fp = grF1->EvalPar(xx,u);
+         eux = (fp-fm)/2;
+         eu = ey*ey +eux*eux;
       }
+      if (eu <= 0) eu = 1;
       if (flag == 2) {
           for (k=0;k<npar;k++) dersum[k] += 1; //should be the derivative
       }
@@ -829,13 +898,12 @@ void GraphFitChisquare(Int_t &npar, Double_t *gin, Double_t &f, Double_t *u, Int
       if (flag == 2) {
          for (k=0;k<npar;k++) grad[k] += dersum[k]*(fu-cu)/eu; dersum[k] = 0;
       }
-      if (eu) fsum = (cu-fu)/eu;
-      else    fsum = cu-fu;
-      f   += fsum*fsum;
+      fsum = (cu-fu);
+      f   += fsum*fsum/eu;
    }
 //  make a better error estimate to be used in the next iterations
-   if (gr->TestBit(kFitInit)) {
-      gr->ResetBit(kFitInit);
+   if (gr->TestBit(TGraph::kFitInit)) {
+      gr->ResetBit(TGraph::kFitInit);
       errormax   = 0.2*(cumax-cumin);
       for (part=0;part<nparts;part++) {
          eysum[part] = TMath::Sqrt(eysum[part]);
@@ -843,7 +911,7 @@ void GraphFitChisquare(Int_t &npar, Double_t *gin, Double_t &f, Double_t *u, Int
          if (errormax < 0.2) eysum[part] = 1;
       }
    }
-   gF1->SetNumberFitPoints(npfits);
+   grF1->SetNumberFitPoints(npfits);
 }
 
 
@@ -859,7 +927,7 @@ void TGraph::InitGaus()
 
 //*-*- Compute mean value and RMS of the graph in the given range
    allcha = sumx = sumx2 = 0;
-   for (bin=0;bin<fNpoints;bin++) {
+   for (bin=xfirst;bin<xlast;bin++) {
       x       = fX[bin];
       val     = fY[bin];
       sumx   += val*x;
@@ -871,9 +939,9 @@ void TGraph::InitGaus()
    rms  = TMath::Sqrt(sumx2/allcha - mean*mean);
    Float_t binwidx = TMath::Abs((fX[fNpoints-1] - fX[0])/fNpoints);
    if (rms == 0) rms = 1;
-   gF1->SetParameter(0,binwidx*allcha/(sqrtpi*rms));
-   gF1->SetParameter(1,mean);
-   gF1->SetParameter(2,rms);
+   grF1->SetParameter(0,binwidx*allcha/(sqrtpi*rms));
+   grF1->SetParameter(1,mean);
+   grF1->SetParameter(2,rms);
 }
 
 //______________________________________________________________________________
@@ -888,8 +956,8 @@ void TGraph::InitExpo()
 
    LeastSquareLinearFit(-nchanx, constant, slope, ifail);
 
-   gF1->SetParameter(0,constant);
-   gF1->SetParameter(1,slope);
+   grF1->SetParameter(0,constant);
+   grF1->SetParameter(1,slope);
 
 }
 
@@ -902,11 +970,11 @@ void TGraph::InitPolynom()
    Double_t fitpar[25];
 
    Int_t nchanx = xlast - xfirst + 1;
-   Int_t npar   = gF1->GetNpar();
+   Int_t npar   = grF1->GetNpar();
 
    LeastSquareFit( nchanx, npar, fitpar);
 
-   for (Int_t i=0;i<npar;i++) gF1->SetParameter(i, fitpar[i]);
+   for (Int_t i=0;i<npar;i++) grF1->SetParameter(i, fitpar[i]);
 }
 
 //______________________________________________________________________________
@@ -920,7 +988,6 @@ void TGraph::LeastSquareFit(Int_t n, Int_t m, Double_t *a)
 //  a   array of parameters
 //
 //   based on CERNLIB routine LSQ: Translated to C++ by Rene Brun
-//   (E.Keil.  revised by B.Schorr, 23.10.1981.)
 //
 //
     static Double_t zero = 0.;
@@ -944,7 +1011,7 @@ void TGraph::LeastSquareFit(Int_t n, Int_t m, Double_t *a)
 	b[m + l*20 - 21] = zero;
 	da[l-1]          = zero;
     }
-    for (k = 0; k < fNpoints; ++k) {
+    for (k = xfirst; k < xlast; ++k) {
 	xk     = fX[k];
 	yk     = fY[k];
 	power  = one;
@@ -982,7 +1049,6 @@ void TGraph::LeastSquareLinearFit(Int_t ndata, Double_t &a0, Double_t &a1, Int_t
 //*-*                =======================================
 //
 //   extracted from CERNLIB LLSQ: Translated to C++ by Rene Brun
-//   (added to LSQ by B. Schorr, 15.02.1982.)
 //
 
     static Double_t xbar, ybar, x2bar;
@@ -994,7 +1060,7 @@ void TGraph::LeastSquareLinearFit(Int_t ndata, Double_t &a0, Double_t &a1, Int_t
     n     = TMath::Abs(ndata);
     ifail = -2;
     xbar  = ybar = x2bar = xybar = 0;
-    for (i = 0; i < fNpoints; ++i) {
+    for (i = xfirst; i < xlast; ++i) {
 	xk = fX[i];
 	yk = fY[i];
 	if (ndata < 0) {
@@ -1187,10 +1253,10 @@ void TGraph::PaintGraph(Int_t npoints, Float_t *x, Float_t *y, Option_t *chopt)
 
 //*-*-  Create a temporary histogram and fill each channel with the function value
    if (!fHistogram) {
-      fHistogram = new TH1F((char*)GetName(),(char*)GetTitle(),40,rwxmin,rwxmax);
+      fHistogram = new TH1F(GetName(),GetTitle(),40,rwxmin,rwxmax);
       if (!fHistogram) return;
       fHistogram->SetMinimum(rwymin);
-      fHistogram->SetBit(kNoStats);
+      fHistogram->SetBit(TH1::kNoStats);
       fHistogram->SetMaximum(rwymax);
       fHistogram->GetYaxis()->SetLimits(rwymin,rwymax);
       fHistogram->SetDirectory(0);
@@ -1201,10 +1267,10 @@ void TGraph::PaintGraph(Int_t npoints, Float_t *x, Float_t *y, Option_t *chopt)
   if (fFunctions) fit = (TF1*)fFunctions->First();
   if (fit) {
      if (fHistogram) {
-        fHistogram->PaintStat(0,fit);
+        TVirtualHistPainter::HistPainter(fHistogram)->PaintStat(0,fit);
      } else {
         TH1F *hfit = new TH1F("___0","",2,0,1);
-        hfit->PaintStat(0,fit);
+        TVirtualHistPainter::HistPainter(hfit)->PaintStat(0,fit);
         delete hfit;
      }
   }
@@ -1749,6 +1815,8 @@ void TGraph::PaintGrapHist(Int_t npoints, Float_t *x, Float_t *y, Option_t *chop
            }
         }  //endfor (j=first; j<=last;j++)
      }
+     TAttLine::Modify();
+     TAttFill::Modify();
   }
 
 //*-*-      Draw a standard Histogram (default)
@@ -1845,6 +1913,7 @@ void TGraph::PaintGrapHist(Int_t npoints, Float_t *x, Float_t *y, Option_t *chop
      if (!OptionRot) {
         npt = 0;
         for (i=first; i<=last;i++) {
+           if ((i == last) && OptionBins) continue;
            npt++;
            if (!OptionBins) xwork[npt-1] = wmin+(i-first)*delta+0.5*delta;
            else {
@@ -1933,6 +2002,7 @@ void TGraph::PaintGrapHist(Int_t npoints, Float_t *x, Float_t *y, Option_t *chop
      if (!OptionRot) {
         npt = 0;
         for (i=first; i<=last;i++) {
+           if ((i == last) && OptionBins) continue;
            npt++;
            if (!OptionBins) xwork[npt-1] = wminstep + (i-first)*delta;
            else {
@@ -1942,10 +2012,12 @@ void TGraph::PaintGrapHist(Int_t npoints, Float_t *x, Float_t *y, Option_t *chop
                  else           Error(where, "X must have N+1 values with option N");
                  return;
               }
-              xwork[npt-1] = x[i-1] + 0.5*(x[i]-x[i-1]);
+              xwork[npt-1] = x[i-1];      xwork[npt] = x[i];
+//              xwork[npt-1] = x[i-1] + 0.5*(x[i]-x[i-1]);
            }
            if (xwork[npt-1] < uxmin || xwork[npt-1] > uxmax) { npt--; continue;}
            ywork[npt-1] = y[i-1];
+           ywork[npt]   = y[i-1]; //new
            if ((ywork[npt-1] < rwymin) || (ywork[npt-1] > rwymax)) {
               if ((ywork[npt-1] < rwymin)) ywork[npt-1] = rwymin;
               if ((ywork[npt-1] > rwymax)) ywork[npt-1] = rwymax;
@@ -1955,7 +2027,7 @@ void TGraph::PaintGrapHist(Int_t npoints, Float_t *x, Float_t *y, Option_t *chop
                     gPad->PaintPolyMarker(npt,xworkl,yworkl);
                  }
                  if (OptionLine) {
-                    ComputeLogs(npt, OptionZ);
+                    if (!OptionMarker) ComputeLogs(npt, OptionZ);
                     gPad->PaintPolyLine(npt,xworkl,yworkl);
                  }
               }
@@ -1970,7 +2042,7 @@ void TGraph::PaintGrapHist(Int_t npoints, Float_t *x, Float_t *y, Option_t *chop
                  gPad->PaintPolyMarker(50,xworkl,yworkl);
               }
               if (OptionLine) {
-                 ComputeLogs(50, OptionZ);
+                 if (!OptionMarker) ComputeLogs(50, OptionZ);
                  gPad->PaintPolyLine(50,xworkl,yworkl);
               }
               xwork[0] = xwork[npt-1];
@@ -1983,7 +2055,7 @@ void TGraph::PaintGrapHist(Int_t npoints, Float_t *x, Float_t *y, Option_t *chop
            gPad->PaintPolyMarker(npt,xworkl,yworkl);
         }
         if (OptionLine && npt > 1) {
-           ComputeLogs(npt, OptionZ);
+           if (!OptionMarker) ComputeLogs(npt, OptionZ);
            gPad->PaintPolyLine(npt,xworkl,yworkl);
         }
      }
@@ -2009,7 +2081,7 @@ void TGraph::PaintGrapHist(Int_t npoints, Float_t *x, Float_t *y, Option_t *chop
                     gPad->PaintPolyMarker(npt,xworkl,yworkl);
                  }
                  if (OptionLine) {
-                    ComputeLogs(npt, OptionZ);
+                    if (!OptionMarker) ComputeLogs(npt, OptionZ);
                     gPad->PaintPolyLine(npt,xworkl,yworkl);
                  }
               }
@@ -2024,7 +2096,7 @@ void TGraph::PaintGrapHist(Int_t npoints, Float_t *x, Float_t *y, Option_t *chop
                  gPad->PaintPolyMarker(50,xworkl,yworkl);
               }
               if (OptionLine) {
-                 ComputeLogs(50, OptionZ);
+                 if (!OptionMarker) ComputeLogs(50, OptionZ);
                  gPad->PaintPolyLine(50,xworkl,yworkl);
               }
               xwork[0] = xwork[npt-1];
@@ -2037,7 +2109,7 @@ void TGraph::PaintGrapHist(Int_t npoints, Float_t *x, Float_t *y, Option_t *chop
            gPad->PaintPolyMarker(npt,xworkl,yworkl);
         }
         if (OptionLine != 0 && npt > 1) {
-           ComputeLogs(npt, OptionZ);
+           if (!OptionMarker) ComputeLogs(npt, OptionZ);
            gPad->PaintPolyLine(npt,xworkl,yworkl);
         }
      }
@@ -2170,6 +2242,16 @@ void TGraph::Print(Option_t *)
    }
 }
 
+
+//______________________________________________________________________________
+void TGraph::RemoveFunction(TGraph *gr, TObject *obj)
+{
+//   Remove obj from the list of functions of the TGraph gr
+//   this function is called by TF1 destructor
+
+   gr->GetListOfFunctions()->Remove(obj);
+}
+
 //______________________________________________________________________________
 void TGraph::SavePrimitive(ofstream &out, Option_t *option)
 {
@@ -2234,6 +2316,13 @@ void TGraph::SetPoint(Int_t i, Float_t x, Float_t y)
    }
    fX[i] = x;
    fY[i] = y;
+}
+
+//______________________________________________________________________________
+void TGraph::SetTitle(const char* title)
+{
+  fTitle = title;
+  if (fHistogram) fHistogram->SetTitle(title);
 }
 
 //______________________________________________________________________________
@@ -2739,8 +2828,9 @@ void TGraph::Streamer(TBuffer &b)
 {
    // Stream an object of class TGraph.
 
+   UInt_t R__s, R__c;
    if (b.IsReading()) {
-      b.ReadVersion();  //Version_t v = b.ReadVersion();
+      b.ReadVersion(&R__s, &R__c);
       TNamed::Streamer(b);
       TAttLine::Streamer(b);
       TAttFill::Streamer(b);
@@ -2755,8 +2845,9 @@ void TGraph::Streamer(TBuffer &b)
       if (fHistogram) fHistogram->SetDirectory(0);
       b >> fMinimum;
       b >> fMaximum;
+      b.CheckByteCount(R__s, R__c, TGraph::IsA());
    } else {
-      b.WriteVersion(TGraph::IsA());
+      R__c = b.WriteVersion(TGraph::IsA(), kTRUE);
       TNamed::Streamer(b);
       TAttLine::Streamer(b);
       TAttFill::Streamer(b);
@@ -2768,6 +2859,7 @@ void TGraph::Streamer(TBuffer &b)
       b << (TObject *)fHistogram;
       b << fMinimum;
       b << fMaximum;
+      b.SetByteCount(R__c, kTRUE);
    }
 }
 

@@ -1,24 +1,21 @@
+//*CMZ :  2.23/09 17/11/99  15.24.43  by  Rene Brun
+//*CMZ :  2.23/03 08/09/99  00.07.49  by  Fons Rademakers
 //*CMZ :  2.00/06 26/04/98  17.30.00  by  Fons Rademakers
 //*CMZ :  2.00/01 13/03/98  12.11.32  by  Fons Rademakers
 //*CMZ :  2.00/00 26/02/98  22.58.21  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   23/02/98
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 //*CMZ :  2.00/00 16/02/98  00.17.08  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   27/12/97
@@ -71,7 +68,7 @@ TGTextFrame::TGTextFrame(TGWindow *parent, UInt_t w, UInt_t h,
    fFont = fgDefaultFontStruct;
 
    int max_ascent, max_descent;
-   gGXW->GetFontProperties(fFont, max_ascent, max_descent);
+   gVirtualX->GetFontProperties(fFont, max_ascent, max_descent);
    fTHeight = max_ascent + max_descent;
 
    SetBackgroundColor(back);
@@ -80,9 +77,9 @@ TGTextFrame::TGTextFrame(TGWindow *parent, UInt_t w, UInt_t h,
    gcv.fMask = kGCFont | kGCForeground | kGCBackground;
    gcv.fForeground = fgBlackPixel;
    gcv.fBackground = back;
-   gcv.fFont       = gGXW->GetFontHandle(fFont);
+   gcv.fFont       = gVirtualX->GetFontHandle(fFont);
 
-   fGC = gGXW->CreateGC(fId, &gcv);
+   fGC = gVirtualX->CreateGC(fId, &gcv);
 
    fChars = new char* [kMaxLines];
    fLnlen = new Int_t [kMaxLines];
@@ -97,6 +94,8 @@ TGTextFrame::~TGTextFrame()
    // Delete a text frame object.
 
    Clear();
+
+   gVirtualX->DeleteGC(fGC);
 
    delete [] fChars;
    delete [] fLnlen;
@@ -133,7 +132,7 @@ void TGTextFrame::Clear(Option_t *)
    Expand(kMaxLines);
 
    fNlines = fTop = 0;
-   gGXW->ClearWindow(fId);
+   gVirtualX->ClearWindow(fId);
 }
 
 //______________________________________________________________________________
@@ -212,7 +211,7 @@ Bool_t TGTextFrame::LoadBuffer(const char *txtbuf)
    i = 0;
    last = 0;
 next:
-      if ((s = strchr(tbuf, '\n'))) {
+      if ((s = (char*)strchr(tbuf, '\n'))) {
          if (s-tbuf+1 >= kMaxLineSize-1) {
             strncpy(buf, tbuf, kMaxLineSize-2);
             buf[kMaxLineSize-2] = '\n';
@@ -282,10 +281,10 @@ void TGTextFrame::DrawRegion(Int_t x, Int_t y, UInt_t w, UInt_t h)
 
    // Set the clip mask of the GC
 
-   gGXW->SetClipRectangles(fGC, 0, 0, &rect, 1);
+   gVirtualX->SetClipRectangles(fGC, 0, 0, &rect, 1);
 
    int max_ascent, max_descent;
-   gGXW->GetFontProperties(fFont, max_ascent, max_descent);
+   gVirtualX->GetFontProperties(fFont, max_ascent, max_descent);
 
    // Loop through each line until the bottom of the window is reached,
    // or we run out of lines. Redraw any lines that intersect the exposed
@@ -294,7 +293,7 @@ void TGTextFrame::DrawRegion(Int_t x, Int_t y, UInt_t w, UInt_t h)
    while (index < fNlines && yloc < (Int_t)fHeight) {
       yloc += fTHeight;
       if ((yloc - fTHeight <= rect.fY + rect.fHeight) && (yloc >= rect.fY))
-         gGXW->DrawString(fId, fGC, kMargin, yloc - max_descent,
+         gVirtualX->DrawString(fId, fGC, kMargin, yloc - max_descent,
                           fChars[index], fLnlen[index]);
       ++index;
    }
@@ -304,7 +303,7 @@ void TGTextFrame::DrawRegion(Int_t x, Int_t y, UInt_t w, UInt_t h)
    GCValues_t gcv;
    gcv.fMask = kGCClipMask;
    gcv.fClipMask = kNone;
-   gGXW->ChangeGC(fGC, &gcv);
+   gVirtualX->ChangeGC(fGC, &gcv);
 }
 
 //______________________________________________________________________________
@@ -357,9 +356,9 @@ void TGTextFrame::ScrollWindow(Int_t new_top)
    // Set the top line of the text buffer
    fTop = new_top;
    // Copy the scrolled region to its new position
-   gGXW->CopyArea(fId, fId, fGC, xsrc, ysrc, fWidth, fHeight, xdest, ydest);
+   gVirtualX->CopyArea(fId, fId, fGC, xsrc, ysrc, fWidth, fHeight, xdest, ydest);
    // Clear the remaining area of any old text
-   gGXW->ClearArea(fId, points[0].fX, points[0].fY,
+   gVirtualX->ClearArea(fId, points[0].fX, points[0].fY,
                    0, points[2].fY - points[0].fY);
 
    DrawRegion(points[0].fX, points[0].fY,
@@ -485,15 +484,15 @@ void TGTextView::DrawBorder()
 
    switch (fOptions & (kSunkenFrame | kRaisedFrame | kDoubleBorder)) {
       case kSunkenFrame | kDoubleBorder:
-         gGXW->DrawLine(fId, fgShadowGC, 0, 0, fWidth-2, 0);
-         gGXW->DrawLine(fId, fgShadowGC, 0, 0, 0, fHeight-2);
-         gGXW->DrawLine(fId, fgBlackGC, 1, 1, fWidth-3, 1);
-         gGXW->DrawLine(fId, fgBlackGC, 1, 1, 1, fHeight-3);
+         gVirtualX->DrawLine(fId, fgShadowGC, 0, 0, fWidth-2, 0);
+         gVirtualX->DrawLine(fId, fgShadowGC, 0, 0, 0, fHeight-2);
+         gVirtualX->DrawLine(fId, fgBlackGC, 1, 1, fWidth-3, 1);
+         gVirtualX->DrawLine(fId, fgBlackGC, 1, 1, 1, fHeight-3);
 
-         gGXW->DrawLine(fId, fgHilightGC, 0, fHeight-1, fWidth-1, fHeight-1);
-         gGXW->DrawLine(fId, fgHilightGC, fWidth-1, fHeight-1, fWidth-1, 0);
-         gGXW->DrawLine(fId, fgBckgndGC,  1, fHeight-2, fWidth-2, fHeight-2);
-         gGXW->DrawLine(fId, fgBckgndGC,  fWidth-2, 1, fWidth-2, fHeight-2);
+         gVirtualX->DrawLine(fId, fgHilightGC, 0, fHeight-1, fWidth-1, fHeight-1);
+         gVirtualX->DrawLine(fId, fgHilightGC, fWidth-1, fHeight-1, fWidth-1, 0);
+         gVirtualX->DrawLine(fId, fgBckgndGC,  1, fHeight-2, fWidth-2, fHeight-2);
+         gVirtualX->DrawLine(fId, fgBckgndGC,  fWidth-2, 1, fWidth-2, fHeight-2);
          break;
 
       default:

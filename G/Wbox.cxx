@@ -1,38 +1,34 @@
+//*CMZ :  2.23/09 21/11/99  15.56.09  by  Fons Rademakers
+//*CMZ :  2.23/02 07/09/99  08.07.25  by  Rene Brun
 //*CMZ :  2.21/07 05/03/99  11.25.23  by  Rene Brun
 //*CMZ :  2.20/05 15/12/98  09.17.21  by  Rene Brun
 //*CMZ :  2.20/00 02/11/98  15.29.52  by  Fons Rademakers
-//*CMZ :  1.03/09 06/12/97  17.52.34  by  Fons Rademakers
 //*-- Author :    Rene Brun   12/12/94
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 #include <fstream.h>
 
 #include "TROOT.h"
 #include "Strlen.h"
+#include "TWbox.h"
 #include "TVirtualPad.h"
-#include "TPostscript.h"
-#include "TGXW.h"
+#include "TVirtualX.h"
 #include "TPoint.h"
-ClassImp(TWbox)
 
-const Int_t kFraming = BIT(6);  // check also definition in TButton
+
+ClassImp(TWbox)
 
 //______________________________________________________________________________
 //
@@ -190,9 +186,9 @@ void TWbox::PaintFrame(Coord_t x1, Coord_t y1,Coord_t x2, Coord_t  y2,
       frame[5].fX = pxl;                 frame[5].fY = pyt;
       frame[6].fX = pxl;                 frame[6].fY = pyl;
 
-      if (bordermode == -1) gGXW->SetFillColor(GetDarkColor());
-      else                  gGXW->SetFillColor(GetLightColor());
-      gGXW->DrawFillArea(7, frame);
+      if (bordermode == -1) gVirtualX->SetFillColor(GetDarkColor());
+      else                  gVirtualX->SetFillColor(GetLightColor());
+      gVirtualX->DrawFillArea(7, frame);
 
 //*-*- Draw bottom&right part of the box
       frame[0].fX = pxl;                 frame[0].fY = pyl;
@@ -203,30 +199,22 @@ void TWbox::PaintFrame(Coord_t x1, Coord_t y1,Coord_t x2, Coord_t  y2,
       frame[5].fX = pxt;                 frame[5].fY = pyl;
       frame[6].fX = pxl;                 frame[6].fY = pyl;
 
-      if (bordermode == -1) gGXW->SetFillColor(GetLightColor());
-      else                  gGXW->SetFillColor(GetDarkColor());
-      gGXW->DrawFillArea(7, frame);
+      if (bordermode == -1) gVirtualX->SetFillColor(GetLightColor());
+      else                  gVirtualX->SetFillColor(GetDarkColor());
+      gVirtualX->DrawFillArea(7, frame);
 
-//*-* If this wbox is a button, highlight it
-      if (InheritsFrom("TButton") && bordermode == -1) {
-         if (TestBit(kFraming)) {  // bit set in TButton::SetFraming
-            if (GetFillColor() != 2) gGXW->SetLineColor(2);
-            else                     gGXW->SetLineColor(4);
-            gGXW->DrawBox(px1+2,py1-2,px2-2,py2+2, TGXW::kHollow);
-         }
-      }
-      gGXW->SetFillColor(-1);
+      gVirtualX->SetFillColor(-1);
       SetFillColor(oldcolor);
    }
 
-   if (!gCurrentPS || !tops) return;
+   if (!tops) return;
 
 //*-*- same for PostScript
 //   Float_t dx   = (xt - xl) *Float_t(bordersize)/Float_t(pxt - pxl);
-//   Int_t border = gCurrentPS->XtoPS(xt) - gCurrentPS->XtoPS(xt-dx);
-   Int_t border = bordersize;
-   gCurrentPS->DrawFrame(xl, yl, xt, yt, bordermode, border,
-                         Int_t(GetDarkColor()), Int_t(GetLightColor()));
+//   Int_t border = gVirtualPS->XtoPS(xt) - gVirtualPS->XtoPS(xt-dx);
+
+   gPad->PaintBorderPS(xl, yl, xt, yt, bordermode, bordersize,
+                         GetDarkColor(), GetLightColor());
 }
 
 //______________________________________________________________________________
@@ -253,4 +241,3 @@ void TWbox::SavePrimitive(ofstream &out, Option_t *)
    SaveLineAttributes(out,"wbox",1,1,1);
 
    out<<"   wbox->Draw();"<<endl;
-}

@@ -1,7 +1,7 @@
-//*CMZ :  2.00/00 28/02/98  02.32.15  by  Fons Rademakers
-//*-- Author :    Fons Rademakers   28/02/98
+//*CMZ :  2.23/04 04/10/99  20.39.44  by  Fons Rademakers
+//*-- Author :    IconsAuthor   04/10/99
 /* XPM */
-static char * tb_smicons_xpm[] = {
+const char * tb_smicons_xpm[] = {
 "16 16 4 1",
 "       c None s None",
 ".      c #000080",

@@ -1,3 +1,4 @@
+//*CMZ :  2.23/12 28/01/2000  19.18.20  by  Rene Brun
 //*CMZ :  2.21/06 15/02/99  09.32.09  by  Rene Brun
 //*-- Author :    Pasha Murat   12/02/99
 //------------------------------------------------------------------------------
@@ -46,4 +47,25 @@ TVector2::~TVector2()
 TVector2 TVector2::Rotate (Double_t phi)
 {
   return TVector2( fX*TMath::Cos(phi)-fY*TMath::Sin(phi), fX*TMath::Sin(phi)+fY*TMath::Cos(phi) );
+}
+
+
+//______________________________________________________________________________
+void TVector2::Streamer(TBuffer &R__b)
+{
+   // Stream an object of class TVector2.
+
+   UInt_t R__s, R__c;
+   if (R__b.IsReading()) {
+      Version_t R__v = R__b.ReadVersion(&R__s, &R__c);
+      if (R__v < 2) TObject::Streamer(R__b);
+      R__b >> fX;
+      R__b >> fY;
+      R__b.CheckByteCount(R__s, R__c, TVector2::IsA());
+   } else {
+      R__c = R__b.WriteVersion(TVector2::IsA(), kTRUE);
+      R__b << fX;
+      R__b << fY;
+      R__b.SetByteCount(R__c, kTRUE);
+   }
 }

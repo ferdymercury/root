@@ -1,5 +1,5 @@
-/*CMZ :  2.22/10 23/07/99  14.42.19  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   23/07/99*/
+/*CMZ :  2.23/10 10/12/99  18.00.06  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   10/12/99*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -9,20 +9,19 @@
  * Description:
  *  Struct, class, enum, union handling
  ************************************************************************
- * Copyright(c) 1991~1996  [hp] Hewlett Packard Japan, All rights reserved
- * Author                  Masaharu Goto (gotom@jpn.hp.com)
- * Copyright(c) 1995~1998  Masaharu Goto (MXJ02154@niftyserve.or.jp)
+ * Copyright(c) 1995~1999  Masaharu Goto (MXJ02154@niftyserve.or.jp)
  *
  * Permission to use, copy, modify and distribute this software and its
  * documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies and
  * that both that copyright notice and this permission notice appear
- * in supporting documentation.  Hewlett-Packard Japan Company makes no
+ * in supporting documentation.  The author makes no
  * representations about the suitability of this software for any
  * purpose.  It is provided "as is" without express or implied warranty.
  ************************************************************************/
 
 #include "common.h"
+
 
 #ifndef G__OLDIMPLEMENTATION1087
 /******************************************************************
@@ -40,7 +39,11 @@ int isclassdef;
   G__disp_mask=1000;
 
   store_c = G__fgetname(checkbuf,";,(");
-  if(isspace(store_c && '*'!=checkbuf[0])) {
+#ifndef G__OLDIMPLEMENTATION1187
+  if(isspace(store_c) && '*'!=checkbuf[0] && 0==strchr(checkbuf,'[')) {
+#else
+  if(isspace(store_c) && '*'!=checkbuf[0]) {  /* ')' fixed 30/Jul/1999 */
+#endif
     char checkbuf2[G__ONELINE];
     store_c = G__fgetname(checkbuf2,";,(");
     if(isalnum(checkbuf2[0])) errflag=1;
@@ -50,7 +53,7 @@ int isclassdef;
   fsetpos(G__ifile.fp,&store_pos);
   G__ifile.line_number = store_linenum;
   if(errflag || (isclassdef&&'('==store_c)) {
-    G__genericerror("Error: ';' missing after class/struct declaration");
+    G__genericerror("Error: ';' missing after class/struct/enum declaration");
     return(1);
   }
   return(0);
@@ -548,13 +551,21 @@ int type;
   char temp[G__ONELINE];
   char atom_tagname[G__ONELINE];
   /* int parent_tagnum; */
+#ifndef G__OLDIMPLEMENTATION1206
+  int isstructdecl = isupper(type);
+  type = tolower(type);
+#endif
 
   /* Search for old tagname */
   i = G__defined_tagname(tagname,2);
 
 
   /* if new tagname, initialize tag table */
-  if(-1==i) {
+  if(-1==i
+#ifndef G__OLDIMPLEMENTATION1206
+     || (G__get_envtagnum() != G__struct.parent_tagnum[i] && isstructdecl)
+#endif
+     ) {
 
     i=G__struct.alltag;
 
@@ -670,6 +681,10 @@ int type;
 #ifdef G__ROOTSPECIAL
     G__struct.rootflag[i] = 0;
     G__struct.rootspecial[i] = (struct G__RootSpecial*)NULL;
+#endif
+
+#ifndef G__OLDIMPLEMENTATION1238
+    G__struct.isctor[i] = 0;
 #endif
 
     G__struct.alltag++;
@@ -986,7 +1001,20 @@ char type;
     ispointer=1;
     tagname[len-1]='\0';
   }
+#ifndef G__OLDIMPLEMENTATION1206
+  switch(c) {
+  case '{':
+  case ':':
+  case ';':
+    G__tagnum=G__search_tagname(tagname,toupper(type));
+    break;
+  default:
+    G__tagnum=G__search_tagname(tagname,type);
+    break;
+  }
+#else
   G__tagnum=G__search_tagname(tagname,type);
+#endif
 
   if(';'==c) {
     /* in case of class name declaration 'class A;' */
@@ -1382,6 +1410,12 @@ char type;
       if(type=='e') { /* enum */
 
 	G__fgetc(); /* skip '{' */
+#ifndef G__OLDIMPLEMENTATION1179
+	/* Change by Philippe Canal, 1999/8/26 */
+        /* enumval.obj.reftype.reftype = -1; */ /* ???Philippe's original??? */
+        enumval.obj.reftype.reftype = G__PARANORMAL; /* This may be correct */
+        enumval.ref = 0;
+#endif
 	enumval.obj.i = -1;
 	enumval.type = 'i' ;
 	enumval.tagnum = G__tagnum ;
@@ -1540,7 +1574,13 @@ char type;
 #endif
   else { /* struct or class instance */
 #ifndef G__OLDIMPLEMENTATION1087
-    if(G__check_semicolumn_after_classdef(isclassdef)) return;
+    if(G__check_semicolumn_after_classdef(isclassdef)) {
+#ifndef G__OLDIMPLEMENTATION1195
+      G__tagnum=store_tagnum;
+      G__def_tagnum = store_def_tagnum;
+#endif
+      return;
+    }
 #endif
     G__define_var(G__tagnum,-1);
   }

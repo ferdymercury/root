@@ -1,0 +1,12 @@
+*CMZ :  2.23/04 11/10/99  03.09.31  by  Fons Rademakers
+*-- Author :    Fons Rademakers   11/10/99
+#ifdef __CINT__
+
+#pragma link off all globals;
+#pragma link off all classes;
+#pragma link off all functions;
+
+#pragma link C++ class TGWin32;
+#pragma link C++ class TWin32GuiFactory;
+
+#endif

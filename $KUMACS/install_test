@@ -1,22 +1,11 @@
+*CMZ :  2.23/09 19/11/99  12.39.26  by  Fons Rademakers
+*CMZ :  2.23/08 30/10/99  22.42.13  by  Rene Brun
+*CMZ :  2.23/07 22/10/99  14.39.55  by  Rene Brun
+*CMZ :  2.23/04 08/10/99  19.42.07  by  Fons Rademakers
+*CMZ :  2.23/00 29/07/99  20.00.37  by  Fons Rademakers
 *CMZ :  2.22/07 05/07/99  13.38.02  by  Rene Brun
 *CMZ :  2.22/06 16/06/99  12.15.47  by  Fons Rademakers
 *CMZ :  2.22/05 15/06/99  11.21.14  by  Fons Rademakers
-*CMZ :  2.21/07 22/02/99  15.26.05  by  Fons Rademakers
-*CMZ :  2.21/04 04/02/99  12.28.14  by  Fons Rademakers
-*CMZ :  2.20/04 09/12/98  15.17.22  by  Rene Brun
-*CMZ :  2.20/03 04/12/98  18.45.54  by  Fons Rademakers
-*CMZ :  2.20/01 30/11/98  14.48.35  by  Fons Rademakers
-*CMZ :  2.20/00 27/11/98  12.26.46  by  Rene Brun
-*CMZ :  2.00/13 28/10/98  18.02.41  by  Rene Brun
-*CMZ :  2.00/12 04/10/98  17.31.35  by  Fons Rademakers
-*CMZ :  2.00/11 07/08/98  11.17.34  by  Fons Rademakers
-*CMZ :  2.00/10 30/06/98  16.33.38  by  Fons Rademakers
-*CMZ :  2.00/09 19/06/98  11.04.50  by  Rene Brun
-*CMZ :  2.00/08 19/05/98  12.56.59  by  Rene Brun
-*CMZ :  2.00/06 12/05/98  15.23.09  by  Rene Brun
-*CMZ :  2.00/01 10/03/98  19.16.39  by  Fons Rademakers
-*CMZ :  2.00/00 08/03/98  16.02.50  by  Rene Brun
-*CMZ :  1.03/07 04/11/97  17.42.45  by  Rene Brun
 *-- Author :    Rene Brun   25/07/96
 macro install_test 1=-  2=opt
 
@@ -40,9 +29,10 @@ Contents
 Directory root/ :
 
 AA_README   - this file
-AA_INSTALL  - how to install ROOT from source
 AA_LICENSE  - usage terms and conditions
 AA_CREDITS  - list of contributors to the ROOT system
+AA_INSTALL  - how to install ROOT from source (comes with source dist)
+AA_ARCHS    - supported architecures (comes with source dist)
 bin         - directory containing executables
 include     - directory containing the ROOT header files
 lib         - directory containing the ROOT libraries (in shared library format)
@@ -181,7 +171,94 @@ ATTENTION: the source distribution only works in combination with
 a binary distribution. First install a binary distribution for your
 platform, then add the source distribution. If the right binary
 distribution does not exist take one that matches as close as possible
-the one you want to built. Make sure ROOTSYS is specified.
+the one you want to built. Make sure ROOTSYS is specified and points
+to this binary distribution.
+
+There are three main methods of installing ROOT from source.
+
+1) You have noting installed yet.
+   - get binary and source tar files or latest ROOT
+   - unpack binary tar file, this creates directory `root':
+        tar zxvf root_v2.23.Linux.2.2.12.tar.gz
+   - cd into `root' and unpack the source tar file,
+     this creates directory `src' in `root' and the needed
+     configure scripts and Makefiles:
+        tar zxvf root_v2.23.source.tar.gz
+   - set ROOTSYS to the `root' directory:
+        export ROOTSYS=<path>/root
+   - now type the build commands:
+        ./configure linuxegcs     [change linuxegcs appropriately, see AA_ARCHS]
+        make depend
+        make                      [or, make "MAKE=make -j2", for dual CPU's]
+   - add $ROOTSYS/bin to PATH and $ROOTSYS/lib to LD_LIBRARY_PATH:
+        export PATH=$ROOTSYS/bin:$PATH
+        export LD_LIBRARY_PATH=$ROOTSYS/lib:$LD_LIBRARY_PATH
+   - try running root:
+        root
+
+2) You have an existing working ROOT environment (ROOTSYS, PATH and
+   LD_LIBRARY_PATH are set correctly). You want to install a new version
+   parallel to the old version and only after verification install the
+   new binaries in the ROOTSYS location. [In case you don't care about
+   having the new version next to the old version see case 1) above,
+   skipping the binary installation part.]
+   - get source tar file of latest ROOT
+   - unpack in new directory, `newroot':
+        mkdir newroot; cd newroot
+        tar zxvf root_v2.23.source.tar.gz
+   - now type the build commands:
+        ./configure linuxegcs     [change linuxegcs appropriately, see AA_ARCHS]
+        make depend
+        make                      [or, make "MAKE=make -j2", for dual CPU's]
+   - change ROOTSYS to the `newroot' directory:
+        export ROOTSYS=<path>/newroot
+   - try running root:
+        root
+   - by changing ROOTSYS one can easily switch between the two versions
+     (make sure PATH and LD_LIBRARY_PATH depend on $ROOTSYS and not some
+     explicit path name)
+
+3) You want to install ROOT in a fixed location, not depending on ROOTSYS.
+   Typically you want to do this when installing in a location like
+   `/usr/local/bin' or even `/usr/bin'. This allows you, and all others on
+   your system, to run ROOT without having to setup ROOTSYS and special
+   PATH and LD_LIBRARY_PATH variables. This scheme also makes it easier
+   to make ROOT distributions/installations that fit with an existing system.
+   E.g., it should be trivial to install ROOT via a RedHat (.rpm) or Debian
+   (.dep) package.
+   - get binary and source tar files or latest ROOT (if you already have
+     a binary distribution you can set it up like in 2) using `newroot',
+     however, a fixed location binary install can not be used).
+   - unpack binary tar file, this creates directory `root':
+        tar zxvf root_v2.23.Linux.2.2.12.tar.gz
+   - cd into `root' and unpack the source tar file,
+     this creates directory `src' in `root' and the needed
+     configure scripts and Makefiles:
+        tar zxvf root_v2.23.source.tar.gz
+   - set ROOTSYS to the `root' directory (only needed during installation):
+        export ROOTSYS=<path>/root
+   - now type the build commands:
+        ./configure linuxegcs --prefix=/usr/local
+        make depend
+        make                    [or, make "MAKE=make -j2", for dual CPU's]
+        make install            [su to root if --prefix points to a system dir]
+   - try running root:
+        root
+
+
+Installation Names
+==================
+
+  By default, the system will be installed depending on the ROOTSYS
+environment variable. In that case the whole package will live under the
+directory ROOTSYS points to.
+
+Using the fixed location mode (option 3 above), the default `--prefix'
+path is `/usr/local', which will result in the ROOT files to be installed
+in `/usr/local/bin', `/usr/local/lib', etc. You can specify an installation
+prefix other than `/usr/local' by giving `configure' the option
+`--prefix=PATH'. For more detailed location specifications see
+`configure --help'.
 
 
 Installing add-on libraries for TrueType fonts and OpenGL graphics
@@ -193,7 +270,11 @@ links in your $ROOTSYS directory prior to compiling:
 
    cd $ROOTSYS
    ln -s <pathname>/ttf ttf
-   ln -s <pathname>/Mesa-2.2 opengl    (Mesa 2.2 or higher)
+   ln -s <pathname>/Mesa-x.y opengl    (Mesa 2.2 or higher)
+
+Alternatively you can also specify the location via `configure' flags
+(`--with--opengl-libdir, --with-opengl-incdir, --with-ttf-fontdir,
+--with-ttf-libdir, --with-ttf-incdir).
 
 On how to get the TrueType ttf directory see:
    http://root.cern.ch/root/TrueType.html
@@ -206,25 +287,20 @@ functioning of ROOT but we advice you to at least get the TrueType
 fonts since they hugely increase the appearance of text on the screen.
 
 
-Compiling
-=========
+Other Optional Features
+=======================
 
-Once you have the above, do the following:
+To build the library providing thread support you need to define either
+the environment variable `THREAD=-lpthread' or the `configure' flag
+`--with-thread=-lpthread'.
 
-- cd $ROOTSYS
-- set the LD_LIBRARY_PATH (see AA_README)
-- gtar zxvf root_v2.20.source.tar.gz
-     [if you have no gtar, first gunzip, then tar xvf]
-- rm -rf include
-- ln -s src include
-- cd src
-- ln -s Makefile.linux Makefile
-     [of course use the makefile for your specific platform]
-- gmake
-     [you need gmake, if you don't have it first install it]
+To build the library providing CERN RFIO (remote I/O) supoort you need to
+define either the environment variable `RFIO=<path>/libshift.a' or the
+`configure' flag `--with-rfio=<path>/libshift.a'.
 
-This will produce new libraries in $ROOTSYS/lib and new executables
-in $ROOTSYS/bin.
+To build the PAW and Geant3 conversion programs `h2root' and `g2root'
+you need to defined either the enviroment variable `CERNLIB=<cernlibpath>'
+or the `configure' flag `--with-cern-libdir=<cernlibpath>'.
 AA_INSTALL
 
 *=======================Generating AA_LICENSE file==============================
@@ -265,7 +341,22 @@ AA_LICENSE
 mess Creating file AA_CREDITS
 set *.txt -F TEXT
 ctot /$KUMACS/AA_CREDITS
-shell mv AA_CREDITS.txt AA_CREDITS
+if $OS = 'WINNT' then
+   shell ren AA_CREDITS.txt AA_CREDITS
+else
+   shell mv AA_CREDITS.txt AA_CREDITS
+endif
+
+*=======================Generating AA_ARCHS file=============================
+
+mess Creating file AA_ARCHS
+set *.txt -F TEXT
+ctot /$KUMACS/AA_ARCHS
+if $OS = 'WINNT' then
+   shell ren AA_ARCHS.txt AA_ARCHS
+else
+   shell mv AA_ARCHS.txt AA_ARCHS
+endif
 
 *=======================Generating MakeDist file===============================
 
@@ -321,8 +412,9 @@ shell echo 'cd \$ROOTSYS' >> MakeDistSource
 
 shell echo 'tar cvf \$TARFILE --exclude cint/MAKEINFO --exclude cint/include/iosenum.h \\' >> MakeDistSource
 shell echo '   src/\*.h src/\*.c src/\*.cxx src/\*.f src/Make\* \\' >> MakeDistSource
-shell echo '   cint tutorials/.rootrc tutorials/\*.C \\' >> MakeDistSource
-shell echo '   test/\*.cxx test/\*.h test/README ChangeLog AA_INSTALL' >> MakeDistSource
+shell echo '   cint tutorials/.rootrc tutorials/\*.C configure config.in \\' >> MakeDistSource
+shell echo '   test/\*.cxx test/\*.h test/README ChangeLog AA_INSTALL \\' >> MakeDistSource
+shell echo '   AA_ARCHS Makefile.in Makefile' >> MakeDistSource
 
 shell echo 'gzip \$TARFILE' >> MakeDistSource
 
@@ -437,7 +529,7 @@ application data EventLinkDef.h
 #pragma link off all functions;
 
 #pragma link C++ class EventHeader;
-#pragma link C++ class Event;
+#pragma link C++ class Event-;
 #pragma link C++ class HistogramManager;
 #pragma link C++ class Track;
 

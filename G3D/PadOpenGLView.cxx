@@ -1,25 +1,23 @@
+//*CMZ :  2.23/09 17/11/99  15.23.48  by  Rene Brun
+//*CMZ :  2.23/07 16/11/99  12.00.32  by  Rene Brun
+//*CMZ :  2.23/04 10/10/99  18.18.04  by  Fons Rademakers
+//*CMZ :  2.23/03 27/09/99  10.02.23  by  Rene Brun
+//*CMZ :  2.23/02 03/09/99  11.39.45  by  Rene Brun
 //*CMZ :  2.22/01 11/05/99  10.20.12  by  Rene Brun
 //*CMZ :  2.21/06 17/04/99  07.50.09  by  Rene Brun
-//*CMZ :  2.21/04 01/02/99  21.02.14  by  Valery Fine(fine@mail.cern.ch)
-//*CMZ :  1.03/09 10/12/97  09.38.29  by  Rene Brun
 //*-- Author :    Valery Fine(fine@vxcern.cern.ch)   08/05/97
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -45,10 +43,10 @@
 //                                                                      //
 //////////////////////////////////////////////////////////////////////////
 
-#include "TGLKernelABC.h"
+#include "TVirtualGL.h"
 #include "TPadOpenGLView.h"
+#include "TVirtualPad.h"
 #include "TView.h"
-#include "TPad.h"
 #include "TGLViewerImp.h"
 #include "TGeometry.h"
 #include "TPolyMarker3D.h"
@@ -57,13 +55,12 @@
 #include "TStopwatch.h"
 #include "TSystem.h"
 
-
 // ClassImp(TPadOpenGLView)
 
 //____________________________________________________________________________
-TPadOpenGLView::TPadOpenGLView(TVirtualPad *pad) : TPadView3D((TPad*)pad)
+TPadOpenGLView::TPadOpenGLView(TVirtualPad *pad) : TPadView3D(pad)
 {
-   fGLViewerImp = gGLKernel->CreateGLViewerImp(this,pad->GetTitle(), pad->GetWw(), pad->GetWh());
+   fGLViewerImp = gVirtualGL->CreateGLViewerImp(this,pad->GetTitle(), pad->GetWw(), pad->GetWh());
    fGLViewerImp->CreateContext();
    fGLViewerImp->MakeCurrent();
 
@@ -101,7 +98,7 @@ TPadOpenGLView::~TPadOpenGLView()
 //*-*  Delete OpenGL lists;
    if (fGLViewerImp)
    {
-       if (fGLList) { gGLKernel->DeleteGLLists(fGLList,kGLListSize);fGLList =0; }
+       if (fGLList) { gVirtualGL->DeleteGLLists(fGLList,kGLListSize);fGLList =0; }
        delete fGLViewerImp;
        fGLViewerImp = 0;
    }
@@ -110,6 +107,9 @@ TPadOpenGLView::~TPadOpenGLView()
 //____________________________________________________________________________
 void TPadOpenGLView::ExecuteEvent(Int_t event, Int_t px, Int_t py)
 {
+
+   if (!GetPad()->IsEditable()) return;
+
     switch ((EEventType)event)
     {
     case kButton1Down:
@@ -149,35 +149,35 @@ void TPadOpenGLView::ExecuteEvent(Int_t event, Int_t px, Int_t py)
 void TPadOpenGLView::MapOpenGL()
 {
 //*-* Set the default attributes
-   gGLKernel->EnableGL(kDEPTH_TEST);
-   gGLKernel->EnableGL(kCULL_FACE);
+   gVirtualGL->EnableGL(kDEPTH_TEST);
+   gVirtualGL->EnableGL(kCULL_FACE);
 
-   gGLKernel->PolygonGLMode(kFRONT,kFILL);
-   gGLKernel->SetRootLight(kTRUE);
-   gGLKernel->FrontGLFace(kCCW);
+   gVirtualGL->PolygonGLMode(kFRONT,kFILL);
+   gVirtualGL->SetRootLight(kTRUE);
+   gVirtualGL->FrontGLFace(kCCW);
 
 //*-* Create a main GL list to draw the scene
 
-   fGLList = gGLKernel->CreateGLLists(kGLListSize);
+   fGLList = gVirtualGL->CreateGLLists(kGLListSize);
    fGLLastList = fGLList+kGLListSize-1;
 
 
-   gGLKernel->NewGLList(fGLList+kScene,kCOMPILE);
+   gVirtualGL->NewGLList(fGLList+kScene,kCOMPILE);
    {
-       for (UInt_t i=fGLList+kProject; i<=fGLLastList;i++) gGLKernel->RunGLList(i);
+       for (UInt_t i=fGLList+kProject; i<=fGLLastList;i++) gVirtualGL->RunGLList(i);
    }
-   gGLKernel->EndGLList();
+   gVirtualGL->EndGLList();
    fGLViewerImp->SetStatusText("working...",4,TGLViewerImp::kStatusPopOut);
 }
 //______________________________________________________________________________
 void TPadOpenGLView::PushMatrix()
 {
-    gGLKernel->PushGLMatrix();
+    gVirtualGL->PushGLMatrix();
 }
 //______________________________________________________________________________
 void TPadOpenGLView::PopMatrix()
 {
-    gGLKernel->PopGLMatrix();
+    gVirtualGL->PopGLMatrix();
 }
 
 //______________________________________________________________________________
@@ -188,7 +188,7 @@ void TPadOpenGLView::SetAttNode(TNode *node, Option_t *opt)
 //______________________________________________________________________________
 void TPadOpenGLView::SetLineAttr(Color_t color, Int_t width, Option_t *)
 {
-    gGLKernel->SetLineAttr(color,width);
+    gVirtualGL->SetLineAttr(color,width);
 }
 //______________________________________________________________________________
 void TPadOpenGLView::UpdateNodeMatrix(TNode *node,Option_t *)
@@ -199,6 +199,7 @@ void TPadOpenGLView::UpdateNodeMatrix(TNode *node,Option_t *)
 //______________________________________________________________________________
 void TPadOpenGLView::UpdatePosition(Double_t x,Double_t y,Double_t z,TRotMatrix *matrix,Option_t *)
 {
+    if (!gGeometry) return;
     Float_t bomb = gGeometry->GetBomb();
 
 //*-*  Create a translation matrix
@@ -220,35 +221,35 @@ void TPadOpenGLView::UpdatePosition(Double_t x,Double_t y,Double_t z,TRotMatrix 
 
 //*-* Update the OpenGL matrix
 
-    gGLKernel->UpdateMatrix(translate,rotate,gGeometry->GetCurrentReflection());
+    gVirtualGL->UpdateMatrix(translate,rotate,gGeometry->GetCurrentReflection());
 }
 
 #if 0
 //______________________________________________________________________________
 void TPadOpenGLView::PaintBrik(TShape *shape,Option_t *opt)
 {
-    gGLKernel->PaintBrik(vertex);
+    gVirtualGL->PaintBrik(vertex);
 }
 //______________________________________________________________________________
 void TPadOpenGLView::PaintCone(TShape *shape,Option_t *opt)
 {
-    gGLKernel->PaintCone(vertex,-(GetNumberOfDivisions()+1),fNz);
+    gVirtualGL->PaintCone(vertex,-(GetNumberOfDivisions()+1),fNz);
 }
 #endif
 //______________________________________________________________________________
 void TPadOpenGLView::PaintPolyLine(TPolyLine3D *line,Option_t *opt)
 {
-    gGLKernel->SetGLColorIndex(line->GetLineColor());
-    gGLKernel->SetGLLineWidth((Float_t)(line->GetLineWidth()));
-    gGLKernel->PaintPolyLine(line->GetN(), line->GetP(), opt);
+    gVirtualGL->SetGLColorIndex(line->GetLineColor());
+    gVirtualGL->SetGLLineWidth((Float_t)(line->GetLineWidth()));
+    gVirtualGL->PaintPolyLine(line->GetN(), line->GetP(), opt);
 }
 
 //______________________________________________________________________________
 void TPadOpenGLView::PaintPolyMarker(TPolyMarker3D *marker,Option_t *opt)
 {
-    gGLKernel->SetGLColorIndex(marker->GetMarkerColor());
-    gGLKernel->SetGLPointSize((Float_t)(marker->GetMarkerSize()));
-    gGLKernel->PaintGLPoints(marker->GetN(), marker->GetP(), opt);
+    gVirtualGL->SetGLColorIndex(marker->GetMarkerColor());
+    gVirtualGL->SetGLPointSize((Float_t)(marker->GetMarkerSize()));
+    gVirtualGL->PaintGLPoints(marker->GetN(), marker->GetP(), opt);
 }
 //______________________________________________________________________________
 void TPadOpenGLView::PaintPoints3D(const TPoints3DABC *points,Option_t *opt)
@@ -259,7 +260,7 @@ void TPadOpenGLView::PaintPoints3D(const TPoints3DABC *points,Option_t *opt)
   //          "LP"       - draw the 3D points and connect them with
   //                       straight lines
 
-  if (points) gGLKernel->PaintGLPointsObject(points,opt);
+  if (points) gVirtualGL->PaintGLPointsObject(points,opt);
 }
 
 //______________________________________________________________________________
@@ -274,14 +275,15 @@ void TPadOpenGLView::PaintBeginModel(Option_t *)
 //    MakeCurrent();
    if (fResetView)
    {
-       TView *view = ((TPad *)fParent)->GetView();
+       TView *view = fParent->GetView();
        if (view) {
            Float_t min[3],max[3];
            view->GetRange(min,max);
 
 //*-*  sqrt(3) = 1.73 factor to fit all possible position of the rotated shapes
 
-           Float_t bomb = 1.73*gGeometry->GetBomb();
+           Float_t bomb = 1.73;
+           if (gGeometry) bomb = 1.73*gGeometry->GetBomb();
 //           Float_t bomb = gGeometry->GetBomb();
 // sqrt((max[i]-min[i])**2)/(max[i]-min[i])**2
            int i;
@@ -314,14 +316,14 @@ void TPadOpenGLView::PaintBeginModel(Option_t *)
 
    UpdateProjectView();  //*-* Update/Create  kProject GL list.
    UpdateModelView();
-   gGLKernel->NewGLList(fGLList+kModel,kCOMPILE);  // Create "Model View" list
+   gVirtualGL->NewGLList(fGLList+kModel,kCOMPILE);  // Create "Model View" list
 }
 //______________________________________________________________________________
 void TPadOpenGLView::PaintEnd(Option_t *)
 {
    if (!fGLList) return;  // There is nothing to render
 //*-*  Close the "model" view and start the projection one
-    gGLKernel->EndGLList();
+    gVirtualGL->EndGLList();
 }
 
 //______________________________________________________________________________
@@ -364,7 +366,7 @@ void TPadOpenGLView::HandleInput(Int_t button, Int_t x, Int_t y)
 #endif
 
 //______________________________________________________________________________
-void TPadOpenGLView::MoveModelView(Char_t option, Int_t count)
+void TPadOpenGLView::MoveModelView(const Char_t option, Int_t count)
 {
 //*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 //*-* option = 'u' //*-*  Move down
@@ -403,12 +405,12 @@ void TPadOpenGLView::MoveModelView(Char_t option, Int_t count)
     const Char_t *bck = "luk";  //*-* "keys" for the "negative" directions
 
     const Char_t *sch = fwd;
-    Char_t *c = strchr(sch,option|0x20);  //*-* Check the "positive" direction"
+    Char_t *c = (char*)strchr(sch,option|0x20);  //*-* Check the "positive" direction"
     if (!c)
     {
         direction = -direction;
         sch = bck;
-        c = strchr(sch,option|0x20);     //*-* Check the "negative" direction"
+        c = (char*)strchr(sch,option|0x20);     //*-* Check the "negative" direction"
     }
     if (c)
     {
@@ -468,36 +470,36 @@ void TPadOpenGLView::MoveModelView(Char_t option, Int_t count)
             break;
         case 'c':
         case 'C':
-            gGLKernel->EnableGL(kCULL_FACE);
+            gVirtualGL->EnableGL(kCULL_FACE);
             done = 1;
             break;
         case 'r':
         case 'R':
-            gGLKernel->PolygonGLMode(kFRONT,kFILL);
-  //          gGLKernel->PolygonGLMode(kFRONT_AND_BACK,kFILL);
+            gVirtualGL->PolygonGLMode(kFRONT,kFILL);
+  //          gVirtualGL->PolygonGLMode(kFRONT_AND_BACK,kFILL);
             done = 1;
             break;
         case 'w':
         case 'W':
-            gGLKernel->DisableGL(kCULL_FACE);
-            gGLKernel->PolygonGLMode(kFRONT_AND_BACK,kLINE);
+            gVirtualGL->DisableGL(kCULL_FACE);
+            gVirtualGL->PolygonGLMode(kFRONT_AND_BACK,kLINE);
             done = 1;
             break;
         case 'n':    //*-*      turn "SMOOTH" shade model on
         case 'N':    //*-*      turn "SMOOTH" shade model on
-            gGLKernel->ShadeGLModel(kSMOOTH);
+            gVirtualGL->ShadeGLModel(kSMOOTH);
             done = 1;
             break;
         case 'm':    //*-*      turn "FLAT" color shade off
         case 'M':    //*-*      turn "FLAT" color shade off
-            gGLKernel->ShadeGLModel(kFLAT);
+            gVirtualGL->ShadeGLModel(kFLAT);
             done = 1;
             break;
         case 't':    //*-*      toggle the light model
         case 'T':    //*-*      toggle the light model
             {
-                Bool_t light = gGLKernel->GetRootLight();
-                gGLKernel->SetRootLight(!light);
+                Bool_t light = gVirtualGL->GetRootLight();
+                gVirtualGL->SetRootLight(!light);
                 if (light)
                     fGLViewerImp->SetStatusText("Real (\" T \")",3);
                 else
@@ -508,8 +510,8 @@ void TPadOpenGLView::MoveModelView(Char_t option, Int_t count)
             {
                 fResetView = kFALSE;  // To keep the current orientations
                 fScale = 1;
-                ((TPad *)fParent)->Modified();
-                ((TPad *)fParent)->Update();
+                fParent->Modified();
+                fParent->Update();
             }
             done = 0;
             break;
@@ -546,7 +548,7 @@ void TPadOpenGLView::MoveModelView(Char_t option, Int_t count)
 }
 
 //______________________________________________________________________________
-void TPadOpenGLView::MoveModelView(char *cmd, int mlsecc)
+void TPadOpenGLView::MoveModelView(const char *cmd, int mlsecc)
 {
 //*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 //*-*  Emulate the "chain" of the "KeyPress" events
@@ -593,13 +595,13 @@ void TPadOpenGLView::Paint(Option_t *)
     Int_t color;
     if (fParent)
     {
-        color = ((TPad *)fParent)->GetFillColor();
-        gGLKernel->ClearColor(color);
+        color = fParent->GetFillColor();
+        gVirtualGL->ClearColor(color);
     }
-//          gGLKernel->ClearGL(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    gGLKernel->ClearGL(0);
+//          gVirtualGL->ClearGL(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    gVirtualGL->ClearGL(0);
 
-    if (fGLList) gGLKernel->RunGLList(fGLList+kScene);
+    if (fGLList) gVirtualGL->RunGLList(fGLList+kScene);
 }
 
 //______________________________________________________________________________
@@ -626,7 +628,7 @@ void TPadOpenGLView::RotateView(Int_t x, Int_t y)
         }
     }
 
-    gGLKernel->AddRotation(fExtraRotMatrix,angles);
+    gVirtualGL->AddRotation(fExtraRotMatrix,angles);
 
     UpdateModelView();
     PaintScene();
@@ -646,25 +648,25 @@ void TPadOpenGLView::UpdateObjectView()
 {
     Double_t angles[3];
     for (Int_t i=0;i<3;i++) angles[i] = fAngles[i] + fExtraAngles[i];
-    gGLKernel->NewGLList(fGLList+kView,kCOMPILE);
-       gGLKernel->NewModelView(angles,fTranslate);
-    gGLKernel->EndGLList();
+    gVirtualGL->NewGLList(fGLList+kView,kCOMPILE);
+       gVirtualGL->NewModelView(angles,fTranslate);
+    gVirtualGL->EndGLList();
 }
 //______________________________________________________________________________
 void TPadOpenGLView::UpdateModelView()
 {
-    gGLKernel->NewGLList(fGLList+kUpdateView,kCOMPILE);
+    gVirtualGL->NewGLList(fGLList+kUpdateView,kCOMPILE);
     {
       Float_t s = 0;
       for (Int_t i=0;i<3;i++) s += TMath::Abs(fExtraTranslate[i]);
 
 
-      if (s != 0.0) gGLKernel->TranslateGL(fExtraTranslate[0],
+      if (s != 0.0) gVirtualGL->TranslateGL(fExtraTranslate[0],
                                            fExtraTranslate[1],
                                            fExtraTranslate[2]);
-      gGLKernel->MultGLMatrix(fExtraRotMatrix);
+      gVirtualGL->MultGLMatrix(fExtraRotMatrix);
     }
-    gGLKernel->EndGLList();
+    gVirtualGL->EndGLList();
 
 }
 
@@ -685,9 +687,9 @@ void TPadOpenGLView::UpdateProjectView()
             fViewBoxMax[i] += shift;
         }
     }
-    gGLKernel->NewGLList(fGLList+kProject,kCOMPILE);
-       gGLKernel->NewProjectionView(fViewBoxMin,fViewBoxMax,fPerspective);
-    gGLKernel->EndGLList();
+    gVirtualGL->NewGLList(fGLList+kProject,kCOMPILE);
+       gVirtualGL->NewProjectionView(fViewBoxMin,fViewBoxMax,fPerspective);
+    gVirtualGL->EndGLList();
 
     if (fGLViewerImp)
     {

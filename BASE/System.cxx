@@ -1,36 +1,24 @@
+//*CMZ :  2.23/12 19/01/2000  17.52.44  by  Fons Rademakers
+//*CMZ :  2.23/09 19/11/99  13.01.03  by  Fons Rademakers
+//*CMZ :  2.23/07 27/10/99  17.55.29  by  Rene Brun
+//*CMZ :  2.23/04 06/10/99  09.41.35  by  Fons Rademakers
+//*CMZ :  2.23/03 20/09/99  15.00.11  by  Fons Rademakers
+//*CMZ :  2.23/01 31/08/99  18.12.23  by  Rene Brun
 //*CMZ :  2.22/10 19/07/99  11.29.20  by  Fons Rademakers
 //*CMZ :  2.22/07 02/07/99  08.31.39  by  Rene Brun
-//*CMZ :  2.22/06 22/06/99  19.38.28  by  Fons Rademakers
-//*CMZ :  2.22/05 15/06/99  11.12.20  by  Fons Rademakers
-//*CMZ :  2.22/04 03/06/99  16.53.46  by  Fons Rademakers
-//*CMZ :  2.22/01 28/04/99  10.40.37  by  Fons Rademakers
-//*CMZ :  2.21/06 15/02/99  10.16.39  by  Rene Brun
-//*CMZ :  2.21/04 02/02/99  19.17.01  by  Fons Rademakers
-//*CMZ :  2.20/00 25/11/98  18.27.02  by  Fons Rademakers
-//*CMZ :  2.00/13 12/10/98  08.50.57  by  Rene Brun
-//*CMZ :  2.00/12 08/10/98  15.54.29  by  Fons Rademakers
-//*CMZ :  2.00/11 24/08/98  23.06.07  by  Fons Rademakers
-//*CMZ :  2.00/10 28/07/98  15.59.58  by  Fons Rademakers
-//*CMZ :  2.00/00 01/01/98  14.49.57  by  Fons Rademakers
-//*CMZ :  1.03/09 14/12/97  12.46.49  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   15/09/95
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -217,7 +205,31 @@ const char *TSystem::GetError()
 {
    // Return system error string.
 
-   return Form("errno: %d", errno);
+   return Form("errno: %d", GetErrno());
+}
+
+//______________________________________________________________________________
+Int_t TSystem::GetErrno()
+{
+   // Static function returning system error number.
+
+#ifdef R__SOLARIS_CC50
+   return ::errno;
+#else
+   return errno;
+#endif
+}
+
+//______________________________________________________________________________
+void TSystem::ResetErrno()
+{
+   // Static function resetting system error number.
+
+#ifdef R__SOLARIS_CC50
+   ::errno = 0;
+#else
+   errno = 0;
+#endif
 }
 
 //______________________________________________________________________________
@@ -294,7 +306,7 @@ void TSystem::InnerLoop()
 //______________________________________________________________________________
 Bool_t TSystem::ProcessEvents()
 {
-   // Process pending events (GUI, timers). Returns the result of
+   // Process pending events (GUI, timers, sockets). Returns the result of
    // TROOT::IsInterrupted(). The interrupt flag (TROOT::SetInterrupt())
    // can be set during the handling of the events. This mechanism allows
    // macros running in tight calculating loops to be interrupted by some
@@ -635,7 +647,7 @@ const char *TSystem::ExpandFileName(const char *fname)
    // you can use on Unix directly $XXX. This is a protected function called
    // from the OS specific system classes, like TUnixSystem and TWinNTSystem.
 
-   const int   kBufSize = 512;
+   const int   kBufSize = 1024;
    int         n, ier, iter, lx, ncopy;
    char       *inp, *out, *c, *b, *e, *x, *t, buff[kBufSize*3];
    const char *p;
@@ -868,11 +880,15 @@ void TSystem::Closelog()
 //---- Dynamic Loading ---------------------------------------------------------
 
 //______________________________________________________________________________
-int TSystem::Load(const char *module, const char *entry)
+int TSystem::Load(const char *module, const char *entry, Bool_t system)
 {
    // Load a shared library. Returns 0 on successful loading, 1 in
    // case lib was already loaded and -1 in case lib does not exist
-   // or in case of error.
+   // or in case of error. When entry is specified the loaded lib is
+   // search for this entry point (return -1 when entry does not exist,
+   // 0 otherwise). When the system flag is kTRUE, the library is consisdered
+   // a permanent systen library that should not be unloaded during the
+   // course of the session.
 
 #ifdef NOCINT
    AbstractMethod("Load");
@@ -880,11 +896,11 @@ int TSystem::Load(const char *module, const char *entry)
 #else
    char *path;
    int i = -1;
-   if (IsAbsoluteFileName(module))
-      i = G__loadfile((char *)module);
-   else if ((path = DynamicPathName(module))) {
-      char *s = path;
-      i = G__loadfile(s);
+   if ((path = DynamicPathName(module))) {
+      if (!system)
+         i = G__loadfile(path);
+      else
+         i = G__loadsystemfile(path);
       delete [] path;
    }
 
@@ -892,7 +908,7 @@ int TSystem::Load(const char *module, const char *entry)
 
    Func_t f = DynFindSymbol(module, entry);
    if (f) return 0;
-   return 1;
+   return -1;
 #endif
 
 }
@@ -926,17 +942,46 @@ void TSystem::ListSymbols(const char *, const char *)
 }
 
 //______________________________________________________________________________
-void TSystem::ListLibraries(const char *)
+void TSystem::ListLibraries(const char *regexp)
 {
    // List all loaded shared libraries.
 
-   AbstractMethod("ListLibraries");
+   TString libs = GetLibraries(regexp);
+   TRegexp separator("[^ \\t\\s]+");
+   TString s;
+   Ssiz_t start = 0, index = 0, end = 0;
+   int i = 0;
+
+   Printf("");
+   Printf("Loaded shared libraries");
+   Printf("=======================");
+
+   while ((start < libs.Length()) && (index != kNPOS)) {
+      index = libs.Index(separator, &end, start);
+      if (index >= 0) {
+         s = libs(index, end);
+         if (s.BeginsWith("-")) {
+            if (s.BeginsWith("-l")) {
+               Printf("%s", s.Data());
+               i++;
+            }
+         } else {
+            Printf("%s", s.Data());
+            i++;
+         }
+      }
+      start += end+1;
+   }
+
+   Printf("-----------------------");
+   Printf("%d libraries loaded", i);
+   Printf("=======================");
 }
 
 //______________________________________________________________________________
-const char * TSystem::GetLibraries(const char *regexp, const char *options)
+const char *TSystem::GetLibraries(const char *regexp, const char *options)
 {
-   // Return a space separated list of of loaded shared libraries.
+   // Return a space separated list of loaded shared libraries.
    // This list is of a format suitable for a linker, i.e it may contain
    // -Lpathname and/or -lNameOfLib.
    // Option can be any of:
@@ -947,27 +992,31 @@ const char * TSystem::GetLibraries(const char *regexp, const char *options)
    fListLibs = "";
    TString libs = "";
    TString opt = options;
-   if ((opt.Length()==0) || (opt.First('D')!=kNPOS)) {
+   if ((opt.Length()==0) || (opt.First('D')!=kNPOS))
       libs += gInterpreter->GetSharedLibs();
-      libs.Append(" ");
-   }
-   if ((opt.Length()==0) || (opt.First('S')!=kNPOS))
+
+   if ((opt.Length()==0) || (opt.First('S')!=kNPOS)) {
+      if (!libs.IsNull()) libs.Append(" ");
       libs.Append(fLinkedLibs);
+   }
 
    // Select according to regexp
    if (regexp!=0 && strlen(regexp)!=0) {
       TRegexp separator("[^ \\t\\s]+");
-      TRegexp user_re(regexp);
+      TRegexp user_re(regexp, kTRUE);
       TString s;
       Ssiz_t start, index, end;
       start = index = end = 0;
 
-      while ( (start < libs.Length()) && (index != kNPOS) ) {
+      while ((start < libs.Length()) && (index != kNPOS)) {
          index = libs.Index(separator,&end,start);
          if (index >= 0) {
             s = libs(index,end);
-            if (s.Index(user_re) != kNPOS)
-               fListLibs.Append(s).Append(" ");
+            if (s.Index(user_re) != kNPOS) {
+               if (!fListLibs.IsNull())
+                  fListLibs.Append(" ");
+               fListLibs.Append(s);
+            }
          }
          start += end+1;
       }
@@ -1127,10 +1176,13 @@ int TSystem::GetSockOpt(int, int, int*)
 //---- Script Compiler ---------------------------------------------------------
 
 //______________________________________________________________________________
-int TSystem::CompileMacro(const char *filename)
+int TSystem::CompileMacro(const char *filename, Option_t * opt)
 {
   // This method compiles and loads a shared library containing
   // the code from the file "filename".
+  //
+  // The possible options are:
+  //     k : keep the shared library after the session end.
   //
   // It uses the directive fMakeSharedLibs to create a shared library.
   // If loading the shared library fails, it tries to output a list of missing
@@ -1153,14 +1205,18 @@ int TSystem::CompileMacro(const char *filename)
   //
   //  .X myfunc.C(arg1,arg2)
   //
-  // We propose to allow him to type:
+  // We allow him to type:
   //
   //  .X myfunc.C++(arg1,arg2)
+  // or
+  //  .X myfunc.C+(arg1,arg2)
   //
   // In which case an external compiler will be called to create a shared
   // library.  This shared library will then be loaded and the function
-  // myfunc will be called with the two arguments. Of course the ++ notation
-  // will also be supported in similar way for .x and .L.
+  // myfunc will be called with the two arguments.  With '++' the shared library
+  // is deleted at the end of the session.  With '+' the shared library is kept.
+  // Of course the + and ++ notation will also be supported in similar way
+  // for .x and .L.
   //
   // Through the function TSystem::SetMakeSharedLib(), the user will be able to
   // indicate, with shell commands, how to build a shared library (a good
@@ -1203,6 +1259,12 @@ int TSystem::CompileMacro(const char *filename)
   //
   // (the ... have to be replaced by the actual values and are here only to
   // shorten this comment).
+
+  // Analyze the options
+  Bool_t keep = kFALSE;
+  if (opt) {
+     keep = (strchr(opt,'k')!=0);
+  }
 
   // Get the right file names for the dictionnary and the shared library
   TString library = filename;
@@ -1287,7 +1349,7 @@ int TSystem::CompileMacro(const char *filename)
     incPath.ReplaceAll(" :",":");
   }
   incPath.Prepend(".:");
-  char * extensions[] = { ".h", ".hh", ".hpp", ".hxx",  ".hPP", ".hXX" };
+  const char * extensions[] = { ".h", ".hh", ".hpp", ".hxx",  ".hPP", ".hXX" };
   for ( int i = 0; i < 6; i++ ) {
     char * name;
     TString lookup = libname;
@@ -1352,7 +1414,7 @@ int TSystem::CompileMacro(const char *filename)
 
   if ( result ) {
 
-    fCompiled->Add(new TObjString( library ));
+    if (!keep) fCompiled->Add(new TObjString( library ));
 
 #ifndef NOCINT
     // This is intended to force a failure if not all symbols needed
@@ -1372,20 +1434,21 @@ int TSystem::CompileMacro(const char *filename)
 
   };
 
-#ifdef DEBUG_COMPILE
-  rcint.Prepend("echo ");
-  cmd.Prepend("echo ");
-  testcmd.Prepend("echo ");
-  gSystem->Exec(rcint);
-  gSystem->Exec( cmd );
-  gSystem->Exec(testcmd);
-#else
-  gSystem->Unlink( dict );
-  gSystem->Unlink( dicth );
-  gSystem->Unlink( linkdef );
-  gSystem->Unlink( fakeMain );
-  gSystem->Unlink( exec );
-#endif
+  if (gDebug>3) {
+     rcint.Prepend("echo ");
+     cmd.Prepend("echo \" ").Append(" \" ");
+     testcmd.Prepend("echo \" ").Append(" \" ");
+     gSystem->Exec(rcint);
+     gSystem->Exec( cmd );
+     gSystem->Exec(testcmd);
+   } else {
+     gSystem->Unlink( dict );
+     gSystem->Unlink( dicth );
+     gSystem->Unlink( dictObj );
+     gSystem->Unlink( linkdef );
+     gSystem->Unlink( fakeMain );
+     gSystem->Unlink( exec );
+   }
 
   return result;
 }
@@ -1509,10 +1572,7 @@ void  TSystem::SetLinkedLibs(const char *LinkedLibs)
    // LinkedLibs should contain the library directory and list of libraries
    // needed to recreate the current executable. It is used to expand $LinkedLibs
    // in the directives given to SetMakeSharedLib() and SetMakeExe()
-   // The default value on Unix is:
-   // "-L$ROOTSYS/lib -lNew -lBase -lCint -lClib -lCont -lFunc -lGraf -lGraf3d
-   //  -lHist -lHtml -lMatrix -lMeta -lMinuit -lNet -lPhysics -lPostscript
-   //  -lProof -lTree -lUnix -lZip -lGpad -lGui -lGX11 -lX3d -lXpm -lRint"
+   // The default value on Unix is: root-config --glibs
 
    fLinkedLibs = LinkedLibs;
 }

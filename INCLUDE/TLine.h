@@ -1,3 +1,5 @@
+//*CMZ :  2.23/12 31/01/2000  10.20.16  by  Rene Brun
+//*CMZ :  2.23/09 22/11/99  17.31.38  by  Rene Brun
 //*CMZ :  2.22/01 19/05/99  12.47.17  by  Rene Brun
 //*CMZ :  0.90/05 21/11/96  09.49.48  by  Rene Brun
 //*-- Author :    Rene Brun   08/12/94
@@ -5,22 +7,17 @@
 #ifndef ROOT_TLine
 #define ROOT_TLine
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -48,19 +45,19 @@ protected:
         Coord_t      fX2;           //X of 2nd point
         Coord_t      fY2;           //Y of 2nd point
 
-protected:
-        virtual Int_t DistancetoPrimitive(Int_t px, Int_t py);
-        virtual void  ExecuteEvent(Int_t event, Int_t px, Int_t py);
-
 public:
+        // TLine status bits
+        enum { kLineNDC = BIT(14) };
+
         TLine();
         TLine(Coord_t x1, Coord_t y1,Coord_t x2, Coord_t  y2);
         TLine(const TLine &line);
         virtual ~TLine();
                 void   Copy(TObject &line);
-        virtual void   Draw(Option_t *option="");
+        virtual Int_t  DistancetoPrimitive(Int_t px, Int_t py);
         virtual TLine *DrawLine(Coord_t x1, Coord_t y1,Coord_t x2, Coord_t y2);
         virtual TLine *DrawLineNDC(Coord_t x1, Coord_t y1,Coord_t x2, Coord_t y2);
+        virtual void   ExecuteEvent(Int_t event, Int_t px, Int_t py);
         Coord_t        GetX1() {return fX1;}
         Coord_t        GetX2() {return fX2;}
         Coord_t        GetY1() {return fY1;}

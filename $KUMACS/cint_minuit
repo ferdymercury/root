@@ -1,3 +1,4 @@
+*CMZ :  2.23/01 31/08/99  16.02.45  by  Rene Brun
 *CMZ :  2.00/09 25/06/98  18.36.57  by  Fons Rademakers
 *CMZ :  0.90/11 03/01/97  10.14.34  by  Rene Brun
 *-- Author :    Fons Rademakers   15/02/96
@@ -13,7 +14,7 @@ macro cint_minuit
 
 seq -i src/*.h
 
-headers=TMinuit.h
+headers=TMinuit.h TFitter.h
 
 name=Minuit
 patch=MINUIT

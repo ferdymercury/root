@@ -1,3 +1,5 @@
+//*CMZ :  2.23/12 31/01/2000  10.56.24  by  Rene Brun
+//*CMZ :  2.23/02 06/09/99  16.52.38  by  Fons Rademakers
 //*CMZ :  2.21/04 02/02/99  19.04.08  by  Fons Rademakers
 //*CMZ :  2.00/11 09/08/98  10.30.13  by  Rene Brun
 //*CMZ :  1.00/02 07/03/97  18.40.23  by  Rene Brun
@@ -6,22 +8,17 @@
 #ifndef ROOT_TGeometry
 #define ROOT_TGeometry
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -48,6 +45,8 @@ class TBrowser;
 class TMaterial;
 class TRotMatrix;
 class TShape;
+class TObjArray;
+
 
 class TGeometry : public TNamed {
 
@@ -57,9 +56,9 @@ private:
    THashList        *fShapes;             //Collection of shapes
    TList            *fNodes;              //Collection of nodes
    TNode            *fCurrentNode;        //Pointer to current node
-   TMaterial       **fMaterialPointer;    //Pointers to materials
-   TRotMatrix      **fMatrixPointer;      //Pointers to rotation matrices
-   TShape          **fShapePointer;       //Pointers to shapes
+   TMaterial       **fMaterialPointer;    //!Pointers to materials
+   TRotMatrix      **fMatrixPointer;      //!Pointers to rotation matrices
+   TShape          **fShapePointer;       //!Pointers to shapes
    Float_t           fBomb;               //Bomb factor for exploded geometry
    TRotMatrix      *fMatrix;              //! Pointers to current rotation matrices
    Double_t         fX;                   //!
@@ -70,14 +69,13 @@ private:
    Bool_t           fIsReflection[kMAXLEVELS];            //!
    Int_t            fGeomLevel;                           //!
 
-
 public:
 
    TGeometry();
-   TGeometry(const Text_t *name, const Text_t *title);
+   TGeometry(const char *name, const char *title);
    virtual        ~TGeometry();
    virtual void   Browse(TBrowser *b);
-   virtual void   cd(const Text_t *path=0);
+   virtual void   cd(const char *path=0);
    virtual void   Draw(Option_t *option="");
    Float_t        GetBomb() const {return fBomb;}
    Int_t          GeomLevel() const {return fGeomLevel;}
@@ -86,12 +84,12 @@ public:
    THashList      *GetListOfMaterials() const {return fMaterials;}
    THashList      *GetListOfMatrices() const {return fMatrices;}
    TNode          *GetCurrentNode()  const {return fCurrentNode;}
-   TMaterial      *GetMaterial(const Text_t *name);
+   TMaterial      *GetMaterial(const char *name);
    TMaterial      *GetMaterialByNumber(Int_t number);
-   TNode          *GetNode(const Text_t *name);
-   TShape         *GetShape(const Text_t *name);
+   TNode          *GetNode(const char *name);
+   TShape         *GetShape(const char *name);
    TShape         *GetShapeByNumber(Int_t number);
-   TRotMatrix     *GetRotMatrix(const Text_t *name);
+   TRotMatrix     *GetRotMatrix(const char *name);
    TRotMatrix     *GetRotMatrixByNumber(Int_t number);
    TRotMatrix     *GetCurrentMatrix() const;
    TRotMatrix     *GetCurrentPosition(Double_t *x,Double_t *y,Double_t *z) const;
@@ -101,8 +99,8 @@ public:
    virtual void   Local2Master(Double_t *local, Double_t *master);
    virtual void   Local2Master(Float_t *local, Float_t *master);
    virtual void   ls(Option_t *option="rsn2");
-   virtual void   Node(const Text_t *name, const Text_t *title, const Text_t *shapename, Double_t x=0, Double_t y=0, Double_t z=0
-                        , const Text_t *matrixname="", Option_t *option="");
+   virtual void   Node(const char *name, const char *title, const char *shapename, Double_t x=0, Double_t y=0, Double_t z=0
+                        , const char *matrixname="", Option_t *option="");
    virtual Int_t  PushLevel(){return fGeomLevel++;}
    virtual Int_t  PopLevel(){return fGeomLevel>0?fGeomLevel--:0;}
    virtual void   RecursiveRemove(TObject *obj);
@@ -117,10 +115,11 @@ public:
    virtual void   UpdateMatrix(TNode *node);
    virtual void   UpdateTempMatrix(Double_t x=0, Double_t y=0, Double_t z=0, TRotMatrix *matrix=0);
    virtual void   UpdateTempMatrix(Double_t x, Double_t y, Double_t z, Double_t *matrix,Bool_t isReflection=kFALSE);
-   static  void   UpdateTempMatrix(Double_t *dx1,Double_t *rmat1
-                , Double_t x, Double_t y, Double_t z, Double_t *matrix
-                , Double_t *dxnew, Double_t *rmatnew);
 
+   static TObjArray *Get(const char *name);
+   static void       UpdateTempMatrix(Double_t *dx1,Double_t *rmat1,
+                                      Double_t x, Double_t y, Double_t z, Double_t *matrix,
+                                      Double_t *dxnew, Double_t *rmatnew);
 
    ClassDef(TGeometry,1)  //Structure for Matrices, Shapes and Nodes
 };

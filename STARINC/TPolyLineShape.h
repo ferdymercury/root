@@ -1,0 +1,101 @@
+//*CMZ :  2.23/12 26/01/2000  09.42.35  by  Valery Fine(fine@mail.cern.ch)
+//*-- Author :
+#ifndef STAR_St_PolyLineShape
+#define STAR_St_PolyLineShape
+// $Id: St_PolyLineShape.h,v 1.14 1999/12/21 18:57:14 fine Exp $
+// ***********************************************************************
+// *  C++ class library to define an abstract 3D shape os STAR "event" geometry
+// * Copyright(c) 1997~1999  [BNL] Brookhaven National Laboratory, STAR, All rights reserved
+// * Author                  Valerie Fine  (fine@bnl.gov)
+// * Copyright(c) 1997~1999  Valerie Fine  (fine@bnl.gov)
+// *
+// * This program is distributed in the hope that it will be useful,
+// * but WITHOUT ANY WARRANTY; without even the implied warranty of
+// * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+// *
+// * Permission to use, copy, modify and distribute this software and its
+// * documentation for any purpose is hereby granted without fee,
+// * provided that the above copyright notice appear in all copies and
+// * that both that copyright notice and this permission notice appear
+// * in supporting documentation.  Brookhaven National Laboratory makes no
+// * representations about the suitability of this software for any
+// * purpose.  It is provided "as is" without express or implied warranty.
+// ************************************************************************
+
+#include <TShape.h>
+#include <TAttMarker.h>
+
+class TPoints3DABC;
+class TVirtualPad;
+
+enum EShapeTypes { kNULL=0, kSphere, kBrik};
+
+class TPolyLineShape : public TShape, public TAttMarker {
+ protected:
+   Bool_t        fPointFlag;   // Flag whether we should paint "points" (option "P")
+   Bool_t        fLineFlag;    // Flag whether we should connect the points with "line" (option "L")
+   EShapeTypes   fShapeType;   // shape of the segment connections
+   TShape       *fShape;       // shape for draw each segment of the polylins
+   TShape       *fConnection;  // shape to represent the each "end" of the polyline
+   TPoints3DABC   *fPoints;    // PolyLine itself
+   Float_t       fWidthFactor; // factor to calculate the the tube diameters
+   Bool_t        fHasDrawn;    // flag to avoid multiply plots
+   Bool_t        fSmooth;      // Make smooth connections
+   Size3D       *fSizeX3D;     //! the X3D buffer sizes
+
+
+protected:
+   virtual void  Create();
+   virtual Size3D *CreateX3DSize(Bool_t marker=kFALSE);
+   virtual void  SetConnection(TShape *connection){ fConnection = connection;}
+   virtual Int_t PointDistancetoPrimitive(Int_t px, Int_t py);
+
+public:
+   TPolyLineShape();
+   TPolyLineShape(TPoints3DABC *points,Option_t* option="P");
+   virtual ~TPolyLineShape();
+   virtual Int_t        DistancetoPrimitive(Int_t px, Int_t py);
+   virtual void         Draw(Option_t *opt="");
+   virtual void         ExecuteEvent(Int_t event, Int_t px, Int_t py);
+   virtual TShape      *GetConnection() const { return fConnection;}
+   virtual Color_t      GetColorAttribute() const;
+   virtual Size_t       GetSizeAttribute()  const;
+   virtual Style_t      GetStyleAttribute() const;
+   virtual TPoints3DABC *GetMarker() const { return fPoints;}
+   virtual TPoints3DABC *GetPoints() const { return fPoints;}
+   virtual TShape      *GetShape() const { return fShape;}
+   virtual Bool_t       GetSmooth() const { return fSmooth;}
+   virtual Float_t      GetWidthFactor() const { return fWidthFactor;}
+   virtual void         PaintNode(Float_t *start,Float_t *end,Option_t *option);
+   virtual void         Paint(Option_t *opt);
+   virtual void         Paint3d(Option_t *opt);
+   virtual void         PaintX3DLine(Option_t *opt="");
+   virtual void         PaintX3DMarker(Option_t *opt="");
+   static Double_t     *gyrot(Double_t *dirc, Double_t cosang,Double_t sinang, Double_t trans[3][3]);
+   virtual void         PaintPoints(Int_t n, Float_t *p=0, Option_t *opt="");
+   virtual void         PaintPolyMarker(Int_t n, Float_t *p=0, Marker_t m=0, Option_t *opt="");
+   static Float_t       Product(Float_t *v1, Float_t *v2,Int_t ndim=3);
+   static Double_t      Product(Double_t *v1, Double_t *v2,Int_t ndim=3);
+   virtual Color_t      SetColorAttribute(Color_t color);
+   virtual Size_t       SetSizeAttribute(Size_t size);
+   virtual Int_t        SetConnection(EShapeTypes connection=kBrik);
+   virtual void         SetShape(TShape *shape);
+   virtual void         SetSmooth(Bool_t smooth=kTRUE){ fSmooth=smooth;}
+   virtual Style_t      SetStyleAttribute(Style_t style);
+   virtual void         SetWidthFactor(Float_t fact=1.0){fWidthFactor = fact;} //*MENU
+   virtual Int_t        Size() const;
+   virtual void         Sizeof3D() const;
+   ClassDef(TPolyLineShape,0) // the base class to define an abstract 3D shape of STAR "event" geometry
+};
+//______________________________________________________________________________
+// $Log: TPolyLineShape.h,v $
+// Revision 1.14  1999/12/21 18:57:14  fine
+// compilation warning plus new type for SizeAttribute
+//
+// Revision 1.13  1999/12/17 23:28:41  fine
+// clean up for the sake of docs + new class TTable3DPackedPoints introduced
+//
+//______________________________________________________________________________
+
+
+#endif

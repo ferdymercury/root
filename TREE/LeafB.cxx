@@ -1,24 +1,22 @@
+//*CMZ :  2.23/12 26/01/2000  14.14.29  by  Rene Brun
+//*CMZ :  2.23/07 26/10/99  15.36.57  by  Rene Brun
+//*CMZ :  2.23/03 17/09/99  08.39.19  by  Rene Brun
 //*CMZ :  2.21/07 06/03/99  16.25.10  by  Rene Brun
 //*CMZ :  2.00/00 03/03/99  14.18.31  by  Rene Brun
 //*CMZ :  1.01/04 02/06/97  12.32.44  by  Rene Brun
 //*-- Author :    Rene Brun   12/01/96
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -41,13 +39,14 @@ TLeafB::TLeafB(): TLeaf()
 }
 
 //______________________________________________________________________________
-TLeafB::TLeafB(const Text_t *name, const Text_t *type)
+TLeafB::TLeafB(const char *name, const char *type)
        :TLeaf(name,type)
 {
 //*-*-*-*-*-*-*-*-*-*-*-*-*Create a LeafB*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 //*-*                      ==============
 //*-*
 
+   fLenType = 1;
    fMinimum = 0;
    fMaximum = 0;
    fValue   = 0;
@@ -93,7 +92,7 @@ void TLeafB::FillBasket(TBuffer &b)
 }
 
 //______________________________________________________________________________
-const Text_t *TLeafB::GetTypeName() const
+const char *TLeafB::GetTypeName() const
 {
 //*-*-*-*-*-*-*-*Returns name of leaf type*-*-*-*-*-*-*-*-*-*-*-*
 //*-*            =========================
@@ -151,12 +150,27 @@ void TLeafB::ReadBasket(TBuffer &b)
 }
 
 //______________________________________________________________________________
+void TLeafB::ReadBasketExport(TBuffer &b, TClonesArray *list, Int_t n)
+{
+//*-*-*-*-*-*-*-*-*-*-*Read leaf elements from Basket input buffer*-*-*-*-*-*
+//  and export buffer to TClonesArray objects
+
+   b.ReadFastArray(fValue,n*fLen);
+
+   Int_t j = 0;
+   for (Int_t i=0;i<n;i++) {
+      memcpy((char*)list->UncheckedAt(i) + fOffset,&fValue[j], fLen);
+      j += fLen;
+   }
+}
+
+//______________________________________________________________________________
 void TLeafB::SetAddress(void *add)
 {
 //*-*-*-*-*-*-*-*-*-*-*Set leaf buffer data address*-*-*-*-*-*
 //*-*                  ============================
 
    if (ResetAddress(add)) delete [] fValue;
-   if (add) fValue = (Char_t*)add;
-   else     fValue = new Char_t[fNdata];
+   if (add) fValue = (char*)add;
+   else     fValue = new char[fNdata];
 }

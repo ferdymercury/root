@@ -1,14 +1,17 @@
-*CMZ :  2.22/02 20/05/99  18.15.35  by  Rene Brun
-*CMZ :  2.21/08 18/03/99  15.12.18  by  Fons Rademakers
-*CMZ :  2.21/04 05/02/99  11.19.10  by  Fons Rademakers
-*CMZ :  2.20/00 22/11/98  18.43.27  by  Fons Rademakers
-*CMZ :  2.00/11 13/08/98  15.17.00  by  Fons Rademakers
-*-- Author :    Fons Rademakers   26/06/98
+*CMZ :  2.23/12 26/01/2000  11.35.02  by  Rene Brun
+*CMZ :  2.23/09 19/11/99  18.31.59  by  Fons Rademakers
+*CMZ :  2.23/07 27/10/99  16.00.04  by  Rene Brun
+*CMZ :  2.23/06 21/10/99  08.18.08  by  Rene Brun
+*CMZ :  2.23/05 20/10/99  18.10.29  by  Philippe Canal
+*-- Author :    Philippe Canal   20/10/99
+
 # Makefile of ROOT for SGI IRIX 6.x with KCC compiler
 
 # You can steer the build with the variable ROOTBUILD
 # The following options are supported: debug, exception, n32
 # Do something like: export ROOTBUILD="debug n32"
+
+include ../Makefile.config
 
 PLATFORM      = sgi
 SGI_REL      := $(subst .,,$(shell uname -r))
@@ -18,13 +21,13 @@ CXXOPT        = +K0
 OPT           = -g -O0
 NOOPT         =
 else
-CXXOPT        = +K3 -O2
-OPT           = -O2
+CXXOPT        = +K3 -O2 -OPT:Olimit=0
+OPT           = -O2 -OPT:Olimit=0
 NOOPT         =
 endif
 
 ifeq (exception,$(findstring exception,$(ROOTBUILD)))
-EXCEPTION     = --exceptions
+EXCEPTION     = --exceptions -DG__EXCEPTIONWRAPPER
 else
 EXCEPTION     = --no_exceptions
 endif
@@ -35,32 +38,55 @@ else
 ABI           = -32 -mips2
 endif
 
+ifeq (thread,$(findstring thread,$(ROOTBUILD)))
+THREAD        += "USE"
+CXXOPT        += --thread_safe -g
+OPT           += -g
+endif
+
+VPATH         = $(ROOTSYS)/include
 CXX           = KCC
 CC            = cc
 CXXFLAGS      = $(ABI) $(EXCEPTION) --signed_chars --display_error_number \
                 --diag_suppress 68 --diag_suppress 191 --diag_suppress 830 \
-                --diag_suppress 837 $(CXXOPT) -DSGI_REL=$(SGI_REL)
-CFLAGS        = $(ABI) -signed
+                --diag_suppress 837 $(CXXOPT) -DSGI_REL=$(SGI_REL) \
+                -I$(OPENGL)/include -I$(ROOTSYS)/include $(EXTRA_CXXFLAGS) \
+		
+CFLAGS        = $(ABI) -signed \
+                -I$(ROOTSYS)/include $(EXTRA_CFLAGS)
 CINTCXXFLAGS  = $(ABI) $(EXCEPTION) --signed_chars --display_error_number \
                 --diag_suppress 68 --diag_suppress 191 --diag_suppress 830 \
                 --diag_suppress 837 -DG__REGEXP1 -DG__UNIX -DG__SHAREDLIB \
-                -DG__OSFDLL -DG__SIGNEDCHAR -DG__ROOT -DG__REDIRECTIO $(CXXOPT)
+                -DG__OSFDLL -DG__SIGNEDCHAR -DG__ROOT -DG__REDIRECTIO $(CXXOPT) \
+                -I$(ROOTSYS)/include --diag_suppress 426 $(EXTRA_CXXFLAGS) \
+		
 CINTCFLAGS    = $(ABI) -signed -w -DG__REGEXP1 -DG__UNIX -DG__SHAREDLIB \
-                -DG__OSFDLL -DG__SIGNEDCHAR -DG__ROOT -DG__REDIRECTIO
+                -DG__OSFDLL -DG__SIGNEDCHAR -DG__ROOT -DG__REDIRECTIO \
+                -D__KCC -I$(ROOTSYS)/include $(EXTRA_CFLAGS)
+
+ifeq (exception,$(findstring exception,$(ROOTBUILD)))
+CINTCFLAGS   += -DG__EXCEPTIONWRAPPER
+endif
+
 LD            = KCC
-LDFLAGS       = $(OPT) $(ABI) $(EXCEPTION)
+LDFLAGS       = $(OPT) $(CXXOPT) $(ABI) $(EXCEPTION) $(EXTRA_LDFLAGS)
+AR            = KCC
+ARFLAGS       = $(OPT) $(CXXOPT) $(ABI) $(EXCEPTION)
 SOFLAGS       =
 SOEXT         = so
 SYSLIBS       = -lm -ldl
-SYSXLIBS      = -lX11 -lm -lPW -ldl
-XLIBS         = $(ROOTSYS)/lib/libXpm.a -lX11
-CILIBS        = -lm -ltermcap -lbsd -ldl
+XLIBS         = ../lib/libXpm.a -lX11
+CILIBS        = -lm -ltermcap -lbsd -ldl -lgen
 CRYPTLIBS     = -lcrypt
 F77           = f77
 F77FLAGS      = $(OPT) $(ABI)
+ifeq (n32,$(findstring n32,$(ROOTBUILD)))
+F77LIBS       = -lftn
+else
 F77LIBS       = -lI77 -lU77 -lF77 -lisam
+endif
 
-VPATH         = $(ROOTSYS)/include
+VPATH         = ../include
 
 ##### MACROS and TARGETS #####
 
@@ -70,4 +96,6 @@ include Make-macros
 ##### DEPENDENCIES #####
 
 include Make-depend
+
+# DO NOT DELETE
 

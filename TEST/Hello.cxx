@@ -1,3 +1,4 @@
+//*CMZ :  2.23/02 02/09/99  15.54.29  by  Rene Brun
 //*CMZ :  2.00/12 04/10/98  18.10.08  by  Fons Rademakers
 //*-- Author :    Valeriy Onuchin & Fons Rademakers   04/10/98
 
@@ -49,7 +50,7 @@ Float_t TChar::GetWidth()
    if (!gPad) return 0;
 
    Float_t wh = (Float_t)gPad->XtoPixel(gPad->GetX2());
-   gGXW->GetTextExtent(w, h, (char*)GetTitle());
+   gVirtualX->GetTextExtent(w, h, (char*)GetTitle());
    return  w/wh;
 }
 

@@ -1,29 +1,24 @@
+//*CMZ :  2.23/09 19/11/99  13.08.04  by  Fons Rademakers
+//*CMZ :  2.23/07 23/10/99  12.06.34  by  Fons Rademakers
+//*CMZ :  2.23/05 19/10/99  17.29.46  by  Fons Rademakers
+//*CMZ :  2.23/04 12/10/99  12.39.21  by  Fons Rademakers
+//*CMZ :  2.23/03 16/09/99  14.12.33  by  Rene Brun
 //*CMZ :  2.21/05 09/02/99  11.46.45  by  Rene Brun
 //*CMZ :  2.21/04 02/02/99  17.49.32  by  Rene Brun
 //*CMZ :  2.21/01 14/01/99  13.35.40  by  Fons Rademakers
-//*CMZ :  2.20/00 25/11/98  18.30.31  by  Fons Rademakers
-//*CMZ :  2.00/13 16/10/98  12.40.04  by  Valery Fine(fine@mail.cern.ch)
-//*CMZ :  2.00/11 26/08/98  12.31.36  by  Valery Fine(fine@mail.cern.ch)
-//*CMZ :  2.00/09 25/06/98  18.15.39  by  Valery Fine(fine@mail.cern.ch)
-//*CMZ :  1.03/09 16/12/97  16.48.08  by  Rene Brun
 //*-- Author :    Fons Rademakers   15/09/95
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -33,6 +28,10 @@
 // Class providing an interface to the Windows NT/Windows 95 Operating Systems. //
 //                                                                              //
 //////////////////////////////////////////////////////////////////////////////////
+
+#ifdef HAVE_CONFIG
+#include "config.h"
+#endif
 
 #include "Windows4Root.h"
 #include "TWinNTSystem.h"
@@ -48,6 +47,7 @@
 #include "TWin32HookViaThread.h"
 #include "TWin32Timer.h"
 #include "TSocket.h"
+#include "TApplication.h"
 
 #include "Win32Constants.h"
 
@@ -268,9 +268,13 @@ Bool_t TWinNTSystem::Init()
    fReadmask.Zero();
    fWritemask.Zero();
 
+#ifndef ROOTPREFIX
    gRootDir = Getenv("ROOTSYS");
    if (gRootDir == 0)
       gRootDir= "/usr/local/root";
+#else
+   gRootDir= ROOTPREFIX;
+#endif
 
 //*-*  The the name of the DLL to be used as a stock of the icon
    SetShellName();
@@ -395,7 +399,12 @@ void TWinNTSystem::CreateInspectView(TObject *obj)
 //*-*  Note: It would be better to use TINspectViewImp directly rather that via
 //*-*  TCanvasImp class
 
+    if (gROOT->IsBatch() || !gApplication) return;
+
+    //would be better to go via CINT. Should have TWin32InspectImp in dictionary
     TWin32InspectImp *inspview = new TWin32InspectImp(obj,"Inspector", (UInt_t)400,(UInt_t)200);
+
+//    gROOT->ProcessLineFast(Form("new TWin32InspectImp(0x%lx,\"Inspector\", (UInt_t)400,(UInt_t)200);", (Long_t) obj));
 }
 
 //______________________________________________________________________________
@@ -516,9 +525,9 @@ const char *TWinNTSystem::GetError()
 
   // GetLastError Could ne introduced in here
 
-   if (errno < 0 || errno >= sys_nerr)
-      return Form("errno out of range %d", errno);
-   return sys_errlist[errno];
+   if (GetErrno() < 0 || GetErrno() >= sys_nerr)
+      return Form("errno out of range %d", GetErrno());
+   return sys_errlist[GetErrno()];
 }
 
 //______________________________________________________________________________
@@ -1033,7 +1042,7 @@ Bool_t TWinNTSystem::AccessPathName(const char *path, EAccessMode mode)
 
    if (::_access(path, mode) == 0)
       return kFALSE;
-   fLastErrorString = sys_errlist[errno];
+   fLastErrorString = sys_errlist[GetErrno()];
    return kTRUE;
 }
 
@@ -1068,7 +1077,7 @@ void TWinNTSystem::Rename(const char *f, const char *t)
    // Rename a file.
 
    ::rename(f, t);
-   fLastErrorString = sys_errlist[errno];
+   fLastErrorString = sys_errlist[GetErrno()];
 }
 
 //______________________________________________________________________________
@@ -1328,21 +1337,23 @@ char *TWinNTSystem::Which(const char *search, const char *infile, EAccessMode mo
    return found;
 }
 
-#ifdef NOCINT
 //______________________________________________________________________________
-int TWinNTSystem::Load(const char *module, const char *entry)
+int TWinNTSystem::Load(const char *module, const char *entry, Bool_t system)
 {
    // Load a shared library. On successful loading return 0.
 
+#ifdef NOCINT
    int i = WinNTDynLoad(module);
    if (!entry || !strlen(entry)) return i;
 
    Func_t f = WinNTDynFindSymbol(module, entry);
    if (f) return 0;
    return 1;
+#else
+   return TSystem::Load(module, entry, system);
+#endif
 }
 
-#endif
 
 //______________________________________________________________________________
 char *TWinNTSystem::DynamicPathName(const char *lib, Bool_t quiet)
@@ -1417,7 +1428,13 @@ void TWinNTSystem::Unload(const char *module)
 {
    // Unload a shared library.
 
+#ifdef NOCINT
    WinNTDynUnload(module);
+#else
+   if (module) { }
+   // should call CINT unload file here, but does not work for sl's yet.
+   Warning("Unload", "CINT does not support unloading shared libs");
+#endif
 }
 
 //______________________________________________________________________________
@@ -1433,7 +1450,8 @@ void TWinNTSystem::ListLibraries(const char *regexp)
 {
    // List all loaded shared libraries.
 
-   WinNTDynListLibs(regexp);
+   //WinNTDynListLibs(regexp);
+   TSystem::ListLibraries(regexp);
 }
 
 //---- Time & Date -------------------------------------------------------------
@@ -1652,15 +1670,15 @@ TInetAddress TWinNTSystem::GetHostByName(const char *hostname)
    int             type;
    UInt_t          addr;    // good for 4 byte addresses
 
-
-
-   if (!(addr = inet_addr(hostname) == INADDR_NONE)) {
+   if ((addr = inet_addr(hostname)) != INADDR_NONE) {
       if ((host_ptr = gethostbyaddr((const char *)&addr,
-                                    sizeof(addr), AF_INET)))
+                                    sizeof(addr), AF_INET))) {
          host = host_ptr->h_name;
-      else
-         host = hostname;
-      type = AF_INET;
+         type = AF_INET;
+      } else {
+         if (gDebug > 0) Error("GetHostByName", "unknown host %s", hostname);
+         return TInetAddress("UnknownHost", ntohl(addr), -1);
+      }
    } else if ((host_ptr = gethostbyname(hostname))) {
       // Check the address type for an internet host
       if (host_ptr->h_addrtype != AF_INET) {
@@ -1671,8 +1689,8 @@ TInetAddress TWinNTSystem::GetHostByName(const char *hostname)
       host = host_ptr->h_name;
       type = host_ptr->h_addrtype;
    } else {
-      Error("GetHostByName", "unknown host %s", hostname);
-      return TInetAddress();
+      if (gDebug > 0) Error("GetHostByName", "unknown host %s", hostname);
+      return TInetAddress(hostname, 0, -1);
    }
 
    return TInetAddress(host, ntohl(addr), type);
@@ -1769,7 +1787,7 @@ void      TWinNTSystem::CloseConnection(int socket)
 #endif
 
    while (::closesocket(sock) == SOCKET_ERROR && WSAGetLastError() == WSAEINTR)
-   errno = 0;
+   ResetErrno();
 }
 //______________________________________________________________________________
 int TWinNTSystem::RecvBuf(int sock, void *buf, int length)
@@ -2089,7 +2107,7 @@ int TWinNTSystem::AcceptConnection(int socket)
    SOCKET sock = socket;
 
    while ((soc = ::accept(sock, 0, 0)) == INVALID_SOCKET && WSAGetLastError() == WSAEINTR)
-      errno = 0;
+      ResetErrno();
 
    if (soc == -1) {
       if (WSAGetLastError() == WSAEWOULDBLOCK)
@@ -2243,7 +2261,7 @@ int TWinNTSystem::WinNTSelect(UInt_t nfds, TFdSet *readready, TFdSet *writeready
    }
    if (retcode == SOCKET_ERROR) {
       if (WSAGetLastError() == WSAEINTR) {
-         errno = 0;  // errno is not self reseting
+         ResetErrno();  // errno is not self reseting
          return -2;
       }
       if (WSAGetLastError() == EBADF)

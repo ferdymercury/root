@@ -1,3 +1,4 @@
+//*CMZ :  2.23/12 26/01/2000  09.24.07  by  Rene Brun
 //*CMZ :  1.00/09 21/04/97  16.43.26  by  Fons Rademakers
 //*-- Author :    Rene Brun   14/04/97
 
@@ -20,8 +21,8 @@ class TCut : public TNamed {
 
 public:
    TCut();
-   TCut(const Text_t *title);
-   TCut(const Text_t *name, const Text_t *title);
+   TCut(const char *title);
+   TCut(const char *name, const char *title);
    TCut(const TCut &cut);
    virtual ~TCut();
 

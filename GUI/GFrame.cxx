@@ -1,29 +1,20 @@
+//*CMZ :  2.23/03 22/09/99  18.15.23  by  Fons Rademakers
 //*CMZ :  2.21/06 15/02/99  15.31.41  by  Fons Rademakers
 //*CMZ :  2.21/04 03/02/99  10.35.20  by  Fons Rademakers
 //*CMZ :  2.20/05 13/12/98  17.48.50  by  Rene Brun
-//*CMZ :  2.20/00 02/11/98  18.09.31  by  Fons Rademakers
-//*CMZ :  2.00/13 28/10/98  12.45.09  by  Fons Rademakers
-//*CMZ :  2.00/12 05/09/98  18.39.15  by  Fons Rademakers
-//*CMZ :  2.00/07 17/05/98  15.10.34  by  Fons Rademakers
-//*CMZ :  2.00/00 21/02/98  13.54.58  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   03/01/98
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 //*CMZ :  2.00/00 16/02/98  00.17.08  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   27/12/97
@@ -82,6 +73,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 #include "TGFrame.h"
+#include "TGPicture.h"
 #include "TList.h"
 #include "TApplication.h"
 
@@ -91,6 +83,8 @@ UInt_t   TGFrame::fgLastButton = 0;
 UInt_t   TGFrame::fgDbx = 0;
 UInt_t   TGFrame::fgDby = 0;
 Window_t TGFrame::fgDbw = 0;
+
+TGLayoutHints *TGCompositeFrame::fgDefaultHints = new TGLayoutHints;
 
 
 ClassImp(TGFrame)
@@ -120,7 +114,7 @@ TGFrame::TGFrame(const TGWindow *p, UInt_t w, UInt_t h,
    wattr.fMask = kWABackPixel | kWAEventMask;
    wattr.fBackgroundPixel = back;
    wattr.fEventMask = kExposureMask;
-   gGXW->ChangeWindowAttributes(fId, &wattr);
+   gVirtualX->ChangeWindowAttributes(fId, &wattr);
 }
 
 //______________________________________________________________________________
@@ -129,10 +123,10 @@ TGFrame::TGFrame(TGClient *c, Window_t id, const TGWindow *parent)
 {
    // Create a frame using an externally created window. For example
    // to register the root window (called by TGClient), or a window
-   // created via TGXW::InitWindow() (id is obtained with TGXW::GetWindowID()).
+   // created via TVirtualX::InitWindow() (id is obtained with TVirtualX::GetWindowID()).
 
    WindowAttributes_t attributes;
-   gGXW->GetWindowAttributes(id, attributes);
+   gVirtualX->GetWindowAttributes(id, attributes);
 
    fX           = attributes.fX;
    fY           = attributes.fY;
@@ -149,7 +143,7 @@ void TGFrame::ChangeBackground(ULong_t back)
    // Change frame background color.
 
    fBackground = back;
-   gGXW->SetWindowBackground(fId, back);
+   gVirtualX->SetWindowBackground(fId, back);
 }
 
 //______________________________________________________________________________
@@ -175,41 +169,41 @@ void TGFrame::DrawBorder()
 
    switch (fOptions & (kSunkenFrame | kRaisedFrame | kDoubleBorder)) {
       case kSunkenFrame:
-         gGXW->DrawLine(fId, fgShadowGC,  0, 0, fWidth-2, 0);
-         gGXW->DrawLine(fId, fgShadowGC,  0, 0, 0, fHeight-2);
-         gGXW->DrawLine(fId, fgHilightGC, 0, fHeight-1, fWidth-1, fHeight-1);
-         gGXW->DrawLine(fId, fgHilightGC, fWidth-1, fHeight-1, fWidth-1, 0);
+         gVirtualX->DrawLine(fId, fgShadowGC,  0, 0, fWidth-2, 0);
+         gVirtualX->DrawLine(fId, fgShadowGC,  0, 0, 0, fHeight-2);
+         gVirtualX->DrawLine(fId, fgHilightGC, 0, fHeight-1, fWidth-1, fHeight-1);
+         gVirtualX->DrawLine(fId, fgHilightGC, fWidth-1, fHeight-1, fWidth-1, 0);
          break;
 
       case kSunkenFrame | kDoubleBorder:
-         gGXW->DrawLine(fId, fgBlackGC,  0, 0, fWidth-1, 0);
-         gGXW->DrawLine(fId, fgBlackGC,  0, 0, 0, fHeight-1);
-         gGXW->DrawLine(fId, fgShadowGC, 1, 1, fWidth-3, 1);
-         gGXW->DrawLine(fId, fgShadowGC, 1, 1, 1, fHeight-3);
+         gVirtualX->DrawLine(fId, fgBlackGC,  0, 0, fWidth-1, 0);
+         gVirtualX->DrawLine(fId, fgBlackGC,  0, 0, 0, fHeight-1);
+         gVirtualX->DrawLine(fId, fgShadowGC, 1, 1, fWidth-3, 1);
+         gVirtualX->DrawLine(fId, fgShadowGC, 1, 1, 1, fHeight-3);
 
-         gGXW->DrawLine(fId, fgHilightGC, 1, fHeight-1, fWidth-1, fHeight-1);
-         gGXW->DrawLine(fId, fgHilightGC, fWidth-1, fHeight-1, fWidth-1, 1);
-         gGXW->DrawLine(fId, fgBckgndGC,  2, fHeight-2, fWidth-2, fHeight-2);
-         gGXW->DrawLine(fId, fgBckgndGC,  fWidth-2, 2, fWidth-2, fHeight-2);
+         gVirtualX->DrawLine(fId, fgHilightGC, 1, fHeight-1, fWidth-1, fHeight-1);
+         gVirtualX->DrawLine(fId, fgHilightGC, fWidth-1, fHeight-1, fWidth-1, 1);
+         gVirtualX->DrawLine(fId, fgBckgndGC,  2, fHeight-2, fWidth-2, fHeight-2);
+         gVirtualX->DrawLine(fId, fgBckgndGC,  fWidth-2, 2, fWidth-2, fHeight-2);
          break;
 
       case kRaisedFrame:
-         gGXW->DrawLine(fId, fgHilightGC, 0, 0, fWidth-2, 0);
-         gGXW->DrawLine(fId, fgHilightGC, 0, 0, 0, fHeight-2);
-         gGXW->DrawLine(fId, fgShadowGC,  0, fHeight-1, fWidth-1, fHeight-1);
-         gGXW->DrawLine(fId, fgShadowGC,  fWidth-1, fHeight-1, fWidth-1, 0);
+         gVirtualX->DrawLine(fId, fgHilightGC, 0, 0, fWidth-2, 0);
+         gVirtualX->DrawLine(fId, fgHilightGC, 0, 0, 0, fHeight-2);
+         gVirtualX->DrawLine(fId, fgShadowGC,  0, fHeight-1, fWidth-1, fHeight-1);
+         gVirtualX->DrawLine(fId, fgShadowGC,  fWidth-1, fHeight-1, fWidth-1, 0);
          break;
 
       case kRaisedFrame | kDoubleBorder:
-         gGXW->DrawLine(fId, fgHilightGC, 0, 0, fWidth-2, 0);
-         gGXW->DrawLine(fId, fgHilightGC, 0, 0, 0, fHeight-2);
-         gGXW->DrawLine(fId, fgBckgndGC,  1, 1, fWidth-3, 1);
-         gGXW->DrawLine(fId, fgBckgndGC,  1, 1, 1, fHeight-3);
+         gVirtualX->DrawLine(fId, fgHilightGC, 0, 0, fWidth-2, 0);
+         gVirtualX->DrawLine(fId, fgHilightGC, 0, 0, 0, fHeight-2);
+         gVirtualX->DrawLine(fId, fgBckgndGC,  1, 1, fWidth-3, 1);
+         gVirtualX->DrawLine(fId, fgBckgndGC,  1, 1, 1, fHeight-3);
 
-         gGXW->DrawLine(fId, fgShadowGC,  1, fHeight-2, fWidth-2, fHeight-2);
-         gGXW->DrawLine(fId, fgShadowGC,  fWidth-2, fHeight-2, fWidth-2, 1);
-         gGXW->DrawLine(fId, fgBlackGC,   0, fHeight-1, fWidth-1, fHeight-1);
-         gGXW->DrawLine(fId, fgBlackGC,   fWidth-1, fHeight-1, fWidth-1, 0);
+         gVirtualX->DrawLine(fId, fgShadowGC,  1, fHeight-2, fWidth-2, fHeight-2);
+         gVirtualX->DrawLine(fId, fgShadowGC,  fWidth-2, fHeight-2, fWidth-2, 1);
+         gVirtualX->DrawLine(fId, fgBlackGC,   0, fHeight-1, fWidth-1, fHeight-1);
+         gVirtualX->DrawLine(fId, fgBlackGC,   fWidth-1, fHeight-1, fWidth-1, 0);
          break;
 
       default:
@@ -222,7 +216,7 @@ void TGFrame::DoRedraw()
 {
    // Redraw the frame.
 
-   gGXW->ClearArea(fId, fBorderWidth, fBorderWidth,
+   gVirtualX->ClearArea(fId, fBorderWidth, fBorderWidth,
                    fWidth - (fBorderWidth << 1), fHeight - (fBorderWidth << 1));
 
    // border will only be drawn if we have a 3D option hint
@@ -256,7 +250,7 @@ Bool_t TGFrame::HandleEvent(Event_t *event)
          break;
 
       case kConfigureNotify:
-         while (gGXW->CheckEvent(fId, kConfigureNotify, *event))
+         while (gVirtualX->CheckEvent(fId, kConfigureNotify, *event))
             ;
          HandleConfigureNotify(event);
          break;
@@ -306,7 +300,7 @@ Bool_t TGFrame::HandleEvent(Event_t *event)
          break;
 
       case kMotionNotify:
-         while (gGXW->CheckEvent(fId, kMotionNotify, *event))
+         while (gVirtualX->CheckEvent(fId, kMotionNotify, *event))
             ;
          HandleMotion(event);
          break;
@@ -397,7 +391,7 @@ void TGFrame::SendMessage(const TGWindow *w, Long_t msg, Long_t parm1, Long_t pa
       event.fUser[3] = 0;
       event.fUser[4] = 0;
 
-      gGXW->SendEvent(w->GetId(), &event);
+      gVirtualX->SendEvent(w->GetId(), &event);
    }
 }
 
@@ -470,7 +464,7 @@ TGCompositeFrame::TGCompositeFrame(const TGWindow *p, UInt_t w, UInt_t h,
    wattr.fEventMask = kExposureMask;
    if (fOptions & kMainFrame)
       wattr.fEventMask |= kStructureNotifyMask;
-   gGXW->ChangeWindowAttributes(fId, &wattr);
+   gVirtualX->ChangeWindowAttributes(fId, &wattr);
 }
 
 //______________________________________________________________________________
@@ -479,7 +473,7 @@ TGCompositeFrame::TGCompositeFrame(TGClient *c, Window_t id, const TGWindow *par
 {
    // Create a frame using an externally created window. For example
    // to register the root window (called by TGClient), or a window
-   // created via TGXW::InitWindow() (id is obtained with TGXW::GetWindowID()).
+   // created via TVirtualX::InitWindow() (id is obtained with TVirtualX::GetWindowID()).
 
    fLayoutManager = 0;
    fList          = new TList;
@@ -527,13 +521,17 @@ void TGCompositeFrame::ChangeOptions(UInt_t options)
 //______________________________________________________________________________
 void TGCompositeFrame::AddFrame(TGFrame *f, TGLayoutHints *l)
 {
-   // Add frame to the composite frame.
+   // Add frame to the composite frame using the specified layout hints.
+   // If no hints are specified default hints TGLayoutHints(kLHintsNormal,0,0,0,0)
+   // will be used. Most of the time, however, you will want to provide
+   // specific hints. User specified hints can be reused many times
+   // and need to be destoyed by the user.
 
    TGFrameElement *nw;
 
    nw = new TGFrameElement;
    nw->fFrame  = f;
-   nw->fLayout = l;
+   nw->fLayout = l ? l : fgDefaultHints;
    nw->fState  = 1;
    fList->Add(nw);
 }
@@ -686,7 +684,7 @@ TGMainFrame::TGMainFrame(const TGWindow *p, UInt_t w, UInt_t h,
 
    // WMDeleteNotify causes the system to send a kClientMessage to the
    // window with fFormat=32 and fUser[0]=gWM_DELETE_WINDOW.
-   gGXW->WMDeleteNotify(fId);
+   gVirtualX->WMDeleteNotify(fId);
 
    fBindList = new TList;
 }
@@ -709,9 +707,9 @@ Bool_t TGMainFrame::HandleKey(Event_t *event)
    // Handle keyboard events.
 
    if (event->fType == kGKeyPress)
-      gGXW->SetKeyAutoRepeat(kFALSE);
+      gVirtualX->SetKeyAutoRepeat(kFALSE);
    else
-      gGXW->SetKeyAutoRepeat(kTRUE);
+      gVirtualX->SetKeyAutoRepeat(kTRUE);
 
    if (!fBindList) return kFALSE;
 
@@ -736,7 +734,7 @@ Bool_t TGMainFrame::BindKey(const TGWindow *w, Int_t keycode, Int_t modifier) co
    if (fBindList) {
       TGMapKey *m = new TGMapKey(keycode, (TGWindow *)w);
       fBindList->Add(m);
-      gGXW->GrabKey(fId, keycode, modifier, kTRUE);
+      gVirtualX->GrabKey(fId, keycode, modifier, kTRUE);
       return kTRUE;
    }
    return kFALSE;
@@ -754,7 +752,7 @@ void TGMainFrame::RemoveBind(const TGWindow *, Int_t keycode, Int_t modifier) co
          if (m->fKeyCode == (UInt_t) keycode) {
             fBindList->Remove(m);
             delete m;
-            gGXW->GrabKey(fId, keycode, modifier, kFALSE);
+            gVirtualX->GrabKey(fId, keycode, modifier, kFALSE);
             return;
          }
       }
@@ -788,7 +786,7 @@ void TGMainFrame::SetWindowName(const char *name)
 {
    // Set window name. This is typically done via the window manager.
 
-   gGXW->SetWindowName(fId, (char *)name);
+   gVirtualX->SetWindowName(fId, (char *)name);
 }
 
 //______________________________________________________________________________
@@ -796,7 +794,20 @@ void TGMainFrame::SetIconName(const char *name)
 {
    // Set window icon name. This is typically done via the window manager.
 
-   gGXW->SetIconName(fId, (char *)name);
+   gVirtualX->SetIconName(fId, (char *)name);
+}
+
+//______________________________________________________________________________
+void TGMainFrame::SetIconPixmap(const char *iconName)
+{
+   // Set window icon pixmap by name. This is typically done via the window
+   // manager.
+
+   const TGPicture *iconPic = fClient->GetPicture(iconName);
+   if (iconPic) {
+      Pixmap_t pic = iconPic->GetPicture();
+      gVirtualX->SetIconPixmap(fId, pic);
+   }
 }
 
 //______________________________________________________________________________
@@ -806,7 +817,7 @@ void TGMainFrame::SetClassHints(const char *className, const char *resourceName)
    // resources from the resource database. However, ROOT applications
    // will typically use the .rootrc file for this.
 
-   gGXW->SetClassHints(fId, (char *)className, (char *)resourceName);
+   gVirtualX->SetClassHints(fId, (char *)className, (char *)resourceName);
 }
 
 //______________________________________________________________________________
@@ -814,7 +825,7 @@ void TGMainFrame::SetMWMHints(UInt_t value, UInt_t funcs, UInt_t input)
 {
    // Set decoration style for MWM-compatible wm (mwm, ncdwm, fvwm?).
 
-   gGXW->SetMWMHints(fId, value, funcs, input);
+   gVirtualX->SetMWMHints(fId, value, funcs, input);
 }
 
 //______________________________________________________________________________
@@ -822,7 +833,7 @@ void TGMainFrame::SetWMPosition(Int_t x, Int_t y)
 {
    // Give the window manager a window position hint.
 
-   gGXW->SetWMPosition(fId, x, y);
+   gVirtualX->SetWMPosition(fId, x, y);
 }
 
 //______________________________________________________________________________
@@ -830,7 +841,7 @@ void TGMainFrame::SetWMSize(UInt_t w, UInt_t h)
 {
    // Give the window manager a window size hint.
 
-   gGXW->SetWMSize(fId, w, h);
+   gVirtualX->SetWMSize(fId, w, h);
 }
 
 //______________________________________________________________________________
@@ -841,7 +852,7 @@ void TGMainFrame::SetWMSizeHints(UInt_t wmin, UInt_t hmin,
    // Give the window manager minimum and maximum size hints. Also
    // specify via winc and hinc the resize increments.
 
-   gGXW->SetWMSizeHints(fId, wmin, hmin, wmax, hmax, winc, hinc);
+   gVirtualX->SetWMSizeHints(fId, wmin, hmin, wmax, hmax, winc, hinc);
 }
 
 //______________________________________________________________________________
@@ -849,7 +860,7 @@ void TGMainFrame::SetWMState(EInitialState state)
 {
    // Set the initial state of the window. Either kNormalState or kIconicState.
 
-   gGXW->SetWMState(fId, state);
+   gVirtualX->SetWMState(fId, state);
 }
 
 //______________________________________________________________________________
@@ -862,7 +873,7 @@ TGTransientFrame::TGTransientFrame(const TGWindow *p, const TGWindow *main,
    fMain = main;
 
    if (fMain)
-      gGXW->SetWMTransientHint(fId, fMain->GetId());
+      gVirtualX->SetWMTransientHint(fId, fMain->GetId());
 }
 
 //______________________________________________________________________________
@@ -887,7 +898,7 @@ TGGroupFrame::TGGroupFrame(const TGWindow *p, TGString *title,
    fNormGC     = norm;
 
    int max_ascent, max_descent;
-   gGXW->GetFontProperties(fFontStruct, max_ascent, max_descent);
+   gVirtualX->GetFontProperties(fFontStruct, max_ascent, max_descent);
    fBorderWidth = max_ascent + max_descent + 1;
 }
 
@@ -904,7 +915,7 @@ TGGroupFrame::TGGroupFrame(const TGWindow *p, const char *title,
    fNormGC     = norm;
 
    int max_ascent, max_descent;
-   gGXW->GetFontProperties(fFontStruct, max_ascent, max_descent);
+   gVirtualX->GetFontProperties(fFontStruct, max_ascent, max_descent);
    fBorderWidth = max_ascent + max_descent + 1;
 }
 
@@ -923,8 +934,8 @@ void TGGroupFrame::DrawBorder()
 
    int x, y, tw, l, t, r, b, gl, gr, sep, max_ascent, max_descent;
 
-   tw = gGXW->TextWidth(fFontStruct, fText->GetString(), fText->GetLength());
-   gGXW->GetFontProperties(fFontStruct, max_ascent, max_descent);
+   tw = gVirtualX->TextWidth(fFontStruct, fText->GetString(), fText->GetLength());
+   gVirtualX->GetFontProperties(fFontStruct, max_ascent, max_descent);
 
    l = 0;
    t = (max_ascent + max_descent + 2) >> 1;
@@ -935,19 +946,19 @@ void TGGroupFrame::DrawBorder()
    gl = 5 + sep;
    gr = gl + tw + (sep << 1);
 
-   gGXW->DrawLine(fId, fgShadowGC,  l,   t,   gl,  t);
-   gGXW->DrawLine(fId, fgHilightGC, l+1, t+1, gl,  t+1);
-   gGXW->DrawLine(fId, fgShadowGC,  gr,  t,   r-1, t);
-   gGXW->DrawLine(fId, fgHilightGC, gr,  t+1, r-2, t+1);
+   gVirtualX->DrawLine(fId, fgShadowGC,  l,   t,   gl,  t);
+   gVirtualX->DrawLine(fId, fgHilightGC, l+1, t+1, gl,  t+1);
+   gVirtualX->DrawLine(fId, fgShadowGC,  gr,  t,   r-1, t);
+   gVirtualX->DrawLine(fId, fgHilightGC, gr,  t+1, r-2, t+1);
 
-   gGXW->DrawLine(fId, fgShadowGC,  r-1, t,   r-1, b-1);
-   gGXW->DrawLine(fId, fgHilightGC, r,   t,   r,   b);
+   gVirtualX->DrawLine(fId, fgShadowGC,  r-1, t,   r-1, b-1);
+   gVirtualX->DrawLine(fId, fgHilightGC, r,   t,   r,   b);
 
-   gGXW->DrawLine(fId, fgShadowGC,  r-1, b-1, l,   b-1);
-   gGXW->DrawLine(fId, fgHilightGC, r,   b,   l,   b);
+   gVirtualX->DrawLine(fId, fgShadowGC,  r-1, b-1, l,   b-1);
+   gVirtualX->DrawLine(fId, fgHilightGC, r,   b,   l,   b);
 
-   gGXW->DrawLine(fId, fgShadowGC,  l,   b-1, l,   t);
-   gGXW->DrawLine(fId, fgHilightGC, l+1, b-2, l+1, t+1);
+   gVirtualX->DrawLine(fId, fgShadowGC,  l,   b-1, l,   t);
+   gVirtualX->DrawLine(fId, fgHilightGC, l+1, b-2, l+1, t+1);
 
    x = gl + sep;
    y = 1;

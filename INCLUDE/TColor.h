@@ -1,3 +1,5 @@
+//*CMZ :  2.23/02 03/09/99  12.08.13  by  Rene Brun
+//*CMZ :  2.23/01 26/08/99  11.46.30  by  Rene Brun
 //*CMZ :  2.00/00 16/01/98  13.17.46  by  Fons Rademakers
 //*CMZ :  0.90/08 02/12/96  11.29.17  by  Rene Brun
 //*-- Author :    Rene Brun   08/12/94
@@ -5,22 +7,17 @@
 #ifndef ROOT_TColor
 #define ROOT_TColor
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -48,7 +45,7 @@ private:
 
 public:
    TColor();
-   TColor(Int_t color, Float_t r, Float_t g, Float_t b, Text_t *name="");
+   TColor(Int_t color, Float_t r, Float_t g, Float_t b, const char *name="");
    TColor(const TColor &color);
    virtual ~TColor();
            void  Copy(TObject &color);
@@ -68,8 +65,6 @@ public:
    virtual void  RGBtoHLS(Float_t r, Float_t g, Float_t b, Float_t &h, Float_t &l, Float_t &s);
    virtual void  SetNumber(Int_t number) {fNumber = number;}
    virtual void  SetRGB(Float_t r, Float_t g, Float_t b);
-
-   static void   DisplayColorTable();
 
    ClassDef(TColor,1)  //Color defined by RGB or HLS
 };

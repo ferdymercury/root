@@ -1,27 +1,21 @@
+//*CMZ :  2.23/09 10/11/99  19.11.55  by  Fons Rademakers
+//*CMZ :  2.23/02 02/09/99  15.54.28  by  Rene Brun
 //*CMZ :  2.22/02 26/05/99  13.49.18  by  Fons Rademakers
 //*CMZ :  2.21/06 12/02/99  08.12.46  by  Rene Brun
 //*CMZ :  2.21/04 26/01/99  11.54.22  by  Fons Rademakers
-//*CMZ :  2.21/01 11/01/99  10.58.43  by  Fons Rademakers
-//*CMZ :  2.20/04 11/12/98  18.29.22  by  Fons Rademakers
-//*CMZ :  2.20/01 02/12/98  18.00.27  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   21/11/98
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -31,10 +25,14 @@
 // Interface to low level X11 (Xlib). This class gives access to basic  //
 // X11 graphics via the parent class TGX11. However, all text and font  //
 // handling is done via the Freetype TrueType library. When the         //
-// shared library containing this class is loaded the global gGXW is    //
+// shared library containing this class is loaded the global gVirtualX is    //
 // redirected to point to this class.                                   //
 //                                                                      //
 //////////////////////////////////////////////////////////////////////////
+
+#ifdef HAVE_CONFIG
+#include "config.h"
+#endif
 
 #include "TGX11TTF.h"
 #include "TSystem.h"
@@ -56,7 +54,7 @@ const Float_t kScale = 0.7;
 //                                                                      //
 // TTFInit                                                              //
 //                                                                      //
-// Small utility class that takes care of switching the current gGXW    //
+// Small utility class that takes care of switching the current gVirtualX    //
 // to the new TGX11TTF class as soon as the shared library containing   //
 // this class is loaded.                                                //
 //                                                                      //
@@ -69,9 +67,9 @@ public:
 
 TTFInit::TTFInit()
 {
-   if (gGXW->IsA() == TGX11::Class()) {
-      TGX11 *oldg = (TGX11 *) gGXW;
-      gGXW = new TGX11TTF(*oldg);
+   if (gVirtualX->IsA() == TGX11::Class()) {
+      TGX11 *oldg = (TGX11 *) gVirtualX;
+      gVirtualX = new TGX11TTF(*oldg);
       delete oldg;
    }
 }
@@ -635,7 +633,14 @@ Int_t TGX11TTF::SetTextFont(char *fontname, ETextSetMode mode)
    }
 
    // try to load font (font must be in Root.TTFontPath resource)
-   const char *ttpath = gEnv->GetValue("Root.TTFontPath", "$(ROOTSYS)/ttf/fonts");
+#ifndef TTFFONTDIR
+   const char *ttpath = gEnv->GetValue("Root.TTFontPath",
+				       "$(ROOTSYS)/ttf/fonts");
+#else
+   const char *ttpath = gEnv->GetValue("Root.TTFontPath",
+                                       TTFFONTDIR );
+#endif
+
    char *ttfont = gSystem->Which(ttpath, fontname, kReadPermission);
 
    if (!ttfont) {
@@ -1216,26 +1221,32 @@ void TGX11TTF::DrawImage(TTChar *c, ULong_t fore, ULong_t back, XImage *xim,
       // the average of the rgb values of all pixels covered by this character
       if (back == (ULong_t) -1 && charlen) {
          ULong_t r, g, b;
-         Int_t   dots;
+         Int_t   dots, dotcnt;
+         const Int_t maxdots = 50000;
 
          dots = Int_t(charlen * c->fHeight);
+         dots = dots > maxdots ? maxdots : dots;
          bcol = new XColor[dots];
          if (!bcol) return;
          bc = bcol;
+         dotcnt = 0;
          for (y = 0; y < (int) c->fHeight; y++) {
             for (x = 0; x < (int) charlen; x++, bc++) {
                bc->pixel = XGetPixel(xim, bx + c->fXoff + x, by - c->fAscent + y);
                bc->flags = DoRed|DoGreen|DoBlue;
+               if (++dotcnt >= maxdots) break;
             }
          }
          XQueryColors(fDisplay, fColormap, bcol, dots);
          r = g = b = 0;
          bc = bcol;
+         dotcnt = 0;
          for (y = 0; y < (int) c->fHeight; y++) {
             for (x = 0; x < (int) charlen; x++, bc++) {
                r += bc->red;
                g += bc->green;
                b += bc->blue;
+               if (++dotcnt >= maxdots) break;
             }
          }
          r /= dots; g /= dots; b /= dots;
@@ -1249,6 +1260,7 @@ void TGX11TTF::DrawImage(TTChar *c, ULong_t fore, ULong_t back, XImage *xim,
             bc->blue  = (UShort_t) b;
          }
       }
+      delete [] bcol;
 
       // if fore or background have changed from previous character
       // recalculate the 3 smooting colors (interpolation between fore-
@@ -1275,7 +1287,6 @@ void TGX11TTF::DrawImage(TTChar *c, ULong_t fore, ULong_t back, XImage *xim,
             }
          }
       }
-      delete [] bcol;
 
       // put smoothed character, character pixmap values are an index
       // into the 5 colors used for aliasing (4 = foreground, 0 = background)

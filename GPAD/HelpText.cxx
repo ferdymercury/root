@@ -1,3 +1,4 @@
+//*CMZ :  2.23/09 24/11/99  22.44.15  by  Rene Brun
 //*CMZ :  2.21/07 02/03/99  16.03.20  by  Rene Brun
 //*CMZ :  2.21/06 10/02/99  17.20.18  by  Valery Fine(fine@vxcern.cern.ch)
 //*CMZ :  2.20/01 30/11/98  09.57.38  by  Rene Brun
@@ -147,6 +148,7 @@ You can create the following graphics objects:\n\
  -An arc of circle. Click on the center of the arc, then move the mouse.\n\
   A rubberband circle is shown. Click again with the left button to freeze\n\
   the arc.\n\n\
+ -A line segment. Click with the left button on the first and last point.\n\n\
  -An arrow. Click with the left button at the point where you want to start\n\
   the arrow, then move the mouse and click again with the left button\n\
   to freeze the arrow.\n\n\
@@ -171,13 +173,21 @@ You can create the following graphics objects:\n\
   the polyline by clicking twice at the same position.\n\
   To edit one vertex point, pick it with the left button and drag to the \n\
   new point position.\n\n\
- -A Text string. Click with the left button where you want to draw the text, \n\
+ -A Curly/Wavy line. Click with the left button on the first and last point.\n\
+  You can use the context menu to set the wavelength or amplitude.\n\n\
+ -A Curly/Wavy arc. Click with the left button on the arc center and click again\n\
+  to stop at the arc radius.\n\n\
+  You can use the context menu to set the wavelength or amplitude.\n\
+  You can use the context menu to set the phimin and phimax.\n\n\
+ -A Text/Latex string. Click with the left button where you want to draw the text, \n\
   then type the text terminated by carriage return. To move the text, point\n\
   on it keeping the left mouse button pressed and drag the text to its new \n\
   position. You can grow/shrink the text if you position the mouse to the first\n\
   top-third part of the string, then move the mouse up or down to grow or \n\
   shrink the text respectively. If you position near the bottom-end of the text,\n\
   you can rotate it.\n\n\
+ - A Marker. Click with the left button where to place the marker.\n\
+  The marker by default can be modified by gStyle->SetMarkerStyle().\n\n\
  -A Graphical Cut. Click with the left button on each point of a polygone\n\
   delimiting the selected area. Close the cut by clicking twice at the\n\
   same position. A TCutG object is created. It can be used\n\

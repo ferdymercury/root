@@ -1,33 +1,21 @@
+//*CMZ :  2.23/04 08/10/99  17.39.59  by  Rene Brun
+//*CMZ :  2.23/03 15/09/99  11.18.05  by  Rene Brun
 //*CMZ :  2.22/08 07/07/99  11.44.39  by  Rene Brun
 //*CMZ :  2.22/06 17/06/99  21.18.30  by  Rene Brun
 //*CMZ :  2.22/03 31/05/99  09.06.17  by  Rene Brun
-//*CMZ :  2.22/02 27/05/99  16.44.20  by  Fons Rademakers
-//*CMZ :  2.21/07 02/03/99  19.01.11  by  Rene Brun
-//*CMZ :  2.21/04 28/01/99  16.35.40  by  Valery Fine(fine@mail.cern.ch)
-//*CMZ :  2.20/03 05/12/98  17.06.54  by  Rene Brun
-//*CMZ :  2.20/00 22/11/98  16.55.46  by  Rene Brun
-//*CMZ :  2.00/07 15/05/98  16.47.13  by  Rene Brun
-//*CMZ :  2.00/06 12/05/98  17.48.55  by  Fons Rademakers
-//*CMZ :  2.00/01 14/03/98  05.56.51  by  Fons Rademakers
-//*CMZ :  1.03/09 16/12/97  17.49.59  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   29/07/95
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -49,16 +37,6 @@
 
 
 ClassImp(TMath)
-
-//______________________________________________________________________________
-#if (defined(sun) && !defined(R__I386) && !defined(__SunOS_5_6)) || \
-    (defined(__OPTIMIZE__) && \
-     (__GNUC__ > 2 || (__GNUC__ == 2 && __GNUC_MINOR__ > 7)))
-   extern "C" void sincos(Double_t, Double_t*, Double_t*);
-#else
-   inline void sincos(Double_t a, Double_t *sinp, Double_t *cosp)
-      { *cosp = cos(a); *sinp = sin(a); }
-#endif
 
 //______________________________________________________________________________
 #if defined(R__MAC) || defined(R__KCC)
@@ -131,23 +109,6 @@ Double_t TMath::Floor(Double_t x)
 Double_t TMath::Log2(Double_t x)
 {
    return log(x)/log(2.0);
-}
-
-//______________________________________________________________________________
-Double_t TMath::Atan2(Long_t y, Long_t x)
-{
-   if (x == 0) return 90;
-   Double_t dd = (0.75 - (atan2(-(Double_t)y,(Double_t)x) / TMath::Pi() + 1.0)/2.0 ) * 360.0;
-   while (dd < 0.0)
-      dd += 360.0;
-   return dd;
-}
-
-//______________________________________________________________________________
-void TMath::Sincos(Double_t a, Double_t *sinp, Double_t *cosp)
-{
-   sincos(2 * TMath::Pi() * (90.0 - a) / 360.0, sinp, cosp);
-   *sinp = -*sinp;
 }
 
 //______________________________________________________________________________

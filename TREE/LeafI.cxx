@@ -1,27 +1,23 @@
-//*CMZ :  2.22/00 08/04/99  14.20.22  by  Rene Brun
+//*CMZ :  2.23/12 26/01/2000  09.45.01  by  Rene Brun
+//*CMZ :  2.23/11 11/01/2000  15.17.59  by  Rene Brun
+//*CMZ :  2.23/07 26/10/99  17.09.51  by  Rene Brun
+//*CMZ :  2.23/03 17/09/99  08.39.51  by  Rene Brun
+//*CMZ :  2.22/00 04/08/99  16.58.41  by  Rene Brun
 //*CMZ :  2.21/07 06/03/99  19.08.11  by  Rene Brun
 //*CMZ :  2.00/13 03/03/99  14.18.31  by  Rene Brun
-//*CMZ :  2.00/11 21/08/98  23.23.42  by  Rene Brun
-//*CMZ :  2.00/00 17/02/98  10.56.06  by  Rene Brun
-//*CMZ :  1.02/00 18/07/97  12.17.20  by  Rene Brun
 //*-- Author :    Rene Brun   12/01/96
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -44,13 +40,14 @@ TLeafI::TLeafI(): TLeaf()
 }
 
 //______________________________________________________________________________
-TLeafI::TLeafI(const Text_t *name, const Text_t *type)
+TLeafI::TLeafI(const char *name, const char *type)
        :TLeaf(name,type)
 {
 //*-*-*-*-*-*-*-*-*-*-*-*-*Create a LeafI*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 //*-*                      ==============
 //*-*
 
+   fLenType = 4;
    fMinimum = 0;
    fMaximum = 0;
    fValue   = 0;
@@ -102,7 +99,7 @@ void TLeafI::FillBasket(TBuffer &b)
 }
 
 //______________________________________________________________________________
-const Text_t *TLeafI::GetTypeName() const
+const char *TLeafI::GetTypeName() const
 {
 //*-*-*-*-*-*-*-*Returns name of leaf type*-*-*-*-*-*-*-*-*-*-*-*
 //*-*            =========================
@@ -113,7 +110,7 @@ const Text_t *TLeafI::GetTypeName() const
 
 
 //______________________________________________________________________________
-Float_t TLeafI::GetValue(Int_t i, TTreeFormula *)
+Float_t TLeafI::GetValue(Int_t i)
 {
 //*-*-*-*-*-*-*-*Returns current value of leaf*-*-*-*-*-*-*-*-*-*-*-*
 //*-*            =============================
@@ -170,6 +167,28 @@ void TLeafI::ReadBasket(TBuffer &b)
       } else {
          b.ReadFastArray(fValue,fLen);
       }
+   }
+}
+
+//______________________________________________________________________________
+void TLeafI::ReadBasketExport(TBuffer &b, TClonesArray *list, Int_t n)
+{
+//*-*-*-*-*-*-*-*-*-*-*Read leaf elements from Basket input buffer*-*-*-*-*-*
+//  and export buffer to TClonesArray objects
+
+   if (n*fLen == 1) {
+      b >> fValue[0];
+   } else {
+      b.ReadFastArray(fValue,n*fLen);
+   }
+   Int_t *value = fValue;
+   for (Int_t i=0;i<n;i++) {
+      char *first = (char*)list->UncheckedAt(i);
+      Int_t *ii = (Int_t*)&first[fOffset];
+      for (Int_t j=0;j<fLen;j++) {
+         ii[j] = value[j];
+      }
+      value += fLen;
    }
 }
 

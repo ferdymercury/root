@@ -1,23 +1,19 @@
+//*CMZ :  2.23/02 02/09/99  15.54.27  by  Rene Brun
 //*CMZ :  2.00/06 26/04/98  17.25.24  by  Fons Rademakers
 //*CMZ :  2.00/00 22/02/98  19.09.13  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   10/01/98
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 //*CMZ :  2.00/00 16/02/98  00.17.08  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   27/12/97
@@ -102,15 +98,15 @@ void TGScrollBarElement::DrawBorder()
 
    switch (fOptions & (kSunkenFrame | kRaisedFrame)) {
       case kSunkenFrame: // pressed
-         gGXW->DrawLine(fId, fgBlackGC, 0, 0, fWidth-2, 0);
-         gGXW->DrawLine(fId, fgBlackGC, 0, 0, 0, fHeight-2);
-         gGXW->DrawLine(fId, fgShadowGC,  1, 1, fWidth-3, 1);
-         gGXW->DrawLine(fId, fgShadowGC,  1, 1, 1, fHeight-3);
+         gVirtualX->DrawLine(fId, fgBlackGC, 0, 0, fWidth-2, 0);
+         gVirtualX->DrawLine(fId, fgBlackGC, 0, 0, 0, fHeight-2);
+         gVirtualX->DrawLine(fId, fgShadowGC,  1, 1, fWidth-3, 1);
+         gVirtualX->DrawLine(fId, fgShadowGC,  1, 1, 1, fHeight-3);
 
-         gGXW->DrawLine(fId, fgWhiteGC,  0, fHeight-1, fWidth-1, fHeight-1);
-         gGXW->DrawLine(fId, fgWhiteGC,  fWidth-1, fHeight-1, fWidth-1, 1);
-         gGXW->DrawLine(fId, fgBckgndGC,  1, fHeight-2, fWidth-2, fHeight-2);
-         gGXW->DrawLine(fId, fgBckgndGC,  fWidth-2, fHeight-2, fWidth-2, 2);
+         gVirtualX->DrawLine(fId, fgWhiteGC,  0, fHeight-1, fWidth-1, fHeight-1);
+         gVirtualX->DrawLine(fId, fgWhiteGC,  fWidth-1, fHeight-1, fWidth-1, 1);
+         gVirtualX->DrawLine(fId, fgBckgndGC,  1, fHeight-2, fWidth-2, fHeight-2);
+         gVirtualX->DrawLine(fId, fgBckgndGC,  fWidth-2, fHeight-2, fWidth-2, 2);
 
          if (fPic) {
             int x = (fWidth - fPic->GetWidth()) >> 1;
@@ -120,15 +116,15 @@ void TGScrollBarElement::DrawBorder()
          break;
 
       case kRaisedFrame: // normal
-         gGXW->DrawLine(fId, fgBckgndGC, 0, 0, fWidth-2, 0);
-         gGXW->DrawLine(fId, fgBckgndGC, 0, 0, 0, fHeight-2);
-         gGXW->DrawLine(fId, fgHilightGC, 1, 1, fWidth-3, 1);
-         gGXW->DrawLine(fId, fgHilightGC, 1, 1, 1, fHeight-3);
+         gVirtualX->DrawLine(fId, fgBckgndGC, 0, 0, fWidth-2, 0);
+         gVirtualX->DrawLine(fId, fgBckgndGC, 0, 0, 0, fHeight-2);
+         gVirtualX->DrawLine(fId, fgHilightGC, 1, 1, fWidth-3, 1);
+         gVirtualX->DrawLine(fId, fgHilightGC, 1, 1, 1, fHeight-3);
 
-         gGXW->DrawLine(fId, fgShadowGC,  1, fHeight-2, fWidth-2, fHeight-2);
-         gGXW->DrawLine(fId, fgShadowGC,  fWidth-2, fHeight-2, fWidth-2, 1);
-         gGXW->DrawLine(fId, fgBlackGC, 0, fHeight-1, fWidth-1, fHeight-1);
-         gGXW->DrawLine(fId, fgBlackGC, fWidth-1, fHeight-1, fWidth-1, 0);
+         gVirtualX->DrawLine(fId, fgShadowGC,  1, fHeight-2, fWidth-2, fHeight-2);
+         gVirtualX->DrawLine(fId, fgShadowGC,  fWidth-2, fHeight-2, fWidth-2, 1);
+         gVirtualX->DrawLine(fId, fgBlackGC, 0, fHeight-1, fWidth-1, fHeight-1);
+         gVirtualX->DrawLine(fId, fgBlackGC, fWidth-1, fHeight-1, fWidth-1, 0);
 
          if (fPic) {
             int x = (fWidth - fPic->GetWidth()) >> 1;
@@ -171,7 +167,7 @@ Bool_t TGScrollBar::HandleTimer(TTimer *t)
    ev.fType    = kButtonPress;
    ev.fUser[0] = fSubw;
 
-   gGXW->QueryPointer(fId, dum1, dum2, ev.fXRoot, ev.fYRoot, ev.fX, ev.fY,
+   gVirtualX->QueryPointer(fId, dum1, dum2, ev.fXRoot, ev.fYRoot, ev.fX, ev.fY,
                       ev.fState);
 
    HandleButton(&ev);
@@ -200,7 +196,7 @@ TGHScrollBar::TGHScrollBar(const TGWindow *p, UInt_t w, UInt_t h,
    fSlider = new TGScrollBarElement(this, 0, fgScrollBarWidth, 50,
                                     kRaisedFrame);
 
-   gGXW->GrabButton(fId, kButton1, kAnyModifier, kButtonPressMask |
+   gVirtualX->GrabButton(fId, kButton1, kAnyModifier, kButtonPressMask |
                     kButtonReleaseMask | kPointerMotionMask, kNone, kNone);
 
    fDragging = kFALSE;
@@ -381,7 +377,7 @@ TGVScrollBar::TGVScrollBar(const TGWindow *p, UInt_t w, UInt_t h,
    fSlider = new TGScrollBarElement(this, 0, fgScrollBarWidth, 50,
                                     kRaisedFrame);
 
-   gGXW->GrabButton(fId, kButton1, kAnyModifier, kButtonPressMask |
+   gVirtualX->GrabButton(fId, kButton1, kAnyModifier, kButtonPressMask |
                     kButtonReleaseMask | kPointerMotionMask, kNone, kNone);
 
    fDragging = kFALSE;

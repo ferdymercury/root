@@ -1,3 +1,5 @@
+//*CMZ :  2.23/12 28/01/2000  19.14.53  by  Rene Brun
+//*CMZ :  2.23/00 12/08/99  14.12.32  by  Rene Brun
 //*CMZ :  2.22/02 26/05/99  09.41.15  by  Rene Brun
 //*CMZ :  2.22/00 06/04/99  19.09.04  by  Rene Brun
 //*CMZ :  2.21/06 15/02/99  09.30.26  by  Rene Brun
@@ -24,20 +26,6 @@
 
 Double_t const  kPI        = 3.14159265358979323846;
 Double_t const  kTWOPI     = 2.*kPI;
-                                        // returns phi angle in the interval
-                                        // [0,2*PI)
-inline Double_t phi_0_2pi(Double_t x) {
-  while (x >= kTWOPI) x -= kTWOPI;
-  while (x <     0.)  x += kTWOPI;
-  return x;
-}
-                                        // returns phi angle in the interval
-                                        // [-PI,PI)
-inline Double_t phi_mpi_pi(Double_t x) {
-  while (x >= kPI) x -= kTWOPI;
-  while (x < -kPI) x += kTWOPI;
-  return x;
-}
 
 class TVector2 : public TObject {
 //------------------------------------------------------------------------------
@@ -115,8 +103,16 @@ public:
                                         // rotates 2-vector by phi radians
   TVector2 Rotate (Double_t phi);
 
+                                        // returns phi angle in the interval
+                                        // [0,2*PI)
+  static inline Double_t Phi_0_2pi(Double_t x);                                                                               // returns phi angle in the interval
+                                        // [-PI,PI)
+  static inline Double_t Phi_mpi_pi(Double_t x);
+
+
+
 				
-  ClassDef(TVector2,1)  // a two dim physics vector
+  ClassDef(TVector2,2)  // a two dim physics vector
 
 };
 
@@ -175,7 +171,7 @@ inline Double_t   operator ^ (const TVector2& v1, const TVector2& v2) {
   return  v1.fX*v2.fY-v1.fY*v2.fX;
 }
 
-inline  Double_t TVector2::DeltaPhi(TVector2& v) const { return phi_mpi_pi(Phi()-v.Phi()); }
+inline  Double_t TVector2::DeltaPhi(TVector2& v) const { return Phi_mpi_pi(Phi()-v.Phi()); }
 
 inline  TVector2 TVector2::Unit() const {return (Mod2()) ? *this/Mod() : TVector2(0); }
 
@@ -190,5 +186,21 @@ inline  TVector2 TVector2::Norm(const TVector2& v) const {return *this-Proj(v); 
 inline void TVector2::Set(TVector2& v              )     { fX = v.fX; fY = v.fY; }
 inline void TVector2::Set(Double_t x0, Double_t y0) { fX = x0  ; fY = y0 ;  }
 inline void TVector2::Set(float  x0, float  y0)     { fX = x0  ; fY = y0 ;  }
+
+                                        // returns phi angle in the interval
+                                        // [0,2*PI)
+inline Double_t TVector2::Phi_0_2pi(Double_t x) {
+  while (x >= kTWOPI) x -= kTWOPI;
+  while (x <     0.)  x += kTWOPI;
+  return x;
+}
+                                        // returns phi angle in the interval
+                                        // [-PI,PI)
+inline Double_t TVector2::Phi_mpi_pi(Double_t x) {
+  while (x >= kPI) x -= kTWOPI;
+  while (x < -kPI) x += kTWOPI;
+  return x;
+}
+
 
 #endif

@@ -1,11 +1,8 @@
+*CMZ :  2.23/05 14/10/99  19.34.30  by  Fons Rademakers
 *CMZ :  2.21/06 11/02/99  08.40.00  by  Rene Brun
 *CMZ :  2.21/05 08/02/99  11.09.31  by  Rene Brun
 *CMZ :  2.21/01 11/01/99  15.24.59  by  Fons Rademakers
 *CMZ :  2.00/10 29/07/98  11.20.15  by  Rene Brun
-*CMZ :  2.00/08 28/05/98  08.49.30  by  Rene Brun
-*CMZ :  2.00/04 06/04/98  09.31.28  by  Rene Brun
-*CMZ :  2.00/00 22/02/98  18.09.11  by  Valery Fine(fine@mail.cern.ch)
-*CMZ :  1.01/04 02/06/97  18.22.11  by  Rene Brun
 *-- Author :    Rene Brun   20/09/96
 MACRO install_h2root 1=- 2=opt
 
@@ -99,7 +96,7 @@ elseif [machine] = 'WinNT' then
   MainObject  = [UserObjDir]\UTILS_h2root.obj [UserObjDir]\UTILS_setpawc.obj
   ForObject   = [UserObjDir]\UTILS_hntvar2.obj [UserObjDir]\UTILS_tzvers.obj [UserObjDir]\UTILS_cf*.obj
   UserLibDir  = [sysroot]\lib
-  UserLibs    = [UserLibDir]\*.lib
+  UserLibs    = [LIBS]
   UserObjs    =
   ExeFile     = /out:[sysroot]\bin\H2Root.exe
 * on NT, h2root must be installed in debug mode (bugs in DEC Fortran)

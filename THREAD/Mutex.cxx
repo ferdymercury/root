@@ -1,24 +1,21 @@
+//*CMZ :  2.23/12 03/01/2000  09.37.10  by  Fons Rademakers
+//*CMZ :  2.23/09 10/11/99  09.35.49  by  Rene Brun
 //*CMZ :  2.22/06 21/06/99  17.49.20  by  Rene Brun
 //*CMZ :  2.00/00 03/11/97  22.36.08  by  Victor Perev
 //*CMZ :  1.03/03 27/08/97  13.01.58  by  Victor Perev
 //*-- Author :    Fons Rademakers   26/06/97
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -30,6 +27,7 @@
 // TPosixMutex, TSolarisMutex or TNTMutex).                             //
 //                                                                      //
 //////////////////////////////////////////////////////////////////////////
+
 #include "TMutex.h"
 #include "TThreadFactory.h"
 
@@ -37,54 +35,87 @@
 ClassImp(TMutex)
 
 //______________________________________________________________________________
-TMutex::TMutex()
+TMutex::TMutex(Bool_t recursive)
 {
-   // Create mutex lock. The actual mutex implementation will be
+   // Create a mutex lock. The actual mutex implementation will be
    // provided via the TThreadFactory.
 
-
    fMutexImp = gThreadFactory->CreateMutexImp();
+   fId  = 0;
+   fRef = recursive ? 0 : -1;
 
    if (!fMutexImp)
-      Error("TMutex", "could not create MutexImp");
+      Error("TMutex", "could not create TMutexImp");
 }
+
+//______________________________________________________________________________
 Int_t TMutex::Lock()
 {
-  UInt_t id;
-  Int_t iret;
-  id = TThread::SelfId();
-  if (id == fId) {
-    fprintf(stderr,"TMutex::Lock() ***ERROR*** mutex is already locked by the same Thread %d",fId);
-    return 13;}
+   // Lock the mutex. Returns 0 when no error, 13 when mutex was already locked
+   // by this thread.
 
-  iret = fMutexImp->Lock(); fId = id; return iret;
+   UInt_t id = TThread::SelfId();
+   if (id == fId) {
+      if (fRef < 0) {
+         Error("Lock", "mutex is already locked by this thread %d\n", fId);
+         return 13;
+      } else {
+         fRef++;
+         return 0;
+      }
+   }
+   Int_t iret = fMutexImp->Lock();
+   fId = id;
+   return iret;
 }
 
-
+//______________________________________________________________________________
 Int_t TMutex::TryLock()
 {
-  UInt_t id;
-  Int_t iret;
-  id = TThread::SelfId();
-  if (id == fId) {
-    fprintf(stderr,"TMutex::TryLock() ***ERROR*** mutex is already locked by the same Thread %d",fId);
-    return 13;}
+   // Try to lock mutex. Returns 0 when no error, 13 when mutex was already
+   // locked by this thread.
 
-  iret = fMutexImp->TryLock(); fId = id; return iret;
+   UInt_t id = TThread::SelfId();
+   if (id == fId) {
+      if (fRef < 0) {
+         Error("TryLock", "mutex is already locked by this thread %d\n", fId);
+         return 13;
+      } else {
+         fRef++;
+         return 0;
+      }
+   }
+   Int_t iret = fMutexImp->TryLock();
+   if (iret == 0) fId = id;
+   return iret;
 }
 
+//______________________________________________________________________________
 Int_t TMutex::UnLock()
 {
-  UInt_t id;
-  id = TThread::SelfId();
-  if (id != fId) {
-    fprintf(stderr,"TMutex::UnLock() ***ERROR*** Thread %d tryes to unlock mutex locked by %d",id,fId);
-    return 13;}
+   // Unlock the mutex. Returns 0 when no error, 13 when mutex was already
+   // locked by this thread.
 
-  fId = 0; return fMutexImp->UnLock();
+   UInt_t id = TThread::SelfId();
+   if (id != fId) {
+      Error("UnLock", "thread %d tries to unlock mutex locked by thread %d\n", id, fId);
+      return 13;
+   }
+
+   if (fRef > 0) {
+      fRef--;
+      return 0;
+   }
+   fId = 0;
+   return fMutexImp->UnLock();
 }
+
+//______________________________________________________________________________
 Int_t TMutex::CleanUp()
 {
-  if ( UInt_t(TThread::SelfId()) != fId) return 0;
-  return UnLock();
+   // Clean up of mutex if it belongs to thread.
+
+   if (UInt_t(TThread::SelfId()) != fId) return 0;
+   if (fRef > 0) fRef = 0;
+   return UnLock();
 }

@@ -1,27 +1,22 @@
+//*CMZ :  2.23/12 26/01/2000  09.57.11  by  Rene Brun
+//*CMZ :  2.23/11 29/12/99  10.07.38  by  Rene Brun
 //*CMZ :  2.22/07 05/07/99  15.38.10  by  Fons Rademakers
 //*CMZ :  2.20/05 13/12/98  17.40.45  by  Rene Brun
 //*CMZ :  2.00/11 18/08/98  16.39.48  by  Rene Brun
 //*CMZ :  2.00/10 27/07/98  19.15.31  by  Fons Rademakers
-//*CMZ :  2.00/00 22/02/98  16.58.15  by  Rene Brun
-//*CMZ :  1.03/09 03/12/97  02.00.05  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   13/08/95
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -149,7 +144,7 @@ void TCollection::Dump()
 }
 
 //______________________________________________________________________________
-TObject *TCollection::FindObject(const Text_t *name) const
+TObject *TCollection::FindObject(const char *name) const
 {
    // Find an object in this collection using its name. Requires a sequential
    // scan till the object has been found. Returns 0 if object with specified
@@ -164,7 +159,7 @@ TObject *TCollection::FindObject(const Text_t *name) const
 }
 
 //______________________________________________________________________________
-TObject *TCollection::operator()(const Text_t *name) const
+TObject *TCollection::operator()(const char *name) const
 {
   // Find an object in this collection by name.
 
@@ -217,11 +212,12 @@ void TCollection::ls(Option_t *option)
 }
 
 //______________________________________________________________________________
-void TCollection::Paint(Option_t *)
+void TCollection::Paint(Option_t *option)
 {
    // Paint all objects in this collection.
 
-   this->ForEach(TObject,Paint)((Option_t *)TObjectPaint_nxt.GetOption());
+//   this->ForEach(TObject,Paint)((Option_t *)TObjectPaint_nxt.GetOption());
+   this->ForEach(TObject,Paint)(option);
 }
 
 //______________________________________________________________________________
@@ -274,7 +270,10 @@ void TCollection::Streamer(TBuffer &b)
    TObject *obj;
 
    if (b.IsReading()) {
-      b.ReadVersion();   // Version_t v = b.ReadVersion();
+      Version_t v = b.ReadVersion();
+      if (v > 1) {
+         fName.Streamer(b);
+      }
       b >> nobjects;
       for (Int_t i = 0; i < nobjects; i++) {
          b >> obj;
@@ -282,6 +281,7 @@ void TCollection::Streamer(TBuffer &b)
       }
    } else {
       b.WriteVersion(TCollection::IsA());
+      fName.Streamer(b);
       nobjects = GetSize();
       b << nobjects;
 
@@ -294,7 +294,7 @@ void TCollection::Streamer(TBuffer &b)
 }
 
 //______________________________________________________________________________
-void TCollection::Write(const Text_t *name, Int_t option, Int_t bsize)
+void TCollection::Write(const char *name, Int_t option, Int_t bsize)
 {
    // Write all objects in this collection. By default all objects in
    // the collection are written individually (each object gets its

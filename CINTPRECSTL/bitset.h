@@ -1,9 +1,9 @@
-/*CMZ :  2.22/10 23/07/99  14.42.33  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   23/07/99*/
+/*CMZ :  2.23/10 10/12/99  18.00.24  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   10/12/99*/
 // lib/prec_stl/bitset
 
-#ifndef PREC_STL_BITSET
-#define PREC_STL_BITSET
+#pragma ifndef PREC_STL_BITSET
+#pragma define PREC_STL_BITSET
 #pragma link off global PREC_STL_BITSET;
 #pragma link C++ nestedtypedef;
 #pragma link C++ nestedclass;
@@ -69,4 +69,4 @@ class bitset {
   bitset operator>>(size_t pos) const;
 };
 
-#endif
+#pragma endif

@@ -1,25 +1,22 @@
+//*CMZ :  2.23/10 16/12/99  18.54.14  by  Fons Rademakers
+//*CMZ :  2.23/09 07/12/99  19.15.06  by  Rene Brun
+//*CMZ :  2.23/03 26/09/99  13.56.47  by  Fons Rademakers
+//*CMZ :  2.23/02 02/09/99  15.54.27  by  Rene Brun
+//*CMZ :  2.23/00 04/08/99  10.20.24  by  Rene Brun
 //*CMZ :  2.00/13 27/10/98  18.49.15  by  Fons Rademakers
-//*CMZ :  2.00/11 25/08/98  11.25.39  by  Fons Rademakers
-//*CMZ :  2.00/08 29/05/98  20.21.53  by  Rene Brun
-//*CMZ :  2.00/01 10/03/98  16.07.15  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   27/02/98
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -497,11 +494,12 @@ void TRootBrowser::CreateBrowser(const char *name)
 
    SetWindowName(name);
    SetIconName(name);
+   SetIconPixmap("rootdb_s.xpm");
    SetClassHints("Browser", "Browser");
 
    SetMWMHints(kMWMDecorAll, kMWMFuncAll, kMWMInputModeless);
 
-   fWaitCursor = gGXW->CreateCursor(kWatch);
+   fWaitCursor = gVirtualX->CreateCursor(kWatch);
    fListLevel = 0;
    fTreeLock  = kFALSE;
 
@@ -592,7 +590,8 @@ void TRootBrowser::DisplayTotal(Int_t total, Int_t selected)
    // Display in statusbar total number of objects and number of
    // selected objects in IconBox.
 
-   char tmp[64], *fmt;
+   char tmp[64];
+   const char *fmt;
 
    if (selected)
       fmt = "%d Object%s, %d selected.";
@@ -895,7 +894,7 @@ void TRootBrowser::Chdir(TGListTreeItem *item)
    if (item) {
       TGListTreeItem *i = item;
       TString dir;
-      while ((i = i->GetParent())) {
+      while (i) {
          TObject *obj = (TObject*) i->GetUserData();
          if (obj) {
             if (obj->IsA() == TDirectory::Class()) {
@@ -913,8 +912,9 @@ void TRootBrowser::Chdir(TGListTreeItem *item)
                }
             }
          }
+         i = i->GetParent();
       }
-      if (gDirectory) gDirectory->cd(dir.Data());
+      if (gDirectory && dir.Length()) gDirectory->cd(dir.Data());
    }
 }
 
@@ -930,14 +930,15 @@ void TRootBrowser::ListTreeHighlight(TGListTreeItem *item)
       TObject *obj = (TObject *) fListLevel->GetUserData();
 
       if (obj) {
-         gGXW->SetCursor(fId, fWaitCursor);
-         gGXW->Update();
+         gVirtualX->SetCursor(fId, fWaitCursor);
+         gVirtualX->Update();
 
          if (obj->IsA() == TKey::Class()) {
             if (strcmp(((TKey*)obj)->GetClassName(), TDirectory::Class()->GetName()) == 0)
-               Chdir(fListLevel);
+               Chdir(fListLevel->GetParent());
 
-            TObject *k_obj = gDirectory->Get((Text_t *) obj->GetName());
+            //TObject *k_obj = gDirectory->Get(obj->GetName());
+            TObject *k_obj = gROOT->FindObject(obj->GetName());
 
             if (k_obj) {
                TGListTreeItem *parent = fListLevel->GetParent();
@@ -952,7 +953,7 @@ void TRootBrowser::ListTreeHighlight(TGListTreeItem *item)
                fLt->HighlightItem(fListLevel);
             }
          } else if (obj->IsA() == TDirectory::Class())
-            Chdir(fListLevel);
+            Chdir(fListLevel->GetParent());
 
          // New TGListTree::AddItem does not allow duplicates if user data
          // is also specified. So no need to delete children.
@@ -962,7 +963,7 @@ void TRootBrowser::ListTreeHighlight(TGListTreeItem *item)
          if (fListLevel->IsActive())
             BrowseObj(obj);
 
-         gGXW->SetCursor(fId, kNone);
+         gVirtualX->SetCursor(fId, kNone);
       }
    }
 }
@@ -973,8 +974,8 @@ void TRootBrowser::IconBoxAction(TObject *obj)
    // Default action when double clicking on icon.
 
    if (obj) {
-      gGXW->SetCursor(fId, fWaitCursor);
-      gGXW->Update();
+      gVirtualX->SetCursor(fId, fWaitCursor);
+      gVirtualX->Update();
 
       if (obj->IsFolder()) {
          fIconBox->RemoveAll();
@@ -989,7 +990,7 @@ void TRootBrowser::IconBoxAction(TObject *obj)
             itm = itm->GetNextSibling();
 
          if (!itm && fListLevel) {
-            itm = fLt->AddItem(fListLevel, (char *) obj->GetName());
+            itm = fLt->AddItem(fListLevel, obj->GetName());
             if (itm) itm->SetUserData(obj);
          }
 
@@ -998,22 +999,28 @@ void TRootBrowser::IconBoxAction(TObject *obj)
             DisplayDirectory();
             TObject *kobj = (TObject *) itm->GetUserData();
             if (kobj->IsA() == TKey::Class()) {
-               TGListTreeItem *parent = fListLevel->GetParent();
-               fLt->DeleteItem(fListLevel);
-               kobj = gROOT->FindObject((Text_t *) kobj->GetName());
-               TGListTreeItem *kitem = fLt->AddItem(parent,
-                                                    (char *) kobj->GetName());
-               if (kitem) {
-                  kitem->SetUserData(kobj);
-                  fListLevel = kitem;
-               } else
-                  fListLevel = parent;
+               Chdir(fListLevel->GetParent());
+
+               kobj = gROOT->FindObject(kobj->GetName());
+
+               if (kobj) {
+                  TGListTreeItem *parent = fListLevel->GetParent();
+                  fLt->DeleteItem(fListLevel);
+                  TGListTreeItem *kitem = fLt->AddItem(parent, kobj->GetName());
+                  if (kitem) {
+                     kitem->SetUserData(kobj);
+                     fListLevel = kitem;
+                  } else
+                     fListLevel = parent;
+               }
             }
             fLt->ClearHighlighted();
             fLt->HighlightItem(fListLevel);
             fClient->NeedRedraw(fLt);
          }
       }
+
+      Chdir(fListLevel);
 
       fTreeLock = kTRUE;
       obj->Browse(fBrowser);
@@ -1026,7 +1033,7 @@ void TRootBrowser::IconBoxAction(TObject *obj)
       } else
          Refresh();
 
-      gGXW->SetCursor(fId, kNone);
+      gVirtualX->SetCursor(fId, kNone);
    }
 }
 
@@ -1035,8 +1042,8 @@ void TRootBrowser::RecursiveRemove(TObject *obj)
 {
    // Recursively remove object from browser.
 
-   //gGXW->SetCursor(fId, fWaitCursor);
-   //gGXW->Update();
+   //gVirtualX->SetCursor(fId, fWaitCursor);
+   //gVirtualX->Update();
 
    // don't delete fIconBox items here (it's status will be updated
    // via TBrowser::Refresh() which should be called once all objects have
@@ -1045,7 +1052,7 @@ void TRootBrowser::RecursiveRemove(TObject *obj)
    //fIconBox->Refresh();
    fLt->RecursiveDeleteItem(fLt->GetFirstItem(), obj);
 
-   //gGXW->SetCursor(fId, kNone);
+   //gVirtualX->SetCursor(fId, kNone);
 }
 
 //______________________________________________________________________________
@@ -1054,8 +1061,8 @@ void TRootBrowser::Refresh(Bool_t force)
    // Refresh the browser contents.
 
    if ((fBrowser && fBrowser->GetRefreshFlag()) || force) {
-      gGXW->SetCursor(fId, fWaitCursor);
-      gGXW->Update();
+      gVirtualX->SetCursor(fId, fWaitCursor);
+      gVirtualX->Update();
 
       // Refresh the IconBox
       if (fListLevel) {
@@ -1071,7 +1078,7 @@ void TRootBrowser::Refresh(Bool_t force)
 
       fClient->NeedRedraw(fLt);
 
-      gGXW->SetCursor(fId, kNone);
+      gVirtualX->SetCursor(fId, kNone);
    }
 }
 

@@ -1,3 +1,8 @@
+*CMZ :  2.23/12 26/01/2000  14.51.08  by  Rene Brun
+*CMZ :  2.23/09 19/11/99  18.31.59  by  Fons Rademakers
+*CMZ :  2.23/07 27/10/99  13.21.52  by  Rene Brun
+*CMZ :  2.23/04 29/09/99  18.30.42  by  Fons Rademakers
+*CMZ :  2.23/00 08/08/99  16.17.53  by  Fons Rademakers
 *CMZ :  2.22/01 11/05/99  09.08.02  by  Rene Brun
 *CMZ :  2.20/00 22/11/98  18.43.27  by  Fons Rademakers
 *CMZ :  2.00/12 22/09/98  11.51.41  by  Fons Rademakers
@@ -6,6 +11,8 @@
 # Changes for Debian 2.0:
 # libncurses does not exist, remove -lncurses
 # problems when using gcc c-compiler, change to egcc
+
+include ../Makefile.config
 
 PLATFORM      = linux
 
@@ -16,24 +23,27 @@ NOOPT         =
 # Compiler:
 CXX           = g++
 CC            = egcc
-CXXFLAGS      = -Wall -fPIC -DR__GLIBC
-CFLAGS        = -Wall -fPIC -DR__GLIBC
-CINTCXXFLAGS  = -Wall -fPIC \
+CXXFLAGS      = -Wall -fPIC -DR__GLIBC $(EXTRA_CXXFLAGS)
+CFLAGS        = -Wall -fPIC -DR__GLIBC $(EXTRA_CFLAGS)
+CINTCXXFLAGS  = -Wall -fPIC $(EXTRA_CXXFLAGS) \
                 -DG__REGEXP -DG__UNIX -DG__SHAREDLIB \
                 -DG__OSFDLL -DG__ROOT -DG__REDIRECTIO
-CINTCFLAGS    = -Wall -fPIC \
+CINTCFLAGS    = -Wall -fPIC $(EXTRA_CFLAGS) \
                 -DG__REGEXP -DG__UNIX -DG__SHAREDLIB \
                 -DG__OSFDLL -DG__ROOT -DG__REDIRECTIO
 
 # Linker:
 LD            = g++
-LDFLAGS       = $(OPT)
+LDFLAGS       = $(OPT) $(EXTRA_LDFLAGS)
 SOFLAGS       = -shared -Wl,-soname,
 SOEXT         = so
-SYSLIBS       = -lm -ldl -rdynamic
-SYSXLIBS      = -L/usr/X11R6/lib -lX11 -lm -ldl -rdynamic
-XLIBS         = -lXpm -L/usr/X11R6/lib -lX11
+SYSLIBS       = -lnsl -lm -ldl -rdynamic
+XLIBS         = -L/usr/X11R6/lib -lX11 -lXpm
 CILIBS        = -lm -ldl -rdynamic
+CRYPTLIBS     = -lcrypt
+F77           = g77
+F77FLAGS      = $(OPT)
+F77LIBS       = -lg2c
 
 
 ##### MACROS and TARGETS #####

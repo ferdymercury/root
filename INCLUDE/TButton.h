@@ -1,3 +1,4 @@
+//*CMZ :  2.23/12 26/01/2000  09.24.06  by  Rene Brun
 //*CMZ :  2.21/04 05/02/99  13.28.35  by  Fons Rademakers
 //*CMZ :  2.20/05 12/12/98  18.09.50  by  Rene Brun
 //*CMZ :  2.00/11 08/08/98  22.26.12  by  Rene Brun
@@ -7,22 +8,17 @@
 #ifndef ROOT_TButton
 #define ROOT_TButton
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -55,12 +51,12 @@ protected:
 
 public:
    TButton();
-   TButton(const Text_t *title, const Text_t *method, Coord_t x1, Coord_t y1, Coord_t x2, Coord_t y2);
+   TButton(const char *title, const char *method, Coord_t x1, Coord_t y1, Coord_t x2, Coord_t y2);
    virtual ~TButton();
    virtual void  Divide(Int_t nx=1, Int_t ny=1, Float_t xmargin=0.01, Float_t ymargin=0.01, Int_t color=0);
    virtual void  Draw(Option_t *option="");
    virtual void  ExecuteEvent(Int_t event, Int_t px, Int_t py);
-   virtual const Text_t *GetMethod() const { return fMethod.Data(); }
+   virtual const char *GetMethod() const { return fMethod.Data(); }
    virtual void  Paint(Option_t *option="");
    virtual void  PaintModified();
    virtual void  Range(Float_t x1, Float_t y1, Float_t x2, Float_t y2);
@@ -71,8 +67,8 @@ public:
    virtual void  SetGrid(Int_t valuex = 1, Int_t valuey = 1);
    virtual void  SetLogx(Int_t value = 1);
    virtual void  SetLogy(Int_t value = 1);
-   virtual void  SetMethod(Text_t *method) { fMethod=method; } // *MENU*
-   virtual void  SetName(const Text_t *name) { fName = name; }
+   virtual void  SetMethod(char *method) { fMethod=method; } // *MENU*
+   virtual void  SetName(const char *name) { fName = name; }
    virtual void  x3d(Option_t *option="");
 
    ClassDef(TButton,0)  //A user interface button.

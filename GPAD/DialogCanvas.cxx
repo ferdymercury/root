@@ -1,24 +1,21 @@
-//*CMZ :  2.00/11 08/08/98  22.35.33  by  Rene Brun
+//*CMZ :  2.23/12 26/01/2000  09.35.28  by  Rene Brun
+//*CMZ :  2.23/04 04/10/99  10.59.06  by  Rene Brun
+//*CMZ :  2.00/11 17/09/99  09.24.48  by  Rene Brun
 //*CMZ :  2.00/09 23/06/98  18.03.36  by  Rene Brun
 //*CMZ :  1.03/09 07/12/97  14.01.59  by  Fons Rademakers
 //*-- Author :    Rene Brun   03/07/96
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 #include "TROOT.h"
@@ -48,14 +45,14 @@ TDialogCanvas::TDialogCanvas() : TCanvas()
 }
 
 //_____________________________________________________________________________
-TDialogCanvas::TDialogCanvas(const Text_t *name, const Text_t *title, UInt_t ww, UInt_t wh)
+TDialogCanvas::TDialogCanvas(const char *name, const char *title, UInt_t ww, UInt_t wh)
              : TCanvas(name,title,-ww,wh)
 {
 //*-*-*-*-*-*-*-*-*-*-*-*DialogCanvas constructor*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 //*-*                    ========================
 
    SetFillColor(36);
-   fIsEditable = kIsNotEditable;
+   fIsEditable = kFALSE;
    fRefObject  = 0;
    fRefPad     = 0;
 }
@@ -68,7 +65,7 @@ TDialogCanvas::~TDialogCanvas()
 }
 
 //______________________________________________________________________________
-void TDialogCanvas::Apply(const Text_t *action)
+void TDialogCanvas::Apply(const char *action)
 {
 //*-*-*-*-*-*-*-*-*Called when the APPLY button is executed*-*-*-*-*-*-*-*-*-*-*
 //*-*              ========================================

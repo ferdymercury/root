@@ -1,3 +1,4 @@
+/*CMZ :  2.23/09 24/11/99  11.25.31  by  Rene Brun*/
 /*CMZ :  2.22/01 18/05/99  11.07.56  by  Rene Brun*/
 /*CMZ :  2.00/00 08/03/98  11.27.32  by  Rene Brun*/
 /*CMZ :  1.03/09 08/12/97  20.54.43  by  Fons Rademakers*/
@@ -33,7 +34,7 @@
  *      The routines in this file allow a variable-length bit value to
  *      be output right-to-left (useful for literal values). For
  *      left-to-right output (useful for code strings from the tree routines),
- *      the bits must have been reversed first with bi_reverse().
+ *      the bits must have been reversed first with R__bi_reverse().
  *
  *      For in-memory compression, the compressed bit stream goes directly
  *      into the requested output buffer. The input data is read in blocks
@@ -42,28 +43,28 @@
  *
  *  INTERFACE
  *
- *      void bi_init (FILE *zipfile)
+ *      void R__bi_init (FILE *zipfile)
  *          Initialize the bit string routines.
  *
- *      void send_bits (int value, int length)
+ *      void R__send_bits (int value, int length)
  *          Write out a bit string, taking the source bits right to
  *          left.
  *
- *      int bi_reverse (int value, int length)
+ *      int R__bi_reverse (int value, int length)
  *          Reverse the bits of a bit string, taking the source bits left to
  *          right and emitting them right to left.
  *
- *      void bi_windup (void)
+ *      void R__bi_windup (void)
  *          Write out any remaining bits in an incomplete byte.
  *
- *      void copy_block(char far *buf, unsigned len, int header)
+ *      void R__copy_block(char far *buf, unsigned len, int header)
  *          Copy a stored block to the zip file, storing first the length and
  *          its one's complement if requested.
  *
- *      int seekable(void)
+ *      int R__seekable(void)
  *          Return true if the zip file can be seeked.
  *
- *      ulg memcompress (char *tgt, ulg tgtsize, char *src, ulg srcsize);
+ *      ulg R__memcompress (char *tgt, ulg tgtsize, char *src, ulg srcsize);
  *          Compress the source buffer src into the target buffer tgt.
  */
 
@@ -113,7 +114,7 @@ local unsigned in_offset, out_offset;
 local unsigned in_size, out_size;
 /* Size of current input and output buffers */
 
-int (*read_buf) OF((char *buf, unsigned size)) = mem_read;
+int (*R__read_buf) OF((char *buf, unsigned size)) = mem_read;
 /* Current input function. Set to mem_read for in-memory compression */
 
 #ifdef DEBUG
@@ -148,7 +149,7 @@ local void flush_outbuf OF((unsigned w, unsigned bytes));
 /* ===========================================================================
  * Initialize the bit string routines.
  */
-void bi_init (FILE *zipfile)
+void R__bi_init (FILE *zipfile)
     /* FILE *zipfile;   output zip file, NULL for in-memory compression */
 {
     zfile  = zipfile;
@@ -163,7 +164,7 @@ void bi_init (FILE *zipfile)
  * Send a value on a given number of bits.
  * IN assertion: length <= 16 and value fits in length bits.
  */
-void send_bits(int value, int length)
+void R__send_bits(int value, int length)
     /* int value;   value to send */
     /* int length;  number of bits */
 {
@@ -192,7 +193,7 @@ void send_bits(int value, int length)
  * method would use a table)
  * IN assertion: 1 <= len <= 15
  */
-unsigned bi_reverse(unsigned code, int len)
+unsigned R__bi_reverse(unsigned code, int len)
     /* unsigned code;  the value to invert */
     /* int len;        its bit length */
 {
@@ -211,7 +212,7 @@ local void flush_outbuf(unsigned w, unsigned bytes)
     /* unsigned w;      value to flush */
     /* unsigned bytes;  number of bytes to flush (0, 1 or 2) */
 {
-    error("output buffer too small for in-memory compression");
+    R__error("output buffer too small for in-memory compression");
 
     /* Encrypt and write the output buffer: */
     out_offset = 0;
@@ -225,7 +226,7 @@ local void flush_outbuf(unsigned w, unsigned bytes)
 /* ===========================================================================
  * Write out any remaining bits in an incomplete byte.
  */
-void bi_windup()
+void R__bi_windup()
 {
     if (bi_valid > 8) {
         PUTSHORT(bi_buf);
@@ -246,12 +247,12 @@ void bi_windup()
  * Copy a stored block to the zip file, storing first the length and its
  * one's complement if requested.
  */
-void copy_block(char far *buf, unsigned len, int header)
+void R__copy_block(char far *buf, unsigned len, int header)
     /* char far *buf;  the input data */
     /* unsigned len;   its length */
     /* int header;     true if block header must be written */
 {
-    bi_windup();              /* align on byte boundary */
+    R__bi_windup();              /* align on byte boundary */
 
     if (header) {
         PUTSHORT((ush)len);
@@ -262,7 +263,7 @@ void copy_block(char far *buf, unsigned len, int header)
     }
     if (out_offset + len > out_size) {
 printf("out_offset=%d, len=%d, out_size=%d\n",out_offset,len,out_size);
-        error("output buffer too small for in-memory compression");
+        R__error("output buffer too small for in-memory compression");
     } else {
         memcpy(out_buf + out_offset, buf, len);
         out_offset += len;
@@ -279,7 +280,7 @@ printf("out_offset=%d, len=%d, out_size=%d\n",out_offset,len,out_size);
  * true for in-memory compression.
  * IN assertion: the local header has already been written (ftell() > 0).
  */
-int seekable()
+int R__seekable()
 {
 #if 0
     return (zfile == NULL ||
@@ -293,7 +294,7 @@ int seekable()
 /* ===========================================================================
  * In-memory compression. This version can be used only if the entire input
  * fits in one memory buffer. The compression is then done in a single
- * call of memcompress(). (An extension to allow repeated calls would be
+ * call of R__memcompress(). (An extension to allow repeated calls would be
  * possible but is not needed here.)
  * The first two bytes of the compressed output are set to a short with the
  * method used (DEFLATE or STORE). The following four bytes contain the CRC.
@@ -302,7 +303,7 @@ int seekable()
  * the first six bytes (method and crc).
  */
 
-ulg memcompress(char *tgt, ulg tgtsize, char *src, ulg srcsize)
+ulg R__memcompress(char *tgt, ulg tgtsize, char *src, ulg srcsize)
     /* char *tgt, *src;        target and source buffers */
     /* ulg tgtsize, srcsize;   target and source sizes */
 {
@@ -311,12 +312,12 @@ ulg memcompress(char *tgt, ulg tgtsize, char *src, ulg srcsize)
     ulg crc      = 0;
     int method   = DEFLATE;
 
-    if (tgtsize <= 6L) error("target buffer too small");
+    if (tgtsize <= 6L) R__error("target buffer too small");
 #if 0
     crc = updcrc((char *)NULL, 0);
     crc = updcrc(src, (extent) srcsize);
 #endif
-    read_buf  = mem_read;
+    R__read_buf  = mem_read;
     in_buf    = src;
     in_size   = (unsigned)srcsize;
     in_offset = 0;
@@ -326,7 +327,7 @@ ulg memcompress(char *tgt, ulg tgtsize, char *src, ulg srcsize)
     out_offset = 2 + 4;
     R__window_size = 0L;
 
-    bi_init((FILE *)NULL);
+    R__bi_init((FILE *)NULL);
     R__ct_init(&att, &method);
     R__lm_init((level != 0 ? level : 1), &flags);
     R__Deflate();
@@ -367,11 +368,11 @@ local int mem_read(char *b, unsigned bsize)
 
 /***********************************************************************
  *                                                                     *
- * Name: mmzip                                       Date:    20.01.95 *
+ * Name: R__zip                                      Date:    20.01.95 *
  * Author: E.Chernyaev (IHEP/Protvino)               Revised:          *
  *                                                                     *
  * Function: In memory ZIP compression                                 *
- *           It's a variant of memcompress adopted to be issued from   *
+ *           It's a variant of R__memcompress adopted to be issued from*
  *           FORTRAN. Written for DELPHI collaboration (CERN)          *
  *                                                                     *
  * Input: cxlevel - compression level                                  *
@@ -386,7 +387,7 @@ local int mem_read(char *b, unsigned bsize)
 #define HDRSIZE 9
 static  int error_flag;
 
-void mmzip(int cxlevel, int *srcsize, char *src, int *tgtsize, char *tgt, int *irep)
+void R__zip(int cxlevel, int *srcsize, char *src, int *tgtsize, char *tgt, int *irep)
      /* int cxlevel;                      compression level */
      /* int  *srcsize, *tgtsize, *irep;   source and target sizes, replay */
      /* char *tgt, *src;                  source and target buffers */
@@ -399,12 +400,12 @@ void mmzip(int cxlevel, int *srcsize, char *src, int *tgtsize, char *tgt, int *i
 
   *irep        = 0;
   error_flag   = 0;
-  if (*tgtsize <= HDRSIZE) error("target buffer too small");
+  if (*tgtsize <= HDRSIZE) R__error("target buffer too small");
   if (error_flag != 0) return;
-  if (*srcsize > 0xffffff) error("source buffer too big");
+  if (*srcsize > 0xffffff) R__error("source buffer too big");
   if (error_flag != 0) return;
 
-  read_buf  = mem_read;
+  R__read_buf  = mem_read;
   in_buf    = src;
   in_size   = (unsigned) (*srcsize);
   in_offset = 0;
@@ -414,7 +415,7 @@ void mmzip(int cxlevel, int *srcsize, char *src, int *tgtsize, char *tgt, int *i
   out_offset  = HDRSIZE;
   R__window_size = 0L;
 
-  bi_init((FILE *)NULL);      /* initialize bit routines */
+  R__bi_init((FILE *)NULL);      /* initialize bit routines */
   if (error_flag != 0) return;
   R__ct_init(&att, &method);     /* initialize tree routines */
   if (error_flag != 0) return;
@@ -440,9 +441,9 @@ void mmzip(int cxlevel, int *srcsize, char *src, int *tgtsize, char *tgt, int *i
   return;
 }
 
-void error(char *msg)
+void R__error(char *msg)
 {
-  fprintf(stderr,"mmzip: %s\n",msg);
+  fprintf(stderr,"R__zip: %s\n",msg);
   error_flag = 1;
   if (verbose) { }  /*use verbose to avoid warning*/
 }

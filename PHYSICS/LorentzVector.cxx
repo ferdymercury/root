@@ -1,9 +1,15 @@
+//*CMZ :  2.23/12 28/01/2000  19.18.20  by  Rene Brun
+//*CMZ :  2.23/05 20/10/99  17.07.33  by  Rene Brun
+//*CMZ :  2.23/04 11/10/99  08.48.58  by  Rene Brun
 //*CMZ :  2.22/09 12/07/99  18.44.19  by  Rene Brun
 //*CMZ :  2.22/07 02/07/99  08.20.08  by  Rene Brun
 //*CMZ :  2.22/06 23/06/99  08.24.47  by  Rene Brun
 //*CMZ :  2.21/06 15/02/99  09.36.40  by  Rene Brun
 //*-- Author :    Pasha Murat , Peter Malzacher  12/02/99
-
+//    Oct  8 1999: changed Warning to Error and
+//                 return fX in Double_t & operator()
+//    Oct 20 1999: dito in Double_t operator()
+//    Jan 25 2000: implemented as (fP,fE) instead of (fX,fY,fZ,fE)
 //______________________________________________________________________________
 //*-*-*-*-*-*-*-*-*-*-*-*The Physics Vector package *-*-*-*-*-*-*-*-*-*-*-*
 //*-*                    ==========================                       *
@@ -29,7 +35,7 @@ energy (px,py,pz,E).
 <BR>&nbsp;
 <H3>
 Declaration</H3>
-<TT>TLorentzVector</TT> has been implemented as a set of four <TT>Double_t</TT> variables.
+<TT>TLorentzVector</TT> has been implemented as a set a <TT>TVector3</TT> and a <TT>Double_t</TT> variable.
 By default all components are initialized by zero.
 
 <P><TT>&nbsp; TLorentzVector v1;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // initialized
@@ -87,6 +93,7 @@ v.SetE(1.);</TT>
 
 <P>To set more the one component by one call you can use the <TT>SetVect()</TT>
 function for the <TT>TVector3</TT> part or <TT>SetXYZT()</TT>, <TT>SetPxPyPzE()</TT>. For convenience there is
+
 also a <TT>SetXYZM()</TT>:
 
 <P><TT>&nbsp; v.SetVect(TVector3(1,2,3));</TT>
@@ -235,34 +242,35 @@ v *= l;&nbsp; // Attention v = l*v</TT>
 #include "TLorentzVector.h"
 #include "TLorentzRotation.h"
 
-
 ClassImp(TLorentzVector)
 
 TLorentzVector::TLorentzVector(Double_t x, Double_t y, Double_t z, Double_t t)
-               : fX(x), fY(y), fZ(z), fE(t) {}
+               : fP(x,y,z), fE(t) {}
 
 TLorentzVector::TLorentzVector(Double_t * x0)
-               : fX(x0[0]), fY(x0[1]), fZ(x0[2]), fE(x0[3]) {}
+               : fP(x0), fE(x0[3]) {}
 
 TLorentzVector::TLorentzVector(Float_t * x0)
-               : fX(x0[0]), fY(x0[1]), fZ(x0[2]), fE(x0[3]) {}
+               : fP(x0), fE(x0[3]) {}
 
 TLorentzVector::TLorentzVector(const TVector3 & p, Double_t e)
-               : fX(p.X()), fY(p.Y()), fZ(p.Z()), fE(e) {}
+               : fP(p), fE(e) {}
 
 TLorentzVector::TLorentzVector(const TLorentzVector & p)
-               : fX(p.X()), fY(p.Y()), fZ(p.Z()), fE(p.T()) {}
+               : fP(p.Vect()), fE(p.T()) {}
 
 
 Double_t TLorentzVector::operator () (int i) const
 {
   switch(i) {
-  case kX: return fX;
-  case kY: return fY;
-  case kZ: return fZ;
-  case kT: return fE;
+  case kX:
+  case kY:
+  case kZ:
+    return fP(i);
+  case kT:
+    return fE;
   default:
-    Warning("operator()()", "bad index (%d)",i);
+    Error("operator()()", "bad index (%d) returning 0",i);
   }
   return 0.;
 }
@@ -270,16 +278,16 @@ Double_t TLorentzVector::operator () (int i) const
 Double_t & TLorentzVector::operator () (int i)
 {
   switch(i) {
-  case kX: return fX;
-  case kY: return fY;
-  case kZ: return fZ;
-  case kT: return fE;
+  case kX:
+  case kY:
+  case kZ:
+    return fP(i);
+  case kT:
+    return fE;
   default:
-    Warning("operator()()", "bad index (%d)",i);
+    Error("operator()()", "bad index (%d) returning &fE",i);
   }
-  Double_t dummy;
-  Double_t & rdummy = dummy;
-  return rdummy;
+  return fE;
 }
 
 void TLorentzVector::Boost(Double_t bx, Double_t by, Double_t bz)
@@ -310,45 +318,26 @@ TLorentzVector &TLorentzVector::Transform(const TLorentzRotation & m)
   return *this = m.VectorMultiplication(*this);
 }
 
-void TLorentzVector::RotateX(Double_t angle) {
-  Double_t s = TMath::Sin(angle);
-  Double_t c = TMath::Cos(angle);
-  Double_t yy = fY;
-  fY = c*yy - s*fZ;
-  fZ = s*yy + c*fZ;
-}
-
-void TLorentzVector::RotateY(Double_t angle) {
-  Double_t s = TMath::Sin(angle);
-  Double_t c = TMath::Cos(angle);
-  Double_t zz = fZ;
-  fZ = c*zz - s*fX;
-  fX = s*zz + c*fX;
-}
-
-void TLorentzVector::RotateZ(Double_t angle) {
-  Double_t s = TMath::Sin(angle);
-  Double_t c = TMath::Cos(angle);
-  Double_t xx = fX;
-  fX = c*xx - s*fY;
-  fY = s*xx + c*fY;
-}
-
-void TLorentzVector::RotateUz(TVector3 &newUzVector) {
-  // NewUzVector must be normalized !
-  Double_t u1 = newUzVector.X();
-  Double_t u2 = newUzVector.Y();
-  Double_t u3 = newUzVector.Z();
-  Double_t up = u1*u1 + u2*u2;
-
-  if (up) {
-      up = TMath::Sqrt(up);
-      Double_t px = fX,  py = fY,  pz = fZ;
-      fX = (u1*u3*px - u2*py + u1*up*pz)/up;
-      fY = (u2*u3*px + u1*py + u2*up*pz)/up;
-      fZ = (u3*u3*px -    px + u3*up*pz)/up;
-    }
-  else if (u3 < 0.) { fX = -fX; fZ = -fZ; }      // phi=0  teta=pi
-  else {};
-
+void TLorentzVector::Streamer(TBuffer &R__b)
+{
+   // Stream an object of class TLorentzVector.
+   Double_t x, y, z;
+   UInt_t R__s, R__c;
+   if (R__b.IsReading()) {
+      Version_t R__v = R__b.ReadVersion(&R__s, &R__c);
+      if (R__v < 2) TObject::Streamer(R__b);
+      R__b >> x;
+      R__b >> y;
+      R__b >> z;
+      fP.SetXYZ(x,y,z);
+      R__b >> fE;
+      R__b.CheckByteCount(R__s, R__c, TLorentzVector::IsA());
+   } else {
+      R__c = R__b.WriteVersion(TLorentzVector::IsA(), kTRUE);
+      R__b << fP.X();
+      R__b << fP.Y();
+      R__b << fP.Z();
+      R__b << fE;
+      R__b.SetByteCount(R__c, kTRUE);
+   }
 }

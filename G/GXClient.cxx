@@ -1,24 +1,20 @@
+//*CMZ :  2.23/02 04/09/99  10.13.09  by  Rene Brun
 //*CMZ :  2.00/12 05/10/98  23.57.17  by  Rene Brun
 //*CMZ :  2.00/02 17/03/98  09.37.41  by  Rene Brun
 //*CMZ :  2.00/00 03/03/98  10.13.11  by  Rene Brun
 //*-- Author :    Rene Brun   23/02/98
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -26,8 +22,8 @@
 // TGXClient                                                            //
 //                                                                      //
 // This class is the basic interface to the graphics client. It is      //
-// an implementation of the abstract TGXW class. The companion class    //
-// for Unix is TGX11 and for Win32 is TGWin32.                          //
+// an implementation of the abstract TVirtualX class.                   //
+// The companion class  for Unix is TGX11 and for Win32 is TGWin32.     //
 //                                                                      //
 //                                                                      //
 //////////////////////////////////////////////////////////////////////////
@@ -91,7 +87,7 @@ TGXClient::TGXClient()
 
 //______________________________________________________________________________
 TGXClient::TGXClient(const char *name)
-          :TGXW((char*)name,"ROOT Client")
+          :TVirtualX((char*)name,"ROOT Client")
 {
 
    fCurrentColor = -1;

@@ -1,35 +1,26 @@
+//*CMZ :  2.23/12 31/01/2000  10.54.23  by  Rene Brun
+//*CMZ :  2.23/09 05/11/99  17.42.26  by  Rene Brun
+//*CMZ :  2.23/03 22/09/99  15.51.06  by  Rene Brun
+//*CMZ :  2.23/02 03/09/99  18.20.11  by  Rene Brun
 //*CMZ :  2.22/06 17/06/99  16.09.55  by  Rene Brun
 //*CMZ :  2.22/00 04/04/99  18.08.19  by  Rene Brun
-//*CMZ :  2.21/07 02/03/99  16.39.52  by  Rene Brun
-//*CMZ :  2.21/01 10/01/99  11.53.18  by  Rene Brun
-//*CMZ :  2.20/05 13/12/98  10.51.29  by  Rene Brun
-//*CMZ :  2.20/03 05/12/98  16.28.52  by  Rene Brun
-//*CMZ :  2.20/01 01/12/98  09.58.43  by  Rene Brun
-//*CMZ :  2.00/04 06/04/98  13.00.30  by  Rene Brun
-//*CMZ :  2.00/00 08/03/98  12.26.26  by  Rene Brun
-//*CMZ :  1.03/09 05/12/97  16.55.41  by  Fons Rademakers
 //*-- Author :    Rene Brun   18/08/95
 // ---------------------------------- F1.h
 
 #ifndef ROOT_TF1
 #define ROOT_TF1
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 
@@ -70,11 +61,14 @@ protected:
    Int_t       fNpfits;      //Number of points used in the fit
    Int_t       fNsave;       //Number of points used to fill array fSave
    Double_t    fChisquare;   //Function fit chisquare
-   Double_t    *fIntegral;   //Integral of function binned on fNpx bins
-   Double_t    *fParErrors;  //Array of errors of the fNpar parameters
-   Double_t    *fParMin;     //Array of lower limits of the fNpar parameters
-   Double_t    *fParMax;     //Array of upper limits of the fNpar parameters
-   Double_t    *fSave;       //Array of fNsave function values
+   Double_t    *fIntegral;   //![fNpx] Integral of function binned on fNpx bins
+   Double_t    *fParErrors;  //[fNpar] Array of errors of the fNpar parameters
+   Double_t    *fParMin;     //[fNpar] Array of lower limits of the fNpar parameters
+   Double_t    *fParMax;     //[fNpar] Array of upper limits of the fNpar parameters
+   Double_t    *fSave;       //[fNsave] Array of fNsave function values
+   Double_t    *fAlpha;      //!Array alpha. for each bin in x the deconvolution r of fIntegral
+   Double_t    *fBeta;       //!Array beta.  is approximated by x = alpha +beta*r *gamma*r**2
+   Double_t    *fGamma;      //!Array gamma.
    TObject     *fParent;     //Parent object hooking this function (if one)
    TH1F        *fHistogram;  //Pointer to histogram used for visualisation
    Float_t     fMaximum;     //Maximum value for plotting
@@ -106,6 +100,7 @@ public:
           Int_t     GetNpx() {return fNpx;}
     TMethodCall    *GetMethodCall() {return fMethodCall;}
           Int_t     GetNumberFitPoints() {return fNpfits;}
+   virtual char    *GetObjectInfo(Int_t px, Int_t py);
         TObject    *GetParent() {return fParent;}
        Double_t     GetParError(Int_t ipar) {return fParErrors[ipar];}
    virtual void     GetParLimits(Int_t ipar, Double_t &parmin, Double_t &parmax);
@@ -118,6 +113,7 @@ public:
         Float_t     GetXmin() {return fXmin;}
         Float_t     GetXmax() {return fXmax;}
    virtual void     InitArgs(Double_t *x, Double_t *params);
+   static  void     InitStandardFunctions();
    virtual Double_t Integral(Float_t a, Float_t b, Double_t *params=0, Float_t epsilon=0.000001);
    virtual Double_t Integral(Float_t ax, Float_t bx, Float_t ay, Float_t by, Float_t epsilon=0.000001);
    virtual Double_t Integral(Float_t ax, Float_t bx, Float_t ay, Float_t by, Float_t az, Float_t bz, Float_t epsilon=0.000001);

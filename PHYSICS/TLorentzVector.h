@@ -1,9 +1,8 @@
+//*CMZ :  2.23/12 28/01/2000  19.07.36  by  Rene Brun
+//*CMZ :  2.23/00 12/08/99  14.10.11  by  Rene Brun
 //*CMZ :  2.22/09 12/07/99  18.43.37  by  Rene Brun
 //*CMZ :  2.22/07 02/07/99  08.22.55  by  Rene Brun
 //*CMZ :  2.22/06 23/06/99  08.27.58  by  Rene Brun
-//*CMZ :  2.22/02 26/05/99  09.30.46  by  Rene Brun
-//*CMZ :  2.22/00 29/03/99  05.57.14  by  Rene Brun
-//*CMZ :  2.21/06 15/02/99  09.36.40  by  Rene Brun
 //*-- Author :    Pasha Murat, Peter Malzacher  12/02/99
 
 #ifndef ROOT_TLorentzVector
@@ -119,6 +118,11 @@ public:
   // Setters to provide the functionality (but a more meanigful name) of
   // the previous version eg SetV4... PsetV4...
 
+  inline void GetXYZT(Double_t *carray);
+  inline void GetXYZT(Float_t *carray);
+  // Getters into an arry
+  // no checking!
+
   Double_t operator () (int i) const;
   inline Double_t operator [] (int i) const;
   // Get components by index.
@@ -217,16 +221,16 @@ public:
   inline Double_t PseudoRapidity() const;
   // Returns the pseudo-rapidity, i.e. -ln(tan(theta/2))
 
-  void RotateX(Double_t angle);
+  inline void RotateX(Double_t angle);
   // Rotate the spatial component around the x-axis.
 
-  void RotateY(Double_t angle);
+  inline void RotateY(Double_t angle);
   // Rotate the spatial component around the y-axis.
 
-  void RotateZ(Double_t angle);
+  inline void RotateZ(Double_t angle);
   // Rotate the spatial component around the z-axis.
 
-  void RotateUz(TVector3 & newUzVector);
+  inline void RotateUz(TVector3 & newUzVector);
   // Rotates the reference frame from Uz to newUz (unit vector).
 
   inline void Rotate(Double_t, const TVector3 &);
@@ -242,12 +246,10 @@ public:
 
 private:
 
-  Double_t fX;  // x or px
-  Double_t fY;  // y or py
-  Double_t fZ;  // z or pz
+  TVector3 fP;  // 3 vector component
   Double_t fE;  // time or energy of (x,y,z,t) or (px,py,pz,e)
 
-  ClassDef(TLorentzVector,1) // A four vector with (-,-,-,+) metric
+  ClassDef(TLorentzVector,2) // A four vector with (-,-,-,+) metric
 
 };
 
@@ -258,85 +260,62 @@ inline TLorentzVector operator * (Double_t a, const TLorentzVector &);
 // Scaling LorentzVector with a real number
 
 
-inline Double_t TLorentzVector::X() const { return fX; }
-inline Double_t TLorentzVector::Y() const { return fY; }
-inline Double_t TLorentzVector::Z() const { return fZ; }
+inline Double_t TLorentzVector::X() const { return fP.X(); }
+inline Double_t TLorentzVector::Y() const { return fP.Y(); }
+inline Double_t TLorentzVector::Z() const { return fP.Z(); }
 inline Double_t TLorentzVector::T() const { return fE; }
 
-// inline TLorentzVector::operator TVector3 () { return TVector3(fX,fY,fZ); }
-
-inline void TLorentzVector::SetX(Double_t a) { fX = a; }
-inline void TLorentzVector::SetY(Double_t a) { fY = a; }
-inline void TLorentzVector::SetZ(Double_t a) { fZ = a; }
+inline void TLorentzVector::SetX(Double_t a) { fP.SetX(a); }
+inline void TLorentzVector::SetY(Double_t a) { fP.SetY(a); }
+inline void TLorentzVector::SetZ(Double_t a) { fP.SetZ(a); }
 inline void TLorentzVector::SetT(Double_t a) { fE = a; }
 
-inline Double_t TLorentzVector::Px() const { return fX; }
-inline Double_t TLorentzVector::Py() const { return fY; }
-inline Double_t TLorentzVector::Pz() const { return fZ; }
-inline Double_t TLorentzVector::E()  const { return fE; }
-inline Double_t TLorentzVector::Energy()  const { return fE; }
+inline Double_t TLorentzVector::Px() const { return X(); }
+inline Double_t TLorentzVector::Py() const { return Y(); }
+inline Double_t TLorentzVector::Pz() const { return Z(); }
+inline Double_t TLorentzVector::E()  const { return T(); }
+inline Double_t TLorentzVector::Energy()  const { return T(); }
 
 inline void TLorentzVector::SetPx(Double_t a) { SetX(a); }
 inline void TLorentzVector::SetPy(Double_t a) { SetY(a); }
 inline void TLorentzVector::SetPz(Double_t a) { SetZ(a); }
 inline void TLorentzVector::SetE(Double_t a)  { SetT(a); }
 
-inline TVector3 TLorentzVector::Vect() const { return TVector3(X(), Y(),Z()); }
+inline TVector3 TLorentzVector::Vect() const { return fP; }
 
-inline void TLorentzVector::SetVect(const TVector3 &p) {
-  SetX(p.X());
-  SetY(p.Y());
-  SetZ(p.Z());
-}
+inline void TLorentzVector::SetVect(const TVector3 &p) { fP = p; }
 
 inline Double_t TLorentzVector::Phi() const {
-  return fX == 0.0 && fY == 0.0 ? 0.0 : TMath::ATan2(fY,fX);
+  return fP.Phi();
 }
 
 inline Double_t TLorentzVector::Theta() const {
-  return fX == 0.0 && fY == 0.0 && fZ == 0.0 ? 0.0 : TMath::ATan2(Perp(),fZ);
+  return fP.Theta();
 }
 
 inline Double_t TLorentzVector::CosTheta() const {
-  Double_t ptot = Mag();
-  return ptot == 0.0 ? 1.0 : fZ/ptot;
+  return fP.CosTheta();
 }
 
 
 inline Double_t TLorentzVector::Rho() const {
-  return TMath::Sqrt(fX*fX+fY*fY+fZ*fZ);
+  return fP.Mag();
 }
 
 inline void TLorentzVector::SetTheta(Double_t th) {
-  Double_t ma   = Rho();
-  Double_t ph   = Phi();
-  SetX(ma*TMath::Sin(th)*TMath::Cos(ph));
-  SetY(ma*TMath::Sin(th)*TMath::Sin(ph));
-  SetZ(ma*TMath::Cos(th));
+  fP.SetTheta(th);
 }
 
 inline void TLorentzVector::SetPhi(Double_t phi) {
-  Double_t xy   = Perp();
-  SetX(xy*TMath::Cos(phi));
-  SetY(xy*TMath::Sin(phi));
+  fP.SetPhi(phi);
 }
 
 inline void TLorentzVector::SetRho(Double_t rho) {
-  Double_t factor = Rho();
-  if (factor == 0) {
-    Warning("SetRho","zero vector can't be stretched");
-  }else{
-    factor = rho/factor;
-    SetX(fX*factor);
-    SetY(fY*factor);
-    SetZ(fZ*factor);
-  }
+  fP.SetMag(rho);
 }
 
 inline void TLorentzVector::SetXYZT(Double_t  x, Double_t  y, Double_t  z, Double_t t) {
-   SetX(x);
-   SetY(y);
-   SetZ(z);
+   fP.SetXYZ(x, y, z);
    SetT(t);
 }
 
@@ -352,8 +331,19 @@ inline void TLorentzVector::SetPtEtaPhiM(Double_t pt, Double_t eta, Double_t phi
   pt = TMath::Abs(pt);
   SetPxPyPzE(pt*TMath::Cos(phi), pt*TMath::Sin(phi), pt/TMath::Tan(2.0*TMath::ATan(TMath::Exp(-eta))), m);
 }
+
 inline void TLorentzVector::SetPtEtaPhiE(Double_t pt, Double_t eta, Double_t phi, Double_t e) {
   SetPtEtaPhiM(pt, eta, phi, e);
+}
+
+inline void TLorentzVector::GetXYZT(Double_t *carray){
+  fP.GetXYZ(carray);
+  carray[3] = fE;
+}
+
+inline void TLorentzVector::GetXYZT(Float_t *carray){
+  fP.GetXYZ(carray);
+  carray[3] = fE;
 }
 
 Double_t & TLorentzVector::operator [] (int i)       { return (*this)(i); }
@@ -361,38 +351,32 @@ Double_t   TLorentzVector::operator [] (int i) const { return (*this)(i); }
 
 inline TLorentzVector &
 TLorentzVector::operator = (const TLorentzVector & q) {
-  SetX(q.X());
-  SetY(q.Y());
-  SetZ(q.Z());
-  SetT(q.T());
+  fP = q.Vect();
+  fE = q.T();
   return *this;
 }
 
 inline TLorentzVector
 TLorentzVector::operator + (const TLorentzVector & q) const {
-  return TLorentzVector(X()+q.X(), Y()+q.Y(), Z()+q.Z(), T()+q.T());
+  return TLorentzVector(fP+q.Vect(), fE+q.T());
 }
 
 inline TLorentzVector &
 TLorentzVector::operator += (const TLorentzVector & q) {
-  fX += q.X();
-  fY += q.Y();
-  fZ += q.Z();
-  fE += q.E();
+  fP += q.Vect();
+  fE += q.T();
   return *this;
 }
 
 inline TLorentzVector
 TLorentzVector::operator - (const TLorentzVector & q) const {
-  return TLorentzVector(fX-q.X(), fY-q.Y(), fZ-q.Z(), fE-q.E());
+  return TLorentzVector(fP-q.Vect(), fE-q.T());
 }
 
 inline TLorentzVector &
 TLorentzVector::operator -= (const TLorentzVector & q) {
-  fX -= q.X();
-  fY -= q.Y();
-  fZ -= q.Z();
-  fE -= q.E();
+  fP -= q.Vect();
+  fE -= q.T();
   return *this;
 }
 
@@ -401,9 +385,7 @@ inline TLorentzVector TLorentzVector::operator - () const {
 }
 
 inline TLorentzVector& TLorentzVector::operator *= (Double_t a) {
-  fX *= a;
-  fY *= a;
-  fZ *= a;
+  fP *= a;
   fE *= a;
   return *this;
 }
@@ -414,40 +396,30 @@ inline TLorentzVector TLorentzVector::operator * (Double_t a) {
 
 inline Bool_t
 TLorentzVector::operator == (const TLorentzVector & q) const {
-  return (X() == q.X() &&
-          Y() == q.Y() &&
-          Z() == q.Z() &&
-          T() == q.T());
+  return (Vect() == q.Vect() && T() == q.T());
 }
 
 inline Bool_t
 TLorentzVector::operator != (const TLorentzVector & q) const {
-  return (X() != q.X() ||
-          Y() != q.Y() ||
-          Z() != q.Z() ||
-          T() != q.T());
+  return (Vect() != q.Vect() || T() != q.T());
 }
 
-inline Double_t TLorentzVector::Perp2() const  { return fX*fX + fY*fY; }
+inline Double_t TLorentzVector::Perp2() const  { return fP.Perp2(); }
 
-inline Double_t TLorentzVector::Perp()  const  { return TMath::Sqrt(Perp2()); }
+inline Double_t TLorentzVector::Perp()  const  { return fP.Perp(); }
 
 inline Double_t TLorentzVector::Pt() const { return Perp(); }
 
 inline void TLorentzVector::SetPerp(Double_t r) {
-  Double_t p = Perp();
-  if (p != 0.0) {
-    fX *= r/p;
-    fY *= r/p;
-  }
+  fP.SetPerp(r);
 }
 
 inline Double_t TLorentzVector::Perp2(const TVector3 &v) const {
-  return Vect().Perp2(v);
+  return fP.Perp2(v);
 }
 
 inline Double_t TLorentzVector::Perp(const TVector3 &v) const {
-  return TMath::Sqrt(Perp2(v));
+  return fP.Perp(v);
 }
 
 inline Double_t TLorentzVector::Pt(const TVector3 &v) const {
@@ -455,7 +427,7 @@ inline Double_t TLorentzVector::Pt(const TVector3 &v) const {
 }
 
 inline Double_t TLorentzVector::DeltaPhi(const TLorentzVector & v) const {
-  return phi_mpi_pi(Phi()-v.Phi());
+  return TVector2::Phi_mpi_pi(Phi()-v.Phi());
 }
 
 inline Double_t TLorentzVector::Eta() const {
@@ -463,7 +435,7 @@ inline Double_t TLorentzVector::Eta() const {
 }
 inline Double_t TLorentzVector::DeltaR(const TLorentzVector & v) const {
   Double_t deta = Eta()-v.Eta();
-  Double_t dphi = phi_mpi_pi(Phi()-v.Phi());
+  Double_t dphi = TVector2::Phi_mpi_pi(Phi()-v.Phi());
   return TMath::Sqrt( deta*deta+dphi*dphi );
 }
 
@@ -477,11 +449,11 @@ inline TVector2 TLorentzVector::EtaPhiVector() {
 
 
 inline Double_t TLorentzVector::Angle(const TVector3 &v) const {
-  return Vect().Angle(v);
+  return fP.Angle(v);
 }
 
 inline Double_t TLorentzVector::Mag2() const {
-  return T()*T() - Vect().Mag2();
+  return T()*T() - fP.Mag2();
 }
 
 inline Double_t TLorentzVector::Mag() const {
@@ -502,7 +474,7 @@ inline Double_t TLorentzVector::Mt() const {
 }
 
 inline Double_t TLorentzVector::Beta() const {
-  return TMath::Sqrt( fX*fX + fY*fY + fZ*fZ )/ fE;
+  return fP.Mag() / fE;
 }
 
 inline Double_t TLorentzVector::Gamma() const {
@@ -547,25 +519,38 @@ inline void TLorentzVector::Boost(const TVector3 & b) {
 }
 
 inline Double_t TLorentzVector::PseudoRapidity() const {
-  return Vect().PseudoRapidity();
+  return fP.PseudoRapidity();
 }
 
+inline void TLorentzVector::RotateX(Double_t angle) {
+  fP.RotateX(angle);
+}
+
+inline void TLorentzVector::RotateY(Double_t angle) {
+  fP.RotateY(angle);
+}
+
+inline void TLorentzVector::RotateZ(Double_t angle) {
+  fP.RotateZ(angle);
+}
+
+inline void TLorentzVector::RotateUz(TVector3 &newUzVector) {
+  fP.RotateUz(newUzVector);
+}
 
 inline void TLorentzVector::Rotate(Double_t a, const TVector3 &v) {
-  TVector3 p( Vect() );
-  p.Rotate(a,v);
-  SetVect( p );
+  fP.Rotate(a,v);
 }
 
 inline TLorentzVector &
 TLorentzVector::operator *= (const TRotation & m) {
-  SetVect( Vect() *= m );
+  fP *= m;
   return *this;
 }
 
 inline TLorentzVector &
 TLorentzVector::Transform(const TRotation & m) {
-  SetVect( Vect().Transform(m) );
+  fP.Transform(m);
   return *this;
 }
 

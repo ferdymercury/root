@@ -1,3 +1,4 @@
+//*CMZ :  2.23/08 30/10/99  22.44.17  by  Rene Brun
 //*CMZ :  2.21/06 17/02/99  19.02.12  by  Rene Brun
 //*CMZ :  2.20/00 06/11/98  15.21.16  by  Rene Brun
 //*CMZ :  2.00/13 28/10/98  12.53.06  by  Fons Rademakers
@@ -132,6 +133,38 @@ void Event::SetHeader(Int_t i, Int_t run, Int_t date, Float_t random)
    if (!fgHist) fgHist = new TH1F("hstat","Event Histogram",100,0,1);
    fH = fgHist;
    fH->Fill(random);
+}
+
+//______________________________________________________________________________
+void Event::Streamer(TBuffer &R__b)
+{
+   // Stream an object of class Event.
+
+   if (R__b.IsReading()) {
+      Version_t R__v = R__b.ReadVersion(); if (R__v) { }
+      TObject::Streamer(R__b);
+      R__b >> fNtrack;
+      R__b >> fNseg;
+      R__b >> fNvertex;
+      R__b >> fFlag;
+      R__b >> fTemperature;
+      fEvtHdr.Streamer(R__b);
+      fTracks->Clear();
+      fTracks->Streamer(R__b);
+      if (!fH) fH = new TH1F();
+      fH->Streamer(R__b);
+   } else {
+      R__b.WriteVersion(Event::IsA());
+      TObject::Streamer(R__b);
+      R__b << fNtrack;
+      R__b << fNseg;
+      R__b << fNvertex;
+      R__b << fFlag;
+      R__b << fTemperature;
+      fEvtHdr.Streamer(R__b);
+      fTracks->Streamer(R__b);
+      fH->Streamer(R__b);
+   }
 }
 
 //______________________________________________________________________________

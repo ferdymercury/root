@@ -1,12 +1,8 @@
+//*CMZ :  2.23/06 21/10/99  08.38.17  by  Rene Brun
 //*CMZ :  2.22/00 06/04/99  19.07.00  by  Rene Brun
 //*CMZ :  2.21/05 08/02/99  11.08.46  by  Rene Brun
 //*CMZ :  2.21/01 11/01/99  15.23.35  by  Fons Rademakers
 //*CMZ :  2.00/10 23/07/98  14.24.58  by  akiya miyamoto
-//*CMZ :  2.00/08 28/05/98  18.21.22  by  Rene Brun
-//*CMZ :  2.00/06 15/05/98  09.58.29  by  Rene Brun
-//*CMZ :  2.00/05 09/04/98  17.57.14  by  Rene Brun
-//*CMZ :  2.00/00 27/02/98  15.08.51  by  Rene Brun
-//*CMZ :  1.03/09 15/12/97  08.53.31  by  Rene Brun
 //*-- Author :    Rene Brun   20/09/96
 /////////////////////////////////////////////////////////////////////////
 //      Program to convert an HBOOK file into a ROOT file
@@ -683,7 +679,7 @@ printf("Creating branch:%s, block:%s, fullname:%s, nsub=%d, itype=%d, isize=%d, 
         strcpy(oldblock,block);
         oldischar = ischar;
         Int_t lblock   = strlen(block);
-        Int_t add= (Int_t)&bigbuf[bufpos];
+        Long_t add= (Long_t)&bigbuf[bufpos];
 #ifndef WIN32
         hbnam(id,PASSCHAR(block),add,PASSCHAR("$SET"),ischar,lblock,4);
 #else

@@ -1,50 +1,26 @@
+//*CMZ :  2.23/12 30/01/2000  18.25.30  by  Rene Brun
+//*CMZ :  2.23/10 11/12/99  12.25.45  by  Rene Brun
+//*CMZ :  2.23/09 25/11/99  08.28.55  by  Rene Brun
+//*CMZ :  2.23/08 01/11/99  22.33.08  by  Rene Brun
+//*CMZ :  2.23/07 27/10/99  11.14.31  by  Rene Brun
+//*CMZ :  2.23/04 11/10/99  18.54.23  by  Rene Brun
+//*CMZ :  2.23/03 22/09/99  18.44.06  by  Rene Brun
+//*CMZ :  2.23/01 06/09/99  08.16.55  by  Rene Brun
+//*CMZ :  2.23/00 17/08/99  10.41.11  by  Rene Brun
 //*CMZ :  2.22/09 13/07/99  18.48.14  by  Rene Brun
-//*CMZ :  2.22/08 07/07/99  17.11.23  by  Rene Brun
-//*CMZ :  2.22/07 30/06/99  17.01.11  by  Rene Brun
-//*CMZ :  2.22/06 21/06/99  12.11.17  by  Rene Brun
-//*CMZ :  2.22/05 14/06/99  16.16.52  by  Rene Brun
-//*CMZ :  2.22/03 31/05/99  15.52.19  by  Rene Brun
-//*CMZ :  2.22/01 17/05/99  10.30.07  by  Rene Brun
-//*CMZ :  2.22/00 26/03/99  20.57.42  by  Rene Brun
-//*CMZ :  2.21/08 26/03/99  20.03.21  by  Rene Brun
-//*CMZ :  2.21/07 05/03/99  15.38.48  by  Rene Brun
-//*CMZ :  2.21/06 03/03/99  14.18.31  by  Rene Brun
-//*CMZ :  2.21/05 07/02/99  20.37.46  by  Rene Brun
-//*CMZ :  2.21/04 03/02/99  09.35.26  by  Rene Brun
-//*CMZ :  2.20/06 17/12/98  09.30.47  by  Rene Brun
-//*CMZ :  2.20/05 13/12/98  17.44.24  by  Rene Brun
-//*CMZ :  2.20/04 11/12/98  14.57.36  by  Rene Brun
-//*CMZ :  2.20/01 01/12/98  11.10.42  by  Rene Brun
-//*CMZ :  2.20/00 25/11/98  17.58.57  by  Rene Brun
-//*CMZ :  2.00/13 05/11/98  13.24.57  by  Rene Brun
-//*CMZ :  2.00/12 23/10/98  12.22.59  by  Rene Brun
-//*CMZ :  2.00/11 26/08/98  14.00.04  by  Fons Rademakers
-//*CMZ :  2.00/10 30/07/98  13.17.35  by  Rene Brun
-//*CMZ :  2.00/09 26/06/98  10.35.04  by  Rene Brun
-//*CMZ :  2.00/08 11/06/98  18.33.31  by  Rene Brun
-//*CMZ :  2.00/06 22/05/98  14.20.57  by  Rene Brun
-//*CMZ :  2.00/05 08/04/98  11.19.53  by  Rene Brun
-//*CMZ :  2.00/03 25/03/98  13.17.36  by  Rene Brun
-//*CMZ :  2.00/00 08/03/98  11.54.07  by  Rene Brun
-//*CMZ :  1.03/09 10/12/97  12.31.15  by  Fons Rademakers
 //*-- Author :    Rene Brun   12/01/96
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -114,11 +90,15 @@
 //      ======
 //     TBranch *branch = tree->Branch(branchname,className,object, bufsize, splitlevel)
 //          object is the address of a pointer to an existing object (derived from TObject).
+//        if splitlevel=0, the object is serialized in the branch buffer.
 //        if splitlevel=1 (default), this branch will automatically be split
 //          into subbranches, with one subbranch for each data member or object
 //          of the object itself. In case the object member is a TClonesArray,
 //          the mechanism described in case C is applied to this array.
-//        if splitlevel=0, the object is serialized in the branch buffer.
+//        if splitlevel=2 ,this branch will automatically be split
+//          into subbranches, with one subbranch for each data member or object
+//          of the object itself. In case the object member is a TClonesArray,
+//          it is processed as a TObject*, only one branch.
 //
 //  ==> Case C
 //      ======
@@ -250,11 +230,11 @@
 
 #include <string.h>
 #include <stdio.h>
+#include <float.h>
 
 #include "TROOT.h"
 #include "TSystem.h"
 #include "TFile.h"
-#include "TSelector.h"
 #include "TTree.h"
 #include "TEventList.h"
 #include "TBranchObject.h"
@@ -268,11 +248,6 @@
 #include "TLeafD.h"
 #include "TBasket.h"
 #include "TMath.h"
-#include "TH2.h"
-#include "TF2.h"
-#include "TView.h"
-#include "TPolymarker.h"
-#include "TPolymarker3d.h"
 #include "TDirectory.h"
 #include "TBranchClones.h"
 #include "TClonesArray.h"
@@ -280,33 +255,14 @@
 #include "TRealData.h"
 #include "TDataMember.h"
 #include "TDataType.h"
-#include "TVirtualPad.h"
-#include "TProfile.h"
-#include "TMinuit.h"
-#include "TTreeFormula.h"
-#include "TGaxis.h"
 #include "TBrowser.h"
 #include "TStyle.h"
-#include "TChain.h"
-#include "TProof.h"
-#include "TProofServ.h"
-#include "TSocket.h"
-#include "TSlave.h"
-#include "TMessage.h"
-#include "TPacketGenerator.h"
+#include "TVirtualPad.h"
 #include "TInterpreter.h"
-#include "Foption.h"
-
+#include "TRegexp.h"
 
 TTree *gTree;
 
-R__EXTERN TF1 *gF1;
-R__EXTERN TH1 *gCurrentHist;
-R__EXTERN Foption_t Foption;
-
-const Int_t kCloseDirectory = BIT(7);
-const Int_t kNoStats        = BIT(9);
-const Int_t kForceRead      = BIT(11);
 
 ClassImp(TTree)
 
@@ -316,31 +272,19 @@ TTree::TTree(): TNamed()
 //*-*-*-*-*-*-*-*-*-*-*Default Tree constructor*-*-*-*-*-*-*-*-*-*-*-*-*-*
 //*-*                  ========================
    fDirectory      = 0;
-   fV1             = 0;
-   fV2             = 0;
-   fV3             = 0;
-   fW              = 0;
-   fVar1           = 0;
-   fVar2           = 0;
-   fVar3           = 0;
-   fVar4           = 0;
-   fSelect         = 0;
    fTotalBuffers   = 0;
    fChainOffset    = 0;
    fReadEntry      = -1;
    fUpdate         = 0;
-   fDraw           = 0;
-   fActiveBranches = 0;
-   fSelector       = 0;
    fEventList      = 0;
-   fPacketGen      = 0;
    fPacketSize     = 100;
    fTimerInterval  = 0;
-   fIndex.Set(0);
+   fPlayer         = 0;
+   fStreamerInfoList  = new TList();
 }
 
 //______________________________________________________________________________
-TTree::TTree(const Text_t *name,const Text_t *title, Int_t maxvirtualsize)
+TTree::TTree(const char *name,const char *title, Int_t maxvirtualsize)
     :TNamed(name,title)
 {
 //*-*-*-*-*-*-*-*-*-*Normal Tree constructor*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
@@ -353,15 +297,6 @@ TTree::TTree(const Text_t *name,const Text_t *title, Int_t maxvirtualsize)
    fMaxEntryLoop   = 1000000000;
    fMaxVirtualSize = maxvirtualsize;
    fDirectory      = gDirectory;
-   fV1             = 0;
-   fV2             = 0;
-   fV3             = 0;
-   fW              = 0;
-   fVar1           = 0;
-   fVar2           = 0;
-   fVar3           = 0;
-   fVar4           = 0;
-   fSelect         = 0;
    fEntries        = 0;
    fTotBytes       = 0;
    fZipBytes       = 0;
@@ -372,14 +307,11 @@ TTree::TTree(const Text_t *name,const Text_t *title, Int_t maxvirtualsize)
    fReadEntry      = -1;
    fEstimate       = 1000000;
    fUpdate         = 0;
-   fDraw           = 0;
-   fActiveBranches = 0;
    fEventList      = 0;
-   fSelector       = 0;
-   fPacketGen      = 0;
    fPacketSize     = 100;
    fTimerInterval  = 0;
-   fIndex.Set(0);
+   fPlayer         = 0;
+   fStreamerInfoList  = new TList();
 
    SetFillColor(gStyle->GetHistFillColor());
    SetFillStyle(gStyle->GetHistFillStyle());
@@ -400,17 +332,14 @@ TTree::~TTree()
 //*-*                  =================
 
    if (fDirectory) {
-      if (!fDirectory->TestBit(kCloseDirectory)) fDirectory->GetList()->Remove(this);
+      if (!fDirectory->TestBit(TDirectory::kCloseDirectory))
+         fDirectory->GetList()->Remove(this);
    }
-   ClearFormula();
    fBranches.Delete();
    fDirectory  = 0;
-   if (fV1)    delete [] fV1;
-   if (fV2)    delete [] fV2;
-   if (fV3)    delete [] fV3;
-   if (fW)     delete [] fW;
-   delete fPacketGen;
-   if (fActiveBranches) {fActiveBranches->Clear();   delete fActiveBranches;}
+   delete fPlayer;
+   fStreamerInfoList->Delete();
+   delete fStreamerInfoList;
 }
 
 //______________________________________________________________________________
@@ -426,6 +355,14 @@ void TTree::AutoSave()
 //   This function may also be invoked by the user, for example every
 //   N entries.
 //   Each AutoSave generates a new key on the file.
+//   Once the key with the tree header has been written, the previous cycle
+//   (if any) is deleted.
+//
+//   Note that calling TTree::AutoSave too frequently (or similarly calling
+//   TTree::SetAutoSave with a small value) is an expensive operation.
+//   You should make tests for your own application to find a compromize
+//   between speed and the quantity of information you may loose in case of
+//   a job crash.
 //
 //   In case your program crashes before closing the file holding this tree,
 //   the file will be automatically recovered when you will connect the file
@@ -433,16 +370,21 @@ void TTree::AutoSave()
 //   The Tree will be recovered at the status corresponding to the last AutoSave.
 //
    if (!fDirectory) return;
-   printf("AutoSave Tree:%s after %g bytes written\n",GetName(),fTotBytes);
+//   printf("AutoSave Tree:%s after %g bytes written\n",GetName(),fTotBytes);
    fSavedBytes = fTotBytes;
    TDirectory *dirsav = gDirectory;
    fDirectory->cd();
+   TKey *key = (TKey*)fDirectory->GetListOfKeys()->FindObject(GetName());
    Write();
+   if (key) {
+      key->Delete();
+      delete key;
+   }
    dirsav->cd();
 }
 
 //______________________________________________________________________________
-TBranch *TTree::Branch(const Text_t *name, void *address, const Text_t *leaflist,Int_t bufsize)
+TBranch *TTree::Branch(const char *name, void *address, const char *leaflist,Int_t bufsize)
 {
 //*-*-*-*-*-*-*-*-*-*-*Create a new TTree Branch*-*-*-*-*-*-*-*-*-*-*-*-*
 //*-*                  =========================
@@ -462,7 +404,7 @@ TBranch *TTree::Branch(const Text_t *name, void *address, const Text_t *leaflist
 }
 
 //______________________________________________________________________________
-TBranch *TTree::Branch(const Text_t *name, const Text_t *classname, void *addobj, Int_t bufsize, Int_t splitlevel)
+TBranch *TTree::Branch(const char *name, const char *classname, void *addobj, Int_t bufsize, Int_t splitlevel)
 {
 //*-*-*-*-*-*-*-*-*-*-*Create a new TTree BranchObject*-*-*-*-*-*-*-*-*-*-*-*
 //*-*                  ===============================
@@ -500,7 +442,6 @@ TBranch *TTree::Branch(const Text_t *name, const Text_t *classname, void *addobj
    Bool_t delobj = kFALSE;
    if (!obj) {
       obj = (TObject*)cl->New();
-      obj->SetBit(kZombie);
       delobj = kTRUE;
    }
 //*-*- Loop on all public data members of the class and its base classes
@@ -538,9 +479,18 @@ TBranch *TTree::Branch(const Text_t *name, const Text_t *classname, void *addobj
          TClass *clobj = 0;
          if (!dm->IsBasic()) clobj = gROOT->GetClass(dm->GetTypeName());
          if (clobj && !strcmp("TClonesArray",clobj->GetName())) {
-            if (isDot) branch1 = new TBranchClones(&branchname[0],pointer,bufsize);
-            else       branch1 = new TBranchClones(&branchname[1],pointer,bufsize);
-            blist->Add(branch1);
+            char *cpointer  =(char*)pointer;
+            char **ppointer =(char**)cpointer;
+            TClonesArray *list = (TClonesArray*)(*ppointer);
+            if (splitlevel != 2) {
+               if (isDot) branch1 = new TBranchClones(&branchname[0],pointer,bufsize);
+               else       branch1 = new TBranchClones(&branchname[1],pointer,bufsize);
+               blist->Add(branch1);
+            } else {
+               if (isDot) branch1 = new TBranchObject(&branchname[0],list->ClassName(),pointer,bufsize);
+               else       branch1 = new TBranchObject(&branchname[1],list->ClassName(),pointer,bufsize);
+               blist->Add(branch1);
+            }
          } else {
             if (!clobj) {
                if (code != 1) continue;
@@ -567,6 +517,10 @@ TBranch *TTree::Branch(const Text_t *name, const Text_t *classname, void *addobj
             else if (code == 13) sprintf(leaflist,"%s/%s",rdname,"i");
             else if (code ==  5) sprintf(leaflist,"%s/%s",rdname,"F");
             else if (code ==  8) sprintf(leaflist,"%s/%s",rdname,"D");
+            else {
+               printf("Cannot create branch for rdname=%s, code=%d\n",branchname, code);
+               leaflist[0] = 0;
+            }
             branch1 = new TBranch(branchname,pointer,leaflist,bufsize);
             branch1->SetTitle(rdname);
             blist->Add(branch1);
@@ -581,7 +535,7 @@ TBranch *TTree::Branch(const Text_t *name, const Text_t *classname, void *addobj
 }
 
 //______________________________________________________________________________
-TBranch *TTree::Branch(const Text_t *name, void *clonesaddress, Int_t bufsize, Int_t splitlevel)
+TBranch *TTree::Branch(const char *name, void *clonesaddress, Int_t bufsize, Int_t splitlevel)
 {
 //*-*-*-*-*-*-*-*-*-*-*Create a new TTree BranchClones*-*-*-*-*-*-*-*-*-*-*-*
 //*-*                  ===============================
@@ -677,11 +631,14 @@ void TTree::BuildIndex(const char *majorname, const char *minorname)
    if (n > oldEstimate) SetEstimate(oldEstimate);
 
    // Sort array fW (contains  majorname +minorname*1e-9) into fIndex
+   Double_t *w = GetPlayer()->GetW();
    Int_t *ind = new Int_t[n];
-   TMath::Sort(n,fW,ind,0);
+   TMath::Sort(n,w,ind,0);
+   fIndexValues.Set(n);
    fIndex.Set(n);
    for (Int_t i=0;i<n;i++) {
-      fIndex.fArray[i] = fW[ind[i]];
+      fIndexValues.fArray[i] = w[ind[i]];
+      fIndex.fArray[i] = ind[i];
    }
 
    // clean up
@@ -690,25 +647,13 @@ void TTree::BuildIndex(const char *majorname, const char *minorname)
    delete [] varexp;
 }
 
-
 //______________________________________________________________________________
-void TTree::ClearFormula()
-{
-//*-*-*-*-*-*-*Delete internal buffers*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
-//*-*          =======================
-
-   delete fVar1;   fVar1 = 0;
-   delete fVar2;   fVar2 = 0;
-   delete fVar3;   fVar3 = 0;
-   delete fVar4;   fVar4 = 0;
-   delete fSelect; fSelect = 0;
-}
-
-//______________________________________________________________________________
-TTree *TTree::CloneTree(Int_t nentries)
+TTree *TTree::CloneTree(Int_t nentries, Option_t *option)
 {
 // Create a clone of this tree and copy nentries
 // By default copy all entries
+// option is reserved for future use
+//        plan to implement option "ACTIVE" to copy only active branches
 //
 // IMPORTANT: Before invoking this function, the branch addresses
 //            of this TTree must have been set.
@@ -729,6 +674,13 @@ TTree *TTree::CloneTree(Int_t nentries)
 
    tree->Reset();
 
+  // delete non active branches from the clone if option "ACTIVE" has been specified
+   TString opt = option;
+   opt.ToUpper();
+   if (opt.Contains("ACTIVE")) {
+      // this block should be implemented
+   }
+
   // copy branch addresses starting from branches
    Int_t i;
    TObjArray *branches  = GetListOfBranches();
@@ -744,12 +696,14 @@ TTree *TTree::CloneTree(Int_t nentries)
    TObjArray *tleaves = tree->GetListOfLeaves();
    Int_t nleaves = leaves->GetEntriesFast();
    for (i=0;i<nleaves;i++) {
-      TLeaf *leaf = (TLeaf*)leaves->UncheckedAt(i);
-      TBranch *branch = leaf->GetBranch();
+      TLeaf *leaf2 = (TLeaf*)tleaves->UncheckedAt(i);
+      TLeaf *leaf  = (TLeaf*)leaves->UncheckedAt(i);
+      TBranch *branch  = leaf->GetBranch();
+  //    TBranch *branch2 = leaf2->GetBranch();
+  //    branch2->SetCompressionLevel(branch2->GetFile()->GetCompressionLevel());
       if (branch->GetAddress()) {
          tree->SetBranchAddress(branch->GetName(),branch->GetAddress());
       } else {
-         TLeaf *leaf2 = (TLeaf*)tleaves->UncheckedAt(i);
          leaf2->SetAddress(leaf->GetValuePointer());
       }
    }
@@ -762,77 +716,6 @@ TTree *TTree::CloneTree(Int_t nentries)
       tree->Fill();
    }
    return tree;
-}
-
-//______________________________________________________________________________
-void TTree::CompileVariables(const Text_t *varexp, const Text_t *selection)
-{
-//*-*-*-*-*-*-*Compile input variables and selection expression*-*-*-*-*-*
-//*-*          ================================================
-//
-//  varexp is an expression of the general form e1:e2:e3
-//    where e1,etc is a formula referencing a combination of the columns
-//  Example:
-//     varexp = x     simplest case: draw a 1-Dim distribution of column named x
-//            = sqrt(x)            : draw distribution of sqrt(x)
-//            = x*y/z
-//            = y:sqrt(x) 2-Dim dsitribution of y versus sqrt(x)
-//
-//  selection is an expression with a combination of the columns
-//  Example:
-//      selection = "x<y && sqrt(z)>3.2"
-//       in a selection all the C++ operators are authorized
-//
-//
-
-   const Int_t MAXCOL = 4;
-   TString title;
-   Int_t i,nch,ncols;
-   Int_t index[MAXCOL];
-//*-*- Compile selection expression if there is one
-   fDimension = 0;
-   ClearFormula();
-   fMultiplicity = 0;
-   Int_t force = 0;
-   if (strlen(selection)) {
-      fSelect = new TTreeFormula("Selection",selection,this);
-      if (!fSelect->GetNdim()) {delete fSelect; fSelect = 0; return; }
-      if (fSelect->GetMultiplicity() == 1) fMultiplicity = fSelect;
-      if (fSelect->GetMultiplicity() == -1) force = 4;
-   }
-//*-*- if varexp is empty, take first column by default
-   nch = strlen(varexp);
-   if (nch == 0) {fDimension = 0; return;}
-   title = varexp;
-
-//*-*- otherwise select only the specified columns
-   ncols  = 1;
-   for (i=0;i<nch;i++)  if (title[i] == ':') ncols++;
-   if (ncols > 3 ) return;
-   MakeIndex(title,index);
-
-   ResetBit(kForceRead);
-   if (ncols >= 1) {
-      fVar1 = new TTreeFormula("Var1",GetNameByIndex(title,index,0),this);
-      if (!fVar1->GetNdim()) { ClearFormula(); return;}
-      if (!fMultiplicity && fVar1->GetMultiplicity() == 1) fMultiplicity = fVar1;
-      if (!force && fVar1->GetMultiplicity() == -1) force = 1;
-   }
-   if (ncols >= 2) {
-      fVar2 = new TTreeFormula("Var2",GetNameByIndex(title,index,1),this);
-      if (!fVar2->GetNdim()) { ClearFormula(); return;}
-      if (!fMultiplicity && fVar2->GetMultiplicity() == 1) fMultiplicity = fVar2;
-      if (!force && fVar2->GetMultiplicity() == -1) force = 2;
-   }
-   if (ncols >= 3) {
-      fVar3 = new TTreeFormula("Var3",GetNameByIndex(title,index,2),this);
-      if (!fVar3->GetNdim()) { ClearFormula(); return;}
-      if (!fMultiplicity && fVar3->GetMultiplicity()  == 1) fMultiplicity = fVar3;
-      if (!force && fVar3->GetMultiplicity() == -1) force = 3;
-   }
-   if (force) SetBit(kForceRead);
-
-   fDimension    = ncols;
 }
 
 //______________________________________________________________________________
@@ -855,21 +738,84 @@ Int_t TTree::CopyEntries(TTree *tree, Int_t nentries)
    return nbytes;
 }
 
-//_______________________________________________________________________
-void TTree::CreatePacketGenerator(Int_t nentries, Stat_t firstEntry)
+//______________________________________________________________________________
+TTree *TTree::CopyTree(const char *selection, Option_t *option, Int_t nentries, Int_t firstentry)
 {
-   // Create or reset the packet generator.
+//*-*-*-*-*-*-*-*-*copy a Tree with selection*-*-*-*-*-*
+//*-*              ==========================
 
-   if (!gProof) return;
+   GetPlayer();
+   if (fPlayer) return fPlayer->CopyTree(selection,option,nentries,firstentry);
+   return 0;
+}
 
-   Stat_t lastEntry = firstEntry + nentries - 1;
-   if (lastEntry > fEntries-1)
-      lastEntry = fEntries - 1;
+//______________________________________________________________________________
+void TTree::Delete(Option_t *option)
+{
+//*-*-*-*-*-*-*-*-*Delete this tree from memory or/and disk
+//*-*              ========================================
+//
+//  if option == "all" delete Tree object from memory AND from disk
+//                     all baskets on disk are deleted. All keys with same name
+//                     are deleted.
+//  if option =="" only Tree object in memory is deleted.
 
-   if (!fPacketGen)
-      fPacketGen = new TPacketGenerator(firstEntry, lastEntry, this, gProof->GetListOfActiveSlaves());
-   else
-      fPacketGen->Reset(firstEntry, lastEntry, gProof->GetListOfActiveSlaves());
+   TFile *file = GetCurrentFile();
+
+   // delete all baskets and header from file
+   if (file && !strcmp(option,"all")) {
+      if (!gFile->IsWritable()) {
+         Error("Delete","File : %s is not writable, cannot delete Tree:%s", file->GetName(),GetName());
+         return;
+      }
+
+      //find key and import Tree header in memory
+      TKey *key = fDirectory->GetKey(GetName());
+      if (!key) return;
+
+      TDirectory *dirsav = gDirectory;
+      file->cd();
+
+      //get list of leaves and loop on all the branches baskets
+      TIter next(GetListOfLeaves());
+      TLeaf *leaf;
+      char header[16];
+      Int_t ntot  = 0;
+      Int_t nbask = 0;
+      Int_t nbytes,objlen,keylen;
+      while ((leaf = (TLeaf*)next())) {
+         TBranch *branch = leaf->GetBranch();
+         Int_t nbaskets = branch->GetMaxBaskets();
+         for (Int_t i=0;i<nbaskets;i++) {
+            Int_t pos = branch->GetBasketSeek(i);
+            if (!pos) continue;
+            gFile->GetRecordHeader(header,pos,16,nbytes,objlen,keylen);
+            if (nbytes <= 0) continue;
+            gFile->MakeFree(pos,pos+nbytes-1);
+            ntot += nbytes;
+            nbask++;
+         }
+      }
+
+      // delete Tree header key and all keys with the same name
+      // A Tree may have been saved many times. Previous cycles are invalid.
+      while (key) {
+         ntot += key->GetNbytes();
+         key->Delete();
+         delete key;
+         key = fDirectory->GetKey(GetName());
+      }
+      if (dirsav) dirsav->cd();
+      if (gDebug) printf(" Deleting Tree: %s: %d baskets deleted. Total space freed = %d bytes\n",GetName(),nbask,ntot);
+   }
+
+   if (fDirectory) fDirectory->GetList()->Remove(this);
+   fDirectory = 0;
+
+    // Delete object from CINT symbol table so it can not be used anymore.
+   gInterpreter->DeleteGlobal(this);
+
+   delete this;
 }
 
 //______________________________________________________________________________
@@ -888,7 +834,7 @@ void TTree::Draw(TCut varexp, TCut selection, Option_t *option, Int_t nentries, 
 }
 
 //______________________________________________________________________________
-void TTree::Draw(const Text_t *varexp0, const Text_t *selection, Option_t *option,Int_t nentries, Int_t firstentry)
+void TTree::Draw(const char *varexp, const char *selection, Option_t *option,Int_t nentries, Int_t firstentry)
 {
 //*-*-*-*-*-*-*-*-*-*-*Draw expression varexp for specified entries-*-*-*-*-*
 //*-*                  ===========================================
@@ -1030,293 +976,9 @@ void TTree::Draw(const Text_t *varexp0, const Text_t *selection, Option_t *optio
 //       - type the command  "TTreeViewer TV(treeName)"
 //       - execute statement "tree->StartViewer();"
 //
-   if (fEntries == 0) return;
-   TString  opt;
-   Text_t *hdefault = (char *)"htemp";
-   Text_t *varexp;
-   Int_t i,j,hkeep, action;
-   opt = option;
-   opt.ToLower();
-   Text_t *hname = strstr(varexp0,">>");
-   TH1 *oldh1 = 0;
-   TEventList *elist = 0;
-   char htitle[256]; htitle[0] = '\0';
-   Bool_t profile = kFALSE;
 
-   gCurrentHist = 0;
-   if (hname) {
-      hname += 2;
-      hkeep  = 1;
-      i = strcspn(varexp0,">>");
-      varexp = new char[i+1];
-      varexp[0] = 0; //necessary if i=0
-      Bool_t hnameplus = kFALSE;
-      while (*hname == ' ') hname++;
-      if (*hname == '+') {
-         hnameplus = kTRUE;
-         hname++;
-         while (*hname == ' ') hname++;
-         j = strlen(hname)-1;
-         while (j) {
-            if (hname[j] != ' ') break;
-            hname[j] = 0;
-            j--;
-         }
-      }
-      if (i) {
-         strncpy(varexp,varexp0,i); varexp[i]=0;
-         oldh1 = (TH1*)gDirectory->Get(hname);
-         if (oldh1 && !hnameplus) oldh1->Reset();
-      } else {
-         elist = (TEventList*)gDirectory->Get(hname);
-         if (!elist) {
-            elist = new TEventList(hname,selection,1000,0);
-         }
-         if (elist && !hnameplus) elist->Reset();
-      }
-   } else {
-      hname  = hdefault;
-      hkeep  = 0;
-      varexp = (char*)varexp0;
-      if (gDirectory) {
-         oldh1 = (TH1*)gDirectory->Get(hname);
-         if (oldh1 && !gProofServ) { oldh1->Delete(); oldh1 = 0;}
-      }
-   }
-//*-* Do not process more than fMaxEntryLoop entries
-   if (nentries > fMaxEntryLoop) nentries = fMaxEntryLoop;
-
-//*-*- Decode varexp and selection
-
-   CompileVariables(varexp, selection);
-   if (!fVar1 && !elist) return;
-
-//*-*- In case oldh1 exists, check dimensionality
-   Int_t nsel = strlen(selection);
-   if (nsel > 1) {
-      if (nsel < 80-(Int_t)strlen(htitle))
-         sprintf(htitle,"%s {%s}",varexp,selection);
-      else
-         sprintf(htitle,"%s {...}",varexp);
-   } else {
-      sprintf(htitle,"%s",varexp);
-   }
-   if (oldh1) {
-      Int_t mustdelete = 0;
-      if (oldh1->InheritsFrom("TProfile")) profile = kTRUE;
-      if (opt.Contains("prof")) {
-         if (!profile) mustdelete = 1;
-      } else {
-         if (oldh1->GetDimension() != fDimension) mustdelete = 1;
-      }
-      if (mustdelete) {
-         Warning("Draw","Deleting old histogram with different dimensions");
-         delete oldh1; oldh1 = 0;
-      }
-   }
-
-//*-*- Create a default canvas if none exists
-   fDraw = 0;
-   if (!gPad && !gProofServ && !opt.Contains("goff") && fDimension > 0) {
-      if (!gROOT->GetMakeDefCanvas()) return;
-      (gROOT->GetMakeDefCanvas())();
-   }
-
-//*-*- 1-D distribution
-   if (fDimension == 1) {
-      action = 1;
-      if (!oldh1) {
-         fNbins[0] = 100;
-         if (gPad && opt.Contains("same")) {
-             TH1 *oldhtemp = (TH1*)gPad->GetPrimitive(hdefault);
-             if (oldhtemp) {
-                fNbins[0] = oldhtemp->GetXaxis()->GetNbins();
-                fVmin[0]  = oldhtemp->GetXaxis()->GetXmin();
-                fVmax[0]  = oldhtemp->GetXaxis()->GetXmax();
-             } else {
-                fVmin[0]  = gPad->GetUxmin();
-                fVmax[0]  = gPad->GetUxmax();
-             }
-         } else {
-             action = -1;
-         }
-      }
-      TH1F *h1;
-      if (oldh1) {
-         h1 = (TH1F*)oldh1;
-         fNbins[0] = h1->GetXaxis()->GetNbins();  // for proofserv
-      } else {
-         h1 = new TH1F(hname,htitle,fNbins[0],fVmin[0],fVmax[0]);
-         h1->SetLineColor(GetLineColor());
-         h1->SetLineWidth(GetLineWidth());
-         h1->SetLineStyle(GetLineStyle());
-         h1->SetFillColor(GetFillColor());
-         h1->SetFillStyle(GetFillStyle());
-         h1->SetMarkerStyle(GetMarkerStyle());
-         h1->SetMarkerColor(GetMarkerColor());
-         h1->SetMarkerSize(GetMarkerSize());
-         if (!hkeep) {
-            h1->SetBit(kCanDelete);
-            h1->SetDirectory(0);
-         }
-         if (opt.Length() && opt[0] == 'e') h1->Sumw2();
-      }
-
-      if (TProof::Active()) {
-         CreatePacketGenerator(nentries, firstentry);
-         gProof->SendCurrentState();
-         if (action == -1) h1->SetBinContent(0,1.0);
-         gProof->SendObject(h1);
-         if (!hkeep) delete h1;
-         char *mess = new char[strlen(varexp0)+strlen(selection)+strlen(option)+128];
-         sprintf(mess, "%s %d %d", GetName(), fMaxVirtualSize, fEstimate);
-         gProof->Broadcast(mess, kPROOF_TREEDRAW);
-         sprintf(mess,"%s->Draw(\"%s\",\"%s\",\"%s\",%d,%d)", GetName(), varexp0,
-                 selection, option, nentries, firstentry);
-         gProof->Broadcast(mess, kMESS_CINT);
-         delete [] mess;
-         gProof->Loop(this);
-         if (gDirectory) {
-            h1 = (TH1F*)gDirectory->Get(hname);
-            if (!h1) {
-               Error("Draw", "histogram %s not returned by PROOF", hname);
-               fDraw = 1;
-            } else if (!hkeep) {
-               h1->SetBit(kCanDelete);
-               h1->SetDirectory(0);
-            }
-         }
-      } else if (gProofServ) {
-         Stat_t first;
-         fNfill = 0;
-         if (h1->GetBinContent(0) > 0) {
-            h1->SetBinContent(0,0.0);
-            action = -1;
-         }
-         while (gProofServ->GetNextPacket(nentries, first))
-            EntryLoop(action, h1, nentries, (Int_t)first, option);
-         EntryLoop(action, h1, nentries, (Int_t)first, option);
-
-         // Send all created objects back to client
-         TObject *obj;
-         TIter next(gDirectory->GetList());
-         while ((obj = next()))
-            if (obj->InheritsFrom(TH1::Class())) { // send only histograms back
-               if (gProofServ->GetLogLevel() > 2)
-                  printf("Slave %d: %s: Nentries is %.0f\n",
-                         gProofServ->GetOrdinal(), obj->GetName(),
-                         ((TH1*)obj)->GetEntries());
-               gProofServ->GetSocket()->SendObject(obj);
-            }
-         fDraw = 1;   // do not draw histogram
-      } else
-         EntryLoop(action, h1, nentries, firstentry, option);
-
-      if (!fDraw && !opt.Contains("goff")) h1->Draw(option);
-
-//*-*- 2-D distribution
-   } else if (fDimension == 2) {
-      action = 2;
-      if (!opt.Contains("same") && gPad)  gPad->Clear();
-      if (!oldh1 || !opt.Contains("same")) {
-         fNbins[0] = 40;
-         fNbins[1] = 40;
-         if (opt.Contains("prof")) fNbins[1] = 100;
-         if (opt.Contains("same")) {
-             TH1 *oldhtemp = (TH1*)gPad->GetPrimitive(hdefault);
-             if (oldhtemp) {
-                fNbins[1] = oldhtemp->GetXaxis()->GetNbins();
-                fVmin[1]  = oldhtemp->GetXaxis()->GetXmin();
-                fVmax[1]  = oldhtemp->GetXaxis()->GetXmax();
-                fNbins[0] = oldhtemp->GetYaxis()->GetNbins();
-                fVmin[0]  = oldhtemp->GetYaxis()->GetXmin();
-                fVmax[0]  = oldhtemp->GetYaxis()->GetXmax();
-             } else {
-                fNbins[1] = 40;
-                fVmin[1]  = gPad->GetUxmin();
-                fVmax[1]  = gPad->GetUxmax();
-                fNbins[0] = 40;
-                fVmin[0]  = gPad->GetUymin();
-                fVmax[0]  = gPad->GetUymax();
-             }
-         } else {
-             action = -2;
-         }
-      }
-      if (profile || opt.Contains("prof")) {
-         TProfile *hp;
-         if (oldh1) {
-            action = 4;
-            hp = (TProfile*)oldh1;
-         } else {
-            if (action < 0) action = -4;
-            if (opt.Contains("profs"))
-               hp = new TProfile(hname,htitle,fNbins[1],fVmin[1], fVmax[1],"s");
-            else
-               hp = new TProfile(hname,htitle,fNbins[1],fVmin[1], fVmax[1],"");
-            if (!hkeep) {
-               hp->SetBit(kCanDelete);
-               hp->SetDirectory(0);
-            }
-            hp->SetLineColor(GetLineColor());
-            hp->SetLineWidth(GetLineWidth());
-            hp->SetLineStyle(GetLineStyle());
-            hp->SetFillColor(GetFillColor());
-            hp->SetFillStyle(GetFillStyle());
-            hp->SetMarkerStyle(GetMarkerStyle());
-            hp->SetMarkerColor(GetMarkerColor());
-            hp->SetMarkerSize(GetMarkerSize());
-         }
-
-         EntryLoop(action,hp,nentries, firstentry, option);
-
-         if (!fDraw && !opt.Contains("goff")) hp->Draw(option);
-      } else {
-         TH2F *h2;
-         if (oldh1) {
-            h2 = (TH2F*)oldh1;
-         } else {
-            h2 = new TH2F(hname,htitle,fNbins[1],fVmin[1], fVmax[1], fNbins[0], fVmin[0], fVmax[0]);
-            h2->SetLineColor(GetLineColor());
-            h2->SetFillColor(GetFillColor());
-            h2->SetFillStyle(GetFillStyle());
-            h2->SetMarkerStyle(GetMarkerStyle());
-            h2->SetMarkerColor(GetMarkerColor());
-            h2->SetMarkerSize(GetMarkerSize());
-            if (!hkeep) {
-               h2->SetBit(kCanDelete);
-               h2->SetBit(kNoStats);
-               h2->SetDirectory(0);
-            }
-         }
-         Int_t noscat = strlen(option);
-         if (opt.Contains("same")) noscat -= 4;
-         if (noscat) {
-            EntryLoop(action,h2,nentries, firstentry, option);
-            if (!fDraw && !opt.Contains("goff")) h2->Draw(option);
-         } else {
-            action = 12;
-            if (!oldh1 && !opt.Contains("same")) action = -12;
-            EntryLoop(action,h2,nentries, firstentry, option);
-            if (oldh1 && !fDraw && !opt.Contains("goff")) h2->Draw(option);
-         }
-      }
-
-//*-*- 3-D distribution
-   } else if (fDimension == 3) {
-      action = 13;
-      if (!opt.Contains("same")) action = -13;
-      EntryLoop(action,0,nentries, firstentry, option);
-
-//*-* an Event List
-   } else {
-      action = 5;
-      Int_t oldEstimate = fEstimate;
-      SetEstimate(1);
-      EntryLoop(action,elist,nentries, firstentry, option);
-      SetEstimate(oldEstimate);
-   }
-   if (hkeep) delete [] varexp;
+   GetPlayer();
+   if (fPlayer) fPlayer->DrawSelect(varexp,selection,option,nentries,firstentry);
 }
 
 
@@ -1344,214 +1006,6 @@ void TTree::DropBuffers(Int_t)
       }
    }
 }
-
-
-//______________________________________________________________________________
-void TTree::EstimateLimits(Int_t, Int_t nentries, Int_t firstentry)
-{
-//*-*-*-*-*Estimate histogram limits for conditions of input parameters*-*-*-*
-//*-*      ============================================================
-//
-//  The estimation of the limits is based on estimate entries
-//  The first estimate/2 and the last esstimate/2 entries are used.
-//  This algorithm is in general good enough to make a reasonable estimation
-//  with a small number of entries.
-//
-//  nentries is the number of entries to process (default is all)
-//  first is the first entry to process (default is 0)
-//
-
-   Int_t lastentry;
-   lastentry = firstentry + nentries -1;
-   if (lastentry > fEntries-1) {
-      lastentry = (Int_t)fEntries -1;
-      nentries   = lastentry - firstentry + 1;
-   }
-   fVmin[0] = fVmin[1] = fVmin[2] = 1e30;
-   fVmax[0] = fVmax[1] = fVmax[2] = -fVmin[0];
-
-   Int_t action = 11;
-   EntryLoop(action,0,nentries,firstentry);
-
-//*-*- Compute nice limits
-   Int_t nchans = fNbins[0];
-   if (fVar1) {
-      if (fVmin[0] >= fVmax[0]) { fVmin[0] -= 1; fVmax[0] += 1;}
-      FindGoodLimits(nchans,fNbins[0],fVmin[0],fVmax[0]);
-   }
-   if (fVar2) {
-      if (fVmin[1] >= fVmax[1]) { fVmin[1] -= 1; fVmax[1] += 1;}
-      FindGoodLimits(nchans,fNbins[1],fVmin[1],fVmax[1]);
-   }
-   if (fVar3) {
-      if (fVmin[2] >= fVmax[2]) { fVmin[2] -= 1; fVmax[2] += 1;}
-      FindGoodLimits(nchans,fNbins[2],fVmin[2],fVmax[2]);
-   }
-}
-
-//______________________________________________________________________________
-void TTree::EntryLoop(Int_t &action, TObject *obj, Int_t nentries, Int_t firstentry, Option_t *option)
-{
-//*-*-*-*-*-*-*-*-*-*-*-*-*Loop on all entries*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
-//*-*                      ==================
-//
-//  nentries is the number of entries to process (default is all)
-//  first is the first entry to process (default is 0)
-//
-//  action =  1  Fill 1-D histogram obj
-//         =  2  Fill 2-D histogram obj
-//         =  3  Fill 3-D histogram obj
-//         =  4  Fill Profile histogram obj
-//         =  5  Fill a TEventlist
-//         = 11  Estimate Limits
-//         = 12  Fill 2-D PolyMarker obj
-//         = 13  Fill 3-D PolyMarker obj
-//  action < 0   Evaluate Limits for case abs(action)
-//
-
-   Int_t i,entry,entryNumber, lastentry,ndata,nfill0;
-   Double_t ww;
-   Int_t  npoints;
-   lastentry = firstentry + nentries - 1;
-   if (lastentry > fEntries-1) {
-      lastentry  = (Int_t)fEntries - 1;
-      nentries   = lastentry - firstentry + 1;
-   }
-
-   TDirectory *cursav = gDirectory;
-
-   if (!gProofServ) fNfill = 0;
-
-   //Create a timer to get control in the entry loop(s)
-   TProcessEventTimer *timer = 0;
-   if (!gROOT->IsBatch() && !gProofServ && fTimerInterval)
-      timer = new TProcessEventTimer(fTimerInterval);
-
-   npoints = 0;
-   if (!fV1 && fVar1)   fV1 = new Float_t[fEstimate];
-   if (!fV2 && fVar2)   fV2 = new Float_t[fEstimate];
-   if (!fV3 && fVar3)   fV3 = new Float_t[fEstimate];
-   if (!fW)             fW  = new Double_t[fEstimate];
-   Int_t force = TestBit(kForceRead);
-   if (!fMultiplicity || !fDimension) {
-      for (entry=firstentry;entry<firstentry+nentries;entry++) {
-         entryNumber = GetEntryNumber(entry);
-         if (entryNumber < 0) break;
-         if (timer && timer->ProcessEvents()) break;
-         if (gROOT->IsInterrupted()) break;
-         LoadTree(entryNumber);
-         if (fSelect) {
-            if (force) fSelect->GetNdata();
-            fW[fNfill] = fSelect->EvalInstance(0);
-            if (!fW[fNfill]) continue;
-         } else fW[fNfill] = 1;
-         if (fVar1) {
-            if (force) fVar1->GetNdata();
-            fV1[fNfill] = fVar1->EvalInstance(0);
-         }
-         if (fVar2) {
-            if (force) fVar2->GetNdata();
-            fV2[fNfill] = fVar2->EvalInstance(0);
-            if (fVar3) {
-               if (force) fVar3->GetNdata();
-               fV3[fNfill] = fVar3->EvalInstance(0);
-            }
-         }
-         fNfill++;
-         if (fNfill >= fEstimate) {
-            TakeAction(fNfill,npoints,action,obj,option);
-            fNfill = 0;
-         }
-      }
-
-      // nentries == -1 when all entries have been processed by proofserver
-      if (gProofServ && nentries != -1) return;
-
-      if (fNfill) {
-         TakeAction(fNfill,npoints,action,obj,option);
-      }
-      fSelectedRows = npoints;
-      if (npoints == 0) fDraw = 1; // do not draw
-      delete timer;
-      return;
-   }
-
-   Bool_t Var1Multiple = kFALSE;
-   Bool_t Var2Multiple = kFALSE;
-   Bool_t Var3Multiple = kFALSE;
-   Bool_t SelectMultiple = kFALSE;
-   if (fVar1 && fVar1->GetMultiplicity()) Var1Multiple = kTRUE;
-   if (fVar2 && fVar2->GetMultiplicity()) Var2Multiple = kTRUE;
-   if (fVar3 && fVar3->GetMultiplicity()) Var3Multiple = kTRUE;
-   if (fSelect && fSelect->GetMultiplicity()) SelectMultiple = kTRUE;
-
-
-   for (entry=firstentry;entry<firstentry+nentries;entry++) {
-      entryNumber = GetEntryNumber(entry);
-      if (entryNumber < 0) break;
-      if (timer && timer->ProcessEvents()) break;
-      if (gROOT->IsInterrupted()) break;
-      LoadTree(entryNumber);
-      nfill0 = fNfill;
-      ndata = fMultiplicity->GetNdata();
-      if (!ndata) continue;
-      if (fSelect) {
-         fW[fNfill] = fSelect->EvalInstance(0);
-         if (!fW[fNfill]  && !SelectMultiple) continue;
-      } else fW[fNfill] = 1;
-      fV1[fNfill] = fVar1->EvalInstance(0);
-      if (fVar2) {
-         fV2[fNfill] = fVar2->EvalInstance(0);
-         if (fVar3)  fV3[fNfill] = fVar3->EvalInstance(0);
-      }
-      if (fW[fNfill]) {
-         fNfill++;
-         if (fNfill >= fEstimate) {
-            TakeAction(fNfill,npoints,action,obj,option);
-            fNfill = 0;
-         }
-      }
-      ww = 1;
-
-      for (i=1;i<ndata;i++) {
-         if (SelectMultiple) {
-            ww = fSelect->EvalInstance(i);
-            if (ww == 0) continue;
-         }
-         if (Var1Multiple) fV1[fNfill] = fVar1->EvalInstance(i);
-         else              fV1[fNfill] = fV1[nfill0];
-         if (fVar2) {
-            if (Var2Multiple) fV2[fNfill] = fVar2->EvalInstance(i);
-            else              fV2[fNfill] = fV2[nfill0];
-            if (fVar3) {
-               if (Var3Multiple) fV3[fNfill] = fVar3->EvalInstance(i);
-               else              fV3[fNfill] = fV3[nfill0];
-            }
-         }
-         fW[fNfill] = ww;
-
-         fNfill++;
-         if (fNfill >= fEstimate) {
-            TakeAction(fNfill,npoints,action,obj,option);
-            fNfill = 0;
-         }
-      }
-   }
-
-   delete timer;
-
-   // nentries == -1 when all entries have been processed by proofserver
-   if (gProofServ && nentries != -1) return;
-
-   if (fNfill) {
-      TakeAction(fNfill,npoints,action,obj,option);
-   }
-
-   fSelectedRows = npoints;
-   if (npoints == 0) fDraw = 1; // do not draw
-   if (cursav) cursav->cd();
-}
-
 
 //______________________________________________________________________________
 Int_t TTree::Fill()
@@ -1588,35 +1042,7 @@ Int_t TTree::Fill()
 }
 
 //______________________________________________________________________________
-void TTree::FindGoodLimits(Int_t nbins, Int_t &newbins, Float_t &xmin, Float_t &xmax)
-{
-//*-*-*-*-*-*-*-*-*Find reasonable bin values*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
-//*-*              ==========================
-
-   static TGaxis gaxis_tree;
-   Float_t binlow,binhigh,binwidth;
-   Int_t n;
-   Float_t dx = 0.1*(xmax-xmin);
-   Float_t umin = xmin - dx;
-   Float_t umax = xmax + dx;
-   if (umin < 0 && xmin >= 0) umin = 0;
-   if (umax > 0 && xmax <= 0) umax = 0;
-
-   gaxis_tree.Optimize(umin,umax,nbins,binlow,binhigh,n,binwidth);
-
-   if (binwidth <= 0 || binwidth > 1.e+39) {
-      xmin = -1;
-      xmax = 1;
-   } else {
-      xmin    = binlow;
-      xmax    = binhigh;
-   }
-
-   newbins = nbins;
-}
-
-//______________________________________________________________________________
-void TTree::Fit(const Text_t *formula ,const Text_t *varexp, const Text_t *selection,Option_t *option ,Option_t *goption,Int_t nentries, Int_t firstentry)
+void TTree::Fit(const char *formula ,const char *varexp, const char *selection,Option_t *option ,Option_t *goption,Int_t nentries, Int_t firstentry)
 {
 //*-*-*-*-*-*-*-*-*Fit  a projected item(s) from a Tree*-*-*-*-*-*-*-*-*-*
 //*-*              ======================================
@@ -1634,25 +1060,12 @@ void TTree::Fit(const Text_t *formula ,const Text_t *varexp, const Text_t *selec
 //    directory.
 //
 
-   Int_t nch = strlen(option) + 10;
-   char *opt = new char[nch];
-   if (option) sprintf(opt,"%sgoff",option);
-   else        strcpy(opt,"goff");
-
-   Draw(varexp,selection,opt,nentries,firstentry);
-
-   delete [] opt;
-
-   TH1 *hfit = gCurrentHist;
-if (!hfit)printf("ERROR hfit=0\n");
-//printf("hname=%s, formula=%s, option=%s, goption=%s\n",hfit->GetName(),formula,option,goption);
-   if (hfit) {
-      hfit->Fit(formula,option,goption);
-   }
+   GetPlayer();
+   if (fPlayer) fPlayer->Fit(formula,varexp,selection,option,goption,nentries,firstentry);
 }
 
 //______________________________________________________________________________
-TBranch *TTree::GetBranch(const Text_t *name)
+TBranch *TTree::GetBranch(const char *name)
 {
 //*-*-*-*-*-*Return pointer to the branch with name*-*-*-*-*-*-*-*
 //*-*        ======================================
@@ -1711,20 +1124,11 @@ Int_t TTree::GetEntry(Int_t entry, Int_t getall)
    Int_t nbytes = 0;
    fReadEntry = entry;
    TBranch *branch;
-   if (fActiveBranches && getall == 0) {
-      TObjLink *lnk = fActiveBranches->FirstLink();
-      while (lnk) {
-          branch = (TBranch*)lnk->GetObject();
-          nbytes += branch->GetEntry(entry);
-          lnk = lnk->Next();
-      }
-      return nbytes;
-   }
 
    Int_t nb = fBranches.GetEntriesFast();
    for (i=0;i<nb;i++)  {
       branch = (TBranch*)fBranches.UncheckedAt(i);
-      nbytes += branch->GetEntry(entry);
+      nbytes += branch->GetEntry(entry, getall);
    }
    return nbytes;
 }
@@ -1747,12 +1151,14 @@ Int_t TTree::GetEntryNumber(Int_t entry)
 Int_t TTree::GetEntryNumberWithIndex(Int_t major, Int_t minor)
 {
 // Return entry number corresponding to major and minor number
+// Note that this function returns only the entry number, not the data
+// To read the data corresponding to an entry number, use TTree::GetEntryWithIndex
 
    if (fIndex.fN == 0) return -1;
    Double_t value = major + minor*1e-9;
-   Int_t i = TMath::BinarySearch(Int_t(fEntries), fIndex.fArray, value);
-   if (fIndex.fArray[i] != value) return -1;
-   return i;
+   Int_t i = TMath::BinarySearch(Int_t(fEntries), fIndexValues.fArray, value);
+   if (TMath::Abs(fIndexValues.fArray[i] - value) > 1.e-10) return -1;
+   return fIndex.fArray[i];
 }
 
 
@@ -1774,7 +1180,7 @@ Int_t TTree::GetEntryWithIndex(Int_t major, Int_t minor)
 
 
 //______________________________________________________________________________
-TLeaf *TTree::GetLeaf(const Text_t *name)
+TLeaf *TTree::GetLeaf(const char *name)
 {
 //*-*-*-*-*-*Return pointer to the 1st Leaf named name in any Branch-*-*-*-*-*
 //*-*        =======================================================
@@ -1786,7 +1192,7 @@ TLeaf *TTree::GetLeaf(const Text_t *name)
 
 
 //______________________________________________________________________________
-Float_t TTree::GetMaximum(Text_t *columname)
+Float_t TTree::GetMaximum(const char *columname)
 {
 //*-*-*-*-*-*-*-*-*Return maximum of column with name columname*-*-*-*-*-*-*
 //*-*              ============================================
@@ -1794,7 +1200,7 @@ Float_t TTree::GetMaximum(Text_t *columname)
    TLeaf *leaf = GetLeaf(columname);
    if (!leaf) return 0;
    TBranch *branch = leaf->GetBranch();
-   Float_t cmax = -1e30;
+   Float_t cmax = -FLT_MAX; //in float.h
    for (Int_t i=0;i<fEntries;i++) {
       branch->GetEntry(i);
       Float_t val = leaf->GetValue();
@@ -1805,7 +1211,7 @@ Float_t TTree::GetMaximum(Text_t *columname)
 
 
 //______________________________________________________________________________
-Float_t TTree::GetMinimum(Text_t *columname)
+Float_t TTree::GetMinimum(const char *columname)
 {
 //*-*-*-*-*-*-*-*-*Return minimum of column with name columname*-*-*-*-*-*-*
 //*-*              ============================================
@@ -1813,7 +1219,7 @@ Float_t TTree::GetMinimum(Text_t *columname)
    TLeaf *leaf = GetLeaf(columname);
    if (!leaf) return 0;
    TBranch *branch = leaf->GetBranch();
-   Float_t cmin = 1e30;
+   Float_t cmin = FLT_MAX; //in float.h
    for (Int_t i=0;i<fEntries;i++) {
       branch->GetEntry(i);
       Float_t val = leaf->GetValue();
@@ -1824,7 +1230,7 @@ Float_t TTree::GetMinimum(Text_t *columname)
 
 
 //______________________________________________________________________________
-const Text_t *TTree::GetNameByIndex(TString &varexp, Int_t *index,Int_t colindex)
+const char *TTree::GetNameByIndex(TString &varexp, Int_t *index,Int_t colindex)
 {
 //*-*-*-*-*-*-*-*-*Return name corresponding to colindex in varexp*-*-*-*-*-*
 //*-*              ===============================================
@@ -1844,26 +1250,14 @@ const Text_t *TTree::GetNameByIndex(TString &varexp, Int_t *index,Int_t colindex
 }
 
 //______________________________________________________________________________
-void TTree::GetNextPacket(TSlave *sl, Int_t &nentries, Stat_t &firstentry, Stat_t &processed)
+TVirtualTreePlayer *TTree::GetPlayer()
 {
-   // Return in nentries and firstentry the optimal range of entries (packet)
-   // to be processed by slave sl. See TPacketGenerator for the algorithm
-   // used to get the packet size.
+   // Load the TTreePlayer (if not already done)
+   // Pointer to player is fPlayer
 
-   fPacketGen->GetNextPacket(sl, nentries, firstentry);
-   processed = fPacketGen->GetEntriesProcessed();
-}
-
-//______________________________________________________________________________
-TSelector *TTree::GetSelector()
-{
-//*-*-*-*-*-*Return current selector or create default selector
-//*-*        ==================================================
-
-   if (fSelector) return fSelector;
-   fSelector = new TSelector("selector.C","The default macro selector");
-   fSelector->Init(this);
-   return fSelector;
+   if (fPlayer) return fPlayer;
+   fPlayer = TVirtualTreePlayer::TreePlayer(this);
+   return fPlayer;
 }
 
 //______________________________________________________________________________
@@ -1875,7 +1269,7 @@ Int_t TTree::LoadTree(Int_t entry)
 // this function is overloaded in TChain
 
    fReadEntry = entry;
-   return 0;
+   return fReadEntry;
 
 }
 
@@ -1885,31 +1279,9 @@ void TTree::Loop(Option_t *option, Int_t nentries, Int_t firstentry)
 //*-*-*-*-*-*-*-*-*Loop on nentries of this tree starting at firstentry
 //*-*              ===================================================
 
-   GetSelector();
-
-//*-* Do not process more than fMaxEntryLoop entries
-   if (nentries > fMaxEntryLoop) nentries = fMaxEntryLoop;
-   Int_t lastentry = firstentry + nentries -1;
-   if (lastentry > fEntries-1) {
-      lastentry = (Int_t)fEntries -1;
-   }
-
-   fSelector->Start(option);
-
-   for (Int_t entry = firstentry;entry<=lastentry;entry++) {
-      fSelector->Execute(this, entry);
-   }
-
-   fSelector->Finish(option);
-}
-
-//______________________________________________________________________________
-Int_t TTree::MakeChopt(Option_t *)
-{
-//*-*-*-*-*-*-*-*-*Fill Hoption structure with the codes in option*-*-*-*-*-*
-//*-*              ===============================================
-
-   return 0;
+   GetPlayer();
+   if (!fPlayer) return;
+   fPlayer->Loop(option,nentries,firstentry);
 }
 
 //______________________________________________________________________________
@@ -1949,293 +1321,9 @@ Int_t TTree::MakeClass(const char *classname)
 //
 //====>
 
-// Connect output files
-   char *thead = new char[256];
-
-   if (!classname) classname = GetName();
-   sprintf(thead,"%s.h",classname);
-   FILE *fp = fopen(thead,"w");
-   if (!fp) {
-      printf("Cannot open output file:%s\n",thead);
-      delete [] thead;
-      return 3;
-   }
-   char *tcimp = new char[256];
-   sprintf(tcimp,"%s.C",classname);
-   FILE *fpc = fopen(tcimp,"w");
-   if (!fpc) {
-      printf("Cannot open output file:%s\n",tcimp);
-      delete [] thead;
-      delete [] tcimp;
-      return 3;
-   }
-   char *treefile = new char[1000];
-   if (fDirectory && fDirectory->GetFile())
-                strcpy(treefile,fDirectory->GetFile()->GetName());
-   else         strcpy(treefile,"Memory Directory");
-
-//======================Generate classname.h=====================
-   // Print header
-   TObjArray *leaves = GetListOfLeaves();
-   Int_t nleaves = leaves->GetEntriesFast();
-   TDatime td;
-   fprintf(fp,"//////////////////////////////////////////////////////////\n");
-   fprintf(fp,"//   This class has been automatically generated \n");
-   fprintf(fp,"//     (%s by ROOT version%s)\n",td.AsString(),gROOT->GetVersion());
-   fprintf(fp,"//   from TTree %s/%s\n",GetName(),GetTitle());
-   fprintf(fp,"//   found on file: %s\n",treefile);
-   fprintf(fp,"//////////////////////////////////////////////////////////\n");
-   fprintf(fp,"\n");
-   fprintf(fp,"\n");
-   fprintf(fp,"#ifndef %s_h\n",classname);
-   fprintf(fp,"#define %s_h\n",classname);
-   fprintf(fp,"\n");
-   fprintf(fp,"#if !defined(__CINT__) || defined(__MAKECINT__)\n");
-   fprintf(fp,"#include <TTree.h>\n");
-   fprintf(fp,"#include <TFile.h>\n");
-   fprintf(fp,"#endif\n");
-
-// First loop on all leaves to generate dimension declarations
-   Int_t len, lenb,l;
-   char blen[64];
-   for (l=0;l<nleaves;l++) {
-      TLeaf *leaf = (TLeaf*)leaves->UncheckedAt(l);
-      strcpy(blen,leaf->GetName());
-      lenb = strlen(blen);
-      if (blen[lenb-1] == '_') {
-         blen[lenb-1] = 0;
-         fprintf(fp,"   const Int_t kMax%s = %d;\n",blen,leaf->GetMaximum());
-      }
-   }
-
-
-// second loop on all leaves to generate type declarations
-   fprintf(fp,"\n");
-   fprintf(fp,"class %s {\n",classname);
-   fprintf(fp,"   public :\n");
-   fprintf(fp,"   TTree          *fTree; //pointer to the analyzed TTree\n");
-   fprintf(fp,"//Declaration of leaves types\n");
-   TLeaf *leafcount;
-   TLeafObject *leafobj;
-   const char *headOK  = "   ";
-   const char *headcom = " //";
-   const char *head;
-   char *bname;
-   char branchname[64];
-   TObjArray branches(100);
-   Int_t *leafStatus = new Int_t[nleaves];
-   for (l=0;l<nleaves;l++) {
-      leafStatus[l] = 0;
-      TLeaf *leaf = (TLeaf*)leaves->UncheckedAt(l);
-      len = leaf->GetLen();
-      leafcount =leaf->GetLeafCount();
-      TBranch *branch = leaf->GetBranch();
-      if (!branches.FindObject(branch)) branches.Add(branch);
-      else leafStatus[l] = 1;
-      if (leafcount) strcpy(branchname,branch->GetName());
-      else           strcpy(branchname,leaf->GetTitle());
-      char *twodim = (char*)strstr(leaf->GetTitle(),"][");
-      bname = branchname;
-      while (*bname) {if (*bname == '.') *bname='_'; bname++;}
-      if (branch->IsA() == TBranchObject::Class()) {
-         if (branch->GetListOfBranches()->GetEntriesFast()) continue;
-         leafobj = (TLeafObject*)leaf;
-         if (leafobj->GetClass()) head = headOK;
-         else                     head = headcom;
-         fprintf(fp,"%s%-15s *%s;\n",head,leafobj->GetTypeName(), leafobj->GetName());
-         continue;
-      }
-      if (leafcount) {
-         len = leafcount->GetMaximum();
-         strcpy(blen,leafcount->GetName());
-         lenb = strlen(blen);
-         if (blen[lenb-1] == '_') blen[lenb-1] = 0;
-         else                     sprintf(blen,"%d",len);
-         if (twodim) {
-            fprintf(fp,"   %-15s %s[%d]%s;\n",leaf->GetTypeName(), branchname,len,(char*)(twodim+1));
-         } else {
-            fprintf(fp,"   %-15s %s[kMax%s];\n",leaf->GetTypeName(), branchname,blen);
-         }
-      } else {
-         fprintf(fp,"   %-15s %s;\n",leaf->GetTypeName(), branchname);
-      }
-   }
-
-// generate list of branches
-   fprintf(fp,"\n");
-   fprintf(fp,"//List of branches\n");
-   for (l=0;l<nleaves;l++) {
-      if (leafStatus[l]) continue;
-      TLeaf *leaf = (TLeaf*)leaves->UncheckedAt(l);
-      TBranch *branch = leaf->GetBranch();
-      strcpy(branchname,branch->GetName());
-      bname = branchname;
-      char *twodim = (char*)strstr(bname,"[");
-      if (twodim) *twodim = 0;
-      while (*bname) {if (*bname == '.') *bname='_'; bname++;}
-      fprintf(fp,"   TBranch        *b_%s;\n",branchname);
-   }
-
-// generate class member functions prototypes
-   fprintf(fp,"\n");
-   fprintf(fp,"   %s(TTree *tree=0);\n",classname);
-   fprintf(fp,"   ~%s() {;}\n",classname);
-   fprintf(fp,"   Int_t GetEntry(Int_t entry);\n");
-   fprintf(fp,"   void  Init(TTree *tree);\n");
-   fprintf(fp,"   void  Loop();\n");
-   fprintf(fp,"   void  Show(Int_t entry = -1);\n");
-   fprintf(fp,"};\n");
-   fprintf(fp,"\n");
-   fprintf(fp,"#endif\n");
-   fprintf(fp,"\n");
-
-// generate code for class constructor
-   fprintf(fp,"#ifdef %s_cxx\n",classname);
-   fprintf(fp,"%s::%s(TTree *tree)\n",classname,classname);
-   fprintf(fp,"{\n");
-   fprintf(fp,"// if parameter tree is not specified (or zero), connect the file\n");
-   fprintf(fp,"// used to generate this class and read the Tree.\n");
-   fprintf(fp,"   if (tree == 0) {\n");
-   fprintf(fp,"      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject(\"%s\");\n",treefile);
-   fprintf(fp,"      if (!f) {\n");
-   fprintf(fp,"         f = new TFile(\"%s\");\n",treefile);
-   if (gDirectory != gFile) {
-     fprintf(fp,"         f->cd(\"%s\");\n",gDirectory->GetPath());
-   }
-   fprintf(fp,"      }\n");
-   fprintf(fp,"      tree = (TTree*)gDirectory->Get(\"%s\");\n\n",GetName());
-   fprintf(fp,"   }\n");
-   fprintf(fp,"   Init(tree);\n");
-   fprintf(fp,"}\n");
-   fprintf(fp,"\n");
-
-// generate code for class member function GetEntry()
-   fprintf(fp,"Int_t %s::GetEntry(Int_t entry)\n",classname);
-   fprintf(fp,"{\n");
-   fprintf(fp,"// Read specified entry from the Tree into data members\n");
-   fprintf(fp,"   if (fTree) return fTree->GetEntry(entry);\n");
-   fprintf(fp,"   else       return 0;\n");
-   fprintf(fp,"}\n");
-   fprintf(fp,"\n");
-
-
-// generate code for class member function Init(), first pass = get branch pointer
-   fprintf(fp,"void %s::Init(TTree *tree)\n",classname);
-   fprintf(fp,"{\n");
-   fprintf(fp,"//   GetBranch pointers\n");
-   fprintf(fp,"   if (tree == 0) return;\n");
-   fprintf(fp,"   fTree = tree;\n");
-   for (l=0;l<nleaves;l++) {
-      if (leafStatus[l]) continue;
-      TLeaf *leaf = (TLeaf*)leaves->UncheckedAt(l);
-      len = leaf->GetLen();
-      leafcount =leaf->GetLeafCount();
-      TBranch *branch = leaf->GetBranch();
-      if (leafcount) strcpy(branchname,branch->GetName());
-      else           strcpy(branchname,leaf->GetTitle());
-      bname = branchname;
-      while (*bname) {if (*bname == '.') *bname='_'; bname++;}
-      char *brak = strstr(branchname,"[");
-      if (brak) *brak = 0;
-      head = headOK;
-      if (branch->IsA() == TBranchObject::Class()) {
-         if (branch->GetListOfBranches()->GetEntriesFast()) {
-            fprintf(fp,"%sb_%s = fTree->GetBranch(\"%s\");\n",head,branch->GetName(),branch->GetName());
-            continue;
-         }
-         leafobj = (TLeafObject*)leaf;
-         if (!leafobj->GetClass()) head = headcom;
-         strcpy(branchname,branch->GetName());
-      }
-      fprintf(fp,"%sb_%s = fTree->GetBranch(\"%s\");\n",head,branchname,branch->GetName());
-   }
-   fprintf(fp,"\n");
-
-// generate code for class member function Init(), second pass = set branch address
-   fprintf(fp,"//   Set branch addresses\n");
-   for (l=0;l<nleaves;l++) {
-      if (leafStatus[l]) continue;
-      TLeaf *leaf = (TLeaf*)leaves->UncheckedAt(l);
-      len = leaf->GetLen();
-      leafcount =leaf->GetLeafCount();
-      TBranch *branch = leaf->GetBranch();
-      if (leafcount) strcpy(branchname,branch->GetName());
-      else           strcpy(branchname,leaf->GetTitle());
-      bname = branchname;
-      char *twodim = (char*)strstr(bname,"[");
-      if (twodim) *twodim = 0;
-      while (*bname) {if (*bname == '.') *bname='_'; bname++;}
-      char *brak = strstr(branchname,"[");
-      if (brak) *brak = 0;
-      head = headOK;
-      if (branch->IsA() == TBranchObject::Class()) {
-         if (branch->GetListOfBranches()->GetEntriesFast()) {
-            fprintf(fp,"%sb_%s->SetAddress((void*)-1);\n",head,branch->GetName());
-            continue;
-         }
-         leafobj = (TLeafObject*)leaf;
-         if (!leafobj->GetClass()) head = headcom;
-         strcpy(branchname,branch->GetName());
-      }
-      if (leafcount) len = leafcount->GetMaximum()+1;
-      if (len > 1) fprintf(fp,"%sb_%s->SetAddress(%s);\n",head,branchname,branchname);
-      else         fprintf(fp,"%sb_%s->SetAddress(&%s);\n",head,branchname,branchname);
-   }
-   fprintf(fp,"}\n");
-   fprintf(fp,"\n");
-
-// generate code for class member function Show()
-   fprintf(fp,"void %s::Show(Int_t entry)\n",classname);
-   fprintf(fp,"{\n");
-   fprintf(fp,"// Print contents of entry.\n");
-   fprintf(fp,"// If entry is not specified, print current entry\n");
-
-   fprintf(fp,"   if (!fTree) return;\n");
-   fprintf(fp,"   fTree->Show(entry);\n");
-   fprintf(fp,"}\n");
-   fprintf(fp,"#endif // #ifdef %s_cxx\n",classname);
-   fprintf(fp,"\n");
-
-//======================Generate classname.C=====================
-// generate code for class member function Loop()
-   fprintf(fpc,"#define %s_cxx\n",classname);
-   fprintf(fpc,"#include \"%s\"\n",thead);
-   fprintf(fpc,"\n");
-   fprintf(fpc,"void %s::Loop()\n",classname);
-   fprintf(fpc,"{\n");
-   fprintf(fpc,"//   In a Root session, you can do:\n");
-   fprintf(fpc,"//      Root > .L %s.C\n",classname);
-   fprintf(fpc,"//      Root > %s t\n",classname);
-   fprintf(fpc,"//      Root > t.GetEntry(12); // Fill t data members with entry number 12\n");
-   fprintf(fpc,"//      Root > t.Show();       // Show values of entry 12\n");
-   fprintf(fpc,"//      Root > t.Show(16);     // Read and show values of entry 16\n");
-   fprintf(fpc,"//      Root > t.Loop();       // Loop on all entries\n");
-   fprintf(fpc,"//\n");
-   fprintf(fpc,"\n//     This is the loop skeleton\n");
-   fprintf(fpc,"//       To read only selected branches, Insert statements like:\n");
-   fprintf(fpc,"// METHOD1:\n");
-   fprintf(fpc,"//    fTree->SetBranchStatus(\"*\",0);  // disable all branches\n");
-   fprintf(fpc,"//    fTree->SetBranchStatus(\"branchname\",1);  // activate branchname\n");
-   fprintf(fpc,"// METHOD2: replace line\n");
-   fprintf(fpc,"//    fTree->GetEntry(i);  // read all branches\n");
-   fprintf(fpc,"//by  b_branchname->GetEntry(i); //read only this branch\n");
-   fprintf(fpc,"   if (fTree == 0) return;\n");
-   fprintf(fpc,"\n   Int_t nentries = Int_t(fTree->GetEntries());\n");
-   fprintf(fpc,"\n   Int_t nbytes = 0, nb = 0;\n");
-   fprintf(fpc,"   for (Int_t i=0; i<nentries;i++) {\n");
-   fprintf(fpc,"      nb = fTree->GetEntry(i);   nbytes += nb;\n");
-   fprintf(fpc,"   }\n");
-   fprintf(fpc,"}\n");
-
-   printf("Files: %s and %s generated from Tree: %s\n",thead,tcimp,GetName());
-   delete [] leafStatus;
-   delete [] thead;
-   delete [] tcimp;
-   delete [] treefile;
-   fclose(fp);
-   fclose(fpc);
-
-   return 0;
+   GetPlayer();
+   if (!fPlayer) return 0;
+   return fPlayer->MakeClass(classname);
 }
 
 
@@ -2268,139 +1356,10 @@ Int_t TTree::MakeCode(const char *filename)
 //          Author: Rene Brun
 //====>
 
-// Connect output file
-   char *tfile = new char[1000];
-   if (filename) strcpy(tfile,filename);
-   else          sprintf(tfile,"%s.C",GetName());
-   FILE *fp = fopen(tfile,"w");
-   if (!fp) {
-      printf("Cannot open output file:%s\n",tfile);
-      return 3;
-   }
-   char *treefile = new char[1000];
-   if (fDirectory && fDirectory->GetFile())
-                strcpy(treefile,fDirectory->GetFile()->GetName());
-   else         strcpy(treefile,"Memory Directory");
-
-// Print header
-   TObjArray *leaves = GetListOfLeaves();
-   Int_t nleaves = leaves->GetEntriesFast();
-   TDatime td;
-   fprintf(fp,"{\n");
-   fprintf(fp,"//////////////////////////////////////////////////////////\n");
-   fprintf(fp,"//   This file has been automatically generated \n");
-   fprintf(fp,"//     (%s by ROOT version%s)\n",td.AsString(),gROOT->GetVersion());
-   fprintf(fp,"//   from TTree %s/%s\n",GetName(),GetTitle());
-   fprintf(fp,"//   found on file: %s\n",treefile);
-   fprintf(fp,"//////////////////////////////////////////////////////////\n");
-   fprintf(fp,"\n");
-   fprintf(fp,"\n");
-
-
-// Reset and file connect
-   fprintf(fp,"//Reset ROOT and connect tree file\n");
-   fprintf(fp,"   gROOT->Reset();\n");
-   fprintf(fp,"   TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject(\"%s\");\n",treefile);
-   fprintf(fp,"   if (!f) {\n");
-   fprintf(fp,"      f = new TFile(\"%s\");\n",treefile);
-   if (gDirectory != gFile) {
-      fprintf(fp,"      f->cd(\"%s\");\n",gDirectory->GetPath());
-   }
-   fprintf(fp,"   }\n");
-   fprintf(fp,"   TTree *%s = (TTree*)gDirectory->Get(\"%s\");\n\n",GetName(),GetName());
-
-// First loop on all leaves to generate type declarations
-   fprintf(fp,"//Declaration of leaves types\n");
-   Int_t len, l;
-   TLeaf *leafcount;
-   TLeafObject *leafobj;
-   char *bname;
-   const char *headOK  = "   ";
-   const char *headcom = " //";
-   const char *head;
-   char branchname[64];
-   for (l=0;l<nleaves;l++) {
-      TLeaf *leaf = (TLeaf*)leaves->UncheckedAt(l);
-      len = leaf->GetLen();
-      leafcount =leaf->GetLeafCount();
-      TBranch *branch = leaf->GetBranch();
-      if (branch->GetListOfBranches()->GetEntriesFast() > 0) continue;
-      if (leafcount) strcpy(branchname,branch->GetName());
-      else           strcpy(branchname,leaf->GetTitle());
-      char *twodim = (char*)strstr(leaf->GetTitle(),"][");
-      bname = branchname;
-      while (*bname) {if (*bname == '.') *bname='_'; bname++;}
-      if (branch->IsA() == TBranchObject::Class()) {
-         leafobj = (TLeafObject*)leaf;
-         if (leafobj->GetClass()) head = headOK;
-         else                     head = headcom;
-         fprintf(fp,"%s%-15s *%s;\n",head,leafobj->GetTypeName(), leafobj->GetName());
-         continue;
-      }
-      if (leafcount) {
-         len = leafcount->GetMaximum();
-         if (twodim) {
-            fprintf(fp,"   %-15s %s[%d]%s;\n",leaf->GetTypeName(), branchname,len,(char*)(twodim+1));
-         } else {
-            fprintf(fp,"   %-15s %s[%d];\n",leaf->GetTypeName(), branchname,len);
-         }
-      } else {
-         fprintf(fp,"   %-15s %s;\n",leaf->GetTypeName(), branchname);
-      }
-   }
-
-// Second loop on all leaves to set the corresponding branch address
-   fprintf(fp,"\n//Set branch addresses\n");
-   for (l=0;l<nleaves;l++) {
-      TLeaf *leaf = (TLeaf*)leaves->UncheckedAt(l);
-      len = leaf->GetLen();
-      leafcount =leaf->GetLeafCount();
-      TBranch *branch = leaf->GetBranch();
-      if (leafcount) strcpy(branchname,branch->GetName());
-      else           strcpy(branchname,leaf->GetTitle());
-      bname = branchname;
-      while (*bname) {if (*bname == '.') *bname='_'; bname++;}
-      char *brak = strstr(branchname,"[");
-      if (brak) *brak = 0;
-      head = headOK;
-      if (branch->IsA() == TBranchObject::Class()) {
-         leafobj = (TLeafObject*)leaf;
-         if (!leafobj->GetClass()) head = headcom;
-      }
-      if (leafcount) len = leafcount->GetMaximum()+1;
-      if (len > 1) fprintf(fp,"%s%s->SetBranchAddress(\"%s\",%s);\n",head,GetName(),branch->GetName(),branchname);
-      else         fprintf(fp,"%s%s->SetBranchAddress(\"%s\",&%s);\n",head,GetName(),branch->GetName(),branchname);
-   }
-
-//Generate instructions to make the loop on entries
-   fprintf(fp,"\n//     This is the loop skeleton\n");
-   fprintf(fp,"//       To read only selected branches, Insert statements like:\n");
-   fprintf(fp,"// %s->SetBranchStatus(\"*\",0);  // disable all branches\n",GetName());
-   fprintf(fp,"// %s->SetBranchStatus(\"branchname\",1);  // activate branchname\n",GetName());
-   fprintf(fp,"\n   Int_t nentries = %s->GetEntries();\n",GetName());
-   fprintf(fp,"\n   Int_t nbytes = 0;\n");
-   fprintf(fp,"//   for (Int_t i=0; i<nentries;i++) {\n");
-   fprintf(fp,"//      nbytes += %s->GetEntry(i);\n",GetName());
-   fprintf(fp,"//   }\n");
-   fprintf(fp,"}\n");
-
-   printf("Macro: %s generated from Tree: %s\n",tfile,GetName());
-   delete [] tfile;
-   delete [] treefile;
-   fclose(fp);
-
-   return 0;
+   GetPlayer();
+   if (!fPlayer) return 0;
+   return fPlayer->MakeCode(filename);
 }
-
-//______________________________________________________________________________
-Int_t TTree::MakeFitOptions(Option_t *)
-{
-//*-*-*-*-*-*-*-*-*Fill Foption structure with the codes in option*-*-*-*-*-*
-//*-*              ===============================================
-
-   return 0;
-}
-
 
 //______________________________________________________________________________
 void TTree::MakeIndex(TString &varexp, Int_t *index)
@@ -2437,7 +1396,8 @@ void TTree::Print(Option_t *option)
    // TPacketGenerator::Print("all")).
 
   if (!strcasecmp(option, "p") || !strcasecmp(option, "pa")) {
-     TPacketGenerator *t = GetPacketGenerator();
+#ifdef NEVER
+          TPacketGenerator *t = GetPacketGenerator();
      if (!t) {
         Printf("No TPacketGenerator object available");
         return;
@@ -2447,6 +1407,7 @@ void TTree::Print(Option_t *option)
      else
         t->Print("all");
      return;
+#endif
   }
 
   Int_t s = 0;
@@ -2468,7 +1429,7 @@ void TTree::Print(Option_t *option)
 }
 
 //______________________________________________________________________________
-void TTree::Project(Text_t *hname, Text_t *varexp, Text_t *selection, Option_t *option,Int_t nentries, Int_t firstentry)
+void TTree::Project(const char *hname, const char *varexp, const char *selection, Option_t *option,Int_t nentries, Int_t firstentry)
 {
 //*-*-*-*-*-*-*-*-*Make a projection of a Tree using selections*-*-*-*-*-*-*
 //*-*              =============================================
@@ -2493,6 +1454,16 @@ void TTree::Project(Text_t *hname, Text_t *varexp, Text_t *selection, Option_t *
 }
 
 //______________________________________________________________________________
+TSQLResult *TTree::Query(const char *varexp, const char *selection, Option_t *option, Int_t nentries, Int_t firstentry)
+{
+   // Loop on Tree & return TSQLResult object containing entries following selection
+
+   GetPlayer();
+   if (fPlayer) return fPlayer->Query(varexp,selection,option,nentries,firstentry);
+   return 0;
+}
+
+//______________________________________________________________________________
 void TTree::Reset(Option_t *option)
 {
 //*-*-*-*-*-*-*-*Reset buffers and entries count in all branches/leaves*-*-*
@@ -2514,109 +1485,49 @@ void TTree::Reset(Option_t *option)
 }
 
 //______________________________________________________________________________
-void TTree::Scan(const Text_t *varexp, const Text_t *selection, Option_t *, Int_t nentries, Int_t firstentry)
+void TTree::Scan(const char *varexp, const char *selection, Option_t *option, Int_t nentries, Int_t firstentry)
 {
 //*-*-*-*-*-*-*-*-*Loop on Tree & print entries following selection*-*-*-*-*-*
 //*-*              ===============================================
 
-   const Int_t MAXCOL = 9;
-   TTreeFormula *select, *var[MAXCOL];
-   TString cnames[MAXCOL];
-   TString onerow;
-   Int_t entry,entryNumber,i,nch;
-   Int_t index[MAXCOL];
-   Int_t ncols   = 8;
+   GetPlayer();
+   if (fPlayer) fPlayer->Scan(varexp,selection,option,nentries,firstentry);
+}
+
+//_______________________________________________________________________
+ void TTree::SetBasketSize(const char *bname, Int_t buffsize)
+{
+//*-*-*-*-*-*-*-*-*Set branc(es) basket size*-*-*-*-*-*-*-*
+//*-*              =========================
+//
+//     bname is the name of a branch.
+//     if bname="*", apply to all branches.
+//     if bname="xxx*", apply to all branches with name starting with xxx
+//     see TRegexp for wildcarding options
+//     buffsize = branc basket size
+
+   TBranch *branch;
+   TLeaf *leaf;
+
+   Int_t i;
    Int_t nleaves = fLeaves.GetEntriesFast();
-   if (nleaves < ncols) ncols = nleaves;
-   nch = strlen(varexp);
-   Int_t lastentry = firstentry + nentries -1;
-   if (lastentry > fEntries-1) {
-      lastentry  = (Int_t)fEntries -1;
-      nentries   = lastentry - firstentry + 1;
+   TRegexp re(bname,kTRUE);
+   Int_t nb = 0;
+   for (i=0;i<nleaves;i++)  {
+      leaf = (TLeaf*)fLeaves.UncheckedAt(i);
+      branch = (TBranch*)leaf->GetBranch();
+      TString s = branch->GetName();
+      if (s.Index(re) == kNPOS) continue;
+      nb++;
+      branch->SetBasketSize(buffsize);
    }
-
-//*-*- Compile selection expression if there is one
-   select = 0;
-   if (strlen(selection)) {
-      select = new TTreeFormula("Selection",selection,this);
-      if (!select) return;
-      if (!select->GetNdim()) {delete select; return ; }
-   }
-//*-*- if varexp is empty, take first 8 columns by default
-   if (nch == 0) {
-      for (i=0;i<ncols;i++) {
-         cnames[i] = ((TLeaf*)fLeaves[i])->GetName();
-      }
-//*-*- otherwise select only the specified columns
-   } else {
-      ncols = 1;
-      onerow = varexp;
-      for (i=0;i<onerow.Length();i++)  if (onerow[i] == ':') ncols++;
-      MakeIndex(onerow,index);
-      for (i=0;i<ncols;i++) {
-         cnames[i] = GetNameByIndex(onerow,index,i);
-      }
-   }
-//*-*- Create the TreeFormula objects corresponding to each column
-   for (i=0;i<ncols;i++) {
-      var[i] = new TTreeFormula("Var1",cnames[i].Data(),this);
-   }
-//*-*- Print header
-   onerow = "***********";
-   for (i=0;i<ncols;i++) {
-      onerow += Form("*%s",var[i]->PrintValue(-2));
-   }
-   printf("%s*\n",onerow.Data());
-   onerow = "*    Row   ";
-   for (i=0;i<ncols;i++) {
-      onerow += Form("*%s",var[i]->PrintValue(-1));
-   }
-   printf("%s*\n",onerow.Data());
-   onerow = "***********";
-   for (i=0;i<ncols;i++) {
-      onerow += Form("*%s",var[i]->PrintValue(-2));
-   }
-   printf("%s*\n",onerow.Data());
-//*-*- loop on all selected entries
-   fSelectedRows = 0;
-   for (entry=firstentry;entry<firstentry+nentries;entry++) {
-      entryNumber = GetEntryNumber(entry);
-      if (entryNumber < 0) break;
-      LoadTree(entryNumber);
-      if (select) {
-         select->GetNdata();
-         if (select->EvalInstance(0) == 0) continue;
-      }
-      onerow = Form("* %8d ",entryNumber);
-      for (i=0;i<ncols;i++) {
-         onerow += Form("*%s",var[i]->PrintValue(0));
-      }
-      fSelectedRows++;
-      printf("%s*\n",onerow.Data());
-      if (fScanField > 0 && fSelectedRows > 0) {
-         if (fSelectedRows%fScanField == 0) {
-            fprintf(stderr,"Type <CR> to continue or q to quit ==> ");
-            int answer = getchar();
-            if (answer == 'q' || answer == 'Q') break;
-         }
-      }
-   }
-   onerow = "***********";
-   for (i=0;i<ncols;i++) {
-      onerow += Form("*%s",var[i]->PrintValue(-2));
-   }
-   printf("%s*\n",onerow.Data());
-   if (select) Printf("==> %d selected entries",fSelectedRows);
-
-//*-*- delete temporary objects
-   delete select;
-   for (i=0;i<ncols;i++) {
-      delete var[i];
+   if (!nb) {
+      Error("SetBasketSize", "unknown branch -> %s", bname);
    }
 }
 
 //_______________________________________________________________________
-void TTree::SetBranchAddress(const Text_t *bname, void *add)
+ void TTree::SetBranchAddress(const char *bname, void *add)
 {
 //*-*-*-*-*-*-*-*-*Set branch address*-*-*-*-*-*-*-*
 //*-*              ==================
@@ -2630,45 +1541,56 @@ void TTree::SetBranchAddress(const Text_t *bname, void *add)
 }
 
 //_______________________________________________________________________
-void TTree::SetBranchStatus(const Text_t *bname, Bool_t status)
+void TTree::SetBranchStatus(const char *bname, Bool_t status)
 {
 //*-*-*-*-*-*-*-*-*Set branch status Process or DoNotProcess*-*-*-*-*-*-*-*
 //*-*              =========================================
 //
-//      bname is the name of a branch. if bname="*", apply to all branches.
+//     bname is the name of a branch.
+//     if bname="*", apply to all branches.
+//     if bname="xxx*", apply to all branches with name starting with xxx
+//     see TRegexp for wildcarding options
 //      status = 1  branch will be processed
 //             = 0  branch will not be processed
 
-   TBranch *branch;
-   TLeaf *leaf;
+   TBranch *branch, *bclones, *bson;
+   TLeaf *leaf, *leafcount;
 
-   Int_t i;
+   Int_t i,j;
    Int_t nleaves = fLeaves.GetEntriesFast();
-   if (!strcmp(bname,"*")) { // loop on all branches
-      for (i=0;i<nleaves;i++)  {
-         leaf = (TLeaf*)fLeaves.UncheckedAt(i);
-         branch = (TBranch*)leaf->GetBranch();
-         if (status) branch->ResetBit(kDoNotProcess);
-         else        branch->SetBit(kDoNotProcess);
-      }
-      if (fActiveBranches) {
-         fActiveBranches->Clear();
-         delete fActiveBranches;
-         fActiveBranches = 0;
-      }
-      return;
-   }
-
-   branch = GetBranch(bname);
-   if (branch) {
+   TRegexp re(bname,kTRUE);
+   Int_t nb = 0;
+   for (i=0;i<nleaves;i++)  {
+      leaf = (TLeaf*)fLeaves.UncheckedAt(i);
+      branch = (TBranch*)leaf->GetBranch();
+      TString s = branch->GetName();
+      if (s.Index(re) == kNPOS) continue;
+      nb++;
       if (status) branch->ResetBit(kDoNotProcess);
       else        branch->SetBit(kDoNotProcess);
-   } else {
+      leafcount = leaf->GetLeafCount();
+      if (leafcount) {
+         bclones = GetBranch(leafcount->GetName());
+         bclones->ResetBit(kDoNotProcess);
+      }
+   }
+   if (!nb) {
       Error("SetBranchStatus", "unknown branch -> %s", bname);
       return;
    }
-
-   UpdateActiveBranches();
+   for (i = 0; i < nleaves; i++) {
+      leaf = (TLeaf*)fLeaves.UncheckedAt(i);
+      branch = (TBranch*)leaf->GetBranch();
+      if (!branch->TestBit(kDoNotProcess)) continue;
+      Int_t nbranches = branch->GetListOfBranches()->GetEntriesFast();
+      for (j=0;j<nbranches;j++) {
+         bson = (TBranch*)branch->GetListOfBranches()->UncheckedAt(j);
+         if (!bson->TestBit(kDoNotProcess)) {
+             branch->ResetBit(kDoNotProcess);
+             break;
+         }
+      }
+   }
 }
 
 //______________________________________________________________________________
@@ -2692,14 +1614,12 @@ void TTree::SetEstimate(Int_t n)
 
    if (n<=0) n = 10000;
    fEstimate = n;
-   delete [] fV1;  fV1 = 0;
-   delete [] fV2;  fV2 = 0;
-   delete [] fV3;  fV3 = 0;
-   delete [] fW;   fW  = 0;
+   GetPlayer();
+   if (fPlayer) fPlayer->SetEstimate(n);
 }
 
 //______________________________________________________________________________
-void TTree::SetName(const Text_t *name)
+void TTree::SetName(const char *name)
 {
 //*-*-*-*-*-*-*-*-*-*-*Change the name of this Tree*-*-*-*-*-*-*-*-*-*-*
 //*-*                  ============================
@@ -2710,35 +1630,6 @@ void TTree::SetName(const Text_t *name)
    if (fDirectory) fDirectory->GetList()->Remove(this);
    fName = name;
    if (fDirectory) fDirectory->GetList()->Add(this);
-}
-
-//_______________________________________________________________________
-void TTree::SetPacketSize(Int_t size)
-{
-//*-*-*-*-*-*-*-*-*Set number of entries per packet for parallel root*-*-*-*-*
-//*-*              =================================================
-
-   fPacketSize = size;
-}
-
-//_______________________________________________________________________
-void TTree::SetSelector(TSelector *selector)
-{
-//*-*-*-*-*-*-*-*-*Set current selector to user selector*-*-*-*-*-*-*-*
-//*-*              =====================================
-//
-   fSelector = selector;
-   if (selector) selector->Init(this);
-}
-
-//_______________________________________________________________________
-void TTree::SetSelector(const Text_t *macroname)
-{
-//*-*-*-*-*-*-*-*-*Set current selector to macroname*-*-*-*-*-*-*-*
-//*-*              =================================
-//
-   fSelector = new TSelector(macroname);
-   if (fSelector) fSelector->Init(this);
 }
 
 //_______________________________________________________________________
@@ -2801,10 +1692,8 @@ void TTree::StartViewer(Int_t ww, Int_t wh)
 //  ww is the width of the canvas in pixels
 //  wh is the height of the canvas in pixels
 
-   char *command = new char[200];
-   sprintf(command,"new TTreeViewer(\"%s\",\"TreeViewer\",%d,%d);",GetName(),ww,wh);
-   gInterpreter->ProcessLine(command);
-   delete [] command;
+   GetPlayer();
+   if (fPlayer) fPlayer->StartViewer(ww,wh);
 }
 
 //_______________________________________________________________________
@@ -2812,9 +1701,10 @@ void TTree::Streamer(TBuffer &b)
 {
 //*-*-*-*-*-*-*-*-*Stream a class object*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 //*-*              =========================================
+   UInt_t R__s, R__c;
    if (b.IsReading()) {
       gTree = this;
-      Version_t v = b.ReadVersion();
+      Version_t v = b.ReadVersion(&R__s, &R__c);
       TNamed::Streamer(b);
       TAttLine::Streamer(b);
       TAttFill::Streamer(b);
@@ -2833,12 +1723,12 @@ void TTree::Streamer(TBuffer &b)
       fSavedBytes = fTotBytes;
       fDirectory = gDirectory;
       gDirectory->Append(this);
-      UpdateActiveBranches();
-      if (v > 1) {
-         fIndex.Streamer(b);
-      }
+      if (v > 1) fIndexValues.Streamer(b);
+      if (v > 2) fIndex.Streamer(b);
+      if (v > 3) fStreamerInfoList->Streamer(b);
+      b.CheckByteCount(R__s, R__c, TTree::IsA());
    } else {
-      b.WriteVersion(TTree::IsA());
+      R__c = b.WriteVersion(TTree::IsA(), kTRUE);
       TNamed::Streamer(b);
       TAttLine::Streamer(b);
       TAttFill::Streamer(b);
@@ -2853,277 +1743,9 @@ void TTree::Streamer(TBuffer &b)
       b << fEstimate;
       fBranches.Streamer(b);
       fLeaves.Streamer(b);
+      fIndexValues.Streamer(b);
       fIndex.Streamer(b);
-   }
-}
-
-
-//______________________________________________________________________________
-void TTree::TakeAction(Int_t nfill, Int_t &npoints, Int_t &action, TObject *obj, Option_t *option)
-{
-//*-*-*-*-*-*Execute action for object obj nfill times*-*-*-*-*-*-*-*-*-*
-//*-*        =========================================
-
-  Int_t i;
-  if      (action ==  1) ((TH1*)obj)->FillN(nfill,fV1,fW);
-  else if (action ==  2) {
-     if (obj->IsA() == TH2F::Class())      {for(i=0;i<nfill;i++) ((TH2F*)obj)->Fill(fV2[i],fV1[i],fW[i]);}
-     else if (obj->IsA() == TH2S::Class()) {for(i=0;i<nfill;i++) ((TH2S*)obj)->Fill(fV2[i],fV1[i],fW[i]);}
-     else if (obj->IsA() == TH2C::Class()) {for(i=0;i<nfill;i++) ((TH2C*)obj)->Fill(fV2[i],fV1[i],fW[i]);}
-     else if (obj->IsA() == TH2D::Class()) {for(i=0;i<nfill;i++) ((TH2D*)obj)->Fill(fV2[i],fV1[i],fW[i]);}
-  }
-  else if (action ==  4) ((TProfile*)obj)->FillN(nfill,fV2,fV1,fW);
-  else if (action ==  5) {
-     TEventList *elist = (TEventList*)obj;
-     Int_t enumb = fChainOffset + fReadEntry;
-     if (elist->GetIndex(enumb) < 0) elist->Enter(enumb);
-  }
-  else if (action == 12) {
-     TPolyMarker *pm = new TPolyMarker(nfill);
-     pm->SetMarkerStyle(GetMarkerStyle());
-     pm->SetMarkerColor(GetMarkerColor());
-     pm->SetMarkerSize(GetMarkerSize());
-     Float_t *x = pm->GetX();
-     Float_t *y = pm->GetY();
-     Float_t u, v;
-     Float_t umin = gPad->GetUxmin();
-     Float_t umax = gPad->GetUxmax();
-     Float_t vmin = gPad->GetUymin();
-     Float_t vmax = gPad->GetUymax();
-
-     for (i=0;i<nfill;i++) {
-        u = gPad->XtoPad(fV2[i]);
-        v = gPad->YtoPad(fV1[i]);
-        if (u < umin) u = umin;
-        if (u > umax) u = umax;
-        if (v < vmin) v = vmin;
-        if (v > vmax) v = vmax;
-        x[i] = u;
-        y[i] = v;
-     }
-
-     pm->Draw();
-     if (obj->IsA() == TH2F::Class())      {for(i=0;i<nfill;i++) ((TH2F*)obj)->Fill(fV2[i],fV1[i],fW[i]);}
-     else if (obj->IsA() == TH2S::Class()) {for(i=0;i<nfill;i++) ((TH2S*)obj)->Fill(fV2[i],fV1[i],fW[i]);}
-     else if (obj->IsA() == TH2C::Class()) {for(i=0;i<nfill;i++) ((TH2C*)obj)->Fill(fV2[i],fV1[i],fW[i]);}
-     else if (obj->IsA() == TH2D::Class()) {for(i=0;i<nfill;i++) ((TH2D*)obj)->Fill(fV2[i],fV1[i],fW[i]);}
-  }
-  else if (action == 13) {
-     TPolyMarker3D *pm3d = new TPolyMarker3D(nfill);
-     pm3d->SetMarkerStyle(GetMarkerStyle());
-     pm3d->SetMarkerColor(GetMarkerColor());
-     pm3d->SetMarkerSize(GetMarkerSize());
-     for (i=0;i<nfill;i++) { pm3d->SetPoint(i,fV3[i],fV2[i],fV1[i]);}
-     pm3d->Draw();
-  }
-  else if (action < 0) {
-     action = -action;
-     TakeEstimate(nfill,npoints,action,obj,option);
-  }
-
-//*-* Do we need to update screen?
-  npoints += nfill;
-  if (!fUpdate) return;
-  if (npoints > fDraw+fUpdate) {
-     if (fDraw) gPad->Modified();
-     else       obj->Draw(option);
-     gPad->Update();
-     fDraw = npoints;
-  }
-}
-
-
-//______________________________________________________________________________
-void TTree::TakeEstimate(Int_t nfill, Int_t &, Int_t action, TObject *obj, Option_t *option)
-{
-//*-*-*-*-*-*Estimate limits for 1-D, 2-D or 3-D objects*-*-*-*-*-*-*-*-*-*
-//*-*        ===========================================
-
-  Int_t i;
-  Float_t rmin[3],rmax[3];
-  fVmin[0] = fVmin[1] = fVmin[2] = 1e30;
-  fVmax[0] = fVmax[1] = fVmax[2] = -fVmin[0];
-//__________________________1-D histogram_______________________
-  if      (action ==  1) {
-     for (i=0;i<nfill;i++) {
-        if (fVmin[0] > fV1[i]) fVmin[0] = fV1[i];
-        if (fVmax[0] < fV1[i]) fVmax[0] = fV1[i];
-     }
-     Int_t nchans = fNbins[0];
-     if (fVmin[0] >= fVmax[0]) { fVmin[0] -= 1; fVmax[0] += 1;}
-     FindGoodLimits(nchans,fNbins[0],fVmin[0],fVmax[0]);
-
-     // When a PROOF client ask master for limits
-     if (gProofServ) {
-        if (gProofServ->GetLogLevel() > 2)
-           printf("have limits: (nfill=%d) %d, %f, %f\n", nfill, fNbins[0], fVmin[0], fVmax[0]);
-        gProofServ->GetLimits(1, nfill, fNbins, fVmin, fVmax);
-        if (gProofServ->GetLogLevel() > 2)
-           printf("got limits: (nfill=%d) %d, %f, %f\n", nfill, fNbins[0], fVmin[0], fVmax[0]);
-     }
-
-     TH1 *h1 = (TH1*)obj;
-     h1->SetBins(fNbins[0],fVmin[0],fVmax[0]);
-     h1->FillN(nfill, fV1, fW);
-     gCurrentHist = h1;
-//__________________________2-D histogram_______________________
-  } else if (action ==  2) {
-     for (i=0;i<nfill;i++) {
-        if (fVmin[0] > fV1[i]) fVmin[0] = fV1[i];
-        if (fVmax[0] < fV1[i]) fVmax[0] = fV1[i];
-        if (fVmin[1] > fV2[i]) fVmin[1] = fV2[i];
-        if (fVmax[1] < fV2[i]) fVmax[1] = fV2[i];
-     }
-     Int_t nchans = fNbins[0];
-     if (fVmin[0] >= fVmax[0]) { fVmin[0] -= 1; fVmax[0] += 1;}
-     FindGoodLimits(nchans,fNbins[0],fVmin[0],fVmax[0]);
-     if (fVmin[1] >= fVmax[1]) { fVmin[1] -= 1; fVmax[1] += 1;}
-     FindGoodLimits(nchans,fNbins[1],fVmin[1],fVmax[1]);
-
-     TH1 *h2 = (TH1*)obj;
-     h2->SetBins(fNbins[1],fVmin[1],fVmax[1],fNbins[0],fVmin[0],fVmax[0]);
-     if (obj->IsA() == TH2F::Class())      {for(i=0;i<nfill;i++) ((TH2F*)obj)->Fill(fV2[i],fV1[i],fW[i]);}
-     else if (obj->IsA() == TH2S::Class()) {for(i=0;i<nfill;i++) ((TH2S*)obj)->Fill(fV2[i],fV1[i],fW[i]);}
-     else if (obj->IsA() == TH2C::Class()) {for(i=0;i<nfill;i++) ((TH2C*)obj)->Fill(fV2[i],fV1[i],fW[i]);}
-     else if (obj->IsA() == TH2D::Class()) {for(i=0;i<nfill;i++) ((TH2D*)obj)->Fill(fV2[i],fV1[i],fW[i]);}
-     gCurrentHist = h2;
-//__________________________Profile histogram_______________________
-  } else if (action ==  4) {
-     for (i=0;i<nfill;i++) {
-        if (fVmin[0] > fV1[i]) fVmin[0] = fV1[i];
-        if (fVmax[0] < fV1[i]) fVmax[0] = fV1[i];
-        if (fVmin[1] > fV2[i]) fVmin[1] = fV2[i];
-        if (fVmax[1] < fV2[i]) fVmax[1] = fV2[i];
-     }
-     Int_t nchans = fNbins[1];
-     if (fVmin[1] >= fVmax[1]) { fVmin[1] -= 1; fVmax[1] += 1;}
-     FindGoodLimits(nchans,fNbins[1],fVmin[1],fVmax[1]);
-     TProfile *hp = (TProfile*)obj;
-     hp->SetBins(fNbins[1],fVmin[1],fVmax[1]);
-     hp->FillN(nfill, fV2, fV1, fW);
-     gCurrentHist = hp;
-//__________________________2D scatter plot_______________________
-  } else if (action == 12) {
-     for (i=0;i<nfill;i++) {
-        if (fVmin[0] > fV1[i]) fVmin[0] = fV1[i];
-        if (fVmax[0] < fV1[i]) fVmax[0] = fV1[i];
-        if (fVmin[1] > fV2[i]) fVmin[1] = fV2[i];
-        if (fVmax[1] < fV2[i]) fVmax[1] = fV2[i];
-     }
-     Int_t nchans = fNbins[0];
-     if (fVmin[0] >= fVmax[0]) { fVmin[0] -= 1; fVmax[0] += 1;}
-     FindGoodLimits(nchans,fNbins[0],fVmin[0],fVmax[0]);
-     if (fVmin[1] >= fVmax[1]) { fVmin[1] -= 1; fVmax[1] += 1;}
-     FindGoodLimits(nchans,fNbins[1],fVmin[1],fVmax[1]);
-
-     TH2F *h2 = (TH2F*)obj;
-     h2->SetBins(fNbins[1],fVmin[1],fVmax[1],fNbins[0],fVmin[0],fVmax[0]);
-     if (!strstr(option,"same") && !strstr(option,"goff")) {
-        h2->DrawCopy(option);
-        gPad->Update();
-     }
-     TPolyMarker *pm = new TPolyMarker(nfill);
-     pm->SetMarkerStyle(GetMarkerStyle());
-     pm->SetMarkerColor(GetMarkerColor());
-     pm->SetMarkerSize(GetMarkerSize());
-     Float_t *x = pm->GetX();
-     Float_t *y = pm->GetY();
-     Float_t u, v;
-     Float_t umin = gPad->GetUxmin();
-     Float_t umax = gPad->GetUxmax();
-     Float_t vmin = gPad->GetUymin();
-     Float_t vmax = gPad->GetUymax();
-
-     for (i=0;i<nfill;i++) {
-        u = gPad->XtoPad(fV2[i]);
-        v = gPad->YtoPad(fV1[i]);
-        if (u < umin) u = umin;
-        if (u > umax) u = umax;
-        if (v < vmin) v = vmin;
-        if (v > vmax) v = vmax;
-        x[i] = u;
-        y[i] = v;
-     }
-     if (!fDraw && !strstr(option,"goff")) pm->Draw();
-     if (!h2->TestBit(kCanDelete)) {
-        for (i=0;i<nfill;i++) h2->Fill(x[i], y[i]);
-     }
-     gCurrentHist = h2;
-//__________________________3D scatter plot_______________________
-  } else if (action == 13) {
-     fNbins[0] = 40;
-     for (i=0;i<nfill;i++) {
-        if (fVmin[0] > fV1[i]) fVmin[0] = fV1[i];
-        if (fVmax[0] < fV1[i]) fVmax[0] = fV1[i];
-        if (fVmin[1] > fV2[i]) fVmin[1] = fV2[i];
-        if (fVmax[1] < fV2[i]) fVmax[1] = fV2[i];
-        if (fVmin[2] > fV3[i]) fVmin[2] = fV3[i];
-        if (fVmax[2] < fV3[i]) fVmax[2] = fV3[i];
-     }
-     rmin[0] = fVmin[2]; rmin[1] = fVmin[1]; rmin[2] = fVmin[0];
-     rmax[0] = fVmax[2]; rmax[1] = fVmax[1]; rmax[2] = fVmax[0];
-     gPad->Clear();
-     gPad->Range(-1,-1,1,1);
-     new TView(rmin,rmax,1);
-     TPolyMarker3D *pm3d = new TPolyMarker3D(nfill);
-     pm3d->SetMarkerStyle(GetMarkerStyle());
-     pm3d->SetMarkerColor(GetMarkerColor());
-     pm3d->SetMarkerSize(GetMarkerSize());
-     for (i=0;i<nfill;i++) { pm3d->SetPoint(i,fV3[i],fV2[i],fV1[i]);}
-     if (!fDraw) pm3d->Draw();
-  }
-}
-//_______________________________________________________________________
-void TTree::UpdateActiveBranches()
-{
-//*-*-*-*-*-*-*-*-*Build the list of active branches*-*-*-*-*-*-*-*
-//*-*              =================================
-//
-//   Scan all branches and enter branches with active status in fActiveBranches.
-//
-   TBranch *branch, *bclones;
-   TLeaf *leaf, *leafcount;
-
-   Int_t i;
-   Int_t inactives = 0;
-   Int_t nleaves   = fLeaves.GetEntriesFast();
-
-   if (!fActiveBranches) fActiveBranches = new TList();
-   else                  fActiveBranches->Clear();
-
-   for (i = 0; i < nleaves; i++) {
-      leaf = (TLeaf*)fLeaves.UncheckedAt(i);
-      branch = (TBranch*)leaf->GetBranch();
-      if (branch->TestBit(kDoNotProcess)) {
-         inactives++;
-         continue;
-      }
-      if (branch->TestBit(kIsClone)) {
-         leafcount = leaf->GetLeafCount();
-         if (!leafcount) continue;
-         char bnam[64];
-         strcpy(bnam, leafcount->GetName());
-         if (bnam[strlen(bnam)-1] == '_') {
-            bnam[strlen(bnam)-1] = 0;
-            bclones = GetBranch(bnam);
-            if (!fActiveBranches->FindObject(bclones)) {
-               fActiveBranches->Add(bclones);
-               bclones->ResetBit(kDoNotProcess);
-            }
-         }
-         bclones = GetBranch(leaf->GetLeafCount()->GetName());
-         if (!fActiveBranches->FindObject(bclones)) {
-            fActiveBranches->Add(bclones);
-            bclones->ResetBit(kDoNotProcess);
-         }
-      }
-      fActiveBranches->Add(branch);
-   }
-
-   // if no active branches, delete list
-   Int_t actives = fActiveBranches->GetSize();
-   if (!actives || !inactives) {
-      delete fActiveBranches;
-      fActiveBranches = 0;
+      fStreamerInfoList->Streamer(b);
+      b.SetByteCount(R__c, kTRUE);
    }
 }

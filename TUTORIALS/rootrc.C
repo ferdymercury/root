@@ -1,10 +1,8 @@
+//*CMZ :  2.23/12 18/01/2000  15.27.44  by  Fons Rademakers
 //*CMZ :  2.22/01 29/04/99  18.00.45  by  Fons Rademakers
 //*CMZ :  2.20/00 26/11/98  10.19.18  by  Fons Rademakers
 //*CMZ :  2.00/10 14/07/98  16.15.29  by  Fons Rademakers
 //*CMZ :  2.00/09 05/06/98  15.17.37  by  Valery Fine(fine@mail.cern.ch)
-//*CMZ :  2.00/07 18/05/98  18.24.40  by  Fons Rademakers
-//*CMZ :  2.00/06 12/05/98  16.11.33  by  Fons Rademakers
-//*CMZ :  1.03/02 01/09/97  12.37.29  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   25/01/96
 
 # ROOT Environment settings are handled via the class TEnv. To see
@@ -21,6 +19,9 @@ WinNT.*.Root.MacroPath:     ./;$(ROOTSYS)/macros
 # Path where to look for TrueType fonts
 Unix.*.Root.UseTTFonts:     true
 Unix.*.Root.TTFontPath:     $(ROOTSYS)/ttf/fonts
+
+# Use thread library (if exists)
+Unix.*.Root.UseThreads:     false
 
 # Show where item is found in the specified path
 Root.ShowPath:           false
@@ -49,12 +50,14 @@ WinNT.*.Editor:          notepad
 # to size of screen, so a canvas still looks good on a low resolution
 # laptop screen without having to change canvas size in macros.
 # HighLightColor 2 = red. ShowEventStatus allows the event status bar to
-# be turned on by default.
+# be turned on by default. AutoExec allows TExec objects to be executed
+# on mouse and key events.
 Canvas.MoveOpaque:          false
 Canvas.ResizeOpaque:        false
 Canvas.UseScreenFactor:     true
 Canvas.HighLightColor:      2
 Canvas.ShowEventStatus:     false
+Canvas.AutoExec:            true
 
 # THtml specific settings.
 Root.Html.OutputDir:         html/

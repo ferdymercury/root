@@ -1,5 +1,5 @@
-/*CMZ :  2.22/10 23/07/99  14.42.12  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   23/07/99*/
+/*CMZ :  2.23/10 10/12/99  17.59.55  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   10/12/99*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -9,15 +9,13 @@
  * Description:
  *  C/C++ interpreter parser header file
  ************************************************************************
- * Copyright(c) 1991~1996  [hp] Hewlett Packard Japan, All rights reserved
- * Author                  Masaharu Goto (gotom@jpn.hp.com)
- * Copyright(c) 1995~1998  Masaharu Goto (MXJ02154@niftyserve.or.jp)
+ * Copyright(c) 1995~1999  Masaharu Goto (MXJ02154@niftyserve.or.jp)
  *
  * Permission to use, copy, modify and distribute this software and its
  * documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies and
  * that both that copyright notice and this permission notice appear
- * in supporting documentation.  Hewlett-Packard Japan Company makes no
+ * in supporting documentation. The author makes no
  * representations about the suitability of this software for any
  * purpose.  It is provided "as is" without express or implied warranty.
  ************************************************************************/
@@ -28,6 +26,19 @@
 /**********************************************************************
 * SPECIAL CHANGES and CINT CORE COMPILATION SWITCH
 **********************************************************************/
+/* Define G__EXCEPTIONWRAPPER for activating C++ exception catching
+ * when calling precompiled function. It is better to define this macro
+ * in platform dependency file OTHMACRO flag.
+ */
+/* #define G__EXCEPTIONWRAPPER */
+
+/* If you define G__REFCONV in platform dependency file, bug fix for
+ * reference argument conversion is activated. Reason of not making
+ * this default is because it breaks DLL compatibility. If you define
+ * G__REFCONV, cint5.14.15 or newer version can load older DLL. But
+ * cint5.14.14 or older version can not load DLL that is created by
+ * cint5.14.15 or later. */
+#define G__REFCONV
 
 /* This change activates bytecode compilation of class object
  * instantiation in a function. Because the change includes some
@@ -53,12 +64,35 @@
 
 #define G__OLDIMPLEMENTATION834 /* THIS MODIFICATION IS TURNED OFF */
 
+#ifndef G__OLDIMPLEMENTATION1231
+/**************************************************************************
+* One of following macro has to be defined to fix DLL global function
+* conflict problem. G__CPPIF_STATIC is recommended. Define G__CPPIF_PROJNAME
+* only if G__CPPIF_STATIC has problem with your compiler.
+**************************************************************************/
+#ifdef G__CPPIF_EXTERNC
+#ifndef G__CPPIF_PROJNAME
+#define G__CPPIF_PROJNAME
+#endif
+#ifdef G__CPPIF_STATIC
+#undef G__CPPIF_STATIC
+#endif
+#endif
+
+#ifndef G__CPPIF_PROJNAME
+#ifndef G__CPPIF_STATIC
+#define G__CPPIF_STATIC
+#endif
+#endif
+
+#endif
 
 /**********************************************************************
 * Define following macro if you want to know where global variable is defined.
 * This macro is usually not defined to keep backward compatibility of DLL.
 **********************************************************************/
 /* #define G__VARIABLEFPOS */
+/* #define G__TYPEDEFFPOS */
 
 /**************************************************************************
 * if __MAKECINT__ is defined, do not include this file
@@ -180,10 +214,9 @@ typedef char G__SIGNEDCHAR_T;
 #include <fcntl.h>
 
 
-#ifndef __CINT__
-#ifdef __cplusplus
-extern "C" {
-#endif
+
+#if defined(__cplusplus) && !defined(__CINT__)
+extern "C" {   /* extern C 1 */
 #endif
 
 #ifndef G__WIN32
@@ -199,16 +232,22 @@ extern "C" {
 #endif
 
 #if   defined(G__SUNOS4)
-#include "sunos.h"
+#include "src/sunos.h"
 #elif defined(G__NEWSOS4) || defined(G__NEWSOS6)
-#include "newsos.h"
+#include "src/newsos.h"
 #elif defined(G__NONANSI)
-#include "sunos.h"
+#include "src/sunos.h"
 #endif
 
 
 #define G__DUMPFILE
 #define G__DOSHUGE
+
+
+#ifndef G__REFCONV
+#define G__OLDIMPLEMENTATION1167
+#endif
+
 
 /* Special typeinfo enhacement for Fons Rademaker's request */
 #define G__FONS_TYPEINFO
@@ -377,6 +416,12 @@ extern "C" {
 #define G__INHERIT5
 
 #define G__EXPLICITCONV
+
+#ifndef G__OLDIMPLEMENTATION1210
+#ifdef __CINT__
+typedef int (*G__IgnoreInclude)();
+#endif
+#endif
 
 /**********************************************************************
 * Non object oriented feature of C++
@@ -575,12 +620,6 @@ typedef struct {
 } G__value ;
 
 
-#ifdef __cplusplus
-typedef void (*G__incsetup)(void);
-#else
-typedef void (*G__incsetup)();
-#endif
-
 #ifndef G__OLDIMPLEMENTATION833
 /**************************************************************************
 * reference type argument for precompiled function
@@ -598,6 +637,7 @@ typedef void (*G__incsetup)();
 
 #endif
 
+
 /**************************************************************************
 * include file flags
 **************************************************************************/
@@ -608,10 +648,21 @@ typedef void (*G__incsetup)();
 /* #define G__ANSI */
 
 #ifdef __cplusplus
+
 #ifndef G__ANSI
 #define G__ANSI
 #endif
+#ifndef __CINT__
+#define G__CONST const
+#else
+#define G__CONST
 #endif
+
+#else /* __cplusplus */
+
+#define G__CONST
+
+#endif /* __cplusplus */
 
 extern G__value G__null;
 
@@ -755,6 +806,7 @@ struct G__bytecodefunc {
 #define G__BYTECODE_NOTYET    1
 #define G__BYTECODE_FAILURE   2
 #define G__BYTECODE_SUCCESS   3
+#define G__BYTECODE_ANALYSIS  4 /* ON1164 */
 
 struct G__funcentry {
   /* file position and pointer for restoring start point */
@@ -986,6 +1038,41 @@ struct G__param {
 #endif
 };
 
+
+#ifndef G__OLDIMPLEMENTATION1231
+#if defined(__cplusplus) && !defined(__CINT__)
+}   /* extern C 1 */
+#endif
+
+/**************************************************************************
+* Interface Method type
+*
+**************************************************************************/
+#if defined(__cplusplus) && defined(G__CPPIF_EXTERNC) && !defined(__CINT__)
+extern "C" {   /* extern C 2 */
+#endif
+
+#ifdef G__ANSIHEADER
+typedef int (*G__InterfaceMethod)(G__value*,G__CONST char*,struct G__param*,int);
+#else
+typedef int (*G__InterfaceMethod)();
+#endif
+
+#ifdef __cplusplus
+typedef void (*G__incsetup)(void);
+#else  /* __cplusplus */
+typedef void (*G__incsetup)();
+#endif /* __cplusplus */
+
+#if defined(__cplusplus) && defined(G__CPPIF_EXTERNC) && !defined(__CINT__)
+} /* extern C 2 */
+#endif
+
+#if defined(__cplusplus) && !defined(__CINT__)
+extern "C" { /* extern C 3 */
+#endif
+#endif /* 1231 */
+
 /**************************************************************************
 * structure for class inheritance
 *
@@ -1109,6 +1196,10 @@ struct G__tagtable {
   char rootflag[G__MAXSTRUCT];
   struct G__RootSpecial *rootspecial[G__MAXSTRUCT];
 #endif
+
+#ifndef G__OLDIMPLEMENTATION1238
+  char isctor[G__MAXSTRUCT];
+#endif
 };
 
 /**************************************************************************
@@ -1131,6 +1222,10 @@ struct G__typedef {
   char iscpplink[G__MAXTYPEDEF];
 #ifdef G__FONS_COMMENT
   struct G__comment_info comment[G__MAXSTRUCT];
+#endif
+#ifdef G__TYPEDEFFPOS
+  int filenum[G__MAXTYPEDEF];
+  int linenum[G__MAXTYPEDEF];
 #endif
   int alltype;
 };
@@ -1259,13 +1354,27 @@ extern void (*G__aterror)();
 #endif
 
 #if defined(G__DEBUG) && !defined(G__MEMTEST_C)
-#include "memtest.h"
+#include "src/memtest.h"
 #endif
 
 #ifndef G__WILDCARD
 #define G__WILDCARD
 #endif
 
+#ifndef G__OLDIMPLEMENTATION1169
+extern G__EXPORT char* G__Charref G__P((G__value *buf));
+extern G__EXPORT short* G__Shortref G__P((G__value *buf));
+extern G__EXPORT int* G__Intref G__P((G__value *buf));
+extern G__EXPORT long* G__Longref G__P((G__value *buf));
+extern G__EXPORT unsigned char* G__UCharref G__P((G__value *buf));
+extern G__EXPORT unsigned int* G__UIntref G__P((G__value *buf));
+extern G__EXPORT unsigned short* G__UShortref G__P((G__value *buf));
+extern G__EXPORT unsigned long* G__ULongref G__P((G__value *buf));
+extern G__EXPORT float* G__Floatref G__P((G__value *buf));
+extern G__EXPORT double* G__Doubleref G__P((G__value *buf));
+#endif
+extern G__EXPORT int G__get_security_error G__P((void));
+extern G__EXPORT char* G__map_cpp_name G__P((char *in));
 extern G__EXPORT int G__genericerror G__P((char *message));
 extern G__EXPORT char* G__tmpnam G__P((char* name));
 extern G__EXPORT int G__setTMPDIR G__P((char* badname));
@@ -1374,8 +1483,8 @@ extern G__EXPORT int G__printlinenum G__P((void));
 #ifndef G__PHILIPPE1
 extern G__EXPORT void G__Set_RTLD_NOW G__P((void));
 extern G__EXPORT void G__Set_RTLD_LAZY G__P((void));
-extern G__EXPORT int (*G__ScriptCompiler) G__P((const char*));
-extern G__EXPORT void G__RegisterScriptCompiler G__P((int(*p2f)(const char*)));
+extern G__EXPORT int (*G__ScriptCompiler) G__P((G__CONST char*,G__CONST char*));
+extern G__EXPORT void G__RegisterScriptCompiler G__P((int(*p2f)(G__CONST char*,G__CONST char*)));
 #endif
 /*************************************************************************
 * Pointer to function evaluation function
@@ -1392,7 +1501,7 @@ extern G__EXPORT void G__set_aterror G__P((void (*p2f)()));
 * interface method setup functions
 *************************************************************************/
 extern G__EXPORT int G__getnumbaseclass G__P((int tagnum));
-extern G__EXPORT void G__setnewtype G__P((int globalcomp,char* comment,int nindex));
+extern G__EXPORT void G__setnewtype G__P((int globalcomp,G__CONST char* comment,int nindex));
 extern G__EXPORT void G__setnewtypeindex G__P((int j,int index));
 extern G__EXPORT void G__resetplocal G__P(());
 extern G__EXPORT long G__getgvp G__P(());
@@ -1408,28 +1517,35 @@ extern G__EXPORT void G__setsizep2memfunc G__P((int sizep2memfunc));
 extern G__EXPORT int G__getsizep2memfunc G__P(());
 
 extern G__EXPORT int G__get_linked_tagnum G__P((G__linked_taginfo *p));
-extern G__EXPORT int G__tagtable_setup G__P((int tagnum,int size,int cpplink,int isabstract,char *comment,G__incsetup setup_memvar,G__incsetup setup_memfunc));
-extern G__EXPORT int G__search_tagname G__P((char *tagname,int type));
-extern G__EXPORT int G__search_typename G__P((char *typenamein,int typein,int tagnum,int reftype));
-extern G__EXPORT int G__search_typename2 G__P((char *typenamein,int typein,int tagnum,int reftype,int parent_tagnum));
-#ifdef __cplusplus
-extern int G__defined_tagname G__P((const char* tagname,int noerror));
-extern G__EXPORT int G__defined_typename G__P((const char* typenamein));
-#else
-extern int G__defined_tagname G__P((char* tagname,int noerror));
-extern G__EXPORT int G__defined_typename G__P((char *typenamein));
-#endif
+extern G__EXPORT int G__tagtable_setup G__P((int tagnum,int size,int cpplink,int isabstract,G__CONST char *comment,G__incsetup setup_memvar,G__incsetup setup_memfunc));
+extern G__EXPORT int G__search_tagname G__P((G__CONST char *tagname,int type));
+extern G__EXPORT int G__search_typename G__P((G__CONST char *typenamein,int typein,int tagnum,int reftype));
+extern G__EXPORT int G__search_typename2 G__P((G__CONST char *typenamein,int typein,int tagnum,int reftype,int parent_tagnum));
+extern int G__defined_tagname G__P((G__CONST char* tagname,int noerror));
+extern G__EXPORT int G__defined_typename G__P((G__CONST char* typenamein));
 extern G__EXPORT int G__tag_memvar_setup G__P((int tagnum));
-extern G__EXPORT int G__memvar_setup G__P((void *p,int type,int reftype,int constvar,int tagnum,int typenum,int statictype,int access,char *expr,int definemacro,char *comment));
+extern G__EXPORT int G__memvar_setup G__P((void *p,int type,int reftype,int constvar,int tagnum,int typenum,int statictype,int access,G__CONST char *expr,int definemacro,G__CONST char *comment));
 extern G__EXPORT int G__tag_memvar_reset G__P(());
 extern G__EXPORT int G__tag_memfunc_setup G__P((int tagnum));
+
+#ifndef G__OLDIMPLEMENTATION1231
 #ifdef G__TRUEP2F
-extern G__EXPORT int G__memfunc_setup G__P((char *funcname,int hash,int (*funcp)(G__value *result7,char *funcname,struct G__param *libp,int hash),int type
-,int tagnum,int typenum,int reftype,int para_nu,int ansi,int access,int isconst,char *paras,char *comment,void* tp2f,int isvirtual));
-#else
-extern G__EXPORT int G__memfunc_setup G__P((char *funcname,int hash,int (*funcp)(G__value *result7,char *funcname,struct G__param *libp,int hash),int type
-,int tagnum,int typenum,int reftype,int para_nu,int ansi,int access,int isconst,char *paras,char *comment));
-#endif
+extern G__EXPORT int G__memfunc_setup G__P((G__CONST char *funcname,int hash,G__InterfaceMethod funcp,int type
+,int tagnum,int typenum,int reftype,int para_nu,int ansi,int access,int isconst,G__CONST char *paras,G__CONST char *comment,void* tp2f,int isvirtual));
+#else /* G__TRUEP2F */
+extern G__EXPORT int G__memfunc_setup G__P((G__CONST char *funcname,int hash,G__InterfaceMethod funcp,int type
+,int tagnum,int typenum,int reftype,int para_nu,int ansi,int access,int isconst,G__CONST char *paras,G__CONST char *comment));
+#endif /* G__TRUEP2F */
+#else /* 1231 */
+#ifdef G__TRUEP2F
+extern G__EXPORT int G__memfunc_setup G__P((G__CONST char *funcname,int hash,int (*funcp)(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash),int type
+,int tagnum,int typenum,int reftype,int para_nu,int ansi,int access,int isconst,G__CONST char *paras,G__CONST char *comment,void* tp2f,int isvirtual));
+#else /* G__TRUEP2F */
+extern G__EXPORT int G__memfunc_setup G__P((G__CONST char *funcname,int hash,int (*funcp)(G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash),int type
+,int tagnum,int typenum,int reftype,int para_nu,int ansi,int access,int isconst,G__CONST char *paras,G__CONST char *comment));
+#endif /* G__TRUEP2F */
+#endif /* 1231 */
+
 extern G__EXPORT int G__memfunc_next G__P(());
 extern G__EXPORT int G__memfunc_para_setup G__P((int ifn,int type,int tagnum,int typenum,int reftype,G__value *para_default,char *para_def,char *para_name));
 extern G__EXPORT int G__tag_memfunc_reset G__P(());
@@ -1437,12 +1553,12 @@ extern G__EXPORT void G__letint G__P((G__value *buf,int type,long value));
 extern G__EXPORT void G__letdouble G__P((G__value *buf,int type,double value));
 extern G__EXPORT void G__store_tempobject G__P((G__value reg));
 extern G__EXPORT int G__inheritance_setup G__P((int tagnum,int basetagnum,long baseoffset,int baseaccess,int property));
-extern G__EXPORT void G__add_compiledheader G__P((char *headerfile));
-extern G__EXPORT void G__add_ipath G__P((char *ipath));
-extern G__EXPORT void G__add_macro G__P((char *macro));
-extern G__EXPORT void G__check_setup_version G__P((int version, char *func));
+extern G__EXPORT void G__add_compiledheader G__P((G__CONST char *headerfile));
+extern G__EXPORT void G__add_ipath G__P((G__CONST char *ipath));
+extern G__EXPORT void G__add_macro G__P((G__CONST char *macro));
+extern G__EXPORT void G__check_setup_version G__P((int version,G__CONST char *func));
 int G__deleteglobal G__P((void* p));
-int G__deletevariable G__P((char* varname));
+int G__deletevariable G__P((G__CONST char* varname));
 extern G__EXPORT void G__setautoconsole G__P((int autoconsole));
 extern G__EXPORT int G__AllocConsole G__P(());
 extern G__EXPORT int G__FreeConsole G__P(());
@@ -1453,25 +1569,39 @@ extern G__EXPORT int G__tracemode G__P((int tracemode));
 extern G__EXPORT int G__stepmode G__P((int stepmode));
 extern G__EXPORT int G__gettracemode G__P(());
 extern G__EXPORT int G__getstepmode G__P(());
-#ifdef __cplusplus
-G__value G__string2type_body G__P((const char *typenamin,int noerror));
-G__value G__string2type G__P((const char *typenamin));
-#else
-G__value G__string2type_body G__P((char *typenamin,int noerror));
-G__value G__string2type G__P((char *typenamin));
+#ifndef G__OLDIMPLEMENTATION1142
+extern G__EXPORT int G__optimizemode G__P((int optimizemode));
+extern G__EXPORT int G__getoptimizemode G__P(());
 #endif
-void* G__findsym G__P((char *fname));
+G__value G__string2type_body G__P((G__CONST char *typenamin,int noerror));
+G__value G__string2type G__P((G__CONST char *typenamin));
+void* G__findsym G__P((G__CONST char *fname));
 
 extern G__EXPORT int G__IsInMacro G__P(());
 extern G__EXPORT void G__storerewindposition G__P(());
 extern G__EXPORT void G__rewinddictionary G__P(());
 extern G__EXPORT void G__SetCriticalSectionEnv G__P(());
 
+#ifndef G__OLDIMPLEMENTATION1198
+extern G__EXPORT void G__storelasterror G__P(());
+extern G__EXPORT char* G__lasterror_filename G__P(());
+extern G__EXPORT int G__lasterror_linenum G__P(());
+#endif
+
+#ifndef G__OLDIMPLEMENTATION1207
+extern G__EXPORT int G__loadsystemfile G__P((G__CONST char* filename));
+#endif
+
+#ifndef G__OLDIMPLEMENTATION1210
+typedef int (*G__IgnoreInclude) G__P((const char* fname,const char* expandedfname));
+extern G__EXPORT void G__set_ignoreinclude G__P((G__IgnoreInclude ignoreinclude));
+#endif
+
 #ifdef G__ASM_WHOLEFUNC
 /**************************************************************************
 * Interface method to run bytecode function
 **************************************************************************/
-extern int G__exec_bytecode G__P((G__value *result7,char *funcname,struct G__param *libp,int hash));
+extern int G__exec_bytecode G__P((G__value *result7,G__CONST char *funcname,struct G__param *libp,int hash));
 #endif
 
 #endif /* __CINT__ */
@@ -1555,10 +1685,8 @@ extern G__EXPORT int G__setmasksignal G__P((int));
 * end of specialstdio or win32
 **************************************************************************/
 
-#ifndef __CINT__
-#ifdef __cplusplus
-}
-#endif
+#if defined(__cplusplus) && !defined(__CINT__)
+} /* extern C 3 */
 #endif
 
 #endif /* __MAKECINT__ */
@@ -1566,27 +1694,25 @@ extern G__EXPORT int G__setmasksignal G__P((int));
 * endif #ifndef G__MAKECINT
 **************************************************************************/
 
+#ifdef G__OLDIMPLEMENTATION1231
 /**************************************************************************
 * Interface Method type
 *
 **************************************************************************/
-#ifndef __CINT__
-#ifdef __cplusplus
-extern "C" {
-#endif
+#if defined(__cplusplus) && !defined(__CINT__)
+extern "C" { /* extern C 4' */
 #endif
 
 #ifdef G__ANSIHEADER
-typedef int (*G__InterfaceMethod)(G__value*,char*,struct G__param*,int);
+typedef int (*G__InterfaceMethod)(G__value*,G__CONST char*,struct G__param*,int);
 #else
 typedef int (*G__InterfaceMethod)();
 #endif
 
-#ifndef __CINT__
-#ifdef __cplusplus
-}
+#if defined(__cplusplus) && !defined(__CINT__)
+} /* extern C 4' */
 #endif
-#endif
+#endif /* 1231 */
 
 
 #endif /* G__CI_H */

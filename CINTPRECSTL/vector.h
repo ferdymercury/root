@@ -1,9 +1,9 @@
-/*CMZ :  2.22/10 23/07/99  14.42.34  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   23/07/99*/
+/*CMZ :  2.23/10 10/12/99  18.00.24  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   10/12/99*/
 // lib/prec_stl/vector
 
-#ifndef PREC_STL_VECTOR
-#define PREC_STL_VECTOR
+#pragma ifndef PREC_STL_VECTOR
+#pragma define PREC_STL_VECTOR
 #pragma link off global PREC_STL_VECTOR;
 #pragma link C++ nestedtypedef;
 #pragma link C++ nestedclass;
@@ -11,6 +11,7 @@
 // Imported from ANSI/ISO C++ 1997/Nov draft
 // Got some ideas from Scott Snyder, Fermi-lab
 // Modified by Masaharu Goto
+// SGI KCC porting by Philippe Canal, Fermi-lab
 
 #include <iterator>
 #include <memory>
@@ -54,7 +55,7 @@ class vector {
 	{
    public:
     reverse_iterator(const reverse_iterator& x) ;
-#ifndef G__BORLAND
+#if !defined(G__BORLAND) && !defined(G__KCC)
     reverse_iterator& operator=(const reverse_iterator& x) ;
 #endif
     T* base() ;
@@ -85,10 +86,10 @@ class vector {
   //iterator_category(vector::reverse_iterator& x);
 #endif
 
-  iterator begin(void) const ;
-  iterator end(void) const ;
-  reverse_iterator rbegin(void) const ;
-  reverse_iterator rend(void) const ;
+  iterator begin(void) ;
+  iterator end(void) ;
+  reverse_iterator rbegin(void) ;
+  reverse_iterator rend(void) ;
   size_type size(void) const ;
   size_type max_size(void) const ;
   size_type capacity(void) const ;

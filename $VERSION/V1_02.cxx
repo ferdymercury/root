@@ -1,5 +1,11 @@
-//*CMZ :          09/12/98  19.25.17  by  Rene Brun
+//*CMZ :          24/11/99  11.28.32  by  Rene Brun
 //*-- Author :    Rene Brun   25/07/97
+//
+// 24/11/1999  11.27.24  by  Rene Brun
+//
+//
+// 03/09/1999  11.37.52  by  Rene Brun
+//
 //
 // 09/12/1998  19.21.59  by  Rene Brun
 //
@@ -641,7 +647,7 @@ history file below.
 - TWiNTSystem  - change the CTRL-C handle. Now it terminates WIN32
                   application. So far it crashes ROOT.
 
-- TGLKernelABC - Bool_t fTrueColorMode data-member and methods are introduced
+- TVirtualGL - Bool_t fTrueColorMode data-member and methods are introduced
 
 - TGLKernel::SetCurrentColor(Int_t color) - respects the fTrueColorMode to set color
                     as result OpenGL works with all kind of Video mode under Windows

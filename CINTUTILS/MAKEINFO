@@ -1,7 +1,7 @@
+*CMZ :  2.23/03 14/09/99  08.44.26  by  Rene Brun
 *CMZ :  2.22/01 03/05/99  18.25.27  by  Fons Rademakers
 *CMZ :  2.21/08 18/03/99  15.14.44  by  Fons Rademakers
 *CMZ :  2.00/11 07/08/98  12.08.36  by  Fons Rademakers
-*CMZ :  1.03/09 16/12/97  17.11.12  by  Rene Brun
 *-- Author :
 
 +SELF,IF=HPUX,IF=-ACC,IF=-GCC.
@@ -72,7 +72,7 @@ DLLPOST     = .dl
 +SELF,IF=SOLARIS,IF=-GCC.
 # Preprocessor
 CPREP       = /opt/SUNWspro/bin/cc -E -C
-CPPPREP     = /usr/ccs/lib/cpp -D__sun -D__sparc -D__unix -E -C
+CPPPREP     = /usr/ccs/lib/cpp -D__sun -D__sparc -D__unix -E -C -B
 
 # source code postfix
 CSRCPOST    = .c
@@ -98,7 +98,7 @@ DLLPOST     = .dl
 +SELF,IF=SOLARISPC,IF=-GCC.
 # Preprocessor
 CPREP       = /opt/SUNWspro/bin/cc -E -C
-CPPPREP     = /usr/ccs/lib/cpp -D__sun -D__i386 -D__unix -E -C
+CPPPREP     = /usr/ccs/lib/cpp -D__sun -D__i386 -D__unix -E -C -B
 
 # source code postfix
 CSRCPOST    = .c

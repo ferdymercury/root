@@ -1,31 +1,24 @@
-//*CMZ :  2.22/07 29/06/99  18.23.54  by  Fons Rademakers
+//*CMZ :  2.23/12 26/01/2000  09.41.49  by  Rene Brun
+//*CMZ :  2.23/11 22/12/99  22.13.50  by  Rene Brun
+//*CMZ :  2.23/10 17/12/99  12.30.35  by  Rene Brun
+//*CMZ :  2.23/09 07/12/99  08.20.56  by  Rene Brun
+//*CMZ :  2.23/01 19/08/99  15.52.31  by  Rene Brun
+//*CMZ :  2.22/07 19/08/99  15.38.13  by  Fons Rademakers
 //*CMZ :  2.22/02 20/05/99  18.13.51  by  Rene Brun
 //*CMZ :  2.22/01 16/04/99  12.26.24  by  Fons Rademakers
-//*CMZ :  2.21/06 17/02/99  18.46.08  by  Fons Rademakers
-//*CMZ :  2.20/04 09/12/98  19.25.21  by  Rene Brun
-//*CMZ :  2.00/13 27/10/98  18.48.25  by  Fons Rademakers
-//*CMZ :  2.00/12 07/10/98  16.59.20  by  Fons Rademakers
-//*CMZ :  2.00/10 01/10/98  11.24.36  by  Fons Rademakers
-//*CMZ :  2.00/09 11/06/98  18.52.49  by  Fons Rademakers
-//*CMZ :  1.03/09 04/06/98  19.11.26  by  Fons Rademakers
 //*-- Author :    Rene Brun   28/12/94
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -72,8 +65,8 @@
 #include "TBrowser.h"
 #include "bytes.h"
 
-extern "C" void mmzip (Int_t cxlevel, Int_t *nin, char *bufin, Int_t *lout, char *bufout, Int_t *nout);
-extern "C" void mmuzip(Int_t *nin, UChar_t *bufin, Int_t *lout, char *bufout, Int_t *nout);
+extern "C" void R__zip (Int_t cxlevel, Int_t *nin, char *bufin, Int_t *lout, char *bufout, Int_t *nout);
+extern "C" void R__unzip(Int_t *nin, UChar_t *bufin, Int_t *lout, char *bufout, Int_t *nout);
 const Int_t kMAXFILEBUFFER = 262144;
 const Int_t kMAXBUF = 0xffffff;
 
@@ -113,7 +106,7 @@ TKey::TKey(Seek_t pointer, Int_t nbytes) : TNamed()
 }
 
 //______________________________________________________________________________
-TKey::TKey(const Text_t *name, const Text_t *title, TClass *cl, Int_t nbytes)
+TKey::TKey(const char *name, const char *title, TClass *cl, Int_t nbytes)
       : TNamed(name,title)
 {
    fClassName  = cl->GetName();
@@ -141,7 +134,7 @@ TKey::TKey(const TString &name, const TString &title, TClass *cl, Int_t nbytes)
 }
 
 //______________________________________________________________________________
-TKey::TKey(TObject *obj, const Text_t *name, const Int_t bufsize)
+TKey::TKey(TObject *obj, const char *name, const Int_t bufsize)
      : TNamed(name, obj->GetTitle())
 {
 //*-*-*-*-*-*-*-*-*-*Create a TKey object and fill output buffer*-*-*-*-*-*-*
@@ -165,7 +158,7 @@ TKey::TKey(TObject *obj, const Text_t *name, const Int_t bufsize)
    fObjlen    = lbuf - fKeylen;
 
    Int_t cxlevel = gFile->GetCompressionLevel();
-   if (cxlevel && fObjlen > 64) {
+   if (cxlevel && fObjlen > 256) {
       if (cxlevel == 2) cxlevel--;
       Int_t nbuffers = fObjlen/kMAXBUF;
       Int_t buflen = TMath::Max(512,fKeylen + fObjlen + 9*nbuffers + 8); //add 8 bytes in case object is placed in a deleted gap
@@ -177,7 +170,14 @@ TKey::TKey(TObject *obj, const Text_t *name, const Int_t bufsize)
       for (Int_t i=0;i<=nbuffers;i++) {
          if (i == nbuffers) bufmax = fObjlen -nzip;
          else               bufmax = kMAXBUF;
-         mmzip(cxlevel, &bufmax, objbuf, &bufmax, bufcur, &nout);
+         R__zip(cxlevel, &bufmax, objbuf, &bufmax, bufcur, &nout);
+         if (nout == 0) { //this happens when the buffer cannot be compressed
+            fBuffer = fBufferRef->Buffer();
+            Create(fObjlen);
+            fBufferRef->SetBufferOffset(0);
+            Streamer(*fBufferRef);         //write key itself again
+            return;
+         }
          bufcur += nout;
          noutot += nout;
          objbuf += kMAXBUF;
@@ -230,7 +230,6 @@ void TKey::Create(Int_t nbytes)
 
 //*-*-------------------find free segment
 //*-*                    =================
-   char *buffer;
    Int_t nsize      = nbytes + fKeylen;
    TFree *f1        = (TFree*) gFile->GetListOfFree()->First();
    TFree *bestfree  = f1->GetBestFree(nsize);
@@ -264,7 +263,7 @@ void TKey::Create(Int_t nbytes)
       if (!fBuffer) {
          fBuffer = new char[nsize+sizeof(Int_t)];
       }
-      buffer  = fBuffer+nsize;
+      char *buffer  = fBuffer+nsize;
       Int_t nbytesleft = -fLeft;  // set header of remaining record
       tobuf(buffer, nbytesleft);
       bestfree->SetFirst(fSeekKey+nsize);
@@ -454,13 +453,14 @@ TObject *TKey::ReadObj()
       while (1) {
          nin  = 9 + ((Int_t)bufcur[3] | ((Int_t)bufcur[4] << 8) | ((Int_t)bufcur[5] << 16));
          nbuf = (Int_t)bufcur[6] | ((Int_t)bufcur[7] << 8) | ((Int_t)bufcur[8] << 16);
-         mmuzip(&nin, bufcur, &nbuf, objbuf, &nout);
+         R__unzip(&nin, bufcur, &nbuf, objbuf, &nout);
+         if (!nout) break;
          noutot += nout;
          if (noutot >= fObjlen) break;
          bufcur += nin;
          objbuf += nout;
       }
-      obj->Streamer(*fBufferRef);
+      if (nout) obj->Streamer(*fBufferRef);
       delete [] fBuffer;
    } else {
       obj->Streamer(*fBufferRef);
@@ -514,7 +514,7 @@ void TKey::Read(TObject *obj)
       UChar_t *bufcur = (UChar_t *)&fBuffer[fKeylen];
       Int_t nin = fNbytes-fKeylen;
       Int_t nout;
-      mmuzip(&nin, bufcur, &fObjlen, objbuf, &nout);
+      R__unzip(&nin, bufcur, &fObjlen, objbuf, &nout);
       if (nout != fObjlen) Error("Read", "fObjlen = %d, nout = %d", fObjlen, nout);
       obj->Streamer(*fBufferRef);
       delete [] fBuffer;

@@ -1,31 +1,35 @@
+*CMZ :  2.23/09 19/11/99  18.31.59  by  Fons Rademakers
+*CMZ :  2.23/04 29/09/99  18.30.42  by  Fons Rademakers
+*CMZ :  2.23/00 08/08/99  16.17.53  by  Fons Rademakers
 *CMZ :  2.22/00 29/03/99  17.02.00  by  Fons Rademakers
 *CMZ :  2.21/08 15/03/99  08.57.31  by  Rene Brun
 *CMZ :  2.21/07 04/03/99  09.32.00  by  Rene Brun
 *-- Author :    Rene Brun   04/03/99
 # Makefile of ROOT for SGI IRIX 6.x with EGCS compiler
 
+include ../Makefile.config
+
 PLATFORM      = sgi
 
 CXX           = gcc
 CC            = cc
 CXXFLAGS      = -fsigned-chars -Wall -fPIC -fno-exceptions  \
-                -I$(OPENGL)/include
-CFLAGS        =
+                -I$(OPENGL)/include $(EXTRA_CXXFLAGS)
+CFLAGS        = $(EXTRA_CFLAGS)
 CINTCXXFLAGS  = -fsigned-chars -Wall -fPIC -fno-exceptions -DG__REGEXP1 \
                 -DG__UNIX -DG__SIGNEDCHAR -DG__SHAREDLIB -DG__OSFDLL \
-                -DG__ROOT -DG__REDIRECTIO
+                -DG__ROOT -DG__REDIRECTIO $(EXTRA_CXXFLAGS)
 CINTCFLAGS    = -signed -DG__REGEXP1 -DG__SIGNEDCHAR -DG__UNIX -DG__SHAREDLIB \
-                -DG__OSFDLL -DG__ROOT -DG__REDIRECTIO
+                -DG__OSFDLL -DG__ROOT -DG__REDIRECTIO $(EXTRA_CFLAGS)
 OPT           = -O
 NOOPT         =
 LD            = gcc
 LDFLAGS       = $(OPT)  -Wl,-u,__builtin_new -Wl,-u,__builtin_delete \
-                -Wl,-u,__nw__FUiPv
+                -Wl,-u,__nw__FUiPv $(EXTRA_LDFLAGS)
 SOFLAGS       = -shared
 SOEXT         = so
 SYSLIBS       = -lstdc++ -lm
-SYSXLIBS      = -L/usr/X11R6/lib -lX11 -lm
-XLIBS         = $(ROOTSYS)/lib/libXpm.a -L/usr/X11R6/lib -lX11
+XLIBS         = ../lib/libXpm.a -L/usr/X11R6/lib -lX11
 CILIBS        = -lstdc++ -lgen -lm -lbsd
 
 

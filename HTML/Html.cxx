@@ -1,32 +1,22 @@
+//*CMZ :  2.23/12 26/01/2000  10.04.52  by  Rene Brun
+//*CMZ :  2.23/04 13/10/99  16.01.02  by  Fons Rademakers
+//*CMZ :  2.23/03 21/09/99  13.02.43  by  Rene Brun
+//*CMZ :  2.23/01 24/08/99  18.17.19  by  Fons Rademakers
 //*CMZ :  2.21/08 17/03/99  08.32.00  by  Rene Brun
 //*CMZ :  2.21/07 05/03/99  17.21.43  by  Rene Brun
-//*CMZ :  2.21/01 13/01/99  09.37.48  by  Rene Brun
-//*CMZ :  2.00/11 30/11/98  11.06.39  by  Rene Brun
-//*CMZ :  2.00/09 26/06/98  09.53.31  by  Rene Brun
-//*CMZ :  2.00/08 26/05/98  17.05.07  by  Fons Rademakers
-//*CMZ :  2.00/06 15/05/98  00.10.03  by  Rene Brun
-//*CMZ :  2.00/05 20/04/98  15.12.42  by  Fons Rademakers
-//*CMZ :  2.00/03 26/03/98  11.13.27  by  Rene Brun
-//*CMZ :  2.00/00 16/03/98  11.29.07  by  Rene Brun
-//*CMZ :  1.03/09 16/12/97  16.26.15  by  Rene Brun
 //*-- Author :    Nenad Buncic   18/10/95
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 #include "TROOT.h"
@@ -41,7 +31,6 @@
 #include "TError.h"
 #include "THtml.h"
 #include "TMethod.h"
-#include "TPostScript.h"
 #include "TSystem.h"
 #include "TString.h"
 #include "TInterpreter.h"
@@ -365,7 +354,7 @@ void THtml::Class2Html( TClass *classPtr, Bool_t force )
                 classFile << "public ";
 
                 // get a class
-                TClass *classInh = gROOT->GetClass( (const Text_t * ) inheritFrom->GetName() );
+                TClass *classInh = GetClass( (const char * ) inheritFrom->GetName() );
 
                 Char_t *htmlFile = GetHtmlFileName( classInh );
 
@@ -1212,7 +1201,7 @@ void THtml::ClassTree( TVirtualPad *psCanvas, TClass *classPtr, Bool_t force )
 
 
 //______________________________________________________________________________
-void THtml::Convert( Text_t *filename, Text_t *title, Text_t *dirname )
+void THtml::Convert( const char *filename, const char *title, const char *dirname )
 {
 // It converts a single text file to HTML
 //
@@ -1225,7 +1214,7 @@ void THtml::Convert( Text_t *filename, Text_t *title, Text_t *dirname )
 //  NOTE: Output file name is the same as filename, but with extension .html
 //
 
-    Char_t *dir;
+    const Char_t *dir;
     Char_t *ptr;
 
     Bool_t isCommentedLine = kFALSE;
@@ -1243,7 +1232,7 @@ void THtml::Convert( Text_t *filename, Text_t *title, Text_t *dirname )
 
 
     // find a file
-    Char_t *realFilename = gSystem->Which( fSourceDir, ( const Char_t * ) filename, kReadPermission );
+    Char_t *realFilename = gSystem->Which( fSourceDir, filename, kReadPermission );
 
     if( realFilename ) {
 
@@ -1257,7 +1246,7 @@ void THtml::Convert( Text_t *filename, Text_t *title, Text_t *dirname )
         if( sourceFile.good() ) {
 
             // open temp file with extension '.html'
-            if( !gSystem->AccessPathName( (const Char_t * ) dir )) {
+            if( !gSystem->AccessPathName( dir )) {
                 Char_t *tmp1 = gSystem->ConcatFileName( dir, GetFileName( filename ));
                 Char_t *htmlFilename = StrDup( tmp1, 16 );
                 strcat( htmlFilename, ".html" );
@@ -1467,7 +1456,7 @@ void THtml::CreateIndex( const Char_t **classNames, Int_t numberOfClasses )
         for( i = 0; i < numberOfClasses; i++ ) {
 
             // get class
-            TClass *classPtr = gROOT->GetClass( (const Text_t * ) classNames[i] );
+            TClass *classPtr = GetClass( (const char * ) classNames[i] );
 
             indexFile << "<li>";
             Char_t *htmlFile = GetHtmlFileName( classPtr );
@@ -1566,7 +1555,7 @@ void THtml::CreateIndexByTopic( Char_t **fileNames, Int_t numberOfNames, Int_t m
         }
 
         // get a class
-        TClass *classPtr = gROOT->GetClass( (const Text_t * ) strrchr( fileNames[i], '_')+1 );
+        TClass *classPtr = GetClass( (const char * ) strrchr( fileNames[i], '_')+1 );
         if( classPtr ) {
 
             // write a classname to an index file
@@ -1755,7 +1744,7 @@ void THtml::DerivedClasses( ofstream &out, TClass *classPtr )
         derivedClassName = gClassTable->Next();
 
         // get class pointer
-        derivedClassPtr = gROOT->GetClass( derivedClassName );
+        derivedClassPtr = GetClass( derivedClassName );
 
         // make a loop on base classes
         TBaseClass *inheritFrom;
@@ -1795,7 +1784,7 @@ void THtml::DerivedClasses( ofstream &out, TClass *classPtr )
 
 //______________________________________________________________________________
 void THtml::ExpandKeywords( ofstream &out, Char_t *text, TClass *ptr2class,
-                            Bool_t &flag, Char_t *dir )
+                            Bool_t &flag, const Char_t *dir )
 {
 // Find keywords in text & create URLs
 //
@@ -1946,7 +1935,7 @@ void THtml::ExpandKeywords( ofstream &out, Char_t *text, TClass *ptr2class,
         if( !flag && !hide && *keyword ) {
 
             // get class
-            TClass *classPtr = gROOT->GetClass( (const Text_t * ) keyword );
+            TClass *classPtr = GetClass( (const char * ) keyword );
 
             if( classPtr ) {
 
@@ -1992,7 +1981,7 @@ void THtml::ExpandKeywords( ofstream &out, Char_t *text, TClass *ptr2class,
             }
             else {
                 // get data type
-                TDataType *type = gROOT->GetType( (const Text_t *) keyword );
+                TDataType *type = gROOT->GetType( (const char *) keyword );
 
                 if( type ) {
 
@@ -2024,14 +2013,14 @@ void THtml::ExpandKeywords( ofstream &out, Char_t *text, TClass *ptr2class,
                         keyword = end;
                     }
                     else {
-                        const Text_t *anyname = gROOT->FindObjectClassName( keyword );
+                        const char *anyname = gROOT->FindObjectClassName( keyword );
 
                         const Char_t *namePtr = NULL;
                         TClass *cl  = 0;
                         TClass *cdl = 0;
 
                         if( anyname ) {
-                            cl = gROOT->GetClass( anyname );
+                            cl = GetClass( anyname );
                             namePtr = ( const Char_t * ) anyname;
                             cdl = cl;
                         }
@@ -2041,7 +2030,7 @@ void THtml::ExpandKeywords( ofstream &out, Char_t *text, TClass *ptr2class,
                                 namePtr = cl->GetName();
                                 TDataMember *member = cl->GetDataMember( keyword );
                                 if( member )
-                                    cdl = gROOT->GetClass( member->GetTypeName() );
+                                    cdl = GetClass( member->GetTypeName() );
                             }
                         }
 
@@ -2259,6 +2248,22 @@ Char_t *THtml::GetHtmlFileName( TClass *classPtr )
     return ret;
 }
 
+//______________________________________________________________________________
+TClass *THtml::GetClass(const char *name1, Bool_t load)
+{
+//*-*-*-*-*Return pointer to class with name*-*-*-*-*-*-*-*-*-*-*-*-*
+//*-*      =================================
+   char name[64];
+
+   char *t = Strip(name1);
+   if (strlen (t) > 64) strncpy(name, t, 63);
+   else strcpy(name, t);
+   delete [] t;
+
+   TClass *cl = gROOT->GetClass(name,load);
+   return cl;
+}
+
 
 //______________________________________________________________________________
 Bool_t THtml::IsModified( TClass *classPtr, const Int_t type )
@@ -2407,7 +2412,7 @@ void THtml::MakeAll( Bool_t force )
 
 
 //______________________________________________________________________________
-void THtml::MakeClass( Text_t *className, Bool_t force )
+void THtml::MakeClass(const char *className, Bool_t force )
 {
 // Make HTML files for a single class
 //
@@ -2415,7 +2420,7 @@ void THtml::MakeClass( Text_t *className, Bool_t force )
 // Input: className - name of the class to process
 //
 
-    TClass *classPtr = gROOT->GetClass( className );
+    TClass *classPtr = GetClass( className );
 
     if( classPtr ) {
         Char_t *htmlFile = GetHtmlFileName( classPtr );
@@ -2468,7 +2473,7 @@ void THtml::MakeIndex()
         maxLen = maxLen > len ? maxLen : len;
 
         // get class & filename
-        TClass *classPtr = gROOT->GetClass( (const Text_t * ) classNames[i] );
+        TClass *classPtr = GetClass( (const char * ) classNames[i] );
         const char *impname = classPtr->GetImplFileName();
 
         if( impname ) {
@@ -2507,7 +2512,7 @@ void THtml::MakeIndex()
 
 
 //______________________________________________________________________________
-void THtml::MakeTree( Text_t *className, Bool_t force )
+void THtml::MakeTree(const char *className, Bool_t force )
 {
 // Make an inheritance tree
 //
@@ -2517,14 +2522,10 @@ void THtml::MakeTree( Text_t *className, Bool_t force )
 
     // create canvas & set fill color
     TVirtualPad *psCanvas = 0;
-    if (gInterpreter) {
-       char cline[80];
-       sprintf(cline,"TCanvas *psCanvas = new TCanvas(\"\",\"psCanvas\", 0, 0, 1000,750);");
-       gROOT->ProcessLine(cline);
-    }
+    gROOT->ProcessLineFast("new TCanvas(\"\",\"psCanvas\",0,0,1000,750);");
     psCanvas = gPad->GetVirtCanvas();
 
-    TClass *classPtr = gROOT->GetClass( className );
+    TClass *classPtr = GetClass( className );
 
     if( classPtr ) {
 
@@ -2692,8 +2693,8 @@ void THtml::WriteHtmlHeader( ofstream &out, const Char_t *title )
 
 
 //______________________________________________________________________________
-void THtml::WriteHtmlFooter( ofstream &out, Char_t *dir, const Char_t *lastUpdate,
-                             Char_t *author, Char_t *copyright )
+void THtml::WriteHtmlFooter( ofstream &out, const char *dir, const char *lastUpdate,
+                             const char *author, const char *copyright )
 {
 // Write HTML footer
 //
@@ -2718,7 +2719,9 @@ void THtml::WriteHtmlFooter( ofstream &out, Char_t *dir, const Char_t *lastUpdat
 
         out << "<em>Author: ";
 
-        Char_t *name = strtok( author, "," );
+        Char_t *auth = StrDup(author);
+
+        Char_t *name = strtok( auth, "," );
 
         Bool_t firstAuthor = kTRUE;
 
@@ -2767,6 +2770,7 @@ void THtml::WriteHtmlFooter( ofstream &out, Char_t *dir, const Char_t *lastUpdat
 
         } while (( name = strtok( NULL, "," )));
         out << "</em><br>" << endl;
+        delete [] auth;
     }
 
     if( *lastUpdate ) out << "<em>Last update: " << lastUpdate << "</em><br>" << endl;

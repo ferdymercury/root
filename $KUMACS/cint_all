@@ -1,8 +1,10 @@
+*CMZ :  2.23/12 26/01/2000  11.07.56  by  Valery Fine(fine@mail.cern.ch)
+*CMZ :  2.23/09 08/11/99  18.06.19  by  Fons Rademakers
+*CMZ :  2.23/05 19/10/99  18.51.19  by  Rene Brun
+*CMZ :  2.23/03 22/09/99  16.33.47  by  Rene Brun
+*CMZ :  2.23/02 05/09/99  22.35.31  by  Rene Brun
 *CMZ :  2.21/07 08/03/99  12.40.32  by  Fons Rademakers
 *CMZ :  2.20/00 21/11/98  13.52.50  by  Fons Rademakers
-*CMZ :  2.00/10 27/06/98  19.18.40  by  Fons Rademakers
-*CMZ :  2.00/00 05/03/98  17.08.07  by  Fons Rademakers
-*CMZ :  1.03/07 29/10/97  15.59.23  by  Fons Rademakers
 *-- Author :    Rene Brun 1016/01/96
 
 macro cint_all
@@ -18,18 +20,27 @@ exec cint_html
 exec cint_matrix
 exec cint_meta
 exec cint_minuit
+exec cint_painter
+exec cint_player
+exec cint_viewer
 exec cint_rint
 exec cint_rfio
 exec cint_tree
 exec cint_unix
+exec cint_x3d
 exec cint_x11
 exec cint_x11ttf
 exec cint_net
 exec cint_proof
+exec cint_ps
 exec cint_pythia
+exec cint_pythia6
 exec cint_physics
 exec cint_venus
 +IF,THREAD.
 exec cint_thread
++ENDIF
++IF,STAR
+exec cint_star
 +ENDIF
 return

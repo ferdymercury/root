@@ -1,56 +1,28 @@
-//*CMZ :  2.22/09 13/07/99  11.20.05  by  Rene Brun
-//*CMZ :  2.22/08 07/07/99  17.08.28  by  Rene Brun
-//*CMZ :  2.22/07 05/07/99  16.38.25  by  Rene Brun
-//*CMZ :  2.22/06 25/06/99  14.39.44  by  Rene Brun
-//*CMZ :  2.22/05 15/06/99  10.08.10  by  Rene Brun
-//*CMZ :  2.22/04 03/06/99  09.35.52  by  Rene Brun
-//*CMZ :  2.22/03 31/05/99  12.31.17  by  Rene Brun
-//*CMZ :  2.22/01 20/05/99  14.18.15  by  Rene Brun
-//*CMZ :  2.22/00 06/04/99  09.37.32  by  Rene Brun
-//*CMZ :  2.21/08 26/03/99  23.08.29  by  Rene Brun
-//*CMZ :  2.21/07 03/03/99  11.34.48  by  Rene Brun
-//*CMZ :  2.21/06 18/02/99  09.06.08  by  Rene Brun
-//*CMZ :  2.21/05 07/02/99  11.41.46  by  Rene Brun
-//*CMZ :  2.21/04 03/02/99  10.51.28  by  Rene Brun
-//*CMZ :  2.21/03 22/01/99  08.40.27  by  Rene Brun
-//*CMZ :  2.21/02 18/01/99  16.21.47  by  Rene Brun
-//*CMZ :  2.21/01 11/01/99  08.42.36  by  Rene Brun
-//*CMZ :  2.20/06 17/12/98  09.41.03  by  Rene Brun
-//*CMZ :  2.20/05 13/12/98  17.39.54  by  Rene Brun
-//*CMZ :  2.20/04 09/12/98  20.54.12  by  Rene Brun
-//*CMZ :  2.20/03 05/12/98  16.34.23  by  Rene Brun
-//*CMZ :  2.20/02 03/12/98  19.03.56  by  Rene Brun
-//*CMZ :  2.20/00 26/11/98  15.21.11  by  Rene Brun
-//*CMZ :  2.00/13 23/10/98  08.41.08  by  Rene Brun
-//*CMZ :  2.00/12 09/10/98  09.56.39  by  Rene Brun
-//*CMZ :  2.00/11 01/09/98  03.04.04  by  Rene Brun
-//*CMZ :  2.00/10 29/07/98  22.00.10  by  Rene Brun
-//*CMZ :  2.00/09 22/06/98  12.31.55  by  Fons Rademakers
-//*CMZ :  2.00/08 02/06/98  19.48.14  by  Rene Brun
-//*CMZ :  2.00/07 17/05/98  00.04.45  by  Rene Brun
-//*CMZ :  2.00/06 14/05/98  23.21.52  by  Rene Brun
-//*CMZ :  2.00/04 06/04/98  12.59.08  by  Rene Brun
-//*CMZ :  2.00/03 27/03/98  17.57.23  by  Rene Brun
-//*CMZ :  2.00/00 06/03/98  17.53.17  by  Rene Brun
-//*CMZ :  1.03/09 07/01/98  08.24.24  by  Fons Rademakers
+//*CMZ :          19/02/2000  11.30.33  by  Fons Rademakers
+//*CMZ :  2.23/12 01/02/2000  15.53.35  by  Rene Brun
+//*CMZ :  2.23/11 02/01/2000  15.55.56  by  Rene Brun
+//*CMZ :  2.23/10 17/12/99  10.02.17  by  Rene Brun
+//*CMZ :  2.23/09 24/11/99  14.42.24  by  Rene Brun
+//*CMZ :  2.23/08 31/10/99  18.32.25  by  Rene Brun
+//*CMZ :  2.23/07 25/10/99  08.20.53  by  Rene Brun
+//*CMZ :  2.23/04 13/10/99  17.58.35  by  Rene Brun
+//*CMZ :  2.23/03 27/09/99  14.25.41  by  Rene Brun
+//*CMZ :  2.23/02 07/09/99  14.53.38  by  Rene Brun
+//*CMZ :  2.23/01 31/08/99  16.59.36  by  Rene Brun
+//*CMZ :  2.23/00 30/07/99  20.04.37  by  Fons Rademakers
 //*-- Author :    Rene Brun   26/12/94
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 #include <stdlib.h>
@@ -59,6 +31,7 @@
 #include <ctype.h>
 #include <fstream.h>
 #include <iostream.h>
+#include <float.h>
 
 #include "TROOT.h"
 #include "TH1.h"
@@ -66,28 +39,12 @@
 #include "TF2.h"
 #include "TF3.h"
 #include "TVirtualPad.h"
-#include "TPaveStats.h"
-#include "TFrame.h"
-#include "TText.h"
-#include "TLine.h"
-#include "TPolyLine.h"
-#include "TPolymarker3D.h"
-#include "TMarker3DBox.h"
-#include "TPoints.h"
-#include "TStyle.h"
 #include "Foption.h"
-#include "TGraph.h"
-#include "TGaxis.h"
-#include "TColor.h"
-#include "TLego.h"
-#include "TView.h"
 #include "TMath.h"
 #include "TRandom.h"
-#include "TMinuit.h"
-#include "Hoption.h"
-#include "Hparam.h"
-#include "TInterpreter.h"
+#include "TVirtualFitter.h"
 #include "TProfile.h"
+#include "TStyle.h"
 
 //______________________________________________________________________________
 //*-*-*-*-*-*-*-*-*-*-*The H I S T O G R A M   Classes*-*-*-*-*-*-*-*-*-*-*-*
@@ -129,6 +86,22 @@
 //*-*     bin = nbins;   last bin with upper-edge xup EXCLUDED
 //*-*     bin = nbins+1; overflow bin
 //*-*
+//*-*  Associated errors
+//*-*  =================
+//*-*  By default, for each bin, the sum of weights is computed at fill time.
+//*-*  One can also call TH1::Sumw2 to force the storage and computation
+//*-*  of the sum of the square of weights per bin.
+//*-*  If Sumw2 has been called, the error per bin is computed as the
+//*-*  sqrt(sum of squares of weights), otherwise the error is set equal
+//*-*  to the sqrt(bin content).
+//*-*
+//*-*  Associated functions
+//*-*  ====================
+//*-*  One or more object (typically a TF1*) can be added to the list
+//*-*  of functions (fFunctions) associated to each histogram.
+//*-*  When TF1::Fit is invoked, the fitted function is added to this list.
+//*-*
+//*-*
 //Begin_Html
 /*
 <img src="gif/th1_classtree.gif">
@@ -136,30 +109,18 @@
 //End_Html
 //*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 
-TH1 *gCurrentHist = 0;
-
 Foption_t Foption;
-Hoption_t Hoption;
-Hparam_t  Hparam;
 
-const Int_t kNMAX = 2000;
+TAxis *xaxis=0;
+TAxis *yaxis=0;
+TAxis *zaxis=0;
 
-static Float_t xbuf[kNMAX];
-static Float_t ybuf[kNMAX];
+TF1 *gF1=0;
+
+TVirtualFitter *hFitter=0;
+
 static Int_t xfirst,xlast,yfirst,ylast,zfirst,zlast;
 static Float_t xmin, xmax, ymin, ymax, zmin, zmax, binwidx, binwidy, binwidz;
-TAxis *xaxis, *yaxis, *zaxis;
-TH1 *hlist[10];
-TLego *gLego;
-Int_t gNIDS = 0;
-const Float_t kHMAX = 1.05;
-const Int_t kMAXCONTOUR  = 104;
-const Int_t kCloseDirectory = BIT(7);
-const Int_t kNoStats     = BIT(9);
-const Int_t kAxisRange   = BIT(11);
-const Int_t kCenterTitle = BIT(12);
-
-R__EXTERN TF1 *gF1;
 
 extern void H1InitGaus();
 extern void H1InitExpo();
@@ -181,6 +142,7 @@ TH1::TH1(): TNamed(), TAttLine(), TAttFill(), TAttMarker()
    fDirectory = 0;
    fFunctions = new TList(this);
    fIntegral  = 0;
+   fPainter   = 0;
 }
 
 //______________________________________________________________________________
@@ -193,14 +155,16 @@ TH1::~TH1()
    if (fIntegral) {delete [] fIntegral; fIntegral = 0;}
    if (fFunctions) { fFunctions->Delete(); delete fFunctions; }
    if (fDirectory) {
-      if (!fDirectory->TestBit(kCloseDirectory)) fDirectory->GetList()->Remove(this);
+      if (!fDirectory->TestBit(TDirectory::kCloseDirectory))
+         fDirectory->GetList()->Remove(this);
    }
+   delete fPainter;
    fDirectory = 0;
    fFunctions = 0;
 }
 
 //______________________________________________________________________________
-TH1::TH1(const Text_t *name,const Text_t *title,Int_t nbins,Axis_t xlow,Axis_t xup)
+TH1::TH1(const char *name,const char *title,Int_t nbins,Axis_t xlow,Axis_t xup)
     :TNamed(name,title), TAttLine(), TAttFill(), TAttMarker()
 {
 //*-*-*-*-*-*-*-*-*Normal constructor for fix bin size histograms*-*-*-*-*-*-*
@@ -228,7 +192,7 @@ TH1::TH1(const Text_t *name,const Text_t *title,Int_t nbins,Axis_t xlow,Axis_t x
 }
 
 //______________________________________________________________________________
-TH1::TH1(const Text_t *name,const Text_t *title,Int_t nbins,Axis_t *xbins)
+TH1::TH1(const char *name,const char *title,Int_t nbins,Axis_t *xbins)
     :TNamed(name,title), TAttLine(), TAttFill(), TAttMarker()
 {
 //*-*-*-*-*-*-*Normal constructor for variable bin size histograms*-*-*-*-*-*-*
@@ -263,6 +227,7 @@ void TH1::Build()
 //*-*-*-*-*-*-*-*-*-*Creates histogram basic data structure*-*-*-*-*-*-*-*-*-*
 //*-*                ======================================
 
+   fPainter       = 0;
    fIntegral      = 0;
    fEntries       = 0;
    fNormFactor    = 0;
@@ -274,7 +239,9 @@ void TH1::Build()
    fZaxis.SetName("zaxis");
    fYaxis.Set(1,0.,1.);
    fZaxis.Set(1,0.,1.);
-   fContour.Set(0);
+   fXaxis.SetParent(this);
+   fYaxis.SetParent(this);
+   fZaxis.SetParent(this);
 
    UseCurrentStyle();
 
@@ -330,10 +297,13 @@ void TH1::Add(TH1 *h1, Float_t c1)
 //*-*- Add statistics
    Float_t ac1 = TMath::Abs(c1);
    fEntries += ac1*h1->GetEntries();
-   fTsumw   += ac1*h1->fTsumw;
-   fTsumw2  += ac1*h1->fTsumw2;
-   fTsumwx  += ac1*h1->fTsumwx;
-   fTsumwx2 += ac1*h1->fTsumwx2;
+   Stat_t s1[10], s2[10];
+   Int_t i;
+   for (i=0;i<10;i++) {s1[i] = s2[i] = 0;}
+   GetStats(s1);
+   h1->GetStats(s2);
+   for (i=0;i<10;i++) s1[i] += ac1*s2[i];
+   PutStats(s1);
 
 //*-*- Loop on bins (including underflows/overflows)
    Int_t bin, binx, biny, binz;
@@ -407,10 +377,13 @@ void TH1::Add(TH1 *h1, TH1 *h2, Float_t c1, Float_t c2)
    Float_t ac1 = TMath::Abs(c1);
    Float_t ac2 = TMath::Abs(c2);
    fEntries = ac1*h1->GetEntries() + ac2*h2->GetEntries();
-   fTsumw   = ac1*h1->fTsumw       + ac2*h2->fTsumw;
-   fTsumw2  = ac1*h1->fTsumw2      + ac2*h2->fTsumw2;
-   fTsumwx  = ac1*h1->fTsumwx      + ac2*h2->fTsumwx;
-   fTsumwx2 = ac1*h1->fTsumwx2     + ac2*h2->fTsumwx2;
+   Stat_t s1[10], s2[10], s3[10];
+   Int_t i;
+   for (i=0;i<10;i++) {s1[i] = s2[i] = s3[i] = 0;}
+   GetStats(s1);
+   h1->GetStats(s2);
+   for (i=0;i<10;i++) s3[i] = ac1*s1[i] +ac2*s2[i];
+   PutStats(s3);
 
 //*-*- Loop on bins (including underflows/overflows)
    Int_t bin, binx, biny, binz;
@@ -485,7 +458,7 @@ Double_t TH1::ComputeIntegral()
 
 //*-*- Normalize integral to 1
    if (fIntegral[nbins] == 0 ) {
-      Printf(" Error in ComputeIntegral, Integral = zero"); return 0;
+      Error("ComputeIntegral", "Integral = zero"); return 0;
    }
    for (bin=1;bin<=nbins;bin++)  fIntegral[bin] /= fIntegral[nbins];
    fIntegral[nbins+1] = fEntries;
@@ -497,6 +470,9 @@ void TH1::Copy(TObject &obj)
 {
 //*-*-*-*-*-*-*Copy this histogram structure to newth1*-*-*-*-*-*-*-*-*-*-*-*
 //*-*          =======================================
+//
+// Note that this function does not copy the list of associated functions.
+// Use TObJect::Clone to make a full copy of an histogram.
 
    TNamed::Copy(obj);
    ((TH1&)obj).fDimension = fDimension;
@@ -541,76 +517,8 @@ Int_t TH1::DistancetoPrimitive(Int_t px, Int_t py)
 //*-*
 //*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 
-   const Int_t big = 9999;
-   const Int_t kMaxDiff = 7;
-
-   Float_t x = gPad->AbsPixeltoX(px);
-
-   Int_t puxmin = gPad->XtoAbsPixel(gPad->GetUxmin());
-   Int_t puymin = gPad->YtoAbsPixel(gPad->GetUymin());
-   Int_t puxmax = gPad->XtoAbsPixel(gPad->GetUxmax());
-   Int_t puymax = gPad->YtoAbsPixel(gPad->GetUymax());
-
-//*-*- return if point is not in the histogram area
-
-//*-*- If a 3-D view exists, check distance to axis
-   TView *view = gPad->GetView();
-   Int_t d1,d2,d3;
-   if (view) {
-      Float_t ratio;
-      d3 = view->GetDistancetoAxis(3, px, py, ratio);
-      if (d3 <= kMaxDiff) {gPad->SetSelected(&fZaxis); return 0;}
-      d1 = view->GetDistancetoAxis(1, px, py, ratio);
-      if (d1 <= kMaxDiff) {gPad->SetSelected(&fXaxis); return 0;}
-      d2 = view->GetDistancetoAxis(2, px, py, ratio);
-      if (d2 <= kMaxDiff) {gPad->SetSelected(&fYaxis); return 0;}
-      if ( px > puxmin && px < puxmax && py > puymax && py < puymin) return 0;
-      return big;
-   }
-//*-*- check if point is close to an axis
-   yaxis = GetYaxis();
-   Int_t xyaxis = puxmin - Int_t((puxmax-puxmin)*yaxis->GetLabelOffset());
-   Int_t dyaxis = Int_t(2*(puymin-puymax)*yaxis->GetLabelSize());
-   if (px >= xyaxis-dyaxis && px <= xyaxis && py >puymax && py < puymin) {
-      if (!strstr(gPad->GetPadPointer()->GetDrawOption(),"same")) {
-         gPad->SetSelected(&fYaxis);
-         return 0;
-      }
-   }
-   xaxis = GetXaxis();
-   Int_t yxaxis = puymin + Int_t((puymin-puymax)*xaxis->GetLabelOffset());
-   if (yxaxis < puymin) yxaxis = puymin;
-   Int_t dxaxis = Int_t((puymin-puymax)*xaxis->GetLabelSize());
-   if (py <= yxaxis+dxaxis && py >= yxaxis && px <puxmax && px > puxmin) {
-      if (!strstr(gPad->GetPadPointer()->GetDrawOption(),"same")) {
-         gPad->SetSelected(&fXaxis);
-         return 0;
-       }
-    }
-
-//*-*- if object is 2-D or 3-D return this object
-   if (GetDimension() == 2) {
-      Int_t delta2 = 5; //Give a margin of delta2 pixels to be in the 2-d area
-      if ( px > puxmin + delta2
-        && px < puxmax - delta2
-        && py > puymax + delta2
-        && py < puymin - delta2) return 0;
-   }
-
-//*-*- point is inside histogram area. Find channel number
-   Int_t bin      = fXaxis.FindBin(gPad->PadtoX(x));
-   Float_t binval = GetBinContent(bin);
-   Int_t pybin    = gPad->YtoAbsPixel(gPad->YtoPad(binval));
-   if (TMath::Abs(py - pybin) <= kMaxDiff) return TMath::Abs(py - pybin);
-
-//*-*- Loop on the list of associated functions and user objects
-   TObject *f;
-   TIter   next(fFunctions);
-   while ((f = (TObject*) next())) {
-      Int_t dist = f->DistancetoPrimitive(px,py);
-      if (dist < kMaxDiff) {gPad->SetSelected(f); return dist;}
-   }
-   return big;
+   if (!fPainter) return 9999;
+   return fPainter->DistancetoPrimitive(px,py);
 }
 
 //______________________________________________________________________________
@@ -655,11 +563,11 @@ void TH1::Divide(TH1 *h1)
    if (fSumw2.fN == 0 && h1->GetSumw2N() != 0) Sumw2();
 
 //*-*- Reset statistics
-   fEntries = fTsumw   = fTsumw2 = fTsumwx = fTsumwx2 = 0;
+   fEntries = fTsumw = 0;
 
 //*-*- Loop on bins (including underflows/overflows)
    Int_t bin, binx, biny, binz;
-   Double_t c0,c1,w,z,x;
+   Double_t c0,c1,w;
    for (binz=0;binz<=nbinsz+1;binz++) {
       for (biny=0;biny<=nbinsy+1;biny++) {
          for (binx=0;binx<=nbinsx+1;binx++) {
@@ -669,13 +577,7 @@ void TH1::Divide(TH1 *h1)
             if (c1) w = c0/c1;
             else    w = 0;
             SetBinContent(bin,w);
-            z = TMath::Abs(w);
-            x = fXaxis.GetBinCenter(binx);
             fEntries++;
-            fTsumw   += z;
-            fTsumw2  += z*z;
-            fTsumwx  += z*x;
-            fTsumwx2 += z*x*x;
             if (fSumw2.fN) {
                Double_t e0 = GetBinError(bin);
                Double_t e1 = h1->GetBinError(bin);
@@ -686,6 +588,9 @@ void TH1::Divide(TH1 *h1)
          }
       }
    }
+   Stat_t s[10];
+   GetStats(s);
+   PutStats(s);
 }
 
 
@@ -748,11 +653,11 @@ void TH1::Divide(TH1 *h1, TH1 *h2, Float_t c1, Float_t c2, Option_t *option)
    if (fSumw2.fN == 0 && (h1->GetSumw2N() != 0 || h2->GetSumw2N() != 0)) Sumw2();
 
 //*-*- Reset statistics
-   fEntries = fTsumw   = fTsumw2 = fTsumwx = fTsumwx2 = 0;
+   fEntries = fTsumw = 0;
 
 //*-*- Loop on bins (including underflows/overflows)
    Int_t bin, binx, biny, binz;
-   Double_t b1,b2,w,z,x,d1,d2;
+   Double_t b1,b2,w,d1,d2;
    d1 = c1*c1;
    d2 = c2*c2;
    for (binz=0;binz<=nbinsz+1;binz++) {
@@ -764,13 +669,7 @@ void TH1::Divide(TH1 *h1, TH1 *h2, Float_t c1, Float_t c2, Option_t *option)
             if (b2) w = c1*b1/(c2*b2);
             else    w = 0;
             SetBinContent(bin,w);
-            z = TMath::Abs(w);
-            x = fXaxis.GetBinCenter(binx);
             fEntries++;
-            fTsumw   += z;
-            fTsumw2  += z*z;
-            fTsumwx  += z*x;
-            fTsumwx2 += z*x*x;
             if (fSumw2.fN) {
                Double_t e1 = h1->GetBinError(bin);
                Double_t e2 = h2->GetBinError(bin);
@@ -785,6 +684,9 @@ void TH1::Divide(TH1 *h1, TH1 *h2, Float_t c1, Float_t c2, Option_t *option)
          }
       }
    }
+   Stat_t s[10];
+   GetStats(s);
+   PutStats(s);
 }
 
 //______________________________________________________________________________
@@ -802,6 +704,8 @@ void TH1::Draw(Option_t *option)
 //*-*  of the Draw operation in the Pad list.
 //*-*
 //*-*  The following options are supported on all types:
+//*-*    "AXIS"   : Draw only axis
+//*-*    "HIST"   : Draw only histo contour. (if histo has errors, errors are not drawn)
 //*-*    "SAME"   : Superimpose on previous picture in the same pad
 //*-*    "CYL"    : Use Cylindrical coordinates
 //*-*    "POL"    : Use Polar coordinates
@@ -836,7 +740,7 @@ void TH1::Draw(Option_t *option)
 //*-*    "BOX"    : a box is drawn for each cell with surface proportional to contents
 //*-*    "COL"    : a box is drawn for each cell with a color scale varying with contents
 //*-*    "COLZ"   : same as "COL". In addition the color mapping is also drawn
-//*-*    "CONT"   : Draw a contour plot (same as CONT3)
+//*-*    "CONT"   : Draw a contour plot (same as CONT0)
 //*-*    "CONT0"  : Draw a contour plot using colors to distinguish contours
 //*-*    "CONT1"  : Draw a contour plot using line styles to distinguish contours
 //*-*    "CONT2"  : Draw a contour plot using the same line style for all contours
@@ -849,12 +753,22 @@ void TH1::Draw(Option_t *option)
 //*-*  h-Draw("e1same");
 //*-*  Options are case insensitive
 //*-*
-//*-*  Whe using the options "BOX", "COL" or "COLZ", the color palette used
+//*-*  When using the options "BOX", "COL" or "COLZ", the color palette used
 //*-*  is the one defined in the current style (see TStyle::SetPalette)
 //*-*
 //*-*  When using the "CONT" or "SURF" or "LEGO" options, the number
 //*-*  of contour levels can be changed via TH1::SetContour.
 //*-*  (default is 20 equidistant levels)
+//*-*
+//*-*  When option "same" is specified, the statistic box is not drawn.
+//*-*  Specify option "sames" to force painting statistics with option "same"
+//*-*  When option "sames" is given, one can use the following technique
+//*-*  to rename a previous "stats" box and/or change its position
+//*-*  Root > TPaveStats *st = (TPaveStats*)gPad->GetPrimitive("stats")
+//*-*  Root > st->SetName(newname)
+//*-*  Root > st->SetX1NDC(newx1); //new x start position
+//*-*  Root > st->SetX2NDC(newx2); //new x end position
+//*-*  Root > newhist->Draw("sames")
 //*-*
 //*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 
@@ -894,29 +808,7 @@ void TH1::DrawPanel()
 //*-*
 //*-*   See class TDrawPanelHist for example
 
-   gCurrentHist = this;
-   if (gPad) {
-      //TObject *pr = gPad->GetSelected();
-      TObject *pr = 0;
-      if (!pr) pr = this;
-      //TVirtualPad *pad = gPad->GetSelectedPad();
-      TVirtualPad *pad = 0;
-      if (!pad) pad = gPad;
-      gROOT->SetSelectedPrimitive(pr);
-      gROOT->SetSelectedPad(pad);
-   } else {
-      Error("DrawPanel", "need to draw histogram first");
-      return;
-   }
-
-   TList *lc = (TList*)gROOT->GetListOfCanvases();
-   if (!lc->FindObject("drawpanelhist")) {
-      char cmd[] = "TDrawPanelHist *drawpanelhist = new TDrawPanelHist(\"drawpanelhist\",\"Hist Draw Panel\",330,450);";
-      gInterpreter->ProcessLine(cmd);
-      return;
-   }
-   char cmdupd[] = "drawpanelhist->SetDefaults(); drawpanelhist->Show();";
-   gInterpreter->ProcessLine(cmdupd);
+   if (fPainter) fPainter->DrawPanel();
 }
 
 //______________________________________________________________________________
@@ -975,92 +867,8 @@ void TH1::ExecuteEvent(Int_t event, Int_t px, Int_t py)
 //*-*  is modified according to the new position of the mouse when it is released.
 //*-*
 //*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
-   static Int_t bin, px1, py1, px2, py2, pyold;
-   Float_t xlow, xup, ylow, binval, x, baroffset, barwidth, binwidth;
 
-//*-*- come here if we have a lego/surface in the pad
-   if (gPad->GetView()) {
-      gPad->GetView()->ExecuteRotateView(event, px, py);
-      return;
-   }
-
-   switch (event) {
-
-   case kButton1Down:
-
-      gGXW->SetLineColor(-1);
-      TAttLine::Modify();
-
-      // No break !!!
-
-   case kMouseMotion:
-
-      if (Hoption.Bar) {
-         baroffset = GetBarOffset();
-         barwidth  = GetBarWidth();
-      } else {
-         baroffset = 0;
-         barwidth  = 1;
-      }
-      x        = gPad->AbsPixeltoX(px);
-      bin      = fXaxis.FindBin(gPad->PadtoX(x));
-      binwidth = GetBinWidth(bin);
-      xlow     = gPad->XtoPad(GetBinLowEdge(bin) + baroffset*binwidth);
-      xup      = gPad->XtoPad(xlow + barwidth*binwidth);
-      ylow     = gPad->GetUymin();
-      px1      = gPad->XtoAbsPixel(xlow);
-      px2      = gPad->XtoAbsPixel(xup);
-      py1      = gPad->YtoAbsPixel(ylow);
-      py2      = py;
-      pyold    = py;
-      if (gROOT->GetEditHistograms()) gPad->SetCursor(kArrowVer);
-      else                            gPad->SetCursor(kPointer);
-
-      break;
-
-   case kButton1Motion:
-
-      if (gROOT->GetEditHistograms()) {
-         gGXW->DrawBox(px1, py1, px2, py2,TGXW::kHollow);  //*-* Draw the old box
-         py2 += py - pyold;
-         gGXW->DrawBox(px1, py1, px2, py2,TGXW::kHollow);  //*-* Draw the new box
-         pyold = py;
-      }
-
-      break;
-
-   case kButton1Up:
-
-      if (gROOT->GetEditHistograms()) {
-         binval = gPad->PadtoY(gPad->AbsPixeltoY(py2));
-         SetBinContent(bin,binval);
-         PaintInit();   // recalculate Hparam structure and recalculate range
-      }
-
-      // might resize pad pixmap so should be called before any paint routine
-      RecalculateRange();
-
-      gPad->Modified(kTRUE);
-      gGXW->SetLineColor(-1);
-
-      break;
-
-   case kButton1Locate:
-
-      ExecuteEvent(kButton1Down, px, py);
-
-      while (1) {
-         px = py = 0;
-         event = gGXW->RequestLocator(1, 1, px, py);
-
-         ExecuteEvent(kButton1Motion, px, py);
-
-         if (event != -1) {                     // button is released
-            ExecuteEvent(kButton1Up, px, py);
-            return;
-         }
-      }
-   }
+   if (fPainter) fPainter->ExecuteEvent(event, px, py);
 }
 
 //______________________________________________________________________________
@@ -1077,6 +885,8 @@ Int_t TH1::Fill(Axis_t x)
 //*-* by 1 in the bin corresponding to x.
 //*-*
 //*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+
+   if (fDimension !=1) return -2;
    Int_t bin;
    fEntries++;
    bin =fXaxis.FindBin(x);
@@ -1207,6 +1017,8 @@ Int_t TH1::Fill(Axis_t x, Axis_t y, Stat_t w)
 //*-* via the function Sumw2, then the sum of the squares of weights is incremented
 //*-* by w^2 in the cell corresponding to x,y.
 //*-*
+//*-* NB: function only valid for a TH2x object
+//*-*
 //*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 
    //authorize calling this function for 3-d histograms. assume weight=1
@@ -1241,6 +1053,7 @@ Int_t TH1::Fill(Axis_t x, Axis_t y, Axis_t z, Stat_t w)
 //*-* via the function Sumw2, then the sum of the squares of weights is incremented
 //*-* by w^2 in the cell corresponding to x,y,z.
 //*-*
+//*-* NB: function only valid for a TH3x object
 //*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
    Int_t binx, biny, binz, bin;
    fEntries++;
@@ -1273,6 +1086,8 @@ void TH1::FillN(Int_t ntimes, Axis_t *x, Axis_t *y, Double_t *w, Int_t stride)
 //*-* by w[i]^2 in the cell corresponding to x[i],y[i].
 //*-* if w is NULL each entry is assumed a weight=1
 //*-*
+//*-* NB: function only valid for a TH2x object
+//*-*
 //*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
    Int_t binx, biny, bin, i;
    fEntries += ntimes;
@@ -1296,7 +1111,7 @@ void TH1::FillN(Int_t ntimes, Axis_t *x, Axis_t *y, Double_t *w, Int_t stride)
 }
 
 //______________________________________________________________________________
-void TH1::FillRandom(char *fname, Int_t ntimes)
+void TH1::FillRandom(const char *fname, Int_t ntimes)
 {
 //*-*-*-*-*-*-*Fill histogram following distribution in function fname*-*-*-*
 //*-*          =======================================================
@@ -1310,13 +1125,15 @@ void TH1::FillRandom(char *fname, Int_t ntimes)
 //*-*     - Fill histogram channel
 //*-*   ntimes random numbers are generated
 //*-*
+//*-*  One can also call TF1::GetRandom to get a random variate from a function.
+//*-*
 //*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-**-*-*-*-*-*-*-*
 
    Int_t bin, binx, biny, binz, ibin, loop;
    Double_t r1, x, y,z, xv[3];
 //*-*- Search for fname in the list of ROOT defined functions
-   gF1 = gROOT->GetFunction(fname);
-   if (!gF1) { Printf("Error Unknow function: %s",fname); return; }
+   TF1 *f1 = (TF1*)gROOT->GetFunction(fname);
+   if (!f1) { Error("FillRandom", "Unknown function: %s",fname); return; }
 
 //*-*- Allocate temporary space to store the integral and compute integral
    Int_t nbinsx = GetNbinsX();
@@ -1335,14 +1152,14 @@ void TH1::FillRandom(char *fname, Int_t ntimes)
          for (binx=1;binx<=nbinsx;binx++) {
             xv[0] = fXaxis.GetBinCenter(binx);
             ibin++;
-            integral[ibin] = integral[ibin-1] + gF1->Eval(xv[0],xv[1],xv[2]);
+            integral[ibin] = integral[ibin-1] + f1->Eval(xv[0],xv[1],xv[2]);
          }
       }
    }
 
 //*-*- Normalize integral to 1
    if (integral[nbins] == 0 ) {
-      Printf(" Error in FillRandom, Integral = zero"); return;
+      Error("FillRandom", "Integral = zero"); return;
    }
    for (bin=1;bin<=nbins;bin++)  integral[bin] /= integral[nbins];
 
@@ -1389,9 +1206,9 @@ void TH1::FillRandom(TH1 *h, Int_t ntimes)
 //*-*
 //*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-**-*-*-*-*-*-*-*
 
-   if (!h) { Printf("Error Null histogram"); return; }
+   if (!h) { Error("FillRandom", "Null histogram"); return; }
    if (fDimension != h->GetDimension()) {
-      Printf("Error Histograms with different dimensions"); return;
+      Error("FillRandom", "Histograms with different dimensions"); return;
    }
 
    if (h->ComputeIntegral() == 0) return;
@@ -1416,8 +1233,42 @@ void TH1::FillRandom(TH1 *h, Int_t ntimes)
    }
 }
 
+
 //______________________________________________________________________________
-void TH1::Fit(const Text_t *fname ,Option_t *option ,Option_t *goption, Float_t xxmin, Float_t xxmax)
+Int_t TH1::FindBin(Axis_t x, Axis_t y, Axis_t z)
+{
+//*-*-*-*-*-*Return Global bin number corresponding to x,y,z*-*-*-*-*-*-*
+//*-*        ===============================================
+//*-*
+//*-*   2-D and 3-D histograms are represented with a one dimensional
+//*-*   structure.
+//*-*   This has the advantage that all existing functions, such as
+//*-*     GetBinContent, GetBinError, GetBinFunction work for all dimensions.
+//*-*  See also TH1::GetBin
+//*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+
+   if (GetDimension() < 2) {
+      return fXaxis.FindBin(x);
+   }
+   if (GetDimension() < 3) {
+      Int_t nx   = fXaxis.GetNbins()+2;
+      Int_t binx = fXaxis.FindBin(x);
+      Int_t biny = fYaxis.FindBin(y);
+      return  binx + nx*biny;
+   }
+   if (GetDimension() < 4) {
+      Int_t nx   = fXaxis.GetNbins()+2;
+      Int_t ny   = fYaxis.GetNbins()+2;
+      Int_t binx = fXaxis.FindBin(x);
+      Int_t biny = fYaxis.FindBin(y);
+      Int_t binz = fZaxis.FindBin(z);
+      return  binx + nx*(biny +ny*binz);
+   }
+   return -1;
+}
+
+//______________________________________________________________________________
+void TH1::Fit(const char *fname ,Option_t *option ,Option_t *goption, Float_t xxmin, Float_t xxmax)
 {
 //*-*-*-*-*-*-*-*-*-*-*Fit histogram with function fname*-*-*-*-*-*-*-*-*-*-*
 //*-*                  =================================
@@ -1430,9 +1281,11 @@ void TH1::Fit(const Text_t *fname ,Option_t *option ,Option_t *goption, Float_t 
 //*-*      option = "W"  Set all errors to 1
 //*-*             = "I" Use integral of function in bin instead of value at bin center
 //*-*             = "L" Use Loglikelihood method (default is chisquare method)
+//*-*             = "U" Use a User specified fitting algorithm (via SetFCN)
 //*-*             = "Q" Quiet mode (minimum printing)
 //*-*             = "V" Verbose mode (default is between Q and V)
 //*-*             = "E" Perform better Errors estimation using Minos technique
+//*-*             = "M" More. Improve fit results
 //*-*             = "R" Use the Range specified in the function range
 //*-*             = "N" Do not store the graphics function, do not draw
 //*-*             = "0" Do not plot the result of the fit. By default the fitted function
@@ -1467,15 +1320,14 @@ void TH1::Fit(const Text_t *fname ,Option_t *option ,Option_t *goption, Float_t 
 //*-*
 //*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 
-   Int_t i, ierf, npar,nvpar,nparx,icstat;
+   Int_t i, npar,nvpar,nparx;
    Double_t par, we, al, bl;
    Double_t eplus,eminus,eparab,globcc,amin,edm,errdef,werr;
-   Double_t params[100];
+   Double_t params[100], arglist[100];
    TF1 *fnew1;
    TF2 *fnew2;
    TF3 *fnew3;
 
-   Double_t *arglist = new Double_t[100];
    xfirst  = fXaxis.GetFirst();
    xlast   = fXaxis.GetLast();
    binwidx = fXaxis.GetBinWidth(xlast);
@@ -1494,24 +1346,22 @@ void TH1::Fit(const Text_t *fname ,Option_t *option ,Option_t *goption, Float_t 
    xaxis   = &fXaxis;
    yaxis   = &fYaxis;
    zaxis   = &fZaxis;
-   gCurrentHist = this;
 
 //*-*- Check if Minuit is initialized and create special functions
-   if (!gMinuit) gMinuit = new TMinuit(25);
-   gMinuit->mncler();
-   gMinuit->SetObjectFit(this);
+   hFitter = TVirtualFitter::Fitter(this);
+   hFitter->Clear();
 
 //*-*- Get pointer to the function by searching in the list of functions in ROOT
-   gF1 = gROOT->GetFunction(fname);
-   if (!gF1) { Printf("Unknown function: %s",fname); return; }
+   gF1 = (TF1*)gROOT->GetFunction(fname);
+   if (!gF1) { Error("Fit", "Unknown function: %s",fname); return; }
    npar = gF1->GetNpar();
-   if (npar <=0) { Printf("Illegal number of parameters = %d",npar); return; }
+   if (npar <=0) { Error("Fit", "Illegal number of parameters = %d",npar); return; }
 
 //*-*- Check that function has same dimension as histogram
    if (gF1->GetNdim() == 1 && GetDimension() > 1) {
-      Printf("Error function %s is not 2-D",fname); return; }
+      Error("Fit", "Function %s is not 2-D",fname); return; }
    if (gF1->GetNdim() == 2 && GetDimension() < 2) {
-      Printf("Error function %s is not 1-D",fname); return; }
+      Error("Fit", "Function %s is not 1-D",fname); return; }
    if (xxmin != xxmax) gF1->SetRange(xxmin,ymin,zmin,xxmax,ymax,zmax);
 
 //*-*- Decode list of options into Foption
@@ -1530,12 +1380,12 @@ void TH1::Fit(const Text_t *fname ,Option_t *option ,Option_t *goption, Float_t 
       if (fxmax < xmax) xmax = fxmax;
       if (fymax < ymax) ymax = fymax;
       if (fzmax < zmax) zmax = fzmax;
-      xfirst = fXaxis.FindBin(xmin); if (xfirst < 1) xfirst = 1;
-      xlast  = fXaxis.FindBin(xmax); if (xlast > fXaxis.GetLast()) xlast = fXaxis.GetLast();
-      yfirst = fYaxis.FindBin(ymin); if (yfirst < 1) yfirst = 1;
-      ylast  = fYaxis.FindBin(ymax); if (ylast > fYaxis.GetLast()) ylast = fYaxis.GetLast();
-      zfirst = fZaxis.FindBin(zmin); if (zfirst < 1) zfirst = 1;
-      zlast  = fZaxis.FindBin(zmax); if (zlast > fZaxis.GetLast()) zlast = fZaxis.GetLast();
+      xfirst = fXaxis.FindFixBin(xmin); if (xfirst < 1) xfirst = 1;
+      xlast  = fXaxis.FindFixBin(xmax); if (xlast > fXaxis.GetLast()) xlast = fXaxis.GetLast();
+      yfirst = fYaxis.FindFixBin(ymin); if (yfirst < 1) yfirst = 1;
+      ylast  = fYaxis.FindFixBin(ymax); if (ylast > fYaxis.GetLast()) ylast = fYaxis.GetLast();
+      zfirst = fZaxis.FindFixBin(zmin); if (zfirst < 1) zfirst = 1;
+      zlast  = fZaxis.FindFixBin(zmax); if (zlast > fZaxis.GetLast()) zlast = fZaxis.GetLast();
    } else {
       gF1->SetRange(xmin,ymin,zmin,xmax,ymax,zmax);
    }
@@ -1550,22 +1400,23 @@ void TH1::Fit(const Text_t *fname ,Option_t *option ,Option_t *goption, Float_t 
 //*-*- Some initialisations
    if (!Foption.Verbose) {
       arglist[0] = -1;
-      gMinuit->mnexcm("SET PRINT", arglist,1,ierf);
+      hFitter->ExecuteCommand("SET PRINT", arglist,1);
       arglist[0] = 0;
-      gMinuit->mnexcm("SET NOW",   arglist,0,ierf);
+      hFitter->ExecuteCommand("SET NOW",   arglist,0);
    }
 
 //*-*- Set error criterion for chisquare or likelihood methods
 //*-*-  MINUIT ERRDEF should not be set to 0.5 in case of loglikelihood fit.
 //*-*-  because the FCN is already multiplied by 2 in H1FitLikelihood
-   if (!Foption.Like) {
-      arglist[0] = 1;
-      gMinuit->SetFCN(H1FitChisquare);
+//*-*-  if Hoption.User is specified, assume that the user has already set
+//*-*-  his minimization function via SetFCN.
+   arglist[0] = 1;
+   if (Foption.Like) {
+      hFitter->SetFCN(H1FitLikelihood);
    } else {
-      arglist[0] = 1;
-      gMinuit->SetFCN(H1FitLikelihood);
+      if (!Foption.User) hFitter->SetFCN(H1FitChisquare);
    }
-   gMinuit->mnexcm("SET ERR",arglist,1,ierf);
+   hFitter->ExecuteCommand("SET ERR",arglist,1);
 
 //*-*- Transfer names and initial values of parameters to Minuit
    Int_t nfixed = 0;
@@ -1580,37 +1431,41 @@ void TH1::Fit(const Text_t *fname ,Option_t *option ,Option_t *goption, Float_t 
       we = 0.1*TMath::Abs(bl-al);
       if (we == 0) we = 0.3*TMath::Abs(par);
       if (we == 0) we = binwidx;
-      gMinuit->mnparm(i,gF1->GetParName(i),par,we,al,bl,ierf);
+      hFitter->SetParameter(i,gF1->GetParName(i),par,we,al,bl);
    }
-   if(nfixed > 0)gMinuit->mnexcm("FIX",arglist,nfixed,ierf); // Otto
+   if(nfixed > 0)hFitter->ExecuteCommand("FIX",arglist,nfixed); // Otto
 
 //*-*- Set Gradient
    if (Foption.Gradient) {
       if (Foption.Gradient == 1) arglist[0] = 1;
       else                       arglist[0] = 0;
-      gMinuit->mnexcm("SET GRAD",arglist,1,ierf);
+      hFitter->ExecuteCommand("SET GRAD",arglist,1);
    }
 
 //*-*- Reset Print level
    if (Foption.Verbose) {
-      arglist[0] = 0; gMinuit->mnexcm("SET PRINT", arglist,1,ierf);
+      arglist[0] = 0; hFitter->ExecuteCommand("SET PRINT", arglist,1);
    }
 
 //*-*- Perform minimization
-   arglist[0] = gMinuit->GetMaxIterations();
+   arglist[0] = hFitter->GetMaxIterations();
    arglist[1] = 1; //epsilon
-   gMinuit->mnexcm("MIGRAD",arglist,2,ierf);
+   hFitter->ExecuteCommand("MIGRAD",arglist,2);
+   if (Foption.More) {
+      hFitter->ExecuteCommand("IMPROVE",arglist,0);
+   }
    if (Foption.Errors) {
-      gMinuit->mnexcm("HESSE",arglist,0,ierf);
-      gMinuit->mnexcm("MINOS",arglist,0,ierf);
+      hFitter->ExecuteCommand("HESSE",arglist,0);
+      hFitter->ExecuteCommand("MINOS",arglist,0);
    }
 
 //*-*- Get return status
+   char parName[50];
    for (i=0;i<npar;i++) {
-      gMinuit->mnpout(i,gF1->GetParName(i), par,we,al,bl,ierf);
+      hFitter->GetParameter(i,parName, par,we,al,bl);
       if (Foption.Errors) werr = we;
       else {
-         gMinuit->mnerrs(i,eplus,eminus,eparab,globcc);
+         hFitter->GetErrors(i,eplus,eminus,eparab,globcc);
          if (eplus > 0 && eminus < 0) werr = 0.5*(eplus-eminus);
          else                         werr = we;
       }
@@ -1618,14 +1473,13 @@ void TH1::Fit(const Text_t *fname ,Option_t *option ,Option_t *goption, Float_t 
       gF1->SetParameter(i,par);
       gF1->SetParError(i,werr);
    }
-   gMinuit->mnstat(amin,edm,errdef,nvpar,nparx,icstat);
+   hFitter->GetStats(amin,edm,errdef,nvpar,nparx);
 
 //*-*- Print final values of parameters.
    if (!Foption.Quiet) {
-      if (Foption.Errors) gMinuit->mnprin(4,amin);
-      else                gMinuit->mnprin(3,amin);
+      if (Foption.Errors) hFitter->PrintResults(4,amin);
+      else                hFitter->PrintResults(3,amin);
    }
-   delete [] arglist;
 
 //*-*  If Log Likelihood, compute an equivalent chisquare
    if (Foption.Like) H1FitChisquare(npar, params, amin, params, 1);
@@ -1634,7 +1488,13 @@ void TH1::Fit(const Text_t *fname ,Option_t *option ,Option_t *goption, Float_t 
 
 //*-*- Store fitted function in histogram functions list and draw
    if (!Foption.Nostore) {
-      if (!Foption.Plus) fFunctions->Delete();
+      if (!Foption.Plus) {
+         TIter next(fFunctions, kIterBackward);
+         TObject *obj;
+         while ((obj = next())) {
+            if (obj->InheritsFrom(TF1::Class())) delete obj;
+         }
+      }
       if (GetDimension() < 2) {
          fnew1 = new TF1();
          gF1->Copy(*fnew1);
@@ -1665,29 +1525,7 @@ void TH1::FitPanel()
 //*-*
 //*-*   See class TFitPanel for example
 
-   gCurrentHist = this;
-   if (gPad) {
-      //TObject *pr = gPad->GetSelected();
-      TObject *pr = 0;
-      if (!pr) pr = this;
-      //TVirtualPad *pad = gPad->GetSelectedPad();
-      TVirtualPad *pad = 0;
-      if (!pad) pad = gPad;
-      gROOT->SetSelectedPrimitive(pr);
-      gROOT->SetSelectedPad(pad);
-   } else {
-      Error("FitPanel", "need to draw histogram first");
-      return;
-   }
-
-   TList *lc = (TList*)gROOT->GetListOfCanvases();
-   if (!lc->FindObject("fitpanel")) {
-      char cmd[] = "TFitPanel *fitpanel = new TFitPanel(\"fitpanel\",\"Fit Panel\",300,400);";
-      gInterpreter->ProcessLine(cmd);
-      return;
-   }
-   char cmdupd[] = "fitpanel->SetDefaults(); fitpanel->Show();";
-   gInterpreter->ProcessLine(cmdupd);
+   if (fPainter) fPainter->FitPanel();
 }
 
 //______________________________________________________________________________
@@ -1724,7 +1562,7 @@ void TH1::FitSlicesX(TF1 *f1, Int_t binmin, Int_t binmax, Int_t cut, Option_t *o
 
    //only valid for 2-D histogram
    if (fDimension != 2) {
-      printf("Error in FitSlicesX: Function only valid for 2-D histograms");
+      Error("FitSlicesX", "Function only valid for 2-D histograms");
       return;
    }
 
@@ -1735,7 +1573,7 @@ void TH1::FitSlicesX(TF1 *f1, Int_t binmin, Int_t binmax, Int_t cut, Option_t *o
 
    //default is to fit with a gaussian
    if (f1 == 0) {
-      f1 = gROOT->GetFunction("gaus");
+      f1 = (TF1*)gROOT->GetFunction("gaus");
       if (f1 == 0) f1 = new TF1("gaus","gaus",fXaxis.GetXmin(),fXaxis.GetXmax());
       else         f1->SetRange(fXaxis.GetXmin(),fXaxis.GetXmax());
    }
@@ -1752,9 +1590,11 @@ void TH1::FitSlicesX(TF1 *f1, Int_t binmin, Int_t binmax, Int_t cut, Option_t *o
       sprintf(name,"%s_%d",GetName(),ipar);
       sprintf(title,"Fitted value of par[%d]=%s",ipar,f1->GetParName(ipar));
       hlist[ipar] = new TH1D(name,title, nbins, fYaxis.GetXmin(), fYaxis.GetXmax());
+      hlist[ipar]->GetXaxis()->SetTitle(fYaxis.GetTitle());
    }
    sprintf(name,"%s_chi2",GetName());
    TH1D *hchi2 = new TH1D(name,"chisquare", nbins, fYaxis.GetXmin(), fYaxis.GetXmax());
+   hchi2->GetXaxis()->SetTitle(fYaxis.GetTitle());
 
    //Loop on all bins in Y, generate a projection along X
    Int_t bin;
@@ -1769,10 +1609,10 @@ void TH1::FitSlicesX(TF1 *f1, Int_t binmin, Int_t binmax, Int_t cut, Option_t *o
       Int_t npfits = f1->GetNumberFitPoints();
       if (npfits > npar && npfits >= cut) {
          for (ipar=0;ipar<npar;ipar++) {
-            hlist[ipar]->Fill(GetBinCenter(bin),f1->GetParameter(ipar));
+            hlist[ipar]->Fill(fYaxis.GetBinCenter(bin),f1->GetParameter(ipar));
             hlist[ipar]->SetBinError(bin,f1->GetParError(ipar));
          }
-         hchi2->Fill(GetBinCenter(bin),f1->GetChisquare()/(npfits-npar));
+         hchi2->Fill(fYaxis.GetBinCenter(bin),f1->GetChisquare()/(npfits-npar));
       }
       delete hpx;
    }
@@ -1820,7 +1660,7 @@ void TH1::FitSlicesY(TF1 *f1, Int_t binmin, Int_t binmax, Int_t cut, Option_t *o
 
    //only valid for 2-D histogram
    if (fDimension != 2) {
-      printf("Error in FitSlicesY: Function only valid for 2-D histograms");
+      Error("FitSlicesY", "Function only valid for 2-D histograms");
       return;
    }
 
@@ -1831,7 +1671,7 @@ void TH1::FitSlicesY(TF1 *f1, Int_t binmin, Int_t binmax, Int_t cut, Option_t *o
 
    //default is to fit with a gaussian
    if (f1 == 0) {
-      f1 = gROOT->GetFunction("gaus");
+      f1 = (TF1*)gROOT->GetFunction("gaus");
       if (f1 == 0) f1 = new TF1("gaus","gaus",fYaxis.GetXmin(),fYaxis.GetXmax());
       else         f1->SetRange(fYaxis.GetXmin(),fYaxis.GetXmax());
    }
@@ -1848,9 +1688,11 @@ void TH1::FitSlicesY(TF1 *f1, Int_t binmin, Int_t binmax, Int_t cut, Option_t *o
       sprintf(name,"%s_%d",GetName(),ipar);
       sprintf(title,"Fitted value of par[%d]=%s",ipar,f1->GetParName(ipar));
       hlist[ipar] = new TH1D(name,title, nbins, fXaxis.GetXmin(), fXaxis.GetXmax());
+      hlist[ipar]->GetXaxis()->SetTitle(fXaxis.GetTitle());
    }
    sprintf(name,"%s_chi2",GetName());
    TH1D *hchi2 = new TH1D(name,"chisquare", nbins, fXaxis.GetXmin(), fXaxis.GetXmax());
+   hchi2->GetXaxis()->SetTitle(fXaxis.GetTitle());
 
    //Loop on all bins in X, generate a projection along Y
    Int_t bin;
@@ -1865,10 +1707,10 @@ void TH1::FitSlicesY(TF1 *f1, Int_t binmin, Int_t binmax, Int_t cut, Option_t *o
       Int_t npfits = f1->GetNumberFitPoints();
       if (npfits > npar && npfits >= cut) {
          for (ipar=0;ipar<npar;ipar++) {
-            hlist[ipar]->Fill(GetBinCenter(bin),f1->GetParameter(ipar));
+            hlist[ipar]->Fill(fXaxis.GetBinCenter(bin),f1->GetParameter(ipar));
             hlist[ipar]->SetBinError(bin,f1->GetParError(ipar));
          }
-         hchi2->Fill(GetBinCenter(bin),f1->GetChisquare()/(npfits-npar));
+         hchi2->Fill(fXaxis.GetBinCenter(bin),f1->GetChisquare()/(npfits-npar));
       }
       delete hpy;
    }
@@ -1905,7 +1747,7 @@ void TH1::FitSlicesZ(TF1 *f1, Int_t binminx, Int_t binmaxx, Int_t binminy, Int_t
 
    //only valid for 3-D histogram
    if (fDimension != 3) {
-      printf("Error in FitSlicesZ: Function only valid for 3-D histograms");
+      Error("FitSlicesZ", "Function only valid for 3-D histograms");
       return;
    }
 
@@ -1921,7 +1763,7 @@ void TH1::FitSlicesZ(TF1 *f1, Int_t binminx, Int_t binmaxx, Int_t binminy, Int_t
 
    //default is to fit with a gaussian
    if (f1 == 0) {
-      f1 = gROOT->GetFunction("gaus");
+      f1 = (TF1*)gROOT->GetFunction("gaus");
       if (f1 == 0) f1 = new TF1("gaus","gaus",fZaxis.GetXmin(),fZaxis.GetXmax());
       else         f1->SetRange(fZaxis.GetXmin(),fZaxis.GetXmax());
    }
@@ -1979,179 +1821,13 @@ void TH1::FitSlicesZ(TF1 *f1, Int_t binminx, Int_t binmaxx, Int_t binminy, Int_t
 }
 
 //______________________________________________________________________________
-Text_t *TH1::GetObjectInfo(Int_t px, Int_t py)
+char *TH1::GetObjectInfo(Int_t px, Int_t py)
 {
 //   Redefines TObject::GetObjectInfo.
 //   Displays the histogram info (bin number, contents, integral up to bin
 //   corresponding to cursor position px,py
 //
-   if (!gPad) return "";
-   static char info[64];
-   Float_t x = gPad->PadtoX(gPad->AbsPixeltoX(px));
-   Float_t y = gPad->PadtoY(gPad->AbsPixeltoY(py));
-   const char *drawOption = GetDrawOption();
-   Float_t xmin, xmax, uxmin,uxmax;
-   Float_t ymin, ymax, uymin,uymax;
-   if (GetDimension() == 2) {
-      if (gPad->GetView() || strncmp(drawOption,"cont",4) == 0
-                          || strncmp(drawOption,"CONT",4) == 0) {
-         uxmin=gPad->GetUxmin();
-         uxmax=gPad->GetUxmax();
-         xmin = fXaxis.GetBinLowEdge(fXaxis.GetFirst());
-         xmax = fXaxis.GetBinUpEdge(fXaxis.GetLast());
-         x = xmin +(xmax-xmin)*(x-uxmin)/(uxmax-uxmin);
-         uymin=gPad->GetUymin();
-         uymax=gPad->GetUymax();
-         ymin = fYaxis.GetBinLowEdge(fYaxis.GetFirst());
-         ymax = fYaxis.GetBinUpEdge(fYaxis.GetLast());
-         y = ymin +(ymax-ymin)*(y-uymin)/(uymax-uymin);
-      }
-   }
-   Int_t binx,biny,binmin;
-   binx   = fXaxis.FindBin(x);
-   binmin = fXaxis.GetFirst();
-   if (GetDimension() == 1) {
-      Double_t integ = 0;
-      for (Int_t bin=binmin;bin<=binx;bin++) {integ += GetBinContent(bin);}
-      sprintf(info,"(x=%g, y=%g, binx=%d, binc=%g, Sum=%g)",x,y,binx,GetBinContent(binx),integ);
-   } else {
-      biny = fYaxis.FindBin(y);
-      sprintf(info,"(x=%g, y=%g, binx=%d, biny=%d, binc=%g)",x,y,binx,biny,GetCellContent(binx,biny));
-   }
-   return info;
-}
-
-//______________________________________________________________________________
-Int_t TH1::MakeChopt(Option_t *choptin)
-{
-//*-*-*-*-*-*-*-*-*Decode string chopt and fill Hoption structure*-*-*-*-*-*-*
-//*-*              ==============================================
-
-   char *l;
-   static char chopt[33];
-   Int_t nch = strlen(choptin);
-   for (Int_t i=0;i<nch;i++) chopt[i] = toupper(choptin[i]);
-   chopt[nch] = 0;
-
-   Hoption.Axis = Hoption.Bar    = Hoption.Curve   = Hoption.Error = 0;
-   Hoption.Hist = Hoption.Line   = Hoption.Mark    = Hoption.Fill  = 0;
-   Hoption.Same = Hoption.Func   = Hoption.Plus    = Hoption.Scat  = 0;
-   Hoption.Star = Hoption.Arrow  = Hoption.Box     = Hoption.Text  = 0;
-   Hoption.Char = Hoption.Color  = Hoption.Contour = Hoption.Logx  = 0;
-   Hoption.Logy = Hoption.Logz   = Hoption.Lego    = Hoption.Surf  = 0;
-
-//*-* special 2-D options
-   Hoption.Zscale      = 0;
-   Hoption.FrontBox    = 1;
-   Hoption.BackBox     = 1;
-   Hoption.System      = kCARTESIAN;
-
-   if (GetDimension() > 1) Hoption.Scat = 1;
-   if (!nch) Hoption.Hist = 1;
-   if (fSumw2.fN) Hoption.Error = 1;
-   if (GetListOfFunctions()->First()) Hoption.Func = 2;
-   if (fSumw2.fN) Hoption.Error = 2;
-
-   l = strstr(chopt,"SAME");
-   if (l) {
-      if (nch == 4) Hoption.Hist = 1;
-      Hoption.Same = 1;
-      strncpy(l,"    ",4);
-   }
-
-   l = strstr(chopt,"LEGO");
-   if (l) {
-      Hoption.Scat = 0;
-      Hoption.Lego = 1; strncpy(l,"    ",4);
-      if (l[4] == '1') { Hoption.Lego = 11; l[4] = ' '; }
-      if (l[4] == '2') { Hoption.Lego = 12; l[4] = ' '; }
-      l = strstr(chopt,"FB");   if (l) { Hoption.FrontBox = 0; strncpy(l,"  ",2); }
-      l = strstr(chopt,"BB");   if (l) { Hoption.BackBox = 0;  strncpy(l,"  ",2); }
-   }
-   l = strstr(chopt,"SURF");
-   if (l) {
-      Hoption.Scat = 0;
-      Hoption.Surf = 1; strncpy(l,"    ",4);
-      if (l[4] == '1') { Hoption.Surf = 11; l[4] = ' '; }
-      if (l[4] == '2') { Hoption.Surf = 12; l[4] = ' '; }
-      if (l[4] == '3') { Hoption.Surf = 13; l[4] = ' '; }
-      if (l[4] == '4') { Hoption.Surf = 14; l[4] = ' '; }
-      l = strstr(chopt,"FB");   if (l) { Hoption.FrontBox = 0; strncpy(l,"  ",2); }
-      l = strstr(chopt,"BB");   if (l) { Hoption.BackBox = 0;  strncpy(l,"  ",2); }
-   }
-   l = strstr(chopt,"CONT");
-   if (l) {
-      Hoption.Scat = 0;
-      Hoption.Contour = 1; strncpy(l,"    ",4);
-      if (l[4] == '1') { Hoption.Contour = 11; l[4] = ' '; }
-      if (l[4] == '2') { Hoption.Contour = 12; l[4] = ' '; }
-      if (l[4] == '3') { Hoption.Contour = 13; l[4] = ' '; }
-   }
-   l = strstr(chopt,"+-");   if (l) { Hoption.Plus = 2; strncpy(l,"  ",2); }
-   l = strstr(chopt,"-+");   if (l) { Hoption.Plus = 2; strncpy(l,"  ",2); }
-
-   l = strstr(chopt,"ARR" ); if (l) { Hoption.Arrow  = 1; strncpy(l,"   ", 3); Hoption.Scat = 0; }
-   l = strstr(chopt,"BOX" ); if (l) { Hoption.Box    = 1; strncpy(l,"   ", 3); Hoption.Scat = 0; }
-   l = strstr(chopt,"COLZ"); if (l) { Hoption.Color  = 2; strncpy(l,"   ", 4); Hoption.Scat = 0; }
-   l = strstr(chopt,"COL" ); if (l) { Hoption.Color  = 1; strncpy(l,"   ", 3); Hoption.Scat = 0; }
-   l = strstr(chopt,"CHAR"); if (l) { Hoption.Char   = 1; strncpy(l,"    ",4); Hoption.Scat = 0; }
-   l = strstr(chopt,"FUNC"); if (l) { Hoption.Func   = 2; strncpy(l,"    ",4); Hoption.Hist = 0; }
-   l = strstr(chopt,"HIST"); if (l) { Hoption.Hist   = 2; strncpy(l,"    ",4); Hoption.Func = 0; Hoption.Error = 0;}
-   l = strstr(chopt,"SCAT"); if (l) { Hoption.Scat   = 1; strncpy(l,"    ",4); }
-   l = strstr(chopt,"TEXT"); if (l) { Hoption.Text   = 1; strncpy(l,"    ",4); Hoption.Scat = 0; }
-   l = strstr(chopt,"POL");  if (l) { Hoption.System = kPOLAR;       strncpy(l,"   ",3); }
-   l = strstr(chopt,"CYL");  if (l) { Hoption.System = kCYLINDRICAL; strncpy(l,"   ",3); }
-   l = strstr(chopt,"SPH");  if (l) { Hoption.System = kSPHERICAL;   strncpy(l,"   ",3); }
-   l = strstr(chopt,"PSR");  if (l) { Hoption.System = kRAPIDITY;    strncpy(l,"   ",3); }
-
-   if (strstr(chopt,"A")) Hoption.Axis =1;
-   if (strstr(chopt,"B")) Hoption.Bar  =1;
-   if (strstr(chopt,"C")) { Hoption.Curve =1; Hoption.Hist = -1;}
-   if (strstr(chopt,"E")) Hoption.Error =1;
-   if (strstr(chopt,"F")) Hoption.Fill =1;
-   if (strstr(chopt,"L")) { Hoption.Line =1; Hoption.Hist = -1;}
-   if (strstr(chopt,"P")) { Hoption.Mark =1; Hoption.Hist = 0;}
-   if (strstr(chopt,"*")) Hoption.Star =1;
-   if (strstr(chopt,"+")) Hoption.Plus =1;
-   if (strstr(chopt,"-")) Hoption.Plus =-1;
-   if (strstr(chopt,"H")) Hoption.Hist =2;
-   if (strstr(chopt,"E0")) Hoption.Error =10;
-   if (strstr(chopt,"E1")) Hoption.Error =11;
-   if (strstr(chopt,"E2")) Hoption.Error =12;
-   if (strstr(chopt,"E3")) Hoption.Error =13;
-   if (strstr(chopt,"E4")) Hoption.Error =14;
-
-   if (Hoption.Surf == 14 && Hoption.System != kCARTESIAN) {
-      Hoption.System = kCARTESIAN;
-      Warning("MakeChopt","option SURF4 only supported in Cartesian mode");
-   }
-//
-//   if (fSumw2.fN && !Hoption.Error) Hoption.Error = 2;
-
-//*-*   Copy options from current style
-   Hoption.Logx = gPad->GetLogx();
-   Hoption.Logy = gPad->GetLogy();
-   Hoption.Logz = gPad->GetLogz();
-
-//*-*-   Check options incompatibilities
-   if (Hoption.Bar) Hoption.Hist = -1;
-   if (Hoption.Same + Hoption.Plus > 1) {
-      Error("MakeChopt", "select only one of the options S,+");
-      return 0;
-   }
-   if (Hoption.Plus) {
-      if (Hoption.Line || Hoption.Curve || Hoption.Text || Hoption.Mark) {
-         Error("MakeChopt", "options L,C,T,P are incompatible with options U and K");
-         if (Hoption.Hist && Hoption.Bar) return 0;
-      }
-   }
-   if (Hoption.Error || Hoption.Func || Hoption.Star) {
-      if (Hoption.Plus) {
-         Error("MakeChopt", "U, + options incompatible with errors/function");
-         return 0;
-      }
-   }
-   return 1;
+   return fPainter->GetObjectInfo(px,py);
 }
 
 //______________________________________________________________________________
@@ -2164,8 +1840,10 @@ Int_t TH1::FitOptionsMake(Option_t *choptin)
    Foption.Verbose = 0;
    Foption.Bound   = 0;
    Foption.Like    = 0;
+   Foption.User    = 0;
    Foption.W1      = 0;
    Foption.Errors  = 0;
+   Foption.More    = 0;
    Foption.Range   = 0;
    Foption.Gradient= 0;
    Foption.Nograph = 0;
@@ -2182,16 +1860,18 @@ Int_t TH1::FitOptionsMake(Option_t *choptin)
    for (Int_t i=0;i<nch;i++) chopt[i] = toupper(choptin[i]);
 
    if (strstr(chopt,"Q")) Foption.Quiet   = 1;
-   if (strstr(chopt,"V")){Foption.Verbose = 1; Foption.Quiet   = 0;}
+   if (strstr(chopt,"V")){Foption.Verbose = 1; Foption.Quiet = 0;}
    if (strstr(chopt,"L")) Foption.Like    = 1;
    if (strstr(chopt,"W")) Foption.W1      = 1;
    if (strstr(chopt,"E")) Foption.Errors  = 1;
+   if (strstr(chopt,"M")) Foption.More    = 1;
    if (strstr(chopt,"R")) Foption.Range   = 1;
    if (strstr(chopt,"G")) Foption.Gradient= 1;
    if (strstr(chopt,"N")) Foption.Nostore = 1;
    if (strstr(chopt,"0")) Foption.Nograph = 1;
    if (strstr(chopt,"+")) Foption.Plus    = 1;
    if (strstr(chopt,"I")) Foption.Integral= 1;
+   if (strstr(chopt,"U")){Foption.User    = 1; Foption.Like = 0;}
    return 1;
 }
 
@@ -2212,7 +1892,7 @@ void H1FitChisquare(Int_t &npar, Double_t *gin, Double_t &f, Double_t *u, Int_t 
    npar = gF1->GetNpar();
    if (flag == 2) for (k=0;k<npar;k++) dersum[k] = gin[k] = 0;
 
-   TH1 *hfit = (TH1*)gMinuit->GetObjectFit();
+   TH1 *hfit = (TH1*)hFitter->GetObjectFit();
    gF1->InitArgs(x,u);
    f = 0;
    for (binz=zfirst;binz<=zlast;binz++) {
@@ -2247,8 +1927,6 @@ void H1FitChisquare(Int_t &npar, Double_t *gin, Double_t &f, Double_t *u, Int_t 
             }
             fsum = (cu-fu)/eu;
             f += fsum*fsum;
-//printf("binx=%d, x=%g, cu=%g, fu=%g, eu=%g, fsum=%g, f=%g, u1=%g, u2=%g, u3=%g\n",binx,x[0],cu,fu,eu,fsum,f,u[0],u[1],u[2]);
-
          }
       }
    }
@@ -2265,8 +1943,8 @@ void H1FitLikelihood(Int_t &npar, Double_t *gin, Double_t &f, Double_t *u, Int_t
 //     the fit would predict it's value.  This is then done for each bin,
 //     and the sum of the logs is taken as the likelihood.
 
-   Double_t cu,eu,fu,fobs,fsub;
-   Double_t dersum[100], grad[100];
+   Double_t cu,fu,fobs,fsub;
+   Double_t dersum[100];
    Double_t x[3];
    Int_t bin,binx,biny,binz,k,icu;
    Float_t binlow, binup, binsize;
@@ -2276,7 +1954,7 @@ void H1FitLikelihood(Int_t &npar, Double_t *gin, Double_t &f, Double_t *u, Int_t
    npar = gF1->GetNpar();
    if (flag == 2) for (k=0;k<npar;k++) dersum[k] = gin[k] = 0;
 
-   TH1 *hfit = (TH1*)gMinuit->GetObjectFit();
+   TH1 *hfit = (TH1*)hFitter->GetObjectFit();
    gF1->InitArgs(x,u);
    f = 0;
    for (binz=zfirst;binz<=zlast;binz++) {
@@ -2295,31 +1973,20 @@ void H1FitLikelihood(Int_t &npar, Double_t *gin, Double_t &f, Double_t *u, Int_t
             } else {
                fu = gF1->EvalPar(x,u);
             }
-            if (Foption.W1) {
-               if (cu == 0 && flag == 2) continue;
-               eu = 1;
-            } else {
-               eu  = hfit->GetBinError(bin);
-               if (eu <= 0) continue;
-            }
-            if (flag == 2) {
-               for (k=0;k<npar;k++) dersum[k] += 1; //should be the derivative
-            }
             npfits++;
             if (flag == 2) {
-               for (k=0;k<npar;k++) grad[k] += dersum[k]*(fu-cu)/eu; dersum[k] = 0;
+               for (k=0;k<npar;k++) {
+                  dersum[k] += 1; //should be the derivative
+                  //grad[k] += dersum[k]*(fu-cu)/eu; dersum[k] = 0;
+               }
             }
             if (fu < 1.e-9) fu = 1.e-9;
-            icu = Int_t(cu);
+            icu  = Int_t(cu);
             fsub = -fu +icu*TMath::Log(fu);
-            fobs = 0;
-            if (icu > 1) {
-               for (Int_t j=1;j<=icu;j++) fobs += TMath::Log(j);
-            }
+            fobs = hFitter->GetSumLog(icu);
+
             fsub -= fobs;
             f -= fsub;
-//printf("binx=%d, x=%g, cu=%g, icu=%d, fu=%g, eu=%g, fsub=%g, f=%g, u1=%g, u2=%g, u3=%g\n",binx,x[0],cu,icu,fu,eu,fsub,f,u[0],u[1],u[2]);
-
          }
       }
    }
@@ -2338,11 +2005,12 @@ void H1InitGaus()
    static Double_t sqrtpi = 2.506628;
 
 //*-*- Compute mean value and RMS of the histogram in the given range
-   Double_t valmax = gCurrentHist->GetBinContent(xfirst);
+   TH1 *curHist = (TH1*)hFitter->GetObjectFit();
+   Double_t valmax = curHist->GetBinContent(xfirst);
    allcha = sumx = sumx2 = 0;
    for (bin=xfirst;bin<=xlast;bin++) {
-      x       = gCurrentHist->GetBinCenter(bin);
-      val     = TMath::Abs(gCurrentHist->GetBinContent(bin));
+      x       = curHist->GetBinCenter(bin);
+      val     = TMath::Abs(curHist->GetBinContent(bin));
       if (val > valmax) valmax = val;
       sumx   += val*x;
       sumx2  += val*x*x;
@@ -2364,8 +2032,8 @@ void H1InitGaus()
    //the RMS is bigger than the range, we take
    //  mean = center of bins
    //  rms  = half range
-   Float_t xmin = gCurrentHist->GetXaxis()->GetXmin();
-   Float_t xmax = gCurrentHist->GetXaxis()->GetXmax();
+   Float_t xmin = curHist->GetXaxis()->GetXmin();
+   Float_t xmax = curHist->GetXaxis()->GetXmax();
    if ((mean < xmin || mean > xmax) && rms > (xmax-xmin)) {
       mean = 0.5*(xmax+xmin);
       rms  = 0.5*(xmax-xmin);
@@ -2405,7 +2073,8 @@ void H1InitPolynom()
    Int_t npar   = gF1->GetNpar();
 
    if (nchanx <=1 || npar == 1) {
-      fitpar[0] = gCurrentHist->GetSumOfWeights()/Float_t(nchanx);
+      TH1 *curHist = (TH1*)hFitter->GetObjectFit();
+      fitpar[0] = curHist->GetSumOfWeights()/Float_t(nchanx);
    } else {
       H1LeastSquareFit( nchanx, npar, fitpar);
    }
@@ -2447,9 +2116,10 @@ void H1LeastSquareFit(Int_t n, Int_t m, Double_t *a)
 	b[m + l*20 - 21] = zero;
 	da[l-1]          = zero;
     }
+    TH1 *curHist = (TH1*)hFitter->GetObjectFit();
     for (k = xfirst; k <= xlast; ++k) {
-	xk     = gCurrentHist->GetBinCenter(k);
-	yk     = gCurrentHist->GetBinContent(k);
+	xk     = curHist->GetBinCenter(k);
+	yk     = curHist->GetBinContent(k);
 	power  = one;
 	da[0] += yk;
 	for (l = 2; l <= m; ++l) {
@@ -2493,9 +2163,10 @@ void H1LeastSquareLinearFit(Int_t ndata, Double_t &a0, Double_t &a1, Int_t &ifai
     n     = TMath::Abs(ndata);
     ifail = -2;
     xbar  = ybar = x2bar = xybar = 0;
+    TH1 *curHist = (TH1*)hFitter->GetObjectFit();
     for (i = xfirst; i <= xlast; ++i) {
-	xk = gCurrentHist->GetBinCenter(i);
-	yk = gCurrentHist->GetBinContent(i);
+	xk = curHist->GetBinCenter(i);
+	yk = curHist->GetBinContent(i);
 	if (ndata < 0) {
 	    if (yk <= 0) yk = 1e-9;
 	    yk = TMath::Log(yk);
@@ -2597,6 +2268,8 @@ Int_t TH1::GetBin(Int_t binx, Int_t biny, Int_t binz)
 //*-*   This has the advantage that all existing functions, such as
 //*-*     GetBinContent, GetBinError, GetBinFunction work for all dimensions.
 //*-*
+//*-*  In case of a TH1x, returns binx directly.
+//*-*
 //*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
    Int_t nx, ny, nz;
    if (GetDimension() < 2) {
@@ -2637,6 +2310,7 @@ Axis_t TH1::GetRandom()
 // is evaluated, normalized to one.
 // The integral is automatically recomputed if the number of entries
 // is not the same then when the integral was computed.
+// NB Only valid for 1-d histograms. Use GetRandom2 or 3 otherwise.
 
    if (fDimension > 1) {
       Error("GetRandom","Function only valid for 1-d histograms");
@@ -2769,11 +2443,11 @@ void TH1::Multiply(TH1 *h1)
    if (fSumw2.fN == 0 && h1->GetSumw2N() != 0) Sumw2();
 
 //*-*- Reset statistics
-   fEntries = fTsumw   = fTsumw2 = fTsumwx = fTsumwx2 = 0;
+   fEntries = fTsumw = 0;
 
 //*-*- Loop on bins (including underflows/overflows)
    Int_t bin, binx, biny, binz;
-   Double_t c0,c1,w,z,x;
+   Double_t c0,c1,w;
    for (binz=0;binz<=nbinsz+1;binz++) {
       for (biny=0;biny<=nbinsy+1;biny++) {
          for (binx=0;binx<=nbinsx+1;binx++) {
@@ -2782,13 +2456,7 @@ void TH1::Multiply(TH1 *h1)
             c1  = h1->GetBinContent(bin);
             w   = c0*c1;
             SetBinContent(bin,w);
-            z = TMath::Abs(w);
-            x = fXaxis.GetBinCenter(binx);
             fEntries++;
-            fTsumw   += z;
-            fTsumw2  += z*z;
-            fTsumwx  += z*x;
-            fTsumwx2 += z*x*x;
             if (fSumw2.fN) {
                Double_t e0 = GetBinError(bin);
                Double_t e1 = h1->GetBinError(bin);
@@ -2797,6 +2465,9 @@ void TH1::Multiply(TH1 *h1)
          }
       }
    }
+   Stat_t s[10];
+   GetStats(s);
+   PutStats(s);
 }
 
 
@@ -2859,7 +2530,7 @@ void TH1::Multiply(TH1 *h1, TH1 *h2, Float_t c1, Float_t c2, Option_t *option)
 
 //*-*- Loop on bins (including underflows/overflows)
    Int_t bin, binx, biny, binz;
-   Double_t b1,b2,w,z,x,d1,d2;
+   Double_t b1,b2,w,d1,d2;
    d1 = c1*c1;
    d2 = c2*c2;
    for (binz=0;binz<=nbinsz+1;binz++) {
@@ -2870,13 +2541,7 @@ void TH1::Multiply(TH1 *h1, TH1 *h2, Float_t c1, Float_t c2, Option_t *option)
             b2  = h2->GetBinContent(bin);
             w   = (c1*b1)*(c2*b2);
             SetBinContent(bin,w);
-            z = TMath::Abs(w);
-            x = fXaxis.GetBinCenter(binx);
             fEntries++;
-            fTsumw   += z;
-            fTsumw2  += z*z;
-            fTsumwx  += z*x;
-            fTsumwx2 += z*x*x;
             if (fSumw2.fN) {
                Double_t e1 = h1->GetBinError(bin);
                Double_t e2 = h2->GetBinError(bin);
@@ -2885,6 +2550,9 @@ void TH1::Multiply(TH1 *h1, TH1 *h2, Float_t c1, Float_t c2, Option_t *option)
          }
       }
    }
+   Stat_t s[10];
+   GetStats(s);
+   PutStats(s);
 }
 
 //______________________________________________________________________________
@@ -2896,2627 +2564,8 @@ void TH1::Paint(Option_t *option)
 //  This function is automatically called by TCanvas::Update.
 //  (see TH1::Draw for the list of options)
 
-   TH1 *oldhist = gCurrentHist;
-   gCurrentHist = this;
-   Float_t minsav = fMinimum;
-
-   if (!MakeChopt(option)) return; //check options and fill Hoption structure
-
-   if (GetDimension() > 2) {
-      PaintH3(option);
-      fMinimum = minsav;
-      gCurrentHist = oldhist;
-      return;
-   }
-   TView *view = gPad->GetView();
-   if (view) {
-      if (!Hoption.Lego && !Hoption.Surf ) {
-         delete view;
-         gPad->SetView(0);
-      }
-   }
-   if (GetDimension() > 1 || Hoption.Lego || Hoption.Surf ) {
-      PaintTable();
-      fMinimum = minsav;
-      gCurrentHist = oldhist;
-      return;
-   }
-
-   if (!PaintInit()) return;  //fill Hparam structure with histo parameters
-
-//*-*-      Picture surround (if new page) and page number (if requested).
-//*-*-      Histogram surround (if not option "Same").
-
-   PaintFrame();
-
-//*-*------
-//*-*-      do not draw histogram if error bars required
-   if (!Hoption.Error) {
-      if (Hoption.Hist) PaintHist();
-   }
-//*-*------
-
-//*-*-     test for error bars or option E
-   if (Hoption.Error || Hoption.Mark) {
-      PaintErrors();
-      if (Hoption.Hist == 2) PaintHist();
-   }
-
-//*-*-     test for associated function
-   if (Hoption.Func) {
-      Hoption_t hoptsave = Hoption;
-      Hparam_t  hparsave = Hparam;
-      PaintFunction();
-      Hoption = hoptsave;
-      Hparam  = hparsave;
-   }
-
-   PaintAxis();     //*-* Draw the axes
-   PaintTitle();    //*-* Draw histogram title
-//   PaintFile();     //*-* Draw Current File name corresp to current directory
-//   PaintDate();     //*-* Draw date/time
-     //*-* Draw box with histogram statistics and/or fit parameters
-   if (!Hoption.Same) {
-      TF1 *fit = (TF1*)fFunctions->First();
-      if (!TestBit(kNoStats)) {  // bit set via TH1::SetStats
-         PaintStat(gStyle->GetOptStat(),fit);
-      }
-   }
-   fMinimum = minsav;
-   gCurrentHist = oldhist;
-
-}
-
-//______________________________________________________________________________
-void TH1::PaintArrows()
-{
-//*-*-*-*-*-*-*-*Control function to draw a table as an arrow plot*-*-*-*-*-*
-//*-*            =================================================
-//*-*
-//*-*    For each cell (i,j) an arrow is drawn
-//*-*    The orientation of the arrow follows the cell gradient
-//Begin_Html
-/*
-<img src="gif/PaintArrows.gif">
-*/
-//End_Html
-//*-*
-//*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
-   Style_t linesav   = GetLineStyle();
-   Width_t widthsav  = GetLineWidth();
-   SetLineStyle(1);
-   SetLineWidth(1);
-   TAttLine::Modify();
-
-   Float_t dx, dy, si, co, anr, x1, x2, y1, y2, xc, yc, dxn, dyn;
-   Int_t   ncx = Hparam.xlast - Hparam.xfirst + 1;
-   Int_t   ncy = Hparam.ylast - Hparam.yfirst + 1;
-   Float_t xrg = gPad->GetUxmin();
-   Float_t yrg = gPad->GetUymin();
-   Float_t xln = gPad->GetUxmax() - xrg;
-   Float_t yln = gPad->GetUymax() - yrg;
-   Float_t cx  = (xln/Float_t(ncx) -0.03)/2;
-   Float_t cy  = (yln/Float_t(ncy) -0.03)/2;
-   Float_t dn = 1.E-30;
-
-   for (Int_t id=1;id<=2;id++) {
-      for (Int_t j=Hparam.yfirst; j<=Hparam.ylast;j++) {
-         for (Int_t i=Hparam.xfirst; i<=Hparam.xlast;i++) {
-            if (i == Hparam.xfirst) {
-               dx = GetCellContent(i+1, j) - GetCellContent(i, j);
-            } else if (i == Hparam.xlast) {
-               dx = GetCellContent(i, j) - GetCellContent(i-1, j);
-            } else {
-               dx = 0.5*(GetCellContent(i+1, j) - GetCellContent(i-1, j));
-            }
-            if (j == Hparam.yfirst) {
-               dy = GetCellContent(i, j+1) - GetCellContent(i, j);
-            } else if (j == Hparam.ylast) {
-               dy = GetCellContent(i, j) - GetCellContent(i, j-1);
-            } else {
-               dy = 0.5*(GetCellContent(i, j+1) - GetCellContent(i, j-1));
-            }
-            if (id == 1) {
-               dn = TMath::Max(dn, TMath::Abs(dx));
-               dn = TMath::Max(dn, TMath::Abs(dy));
-            } else if (id == 2) {
-               xc  = xrg + xln*(Float_t(i - Hparam.xfirst+1)-0.5)/Float_t(ncx);
-               dxn = cx*dx/dn;
-               x1  = xc - dxn;
-               x2  = xc + dxn;
-               yc  = yrg + yln*(Float_t(j - Hparam.yfirst+1)-0.5)/Float_t(ncy);
-               dyn = cy*dy/dn;
-               y1  = yc - dyn;
-               y2  = yc + dyn;
-               xbuf[0] = x1;
-               xbuf[1] = x2;
-               ybuf[0] = y1;
-               ybuf[1] = y2;
-               if (TMath::Abs(x2-x1) > 0.01 || TMath::Abs(y2-y1) > 0.01) {
-                  anr = 0.005*.5*TMath::Sqrt(2/(dxn*dxn + dyn*dyn));
-                  si  = anr*(dxn + dyn);
-                  co  = anr*(dxn - dyn);
-                  xbuf[2] = x2 - si;
-                  ybuf[2] = y2 + co;
-                  gPad->PaintPolyLine(3, xbuf, ybuf);
-                  xbuf[0] = x2;
-                  xbuf[1] = x2 - co;
-                  ybuf[0] = y2;
-                  ybuf[1] = y2 - si;
-                  gPad->PaintPolyLine(2, xbuf, ybuf);
-               }
-               else {
-                  gPad->PaintPolyLine(2, xbuf, ybuf);
-               }
-            }
-         }
-      }
-   }
-   SetLineStyle(linesav);
-   SetLineWidth(widthsav);
-   TAttLine::Modify();
-}
-
-//______________________________________________________________________________
-void TH1::PaintAxis()
-{
-//*-*-*-*-*-*-*-*-*-*-*-*Draw axis of an histogram*-*-*-*-*-*-*-*-*-*-*-*-*
-//*-*                    =========================
-//
-//   Assume tx = gPad->GetTickx() and ty = gPad->GetTicky()
-//   by default only the left Y axis and X bottom axis are drawn (tx = ty = 0)
-//    tx = 1 ;  tick marks on top side are drawn (inside)
-//    tx = 2;   tick marks and labels on top side are drawn
-//    ty = 1;   tick marks on right side are drawn (inside)
-//    ty = 2;   tick marks and labels on right side are drawn
-//       Use TPad::SetTicks(tx,ty) to set these options
-
-   if (Hoption.Same) return;
-   if (Hoption.Axis) return;
-
-   static char chopt[10] = "";
-   Float_t gridl = 0;
-   Int_t ndiv, ndivx, ndivy, nx1, nx2,ndivsave;
-   Float_t umin, umax, uminsave, umaxsave;
-
-   Float_t axmin = gPad->GetUxmin();
-   Float_t axmax = gPad->GetUxmax();
-   Float_t aymin = gPad->GetUymin();
-   Float_t aymax = gPad->GetUymax();
-   char *cw = 0;
-
-//*-*- X axis
-   ndivx = GetNdivisions("X");
-   ndivy = GetNdivisions("Y");
-   if (ndivx > 1000) {
-      nx2   = ndivx/100;
-      nx1   = TMath::Max(1, ndivx%100);
-      ndivx = 100*nx2 + Int_t(Float_t(nx1)*gPad->GetAbsWNDC());
-   }
-   TGaxis axis;
-   axis.SetTextAngle(0);
-   axis.SetLineColor(fXaxis.GetAxisColor());
-   axis.SetTextColor(fXaxis.GetLabelColor());
-   axis.SetTextFont(fXaxis.GetLabelFont());
-   axis.SetLabelFont(fXaxis.GetLabelFont());
-   axis.SetLabelSize(fXaxis.GetLabelSize());
-   axis.SetLabelOffset(fXaxis.GetLabelOffset());
-   axis.SetTickSize(fXaxis.GetTickLength());
-   axis.SetTitle((char*)fXaxis.GetTitle());
-   axis.SetTitleOffset(fXaxis.GetTitleOffset());
-   axis.SetTitleSize(fXaxis.GetTitleSize());
-   axis.SetBit(kCenterTitle, fXaxis.TestBit(kCenterTitle));
-
-   chopt[0] = 0;
-   strcat(chopt, "SDH");
-   if (ndivx < 0) strcat(chopt, "N");
-   if (gPad->GetGridx()) {
-      gridl = (aymax-aymin)/(gPad->GetY2() - gPad->GetY1());
-      strcat(chopt, "W");
-   }
-
-   if (Hoption.Logx) {
-      strcat(chopt, "G");
-      ndiv =TMath::Abs(ndivx);
-      umin = TMath::Power(10,Hparam.xmin);
-      umax = TMath::Power(10,Hparam.xmax);
-   } else {
-      ndiv =TMath::Abs(ndivx);
-      umin = Hparam.xmin;
-      umax = Hparam.xmax;
-   }
-   uminsave = umin;
-   umaxsave = umax;
-   ndivsave = ndiv;
-   axis.PaintAxis(Hparam.xmin, Hparam.ymin,
-                  Hparam.xmax, Hparam.ymin,
-                  umin, umax,  ndiv, chopt, gridl);
-   if (gPad->GetTickx()) {
-      strcat(chopt, "-");
-      if (gPad->GetTickx() < 2) strcat(chopt, "U");
-      if ((cw=strstr(chopt,"W"))) *cw='z';
-      axis.SetTitle("");
-      axis.PaintAxis(Hparam.xmin, Hparam.ymax,
-                     Hparam.xmax, Hparam.ymax,
-                     uminsave, umaxsave,  ndivsave, chopt, gridl);
-   }
-//*-*- Y axis
-   axis.SetLineColor(fYaxis.GetAxisColor());
-   axis.SetTextColor(fYaxis.GetLabelColor());
-   axis.SetTextFont(fYaxis.GetLabelFont());
-   axis.SetLabelFont(fYaxis.GetLabelFont());
-   axis.SetLabelSize(fYaxis.GetLabelSize());
-   axis.SetLabelOffset(fYaxis.GetLabelOffset());
-   axis.SetTickSize(fYaxis.GetTickLength());
-   axis.SetTitle((char*)fYaxis.GetTitle());
-   axis.SetTitleOffset(fYaxis.GetTitleOffset());
-   axis.SetTitleSize(fYaxis.GetTitleSize());
-   axis.SetBit(kCenterTitle, fYaxis.TestBit(kCenterTitle));
-
-      chopt[0] = 0;
-   strcat(chopt, "SDH");
-   if (ndivy < 0) {
-      nx2   = ndivy/100;
-      nx1   = TMath::Max(1, ndivy%100);
-      ndivy = 100*nx2 + Int_t(Float_t(nx1)*gPad->GetAbsHNDC());
-      strcat(chopt, "N");
-   }
-   if (gPad->GetGridy()) {
-      gridl = (axmax-axmin)/(gPad->GetX2() - gPad->GetX1());
-      strcat(chopt, "W");
-   }
-   if (Hoption.Logy) {
-      strcat(chopt, "G");
-      ndiv =TMath::Abs(ndivy);
-      umin = TMath::Power(10,Hparam.ymin);
-      umax = TMath::Power(10,Hparam.ymax);
-   } else {
-      ndiv =TMath::Abs(ndivy);
-      umin = Hparam.ymin;
-      umax = Hparam.ymax;
-   }
-   uminsave = umin;
-   umaxsave = umax;
-   ndivsave = ndiv;
-   axis.PaintAxis(Hparam.xmin, Hparam.ymin,
-                  Hparam.xmin, Hparam.ymax,
-                  umin, umax,  ndiv, chopt, gridl);
-   if (gPad->GetTicky()) {
-      if (gPad->GetTicky() < 2) {
-         strcat(chopt, "U");
-         axis.SetTickSize(-fYaxis.GetTickLength());
-      } else {
-         strcat(chopt, "+L");
-      }
-      if ((cw=strstr(chopt,"W"))) *cw='z';
-      axis.SetTitle("");
-      axis.PaintAxis(Hparam.xmax, Hparam.ymin,
-                     Hparam.xmax, Hparam.ymax,
-                     uminsave, umaxsave,  ndivsave, chopt, gridl);
-   }
-}
-
-
-//______________________________________________________________________________
-void TH1::PaintBoxes()
-{
-//*-*-*-*-*-*-*-*Control function to draw a table as a box plot*-*-*-*-*-*
-//*-*            ==============================================
-//*-*
-//*-*    For each cell (i,j) a box is drawn.
-//*-*    The size of the box is proportional to the cell content.
-//Begin_Html
-/*
-<img src="gif/PaintBox.gif">
-*/
-//End_Html
-//*-*
-//*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
-   Style_t linesav   = GetLineStyle();
-   Width_t widthsav  = GetLineWidth();
-   Style_t fillsav   = GetFillStyle();
-   if (GetFillColor() == 0)  SetFillStyle(0);
-   SetLineStyle(1);
-   SetLineWidth(1);
-   TAttLine::Modify();
-   TAttFill::Modify();
-
-   Float_t z, xk,xstep, yk, ystep, xcent, ycent, xlow, xup, ylow, yup;
-   Float_t dz = Hparam.zmax - Hparam.zmin;
-
-   for (Int_t j=Hparam.yfirst; j<=Hparam.ylast;j++) {
-      yk    = fYaxis.GetBinLowEdge(j);
-      ystep = fYaxis.GetBinWidth(j);
-      ycent = 0.5*ystep;
-      for (Int_t i=Hparam.xfirst; i<=Hparam.xlast;i++) {
-         Int_t bin  = j*(fXaxis.GetNbins()+2) + i;
-         xk    = fXaxis.GetBinLowEdge(i);
-         xstep = fXaxis.GetBinWidth(i);
-         xcent = 0.5*xstep;
-         z     = GetBinContent(bin);
-         if (Hoption.Logz) {
-            if (z != 0) z = TMath::Log10(z);
-            else        z = Hparam.zmin;
-         }
-         if (z <= Hparam.zmin) continue;
-         xup  = xcent*(z - Hparam.zmin)/dz + xk + xcent;
-         xlow = 2*(xk + xcent) - xup;
-         if (Hoption.Logx) {
-            if (xup > 0)  xup  = TMath::Log10(xup);
-            else continue;
-            if (xlow > 0) xlow = TMath::Log10(xlow);
-            else continue;
-         }
-         yup  = ycent*(z - Hparam.zmin)/dz + yk + ycent;
-         ylow = 2*(yk + ycent) - yup;
-         if (Hoption.Logy) {
-            if (yup > 0)  yup  = TMath::Log10(yup);
-            else continue;
-            if (ylow > 0) ylow = TMath::Log10(ylow);
-            else continue;
-         }
-         if (xlow < gPad->GetUxmin()) continue;
-         if (ylow < gPad->GetUymin()) continue;
-         if (xup  > gPad->GetUxmax()) continue;
-         if (yup  > gPad->GetUymax()) continue;
-         gGXW->SetFillColor(GetFillColor()); //is redefined in TPad::PaintBox
-         gPad->PaintBox(xlow, ylow, xup, yup);
-      }
-   }
-   SetFillStyle(fillsav);
-   SetLineStyle(linesav);
-   SetLineWidth(widthsav);
-   TAttLine::Modify();
-}
-
-//______________________________________________________________________________
-void TH1::PaintColorLevels()
-{
-//*-*-*-*-*-*-*-*Control function to draw a table as a color plot*-*-*-*-*-*
-//*-*            ================================================
-//*-*
-//*-*    For each cell (i,j) a box is drawn with a color proportional
-//*-*    to the cell content.
-//*-*    The color table used is defined in the current style (gStyle).
-//*-*    The color palette in TStyle can be modified via TStyle::SetPalette.
-//Begin_Html
-/*
-<img src="gif/PaintCol.gif">
-*/
-//End_Html
-//*-*
-//*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
-
-
-   Float_t z, xk,xstep, yk, ystep, xlow, xup, ylow, yup;
-   Float_t dz = Hparam.zmax - Hparam.zmin;
-   if (dz <= 0) return;
-
-   Style_t fillsav   = GetFillStyle();
-   Style_t colsav    = GetFillColor();
-//   SetFillStyle(1000);
-   TAttFill::Modify();
-
-   Int_t ncolors = gStyle->GetNumberOfColors();
-   Float_t scale = ncolors/dz;
-   Int_t color;
-   for (Int_t j=Hparam.yfirst; j<=Hparam.ylast;j++) {
-      yk    = fYaxis.GetBinLowEdge(j);
-      ystep = fYaxis.GetBinWidth(j);
-      for (Int_t i=Hparam.xfirst; i<=Hparam.xlast;i++) {
-         Int_t bin  = j*(fXaxis.GetNbins()+2) + i;
-         xk    = fXaxis.GetBinLowEdge(i);
-         xstep = fXaxis.GetBinWidth(i);
-         z     = GetBinContent(bin);
-         if (Hoption.Logz) {
-            if (z != 0) z = TMath::Log10(z);
-            else        z = Hparam.zmin;
-         }
-         if (z <= Hparam.zmin) continue;
-         xup  = xk + xstep;
-         xlow = xk;
-         if (Hoption.Logx) {
-            if (xup > 0)  xup  = TMath::Log10(xup);
-            else continue;
-            if (xlow > 0) xlow = TMath::Log10(xlow);
-            else continue;
-         }
-         yup  = yk + ystep;
-         ylow = yk;
-         if (Hoption.Logy) {
-            if (yup > 0)  yup  = TMath::Log10(yup);
-            else continue;
-            if (ylow > 0) ylow = TMath::Log10(ylow);
-            else continue;
-         }
-         if (xlow < gPad->GetUxmin()) continue;
-         if (ylow < gPad->GetUymin()) continue;
-         if (xup  > gPad->GetUxmax()) continue;
-         if (yup  > gPad->GetUymax()) continue;
-         color = Int_t((z- Hparam.zmin)*scale);
-         if (z >= Hparam.zmax) color = ncolors-1;
-         SetFillColor(gStyle->GetColorPalette(color));
-         TAttFill::Modify();
-         gPad->PaintBox(xlow, ylow, xup, yup);
-      }
-   }
-
-   if (Hoption.Color > 1) PaintPalette();
-
-   SetFillStyle(fillsav);
-   SetFillColor(colsav);
-   TAttFill::Modify();
-
-}
-
-//______________________________________________________________________________
-void TH1::PaintPalette()
-{
-//*-*-*-*-*-*-*-*Paint the color palette on the right side of the pad*-*-*-*-*
-//*-*            ====================================================
-
-   Float_t xup  = gPad->GetUxmax();
-   Float_t x2   = gPad->GetX2();
-   Float_t ymin = gPad->GetUymin();
-   Float_t ymax = gPad->GetUymax();
-   Float_t xr   = 0.05*(x2 - gPad->GetX1());
-   Float_t xmin = xup +0.1*xr;
-   Float_t xmax = xmin + xr;
-   if (xmax > x2) xmax = x2-0.01*xr;
-   Int_t ncolors = gStyle->GetNumberOfColors();
-   Float_t dy = (ymax-ymin)/ncolors;
-   for (Int_t i=0;i<ncolors;i++) {
-      SetFillColor(gStyle->GetColorPalette(i));
-      TAttFill::Modify();
-      gPad->PaintBox(xmin,ymin+i*dy,xmax,ymin+(i+1)*dy);
-   }
-   TGaxis axis;
-   Int_t ndiv = 10;
-   Float_t wmin = Hparam.zmin;
-   Float_t wmax = Hparam.zmax;
-   if (Hoption.Logz) {
-      wmin = TMath::Power(10.,wmin);
-      wmax = TMath::Power(10.,wmax);
-      axis.PaintAxis(xmax,ymin,xmax,ymax,wmin,wmax,ndiv,"+LG");
-   } else {
-      axis.PaintAxis(xmax,ymin,xmax,ymax,wmin,wmax,ndiv,"+L");
-   }
-}
-
-//______________________________________________________________________________
-void TH1::PaintContour()
-{
-//*-*-*-*-*-*-*-*Control function to draw a table as a contour plot*-*-*-*-*-*
-//*-*            =================================================
-//*-*  Hoption.Contour may have the following values:
-//*-*     1  The contour is drawn with filled colour levels.
-//*-*        The levels are equidistant.
-//*-*    11  Use colour to distinguish contours.
-//*-*    12  Use line style to distinguish contours.
-//*-*    13  Line style and colour are the same for all contours.
-//Begin_Html
-/*
-<img src="gif/PaintContour1.gif">
-*/
-//End_Html
-//*-*
-//*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
-
-   Int_t i, j, count, ncontour, icol, iend, icont, n, lj, m, ix, jx, ljfill;
-   Int_t itars, mode, ir[4];
-   Float_t xsave, ysave, thesave,phisave,x[4], y[4], zc[4];
-
-   if (Hoption.Contour == 1) {
-      Hoption.Surf = 12;
-      thesave = gPad->GetTheta();
-      phisave = gPad->GetPhi();
-      gPad->SetPhi(0.0001);
-      gPad->SetTheta(89.99);
-      PaintSurface();
-      gPad->SetPhi(phisave);
-      gPad->SetTheta(thesave);
-      delete gPad->GetView();
-      gPad->SetView(0);
-      return;
-   }
-
-   Float_t *xarr  = new Float_t[kMAXCONTOUR];
-   Float_t *yarr  = new Float_t[kMAXCONTOUR];
-   Int_t  *itarr  = new Int_t[kMAXCONTOUR];
-   for (i=0;i<kMAXCONTOUR;i++) itarr[i] = 0;
-
-   ncontour  = GetContour();
-   if (!ncontour) {
-      ncontour = 20;
-      SetContour(ncontour);
-   }
-   if (ncontour > kMAXCONTOUR) {
-      Warning("PaintContour", "maximum number of contours is %d, asked for %d",
-              kMAXCONTOUR, ncontour);
-      ncontour = kMAXCONTOUR-1;
-   }
-   Float_t *levels = fContour.GetArray();
-   Int_t linesav   = GetLineStyle();
-   Int_t colorsav  = GetLineColor();
-   if (Hoption.Contour == 13) {
-      TAttLine::Modify();
-   }
-
-   iend = 1;
-   Int_t k;
-   for (icont=1; icont<=iend; icont++) {
-      for (j=Hparam.yfirst; j<=Hparam.ylast-1; j++) {
-         y[0] = fYaxis.GetBinCenter(j);
-         y[1] = y[0];
-         y[2] = fYaxis.GetBinCenter(j+1);
-         y[3] = y[2];
-         if (y[0] < gPad->GetUymin() || y[0] > gPad->GetUymax()) continue;
-         if (y[2] < gPad->GetUymin() || y[2] > gPad->GetUymax()) continue;
-         for (i=Hparam.xfirst; i<=Hparam.xlast-1; i++) {
-            zc[0] = GetCellContent(i, j);
-            zc[1] = GetCellContent(i+1, j);
-            zc[2] = GetCellContent(i+1, j+1);
-            zc[3] = GetCellContent(i, j+1);
-            for (k=0;k<4;k++) {
-               ir[k] = TMath::BinarySearch(ncontour,levels,zc[k]);
-               if (zc[k] > levels[ncontour-1]) ir[k] = ncontour-1;
-            }
-            if (ir[0] != ir[1] || ir[1] != ir[2] || ir[2] != ir[3] || ir[3] != ir[0]) {
-               x[0] = fXaxis.GetBinCenter(i);
-               x[3] = x[0];
-               x[1] = fXaxis.GetBinCenter(i+1);
-               x[2] = x[1];
-               if (x[0] < gPad->GetUxmin() || x[0] > gPad->GetUxmax()) continue;
-               if (x[2] < gPad->GetUxmin() || x[2] > gPad->GetUxmax()) continue;
-               if (zc[0] < zc[1]) n = 0; else n = 1;
-               if (zc[2] < zc[3]) m = 2; else m = 3;
-               if (zc[n] > zc[m]) n = m;
-               n++;
-               lj=1;
-               for (ix=1;ix<=4;ix++) {
-                  m = n%4 + 1;
-                  ljfill = PaintContourLine(zc[n-1],ir[n-1],x[n-1],y[n-1],zc[m-1],
-                        ir[m-1],x[m-1],y[m-1],&xarr[lj-1],&yarr[lj-1],&itarr[lj-1]);
-                  lj += 2*ljfill;
-                  n = m;
-               }
-               if (zc[0] < zc[1]) n = 0; else n = 1;
-               if (zc[2] < zc[3]) m = 2; else m = 3;
-               if (zc[n] > zc[m]) n = m;
-               n++;
-               lj=2;
-               for (ix=1;ix<=4;ix++) {
-                  if (n == 1) m = 4;
-                  else        m = n-1;
-                  ljfill = PaintContourLine(zc[n-1],ir[n-1],x[n-1],y[n-1],zc[m-1],
-                        ir[m-1],x[m-1],y[m-1],&xarr[lj-1],&yarr[lj-1],&itarr[lj-1]);
-                  lj += 2*ljfill;
-                  n = m;
-               }
-//*-*- Re-order endpoints
-
-               count = 0;
-               for (ix=1; ix<=lj-5; ix +=2) {
-                  count = 0;
-                  while (itarr[ix-1] != itarr[ix]) {
-                     xsave = xarr[ix];
-                     ysave = yarr[ix];
-                     itars = itarr[ix];
-                     for (jx=ix; jx<=lj-5; jx +=2) {
-                        xarr[jx]  = xarr[jx+2];
-                        yarr[jx]  = yarr[jx+2];
-                        itarr[jx] = itarr[jx+2];
-                     }
-                     xarr[lj-3]  = xsave;
-                     yarr[lj-3]  = ysave;
-                     itarr[lj-3] = itars;
-                     if (count > 100) break;
-                     count++;
-                  }
-               }
-               if (count > 100) continue;
-
-               for (ix=1; ix<=lj-2; ix +=2) {
-                  icol = (4*itarr[ix])/ncontour+1;
-                  if (Hoption.Contour == 11) {
-                      SetLineColor(icol);
-                  }
-                  if (Hoption.Contour == 12) {
-                      mode = icol%5;
-                      if (mode == 0) mode = 5;
-                      SetLineStyle(mode);
-                  }
-                  TAttLine::Modify();
-                  gPad->PaintPolyLine(2,&xarr[ix-1],&yarr[ix-1]);
-               }
-            }
-         }
-      }
-   }
-   SetLineStyle(linesav);
-   SetLineColor(colorsav);
-   delete [] xarr;
-   delete [] yarr;
-   delete [] itarr;
-}
-
-//______________________________________________________________________________
-Int_t TH1::PaintContourLine(Float_t elev1, Int_t icont1, Float_t x1, Float_t y1,
-                            Float_t elev2, Int_t icont2, Float_t x2, Float_t y2,
-                            Float_t *xarr, Float_t *yarr, Int_t *itarr)
-{
-//*-*-*-*-*-*-*-*Fill the matrix XARR YARR for Contour Plot*-*-*-*-*-*-*-*
-//*-*            ==========================================
-//*-*
-
-   Bool_t vert;
-   Float_t tlen, tdif, elev, diff, pdif, xlen;
-   Int_t n, i, icount;
-
-   if (x1 == x2) {
-      vert = kTRUE;
-      tlen = y2 - y1;
-   } else {
-      vert = kFALSE;
-      tlen = x2 - x1;
-   }
-
-   n = icont1 + 1;
-   tdif = elev2 - elev1;
-   i = 0;
-   icount = 0;
-   while (n <= icont2 && i <= kMAXCONTOUR/2 -3) {
-      elev = GetContourLevel(n);
-      diff = elev - elev1;
-      pdif = diff/tdif;
-      xlen = tlen*pdif;
-      if (vert) {
-         xarr[i] = x1;
-         yarr[i] = y1 + xlen;
-      } else {
-         xarr[i] = x1 + xlen;
-         yarr[i] = y1;
-      }
-      itarr[i] = n;
-      icount++;
-      i +=2;
-      n++;
-   }
-   return icount;
-}
-
-//______________________________________________________________________________
-Int_t TH1::PaintInit()
-{
-//*-*-*-*-*-*-*Compute histogram parameters used by the drawing routines*-*-*-*
-//*-*          =========================================================
-
-   if (GetDimension() > 1 || Hoption.Lego || Hoption.Surf) return 1;
-
-   static const char *where = "PaintInit";
-   Float_t YMARGIN = 0.05;
-   Int_t maximum = 0;
-   Int_t minimum = 0;
-   if (fMaximum != -1111) maximum = 1;
-   if (fMinimum != -1111) minimum = 1;
-
-//*-*  Compute X axis parameters
-
-   Int_t last   = fXaxis.GetLast();
-   Int_t first  = fXaxis.GetFirst();
-   Hparam.xlowedge = GetBinLowEdge(first);
-   Hparam.xbinsize = GetBinWidth(first);
-   Hparam.xlast = last;
-   Hparam.xfirst= first;
-   Hparam.xmin  = Hparam.xlowedge;
-   Hparam.xmax  = GetBinLowEdge(last)+GetBinWidth(last);
-
-//*-*-   if log scale in X, replace xmin,max by the log
-   if (Hoption.Logx) {
-      if (Hparam.xlowedge <=0 ) {
-         Hparam.xlowedge = 0.1*Hparam.xbinsize;
-         Hparam.xmin  = Hparam.xlowedge;
-      }
-      if (Hparam.xmin <=0 || Hparam.xmax <=0) {
-         Error(where, "cannot set X axis to log scale");
-         return 0;
-      }
-      Hparam.xfirst= fXaxis.FindBin(Hparam.xmin);
-      Hparam.xlast = fXaxis.FindBin(Hparam.xmax);
-      Hparam.xmin  = TMath::Log10(Hparam.xmin);
-      Hparam.xmax  = TMath::Log10(Hparam.xmax);
-   }
-
-//*-*  Compute Y axis parameters
-   Float_t BIGP = TMath::Power(10,32);
-   Float_t ymax = -BIGP;
-   Float_t ymin = BIGP;
-   Float_t c1, e1;
-   Double_t xv[1];
-   Double_t fval;
-   Int_t i;
-   TObject *f;
-   TF1 *f1;
-   Stat_t allchan = 0;
-   for (i=first; i<=last;i++) {
-      c1 = GetBinContent(i);
-      ymax = TMath::Max(ymax,c1);
-      if (Hoption.Error) {
-         e1 = GetBinError(i);
-         ymax = TMath::Max(ymax,c1+e1);
-      }
-      if (Hoption.Func) {
-         xv[0] = fXaxis.GetBinCenter(i);
-         TIter   next(fFunctions);
-         while ((f = (TObject*) next())) {
-            if (f->IsA() == TF1::Class()) {
-               f1 = (TF1*)f;
-               if (xv[0] < f1->GetXmin() || xv[0] > f1->GetXmax()) continue;
-               fval = f1->Eval(xv[0],0,0);
-               ymax = TMath::Max(ymax,Float_t(fval));
-               if (Hoption.Logy) {
-                  if (fval > 0.3*c1) ymin = TMath::Min(ymin,Float_t(fval));
-               }
-            }
-         }
-      }
-      if (Hoption.Logy) {
-         if (c1 > 0) ymin = TMath::Min(ymin,c1);
-      }
-      else           ymin = TMath::Min(ymin,c1);
-      allchan += c1;
-   }
-
-//*-*- Take into account maximum , minimum
-
-   Float_t xm = ymin;
-   if (maximum) ymax = fMaximum;
-   if (minimum) xm   = fMinimum;
-   if (Hoption.Logy && xm <= 0) {
-      Error(where, "log scale requested with zero or negative argument (%f)", xm);
-      return 0;
-   }
-   else ymin = xm;
-   if (ymin >= ymax && !Hoption.Plus) {
-      if (Hoption.Logy) {
-         if (ymax > 0) ymin = 0.001*ymax;
-         else {
-            Error(where, "log scale is requested but maximum is less or equal 0 (%f)", ymax);
-            return 0;
-         }
-      }
-      else {
-         ymax = ymin + 1;
-         ymin = ymin - 1;
-      }
-   }
-
-//*-*- take into account normalization factor
-   Hparam.allchan = allchan;
-   Stat_t factor = allchan;
-   if (fNormFactor > 0) factor = fNormFactor;
-   if (allchan) factor /= allchan;
-   if (factor == 0) factor = 1;
-   Hparam.factor = factor;
-   ymax = factor*ymax;
-   ymin = factor*ymin;
-
-//*-*-----
-//*-*-     For log scales, histogram coordinates are LOG10(ymin) and
-//*-*-     LOG10(ymax). Final adjustment (if not option "Same"
-//*-*-     or "+" for ymax) of ymax and ymin for logarithmic scale, if
-//*-*-     Maximum and Minimum are not defined.
-//*-*-----
-   if (Hoption.Logy) {
-      if (ymin <=0 || ymax <=0) {
-         Error(where, "Cannot set Y axis to log scale");
-         return 0;
-      }
-      ymin = TMath::Log10(ymin);
-      if (!minimum) ymin += TMath::Log10(0.5);
-      ymax = TMath::Log10(ymax);
-      if (!maximum && !Hoption.Plus) ymax += TMath::Log10(2*(0.9/0.95));
-      if (!Hoption.Same) {
-         Hparam.ymin = ymin;
-         Hparam.ymax = ymax;
-      }
-      return 1;
-   }
-//*-*-----
-//*-*-     final adjustment of ymin for linear scale.
-//*-*-     if minimum is not set , then ymin is set to zero if >0
-//*-*-     or to ymin - margin if <0.
-//*-*-----
-   if (!minimum) {
-      if (ymin >= 0) ymin = 0;
-      else           ymin -= YMARGIN*(ymax-ymin);
-   }
-//*-*-----
-//*-*-     final adjustment of YMAXI for linear scale (if not option "Same"):
-//*-*-     decrease histogram height to MAX% of allowed height if HMAXIM
-//*-*-     has not been called.
-//*-*-----
-   if (!maximum && !Hoption.Plus) {
-      ymax += YMARGIN*(ymax-ymin);
-   }
-   Hparam.ymin = ymin;
-   Hparam.ymax = ymax;
-   return 1;
-}
-
-//______________________________________________________________________________
-void TH1::PaintErrors()
-{
-//*-*-*-*-*-*-*-*-*-*-*Draw histogram error bars*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
-//*-*-
-//*-*-   Draws error bars for the current histogram. The current polymarker
-//*-*-   is drawn at the centre of the errors according to CHOPT:
-//*-*-
-//*-*-   ' ' Coordinates are expressed in histogram coordinates
-//*-*-       (of the last drawn histogram). Error bars are drawn.
-//*-*-   '1' Small lines are drawn at the end of the error bars.
-//*-*-   '2' Error rectangles are drawn.
-//*-*-   '3' A filled area is drawn through the end points of the vertical
-//*-*-       error bars.
-//*-*-   '4' A smoothed filled area is drawn through the end points of the
-//*-*-       vertical error bars.
-//*-*-   '0' Turn off the symbols clipping.
-//Begin_Html
-/*
-<img src="gif/PaintErrors.gif">
-*/
-//End_Html
-//*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
-
-   const Int_t BASEMARKER=10;
-   Float_t xp, yp, ex1, ex2, ey1, ey2;
-   Float_t delta;
-   Float_t s2x, s2y, bxsize, bysize, symbolsize, xerror;
-   Float_t xi1, xi2, xi3, xi4, yi1, yi2, yi3, yi4;
-   Float_t xmin, xmax, ymin, ymax;
-   Float_t logxmin = 0;
-   Float_t logymin = 0;
-   Int_t k, npoints, first, last, fixbin;
-   Int_t if1 = 0;
-   Int_t if2 = 0;
-   Int_t drawmarker, errormarker;
-   Int_t option0, option1, option2, option3, option4, optionE;
-//*-*-_____________________________
-
-   Float_t *xline = 0;
-   Float_t *yline = 0;
-   option0 = option1 = option2 = option3 = option4 = optionE = 0;
-   if (Hoption.Error == 10) option0 = 1;
-   if (Hoption.Error == 11) option1 = 1;
-   if (Hoption.Error == 12) option2 = 1;
-   if (Hoption.Error == 13) option3 = 1;
-   if (Hoption.Error == 14) {option4 = 1; option3 = 1;}
-   if (option2+option3 == 0) optionE = 1;
-   if (Hoption.Error == 0) optionE = 0;
-   if (fXaxis.GetXbins()->fN) fixbin = 0;
-   else                       fixbin = 1;
-
-   errormarker = GetMarkerStyle();
-   xerror      = gStyle->GetErrorX();
-   symbolsize  = GetMarkerSize();
-
-//*-*-      set the graphics attributes
-
-   TAttLine::Modify();
-   TAttFill::Modify();
-   TAttMarker::Modify();
-
-//*-*-      initiate the first and last bin
-
-   first      = Hparam.xfirst;
-   last       = Hparam.xlast;
-   npoints    = last - first  +1;
-   if (errormarker == 1) symbolsize = 0.01;
-   Float_t factor = Hparam.factor;
-//   xmin       = Hparam.xmin;
-//   xmax       = Hparam.xmax;
-   xmin       = gPad->GetUxmin();
-   xmax       = gPad->GetUxmax();
-   ymin       = gPad->GetUymin();
-   ymax       = gPad->GetUymax();
-   bxsize     = 0.01*symbolsize*(xmax-xmin);
-
-//*-*-      initialize the filled area drawing
-
-   if (option3) {
-      xline = new Float_t[2*npoints];
-      yline = new Float_t[2*npoints];
-      if (!xline || !yline) {
-         Error("PaintErrors", "too many points, out of memory");
-         return;
-      }
-      if1 = 1;
-      if2 = 2*npoints;
-   }
-
-//*-*-      define the offset of the error bars due to the symbol size
-
-   s2x    = gPad->PixeltoX(Int_t(0.5*symbolsize*BASEMARKER)) - gPad->PixeltoX(0);
-   s2y    =-gPad->PixeltoY(Int_t(0.5*symbolsize*BASEMARKER)) + gPad->PixeltoY(0);
-   bxsize = 0.5*s2x;
-   bysize = 0.5*s2y;
-
-//*-*-      initialize the first point
-
-   if (fixbin) {
-      if (Hoption.Logx) xp = TMath::Power(10,Hparam.xmin) + 0.5*Hparam.xbinsize;
-      else              xp = Hparam.xmin + 0.5*Hparam.xbinsize;
-   }
-   else {
-      delta = GetBinWidth(first);
-      xp    = GetBinLowEdge(first) + 0.5*delta;
-   }
-
-//*      if errormarker = 0 or symbolsize = 0. no symbol is drawn
-
-   if (Hoption.Logx) logxmin = TMath::Power(10,Hparam.xmin);
-   if (Hoption.Logy) logymin = TMath::Power(10,Hparam.ymin);
-
-//*-*----------------------- Loop over the points---------------------
-
-   for (k=first; k<=last; k++) {
-
-//*-*-      get the data
-
-//*-*- xp      = X position of the current point
-//*-*- yp      = Y position of the current point
-//*-*- ex1   = Low X error
-//*-*- ex2   = Up X error
-//*-*- ey1   = Low Y error
-//*-*- ey2   = Up Y error
-//*-*- (xi,yi) = Error bars corrdinates
-
-      if (xp < xmin) goto L30;
-      if (xp > xmax) break;
-      yp = factor*GetBinContent(k);
-      if (fixbin) ex1 = xerror*Hparam.xbinsize;
-      else {
-         delta = GetBinWidth(k);
-         ex1 = xerror*delta;
-      }
-      ey1 = factor*GetBinError(k);
-      ex2 = ex1;
-      ey2 = ey1;
-      if (Hoption.Logy && yp <= 0) goto L30;
-      if (Hoption.Logx && xp <= 0) goto L30;
-
-      xi4 = xp;
-      xi3 = xp;
-      xi2 = xp + ex2;
-      xi1 = xp - ex1;
-
-      yi1 = yp;
-      yi2 = yp;
-      yi3 = yp - ey1;
-      yi4 = yp + ey2;
-
-//*-*-      take the LOG if necessary
-
-      if (Hoption.Logx) {
-         xi1 = TMath::Log10(TMath::Max(xi1,logxmin));
-         xi2 = TMath::Log10(TMath::Max(xi2,logxmin));
-         xi3 = TMath::Log10(TMath::Max(xi3,logxmin));
-         xi4 = TMath::Log10(TMath::Max(xi4,logxmin));
-      }
-      if (Hoption.Logy) {
-         yi1 = TMath::Log10(TMath::Max(yi1,logymin));
-         yi2 = TMath::Log10(TMath::Max(yi2,logymin));
-         yi3 = TMath::Log10(TMath::Max(yi3,logymin));
-         yi4 = TMath::Log10(TMath::Max(yi4,logymin));
-      }
-
-//*-*-      test if error bars are not outside the limits
-//*-*-      otherwise they are truncated
-
-      xi1 = TMath::Max(xi1,xmin);
-      xi2 = TMath::Min(xi2,xmax);
-      yi3 = TMath::Max(yi3,ymin);
-      yi4 = TMath::Min(yi4,ymax);
-
-//*-*-      test if the marker is on the frame limits. If "Yes", the
-//*-*-      marker will be not drawn and the error bars will be readjusted.
-
-      drawmarker = kTRUE;
-      if (!option0) {   // <=====Please check
-         if (yi1 < ymin || yi1 > ymax) goto L30;
-//         if (((yi1-s2y) < ymin && (yi1+s2y) > ymin)
-//          || ((yi1-s2y) < ymax && (yi1+s2y) > ymax)
-//          || ((xi3-s2x) < xmin && (xi3+s2x) > xmin)
-//          || ((xi3-s2x) < xmax && (xi3+s2x) > xmax))
-//         drawmarker = kFALSE;
-          if (ey1 <= 0) drawmarker = kFALSE;
-      }
-      if (!symbolsize || !errormarker) drawmarker = kFALSE;
-
-//*-*-      draw the error rectangles
-
-      if (option2) gPad->PaintBox(xi1,yi3,xi2,yi4);
-
-//*-*-      keep points for fill area drawing
-
-      if (option3) {
-         xline[if1-1] = xi3;
-         xline[if2-1] = xi3;
-         yline[if1-1] = yi4;
-         yline[if2-1] = yi3;
-         if1++;
-         if2--;
-      }
-
-//*-*-      draw the error bars
-
-      if (optionE && drawmarker) {
-         if (yi3 < yi1 - s2y) gPad->PaintLine(xi3,yi3,xi4,yi1 - s2y);
-         if (yi1 + s2y < yi4) gPad->PaintLine(xi3,yi1 + s2y,xi4,yi4);
-         if (xi1 < xi3 - s2x) gPad->PaintLine(xi1,yi1,xi3 - s2x,yi2);
-         if (xi3 + s2x < xi2) gPad->PaintLine(xi3 + s2x,yi1,xi2,yi2);
-      }
-      if (optionE && !drawmarker) {
-         if (yi3 < yi4) gPad->PaintLine(xi3,yi3,xi4,yi4);
-         if (yi1 < yi4) gPad->PaintLine(xi3,yi1,xi4,yi4);
-         if (xi1 < xi3) gPad->PaintLine(xi1,yi1,xi3,yi2);
-         if (xi3 < xi2) gPad->PaintLine(xi3,yi1,xi2,yi2);
-      }
-
-//*-*-      draw line at the end of the error bars
-
-      if (option1) {
-         if (yi3 < yi1-s2y) gPad->PaintLine(xi3 - bxsize,yi3,xi3 + bxsize,yi3);
-         if (yi4 > yi1+s2y) gPad->PaintLine(xi3 - bxsize,yi4,xi3 + bxsize,yi4);
-         if (xi1 < xi3-s2x) gPad->PaintLine(xi1,yi1 - bysize,xi1,yi1 + bysize);
-         if (xi2 > xi3+s2x) gPad->PaintLine(xi2,yi1 - bysize,xi2,yi1 + bysize);
-      }
-
-//*-*-      draw the marker
-
-      if (drawmarker) gPad->PaintPolyMarker(1, &xi3, &yi1);
-
-L30:
-      if (fixbin) xp += Hparam.xbinsize;
-      else {
-         if (k < last) {
-            delta = GetBinWidth(k+1);
-            xp    = GetBinLowEdge(k+1) + 0.5*delta;
-         }
-      }
-   }  //end of for loop
-
-//*-*-      draw the filled area
-
-   if (option3) {
-      TGraph graph;
-      graph.SetFillStyle(GetFillStyle());
-      graph.SetFillColor(GetFillColor());
-      if (option4) graph.PaintGraph(2*npoints,xline,yline,"FC");
-      else         graph.PaintGraph(2*npoints,xline,yline,"F");
-      delete [] xline;
-      delete [] yline;
-   }
-}
-
-//______________________________________________________________________________
-void TH1::PaintFrame()
-{
-//*-*-*-*-*-*-*-*-*-*Calculate range and clear pad (canvas)*-*-*-*-*-*-*-*-*-*
-//*-*                ======================================
-   if (Hoption.Same) return;
-
-   RecalculateRange();
-
-   if (Hoption.Lego || Hoption.Surf || Hoption.Contour == 1) {
-      TObject *frame = gPad->GetPrimitive("TFrame");
-      if (frame) gPad->GetListOfPrimitives()->Remove(frame);
-      return;
-   }
-   gPad->PaintPadFrame(Hparam.xmin,Hparam.ymin,Hparam.xmax,Hparam.ymax);
-}
-
-//______________________________________________________________________________
-void TH1::PaintFunction()
-{
-//*-*-*-*-*-*-*-*-*-*-*Paint functions associated to an histogram*-*-*-*-*-*-*
-//*-*                  ==========================================
-//
-//   An associated function is created by TH1::Fit. Note that more than
-//   on fitted function can be associated with one histogram (see TH1::Fit).
-//
-//   A TF1 object can be added to the list of associated functions directly
-//   by a user without calling TH1::Fit.
-//   To add a new function to the list of associated functions, do
-//     h->GetListOfFunctions()->Add(f1);
-//   To retrieve a function by name from this list, do:
-//     TF1 *f1 = (TF1*)h->GetListOfFunctions()->FindObject(name);
-//   or
-//     TF1 *f1 = h->GetFunction(name);
-//
-   TObject *f;
-   TIter   next(fFunctions);
-   while ((f = (TObject*) next())) {
-      if (f->IsA() == TF1::Class()) f->Paint("lsame");
-      else                          f->Paint();
-   }
-}
-
-//______________________________________________________________________________
-void TH1::PaintHist()
-{
-//*-*-*-*-*-*-*-*-*-*Control routine to draw an histogram*-*-*-*-*-*-*-*-*-*-*
-//*-*                ====================================
-
-   static char chopth[17];
-   static char choptg[5];
-   static char chtemp[9];
-
-
-   Int_t htype, oldhtype;
-   Int_t i, j, first, last, nbins, fixbin;
-   Float_t c1, yb, y1, y2, ym1, ym2, yadd, ycur, ypre;
-   Float_t ync, ynext, ypc;
-   yb = ynext = 0;
-
-   strcpy(chopth, "                ");
-   strcpy(choptg, "    ");
-   strcpy(chtemp, "        ");
-
-   Float_t ymin = Hparam.ymin;
-   Float_t ymax = Hparam.ymax;
-   Float_t baroffset = GetBarOffset();
-   Float_t barwidth  = GetBarWidth();
-   Float_t baroffsetsave = gStyle->GetBarOffset();
-   Float_t barwidthsave  = gStyle->GetBarWidth();
-   gStyle->SetBarOffset(baroffset);
-   gStyle->SetBarWidth(barwidth);
-
-//*-*-   Create "LIFE" structure to keep current histogram status
-
-   first = Hparam.xfirst;
-   last  = Hparam.xlast;
-   nbins = last - first + 1;
-
-   Float_t *keepx = 0;
-   Float_t *keepy = 0;
-   if (fXaxis.GetXbins()->fN) fixbin = 0;
-   else                       fixbin = 1;
-   if (!Hoption.Plus) {
-      if (fixbin) keepx = new Float_t[2];
-      else        keepx = new Float_t[nbins+1];
-      keepy = new Float_t[nbins];
-   }
-   Float_t logymin = 0;
-   if (Hoption.Logy) logymin = TMath::Power(10,ymin);
-
-//*-*-  Loop on histogram bins
-
-   for (j=first; j<=last;j++) {
-      c1 = Hparam.factor*GetBinContent(j);
-      if (TMath::Abs(ymax-ymin) > 0) {
-         if (Hoption.Logy) yb = TMath::Log10(TMath::Max(c1,logymin));
-         else              yb = c1;
-      }
-      yb = TMath::Max(yb, ymin);
-      yb = TMath::Min(yb, ymax);
-
-      if (Hoption.Plus) {
-//*-*         compute y1, y2
-         y1 = keepy[j-first];
-         y2 = yb;
-         if (Hoption.Plus == 1 || Hoption.Plus == -1) {
-            if (Hoption.Logy)
-               y2 = TMath::Log10(TMath::Power(10,y1) + Hoption.Plus*TMath::Power(10,y2));
-            else
-               y2 = y1 +y2*Hoption.Plus;
-         }
-//*-*         compute ym1, ym2
-         if (!Hoption.Bar) {
-            yadd = Hparam.factor*GetBinContent(j);
-            if (Hoption.Logy) ycur = TMath::Power(10,keepy[j-first]);
-            else              ycur = keepy[j-first];
-            if (j != last) {
-               ync = Hparam.factor*GetBinContent(j+1);
-               if (Hoption.Logy) ycur = TMath::Power(10,keepy[j-first+1]);
-               else              ycur = keepy[j-first+1];
-            }
-            else { ync = ynext = 0;}
-            if (j != first) {
-               ypc = Hparam.factor*GetBinContent(j-1);
-               if (Hoption.Logy) ypre = TMath::Power(10,keepy[j-first]);
-               else              ypre = keepy[j-first];
-            }
-            else { ypc = ypre = 0;}
-            if (Hoption.Plus == 1) {
-                ym1 = TMath::Max(TMath::Min(ycur+yadd,ypre),ycur);
-                ym2 = TMath::Max(TMath::Min(ycur+yadd,ynext+ync),ycur);
-            }
-            else if(Hoption.Plus == -1) {
-                ym1 = TMath::Max(TMath::Min(ycur-yadd,ypre),ycur);
-                ym2 = TMath::Max(TMath::Min(ycur-yadd,ynext-ync),ycur);
-            }
-            else {
-               if (ycur > yadd) { ym1 = TMath::Max(yadd,ypc); ym2 = TMath::Max(yadd,ync); }
-               else {             ym1 = TMath::Min(yadd,ypc); ym2 = TMath::Min(yadd,ync); }
-            }
-            if (Hoption.Logy) {
-               if (ym1 > 0) ym1 = TMath::Log10(ym1);
-               if (ym2 > 0) ym2 = TMath::Log10(ym2);
-            }
-         }
-
-//*-*-           Compute X1 X2
-         if (Hoption.Logy && c1 <= 0) continue;
-
-//*-*- Update the current plot
-
-         if (Hoption.Plus == 1 || Hoption.Plus == -1) keepy[j-first-1] = y2;
-      }
-      else {
-         keepy[j-first] = yb;
-      }
-   } // end of for loop
-
-   if (Hoption.Plus) return;
-
-//*-*-          Draw histogram according to value of FillStyle and FillColor
-
-   if (fixbin) { keepx[0] = Hparam.xmin; keepx[1] = Hparam.xmax; }
-   else {
-      for (i=0; i<=nbins; i++) keepx[i] = fXaxis.GetXbins()->fArray[i+first-1];
-   }
-
-//*-*-     Prepare Fill area (systematic with option "Bar").
-
-   oldhtype = GetFillStyle();
-   htype    = oldhtype;
-   if (Hoption.Bar) {
-      if (htype == 0 || htype == 1000) htype = 1001;
-   }
-
-   Width_t lw = Width_t(GetLineWidth()*gPad->GetAbsHNDC() + 0.5);
-
-//*-*-     Code option for GrapHist
-
-   if (Hoption.Line) chopth[0] = 'L';
-   if (Hoption.Star) chopth[1] = '*';
-   if (Hoption.Mark) chopth[2] = 'P';
-   if (Hoption.Curve || Hoption.Hist || Hoption.Bar) {
-      if (Hoption.Curve)      chopth[3] = 'C';
-      if (Hoption.Hist > 0) { chopth[4] = 'H';  strcpy(choptg,"H"); }
-      else if (Hoption.Bar) { chopth[5] = 'B';  strcpy(choptg,"B"); }
-      if (GetFillColor() && htype) {
-         if (Hoption.Logy) {
-            chopth[6] = '1';
-            if (strlen(choptg)) {
-               strcpy(chtemp,"1");
-               strcat(chtemp, choptg);
-               strncpy(choptg, chtemp,4);
-            }
-         }
-         if (Hoption.Hist > 0 || Hoption.Curve) {
-            chopth[7] = 'F';
-            if (strlen(choptg)) {
-               strcpy(chtemp,"F");
-               strcat(chtemp, choptg);
-               strncpy(choptg, chtemp,4);
-            }
-         }
-      }
-   }
-   if (!fixbin && strlen(chopth)) {
-      chopth[8] = 'N';
-      if (strlen(choptg)) {
-         strcpy(chtemp,"N");
-         strcat(chtemp, choptg);
-         strncpy(choptg, chtemp,4);
-      }
-   }
-
-   if (!strlen(chopth)) {
-      if (GetFillColor() && htype) {
-         if (!Hoption.Logy) {
-            if (!Hoption.Bar) {
-               if (fixbin) { strcpy(chopth,"F");   strcpy(choptg,"F   "); }
-               else        { strcpy(chopth,"FN");  strcpy(choptg,"FN  "); }
-            }
-            else {
-               if (fixbin) { strcpy(chopth,"B");   strcpy(choptg,"B   "); }
-               else        { strcpy(chopth,"BN");  strcpy(choptg,"BN  "); }
-            }
-         }
-         else {
-            if (!Hoption.Bar) {
-               if (fixbin) { strcpy(chopth,"F1");  strcpy(choptg,"F1  "); }
-               else        { strcpy(chopth,"F1N"); strcpy(choptg,"F1N "); }
-            }
-            else {
-               if (fixbin) { strcpy(chopth,"B1");  strcpy(choptg,"B1  "); }
-               else        { strcpy(chopth,"B1N"); strcpy(choptg,"B1N "); }
-            }
-         }
-      }
-      else {
-         if (fixbin) { strcpy(chopth,"H");   strcpy(choptg,"H   "); }
-         else        { strcpy(chopth,"HN");  strcpy(choptg,"HN  "); }
-      }
-   }
-
-//*-*-     Option LOGX
-
-   if (Hoption.Logx) {
-      chopth[9]  = 'G';
-      chopth[10] = 'X';
-      if (strlen(choptg)) {
-         strcpy(chtemp,"GX");
-         strcat(chtemp, choptg);
-         strncpy(choptg, chtemp,4);
-      }
-      if (fixbin) {
-         keepx[0] = TMath::Power(10,keepx[0]);
-         keepx[1] = TMath::Power(10,keepx[1]);
-      }
-   }
-
-//*-*-     Draw the histogram
-
-   TGraph graph;
-   graph.SetLineWidth(lw);
-   graph.SetLineStyle(GetLineStyle());
-   graph.SetLineColor(GetLineColor());
-   graph.SetFillStyle(htype);
-   graph.SetFillColor(GetFillColor());
-   if (fixbin) {
-      graph.PaintGrapHist(nbins, keepx, keepy ,chopth);
-   }
-   else {
-      graph.PaintGrapHist(nbins, keepx, keepy ,chopth);
-   }
-   delete [] keepx;
-   delete [] keepy;
-   gStyle->SetBarOffset(baroffsetsave);
-   gStyle->SetBarWidth(barwidthsave);
-
-   htype=oldhtype;
-}
-
-//______________________________________________________________________________
-void TH1::PaintH3(Option_t *option)
-{
-//*-*-*-*-*-*-*-*-*-*Control function to draw a 3-D histogram*-*-*-*-*-*-*-*-*
-//*-*                ========================================
-
-   if (GetDrawOption() && strstr(GetDrawOption(),"box")) {
-      PaintH3Box(option);
-      return;
-   }
-
-   Float_t rmin[3], rmax[3];
-   Float_t xf,yf,zf;
-   Int_t bin, binx, biny, binz;
-   TView * view;
-
-   if (!fEntries) return;
-   Int_t nx  = fXaxis.GetNbins();
-   Int_t ny  = fYaxis.GetNbins();
-   Int_t nz  = fZaxis.GetNbins();
-   TPolyMarker3D *pm3d    = new TPolyMarker3D(Int_t(fEntries));
-   gPad->Modified(kTRUE);
-   rmin[0] = fXaxis.GetBinLowEdge(1);
-   rmin[1] = fYaxis.GetBinLowEdge(1);
-   rmin[2] = fZaxis.GetBinLowEdge(1);
-   rmax[0] = fXaxis.GetBinLowEdge(nx) + fXaxis.GetBinWidth(nx);
-   rmax[1] = fYaxis.GetBinLowEdge(ny) + fYaxis.GetBinWidth(ny);
-   rmax[2] = fZaxis.GetBinLowEdge(nz) + fZaxis.GetBinWidth(nz);
-   xf = 1000/(rmax[0] - rmin[0]);
-   yf = 1000/(rmax[1] - rmin[1]);
-   zf = 1000/(rmax[2] - rmin[2]);
-   rmin[0] *= xf; rmax[0] *= xf;
-   rmin[1] *= yf; rmax[1] *= yf;
-   rmin[2] *= zf; rmax[2] *= zf;
-   view = gPad->GetView();
-   if (view) {
-      view->SetRange(rmin,rmax);
-   } else {
-      gPad->Range(-1,-1,1,1);
-      view = new TView(rmin,rmax,1);
-   }
-   Int_t entry = 0;
-   Float_t x,y,z,xw,yw,zw,xp,yp,zp;
-   for (binz=1;binz<=nz;binz++) {
-      z  = fZaxis.GetBinCenter(binz);
-      zw = fZaxis.GetBinWidth(binz);
-      for (biny=1;biny<=ny;biny++) {
-         y  = fYaxis.GetBinCenter(biny);
-         yw = fYaxis.GetBinWidth(biny);
-         for (binx=1;binx<=nx;binx++) {
-            x  = fXaxis.GetBinCenter(binx);
-            xw = fXaxis.GetBinWidth(binx);
-            bin = GetBin(binx-1,biny-1,binz-1);
-            for (Int_t in=0;in<GetBinContent(bin);in++) {
-               xp = x + xw*gRandom->Rndm(in);
-               yp = y + yw*gRandom->Rndm(in);
-               zp = z + zw*gRandom->Rndm(in);
-               pm3d->SetPoint(entry,xp*xf,yp*yf,zp*zf);
-               entry++;
-            }
-         }
-      }
-   }
-   pm3d->Paint(option);
-   delete pm3d;
-}
-
-//______________________________________________________________________________
-void TH1::PaintH3Box(Option_t *option)
-{
-//*-*-*-*-*-*-*-*-*-*Draw a 3-D histogram with boxes*-*-*-*-*-*-*-*-*
-//*-*                ===============================
-//
-// Each 3-d cell is represented by a box of size proportional to the cell content
-// The cell color is the histogram marker color
-
-   Int_t bin,ix,iy,iz;
-   Float_t xmin,xmax,ymin,ymax,zmin,zmax,wmin,wmax,w;
-   Int_t nbinsx = fXaxis.GetNbins();
-   Int_t nbinsy = fYaxis.GetNbins();
-   Int_t nbinsz = fZaxis.GetNbins();
-
-   //compute min and max of all cells
-   wmin = wmax = 0;
-   for (ix=1;ix<=nbinsx;ix++) {
-      for (iy=1;iy<=nbinsy;iy++) {
-         for (iz=1;iz<=nbinsz;iz++) {
-            bin = GetBin(ix,iy,iz);
-            w = GetBinContent(bin);
-            if (w > wmax) wmax = w;
-            if (w < wmin) wmin = w;
-         }
-      }
-   }
-
-   //Create or modify 3-d view object
-   TView *view = gPad->GetView();
-   if (!view) {
-      gPad->Range(-1,-1,1,1);
-      view = new TView(1);
-   }
-   view->SetRange(fXaxis.GetXmin(),
-                  fYaxis.GetXmin(),
-                  fZaxis.GetXmin(),
-                  fXaxis.GetXmax(),
-                  fYaxis.GetXmax(),
-                  fZaxis.GetXmax());
-
-
-   //Draw TMarker3DBox with size proportional to cell content
-   TMarker3DBox m3;
-   m3.SetRefObject(this);
-   m3.SetDirection(0,0);
-   m3.SetLineColor(GetMarkerColor());
-   Float_t scale;
-   for (ix=1;ix<=nbinsx;ix++) {
-      xmin = fXaxis.GetBinLowEdge(ix);
-      xmax = xmin + fXaxis.GetBinWidth(ix);
-      for (iy=1;iy<=nbinsy;iy++) {
-         ymin = fYaxis.GetBinLowEdge(iy);
-         ymax = ymin + fYaxis.GetBinWidth(iy);
-         for (iz=1;iz<=nbinsz;iz++) {
-            zmin = fZaxis.GetBinLowEdge(iz);
-            zmax = zmin + fZaxis.GetBinWidth(iz);
-            bin = GetBin(ix,iy,iz);
-            w = GetBinContent(bin);
-            if (w == 0) continue;
-            scale = (w-wmin)/(wmax-wmin);
-            m3.SetPosition(0.5*(xmin+xmax),0.5*(ymin+ymax),0.5*(zmin+zmax));
-            m3.SetSize(scale*(xmax-xmin),scale*(ymax-ymin),scale*(zmax-zmin));
-            m3.Paint(option);
-         }
-      }
-   }
-}
-
-
-//______________________________________________________________________________
-void TH1::PaintLego()
-{
-//*-*-*-*-*-*-*-*Control function to draw a table as a lego plot*-*-*-*-*-*
-//*-*            ===============================================
-//*-*
-//*-*     In a lego plot, cell contents are represented as 3-d boxes.
-//*-*     The height of the box is proportional to the cell content.
-//*-*
-//*-*    A lego plot can be represented in several coordinate systems.
-//*-*    Default system is Cartesian coordinates.
-//*-*    Possible systems are CYL,POL,SPH,PSR.
-//*-*
-//*-*   See TH1::Draw for the list of Lego options.
-//*-*   See TLego for more examples of lego options.
-//
-//      See TStyle::SetPalette to change the color palette.
-//      It is suggested to use palette 1 via the call
-//      gStyle->SetColorPalette(1)
-//
-//Begin_Html
-/*
-<img src="gif/PaintLego1.gif">
-*/
-//End_Html
-//*-*
-//*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
-
-   Int_t i;
-   Int_t raster = 1;
-   TH1 *hid;
-   gNIDS = 0;
-   hlist[0] = this;
-   if (Hparam.zmin == 0 && Hparam.zmax == 0) {Hparam.zmin = -1; Hparam.zmax = 1;}
-   Int_t   nx     = Hparam.xlast - Hparam.xfirst + 1;
-   Int_t   ny     = Hparam.ylast - Hparam.yfirst + 1;
-   Float_t zmin   = Hparam.zmin;
-   Float_t zmax   = Hparam.zmax;
-   Float_t xlab1  = Hparam.xmin;
-   Float_t xlab2  = Hparam.xmax;
-   Float_t ylab1  = Hparam.ymin;
-   Float_t ylab2  = Hparam.ymax;
-   Float_t dangle = 10*3.141592/180; //Delta angle for Rapidity option
-   Float_t z1c = zmin;
-   Float_t z2c = zmax*kHMAX;
-
-
-//*-*- Compute the lego limits and instantiate a lego object
-   xbuf[0] = -1;
-   ybuf[0] =  1;
-   xbuf[1] = -1;
-   ybuf[1] =  1;
-   if (Hoption.System == kPOLAR) {
-      xbuf[2] = z1c;
-      ybuf[2] = z2c;
-   } else if (Hoption.System == kCYLINDRICAL) {
-      if (Hoption.Logy) {
-         if (ylab1 > 0) xbuf[2] = TMath::Log10(ylab1);
-         else           xbuf[2] = 0;
-         if (ylab2 > 0) ybuf[2] = TMath::Log10(ylab2);
-         else           ybuf[2] = 0;
-      } else {
-         xbuf[2] = ylab1;
-         ybuf[2] = ylab2;
-      }
-      z1c = 0; z2c = 1;
-   } else if (Hoption.System == kSPHERICAL) {
-      xbuf[2] = -1;
-      ybuf[2] =  1;
-      z1c = 0; z2c = 1;
-   } else if (Hoption.System == kRAPIDITY) {
-      xbuf[2] = -1/TMath::Tan(dangle);
-      ybuf[2] =  1/TMath::Tan(dangle);
-   } else {
-      if (Hoption.Logx) {
-         if (xlab1 > 0) xbuf[0] = TMath::Log10(xlab1);
-         else           xbuf[0] = 0;
-         if (xlab2 > 0) ybuf[0] = TMath::Log10(xlab2);
-         else           ybuf[0] = 0;
-      } else {
-         xbuf[0] = xlab1;
-         ybuf[0] = xlab2;
-      }
-      if (Hoption.Logy) {
-         if (ylab1 > 0) xbuf[1] = TMath::Log10(ylab1);
-         else           xbuf[1] = 0;
-         if (ylab2 > 0) ybuf[1] = TMath::Log10(ylab2);
-         else           ybuf[1] = 0;
-      } else {
-         xbuf[1] = ylab1;
-         ybuf[1] = ylab2;
-      }
-      xbuf[2] = z1c;
-      ybuf[2] = z2c;
-      raster  = 0;
-   }
-
-   gLego = new TLego(xbuf, ybuf, Hoption.System);
-
-//*-*-      Create axis object
-
-   TGaxis *axis = new TGaxis();
-
-//*-*-              Initialize the levels on the Z axis
-   Int_t ndiv   = GetContour();
-   if (ndiv == 0 ) {
-      ndiv = 20;
-      SetContour(ndiv);
-   }
-   Int_t ndivz  = TMath::Abs(ndiv);
-
-//*-*- Initialize colors for the lighting model (option Lego1 only)
-   if (Hoption.Lego == 11) {
-      for (Int_t id=0;id<=gNIDS;id++) {
-         hid = hlist[id];
-         Color_t colormain = hid->GetFillColor();
-         if (colormain == 1) colormain = 17; //avoid drawing with black
-         Color_t colordark = colormain + 100;
-         gLego->SetColorMain(colormain,id);
-         gLego->SetColorDark(colordark,id);
-         if (id == 0)     gLego->SetColorMain(colormain,-1);  // Set Bottom color
-         if (id == gNIDS) gLego->SetColorMain(colormain,99);  // Set Top color
-      }
-   }
-
-//*-*- Now ready to draw the lego plot
-   Int_t irep = 0;
-
-   TView *view = gPad->GetView();
-   if (!view) {
-      Error("PaintLego", "no TView in current pad");
-      return;
-   }
-
-   Float_t thedeg =  90 - gPad->GetTheta();
-   Float_t phideg = -90 - gPad->GetPhi();
-   Float_t psideg = view->GetPsi();
-   view->SetView(phideg, thedeg, psideg, irep);
-
-   gLego->SetLineColor(GetLineColor());
-   gLego->SetFillStyle(GetFillStyle());
-
-//*-*- Set color/style for back box
-   gLego->SetFillStyle(gStyle->GetFrameFillStyle());
-   gLego->SetFillColor(gStyle->GetFrameFillColor());
-   gLego->TAttFill::Modify();
-
-   Int_t backcolor = gStyle->GetFrameFillColor();
-   if (Hoption.System != kCARTESIAN) backcolor = 0;
-   view->PadRange(backcolor);
-
-   gLego->SetFillStyle(GetFillStyle());
-   gLego->SetFillColor(GetFillColor());
-   gLego->TAttFill::Modify();
-
-   if (raster) gLego->InitRaster(-1.1,-1.1,1.1,1.1,1000,800);
-   else        gLego->InitMoveScreen(-1.1,1.1);
-
-   if (Hoption.Lego == 11 || Hoption.Lego == 12) {
-      gLego->SetLineColor(1);
-      if (Hoption.System == kCARTESIAN && Hoption.BackBox) {
-         gLego->SetDrawFace(&TLego::DrawFaceMove1);
-         gLego->BackBox(90);
-      }
-   }
-
-//*-*-             Initialize the colour levels
-   if (ndivz >= 100) {
-      Warning("PaintLego", "too many color levels, %d, reset to 8", ndivz);
-      ndivz = 8;
-   }
-   Float_t *funlevel = new Float_t[ndivz+1];
-   Int_t *colorlevel = new Int_t[ndivz+1];
-   Int_t lowcolor = GetFillColor();
-   Int_t theColor;
-   Int_t ncolors = gStyle->GetNumberOfColors();
-   for (i = 0; i < ndivz; ++i) {
-      funlevel[i]   = GetContourLevel(i);
-      theColor = lowcolor + Int_t(i*Float_t(ncolors)/Float_t(ndivz));
-      colorlevel[i] = gStyle->GetColorPalette(theColor);
-   }
-   colorlevel[ndivz] = gStyle->GetColorPalette(lowcolor+ncolors-1);
-   gLego->ColorFunction(ndivz, funlevel, colorlevel, irep);
-   delete [] colorlevel;
-   delete [] funlevel;
-
-   gLego->SetLegoFunction(&TLego::LegoFunction);
-   if (Hoption.Lego ==  1) gLego->SetDrawFace(&TLego::DrawFaceRaster2);
-   if (Hoption.Lego == 11) gLego->SetDrawFace(&TLego::DrawFaceMode3);
-   if (Hoption.Lego == 12) gLego->SetDrawFace(&TLego::DrawFaceMode2);
-   if (Hoption.System == kPOLAR) {
-      if (Hoption.Lego ==  1) gLego->LegoPolar(1,nx,ny,"FB");
-      if (Hoption.Lego == 11) gLego->LegoPolar(1,nx,ny,"BF");
-      if (Hoption.Lego == 12) gLego->LegoPolar(1,nx,ny,"BF");
-   } else if (Hoption.System == kCYLINDRICAL) {
-      if (Hoption.Lego ==  1) gLego->LegoCylindrical(1,nx,ny,"FB");
-      if (Hoption.Lego == 11) gLego->LegoCylindrical(1,nx,ny,"BF");
-      if (Hoption.Lego == 12) gLego->LegoCylindrical(1,nx,ny,"BF");
-   } else if (Hoption.System == kSPHERICAL) {
-      if (Hoption.Lego ==  1) gLego->LegoSpherical(0,1,nx,ny,"FB");
-      if (Hoption.Lego == 11) gLego->LegoSpherical(0,1,nx,ny,"BF");
-      if (Hoption.Lego == 12) gLego->LegoSpherical(0,1,nx,ny,"BF");
-   } else if (Hoption.System == kRAPIDITY) {
-      if (Hoption.Lego ==  1) gLego->LegoSpherical(1,1,nx,ny,"FB");
-      if (Hoption.Lego == 11) gLego->LegoSpherical(1,1,nx,ny,"BF");
-      if (Hoption.Lego == 12) gLego->LegoSpherical(1,1,nx,ny,"BF");
-   } else {
-      if (Hoption.Lego ==  1) {
-                              gLego->SetDrawFace(&TLego::DrawFaceMove2);
-                              gLego->LegoCartesian(90,nx,ny,"FB");}
-      if (Hoption.Lego == 11) gLego->LegoCartesian(90,nx,ny,"BF");
-      if (Hoption.Lego == 12) gLego->LegoCartesian(90,nx,ny,"BF");
-   }
-
-   if (Hoption.Lego == 1 || Hoption.Lego == 11) {
-      gLego->SetLineColor(1);
-      if (Hoption.System == kCARTESIAN && Hoption.BackBox) {
-         gLego->SetDrawFace(&TLego::DrawFaceMove1);
-         gLego->BackBox(90);
-      }
-   }
-   if (Hoption.System == kCARTESIAN) {
-      gLego->InitMoveScreen(-1.1,1.1);
-      gLego->SetDrawFace(&TLego::DrawFaceMove2);
-      if (Hoption.FrontBox) gLego->FrontBox(90);
-   }
-   if (!Hoption.Axis) PaintLegoAxis(axis, 90);
-   gNIDS = 0;
-   delete axis;
-   delete gLego; gLego = 0;
-}
-
-//______________________________________________________________________________
-void TH1::PaintLegoAxis(TGaxis *axis, Float_t ang)
-{
-//*-*-*-*-*-*-*Draw the axis for legos and surface plots*-*-*-*-*-*-*-*-*-*
-//*-*          =========================================
-//*-*
-
-    static Float_t epsil = 0.001;
-
-    Double_t cosa, sina;
-    Float_t bmin, bmax;
-    Float_t r[24]	/* was [3][8] */;
-    Int_t ndivx, ndivy, ndivz, i;
-    Float_t x1[3], x2[3], y1[3], y2[3], z1[3], z2[3], av[24]  /*  was [3][8] */;
-    static char chopax[8], chopay[8], chopaz[8];
-    Int_t ix1, ix2, iy1, iy2, iz1, iz2;
-    Double_t rad;
-
-//*-*-----------------------------------------------------------------------
-
-    if (Hoption.System != kCARTESIAN) return ;
-
-    rad = TMath::ATan(1.) * (float)4. / (float)180.;
-    cosa = TMath::Cos(ang*rad);
-    sina = TMath::Sin(ang*rad);
-
-    TView *view = gPad->GetView();
-	if (!view) {
-	   Error("PaintLegoAxis", "no TView in current pad");
-		return;
-	}
-	
-    view->AxisVertex(ang, av, ix1, ix2, iy1, iy2, iz1, iz2);
-    for (i = 1; i <= 8; ++i) {
-	r[i*3 - 3] = av[i*3 - 3] + av[i*3 - 2]*cosa;
-	r[i*3 - 2] = av[i*3 - 2]*sina;
-	r[i*3 - 1] = av[i*3 - 1];
-    }
-
-
-    view->WCtoNDC(&r[ix1*3 - 3], x1);
-    view->WCtoNDC(&r[ix2*3 - 3], x2);
-    view->WCtoNDC(&r[iy1*3 - 3], y1);
-    view->WCtoNDC(&r[iy2*3 - 3], y2);
-    view->WCtoNDC(&r[iz1*3 - 3], z1);
-    view->WCtoNDC(&r[iz2*3 - 3], z2);
-
-    view->SetAxisNDC(x1, x2, y1, y2, z1, z2);
-
-    Float_t *rmin = view->GetRmin();
-    Float_t *rmax = view->GetRmax();
-
-//*-*-             Initialize the axis options
-
-    if (x1[0] > x2[0]) strcpy(chopax, "SDHV=+");
-    else               strcpy(chopax, "SDHV=-");
-    if (y1[0] > y2[0]) strcpy(chopay, "SDHV=+");
-    else               strcpy(chopay, "SDHV=-");
-    strcpy(chopaz, "SDH+=");
-
-//*-*-             Option LOG is required ?
-
-    if (Hoption.Logx) strcat(chopax,"G");
-    if (Hoption.Logy) strcat(chopay,"G");
-    if (Hoption.Logz) strcat(chopaz,"G");
-
-//*-*-          Initialize the number of divisions. If the
-//*-*-          number of divisions is negative, option 'N' is required.
-
-    ndivx = fXaxis.GetNdivisions();
-    ndivy = fYaxis.GetNdivisions();
-    ndivz = fZaxis.GetNdivisions();
-    if (ndivx < 0) {
-	ndivx = TMath::Abs(ndivx);
-	chopax[6] = 'N';
-    }
-    if (ndivy < 0) {
-	ndivy = TMath::Abs(ndivy);
-	chopay[6] = 'N';
-    }
-    if (ndivz < 0) {
-	ndivz = TMath::Abs(ndivz);
-	chopaz[6] = 'N';
-    }
-
-//*-*-          Set Axis attributes.
-//*-*-          The variable SCALE  rescales the VSIZ
-//*-*-          in order to have the same label size for all angles.
-
-    axis->SetLineWidth(1);
-
-//*-*-          X axis drawing
-
-    if (TMath::Abs(x1[0] - x2[0]) >= epsil || TMath::Abs(x1[1] - x2[1]) > epsil) {
-        axis->SetLineColor(fXaxis.GetAxisColor());
-        axis->SetTextFont(fXaxis.GetLabelFont());
-	axis->SetTextColor(fXaxis.GetLabelColor());
-	axis->SetTickSize(fXaxis.GetTickLength());
-        axis->SetLabelFont(fXaxis.GetLabelFont());
-	axis->SetLabelOffset(fXaxis.GetLabelOffset()+fXaxis.GetTickLength());
-        axis->SetLabelSize(fXaxis.GetLabelSize());
-        axis->SetTitle((char*)fXaxis.GetTitle());
-        axis->SetTitleOffset(fXaxis.GetTitleOffset());
-        axis->SetTitleSize(fXaxis.GetTitleSize());
-        axis->SetBit(kCenterTitle, fXaxis.TestBit(kCenterTitle));
-	if (Hoption.Logx) {
-	    bmin = TMath::Power(10, rmin[0]);
-	    bmax = TMath::Power(10, rmax[0]);
-	} else {
-	    bmin = rmin[0];
-	    bmax = rmax[0];
-	}
-	axis->PaintAxis(x1[0], x1[1], x2[0], x2[1], bmin, bmax, ndivx, chopax);
-    }
-
-//*-*-          Y axis drawing
-
-    if (TMath::Abs(y1[0] - y2[0]) >= epsil || TMath::Abs(y1[1] - y2[1]) > epsil) {
-        axis->SetLineColor(fYaxis.GetAxisColor());
-        axis->SetTextFont(fYaxis.GetLabelFont());
-	axis->SetTextColor(fYaxis.GetLabelColor());
-	axis->SetTickSize(fYaxis.GetTickLength());
-        axis->SetLabelFont(fYaxis.GetLabelFont());
-	axis->SetLabelOffset(fYaxis.GetLabelOffset()+fYaxis.GetTickLength());
-        axis->SetLabelSize(fYaxis.GetLabelSize());
-        axis->SetTitle((char*)fYaxis.GetTitle());
-        axis->SetTitleOffset(fYaxis.GetTitleOffset());
-        axis->SetTitleSize(fYaxis.GetTitleSize());
-        axis->SetBit(kCenterTitle, fYaxis.TestBit(kCenterTitle));
-
-	if (TMath::Abs(z1[0] - z2[0]) < epsil && TMath::Abs(z1[1] - z2[1]) < epsil) {
-	    strcpy(chopay, "SDH+=N");
-	}
-	if (GetDimension() < 2) {
-	    strcpy(chopay, "V=+UN");
-	    ndivy = 0;
-	}
-	if (TMath::Abs(y1[0] - y2[0]) < epsil) {
-	    y2[0] = y1[0];
-	}
-	if (Hoption.Logy) {
-	    bmin = TMath::Power(10, rmin[1]);
-	    bmax = TMath::Power(10, rmax[1]);
-	} else {
-	    bmin = rmin[1];
-	    bmax = rmax[1];
-	}
-	axis->PaintAxis(y1[0], y1[1], y2[0], y2[1], bmin, bmax, ndivy, chopay);
-    }
-
-//*-*-          Z axis drawing
-
-    if (TMath::Abs(z1[0] - z2[0]) >= epsil || TMath::Abs(z1[1] - z2[1]) > epsil) {
-        axis->SetLineColor(fZaxis.GetAxisColor());
-        axis->SetTextFont(fZaxis.GetLabelFont());
-	axis->SetTextColor(fZaxis.GetLabelColor());
-	axis->SetTickSize(fZaxis.GetTickLength());
-        axis->SetLabelFont(fZaxis.GetLabelFont());
-	axis->SetLabelOffset(fZaxis.GetLabelOffset());
-        axis->SetLabelSize(fZaxis.GetLabelSize());
-        axis->SetTitle((char*)fZaxis.GetTitle());
-        axis->SetTitleOffset(fZaxis.GetTitleOffset());
-        axis->SetTitleSize(fZaxis.GetTitleSize());
-        axis->SetBit(kCenterTitle, fZaxis.TestBit(kCenterTitle));
-	if (Hoption.Logz) {
-	    bmin = TMath::Power(10, rmin[2]);
-	    bmax = TMath::Power(10, rmax[2]);
-	} else {
-	    bmin = rmin[2];
-	    bmax = rmax[2];
-	}
-	axis->PaintAxis(z1[0], z1[1], z2[0], z2[1], bmin, bmax, ndivz, chopaz);
-    }
-
-    SetLineStyle(1);
-}
-
-//______________________________________________________________________________
-void TH1::PaintScatterPlot()
-{
-//*-*-*-*-*-*-*-*Control function to draw a table as a scatter plot*-*-*-*-*
-//*-*            ==================================================
-//*-*
-//*-*    For each cell (i,j) a number of points proportional to the cell
-//*-*    content is drawn.
-//*-*    A maximum of 500 points per cell is drawn. If the maximum is above 500
-//*-*    contents are normalized to 500.
-//Begin_Html
-/*
-<img src="gif/PaintScatterPlot.gif">
-*/
-//End_Html
-//*-*
-//*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
-   TAttMarker::Modify();
-
-   Int_t k, marker;
-   Float_t dz, z, xk,xstep, yk, ystep;
-   Float_t scale = 1;
-   Bool_t ltest  = kFALSE;
-   Float_t zmax  = GetMaximum();
-   Float_t zmin  = GetMinimum();
-   if (zmin == 0 && zmax == 0) return;
-   Int_t ncells = (Hparam.ylast-Hparam.yfirst)*(Hparam.xlast-Hparam.xfirst);
-   if (Hoption.Logz) {
-      if (zmin > 0) zmin = TMath::Log10(zmin);
-      else          zmin = 0;
-      if (zmax > 0) zmax = TMath::Log10(zmax);
-      else          zmax = 0;
-      if (zmin == 0 && zmax == 0) return;
-      dz = zmax - zmin;
-      scale = 100/dz;
-      if (ncells > 10000) scale /= 5;
-      ltest = kTRUE;
-   } else {
-      dz = zmax - zmin;
-      if (dz >= kNMAX || zmax < 1) {
-         scale = (kNMAX-1)/dz;
-         if (ncells > 10000) scale /= 5;
-         ltest = kTRUE;
-      }
-   }
-   UInt_t seedsave = gRandom->GetSeed();
-   gRandom->SetSeed();
-   marker=0;
-   for (Int_t j=Hparam.yfirst; j<=Hparam.ylast;j++) {
-      yk    = fYaxis.GetBinLowEdge(j);
-      ystep = fYaxis.GetBinWidth(j);
-      for (Int_t i=Hparam.xfirst; i<=Hparam.xlast;i++) {
-         Int_t bin  = j*(fXaxis.GetNbins()+2) + i;
-         xk    = fXaxis.GetBinLowEdge(i);
-         xstep = fXaxis.GetBinWidth(i);
-         z     = GetBinContent(bin);
-         if (Hoption.Logz) {
-            if (z > 0) z = TMath::Log10(z) - zmin;
-         } else {
-            z    -=  zmin;
-         }
-         if (z <= 0) continue;
-         k = Int_t(z*scale);
-         if (ltest) k++;
-         if (k > 0) {
-            if (k+marker >= kNMAX) {
-               gPad->PaintPolyMarker(marker, xbuf, ybuf);
-               marker=0;
-            }
-            for (Int_t loop=0; loop<k; loop++) {
-               xbuf[marker] = (gRandom->Rndm(loop)*xstep) + xk;
-               ybuf[marker] = (gRandom->Rndm(loop)*ystep) + yk;
-               if (Hoption.Logx){
-                  if (xbuf[marker] > 0) xbuf[marker] = TMath::Log10(xbuf[marker]);
-                  else                  break;
-               }
-               if (Hoption.Logy){
-                  if (ybuf[marker] > 0) ybuf[marker] = TMath::Log10(ybuf[marker]);
-                  else                  break;
-               }
-               if (xbuf[marker] < gPad->GetUxmin()) break;
-               if (ybuf[marker] < gPad->GetUymin()) break;
-               if (xbuf[marker] > gPad->GetUxmax()) break;
-               if (ybuf[marker] > gPad->GetUymax()) break;
-               marker++;
-            }
-         }
-      }
-   }
-   if (marker > 0) gPad->PaintPolyMarker(marker, xbuf, ybuf);
-   gRandom->SetSeed(seedsave);
-}
-
-
-//______________________________________________________________________________
-void TH1::PaintStat(Int_t dostat, TF1 *fit)
-{
-//*-*-*-*-*-*-*-*-*-*-*-*Draw the statistics box*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
-//*-*                    =======================
-// The type of information printed in the histogram statistics box
-//  can be selected via gStyle->SetOptStat(mode).
-//  The parameter mode can be = ourmeni  (default = 0001111)
-//    n = 1;  name of histogram is printed
-//    e = 1;  number of entries printed
-//    m = 1;  mean value printed
-//    r = 1;  rms printed
-//    u = 1;  number of underflows printed
-//    o = 1;  number of overflows printed
-//    i = 1;  integral of bins printed
-//  Example: gStyle->SetOptStat(11);
-//           print only name of histogram and number of entries.
-//
-// The type of information about fit parameters printed in the histogram
-// statistics box can be selected via the parameter mode.
-//  The parameter mode can be = pcev  (default = 0111)
-//    v = 1;  print name/values of parameters
-//    e = 1;  print errors (if e=1, v must be 1)
-//    c = 1;  print Chisquare/Number of degress of freedom
-//    p = 1;  print Probability
-//  Example: gStyle->SetOptFit(1011);
-//           print fit probability, parameter names/values and errors.
-//
-
-   static char t[64];
-   Int_t dofit;
-   TPaveStats *stats  = (TPaveStats*)gPad->GetPrimitive("stats");
-   if (stats) {
-      dofit  = stats->GetOptFit();
-      dostat = stats->GetOptStat();
-   } else {
-      dofit  = gStyle->GetOptFit();
-   }
-   if (!dofit) fit = 0;
-   if (dofit  == 1) dofit  =  111;
-   if (dostat == 1) dostat = 1111;
-   Int_t print_name    = dostat%10;
-   Int_t print_entries = (dostat/10)%10;
-   Int_t print_mean    = (dostat/100)%10;
-   Int_t print_rms     = (dostat/1000)%10;
-   Int_t print_under   = (dostat/10000)%10;
-   Int_t print_over    = (dostat/100000)%10;
-   Int_t print_integral= (dostat/1000000)%10;
-   Int_t nlines = print_name + print_entries + print_mean + print_rms + print_under + print_over + print_integral;
-   Int_t print_fval    = dofit%10;
-   Int_t print_ferrors = (dofit/10)%10;
-   Int_t print_fchi2   = (dofit/100)%10;
-   Int_t print_fprob   = (dofit/1000)%10;
-   Int_t nlinesf = print_fval + print_fchi2 + print_fprob;
-   if (fit) nlinesf += fit->GetNpar();
-
-//*-*- Pavetext with statistics
-   Bool_t done = kFALSE;
-   if (!dostat && !fit) {
-      if (stats) delete stats;
-      return;
-   }
-   Float_t  statw  = gStyle->GetStatW();
-   if (fit) statw  = 1.8*gStyle->GetStatW();
-   Float_t  stath  = 0.25*(nlines+nlinesf)*gStyle->GetStatH();
-   if (stats) {
-      stats->Clear();
-      done = kTRUE;
-   } else {
-      stats  = new TPaveStats(
-               gStyle->GetStatX()-statw,
-               gStyle->GetStatY()-stath,
-               gStyle->GetStatX(),
-               gStyle->GetStatY(),"brNDC");
-      stats->SetOptFit(dofit);
-      stats->SetOptStat(dostat);
-      stats->SetFillColor(gStyle->GetStatColor());
-      stats->SetFillStyle(gStyle->GetStatStyle());
-      stats->SetBorderSize(gStyle->GetStatBorderSize());
-      stats->SetTextFont(gStyle->GetStatFont());
-      stats->SetName("stats");
-
-      stats->SetTextColor(1);
-      stats->SetTextAlign(12);
-      stats->SetBit(kCanDelete);
-   }
-   if (print_name)  stats->AddText((char*)GetName());
-   if (print_entries) {
-      if (fEntries < 1e7) sprintf(t,"Nent = %-7d",Int_t(fEntries));
-      else                sprintf(t,"Nent = %14.7g",Float_t(fEntries));
-      stats->AddText(t);
-   }
-   if (print_mean) {
-      sprintf(t,"Mean  = %6.4g",GetMean(1));
-      stats->AddText(t);
-   }
-   if (print_rms) {
-      sprintf(t,"RMS   = %6.4g",GetRMS(1));
-      stats->AddText(t);
-   }
-   if (print_under) {
-      sprintf(t,"Under = %6.4g",GetBinContent(0));
-      stats->AddText(t);
-   }
-   if (print_over) {
-      sprintf(t,"Over  = %6.4g",GetBinContent(fNcells-1));
-      stats->AddText(t);
-   }
-   if (print_integral) {
-      sprintf(t,"Integ = %6.4g",Integral());
-      stats->AddText(t);
-   }
-
-//     Draw Fit parameters
-   if (fit) {
-      Int_t ndf = fit->GetNumberFitPoints() - fit->GetNpar();
-      sprintf(t,"Chi2 / ndf = %6.4g / %d",(Float_t)fit->GetChisquare(),ndf);
-      if (print_fchi2) stats->AddText(t);
-      if (print_fprob) {
-         sprintf(t,"Prob  = %6.4g",(Float_t)TMath::Prob(fit->GetChisquare(),ndf));
-         stats->AddText(t);
-      }
-      if (print_fval || print_ferrors) {
-         for (Int_t ipar=0;ipar<fit->GetNpar();ipar++) {
-            if (print_ferrors) {
-               sprintf(t,"%-8s = %5.4g +- %5.4g ",fit->GetParName(ipar)
-                                       ,(Float_t)fit->GetParameter(ipar)
-                                       ,(Float_t)fit->GetParError(ipar));
-            } else {
-               sprintf(t,"%-8s = %5.4g ",fit->GetParName(ipar)
-                                       ,(Float_t)fit->GetParameter(ipar));
-            }
-            t[32] = 0;
-            stats->AddText(t);
-         }
-      }
-   }
-
-   if (!done) stats->Draw();
-   stats->Paint();
-}
-
-//______________________________________________________________________________
-void TH1::PaintStat2(Int_t dostat, TF1 *fit)
-{
-   // Draw the statistics box for 2D histogram.
-   // The type of information printed in the histogram statistics box
-   // can be selected via gStyle->SetOptStat(mode).
-   // The parameter mode can be = ourmen  (default = 001111)
-   //    n = 1;  name of histogram is printed
-   //    e = 1;  number of entries printed
-   //    m = 1;  mean value printed
-   //    r = 1;  rms printed
-   //    u = 1;  number of underflows printed
-   //    o = 1;  number of overflows printed
-   //    i = 1;  integral of bins printed
-   //  Example: gStyle->SetOptStat(11);
-   //           print only name of histogram and number of entries.
-
-   if (GetDimension() != 2) return;
-
-   static char t[64];
-   Int_t dofit;
-   TPaveStats *stats  = (TPaveStats*)gPad->GetPrimitive("stats");
-   if (stats) {
-      dofit  = stats->GetOptFit();
-      dostat = stats->GetOptStat();
-   } else {
-      dofit  = gStyle->GetOptFit();
-   }
-   if (dostat == 1) dostat = 1111;
-   Int_t print_name    = dostat%10;
-   Int_t print_entries = (dostat/10)%10;
-   Int_t print_mean    = (dostat/100)%10;
-   Int_t print_rms     = (dostat/1000)%10;
-   Int_t print_under   = (dostat/10000)%10;
-   Int_t print_over    = (dostat/100000)%10;
-   Int_t print_integral= (dostat/1000000)%10;
-   Int_t nlines = print_name + print_entries + 2*print_mean + 2*print_rms + print_integral;
-   if (print_under || print_over) nlines += 3;
-
-   // Pavetext with statistics
-   if (!gStyle->GetOptFit()) fit = 0;
-   Bool_t done = kFALSE;
-   if (!dostat && !fit) {
-      if (stats) delete stats;
-      return;
-   }
-   Float_t  statw  = gStyle->GetStatW();
-   if (fit) statw  = 1.8*gStyle->GetStatW();
-   Float_t  stath  = 0.25*nlines*gStyle->GetStatH();
-   if (fit) stath += gStyle->GetStatH();
-   if (stats) {
-      stats->Clear();
-      done = kTRUE;
-   } else {
-      stats  = new TPaveStats(
-               gStyle->GetStatX()-statw,
-               gStyle->GetStatY()-stath,
-               gStyle->GetStatX(),
-               gStyle->GetStatY(),"brNDC");
-      stats->SetOptFit(dofit);
-      stats->SetOptStat(dostat);
-      stats->SetFillColor(gStyle->GetStatColor());
-      stats->SetFillStyle(gStyle->GetStatStyle());
-      stats->SetBorderSize(gStyle->GetStatBorderSize());
-      stats->SetName("stats");
-
-      stats->SetTextColor(1);
-      stats->SetTextAlign(12);
-      stats->SetTextFont(gStyle->GetStatFont());
-      stats->SetBit(kCanDelete);
-   }
-   if (print_name)  stats->AddText((char*)GetName());
-   if (print_entries) {
-      if (fEntries < 1e7) sprintf(t,"Nent = %-7d",Int_t(fEntries));
-      else                sprintf(t,"Nent = %14.7g",Float_t(fEntries));
-      stats->AddText(t);
-   }
-   if (print_mean) {
-      sprintf(t,"Mean x = %6.4g",GetMean(1));
-      stats->AddText(t);
-      sprintf(t,"Mean y = %6.4g",GetMean(2));
-      stats->AddText(t);
-   }
-   if (print_rms) {
-      sprintf(t,"RMS x  = %6.4g",GetRMS(1));
-      stats->AddText(t);
-      sprintf(t,"RMS y  = %6.4g",GetRMS(2));
-      stats->AddText(t);
-   }
-   if (print_under || print_over) {
-      //get 3*3 under/overflows for 2d hist
-      Stat_t unov[9];
-      Int_t nx = GetNbinsX();
-      Int_t ny = GetNbinsY();
-
-      unov[0] = Integral(0,0,ny+1,ny+1);
-      unov[1] = Integral(1,nx,ny+1,ny+1);
-      unov[2] = Integral(nx+1,nx+1,ny+1,ny+1);
-      unov[3] = Integral(0,0,1,ny);
-      unov[4] = Integral(1,nx,1,ny);
-      unov[5] = Integral(nx+1,nx+1,1,ny);
-      unov[6] = Integral(0,0,0,0);
-      unov[7] = Integral(1,nx,0,0);
-      unov[8] = Integral(nx+1,nx+1,0,0);
-
-      sprintf(t, " %7d %7d %7d\n", (Int_t)unov[0], (Int_t)unov[1], (Int_t)unov[2]);
-      stats->AddText(t);
-      if (fEntries < 1e7)
-         sprintf(t, " %7d %7d %7d\n", (Int_t)unov[3], (Int_t)unov[4], (Int_t)unov[5]);
-      else
-         sprintf(t, " %7d %14.7g %7d\n", (Int_t)unov[3], (Float_t)unov[4], (Int_t)unov[5]);
-      stats->AddText(t);
-      sprintf(t, " %7d %7d %7d\n", (Int_t)unov[6], (Int_t)unov[7], (Int_t)unov[8]);
-      stats->AddText(t);
-   }
-   if (print_integral) {
-      sprintf(t,"Integ  = %6.4g",Integral());
-      stats->AddText(t);
-   }
-
-   // Draw Fit parameters
-   if (fit) {
-      Int_t ndf = fit->GetNumberFitPoints() - fit->GetNpar();
-      sprintf(t,"Chi2 / ndf = %6.4g / %d",(Float_t)fit->GetChisquare(),ndf);
-      stats->AddText(t);
-      for (Int_t ipar=0;ipar<fit->GetNpar();ipar++) {
-         sprintf(t,"%-8s = %5.4g +- %5.4g ",fit->GetParName(ipar)
-                                       ,(Float_t)fit->GetParameter(ipar)
-                                       ,(Float_t)fit->GetParError(ipar));
-         t[32] = 0;
-         stats->AddText(t);
-      }
-   }
-
-   if (!done) stats->Draw();
-   stats->Paint();
-}
-
-//______________________________________________________________________________
-void TH1::PaintSurface()
-{
-//*-*-*-*-*-*-*-*Control function to draw a table as a surface plot*-*-*-*-*-*
-//*-*            ==================================================
-//*-*
-//*-*     In a surface plot, cell contents are represented as a mesh.
-//*-*     The height of the mesh is proportional to the cell content.
-//*-*
-//*-*    A surface plot can be represented in several coordinate systems.
-//*-*    Default system is Cartesian coordinates.
-//*-*    Possible systems are CYL,POL,SPH,PSR.
-//*-*
-//*-*   See TH1::Draw for a list of Surface options
-//*-*  The following picture is generated with option SURF1.
-//
-//      See TStyle::SetPalette to change the color palette.
-//      It is suggested to use palette 1 via the call
-//      gStyle->SetColorPalette(1)
-//
-//Begin_Html
-/*
-<img src="gif/PaintSurface1.gif">
-*/
-//End_Html
-//*-*  The following picture is generated with option SURF3.
-//Begin_Html
-/*
-<img src="gif/PaintSurface3.gif">
-*/
-//End_Html
-//*-*
-//*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
-   const Float_t ydiff = 1;
-   const Float_t yligh1 = 10;
-   const Float_t qa = 0.15;
-   const Float_t qd = 0.15;
-   const Float_t qs = 0.8;
-   Float_t fmin, fmax;
-   Int_t i;
-   Int_t raster = 0;
-   Int_t irep   = 0;
-
-   gNIDS        = 0;
-
-   if (Hparam.zmin == 0 && Hparam.zmax == 0) {Hparam.zmin = -1; Hparam.zmax = 1;}
-   Int_t   nx     = Hparam.xlast - Hparam.xfirst;
-   Int_t   ny     = Hparam.ylast - Hparam.yfirst;
-   Float_t zmin   = Hparam.zmin;
-   Float_t zmax   = Hparam.zmax;
-   Float_t xlab1  = Hparam.xmin;
-   Float_t xlab2  = Hparam.xmax;
-   Float_t ylab1  = Hparam.ymin;
-   Float_t ylab2  = Hparam.ymax;
-   Float_t dangle = 10*3.141592/180; //Delta angle for Rapidity option
-   Float_t z1c = zmin;
-   Float_t z2c = zmax*kHMAX;
-
-
-//*-*- Compute the lego limits and instantiate a lego object
-   xbuf[0] = -1;
-   ybuf[0] =  1;
-   xbuf[1] = -1;
-   ybuf[1] =  1;
-   if (Hoption.System >= kPOLAR && (Hoption.Surf == 1 || Hoption.Surf == 13)) raster = 1;
-   if (Hoption.System == kPOLAR) {
-      xbuf[2] = z1c;
-      ybuf[2] = z2c;
-   } else if (Hoption.System == kCYLINDRICAL) {
-      if (Hoption.Logy) {
-         if (ylab1 > 0) xbuf[2] = TMath::Log10(ylab1);
-         else           xbuf[2] = 0;
-         if (ylab2 > 0) ybuf[2] = TMath::Log10(ylab2);
-         else           ybuf[2] = 0;
-      } else {
-         xbuf[2] = ylab1;
-         ybuf[2] = ylab2;
-      }
-      z1c = 0; z2c = 1;
-   } else if (Hoption.System == kSPHERICAL) {
-      xbuf[2] = -1;
-      ybuf[2] =  1;
-      z1c = 0; z2c = 1;
-   } else if (Hoption.System == kRAPIDITY) {
-      xbuf[2] = -1/TMath::Tan(dangle);
-      ybuf[2] =  1/TMath::Tan(dangle);
-   } else {
-      if (Hoption.Logx) {
-         if (xlab1 > 0) xbuf[0] = TMath::Log10(xlab1);
-         else           xbuf[0] = 0;
-         if (xlab2 > 0) ybuf[0] = TMath::Log10(xlab2);
-         else           ybuf[0] = 0;
-      } else {
-         xbuf[0] = xlab1;
-         ybuf[0] = xlab2;
-      }
-      if (Hoption.Logy) {
-         if (ylab1 > 0) xbuf[1] = TMath::Log10(ylab1);
-         else           xbuf[1] = 0;
-         if (ylab2 > 0) ybuf[1] = TMath::Log10(ylab2);
-         else           ybuf[1] = 0;
-      } else {
-         xbuf[1] = ylab1;
-         ybuf[1] = ylab2;
-      }
-      xbuf[2] = z1c;
-      ybuf[2] = z2c;
-   }
-
-   gLego = new TLego(xbuf, ybuf, Hoption.System);
-
-//*-*-      Create axis object
-
-   TGaxis *axis = new TGaxis();
-
-//*-*-              Initialize the levels on the Z axis
-   Int_t ndiv   = GetContour();
-   if (ndiv == 0 ) {
-      ndiv = 20;
-      SetContour(ndiv);
-   }
-   Int_t ndivz  = TMath::Abs(ndiv);
-
-//*-*- Initialize colors for the lighting model
-   Color_t colormain = GetFillColor();
-   if (colormain == 1) colormain = 17; //avoid drawing with black
-   Color_t colordark = colormain + 100;
-   gLego->SetColorMain(colormain,0);
-   gLego->SetColorDark(colordark,0);
-   gLego->SetColorMain(colormain,-1);  // Set Bottom color
-   gLego->SetColorMain(colormain,99);  // Set Top color
-   if (Hoption.Surf == 13) gLego->SetMesh(3);
-   if (Hoption.Surf == 12 || Hoption.Surf == 14) gLego->SetMesh(0);
-
-//*-*- Close the surface in case of non cartesian coordinates.
-
-   if (Hoption.System != kCARTESIAN) {nx++; ny++;}
-
-//*-*-             Initialize the colour levels
-   if (ndivz >= 100) {
-      Warning("PaintSurface", "too many color levels, %d, reset to 8", ndivz);
-      ndivz = 8;
-   }
-   Float_t *funlevel = new Float_t[ndivz+1];
-   Int_t *colorlevel = new Int_t[ndivz+1];
-   Int_t lowcolor = GetFillColor();
-   Int_t theColor;
-   Int_t ncolors = gStyle->GetNumberOfColors();
-   for (i = 0; i < ndivz; ++i) {
-      funlevel[i]   = GetContourLevel(i);
-      theColor = lowcolor + Int_t(i*Float_t(ncolors)/Float_t(ndivz));
-      colorlevel[i] = gStyle->GetColorPalette(theColor);
-   }
-   colorlevel[ndivz] = gStyle->GetColorPalette(lowcolor+ncolors-1);
-   gLego->ColorFunction(ndivz, funlevel, colorlevel, irep);
-   delete [] colorlevel;
-   delete [] funlevel;
-
-//*-*- Now ready to draw the surface plot
-
-   TView *view = gPad->GetView();
-   if (!view) {
-      Error("PaintSurface", "no TView in current pad");
-      return;
-   }
-
-   Float_t thedeg =  90 - gPad->GetTheta();
-   Float_t phideg = -90 - gPad->GetPhi();
-   Float_t psideg = view->GetPsi();
-   view->SetView(phideg, thedeg, psideg, irep);
-
-//*-*- Set color/style for back box
-   gLego->SetFillStyle(gStyle->GetFrameFillStyle());
-   gLego->SetFillColor(gStyle->GetFrameFillColor());
-   gLego->TAttFill::Modify();
-
-   Int_t backcolor = gStyle->GetFrameFillColor();
-   if (Hoption.System != kCARTESIAN) backcolor = 0;
-   view->PadRange(backcolor);
-
-   gLego->SetFillStyle(GetFillStyle());
-   gLego->SetFillColor(GetFillColor());
-   gLego->TAttFill::Modify();
-
-//*-*- Draw the filled contour on top
-   Int_t icol1 = GetFillColor();
-
-   if (Hoption.Surf == 13) {
-      Hoption.Surf = 23;
-      gLego->SetSurfaceFunction(&TLego::SurfaceFunction);
-      gLego->SetDrawFace(&TLego::DrawFaceMode2);
-      nx--; ny--;
-      if (Hoption.System == kPOLAR)       gLego->SurfacePolar(1,nx,ny,"BF");
-      if (Hoption.System == kCYLINDRICAL) gLego->SurfaceCylindrical(1,nx,ny,"BF");
-      if (Hoption.System == kSPHERICAL)   gLego->SurfaceSpherical(0,1,nx,ny,"BF");
-      if (Hoption.System == kRAPIDITY )   gLego->SurfaceSpherical(1,1,nx,ny,"BF");
-      if (Hoption.System == kCARTESIAN)   gLego->SurfaceCartesian(90,nx,ny,"BF");
-      Hoption.Surf = 13;
-      gLego->SetMesh(1);
-   }
-
-   if (raster) gLego->InitRaster(-1.1,-1.1,1.1,1.1,1000,800);
-   else        gLego->InitMoveScreen(-1.1,1.1);
-
-   if (Hoption.Surf == 11 || Hoption.Surf == 12 || Hoption.Surf == 14) {
-      gLego->SetLineColor(1);
-      if (Hoption.System == kCARTESIAN && Hoption.BackBox) {
-         gLego->SetDrawFace(&TLego::DrawFaceMove1);
-         gLego->BackBox(90);
-      }
-   }
-
-//*-*- Gouraud Shading surface
-   if (Hoption.Surf == 14) {
-//*-* Set light sources
-      gLego->LightSource(0, ydiff, 0,0,0,irep);
-      gLego->LightSource(1, yligh1 ,1,1,1,irep);
-      gLego->SurfaceProperty(qa, qd, qs, 1, irep);
-      fmin = ydiff*qa;
-      fmax = fmin + (yligh1+0.1)*(qd+qs);
-      Int_t nbcol = 28;
-      icol1 = 201;
-      Float_t dcol = 0.5/Float_t(nbcol);
-      TColor *colref = gROOT->GetColor(GetFillColor());
-      Float_t r,g,b,hue,light,satur;
-      colref->GetRGB(r,g,b);
-      colref->RGBtoHLS(r,g,b,hue,light,satur);
-      TColor *acol;
-      for (Int_t col=0;col<nbcol;col++) {
-         acol = gROOT->GetColor(col+icol1);
-         acol->HLStoRGB(hue,.4+col*dcol,satur,r,g,b);
-         acol->SetRGB(r,g,b);
-      }
-      gLego->Spectrum(nbcol, fmin, fmax, icol1, 1, irep);
-      gLego->SetSurfaceFunction(&TLego::GouraudFunction);
-      gLego->SetDrawFace(&TLego::DrawFaceMode2);
-      if (Hoption.System == kPOLAR)       gLego->SurfacePolar(1,nx,ny,"BF");
-      if (Hoption.System == kCYLINDRICAL) gLego->SurfaceCylindrical(1,nx,ny,"BF");
-      if (Hoption.System == kSPHERICAL)   gLego->SurfaceSpherical(0,1,nx,ny,"BF");
-      if (Hoption.System == kRAPIDITY )   gLego->SurfaceSpherical(1,1,nx,ny,"BF");
-      if (Hoption.System == kCARTESIAN)   gLego->SurfaceCartesian(90,nx,ny,"BF");
-   }
-   else {
-//*-*- Draw the surface
-      gLego->SetSurfaceFunction(&TLego::SurfaceFunction);
-      if (Hoption.Surf ==  1 || Hoption.Surf == 13) gLego->SetDrawFace(&TLego::DrawFaceRaster1);
-      if (Hoption.Surf == 11 || Hoption.Surf == 12) gLego->SetDrawFace(&TLego::DrawFaceMode2);
-      if (Hoption.System == kPOLAR) {
-         if (Hoption.Surf ==  1 || Hoption.Surf == 13) gLego->SurfacePolar(1,nx,ny,"FB");
-         if (Hoption.Surf == 11 || Hoption.Surf == 12) gLego->SurfacePolar(1,nx,ny,"BF");
-      } else if (Hoption.System == kCYLINDRICAL) {
-         if (Hoption.Surf ==  1 || Hoption.Surf == 13) gLego->SurfaceCylindrical(1,nx,ny,"FB");
-         if (Hoption.Surf == 11 || Hoption.Surf == 12) gLego->SurfaceCylindrical(1,nx,ny,"BF");
-      } else if (Hoption.System == kSPHERICAL) {
-         if (Hoption.Surf ==  1 || Hoption.Surf == 13) gLego->SurfaceSpherical(0,1,nx,ny,"FB");
-         if (Hoption.Surf == 11 || Hoption.Surf == 12) gLego->SurfaceSpherical(0,1,nx,ny,"BF");
-      } else if (Hoption.System == kRAPIDITY) {
-         if (Hoption.Surf ==  1 || Hoption.Surf == 13) gLego->SurfaceSpherical(1,1,nx,ny,"FB");
-         if (Hoption.Surf == 11 || Hoption.Surf == 12) gLego->SurfaceSpherical(1,1,nx,ny,"BF");
-      } else {
-         if (Hoption.Surf ==  1 || Hoption.Surf == 13) gLego->SetDrawFace(&TLego::DrawFaceMove1);
-         if (Hoption.Surf ==  1 || Hoption.Surf == 13) gLego->SurfaceCartesian(90,nx,ny,"FB");
-         if (Hoption.Surf == 11 || Hoption.Surf == 12) gLego->SurfaceCartesian(90,nx,ny,"BF");
-      }
-   }
-
-   if (Hoption.Surf == 1 || Hoption.Surf == 13) {
-      gLego->SetLineColor(1);
-      if (Hoption.System == kCARTESIAN && Hoption.BackBox) {
-         gLego->SetDrawFace(&TLego::DrawFaceMove1);
-         gLego->BackBox(90);
-      }
-   }
-   if (Hoption.System == kCARTESIAN) {
-      gLego->InitMoveScreen(-1.1,1.1);
-      gLego->SetDrawFace(&TLego::DrawFaceMove2);
-      if (Hoption.FrontBox) gLego->FrontBox(90);
-   }
-   if (!Hoption.Axis) PaintLegoAxis(axis, 90);
-   gNIDS = 0;
-   delete axis;
-   delete gLego; gLego = 0;
-}
-
-
-//______________________________________________________________________________
-void TH1::PaintTable()
-{
-//*-*-*-*-*-*-*-*-*-*Control function to draw 2-D/3-D tables*-*-*-*-*-*-*-*
-//*-*                =======================================
-
-   if (!TableInit()) return;  //fill Hparam structure with histo parameters
-
-   PaintFrame();
-
-   if (fEntries >= 0) {
-      if (Hoption.Scat)    PaintScatterPlot();
-      if (Hoption.Arrow)   PaintArrows();
-      if (Hoption.Box)     PaintBoxes();
-      if (Hoption.Color)   PaintColorLevels();
-      if (Hoption.Contour) PaintContour();
-   }
-   if (Hoption.Lego)    PaintLego();
-   if (Hoption.Surf && !Hoption.Contour)    PaintSurface();
-
-   if (!Hoption.Lego && !Hoption.Surf) PaintAxis();     //*-* Draw the axes
-
-   PaintTitle();    //*-* Draw histogram title
-//   PaintFile();     //*-* Draw Current File name corresp to current directory
-//   PaintDate();     //*-* Draw date/time
-   if (!Hoption.Same && !Hoption.Lego && !Hoption.Surf) {
-      TF2 *fit = (TF2*)fFunctions->First();
-      if (!TestBit(kNoStats)) {  // bit set via TH1::SetStats
-         PaintStat2(gStyle->GetOptStat(),fit);
-      }
-   }
+   if (!fPainter) fPainter = TVirtualHistPainter::HistPainter(this);
+   if (fPainter) fPainter->Paint(option);
 }
 
 //______________________________________________________________________________
@@ -5539,7 +2588,7 @@ TProfile *TH1::ProfileX(const char *name, Int_t firstybin, Int_t lastybin, Optio
   Int_t nx = fXaxis.GetNbins();
   Int_t ny = fYaxis.GetNbins();
   if (firstybin < 0) firstybin = 0;
-  if (lastybin > ny) lastybin = ny;
+  if (lastybin > ny) lastybin = ny+1;
 
 // Create the profile histogram
   char *pname = (char*)name;
@@ -5548,13 +2597,13 @@ TProfile *TH1::ProfileX(const char *name, Int_t firstybin, Int_t lastybin, Optio
      pname = new char[nch];
      sprintf(pname,"%s%s",GetName(),name);
   }
-  TProfile *h1 = new TProfile(pname,(char*)GetTitle(),nx,fXaxis.GetXmin(),fXaxis.GetXmax(),option);
+  TProfile *h1 = new TProfile(pname,GetTitle(),nx,fXaxis.GetXmin(),fXaxis.GetXmax(),option);
   if (pname != name)  delete [] pname;
 
 // Fill the profile histogram
   Double_t cont;
   Double_t entries = 0;
-  for (Int_t binx =0;binx<=nx;binx++) {
+  for (Int_t binx =0;binx<=nx+1;binx++) {
      for (Int_t biny=firstybin;biny<=lastybin;biny++) {
         cont =  GetCellContent(binx,biny);
         if (cont) {
@@ -5587,7 +2636,7 @@ TProfile *TH1::ProfileY(const char *name, Int_t firstxbin, Int_t lastxbin, Optio
   Int_t nx = fXaxis.GetNbins();
   Int_t ny = fYaxis.GetNbins();
   if (firstxbin < 0) firstxbin = 0;
-  if (lastxbin > nx) lastxbin = nx;
+  if (lastxbin > nx) lastxbin = nx+1;
 
 // Create the projection histogram
   char *pname = (char*)name;
@@ -5596,13 +2645,13 @@ TProfile *TH1::ProfileY(const char *name, Int_t firstxbin, Int_t lastxbin, Optio
      pname = new char[nch];
      sprintf(pname,"%s%s",GetName(),name);
   }
-  TProfile *h1 = new TProfile(pname,(char*)GetTitle(),nx,fYaxis.GetXmin(),fYaxis.GetXmax(),option);
+  TProfile *h1 = new TProfile(pname,GetTitle(),nx,fYaxis.GetXmin(),fYaxis.GetXmax(),option);
   if (pname != name)  delete [] pname;
 
 // Fill the profile histogram
   Double_t cont;
   Double_t entries = 0;
-  for (Int_t biny =0;biny<=ny;biny++) {
+  for (Int_t biny =0;biny<=ny+1;biny++) {
      for (Int_t binx=firstxbin;binx<=lastxbin;binx++) {
         cont =  GetCellContent(binx,biny);
         if (cont) {
@@ -5625,7 +2674,7 @@ TH1D *TH1::ProjectionX(const char *name, Int_t firstybin, Int_t lastybin, Option
 //   The projection is made from the channels along the Y axis
 //   ranging from firstybin to lastybin included.
 //
-//   if option 'E" is specified, the errors are computed.
+//   if option "E" is specified, the errors are computed.
 //
 
 // Check if this is a 2-d histogram
@@ -5638,7 +2687,7 @@ TH1D *TH1::ProjectionX(const char *name, Int_t firstybin, Int_t lastybin, Option
   Int_t nx = fXaxis.GetNbins();
   Int_t ny = fYaxis.GetNbins();
   if (firstybin < 0) firstybin = 0;
-  if (lastybin > ny) lastybin = ny;
+  if (lastybin > ny) lastybin = ny+1;
 
 // Create the projection histogram
   char *pname = (char*)name;
@@ -5682,7 +2731,7 @@ TH1D *TH1::ProjectionY(const char *name, Int_t firstxbin, Int_t lastxbin, Option
 //   The projection is made from the channels along the X axis
 //   ranging from firstxbin to lastxbin included.
 //
-//   if option 'E" is specified, the errors are computed.
+//   if option "E" is specified, the errors are computed.
 //
 
 // Check if this is a 2-d histogram
@@ -5695,7 +2744,7 @@ TH1D *TH1::ProjectionY(const char *name, Int_t firstxbin, Int_t lastxbin, Option
   Int_t nx = fXaxis.GetNbins();
   Int_t ny = fYaxis.GetNbins();
   if (firstxbin < 0) firstxbin = 0;
-  if (lastxbin > nx) lastxbin = nx;
+  if (lastxbin > nx) lastxbin = nx+1;
 
 // Create the projection histogram
   char *pname = (char*)name;
@@ -5739,23 +2788,24 @@ TH1D *TH1::ProjectionZ(const char *name, Int_t ixmin, Int_t ixmax, Int_t iymin, 
 //   The projection is made from the cells along the X axis
 //   ranging from ixmin to ixmax and iymin to iymax included.
 //
-//   if option 'E" is specified, the errors are computed.
+//   if option "E" is specified, the errors are computed.
 //
 //   code from Paola Collins & Hans Dijkstra
 
   if (GetDimension() != 3){
-     printf("Error in ProjectionZ: histogram is not 3d \n");
+     Error("ProjectionZ", "Not a 3-D histogram");
      return 0;
   }
 
   TString opt = option;
+  opt.ToLower();
   Int_t nx = GetNbinsX();
   Int_t ny = GetNbinsY();
   Int_t nz = GetNbinsZ();
   if (ixmin < 0)  ixmin = 0;
-  if (ixmax > nx) ixmax = nx;
+  if (ixmax > nx) ixmax = nx+1;
   if (iymin < 0)  iymin = 0;
-  if (iymax > nx) iymax = ny;
+  if (iymax > ny) iymax = ny+1;
 
 // Create the projection histogram
   char *pname = (char*)name;
@@ -5796,6 +2846,224 @@ TH1D *TH1::ProjectionZ(const char *name, Int_t ixmin, Int_t ixmax, Int_t iymin, 
 }
 
 //______________________________________________________________________________
+TH1 *TH1::Project3D(Option_t *option)
+{
+   // Project a 3-d histogram into 1 or 2-d histograms depending on the
+   // option parameter
+   // option may contain a combination of the characters x,y,z,e
+   // option = "x" return the x projection into a TH1D histogram
+   // option = "y" return the y projection into a TH1D histogram
+   // option = "z" return the z projection into a TH1D histogram
+   // option = "xy" return the x versus y projection into a TH2D histogram
+   // option = "yx" return the y versus x projection into a TH2D histogram
+   // option = "xz" return the x versus z projection into a TH2D histogram
+   // option = "zx" return the z versus x projection into a TH2D histogram
+   // option = "yz" return the y versus z projection into a TH2D histogram
+   // option = "zy" return the z versus y projection into a TH2D histogram
+   //
+   // If option contains the string "e", errors are computed
+   //
+   // The projection is made for the selected bins only
+
+  if (GetDimension() != 3) {
+     Error("Project3D", "Not a 3-D histogram");
+     return 0;
+  }
+
+  TString opt = option; opt.ToLower();
+  Int_t ixmin = fXaxis.GetFirst();
+  Int_t ixmax = fXaxis.GetLast();
+  Int_t iymin = fYaxis.GetFirst();
+  Int_t iymax = fYaxis.GetLast();
+  Int_t izmin = fZaxis.GetFirst();
+  Int_t izmax = fZaxis.GetLast();
+  Int_t nx = ixmax-ixmin+1;
+  Int_t ny = iymax-iymin+1;
+  Int_t nz = izmax-izmin+1;
+  Int_t pcase = 0;
+  if (opt.Contains("x"))  pcase = 1;
+  if (opt.Contains("y"))  pcase = 2;
+  if (opt.Contains("z"))  pcase = 3;
+  if (opt.Contains("xy")) pcase = 4;
+  if (opt.Contains("yx")) pcase = 5;
+  if (opt.Contains("xz")) pcase = 6;
+  if (opt.Contains("zx")) pcase = 7;
+  if (opt.Contains("yz")) pcase = 8;
+  if (opt.Contains("zy")) pcase = 9;
+
+// Create the projection histogram
+  TH1 *h = 0;
+  Int_t nch = strlen(GetName()) +opt.Length() +2;
+  char *name = new char[nch];
+  sprintf(name,"%s_%s",GetName(),option);
+  nch = strlen(GetTitle()) +opt.Length() +2;
+  char *title = new char[nch];
+  sprintf(title,"%s_%s",GetTitle(),option);
+  switch (pcase) {
+     case 1:
+        h = new TH1D(name,title,nx,fXaxis.GetBinLowEdge(ixmin),fXaxis.GetBinUpEdge(ixmax));
+        break;
+
+     case 2:
+        h = new TH1D(name,title,ny,fYaxis.GetBinLowEdge(iymin),fYaxis.GetBinUpEdge(iymax));
+        break;
+
+     case 3:
+        h = new TH1D(name,title,nz,fZaxis.GetBinLowEdge(izmin),fZaxis.GetBinUpEdge(izmax));
+        break;
+
+     case 4:
+        h = new TH2D(name,title,ny,fYaxis.GetBinLowEdge(iymin),fYaxis.GetBinUpEdge(iymax)
+                               ,nx,fXaxis.GetBinLowEdge(ixmin),fXaxis.GetBinUpEdge(ixmax));
+        break;
+
+     case 5:
+        h = new TH2D(name,title,nx,fXaxis.GetBinLowEdge(ixmin),fXaxis.GetBinUpEdge(ixmax)
+                               ,ny,fYaxis.GetBinLowEdge(iymin),fYaxis.GetBinUpEdge(iymax));
+        break;
+
+     case 6:
+        h = new TH2D(name,title,nz,fZaxis.GetBinLowEdge(izmin),fZaxis.GetBinUpEdge(izmax)
+                               ,nx,fXaxis.GetBinLowEdge(ixmin),fXaxis.GetBinUpEdge(ixmax));
+        break;
+
+     case 7:
+        h = new TH2D(name,title,nx,fXaxis.GetBinLowEdge(ixmin),fXaxis.GetBinUpEdge(ixmax)
+                               ,nz,fZaxis.GetBinLowEdge(izmin),fZaxis.GetBinUpEdge(izmax));
+        break;
+
+     case 8:
+        h = new TH2D(name,title,nz,fZaxis.GetBinLowEdge(izmin),fZaxis.GetBinUpEdge(izmax)
+                               ,ny,fYaxis.GetBinLowEdge(iymin),fYaxis.GetBinUpEdge(iymax));
+        break;
+
+     case 9:
+        h = new TH2D(name,title,ny,fYaxis.GetBinLowEdge(iymin),fYaxis.GetBinUpEdge(iymax)
+                               ,nz,fZaxis.GetBinLowEdge(izmin),fZaxis.GetBinUpEdge(izmax));
+        break;
+
+     }
+  delete [] name;
+  delete [] title;
+  if (h == 0) return h;
+
+  Bool_t computeErrors = kFALSE;
+  if (opt.Contains("e")) {h->Sumw2(); computeErrors = kTRUE;}
+
+// Fill the projected histogram
+  Float_t cont,e,e1;
+  Double_t entries  = 0;
+  Double_t newerror = 0;
+  for (Int_t ixbin=ixmin;ixbin<=ixmax;ixbin++){
+     Int_t ix = ixbin-ixmin+1;
+     for (Int_t iybin=iymin;iybin<=iymax;iybin++){
+        Int_t iy = iybin-iymin+1;
+        for (Int_t izbin=izmin;izbin<=izmax;izbin++){
+           Int_t iz = izbin-izmin+1;
+           Int_t bin = GetBin(ixbin,iybin,izbin);
+           cont = GetBinContent(bin);
+           switch (pcase) {
+           case 1:
+              if (cont) h->Fill(fXaxis.GetBinCenter(ixbin), cont);
+              if (computeErrors) {
+                 e        = GetBinError(bin);
+                 e1       = h->GetBinError(ix);
+                 newerror = TMath::Sqrt(e*e + e1*e1);
+                 h->SetBinError(ix,newerror);
+              }
+              break;
+
+           case 2:
+              if (cont) h->Fill(fYaxis.GetBinCenter(iybin), cont);
+              if (computeErrors) {
+                 e        = GetBinError(bin);
+                 e1       = h->GetBinError(iy);
+                 newerror = TMath::Sqrt(e*e + e1*e1);
+                 h->SetBinError(iy,newerror);
+              }
+              break;
+
+           case 3:
+              if (cont) h->Fill(fZaxis.GetBinCenter(izbin), cont);
+              if (computeErrors) {
+                 e        = GetBinError(bin);
+                 e1       = h->GetBinError(iz);
+                 newerror = TMath::Sqrt(e*e + e1*e1);
+                 h->SetBinError(iz,newerror);
+              }
+              break;
+
+           case 4:
+              if (cont) h->Fill(fYaxis.GetBinCenter(iybin),fXaxis.GetBinCenter(ixbin), cont);
+              if (computeErrors) {
+                 e        = GetBinError(bin);
+                 e1       = h->GetCellError(iy,ix);
+                 newerror = TMath::Sqrt(e*e + e1*e1);
+                 h->SetCellError(iy,ix,newerror);
+              }
+              break;
+
+           case 5:
+              if (cont) h->Fill(fXaxis.GetBinCenter(ixbin),fYaxis.GetBinCenter(iybin), cont);
+              if (computeErrors) {
+                 e        = GetBinError(bin);
+                 e1       = h->GetCellError(ix,iy);
+                 newerror = TMath::Sqrt(e*e + e1*e1);
+                 h->SetCellError(ix,iy,newerror);
+              }
+              break;
+
+           case 6:
+              if (cont) h->Fill(fZaxis.GetBinCenter(izbin),fXaxis.GetBinCenter(ixbin), cont);
+              if (computeErrors) {
+                 e        = GetBinError(bin);
+                 e1       = h->GetCellError(iz,ix);
+                 newerror = TMath::Sqrt(e*e + e1*e1);
+                 h->SetCellError(iz,ix,newerror);
+              }
+              break;
+
+           case 7:
+              if (cont) h->Fill(fXaxis.GetBinCenter(ixbin),fZaxis.GetBinCenter(izbin), cont);
+              if (computeErrors) {
+                 e        = GetBinError(bin);
+                 e1       = h->GetCellError(ix,iz);
+                 newerror = TMath::Sqrt(e*e + e1*e1);
+                 h->SetCellError(ix,iz,newerror);
+              }
+              break;
+
+           case 8:
+              if (cont) h->Fill(fZaxis.GetBinCenter(izbin),fYaxis.GetBinCenter(iybin), cont);
+              if (computeErrors) {
+                 e        = GetBinError(bin);
+                 e1       = h->GetCellError(iz,iy);
+                 newerror = TMath::Sqrt(e*e + e1*e1);
+                 h->SetCellError(iz,iy,newerror);
+              }
+              break;
+
+           case 9:
+              if (cont) h->Fill(fYaxis.GetBinCenter(iybin),fZaxis.GetBinCenter(izbin), cont);
+              if (computeErrors) {
+                 e        = GetBinError(bin);
+                 e1       = h->GetCellError(iy,iz);
+                 newerror = TMath::Sqrt(e*e + e1*e1);
+                 h->SetCellError(iy,iz,newerror);
+              }
+              break;
+           }
+           if (cont) {
+              entries += cont;
+           }
+        }
+     }
+  }
+  h->SetEntries(entries);
+  return h;
+}
+
+//______________________________________________________________________________
 TH1 *TH1::Rebin(Int_t ngroup, const char*newname)
 {
 //*-*-*-*-*Rebin this histogram grouping ngroup bins together*-*-*-*-*-*-*-*-*
@@ -5818,11 +3086,11 @@ TH1 *TH1::Rebin(Int_t ngroup, const char*newname)
    Float_t xmin  = fXaxis.GetXmin();
    Float_t xmax  = fXaxis.GetXmax();
    if ((ngroup <= 0) || (ngroup > nbins)) {
-      printf("ERROR in Rebin. Illegal value of ngroup=%d\n",ngroup);
+      Error("Rebin", "Illegal value of ngroup=%d",ngroup);
       return 0;
    }
    if (fDimension > 1 || InheritsFrom("TProfile")) {
-      printf("ERROR in Rebin. Operation valid on 1-D histograms only\n");
+      Error("Rebin", "Operation valid on 1-D histograms only");
       return 0;
    }
    Int_t newbins = nbins/ngroup;
@@ -5869,6 +3137,111 @@ TH1 *TH1::Rebin(Int_t ngroup, const char*newname)
 }
 
 //______________________________________________________________________________
+void TH1::RebinAxis(Axis_t x, const char *ax)
+{
+// Histogram is resized along ax such that x is in the axis range.
+// The new axis limits are recomputed by doubling iteratively
+// the current axis range until the specified value x is within the limits.
+// The algorithm makes a copy of the histogram, then loops on all bins
+// of the old histogram to fill the rebinned histogram.
+// Takes into account errors (Sumw2) if any.
+// The algorithm works for 1-d, 2-d and 3-d histograms.
+// The bit kCanRebin must be set before invoking this function.
+//  Ex:  h->SetBit(TH1::kCanRebin);
+
+   if (!TestBit(kCanRebin)) return;
+   char achoice = toupper(ax[0]);
+   TAxis *axis = &fXaxis;
+   if (achoice == 'Y') axis = &fYaxis;
+   if (achoice == 'Z') axis = &fZaxis;
+   Float_t cxmin = axis->GetXmin();
+   Float_t cxmax = axis->GetXmax();
+   Int_t  nbinsx = fXaxis.GetNbins();
+   Int_t  nbinsy = fYaxis.GetNbins();
+   Int_t  nbinsz = fZaxis.GetNbins();
+   Float_t range = cxmax-cxmin;
+
+    //recompute new axis limits by doubling the current range
+   Int_t bin;
+   if (x < cxmin) {
+      while (1) {
+         range *= 2;
+         if (x < cxmax-range) continue;
+         xmin = cxmin - range/4;
+         xmax = xmin + range;
+         if (x < xmin) {
+            xmin = cxmax - range;
+            xmax = cxmax;
+         }
+         if ( xmin < 0 && x >= 0) {
+            xmin = 0;
+            xmax = range;
+         }
+         if (xmax >= 0 && cxmax <= 0) {
+            xmax = 0;
+            xmin = xmax - range;
+         }
+         break;
+      }
+   } else {
+      while (1) {
+         range *= 2;
+         if (x >= cxmin+range) continue;
+         xmax = cxmax + range/4;
+         xmin = xmax - range;
+         if (x >= xmax) {
+            xmax = cxmin + range;
+            xmin = cxmin;
+         }
+         if ( xmax > 0 && x < 0) {
+            xmax = 0;
+            xmin = -range;
+         }
+         if (xmin < 0 && cxmin >= 0) {
+            xmin = 0;
+            xmax = xmin + range;
+         }
+         break;
+      }
+   }
+
+   //save a copy of this histogram
+   TH1 *hold = (TH1*)Clone();
+   hold->SetDirectory(0);
+
+   //set new axis limits
+   axis->SetLimits(xmin,xmax);
+
+   //now loop on all bins and refill
+   Double_t err,cu;
+   Float_t bx,by,bz;
+   Int_t errors = GetSumw2N();
+   Int_t ix,iy,iz,ibin,binx,biny,binz;
+   Reset("ICE"); //reset only Integral, contents and Errors
+   for (binz=1;binz<=nbinsz;binz++) {
+      bz  = hold->GetZaxis()->GetBinCenter(binz);
+      iz  = fZaxis.FindFixBin(bz);
+      for (biny=1;biny<=nbinsy;biny++) {
+         by  = hold->GetYaxis()->GetBinCenter(biny);
+         iy  = fYaxis.FindFixBin(by);
+         for (binx=1;binx<=nbinsx;binx++) {
+            bx = hold->GetXaxis()->GetBinCenter(binx);
+            ix  = fXaxis.FindFixBin(bx);
+            bin = hold->GetBin(binx,biny,binz);
+            ibin= GetBin(ix,iy,iz);
+            cu  = hold->GetBinContent(bin);
+            AddBinContent(ibin,cu);
+            if (errors) {
+               err = hold->GetBinError(bin);
+               fSumw2.fArray[ibin] += err*err;
+            }
+         }
+      }
+   }
+   delete hold;
+}
+
+//______________________________________________________________________________
 void TH1::Scale(Float_t c1)
 {
 //*-*-*-*-*Multiply this histogram by a constant c1*-*-*-*-*-*-*-*-*
@@ -5892,6 +3265,225 @@ void TH1::Scale(Float_t c1)
       levels[i] *= c1;
    }
 }
+// -------------------------------------------------------------------------
+void  TH1::SmoothArray(Int_t NN, Double_t *XX, Int_t ntimes)
+{
+// smooth array XX, translation of Hbook routine hsmoof.F
+// based on algorithm 353QH twice presented by J. Friedman
+// in Proc.of the 1974 CERN School of Computing, Norway, 11-24 August, 1974.
+
+   Int_t ii, jj, ik, jk, kk, nn1, nn2;
+   Double_t hh[5];
+   Double_t *YY = new Double_t[NN];
+   Double_t *ZZ = new Double_t[NN];
+   Double_t *RR = new Double_t[NN];
+
+   for (Int_t pass=0;pass<ntimes;pass++) {
+      // first copy original data into temp array
+
+      for (ii = 0; ii < NN; ii++) {
+         YY[ii] = XX[ii];
+      }
+
+//  do 353 i.e. running median 3, 5, and 3 in a single loop
+      for  (kk = 0; kk < 3; kk++)  {
+         ik = 0;
+         if  (kk == 1)  ik = 1;
+         nn1 = ik + 1;
+         nn2 = NN - ik - 1;
+       // do all elements beside the first and last point for median 3
+       //  and first two and last 2 for median 5
+         for  (ii = nn1; ii < nn2; ii++)  {
+            for  (jj = 0; jj < 3; jj++)   {
+               hh[jj] = YY[ii + jj - 1];
+            }
+            ZZ[ii] = TH1::SmoothMedian(3 + 2*ik, hh);
+         }
+
+         if  (kk == 0)  {   // first median 3
+// first point
+            hh[0] = 3*YY[1] - 2*YY[2];
+            hh[1] = YY[0];
+            hh[2] = YY[2];
+            ZZ[0] = TH1::SmoothMedian(3, hh);
+// last point
+            hh[0] = YY[NN - 2];
+            hh[1] = YY[NN - 1];
+            hh[2] = 3*YY[NN - 2] - 2*YY[NN - 3];
+            ZZ[NN - 1] = TH1::SmoothMedian(3, hh);
+         }
+         if  (kk == 1)  {   //  median 5
+  //  first point remains the same
+            ZZ[0] = YY[0];
+            for  (ii = 0; ii < 3; ii++) {
+               hh[ii] = YY[ii];
+            }
+            ZZ[1] = TH1::SmoothMedian(3, hh);
+// last two points
+            for  (ii = 0; ii < 3; ii++) {
+               hh[ii] = YY[NN - 3 + ii];
+            }
+            ZZ[NN - 2] = TH1::SmoothMedian(3, hh);
+            ZZ[NN - 1] = YY[NN - 1];
+         }
+      }
+
+// quadratic interpolation for flat segments
+      nn2 = nn2 - 1;
+      for (ii = nn1 + 1; ii < nn2; ii++) {
+         if  (ZZ[ii - 1] != ZZ[ii]) continue;
+         if  (ZZ[ii] != ZZ[ii + 1]) continue;
+         hh[0] = ZZ[ii - 2] - ZZ[ii];
+         hh[1] = ZZ[ii + 2] - ZZ[ii];
+         if  (hh[0] * hh[1] < 0) continue;
+         jk = 0;
+         if  ( TMath::Abs(hh[1]) > TMath::Abs(hh[0]) ) jk = -1;
+         YY[ii] = 0.5*ZZ[ii - 2*jk] + ZZ[ii - jk]/0.75 + ZZ[ii + 2*jk] /6.;
+         YY[ii + jk] = 0.5*(ZZ[ii + 2*jk] - ZZ[ii - 2*jk]) + ZZ[ii - jk];
+      }
+
+// running means
+      for  (ii = 1; ii < NN - 1; ii++) {
+         RR[ii] = 0.25*YY[ii - 1] + 0.5*YY[ii] + 0.25*YY[ii + 1];
+      }
+      RR[0] = YY[0];
+      RR[NN - 1] = YY[NN - 1];
+
+// now do the same for residuals
+
+      for  (ii = 0; ii < NN; ii++)  {
+         YY[ii] = XX[ii] - RR[ii];
+      }
+
+//  do 353 i.e. running median 3, 5, and 3 in a single loop
+      for  (kk = 0; kk < 3; kk++)  {
+         ik = 0;
+         if  (kk == 1)  ik = 1;
+         nn1 = ik + 1;
+         nn2 = NN - ik - 1;
+       // do all elements beside the first and last point for median 3
+       //  and first two and last 2 for median 5
+         for  (ii = nn1; ii < nn2; ii++)  {
+            for  (jj = 0; jj < 3; jj++) {
+               hh[jj] = YY[ii + jj - 1];
+            }
+            ZZ[ii] = TH1::SmoothMedian(3 + 2*ik, hh);
+         }
+
+         if  (kk == 0)  {   // first median 3
+// first point
+            hh[0] = 3*YY[1] - 2*YY[2];
+            hh[1] = YY[0];
+            hh[2] = YY[2];
+            ZZ[0] = TH1::SmoothMedian(3, hh);
+// last point
+            hh[0] = YY[NN - 2];
+            hh[1] = YY[NN - 1];
+            hh[2] = 3*YY[NN - 2] - 2*YY[NN - 3];
+            ZZ[NN - 1] = TH1::SmoothMedian(3, hh);
+         }
+         if  (kk == 1)  {   //  median 5
+//  first point remains the same
+            ZZ[0] = YY[0];
+            for  (ii = 0; ii < 3; ii++) {
+               hh[ii] = YY[ii];
+            }
+            ZZ[1] = TH1::SmoothMedian(3, hh);
+// last two points
+            for  (ii = 0; ii < 3; ii++) {
+               hh[ii] = YY[NN - 3 + ii];
+            }
+            ZZ[NN - 2] = TH1::SmoothMedian(3, hh);
+            ZZ[NN - 1] = YY[NN - 1];
+         }
+      }
+
+// quadratic interpolation for flat segments
+      nn2 = nn2 - 1;
+      for (ii = nn1 + 1; ii < nn2; ii++) {
+         if  (ZZ[ii - 1] != ZZ[ii]) continue;
+         if  (ZZ[ii] != ZZ[ii + 1]) continue;
+         hh[0] = ZZ[ii - 2] - ZZ[ii];
+         hh[1] = ZZ[ii + 2] - ZZ[ii];
+         if  (hh[0] * hh[1] < 0) continue;
+         jk = 0;
+         if  ( TMath::Abs(hh[1]) > TMath::Abs(hh[0]) ) jk = -1;
+         YY[ii] = 0.5*ZZ[ii - 2*jk] + ZZ[ii - jk]/0.75 + ZZ[ii + 2*jk]/6.;
+         YY[ii + jk] = 0.5*(ZZ[ii + 2*jk] - ZZ[ii - 2*jk]) + ZZ[ii - jk];
+      }
+
+// running means
+      for  (ii = 1; ii < NN - 1; ii++) {
+         ZZ[ii] = 0.25*YY[ii - 1] + 0.5*YY[ii] + 0.25*YY[ii + 1];
+      }
+      ZZ[0] = YY[0];
+      ZZ[NN - 1] = YY[NN - 1];
+
+//  add smoothed XX and smoothed residuals
+
+      for  (ii = 0; ii < NN; ii++) {
+         XX[ii] = RR[ii] + ZZ[ii];
+      }
+   }
+   delete [] YY;
+   delete [] ZZ;
+   delete [] RR;
+}
+
+// ------------------------------------------------------------------------
+Double_t  TH1::SmoothMedian(Int_t n, Double_t *a)
+{
+// return the median of a vector a in monotonic order with length n
+// where median is a number which divides sequence of n numbers
+// into 2 halves. When n is odd, the median is kth element k = (n + 1) / 2.
+// when n is even the median is a mean of the elements k = n/2 and k = n/2 + 1.
+
+  Int_t in, imin, imax;
+  Double_t  xm;
+
+  if  (n%2 == 0)  in = n / 2;
+  else            in = n / 2 + 1;
+
+  // find array element with maximum content
+  imax = TMath::LocMax(n,a);
+  xm = a[imax];
+
+  while (in < n) {
+     imin = TMath::LocMin(n,a);  // find array element with minimum content
+     a[imin] = xm;
+     in++;
+  }
+  imin = TMath::LocMin(n,a);
+  return a[imin];
+}
+
+
+// ------------------------------------------------------------------------
+void  TH1::Smooth(Int_t ntimes)
+{
+// Smooth bin contents of this histogram.
+// bin contents are replaced by their smooth values.
+// Errors (if any) are not modified.
+// algorithm can only be applied to 1-d histograms
+
+   if (fDimension != 1) {
+      Error("Smooth","Smooth only supported for 1-d histograms");
+      return;
+   }
+   Int_t nbins = fXaxis.GetNbins();
+   Double_t *XX = new Double_t[nbins];
+   Int_t i;
+   for (i=0;i<nbins;i++) {
+      XX[i] = GetBinContent(i+1);
+   }
+
+   TH1::SmoothArray(nbins,XX,ntimes);
+
+   for (i=0;i<nbins;i++) {
+      SetBinContent(i+1,XX[i]);
+   }
+   if (gPad) gPad->Modified();
+}
 
 
 //_______________________________________________________________________
@@ -5899,8 +3491,9 @@ void TH1::Streamer(TBuffer &b)
 {
 //*-*-*-*-*-*-*-*-*Stream a class object*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 //*-*              =====================
+   UInt_t R__s, R__c;
    if (b.IsReading()) {
-      b.ReadVersion();  //Version_t v = b.ReadVersion();
+      b.ReadVersion(&R__s, &R__c);
       TNamed::Streamer(b);
       TAttLine::Streamer(b);
       TAttFill::Streamer(b);
@@ -5909,6 +3502,9 @@ void TH1::Streamer(TBuffer &b)
       fXaxis.Streamer(b);
       fYaxis.Streamer(b);
       fZaxis.Streamer(b);
+      fXaxis.SetParent(this);
+      fYaxis.SetParent(this);
+      fZaxis.SetParent(this);
       b >> fBarOffset;
       b >> fBarWidth;
       b >> fEntries;
@@ -5922,13 +3518,15 @@ void TH1::Streamer(TBuffer &b)
       fContour.Streamer(b);
       fSumw2.Streamer(b);
       fOption.Streamer(b);
+      fFunctions->Delete();
       fFunctions->Streamer(b);
       if (!gROOT->ReadingBasket()) {
          fDirectory = gDirectory;
-         gDirectory->Append(this);
+         if (!gDirectory->GetList()->FindObject(this)) gDirectory->Append(this);
       }
+      b.CheckByteCount(R__s, R__c, TH1::IsA());
    } else {
-      b.WriteVersion(TH1::IsA());
+      R__c = b.WriteVersion(TH1::IsA(), kTRUE);
       TNamed::Streamer(b);
       TAttLine::Streamer(b);
       TAttFill::Streamer(b);
@@ -5951,224 +3549,8 @@ void TH1::Streamer(TBuffer &b)
       fSumw2.Streamer(b);
       fOption.Streamer(b);
       fFunctions->Streamer(b);
+      b.SetByteCount(R__c, kTRUE);
    }
-}
-
-//______________________________________________________________________________
-Int_t TH1::TableInit()
-{
-//*-*-*-*-*-*-*-*-*Initialize various options to draw tables*-*-*-*-*-*-*-*
-//*-*              =========================================
-
-   static const char *where = "TableInit";
-
-   Int_t first, last;
-   Float_t YMARGIN= 0.05;
-   Float_t zmin, zmax;
-   Int_t maximum = 0;
-   Int_t minimum = 0;
-   if (fMaximum != -1111) maximum = 1;
-   if (fMinimum != -1111) minimum = 1;
-
-//*-*------------------  Compute X axis parameters
-   first           = fXaxis.GetFirst();
-   last            = fXaxis.GetLast();
-   Hparam.xlast    = last;
-   Hparam.xfirst   = first;
-   Hparam.xlowedge = fXaxis.GetBinLowEdge(first);
-   Hparam.xbinsize = fXaxis.GetBinWidth(first);
-   Hparam.xmin     = Hparam.xlowedge;
-   Hparam.xmax     = fXaxis.GetBinLowEdge(last)+fXaxis.GetBinWidth(last);
-
-//*-*-   if log scale in X, replace xmin,max by the log
-   if (Hoption.Logx) {
-      if (Hparam.xlowedge <=0 ) {
-         Hparam.xlowedge = 0.1*Hparam.xbinsize;
-         Hparam.xmin  = Hparam.xlowedge;
-      }
-      if (Hparam.xmin <=0 || Hparam.xmax <=0) {
-         Error(where, "cannot set X axis to log scale");
-         return 0;
-      }
-      Hparam.xfirst= fXaxis.FindBin(Hparam.xmin);
-      Hparam.xlast = fXaxis.FindBin(Hparam.xmax);
-      Hparam.xmin  = TMath::Log10(Hparam.xmin);
-      Hparam.xmax  = TMath::Log10(Hparam.xmax);
-   }
-
-//*-*------------------  Compute Y axis parameters
-   first           = fYaxis.GetFirst();
-   last            = fYaxis.GetLast();
-   Hparam.ylast    = last;
-   Hparam.yfirst   = first;
-   Hparam.ylowedge = fYaxis.GetBinLowEdge(first);
-   Hparam.ybinsize = fYaxis.GetBinWidth(first);
-   if (!Hparam.ybinsize) Hparam.ybinsize = 1;
-   Hparam.ymin     = Hparam.ylowedge;
-   Hparam.ymax     = fYaxis.GetBinLowEdge(last)+fYaxis.GetBinWidth(last);
-
-//*-*-   if log scale in Y, replace ymin,max by the log
-   if (Hoption.Logy) {
-      if (Hparam.ylowedge <=0 ) {
-         Hparam.ylowedge = 0.1*Hparam.ybinsize;
-         Hparam.ymin  = Hparam.ylowedge;
-      }
-      if (Hparam.ymin <=0 || Hparam.ymax <=0) {
-         Error(where, "cannot set Y axis to log scale");
-         return 0;
-      }
-      Hparam.yfirst= fYaxis.FindBin(Hparam.ymin);
-      Hparam.ylast = fYaxis.FindBin(Hparam.ymax);
-      Hparam.ymin  = TMath::Log10(Hparam.ymin);
-      Hparam.ymax  = TMath::Log10(Hparam.ymax);
-   }
-
-
-//*-*------------------  Compute Z axis parameters
-   Float_t BIGP = TMath::Power(10,32);
-   zmax = -BIGP;
-   zmin = BIGP;
-   Float_t c1, e1;
-   Stat_t allchan = 0;
-   for (Int_t j=Hparam.yfirst; j<=Hparam.ylast;j++) {
-      for (Int_t i=Hparam.xfirst; i<=Hparam.xlast;i++) {
-         c1 = GetCellContent(i,j);
-         zmax = TMath::Max(zmax,c1);
-         if (Hoption.Error) {
-            e1 = GetCellError(i,j);
-            zmax = TMath::Max(zmax,c1+e1);
-         }
-         if (Hoption.Func) {
-//            f1 = GetCellFunction(i,j);
-//            zmax = TMath::Max(zmax,f1);
-         }
-         zmin = TMath::Min(zmin,c1);
-         allchan += c1;
-      }
-   }
-
-//*-*- Take into account maximum , minimum
-
-   if (maximum) zmax = fMaximum;
-   if (minimum) zmin = fMinimum;
-   if (Hoption.Logz && zmax <= 0) {
-      Error(where, "log scale is requested but maximum is less or equal 0 (%f)", zmax);
-      return 0;
-   }
-   if (zmin >= zmax && !Hoption.Plus) {
-      if (Hoption.Logz) {
-         if (zmax > 0) zmin = 0.001*zmax;
-         else {
-            Error(where, "log scale is requested but maximum is less or equal 0 (%f)", zmax);
-            return 0;
-         }
-      }
-//      else {
-//         zmax = zmin + 1;
-//         zmin = zmin - 1;
-//      }
-   }
-
-//*-*- take into account normalization factor
-   Hparam.allchan = allchan;
-   Stat_t factor = allchan;
-   if (fNormFactor > 0) factor = fNormFactor;
-   if (allchan) factor /= allchan;
-   if (factor == 0) factor = 1;
-   Hparam.factor = factor;
-   zmax = factor*zmax;
-   zmin = factor*zmin;
-   c1 = zmax;
-   if (TMath::Abs(zmin) > TMath::Abs(c1)) c1 = zmin;
-
-//*-*-----
-//*-*-     For log scales, histogram coordinates are log10(ymin) and
-//*-*-     log10(ymax). Final adjustment (if not option "Same")
-//*-*-     or "+" for ymax) of ymax and ymin for logarithmic scale, if
-//*-*-     Maximum and Minimum are not defined.
-//*-*-----
-   if (Hoption.Logz) {
-      if (zmin <= 0) {
-         zmin = TMath::Min((Float_t)1, (Float_t)0.001*zmax);
-         fMinimum = zmin;
-      }
-      zmin = TMath::Log10(zmin);
-      if (!minimum) zmin += TMath::Log10(0.5);
-      zmax = TMath::Log10(zmax);
-      if (!maximum && !Hoption.Plus) zmax += TMath::Log10(2*(0.9/0.95));
-      goto LZMIN;
-   }
-//*-*-----
-//*-*-     final adjustment of YMAXI for linear scale (if not option "Same"):
-//*-*-     decrease histogram height to MAX% of allowed height if HMAXIM
-//*-*-     has not been called.
-//*-*-     MAX% is the value in percent which has been set in HPLSET
-//*-*-     (default is 90%).
-//*-*-----
-   if (!maximum && !Hoption.Plus) {
-      zmax += YMARGIN*(zmax-zmin);
-   }
-//*-*-----
-//*-*-     final adjustment of ymin for linear scale.
-//*-*-     if minimum is not set , then ymin is set to zero if >0
-//*-*-     or to ymin - YMARGIN if <0.
-//*-*-----
-   if (!minimum) {
-      if (zmin >= 0) zmin = 0;
-      else           zmin -= YMARGIN*(zmax-zmin);
-   }
-
-LZMIN:
-   Hparam.zmin = zmin;
-   Hparam.zmax = zmax;
-
-//*-*- Set bar offset and width
-   Hparam.baroffset = GetBarOffset();
-   Hparam.barwidth  = GetBarWidth();
-
-   return 1;
-}
-
-//______________________________________________________________________________
-void TH1::PaintTitle()
-{
-//*-*-*-*-*-*-*-*-*-*-*-*Draw the histogram title*-*-*-*-*-*-*-*-*-*-*-*-*
-//*-*                    ========================
-   if (Hoption.Same) return;
-   Int_t nt = strlen(GetTitle());
-   TPaveText *title  = (TPaveText*)gPad->GetPrimitive("title");
-   if (nt == 0 || gStyle->GetOptTitle() <= 0) {
-      if (title) delete title;
-      return;
-   }
-   if (title) {
-      TText *t0 = (TText*)title->GetLine(0);
-      if (t0) t0->SetTitle(GetTitle());
-      return;
-   }
-   Float_t ht = gStyle->GetTitleH();
-   Float_t wt = gStyle->GetTitleW();
-   if (ht <= 0) ht = 0.05;
-   if (wt <= 0) wt = TMath::Min(0.6, 0.05+0.015*nt);
-
-   TPaveText *ptitle = new TPaveText(
-             gStyle->GetTitleX(),
-             gStyle->GetTitleY()-ht,
-             gStyle->GetTitleX()+wt,
-             gStyle->GetTitleY(),"blNDC");
-
-//*-*- box with the histogram title
-   ptitle->SetFillColor(gStyle->GetTitleColor());
-   ptitle->SetName("title");
-   ptitle->SetBorderSize(gStyle->GetTitleBorderSize());
-//   ptitle->SetTextSize(0.85*ht);
-   ptitle->SetTextColor(1);
-   ptitle->SetTextFont(gStyle->GetTitleFont());
-   ptitle->AddText((char*)GetTitle());
-   ptitle->SetBit(kCanDelete);
-   ptitle->Draw();
-   ptitle->Paint();
-
 }
 
 //______________________________________________________________________________
@@ -6179,58 +3561,74 @@ void TH1::Print(Option_t *option)
 //
 //  If option "all" is given, bin contents and errors are also printed.
 //
-   Int_t bin;
-   printf( "TH1.Print Name= %s, Total sum= %g\n",GetName(),GetSumOfWeights());
-   if (!strcasecmp(option,"all")) {
-      for (bin=0; bin<fNcells; bin++) {
-         if(fSumw2.fN) printf(" fSumw[%d]=%g, error[%d]=%g\n",bin,GetBinContent(bin),bin,GetBinError(bin));
-         else          printf(" fSumw[%d]=%g\n",bin,GetBinContent(bin));
+   printf( "TH1.Print Name= %s, Entries= %d, Total sum= %g\n",GetName(),Int_t(fEntries),GetSumOfWeights());
+   if (strcasecmp(option,"all")) return;
+
+   Int_t bin, binx, biny, binz;
+   Stat_t w,e;
+   Float_t x,y,z;
+   if (fDimension == 1) {
+      for (binx=fXaxis.GetFirst();binx<=fXaxis.GetLast();binx++) {
+         x = fXaxis.GetBinCenter(binx);
+         w = GetBinContent(binx);
+         e = GetBinError(binx);
+         if(fSumw2.fN) printf(" fSumw[%d]=%g, x=%g, error=%g\n",binx,w,x,e);
+         else          printf(" fSumw[%d]=%g, x=%g\n",binx,w,x);
+      }
+   }
+   if (fDimension == 2) {
+      for (biny=fYaxis.GetFirst();biny<=fYaxis.GetLast();biny++) {
+         y = fYaxis.GetBinCenter(biny);
+         for (binx=fXaxis.GetFirst();binx<=fXaxis.GetLast();binx++) {
+            bin = GetBin(binx,biny);
+            x = fXaxis.GetBinCenter(binx);
+            w = GetBinContent(bin);
+            e = GetBinError(bin);
+            if(fSumw2.fN) printf(" fSumw[%d][%d]=%g, x=%g, y=%g, error=%g\n",binx,biny,w,x,y,e);
+            else          printf(" fSumw[%d][%d]=%g, x=%g, y=%g\n",binx,biny,w,x,y);
+         }
+      }
+   }
+   if (fDimension == 3) {
+      for (binz=fZaxis.GetFirst();binz<=fZaxis.GetLast();binz++) {
+         z = fZaxis.GetBinCenter(binz);
+         for (biny=fYaxis.GetFirst();biny<=fYaxis.GetLast();biny++) {
+            y = fYaxis.GetBinCenter(biny);
+            for (binx=fXaxis.GetFirst();binx<=fXaxis.GetLast();binx++) {
+               bin = GetBin(binx,biny,binz);
+               x = fXaxis.GetBinCenter(binx);
+               w = GetBinContent(bin);
+               e = GetBinError(bin);
+               if(fSumw2.fN) printf(" fSumw[%d][%d][%d]=%g, x=%g, y=%g, z=%g, error=%g\n",binx,biny,binz,w,x,y,z,e);
+               else          printf(" fSumw[%d][%d][%d]=%g, x=%g, y=%g, z=%g\n",binx,biny,binz,w,x,y,z);
+            }
+         }
       }
    }
 }
 
 //______________________________________________________________________________
-void TH1::RecalculateRange()
-{
-//*-*-*-*-*-*Recompute the histogram range following graphics operations*-*-*
-//*-*        ===========================================================
-   if (Hoption.Same) return;
-
-//*-*- Compute x,y range
-   Float_t xmin = Hparam.xmin;
-   Float_t xmax = Hparam.xmax;
-   Float_t ymin = Hparam.ymin;
-   Float_t ymax = Hparam.ymax;
-   Float_t dx   = xmax-xmin;
-   Float_t dy   = ymax-ymin;
-   Float_t dxr  = dx/(1 - gPad->GetLeftMargin() - gPad->GetRightMargin());
-   Float_t dyr  = dy/(1 - gPad->GetBottomMargin() - gPad->GetTopMargin());
-
-   // Range() could change the size of the pad pixmap and therefore should
-   // be called before the other paint routines
-   gPad->Range(xmin - dxr*gPad->GetLeftMargin(),
-                      ymin - dyr*gPad->GetBottomMargin(),
-                      xmax + dxr*gPad->GetRightMargin(),
-                      ymax + dyr*gPad->GetTopMargin());
-   gPad->RangeAxis(xmin, ymin, xmax, ymax);
-}
-
-//______________________________________________________________________________
-void TH1::Reset(Option_t *)
+void TH1::Reset(Option_t *option)
 {
 //*-*-*-*-*-*-*-*Reset this histogram: contents, errors, etc*-*-*-*-*-*-*-*
 //*-*            ===========================================
+//
+// if option "ICE" is specified, resets only Integral, Contents and Errors
 
+   TString opt = option;
+   opt.ToUpper();
+   fSumw2.Reset();
+   if (fIntegral) {delete [] fIntegral; fIntegral = 0;}
+
+   if (opt.Contains("ICE")) return;
    fTsumw       = 0;
    fTsumw2      = 0;
    fTsumwx      = 0;
    fTsumwx2     = 0;
    fEntries     = 0;
 
-   fSumw2.Reset();
    fFunctions->Delete();
    fContour.Set(0);
-   if (fIntegral) {delete [] fIntegral; fIntegral = 0;}
 }
 
 //______________________________________________________________________________
@@ -6257,8 +3655,8 @@ void TH1::UseCurrentStyle()
 //*-*-*-*-*-*Replace current attributes by current style*-*-*-*-*
 //*-*        ===========================================
 
-   fXaxis.Reset("X");
-   fYaxis.Reset("Y");
+   fXaxis.ResetAttAxis("X");
+   fYaxis.ResetAttAxis("Y");
    SetBarOffset(gStyle->GetBarOffset());
    SetBarWidth(gStyle->GetBarWidth());
    SetFillColor(gStyle->GetHistFillColor());
@@ -6281,8 +3679,8 @@ Stat_t TH1::GetMean(Int_t axis)
   Stat_t stats[10];
   GetStats(stats);
   if (stats[0] == 0) return 0;
-  Int_t ax = 2*axis;
-  return stats[ax]/stats[0];
+  Int_t ax[3] = {2,4,7};
+  return stats[ax[axis-1]]/stats[0];
 }
 
 //______________________________________________________________________________
@@ -6295,9 +3693,10 @@ Stat_t TH1::GetRMS(Int_t axis)
   Stat_t x, rms2, stats[10];
   GetStats(stats);
   if (stats[0] == 0) return 0;
-  Int_t ax = 2*axis;
-  x    = stats[ax]/stats[0];
-  rms2 = TMath::Abs(stats[ax+1]/stats[0] -x*x);
+  Int_t ax[3] = {2,4,7};
+  Int_t axm = ax[axis-1];
+  x    = stats[axm]/stats[0];
+  rms2 = TMath::Abs(stats[axm+1]/stats[0] -x*x);
   return TMath::Sqrt(rms2);
 }
 
@@ -6312,8 +3711,9 @@ void TH1::GetStats(Stat_t *stats)
    // stats[3] = sumwx2
    // stats[4] = sumwy   if 2-d or 3-d
    // stats[5] = sumwy2
-   // stats[6] = sumwz   if 3-d
-   // stats[7] = sumwz2
+   // stats[6] = sumwxy
+   // stats[7] = sumwz   if 3-d
+   // stats[8] = sumwz2
    //
    // If no axis-subrange is specified (via TAxis::SetRange), the array stats
    // is simply a copy of the statistics quantities computed at filling time.
@@ -6325,7 +3725,7 @@ void TH1::GetStats(Stat_t *stats)
    Stat_t w;
    Float_t x,y,z;
    if (fDimension == 1) {
-      if (fTsumw == 0 || fXaxis.TestBit(kAxisRange)) {
+      if (fTsumw == 0 || fXaxis.TestBit(TAxis::kAxisRange)) {
          for (bin=0;bin<4;bin++) stats[bin] = 0;
          for (binx=fXaxis.GetFirst();binx<=fXaxis.GetLast();binx++) {
             x = fXaxis.GetBinCenter(binx);
@@ -6343,7 +3743,7 @@ void TH1::GetStats(Stat_t *stats)
       }
    }
    if (fDimension == 2) {
-      for (bin=0;bin<6;bin++) stats[bin] = 0;
+      for (bin=0;bin<7;bin++) stats[bin] = 0;
       for (biny=fYaxis.GetFirst();biny<=fYaxis.GetLast();biny++) {
          y = fYaxis.GetBinCenter(biny);
          for (binx=fXaxis.GetFirst();binx<=fXaxis.GetLast();binx++) {
@@ -6356,11 +3756,12 @@ void TH1::GetStats(Stat_t *stats)
             stats[3] += w*x*x;
             stats[4] += w*y;
             stats[5] += w*y*y;
+            stats[6] += w*x*y;
          }
       }
    }
    if (fDimension == 3) {
-      for (bin=0;bin<8;bin++) stats[bin] = 0;
+      for (bin=0;bin<9;bin++) stats[bin] = 0;
       for (binz=fZaxis.GetFirst();binz<=fZaxis.GetLast();binz++) {
          z = fZaxis.GetBinCenter(binz);
          for (biny=fYaxis.GetFirst();biny<=fYaxis.GetLast();biny++) {
@@ -6375,12 +3776,24 @@ void TH1::GetStats(Stat_t *stats)
                stats[3] += w*x*x;
                stats[4] += w*y;
                stats[5] += w*y*y;
-               stats[6] += w*z;
-               stats[7] += w*z*z;
+               stats[6] += w*x*y;
+               stats[7] += w*z;
+               stats[8] += w*z*z;
             }
          }
       }
    }
+}
+
+//______________________________________________________________________________
+void TH1::PutStats(Stat_t *stats)
+{
+   // Replace current statistics with the values in array stats
+
+   fTsumw   = stats[0];
+   fTsumw2  = stats[1];
+   fTsumwx  = stats[2];
+   fTsumwx2 = stats[3];
 }
 
 //______________________________________________________________________________
@@ -6405,27 +3818,18 @@ Stat_t TH1::GetSumOfWeights()
 //______________________________________________________________________________
 Stat_t TH1::Integral()
 {
-//Return integral of bin contents (all bins)
+//Return integral of bin contents. Only bins in the bins range are considered.
 
-   Int_t nbinsx = GetNbinsX();
-   Int_t nbinsy = GetNbinsY();
-   Int_t nbinsz = GetNbinsZ();
-   if (fDimension < 2) nbinsy = -1;
-   if (fDimension < 3) nbinsz = -1;
-
-   Stat_t integral = 0;
-
-//*-*- Loop on bins (including underflows/overflows)
-   Int_t bin, binx, biny, binz;
-   for (binz=0;binz<=nbinsz+1;binz++) {
-      for (biny=0;biny<=nbinsy+1;biny++) {
-         for (binx=0;binx<=nbinsx+1;binx++) {
-            bin = binx +(nbinsx+2)*(biny + (nbinsy+2)*binz);
-            integral += GetBinContent(bin);
-         }
-      }
+   if (fDimension == 1) {
+      return Integral(fXaxis.GetFirst(),fXaxis.GetLast());
+   } else if (fDimension ==2) {
+      return Integral(fXaxis.GetFirst(),fXaxis.GetLast(),
+                      fYaxis.GetFirst(),fYaxis.GetLast());
+   } else {
+      return Integral(fXaxis.GetFirst(),fXaxis.GetLast(),
+                      fYaxis.GetFirst(),fYaxis.GetLast(),
+                      fZaxis.GetFirst(),fZaxis.GetLast());
    }
-   return integral;
 }
 
 //______________________________________________________________________________
@@ -6539,11 +3943,17 @@ Int_t TH1::GetContour(Float_t *levels)
 //*-*-*-*-*-*-*-*Return contour values into array levels*-*-*-*-*-*-*-*-*-*
 //*-*            =======================================
 //*-*
-//*-*  The number of contour levels can be returned by getContourLevel
+//*-*  The number of contour levels can be returned by TH1::GetContourLevel
 //*-*
 //*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
   Int_t nlevels = fContour.fN;
   if (levels) {
+     if (nlevels == 0) {
+        nlevels = 20;
+        SetContour(nlevels);
+     } else {
+        if (TestBit(kUserContour) == 0) SetContour(nlevels);
+     }
      for (Int_t level=0; level<nlevels; level++) levels[level] = fContour.fArray[level];
   }
   return nlevels;
@@ -6572,6 +3982,7 @@ void TH1::SetContour(Int_t  nlevels, Float_t *levels)
 //
 
   Int_t level;
+  ResetBit(kUserContour);
   if (nlevels <=0 ) {
      fContour.Set(0);
      return;
@@ -6580,13 +3991,14 @@ void TH1::SetContour(Int_t  nlevels, Float_t *levels)
 
 //*-*-  Contour levels are specified
   if (levels) {
+     SetBit(kUserContour);
      for (level=0; level<nlevels; level++) fContour.fArray[level] = levels[level];
   } else {
 //*-*- contour levels are computed automatically as equidistant contours
      Float_t zmin = GetMinimum();
      Float_t zmax = GetMaximum();
      Float_t dz   = (zmax-zmin)/Float_t(nlevels);
-     if (Hoption.Logz) {
+     if (gPad->GetLogz()) {
         if (zmax <= 0) return;
         if (zmin <= 0) zmin = 0.001*zmax;
         zmin = TMath::Log10(zmin);
@@ -6605,28 +4017,29 @@ void TH1::SetContourLevel(Int_t level, Float_t value)
 //*-*-*-*-*-*-*-*-*-*-*Set value for one contour level*-*-*-*-*-*-*-*-*-*-*-*
 //*-*                  ===============================
   if (level <0 || level >= fContour.fN) return;
+  SetBit(kUserContour);
   fContour.fArray[level] = value;
 }
 
 //______________________________________________________________________________
 Float_t TH1::GetMaximum()
 {
-//*-*-*-*-*-*-*-*-*-*-*Return maximum value of all bins*-*-*-*-*-*-*-*-*-*-*-*
-//*-*                  ================================
-  Int_t binx, biny;
-  Float_t maximum, value;
+//*-*-*-*-*-*-*-*-*-*-*Return maximum value of bins in the range*-*-*-*-*-*
+//*-*                  =========================================
   if (fMaximum != -1111) return fMaximum;
-  if (GetDimension() < 2) {
-     maximum = GetBinContent(1);
-     for(binx=1; binx<=fXaxis.GetNbins(); binx++) {
-        value = GetBinContent(binx);
-        if (value > maximum) maximum = value;
-     }
-  } else {
-     maximum = GetCellContent(1,1);
-     for(biny=1; biny<=fYaxis.GetNbins(); biny++) {
-        for(binx=1; binx<=fXaxis.GetNbins(); binx++) {
-           value = GetCellContent(binx, biny);
+  Int_t bin, binx, biny, binz;
+  Int_t xfirst  = fXaxis.GetFirst();
+  Int_t xlast   = fXaxis.GetLast();
+  Int_t yfirst  = fYaxis.GetFirst();
+  Int_t ylast   = fYaxis.GetLast();
+  Int_t zfirst  = fZaxis.GetFirst();
+  Int_t zlast   = fZaxis.GetLast();
+  Float_t maximum = -FLT_MAX, value;
+  for (binz=zfirst;binz<=zlast;binz++) {
+     for (biny=yfirst;biny<=ylast;biny++) {
+        for (binx=xfirst;binx<=xlast;binx++) {
+           bin = GetBin(binx,biny,binz);
+           value = GetBinContent(bin);
            if (value > maximum) maximum = value;
         }
      }
@@ -6635,29 +4048,113 @@ Float_t TH1::GetMaximum()
 }
 
 //______________________________________________________________________________
+Int_t TH1::GetMaximumBin()
+{
+//*-*-*-*-*-*-*Return location of bin with maximum value in the range*-*
+//*-*          ======================================================
+  Int_t locmax, locmay, locmaz;
+  return GetMaximumBin(locmax, locmay, locmaz);
+}
+
+//______________________________________________________________________________
+Int_t TH1::GetMaximumBin(Int_t &locmax, Int_t &locmay, Int_t &locmaz)
+{
+//*-*-*-*-*-*-*Return location of bin with maximum value in the range*-*
+//*-*          ======================================================
+  Int_t bin, binx, biny, binz;
+  Int_t locm;
+  Int_t xfirst  = fXaxis.GetFirst();
+  Int_t xlast   = fXaxis.GetLast();
+  Int_t yfirst  = fYaxis.GetFirst();
+  Int_t ylast   = fYaxis.GetLast();
+  Int_t zfirst  = fZaxis.GetFirst();
+  Int_t zlast   = fZaxis.GetLast();
+  Float_t maximum = -FLT_MAX, value;
+  locm = locmax = locmay = locmaz = 0;
+  for (binz=zfirst;binz<=zlast;binz++) {
+     for (biny=yfirst;biny<=ylast;biny++) {
+        for (binx=xfirst;binx<=xlast;binx++) {
+           bin = GetBin(binx,biny,binz);
+           value = GetBinContent(bin);
+           if (value > maximum) {
+              maximum = value;
+              locm    = bin;
+              locmax  = binx;
+              locmay  = biny;
+              locmaz  = binz;
+           }
+        }
+     }
+  }
+  return locm;
+}
+
+//______________________________________________________________________________
 Float_t TH1::GetMinimum()
 {
-//*-*-*-*-*-*-*-*-*-*-*Return minimum value of all bins*-*-*-*-*-*-*-*-*-*-*-*
-//*-*                  ================================
-  Int_t binx, biny;
-  Float_t minimum, value;
+//*-*-*-*-*-*-*-*-*-*-*Return minimum value of bins in the range-*-*-*-*-*
+//*-*                  =========================================
   if (fMinimum != -1111) return fMinimum;
-  if (GetDimension() < 2) {
-     minimum = GetBinContent(1);
-     for(binx=1; binx<=fXaxis.GetNbins(); binx++) {
-        value = GetBinContent(binx);
-        if (value < minimum) minimum = value;
-     }
-  } else {
-     minimum = GetCellContent(1,1);
-     for(biny=1; biny<=fYaxis.GetNbins(); biny++) {
-        for(binx=1; binx<=fXaxis.GetNbins(); binx++) {
-           value = GetCellContent(binx, biny);
+  Int_t bin, binx, biny, binz;
+  Int_t xfirst  = fXaxis.GetFirst();
+  Int_t xlast   = fXaxis.GetLast();
+  Int_t yfirst  = fYaxis.GetFirst();
+  Int_t ylast   = fYaxis.GetLast();
+  Int_t zfirst  = fZaxis.GetFirst();
+  Int_t zlast   = fZaxis.GetLast();
+  Float_t minimum=FLT_MAX, value;
+  for (binz=zfirst;binz<=zlast;binz++) {
+     for (biny=yfirst;biny<=ylast;biny++) {
+        for (binx=xfirst;binx<=xlast;binx++) {
+           bin = GetBin(binx,biny,binz);
+           value = GetBinContent(bin);
            if (value < minimum) minimum = value;
         }
      }
   }
   return minimum;
+}
+
+//______________________________________________________________________________
+Int_t TH1::GetMinimumBin()
+{
+//*-*-*-*-*-*-*Return location of bin with minimum value in the range*-*
+//*-*          ======================================================
+  Int_t locmix, locmiy, locmiz;
+  return GetMinimumBin(locmix, locmiy, locmiz);
+}
+
+//______________________________________________________________________________
+Int_t TH1::GetMinimumBin(Int_t &locmix, Int_t &locmiy, Int_t &locmiz)
+{
+//*-*-*-*-*-*-*Return location of bin with minimum value in the range*-*
+//*-*          ======================================================
+  Int_t bin, binx, biny, binz;
+  Int_t locm;
+  Int_t xfirst  = fXaxis.GetFirst();
+  Int_t xlast   = fXaxis.GetLast();
+  Int_t yfirst  = fYaxis.GetFirst();
+  Int_t ylast   = fYaxis.GetLast();
+  Int_t zfirst  = fZaxis.GetFirst();
+  Int_t zlast   = fZaxis.GetLast();
+  Float_t minimum = FLT_MAX, value;
+  locm = locmix = locmiy = locmiz = 0;
+  for (binz=zfirst;binz<=zlast;binz++) {
+     for (biny=yfirst;biny<=ylast;biny++) {
+        for (binx=xfirst;binx<=xlast;binx++) {
+           bin = GetBin(binx,biny,binz);
+           value = GetBinContent(bin);
+           if (value < minimum) {
+              minimum = value;
+              locm    = bin;
+              locmix  = binx;
+              locmiy  = biny;
+              locmiz  = binz;
+           }
+        }
+     }
+  }
+  return locm;
 }
 
 //______________________________________________________________________________
@@ -6738,7 +4235,9 @@ void TH1::SetMaximum(Float_t maximum)
 //*-*-*-*-*-*-*-*-*Set the maximum value for the Y axis*-*-*-*-*-*-*-*-*-*-*-*
 //*-*              ====================================
 // By default the maximum value is automatically set to the maximum
-// bin content plyus a margin of 10 per cent.
+// bin content plus a margin of 10 per cent.
+// Use TH1::GetMaximum to find the maximum value of an histogram
+// Use TH1::GetMaximumBin to find the bin with the maximum value of an histogram
 //
    fMaximum = maximum;
 }
@@ -6751,6 +4250,8 @@ void TH1::SetMinimum(Float_t minimum)
 //*-*              ====================================
 // By default the minimum value is automatically set to zero if all bin contents
 // are positive or the minimum - 10 per cent otherwise.
+// Use TH1::GetMinimum to find the minimum value of an histogram
+// Use TH1::GetMinimumBin to find the bin with the minimum value of an histogram
 //
    fMinimum = minimum;
 }
@@ -6758,6 +4259,8 @@ void TH1::SetMinimum(Float_t minimum)
 //______________________________________________________________________________
 void TH1::SetDirectory(TDirectory *dir)
 {
+   // By default when an histogram is created, it is added to the list
+   // of histogram objects in the current directory in memory.
    // Remove reference to this histogram from current directory and add
    // reference to new directory dir. dir can be 0 in which case the
    // histogram does not belong to any directory.
@@ -6783,11 +4286,10 @@ void TH1::SetError(Stat_t *error)
 }
 
 //______________________________________________________________________________
-void TH1::SetName(const Text_t *name)
+void TH1::SetName(const char *name)
 {
 //*-*-*-*-*-*-*-*-*-*-*Change the name of this histogram*-*-*-*-*-*-*-*-*-*-*
 //*-*                  =================================
-   if (gPad) gPad->Modified();
 
 //  Histograms are named objects in a THashList.
 //  We must update the hashlist if we change the name
@@ -6818,6 +4320,10 @@ void TH1::Sumw2()
 //*-*
 //*-*  if histogram is already filled, the sum of squares of weights
 //*-*  is filled with the existing bin contents
+//*-*
+//*-*  The error per bin will be computed as sqrt(sum of squares of weight)
+//*-*  for each bin.
+//*-*
 //*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 
   if (fSumw2.fN) {
@@ -6835,10 +4341,13 @@ void TH1::Sumw2()
 }
 
 //______________________________________________________________________________
-TF1 *TH1::GetFunction(const Text_t *name)
+TF1 *TH1::GetFunction(const char *name)
 {
 //*-*-*-*-*Return pointer to function with name*-*-*-*-*-*-*-*-*-*-*-*-*
 //*-*      ===================================
+//
+// Functions such as TH1::Fit store the fitted function in the list of
+// functions of this histogram.
 
    return (TF1*)fFunctions->FindObject(name);
 }
@@ -6889,6 +4398,14 @@ void TH1::SetBinError(Int_t bin, Stat_t error)
 }
 
 //______________________________________________________________________________
+void TH1::SetCellContent(Int_t binx, Int_t biny, Stat_t content)
+{
+  if (binx <0 || binx>fXaxis.GetNbins()+1) return;
+  if (biny <0 || biny>fYaxis.GetNbins()+1) return;
+  SetBinContent(biny*(fXaxis.GetNbins()+2) + binx,content);
+}
+
+//______________________________________________________________________________
 void TH1::SetCellError(Int_t binx, Int_t biny, Stat_t error)
 {
   if (binx <0 || binx>fXaxis.GetNbins()+1) return;
@@ -6915,22 +4432,22 @@ TH1C::TH1C(): TH1(), TArrayC()
 }
 
 //______________________________________________________________________________
-TH1C::TH1C(Int_t dim,const Text_t *name,const Text_t *title,Int_t nbins,Axis_t xlow,Axis_t xup)
+TH1C::TH1C(Int_t dim,const char *name,const char *title,Int_t nbins,Axis_t xlow,Axis_t xup)
      : TH1(name,title,nbins,xlow,xup), TArrayC()
 {
    fDimension = dim;
 }
 
 //______________________________________________________________________________
-TH1C::TH1C(Int_t dim,const Text_t *name,const Text_t *title,Int_t nbins,Axis_t *xbins)
+TH1C::TH1C(Int_t dim,const char *name,const char *title,Int_t nbins,Axis_t *xbins)
      : TH1(name,title,nbins,xbins), TArrayC()
 {
    fDimension = dim;
 }
 
 //______________________________________________________________________________
-TH1C::TH1C(const Text_t *name,const Text_t *title,Int_t nbins,Axis_t xlow,Axis_t xup)
-     : TH1(name,title,nbins,xlow,xup), TArrayC()
+TH1C::TH1C(const char *name,const char *title,Int_t nbins,Axis_t xlow,Axis_t xup)
+     : TH1(name,title,nbins,xlow,xup), TArrayC(nbins+2)
 {
 //
 //    Create a 1-Dim histogram with fix bins of type char (one byte per channel)
@@ -6938,12 +4455,11 @@ TH1C::TH1C(const Text_t *name,const Text_t *title,Int_t nbins,Axis_t xlow,Axis_t
 //                    (see TH1::TH1 for explanation of parameters)
 //
    fDimension = 1;
-   TArrayC::Set(fNcells);
 }
 
 //______________________________________________________________________________
-TH1C::TH1C(const Text_t *name,const Text_t *title,Int_t nbins,Axis_t *xbins)
-     : TH1(name,title,nbins,xbins), TArrayC()
+TH1C::TH1C(const char *name,const char *title,Int_t nbins,Axis_t *xbins)
+     : TH1(name,title,nbins,xbins), TArrayC(nbins+2)
 {
 //
 //    Create a 1-Dim histogram with variable bins of type char (one byte per channel)
@@ -6951,7 +4467,6 @@ TH1C::TH1C(const Text_t *name,const Text_t *title,Int_t nbins,Axis_t *xbins)
 //                    (see TH1::TH1 for explanation of parameters)
 //
    fDimension = 1;
-   TArrayC::Set(fNcells);
 }
 
 //______________________________________________________________________________
@@ -7087,22 +4602,22 @@ TH1S::TH1S(): TH1(), TArrayS()
 }
 
 //______________________________________________________________________________
-TH1S::TH1S(Int_t dim,const Text_t *name,const Text_t *title,Int_t nbins,Axis_t xlow,Axis_t xup)
+TH1S::TH1S(Int_t dim,const char *name,const char *title,Int_t nbins,Axis_t xlow,Axis_t xup)
      : TH1(name,title,nbins,xlow,xup), TArrayS()
 {
    fDimension = dim;
 }
 
 //______________________________________________________________________________
-TH1S::TH1S(Int_t dim,const Text_t *name,const Text_t *title,Int_t nbins,Axis_t *xbins)
+TH1S::TH1S(Int_t dim,const char *name,const char *title,Int_t nbins,Axis_t *xbins)
      : TH1(name,title,nbins,xbins), TArrayS()
 {
    fDimension = dim;
 }
 
 //______________________________________________________________________________
-TH1S::TH1S(const Text_t *name,const Text_t *title,Int_t nbins,Axis_t xlow,Axis_t xup)
-     : TH1(name,title,nbins,xlow,xup), TArrayS()
+TH1S::TH1S(const char *name,const char *title,Int_t nbins,Axis_t xlow,Axis_t xup)
+     : TH1(name,title,nbins,xlow,xup), TArrayS(nbins+2)
 {
 //
 //    Create a 1-Dim histogram with fix bins of type short
@@ -7110,12 +4625,11 @@ TH1S::TH1S(const Text_t *name,const Text_t *title,Int_t nbins,Axis_t xlow,Axis_t
 //           (see TH1::TH1 for explanation of parameters)
 //
    fDimension = 1;
-   TArrayS::Set(fNcells);
 }
 
 //______________________________________________________________________________
-TH1S::TH1S(const Text_t *name,const Text_t *title,Int_t nbins,Axis_t *xbins)
-     : TH1(name,title,nbins,xbins), TArrayS()
+TH1S::TH1S(const char *name,const char *title,Int_t nbins,Axis_t *xbins)
+     : TH1(name,title,nbins,xbins), TArrayS(nbins+2)
 {
 //
 //    Create a 1-Dim histogram with variable bins of type short
@@ -7123,7 +4637,6 @@ TH1S::TH1S(const Text_t *name,const Text_t *title,Int_t nbins,Axis_t *xbins)
 //           (see TH1::TH1 for explanation of parameters)
 //
    fDimension = 1;
-   TArrayS::Set(fNcells);
 }
 
 //______________________________________________________________________________
@@ -7258,22 +4771,22 @@ TH1F::TH1F(): TH1(), TArrayF()
 }
 
 //______________________________________________________________________________
-TH1F::TH1F(Int_t dim,const Text_t *name,const Text_t *title,Int_t nbins,Axis_t xlow,Axis_t xup)
+TH1F::TH1F(Int_t dim,const char *name,const char *title,Int_t nbins,Axis_t xlow,Axis_t xup)
      : TH1(name,title,nbins,xlow,xup), TArrayF()
 {
    fDimension = dim;
 }
 
 //______________________________________________________________________________
-TH1F::TH1F(Int_t dim,const Text_t *name,const Text_t *title,Int_t nbins,Axis_t *xbins)
+TH1F::TH1F(Int_t dim,const char *name,const char *title,Int_t nbins,Axis_t *xbins)
      : TH1(name,title,nbins,xbins), TArrayF()
 {
    fDimension = dim;
 }
 
 //______________________________________________________________________________
-TH1F::TH1F(const Text_t *name,const Text_t *title,Int_t nbins,Axis_t xlow,Axis_t xup)
-     : TH1(name,title,nbins,xlow,xup), TArrayF()
+TH1F::TH1F(const char *name,const char *title,Int_t nbins,Axis_t xlow,Axis_t xup)
+     : TH1(name,title,nbins,xlow,xup), TArrayF(nbins+2)
 {
 //
 //    Create a 1-Dim histogram with fix bins of type float
@@ -7281,12 +4794,11 @@ TH1F::TH1F(const Text_t *name,const Text_t *title,Int_t nbins,Axis_t xlow,Axis_t
 //           (see TH1::TH1 for explanation of parameters)
 //
    fDimension = 1;
-   TArrayF::Set(fNcells);
 }
 
 //______________________________________________________________________________
-TH1F::TH1F(const Text_t *name,const Text_t *title,Int_t nbins,Axis_t *xbins)
-     : TH1(name,title,nbins,xbins), TArrayF()
+TH1F::TH1F(const char *name,const char *title,Int_t nbins,Axis_t *xbins)
+     : TH1(name,title,nbins,xbins), TArrayF(nbins+2)
 {
 //
 //    Create a 1-Dim histogram with variable bins of type float
@@ -7294,7 +4806,6 @@ TH1F::TH1F(const Text_t *name,const Text_t *title,Int_t nbins,Axis_t *xbins)
 //           (see TH1::TH1 for explanation of parameters)
 //
    fDimension = 1;
-   TArrayF::Set(fNcells);
 }
 
 //______________________________________________________________________________
@@ -7409,22 +4920,22 @@ TH1D::TH1D(): TH1(), TArrayD()
 }
 
 //______________________________________________________________________________
-TH1D::TH1D(Int_t dim,const Text_t *name,const Text_t *title,Int_t nbins,Axis_t xlow,Axis_t xup)
+TH1D::TH1D(Int_t dim,const char *name,const char *title,Int_t nbins,Axis_t xlow,Axis_t xup)
      : TH1(name,title,nbins,xlow,xup), TArrayD()
 {
    fDimension = dim;
 }
 
 //______________________________________________________________________________
-TH1D::TH1D(Int_t dim,const Text_t *name,const Text_t *title,Int_t nbins,Axis_t *xbins)
+TH1D::TH1D(Int_t dim,const char *name,const char *title,Int_t nbins,Axis_t *xbins)
      : TH1(name,title,nbins,xbins), TArrayD()
 {
    fDimension = dim;
 }
 
 //______________________________________________________________________________
-TH1D::TH1D(const Text_t *name,const Text_t *title,Int_t nbins,Axis_t xlow,Axis_t xup)
-     : TH1(name,title,nbins,xlow,xup), TArrayD()
+TH1D::TH1D(const char *name,const char *title,Int_t nbins,Axis_t xlow,Axis_t xup)
+     : TH1(name,title,nbins,xlow,xup), TArrayD(nbins+2)
 {
 //
 //    Create a 1-Dim histogram with fix bins of type double
@@ -7432,12 +4943,11 @@ TH1D::TH1D(const Text_t *name,const Text_t *title,Int_t nbins,Axis_t xlow,Axis_t
 //           (see TH1::TH1 for explanation of parameters)
 //
    fDimension = 1;
-   TArrayD::Set(fNcells);
 }
 
 //______________________________________________________________________________
-TH1D::TH1D(const Text_t *name,const Text_t *title,Int_t nbins,Axis_t *xbins)
-     : TH1(name,title,nbins,xbins), TArrayD()
+TH1D::TH1D(const char *name,const char *title,Int_t nbins,Axis_t *xbins)
+     : TH1(name,title,nbins,xbins), TArrayD(nbins+2)
 {
 //
 //    Create a 1-Dim histogram with variable bins of type double
@@ -7445,7 +4955,6 @@ TH1D::TH1D(const Text_t *name,const Text_t *title,Int_t nbins,Axis_t *xbins)
 //           (see TH1::TH1 for explanation of parameters)
 //
    fDimension = 1;
-   TArrayD::Set(fNcells);
 }
 
 //______________________________________________________________________________

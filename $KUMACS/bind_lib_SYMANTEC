@@ -1,3 +1,4 @@
+*CMZ :  2.23/04 04/10/99  19.57.53  by  Fons Rademakers
 *CMZ :  0.90/14 03/02/97  17.07.40  by  Rene Brun
 *-- Author :  Valery Fine
 macro bind_lib_SYMANTEC 1='root'   2='*.obj'
@@ -7,9 +8,17 @@ message Generating library: $ROOTSYS\lib\Root_[1].lib
 
 shell echo $ROOTSYS\lib\Root_[1].lib /c /n /p:64  > creatlib.tmp
 if $PROCESSOR_ARCHITECTURE = 'x86' then
-   shell for %f in ($ROOTSYS\src\[2]*) do echo +%f  ^& >>creatlib.tmp
+   if [1] = 'Core' then
+      shell for %f in ([COREOBJS]) do echo +%f  ^& >>creatlib.tmp
+   else
+      shell for %f in ($ROOTSYS\src\[2]*) do echo +%f  ^& >>creatlib.tmp
+   endif
 else
-   shell for %f in ($ROOTSYS\src\[2]*) do echo +%f  & >>creatlib.tmp
+   if [1] = 'Core' then
+      shell for %f in ([COREOBJS]) do echo +%f  & >>creatlib.tmp
+   else
+      shell for %f in ($ROOTSYS\src\[2]*) do echo +%f  & >>creatlib.tmp
+   endif
 endif
 shell echo ,nul >> creatlib.tmp
 shell lib @creatlib.tmp

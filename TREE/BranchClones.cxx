@@ -1,31 +1,23 @@
-//*CMZ :  2.22/01 12/05/99  11.16.28  by  Rene Brun
+//*CMZ :  2.23/12 30/01/2000  18.22.12  by  Rene Brun
+//*CMZ :  2.23/09 11/01/2000  15.17.31by  Rene Brun
+//*CMZ :  2.23/07 26/10/99  16.49.52  by  Rene Brun
+//*CMZ :  2.22/01 04/08/99  16.35.11  by  Rene Brun
 //*CMZ :  2.22/00 08/04/99  14.20.22  by  Rene Brun
 //*CMZ :  2.21/07 14/03/99  07.55.47  by  Rene Brun
 //*CMZ :  2.20/01 03/03/99  14.18.31  by  Rene Brun
-//*CMZ :  2.00/12 11/09/98  05.02.03  by  Rene Brun
-//*CMZ :  2.00/11 11/09/98  00.31.46  by  Rene Brun
-//*CMZ :  2.00/09 11/06/98  19.16.04  by  Rene Brun
-//*CMZ :  2.00/08 04/06/98  20.34.09  by  Rene Brun
-//*CMZ :  2.00/00 23/02/98  11.00.07  by  Rene Brun
-//*CMZ :  1.03/09 11/12/97  16.26.34  by  Rene Brun
 //*-- Author :    Rene Brun   11/02/96
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -65,7 +57,7 @@ TBranchClones::TBranchClones(): TBranch()
 
 
 //______________________________________________________________________________
-TBranchClones::TBranchClones(const Text_t *name, void *pointer, Int_t basketsize, Int_t compress)
+TBranchClones::TBranchClones(const char *name, void *pointer, Int_t basketsize, Int_t compress)
     :TBranch()
 {
 //*-*-*-*-*-*-*-*-*-*-*-*-*Create a BranchClones*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
@@ -100,11 +92,13 @@ TBranchClones::TBranchClones(const Text_t *name, void *pointer, Int_t basketsize
    fBranchCount->SetBit(kIsClone);
    TLeaf *leafcount = (TLeaf*)fBranchCount->GetListOfLeaves()->UncheckedAt(0);
 
-//*-*-  Create the first basket
+//*-*-  Add StreamerInfo to Tree list
    fTree       = gTree;
    fDirectory  = fTree->GetDirectory();
    fFileName   = "";
+   cl->FillStreamerInfoList(fTree->GetStreamerInfoList());
 
+//*-*-  Create the first basket
    TBasket *basket = new TBasket(branchcount,fTree->GetName(),this);
    fBaskets.Add(basket);
 
@@ -186,6 +180,7 @@ Int_t TBranchClones::Fill()
    if (ppointer == 0) return 0;
    fList = (TClonesArray*)(*ppointer);
    fN    = fList->GetEntriesFast();
+   fEntries++;
 
    if (fN > fNdataMax) {
       fNdataMax = fList->GetSize();
@@ -212,35 +207,33 @@ Int_t TBranchClones::Fill()
 }
 
 //______________________________________________________________________________
-Int_t TBranchClones::GetEntry(Int_t entry)
+Int_t TBranchClones::GetEntry(Int_t entry, Int_t getall)
 {
 //*-*-*-*-*Read all branches of a BranchClones and return total number of bytes
 //*-*      ====================================================================
 
+   if (TestBit(kDoNotProcess) && !getall) return 0;
    Int_t nbytes = fBranchCount->GetEntry(entry);
    TLeaf *leafcount = (TLeaf*)fBranchCount->GetListOfLeaves()->UncheckedAt(0);
    fN = Int_t(leafcount->GetValue());
    if (fN <= 0) return 0;
 
-  // if fList exists, create clonesarray objects
-   if (fList) {
-     fList->ExpandCreate(fN);
-   }
-
-   TObjArray *leaves;
    TBranch *branch;
-   TLeaf *leaf;
    Int_t nbranches = fBranches.GetEntriesFast();
-   for (Int_t i=0;i<nbranches;i++)  {
-      branch = (TBranch*)fBranches.UncheckedAt(i);
-      if (branch->TestBit(kDoNotProcess)) continue;
-      nbytes += branch->GetEntry(entry);
-      if (!fList) continue;
-      leaves = branch->GetListOfLeaves();
-      leaf = (TLeaf*)leaves->UncheckedAt(0);
-      leaf->Export(fList,fN);
-   }
 
+     // if fList exists, create clonesarray objects
+   if (fList) {
+     fList->ExpandCreateFast(fN);
+     for (Int_t i=0;i<nbranches;i++)  {
+         branch = (TBranch*)fBranches.UncheckedAt(i);
+         nbytes += branch->GetEntryExport(entry, getall, fList, fN);
+      }
+   } else {
+      for (Int_t i=0;i<nbranches;i++)  {
+         branch = (TBranch*)fBranches.UncheckedAt(i);
+         nbytes += branch->GetEntry(entry, getall);
+      }
+   }
   return nbytes;
 }
 
@@ -316,8 +309,9 @@ void TBranchClones::Streamer(TBuffer &b)
 {
 //*-*-*-*-*-*-*-*-*Stream a class object*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 //*-*              =========================================
+   UInt_t R__s, R__c;
    if (b.IsReading()) {
-      b.ReadVersion();  //Version_t v = b.ReadVersion();
+      b.ReadVersion(&R__s, &R__c);
       TNamed::Streamer(b);
       b >> fCompress;
       b >> fBasketSize;
@@ -366,8 +360,9 @@ void TBranchClones::Streamer(TBuffer &b)
          leaf = (TLeaf*)leaves->UncheckedAt(0);
          leaf->SetOffset(rd->GetThisOffset());
       }
+      b.CheckByteCount(R__s, R__c, TBranchClones::IsA());
    } else {
-      b.WriteVersion(TBranchClones::IsA());
+      R__c = b.WriteVersion(TBranchClones::IsA(), kTRUE);
       TNamed::Streamer(b);
       b << fCompress;
       b << fBasketSize;
@@ -382,5 +377,6 @@ void TBranchClones::Streamer(TBuffer &b)
       b << fBranchCount;
       fClassName.Streamer(b);
       fBranches.Streamer(b);
+      b.SetByteCount(R__c, kTRUE);
    }
 }

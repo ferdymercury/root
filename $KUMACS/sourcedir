@@ -2,7 +2,6 @@
 *CMZ :  2.00/04 06/04/98  09.34.02  by  Rene Brun
 *CMZ :  2.00/01 09/03/98  18.02.05  by  Rene Brun
 *CMZ :  2.00/00 17/02/98  12.12.34  by  Rene Brun
-*CMZ :  1.03/09 16/12/97  11.52.38  by  Rene Brun
 *-- Author :    Rene Brun   04/12/95
 macro sourcedir 1=-
 

@@ -1,32 +1,24 @@
+//*CMZ :  2.23/12 26/01/2000  09.24.07  by  Rene Brun
+//*CMZ :  2.23/03 25/09/99  20.18.45  by  Fons Rademakers
+//*CMZ :  2.23/01 26/08/99  11.59.29  by  Rene Brun
 //*CMZ :  2.22/08 06/07/99  18.56.49  by  Fons Rademakers
 //*CMZ :  2.20/00 19/11/98  19.21.13  by  Fons Rademakers
-//*CMZ :  2.00/13 28/10/98  12.39.37  by  Fons Rademakers
-//*CMZ :  2.00/12 08/10/98  14.11.32  by  Fons Rademakers
-//*CMZ :  2.00/11 25/08/98  11.08.50  by  Fons Rademakers
-//*CMZ :  2.00/01 09/03/98  14.37.39  by  Fons Rademakers
-//*CMZ :  2.00/00 04/03/98  19.34.51  by  Fons Rademakers
-//*CMZ :  1.03/09 08/12/97  15.44.30  by  Fons Rademakers
 //*-- Author :    Rene Brun   11/12/94
 
 #ifndef ROOT_TGX11
 #define ROOT_TGX11
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -38,8 +30,8 @@
 //                                                                      //
 //////////////////////////////////////////////////////////////////////////
 
-#ifndef ROOT_TGXW
-#include "TGXW.h"
+#ifndef ROOT_TVirtualX
+#include "TVirtualX.h"
 #endif
 
 #if !defined(__CINT__)
@@ -93,7 +85,7 @@ struct XWindow_t {
 
 
 
-class TGX11 : public TGXW {
+class TGX11 : public TVirtualX {
 
 private:
    Int_t      fMaxNumberOfWindows;    //Maximum number of windows
@@ -149,7 +141,7 @@ protected:
 public:
    TGX11();
    TGX11(const TGX11 &org);
-   TGX11(Text_t *name, Text_t *title);
+   TGX11(const char *name, const char *title);
    virtual ~TGX11();
 
    Bool_t    Init(void *display);
@@ -229,6 +221,7 @@ public:
    void         MoveWindow(Window_t id, Int_t x, Int_t y);
    void         MoveResizeWindow(Window_t id, Int_t x, Int_t y, UInt_t w, UInt_t h);
    void         ResizeWindow(Window_t id, UInt_t w, UInt_t h);
+   void         IconifyWindow(Window_t id);
    void         SetWindowBackground(Window_t id, ULong_t color);
    void         SetWindowBackgroundPixmap(Window_t id, Pixmap_t pxm);
    Window_t     CreateWindow(Window_t parent, Int_t x, Int_t y,
@@ -290,6 +283,7 @@ public:
                             Cursor_t cursor, Bool_t grab = kTRUE);
    void         SetWindowName(Window_t id, char *name);
    void         SetIconName(Window_t id, char *name);
+   void         SetIconPixmap(Window_t id, Pixmap_t pic);
    void         SetClassHints(Window_t id, char *className, char *resourceName);
    void         SetMWMHints(Window_t id, UInt_t value, UInt_t funcs, UInt_t input);
    void         SetWMPosition(Window_t id, Int_t x, Int_t y);
@@ -304,6 +298,7 @@ public:
    void         GetFontProperties(FontStruct_t font, Int_t &max_ascent, Int_t &max_descent);
    void         GetGCValues(GContext_t gc, GCValues_t &gval);
    FontStruct_t GetFontStruct(FontH_t fh);
+   void         FreeFontStruct(FontStruct_t fs);
    void         ClearWindow(Window_t id);
    Int_t        KeysymToKeycode(UInt_t keysym);
    void         FillRectangle(Drawable_t id, GContext_t gc, Int_t x, Int_t y,

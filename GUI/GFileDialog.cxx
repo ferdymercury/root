@@ -1,24 +1,21 @@
+//*CMZ :  2.23/10 15/12/99  19.39.50  by  Fons Rademakers
+//*CMZ :  2.23/03 12/09/99  16.57.48  by  Fons Rademakers
 //*CMZU:  2.00/08 19/05/98  21.55.44  by  Fons Rademakers
 //*CMZ :  2.00/02 17/03/98  09.44.29  by  Rene Brun
 //*CMZ :  2.00/00 26/02/98  11.53.46  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   20/01/98
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -28,7 +25,11 @@
 // This class creates a file selection dialog. It contains a combo box  //
 // to select the desired directory. A listview with the different       //
 // files in the current directory and a combo box with which you can    //
-// select the a filter (on file extensions).                            //
+// select a filter (on file extensions).                                //
+// When creating a file dialog one passes a pointer to a TGFileInfo     //
+// object. When the TGFileDialog ctor returns the selected file name    //
+// can be found in the TGFileInfo::fFileName field. This string must    //
+// be freed by the users.                                               //
 //                                                                      //
 //////////////////////////////////////////////////////////////////////////
 
@@ -137,13 +138,12 @@ TGFileDialog::TGFileDialog(const TGWindow *p, const TGWindow *main,
 
    fFv->GetViewPort()->SetBackgroundColor(fgWhitePixel);
    fFv->SetContainer(fFc);
+   fFv->SetViewMode(kLVList);
 
    fFc->SetFilter(fFileInfo->fFileTypes[1]);
-   fFc->ChangeDirectory(".");
-   fTreeLB->Update((char *)gSystem->WorkingDirectory());
-
-   fFv->SetViewMode(kLVList);
    fFc->Sort(kSortByType);
+   fFc->ChangeDirectory(".");
+   fTreeLB->Update(fFc->GetDirectory());
 
    fList->SetState(kButtonEngaged);
 
@@ -232,7 +232,7 @@ TGFileDialog::TGFileDialog(const TGWindow *p, const TGWindow *main,
    if (main) {
       int      ax, ay;
       Window_t wdummy;
-      gGXW->TranslateCoordinates(main->GetId(), GetParent()->GetId(),
+      gVirtualX->TranslateCoordinates(main->GetId(), GetParent()->GetId(),
                                  (((TGFrame *) main)->GetWidth() - fWidth) >> 1,
                                  (((TGFrame *) main)->GetHeight() - fHeight) >> 1,
                                  ax, ay, wdummy);
@@ -322,15 +322,14 @@ Bool_t TGFileDialog::ProcessMessage(Long_t msg, Long_t parm1, Long_t)
                   case kIDF_OK:
                      // same code as under kTE_ENTER
                      if (fTbfname->GetTextLength() == 0) {
-                        char txt[64];
-                        sprintf(txt, "Please provide file name or use \"Cancel\"");
+                        const char *txt = "Please provide file name or use \"Cancel\"";
                         new TGMsgBox(fClient->GetRoot(), GetMainFrame(),
                                      "Missing File Name", txt, kMBIconExclamation,
                                      kMBOk);
                         return kTRUE;
                      }
-                     fFileInfo->fFilename = new char[fTbfname->GetTextLength()+1];
-                     strcpy(fFileInfo->fFilename, fTbfname->GetString());
+                     fFileInfo->fFilename = gSystem->ConcatFileName(fFc->GetDirectory(),
+                                                                    fTbfname->GetString());
                      delete this;
                      break;
 
@@ -341,7 +340,7 @@ Bool_t TGFileDialog::ProcessMessage(Long_t msg, Long_t parm1, Long_t)
 
                   case kIDF_CDUP:
                      fFc->ChangeDirectory("..");
-                     fTreeLB->Update((char *)gSystem->WorkingDirectory());
+                     fTreeLB->Update(fFc->GetDirectory());
                      break;
 
                   case kIDF_NEW_FOLDER:
@@ -366,7 +365,7 @@ Bool_t TGFileDialog::ProcessMessage(Long_t msg, Long_t parm1, Long_t)
                      e = (TGTreeLBEntry *) fTreeLB->GetSelectedEntry();
                      if (e) {
                         fFc->ChangeDirectory(e->GetPath()->GetString());
-                        fTreeLB->Update((char *)gSystem->WorkingDirectory());
+                        fTreeLB->Update(fFc->GetDirectory());
                      }
                      break;
 
@@ -407,10 +406,10 @@ Bool_t TGFileDialog::ProcessMessage(Long_t msg, Long_t parm1, Long_t)
                      f = (TGFileItem *) fFc->GetNextSelected(&p);
                      if (S_ISDIR(f->GetType())) {
                         fFc->ChangeDirectory(f->GetItemName()->GetString());
-                        fTreeLB->Update((char *)gSystem->WorkingDirectory());
+                        fTreeLB->Update(fFc->GetDirectory());
                      } else {
-                        fFileInfo->fFilename = new char[f->GetItemName()->GetLength()+1];
-                        strcpy(fFileInfo->fFilename, f->GetItemName()->GetString());
+                        fFileInfo->fFilename = gSystem->ConcatFileName(fFc->GetDirectory(),
+                                                                       fTbfname->GetString());
                         delete this;
                      }
                   }
@@ -429,15 +428,14 @@ Bool_t TGFileDialog::ProcessMessage(Long_t msg, Long_t parm1, Long_t)
             case kTE_ENTER:
                // same code as under kIDF_OK
                if (fTbfname->GetTextLength() == 0) {
-                  char txt[64];
-                  sprintf(txt, "Please provide file name or use \"Cancel\"");
+                  const char *txt = "Please provide file name or use \"Cancel\"";
                   new TGMsgBox(fClient->GetRoot(), GetMainFrame(),
                                "Missing File Name", txt, kMBIconExclamation,
                                kMBOk);
                   return kTRUE;
                }
-               fFileInfo->fFilename = new char[fTbfname->GetTextLength()+1];
-               strcpy(fFileInfo->fFilename, fTbfname->GetString());
+               fFileInfo->fFilename = gSystem->ConcatFileName(fFc->GetDirectory(),
+                                                              fTbfname->GetString());
                delete this;
                break;
 

@@ -1,29 +1,28 @@
-//*CMZ :  2.22/05 06/06/99  11.36.16  by  Fons Rademakers
-//*CMZ :  2.22/01 27/04/99  10.36.28  by  Fons Rademakers
-//*CMZ :  2.21/06 14/02/99  18.23.35  by  Fons Rademakers
-//*CMZ :  2.20/00 22/11/98  19.29.37  by  Fons Rademakers
-//*CMZ :  2.00/13 29/10/98  08.32.56  by  Fons Rademakers
-//*CMZ :  2.00/10 10/07/98  09.59.46  by  Rene Brun
-//*CMZ :  2.00/08 22/05/98  12.06.17  by  Fons Rademakers
-//*CMZ :  1.03/09 16/12/97  16.26.15  by  Rene Brun
+//*CMZ :  2.23/12 27/01/2000  11.14.12  by  Fons Rademakers
+//*CMZ :  2.23/11 09/01/2000  10.41.06  by  Rene Brun
+//*CMZ :  2.23/09 18/11/99  12.24.21  by  Rene Brun
+//*CMZ :  2.23/08 29/10/99  10.05.01  by  Rene Brun
+//*CMZ :  2.23/07 24/10/99  18.14.19  by  Fons Rademakers
+//*CMZ :  2.23/06 21/10/99  08.20.45  by  Rene Brun
+//*CMZ :  2.23/05 20/10/99  18.58.25  by  Rene Brun
+//*CMZ :  2.23/04 11/10/99  19.21.26  by  Fons Rademakers
+//*CMZ :  2.23/03 24/09/99  18.20.05  by  Rene Brun
+//*CMZ :  2.23/02 07/09/99  16.47.26  by  Rene Brun
+//*CMZ :  2.23/01 31/08/99  12.31.47  by  Fons Rademakers
+//*CMZ :  2.23/00 07/08/99  18.08.51  by  Fons Rademakers
 //*-- Author :    Rene Brun   17/02/95
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -37,10 +36,9 @@
 
 #include "TROOT.h"
 #include "TClass.h"
-#include "TGXW.h"
+#include "TVirtualX.h"
 #include "Getline.h"
 #include "TStyle.h"
-#include "TPostscript.h"
 #include "TObjectTable.h"
 #include "TClassTable.h"
 #include "TStopwatch.h"
@@ -55,13 +53,17 @@
 #include "TInterpreter.h"
 #include "TObjArray.h"
 #include "TObjString.h"
-#include "TProof.h"
 #include "TFile.h"
 #include "TMapFile.h"
 #include "TTabCom.h"
 
 #ifdef R__UNIX
 #include <signal.h>
+
+extern "C" {
+   extern int G__get_security_error();
+   extern int G__genericerror(char* msg);
+}
 #endif
 
 
@@ -86,13 +88,18 @@ Bool_t TInterruptHandler::Notify()
 
    // make sure we use the sbrk heap (in case of mapped files)
    gMmallocDesc = 0;
+//  go via the interpreter???
+//   if (gProof) gProof->Interrupt(TProof::kHardInterrupt);
 
-   Printf("\n *** Break *** keyboard interrupt");
-   if (gProof) gProof->Interrupt(TProof::kHardInterrupt);
-   if (TROOT::Initialized()) {
-      Getlinem(kInit, "Root > ");
-      gInterpreter->RewindDictionary();
-      Throw(GetSignal());
+   if (!G__get_security_error())
+      G__genericerror("\n *** Break *** keyboard interrupt");
+   else {
+      Printf("\n *** Break *** keyboard interrupt");
+      if (TROOT::Initialized()) {
+         Getlinem(kInit, "Root > ");
+         gInterpreter->RewindDictionary();
+         Throw(GetSignal());
+      }
    }
    return kTRUE;
 }
@@ -117,7 +124,7 @@ Bool_t TTermInputHandler::Notify()
 ClassImp(TRint)
 
 //______________________________________________________________________________
-TRint::TRint(char *appClassName, int *argc, char **argv, void *options, int numOptions)
+TRint::TRint(const char *appClassName, int *argc, char **argv, void *options, int numOptions)
        : TApplication(appClassName, argc, argv, options, numOptions)
 {
    // Create an application environment. The TRint environment provides an
@@ -129,17 +136,23 @@ TRint::TRint(char *appClassName, int *argc, char **argv, void *options, int numO
    fDefaultPrompt = "root [%d] ";
    fInterrupt     = kFALSE;
 
-   TPostScript *ps = new TPostScript();
-   ps->SetName("ps");
-   ps->SetTitle("Default PostScript object");
-   gROOT->GetListOfSpecials()->Add(ps);
-
    gBenchmark = new TBenchmark();
 
    PrintLogo();
 
    // Everybody expects iostream to be available, so load it...
+#ifndef WIN32
    ProcessLine("#include <iostream>");
+#endif
+   // The following libs are also useful to have,
+   // make sure they are loaded...
+   gROOT->LoadClass("TGeometry",   "Graf3d");
+   gROOT->LoadClass("TTree",       "Tree");
+   gROOT->LoadClass("TMatrix",     "Matrix");
+   gROOT->LoadClass("TMinuit",     "Minuit");
+   gROOT->LoadClass("TPostScript", "Postscript");
+   gROOT->LoadClass("TCanvas",     "Gpad");
+   gROOT->LoadClass("THtml",       "Html");
 
    // Load user functions
    const char *logon;
@@ -243,7 +256,7 @@ void TRint::PrintLogo()
 {
    // Print the ROOT logo on standard output.
 
-   Int_t iday,imonth,iyear,mille;
+   Int_t iday,imonth,iyear;
    static const char *months[] = {"January","February","March","April","May",
                                   "June","July","August","September","October",
                                   "November","December"};
@@ -252,9 +265,7 @@ void TRint::PrintLogo()
    iday   = idatqq%100;
    imonth = (idatqq/100)%100;
    iyear  = (idatqq/10000);
-   if (iyear < 90) mille = 2000 + iyear;
-   else            mille = 1900 + iyear;
-   char *root_date = Form("%d %s %4d",iday,months[imonth-1],mille);
+   char *root_date = Form("%d %s %4d",iday,months[imonth-1],iyear);
 
    Printf("  *******************************************");
    Printf("  *                                         *");
@@ -269,8 +280,11 @@ void TRint::PrintLogo()
    Printf("  *******************************************");
 
 #ifdef R__UNIX
-   if (!strcmp(gGXW->GetName(), "X11TTF"))
+   if (!strcmp(gVirtualX->GetName(), "X11TTF"))
       Printf("\nFreeType Engine v1.1 used to render TrueType fonts.");
+#endif
+#ifdef _REENTRANT
+   Printf("Compiled with thread support.");
 #endif
 
    gInterpreter->PrintIntro();

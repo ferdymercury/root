@@ -1,5 +1,5 @@
-//*CMZ :  2.22/10 23/07/99  14.42.21  by  Masaharu Goto
-//*-- Author :    Masaharu Goto   23/07/99
+//*CMZ :  2.23/10 10/12/99  18.00.08  by  Masaharu Goto
+//*-- Author :    Masaharu Goto   10/12/99
 /* /% C++ %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -9,15 +9,13 @@
  * Description:
  *  Extended Run Time Type Identification API
  ************************************************************************
- * Copyright(c) 1991~1996  [hp] Hewlett Packard Japan, All rights reserved
- * Author                  Masaharu Goto (gotom@jpn.hp.com)
- * Copyright(c) 1995~1998  Masaharu Goto (MXJ02154@niftyserve.or.jp)
+ * Copyright(c) 1995~1999  Masaharu Goto (MXJ02154@niftyserve.or.jp)
  *
  * Permission to use, copy, modify and distribute this software and its
  * documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies and
  * that both that copyright notice and this permission notice appear
- * in supporting documentation.  Hewlett-Packard Japan Company makes no
+ * in supporting documentation.  The author makes no
  * representations about the suitability of this software for any
  * purpose.  It is provided "as is" without express or implied warranty.
  ************************************************************************/
@@ -140,7 +138,12 @@ extern "C" G__value G__APIGetSpecialObject_layer1(char *item)
   G__value result;
   long l;
   G__ClassInfo type;
-#if !defined(G__OLDIMPLEMENTATION481)
+#if !defined(G__PHILIPPE4)
+  int store_prerun = G__prerun;
+  G__prerun = 0;
+  l=(long)((*G__UserSpecificGetSpecialObject)(item,&type,pptr,ppdict));
+  G__prerun = store_prerun;
+#elif !defined(G__OLDIMPLEMENTATION481)
   l=(long)((*G__UserSpecificGetSpecialObject)(item,&type,pptr,ppdict));
 #elif !defined(G__OLDIMPLEMENTATOIN455)
   l=(long)((*G__UserSpecificGetSpecialObject)(item,&type,ptr));
@@ -173,6 +176,22 @@ extern "C" void G__InitGetSpecialObject(G__pMethodSpecialObject pmethod)
 #endif
 }
 
+#ifndef G__OLDIMPLEMENTATION1207
+/*********************************************************************
+* Feedback routine in case tagnum for a class changes (in case the
+* dictionary of a shared lib is being re-initialized).
+*********************************************************************/
+//
+// Static object to store pointer to interface function (defined in newlink.c)
+//
+extern "C" G__pMethodUpdateClassInfo G__UserSpecificUpdateClassInfo;
+
+extern "C" void G__InitUpdateClassInfo(G__pMethodUpdateClassInfo pmethod)
+{
+   G__UserSpecificUpdateClassInfo = pmethod;
+}
+#endif
+
 #ifndef G__OLDIMPLEMENTATION1002
 #ifdef G__ROOT
 extern "C" void* G__new_interpreted_object(int size) {
@@ -196,7 +215,7 @@ extern "C" void G__delete_interpreted_object(void* p) {
 ////////////////////////////////////////////////////////////////////
 void G__SourceFileInfo::Init(const char* fname) {
   for(filen=0;filen<G__nfile;filen++) {
-    if(0==strcmp(fname,G__srcfile[filen].filename)) break;
+    if(0==strcmp(fname,G__srcfile[filen].filename)) return;
   }
 }
 ////////////////////////////////////////////////////////////////////
@@ -258,12 +277,8 @@ int G__SourceFileInfo::IsValid() {
 ////////////////////////////////////////////////////////////////////
 int G__SourceFileInfo::Next() {
   ++filen;
-  if(IsValid()) {
-    return(1);
-  }
-  else {
-    return(0);
-  }
+  if(IsValid()) return(1);
+  else return(0);
 }
 ////////////////////////////////////////////////////////////////////
 
@@ -300,3 +315,24 @@ int G__IncludePathInfo::Next() {
 }
 ////////////////////////////////////////////////////////////////////
 
+#ifdef G__EXCEPTIONWRAPPER
+/*********************************************************************
+* G__ExceptionWrapper
+*********************************************************************/
+extern "C" int G__ExceptionWrapper(G__InterfaceMethod funcp
+				   ,G__value* result7
+				   ,char* funcname
+				   ,struct G__param *libp
+				   ,int hash)
+{
+  try {
+    (*funcp)(result7,funcname,libp,hash);
+    return 1;
+  }
+  catch(...) {
+    G__genericerror("Error: C++ exception caught");
+    return 0;
+  }
+}
+#endif
+////////////////////////////////////////////////////////////////////

@@ -1,3 +1,4 @@
+*CMZ :  2.23/04 12/10/99  10.18.54  by  Fons Rademakers
 *CMZ :  0.80/00 22/07/96  18.32.50  by  Rene Brun
 *-- Author :    Fons Rademakers   15/02/96
 
@@ -12,24 +13,13 @@ macro cint_winnt
 
 seq -i src/*.h
 
-headers=TWinNTSystem.h
+headers=TWinNTSystem.h TWinNTInput.h
 
 name=WinNT
 patch=WINNT
 
-application data G__LinkDef.h
-#ifdef __CINT__
-
-#pragma link off all globals;
-#pragma link off all classes;
-#pragma link off all functions;
-
-#pragma link C++ class TWinNTSystem;
-#pragma link C++ class TFdSet;
-
-#endif
-G__LinkDef.h
-
+set G__LinkDef.h -F TEXT
+ctot /$kumacs/WINNT_LinkDef
 
 exec makecint [name] [patch] [headers]
 

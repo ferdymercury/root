@@ -2,9 +2,6 @@
 *CMZ :  2.21/06 11/02/99  16.15.08  by  Valery Fine(fine@vxcern.cern.ch)
 *CMZ :  2.20/00 09/11/98  12.34.27  by  Valery Fine(fine@mail.cern.ch)
 *CMZ :  2.00/13 29/10/98  13.35.51  by  Rene Brun
-*CMZ :  2.00/10 28/07/98  16.42.35  by  Rene Brun
-*CMZ :  2.00/00 09/02/98  16.46.40  by  Rene Brun
-*CMZ :  1.03/09 16/12/97  17.11.12  by  Rene Brun
 *-- Author :
 ObjSuf        = obj
 SrcSuf        = cxx

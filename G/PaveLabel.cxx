@@ -1,29 +1,25 @@
+//*CMZ :  2.23/12 26/01/2000  09.31.22  by  Rene Brun
+//*CMZ :  2.23/11 04/01/2000  19.23.12  by  Rene Brun
+//*CMZ :  2.23/10 15/12/99  10.03.29  by  Rene Brun
+//*CMZ :  2.23/05 17/10/99  11.13.04  by  Rene Brun
+//*CMZ :  2.23/04 13/10/99  10.15.44  by  Rene Brun
 //*CMZ :  2.21/05 07/02/99  11.39.40  by  Rene Brun
 //*CMZ :  2.21/03 21/01/99  18.54.32  by  Rene Brun
 //*CMZ :  2.21/00 28/12/98  18.40.32  by  Rene Brun
 //*CMZ :  2.20/05 15/12/98  09.17.21  by  Rene Brun
-//*CMZ :  2.00/11 18/08/98  21.28.58  by  Rene Brun
-//*CMZ :  2.00/04 03/04/98  17.54.31  by  Rene Brun
-//*CMZ :  2.00/00 16/02/98  12.44.26  by  Rene Brun
-//*CMZ :  1.03/09 06/12/97  17.31.27  by  Fons Rademakers
 //*-- Author :    Rene Brun   17/10/95
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 #include <fstream.h>
@@ -31,6 +27,7 @@
 
 #include "TROOT.h"
 #include "TPaveLabel.h"
+#include "TLatex.h"
 #include "TVirtualPad.h"
 
 ClassImp(TPaveLabel)
@@ -52,8 +49,8 @@ TPaveLabel::TPaveLabel(): TPave(), TAttText()
 }
 
 //______________________________________________________________________________
-TPaveLabel::TPaveLabel(Coord_t x1, Coord_t y1,Coord_t x2, Coord_t  y2, const Text_t *label, Option_t *option)
-           :TPave(x1,y1,x2,y2,3,option), TAttText(22,0,1,62,0.7)
+TPaveLabel::TPaveLabel(Coord_t x1, Coord_t y1,Coord_t x2, Coord_t  y2, const char *label, Option_t *option)
+           :TPave(x1,y1,x2,y2,3,option), TAttText(22,0,1,62,0.99)
 {
 //*-*-*-*-*-*-*-*-*-*-*pavelabel normal constructor*-*-*-*-*-*-*-*-*-*-*-*-*-*
 //*-*                  ============================
@@ -104,7 +101,7 @@ void TPaveLabel::Draw(Option_t *option)
 }
 
 //______________________________________________________________________________
-void TPaveLabel::DrawPaveLabel(Coord_t x1, Coord_t y1, Coord_t x2, Coord_t y2, const Text_t *label, Option_t *)
+void TPaveLabel::DrawPaveLabel(Coord_t x1, Coord_t y1, Coord_t x2, Coord_t y2, const char *label, Option_t *)
 {
 //*-*-*-*-*-*-*-*-*-*-*Draw this pavelabel with new coordinates*-*-*-*-*-*-*-*
 //*-*                  ========================================
@@ -129,7 +126,7 @@ void TPaveLabel::Paint(Option_t *option)
 
 //______________________________________________________________________________
 void TPaveLabel::PaintPaveLabel(Coord_t x1, Coord_t y1,Coord_t x2, Coord_t  y2,
-                      const Text_t *label ,Option_t *option)
+                      const char *label ,Option_t *option)
 {
 //*-*-*-*-*-*-*-*-*-*-*Draw this pavelabel with new coordinates*-*-*-*-*-*-*-*
 //*-*                  ========================================
@@ -154,18 +151,32 @@ void TPaveLabel::PaintPaveLabel(Coord_t x1, Coord_t y1,Coord_t x2, Coord_t  y2,
    if (nch <= 0) return;
 
 //*-*- Draw label
-   Float_t textsize  = GetTextSize();
-   Int_t ypixel      = gPad->YtoPixel(y1) - gPad->YtoPixel(y2);
-   Float_t labelsize = textsize*ypixel;
-   Float_t wxlabel   = gPad->XtoPixel(x2) - gPad->XtoPixel(x1);
-   if (nch*0.5*labelsize > wxlabel) labelsize = wxlabel/(nch*0.5);
-   if (labelsize < 0.5*ypixel && labelsize < 10) labelsize = 0.5*ypixel;
    Float_t wh   = (Float_t)gPad->XtoPixel(gPad->GetX2());
    Float_t hh   = (Float_t)gPad->YtoPixel(gPad->GetY1());
-   if (wh < hh)  labelsize   /= wh;
-   else          labelsize   /= hh;
-   SetTextSize(labelsize);
-   TAttText::Modify();
+   Float_t textsize  = GetTextSize();
+   Int_t automat = 0;
+   if (TMath::Abs(textsize -0.99) < 0.001) automat = 1;
+   if (textsize == 0)   { textsize = 0.99; automat = 1;}
+   Int_t ypixel      = gPad->YtoPixel(y1) - gPad->YtoPixel(y2);
+   Float_t labelsize = textsize*ypixel/hh;
+   if (wh < hh) labelsize *= hh/wh;
+   TLatex latex;
+   latex.SetTextAngle(GetTextAngle());
+   latex.SetTextFont(GetTextFont());
+   latex.SetTextAlign(GetTextAlign());
+   latex.SetTextColor(GetTextColor());
+   latex.SetTextSize(labelsize);
+   if (automat) {
+      UInt_t w,h;
+      latex.GetTextExtent(w,h,GetTitle());
+      labelsize = h/hh;
+      Float_t wxlabel   = gPad->XtoPixel(x2) - gPad->XtoPixel(x1);
+      if (w > 0.99*wxlabel) {labelsize *= 0.99*wxlabel/w; h = UInt_t(h*0.99*wxlabel/w);}
+      if (h < 1) h = 1;
+      labelsize   = Float_t(h)/hh;
+      if (wh < hh) labelsize *= hh/wh;
+      latex.SetTextSize(labelsize);
+   }
    Int_t halign = GetTextAlign()/10;
    Int_t valign = GetTextAlign()%10;
    Float_t x = 0.5*(x1+x2);
@@ -174,8 +185,7 @@ void TPaveLabel::PaintPaveLabel(Coord_t x1, Coord_t y1,Coord_t x2, Coord_t  y2,
    Float_t y = 0.5*(y1+y2);
    if (valign == 1) y = y1 + 0.02*(y2-y1);
    if (valign == 3) y = y2 - 0.02*(y2-y1);
-   gPad->PaintText(x, y, GetLabel());
-   SetTextSize(textsize);
+   latex.PaintLatex(x, y, GetTextAngle(),labelsize,GetLabel());
 }
 
 //______________________________________________________________________________
@@ -198,9 +208,16 @@ void TPaveLabel::SavePrimitive(ofstream &out, Option_t *)
    } else {
        out<<"   TPaveLabel *";
    }
-   out<<"pl = new TPaveLabel("<<fX1<<","<<fY1<<","<<fX2<<","<<fY2
-      <<","<<quote<<fLabel<<quote<<","<<quote<<fOption<<quote<<");"<<endl;
-
+   if (fOption.Contains("NDC")) {
+      out<<"pl = new TPaveLabel("<<fX1NDC<<","<<fY1NDC<<","<<fX2NDC<<","<<fY2NDC
+         <<","<<quote<<fLabel<<quote<<","<<quote<<fOption<<quote<<");"<<endl;
+   } else {
+      out<<"pl = new TPaveLabel("<<fX1<<","<<fY1<<","<<fX2<<","<<fY2
+         <<","<<quote<<fLabel<<quote<<","<<quote<<fOption<<quote<<");"<<endl;
+   }
+   if (fBorderSize != 3) {
+      out<<"   pt->SetBorderSize("<<fBorderSize<<");"<<endl;
+   }
    SaveFillAttributes(out,"pl",0,1001);
    SaveLineAttributes(out,"pl",1,1,1);
    SaveTextAttributes(out,"pl",22,0,1,62,0);

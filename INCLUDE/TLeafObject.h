@@ -1,25 +1,23 @@
+//*CMZ :  2.23/12 26/01/2000  09.24.07  by  Rene Brun
+//*CMZ :  2.23/09 22/11/99  17.15.49  by  Rene Brun
+//*CMZ :  2.23/03 10/09/99  20.00.31  by  Rene Brun
 //*CMZ :  1.00/09 24/04/97  16.04.25  by  Rene Brun
 //*-- Author :    Rene Brun   27/01/96
 
 #ifndef ROOT_TLeafObject
 #define ROOT_TLeafObject
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -46,16 +44,14 @@ protected:
 
 public:
     TLeafObject();
-    TLeafObject(const Text_t *name, const Text_t *type);
+    TLeafObject(const char *name, const char *type);
     virtual ~TLeafObject();
 
     virtual void    FillBasket(TBuffer &b);
     TClass          *GetClass() {return fClass;}
     TMethodCall     *GetMethodCall(char *name);
     TObject         *GetObject() {return (TObject*)(*fObjAddress);}
-    const Text_t    *GetTypeName() const ;
-    Float_t         GetValue(Int_t i, TTreeFormula *f=0);
-    virtual void    Print(Option_t *option="");
+    const char      *GetTypeName() const ;
     virtual void    ReadBasket(TBuffer &b);
     virtual void    SetAddress(void *add=0);
 

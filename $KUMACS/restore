@@ -1,3 +1,5 @@
+*CMZ :  2.23/04 08/10/99  19.54.27  by  Fons Rademakers
+*CMZ :  2.23/02 04/09/99  10.03.44  by  Rene Brun
 *CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers
 *CMZ :  1.03/08 16/11/97  19.39.32  by  Fons Rademakers
 *-- Author :    Valery Fine(fine@vxcern.cern.ch)   02/09/96
@@ -41,25 +43,29 @@ cd ..
 
 Echo restore the 'long' names of the ROOT DLLs
 cd bin
-ren  ROOT_B~1.DLL    Root_Base.dll
-ren  ROOT_C~1.DLL    Root_Cint.dll
-ren  ROOT_C~2.DLL    Root_Clib.dll
-ren  ROOT_C~3.DLL    Root_Cont.dll
-ren  ROOT_F~1.DLL    Root_Func.dll
-ren  ROOT_G~2.DLL    Root_Gpad.dll
-ren  ROOT_G~1.DLL    Root_Graf.dll
-ren  ROOT_G~3.DLL    Root_Graf3d.dll
-ren  ROOT_H~1.DLL    Root_Hist.dll
-ren  ROOT_H~2.DLL    Root_Html.dll
-ren  ROOT_M~1.DLL    Root_Matrix.dll
-ren  ROOT_M~2.DLL    Root_Meta.dll
-ren  ROOT_M~3.DLL    Root_Minuit.dll
-ren  ROOT_P~1.DLL    Root_Postscript.dll
-ren  ROOT_P~2.DLL    Root_Proof.dll
-ren  ROOT_R~1.DLL    Root_Rint.dll
-ren  ROOT_T~1.DLL    Root_Tree.dll
-ren  ROOT_W~1.DLL    Root_Win32.dll
-ren  ROOT_W~2.DLL    Root_WinNT.dll
+ren ROOT_C~1.DLL    Root_Cint.dll
+ren ROOT_C~2.DLL    Root_Core.dll
+ren ROOT_G~1.DLL    Root_Graf.dll
+ren ROOT_GUI.DLL    Root_Gui.dll
+ren ROOT_G~2.DLL    Root_Gpad.dll
+ren ROOT_G~3.DLL    Root_Graf3d.dll
+ren ROOT_H~1.DLL    Root_Hist.dll
+ren ROOT_M~1.DLL    Root_Matrix.dll
+ren ROOT_M~2.DLL    Root_Minuit.dll
+ren ROOT_NEW.DLL    Root_New.dll
+ren ROOT_T~1.DLL    Root_Tree.dll
+ren ROOT_X3D.DLL    Root_X3d.dll
+ren ROOT_H~2.DLL    Root_HistPainter.dll
+ren ROOT_P~1.DLL    Root_Physics.dll
+ren ROOT_T~2.DLL    Root_TreePlayer.dll
+ren ROOT_T~3.DLL    Root_TreeViewer.dll
+ren ROOT_P~2.DLL    Root_Postscript.dll
+ren ROOT_R~1.DLL    Root_Rint.dll
+ren ROOT_H~3.DLL    Root_Html.dll
+ren ROOT_P~3.DLL    Root_Proof.dll
+ren ROOT_EG.DLL     Root_EG.dll
+ren ROOT_RGL.DLL    Root_RGL.dll
+ren ROOT_W~1.DLL    Root_WIN32.dll
 cd ..
 
 Echo restore the 'long' names of the C++ interpreter system includes

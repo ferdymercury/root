@@ -1,5 +1,5 @@
-/*CMZ :  2.22/10 23/07/99  14.42.20  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   23/07/99*/
+/*CMZ :  2.23/10 10/12/99  18.00.06  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   10/12/99*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -9,15 +9,13 @@
  * Description:
  *  typedef handling
  ************************************************************************
- * Copyright(c) 1991~1996  [hp] Hewlett Packard Japan, All rights reserved
- * Author                  Masaharu Goto (gotom@jpn.hp.com)
- * Copyright(c) 1995~1998  Masaharu Goto (MXJ02154@niftyserve.or.jp)
+ * Copyright(c) 1995~1999  Masaharu Goto (MXJ02154@niftyserve.or.jp)
  *
  * Permission to use, copy, modify and distribute this software and its
  * documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies and
  * that both that copyright notice and this permission notice appear
- * in supporting documentation.  Hewlett-Packard Japan Company makes no
+ * in supporting documentation.  The author makes no
  * representations about the suitability of this software for any
  * purpose.  It is provided "as is" without express or implied warranty.
  ************************************************************************/
@@ -432,12 +430,19 @@ void G__define_type()
 
 #ifndef G__OLDIMPLEMENTATION1141
   if(strcmp(typename,"long")==0) {
-    if('l'==type) {
+    if('l'==type || 'k'==type) {
       if(0==G__defined_macro("G__LONGLONG_H")) {
+#ifndef G__OLDIMPLEMENTATION1153
+	int store_def_struct_member = G__def_struct_member;
+	G__def_struct_member = 0;
+#endif
 #ifdef G__WIN32
 	G__loadfile("long.dll");
 #else
 	G__loadfile("long.dl");
+#endif
+#ifndef G__OLDIMPLEMENTATION1153
+	G__def_struct_member = store_def_struct_member;
 #endif
       }
       strcpy(tagname,"G__longlong");
@@ -696,7 +701,13 @@ void G__define_type()
     G__newtype.reftype[typenum]=reftype;
 
     if(G__def_struct_member) env_tagnum = G__tagnum;
-    else if(-1!=G__func_now) env_tagnum = -2;
+    else if(-1!=G__func_now) {
+      env_tagnum = -2;
+#ifndef G__OLDIMPLEMENTATION1145
+      fprintf(G__serr,"Limitation: In class typedef not allowed in cint");
+      G__printlinenum();
+#endif
+    }
     else                     env_tagnum = -1;
     G__newtype.parent_tagnum[typenum]=env_tagnum;
     ++G__newtype.alltype;
@@ -1152,6 +1163,10 @@ int reftype;
     G__newtype.comment[G__newtype.alltype].p.pos = (fpos_t)0;
 #endif
     G__newtype.comment[G__newtype.alltype].filenum = -1;
+#endif
+#ifdef G__TYPEDEFFPOS
+    G__newtype.filenum[G__newtype.alltype] = G__ifile.filenum;
+    G__newtype.linenum[G__newtype.alltype] = G__ifile.line_number;
 #endif
     ++G__newtype.alltype;
   }

@@ -1,3 +1,4 @@
+//*CMZ :  2.23/02 02/09/99  15.39.27  by  Rene Brun
 //*CMZ :  1.03/09 08/12/97  15.54.30  by  Fons Rademakers
 //*-- Author :    Valery Fine(fine@vxcern.cern.ch)   16/08/96
 #ifndef ROOT_TGWin32PixmapObject
@@ -33,13 +34,13 @@ public:
     virtual void      W32_Clear();
     virtual void      W32_Close();
     virtual void      W32_CopyTo(TGWin32Object *obj, int xpos, int ypos);
-    virtual void      W32_DrawBox(int x1, int y1, int x2, int y2, TGXW::EBoxMode mode);
+    virtual void      W32_DrawBox(int x1, int y1, int x2, int y2, TVirtualX::EBoxMode mode);
     virtual void      W32_DrawCellArray(int x1, int y1, int x2, int y2, int nx, int ny, int *ic);
     virtual void      W32_DrawFillArea(int n, TPoint *xy);
     virtual void      W32_DrawLine(int x1, int y1, int x2, int y2);
     virtual void      W32_DrawPolyLine(int n, TPoint *xy);
     virtual void      W32_DrawPolyMarker(int n, TPoint *xy);
-    virtual void      W32_DrawText(int x, int y, float angle, float mgn, const char *text, TGXW::ETextMode mode);
+    virtual void      W32_DrawText(int x, int y, float angle, float mgn, const char *text, TVirtualX::ETextMode mode);
     virtual void      W32_GetCharacterUp(Float_t &chupx, Float_t &chupy);
     virtual Int_t     W32_GetDoubleBuffer();
     virtual void      W32_GetGeometry(int &x, int &y, unsigned int &w, unsigned int &h);
@@ -61,7 +62,7 @@ public:
     virtual void      W32_SetDoubleBuffer(int mode);
     virtual void      W32_SetDoubleBufferOFF();
     virtual void      W32_SetDoubleBufferON();
-    virtual void      W32_SetDrawMode(TGXW::EDrawMode mode);
+    virtual void      W32_SetDrawMode(TVirtualX::EDrawMode mode);
     virtual void      W32_SetFillColor(Color_t cindex);
     virtual void      W32_SetFillStyle(Style_t style);
     virtual void      W32_SetLineColor(Color_t cindex);
@@ -74,7 +75,7 @@ public:
     virtual void      W32_SetRGB(int cindex, float r, float g, float b);
     virtual void      W32_SetTextAlign(Short_t talign=11);
     virtual void      W32_SetTextColor(Color_t cindex);
-    virtual Int_t     W32_SetTextFont(char *fontname, TGXW::ETextSetMode mode);
+    virtual Int_t     W32_SetTextFont(char *fontname, TVirtualX::ETextSetMode mode);
     virtual void      W32_SetTextFont(Int_t fontnumber);
     virtual void      W32_SetTextSize(Float_t textsize);
     virtual void      W32_SetTitle(const char *title);

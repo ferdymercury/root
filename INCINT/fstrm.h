@@ -1,5 +1,5 @@
-/*CMZ :  2.22/10 23/07/99  14.42.12  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   23/07/99*/
+/*CMZ :  2.23/10 10/12/99  17.59.58  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   10/12/99*/
 /* /% C++ %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -9,8 +9,7 @@
  * Description:
  *  Stub file for making iostream library
  ************************************************************************
- * Copyright(c) 1991~1997  [hp] Hewlett-Packard Japan, All rights reserved
- * Author                  Masaharu Goto (gotom@jpn.hp.com)
+ * Copyright(c) 1991~1999,   Masaharu Goto (MXJ02154@niftyserve.or.jp)
  *
  ************************************************************************/
 

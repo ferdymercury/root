@@ -2,7 +2,6 @@
 //*CMZ :  2.00/04 07/04/98  11.58.43  by  Rene Brun
 //*CMZ :  2.00/01 12/03/98  18.07.13  by  Fons Rademakers
 //*CMZ :  2.00/00 27/02/98  00.39.41  by  Fons Rademakers
-//*CMZ :  1.01/00 25/04/97  14.35.00  by  Rene Brun
 //*-- Author :    Rene Brun   08/03/96
 {
 //

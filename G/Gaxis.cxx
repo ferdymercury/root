@@ -1,46 +1,46 @@
+//*CMZ :  2.23/12 26/01/2000  09.31.21  by  Rene Brun
+//*CMZ :  2.23/11 06/01/2000  10.12.10  by  Rene Brun
+//*CMZ :  2.23/10 11/12/99  12.25.44  by  Rene Brun
+//*CMZ :  2.23/09 22/11/99  17.01.12  by  Rene Brun
+//*CMZ :  2.23/08 30/10/99  11.54.10  by  Rene Brun
+//*CMZ :  2.23/07 27/10/99  12.33.15  by  Fons Rademakers
+//*CMZ :  2.23/05 18/10/99  10.09.43  by  Rene Brun
+//*CMZ :  2.23/04 12/10/99  08.05.27  by  Rene Brun
+//*CMZ :  2.23/03 15/09/99  17.52.59  by  Rene Brun
+//*CMZ :  2.23/02 07/09/99  16.16.53  by  Rene Brun
 //*CMZ :  2.22/07 28/06/99  18.14.09  by  Rene Brun
 //*CMZ :  2.22/01 17/05/99  13.39.37  by  Rene Brun
-//*CMZ :  2.21/01 07/01/99  14.47.09  by  Rene Brun
-//*CMZ :  2.20/05 15/12/98  09.17.20  by  Rene Brun
-//*CMZ :  2.20/00 13/11/98  18.38.02  by  Rene Brun
-//*CMZ :  2.00/12 15/09/98  01.38.01  by  Rene Brun
-//*CMZ :  2.00/05 15/09/98  01.17.51  by  Rene Brun
-//*CMZ :  2.00/00 03/03/98  16.27.12  by  Rene Brun
-//*CMZ :  1.03/09 10/12/97  10.07.31  by  Rene Brun
 //*-- Author :    Rene Brun, Olivier Couet   12/12/94
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 #include <stdlib.h>
 #include <string.h>
 #include <fstream.h>
+#include <time.h>
+#include <math.h>
+#include <float.h>
 
 #include "TROOT.h"
 #include "TGaxis.h"
 #include "TVirtualPad.h"
-#include "TGXW.h"
+#include "TVirtualX.h"
 #include "TLine.h"
-#include "TText.h"
+#include "TLatex.h"
 #include "TStyle.h"
+#include "TF1.h"
 #include "TMath.h"
-
-const Int_t kCenterTitle = BIT(12);
 
 ClassImp(TGaxis)
 
@@ -58,27 +58,38 @@ ClassImp(TGaxis)
 //
 //  c1->Range(-10,-1,10,1);
 //
-//  TGaxis *axis1 = new TGaxis(-4,-0.2,8,-0.2,-6,8,510,"");
+//  TGaxis *axis1 = new TGaxis(-5,-0.2,6,-0.2,-6,8,510,"");
+//  axis1->SetName("axis1");
 //  axis1->Draw();
 //
-//  TGaxis *axis2 = new TGaxis(-4,0.2,8,0.2,0.001,10000,510,"G");
+//  TGaxis *axis2 = new TGaxis(-5,0.2,6,0.2,0.001,10000,510,"G");
+//  axis2->SetName("axis2");
 //  axis2->Draw();
 //
-//  TGaxis *axis3 = new TGaxis(-8,-0.8,-8,0.8,-8,8,50510,"");
+//  TGaxis *axis3 = new TGaxis(-9,-0.8,-9,0.8,-8,8,50510,"");
+//  axis3->SetName("axis3");
 //  axis3->Draw();
 //
-//  TGaxis *axis4 = new TGaxis(-6,-0.8,-6,0.8,1,10000,50510,"G");
+//  TGaxis *axis4 = new TGaxis(-7,-0.8,-7,0.8,1,10000,50510,"G");
+//  axis4->SetName("axis4");
 //  axis4->Draw();
 //
-//  TGaxis *axis5 = new TGaxis(-4,-0.6,8,-0.6,1.2,1.32,80506,"-+");
+//  TGaxis *axis5 = new TGaxis(-5,-0.6,6,-0.6,1.2,1.32,80506,"-+");
+//  axis5->SetName("axis5");
 //  axis5->SetLabelSize(0.03);
 //  axis5->SetTextFont(72);
 //  axis5->SetLabelOffset(0.025);
 //
 //  axis5->Draw();
 //
-//  TGaxis *axis6 = new TGaxis(-4,0.6,8,0.6,100,900,50510,"-");
+//  TGaxis *axis6 = new TGaxis(-5,0.6,6,0.6,100,900,50510,"-");
+//  axis6->SetName("axis6");
 //  axis6->Draw();
+//
+//  TGaxis *axis7 = new TGaxis(8,-0.8,8,0.8,0,9000,50510,"+L");
+//  axis7->SetName("axis7");
+//  axis7->SetLabelOffset(0.01);
+//  axis7->Draw();
 //}
 //Begin_Html
 /*
@@ -86,6 +97,9 @@ ClassImp(TGaxis)
 */
 //End_Html
 //
+//
+//  See the second TGaxis constructor for examples of TGaxis
+//  with a mapping function.
 
 //______________________________________________________________________________
 TGaxis::TGaxis(): TLine(), TAttText(11,0,1,62,0.040)
@@ -99,9 +113,13 @@ TGaxis::TGaxis(): TLine(), TAttText(11,0,1,62,0.040)
    fTickSize    = 0.030;
    fTitleOffset = 1;
    fTitleSize   = fLabelSize;
-   fName  = " ";
-   fTitle = " ";
+   fName        = " ";
+   fTitle       = " ";
+   fTimeFormat  = "";
+   fFunctionName= "";
+   fFunction    = 0;
 }
+
 //______________________________________________________________________________
 TGaxis::TGaxis(Float_t xmin, Float_t ymin, Float_t xmax, Float_t ymax,
                Float_t wmin, Float_t wmax, Int_t ndiv,   Option_t *chopt,
@@ -126,6 +144,81 @@ TGaxis::TGaxis(Float_t xmin, Float_t ymin, Float_t xmax, Float_t ymax,
    fChopt       = chopt;
    fName        = " ";
    fTitle       = " ";
+   fTimeFormat  = "";
+   fFunctionName= "";
+   fFunction    = 0;
+}
+
+//______________________________________________________________________________
+TGaxis::TGaxis(Float_t xmin, Float_t ymin, Float_t xmax, Float_t ymax,
+               const char *funcname, Int_t ndiv,   Option_t *chopt,
+               Float_t gridlength)
+       : TLine(xmin,ymin,xmax,ymax), TAttText(11,0,1,62,0.040)
+{
+//*-*-*-*-*-*-*-*-*-*-*Gaxis constructor with a TF1 to map axis values-*-*-*
+//*-*                  ===============================================
+//  See explanation of parameters in PaintAxis
+//  Instead of the wmin,wmax arguments of the normal constructor, the
+//  name of a TF1 function can be specified. This function will be used
+//  by TGaxis::PaintAxis to map the user coordinates to the axis values
+//  and ticks.
+//  Examples:
+//void gaxis3a()
+//{
+//   gStyle->SetOptStat(0);
+//
+//   TH2F *h2 = new TH2F("h","Axes",2,0,10,2,-2,2);
+//   h2->Draw();
+//
+//   TF1 *f1=new TF1("f1","-x",-10,10);
+//   TGaxis *A1 = new TGaxis(0,2,10,2,"f1",510,"-");
+//   A1->SetTitle("axis with decreasing values");
+//   A1->Draw();
+//
+//   TF1 *f2=new TF1("f2","exp(x)",0,2);
+//   TGaxis *A2 = new TGaxis(1,1,9,1,"f2");
+//   A2->SetTitle("exponential axis");
+//   A2->SetLabelSize(0.03);
+//   A2->SetTitleSize(0.03);
+//   A2->SetTitleOffset(1.2);
+//   A2->Draw();
+//
+//   TF1 *f3=new TF1("f3","log10(x)",0,800);
+//   TGaxis *A3 = new TGaxis(2,-2,2,0,"f3",505);
+//   A3->SetTitle("logarithmic axis");
+//   A3->SetLabelSize(0.03);
+//   A3->SetTitleSize(0.03);
+//   A3->SetTitleOffset(1.2);
+//   A3->Draw();
+//}
+//Begin_Html
+/*
+<img src="gif/gaxisf1.gif">
+*/
+//End_Html
+
+   fFunction = (TF1*)gROOT->GetFunction(funcname);
+   if (!fFunction) {
+      Error("TGaxis, calling constructor with an unknown function:%s",funcname);
+      fWmin = 0;
+      fWmax = 1;
+   } else {
+      fWmin = fFunction->GetXmin();
+      fWmax = fFunction->GetXmax();
+   }
+   fFunctionName= funcname;
+   fNdiv        = ndiv;
+   fGridLength  = gridlength;
+   fLabelOffset = 0.005;
+   fLabelSize   = 0.040;
+   fLabelFont   = 62;
+   fTickSize    = 0.030;
+   fTitleOffset = 1;
+   fTitleSize   = fLabelSize;
+   fChopt       = chopt;
+   fName        = " ";
+   fTitle       = " ";
+   fTimeFormat  = "";
 }
 
 //______________________________________________________________________________
@@ -136,15 +229,13 @@ TGaxis::~TGaxis()
 }
 
 //______________________________________________________________________________
-void TGaxis::Draw(Option_t *option)
+void TGaxis::CenterTitle(Bool_t center)
 {
-//*-*-*-*-*-*-*-*-*-*-*Draw this axis with its current attributes*-*-*-*-*-*-*
-//*-*                  ==========================================
-
-   AppendPad(option);
-
+//   if center = kTRUE axis title will be centered
+//   default is right adjusted
+   if (center) SetBit(kCenterTitle);
+   else        ResetBit(kCenterTitle);
 }
-
 
 //______________________________________________________________________________
 void TGaxis::DrawAxis(Float_t xmin, Float_t ymin, Float_t xmax, Float_t ymax,
@@ -155,8 +246,14 @@ void TGaxis::DrawAxis(Float_t xmin, Float_t ymin, Float_t xmax, Float_t ymax,
 //*-*                  ==================================
 
    TGaxis *newaxis = new TGaxis(xmin,ymin,xmax,ymax,wmin,wmax,ndiv,chopt,gridlength);
-   TAttLine::Copy(*newaxis);
-   TAttText::Copy(*newaxis);
+   newaxis->SetLineColor(fLineColor);
+   newaxis->SetLineWidth(fLineWidth);
+   newaxis->SetLineStyle(fLineStyle);
+   newaxis->SetTextAlign(fTextAlign);
+   newaxis->SetTextAngle(fTextAngle);
+   newaxis->SetTextColor(fTextColor);
+   newaxis->SetTextFont(fTextFont);
+   newaxis->SetTextSize(fTextSize);
    newaxis->SetTitleSize(fTitleSize);
    newaxis->SetTitleOffset(fTitleOffset);
    newaxis->SetLabelFont(fLabelFont);
@@ -286,6 +383,14 @@ void TGaxis::PaintAxis(Float_t xmin, Float_t ymin, Float_t xmax, Float_t ymax,
 //       chopt='I': Integer labelling
 //
 //
+// Time representation.
+// --------------------
+//
+//   Axis labels may be considered as times, plotted in
+//   a defined time format. The format id set with SetTimeFormat().
+//
+//       chopt='t': Plot times with a defined format instead of values
+//
 
    static const char *where = "PaintAxis";
 
@@ -306,7 +411,7 @@ void TGaxis::PaintAxis(Float_t xmin, Float_t ymin, Float_t xmax, Float_t ymax,
    Float_t Xtick = 0;
    Float_t Xtick0, Xtick1, DXtick;
    Float_t Ytick, Ytick0, Ytick1;
-   Float_t Wlabel, DWlabel;
+   Double_t Wlabel, DWlabel;
    Float_t Xfactor, Yfactor;
    Float_t Xlabel, Ylabel, DXlabel;
    Float_t Xone, Xtwo;
@@ -332,6 +437,7 @@ void TGaxis::PaintAxis(Float_t xmin, Float_t ymin, Float_t xmax, Float_t ymax,
    Int_t OptionLog,OptionBlank,OptionVert,OptionPlus,OptionMinus,OptionUnlab,OptionPara;
    Int_t OptionDown,OptionRight,OptionLeft,OptionCent,OptionEqual,OptionDot;
    Int_t OptionY,OptionText,OptionGrid,OptionSize,OptionNoopt,OptionInt,OptionM,OptionUp,OptionX;
+   Int_t OptionTime;
    Int_t first,last,labelnumber;
    Int_t Xalign, Yalign;
    Int_t N, NN1, NN2, NN3, N1A, N2A, N3A, NB2, NB3;
@@ -349,10 +455,14 @@ void TGaxis::PaintAxis(Float_t xmin, Float_t ymin, Float_t xmax, Float_t ymax,
    static char kCHTEMP[36];
    static char CHCODED[8];
    TLine *linegrid;
+   TString timeformat;
+   time_t timelabel;
+   Double_t timed, wTimeIni;
+   struct tm* utctis;
 
    const Int_t precision = 5;
    Float_t epsilon = 0.00001;
-   const Float_t PI=3.141592;
+   const Float_t kPI=3.141592;
 //*-*-______________________________________
 
    Float_t rwmi = wmin;
@@ -361,6 +471,8 @@ void TGaxis::PaintAxis(Float_t xmin, Float_t ymin, Float_t xmax, Float_t ymax,
    LABEL  = &CHLABEL[0];
 
    linegrid  = 0;
+
+   fFunction = (TF1*)gROOT->GetFunction(fFunctionName.Data());
 
 //*-*- the following parameters correspond to the pad range in NDC
 //*-*- and the WC coordinates in the pad
@@ -394,6 +506,7 @@ void TGaxis::PaintAxis(Float_t xmin, Float_t ymin, Float_t xmax, Float_t ymax,
    if(strchr(chopt,'M')) OptionM    = 1;  else OptionM    = 0;
    if(strchr(chopt,'0')) OptionUp   = 1;  else OptionUp   = 0;
    if(strchr(chopt,'X')) OptionX    = 1;  else OptionX    = 0;
+   if(strchr(chopt,'t')) OptionTime = 1;  else OptionTime = 0;
 
 //*-*-              Set the grid length
 
@@ -404,6 +517,10 @@ void TGaxis::PaintAxis(Float_t xmin, Float_t ymin, Float_t xmax, Float_t ymax,
       linegrid->SetLineStyle(3);
       linegrid->SetLineWidth(1);
    }
+
+//*-*-              Determine time format
+
+   timeformat = fTimeFormat;
 
 //*-*-              Determine number of divisions 1, 2 and 3
    N     = ndiv;
@@ -468,8 +585,10 @@ void TGaxis::PaintAxis(Float_t xmin, Float_t ymin, Float_t xmax, Float_t ymax,
             Yymax = alfa*Xxmax + beta;
          }
       }
-      wmin = BinLow;
-      wmax = BinHigh;
+      if (!fFunction) {
+         wmin = BinLow;
+         wmax = BinHigh;
+      }
 
 //*-*- Secondary divisions optimization
       NB2 = N2A;
@@ -518,7 +637,7 @@ void TGaxis::PaintAxis(Float_t xmin, Float_t ymin, Float_t xmax, Float_t ymax,
    }
 
    TLine *lineaxis = new TLine();
-   TText *textaxis = new TText();
+   TLatex *textaxis = new TLatex();
    lineaxis->SetLineColor(GetLineColor());
    lineaxis->SetLineStyle(1);
    lineaxis->SetLineWidth(gStyle->GetLineWidth());
@@ -526,8 +645,8 @@ void TGaxis::PaintAxis(Float_t xmin, Float_t ymin, Float_t xmax, Float_t ymax,
    textaxis->SetTextFont(GetTextFont());
 
    if (!gPad->IsBatch()) {
-      gGXW->GetCharacterUp(chupxvsav, chupyvsav);
-      gGXW->SetClipOFF(gPad->GetCanvasID());
+      gVirtualX->GetCharacterUp(chupxvsav, chupyvsav);
+      gVirtualX->SetClipOFF(gPad->GetCanvasID());
    }
 
 //*-*-              Compute length of axis
@@ -552,7 +671,7 @@ void TGaxis::PaintAxis(Float_t xmin, Float_t ymin, Float_t xmax, Float_t ymax,
    }
 
    if (X0 == X1) {
-      phi  = 0.5*PI;
+      phi  = 0.5*kPI;
       phil = phi;
    } else {
             phi = TMath::ATan2((Y1-Y0),(X1-X0));
@@ -602,6 +721,17 @@ void TGaxis::PaintAxis(Float_t xmin, Float_t ymin, Float_t xmax, Float_t ymax,
    if ((X0 == X1) && (Y1 > Y0))  grid_side =-1;
    else                          grid_side = 1;
 
+//*-*-             Compute Values if Function is given
+   if(fFunction) {
+      rwmi = fFunction->Eval(wmin);
+      rwma = fFunction->Eval(wmax);
+      if(rwmi > rwma) {
+         Float_t t = rwma;
+         rwma = rwmi;
+         rwmi = t;
+      }
+   }
+
 //*-*-              Draw the axis if needed...
    if (!OptionBlank) {
       xpl1 = X0;
@@ -640,8 +770,11 @@ void TGaxis::PaintAxis(Float_t xmin, Float_t ymin, Float_t xmax, Float_t ymax,
          else                       textaxis->SetTextAlign(12);
          Rotate(axispos,Ylabel,cosphi,sinphi,X0,Y0,xpl1,ypl1);
       }
-      textaxis->SetTextAngle(phil*180/PI);
-      textaxis->PaintTextNDC(xpl1,ypl1,GetTitle());
+      textaxis->PaintLatex(gPad->GetX1() + xpl1*(gPad->GetX2() - gPad->GetX1()),
+                           gPad->GetY1() + ypl1*(gPad->GetY2() - gPad->GetY1()),
+                           phil*180/kPI,
+                           charheight,
+                           GetTitle());
    }
 
 //*-*-              Labels preparation:
@@ -673,12 +806,12 @@ void TGaxis::PaintAxis(Float_t xmin, Float_t ymin, Float_t xmax, Float_t ymax,
 
 //*-*-              Now determine orientation of labels on axis
    if (!gPad->IsBatch()) {
-      if (cosphi > 0) gGXW->SetCharacterUp(-sinphi,cosphi);
-      else            gGXW->SetCharacterUp(sinphi,-cosphi);
-      if (X0 == X1)   gGXW->SetCharacterUp(0,1);
-      if (OptionVert) gGXW->SetCharacterUp(0,1);
-      if (OptionPara) gGXW->SetCharacterUp(-sinphi,cosphi);
-      if (OptionDown) gGXW->SetCharacterUp(cosphi,sinphi);
+      if (cosphi > 0) gVirtualX->SetCharacterUp(-sinphi,cosphi);
+      else            gVirtualX->SetCharacterUp(sinphi,-cosphi);
+      if (X0 == X1)   gVirtualX->SetCharacterUp(0,1);
+      if (OptionVert) gVirtualX->SetCharacterUp(0,1);
+      if (OptionPara) gVirtualX->SetCharacterUp(-sinphi,cosphi);
+      if (OptionDown) gVirtualX->SetCharacterUp(cosphi,sinphi);
    }
 
 //*-*-              Now determine text alignment
@@ -705,14 +838,25 @@ void TGaxis::PaintAxis(Float_t xmin, Float_t ymin, Float_t xmax, Float_t ymax,
 //*-*-              Draw the linear tick marks if needed...
    if (!OptionLog) {
       if (ndiv) {
-         if (OptionNoopt && !OptionInt) DXtick=axis_length/float(Nticks-1);
-         else                           DXtick=axis_lengthN/float(Nticks-1);
-
+         if (fFunction) {
+            if (OptionNoopt && !OptionInt) {
+               DXtick=(BinHigh-BinLow)/float(Nticks-1);
+            } else {
+               DXtick=(BinHigh-BinLow)/float(Nticks-1);
+            }
+         } else {
+            if (OptionNoopt && !OptionInt) DXtick=axis_length/float(Nticks-1);
+            else                           DXtick=axis_lengthN/float(Nticks-1);
+         }
          for (k=0;k<Nticks; k++) {
             ltick = 2;
             if (k%NN3 == 0) ltick = 1;
             if (k%NN2 == 0) ltick = 0;
-            Xtick = float(k)*DXtick;
+            if (fFunction) {
+               Xtick = (fFunction->Eval(BinLow+float(k)*DXtick)-rwmi)* axis_length / TMath::Abs(rwma-rwmi);
+            } else {
+               Xtick = Float_t(k)*DXtick;
+            }
             Ytick = 0;
             if (!Mside) Ytick -= atick[ltick];
             if ( OptionNoopt && !OptionInt) {
@@ -758,13 +902,19 @@ void TGaxis::PaintAxis(Float_t xmin, Float_t ymin, Float_t xmax, Float_t ymax,
          Xtick1 = Xtick;
 
          if ((!OptionNoopt || OptionInt) && axis_length0) {
-            Nticks0 = int(axis_length0/DXtick);
+            if (fFunction) Nticks0 = Int_t((BinLow-wmin)/DXtick);
+            else           Nticks0 = Int_t(axis_length0/DXtick);
+            if (Nticks0 > 1000) Nticks0 = 1000;
             for (k=0; k<=Nticks0; k++) {
                ltick = 2;
                if (k%NN3 == 0) ltick = 1;
                if (k%NN2 == 0) ltick = 0;
                Ytick0 = 0;
                if (!Mside) Ytick0 -= atick[ltick];
+               if (fFunction) {
+                  Xtick0 = (fFunction->Eval(BinLow - Float_t(k)*DXtick)-rwmi)
+		           * axis_length / TMath::Abs(rwma-rwmi);
+               }
                Rotate(Xtick0,Ytick0,cosphi,sinphi,XX0,YY0 ,xpl2,ypl2);
                Rotate(Xtick0,atick[ltick],cosphi,sinphi,XX0,YY0 ,xpl1,ypl1);
                if (OptionVert) {
@@ -796,13 +946,19 @@ void TGaxis::PaintAxis(Float_t xmin, Float_t ymin, Float_t xmax, Float_t ymax,
          }
 
          if ((!OptionNoopt || OptionInt) && axis_length1) {
-            Nticks1=int(axis_length1/DXtick);
+            if (fFunction) Nticks1 = int((wmax-BinHigh)/DXtick);
+            else           Nticks1 = int(axis_length1/DXtick);
+            if (Nticks1 > 1000) Nticks1 = 1000;
             for (k=0; k<=Nticks1; k++) {
                ltick = 2;
                if (k%NN3 == 0) ltick = 1;
                if (k%NN2 == 0) ltick = 0;
                Ytick1 = 0;
                if (!Mside) Ytick1 -= atick[ltick];
+               if (fFunction) {
+                  Xtick1 = (fFunction->Eval(BinHigh + Float_t(k)*DXtick)-rwmi)
+	                   * axis_length / TMath::Abs(rwma-rwmi);
+               }
                Rotate(Xtick1,Ytick1,cosphi,sinphi,XX0,YY0 ,xpl2,ypl2);
                Rotate(Xtick1,atick[ltick],cosphi,sinphi,XX0,YY0 ,xpl1,ypl1);
                if (OptionVert) {
@@ -848,7 +1004,7 @@ void TGaxis::PaintAxis(Float_t xmin, Float_t ymin, Float_t xmax, Float_t ymax,
             if (OptionNoopt && !OptionInt) DXlabel = axis_length/float(N1A);
             else                           DXlabel = axis_lengthN/float(N1A);
 
-            if (!OptionText) {
+            if (!OptionText && !OptionTime) {
 
 //*-*-              Here we have to decide what format to generate
 //*-*-              (for numeric labels only)
@@ -940,11 +1096,17 @@ L110:
 
             if (OptionM) Nlabels = N1A-1;
             else         Nlabels = N1A;
+            wTimeIni = Wlabel;
             for ( k=0; k<=Nlabels; k++) {
-               Xlabel = DXlabel*float(k);
+               if (fFunction) {
+                  Xlabel = (fFunction->Eval(Wlabel)-rwmi)
+                           * axis_length / TMath::Abs(rwma-rwmi);
+               } else {
+                  Xlabel = DXlabel*Float_t(k);
+               }
                if (OptionM) Xlabel += 0.5*DXlabel;
 
-               if (!OptionText) {
+               if (!OptionText && !OptionTime) {
                   sprintf(LABEL,&CHCODED[0],Wlabel);
                   Wlabel += DWlabel;
 
@@ -972,6 +1134,44 @@ L110:
                   if (LABEL[last] == '.') {
                      if (!OptionDot) { LABEL[last] = 0; last--;}
                   }
+               }
+
+//*-*-              Generate the time labels
+
+               if (OptionTime) {
+                  timed = Wlabel + gStyle->GetTimeOffset();
+                  timelabel = (time_t)((Long_t)(timed));
+                  utctis = gmtime(&timelabel);
+                  strftime(LABEL,36,timeformat.Data(),utctis);
+                  first = 0; last=strlen(LABEL)-1;
+
+//*-*-              Appends fractionnal part if seconds displayed
+                  if (DWlabel<0.9) {
+                     double tmpdb;
+                     int tmplast, tmpfirst;
+                     strcpy(CHTEMP,&LABEL[first]);
+                     sprintf(LABEL,"%7.5f",modf(Wlabel,&tmpdb));
+                     tmplast = strlen(LABEL)-1;
+
+//*-*-              Here we eliminate the non significiant 0 after '.'
+                     while (LABEL[tmplast] == '0') {
+                        LABEL[tmplast] = 0; tmplast--;
+                     }
+
+//*-*-              replace the "0." at the begining by "s"
+                     if (CHTEMP[strlen(CHTEMP)-1] == 's' || CHTEMP[strlen(CHTEMP)-1] == 'S') {
+                        tmpfirst = 2;
+                     } else {
+                        tmpfirst = 1;
+                        LABEL[tmpfirst] = 's';
+                     }
+
+                     strcat(CHTEMP, &LABEL[tmpfirst]);
+                     strcpy(LABEL, CHTEMP);
+                     first = 0; last = strlen(LABEL)-1;
+                  }
+
+                  Wlabel = wTimeIni + (k+1)*DWlabel;
                }
 
 //*-*-              Here we generate labels (numeric or alphanumeric).
@@ -1027,21 +1227,16 @@ L110:
 //*-*-                Here we use the format x 10 ** n
 
             if (FLEXE && !OptionText && NEXE)  {
-               sprintf(LABEL,"%d", NEXE);
+               sprintf(LABEL,"x10^{%d}", NEXE);
                if (X0 != X1) { Xfactor = X1-X0+0.1*charheight; Yfactor = 0; }
                else          { Xfactor = Y1-Y0+0.1*charheight; Yfactor = 0; }
-               LabelsLimits(LABEL,first,last);
                Rotate (Xfactor,Yfactor,cosphi,sinphi,X0,Y0,XX,YY);
                textaxis->SetTextAlign(11);
-               textaxis->PaintTextNDC(XX,YY,"x10");
-               if (NEXE != 1) {
-                  Float_t s10 = textaxis->GetTextSize();
-                  textaxis->SetTextSize (0.6*s10);
-                  XexpT = XX + 1.05*s10;
-                  YexpT = YY + 0.54*s10;
-                  textaxis->PaintTextNDC(XexpT,YexpT,&LABEL[first]);
-                  textaxis->SetTextSize (charheight);
-               }
+               textaxis->PaintLatex(gPad->GetX1() + XX*(gPad->GetX2() - gPad->GetX1()),
+                           gPad->GetY1() + YY*(gPad->GetY2() - gPad->GetY1()),
+                           0,
+                           charheight,
+                           LABEL);
             }
          }
       }
@@ -1301,34 +1496,113 @@ void TGaxis::Optimize(Float_t A1,  Float_t A2,  Int_t nold
    Int_t jlog  = 0;
    Float_t siground = 0;
    Float_t alb, awidth, sigfig;
+   Float_t timemulti = 1;
+   Int_t roundmode =0;
+
+   Int_t OptionTime;
+   if(strchr(fChopt.Data(),'t')) OptionTime = 1;  else OptionTime = 0;
 
    Float_t AL = TMath::Min(A1,A2);
    Float_t AH = TMath::Max(A1,A2);
    if (AL == AH) AH = AL+1;
-
 //*-*-      IF nold  ==  -1 , program uses binwidth input from calling routine
    if (nold == -1 && BinWidth > 0 ) goto L90;
    ntemp = TMath::Max(nold,2);
    if (ntemp < 1) ntemp = 1;
 
-//*-*-      Get nominal bin width in exponential form
 
 L20:
    awidth = (AH-AL)/float(ntemp);
-   if (awidth > 1.e30) goto LOK;
+   if (awidth >= FLT_MAX) goto LOK;  //in float.h
+   if (awidth <= 0)       goto LOK;
+
+//*-*-      If time representation, bin width should be rounded to seconds
+//          minutes, hours or days
+
+   if (OptionTime && awidth>=60) { // if width in seconds, treat it as normal
+//   width in minutes
+      awidth /= 60; timemulti *=60;
+      roundmode = 1; // round minutes (60)
+//   width in hours ?
+      if (awidth>=60) {
+         awidth /= 60; timemulti *= 60;
+         roundmode = 2; // round hours (24)
+//   width in days ?
+         if (awidth>=24) {
+            awidth /= 24; timemulti *= 24;
+            roundmode = 3; // round days (30)
+//   width in months ?
+            if (awidth>=30.43685) { // Mean month length in 1900.
+               awidth /= 30.43685; timemulti *= 30.43685;
+               roundmode = 2; // round months (12)
+//   width in years ?
+               if (awidth>=12) {
+                  awidth /= 12; timemulti *= 12;
+                  roundmode = 0; // round years (10)
+               }
+            }
+         }
+      }
+   }
+//*-*-      Get nominal bin width in exponential form
+
    jlog   = Int_t(TMath::Log10(awidth));
-   if (awidth <= 1) jlog--;
+   if (jlog <-30 || jlog > 30) {
+      BinLow   = 0;
+      BinHigh  = 1;
+      BinWidth = 0.01;
+      nbins    = 100;
+      return;
+   }
+   if (awidth <= 1 && (!OptionTime || timemulti==1) ) jlog--;
    sigfig = awidth*TMath::Power(10,-jlog);
+//*-*-      Round mantissa
 
-//*-*-      Round mantissa up to 1, 2, 2.5, 5, or 10
+   switch (roundmode) {
 
-   if      (sigfig <= 1)    siground = 1;
-   else if (sigfig <= 2)    siground = 2;
-//   else if (sigfig <= 2.5)  siground = 2.5;
-   else if (sigfig <= 5)    siground = 5;
-   else                    {siground = 1;   jlog++; }
+//*-*-      Round mantissa up to 1, 1.5, 2, 3, or 6 in case of minutes
+      case 1: // case 60
+         if      (sigfig <= 1)    siground = 1;
+         else if (sigfig <= 1.5 && jlog==1)    siground = 1.5;
+         else if (sigfig <= 2)    siground = 2;
+         else if (sigfig <= 3 && jlog ==1)    siground = 3;
+         else if (jlog==0)        {siground = 1; jlog++;}
+         else                     siground = 6;
+         break;
+      case 2: // case 12 and 24
+
+//*-*-      Round mantissa up to 1, 1.2, 2, 2.4, 3 or 6 in case of hours or months
+         if      (sigfig <= 1 && jlog==0)    siground = 1;
+         else if (sigfig <= 1.2 && jlog==1)    siground = 1.2;
+         else if (sigfig <= 2 && jlog==0)    siground = 2;
+         else if (sigfig <= 2.4 && jlog==1)    siground = 2.4;
+         else if (sigfig <= 3)    siground = 3;
+         else if (sigfig <= 6)    siground = 6;
+         else if (jlog==0)        siground = 12;
+         else                     siground = 2.4;
+         break;
+
+//*-*-      Round mantissa up to 1, 1.4, 2, or 7 in case of days (weeks)
+      case 3: // case 30
+         if      (sigfig <= 1 && jlog==0)    siground = 1;
+         else if (sigfig <= 1.4 && jlog==1)    siground = 1.4;
+         else if (sigfig <= 3 && jlog ==1)    siground = 3;
+         else                     siground = 7;
+         break;
+      default :
+
+//*-*-      Round mantissa up to 1, 2, 2.5, 5, or 10 in case of decimal number
+         if      (sigfig <= 1)    siground = 1;
+         else if (sigfig <= 2)    siground = 2;
+//         else if (sigfig <= 2.5)  siground = 2.5;
+         else if (sigfig <= 5 && (!OptionTime || jlog<1))    siground = 5;
+         else if (sigfig <= 6 && OptionTime && jlog==1)    siground = 6;
+         else                    {siground = 1;   jlog++; }
+         break;
+   }
 
    BinWidth = siground*TMath::Power(10,jlog);
+   if (OptionTime) BinWidth *= timemulti;
 
 //*-*-      Get new bounds from new width BinWidth
 
@@ -1336,11 +1610,11 @@ L90:
    alb  = AL/BinWidth;
    lwid   = Int_t(alb);
    if (alb < 0) lwid--;
-   BinLow     = siground*float(lwid)*TMath::Power(10,jlog);
+   BinLow     = BinWidth*float(lwid);
    alb        = AH/BinWidth + 1.00001;
    kwid = Int_t(alb);
    if (alb < 0) kwid--;
-   BinHigh = siground*float(kwid)*TMath::Power(10,jlog);
+   BinHigh = BinWidth*float(kwid);
    nbins = kwid - lwid;
    if (nold == -1) goto LOK;
    if (nold <= 5) {          //*-*-    Request for one bin is difficult case
@@ -1352,9 +1626,23 @@ L90:
    if (2*nbins == nold) { ntemp++; goto L20; }
 
 LOK:
+   Float_t oldBinLow = BinLow;
+   Float_t oldBinHigh = BinHigh;
+   Int_t oldnbins = nbins;
+
    Float_t atest = BinWidth*0.0001;
    if (TMath::Abs(BinLow-A1)  >= atest) { BinLow  += BinWidth;  nbins--; }
    if (TMath::Abs(BinHigh-A2) >= atest) { BinHigh -= BinWidth;  nbins--; }
+
+   if (OptionTime && nbins==0) {
+      nbins = 2*oldnbins;
+      BinHigh = oldBinHigh;
+      BinLow = oldBinLow;
+      BinWidth = (oldBinHigh - oldBinLow)/nbins;
+      Float_t atest = BinWidth*0.0001;
+      if (TMath::Abs(BinLow-A1)  >= atest) { BinLow  += BinWidth;  nbins--; }
+      if (TMath::Abs(BinHigh-A2) >= atest) { BinHigh -= BinWidth;  nbins--; }
+   }
 }
 
 //______________________________________________________________________________
@@ -1454,7 +1742,27 @@ void TGaxis::SavePrimitive(ofstream &out, Option_t *)
 }
 
 //______________________________________________________________________________
-void TGaxis::SetName(Text_t *name)
+void TGaxis::SetFunction(const char *funcname)
+{
+//        specify a function to map the axis values
+//        =========================================
+
+   fFunctionName = funcname;
+   if (strlen(funcname) == 0) {
+      fFunction = 0;
+      return;
+   }
+   fFunction = (TF1*)gROOT->GetFunction(funcname);
+   if (!fFunction) {
+      Error("SetFunction, Unknown function:%s",funcname);
+   } else {
+      fWmin = fFunction->GetXmin();
+      fWmax = fFunction->GetXmax();
+   }
+}
+
+//______________________________________________________________________________
+void TGaxis::SetName(char *name)
 {
 //*-*-*-*-*-*-*-*-*-*-*Change the name of the axis*-*-*-*-*-*-*-*-*-*-*-*-*-*
 //*-*                  ============================
@@ -1471,9 +1779,87 @@ void TGaxis::SetOption(Option_t *option)
 }
 
 //______________________________________________________________________________
-void TGaxis::SetTitle(const Text_t *title)
+void TGaxis::SetTitle(const char *title)
 {
 //*-*-*-*-*-*-*-*-*-*-*Change the title of the axis*-*-*-*-*-*-*-*-*-*-*-*-*
 //*-*                  ============================
    fTitle = title;
+}
+
+//______________________________________________________________________________
+void TGaxis::SetTimeFormat(const char *tformat)
+{
+//*-*-*-*-*-*-*-*-*-*-*Change the format used for time plotting *-*-*-*-*-*-*-*
+//*-*                  ========================================
+//  The format string for date and time use the same options as the one used
+//  in the standard strftime C function, i.e. :
+//    for date :
+//      %a abbreviated weekday name
+//      %b abbreviated month name
+//      %d day of the month (01-31)
+//      %m month (01-12)
+//      %y year without century
+//
+//    for time :
+//      %H hour (24-hour clock)
+//      %I hour (12-hour clock)
+//      %p local equivalent of AM or PM
+//      %M minute (00-59)
+//      %S seconds (00-61)
+//      %% %
+
+   fTimeFormat = tformat;
+}
+
+
+//______________________________________________________________________________
+void TGaxis::Streamer(TBuffer &R__b)
+{
+   // Stream an object of class TGaxis.
+
+   UInt_t R__s, R__c;
+   if (R__b.IsReading()) {
+      Version_t R__v = R__b.ReadVersion(&R__s, &R__c);
+      TLine::Streamer(R__b);
+      TAttText::Streamer(R__b);
+      R__b >> fNdiv;
+      R__b >> fWmin;
+      R__b >> fWmax;
+      R__b >> fGridLength;
+      R__b >> fTickSize;
+      R__b >> fLabelOffset;
+      R__b >> fLabelSize;
+      R__b >> fTitleOffset;
+      R__b >> fTitleSize;
+      R__b >> fLabelFont;
+      fChopt.Streamer(R__b);
+      fName.Streamer(R__b);
+      fTitle.Streamer(R__b);
+      fTimeFormat.Streamer(R__b);
+      if (R__v > 1) {
+         fFunctionName.Streamer(R__b);
+         fFunction = (TF1*)gROOT->GetFunction(fFunctionName.Data());
+      }
+      R__b.CheckByteCount(R__s, R__c, TGaxis::IsA());
+   } else {
+      R__c = R__b.WriteVersion(TGaxis::IsA(), kTRUE);
+      TLine::Streamer(R__b);
+      TAttText::Streamer(R__b);
+      R__b << fNdiv;
+      R__b << fWmin;
+      R__b << fWmax;
+      R__b << fGridLength;
+      R__b << fTickSize;
+      R__b << fLabelOffset;
+      R__b << fLabelSize;
+      R__b << fTitleOffset;
+      R__b << fTitleSize;
+      R__b << fLabelFont;
+      fChopt.Streamer(R__b);
+      fName.Streamer(R__b);
+      fTitle.Streamer(R__b);
+      fTimeFormat.Streamer(R__b);
+      fFunctionName.Streamer(R__b);
+      R__b.SetByteCount(R__c, kTRUE);
+   }
 }

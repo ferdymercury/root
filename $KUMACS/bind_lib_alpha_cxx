@@ -1,0 +1,56 @@
+*CMZ :  2.23/10 11/12/99  16.30.44  by  Rene Brun
+*CMZ :  2.23/04 12/10/99  09.27.49  by  Rene Brun
+*CMZ :  2.21/03 20/01/99  12.29.25  by  Fons Rademakers
+*CMZ :  0.90/01 29/10/96  12.01.52  by  Fons Rademakers
+*-- Author :    Rene Brun   14/09/95
+macro bind_lib_alpha_cxx 1='root'   2='*.o' 3='' 4='' 5=''
+* macro to generate a shared library from the sources specified in par 2.
+
+import *
+
+message Generating library: $ROOTSYS/lib/lib[1].so
+
+shell /bin/rm -f $ROOTSYS/lib/lib[1].so
+* due to a bug in cxx/ld under osf3.xx, one cannot use cxx to generate
+* a shared library. One must use ld instead.
+*shell [LD] [SLOPT] $ROOTSYS/lib/lib[1].so $ROOTSYS/src/[2] [3] [4] [5]
+if [1] = 'Core' then
+   shell ld -L/usr/lib/cmplrs/cxx -rpath /usr/lib/cmplrs/cxx _
+    -expect_unresolved "*"  _
+    -g0 -O1 -msym -shared /usr/lib/cmplrs/cc/crt0.o /usr/lib/cmplrs/cxx/_main.o _
+    -o $ROOTSYS/lib/lib[1].so -L$ROOTSYS/lib -lCint [COREOBJS] _
+    $ROOTSYS/src/H_*.o $ROOTSYS/src/G_*.o $ROOTSYS/src/G3D_*.o _
+    [3] [4] [5] -lcxxstd -lcxx -lexc -lots -lc -lm
+elseif [1] = 'Cint' then
+   shell ld -L/usr/lib/cmplrs/cxx -rpath /usr/lib/cmplrs/cxx _
+    -expect_unresolved "*"  _
+    -g0 -O1 -msym -shared /usr/lib/cmplrs/cc/crt0.o /usr/lib/cmplrs/cxx/_main.o _
+    -o $ROOTSYS/lib/lib[1].so $ROOTSYS/src/[2] -lcxxstd -lcxx -lexc -lots -lc -lm
+    [3] [4] [5] -lcxxstd -lcxx -lexc -lots -lc -lm
+elseif [1] = 'Hist' then
+   shell ld -L/usr/lib/cmplrs/cxx -rpath /usr/lib/cmplrs/cxx _
+    -expect_unresolved "*"  _
+    -g0 -O1 -msym -shared /usr/lib/cmplrs/cc/crt0.o /usr/lib/cmplrs/cxx/_main.o _
+    -o $ROOTSYS/lib/lib[1].so  -L$ROOTSYS/lib -lCint $ROOTSYS/src/ZIP_*.o -lcxxstd -lcxx -lexc -lots -lc -lm
+    [3] [4] [5] -lcxxstd -lcxx -lexc -lots -lc -lm
+elseif [1] = 'Graf3d' then
+   shell ld -L/usr/lib/cmplrs/cxx -rpath /usr/lib/cmplrs/cxx _
+    -expect_unresolved "*"  _
+    -g0 -O1 -msym -shared /usr/lib/cmplrs/cc/crt0.o /usr/lib/cmplrs/cxx/_main.o _
+    -o $ROOTSYS/lib/lib[1].so  -L$ROOTSYS/lib -lCint $ROOTSYS/src/ZIP_*.o -lcxxstd -lcxx -lexc -lots -lc -lm
+    [3] [4] [5] -lcxxstd -lcxx -lexc -lots -lc -lm
+elseif [1] = 'Graf' then
+   shell ld -L/usr/lib/cmplrs/cxx -rpath /usr/lib/cmplrs/cxx _
+    -expect_unresolved "*"  _
+    -g0 -O1 -msym -shared /usr/lib/cmplrs/cc/crt0.o /usr/lib/cmplrs/cxx/_main.o _
+    -o $ROOTSYS/lib/lib[1].so  -L$ROOTSYS/lib -lCint $ROOTSYS/src/ZIP_*.o -lcxxstd -lcxx -lexc -lots -lc -lm
+    [3] [4] [5] -lcxxstd -lcxx -lexc -lots -lc -lm
+else
+   shell ld -L/usr/lib/cmplrs/cxx -rpath /usr/lib/cmplrs/cxx _
+    -expect_unresolved "*"  _
+    -g0 -O1 -msym -shared /usr/lib/cmplrs/cc/crt0.o /usr/lib/cmplrs/cxx/_main.o _
+    -o $ROOTSYS/lib/lib[1].so  -L$ROOTSYS/lib -lCint $ROOTSYS/src/[2] [3] [4] [5] -lcxxstd -lcxx -lexc -lots -lc -lm
+endif
+shell chmod 555 $ROOTSYS/lib/lib[1].so
+
+return

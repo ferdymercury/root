@@ -1,33 +1,24 @@
+//*CMZ :  2.23/12 26/01/2000  09.41.47  by  Rene Brun
+//*CMZ :  2.23/09 17/11/99  16.36.11  by  Rene Brun
+//*CMZ :  2.23/05 18/10/99  20.16.37  by  Fons Rademakers
+//*CMZ :  2.23/04 13/10/99  15.44.54  by  Fons Rademakers
+//*CMZ :  2.23/03 24/09/99  19.14.59  by  Rene Brun
+//*CMZ :  2.23/00 08/08/99  19.24.43  by  Fons Rademakers
 //*CMZ :  2.22/09 10/07/99  21.29.51  by  Rene Brun
 //*CMZ :  2.22/07 26/06/99  23.05.04  by  Rene Brun
-//*CMZ :  2.22/05 14/06/99  13.32.14  by  Fons Rademakers
-//*CMZ :  2.22/04 01/06/99  16.37.32  by  Fons Rademakers
-//*CMZ :  2.22/01 30/04/99  14.49.31  by  Fons Rademakers
-//*CMZ :  2.21/06 15/02/99  01.29.37  by  Fons Rademakers
-//*CMZ :  2.20/04 11/12/98  18.41.38  by  Fons Rademakers
-//*CMZ :  2.20/00 26/11/98  12.45.27  by  Fons Rademakers
-//*CMZ :  2.00/12 02/10/98  11.28.58  by  Fons Rademakers
-//*CMZ :  2.00/11 05/08/98  15.33.51  by  Fons Rademakers
-//*CMZ :  2.00/00 04/03/98  17.28.16  by  Fons Rademakers
-//*CMZ :  1.03/09 10/12/97  09.00.38  by  Rene Brun
 //*-- Author :    Fons Rademakers   22/12/95
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -42,11 +33,15 @@
 //                                                                      //
 //////////////////////////////////////////////////////////////////////////
 
+#ifdef HAVE_CONFIG
+#include "config.h"
+#endif
+
 #include <fstream.h>
 
 #include "TApplication.h"
 #include "TGuiFactory.h"
-#include "TGXW.h"
+#include "TVirtualX.h"
 #include "TROOT.h"
 #include "TSystem.h"
 #include "TString.h"
@@ -59,7 +54,7 @@
 #include "TVirtualPad.h"
 #include "TEnv.h"
 #include "TColor.h"
-#include "TGXClient.h"
+#include "TClassTable.h"
 #include "TSystemDirectory.h"
 
 
@@ -89,8 +84,14 @@ TApplication::TApplication(const char *appClassName,
                            int numOptions)
 {
    // Create an application environment. The application environment
-   // provides an interface to the Window Manager functionality and eventloop
-   // (be it X, Windoze, Mac or Be).
+   // provides an interface to the graphics system and eventloop
+   // (be it X, Windoze, MacOS or BeOS). After creating the application
+   // object start the eventloop by calling its Run() method. The command
+   // line options recogized by TApplication are described in the GetOptions()
+   // method. The recognized options are removed from the argument array.
+   // The original list of argument options can be retrieved via the Argc()
+   // and Argv() methods. The "options" and "numOptions" arguments are
+   // not used. The appClassName "proofserv" is reserved for the PROOF system.
 
    if (gApplication) {
       Error("TApplication", "only one instance of TApplication allowed");
@@ -103,16 +104,10 @@ TApplication::TApplication(const char *appClassName,
    if (!gSystem)
       ::Fatal("TApplication::TApplication", "gSystem not initialized");
 
-   GetOptions(argc, argv);
-
-   if (!gGuiFactory) {
-      Printf("Must initialize the GUI classes using InitGui in the TROOT ctor");
-      Fatal("TApplication", "TGuiFactory not initialized");
-   }
-
    gApplication = this;
    gROOT->SetApplication(this);
 
+   // copy command line arguments, can be later accessed via Argc() and Argv()
    if (argc && *argc > 0) {
       fArgc = *argc;
       fArgv = (char **)new char*[fArgc];
@@ -124,12 +119,15 @@ TApplication::TApplication(const char *appClassName,
    for (int i = 0; i < fArgc; i++)
       fArgv[i] = StrDup(argv[i]);
 
+   GetOptions(argc, argv);
 
    fIdleTimer     = 0;
    fIdleCommand   = 0;
    fSigHandler    = 0;
    fReturnFromRun = kFALSE;
    fAppImp        = 0;
+
+   LoadGraphicsLibs();
 
    // Create WM dependent application environment
    fAppImp = gGuiFactory->CreateApplicationImp(appClassName, argc, argv, options, numOptions);
@@ -138,18 +136,35 @@ TApplication::TApplication(const char *appClassName,
    // mode and Root.UseTTFonts is true and Root.TTFontPath exists. Abort silently
    // if libttf or libGX11TTF are not found in $ROOTSYS/lib.
 #if !defined(WIN32)
-   const char *ttpath = gEnv->GetValue("Root.TTFontPath", "$(ROOTSYS)/ttf/fonts");
-   char *ttfont = gSystem->Which(ttpath, "arialbd.ttf", kReadPermission);
+   if (strcmp(appClassName, "proofserv")) {
+      const char *ttpath = gEnv->GetValue("Root.TTFontPath",
+# ifdef TTFFONTDIR
+                                          TTFFONTDIR);
+# else
+                                          "$(ROOTSYS)/ttf/fonts");
+# endif
+      char *ttfont = gSystem->Which(ttpath, "arialbd.ttf", kReadPermission);
 
-   if (!gROOT->IsBatch() && ttfont && gEnv->GetValue("Root.UseTTFonts", 1)) {
-      char *p, *lib = Form("%s/lib/libttf", gRootDir);
-      if ((p = gSystem->DynamicPathName(lib, kTRUE))) {
-         delete [] p;
-         if (!gSystem->Load(lib)) {
-            lib = Form("%s/lib/libGX11TTF", gRootDir);
-            if ((p = gSystem->DynamicPathName(lib, kTRUE))) {
-               delete [] p;
-               gSystem->Load(lib);
+      if (!gROOT->IsBatch() && ttfont && gEnv->GetValue("Root.UseTTFonts", 1) &&
+          !TClassTable::GetDict("TGX11TTF")) {
+         char *p;
+# ifdef TTFLIBDIR
+         char *lib = TTFLIBDIR "/libttf";
+# else
+         char *lib = Form("%s/lib/libttf", gRootDir);
+# endif
+         if ((p = gSystem->DynamicPathName(lib, kTRUE))) {
+            delete [] p;
+            if (!gSystem->Load(lib)) {
+# ifdef ROOTLIBDIR
+               lib = ROOTLIBDIR "/libGX11TTF";
+# else
+               lib = Form("%s/lib/libGX11TTF", gRootDir);
+# endif
+               if ((p = gSystem->DynamicPathName(lib, kTRUE))) {
+                  delete [] p;
+                  gSystem->Load(lib);
+               }
             }
          }
       }
@@ -170,8 +185,8 @@ TApplication::TApplication(const char *appClassName,
    if (gEnv->GetValue("Canvas.UseScreenFactor", 1)) {
       Int_t  x, y;
       UInt_t w, h;
-      if (gGXW) {
-         gGXW->GetGeometry(-1, x, y, w, h);
+      if (gVirtualX) {
+         gVirtualX->GetGeometry(-1, x, y, w, h);
          if (h > 0 && h < 1000) gStyle->SetScreenFactor(0.0011*h);
       }
    }
@@ -212,7 +227,15 @@ void TApplication::ClearInputFiles()
 //______________________________________________________________________________
 void TApplication::GetOptions(int *argc, char **argv)
 {
-   // Get and handle command line options.
+   // Get and handle command line options. Arguments handled are removed
+   // from the argument array. The following arguments are handled:
+   //    -? : help
+   //    -h : help
+   //    -b : run in batch mode without graphics
+   //    -n : do not execute logon and logoff macros as specified in .rootrc
+   //    -q : exit after processing command line macro files
+   //    -l : do not show splash screen
+   // The last three options are only relevant in conjunction with TRint.
 
    fNoLog = kFALSE;
    fQuit  = kFALSE;
@@ -221,7 +244,9 @@ void TApplication::GetOptions(int *argc, char **argv)
    if (!argc)
       return;
 
-   for (int i = 1; i < *argc; i++) {
+   int i, j;
+
+   for (i = 1; i < *argc; i++) {
       if (!strcmp(argv[i], "-?") || !strncmp(argv[i], "-h", 2)) {
          fprintf(stderr, "Usage: %s [-l] [-b] [-n] [-q] [file1.C ... fileN.C]\n", argv[0]);
          fprintf(stderr, "Options:\n");
@@ -236,31 +261,39 @@ void TApplication::GetOptions(int *argc, char **argv)
          if (gGuiFactory != gBatchGuiFactory) delete gGuiFactory;
          gGuiFactory = gBatchGuiFactory;
 #ifndef WIN32
-         if (gGXW != gGXBatch) delete gGXW;
+         if (gVirtualX != gGXBatch) delete gVirtualX;
 #endif
-         gGXW = gGXBatch;
+         gVirtualX = gGXBatch;
+         argv[i] = 0;
+#if 0
       } else if (!strcmp(argv[i], "-x")) {
          // remote ROOT display server not operational yet
 #ifndef WIN32
-         if (gGXW != gGXBatch) delete gGXW;
+         if (gVirtualX != gGXBatch) delete gVirtualX;
 #endif
-         gGXW = new TGXClient("Root_Client");
-         if (gGXW->IsZombie()) {
-            delete gGXW;
+         gVirtualX = new TGXClient("Root_Client");
+         if (gVirtualX->IsZombie()) {
+            delete gVirtualX;
             gROOT->SetBatch();
             if (gGuiFactory != gBatchGuiFactory) delete gGuiFactory;
             gGuiFactory = gBatchGuiFactory;
-            gGXW = gGXBatch;
+            gVirtualX = gGXBatch;
          }
+         argv[i] = 0;
+#endif
       } else if (!strcmp(argv[i], "-n")) {
          fNoLog = kTRUE;
+         argv[i] = 0;
       } else if (!strcmp(argv[i], "-q")) {
          fQuit = kTRUE;
+         argv[i] = 0;
       } else if (!strcmp(argv[i], "-l")) {
          // used by front-end program to not display splash screen
+         argv[i] = 0;
       } else if (!strcmp(argv[i], "-p")) {
          // used when started by front-end program to signal that
          // splash screen can be popped down (TRint::PrintLogo())
+         argv[i] = 0;
       } else if (argv[i][0] != '-' && argv[i][0] != '+') {
          Long_t id, size, flags, modtime;
          char *dir = gSystem->ExpandPathName(argv[i]);
@@ -288,6 +321,17 @@ void TApplication::GetOptions(int *argc, char **argv)
       }
       // ignore unknown options
    }
+
+   // remove handled arguments from argument array
+   j = 0;
+   for (i = 0; i < *argc; i++) {
+      if (argv[i]) {
+         argv[j] = argv[i];
+         j++;
+      }
+   }
+
+   *argc = j;
 }
 
 //______________________________________________________________________________
@@ -296,11 +340,11 @@ void TApplication::HandleIdleTimer()
    // Handle idle timeout. When this timer expires the registered idle command
    // will be executed by this routine.
 
-   ProcessLine((Text_t *)GetIdleCommand());
+   ProcessLine(GetIdleCommand());
 }
 
 //______________________________________________________________________________
-void TApplication::Help(const Text_t *line)
+void TApplication::Help(const char *line)
 {
    // Print help on interpreter.
 
@@ -427,7 +471,32 @@ void TApplication::InitializeColors()
 }
 
 //______________________________________________________________________________
-void TApplication::ProcessLine(const Text_t *line)
+void TApplication::LoadGraphicsLibs()
+{
+   // Load shared libs neccesary for graphics. These libraries are only
+   // loaded when gROOT->IsBatch() is kFALSE.
+
+   if (gROOT->IsBatch()) return;
+
+   gROOT->LoadClass("TCanvas", "Gpad");
+#ifndef WIN32
+   //gSystem->Load("/usr/X11R6/lib/libX11.so");
+   //gSystem->Load("libXpm");
+   gROOT->LoadClass("TGX11", "GX11");  // implicitely loads X11 and Xpm
+   gROOT->LoadClass("TRootGuiFactory", "Gui");
+
+   gROOT->ProcessLineFast("new TGX11(\"X11\", \"ROOT interface to X11\");");
+   gGuiFactory = (TGuiFactory *) gROOT->ProcessLineFast("new TRootGuiFactory();");
+#else
+   gROOT->LoadClass("TGWin32", "Win32");
+
+   gVirtualX   = (TVirtualX *) gROOT->ProcessLineFast("new TGWin32(\"Win32\", \"ROOT interface to Win32\");");
+   gGuiFactory = (TGuiFactory *) gROOT->ProcessLineFast("new TWin32GuiFactory();");
+#endif
+}
+
+//______________________________________________________________________________
+void TApplication::ProcessLine(const char *line, Bool_t sync)
 {
    // Process a single command line, either a C++ statement or an interpreter
    // command starting with a ".".
@@ -456,7 +525,9 @@ void TApplication::ProcessLine(const Text_t *line)
    }
 
    if (!strncmp(line, ".ls", 3)) {
-      if (gDirectory) gDirectory->ls();
+      const char *opt = 0;
+      if (line[3]) opt = &line[3];
+      if (gDirectory) gDirectory->ls(opt);
       return;
    }
 
@@ -476,18 +547,28 @@ void TApplication::ProcessLine(const Text_t *line)
    if (!strncmp(line, ".L", 2)) {
       char *fn  = Strip(line+3);
       // See if script compilation requested
-      Bool_t compile = !strcmp(fn+strlen(fn)-2,"++");
-      if (compile)
-         fn[strlen(fn)-2] = 0;
+      char postfix[3];
+      postfix[0] = 0;
+      Bool_t compile = !strcmp(fn+strlen(fn)-1,"+");
+      Bool_t remove  = !strcmp(fn+strlen(fn)-2,"++");
+      if (compile) {
+         if (remove) {
+            fn[strlen(fn)-2] = 0;
+            strcpy(postfix,"++");
+         } else {
+            fn[strlen(fn)-1] = 0;
+            strcpy(postfix,"+");
+         }
+      }
       char *mac = gSystem->Which(TROOT::GetMacroPath(), fn, kReadPermission);
       if (!mac)
          Error("ProcessLine", "macro %s not found in path %s", fn,
                TROOT::GetMacroPath());
       else {
-         if (compile)
-           gInterpreter->ProcessLine(Form(".L %s++", mac));
+         if (sync)
+           gInterpreter->ProcessLineSynch(Form(".L %s%s", mac,postfix));
          else
-           gInterpreter->ProcessLine(Form(".L %s", mac));
+           gInterpreter->ProcessLine(Form(".L %s%s", mac, postfix));
       }
 
       delete [] fn;
@@ -513,11 +594,14 @@ void TApplication::ProcessLine(const Text_t *line)
 #endif
    }
 
-   gInterpreter->ProcessLine(line);
+   if (sync)
+      gInterpreter->ProcessLineSynch(line);
+   else
+      gInterpreter->ProcessLine(line);
 }
 
 //______________________________________________________________________________
-void TApplication::ProcessFile(const Text_t *name)
+void TApplication::ProcessFile(const char *name)
 {
    // Process a file containing a C++ macro.
 
@@ -558,10 +642,14 @@ void TApplication::ProcessFile(const Text_t *name)
    }
 
    // See if script compilation requested
-   char *compile = "";
+   char compile[3];
+   compile[0] = 0;
    if (!strcmp(fname+strlen(fname)-2,"++")) {
-      compile = "++";
+      strcpy(compile ,"++");
       fname[strlen(fname)-2] = 0;
+   } else if (!strcmp(fname+strlen(fname)-1,"+")) {
+      strcpy(compile, "+");
+      fname[strlen(fname)-1] = 0;
    }
 
    char *exnam = gSystem->Which(TROOT::GetMacroPath(), fname, kReadPermission);
@@ -572,7 +660,7 @@ void TApplication::ProcessFile(const Text_t *name)
       return;
    }
 
-   ifstream file(exnam,ios::in);
+   ::ifstream file(exnam,ios::in);
    if (!file.good()) {
       Error("ProcessFile", "%s no such file", exnam);
       delete [] exnam;
@@ -580,7 +668,7 @@ void TApplication::ProcessFile(const Text_t *name)
       return;
    }
 
-   Text_t currentline[kBufSize];
+   char currentline[kBufSize];
    int tempfile = 0;
    int comment  = 0;
    int ifndefc  = 0;
@@ -672,7 +760,7 @@ void TApplication::Run(Bool_t retrn)
 }
 
 //______________________________________________________________________________
-void TApplication::SetIdleTimer(UInt_t idleTimeInSec, const Text_t *command)
+void TApplication::SetIdleTimer(UInt_t idleTimeInSec, const char *command)
 {
    // Set the command to be executed after the system has been idle for
    // idleTimeInSec seconds. Normally called via TROOT::Idle(...).
@@ -734,7 +822,7 @@ void TApplication::CreateApplication()
 
    if (!gApplication) {
       new TApplication("RootApp", 0, 0, 0, 0);
-      ::Warning("TApplication::CreateApplication",
-                "application created with generic name \"RootApp\"");
+      Printf("<TApplication::CreateApplication>: "
+             "created default TApplication");
    }
 }

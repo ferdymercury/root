@@ -1,0 +1,30 @@
+*CMZ :  2.23/12 26/01/2000  13.06.38  by  Valery Fine(fine@bnl.gov)
+*-- Author :    Valery Fine(fine@bnl.gov)   26/01/2000
+
+macro cint_star
+*
+*    To generate the dictionary for all matrix classes
+*    =================================================
+*
+* Only change the [headers], [name] and [patch] variables and the
+* "#pragma ..." statements.
+*
+sel star
+seq starinc
+seq -i src/*.h
+
+headers=TTableDescriptor.h TCL.h TDataSet.h TDataSetIter.h TFileSet.h _
+        TVolume.h TVolumePosition.h TVolumeView.h TVolumeViewIter.h TObjectSet.h _
+        TPointPosition.h TPoints3D.h TPointsArray3D.h TPolyLineShape.h TTable.h _
+        TTable3Points.h TTableElementDescriptor.h TTableIter.h TTablePoints.h _
+        TTableSorter.h Tpoint3_Table.h  point3.h tableDescriptor.h table_header.h
+
+name=Star
+patch=STAR
+
+set G__LinkDef.h -F TEXT
+ctot /$kumacs/STAR_LinkDef
+
+exec makecint [name] [patch] [headers]
+
+return

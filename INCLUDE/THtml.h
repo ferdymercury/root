@@ -1,31 +1,24 @@
+//*CMZ :  2.23/12 26/01/2000  10.04.53  by  Rene Brun
+//*CMZ :  2.23/03 21/09/99  13.02.43  by  Rene Brun
+//*CMZ :  2.23/01 24/08/99  18.17.19  by  Fons Rademakers
 //*CMZ :  2.21/00 04/01/99  07.39.17  by  Rene Brun
 //*CMZ :  2.00/11 24/08/98  16.53.34  by  Rene Brun
-//*CMZ :  2.00/10 13/07/98  19.38.06  by  Fons Rademakers
-//*CMZ :  2.00/08 26/05/98  17.05.07  by  Fons Rademakers
-//*CMZ :  2.00/03 26/03/98  11.04.17  by  Rene Brun
-//*CMZ :  2.00/00 11/02/98  12.55.37  by  Rene Brun
-//*CMZ :  1.03/09 09/12/97  21.18.14  by  Fons Rademakers
 //*-- Author :    Nenad Buncic   18/10/95
 
 #ifndef ROOT_THtml
 #define ROOT_THtml
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 ////////////////////////////////////////////////////////////////////////////
@@ -66,8 +59,9 @@ private:
         void    CreateIndexByTopic  (Char_t **filenames, Int_t numberOfNames, Int_t maxLen);
         void    CreateListOfTypes   ();
         void    DerivedClasses      (ofstream &out, TClass *classPtr);
-        void    ExpandKeywords      (ofstream &out, Char_t *text, TClass *ptr2class, Bool_t &flag, Char_t *dir="");
+        void    ExpandKeywords      (ofstream &out, Char_t *text, TClass *ptr2class, Bool_t &flag, const Char_t *dir="");
         void    ExpandPpLine        (ofstream &out, Char_t *line);
+   TClass      *GetClass(const char *name, Bool_t load=kTRUE);
   const Char_t *GetFileName         (const Char_t *filename);
         Char_t *GetHtmlFileName     (TClass *classPtr);
         Bool_t  IsModified          (TClass *classPtr, const Int_t type);
@@ -84,22 +78,22 @@ private:
 public:
                  THtml();
        virtual   ~THtml();
-          void   Convert      ( Text_t *filename, Text_t *title, Text_t *dirname = "" );
+          void   Convert      ( const char *filename, const char *title, const char *dirname = "" );
     const Char_t *GetSourceDir()  { return fSourceDir; }
     const Char_t *GetOutputDir()  { return fOutputDir; }
     const Char_t *GetXwho() const { return fXwho.Data(); }
           void   MakeAll      ( Bool_t force=kFALSE );
-          void   MakeClass    ( Text_t *className, Bool_t force=kFALSE );
+          void   MakeClass    ( const char *className, Bool_t force=kFALSE );
           void   MakeIndex    ();
-          void   MakeTree     ( Text_t *className, Bool_t force=kFALSE  );
+          void   MakeTree     ( const char *className, Bool_t force=kFALSE  );
           void   SetEscape(Char_t esc='\\') {fEsc = esc;}
           void   SetSourceDir ( const Char_t *dir ) { fSourceDir = dir; }
           void   SetOutputDir ( const Char_t *dir ) { fOutputDir = dir; }
           void   SetXwho(const char *xwho) {fXwho = xwho;}
           Bool_t IsModified() { return TObject::IsModified(); }
    virtual void  WriteHtmlHeader(ofstream &out, const Char_t *title);
-   virtual void  WriteHtmlFooter(ofstream &out, Char_t *dir="", const Char_t *lastUpdate="",
-                                 Char_t *author="", Char_t *copyright="");
+   virtual void  WriteHtmlFooter(ofstream &out, const char *dir="", const char *lastUpdate="",
+                                 const char *author="", const char *copyright="");
 
    ClassDef(THtml,0)  //Convert class(es) into HTML file(s)
 };

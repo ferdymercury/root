@@ -1,26 +1,22 @@
+//*CMZ :  2.23/12 26/01/2000  09.35.28  by  Rene Brun
+//*CMZ :  2.23/04 28/09/99  21.26.29  by  Rene Brun
+//*CMZ :  2.23/02 03/09/99  11.00.47  by  Rene Brun
 //*CMZ :  2.20/00 11/11/98  16.48.49  by  Rene Brun
 //*CMZ :  2.00/11 08/08/98  22.47.49  by  Rene Brun
 //*CMZ :  2.00/09 23/06/98  17.57.29  by  Rene Brun
-//*CMZ :  2.00/02 16/03/98  10.55.52  by  Rene Brun
-//*CMZ :  1.03/09 07/12/97  14.09.46  by  Fons Rademakers
 //*-- Author :    Rene Brun   24/11/96
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 #include "TROOT.h"
@@ -64,7 +60,7 @@ TFitPanel::TFitPanel() : TDialogCanvas()
 }
 
 //_____________________________________________________________________________
-TFitPanel::TFitPanel(const Text_t *name, const Text_t *title, UInt_t ww, UInt_t wh)
+TFitPanel::TFitPanel(const char *name, const char *title, UInt_t ww, UInt_t wh)
           : TDialogCanvas(name, title,ww,wh)
 {
 //*-*-*-*-*-*-*-*-*-*-*-*FitPanel constructor*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
@@ -110,21 +106,26 @@ TFitPanel::TFitPanel(const Text_t *name, const Text_t *title, UInt_t ww, UInt_t 
    }
    y  -= dy;
    dpx = 0.25;
-   b = new TGroupButton("FUNCTION","gaus","SetFunction(\"gaus\")",.1,y-yb,.32,y);
+   b = new TGroupButton("FUNCTION","gaus","SetFunction(\"gaus\")",.1,y-yb,.28,y);
       b->SetBorderMode(-1);
       b->Draw();
-   b = new TGroupButton("FUNCTION","landau","SetFunction(\"landau\")",.38,y-yb,.62,y);
+   b = new TGroupButton("FUNCTION","landau","SetFunction(\"landau\")",.30,y-yb,.48,y);
       b->Draw();
-   b = new TGroupButton("FUNCTION","expo","SetFunction(\"expo\")",.68,y-yb,.9,y);
+   b = new TGroupButton("FUNCTION","expo","SetFunction(\"expo\")",.52,y-yb,.7,y);
+      b->Draw();
+   b = new TGroupButton("FUNCTION","user","SetFunction(\"user\")",.72,y-yb,.9,y);
       b->Draw();
 
 // Quiet/Verbose buttons
    y -= dy;
-   b = new TGroupButton("MODE","Quiet","AddOption(\"Q\")",x0,y-yb,.45,y);
+   b = new TGroupButton("MODE","Quiet","AddOption(\"Q\")",x0,y-yb,.32,y);
       b->SetFillColor(15);
       b->Draw();
-   b = new TGroupButton("MODE","Verbose","AddOption(\"V\")",.55,y-yb,.9,y);
+   b = new TGroupButton("MODE","Verbose","AddOption(\"V\")",.34,y-yb,.56,y);
       b->SetFillColor(15);
+      b->Draw();
+   b = new TGroupButton("SAME","Same Picture","SetSame()",.58,y-yb,.9,y);
+      b->SetFillColor(43);
       b->Draw();
 
 // Other buttons
@@ -149,7 +150,7 @@ TFitPanel::TFitPanel(const Text_t *name, const Text_t *title, UInt_t ww, UInt_t 
       b->SetFillColor(31);
       b->Draw();
    y -= dy;
-   b = new TGroupButton("SAME","Same Picture","SetSame()",x0,y-yb,.9,y);
+   b = new TGroupButton("FITM","L : Log  Likelihood","AddOption(\"L\")",x0,y-yb,.9,y);
       b->SetFillColor(43);
       b->Draw();
 
@@ -191,7 +192,7 @@ void TFitPanel::AddOption(Option_t *option)
 }
 
 //______________________________________________________________________________
-void TFitPanel::Apply(const Text_t *action)
+void TFitPanel::Apply(const char *action)
 {
 //*-*-*-*-*-*-*-*-*-*Collect all options and fit histogram*-*-*-*-*-*-*
 //*-*                =====================================
@@ -218,7 +219,7 @@ void TFitPanel::Apply(const Text_t *action)
       }
    }
 
-   TF1 *f1 = (TF1*)gROOT->GetFunction((char*)fFunction.Data());
+   TF1 *f1 = (TF1*)gROOT->GetFunction(fFunction.Data());
    if (!f1) return;
 
    Float_t xhmin = fRefPad->GetUxmin();
@@ -287,13 +288,13 @@ void TFitPanel::ExecuteEvent(Int_t event, Int_t px, Int_t py)
    if (!fRefPad) return;
    fRefPad->cd();
    fRefPad->GetCanvas()->FeedbackMode(kTRUE);
-   gGXW->SetLineWidth(2);
+   gVirtualX->SetLineWidth(2);
 
    switch (event) {
 
    case kButton1Down:
-      gGXW->SetLineColor(-1);
-      if (done) gGXW->DrawBox(px1, py1, px2, py2, TGXW::kHollow);
+      gVirtualX->SetLineColor(-1);
+      if (done) gVirtualX->DrawBox(px1, py1, px2, py2, TVirtualX::kHollow);
       done = kTRUE;
       xmin = fRefPad->GetUxmin();
       xmax = fRefPad->GetUxmax();
@@ -303,25 +304,25 @@ void TFitPanel::ExecuteEvent(Int_t event, Int_t px, Int_t py)
       py1  = fRefPad->YtoAbsPixel(ymin);
       px2  = fRefPad->XtoAbsPixel(xmin+(xmax-xmin)*xpmax);
       py2  = fRefPad->YtoAbsPixel(ymax);
-      gGXW->DrawBox(px1, py1, px2, py2, TGXW::kHollow);
+      gVirtualX->DrawBox(px1, py1, px2, py2, TVirtualX::kHollow);
       break;
 
    case kMouseMotion:
       break;
 
    case kButton1Motion:
-      gGXW->DrawBox(px1, py1, px2, py2, TGXW::kHollow);
+      gVirtualX->DrawBox(px1, py1, px2, py2, TVirtualX::kHollow);
       px1 = fRefPad->XtoAbsPixel(xmin+(xmax-xmin)*xpmin);
       px2 = fRefPad->XtoAbsPixel(xmin+(xmax-xmin)*xpmax);
-      gGXW->DrawBox(px1, py1, px2, py2, TGXW::kHollow);
+      gVirtualX->DrawBox(px1, py1, px2, py2, TVirtualX::kHollow);
 
       break;
 
    case kButton1Up:
-      gGXW->DrawBox(px1, py1, px2, py2, TGXW::kHollow);
+      gVirtualX->DrawBox(px1, py1, px2, py2, TVirtualX::kHollow);
       done = kFALSE;
       fRefPad->GetCanvas()->FeedbackMode(kFALSE);
-      gGXW->SetLineWidth(-1);
+      gVirtualX->SetLineWidth(-1);
 
       break;
    }
@@ -371,7 +372,7 @@ void TFitPanel::SetDefaults()
 }
 
 //______________________________________________________________________________
-void TFitPanel::SetFunction(const Text_t *function)
+void TFitPanel::SetFunction(const char *function)
 {
 //*-*-*-*-*-*-*-*-*-*Set the function to be used in the fit*-*-*-*-*-*-*
 //*-*                ======================================

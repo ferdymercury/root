@@ -1,31 +1,25 @@
+//*CMZ :  2.23/12 26/01/2000  09.45.01  by  Rene Brun
+//*CMZ :  2.23/10 11/12/99  12.25.45  by  Rene Brun
+//*CMZ :  2.23/09 18/11/99  12.16.50  by  Rene Brun
+//*CMZ :  2.23/07 27/10/99  12.29.01  by  Fons Rademakers
+//*CMZ :  2.23/05 15/10/99  16.08.08  by  Rene Brun
+//*CMZ :  2.23/03 22/09/99  12.49.59  by  Rene Brun
+//*CMZ :  2.23/01 31/08/99  08.45.35  by  Rene Brun
+//*CMZ :  2.23/00 29/07/99  08.41.54  by  Rene Brun
 //*CMZ :  2.22/04 01/06/99  11.27.39  by  Rene Brun
-//*CMZ :  2.22/01 26/04/99  11.51.22  by  Rene Brun
-//*CMZ :  2.21/06 03/03/99  14.18.31  by  Rene Brun
-//*CMZ :  2.21/05 09/02/99  18.24.33  by  Rene Brun
-//*CMZ :  2.20/00 21/11/98  17.34.16  by  Rene Brun
-//*CMZ :  2.00/12 15/09/98  16.35.30  by  Fons Rademakers
-//*CMZ :  2.00/11 20/08/98  08.49.23  by  Rene Brun
-//*CMZ :  2.00/08 04/06/98  19.12.17  by  Rene Brun
-//*CMZ :  2.00/00 05/04/98  17.02.28  by  Rene Brun
-//*CMZ :  1.03/09 10/12/97  16.18.34  by  Fons Rademakers
 //*-- Author :    Rene Brun   03/02/97
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -54,7 +48,9 @@
 #include "TLeaf.h"
 #include "TBrowser.h"
 #include "TChainElement.h"
-#include "TTreeFormula.h"
+
+#include <math.h>
+#include <float.h>
 
 ClassImp(TChain)
 
@@ -73,10 +69,11 @@ TChain::TChain(): TTree()
    fNbranches      = 0;
    fFiles          = new TObjArray(fTreeOffsetLen );
    fStatus         = new TList();
+   fNotify         = 0;
 }
 
 //______________________________________________________________________________
-TChain::TChain(const Text_t *name, const Text_t *title)
+TChain::TChain(const char *name, const char *title)
        :TTree(name,title)
 {
 //*-*-*-*-*-*-*-*-*-*-*-*-*Create a Chain*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
@@ -115,6 +112,7 @@ TChain::TChain(const Text_t *name, const Text_t *title)
    gDirectory->GetList()->Remove(this);
    gROOT->GetListOfSpecials()->Add(this);
    fDirectory = 0;
+   fNotify    = 0;
    gROOT->cd();
 }
 
@@ -136,7 +134,7 @@ TChain::~TChain()
 
 
 //______________________________________________________________________________
-void TChain::Add(const Text_t *name)
+void TChain::Add(const char *name)
 {
 //       Add a new element to this chain.
 //       An element can be the name of another chain or the name of a file
@@ -149,7 +147,7 @@ void TChain::Add(const Text_t *name)
 
    TDirectory *cursav = gDirectory;
    char *treename = (char*)GetName();
-   char *dot = strstr(name,".root");
+   char *dot = (char*)strstr(name,".root");
    if (!dot) {
       Error("Add","a chain element name must contain the string .root");
       return;
@@ -165,10 +163,10 @@ void TChain::Add(const Text_t *name)
    }
 
    //Search for a a slash between the .root and the end
-   Int_t nch = strlen(name);
+   Int_t nch = strlen(name) + strlen(treename);
    char *filename = new char[nch+1];
    strcpy(filename,name);
-   char *pos = strstr(filename,".root") + 5;
+   char *pos = (char*)strstr(filename,".root") + 5;
    while (*pos) {
       if (*pos == '/') {
          treename = pos+1;
@@ -179,7 +177,7 @@ void TChain::Add(const Text_t *name)
    }
 
    //Connect the file to get the number of entries
-   TFile *file = new TFile(filename);
+   TFile *file = TFile::Open(filename);
    if (file->IsZombie()) {
       delete file;
       delete [] filename;
@@ -187,13 +185,19 @@ void TChain::Add(const Text_t *name)
    }
 
    //Check that tree with the right name exists in the file
-   TTree *tree = (TTree*)file->Get(treename);
-   if (!tree) {
+   TObject *obj = file->Get(treename);
+   if (obj && !obj->InheritsFrom("TTree") ) {
+      strcat(treename,"/");
+      strcat(treename,(char*)GetName());
+      obj = file->Get(treename);
+   }
+   if (!obj || !obj->InheritsFrom("TTree") ) {
       Error("Add","cannot find tree with name %s", treename);
       delete file;
       delete [] filename;
       return;
    }
+   TTree *tree = (TTree*)obj;
    Int_t nentries = (Int_t)tree->GetEntries();
 
    fTreeOffset[fNtrees+1] = fTreeOffset[fNtrees] + nentries;
@@ -244,13 +248,26 @@ void TChain::Draw(TCut varexp, TCut selection, Option_t *option, Int_t nentries,
 }
 
 //______________________________________________________________________________
-void TChain::Draw(const Text_t *varexp, const Text_t *selection, Option_t *option,Int_t nentries, Int_t firstentry)
+void TChain::Draw(const char *varexp, const char *selection, Option_t *option,Int_t nentries, Int_t firstentry)
 {
    // Process all entries in this chain and draw histogram
    // corresponding to expression varexp.
 
-   if (LoadTree(firstentry)) return;
+   if (LoadTree(firstentry) < 0) return;
    TTree::Draw(varexp,selection,option,nentries,firstentry);
+}
+
+
+//______________________________________________________________________________
+TBranch *TChain::GetBranch(const char *name)
+{
+//*-*-*-*-*-*-*-*-*Return pointer to the branch name*-*-*-*-*
+//*-*              ==========================================
+
+   if (fTree) return fTree->GetBranch(name);
+   LoadTree(0);
+   if (fTree) return fTree->GetBranch(name);
+   return 0;
 }
 
 //______________________________________________________________________________
@@ -261,9 +278,21 @@ Int_t TChain::GetEntry(Int_t entry, Int_t getall)
 //     getall = 0 : get only active branches
 //     getall = 1 : get all branches
 
-   if (LoadTree(entry)) return 0;
-   fReadEntry = entry - fTreeOffset[fTreeNumber];
+   if (LoadTree(entry) < 0) return 0;
    return fTree->GetEntry(fReadEntry,getall);
+}
+
+
+//______________________________________________________________________________
+TLeaf *TChain::GetLeaf(const char *name)
+{
+//*-*-*-*-*-*-*-*-*Return pointer to the leaf name*-*-*-*-*
+//*-*              ==========================================
+
+   if (fTree) return fTree->GetLeaf(name);
+   LoadTree(0);
+   if (fTree) return fTree->GetLeaf(name);
+   return 0;
 }
 
 
@@ -293,12 +322,12 @@ TObjArray *TChain::GetListOfLeaves()
 }
 
 //______________________________________________________________________________
-Float_t TChain::GetMaximum(Text_t *columname)
+Float_t TChain::GetMaximum(const char *columname)
 {
 //*-*-*-*-*-*-*-*-*Return maximum of column with name columname*-*-*-*-*-*-*
 //*-*              ============================================
 
-   Float_t theMax = -1e30;
+   Float_t theMax = -FLT_MAX;  //in float.h
    for (Int_t file=0;file<fNtrees;file++) {
       Int_t first = fTreeOffset[file];
       LoadTree(first);
@@ -310,12 +339,12 @@ Float_t TChain::GetMaximum(Text_t *columname)
 
 
 //______________________________________________________________________________
-Float_t TChain::GetMinimum(Text_t *columname)
+Float_t TChain::GetMinimum(const char *columname)
 {
 //*-*-*-*-*-*-*-*-*Return minimum of column with name columname*-*-*-*-*-*-*
 //*-*              ============================================
 
-   Float_t theMin = 1e30;
+   Float_t theMin = FLT_MAX; //in float.h
    for (Int_t file=0;file<fNtrees;file++) {
       Int_t first = fTreeOffset[file];
       LoadTree(first);
@@ -327,12 +356,25 @@ Float_t TChain::GetMinimum(Text_t *columname)
 
 
 //______________________________________________________________________________
+Int_t TChain::GetNbranches()
+{
+//*-*-*-*-*-*-*-*-*Return number of branches of current tree*-*-*-*-*
+//*-*              =========================================
+
+   if (fTree) return fTree->GetNbranches();
+   LoadTree(0);
+   if (fTree) return fTree->GetNbranches();
+   return 0;
+}
+
+
+//______________________________________________________________________________
 Int_t TChain::LoadTree(Int_t entry)
 {
 //    Load tree corresponding to entry
 
    if (!fNtrees) return 1;
-   if (entry < 0 || entry > fEntries) return 2;
+   if (entry < 0 || entry > fEntries) return -2;
 
    //Find in which tree this entry belongs to
    Int_t t;
@@ -343,18 +385,18 @@ Int_t TChain::LoadTree(Int_t entry)
    fReadEntry = entry - fTreeOffset[t];
    // If entry belongs to the current tree return entry
    if (t == fTreeNumber) {
-      return 0;
+      return fReadEntry;
    }
 
    //Delete current tree and connect new tree
    TDirectory *cursav = gDirectory;
    delete fFile;
    TChainElement *element = (TChainElement*)fFiles->At(t);
-   if (!element) return 0;
-   fFile = new TFile(element->GetTitle());
+   if (!element) return -4;
+   fFile = TFile::Open(element->GetTitle());
    if (fFile->IsZombie()) {
       delete fFile;
-      return 3;
+      return -3;
    }
    fTree = (TTree*)fFile->Get(element->GetName());
    fTreeNumber = t;
@@ -373,8 +415,11 @@ Int_t TChain::LoadTree(Int_t entry)
    }
 
    if (cursav) cursav->cd();
-   return 0;
 
+   //Notify user if requested
+   if (fNotify) fNotify->Notify();
+
+   return fReadEntry;
 }
 
 //______________________________________________________________________________
@@ -384,7 +429,12 @@ void TChain::Loop(Option_t *option, Int_t nentries, Int_t firstentry)
 //*-*              ===================================================
 
 
-   if (LoadTree(firstentry)) return;
+   Error("Loop","Function not yet implemented");
+
+   if (option || nentries || firstentry) { }  // keep warnings away
+
+#ifdef NEVER
+   if (LoadTree(firstentry) < 0) return;
 
    if (firstentry < 0) firstentry = 0;
    Int_t lastentry = firstentry + nentries -1;
@@ -392,6 +442,7 @@ void TChain::Loop(Option_t *option, Int_t nentries, Int_t firstentry)
       lastentry = (Int_t)fEntries -1;
    }
 
+   GetPlayer();
    GetSelector();
    fSelector->Start(option);
 
@@ -414,6 +465,7 @@ void TChain::Loop(Option_t *option, Int_t nentries, Int_t firstentry)
    }
 
    fSelector->Finish(option);
+#endif
 }
 
 
@@ -424,12 +476,12 @@ void TChain::ls(Option_t *option)
 }
 
 //______________________________________________________________________________
-void TChain::Merge(const Text_t *name)
+void TChain::Merge(const char *name)
 {
 //     Merge all files in this chain into a new file
 // see important note in the following function Merge
 
-   TFile *file = new TFile(name,"recreate","chain files",1);
+   TFile *file = TFile::Open(name,"recreate","chain files",1);
    Merge(file,0,"");
    file->Close();
    delete file;
@@ -527,7 +579,7 @@ void TChain::Print(Option_t *option)
 }
 
 //_______________________________________________________________________
-void TChain::SetBranchAddress(const Text_t *bname, void *add)
+void TChain::SetBranchAddress(const char *bname, void *add)
 {
 //*-*-*-*-*-*-*-*-*Set branch address*-*-*-*-*-*-*-*
 //*-*              ==================
@@ -547,7 +599,7 @@ void TChain::SetBranchAddress(const Text_t *bname, void *add)
 }
 
 //_______________________________________________________________________
-void TChain::SetBranchStatus(const Text_t *bname, Bool_t status)
+void TChain::SetBranchStatus(const char *bname, Bool_t status)
 {
 //*-*-*-*-*-*-*-*-*Set branch status Process or DoNotProcess*-*-*-*-*-*-*-*
 //*-*              =========================================

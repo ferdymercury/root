@@ -1,8 +1,9 @@
+//*CMZ :  2.23/12 26/01/2000  09.49.06  by  Rene Brun
+//*CMZ :  2.23/10 10/12/99  09.24.30  by  Rene Brun
+//*CMZ :  2.23/03 08/09/99  18.59.23  by  Fons Rademakers
 //*CMZ :  2.22/08 07/07/99  18.51.24  by  Rene Brun
 //*CMZ :  2.22/07 02/07/99  11.56.34  by  Fons Rademakers
 //*CMZ :  2.22/06 22/06/99  20.56.04  by  Rene Brun
-//*CMZ :  2.22/02 28/05/99  14.21.32  by  Rene Brun
-//*CMZ :  2.22/01 26/04/99  18.29.57  by  Rene Brun
 //*-- Author :    Rene Brun, Federico Carminati, Pasha Murat   26/04/99
 //////////////////////////////////////////////////////////////////////////
 //                                                                      //
@@ -18,6 +19,9 @@
 #ifndef ROOT_TAttLine
 #include "TAttLine.h"
 #endif
+#ifndef ROOT_TAtt3D
+#include "TAtt3D.h"
+#endif
 #ifndef ROOT_X3DBuffer
 #include "X3DBuffer.h"
 #endif
@@ -31,7 +35,7 @@
 #include "TDatabasePDG.h"
 #endif
 
-class TParticle : public TObject, public TAttLine  {
+class TParticle : public TObject, public TAttLine, public TAtt3D {
 
 protected:
 
@@ -60,10 +64,10 @@ protected:
   //the line above should be changed to the following line when all compilers
   //will be able to digest the mutable keyword (We want to have GetPDG const !!)
   //mutable TParticlePDG*  fParticlePDG;  //! reference to the particle record in PDG database
-//------------------------------------------------------------------------------
-//  functions
-//------------------------------------------------------------------------------
- public:
+  //----------------------------------------------------------------------------
+  //  functions
+  //----------------------------------------------------------------------------
+public:
                                 // ****** constructors and destructor
   TParticle();
 
@@ -83,7 +87,7 @@ protected:
 
 
 //   virtual TString* Name   () const { return fName.Data(); }
-//   virtual Text_t*  GetName() const { return fName.Data(); }
+//   virtual char*  GetName()   const { return fName.Data(); }
 
   Int_t          GetStatusCode   () const { return fStatusCode; }
   Int_t          GetPdgCode      () const { return fPdgCode; }
@@ -99,11 +103,7 @@ protected:
   Int_t          GetNDaughters   () const { return fDaughter[1]-fDaughter[0]+1;}
   void           GetPolarisation(TVector3 &v);
   Float_t        GetWeight       () const { return fWeight;}
-  TParticlePDG*  GetPDG          ()       { return fParticlePDG ? fParticlePDG :
-  (((TParticle*)this)->fParticlePDG = TDatabasePDG::Instance()->GetParticle(fPdgCode));}
-  // when mutable will be allowed, change above line to the following line
-  //   fParticlePDG = TDatabasePDG::Instance()->GetParticle(fPdgCode);}
-
+  TParticlePDG*  GetPDG          (Int_t mode = 0);
 
   Int_t          Beauty          ()  { return GetPDG()->Beauty(); }
   Int_t          Charm           ()  { return GetPDG()->Charm(); }
@@ -162,14 +162,13 @@ protected:
 
                                 // ****** overloaded functions of TObject
 
-  virtual Bool_t    Is3D() {return kTRUE;}
   virtual void      Paint(Option_t *option = "");
   virtual void      Print(Option_t *option = "");
   virtual void      Sizeof3D() const;
   virtual Int_t     DistancetoPrimitive(Int_t px, Int_t py);
   virtual void      ExecuteEvent(Int_t event, Int_t px, Int_t py);
-  virtual const     Text_t *GetName() const;
-  virtual const     Text_t *GetTitle() const;
+  virtual const     char *GetName() const;
+  virtual const     char *GetTitle() const;
 
 
   ClassDef(TParticle,1)  // TParticle vertex particle information

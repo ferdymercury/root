@@ -1,28 +1,22 @@
+//*CMZ :  2.23/12 29/01/2000  02.57.20  by  Fons Rademakers
+//*CMZ :  2.23/09 19/11/99  14.38.09  by  Fons Rademakers
 //*CMZ :  2.21/08 18/03/99  15.14.28  by  Fons Rademakers
 //*CMZ :  2.21/05 09/02/99  11.36.48  by  Fons Rademakers
 //*CMZ :  2.21/04 04/02/99  16.25.45  by  Fons Rademakers
 //*CMZ :  2.21/02 14/01/99  17.49.58  by  Fons Rademakers
-//*CMZ :  2.20/00 08/11/98  12.15.54  by  Rene Brun
-//*CMZ :  2.00/04 07/04/98  15.23.45  by  Fons Rademakers
-//*CMZ :  1.03/09 12/12/97  19.31.05  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   11/08/97
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -105,6 +99,21 @@
 //    can be accessed.                                                  //
 //  - anonymous mode only works when the server is started via inetd.   //
 //                                                                      //
+//  When you system uses shadow passwords you have to compile rootd     //
+//  with -DSHADOWPW. Since shadow passwords can only be accessed while  //
+//  being superuser (root) this works only when the server is started   //
+//  via inetd. Another solution is to create a file ~/.rootdpass        //
+//  containing an encrypted password. If this file exists its password  //
+//  is used for authentication. This method overrides all other         //
+//  authentication methods. To create an encrypted password do          //
+//  something like:                                                     //
+//     perl -e '$pw = crypt("<secretpasswd>","salt"); print "$pw\n"'    //
+//  and store this string in ~/.rootdpass.                              //
+//                                                                      //
+//  To use AFS for authentication compile rootd with the -DAFS flag.    //
+//  In that case you also need to link with the AFS libraries. See      //
+//  the Makefiles for more details.
+//                                                                      //
 //////////////////////////////////////////////////////////////////////////
 
 #include <ctype.h>
@@ -184,6 +193,7 @@ extern "C" int ka_UserAuthenticateGeneral(int,char*,char*,char*,char*,int,int,in
 
 const char kRootdService[] = "rootd";
 const char kRootdTab[]     = "/usr/tmp/rootdtab";
+const char kRootdPass[]    = ".rootdpass";
 const int  kMAXPATHLEN     = 1024;
 
 int     gInetdFlag         = 0;
@@ -442,8 +452,8 @@ again:
    if (siz > 0) {
       char *fbuf = new char[siz+1];
 
-      while (read(fid, fbuf, siz) < 0 && errno == EINTR)
-         errno = 0;
+      while (read(fid, fbuf, siz) < 0 && GetErrno() == EINTR)
+         ResetErrno();
       fbuf[siz] = 0;
 
       char *n, *s = fbuf;
@@ -530,8 +540,8 @@ again:
       char *fbuf  = new char[siz+1];
       char *flast = fbuf + siz;
 
-      while (read(fid, fbuf, siz) < 0 && errno == EINTR)
-         errno = 0;
+      while (read(fid, fbuf, siz) < 0 && GetErrno() == EINTR)
+         ResetErrno();
       fbuf[siz] = 0;
 
       char *n, *s = fbuf;
@@ -563,8 +573,8 @@ again:
          ftruncate(fid, 0);
          if (siz > 0) {
             lseek(fid, 0, SEEK_SET);
-            while (write(fid, fbuf, siz) < 0 && errno == EINTR)
-               errno = 0;
+            while (write(fid, fbuf, siz) < 0 && GetErrno() == EINTR)
+               ResetErrno();
          }
       }
       delete [] fbuf;
@@ -660,6 +670,46 @@ void RootdUser(const char *user)
 }
 
 //______________________________________________________________________________
+int RootdCheckSpecialPass(const char *passwd)
+{
+   // Check user's password against password in $HOME/.rootdpass. If matches
+   // skip other authentication mechanism. Returns 1 in case of success
+   // authentication, 0 otherwise.
+
+   char rootdpass[kMAXPATHLEN];
+
+   struct passwd *pw = getpwnam(gUser);
+
+   sprintf(rootdpass, "%s/%s", pw->pw_dir, kRootdPass);
+
+   int fid = open(rootdpass, O_RDONLY);
+   if (fid == -1)
+      return 0;
+
+   int n;
+   if ((n = read(fid, rootdpass, sizeof(rootdpass)-1)) <= 0) {
+      close(fid);
+      return 0;
+   }
+   close(fid);
+
+   rootdpass[n] = 0;
+   char *s = strchr(rootdpass, '\n');
+   if (s) *s = 0;
+
+   char *pass_crypt = crypt(passwd, rootdpass);
+   n = strlen(rootdpass);
+
+   if (strncmp(pass_crypt, rootdpass, n+1) != 0)
+      return 0;
+
+   if (gDebug > 0)
+      ErrorInfo("RootdCheckSpecialPass: user %s authenticated via ~/.rootdpass", gUser);
+
+   return 1;
+}
+
+//______________________________________________________________________________
 void RootdPass(const char *pass)
 {
    // Check user's password, if ok, change to user's id and to user's directory.
@@ -698,6 +748,9 @@ void RootdPass(const char *pass)
       strcpy(gPasswd, passwd);
       goto skipauth;
    }
+
+   if (RootdCheckSpecialPass(passwd))
+      goto skipauth;
 
 #ifdef AFS
    afs_auth = !ka_UserAuthenticateGeneral(
@@ -909,8 +962,8 @@ void RootdPut(const char *msg)
       ErrorSys(kErrFilePut, "RootdPut: cannot seek to position %d in file %s", offset, gFile);
 
    ssize_t siz;
-   while ((siz = write(gFd, buf, len)) < 0 && errno == EINTR)
-      errno = 0;
+   while ((siz = write(gFd, buf, len)) < 0 && GetErrno() == EINTR)
+      ResetErrno();
 
    if (siz < 0)
       ErrorSys(kErrFilePut, "RootdPut: error writing to file %s", gFile);
@@ -946,8 +999,8 @@ void RootdGet(const char *msg)
       ErrorSys(kErrFileGet, "RootdGet: cannot seek to position %d in file %s", offset, gFile);
 
    ssize_t siz;
-   while ((siz = read(gFd, buf, len)) < 0 && errno == EINTR)
-      errno = 0;
+   while ((siz = read(gFd, buf, len)) < 0 && GetErrno() == EINTR)
+      ResetErrno();
 
    if (siz < 0)
       ErrorSys(kErrFileGet, "RootdGet: error reading from file %s", gFile);

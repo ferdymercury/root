@@ -1,5 +1,8 @@
-//*CMZ :          17/08/98  15.18.33  by  Rene Brun
+//*CMZ :          16/09/99  08.50.50  by  Rene Brun
 //*-- Author :    Rene Brun   14/08/95
+//
+// 16/09/1999  08.34.47  by  Rene Brun
+//
 //
 // 17/08/1998  15.17.00  by  Rene Brun
 //
@@ -129,7 +132,7 @@ like a last change in this part.
   could also trigger a pad range change. Therefore execute PaintInit() in
   ExecuteEvent() and Recalculate the range before redrawing the pad.
 
-- Class TGXW: Set the window bit gravity to NorthWestGravity. This prevents
+- Class TVirtualX: Set the window bit gravity to NorthWestGravity. This prevents
   X from clearing the bitmap incase it is resized. The default behaviour
   (of clearing the resized window) was causing a white flash in
   TObject::Inspect().
@@ -296,7 +299,7 @@ like a last change in this part.
 - Modify all graphics primitives and TPad to support "Batch" graphics.
   Graphics primitives include a statement like:
     if (gCanvas->GetRWindow())
-       gGXW->dosomething
+       gVirtualX->dosomething
   In case of batch, GetRWindow returns a null pointer.
 
 - Implement new member functions in Pad:

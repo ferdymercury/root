@@ -1,16 +1,11 @@
-//*CMZ :          28/07/99  10.54.24  by  Rene Brun
-//*CMZ :  2.22/10 21/07/99  22.39.20  by  Rene Brun
-//*CMZ :  2.22/07 05/07/99  19.25.42  by  Rene Brun
-//*CMZ :  2.22/06 16/06/99  15.59.59  by  Rene Brun
-//*CMZ :  2.22/05 15/06/99  11.52.24  by  Rene Brun
-//*CMZ :  2.22/02 20/05/99  17.42.37  by  Rene Brun
-//*CMZ :  2.22/01 10/05/99  19.12.15  by  Rene Brun
-//*CMZ :  2.21/07 02/03/99  19.11.59  by  Rene Brun
-//*CMZ :  2.21/06 17/02/99  19.01.48  by  Rene Brun
-//*CMZ :  2.21/04 05/02/99  08.59.52  by  Rene Brun
-//*CMZ :  2.21/03 19/01/99  17.43.26  by  Rene Brun
-//*CMZ :  2.20/05 14/12/98  14.42.43  by  Rene Brun
-//*CMZ :  2.20/00 24/11/98  16.47.10  by  Rene Brun
+//*CMZ :  2.23/12 23/01/2000  20.01.39  by  Rene Brun
+//*CMZ :  2.23/09 17/11/99  16.18.58  by  Rene Brun
+//*CMZ :  2.23/08 01/11/99  14.33.24  by  Rene Brun
+//*CMZ :  2.23/04 05/10/99  08.24.00  by  Fons Rademakers
+//*CMZ :  2.23/03 16/09/99  12.46.25  by  Rene Brun
+//*CMZ :  2.23/02 04/09/99  12.16.48  by  Rene Brun
+//*CMZ :  2.23/01 26/08/99  14.24.02  by  Rene Brun
+//*CMZ :  2.23/00 30/07/99  17.23.23  by  Rene Brun
 //*-- Author :    Rene Brun   05/11/98
 /////////////////////////////////////////////////////////////////
 //
@@ -99,6 +94,7 @@
 #include <TApplication.h>
 #include <TClassTable.h>
 #include "Event.h"
+
    void stress(Int_t nevent);
    void stress1();
    void stress2();
@@ -292,7 +288,7 @@ void stress1()
 
    //The difference between the two histograms must be null
    h1diff->Add(h1form, h1int, 1, -1);
-   Double_t hdiff = h1diff->Integral();
+   Double_t hdiff = h1diff->Integral(0,101);
 
    //Compare fitted parameters and value of integral of f1form in [-8,6]
    Int_t npar = f1form->GetNpar();
@@ -363,7 +359,7 @@ void stress3()
    Int_t last = f.GetEND();
    Float_t comp = f.GetCompressionFactor();
    Bool_t OK = kTRUE;
-   Int_t lastgood = 42789;
+   Int_t lastgood = 43222;
    if (last <lastgood-300 || last > lastgood+300 || comp <1.37 || comp > 1.43) OK = kFALSE;
    if (OK) printf("OK\n");
    else    {
@@ -434,6 +430,7 @@ void stress5()
    Bprint(5,"Test graphics & Postscript");
 
    TCanvas *c1 = new TCanvas("c1","stress canvas",800,600);
+   gROOT->LoadClass("TPostScript","Postscript");
    TPostScript ps("stress.ps",112);
 
    //Get objects generated in previous test
@@ -461,7 +458,7 @@ void stress5()
    FILE *fp = fopen("stress.ps","r");
    char line[200];
    Int_t nlines = 0;
-   Int_t nlinesGood = 1745;
+   Int_t nlinesGood = 1581;
    while (fgets(line,199,fp)) {
       nlines++;
    }
@@ -589,7 +586,6 @@ void stress7()
 
    // Create a graphical cut. Select only events in cut
    TCutG *cutg = new TCutG("cutg",9);
-   cutg->SetTree(ntuple);
    cutg->SetVarX("py");
    cutg->SetVarY("px");
    cutg->SetPoint(0,-1.75713,2.46193);
@@ -786,7 +782,7 @@ void stress8(Int_t nevent)
 
   // First step: make sure the Event shared library exists
   // This test dynamic linking when running in interpreted mode
-   if (gClassTable->GetID("Event") < 0) {
+   if (!TClassTable::GetDict("Event")) {
       Bool_t UNIX = strcmp(gSystem->GetName(), "Unix") == 0;
       Int_t st1 = gSystem->Load("$(ROOTSYS)/test/libEvent");
       if (st1 == -1) {
@@ -1311,6 +1307,7 @@ void stress16()
 
    // create histogram and array of profile histograms
    TCanvas *c = new TCanvas("laten","latency simulation",700,600);
+   gROOT->LoadClass("TPostScript","Postscript");
    TPostScript ps("stress_lhcb.ps",112);
    gRandom->SetSeed();
    TFile f("stress_lhcb.root", "recreate");
@@ -1390,7 +1387,7 @@ void stress16()
    FILE *fp = fopen("stress_lhcb.ps","r");
    char line[200];
    Int_t nlines = 0;
-   Int_t nlinesGood = 8009;
+   Int_t nlinesGood = 7612;
    while (fgets(line,200,fp)) {
       nlines++;
    }

@@ -1,3 +1,4 @@
+/*CMZ :  2.23/12 17/01/2000  17.49.00  by  Rene Brun*/
 /*CMZ :  2.00/07 15/05/98  13.06.44  by  Rene Brun*/
 /*CMZ :  2.00/06 12/05/98  15.50.07  by  Rene Brun*/
 /*CMZ :  2.00/04 06/04/98  20.43.18  by  Fons Rademakers*/
@@ -187,7 +188,9 @@ mmalloc_attach (fd, baseaddr, minsize)
       memcpy (mbase, mdp, sizeof (mtemp));
 #ifndef WIN32
 #  ifndef VMS
+#  ifndef R__LYNXOS
       msync(mbase, sizeof(mtemp), MS_ASYNC);
+#  endif
 #  endif
 #endif
       mdp = (struct mdesc *) mbase;
@@ -290,7 +293,9 @@ reuse (cfd)
             mdp -> fd = cfd;
 #ifndef WIN32
 #  ifndef VMS
+#  ifndef R__LYNXOS
             msync((void *)mdp, sizeof(*mtemp), MS_ASYNC);
+#  endif
 #  endif
 #endif
             free(mtemp);

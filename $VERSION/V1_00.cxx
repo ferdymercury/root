@@ -1,4 +1,4 @@
-//*CMZ :          16/12/97  16.42.19  by  Rene Brun
+//*CMZ :          03/09/99  11.39.43  by  Rene Brun
 //*-- Author :    Rene Brun   21/02/97
 //
 // 16/12/1997  16.40.09  by  Rene Brun
@@ -528,30 +528,30 @@ history file (sequential history from the developpers) below.
 
 - Continue towards OpenGL:
 
-  TGLKernelABC & TGLKernel  - two classes to implement the platform indepened part of
+  TVirtualGL & TGLKernel  - two classes to implement the platform indepened part of
                               OpenGL, those defined via <GL/gl.h> and <GL/glu.h>
                               We need two classes to avoid the direct linking with
                               OpenGL library if is is not present of unwanted.
 
-  TGLKernelABC *gGLKernel   - A new global variable pointing TGLKenrelABC class
+  TVirtualGL *gVirtualGL   - A new global variable pointing TGLKenrelABC class
                               with the empty implemetation of GL interface.
                               User of ROOT must load a DLL with a real implementation
                               of TGLKernel class to turn OpenGL on.
 
   TViewOpenGL               - new class is derived from TView to use OpenGL 3D view
 
-  TGXW::CreateOpenGLContext(int wid) - to map/unmap the wid (pixmap or window) with
+  TVirtualX::CreateOpenGLContext(int wid) - to map/unmap the wid (pixmap or window) with
 
-  TGXW::DeleteOpenGLContext(int wid)   the OpenGL context
-                                       It is assumed the  TGXW::SelectWindow(int wid)
+  TVirtualX::DeleteOpenGLContext(int wid)   the OpenGL context
+                                       It is assumed the  TVirtualX::SelectWindow(int wid)
                                        makes the current OpenGL context for the selected wid
 
   TNode, TShape have been changed to gain an access to OpenGL implemetation via
-  TGLKernelABC class
+  TVirtualGL class
 
-  TGXWOpenGL                - a new class to implement the platform specific part of OpenGL
+  TVirtualXOpenGL                - a new class to implement the platform specific part of OpenGL
                               (namely either glX... for X11 of wgl... for Win32 class).
-                              It is used with TGWin32 implemenation of TGXW.
+                              It is used with TGWin32 implemenation of TVirtualX.
   Double_t* TRotMatrix::GetGLMatrix(Double_t *rGLMatrix);  - New method to convert this "ROOT"
                                                              matrix to the OpenGL [4x4]
 
@@ -1081,7 +1081,7 @@ history file (sequential history from the developpers) below.
   new macros bind_root_winnt and bind_root_winnt.
   VisualC++ is now the default option. Select SYMANTEC option.
 
-- New member function TGXW::Init, TGX11::Init, TGWIN32::Init.
+- New member function TVirtualX::Init, TGX11::Init, TGWIN32::Init.
   This function is used to support the batch option under Windows.
 
 - Changes in test program MainEvent and in Event.

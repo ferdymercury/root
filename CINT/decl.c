@@ -1,5 +1,5 @@
-/*CMZ :  2.22/10 23/07/99  14.42.13  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   23/07/99*/
+/*CMZ :  2.23/10 10/12/99  17.59.59  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   10/12/99*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -9,15 +9,13 @@
  * Description:
  *  Variable declaration
  ************************************************************************
- * Copyright(c) 1991~1996  [hp] Hewlett Packard Japan, All rights reserved
- * Author                  Masaharu Goto (gotom@jpn.hp.com)
- * Copyright(c) 1995~1998  Masaharu Goto (MXJ02154@niftyserve.or.jp)
+ * Copyright(c) 1995~1999  Masaharu Goto (MXJ02154@niftyserve.or.jp)
  *
  * Permission to use, copy, modify and distribute this software and its
  * documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies and
  * that both that copyright notice and this permission notice appear
- * in supporting documentation.  Hewlett-Packard Japan Company makes no
+ * in supporting documentation.  The author makes no
  * representations about the suitability of this software for any
  * purpose.  It is provided "as is" without express or implied warranty.
  ************************************************************************/
@@ -108,6 +106,10 @@ char *new_name;
       int store_typenum = G__typenum;
       int store_decl = G__decl;
       if(0==G__defined_macro("G__LONGLONG_H")) {
+#ifndef G__OLDIMPLEMENTATION1153
+	int store_def_struct_member = G__def_struct_member;
+	G__def_struct_member = 0;
+#endif
 	G__decl=0;
 #ifdef G__WIN32
 	G__loadfile("long.dll");
@@ -115,6 +117,9 @@ char *new_name;
 	G__loadfile("long.dl");
 #endif
 	G__decl=1;
+#ifndef G__OLDIMPLEMENTATION1153
+	G__def_struct_member = store_def_struct_member;
+#endif
       }
       G__tagnum=G__defined_tagname("G__longlong",2);
       if(-1==G__tagnum) {
@@ -202,6 +207,20 @@ char *new_name;
       }
       else if(strcmp(new_name,"const")==0) {
 	cin=G__fgetvarname(new_name,",;=():");
+#ifndef G__OLDIMPLEMENTATION1182
+	if(strcmp(new_name,"&*")==0 || strcmp(new_name,"*&")==0) {
+	  G__reftype=G__PARAREFERENCE;
+	  new_name[0]='*';
+	  cin=G__fgetvarname(new_name+1,",;=():");
+	}
+	else if(strcmp(new_name,"&")==0) {
+	  G__reftype=G__PARAREFERENCE;
+	  cin=G__fgetvarname(new_name,",;=():");
+        }
+	if(strcmp(new_name,"*")==0) {
+	  cin=G__fgetvarname(new_name+1,",;=():");
+	}
+#endif
 #ifndef G__OLDIMPLEMENTATION1134
 	if(isupper(G__var_type)) G__constvar |= G__PCONSTVAR;
 	else                     G__constvar |= G__CONSTVAR;
@@ -214,9 +233,26 @@ char *new_name;
 	G__reftype=G__PARAREFERENCE;
 	G__constvar |= G__PCONSTVAR;
       }
+#ifndef G__OLDIMPLEMENTATION1216
+      else if(strcmp(new_name,"volatile")==0) {
+	cin=G__fgetvarname(new_name,",;=():");
+      }
+      else if(strcmp(new_name,"*volatile")==0) {
+	cin=G__fgetvarname(new_name+1,",;=():");
+      }
+      else if(strcmp(new_name,"**volatile")==0) {
+	cin=G__fgetvarname(new_name+2,",;=():");
+      }
+      else if(strcmp(new_name,"***volatile")==0) {
+	cin=G__fgetvarname(new_name+3,",;=():");
+      }
+#endif
     }
 
     if(isspace(cin)) {
+#ifndef G__OLDIMPLEMENTATION1149
+      int store_len;
+#endif
       if(strcmp(new_name,"operator")==0 ||
 	 strcmp(new_name,"*operator")==0||
 	 strcmp(new_name,"&operator")==0) {
@@ -243,6 +279,9 @@ char *new_name;
 	case '=':
 	case '!':
 	case '[':
+#ifndef G__OLDIMPLEMENTATION1224
+	case ',':
+#endif
 	  sprintf(temp,"%s%s",new_name,temp1);
 	  strcpy(new_name,temp);
 	  break;
@@ -275,10 +314,23 @@ char *new_name;
 	return(cin);
       } /* if(strcmp(new_name,"operator")==0) */
 
+#ifndef G__OLDIMPLEMENTATION1149
+      store_len = strlen(new_name);
+#endif
+
       do {
 	cin = G__fgetstream(new_name+strlen(new_name),",;=():");
 	if(']'==cin) strcpy(new_name+strlen(new_name),"]");
       } while(']'==cin);
+
+#ifndef G__OLDIMPLEMENTATION1149
+      if(store_len>1&&isalnum(new_name[store_len])&&
+	 isalnum(new_name[store_len-1])) {
+	fprintf(G__serr,"Warning: %s  Syntax error??",new_name);
+	G__printlinenum();
+      }
+#endif
+
       return(cin);
 
     } /* of isspace(cin) */
@@ -296,6 +348,12 @@ char *new_name;
       cin=G__fgetstream(new_name,"(");
       sprintf(new_name,"operator()");
     }
+#ifndef G__OLDIMPLEMENTATION1224
+    else if(','==cin && '\0'==new_name[8]) {
+      cin=G__fgetstream(new_name,"(");
+      sprintf(new_name,"operator,");
+    }
+#endif
     return(cin);
   }
   else if((strncmp(new_name,"*operator",9)==0 ||
@@ -1196,9 +1254,17 @@ int tagnum,typenum;      /* overrides global variables */
 	    if(G__ASM_FUNC_NOP==G__asm_wholefunction||G__asm_noverflow)
 #endif
 	  {
+#ifndef G__OLDIMPLEMENTATION1164
+	    if(0==G__xrefflag) {
+	      fprintf(G__serr
+		      ,"Error: %s not allocated(1), maybe duplicate declaration "
+		      ,new_name);
+	    }
+#else
 	    fprintf(G__serr
 		    ,"Error: %s not allocated(1), maybe duplicate declaration "
 		    ,new_name);
+#endif
 	    G__genericerror((char*)NULL);
 	  }
 	}
@@ -1263,6 +1329,12 @@ int tagnum,typenum;      /* overrides global variables */
 	store_tagdefining = G__tagdefining;
 	i=0;
 	while('*'==new_name[i]) ++i;
+#ifndef G__OLDIMPLEMENTATION1166
+	if(i) {
+	  var_type = toupper(var_type);
+	  /* if(i>1) G__reftype = i+1;  not needed */
+	}
+#endif
 #ifndef G__OLDIMPLEMENTATION1037
 	if(strchr(new_name+i,'<')) G__removespacetemplate(new_name+i);
 #endif
@@ -1456,7 +1528,7 @@ int tagnum,typenum;      /* overrides global variables */
 	  reg = G__null;
 	  /* avoiding assignment ignore in G__letvariable when reg==G__null */
 	  if(staticclassobject) reg=G__one;
-#ifndef G__OLDIMPLEMENTATION1032
+#ifdef G__OLDIMPLEMENTATION1032_YET
 	  if(0==strncmp(temp,"new ",4)) G__assign_error(new_name,&G__null);
 #endif
 	}
@@ -1708,7 +1780,14 @@ int tagnum,typenum;      /* overrides global variables */
 	      else {
 		/* interpreterd class, memory area is alread allocated above */
 		for(i=0;i<p_inc;i++) {
+#ifndef G__OLDIMPLEMENTATION1238
+		  if(G__struct.isctor[tagnum])
+		    G__getfunction(temp,&known,G__CALLCONSTRUCTOR);
+		  else
+		    G__getfunction(temp,&known,G__TRYCONSTRUCTOR);
+#else
 		  G__getfunction(temp,&known,G__TRYCONSTRUCTOR);
+#endif
 		  if(G__return>G__RETURN_NORMAL||0==known) break;
 		  G__store_struct_offset+=G__struct.size[G__tagnum];
 #ifndef G__OLDIMPLEMENTATION1073
@@ -1750,8 +1829,23 @@ int tagnum,typenum;      /* overrides global variables */
 		  G__letvariable(new_name,G__null,&G__global,G__p_local);
 		}
 		else {
+#ifndef G__OLDIMPLEMENTATION1164
+		  if(0==G__xrefflag) {
+#ifndef G__OLDIMPLEMENTATION1180
+		    if(G__ASM_FUNC_NOP==G__asm_wholefunction)
+		      fprintf(G__serr,"Error: %s no default constructor",temp);
+#else
+		    fprintf(G__serr,"Error: %s no default constructor",temp);
+#endif
+		    G__genericerror((char*)NULL);
+		  }
+		  else {
+		    G__letvariable(new_name,G__null,&G__global,G__p_local);
+		  }
+#else
 		  fprintf(G__serr,"Error: %s no default constructor",temp);
 		  G__genericerror((char*)NULL);
+#endif
 		}
 #else
 		G__letvariable(new_name,G__null,&G__global,G__p_local);
@@ -1772,7 +1866,14 @@ int tagnum,typenum;      /* overrides global variables */
 	      }
 	      else {
 		/* interpreterd class, memory area is alread allocated above */
+#ifndef G__OLDIMPLEMENTATION1238
+		if(G__struct.isctor[tagnum])
+		  G__getfunction(temp,&known,G__CALLCONSTRUCTOR);
+		else
+		  G__getfunction(temp,&known,G__TRYCONSTRUCTOR);
+#else
 		G__getfunction(temp,&known,G__TRYCONSTRUCTOR);
+#endif
 #ifndef G__OLDIMPLEMENTATION1073
 		if(G__asm_wholefunction && G__asm_noverflow) {
 #ifdef G__ASM_DBG

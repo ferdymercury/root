@@ -1,22 +1,20 @@
+//*CMZ :  2.23/12 26/01/2000  09.49.06  by  Rene Brun
+//*CMZ :  2.23/10 15/12/99  12.45.11  by  Rene Brun
+//*CMZ :  2.23/01 26/08/99  12.25.03  by  Rene Brun
 //*CMZ :  0.90/01 08/09/97  10.27.37  by  Rene Brun
 //*-- Author :    Ola Nordman   29/09/95
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -55,9 +53,9 @@ class TAttParticle  : public TNamed {
 
  public:
   TAttParticle();
-  TAttParticle(const Text_t *name, const Text_t *title,
+  TAttParticle(const char *name, const char *title,
                Double_t Mass, Bool_t Stable,
-               Double_t DecayWidth, Double_t Charge, Text_t *Type,
+               Double_t DecayWidth, Double_t Charge, const char *Type,
                Int_t MCnumber, Int_t granularity=90,
                Double_t LowerCutOff=1.e-5, Double_t HighCutOff=1.e4);
   virtual ~TAttParticle();
@@ -71,11 +69,10 @@ class TAttParticle  : public TNamed {
   virtual Double_t       GetDecayWidth() { return fPDGDecayWidth; }
   virtual Double_t       GetMass() { return fPDGMass; }
   virtual Int_t          GetMCNumber() { return fMCnumberOfPDG; }
-  static  TAttParticle  *GetParticle(Text_t *name);
+  static  TAttParticle  *GetParticle(const char *name);
   static  TAttParticle  *GetParticle(Int_t mcnumber);
-  virtual const Text_t  *GetParticleType() const { return fParticleType.Data(); }
+  virtual const char    *GetParticleType() const { return fParticleType.Data(); }
   virtual Bool_t         GetStable() { return fPDGStable; }
-  virtual ULong_t        Hash() { return fMCnumberOfPDG; }
   virtual void           Print(Option_t *option="");
   virtual Double_t       SampleMass();
   virtual Double_t       SampleMass(Double_t widthcut);

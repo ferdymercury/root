@@ -1,28 +1,22 @@
+//*CMZ :  2.23/12 26/01/2000  10.11.08  by  Rene Brun
+//*CMZ :  2.23/05 20/10/99  15.18.16  by  Rene Brun
+//*CMZ :  2.23/01 19/10/99  19.05.20  by  Rene Brun
 //*CMZ :  2.22/07 05/07/99  16.13.12  by  Rene Brun
 //*CMZ :  2.22/03 31/05/99  17.06.21  by  Rene Brun
 //*CMZ :  2.22/01 26/04/99  16.44.57  by  Rene Brun
-//*CMZ :  2.21/01 06/01/99  09.29.21  by  Rene Brun
-//*CMZ :  2.00/11 22/08/98  09.48.59  by  Rene Brun
-//*CMZ :  2.00/09 08/06/98  17.57.53  by  Valery Fine(fine@mail.cern.ch)
-//*CMZ :  1.03/09 10/12/97  12.31.04  by  Rene Brun
 //*-- Author :    Piotr Golonka   10/09/97
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -309,7 +303,7 @@ void TPythia::SetMSEL(Int_t sel)
 //       0 = full user control , desired subprocesses have to be switched on
 //           using SetMSUB()
 // (see documentation for further details).
-// This setting should be done before a call to Initialize() or PyInit().
+// This setting should be done before a call to Initialize() or Pyinit().
 
    PYSUBS.msel=sel;
 }
@@ -1377,9 +1371,9 @@ void TPythia::SetKFDP(Int_t idc,Int_t j,Int_t value)
 //====================== access to common LUDAT4 ===============================
 
 //______________________________________________________________________________
-Text_t *TPythia::GetCHAF(Int_t kc) const
+char *TPythia::GetCHAF(Int_t kc) const
 {
-   static Text_t buf[9]="";
+   static char buf[9]="";
 
    if ( kc<1 || kc>500 ) {
       printf("ERROR in TPythia::GetCHAF(kc):\n");
@@ -1396,7 +1390,7 @@ Text_t *TPythia::GetCHAF(Int_t kc) const
 
 
 //______________________________________________________________________________
-void TPythia::SetCHAF(Int_t kc,Text_t *name)
+void TPythia::SetCHAF(Int_t kc,char *name)
 {
 
    if ( kc<1 || kc>500 ) {
@@ -1416,10 +1410,10 @@ void TPythia::SetCHAF(Int_t kc,Text_t *name)
 
 
 //______________________________________________________________________________
-void TPythia::Initialize(char *frame, char *beam, char *target, float win)
+void TPythia::Initialize(const char *frame, const char *beam, const char *target, float win)
 {
-// Calls PyInit with the same parameters after performing some checking,
-// sets correct title. This method should preferably be called instead of PyInit.
+// Calls Pyinit with the same parameters after performing some checking,
+// sets correct title. This method should preferably be called instead of Pyinit.
 // PURPOSE: to initialize the generation procedure.
 // ARGUMENTS: See documentation for details.
 //    frame:  - specifies the frame of the experiment:
@@ -1434,11 +1428,11 @@ void TPythia::Initialize(char *frame, char *beam, char *target, float win)
 //              for frame=="USER" - dummy - see documentation.
 ////////////////////////////////////////////////////////////////////////////////////
 
-   Text_t  cframe[4];
+   char  cframe[4];
    strncpy(cframe,frame,4);
-   Text_t  cbeam[8];
+   char  cbeam[8];
    strncpy(cbeam,beam,8);
-   Text_t  ctarget[8];
+   char  ctarget[8];
    strncpy(ctarget,target,8);
 
    if ( (!strncmp(frame, "CMS"  ,3)) &&
@@ -1499,9 +1493,9 @@ void TPythia::Initialize(char *frame, char *beam, char *target, float win)
 
 
 
-   PyInit(cframe, cbeam ,ctarget, win);
+   Pyinit(cframe, cbeam ,ctarget, win);
 
-   Text_t atitle[32];
+   char atitle[32];
    sprintf(atitle," %s-%s at %g GeV",cbeam,ctarget,win);
    SetTitle(atitle);
 
@@ -1519,7 +1513,7 @@ void TPythia::GenerateEvent()
 }
 
 //______________________________________________________________________________
-void TPythia::PyInit(char *frame, char *beam, char *target, float win)
+void TPythia::Pyinit(char *frame, char *beam, char *target, float win)
 {
 // Calls Pythia's PYINIT subroutine passing these parameters in a way accepted
 // by FORTRAN routines. Yo should rather use Initialize() method instead of this
@@ -1541,7 +1535,7 @@ void TPythia::PyInit(char *frame, char *beam, char *target, float win)
 
 
 //______________________________________________________________________________
-void TPythia::PyEvnt()
+void TPythia::Pyevnt()
 {
 // Calls Pythia's PYEVNT. You'd better use GenerateEvent() method instead.
 
@@ -1549,7 +1543,7 @@ void TPythia::PyEvnt()
 }
 
 //______________________________________________________________________________
-void TPythia::PyStat(Int_t mstat)
+void TPythia::Pystat(Int_t mstat)
 {
 // Calls Pythia's PYSTAT: prints out some statistics depending on value of key:
 // see documentation for details...
@@ -1559,7 +1553,7 @@ void TPythia::PyStat(Int_t mstat)
 }
 
 //______________________________________________________________________________
-void TPythia::PyTest(Int_t key)
+void TPythia::Pytest(Int_t key)
 {
 // Calls Pythia's PYTEST routine - runs a set of tests to detect possible errors.
 
@@ -1568,7 +1562,7 @@ void TPythia::PyTest(Int_t key)
 }
 
 //______________________________________________________________________________
-void TPythia::LuList(Int_t mlist)
+void TPythia::Lulist(Int_t mlist)
 {
 // Calls JetSet's LULUST routine - lists an event.
 
@@ -1577,7 +1571,7 @@ void TPythia::LuList(Int_t mlist)
 }
 
 //______________________________________________________________________________
-void TPythia::LuExec()
+void TPythia::Luexec()
 {
 // Calls JetSet's LuExec routine - administrates the fragmentation and decay chain.
 
@@ -1585,7 +1579,7 @@ void TPythia::LuExec()
 }
 
 //______________________________________________________________________________
-Int_t TPythia::LuComp(Int_t kf)
+Int_t TPythia::Lucomp(Int_t kf)
 {
    Long_t lkey = kf;
    return lucomp(lkey);

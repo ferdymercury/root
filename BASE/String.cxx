@@ -1,26 +1,21 @@
+//*CMZ :  2.23/09 20/11/99  11.13.25  by  Fons Rademakers
 //*CMZ :  2.22/02 24/05/99  17.08.12  by  Fons Rademakers
 //*CMZ :  2.21/04 05/02/99  16.43.33  by  Fons Rademakers
 //*CMZ :  2.00/12 08/10/98  15.34.37  by  Fons Rademakers
 //*CMZ :  2.00/05 07/04/98  22.35.08  by  Fons Rademakers
-//*CMZ :  1.03/09 16/12/97  16.44.28  by  Rene Brun
 //*-- Author :    Fons Rademakers   04/08/95
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -706,10 +701,19 @@ void TString::FillBuffer(char *&buffer)
 {
    // Copy string into I/O buffer.
 
-   Int_t nchars = Length();
-   *buffer = nchars;
-   for (int i = 0; i < nchars; i++) *(buffer+i+1) = fData[i];
-   buffer += nchars+1;
+   UChar_t nwh;
+   Int_t   nchars = Length();
+
+   if (nchars > 254) {
+      nwh = 255;
+      tobuf(buffer, nwh);
+      tobuf(buffer, nchars);
+   } else {
+      nwh = UChar_t(nchars);
+      tobuf(buffer, nwh);
+   }
+   for (int i = 0; i < nchars; i++) buffer[i] = fData[i];
+   buffer += nchars;
 }
 
 //______________________________________________________________________________
@@ -719,12 +723,18 @@ void TString::ReadBuffer(char *&buffer)
 
    Pref()->UnLink();
 
-   unsigned char nwh;
+   UChar_t nwh;
+   Int_t   nchars;
+
    frombuf(buffer, &nwh);
+   if (nwh == 255)
+      frombuf(buffer, &nchars);
+   else
+      nchars = nwh;
 
-   fData = TStringRef::GetRep(nwh, nwh)->Data();
+   fData = TStringRef::GetRep(nchars, nchars)->Data();
 
-   for (int i = 0; i < nwh; i++) frombuf(buffer, &fData[i]);
+   for (int i = 0; i < nchars; i++) frombuf(buffer, &fData[i]);
 }
 
 //______________________________________________________________________________
@@ -732,7 +742,10 @@ Int_t TString::Sizeof() const
 {
    // Returns size string will occupy on I/O buffer.
 
-   return Length()+1;
+   if (Length() > 254)
+      return Length()+sizeof(UChar_t)+sizeof(Int_t);
+   else
+      return Length()+sizeof(UChar_t);
 }
 
 //_______________________________________________________________________
@@ -740,18 +753,28 @@ void TString::Streamer(TBuffer &b)
 {
    // Stream a string object
 
-   unsigned char nwh;
+   Int_t   nbig;
+   UChar_t nwh;
    if (b.IsReading()) {
       b >> nwh;
+      if (nwh == 255)
+         b >> nbig;
+      else
+         nbig = nwh;
       Pref()->UnLink();
-      fData = TStringRef::GetRep(nwh, nwh)->Data();
-      for (int i = 0; i < nwh; i++) b >> fData[i];
+      fData = TStringRef::GetRep(nbig,nbig)->Data();
+      for (int i = 0; i < nbig; i++) b >> fData[i];
    } else {
-      if (Length() > 255)
-         Error("Streamer", "string too long (>255) for I/O, use TStringLong");
-      nwh = Length();
-      b << nwh;
-      for (int i = 0; i < nwh; i++) b << fData[i];
+      nbig = Length();
+      if (nbig > 254) {
+         nwh = 255;
+         b << nwh;
+         b << nbig;
+      } else {
+         nwh = UChar_t(nbig);
+         b << nwh;
+      }
+      for (int i = 0; i < nbig; i++) b << fData[i];
    }
 }
 

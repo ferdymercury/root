@@ -1,7 +1,9 @@
+*CMZ :  2.23/12 22/01/2000  18.38.56  by  Rene Brun
+*CMZ :  2.23/07 21/10/99  23.36.00  by  Rene Brun
+*CMZ :  2.23/03 26/09/99  20.19.05  by  Fons Rademakers
+*CMZ :  2.23/02 04/09/99  09.26.46  by  Rene Brun
+*CMZ :  2.23/01 30/08/99  18.18.05  by  Rene Brun
 *CMZ :  2.22/04 01/06/99  09.04.20  by  Rene Brun
-*CMZ :  2.22/02 27/05/99  14.52.11  by  Miroslav Morhac
-*CMZ :  2.21/08 15/03/99  17.02.11  by  Rene Brun
-*CMZ :  2.00/09 25/06/98  14.58.33  by  Fons Rademakers
 *-- Author :    Fons Rademakers   25/06/98
 #ifdef __CINT__
 
@@ -9,24 +11,30 @@
 #pragma link off all classes;
 #pragma link off all functions;
 
+#pragma link C++ class TAxis-;
+#pragma link C++ class TFormula-;
+#pragma link C++ class TF1-;
+#pragma link C++ class TF2-;
+#pragma link C++ class TF3+;
 #pragma link C++ class TH1-;
-#pragma link C++ class TH1C;
-#pragma link C++ class TH1D;
-#pragma link C++ class TH1F;
-#pragma link C++ class TH1S;
+#pragma link C++ class TH1C+;
+#pragma link C++ class TH1D+;
+#pragma link C++ class TH1F+;
+#pragma link C++ class TH1S+;
 #pragma link C++ class TH2;
-#pragma link C++ class TH2C;
-#pragma link C++ class TH2D;
-#pragma link C++ class TH2F;
-#pragma link C++ class TH2S;
-#pragma link C++ class TH3;
-#pragma link C++ class TH3C;
-#pragma link C++ class TH3D;
-#pragma link C++ class TH3F;
-#pragma link C++ class TH3S;
-#pragma link C++ class TPaveStats;
-#pragma link C++ class TSpectrum;
-#pragma link C++ class TProfile;
+#pragma link C++ class TH2C+;
+#pragma link C++ class TH2D+;
+#pragma link C++ class TH2F+;
+#pragma link C++ class TH2S+;
+#pragma link C++ class TH3-;
+#pragma link C++ class TH3C+;
+#pragma link C++ class TH3D+;
+#pragma link C++ class TH3F+;
+#pragma link C++ class TH3S+;
+#pragma link C++ class TPolyMarker-;
+#pragma link C++ class TProfile+;
+#pragma link C++ class TSpectrum+;
+#pragma link C++ class TVirtualHistPainter;
 
 #pragma link C++ function operator*(Float_t,TH1C&);
 #pragma link C++ function operator*(TH1C&, Float_t);

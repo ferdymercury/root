@@ -1,23 +1,19 @@
+//*CMZ :  2.23/11 29/12/99  14.16.53  by  Rene Brun
 //*CMZ :  2.20/05 15/12/98  09.17.19  by  Rene Brun
 //*CMZ :  1.03/09 06/12/97  16.45.59  by  Fons Rademakers
 //*-- Author :    Rene Brun   17/10/95
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 #include <fstream.h>
@@ -46,6 +42,8 @@ TArrow::TArrow(): TLine(),TAttFill()
 {
 //*-*-*-*-*-*-*-*-*-*-*arrow default constructor*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 //*-*                  ========================
+
+   fAngle = 60;
 }
 
 //______________________________________________________________________________
@@ -137,7 +135,7 @@ void TArrow::Paint(Option_t *option)
 
 //______________________________________________________________________________
 void TArrow::PaintArrow(Coord_t x1, Coord_t y1, Coord_t x2, Coord_t y2,
-                        Float_t, Option_t *option)
+                        Float_t arrowsize, Option_t *option)
 {
 //*-*-*-*-*-*-*-*-*-*-*Draw this arrow with new coordinates*-*-*-*-*-*-*-*-*-*
 //*-*                  ====================================
@@ -167,7 +165,7 @@ void TArrow::PaintArrow(Coord_t x1, Coord_t y1, Coord_t x2, Coord_t y2,
    Int_t px2    = gPad->XtoAbsPixel(x2);
    Int_t py2    = gPad->YtoAbsPixel(y2);
    Float_t lp   = TMath::Sqrt(Double_t((px2-px1)*(px2-px1) + (py2-py1)*(py2-py1)));
-   Float_t rSiz = fArrowSize*gPad->GetAbsHNDC()*gPad->GetWh();
+   Float_t rSiz = arrowsize*gPad->GetAbsHNDC()*gPad->GetWh();
    Float_t dSiz = rSiz*TMath::Tan(3.141592*fAngle/360);
    if (lp <= 0) return;
    Float_t ct = (px2-px1)/lp;

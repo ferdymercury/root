@@ -1,25 +1,22 @@
+//*CMZ :  2.23/03 27/09/99  10.16.20  by  Rene Brun
+//*CMZ :  2.23/01 26/08/99  12.07.07  by  Rene Brun
 //*CMZ :  1.03/09 15/12/97  20.15.07  by  Fons Rademakers
 //*-- Author :    Rene Brun   08/12/94
 
 #ifndef ROOT_TLego
 #define ROOT_TLego
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -127,11 +124,11 @@ public:
    void    GouraudFunction(Int_t ia, Int_t ib, Float_t *f, Float_t *t);
    void    InitMoveScreen(Float_t xmin, Float_t xmax);
    void    InitRaster(Float_t xmin, Float_t ymin, Float_t xmax, Float_t ymax, Int_t nx, Int_t ny);
-   void    LegoCartesian(Float_t ang, Int_t nx, Int_t ny, char *chopt);
+   void    LegoCartesian(Float_t ang, Int_t nx, Int_t ny, const char *chopt);
    void    LegoFunction(Int_t ia, Int_t ib, Int_t &nv, Float_t *ab, Float_t *vv, Float_t *t);
-   void    LegoPolar(Int_t iordr, Int_t na, Int_t nb, char *chopt);
-   void    LegoCylindrical(Int_t iordr, Int_t na, Int_t nb, char *chopt);
-   void    LegoSpherical(Int_t ipsdr, Int_t iordr, Int_t na, Int_t nb, char *chopt);
+   void    LegoPolar(Int_t iordr, Int_t na, Int_t nb, const char *chopt);
+   void    LegoCylindrical(Int_t iordr, Int_t na, Int_t nb, const char *chopt);
+   void    LegoSpherical(Int_t ipsdr, Int_t iordr, Int_t na, Int_t nb, const char *chopt);
    void    LightSource(Int_t nl, Float_t yl, Float_t xscr, Float_t yscr, Float_t zscr, Int_t &irep);
    void    Luminosity(Float_t *anorm, Float_t &flum);
    void    ModifyScreen(Float_t *r1, Float_t *r2);
@@ -144,11 +141,11 @@ public:
    void    SideVisibilityDecode(Float_t val, Int_t &iv1, Int_t &iv2, Int_t &iv3, Int_t &iv4, Int_t &iv5, Int_t &iv6, Int_t &ir);
    void    SideVisibilityEncode(Int_t iopt, Float_t phi1, Float_t phi2, Float_t &val);
    void    Spectrum(Int_t nl, Float_t fmin, Float_t fmax, Int_t ic, Int_t idc, Int_t &irep);
-   void    SurfaceCartesian(Float_t ang, Int_t nx, Int_t ny, char *chopt);
-   void    SurfacePolar(Int_t iordr, Int_t na, Int_t nb, char *chopt);
-   void    SurfaceCylindrical(Int_t iordr, Int_t na, Int_t nb, char *chopt);
+   void    SurfaceCartesian(Float_t ang, Int_t nx, Int_t ny, const char *chopt);
+   void    SurfacePolar(Int_t iordr, Int_t na, Int_t nb, const char *chopt);
+   void    SurfaceCylindrical(Int_t iordr, Int_t na, Int_t nb, const char *chopt);
    void    SurfaceFunction(Int_t ia, Int_t ib, Float_t *f, Float_t *t);
-   void    SurfaceSpherical(Int_t ipsdr, Int_t iordr, Int_t na, Int_t nb, char *chopt);
+   void    SurfaceSpherical(Int_t ipsdr, Int_t iordr, Int_t na, Int_t nb, const char *chopt);
    void    SurfaceProperty(Float_t qqa, Float_t qqd, Float_t qqs, Int_t nnqs, Int_t &irep);
 
    ClassDef(TLego,0)   //Hidden line removal package

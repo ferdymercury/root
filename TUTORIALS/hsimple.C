@@ -1,3 +1,4 @@
+//*CMZ :  2.23/08 01/11/99  13.24.05  by  Rene Brun
 //*CMZ :  2.00/10 22/07/98  12.12.52  by  Fons Rademakers
 //*CMZ :  2.00/00 06/02/98  15.02.22  by  Rene Brun
 //*CMZ :  0.90/08 02/12/96  12.02.58  by  Rene Brun
@@ -29,7 +30,7 @@
 // pictures, graphics objects, detector geometries, tracks, events, etc..
 // This file is now becoming the current directory.
 
-  TFile *hfile = gROOT->FindObject("hsimple.root"); if (hfile) hfile->Close();
+  TFile *hfile = (TFile*)gROOT->FindObject("hsimple.root"); if (hfile) hfile->Close();
   hfile = new TFile("hsimple.root","RECREATE","Demo ROOT file with histograms");
 
 // Create some histograms, a profile histogram and an ntuple

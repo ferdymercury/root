@@ -1,25 +1,20 @@
+//*CMZ :  2.23/02 05/10/99  16.43.36  by  Fons Rademakers
 //*CMZ :  2.21/05 08/02/99  10.45.50  by  Rene Brun
 //*CMZ :  2.00/03 27/03/98  16.45.37  by  Reiner Rohlfs
 //*CMZ :  2.00/01 13/03/98  11.46.45  by  Fons Rademakers
-//*CMZ :  2.00/00 23/02/98  02.19.42  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   22/02/98
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 //*CMZ :  2.00/00 16/02/98  00.17.08  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   27/12/97
@@ -87,7 +82,7 @@ TGToolTip::TGToolTip(const TGWindow *p, const TGFrame *f, const char *text,
    attr.fOverrideRedirect = kTRUE;
    attr.fSaveUnder        = kTRUE;
 
-   gGXW->ChangeWindowAttributes(fId, &attr);
+   gVirtualX->ChangeWindowAttributes(fId, &attr);
    SetBackgroundColor(fgLightYellowPixel);
 
    fLabel = new TGLabel(this, text);
@@ -118,7 +113,38 @@ TGToolTip::TGToolTip(const TGWindow *p, const TBox *box, const char *text,
    attr.fOverrideRedirect = kTRUE;
    attr.fSaveUnder        = kTRUE;
 
-   gGXW->ChangeWindowAttributes(fId, &attr);
+   gVirtualX->ChangeWindowAttributes(fId, &attr);
+   SetBackgroundColor(fgLightYellowPixel);
+
+   fLabel = new TGLabel(this, text);
+   fLabel->SetBackgroundColor(fgLightYellowPixel);
+
+   AddFrame(fLabel, fL1 = new TGLayoutHints(kLHintsLeft | kLHintsTop,
+                                            2, 3, 0, 0));
+   MapSubwindows();
+   Resize(GetDefaultSize());
+
+   fWindow = 0;
+   fPad    = 0;
+   fBox    = box;
+   fDelay = new TTipDelayTimer(this, delayms);
+}
+
+//______________________________________________________________________________
+TGToolTip::TGToolTip(const TBox *box, const char *text,Long_t delayms)
+          : TGCompositeFrame(gClient->GetRoot(), 10, 10, kHorizontalFrame | kRaisedFrame)
+{
+   // Create a tool tip in the parent window gClient->GetRoot(),
+   // f is the frame to which the tool tip is associated,
+   // text is the tool tip one-liner and delayms is the delay in ms before
+   // the tool tip is shown.
+
+   SetWindowAttributes_t attr;
+   attr.fMask             = kWAOverrideRedirect | kWASaveUnder;
+   attr.fOverrideRedirect = kTRUE;
+   attr.fSaveUnder        = kTRUE;
+
+   gVirtualX->ChangeWindowAttributes(fId, &attr);
    SetBackgroundColor(fgLightYellowPixel);
 
    fLabel = new TGLabel(this, text);
@@ -150,10 +176,10 @@ void TGToolTip::DrawBorder()
 {
    // Draw border of tool tip window.
 
-   gGXW->DrawLine(fId, fgShadowGC, 0, 0, fWidth-2, 0);
-   gGXW->DrawLine(fId, fgShadowGC, 0, 0, 0, fHeight-2);
-   gGXW->DrawLine(fId, fgBlackGC,  0, fHeight-1, fWidth-1, fHeight-1);
-   gGXW->DrawLine(fId, fgBlackGC,  fWidth-1, fHeight-1, fWidth-1, 0);
+   gVirtualX->DrawLine(fId, fgShadowGC, 0, 0, fWidth-2, 0);
+   gVirtualX->DrawLine(fId, fgShadowGC, 0, 0, 0, fHeight-2);
+   gVirtualX->DrawLine(fId, fgBlackGC,  0, fHeight-1, fWidth-1, fHeight-1);
+   gVirtualX->DrawLine(fId, fgBlackGC,  fWidth-1, fHeight-1, fWidth-1, 0);
 }
 
 //______________________________________________________________________________
@@ -210,7 +236,7 @@ Bool_t TGToolTip::HandleTimer(TTimer *)
    Window_t wtarget;
 
    if (fWindow) {
-      gGXW->TranslateCoordinates(fWindow->GetId(), GetParent()->GetId(),
+      gVirtualX->TranslateCoordinates(fWindow->GetId(), GetParent()->GetId(),
                                  fWindow->GetWidth() >> 1, fWindow->GetHeight(),
                                  x, y, wtarget);
    } else {
@@ -225,8 +251,13 @@ Bool_t TGToolTip::HandleTimer(TTimer *)
          px2 = fPad->XtoAbsPixel(fBox->GetX2());
          py1 = fPad->YtoAbsPixel(fBox->GetY1());
          py2 = fPad->YtoAbsPixel(fBox->GetY2());
+      } else {
+         px1 = fPad->XtoAbsPixel(fPad->GetX1());
+         px2 = fPad->XtoAbsPixel(fPad->GetX2());
+         py1 = fPad->YtoAbsPixel(fPad->GetY1());
+         py2 = fPad->YtoAbsPixel(fPad->GetY2());
       }
-      gGXW->TranslateCoordinates(gGXW->GetWindowID(fPad->GetCanvasID()),
+      gVirtualX->TranslateCoordinates(gVirtualX->GetWindowID(fPad->GetCanvasID()),
                                  GetParent()->GetId(),
                                  px1 + ((px2-px1) >> 1), py1,
                                  x, y, wtarget);
@@ -235,7 +266,7 @@ Bool_t TGToolTip::HandleTimer(TTimer *)
    Int_t   screenX, screenY;
    UInt_t  screenW, screenH;     // width and height of screen
 
-   gGXW->GetWindowSize(gClient->GetRoot()->GetId(), screenX, screenY,
+   gVirtualX->GetWindowSize(gClient->GetRoot()->GetId(), screenX, screenY,
                                                     screenW, screenH);
 
    if (x + fWidth > screenW)

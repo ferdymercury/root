@@ -1,26 +1,22 @@
+//*CMZ :  2.23/12 22/01/2000  17.53.37  by  Rene Brun
+//*CMZ :  2.23/04 04/10/99  14.43.36  by  Rene Brun
+//*CMZ :  2.23/02 02/09/99  15.54.26  by  Rene Brun
+//*CMZ :  2.23/01 24/08/99  09.41.12  by  Rene Brun
 //*CMZ :  2.20/05 15/12/98  09.17.21  by  Rene Brun
 //*CMZ :  2.00/12 02/09/98  17.38.50  by  Fons Rademakers
-//*CMZ :  2.00/11 18/08/98  10.10.01  by  Rene Brun
-//*CMZ :  2.00/00 17/02/98  16.02.48  by  Rene Brun
-//*CMZ :  1.03/09 06/12/97  17.38.47  by  Fons Rademakers
 //*-- Author :    Rene Brun   12/12/94
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 #include <fstream.h>
@@ -103,7 +99,7 @@ void TPolyLine::Copy(TObject &obj)
 }
 
 //______________________________________________________________________________
-Int_t TPolyLine::DistancetoPrimitive(Int_t, Int_t)
+Int_t TPolyLine::DistancetoPrimitive(Int_t px, Int_t py)
 {
 //*-*-*-*-*-*-*-*-*Compute distance from point px,py to a polyline*-*-*-*-*-*
 //*-*              ===============================================
@@ -112,7 +108,27 @@ Int_t TPolyLine::DistancetoPrimitive(Int_t, Int_t)
 //  Returns when the distance found is below DistanceMaximum.
 //  The distance is computed in pixels units.
 //
-   return 9999;
+   const Int_t big = 9999;
+   const Int_t kMaxDiff = 10;
+
+//*-*- check if point is near one of the points
+   Int_t i, pxp, pyp, d;
+   Int_t distance = big;
+
+   for (i=0;i<fN;i++) {
+      pxp = gPad->XtoAbsPixel(gPad->XtoPad(fX[i]));
+      pyp = gPad->YtoAbsPixel(gPad->YtoPad(fY[i]));
+      d   = TMath::Abs(pxp-px) + TMath::Abs(pyp-py);
+      if (d < distance) distance = d;
+   }
+   if (distance < kMaxDiff) return distance;
+
+//*-*- check if point is near one of the connecting lines
+   for (i=0;i<fN-1;i++) {
+      d = DistancetoLine(px, py, gPad->XtoPad(fX[i]), gPad->YtoPad(fY[i]), gPad->XtoPad(fX[i+1]), gPad->YtoPad(fY[i+1]));
+      if (d < distance) distance = d;
+   }
+   return distance;
 }
 
 //______________________________________________________________________________
@@ -143,13 +159,193 @@ void TPolyLine::DrawPolyLine(Int_t n, Float_t *x, Float_t *y, Option_t *option)
 }
 
 //______________________________________________________________________________
-void TPolyLine::ExecuteEvent(Int_t, Int_t, Int_t)
+void TPolyLine::ExecuteEvent(Int_t event, Int_t px, Int_t py)
 {
 //*-*-*-*-*-*-*-*-*-*-*Execute action corresponding to one event*-*-*-*
 //*-*                  =========================================
-//  This member function must be implemented to realize the action
-//  corresponding to the mouse click on the object in the window
+//  This member function is called when a polyline is clicked with the locator
 //
+//  If Left button clicked on one of the line end points, this point
+//     follows the cursor until button is released.
+//
+//  if Middle button clicked, the line is moved parallel to itself
+//     until the button is released.
+//
+   Int_t i, d;
+   Float_t xmin, xmax, ymin, ymax, dx, dy, dxr, dyr;
+   const Int_t kMaxDiff = 10;
+   static Bool_t MIDDLE;
+   static Int_t ipoint, pxp, pyp;
+   static Int_t px1,px2,py1,py2;
+   static Int_t pxold, pyold, px1old, py1old, px2old, py2old;
+   static Int_t dpx, dpy;
+   static Int_t *x=0, *y=0;
+
+   if (!gPad->IsEditable()) return;
+
+   switch (event) {
+
+   case kButton1Down:
+      gVirtualX->SetLineColor(-1);
+      TAttLine::Modify();  //Change line attributes only if necessary
+      px1 = gPad->XtoAbsPixel(gPad->GetX1());
+      py1 = gPad->YtoAbsPixel(gPad->GetY1());
+      px2 = gPad->XtoAbsPixel(gPad->GetX2());
+      py2 = gPad->YtoAbsPixel(gPad->GetY2());
+      ipoint = -1;
+
+
+      if (x || y) break;
+      x = new Int_t[fN+1];
+      y = new Int_t[fN+1];
+      for (i=0;i<fN;i++) {
+         pxp = gPad->XtoAbsPixel(gPad->XtoPad(fX[i]));
+         pyp = gPad->YtoAbsPixel(gPad->YtoPad(fY[i]));
+         gVirtualX->DrawLine(pxp-4, pyp-4, pxp+4,  pyp-4);
+         gVirtualX->DrawLine(pxp+4, pyp-4, pxp+4,  pyp+4);
+         gVirtualX->DrawLine(pxp+4, pyp+4, pxp-4,  pyp+4);
+         gVirtualX->DrawLine(pxp-4, pyp+4, pxp-4,  pyp-4);
+         x[i] = pxp;
+         y[i] = pyp;
+         d   = TMath::Abs(pxp-px) + TMath::Abs(pyp-py);
+         if (d < kMaxDiff) ipoint =i;
+      }
+      dpx = 0;
+      dpy = 0;
+      pxold = px;
+      pyold = py;
+      if (ipoint < 0) return;
+      if (ipoint == 0) {
+         px1old = 0;
+         py1old = 0;
+         px2old = gPad->XtoAbsPixel(fX[1]);
+         py2old = gPad->YtoAbsPixel(fY[1]);
+      } else if (ipoint == fN-1) {
+         px1old = gPad->XtoAbsPixel(gPad->XtoPad(fX[fN-2]));
+         py1old = gPad->YtoAbsPixel(gPad->YtoPad(fY[fN-2]));
+         px2old = 0;
+         py2old = 0;
+      } else {
+         px1old = gPad->XtoAbsPixel(gPad->XtoPad(fX[ipoint-1]));
+         py1old = gPad->YtoAbsPixel(gPad->YtoPad(fY[ipoint-1]));
+         px2old = gPad->XtoAbsPixel(gPad->XtoPad(fX[ipoint+1]));
+         py2old = gPad->YtoAbsPixel(gPad->YtoPad(fY[ipoint+1]));
+      }
+      pxold = gPad->XtoAbsPixel(gPad->XtoPad(fX[ipoint]));
+      pyold = gPad->YtoAbsPixel(gPad->YtoPad(fY[ipoint]));
+
+      break;
+
+
+   case kMouseMotion:
+
+      MIDDLE = kTRUE;
+      for (i=0;i<fN;i++) {
+         pxp = gPad->XtoAbsPixel(gPad->XtoPad(fX[i]));
+         pyp = gPad->YtoAbsPixel(gPad->YtoPad(fY[i]));
+         d   = TMath::Abs(pxp-px) + TMath::Abs(pyp-py);
+         if (d < kMaxDiff) MIDDLE = kFALSE;
+      }
+
+
+//*-*- check if point is close to an axis
+      if (MIDDLE) gPad->SetCursor(kMove);
+      else gPad->SetCursor(kHand);
+      break;
+
+   case kButton1Motion:
+      if (MIDDLE) {
+         for(i=0;i<fN-1;i++) {
+            gVirtualX->DrawLine(x[i]+dpx, y[i]+dpy, x[i+1]+dpx, y[i+1]+dpy);
+            pxp = x[i]+dpx;
+            pyp = y[i]+dpy;
+            gVirtualX->DrawLine(pxp-4, pyp-4, pxp+4,  pyp-4);
+            gVirtualX->DrawLine(pxp+4, pyp-4, pxp+4,  pyp+4);
+            gVirtualX->DrawLine(pxp+4, pyp+4, pxp-4,  pyp+4);
+            gVirtualX->DrawLine(pxp-4, pyp+4, pxp-4,  pyp-4);
+         }
+         pxp = x[fN-1]+dpx;
+         pyp = y[fN-1]+dpy;
+         gVirtualX->DrawLine(pxp-4, pyp-4, pxp+4,  pyp-4);
+         gVirtualX->DrawLine(pxp+4, pyp-4, pxp+4,  pyp+4);
+         gVirtualX->DrawLine(pxp+4, pyp+4, pxp-4,  pyp+4);
+         gVirtualX->DrawLine(pxp-4, pyp+4, pxp-4,  pyp-4);
+         dpx += px - pxold;
+         dpy += py - pyold;
+         pxold = px;
+         pyold = py;
+         for(i=0;i<fN-1;i++) {
+            gVirtualX->DrawLine(x[i]+dpx, y[i]+dpy, x[i+1]+dpx, y[i+1]+dpy);
+            pxp = x[i]+dpx;
+            pyp = y[i]+dpy;
+            gVirtualX->DrawLine(pxp-4, pyp-4, pxp+4,  pyp-4);
+            gVirtualX->DrawLine(pxp+4, pyp-4, pxp+4,  pyp+4);
+            gVirtualX->DrawLine(pxp+4, pyp+4, pxp-4,  pyp+4);
+            gVirtualX->DrawLine(pxp-4, pyp+4, pxp-4,  pyp-4);
+         }
+         pxp = x[fN-1]+dpx;
+         pyp = y[fN-1]+dpy;
+         gVirtualX->DrawLine(pxp-4, pyp-4, pxp+4,  pyp-4);
+         gVirtualX->DrawLine(pxp+4, pyp-4, pxp+4,  pyp+4);
+         gVirtualX->DrawLine(pxp+4, pyp+4, pxp-4,  pyp+4);
+         gVirtualX->DrawLine(pxp-4, pyp+4, pxp-4,  pyp-4);
+      } else {
+         if (px1old) gVirtualX->DrawLine(px1old, py1old, pxold,  pyold);
+         if (px2old) gVirtualX->DrawLine(pxold,  pyold,  px2old, py2old);
+         gVirtualX->DrawLine(pxold-4, pyold-4, pxold+4,  pyold-4);
+         gVirtualX->DrawLine(pxold+4, pyold-4, pxold+4,  pyold+4);
+         gVirtualX->DrawLine(pxold+4, pyold+4, pxold-4,  pyold+4);
+         gVirtualX->DrawLine(pxold-4, pyold+4, pxold-4,  pyold-4);
+         pxold = px;
+         pxold = TMath::Max(pxold, px1);
+         pxold = TMath::Min(pxold, px2);
+         pyold = py;
+         pyold = TMath::Max(pyold, py2);
+         pyold = TMath::Min(pyold, py1);
+         if (px1old) gVirtualX->DrawLine(px1old, py1old, pxold,  pyold);
+         if (px2old) gVirtualX->DrawLine(pxold,  pyold,  px2old, py2old);
+         gVirtualX->DrawLine(pxold-4, pyold-4, pxold+4,  pyold-4);
+         gVirtualX->DrawLine(pxold+4, pyold-4, pxold+4,  pyold+4);
+         gVirtualX->DrawLine(pxold+4, pyold+4, pxold-4,  pyold+4);
+         gVirtualX->DrawLine(pxold-4, pyold+4, pxold-4,  pyold-4);
+      }
+      break;
+
+   case kButton1Up:
+
+//*-*- Compute x,y range
+      xmin = gPad->GetUxmin();
+      xmax = gPad->GetUxmax();
+      ymin = gPad->GetUymin();
+      ymax = gPad->GetUymax();
+      dx   = xmax-xmin;
+      dy   = ymax-ymin;
+      dxr  = dx/(1 - gPad->GetLeftMargin() - gPad->GetRightMargin());
+      dyr  = dy/(1 - gPad->GetBottomMargin() - gPad->GetTopMargin());
+
+   // Range() could change the size of the pad pixmap and therefore should
+   // be called before the other paint routines
+         gPad->Range(xmin - dxr*gPad->GetLeftMargin(),
+                      ymin - dyr*gPad->GetBottomMargin(),
+                      xmax + dxr*gPad->GetRightMargin(),
+                      ymax + dyr*gPad->GetTopMargin());
+         gPad->RangeAxis(xmin, ymin, xmax, ymax);
+
+      if (MIDDLE) {
+         for(i=0;i<fN;i++) {
+            fX[i] = gPad->PadtoX(gPad->AbsPixeltoX(x[i]+dpx));
+            fY[i] = gPad->PadtoY(gPad->AbsPixeltoY(y[i]+dpy));
+         }
+      } else {
+         fX[ipoint] = gPad->PadtoX(gPad->AbsPixeltoX(pxold));
+         fY[ipoint] = gPad->PadtoY(gPad->AbsPixeltoY(pyold));
+      }
+      delete [] x; x = 0;
+      delete [] y; y = 0;
+      gPad->Modified(kTRUE);
+      gVirtualX->SetLineColor(-1);
+
+   }
 }
 
 
@@ -259,8 +455,9 @@ void TPolyLine::Streamer(TBuffer &b)
 {
 //*-*-*-*-*-*-*-*-*Stream a class object*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 //*-*              =========================================
+   UInt_t R__s, R__c;
    if (b.IsReading()) {
-      b.ReadVersion();  //Version_t v = b.ReadVersion();
+      b.ReadVersion(&R__s, &R__c);
       TObject::Streamer(b);
       TAttLine::Streamer(b);
       TAttFill::Streamer(b);
@@ -270,8 +467,9 @@ void TPolyLine::Streamer(TBuffer &b)
       b.ReadFastArray(fX,fN);
       b.ReadFastArray(fY,fN);
       fOption.Streamer(b);
+      b.CheckByteCount(R__s, R__c, TPolyLine::IsA());
    } else {
-      b.WriteVersion(TPolyLine::IsA());
+      R__c = b.WriteVersion(TPolyLine::IsA(), kTRUE);
       TObject::Streamer(b);
       TAttLine::Streamer(b);
       TAttFill::Streamer(b);
@@ -279,5 +477,6 @@ void TPolyLine::Streamer(TBuffer &b)
       b.WriteFastArray(fX,fN);
       b.WriteFastArray(fY,fN);
       fOption.Streamer(b);
+      b.SetByteCount(R__c, kTRUE);
    }
 }

@@ -1,26 +1,22 @@
+//*CMZ :  2.23/10 14/12/99  19.13.31  by  Fons Rademakers
+//*CMZ :  2.23/09 17/11/99  16.17.59  by  Rene Brun
 //*CMZ :  2.00/13 29/10/98  08.31.32  by  Fons Rademakers
 //*CMZ :  2.00/11 16/08/98  16.46.00  by  Rene Brun
 //*CMZ :  2.00/08 28/05/98  10.40.29  by  Rene Brun
 //*CMZ :  2.00/07 18/05/98  02.04.37  by  Fons Rademakers
-//*CMZ :  1.03/09 06/12/97  19.31.48  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   22/09/95
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -69,7 +65,11 @@
 //                                                                      //
 //////////////////////////////////////////////////////////////////////////
 
+#ifdef HAVE_CONFIG
+#include "config.h"
+#endif
 
+#include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
@@ -385,9 +385,9 @@ TString TEnvRec::ExpandValue(const char *value)
 
    char *s1, *s2;
    int len = 0;
-   while ((s1 = strstr(v, "$("))) {
+   while ((s1 = (char*)strstr(v, "$("))) {
       s1 += 2;
-      s2 = strchr(s1, ')');
+      s2 = (char*)strchr(s1, ')');
       if (!s2) {
          len = 0;
          break;
@@ -406,12 +406,12 @@ TString TEnvRec::ExpandValue(const char *value)
    char *nv = new char[strlen(v) + len];
    *nv = 0;
 
-   while ((s1 = strstr(v, "$("))) {
+   while ((s1 = (char*)strstr(v, "$("))) {
       *s1 = 0;
       strcat(nv, v);
       *s1 = '$';
       s1 += 2;
-      s2 = strchr(s1, ')');
+      s2 = (char*)strchr(s1, ')');
       *s2 = 0;
       vv =  gSystem->Getenv(s1);
       if (vv) strcat(nv, vv);
@@ -435,7 +435,9 @@ ClassImp(TEnv)
 //______________________________________________________________________________
 TEnv::TEnv(const char *name)
 {
-   // Create a resource table and read the (possibly) three resource files.
+   // Create a resource table and read the (possibly) three resource files, i.e
+   // $ROOTSYS/system<name> (or ROOTETCDIR/system<name>), $HOME/<name> and
+   // ./<name>. Where in the case of TRint <name> is ".rootrc".
 
    if (strlen(name) == 0)
       fTable = 0;
@@ -443,7 +445,19 @@ TEnv::TEnv(const char *name)
       fTable  = new TOrdCollection(1000);
       fRcName = name;
 
-      char *s = gSystem->ConcatFileName(gRootDir, name);
+      char sname[128] = "system";
+      strcat(sname, name);
+#ifdef ROOTETCDIR
+      char *s = gSystem->ConcatFileName(ROOTETCDIR, sname);
+#else
+      char *s = gSystem->ConcatFileName(gRootDir, sname);
+      if (gSystem->AccessPathName(s)) {
+         // for backward compatibility check also <name> if "system<name>
+         // does not exist
+         delete [] s;
+         s = gSystem->ConcatFileName(gRootDir, name);
+      }
+#endif
       ReadFile(s, kEnvGlobal);
       delete [] s;
       s = gSystem->ConcatFileName(gSystem->HomeDirectory(), name);
@@ -643,7 +657,13 @@ void TEnv::SaveLevel(EEnvLevel level)
    FILE     *ifp, *ofp;
 
    if (level == kEnvGlobal) {
+#ifdef ROOTETCDIR
+      char sname[128] = "system";
+      strcat(sname, fRcName.Data());
+      char *s = gSystem->ConcatFileName(ROOTETCDIR, sname);
+#else
       char *s = gSystem->ConcatFileName(gRootDir, fRcName.Data());
+#endif
       rootrcdir = s;
       delete [] s;
    } else if (level == kEnvUser) {

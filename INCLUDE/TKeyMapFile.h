@@ -1,3 +1,4 @@
+//*CMZ :  2.23/12 26/01/2000  09.24.07  by  Rene Brun
 //*CMZ :  1.02/00 23/07/97  10.55.00  by  Rene Brun
 //*-- Author :    Rene Brun   23/07/97
 
@@ -28,7 +29,7 @@ private:
 
 public:
     TKeyMapFile();
-    TKeyMapFile(const Text_t *name, const Text_t *classname, TMapFile *mapfile);
+    TKeyMapFile(const char *name, const char *classname, TMapFile *mapfile);
     virtual ~TKeyMapFile() {;}
     virtual void      Browse(TBrowser *b);
 

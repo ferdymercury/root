@@ -1,42 +1,27 @@
-//*CMZ :  2.22/09 13/07/99  12.37.42  by  Rene Brun
-//*CMZ :  2.22/07 05/07/99  17.06.23  by  Rene Brun
-//*CMZ :  2.22/05 11/06/99  16.15.49  by  Rene Brun
-//*CMZ :  2.22/04 02/06/99  09.18.13  by  Rene Brun
-//*CMZ :  2.22/03 31/05/99  17.57.57  by  Rene Brun
-//*CMZ :  2.22/02 28/05/99  18.05.02  by  Rene Brun
-//*CMZ :  2.22/01 20/05/99  08.16.22  by  Rene Brun
-//*CMZ :  2.21/06 15/02/99  09.05.14  by  Rene Brun
-//*CMZ :  2.21/05 09/02/99  01.10.37  by  Fons Rademakers
-//*CMZ :  2.21/02 16/01/99  14.51.35  by  Rene Brun
-//*CMZ :  2.20/05 15/12/98  09.17.21  by  Rene Brun
-//*CMZ :  2.20/00 13/11/98  18.44.00  by  Fons Rademakers
-//*CMZ :  2.00/13 29/10/98  15.10.09  by  Fons Rademakers
-//*CMZ :  2.00/12 08/10/98  09.11.57  by  Rene Brun
-//*CMZ :  2.00/11 18/08/98  08.17.13  by  Rene Brun
-//*CMZ :  2.00/10 24/07/98  18.19.33  by  Fons Rademakers
-//*CMZ :  2.00/09 21/06/98  23.34.02  by  Rene Brun
-//*CMZ :  2.00/08 01/06/98  17.55.30  by  Rene Brun
-//*CMZ :  2.00/04 30/03/98  19.05.29  by  Rene Brun
-//*CMZ :  2.00/03 26/03/98  09.48.59  by  Rene Brun
-//*CMZ :  1.03/09 16/12/97  16.26.14  by  Rene Brun
+//*CMZ :          01/02/2000  16.35.53  by  Rene Brun
+//*CMZ :  2.23/11 09/01/2000  16.04.36  by  Rene Brun
+//*CMZ :  2.23/10 16/12/99  10.32.49  by  Rene Brun
+//*CMZ :  2.23/09 25/11/99  18.49.46  by  Rene Brun
+//*CMZ :  2.23/08 01/11/99  10.41.09  by  Rene Brun
+//*CMZ :  2.23/05 17/10/99  15.03.23  by  Rene Brun
+//*CMZ :  2.23/04 17/10/99  14.59.43  by  Fons Rademakers
+//*CMZ :  2.23/03 27/09/99  15.15.12  by  Rene Brun
+//*CMZ :  2.23/02 07/09/99  12.55.20  by  Rene Brun
+//*CMZ :  2.23/01 26/08/99  11.58.16  by  Rene Brun
+//*CMZ :  2.23/00 03/08/99  12.04.05  by  Rene Brun
 //*-- Author :    Rene Brun   12/12/94
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 #include <string.h>
@@ -44,58 +29,54 @@
 #include <fstream.h>
 
 #include "TROOT.h"
+#include "TSystem.h"
 #include "TCanvas.h"
 #include "TFile.h"
 #include "TStyle.h"
 #include "TDirectory.h"
-#include "TLego.h"
 #include "TH1.h"
 #include "TClass.h"
 #include "TBaseClass.h"
-#include "TPostscript.h"
-#include "TGXW.h"
+#include "TClassTable.h"
+#include "TVirtualPS.h"
+#include "TVirtualX.h"
 #include "TView.h"
-#include "X3DBuffer.h"
 #include "TPoint.h"
 #include "TGraph.h"
 #include "TArrow.h"
 #include "TPaveText.h"
 #include "TPavesText.h"
 #include "TPaveLabel.h"
+#include "TCurlyArc.h"
 #include "TArc.h"
-+SEq,TText.
+#include "TLatex.h"
+#include "TMarker.h"
 #include "TDiamond.h"
 #include "TGroupButton.h"
 #include "TBrowser.h"
-#include "TCutG.h"
 #include "TPadView3D.h"
-#include "TGLKernelABC.h"
+#include "TVirtualGL.h"
 #include "TString.h"
 #include "TLine.h"
-#include "TLink.h"
 #include "TDataMember.h"
 #include "TMethod.h"
 #include "TDataType.h"
 #include "TRealData.h"
-#include "TGToolTip.h"
+#include "TFrame.h"
+#include "TGaxis.h"
+#include "TExec.h"
 
-#if defined(WIN32)
-#include "TInterpreter.h"
-#include "TSystem.h"
-#endif
-
-const Int_t kNoStats    = BIT(9);
-const Int_t kClipFrame  = BIT(10);
-const Int_t kPrintingPS = BIT(11);
 const Int_t kDistanceMaximum = 5;
 
 // Local scratch buffer for screen points, faster than allocating buffer on heap
-const Int_t kPXY    = 1002;
-const Int_t kButton = 101;
-const Int_t kCutG   = 100;
+const Int_t kPXY       = 1002;
+const Int_t kButton    = 101;
+const Int_t kCutG      = 100;
+const Int_t kCurlyLine = 200;
+const Int_t kCurlyArc  = 201;
 
 static TPoint gPXY[kPXY];
-
+static Int_t readLevel = 0;
 
 ClassImp(TPad)
 
@@ -155,8 +136,11 @@ TPad::TPad(): TVirtualPad()
 {
 //*-*-*-*-*-*-*-*-*-*-*Pad default constructor*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 //*-*                  =======================
+
+   fTip        = 0;
    fPadPointer = 0;
    fPrimitives = 0;
+   fExecs      = 0;
    fCanvas     = 0;
    fMother     = 0;
    fPadPaint   = 0;
@@ -165,6 +149,7 @@ TPad::TPad(): TVirtualPad()
    fPhi        = 30;
    fNumber     = 0;
    fAbsCoord   = kFALSE;
+   fIsEditable = kTRUE;
    fPadView3D  = 0;
 
    fLogx  = 0;
@@ -193,7 +178,7 @@ TPad::TPad(): TVirtualPad()
 }
 
 //______________________________________________________________________________
-TPad::TPad(const Text_t *name, const Text_t *title, Float_t xlow,
+TPad::TPad(const char *name, const char *title, Float_t xlow,
            Float_t ylow, Float_t xup, Float_t yup,
            Color_t color, Short_t bordersize, Short_t bordermode)
           : TVirtualPad(name,title,xlow,ylow,xup,yup,color,bordersize,bordermode)
@@ -212,14 +197,20 @@ TPad::TPad(const Text_t *name, const Text_t *title, Float_t xlow,
 //             expressed in the mother pad reference system
 //  yup  [0,1] is the Y position of this point.
 //
-//  See TWbox::TWbox for the other parameters.
+//  the bordersize is in pixels
+//  bordermode = -1 box looks as it is behind the screen
+//  bordermode = 0  no special effects
+//  bordermode = 1  box looks as it is in front of the screen
 //
 
-
+   fTip        = 0;
+   fBorderSize = bordersize;
+   fBorderMode = bordermode;
    if (gPad)   fCanvas = gPad->GetCanvas();
    else        fCanvas = (TCanvas*)this;
    fMother     = (TPad*)gPad;
    fPrimitives = new TList(this);
+   fExecs      = new TList(this);
    fPadPointer = 0;
    fTheta      = 30;
    fPhi        = 30;
@@ -233,7 +224,14 @@ TPad::TPad(const Text_t *name, const Text_t *title, Float_t xlow,
    fPixmapID   = -1;      // -1 means pixmap will be created by ResizePad()
    fNumber     = 0;
    fAbsCoord   = kFALSE;
+   fIsEditable = kTRUE;
    fPadView3D  = 0;
+
+//*-*- Set default world coordinates to NDC [0,1]
+   fX1 = 0;
+   fX2 = 1;
+   fY1 = 0;
+   fY2 = 1;
 
    if (!gPad) return;
    TPad *padsav = (TPad*)gPad;
@@ -275,8 +273,62 @@ TPad::~TPad()
 
    if (!TestBit(kNotDeleted)) return;
    Close();
+   CloseToolTip(fTip);
+   DeleteToolTip(fTip);
    SafeDelete(fPrimitives);
+   SafeDelete(fExecs);
    if (fPadView3D) { fPadView3D->SetPad(); fPadView3D = 0; }
+}
+
+//______________________________________________________________________________
+void TPad::AddExec(const char *name, const char*command)
+{
+// Add a new TExec object to the list of Execs.
+// When an event occurs in the pad (mouse click, etc) the list of CINT commands
+// in the list of Execs are executed via TPad::AutoExec.
+//  When a pad event occurs (mouse move, click, etc) all the commands
+//  contained in the fExecs list are executed in the order found in the list.
+//  This facility is activated by default. It can be deactivated by using
+//  the canvas "Option" menu.
+//  The following examples of TExec commands are provided in the tutorials:
+//  macros exec1.C and exec2.C.
+//  Example1 of use of exec1.C
+//  ==========================
+//  Root > TFile f("hsimple.root")
+//  Root > hpx.Draw()
+//  Root > c1.AddExec("ex1",".x exec1.C")
+//   At this point you can use the mouse to click on the contour of
+//   the histogram hpx. When teh mouse is clicked, the bin number and its
+//   contents are printed.
+//  Example2 of use of exec1.C
+//  ==========================
+//  Root > TFile f("hsimple.root")
+//  Root > hpxpy.Draw()
+//  Root > c1.AddExec("ex2",".x exec2.C")
+//    When moving the mouse in the canvas, a second canvas shows the
+//    projection along X of the bin corresponding to the Y position
+//    of the mouse. The resulting histogram is fitted with a gaussian.
+//    A "dynamic" line shows the current bin position in Y.
+//    This more elaborated example can be used as a starting point
+//    to develop more powerful interactive applications exploiting CINT
+//    as a development engine.
+
+   if (!fExecs) fExecs = new TList(this);
+   TExec *ex = new TExec(name,command);
+   fExecs->Add(ex);
+}
+
+//______________________________________________________________________________
+void TPad::AutoExec()
+{
+// Execute the list of Execs when a pad event occurs.
+
+   if (!fExecs) fExecs = new TList(this);
+   TIter next(fExecs);
+   TExec *exec;
+   while ((exec = (TExec*)next())) {
+      exec->Exec();
+   }
 }
 
 //______________________________________________________________________________
@@ -307,7 +359,7 @@ void TPad::cd(Int_t subpadnumber)
 
    if (!subpadnumber) {
       gPad = this;
-      if (!gPad->IsBatch()) gGXW->SelectWindow(fPixmapID);
+      if (!gPad->IsBatch()) gVirtualX->SelectWindow(fPixmapID);
       return;
    }
 
@@ -342,17 +394,19 @@ void TPad::Clear(Option_t *option)
 
    cd();
 
-   if (!gPad->IsBatch()) gGXW->ClearWindow();
-   if (gCurrentPS && gPad == gPad->GetCanvas()) gCurrentPS->NewPage();
+   if (!gPad->IsBatch()) gVirtualX->ClearWindow();
+   if (gVirtualPS && gPad == gPad->GetCanvas()) gVirtualPS->NewPage();
 
-   TWbox::Paint("");
+   PaintBorder(GetFillColor(), kTRUE);
 }
 
 //___________________________________________________________
 Int_t TPad::Clip(Float_t *x, Float_t *y, Float_t xclipl, Float_t yclipb, Float_t xclipr, Float_t yclipt)
 {
 //   Clipping routine: Cohen Sutherland algorithm.
-// If Clip ==0 the segment is outside the boundary.
+// If Clip ==2 the segment is outside the boundary.
+// If Clip ==1 the segment has one point outside the boundary.
+// If Clip ==0 the segment is inside the boundary.
 //
 // _Input parameters:
 //
@@ -362,9 +416,6 @@ Int_t TPad::Clip(Float_t *x, Float_t *y, Float_t xclipl, Float_t yclipb, Float_t
 // _Output parameters:
 //
 //  x[2], y[2] : New segment coordinates
-//
-// If clipped != 0 after a call to this function, the
-// line has been clipped.
 //
    const Float_t P=10000;
    Int_t clip = 0;
@@ -381,14 +432,14 @@ Int_t TPad::Clip(Float_t *x, Float_t *y, Float_t xclipl, Float_t yclipb, Float_t
    Int_t code2 = ClippingCode(x[1],y[1],xclipl,yclipb,xclipr,yclipt);
 
    Float_t xt=0, yt=0;
-//   Int_t clipped = 0; //this variable could be used in a future version
+   Int_t clipped = 0; //this variable could be used in a future version
    while(code1 + code2) {
-//      clipped = 1;
+      clipped = 1;
 
 //The line lies entirely outside the clipping boundary
 
       if (code1&code2) {
-         clip = 0;
+         clip = 2;
          return clip;
       }
 //The line is subdivided into several parts
@@ -421,7 +472,7 @@ Int_t TPad::Clip(Float_t *x, Float_t *y, Float_t xclipl, Float_t yclipb, Float_t
          code2 = ClippingCode(xt,yt,xclipl,yclipb,xclipr,yclipt);
       }
    }
-   clip = 1;
+   clip = clipped;
    return clip;
 }
 
@@ -464,8 +515,8 @@ void TPad::Close(Option_t *)
    if (fPixmapID != -1) {
       if (gPad) {
          if (!gPad->IsBatch()) {
-            gGXW->SelectWindow(fPixmapID);
-            gGXW->ClosePixmap();
+            gVirtualX->SelectWindow(fPixmapID);
+            gVirtualX->ClosePixmap();
          }
       }
       fPixmapID = -1;
@@ -479,10 +530,11 @@ void TPad::Close(Option_t *)
       // remove from the mother's list of primitives
       if (fMother->GetListOfPrimitives()) fMother->GetListOfPrimitives()->Remove(this);
 
-      if (gPad == this)
-         fMother->cd();
+      if (gPad == this) fMother->cd();
+      if (gROOT->GetSelectedPad() == this) gROOT->SetSelectedPad(0);
    }
    fMother = 0;
+   if (gROOT->GetSelectedPad()== this) gROOT->SetSelectedPad(0);
 }
 
 //______________________________________________________________________________
@@ -493,7 +545,7 @@ void TPad::CopyPixmap()
 
    int px, py;
    XYtoAbsPixel(GetX1(), GetY2(), px, py);
-   gGXW->CopyPixmap(fPixmapID, px, py);
+   gVirtualX->CopyPixmap(fPixmapID, px, py);
    if (this == gPad) HighLight(gPad->GetHighLightColor());
 }
 
@@ -512,60 +564,6 @@ void TPad::CopyPixmaps()
       }
    }
 }
-
-//______________________________________________________________________________
-void TPad::CreateNewArrow(Int_t event, Int_t px, Int_t py)
-{
-//*-*-*-*-*-*-*-*-*-*-*Create a new arrow in this pad*-*-*-*-*-*-*-*-*-*-*-*-*
-//*-*                  ==============================
-//
-//  Function called by TPad::ExecuteEvent when the action "Create NewArrow"
-//  has been selected in the Canvas pulldown menu.
-//
-//  Click left button to indicate arrow starting position.
-//  Release left button to terminate the arrow.
-//
-//
-
-   static Float_t x0, y0, x1, y1;
-
-   static Int_t pxold, pyold;
-   static Int_t px0, py0;
-   static Int_t linedrawn;
-   TArrow *arrow;
-
-   switch (event) {
-
-   case kButton1Down:
-      gGXW->SetLineColor(-1);
-      x0 = gPad->AbsPixeltoX(px);
-      y0 = gPad->AbsPixeltoY(py);
-      px0   = px; py0   = py;
-      pxold = px; pyold = py;
-      linedrawn = 0;
-      break;
-
-   case kButton1Motion:
-      if (linedrawn) gGXW->DrawLine(px0, py0, pxold, pyold);
-      pxold = px;
-      pyold = py;
-      linedrawn = 1;
-      gGXW->DrawLine(px0, py0, pxold, pyold);
-      break;
-
-   case kButton1Up:
-      x1 = gPad->AbsPixeltoX(px);
-      y1 = gPad->AbsPixeltoY(py);
-      gPad->Modified(kTRUE);
-
-      arrow = new TArrow(x0,y0,x1,y1,0.03,"|>");
-      arrow->SetFillColor(1);
-      arrow->Draw();
-      gROOT->SetEditorMode();
-      break;
-   }
-}
-
 
 //______________________________________________________________________________
 void TPad::CreateNewEllipse(Int_t event, Int_t px, Int_t py, Int_t mode)
@@ -592,7 +590,7 @@ void TPad::CreateNewEllipse(Int_t event, Int_t px, Int_t py, Int_t mode)
    switch (event) {
 
    case kButton1Down:
-      gGXW->SetLineColor(-1);
+      gVirtualX->SetLineColor(-1);
       x0 = gPad->AbsPixeltoX(px);
       y0 = gPad->AbsPixeltoY(py);
       px0   = px; py0   = py;
@@ -601,11 +599,11 @@ void TPad::CreateNewEllipse(Int_t event, Int_t px, Int_t py, Int_t mode)
       break;
 
    case kButton1Motion:
-      if (linedrawn) gGXW->DrawBox(px0, py0, pxold, pyold, TGXW::kHollow);
+      if (linedrawn) gVirtualX->DrawBox(px0, py0, pxold, pyold, TVirtualX::kHollow);
       pxold = px;
       pyold = py;
       linedrawn = 1;
-      gGXW->DrawBox(px0, py0, pxold, pyold, TGXW::kHollow);
+      gVirtualX->DrawBox(px0, py0, pxold, pyold, TVirtualX::kHollow);
       break;
 
    case kButton1Up:
@@ -632,7 +630,81 @@ void TPad::CreateNewEllipse(Int_t event, Int_t px, Int_t py, Int_t mode)
 }
 
 //______________________________________________________________________________
-void TPad::CreateNewPad(Int_t event, Int_t px, Int_t py)
+void TPad::CreateNewLine(Int_t event, Int_t px, Int_t py, Int_t mode)
+{
+//*-*-*-*-*-*-*-*-*-*-*Create a new arrow in this pad*-*-*-*-*-*-*-*-*-*-*-*-*
+//*-*                  ==============================
+//
+//  Function called by TPad::ExecuteEvent when the action "Create NewArrow"
+//  has been selected in the Canvas pulldown menu.
+//
+//  Click left button to indicate arrow starting position.
+//  Release left button to terminate the arrow.
+//
+//
+
+   static Float_t x0, y0, x1, y1;
+
+   static Int_t pxold, pyold;
+   static Int_t px0, py0;
+   static Int_t linedrawn;
+   TLine *line;
+   TArrow *arrow;
+   TCurlyLine *cline;
+   Float_t radius, phimin,phimax;
+
+   switch (event) {
+
+   case kButton1Down:
+      gVirtualX->SetLineColor(-1);
+      x0 = gPad->AbsPixeltoX(px);
+      y0 = gPad->AbsPixeltoY(py);
+      px0   = px; py0   = py;
+      pxold = px; pyold = py;
+      linedrawn = 0;
+      break;
+
+   case kButton1Motion:
+      if (linedrawn) gVirtualX->DrawLine(px0, py0, pxold, pyold);
+      pxold = px;
+      pyold = py;
+      linedrawn = 1;
+      gVirtualX->DrawLine(px0, py0, pxold, pyold);
+      break;
+
+   case kButton1Up:
+      if (px == px0 && py == py0) break;
+      x1 = gPad->AbsPixeltoX(px);
+      y1 = gPad->AbsPixeltoY(py);
+      gPad->Modified(kTRUE);
+
+      if (mode == kLine) {
+         line = new TLine(x0,y0,x1,y1);
+         line->Draw();
+      }
+      if (mode == kArrow) {
+         arrow = new TArrow(x0,y0,x1,y1,0.03,"|>");
+         arrow->SetFillColor(1);
+         arrow->Draw();
+      }
+      if (mode == kCurlyLine) {
+         cline = new TCurlyLine(x0,y0,x1,y1);
+         cline->Draw();
+      }
+      if (mode == kCurlyArc) {
+         radius = TMath::Sqrt((x1-x0)*(x1-x0) + (y1-y0)*(y1-y0));
+         phimin = 0;
+         phimax = 360;
+         cline = new TCurlyArc(x0,y0,radius,phimin,phimax);
+         cline->Draw();
+      }
+      gROOT->SetEditorMode();
+      break;
+   }
+}
+
+//______________________________________________________________________________
+void TPad::CreateNewPad(Int_t event, Int_t px, Int_t py, Int_t)
 {
 //*-*-*-*-*-*-*-*-*-*-*Create a new pad in this pad*-*-*-*-*-*-*-*-*-*-*-*-*-*
 //*-*                  ============================
@@ -657,7 +729,7 @@ void TPad::CreateNewPad(Int_t event, Int_t px, Int_t py)
    case kButton1Down:
       padsav = (TPad*)gPad;
       cd();
-      gGXW->SetLineColor(-1);
+      gVirtualX->SetLineColor(-1);
       px1 = gPad->XtoAbsPixel(gPad->GetX1());
       py1 = gPad->YtoAbsPixel(gPad->GetY1());
       px2 = gPad->XtoAbsPixel(gPad->GetX2());
@@ -667,7 +739,7 @@ void TPad::CreateNewPad(Int_t event, Int_t px, Int_t py)
       break;
 
    case kButton1Motion:
-      if (boxdrawn) gGXW->DrawBox(pxl, pyl, pxt, pyt, TGXW::kHollow);
+      if (boxdrawn) gVirtualX->DrawBox(pxl, pyl, pxt, pyt, TVirtualX::kHollow);
       px2old = px;
       px2old = TMath::Max(px2old, px1);
       px2old = TMath::Min(px2old, px2);
@@ -679,13 +751,13 @@ void TPad::CreateNewPad(Int_t event, Int_t px, Int_t py)
       pyl = TMath::Max(py1old, py2old);
       pyt = TMath::Min(py1old, py2old);
       boxdrawn = 1;
-      gGXW->DrawBox(pxl, pyl, pxt, pyt, TGXW::kHollow);
+      gVirtualX->DrawBox(pxl, pyl, pxt, pyt, TVirtualX::kHollow);
       break;
 
    case kButton1Up:
       gPad->Modified(kTRUE);
       gPad->SetDoubleBuffer(1);   // Turn on double buffer mode
-      gGXW->SetDrawMode(TGXW::kCopy);       // set drawing mode back to normal (copy) mode
+      gVirtualX->SetDrawMode(TVirtualX::kCopy);       // set drawing mode back to normal (copy) mode
       xlow = (Float_t(pxl) - Float_t(px1))/(Float_t(px2) - Float_t(px1));
       ylow = (Float_t(py1) - Float_t(pyl))/(Float_t(py1) - Float_t(py2));
       xup  = (Float_t(pxt) - Float_t(px1))/(Float_t(px2) - Float_t(px1));
@@ -731,7 +803,7 @@ void TPad::CreateNewPave(Int_t event, Int_t px, Int_t py, Int_t mode)
    switch (event) {
 
    case kButton1Down:
-      gGXW->SetLineColor(-1);
+      gVirtualX->SetLineColor(-1);
       x0 = gPad->AbsPixeltoX(px);
       y0 = gPad->AbsPixeltoY(py);
       px0   = px; py0   = py;
@@ -740,11 +812,11 @@ void TPad::CreateNewPave(Int_t event, Int_t px, Int_t py, Int_t mode)
       break;
 
    case kButton1Motion:
-      if (linedrawn) gGXW->DrawBox(px0, py0, pxold, pyold, TGXW::kHollow);
+      if (linedrawn) gVirtualX->DrawBox(px0, py0, pxold, pyold, TVirtualX::kHollow);
       pxold = px;
       pyold = py;
       linedrawn = 1;
-      gGXW->DrawBox(px0, py0, pxold, pyold, TGXW::kHollow);
+      gVirtualX->DrawBox(px0, py0, pxold, pyold, TVirtualX::kHollow);
       break;
 
    case kButton1Up:
@@ -768,7 +840,7 @@ void TPad::CreateNewPave(Int_t event, Int_t px, Int_t py, Int_t mode)
          pyl = (py0 + py)/2;
          for (i=0;i<kTMAX;i++) atext[i] = ' ';
          atext[kTMAX-1] = 0;
-         gGXW->RequestString(pxl, pyl, atext);
+         gVirtualX->RequestString(pxl, pyl, atext);
          for (i=kTMAX-2;i>=0;i--) {
             if (atext[i] != ' ') {
                atext[i+1] = 0;
@@ -811,16 +883,15 @@ void TPad::CreateNewPolyLine(Int_t event, Int_t px, Int_t py, Int_t mode)
    static Int_t linedrawn;
    Int_t dp;
    TGraph *gr;
-   TCutG *cutg;
 
    switch (event) {
 
    case kButton1Down:
       if (npoints == 0) {
-         gGXW->SetLineColor(-1);
+         gVirtualX->SetLineColor(-1);
       } else {
          gPad->GetCanvas()->FeedbackMode(kFALSE);
-         gGXW->DrawLine(px1old, py1old, pxold, pyold);
+         gVirtualX->DrawLine(px1old, py1old, pxold, pyold);
       }
       // stop collecting new points if new point is close ( < 5 pixels) of previous point
       dp = TMath::Abs(px-px1old) +TMath::Abs(py-py1old);
@@ -828,14 +899,16 @@ void TPad::CreateNewPolyLine(Int_t event, Int_t px, Int_t py, Int_t mode)
          gPad->Modified(kTRUE);
          if      (mode == kPolyLine) {
             gr = new TGraph(npoints,xline,yline);
-            gr->ResetBit(kClipFrame);
+            gr->ResetBit(TGraph::kClipFrame);
             gr->Draw("L");
          } else {
             xline[npoints] = xline[0];
             yline[npoints] = yline[0];
             npoints++;
-            cutg = new TCutG("CUTG",npoints,xline,yline);
-            cutg->Draw("L");
+            gr = (TGraph*)gROOT->ProcessLineFast(
+                 Form("new TCutG(\"CUTG\",%d,(Float_t*)0x%lx,(Float_t*)0x%lx)",
+                      npoints,(Long_t)xline,(Long_t)yline));
+            if (gr) gr->Draw("L");
          }
          npoints = 0;
          linedrawn = 0;
@@ -860,20 +933,20 @@ void TPad::CreateNewPolyLine(Int_t event, Int_t px, Int_t py, Int_t mode)
    case kButton1Up:
       if (npoints == 0) return;
       gPad->GetCanvas()->FeedbackMode(kTRUE);
-      if (linedrawn) gGXW->DrawLine(px1old, py1old, pxold, pyold);
+      if (linedrawn) gVirtualX->DrawLine(px1old, py1old, pxold, pyold);
       pxold = px;
       pyold = py;
       linedrawn = 1;
-      gGXW->DrawLine(px1old, py1old, pxold, pyold);
+      gVirtualX->DrawLine(px1old, py1old, pxold, pyold);
       break;
    }
 }
 
 //______________________________________________________________________________
-void TPad::CreateNewText(Int_t event, Int_t px, Int_t py)
+void TPad::CreateNewText(Int_t event, Int_t px, Int_t py, Int_t mode)
 {
-//*-*-*-*-*-*-*-*-*-*Create a new TText at the cursor position*-*-*-*-*-*-*-*
-//*-*                =========================================
+//*-*-*-*-*-*-*-*-*-*Create a new TLatex at the cursor position*-*-*-*-*-*-*-*
+//*-*                ==========================================
 //  Click left button to indicate the text position
 // This function is called when the item NewText is selected in the
 // canvas pulldown menu.
@@ -882,19 +955,28 @@ void TPad::CreateNewText(Int_t event, Int_t px, Int_t py)
    const Int_t kTMAX=100;
    static char atext[kTMAX];
    Int_t i, lentext;
-   TText *newtext;
+   TLatex *newtext;
+   TMarker *marker;
    Float_t x, y;
 
    switch (event) {
 
    case kButton1Down:
+      x = gPad->AbsPixeltoX(px);
+      y = gPad->AbsPixeltoY(py);
+      if (mode == kMarker) {
+         marker = new TMarker(x,y,gStyle->GetMarkerStyle());
+         marker->Draw();
+         gROOT->SetEditorMode();
+         break;
+      }
       for (i=0;i<kTMAX;i++) atext[i] = ' ';
       atext[kTMAX-1] = 0;
       lentext = kTMAX;
-      newtext = new TText();
-      gGXW->SetLineColor(-1);
+      newtext = new TLatex();
+      gVirtualX->SetLineColor(-1);
       newtext->TAttText::Modify();
-      gGXW->RequestString(px, py, atext);
+      gVirtualX->RequestString(px, py, atext);
       lentext = strlen(atext);
       for (i=lentext-1;i>=0;i--) {
          if (atext[i] != ' ') {
@@ -904,13 +986,68 @@ void TPad::CreateNewText(Int_t event, Int_t px, Int_t py)
          lentext--;
       }
       if (!lentext) break;
-      x = gPad->AbsPixeltoX(px);
-      y = gPad->AbsPixeltoY(py);
-      newtext->DrawText(x, y, atext);
+      newtext->DrawLatex(x, y, atext);
       gPad->Modified(kTRUE);
       gROOT->SetEditorMode();
       break;
    }
+}
+
+//______________________________________________________________________________
+void TPad::DeleteExec(const char *name)
+{
+// Remove TExec name from the list of Execs.
+
+   if (!fExecs) fExecs = new TList(this);
+   TExec *ex = (TExec*)fExecs->FindObject(name);
+   if (!ex) return;
+   fExecs->Remove(ex);
+   delete ex;
+}
+
+//______________________________________________________________________________
+Int_t TPad::DistancetoPrimitive(Int_t px, Int_t py)
+{
+//*-*-*-*-*-*-*-*-*-*-*Compute distance from point px,py to a box*-*-*-*-*-*
+//*-*                  ==========================================
+//  Compute the closest distance of approach from point px,py to the
+//  edges of this pad.
+//  The distance is computed in pixels units.
+//
+
+   Int_t pxl, pyl, pxt, pyt;
+   Int_t px1 = gPad->XtoAbsPixel(fX1);
+   Int_t py1 = gPad->YtoAbsPixel(fY1);
+   Int_t px2 = gPad->XtoAbsPixel(fX2);
+   Int_t py2 = gPad->YtoAbsPixel(fY2);
+   if (px1 < px2) {pxl = px1; pxt = px2;}
+   else           {pxl = px2; pxt = px1;}
+   if (py1 < py2) {pyl = py1; pyt = py2;}
+   else           {pyl = py2; pyt = py1;}
+
+//*-*- Are we inside the box?
+//*-*  ======================
+   if ( (px > pxl && px < pxt) && (py > pyl && py < pyt) ) {
+      if (GetFillStyle()) return 0;  //*-* if pad is filled
+   }
+
+//*-*- Are we on the edges?
+//*-*  ====================
+   Int_t dxl = TMath::Abs(px - pxl);
+   if (py < pyl) dxl += pyl - py; if (py > pyt) dxl += py - pyt;
+   Int_t dxt = TMath::Abs(px - pxt);
+   if (py < pyl) dxt += pyl - py; if (py > pyt) dxt += py - pyt;
+   Int_t dyl = TMath::Abs(py - pyl);
+   if (px < pxl) dyl += pxl - px; if (px > pxt) dyl += px - pxt;
+   Int_t dyt = TMath::Abs(py - pyt);
+   if (px < pxl) dyt += pxl - px; if (px > pxt) dyt += px - pxt;
+
+   Int_t distance = dxl;
+   if (dxt < distance) distance = dxt;
+   if (dyl < distance) distance = dyl;
+   if (dyt < distance) distance = dyt;
+
+   return distance - Int_t(0.5*fLineWidth);
 }
 
 //______________________________________________________________________________
@@ -1224,7 +1361,7 @@ void TPad::DrawClassObject(TObject *classobj, Option_t *option)
 }
 
 //______________________________________________________________________________
-TH1F *TPad::DrawFrame(Float_t xmin, Float_t ymin, Float_t xmax, Float_t ymax, Text_t *title)
+TH1F *TPad::DrawFrame(Float_t xmin, Float_t ymin, Float_t xmax, Float_t ymax, const char *title)
 {
 //  Draw a pad frame
 //  Compute real pad range taking into account all margins
@@ -1233,13 +1370,57 @@ TH1F *TPad::DrawFrame(Float_t xmin, Float_t ymin, Float_t xmax, Float_t ymax, Te
    TH1F *hframe = (TH1F*)GetPrimitive("hframe");
    if (hframe) delete hframe;
    hframe = new TH1F("hframe",title,100,xmin,xmax);
-   hframe->SetBit(kNoStats);
+   hframe->SetBit(TH1::kNoStats);
    hframe->SetMinimum(ymin);
    hframe->SetMaximum(ymax);
    hframe->SetDirectory(0);
    hframe->Draw();
    Update();
    return hframe;
+}
+
+//______________________________________________________________________________
+void TPad::DrawColorTable()
+{
+//*-*-*-*-static function to Display Color Table in a pad*-*-*-*-*-*-*
+//*-*     ===============================================
+
+   Int_t i, j;
+   Int_t color;
+   Float_t xlow, ylow, xup, yup, hs, ws;
+   Float_t x1, y1, x2, y2;
+   x1 = y1 = 0;
+   x2 = y2 = 20;
+
+   gPad->SetFillColor(0);
+   gPad->Clear();
+   gPad->Range(x1,y1,x2,y2);
+
+   TText *text = new TText(0,0,"");
+   text->SetTextFont(61);
+   text->SetTextSize(0.05);
+   text->SetTextAlign(22);
+
+   TBox *box;
+   char label[8];
+//*-* draw colortable boxes
+   hs = (y2-y1)/Float_t(5);
+   ws = (x2-x1)/Float_t(10);
+   for (i=0;i<10;i++) {
+      xlow = x1 + ws*(Float_t(i)+0.1);
+      xup  = x1 + ws*(Float_t(i)+0.9);
+      for (j=0;j<5;j++) {
+         ylow = y1 + hs*(Float_t(j)+0.1);
+         yup  = y1 + hs*(Float_t(j)+0.9);
+         color = 10*j + i + 1;
+         sprintf(label,"%d",color);
+         box = new TBox(xlow, ylow, xup, yup);
+         box->SetFillColor(color);
+         box->Draw();
+         text->DrawText(0.5*(xlow+xup), 0.5*(ylow+yup),label);
+      }
+   }
+
 }
 
 //______________________________________________________________________________
@@ -1253,7 +1434,7 @@ void TPad::DrawLine(Float_t x1, Float_t y1, Float_t x2, Float_t y2)
    Int_t py1 = gPad->YtoPixel(y1);
    Int_t py2 = gPad->YtoPixel(y2);
 
-   gGXW->DrawLine(px1, py1, px2, py2);
+   gVirtualX->DrawLine(px1, py1, px2, py2);
 }
 
 //______________________________________________________________________________
@@ -1267,11 +1448,11 @@ void TPad::DrawLineNDC(Float_t u1, Float_t v1, Float_t u2, Float_t v2)
    Int_t py1 = gPad->VtoPixel(v1);
    Int_t py2 = gPad->VtoPixel(v2);
 
-   gGXW->DrawLine(px1, py1, px2, py2);
+   gVirtualX->DrawLine(px1, py1, px2, py2);
 }
 
 //______________________________________________________________________________
-void TPad::DrawText(Float_t x, Float_t y, const Text_t *text)
+void TPad::DrawText(Float_t x, Float_t y, const char *text)
 {
 //*-*-*-*-*-*-*-*-*Draw text in CurrentPad World coordinates*-*-*-*-*-*-*-*
 //*-*              =========================================
@@ -1279,13 +1460,13 @@ void TPad::DrawText(Float_t x, Float_t y, const Text_t *text)
    Int_t px = gPad->XtoPixel(x);
    Int_t py = gPad->YtoPixel(y);
 
-   Float_t angle = gGXW->GetTextAngle();
-   Float_t mgn   = gGXW->GetTextSize();
-   gGXW->DrawText(px, py, angle, mgn, text, TGXW::kClear);
+   Float_t angle = gVirtualX->GetTextAngle();
+   Float_t mgn   = gVirtualX->GetTextSize();
+   gVirtualX->DrawText(px, py, angle, mgn, text, TVirtualX::kClear);
 }
 
 //______________________________________________________________________________
-void TPad::DrawTextNDC(Float_t u, Float_t v, const Text_t *text)
+void TPad::DrawTextNDC(Float_t u, Float_t v, const char *text)
 {
 //*-*-*-*-*-*-*-*-*Draw text in CurrentPad NDC coordinates*-*-*-*-*-*-*-*
 //*-*              =======================================
@@ -1293,9 +1474,9 @@ void TPad::DrawTextNDC(Float_t u, Float_t v, const Text_t *text)
    Int_t px = gPad->UtoPixel(u);
    Int_t py = gPad->VtoPixel(v);
 
-   Float_t angle = gGXW->GetTextAngle();
-   Float_t mgn   = gGXW->GetTextSize();
-   gGXW->DrawText(px, py, angle, mgn, text, TGXW::kClear);
+   Float_t angle = gVirtualX->GetTextAngle();
+   Float_t mgn   = gVirtualX->GetTextSize();
+   gVirtualX->DrawText(px, py, angle, mgn, text, TVirtualX::kClear);
 }
 
 //______________________________________________________________________________
@@ -1303,18 +1484,58 @@ void TPad::ExecuteEvent(Int_t event, Int_t px, Int_t py)
 {
 //*-*-*-*-*-*-*-*-*-*-*Execute action corresponding to one event*-*-*-*
 //*-*                  =========================================
-//  This member function must be implemented to realize the action
-//  corresponding to the mouse click on the object in the canvas
+//  This member function is called when a TPad object is clicked.
 //
+//  If the mouse is clicked in one of the 4 corners of the pad (PA,PB,PC,PD)
+//  the pad is resized with the rubber rectangle.
+//
+//  If the mouse is clicked inside the pad, the pad is moved.
+//
+//  If the mouse is clicked on the 4 edges (L,R,T,B), the pad is rscaled
+//  parallel to this edge (same as Motif window manager).
+//
+//    PA                    T                       PB
+//     +--------------------------------------------+
+//     |                                            |
+//     |                                            |
+//     |                                            |
+//    L|                  INSIDE                    |R
+//     |                                            |
+//     |                                            |
+//     |                                            |
+//     |                                            |
+//     +--------------------------------------------+
+//    PD                    B                      PC
+//
+//
+//  Note that this function duplicates on purpose the functionality
+//  already implemented in TBox::ExecuteEvent.
+//  If somebody modifies this function, may be similar changes should also
+//  be applied to TBox::ExecuteEvent.
 
    static Float_t xmin;
    static Float_t xmax;
    static Float_t ymin;
    static Float_t ymax;
 
+   const Int_t kMaxDiff = 5;
+   const Int_t kMinSize = 20;
    static Int_t pxorg, pyorg;
+   static Int_t px1, px2, py1, py2, pxl, pyl, pxt, pyt, pxold, pyold;
+   static Int_t px1p, px2p, py1p, py2p, pxlp, pylp, pxtp, pytp;
+   static Bool_t PA, PB, PC, PD, T, L, R, B, INSIDE;
+   Int_t  wx, wy;
+   TVirtualPad  *parent;
+   Bool_t opaque  = OpaqueMoving();
+   Bool_t ropaque = OpaqueResizing();
+
+   if (!IsEditable() && event != kMouseEnter) return;
 
    HideToolTip(event);
+
+   parent = GetMother();
+   if (GetXlowNDC() < 0 && event != kButton1Down) return;
+   if (GetYlowNDC() < 0 && event != kButton1Down) return;
 
    // keep old range and mouse position
    if (event == kButton1Down) {
@@ -1330,20 +1551,31 @@ void TPad::ExecuteEvent(Int_t event, Int_t px, Int_t py)
    Int_t newcode = gROOT->GetEditorMode();
    switch (newcode) {
       case kPad:
-         CreateNewPad(event,px,py);
+         CreateNewPad(event,px,py,0);
          break;
+      case kMarker:
       case kText:
 #ifndef WIN32
-         CreateNewText(event,px,py);
+         CreateNewText(event,px,py,newcode);
 #else
         {
-         char cmd[]="((TPad *)0x1234567890123456)->CreateNewText(xx,xxxx,xxxx);";
-         sprintf(cmd,"((TPad *)%#16x)->CreateNewText(%2i,%4i,%4i);",
-                                       this,                event, px, py);
-         if (event == kButton1Down) gROOT->SetEditorMode();
-         gInterpreter->ProcessLine(cmd);
+            if (event == kButton1Down) gROOT->SetEditorMode();
+            gROOT->ProcessLine(Form("((TPad *)0x%lx)->CreateNewText(%d,%d,%d,%d);",
+                                    (Long_t)this, event, px, py, newcode));
         }
 #endif
+         break;
+      case kLine:
+         CreateNewLine(event,px,py,kLine);
+         break;
+      case kArrow:
+         CreateNewLine(event,px,py,kArrow);
+         break;
+      case kCurlyLine:
+         CreateNewLine(event,px,py,kCurlyLine);
+         break;
+      case kCurlyArc:
+         CreateNewLine(event,px,py,kCurlyArc);
          break;
       case kPolyLine:
          CreateNewPolyLine(event,px,py,kPolyLine);
@@ -1353,9 +1585,6 @@ void TPad::ExecuteEvent(Int_t event, Int_t px, Int_t py)
          break;
       case kArc:
          CreateNewEllipse(event,px,py,kArc);
-         break;
-      case kArrow:
-         CreateNewArrow(event,px,py);
          break;
       case kEllipse:
          CreateNewEllipse(event,px,py,kEllipse);
@@ -1368,11 +1597,9 @@ void TPad::ExecuteEvent(Int_t event, Int_t px, Int_t py)
       case kDiamond:
 #ifdef WIN32
          if (newcode == kPaveLabel || newcode == kButton) {
-           char cmd[]= "((TPad *)0x1234567890123456)->CreateNewPave(xx,xxxx,xxxx,xx);";
-           sprintf(cmd,"((TPad *)%#16x)->CreateNewPave(%2i,%4i,%4i,%2i);",
-                                         this,                event, px, py,newcode);
-           if (event == kButton1Up) gROOT->SetEditorMode();
-           gInterpreter->ProcessLine(cmd);
+            if (event == kButton1Up) gROOT->SetEditorMode();
+            gROOT->ProcessLine(Form("((TPad *)0x%lx)->CreateNewPave(%d,%d,%d,%d);",
+                                    (Long_t)this, event, px, py,newcode));
          }
          else
 #endif
@@ -1389,9 +1616,8 @@ again:
    switch (event) {
 
    case kMouseEnter:
-   case kMouseMotion:
-
-      TWbox::ExecuteEvent(event, px, py);
+      if (fTip)
+         ResetToolTip(fTip);
       break;
 
    case kButton1Down:
@@ -1399,15 +1625,209 @@ again:
 #ifdef WIN32
       Pop(); //this should be for cases where mouse has only two buttons
 #endif
-      TWbox::ExecuteEvent(event, px, py);
+      gVirtualX->SetLineColor(-1);
+      TAttLine::Modify();  //Change line attributes only if necessary
+      if (GetFillColor())
+         gVirtualX->SetLineColor(GetFillColor());
+      else
+         gVirtualX->SetLineColor(1);
+      gVirtualX->SetLineWidth(2);
+
+      // No break !!!
+
+   case kMouseMotion:
+
+      px1 = XtoAbsPixel(GetX1());
+      py1 = YtoAbsPixel(GetY1());
+      px2 = XtoAbsPixel(GetX2());
+      py2 = YtoAbsPixel(GetY2());
+
+      if (px1 < px2) {
+         pxl = px1;
+         pxt = px2;
+      } else {
+         pxl = px2;
+         pxt = px1;
+      }
+      if (py1 < py2) {
+         pyl = py1;
+         pyt = py2;
+      } else {
+         pyl = py2;
+         pyt = py1;
+      }
+
+      px1p = parent->XtoAbsPixel(parent->GetX1()) + parent->GetBorderSize();
+      py1p = parent->YtoAbsPixel(parent->GetY1()) - parent->GetBorderSize();
+      px2p = parent->XtoAbsPixel(parent->GetX2()) - parent->GetBorderSize();
+      py2p = parent->YtoAbsPixel(parent->GetY2()) + parent->GetBorderSize();
+
+      if (px1p < px2p) {
+         pxlp = px1p;
+         pxtp = px2p;
+      } else {
+         pxlp = px2p;
+         pxtp = px1p;
+      }
+      if (py1p < py2p) {
+         pylp = py1p;
+         pytp = py2p;
+      } else {
+         pylp = py2p;
+         pytp = py1p;
+      }
+
+      PA = PB = PC = PD = T = L = R = B = INSIDE = kFALSE;
+
+                                                         // case PA
+      if (TMath::Abs(px - pxl) <= kMaxDiff && TMath::Abs(py - pyl) <= kMaxDiff) {
+         pxold = pxl; pyold = pyl; PA = kTRUE;
+         SetCursor(kTopLeft);
+      }
+                                                         // case PB
+      if (TMath::Abs(px - pxt) <= kMaxDiff && TMath::Abs(py - pyl) <= kMaxDiff) {
+         pxold = pxt; pyold = pyl; PB = kTRUE;
+         SetCursor(kTopRight);
+      }
+                                                         // case PC
+      if (TMath::Abs(px - pxt) <= kMaxDiff && TMath::Abs(py - pyt) <= kMaxDiff) {
+         pxold = pxt; pyold = pyt; PC = kTRUE;
+         SetCursor(kBottomRight);
+      }
+                                                         // case PD
+      if (TMath::Abs(px - pxl) <= kMaxDiff && TMath::Abs(py - pyt) <= kMaxDiff) {
+         pxold = pxl; pyold = pyt; PD = kTRUE;
+         SetCursor(kBottomLeft);
+      }
+
+      if ((px > pxl+kMaxDiff && px < pxt-kMaxDiff) &&
+          TMath::Abs(py - pyl) < kMaxDiff) {             // top edge
+         pxold = pxl; pyold = pyl; T = kTRUE;
+         SetCursor(kTopSide);
+      }
+
+      if ((px > pxl+kMaxDiff && px < pxt-kMaxDiff) &&
+          TMath::Abs(py - pyt) < kMaxDiff) {             // bottom edge
+         pxold = pxt; pyold = pyt; B = kTRUE;
+         SetCursor(kBottomSide);
+      }
+
+      if ((py > pyl+kMaxDiff && py < pyt-kMaxDiff) &&
+          TMath::Abs(px - pxl) < kMaxDiff) {             // left edge
+         pxold = pxl; pyold = pyl; L = kTRUE;
+         SetCursor(kLeftSide);
+      }
+
+      if ((py > pyl+kMaxDiff && py < pyt-kMaxDiff) &&
+          TMath::Abs(px - pxt) < kMaxDiff) {             // right edge
+          pxold = pxt; pyold = pyt; R = kTRUE;
+          SetCursor(kRightSide);
+      }
+
+      if ((px > pxl+kMaxDiff && px < pxt-kMaxDiff) &&
+          (py > pyl+kMaxDiff && py < pyt-kMaxDiff)) {    // inside box
+         pxold = px; pyold = py; INSIDE = kTRUE;
+         if (event == kButton1Down)
+            SetCursor(kMove);
+         else
+            SetCursor(kCross);
+      }
+
+      fResizing = kFALSE;
+      if (PA || PB || PC || PD || T || L || R || B)
+         fResizing = kTRUE;
+
+      if (!PA && !PB && !PC && !PD && !T && !L && !R && !B && !INSIDE)
+         SetCursor(kCross);
+
       break;
 
    case kButton1Motion:
 
-      TWbox::ExecuteEvent(event, px, py);
+      wx = wy = 0;
 
-      if ((!IsBeingResized() && gPad->OpaqueMoving()) ||
-           (IsBeingResized() && gPad->OpaqueResizing())) {
+      if (PA) {
+         if (!ropaque) gVirtualX->DrawBox(pxold, pyt, pxt, pyold, TVirtualX::kHollow);  // draw the old box
+         if (px > pxt-kMinSize) { px = pxt-kMinSize; wx = px; }
+         if (py > pyt-kMinSize) { py = pyt-kMinSize; wy = py; }
+         if (px < pxlp) { px = pxlp; wx = px; }
+         if (py < pylp) { py = pylp; wy = py; }
+         if (!ropaque) gVirtualX->DrawBox(px   , pyt, pxt, py,    TVirtualX::kHollow);  // draw the new box
+      }
+      if (PB) {
+         if (!ropaque) gVirtualX->DrawBox(pxl  , pyt, pxold, pyold, TVirtualX::kHollow);
+         if (px < pxl+kMinSize) { px = pxl+kMinSize; wx = px; }
+         if (py > pyt-kMinSize) { py = pyt-kMinSize; wy = py; }
+         if (px > pxtp) { px = pxtp; wx = px; }
+         if (py < pylp) { py = pylp; wy = py; }
+         if (!ropaque) gVirtualX->DrawBox(pxl  , pyt, px ,  py,    TVirtualX::kHollow);
+      }
+      if (PC) {
+         if (!ropaque) gVirtualX->DrawBox(pxl  , pyl, pxold, pyold, TVirtualX::kHollow);
+         if (px < pxl+kMinSize) { px = pxl+kMinSize; wx = px; }
+         if (py < pyl+kMinSize) { py = pyl+kMinSize; wy = py; }
+         if (px > pxtp) { px = pxtp; wx = px; }
+         if (py > pytp) { py = pytp; wy = py; }
+         if (!ropaque) gVirtualX->DrawBox(pxl  , pyl, px ,   py,    TVirtualX::kHollow);
+      }
+      if (PD) {
+         if (!ropaque) gVirtualX->DrawBox(pxold, pyold, pxt, pyl, TVirtualX::kHollow);
+         if (px > pxt-kMinSize) { px = pxt-kMinSize; wx = px; }
+         if (py < pyl+kMinSize) { py = pyl+kMinSize; wy = py; }
+         if (px < pxlp) { px = pxlp; wx = px; }
+         if (py > pytp) { py = pytp; wy = py; }
+         if (!ropaque) gVirtualX->DrawBox(px   , py ,   pxt, pyl, TVirtualX::kHollow);
+      }
+      if (T) {
+         if (!ropaque) gVirtualX->DrawBox(px1, py1, px2, py2, TVirtualX::kHollow);
+         py2 += py - pyold;
+         if (py2 > py1-kMinSize) { py2 = py1-kMinSize; wy = py2; }
+         if (py2 < py2p) { py2 = py2p; wy = py2; }
+         if (!ropaque) gVirtualX->DrawBox(px1, py1, px2, py2, TVirtualX::kHollow);
+      }
+      if (B) {
+         if (!ropaque) gVirtualX->DrawBox(px1, py1, px2, py2, TVirtualX::kHollow);
+         py1 += py - pyold;
+         if (py1 < py2+kMinSize) { py1 = py2+kMinSize; wy = py1; }
+         if (py1 > py1p) { py1 = py1p; wy = py1; }
+         if (!ropaque) gVirtualX->DrawBox(px1, py1, px2, py2, TVirtualX::kHollow);
+      }
+      if (L) {
+         if (!ropaque) gVirtualX->DrawBox(px1, py1, px2, py2, TVirtualX::kHollow);
+         px1 += px - pxold;
+         if (px1 > px2-kMinSize) { px1 = px2-kMinSize; wx = px1; }
+         if (px1 < px1p) { px1 = px1p; wx = px1; }
+         if (!ropaque) gVirtualX->DrawBox(px1, py1, px2, py2, TVirtualX::kHollow);
+      }
+      if (R) {
+         if (!ropaque) gVirtualX->DrawBox(px1, py1, px2, py2, TVirtualX::kHollow);
+         px2 += px - pxold;
+         if (px2 < px1+kMinSize) { px2 = px1+kMinSize; wx = px2; }
+         if (px2 > px2p) { px2 = px2p; wx = px2; }
+         if (!ropaque) gVirtualX->DrawBox(px1, py1, px2, py2, TVirtualX::kHollow);
+      }
+      if (INSIDE) {
+         if (!opaque) gVirtualX->DrawBox(px1, py1, px2, py2, TVirtualX::kHollow);  // draw the old box
+         Int_t dx = px - pxold;
+         Int_t dy = py - pyold;
+         px1 += dx; py1 += dy; px2 += dx; py2 += dy;
+         if (px1 < px1p) { dx = px1p - px1; px1 += dx; px2 += dx; wx = px+dx; }
+         if (px2 > px2p) { dx = px2 - px2p; px1 -= dx; px2 -= dx; wx = px-dx; }
+         if (py1 > py1p) { dy = py1 - py1p; py1 -= dy; py2 -= dy; wy = py-dy; }
+         if (py2 < py2p) { dy = py2p - py2; py1 += dy; py2 += dy; wy = py+dy; }
+         if (!opaque) gVirtualX->DrawBox(px1, py1, px2, py2, TVirtualX::kHollow);  // draw the new box
+      }
+
+      if (wx || wy) {
+         if (wx) px = wx;
+         if (wy) py = wy;
+         gVirtualX->Warp(px, py);
+      }
+
+      pxold = px;
+      pyold = py;
+
+      if ((!fResizing && opaque) || (fResizing && ropaque)) {
          event = kButton1Up;
          doing_again = kTRUE;
          goto again;
@@ -1417,8 +1837,45 @@ again:
 
    case kButton1Up:
 
-      if (!doing_again)
-         TWbox::ExecuteEvent(event, px, py);
+      if (PA) {
+         fX1 = AbsPixeltoX(px);
+         fY1 = AbsPixeltoY(pyt);
+         fX2 = AbsPixeltoX(pxt);
+         fY2 = AbsPixeltoY(py);
+      }
+      if (PB) {
+         fX1 = AbsPixeltoX(pxl);
+         fY1 = AbsPixeltoY(pyt);
+         fX2 = AbsPixeltoX(px);
+         fY2 = AbsPixeltoY(py);
+      }
+      if (PC) {
+         fX1 = AbsPixeltoX(pxl);
+         fY1 = AbsPixeltoY(py);
+         fX2 = AbsPixeltoX(px);
+         fY2 = AbsPixeltoY(pyl);
+      }
+      if (PD) {
+         fX1 = AbsPixeltoX(px);
+         fY1 = AbsPixeltoY(py);
+         fX2 = AbsPixeltoX(pxt);
+         fY2 = AbsPixeltoY(pyl);
+      }
+      if (T || B || L || R || INSIDE) {
+         fX1 = AbsPixeltoX(px1);
+         fY1 = AbsPixeltoY(py1);
+         fX2 = AbsPixeltoX(px2);
+         fY2 = AbsPixeltoY(py2);
+      }
+
+      if (INSIDE)
+         if (!doing_again) gPad->SetCursor(kCross);
+
+      if (PA || PB || PC || PD || T || L || R || B)
+         Modified(kTRUE);
+
+      gVirtualX->SetLineColor(-1);
+      gVirtualX->SetLineWidth(-1);
 
       if (px != pxorg || py != pyorg) {
 
@@ -1455,9 +1912,19 @@ again:
 
    case kButton1Locate:
 
-      TWbox::ExecuteEvent(event, px, py);
+      ExecuteEvent(kButton1Down, px, py);
 
-      break;
+      while (1) {
+         px = py = 0;
+         event = gVirtualX->RequestLocator(1, 1, px, py);
+
+         ExecuteEvent(kButton1Motion, px, py);
+
+         if (event != -1) {                     // button is released
+            ExecuteEvent(kButton1Up, px, py);
+            return;
+         }
+      }
 
    case kButton2Down:
 
@@ -1465,6 +1932,17 @@ again:
       break;
 
    }
+}
+
+//______________________________________________________________________________
+void TPad::HideToolTip(Int_t event)
+{
+   // Hide tool tip depending on the event type. Typically tool tips
+   // are hidden when event is not a kMouseEnter and not a kMouseMotion
+   // event.
+
+   if (event != kMouseEnter && event != kMouseMotion && fTip)
+      gPad->CloseToolTip(fTip);
 }
 
 //______________________________________________________________________________
@@ -1558,6 +2036,12 @@ Bool_t TPad::OpaqueResizing() const
 }
 
 //______________________________________________________________________________
+void TPad::SetBatch(Bool_t batch)
+{
+   fCanvas->SetBatch(batch);
+}
+
+//______________________________________________________________________________
 void TPad::SetCanvasSize(UInt_t ww, UInt_t wh)
 {
    fCanvas->SetCanvasSize(ww,wh);
@@ -1607,7 +2091,7 @@ TFrame *TPad::GetFrame()
 }
 
 //______________________________________________________________________________
-TObject *TPad::GetPrimitive(const Text_t *name)
+TObject *TPad::GetPrimitive(const char *name)
 {
    if (fPrimitives) return fPrimitives->FindObject(name);
    return 0;
@@ -1642,218 +2126,15 @@ void TPad::HighLight(Color_t color, Bool_t set)
 
    // We do not want to have active(executable) buttons, etc highlighted
    // in this manner, unless we want to edit'em
-   if (GetCanvas()->IsEditable() && !InheritsFrom(TButton::Class())) {
+   if (GetMother()->IsEditable() && !InheritsFrom(TButton::Class())) {
+      gROOT->SetSelectedPad(this);
       if (set)
-         PaintFrame(fX1, fY1, fX2, fY2, color, fBorderSize, fBorderMode, kFALSE);
+         PaintBorder(-color, kFALSE);
       else
-         PaintFrame(fX1, fY1, fX2, fY2, GetFillColor(), fBorderSize, fBorderMode,
-                 kFALSE);
+         PaintBorder(-GetFillColor(), kFALSE);
    }
 
    AbsCoordinates(kFALSE);
-}
-
-//______________________________________________________________________________
-void TPad::InspectObject(TObject *obj)
-{
-   // Dump contents of obj in a graphics canvas.
-   // Same action as TObject::Dump but in a graphical form.
-   // In addition pointers to other objects can be followed.
-   //
-   // The following picture is the Inspect of a histogram object:
-   //Begin_Html
-   /*
-   <img src="gif/hpxinspect.gif">
-   */
-   //End_Html
-
-   Int_t cdate = 0;
-   Int_t ctime = 0;
-   UInt_t *cdatime = 0;
-   Bool_t isdate = kFALSE;
-   const Int_t kname  = 1;
-   const Int_t kvalue = 25;
-   const Int_t ktitle = 37;
-   const Int_t kline  = 255;
-   char line[kline];
-   char *pname;
-
-   TClass *cl = obj->IsA();
-   if (cl == 0) return;
-   if (!cl->GetListOfRealData()) cl->BuildRealData();
-
-   // Count number of data members in order to resize the canvas
-   TRealData *rd;
-   TIter      next(cl->GetListOfRealData());
-   Int_t nreal = cl->GetListOfRealData()->GetSize();
-
-   if (nreal == 0) return;
-
-   Int_t nrows = 33;
-   if (nreal+7 > nrows) nrows = nreal+7;
-   Int_t nh = nrows*15;
-   Int_t nw = 700;
-   TVirtualPad *canvas = GetVirtCanvas();
-   canvas->Clear();                // remove primitives from canvas
-   canvas->SetCanvasSize(nw, nh);  // set new size of drawing area
-   canvas->Range(0,-3,20,nreal+4);
-
-   Float_t xvalue = 5;
-   Float_t xtitle = 8;
-   Float_t dy     = 1;
-   Float_t ytext  = Float_t(nreal) - 0.5;
-   Float_t tsize  = 0.99/ytext;
-   if (tsize > 0.0333) tsize = 0.033;
-
-   // Create text objects
-   TText *tname  = new TText();
-   TText *tvalue = new TText();
-   TText *ttitle = new TText();
-   TText *tval;
-   tname->SetTextFont(61);
-   tname->SetTextAngle(0);
-   tname->SetTextAlign(12);
-   tname->SetTextColor(1);
-   tname->SetTextSize(tsize);
-   tvalue->SetTextFont(61);
-   tvalue->SetTextAngle(0);
-   tvalue->SetTextAlign(12);
-   tvalue->SetTextColor(1);
-   tvalue->SetTextSize(tsize);
-   ttitle->SetTextFont(62);
-   ttitle->SetTextAngle(0);
-   ttitle->SetTextAlign(12);
-   ttitle->SetTextColor(1);
-   ttitle->SetTextSize(tsize);
-
-   // Draw surrounding box and title areas
-   Float_t x1 = 0.2;
-   Float_t x2 = 19.8;
-   Float_t y1 = 0.5;
-   Float_t y2 = Float_t(nreal) + 0.5;
-   Float_t y3 = y2 + 1;
-   Float_t y4 = y3 + 1.5;
-   TLine *frame   = new TLine();
-   frame->SetLineColor(1);
-   frame->SetLineStyle(1);
-   frame->SetLineWidth(1);
-   frame->DrawLine(x1, y1, x2, y1);
-   frame->DrawLine(x2, y1, x2, y4);
-   frame->DrawLine(x2, y4, x1, y4);
-   frame->DrawLine(x1, y4, x1, y1);
-   frame->DrawLine(x1, y2, x2, y2);
-   frame->DrawLine(x1, y3, x2, y3);
-   frame->DrawLine(xvalue, y1, xvalue, y3);
-   frame->DrawLine(xtitle, y1, xtitle, y3);
-   ttitle->SetTextSize(0.8*tsize);
-   ttitle->SetTextAlign(21);
-   ttitle->DrawText(0.5*(x1+xvalue), y2+0.1, "Member Name");
-   ttitle->DrawText(0.5*(xvalue+xtitle), y2+0.1, "Value");
-   ttitle->DrawText(0.5*(xtitle+x2), y2+0.1, "Title");
-   ttitle->SetTextSize(1.2*tsize);
-   ttitle->SetTextColor(2);
-   ttitle->SetTextAlign(11);
-   ttitle->DrawText(x1+0.2, y3+0.1, cl->GetName());
-   ttitle->SetTextColor(4);
-   sprintf(line,"%s:%d",obj->GetName(),obj->GetUniqueID());
-   ttitle->DrawText(xvalue+0.2, y3+0.1, line);
-   ttitle->SetTextColor(6);
-   ttitle->DrawText(xtitle+2, y3+0.1, obj->GetTitle());
-   ttitle->SetTextSize(tsize);
-   ttitle->SetTextColor(1);
-   ttitle->SetTextFont(11);
-   ttitle->SetTextAlign(12);
-
-   //---Now loop on data members-----------------------
-   // We make 3 passes. Faster than one single pass because changing
-   // font parameters is time consuming
-   for (Int_t pass = 0; pass < 3; pass++) {
-      ytext  = y2 - 0.5;
-      next.Reset();
-      while ((rd = (TRealData*) next())) {
-         TDataMember *member = rd->GetDataMember();
-         if (!member) continue;
-         TDataType *membertype = member->GetDataType();
-         isdate = kFALSE;
-         if (strcmp(member->GetName(),"fDatime") == 0 && strcmp(member->GetTypeName(),"UInt_t") == 0) {
-            isdate = kTRUE;
-         }
-
-         // Encode data member name
-         pname = &line[kname];
-         for (Int_t i=0;i<kline;i++) line[i] = ' ';
-         line[kline-1] = 0;
-         sprintf(pname,"%s ",rd->GetName());
-
-         // Encode data value or pointer value
-         tval = tvalue;
-         Int_t offset = rd->GetThisOffset();
-         char *pointer = (char*)obj + offset;
-         char **ppointer = (char**)(pointer);
-         TLink *tlink = 0;
-
-         if (member->IsaPointer()) {
-            char **p3pointer = (char**)(*ppointer);
-            if (!p3pointer) {
-               sprintf(&line[kvalue],"->0");
-            } else if (!member->IsBasic()) {
-               if (pass == 1) tlink = new TLink(xvalue+0.1, ytext, p3pointer);
-            } else if (membertype) {
-               if (!strcmp(membertype->GetTypeName(), "char"))
-                  sprintf(&line[kvalue], "%s", *ppointer);
-               else
-                  strcpy(&line[kvalue], membertype->AsString(p3pointer));
-            } else if (!strcmp(member->GetFullTypeName(), "char*") ||
-                     !strcmp(member->GetFullTypeName(), "const char*")) {
-               sprintf(&line[kvalue], "%s", *ppointer);
-            } else {
-               if (pass == 1) tlink = new TLink(xvalue+0.1, ytext, p3pointer);
-            }
-         } else if (membertype)
-            if (isdate) {
-               cdatime = (UInt_t*)pointer;
-               TDatime::GetDateTime(cdatime[0],cdate,ctime);
-               sprintf(&line[kvalue],"%d/%d",cdate,ctime);
-            } else {
-               strcpy(&line[kvalue], membertype->AsString(pointer));
-            }
-         else
-            sprintf(&line[kvalue],"->%lx ", (Long_t)pointer);
-
-         // Encode data member title
-         Int_t ltit = 0;
-         if (isdate == kFALSE && strcmp(member->GetFullTypeName(), "char*") &&
-             strcmp(member->GetFullTypeName(), "const char*")) {
-            Int_t lentit = strlen(member->GetTitle());
-            if (lentit >= kline-ktitle) lentit = kline-ktitle-1;
-            strncpy(&line[ktitle],member->GetTitle(),lentit);
-            line[ktitle+lentit] = 0;
-            ltit = ktitle;
-         }
-
-         // Ready to draw the name, value and title columns
-         if (pass == 0)tname->DrawText( x1+0.1,  ytext, &line[kname]);
-         if (pass == 1) {
-            if (tlink) {
-               tlink->SetTextFont(61);
-               tlink->SetTextAngle(0);
-               tlink->SetTextAlign(12);
-               tlink->SetTextColor(2);
-               tlink->SetTextSize(tsize);
-               tlink->SetName((char *)member->GetTypeName());
-               tlink->SetBit(kCanDelete);
-               tlink->Draw();
-            } else tval->DrawText(xvalue+0.1, ytext, &line[kvalue]);
-         }
-         if (pass == 2 && ltit) ttitle->DrawText(xtitle+0.3, ytext, &line[ltit]);
-         ytext -= dy;
-      }
-   }
-   Update();
-   delete frame;
-   delete tname;
-   delete tvalue;
-   delete ttitle;
 }
 
 //______________________________________________________________________________
@@ -1919,9 +2200,16 @@ void TPad::Paint(Option_t *option)
    if (fPadView3D)
         fPadView3D->PaintBeginModel(option);
 //   else
-   TWbox::Paint(option);
+   PaintBorder(GetFillColor(), kTRUE);
 
-   if (fPrimitives) fPrimitives->Paint(option);
+   TObjOptLink *lnk = (TObjOptLink*)GetListOfPrimitives()->FirstLink();
+   TObject *obj;
+
+   while (lnk) {
+      obj = lnk->GetObject();
+      obj->Paint(lnk->GetOption());
+      lnk = (TObjOptLink*)lnk->Next();
+   }
 
    if (fPadView3D)
    {
@@ -1934,6 +2222,105 @@ void TPad::Paint(Option_t *option)
    padsav->cd();
    fPadPaint = 0;
    Modified(kFALSE);
+}
+
+//______________________________________________________________________________
+void TPad::PaintBorder(Color_t color, Bool_t tops)
+{
+//*-*-*-*-*-*-*-*-*-*Paint the pad border*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+//*-*                ====================
+
+//*-*- Draw first  a box as a normal filled box
+   if(color >= 0) {
+      TAttLine::Modify();  //Change line attributes only if necessary
+      TAttFill::Modify();  //Change fill area attributes only if necessary
+      PaintBox(fX1,fY1,fX2,fY2);
+   }
+   if (color < 0) color = -color;
+//*-*- then paint 3d frame (depending on bordermode)
+   if (IsTransparent()) return;
+   // Paint a 3D frame around the pad.
+
+   if (fBorderMode == 0) return;
+   Int_t bordersize = fBorderSize;
+   if (bordersize <= 0) bordersize = 2;
+
+   Short_t pxl,pyl,pxt,pyt,px1,py1,px2,py2;
+   Float_t xl, xt, yl, yt;
+
+   // GetDarkColor() and GetLightColor() use GetFillColor()
+   Color_t oldcolor = GetFillColor();
+   SetFillColor(color);
+   TAttFill::Modify();
+   Color_t light    = color + 150;
+   Color_t dark     = color + 100;
+
+//*-*- Compute real left bottom & top right of the box in pixels
+   px1 = XtoPixel(fX1);   py1 = YtoPixel(fY1);
+   px2 = XtoPixel(fX2);   py2 = YtoPixel(fY2);
+   if (px1 < px2) {pxl = px1; pxt = px2; xl = fX1; xt = fX2; }
+   else           {pxl = px2; pxt = px1; xl = fX2; xt = fX1;}
+   if (py1 > py2) {pyl = py1; pyt = py2; yl = fY1; yt = fY2;}
+   else           {pyl = py2; pyt = py1; yl = fY2; yt = fY1;}
+
+   if (!IsBatch()) {
+      TPoint frame[7];
+
+//*-*- Draw top&left part of the box
+      frame[0].fX = pxl;                 frame[0].fY = pyl;
+      frame[1].fX = pxl + bordersize;    frame[1].fY = pyl - bordersize;
+      frame[2].fX = frame[1].fX;         frame[2].fY = pyt + bordersize;
+      frame[3].fX = pxt - bordersize;    frame[3].fY = frame[2].fY;
+      frame[4].fX = pxt;                 frame[4].fY = pyt;
+      frame[5].fX = pxl;                 frame[5].fY = pyt;
+      frame[6].fX = pxl;                 frame[6].fY = pyl;
+
+      if (fBorderMode == -1) gVirtualX->SetFillColor(dark);
+      else                   gVirtualX->SetFillColor(light);
+      gVirtualX->DrawFillArea(7, frame);
+
+//*-*- Draw bottom&right part of the box
+      frame[0].fX = pxl;                 frame[0].fY = pyl;
+      frame[1].fX = pxl + bordersize;    frame[1].fY = pyl - bordersize;
+      frame[2].fX = pxt - bordersize;    frame[2].fY = frame[1].fY;
+      frame[3].fX = frame[2].fX;         frame[3].fY = pyt + bordersize;
+      frame[4].fX = pxt;                 frame[4].fY = pyt;
+      frame[5].fX = pxt;                 frame[5].fY = pyl;
+      frame[6].fX = pxl;                 frame[6].fY = pyl;
+
+      if (fBorderMode == -1) gVirtualX->SetFillColor(light);
+      else                   gVirtualX->SetFillColor(dark);
+      gVirtualX->DrawFillArea(7, frame);
+
+//*-* If this pad is a button, highlight it
+      if (InheritsFrom("TButton") && fBorderMode == -1) {
+         if (TestBit(kFraming)) {  // bit set in TButton::SetFraming
+            if (GetFillColor() != 2) gVirtualX->SetLineColor(2);
+            else                     gVirtualX->SetLineColor(4);
+            gVirtualX->DrawBox(px1+2,py1-2,px2-2,py2+2, TVirtualX::kHollow);
+         }
+      }
+      gVirtualX->SetFillColor(-1);
+      SetFillColor(oldcolor);
+   }
+
+   if (!tops) return;
+
+//*-*- same for PostScript
+//   Float_t dx   = (xt - xl) *Float_t(bordersize)/Float_t(pxt - pxl);
+//   Int_t border = gVirtualPS->XtoPS(xt) - gVirtualPS->XtoPS(xt-dx);
+
+   PaintBorderPS(xl, yl, xt, yt, fBorderMode, bordersize, dark, light);
+}
+
+//______________________________________________________________________________
+void TPad::PaintBorderPS(Float_t xl,Float_t yl,Float_t xt,Float_t yt,Int_t bmode,Int_t bsize,Int_t dark,Int_t light)
+{
+//*-*-*-*-*-*-*-*Paint a frame border with Postscript*-*-*-*-*-*-*-*-*-*-*-*-*
+//*-*            ====================================
+
+   if (!gVirtualPS) return;
+   gVirtualPS->DrawFrame(xl, yl, xt, yt, bmode,bsize,dark,light);
 }
 
 //______________________________________________________________________________
@@ -1962,27 +2349,29 @@ void TPad::PaintModified()
 //*-*          =======================================================
 
    TPad *padsav = (TPad*)gPad;
-   TPostScript *saveps = gCurrentPS;
-   if (gCurrentPS) {
-      if (gCurrentPS->TestBit(kPrintingPS)) gCurrentPS = 0;
+   TVirtualPS *saveps = gVirtualPS;
+   if (gVirtualPS) {
+      if (gVirtualPS->TestBit(kPrintingPS)) gVirtualPS = 0;
    }
    fPadPaint = 1;
    cd();
    if (IsModified() || IsTransparent()) {
        if (fPadView3D)
            fPadView3D->PaintBeginModel();
-       TWbox::Paint();
+       PaintBorder(GetFillColor(), kTRUE);
    }
 
-   TIter next(GetListOfPrimitives());
+   TObjOptLink *lnk = (TObjOptLink*)GetListOfPrimitives()->FirstLink();
    TObject *obj;
 
-   while ((obj = next())) {
+   while (lnk) {
+      obj = lnk->GetObject();
       if (obj->InheritsFrom(TPad::Class())) {
          ((TPad*)obj)->PaintModified();
       } else if (IsModified() || IsTransparent()) {
-         obj->Paint((Option_t *)next.GetOption());
+         obj->Paint(lnk->GetOption());
       }
+      lnk = (TObjOptLink*)lnk->Next();
    }
 
    if (IsModified() && fPadView3D)
@@ -1994,7 +2383,7 @@ void TPad::PaintModified()
    if (padsav) padsav->cd();
    fPadPaint = 0;
    Modified(kFALSE);
-   gCurrentPS = saveps;
+   gVirtualPS = saveps;
 }
 
 //______________________________________________________________________________
@@ -2009,31 +2398,31 @@ void TPad::PaintBox(Float_t x1, Float_t y1, Float_t x2, Float_t y2, Option_t *)
       Int_t py1 = YtoPixel(y1);
       Int_t py2 = YtoPixel(y2);
 
-      Int_t style = gGXW->GetFillStyle();
+      Int_t style = gVirtualX->GetFillStyle();
       if (style) {
          if (style > 3000 && style < 4000) {
 #ifndef WIN32
             if (style < 3020) {
                // set solid background color
-               gGXW->SetFillStyle(1001);
-               gGXW->DrawBox(px1,py1,px2,py2,TGXW::kFilled);
+               gVirtualX->SetFillStyle(1001);
+               gVirtualX->DrawBox(px1,py1,px2,py2,TVirtualX::kFilled);
             }
 
             if (style > 3100) {
                char gifname[32];
                sprintf(gifname,"gif%d",style);
                TNamed *gifnamed = (TNamed*)gROOT->GetListOfSpecials()->FindObject(gifname);
-               if (gifnamed) gGXW->ReadGIF(px1,py2,gifnamed->GetTitle());
+               if (gifnamed) gVirtualX->ReadGIF(px1,py2,gifnamed->GetTitle());
             }
             if (style > 3020 && style < 3100) {
-               gGXW->SetFillStyle(style-10);
+               gVirtualX->SetFillStyle(style-10);
             } else {
-               gGXW->SetFillColor(1);
-               gGXW->SetFillStyle(style);
+               gVirtualX->SetFillColor(1);
+               gVirtualX->SetFillStyle(style);
             }
 #endif
             // draw stipples
-            gGXW->DrawBox(px1,py1,px2,py2,TGXW::kFilled);
+            gVirtualX->DrawBox(px1,py1,px2,py2,TVirtualX::kFilled);
 
          } else if (style >= 4000 && style <= 4100) {
             // For style >=4000 we make the window transparent.
@@ -2041,7 +2430,7 @@ void TPad::PaintBox(Float_t x1, Float_t y1, Float_t x2, Float_t y2, Option_t *)
 
             //ignore this style option when this is the canvas itself
             if (this == fMother)
-               gGXW->DrawBox(px1,py1,px2,py2,TGXW::kFilled);
+               gVirtualX->DrawBox(px1,py1,px2,py2,TVirtualX::kFilled);
             else {
                //draw background by blitting all bottom pads
                int px, py;
@@ -2050,18 +2439,18 @@ void TPad::PaintBox(Float_t x1, Float_t y1, Float_t x2, Float_t y2, Option_t *)
                fMother->CopyBackgroundPixmap(px, py);
                CopyBackgroundPixmaps(fMother, this, px, py);
 
-               gGXW->SetOpacity(style-4000);
+               gVirtualX->SetOpacity(style-4000);
             }
          } else {
-            gGXW->DrawBox(px1,py1,px2,py2,TGXW::kFilled);
+            gVirtualX->DrawBox(px1,py1,px2,py2,TVirtualX::kFilled);
          }
       } else {
-         gGXW->DrawBox(px1,py1,px2,py2,TGXW::kHollow);
+         gVirtualX->DrawBox(px1,py1,px2,py2,TVirtualX::kHollow);
       }
    }
 
-   if (gCurrentPS) {
-      gCurrentPS->DrawBox(x1, y1, x2, y2);
+   if (gVirtualPS) {
+      gVirtualPS->DrawBox(x1, y1, x2, y2);
    }
 
    Modified();
@@ -2091,45 +2480,88 @@ void TPad::CopyBackgroundPixmap(Int_t x, Int_t y)
 
    int px, py;
    XYtoAbsPixel(GetX1(), GetY2(), px, py);
-   gGXW->CopyPixmap(GetPixmapID(), px-x, py-y);
+   gVirtualX->CopyPixmap(GetPixmapID(), px-x, py-y);
 }
 
 //______________________________________________________________________________
-void TPad::PaintFillArea(Int_t n, Float_t *x, Float_t *y, Option_t *)
+void TPad::PaintFillArea(Int_t nn, Float_t *xx, Float_t *yy, Option_t *)
 {
 //*-*-*-*-*-*-*-*-*Paint fill area in CurrentPad World coordinates*-*-*-*-*-*-*
 //*-*              ===============================================
 
+   if (nn <3) return;
+   Int_t i,iclip,n=0;
+   Float_t xmin,xmax,ymin,ymax;
+   Float_t u1, v1, u[2],v[2];
+   if (TestBit(TGraph::kClipFrame)) {
+      xmin = fUxmin; ymin = fUymin; xmax = fUxmax; ymax = fUymax;
+   } else {
+      xmin = fX1; ymin = fY1; xmax = fX2; ymax = fY2;
+   }
+   Float_t *x = new Float_t[2*nn+1];
+   Float_t *y = new Float_t[2*nn+1];
+
+   for (i=0;i<nn;i++) {
+      u[0] = xx[i];
+      v[0] = yy[i];
+      if (i == nn-1) {
+         u[1] = xx[0];
+         v[1] = yy[0];
+      } else {
+         u[1] = xx[i+1];
+         v[1] = yy[i+1];
+      }
+      u1 = u[1];
+      v1 = v[1];
+      iclip = Clip(u,v,xmin,ymin,xmax,ymax);
+      if (iclip == 2) continue;
+      if (iclip == 1) {
+         if (u[0] == u[1] && v[0] == v[1]) continue;
+      }
+      x[n] = u[0];
+      y[n] = v[0];
+      n++;
+      if (iclip) {
+         if (u[1] != u1 || v[1] != v1) {
+            x[n] = u[1];
+            y[n] = v[1];
+            n++;
+         }
+      }
+   }
+   x[n] = x[0];
+   y[n] = y[0];
+   if (n < 3) return;
+
    TPoint *pxy;
 
 //*-*- Create temporary array to store array in pixel coordinates
-   if (n <=0) return;
 
    if (!gPad->IsBatch()) {
       if (n <kPXY) pxy = &gPXY[0];
       else         pxy = new TPoint[n+1];
 //*-*- convert points from world to pixel coordinates
-      for (Int_t i=0;i<n;i++) {
+      for (i=0;i<n;i++) {
          pxy[i].fX = gPad->XtoPixel(x[i]);
          pxy[i].fY = gPad->YtoPixel(y[i]);
       }
 //*-*- invoke the graphics subsystem
-      if (gGXW->GetFillStyle() == 0) {
+      if (gVirtualX->GetFillStyle() == 0) {
          pxy[n].fX = pxy[0].fX;
          pxy[n].fY = pxy[0].fY;
-         gGXW->DrawFillArea(n+1,pxy);
+         gVirtualX->DrawFillArea(n+1,pxy);
       } else {
-         gGXW->DrawFillArea(n,pxy);
+         gVirtualX->DrawFillArea(n,pxy);
       }
       if (n > kPXY) delete [] pxy;
    }
 
-   if (gCurrentPS) {
-      gCurrentPS->DrawPS(-n, x, y);
+   if (gVirtualPS) {
+      gVirtualPS->DrawPS(-n, x, y);
    }
-
+   delete [] x;
+   delete [] y;
    Modified();
-
 }
 
 //______________________________________________________________________________
@@ -2142,10 +2574,10 @@ void TPad::PaintLine(Float_t x1, Float_t y1, Float_t x2, Float_t y2)
    x[0] = x1;   x[1] = x2;   y[0] = y1;   y[1] = y2;
 
    //If line is totally clipped, return
-   if (TestBit(kClipFrame)) {
-      if (Clip(x,y,fUxmin,fUymin,fUxmax,fUymax) == 0) return;
+   if (TestBit(TGraph::kClipFrame)) {
+      if (Clip(x,y,fUxmin,fUymin,fUxmax,fUymax) == 2) return;
    } else {
-      if (Clip(x,y,fX1,fY1,fX2,fY2) == 0) return;
+      if (Clip(x,y,fX1,fY1,fX2,fY2) == 2) return;
    }
    if (!gPad->IsBatch()) {
       Int_t px1 = XtoPixel(x[0]);
@@ -2153,11 +2585,11 @@ void TPad::PaintLine(Float_t x1, Float_t y1, Float_t x2, Float_t y2)
       Int_t py1 = YtoPixel(y[0]);
       Int_t py2 = YtoPixel(y[1]);
 
-      gGXW->DrawLine(px1, py1, px2, py2);
+      gVirtualX->DrawLine(px1, py1, px2, py2);
    }
 
-   if (gCurrentPS) {
-      gCurrentPS->DrawPS(2, x, y);
+   if (gVirtualPS) {
+      gVirtualPS->DrawPS(2, x, y);
    }
 
    Modified();
@@ -2175,16 +2607,16 @@ void TPad::PaintLineNDC(Coord_t u1, Coord_t v1,Coord_t u2, Coord_t v2)
       Int_t px2 = UtoPixel(u2);
       Int_t py2 = VtoPixel(v2);
 
-      gGXW->DrawLine(px1, py1, px2, py2);
+      gVirtualX->DrawLine(px1, py1, px2, py2);
    }
 
-   if (gCurrentPS) {
+   if (gVirtualPS) {
       xw[0] = GetX1() + u1*(GetX2() - GetX1());
       xw[1] = GetX1() + u2*(GetX2() - GetX1());
       yw[0] = GetY1() + v1*(GetY2() - GetY1());
       yw[1] = GetY1() + v2*(GetY2() - GetY1());
-      gCurrentPS->DrawPS(2, xw, yw);
-      gCurrentPS->PrintFast(2," s");
+      gVirtualPS->DrawPS(2, xw, yw);
+      gVirtualPS->PrintFast(2," s");
    }
 
    Modified();
@@ -2211,35 +2643,54 @@ void TPad::PaintPolyLine(Int_t n, Float_t *x, Float_t *y, Option_t *)
 //*-*-*-*-*-*-*-*-*Paint polyline in CurrentPad World coordinates*-*-*-*-*-*-*
 //*-*              ==============================================
 
-   for (Int_t i=0;i<n-1;i++) {
-      PaintLine(x[i],y[i],x[i+1],y[i+1]);
-   }
-
-#ifdef NEVER
-   TPoint *pxy;
-
-//*-*- Create temporary array to store array in pixel coordinates
-   if (n <=0) return;
-
+   if (n < 2) return;
+   TPoint *pxy = &gPXY[0];
    if (!gPad->IsBatch()) {
-      if (n <kPXY) pxy = &gPXY[0];
-      else         pxy = new TPoint[n+1];
-//*-*- convert points from world to pixel coordinates
-      for (Int_t i=0;i<n;i++) {
-         pxy[i].fX = XtoPixel(x[i]);
-         pxy[i].fY = YtoPixel(y[i]);
+      if (n >= kPXY) pxy = new TPoint[n+1];
+   }
+   Float_t xmin,xmax,ymin,ymax;
+   if (TestBit(TGraph::kClipFrame)) {
+      xmin = fUxmin; ymin = fUymin; xmax = fUxmax; ymax = fUymax;
+   } else {
+      xmin = fX1; ymin = fY1; xmax = fX2; ymax = fY2;
+   }
+   Int_t i,j,i1=-1,np=1;
+   for (i=0; i<n-1; i++) {
+      float x1=x[i];
+      float y1=y[i];
+      float x2=x[i+1];
+      float y2=y[i+1];
+      Int_t iclip = Clip(&x[i],&y[i],xmin,ymin,xmax,ymax);
+      if (iclip == 2) {
+         i1 = -1;
+         continue;
       }
-//*-*- invoke the graphics subsystem
-      gGXW->DrawPolyLine(n,pxy);
-      if (n > kPXY)  delete [] pxy;
+      np++;
+      if (i1 < 0) i1 = i;
+      if (iclip == 0 && i < n-2) continue;
+      if (!gPad->IsBatch()) {
+         for (j=0;j<np;j++) {
+            pxy[j].fX = XtoPixel(x[i1+j]);
+            pxy[j].fY = YtoPixel(y[i1+j]);
+         }
+         gVirtualX->DrawPolyLine(np,pxy);
+      }
+      if (gVirtualPS) {
+         gVirtualPS->DrawPS(np, &x[i1], &y[i1]);
+      }
+      if (iclip) {
+         x[i] = x1;
+         y[i] = y1;
+         x[i+1] = x2;
+         y[i+1] = y2;
+      }
+      i1 = -1;
+      np = 1;
    }
-
-   if (gCurrentPS) {
-      gCurrentPS->DrawPS(n, x, y);
+   if (!gPad->IsBatch()) {
+      if (n >= kPXY)   delete [] pxy;
    }
-
    Modified();
-#endif
 }
 
 //______________________________________________________________________________
@@ -2262,12 +2713,12 @@ void TPad::PaintPolyLineNDC(Int_t n, Float_t *x, Float_t *y, Option_t *)
          pxy[i].fY = VtoPixel(y[i]);
       }
 //*-*- invoke the graphics subsystem
-      gGXW->DrawPolyLine(n,pxy);
+      gVirtualX->DrawPolyLine(n,pxy);
       if (n > kPXY)  delete [] pxy;
    }
 
-   if (gCurrentPS) {
-      gCurrentPS->DrawPS(n, x, y);
+   if (gVirtualPS) {
+      gVirtualPS->DrawPS(n, x, y);
    }
 
    Modified();
@@ -2285,11 +2736,8 @@ void TPad::PaintPolyLine3D(Int_t n, Float_t *p)
 
 //*-*- Loop on each individual line
 
-   Int_t i=3;
-   while(i<3*n) {
+   for (Int_t i = 1; i < n; i++)
       PaintLine3D(&p[3*i-3], &p[3*i]);
-      i += 3;
-   }
 
    Modified();
 }
@@ -2300,33 +2748,46 @@ void TPad::PaintPolyMarker(Int_t n, Float_t *x, Float_t *y, Option_t *)
 //*-*-*-*-*-*-*-*-*Paint polymarker in CurrentPad World coordinates*-*-*-*-*-*
 //*-*              ================================================
 
-   TPoint *pxy;
-
-   if (n <=0) return;
-   Int_t i;
+   if (n < 0) return;
+   TPoint *pxy = &gPXY[0];
    if (!gPad->IsBatch()) {
-      if (n <kPXY) pxy = &gPXY[0];
-      else         pxy = new TPoint[n+1];
-//*-*- convert points from world to pixel coordinates
-      for (i=0;i<n;i++) {
-         pxy[i].fX = XtoPixel(x[i]);
-         pxy[i].fY = YtoPixel(y[i]);
+      if (n >= kPXY) pxy = new TPoint[n+1];
+   }
+   Float_t xmin,xmax,ymin,ymax;
+   if (TestBit(TGraph::kClipFrame)) {
+      xmin = fUxmin; ymin = fUymin; xmax = fUxmax; ymax = fUymax;
+   } else {
+      xmin = fX1; ymin = fY1; xmax = fX2; ymax = fY2;
+   }
+   Int_t i,j,i1=-1,np=0;
+   for (i=0; i<n; i++) {
+      if (x[i] >= xmin && x[i] <= xmax && y[i] >= ymin && y[i] <= ymax) {
+         np++;
+         if (i1 < 0) i1 = i;
+         if (i < n-1) continue;
       }
-//*-*- invoke the graphics subsystem
-      gGXW->DrawPolyMarker(n, pxy);
-      if (n > kPXY)  delete [] pxy;
+      if (np == 0) continue;
+      if (!gPad->IsBatch()) {
+         for (j=0;j<np;j++) {
+            pxy[j].fX = XtoPixel(x[i1+j]);
+            pxy[j].fY = YtoPixel(y[i1+j]);
+         }
+         gVirtualX->DrawPolyMarker(np,pxy);
+      }
+      if (gVirtualPS) {
+         gVirtualPS->DrawPolyMarker(np, &x[i1], &y[i1]);
+      }
+      i1 = -1;
+      np = 0;
    }
-
-   if (gCurrentPS) {
-      gCurrentPS->DrawPolyMarker(n, x, y);
+   if (!gPad->IsBatch()) {
+      if (n >= kPXY)   delete [] pxy;
    }
-
    Modified();
-
 }
 
 //______________________________________________________________________________
-void TPad::PaintText(Float_t x, Float_t y, const Text_t *text)
+void TPad::PaintText(Float_t x, Float_t y, const char *text)
 {
 //*-*-*-*-*-*-*-*-*Paint text in CurrentPad World coordinates*-*-*-*-*-*-*-*
 //*-*              ==========================================
@@ -2337,21 +2798,23 @@ void TPad::PaintText(Float_t x, Float_t y, const Text_t *text)
    if (!gPad->IsBatch()) {
       Int_t px = XtoPixel(x);
       Int_t py = YtoPixel(y);
-      Float_t angle = gGXW->GetTextAngle();
+      Float_t angle = gVirtualX->GetTextAngle();
 
-      gGXW->DrawText(px, py, angle, gGXW->GetTextMagnitude(), text, TGXW::kClear);
+      gVirtualX->DrawText(px, py, angle, gVirtualX->GetTextMagnitude(), text, TVirtualX::kClear);
    }
 
-   if (gCurrentPS) {
-      if (x < fX1 || x > fX2) return;
-      if (y < fY1 || y > fY2) return;
-      gCurrentPS->Text(x, y, text);
+   if (gVirtualPS) {
+      if (x < fX1) x = fX1;
+      if( x > fX2) x = fX2;
+      if (y < fY1) x = fY1;
+      if( y > fY2) x = fY2;
+      gVirtualPS->Text(x, y, text);
    }
 
 }
 
 //______________________________________________________________________________
-void TPad::PaintTextNDC(Float_t u, Float_t v, const Text_t *text)
+void TPad::PaintTextNDC(Float_t u, Float_t v, const char *text)
 {
 //*-*-*-*-*-*-*-*-*Paint text in CurrentPad NDC coordinates*-*-*-*-*-*-*-*
 //*-*              ========================================
@@ -2362,17 +2825,17 @@ void TPad::PaintTextNDC(Float_t u, Float_t v, const Text_t *text)
    if (!gPad->IsBatch()) {
       Int_t px = UtoPixel(u);
       Int_t py = VtoPixel(v);
-      Float_t angle = gGXW->GetTextAngle();
+      Float_t angle = gVirtualX->GetTextAngle();
 
-      gGXW->DrawText(px, py, angle, gGXW->GetTextMagnitude(), text, TGXW::kClear);
+      gVirtualX->DrawText(px, py, angle, gVirtualX->GetTextMagnitude(), text, TVirtualX::kClear);
    }
 
-   if (gCurrentPS) {
+   if (gVirtualPS) {
       Float_t x = GetX1() + u*(GetX2() - GetX1());
       Float_t y = GetY1() + v*(GetY2() - GetY1());
       if (x < fX1 || x > fX2) return;
       if (y < fY1 || y > fY2) return;
-      gCurrentPS->Text(x, y, text);
+      gVirtualPS->Text(x, y, text);
    }
 
 }
@@ -2391,7 +2854,7 @@ TPad *TPad::Pick(Int_t px, Int_t py, TObjLink *&pickobj)
 //
 
    //the two following statements are necessary under NT (multithreaded)
-   //when a TCanvas object is being craeted and a thread calling TPad::Pick
+   //when a TCanvas object is being created and a thread calling TPad::Pick
    //before the TPad constructor has completed in the other thread
    if (gPad == 0) return 0; //Andy Haas
    if (GetListOfPrimitives() == 0) return 0; //Andy Haas
@@ -2450,7 +2913,7 @@ TPad *TPad::Pick(Int_t px, Int_t py, TObjLink *&pickobj)
 
    if (picked->InheritsFrom(TButton::Class())) {
       TButton *button = (TButton*)picked;
-      if (!button->GetCanvas()->IsEditable()) pickobj = 0;
+      if (!button->IsEditable()) pickobj = 0;
    }
 
    gPad = padsav;
@@ -2478,7 +2941,7 @@ void TPad::Pop()
 
 
 //______________________________________________________________________________
-void TPad::Print(const Text_t *filename)
+void TPad::Print(const char *filename)
 {
 //*-*-*-*-*Old interface. Use SaveAs instead*-*-*-*-*-*
 //*-*      =================================
@@ -2489,7 +2952,7 @@ void TPad::Print(const Text_t *filename)
 }
 
 //______________________________________________________________________________
-void TPad::Print(const Text_t *filename, Option_t *option)
+void TPad::Print(const char *filename, Option_t *option)
 {
 //*-*-*-*-*Save Pad contents on a file in various formats*-*-*-*-*-*
 //*-*      ==============================================
@@ -2526,8 +2989,8 @@ void TPad::Print(const Text_t *filename, Option_t *option)
       }
       Update();
       Int_t canvasid = GetCanvas()->GetCanvasID();
-      gGXW->SelectWindow(canvasid);
-      gGXW->WriteGIF(psname);
+      gVirtualX->SelectWindow(canvasid);
+      gVirtualX->WriteGIF(psname);
       Printf("GIF file: %s has been created.",psname);
       return;
    }
@@ -2564,15 +3027,19 @@ void TPad::Print(const Text_t *filename, Option_t *option)
    if (strstr(opt,"eps")) pstype = 113;
    TPad *padsav = (TPad*)gPad;
    cd();
-   TPostScript *psave = gCurrentPS;
-   TPostScript *ps = new TPostScript(psname,pstype);
-   ps->SetBit(kPrintingPS);
+   TVirtualPS *psave = gVirtualPS;
+   // check if Postscript class is in memory. If not, dynamic link
+   if (gROOT->LoadClass("TPostScript","Postscript")) return;
+
+   gROOT->ProcessLineFast("new TPostScript()");
+   gVirtualPS->Open(psname,pstype);
+   gVirtualPS->SetBit(kPrintingPS);
    Paint();
-   ps->Close();
-   if (noScreen) GetCanvas()->SetBatch(kFALSE);
+   gVirtualPS->Close();
+   if (noScreen)  GetCanvas()->SetBatch(kFALSE);
    Printf("PostScript file: %s has been created",psname);
-   gCurrentPS = psave;
-   delete ps;
+   delete gVirtualPS;
+   gVirtualPS = psave;
    padsav->cd();
 }
 
@@ -2640,39 +3107,25 @@ void TPad::RecursiveRemove(TObject *obj)
 }
 
 //______________________________________________________________________________
-void TPad::RedrawAxis()
+void TPad::RedrawAxis(Option_t *option)
 {
 //  Redraw the frame axis
 //  Redrawing axis may be necessary in case of superimposed histograms
 //  when one or more histograms have a fill color
+//  Instead of calling this function, it may be more convenient
+//  to call directly h1->Draw("sameaxis") where h1 is the pointer
+//  to the first histogram drawn in the pad.
 //
-   TGaxis axis;
-   Float_t xmin,ymin,xmax,ymax;
-   gPad->GetRangeAxis(xmin,ymin,xmax,ymax);
-//  redraw x axis
-   axis.SetLineColor(gStyle->GetAxisColor("X"));
-   axis.SetTextColor(gStyle->GetLabelColor("X"));
-   axis.SetTextFont(gStyle->GetLabelFont("X"));
-   axis.SetLabelFont(gStyle->GetLabelFont("X"));
-   axis.SetLabelSize(gStyle->GetLabelSize("X"));
-   axis.SetLabelOffset(gStyle->GetLabelOffset("X"));
-   axis.SetTickSize(gStyle->GetTickLength("X"));
-   Int_t ndiv =gStyle->GetNdivisions("X");
-   if (!gPad->GetLogx()) axis.DrawAxis(xmin,ymin,xmax,ymin,xmin,xmax,ndiv);
-   else   axis.DrawAxis(xmin,ymin,xmax,ymin,
-                     TMath::Power(10,xmin),TMath::Power(10,xmax),ndiv,"G");
-//  redraw y axis
-   axis.SetLineColor(gStyle->GetAxisColor("Y"));
-   axis.SetTextColor(gStyle->GetLabelColor("Y"));
-   axis.SetTextFont(gStyle->GetLabelFont("Y"));
-   axis.SetLabelFont(gStyle->GetLabelFont("Y"));
-   axis.SetLabelSize(gStyle->GetLabelSize("Y"));
-   axis.SetLabelOffset(gStyle->GetLabelOffset("Y"));
-   axis.SetTickSize(gStyle->GetTickLength("Y"));
-   ndiv =gStyle->GetNdivisions("Y");
-   if (!gPad->GetLogy()) axis.DrawAxis(xmin,ymin,xmin,ymax,ymin,ymax,ndiv);
-   else   axis.DrawAxis(xmin,ymin,xmin,ymax,
-                     TMath::Power(10,ymin),TMath::Power(10,ymax),ndiv,"G");
+   // get first histogram in the list of primitives
+   TIter next(fPrimitives);
+   TObject *obj;
+   while ((obj = next())) {
+      if (obj->InheritsFrom("TH1")) {
+         TH1 *hobj = (TH1*)obj;
+         hobj->Draw("sameaxis");
+         return;
+      }
+   }
 }
 
 //______________________________________________________________________________
@@ -2838,24 +3291,24 @@ void TPad::ResizePad(Option_t *option)
    if (gPad->IsBatch())
       fPixmapID = 0;
    else {
-      gGXW->SetLineWidth(-1);
-      gGXW->SetTextSize(-1);
+      gVirtualX->SetLineWidth(-1);
+      gVirtualX->SetTextSize(-1);
 
       // create or re-create off-screen pixmap
       if (fPixmapID) {
          int w = TMath::Abs(XtoPixel(fX2) - XtoPixel(fX1));
          int h = TMath::Abs(YtoPixel(fY2) - YtoPixel(fY1));
          if (fPixmapID == -1)       // this case is handled via the ctor
-            fPixmapID = gGXW->OpenPixmap(w, h);
+            fPixmapID = gVirtualX->OpenPixmap(w, h);
          else
-            if (gGXW->ResizePixmap(fPixmapID, w, h)) Modified(kTRUE);
+            if (gVirtualX->ResizePixmap(fPixmapID, w, h)) Modified(kTRUE);
       }
    }
 }
 
 
 //______________________________________________________________________________
-void TPad::SaveAs(const Text_t *filename)
+void TPad::SaveAs(const char *filename)
 {
 //*-*-*-*-*Save Pad contents on a  file in various formats*-*-*-*-*-*
 //*-*      ===============================================
@@ -3004,8 +3457,27 @@ void TPad::SavePrimitive(ofstream &out, Option_t *)
    while ((obj = next()))
          obj->SavePrimitive(out, (Option_t *)next.GetOption());
    out<<"   "<<GetName()<<"->Modified();"<<endl;
-   out<<"   "<<padsav->GetName()<<"->cd();"<<endl;
+   out<<"   "<<GetMother()->GetName()<<"->cd();"<<endl;
    if (padsav) padsav->cd();
+}
+
+//______________________________________________________________________________
+void TPad::SetEditable(Bool_t mode)
+{
+   // Set pad editable yes/no
+   // If a pad is not editable, one cannot modify the pad and its objects
+   // via the mouse.
+
+   fIsEditable = mode;
+
+   TObject *obj;
+   TIter    next(GetListOfPrimitives());
+   while ((obj = next())) {
+      if (obj->InheritsFrom(TPad::Class())) {
+         TPad *pad = (TPad*)obj;
+         pad->SetEditable(mode);
+      }
+   }
 }
 
 //______________________________________________________________________________
@@ -3060,7 +3532,7 @@ void TPad::SetPad(Float_t xlow, Float_t ylow, Float_t xup, Float_t yup)
 }
 
 //______________________________________________________________________________
-void TPad::SetPad(const Text_t *name, const Text_t *title,
+void TPad::SetPad(const char *name, const char *title,
                   Float_t xlow, Float_t ylow, Float_t xup, Float_t yup,
                   Color_t color, Short_t bordersize, Short_t bordermode)
 {
@@ -3083,17 +3555,110 @@ void TPad::SetPad(const Text_t *name, const Text_t *title,
    SetPad(xlow, ylow, xup, yup);
 }
 
+//______________________________________________________________________________
+void TPad::SetAttFillPS(Color_t color, Style_t style)
+{
+//*-*-*-*-*-*-*-*-*Set postscript fill area attributes*-*-*-*-*-*-*-*-*-*-*
+//*-*              ===================================
+
+   if (gVirtualPS) {
+      gVirtualPS->SetFillColor(color);
+      gVirtualPS->SetFillStyle(style);
+   }
+}
+
+//______________________________________________________________________________
+void TPad::SetAttLinePS(Color_t color, Style_t style, Width_t lwidth)
+{
+//*-*-*-*-*-*-*-*-*Set postscript line attributes*-*-*-*-*-*-*-*-*-*-*
+//*-*              ==============================
+
+   if (gVirtualPS) {
+      gVirtualPS->SetLineColor(color);
+      gVirtualPS->SetLineStyle(style);
+      gVirtualPS->SetLineWidth(lwidth);
+   }
+}
+
+//______________________________________________________________________________
+void TPad::SetAttMarkerPS(Color_t color, Style_t style, Size_t msize)
+{
+//*-*-*-*-*-*-*-*-*Set postscript marker attributes*-*-*-*-*-*-*-*-*-*-*
+//*-*              ================================
+
+   if (gVirtualPS) {
+      gVirtualPS->SetMarkerColor(color);
+      gVirtualPS->SetMarkerStyle(style);
+      gVirtualPS->SetMarkerSize(msize);
+   }
+}
+
+//______________________________________________________________________________
+void TPad::SetAttTextPS(Int_t align, Float_t angle, Color_t color, Style_t font, Float_t tsize)
+{
+//*-*-*-*-*-*-*-*-*Set postscript text attributes*-*-*-*-*-*-*-*-*-*-*
+//*-*              ==============================
+
+   if (gVirtualPS) {
+      gVirtualPS->SetTextAlign(align);
+      gVirtualPS->SetTextAngle(angle);
+      gVirtualPS->SetTextColor(color);
+      gVirtualPS->SetTextFont(font);
+      gVirtualPS->SetTextSize(tsize);
+   }
+}
+
+//______________________________________________________________________________
+void TPad::SetToolTipText(const char *text, Long_t delayms)
+{
+   // Set tool tip text associated with this pad. The delay is in
+   // milliseconds (minimum 250). To remove tool tip call method with
+   // text = 0.
+
+   if (fTip) {
+      DeleteToolTip(fTip);
+      fTip = 0;
+   }
+
+   if (text && strlen(text))
+      fTip = CreateToolTip((TBox*)0, text, delayms);
+}
+
 //_______________________________________________________________________
 void TPad::Streamer(TBuffer &b)
 {
 //*-*-*-*-*-*-*-*-*Stream a class object*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 //*-*              =========================================
 
+   UInt_t R__s, R__c;
    Int_t nch, nobjects;
    TObject *obj;
    if (b.IsReading()) {
-      Version_t v = b.ReadVersion();
-      TVirtualPad::Streamer(b);
+      Version_t v = b.ReadVersion(&R__s, &R__c);
+      if (v < 3) {   //old TPad derived from TWbox
+         b.ReadVersion();   //      TVirtualPad::Streamer(b)
+         b.ReadVersion();   //      TWbox::Streamer(b)
+         b.ReadVersion();   //      TBox::Streamer(b)
+         TObject::Streamer(b);
+         TAttLine::Streamer(b);
+         TAttFill::Streamer(b);
+         b >> fX1;
+         b >> fY1;
+         b >> fX2;
+         b >> fY2;
+         b >> fBorderSize;
+         b >> fBorderMode;
+         TAttPad::Streamer(b);
+      } else {  //new TPad
+         TVirtualPad::Streamer(b);
+         TAttPad::Streamer(b);
+         b >> fX1;
+         b >> fY1;
+         b >> fX2;
+         b >> fY2;
+         b >> fBorderSize;
+         b >> fBorderMode;
+      }
       b >> fLogx;
       b >> fLogy;
       b >> fLogz;
@@ -3128,12 +3693,17 @@ void TPad::Streamer(TBuffer &b)
       b >> fUxmax;
       b >> fUymax;
 
-      fMother     = (TPad*)gPad;
-      if (gPad)  fCanvas = gPad->GetCanvas();
+      if (!gPad) gPad = new TCanvas(GetName());
+      if (readLevel == 0) fMother = (TPad*)gROOT->GetSelectedPad();
+      else                fMother = (TPad*)gPad;
+      if (!fMother) fMother = (TPad*)gPad;
+      if (fMother)  fCanvas = fMother->GetCanvas();
       fPixmapID   = -1;      // -1 means pixmap will be created by ResizePad()
 //-------------------------
 // read objects and their drawing options
 //      b >> fPrimitives;
+      readLevel++;
+      gROOT->SetReadingBasket(kTRUE);
       TPad *padsav = (TPad*)gPad;
       gPad = this;
       fPrimitives = new TList(this);
@@ -3146,7 +3716,12 @@ void TPad::Streamer(TBuffer &b)
          fPrimitives->AddLast(obj, drawoption);
          gPad = padsav; // gPad may be modified in b >> obj if obj is a pad
       }
+      readLevel--;
+      gROOT->SetReadingBasket(kFALSE);
 //-------------------------
+      if (v > 3) {
+         b >> fExecs;
+      }
       fName.Streamer(b);
       fTitle.Streamer(b);
       b >> fPadPaint;
@@ -3166,9 +3741,18 @@ void TPad::Streamer(TBuffer &b)
       } else {
          fTickx = fTicky = 0;
       }
+      if (readLevel == 0 && IsA() == TPad::Class()) ResizePad();
+      b.CheckByteCount(R__s, R__c, TPad::IsA());
    } else {
-      b.WriteVersion(TPad::IsA());
+      R__c = b.WriteVersion(TPad::IsA(), kTRUE);
       TVirtualPad::Streamer(b);
+      TAttPad::Streamer(b);
+      b << fX1;
+      b << fY1;
+      b << fX2;
+      b << fY2;
+      b << fBorderSize;
+      b << fBorderMode;
       b << fLogx;
       b << fLogy;
       b << fLogz;
@@ -3216,6 +3800,7 @@ void TPad::Streamer(TBuffer &b)
          if (nch) b.WriteFastArray(next.GetOption(),nch);
       }
 //-------------------------
+      b << fExecs;
       fName.Streamer(b);
       fTitle.Streamer(b);
       b << fPadPaint;
@@ -3229,6 +3814,7 @@ void TPad::Streamer(TBuffer &b)
       b << fAbsCoord;
       b << fTickx;
       b << fTicky;
+      b.SetByteCount(R__c, kTRUE);
    }
 }
 
@@ -3238,7 +3824,7 @@ void TPad::UseCurrentStyle()
 //*-*-*-*-*-*Force a copy of current style for all objects in pad*-*-*-*-*
 //*-*        ====================================================
 
-   SetFillColor(gStyle->GetCanvasColor());
+   SetFillColor(gStyle->GetPadColor());
    SetBottomMargin(gStyle->GetPadBottomMargin());
    SetTopMargin(gStyle->GetPadTopMargin());
    SetLeftMargin(gStyle->GetPadLeftMargin());
@@ -3259,14 +3845,21 @@ void TPad::UseCurrentStyle()
 
    TPaveText *stats  = (TPaveText*)GetPrimitive("stats");
    if (stats) {
+      stats->SetFillColor(gStyle->GetStatStyle());
       stats->SetFillColor(gStyle->GetStatColor());
+      stats->SetTextFont(gStyle->GetStatFont());
+      stats->SetTextColor(gStyle->GetStatTextColor());
       stats->SetBorderSize(gStyle->GetStatBorderSize());
+      if (!gStyle->GetOptStat()) delete stats;
    }
 
    TPaveText *title  = (TPaveText*)GetPrimitive("title");
    if (title) {
       title->SetFillColor(gStyle->GetTitleColor());
+      title->SetTextFont(gStyle->GetTitleFont());
+      title->SetTextColor(gStyle->GetTitleTextColor());
       title->SetBorderSize(gStyle->GetTitleBorderSize());
+      if (!gStyle->GetOptTitle()) delete title;
    }
    if (fFrame) {
       fFrame->SetFillColor(gStyle->GetFrameFillColor());
@@ -3282,48 +3875,123 @@ void TPad::UseCurrentStyle()
 }
 
 //______________________________________________________________________________
-TGToolTip *TPad::CreateToolTip(const TBox *box, const char *text, Long_t delayms)
+TObject *TPad::WaitPrimitive(const char *pname, const char *emode)
 {
-   // Create a tool tip and return its pointer.
+   // Loop and sleep until a primitive with name=pname
+   // is found in the pad.
+   // If emode is given, the editor is automatically set to emode, ie
+   // it is not required to have the editor control bar.
+   // The possible values for emode are:
+   //  emode = "" (default). User will select the mode via the editor bar
+   //        = "Arc", "Line", "Arrow", "Button", "Diamond", "Ellipse",
+   //        = "Pad","pave", "PaveLabel","PaveText", "PavesText",
+   //        = "PolyLine", "CurlyLine", "CurlyArc", "Text", "Marker", "CutG"
+   // if emode is specified and it is not valid, "PolyLine" is assumed.
+   // if emode is not specified or ="", an attempt is to use pname[1...]
+   // for example if pname="TArc", emode="Arc" will be assumed.
+   // When this function is called within a macro, the macro execution
+   // is suspended until a primitive corresponding to the arguments
+   // is found in the pad.
+   // If CRTL/C is typed in the pad, the function returns 0.
+   // While this function is executing, one can use the mouse, interact
+   // with the graphics pads, use the Inspector, Browser, TreeViewer, etc.
+   // Examples:
+   //   c1.WaitPrimitive();      // Return the first created primitive
+   //                            // whatever it is.
+   //   c1.WaitPrimitive("ggg"); // Set the editor in mode "PolyLine/Graph"
+   //                            // Create a polyline, then using the context
+   //                            // menu item "SetName", change the name
+   //                            // of the created TGraph to "ggg"
+   //   c1.GetPrimitive("Arc");  // Set the editor in mode "Arc". Returns
+   //                            // as soon as a TArc object is created.
+   //   c1.GetPrimitive("lat","Text"); // Set the editor in Text/Latex mode.
+   //                            // Create a text object, then Set its anme to "lat"
+   //
+   // The following macro waits for 10 primitives of any type to be created.
+   //{
+   //   TCanvas c1("c1");
+   //   TObject *obj;
+   //   for (Int_t i=0;i<10;i++) {
+   //      obj = gPad->WaitPrimitive();
+   //      if (!obj) break;
+   //      printf("Loop i=%d, found objIsA=%s, name=%s\n",
+   //         i,obj->ClassName(),obj->GetName());
+   //   }
+   //}
 
-   return new TGToolTip(gClient->GetRoot(), box, text, delayms);
+   if (strlen(emode)) gROOT->SetEditorMode(emode);
+   if (gROOT->GetEditorMode() == 0 && strlen(pname) > 2) gROOT->SetEditorMode(&pname[1]);
+
+   TObject *oldlast = gPad->GetListOfPrimitives()->Last();
+   TObject *obj = 0;
+   Bool_t testlast = kFALSE;
+   if (strlen(pname) == 0 && strlen(emode) == 0) testlast = kTRUE;
+   if (testlast) gROOT->SetEditorMode();
+   while (!gSystem->ProcessEvents()) {
+      obj = GetPrimitive(pname);
+      if (obj) {
+         gROOT->SetEditorMode();
+         return obj;
+      }
+      if (testlast) {
+         obj = gPad->GetListOfPrimitives()->Last();
+         if (obj != oldlast) return obj;
+      }
+   }
+   return 0;
 }
 
 //______________________________________________________________________________
-void TPad::DeleteToolTip(TGToolTip *tip)
+TObject *TPad::CreateToolTip(const TBox *box, const char *text, Long_t delayms)
 {
-   // Delete tool tip object.
+   // Create a tool tip and return its pointer.
 
 #ifndef WIN32
-   delete tip;
+   if (gPad->IsBatch()) return 0;
+   // return new TGToolTip(box, text, delayms);
+   return (TObject*)gROOT->ProcessLineFast(Form("new TGToolTip((TBox*)0x%lx,\"%s\",%d)",
+                                           (Long_t)box,text,(Int_t)delayms));
+#else
+   return 0;
 #endif
 }
 
 //______________________________________________________________________________
-void TPad::ResetToolTip(TGToolTip *tip)
+void TPad::DeleteToolTip(TObject *tip)
+{
+   // Delete tool tip object.
+
+#ifndef WIN32
+   // delete tip;
+   if (!tip) return;
+   gROOT->ProcessLineFast(Form("delete (TGToolTip*)0x%lx", (Long_t)tip));
+#endif
+}
+
+//______________________________________________________________________________
+void TPad::ResetToolTip(TObject *tip)
 {
    // Reset tool tip, i.e. within time specified in CreateToolTip the
    // tool tip will pop up.
 
 #ifndef WIN32
-   if (tip) tip->Reset(this);
+   if (!tip) return;
+   // tip->Reset(this);
+   gROOT->ProcessLineFast(Form("((TGToolTip*)0x%lx)->Reset((TPad*)0x%lx)",
+                          (Long_t)tip,(Long_t)this));
 #endif
 }
 
 //______________________________________________________________________________
-void TPad::CloseToolTip(TGToolTip *tip)
+void TPad::CloseToolTip(TObject *tip)
 {
    // Hide tool tip.
 
 #ifndef WIN32
-   if (tip) tip->Hide();
+   if (!tip) return;
+   // tip->Hide();
+   gROOT->ProcessLineFast(Form("((TGToolTip*)0x%lx)->Hide()",(Long_t)tip));
 #endif
-}
-
-//______________________________________________________________________________
-
-extern "C" {
-  void   x3d_main(Float_t  *longitude,Float_t  *latitude,Float_t  *psi,Option_t *option);
 }
 
 //______________________________________________________________________________
@@ -3338,7 +4006,7 @@ void TPad::x3d(Option_t *option)
    {
       // Disconnect the previous 3D context
       if (fPadView3D) fPadView3D->SetPad(0);
-      fPadView3D = gGLKernel->CreatePadGLView(this);
+      fPadView3D = gVirtualGL->CreatePadGLView(this);
       if (!fPadView3D) {
 #ifdef WIN32
          Warning("x3d", "loading OpenGL viewer (gSystem->Load(\"Root_RGL.DLL\")");
@@ -3347,7 +4015,7 @@ void TPad::x3d(Option_t *option)
 #else
          gROOT->Macro("GL.C");
 #endif
-         fPadView3D = gGLKernel->CreatePadGLView(this);
+         fPadView3D = gVirtualGL->CreatePadGLView(this);
          if (!fPadView3D)
             Error("x3d", "OpenGL shared libraries not loaded");
       }
@@ -3358,70 +4026,10 @@ void TPad::x3d(Option_t *option)
       return;
    }
 
-#ifdef R__UNIX
+#ifndef WIN32
+   if (gROOT->LoadClass("TViewerX3D","X3d")) return;
 
-    TObject *obj;
-    char x3dopt[32];
-
-    if(!fView) {
-        cout << "Error: View is not set !" << endl;
-        return;
-    }
-
-    gSize3D.numPoints = 0;
-    gSize3D.numSegs   = 0;
-    gSize3D.numPolys  = 0;
-
-    TObjLink *lnk = GetListOfPrimitives()->FirstLink();
-    while (lnk) {
-        obj = lnk->GetObject();
-        if(obj->Is3D()) obj->Sizeof3D();
-        lnk = lnk->Next();
-    }
-
-    cout<<"Total size of x3d primitives:"<<endl;
-    cout<<"     gSize3D.numPoints="<<gSize3D.numPoints<<endl;
-    cout<<"     gSize3D.numSegs  ="<<gSize3D.numSegs<<endl;
-    cout<<"     gSize3D.numPolys ="<<gSize3D.numPolys<<endl;
-
-    if (!AllocateX3DBuffer()) {
-        Error("x3d", "x3d buffer allocation failure");
-        return;
-    }
-
-    lnk = GetListOfPrimitives()->FirstLink();
-    while (lnk) {
-        obj = lnk->GetObject();
-        if(obj->Is3D()) {
-           strcpy(x3dopt,"x3d");
-           strcat(x3dopt,option);
-           obj->Paint(x3dopt);
-        }
-        lnk = lnk->Next();
-    }
-
-    const Float_t kPI = Float_t (TMath::Pi());
-
-    Float_t longitude_rad = ( 90 + fView->GetLongitude()) * kPI/180.0;
-    Float_t  latitude_rad = (-90 + fView->GetLatitude() ) * kPI/180.0;
-    Float_t       psi_rad = (      fView->GetPsi()      ) * kPI/180.0;
-
-
-    //*-* Call 'x3d' package *-*
-    x3d_main(&longitude_rad, &latitude_rad, &psi_rad, option);
-
-    Int_t irep;
-
-    Float_t longitude_deg = longitude_rad * 180.0/kPI - 90;
-    Float_t  latitude_deg = latitude_rad  * 180.0/kPI + 90;
-    Float_t       psi_deg = psi_rad       * 180.0/kPI;
-
-    fView->SetView(longitude_deg, latitude_deg, psi_deg, irep);
-
-    fPhi   = -90 - longitude_deg;
-    fTheta =  90 - latitude_deg;
-
-    Modified(kTRUE);
-
+   gROOT->ProcessLineFast(Form("TViewerX3D::View((TVirtualPad*)0x%lx,\"%s\")",
+                          (Long_t)this,option));
 #endif
 }

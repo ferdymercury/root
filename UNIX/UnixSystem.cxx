@@ -1,39 +1,27 @@
+//*CMZ :  2.23/12 23/01/2000  12.45.40  by  Fons Rademakers
+//*CMZ :  2.23/09 19/11/99  13.06.21  by  Fons Rademakers
+//*CMZ :  2.23/08 28/10/99  00.49.36  by  Fons Rademakers
+//*CMZ :  2.23/07 27/10/99  12.27.47  by  Fons Rademakers
+//*CMZ :  2.23/06 21/10/99  08.30.06  by  Rene Brun
+//*CMZ :  2.23/05 19/10/99  17.29.46  by  Fons Rademakers
+//*CMZ :  2.23/04 06/10/99  09.43.10  by  Fons Rademakers
+//*CMZ :  2.23/03 17/09/99  15.42.36  by  Rene Brun
+//*CMZ :  2.23/00 07/08/99  18.07.29  by  Fons Rademakers
 //*CMZ :  2.22/01 21/04/99  11.24.57  by  Fons Rademakers
 //*CMZ :  2.21/05 08/02/99  12.53.47  by  Fons Rademakers
-//*CMZ :  2.21/04 02/02/99  19.23.12  by  Fons Rademakers
-//*CMZ :  2.21/03 22/01/99  18.25.23  by  Fons Rademakers
-//*CMZ :  2.21/01 14/01/99  13.35.08  by  Fons Rademakers
-//*CMZ :  2.20/01 02/12/98  18.00.58  by  Fons Rademakers
-//*CMZ :  2.20/00 25/11/98  18.28.15  by  Fons Rademakers
-//*CMZ :  2.00/13 29/10/98  10.34.15  by  Rene Brun
-//*CMZ :  2.00/12 08/10/98  15.54.29  by  Fons Rademakers
-//*CMZ :  2.00/11 26/08/98  13.38.10  by  Fons Rademakers
-//*CMZ :  2.00/10 29/07/98  11.31.49  by  Rene Brun
-//*CMZ :  2.00/09 08/06/98  19.08.10  by  Fons Rademakers
-//*CMZ :  2.00/07 18/05/98  21.24.13  by  Fons Rademakers
-//*CMZ :  2.00/06 23/04/98  18.40.57  by  Fons Rademakers
-//*CMZ :  2.00/04 06/04/98  21.05.10  by  Fons Rademakers
-//*CMZ :  2.00/01 12/03/98  20.16.34  by  Fons Rademakers
-//*CMZ :  2.00/00 08/03/98  00.17.14  by  Fons Rademakers
-//*CMZ :  1.03/09 16/12/97  17.59.20  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   15/09/95
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -43,6 +31,10 @@
 // Class providing an interface to the UNIX Operating System.           //
 //                                                                      //
 //////////////////////////////////////////////////////////////////////////
+
+#ifdef HAVE_CONFIG
+#include "config.h"
+#endif
 
 #include "TUnixSystem.h"
 #include "TROOT.h"
@@ -74,7 +66,7 @@
 #   include <sgtty.h>
 #endif
 #if defined(R__AIX) || defined(R__LINUX) || defined(R__ALPHA) || defined(R__SGI) || \
-    defined(R__HIUX) || defined(R__FBSD)
+    defined(R__HIUX) || defined(R__FBSD) || defined(R__LYNXOS)
 #   include <sys/ioctl.h>
 #endif
 #if defined(R__AIX) || defined(R__SOLARIS)
@@ -104,7 +96,7 @@
 #   undef _XOPEN_EXTENDED_SOURCE
 #   if !defined(_AIX41) && !defined(_AIX43)
     // AIX 3.2 doesn't have it
-    extern "C" int inet_aton(const char *, struct in_addr *) { return 0; }
+#   define HASNOT_INETATON
 #   endif
 #else
 #   include <arpa/inet.h>
@@ -119,7 +111,8 @@
 #   include <sys/systeminfo.h>
 #   include <sys/filio.h>
 #   include <sys/sockio.h>
-extern "C" int inet_aton(const char *, struct in_addr *) { return 0; }
+#   define HASNOT_INETATON
+#   define INADDR_NONE (UInt_t)-1
 #endif
 #if defined(R__HPUX)
 #   include <symlink.h>
@@ -136,29 +129,34 @@ extern "C" int inet_aton(const char *, struct in_addr *) { return 0; }
     extern "C" void U_STACK_TRACE();
 #   if defined(hpux9)
 extern "C" {
-   int inet_aton(const char *, struct in_addr *) { return 0; }
    extern void openlog(const char *, int, int);
    extern void syslog(int, const char *, ...);
    extern void closelog(void);
    extern int setlogmask(int);
 }
+#   define HASNOT_INETATON
 #   endif
 #endif
 #if defined(R__ALPHA) && !defined(R__GNU)
-extern "C" int inet_aton(const char *, struct in_addr *) { return 0; }
+#   define HASNOT_INETATON
 #endif
 #if defined(R__HIUX)
-extern "C" {
-   int inet_aton(const char *, struct in_addr *) { return 0; }
-}
+#   define HASNOT_INETATON
 #endif
 
 #if defined(R__SGI) || defined(R__SOLARIS)
 #define HAVE_UTMPX_H
 #define UTMP_NO_ADDR
 #endif
-#if defined(R__ALPHA) || defined(R__AIX) || defined(R__FBSD)
+#if defined(R__ALPHA) || defined(R__AIX) || defined(R__FBSD) || defined(R__LYNXOS)
 #define UTMP_NO_ADDR
+#endif
+
+#if defined(R__LYNXOS)
+extern "C" {
+   extern int putenv(const char *);
+   extern int inet_aton(const char *, struct in_addr *);
+};
 #endif
 
 #ifdef HAVE_UTMPX_H
@@ -181,6 +179,7 @@ extern "C" {
 #ifndef UTMP_FILE
 #define UTMP_FILE "/etc/utmp"
 #endif
+
 static STRUCT_UTMP *gUtmpContents;
 
 
@@ -230,9 +229,13 @@ Bool_t TUnixSystem::Init()
    UnixSignal(kSigFloatingException,     SigHandler);
    UnixSignal(kSigWindowChanged,         SigHandler);
 
+#ifndef ROOTPREFIX
    gRootDir = Getenv("ROOTSYS");
    if (gRootDir == 0)
       gRootDir= "/usr/local/root";
+#else
+   gRootDir = ROOTPREFIX;
+#endif
 
    return kFALSE;
 }
@@ -301,12 +304,13 @@ const char *TUnixSystem::GetError()
 {
    // Return system error string.
 
-#if defined(R__SOLARIS) || defined (R__LINUX) || defined(R__AIX) || defined(R__FBSD)
-   return strerror(errno);
+   Int_t err = GetErrno();
+   #if defined(R__SOLARIS) || defined (R__LINUX) || defined(R__AIX) || defined(R__FBSD)
+   return strerror(err);
 #else
-   if (errno < 0 || errno >= sys_nerr)
-      return Form("errno out of range %d", errno);
-   return sys_errlist[errno];
+   if (err < 0 || err >= sys_nerr)
+      return Form("errno out of range %d", err);
+   return sys_errlist[err];
 #endif
 }
 
@@ -317,7 +321,7 @@ const char *TUnixSystem::HostName()
 
    if (fHostname == "") {
       char hn[64];
-#if defined(R__SOLARIS)
+#if defined(R__SOLARIS) && !defined(R__KCC)
       sysinfo(SI_HOSTNAME, hn, sizeof(hn));
 #else
       gethostname(hn, sizeof(hn));
@@ -427,7 +431,7 @@ void TUnixSystem::DispatchOneEvent(Bool_t pendingOnly)
    while (1) {
       // first handle any X11 events
       if (gXDisplay && gXDisplay->Notify())
-         return;
+         if (!pendingOnly) return;
 
       // check for file descriptors ready for reading/writing
       if (fNfd > 0 && fFileHandler->GetSize() > 0) {
@@ -439,12 +443,12 @@ void TUnixSystem::DispatchOneEvent(Bool_t pendingOnly)
             if (fd <= fMaxrfd && fReadready.IsSet(fd)) {
                fReadready.Clr(fd);
                if (fh->ReadNotify())
-                  return;
+                  if (!pendingOnly) return;
             }
             if (fd <= fMaxwfd && fWriteready.IsSet(fd)) {
                fWriteready.Clr(fd);
                if (fh->WriteNotify())
-                  return;
+                  if (!pendingOnly) return;
             }
          }
       }
@@ -455,7 +459,7 @@ void TUnixSystem::DispatchOneEvent(Bool_t pendingOnly)
       // check synchronous signals
       if (fSigcnt > 0 && fSignalHandler->GetSize() > 0)
          if (CheckSignals(kTRUE))
-            return;
+            if (!pendingOnly) return;
       fSigcnt = 0;
       fSignals.Zero();
 
@@ -540,6 +544,7 @@ void TUnixSystem::DispatchSignals(ESignals sig)
                Getlinem(kInit, "Root > ");
             }
             gInterpreter->RewindDictionary();
+            gInterpreter->ClearFileBusy();
          }
          Throw(sig);
       }
@@ -949,34 +954,33 @@ int TUnixSystem::Umask(Int_t mask)
 }
 
 //______________________________________________________________________________
-char *TUnixSystem::Which(const char *search, const char *file, EAccessMode mode)
+char *TUnixSystem::Which(const char *search, const char *wfil, EAccessMode mode)
 {
-   // Find location of file in a search path.
+   // Find location of file "wfil" in a search path.
+   // The search path is specified as a : separated list of directories.
    // User must delete returned string.
 
-   char name[kMAXPATHLEN];
+   char name[kMAXPATHLEN], file[kMAXPATHLEN];
    const char *ptr;
    char *next, *exname;
 
-   if (strchr(file, '/')) {
-      if (file[0] != '/' && file[0] != '$' && file[0] != '~') {
-         char tmp[kMAXPATHLEN];
-         strcpy(tmp, file);
-         strcpy(name, gSystem->WorkingDirectory());
-         strcat(name, "/");
-         strcat(name, tmp);
-      } else
-         strcpy(name, file);
+   exname = gSystem->ExpandPathName(wfil);
+   if (exname)
+      strcpy(file, exname);
+   else
+      file[0] = 0;
+   delete [] exname;
 
-      exname = gSystem->ExpandPathName(name);
+   if (file[0] == '/') {
+      exname = StrDup(file);
       if (exname && access(exname, mode) == 0) {
          if (gEnv->GetValue("Root.ShowPath", 0))
-            Printf("Which: %s = %s", file, exname);
+            Printf("Which: %s = %s", wfil, exname);
          return exname;
       }
       delete [] exname;
       if (gEnv->GetValue("Root.ShowPath", 0))
-         Printf("Which: %s = <not found>", file);
+         Printf("Which: %s = <not found>", wfil);
       return 0;
    }
 
@@ -1003,7 +1007,7 @@ char *TUnixSystem::Which(const char *search, const char *file, EAccessMode mode)
       exname = gSystem->ExpandPathName(name);
       if (exname && access(exname, mode) == 0) {
          if (gEnv->GetValue("Root.ShowPath", 0))
-            Printf("Which: %s = %s", file, exname);
+            Printf("Which: %s = %s", wfil, exname);
          return exname;
       }
       delete [] exname;
@@ -1012,7 +1016,7 @@ char *TUnixSystem::Which(const char *search, const char *file, EAccessMode mode)
    }
 
    if (gEnv->GetValue("Root.ShowPath", 0))
-      Printf("Which: %s = <not found>", file);
+      Printf("Which: %s = <not found>", wfil);
    return 0;
 }
 
@@ -1099,7 +1103,7 @@ void TUnixSystem::StackTrace()
 {
    // Print a stack trace.
 
-#ifdef R__HPUX
+#if defined(R__HPUX) && !defined(R__GNU)
       Printf("");
       U_STACK_TRACE();
       Printf("");
@@ -1174,18 +1178,22 @@ Func_t TUnixSystem::DynFindSymbol(const char *module, const char *entry)
 }
 
 //______________________________________________________________________________
-int TUnixSystem::Load(const char *module, const char *entry)
+int TUnixSystem::Load(const char *module, const char *entry, Bool_t system)
 {
    // Load a shared library. Returns 0 on successful loading, 1 in
    // case lib was already loaded and -1 in case lib does not exist
    // or in case of error.
 
+#ifdef NOCINT
    int i = UnixDynLoad(module);
    if (!entry || !strlen(entry)) return i;
 
    Func_t f = UnixDynFindSymbol(module, entry);
    if (f) return 0;
    return -1;
+#else
+   return TSystem::Load(module, entry, system);
+#endif
 }
 
 //______________________________________________________________________________
@@ -1193,7 +1201,13 @@ void TUnixSystem::Unload(const char *module)
 {
    // Unload a shared library.
 
+#ifdef NOCINT
    UnixDynUnload(module);
+#else
+   if (module) { }
+   // should call CINT unload file here, but does not work for sl's yet.
+   Warning("Unload", "CINT does not support unloading shared libs");
+#endif
 }
 
 //______________________________________________________________________________
@@ -1209,7 +1223,11 @@ void TUnixSystem::ListLibraries(const char *regexp)
 {
    // List all loaded shared libraries.
 
+#ifdef R__HPUX
    UnixDynListLibs(regexp);
+#else
+   TSystem::ListLibraries(regexp);
+#endif
 }
 
 //---- Time & Date -------------------------------------------------------------
@@ -1286,7 +1304,9 @@ void TUnixSystem::ResetTimer(TTimer *ti)
 //______________________________________________________________________________
 TInetAddress TUnixSystem::GetHostByName(const char *hostname)
 {
-   // Get Internet Protocol (IP) address of host.
+   // Get Internet Protocol (IP) address of host. Returns an TInetAddress
+   // object. To see if the hostname lookup was successfull call
+   // TInetAddress::IsValid().
 
    struct hostent *host_ptr;
    struct in_addr  ad;
@@ -1294,14 +1314,20 @@ TInetAddress TUnixSystem::GetHostByName(const char *hostname)
    int             type;
    UInt_t          addr;    // good for 4 byte addresses
 
+#ifdef HASNOT_INETATON
+   if ((addr = (UInt_t)inet_addr(hostname)) != INADDR_NONE) {
+#else
    if (inet_aton(hostname, &ad)) {
       memcpy(&addr, &ad.s_addr, sizeof(ad.s_addr));
-      if ((host_ptr = gethostbyaddr((const char *)&ad.s_addr,
-                                    sizeof(ad.s_addr), AF_INET)))
+#endif
+      if ((host_ptr = gethostbyaddr((const char *)&addr,
+                                    sizeof(addr), AF_INET))) {
          host = host_ptr->h_name;
-      else
-         host = hostname;
-      type = AF_INET;
+         type = AF_INET;
+      } else {
+         if (gDebug > 0) Error("GetHostByName", "unknown host %s", hostname);
+         return TInetAddress("UnknownHost", ntohl(addr), -1);
+      }
    } else if ((host_ptr = gethostbyname(hostname))) {
       // Check the address type for an internet host
       if (host_ptr->h_addrtype != AF_INET) {
@@ -1312,8 +1338,8 @@ TInetAddress TUnixSystem::GetHostByName(const char *hostname)
       host = host_ptr->h_name;
       type = host_ptr->h_addrtype;
    } else {
-      Error("GetHostByName", "unknown host %s", hostname);
-      return TInetAddress();
+      if (gDebug > 0) Error("GetHostByName", "unknown host %s", hostname);
+      return TInetAddress(hostname, 0, -1);
    }
 
    return TInetAddress(host, ntohl(addr), type);
@@ -1475,11 +1501,11 @@ int TUnixSystem::AcceptConnection(int sock)
 
    int soc = -1;
 
-   while ((soc = ::accept(sock, 0, 0)) == -1 && errno == EINTR)
-      errno = 0;
+   while ((soc = ::accept(sock, 0, 0)) == -1 && GetErrno() == EINTR)
+      ResetErrno();
 
    if (soc == -1) {
-      if (errno == EWOULDBLOCK)
+      if (GetErrno() == EWOULDBLOCK)
          return -2;
       else {
          SysError("AcceptConnection", "accept");
@@ -1501,8 +1527,8 @@ void TUnixSystem::CloseConnection(int sock)
    ::shutdown(sock, 2);
 #endif
 
-   while (::close(sock) == -1 && errno == EINTR)
-      errno = 0;
+   while (::close(sock) == -1 && GetErrno() == EINTR)
+      ResetErrno();
 }
 
 //______________________________________________________________________________
@@ -1582,7 +1608,7 @@ int TUnixSystem::RecvRaw(int sock, void *buf, int length, int opt)
 
    int n;
    if ((n = UnixRecv(sock, buf, length, flag)) <= 0) {
-      if (n == -1 && errno != EINTR)
+      if (n == -1 && GetErrno() != EINTR)
          Error("RecvRaw", "cannot receive buffer");
       return n;
    }
@@ -1744,22 +1770,37 @@ int TUnixSystem::GetSockOpt(int sock, int opt, int *val)
       *val = flg & O_NDELAY;
       break;
    case kProcessGroup:
+#if !defined(R__LYNXOS)
       if (ioctl(sock, SIOCGPGRP, (char*)val) == -1) {
          SysError("GetSockOpt", "ioctl(SIOCGPGRP)");
          return -1;
       }
+#else
+      SysError("GetSockOpt", "ioctl(SIOCGPGRP) not supported on LynxOS");
+      return -1;
+#endif
       break;
    case kAtMark:
+#if !defined(R__LYNXOS)
       if (ioctl(sock, SIOCATMARK, (char*)val) == -1) {
          SysError("GetSockOpt", "ioctl(SIOCATMARK)");
          return -1;
       }
+#else
+      SysError("GetSockOpt", "ioctl(SIOCATMARK) not supported on LynxOS");
+      return -1;
+#endif
       break;
    case kBytesToRead:
+#if !defined(R__LYNXOS)
       if (ioctl(sock, FIONREAD, (char*)val) == -1) {
          SysError("GetSockOpt", "ioctl(FIONREAD)");
          return -1;
       }
+#else
+      SysError("GetSockOpt", "ioctl(FIONREAD) not supported on LynxOS");
+      return -1;
+#endif
       break;
    default:
       Error("GetSockOpt", "illegal option (%d)", opt);
@@ -1826,7 +1867,7 @@ void TUnixSystem::UnixSignal(ESignals sig, SigHandler_t handler)
       sigact.sa_handler = (void (*)())sighandler;
 #elif defined(__SunOS_5_6)
       sigact.sa_handler = (void (*)(int))sighandler;
-#elif defined(R__SGI) && !defined(R__KCC)
+#elif (defined(R__SGI) && !defined(R__KCC)) || defined(R__LYNXOS)
 #  if defined(R__SGI64)
        sigact.sa_handler = (void (*)(int))sighandler;
 #   else
@@ -1934,11 +1975,11 @@ int TUnixSystem::UnixSelect(UInt_t nfds, TFdSet *readready, TFdSet *writeready,
 #endif
    }
    if (retcode == -1) {
-      if (errno == EINTR) {
-         errno = 0;  // errno is not self reseting
+      if (GetErrno() == EINTR) {
+         ResetErrno();  // errno is not self reseting
          return -2;
       }
-      if (errno == EBADF)
+      if (GetErrno() == EBADF)
          return -3;
       return -1;
    }
@@ -2248,7 +2289,7 @@ int TUnixSystem::UnixRecv(int sock, void *buffer, int length, int flag)
    // and errno == EWOULDBLOCK, -3 in case of MSG_OOB and errno == EINVAL
    // and -4 in case of kNoBlock and errno == EWOULDBLOCK.
 
-   errno = 0;
+   ResetErrno();
 
    if (sock < 0) return -1;
 
@@ -2260,15 +2301,15 @@ int TUnixSystem::UnixRecv(int sock, void *buffer, int length, int flag)
          if (nrecv == 0)
             break;        // EOF
          if (flag == MSG_OOB) {
-            if (errno == EWOULDBLOCK)
+            if (GetErrno() == EWOULDBLOCK)
                return -2;
-            else if (errno == EINVAL)
+            else if (GetErrno() == EINVAL)
                return -3;
          }
-         if (errno == EWOULDBLOCK)
+         if (GetErrno() == EWOULDBLOCK)
             return -4;
          else {
-            if (errno != EINTR)
+            if (GetErrno() != EINTR)
                ::SysError("TUnixSystem::UnixRecv", "recv");
             return -1;
          }
@@ -2307,9 +2348,33 @@ const char *TUnixSystem::GetDynamicPath()
    static const char *dynpath = 0;
 
    if (dynpath == 0) {
-      dynpath = gEnv->GetValue("Root.DynamicPath", (char*)0);
-      if (dynpath == 0)
-         dynpath = StrDup(Form(".:%s/lib", gRootDir));
+      const char *rdynpath = gEnv->GetValue("Root.DynamicPath", (char*)0);
+      if (rdynpath == 0)
+#ifdef ROOTLIBDIR
+         rdynpath = StrDup(Form(".:%s", ROOTLIBDIR));
+#else
+         rdynpath = StrDup(Form(".:%s/lib", gRootDir));
+#endif
+      const char *ldpath = 0;
+#if defined (R__AIX)
+      ldpath = gSystem->Getenv("LIBPATH");
+#elif defined(R__HPUX)
+      ldpath = gSystem->Getenv("SHLIB_PATH");
+#else
+      ldpath = gSystem->Getenv("LD_LIBRARY_PATH");
+#endif
+      if (ldpath == 0)
+         dynpath = rdynpath;
+      else
+         dynpath = StrDup(Form("%s:%s", rdynpath, ldpath));
+
+#ifdef ROOTLIBDIR
+      if (!strstr(dynpath, ROOTLIBDIR))
+         dynpath = StrDup(Form("%s:%s", dynpath, ROOTLIBDIR));
+#else
+      if (!strstr(dynpath, Form("%s/lib", gRootDir)))
+         dynpath = StrDup(Form("%s:%s/lib", dynpath, gRootDir));
+#endif
    }
    return dynpath;
 }
@@ -2324,13 +2389,14 @@ char *TUnixSystem::DynamicPathName(const char *lib, Bool_t quiet)
 
    char *name;
 
-   int len = strlen(lib);
+   int ext = 0, len = strlen(lib);
    if (len > 3 && (!strcmp(lib+len-3, ".sl") ||
                    !strcmp(lib+len-3, ".dl") ||
                    !strcmp(lib+len-3, ".so") ||
-                   !strcmp(lib+len-2, ".a")))
+                   !strcmp(lib+len-2, ".a"))) {
       name = gSystem->Which(GetDynamicPath(), lib, kReadPermission);
-   else {
+      ext  = 1;
+   } else {
       name = Form("%s.so", lib);
       name = gSystem->Which(GetDynamicPath(), name, kReadPermission);
       if (!name) {
@@ -2347,9 +2413,14 @@ char *TUnixSystem::DynamicPathName(const char *lib, Bool_t quiet)
       }
    }
 
-   if (!name && !quiet)
-      Error("DynamicPathName",
-      "%s does not exist or wrong file extension (.so, .sl, .dl or .a)", lib);
+   if (!name && !quiet) {
+      if (ext)
+         Error("DynamicPathName",
+               "%s does not exist in %s", lib, GetDynamicPath());
+      else
+         Error("DynamicPathName",
+               "%s[.so | .sl | .dl | .a] does not exist in %s", lib, GetDynamicPath());
+   }
 
    return name;
 }
@@ -2388,11 +2459,16 @@ int TUnixSystem::UnixDynLoad(const char *lib)
    const char *path;
 
    if ((path = gSystem->DynamicPathName(lib))) {
-#if defined(R__HPUX) && defined(NOCINT)
+#if defined(R__HPUX)
+#if !defined(__STDCPP__)
       shl_t handle = cxxshl_load(path, BIND_IMMEDIATE | BIND_NONFATAL, 0L);
-      if (handle > 0) return 0;
 #else
-      return G__loadfile((char *)path);
+      shl_t handle = shl_load(path, BIND_IMMEDIATE | BIND_NONFATAL, 0L);
+#endif
+      if (handle != 0) return 0;
+#else
+      ::Error("TUnixSystem::UnixDynLoad", "not yet implemented for this platform");
+      return -1;
 #endif
    }
    return -1;
@@ -2404,7 +2480,7 @@ Func_t TUnixSystem::UnixDynFindSymbol(const char *lib, const char *entry)
    // Finds and returns a function pointer to a symbol in the shared library.
    // Returns 0 when symbol not found.
 
-#ifdef R__HPUX
+#if defined(R__HPUX) && !defined(R__GNU)
    shl_t handle;
 
    if (handle = (shl_t)FindDynLib(lib)) {
@@ -2428,7 +2504,7 @@ void TUnixSystem::UnixDynListSymbols(const char *lib, const char *regexp)
    // List symbols in a shared library. One can use wildcards to list only
    // the intresting symbols.
 
-#ifdef R__HPUX
+#if defined(R__HPUX) && !defined(R__GNU)
    shl_t handle;
 
    if (handle = (shl_t)FindDynLib(lib)) {
@@ -2473,7 +2549,7 @@ void TUnixSystem::UnixDynListLibs(const char *lib)
 {
    // List all loaded shared libraries.
 
-#ifdef R__HPUX
+#if defined(R__HPUX) && !defined(R__GNU)
    TRegexp *re = 0;
    if (lib && strlen(lib)) re = new TRegexp(lib, kTRUE);
    struct shl_descriptor *desc;
@@ -2493,8 +2569,9 @@ void TUnixSystem::UnixDynListLibs(const char *lib)
    Printf("%d libraries loaded", index-1);
    Printf("=======================");
    delete re;
-#endif
+#else
    if (lib) { }
+#endif
 }
 
 //______________________________________________________________________________
@@ -2502,16 +2579,20 @@ void TUnixSystem::UnixDynUnload(const char *lib)
 {
    // Unload a shared library.
 
-#if defined(R__HPUX) && defined (NOCINT)
+#if defined(R__HPUX)
    shl_t handle;
 
    if (handle = (shl_t)FindDynLib(lib))
+#if !defined(__STDCPP__)
       if (cxxshl_unload(handle) == -1)
+#else
+      if (shl_unload(handle) == -1)
+#endif
          ::SysError("TUnixSystem::UnixDynUnload", "could not unload library %s", lib);
 #else
    if (lib) { }
    // should call CINT unload file here, but does not work for sl's yet.
-   ::Warning("TUnixSystem::UnixDynUnload", "CINT does not support unloading shared libs");
+   ::Error("TUnixSystem::UnixDynUnload", "not yet implemented for this platform");
 #endif
 }
 

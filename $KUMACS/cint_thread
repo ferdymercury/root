@@ -1,3 +1,6 @@
+*CMZ :  2.23/12 06/01/2000  11.25.03  by  Fons Rademakers
+*CMZ :  2.23/10 09/12/99  12.04.28  by  Fons Rademakers
+*CMZ :  2.23/00 02/08/99  10.08.30  by  Rene Brun
 *CMZ :  2.22/06 21/06/99  18.38.32  by  Rene Brun
 *CMZ :  1.03/02 25/08/97  17.05.19  by  Victor Perev
 *-- Author :    Victor Perev   25/07/97
@@ -13,10 +16,10 @@ macro cint_thread
 
 seq -i src/*.h
 
-headers=-DR__THREAD TThread.h TConditionImp.h TCondition.h TMutex.h TMutexImp.h _
-        TPosixCondition.h TPosixMutex.h TPosixThread.h _
+headers=PosixThreadInc.h TThread.h TConditionImp.h TCondition.h TMutex.h _
+        TMutexImp.h TPosixCondition.h TPosixMutex.h TPosixThread.h _
         TPosixThreadFactory.h TSemaphore.h TThreadFactory.h _
-        TThreadImp.h
+        TThreadImp.h TRWLock.h
 
 name=Thread
 patch=THREAD

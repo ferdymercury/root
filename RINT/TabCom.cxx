@@ -1,27 +1,23 @@
+//*CMZ :  2.23/09 10/11/99  18.35.42  by  Fons Rademakers
+//*CMZ :  2.23/06 21/10/99  08.21.17  by  Rene Brun
+//*CMZ :  2.23/05 20/10/99  12.29.18  by  Fons Rademakers
+//*CMZ :  2.23/00 02/08/99  08.51.20  by  Rene Brun
 //*CMZ :  2.22/10 19/07/99  19.56.21  by  Fons Rademakers
 //*CMZ :  2.22/08 07/07/99  13.42.13  by  Fons Rademakers
 //*CMZ :  2.22/05 15/06/99  16.10.16  by  Fons Rademakers
-//*CMZ :  2.22/04 01/06/99  18.50.44  by  Fons Rademakers
-//*CMZ :  2.22/02 21/05/99  08.58.56  by  Rene Brun
-//*CMZ :  2.22/01 18/05/99  12.43.23  by  Fons Rademakers
-//*-- Author :    Christian Lacunza <lacunza@cdfsg5.lbl.gov>   27/04/99
+//*-- Author :    Christian Lacunza <lacunza@cdfsg6.lbl.gov>   27/04/99
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 ////////////////////////////////////////////////////////////////////////////
@@ -132,6 +128,10 @@
 //     (this could be fixed)                                              //
 //                                                                        //
 ////////////////////////////////////////////////////////////////////////////
+
+#ifdef HAVE_CONFIG
+#include "config.h"
+#endif
 
 #include "TTabCom.h"
 #include "TClass.h"
@@ -275,7 +275,7 @@ const TSeqCol* TTabCom::GetListOfClasses( void )
           // generate a text list of classes on disk
           strstream   cmd;
           const char* tmpfilename = tmpnam(0);
-          cmd << ".class > " << tmpfilename;
+          cmd << ".class > " << tmpfilename << endl;
           gROOT->ProcessLine( cmd.str() ); // memory leak cmd.str()
 
           // open the file
@@ -310,6 +310,7 @@ const TSeqCol* TTabCom::GetListOfClasses( void )
                int index;
                if(0);
                else if ((index=line.Index(" class ")    ) >= 0) line = line(1+index+6, 32000);
+               else if ((index=line.Index(" struct ")   ) >= 0) line = line(1+index+7, 32000);
                else if ((index=line.Index(" enum ")     ) >= 0) line = line(1+index+5, 32000);
                else if ((index=line.Index(" (unknown) ")) >= 0) line = line(1+index+10, 32000);
                // 2 changes: 1. use spaces ^         ^          2. use offset ^^^^^ in case of long
@@ -378,7 +379,7 @@ const TSeqCol* TTabCom::GetListOfEnvVars()
           const char* tmpfilename = tmpnam(0);
           strstream  cmd;
 
-          cmd << "/bin/env > " << tmpfilename;
+          cmd << "/bin/env > " << tmpfilename << endl;
           gSystem->Exec( cmd.str() ); // memory leak cmd.str()
 
           // open the file
@@ -393,7 +394,9 @@ const TSeqCol* TTabCom::GetListOfEnvVars()
           // parse, add
           fpEnvVars = new TContainer;
           TString line;
-          while( file1 ) // i think this loop goes one time extra which results in an empty string in the list, but i don't think it causes any problems.
+          while( file1 ) // i think this loop goes one time extra which
+                         // results in an empty string in the list, but i don't think it causes any
+                         // problems.
           {
                line.ReadToDelim( file1, '=' );
                file1.ignore(32000,'\n');
@@ -654,7 +657,7 @@ void TTabCom::AppendListOfFilesInDirectory( const char dirName[], TSeqCol* pList
           pList->Add( new TObjString(dirName+fileName.Prepend("/")) );
      }
      // NOTE:
-     // with a path like "/usr/include:/usr/include/CC:$ROOTDIR/incldue:$ROOTDIR/cint/include:..."
+     // with a path like "/usr/include:/usr/include/CC:$ROOTDIR/include:$ROOTDIR/cint/include:..."
      // the above loop could get traversed 700 times or more.
      // ==> keep it minimal or it could cost whole seconds on slower machines.
      // also: TClonesArray doesn't help.
@@ -687,9 +690,12 @@ TString TTabCom::DetermineClass( const char varName[] )
      //
      ///////////////////////////////////
 
+     assert(varName != 0);
+     IfDebug(cerr << "DetermineClass(\"" << varName << "\");" << endl);
+
      strstream   cmd;
      const char* tmpfile = tmpnam(0);
-     cmd << "gROOT->ProcessLine(\"" << varName << "\"); > " << tmpfile;
+     cmd << "gROOT->ProcessLine(\"" << varName << "\"); > " << tmpfile << endl;
      gROOT->ProcessLine(cmd.str()); // memory leak cmd.str()
      // the type of the variable whose name is "varName"
      // should now be stored on disk in the file "tmpfile"
@@ -710,20 +716,25 @@ TString TTabCom::DetermineClass( const char varName[] )
           Error( "TTabCom::DetermineClass", "variable \"%s\" not defined?", varName );
           goto cleanup;
      }
+     IfDebug(cerr << (char)c << flush);
 
      // in case of success, "class TClassName*)0x12345" remains,
      // since the opening '(' was removed.
      file1 >> type; // ignore "class"
 
      // non-class type ==> failure
-     if( type != "class" )
+     if( type != "class" && type != "struct" ) {
+          type = ""; // empty return string indicates failure.
           goto cleanup; //* RETURN *//
+     }
 
      // ignore ' '
-     file1.ignore(1);
+     c = file1.get();
+     IfDebug(cerr << (char)c << flush);
 
      // this is what we want
      type.ReadToDelim( file1, ')' );
+     IfDebug(cerr << type << endl);
 
 cleanup:
      // done reading from file
@@ -846,9 +857,11 @@ TString TTabCom::GetSysIncludePath( void )
      // 3) standard directories
      // ----------------------------------------------
 
+#ifndef CINTINCDIR
      TString CINTSYSDIR("$ROOTSYS/cint");
-     gSystem->ExpandPathName(CINTSYSDIR);
-
+#else
+     TString CINTSYSDIR(CINTINCDIR);
+#endif
      path.Append(":"+CINTSYSDIR+"/include");
 //   path.Append(":"+CINTSYSDIR+"/stl");
 //   path.Append(":"+CINTSYSDIR+"/msdev/include");
@@ -997,7 +1010,9 @@ Int_t TTabCom::Complete( const TRegexp& re, const TSeqCol* pListOfCandidates, co
      //  1 ==> after 1st char
      //  n ==> after nth char
 
+     IfDebug(cerr << "TTabCom::Complete() ..." << endl);
      assert( fpLoc != 0 );
+     assert( pListOfCandidates != 0 );
 
      Int_t     pos;          // position of first change
      const int loc = *fpLoc; // location where TAB was pressed
@@ -1259,8 +1274,7 @@ void TTabCom::CopyMatch( char dest[], const char localName[], const char appenda
           if( appendage ) strcpy( dest+strlen(localName), appendage );
      }
 }
-TTabCom::
-EContext_t TTabCom::DetermineContext() const
+TTabCom::EContext_t TTabCom::DetermineContext() const
 {
      // [private]
 
@@ -1485,6 +1499,9 @@ Int_t TTabCom::Hook( char* buf, int* pLoc )
                TClass* pClass;
                TString name = s3("^[_a-zA-Z][_a-zA-Z0-9]*"); // may be a class, object, or pointer
 
+               IfDebug(cerr << endl);
+               IfDebug(cerr << "name: " << '"' << name << '"' << endl);
+
                switch( context )
                {
                case kCXX_ScopeMember:    pClass = MakeClassFromClassName( name );        break;
@@ -1538,7 +1555,7 @@ Int_t TTabCom::Hook( char* buf, int* pLoc )
                     // "name" may now be the name of a class, object, or pointer
                }
                IfDebug(cerr << endl);
-               IfDebug(cerr << name << endl);
+               IfDebug(cerr << "name: " << '"' << name << '"' << endl);
                switch( context )
                {
                case kCXX_ScopeProto:       pClass = MakeClassFromClassName( name );        break;
@@ -1798,18 +1815,19 @@ TClass* TTabCom::MakeClassFromVarName( const char varName[], EContext_t& context
           return 0; //* RETURN *//
      }
 
-      /****************************************************************************************/
+     /*****************************************************************************************/
      /*                                                                                       */
      /*  this section is really ugly.                                                         */
      /*  and slow.                                                                            */
      /*  it could be made a lot better if there was some way to tell whether or not a given   */
      /*  variable is a pointer or a pointer to a pointer.                                     */
      /*                                                                                       */
-     /****************************************************************************************/
+     /*****************************************************************************************/
 
      TString className = DetermineClass( varName );
 
-     if( className.Length()<2 ) { // error, also protects against range error later: className[<0]
+     if( className.Length()<1 )
+     {
           // this will happen if "varName" is a fundamental type (as opposed to class type).
           // or a pointer to a pointer.
           // or a function pointer.
@@ -1821,7 +1839,6 @@ TClass* TTabCom::MakeClassFromVarName( const char varName[], EContext_t& context
 
      Bool_t varIsPointer = className[ className.Length()-1 ]=='*';
 
-     // flag & kNonPointer &&
      if( varIsPointer &&
          (context == kCXX_DirectMember ||
           context == kCXX_DirectProto     ))

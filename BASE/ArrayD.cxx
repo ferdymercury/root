@@ -1,22 +1,19 @@
+//*CMZ :  2.23/12 14/01/2000  10.23.42  by  Rene Brun
+//*CMZ :  2.23/11 22/12/99  11.07.34  by  Rene Brun
 //*CMZ :  1.03/06 27/10/97  03.23.58  by  Fons Rademakers
 //*-- Author :    Rene Brun   06/03/95
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -113,28 +110,34 @@ void TArrayD::AddAt(Double_t c, Int_t i)
 //______________________________________________________________________________
 void TArrayD::Set(Int_t n)
 {
-   // Set array size of TArrayD object to n doubles.
-   // If n<0 leave array unchanged.
+   // Set size of this array to n doubles.
+   // A new array is created, the old contents copied to the new array,
+   // then the old array is deleted.
 
    if (n < 0) return;
-   if (fArray && fN != n) {
-      delete [] fArray;
-      fArray = 0;
+   if (n != fN) {
+      Double_t *temp = fArray;
+      if (n != 0) {
+         fArray = new Double_t[n];
+         if (n < fN) memcpy(fArray,temp, n*sizeof(Double_t));
+         else {
+            memcpy(fArray,temp,fN*sizeof(Double_t));
+            for (Int_t i=fN;i<n;i++) fArray[i] = 0;
+         }
+      } else {
+        fArray = 0;
+      }
+      if (fN) delete [] temp;
+      fN = n;
    }
-   fN = n;
-   if (fN == 0) return;
-   if (!fArray) fArray = new Double_t[fN];
-   for (Int_t i = 0; i < fN; i++)
-      fArray[i] = 0;
 }
 
 //______________________________________________________________________________
 void TArrayD::Set(Int_t n, Double_t *array)
 {
-   // Set array size of TArrayD object to n doubles and copy array.
-   // If n<0 leave array unchanged.
+   // Set size of this array to n doubles and set the contents
 
-   if (n < 0) return;
+   if (n < 0 || array == 0) return;
    if (fArray && fN != n) {
       delete [] fArray;
       fArray = 0;
@@ -142,8 +145,7 @@ void TArrayD::Set(Int_t n, Double_t *array)
    fN = n;
    if (fN == 0) return;
    if (!fArray) fArray = new Double_t[fN];
-   for (Int_t i = 0; i < fN; i++)
-      fArray[i] = array[i];
+   memcpy(fArray,array, n*sizeof(Double_t));
 }
 
 //_______________________________________________________________________

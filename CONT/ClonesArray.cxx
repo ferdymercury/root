@@ -1,28 +1,25 @@
+//*CMZ :  2.23/12 26/01/2000  09.57.11  by  Rene Brun
+//*CMZ :  2.23/11 20/12/99  12.02.53  by  Rene Brun
+//*CMZ :  2.23/10 08/12/99  18.41.15  by  Fons Rademakers
+//*CMZ :  2.23/09 25/11/99  09.53.03  by  Rene Brun
+//*CMZ :  2.23/07 27/10/99  10.47.27  by  Fons Rademakers
+//*CMZ :  2.23/01 26/08/99  12.42.22  by  Rene Brun
 //*CMZ :  2.22/01 26/04/99  12.08.46  by  Rene Brun
 //*CMZ :  2.21/07 05/03/99  19.22.41  by  Rene Brun
 //*CMZ :  2.21/06 16/02/99  18.41.13  by  Fons Rademakers
-//*CMZ :  2.20/00 10/11/98  11.26.42  by  Fons Rademakers
-//*CMZ :  2.00/10 29/07/98  15.56.44  by  Fons Rademakers
-//*CMZ :  2.00/08 04/06/98  15.38.07  by  Fons Rademakers
-//*CMZ :  1.03/09 11/12/97  16.17.55  by  Rene Brun
 //*-- Author :    Rene Brun   11/02/96
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -83,7 +80,7 @@ TClonesArray::TClonesArray() : TObjArray()
 }
 
 //______________________________________________________________________________
-TClonesArray::TClonesArray(Text_t *classname, Int_t s, Bool_t) : TObjArray(s)
+TClonesArray::TClonesArray(const char *classname, Int_t s, Bool_t) : TObjArray(s)
 {
    // Create an array of clone objects of classname. The class must inherit from
    // TObject. If the class defines an own operator delete(), make sure that
@@ -230,7 +227,6 @@ void TClonesArray::ExpandCreate(Int_t n)
    // This routine is typically used to create a clonesarray into which
    // one can directly copy object data without going via the
    // "new (arr[i]) MyObj()" (i.e. the vtbl is already set correctly).
-   // This routine is used in the TTree mechanism.
 
    if (n < 0) {
       Error("ExpandCreate", "n must be positive (%d)", n);
@@ -246,27 +242,51 @@ void TClonesArray::ExpandCreate(Int_t n)
 
       fCont[i] = fKeep->fCont[i];
    }
-/*
- //this function is currently only called by TBranchClones::GetEntry
- //the following lines have been commented (not necessary for getEvent)
+
    for (i = n; i < fSize; i++)
       if (fKeep->fCont[i]) {
          if (TObject::GetObjectStat() && gObjectTable)
             gObjectTable->RemoveQuietly(fKeep->fCont[i]);
          ::operator delete(fKeep->fCont[i]);
          fKeep->fCont[i] = 0;
+         fCont[i] = 0;
       }
-*/
+
    fLast = n - 1;
    Changed();
 }
 
 //______________________________________________________________________________
-void TClonesArray::RemoveAt(Int_t idx)
+void TClonesArray::ExpandCreateFast(Int_t n)
+{
+   // Expand or shrink the array to n elements and create the clone
+   // objects by caling their default ctor. If n is less than the current size
+   // the array is shrinked and the allocated space is freed.
+   // This routine is typically used to create a clonesarray into which
+   // one can directly copy object data without going via the
+   // "new (arr[i]) MyObj()" (i.e. the vtbl is already set correctly).
+   // This is a simplified version of ExpandCreate used in the TTree mechanism.
+
+   if (n > fSize)
+      Expand(TMath::Max(n, GrowBy(fSize)));
+
+   Int_t i;
+   for (i = 0; i < n; i++) {
+      if (!fKeep->fCont[i])
+         fKeep->fCont[i] = (TObject*)fClass->New();
+
+      fCont[i] = fKeep->fCont[i];
+   }
+   fLast = n - 1;
+   Changed();
+}
+
+//______________________________________________________________________________
+TObject *TClonesArray::RemoveAt(Int_t idx)
 {
    // Remove object at index idx.
 
-   if (!BoundsOk("RemoveAt", idx)) return;
+   if (!BoundsOk("RemoveAt", idx)) return 0;
 
    int i = idx-fLowerBound;
 
@@ -280,9 +300,13 @@ void TClonesArray::RemoveAt(Int_t idx)
 
    if (fCont[i]) {
       fCont[i] = 0;
-      fLast = -2;
+      // recalculate array size
+      if (i == fLast)
+         do { fLast--; } while (fCont[fLast] == 0 && fLast >= 0);
       Changed();
    }
+
+   return 0;
 }
 
 //______________________________________________________________________________
@@ -305,7 +329,9 @@ TObject *TClonesArray::Remove(TObject *obj)
    }
 
    fCont[i] = 0;
-   fLast = -2;
+   // recalculate array size
+   if (i == fLast)
+      do { fLast--; } while (fCont[fLast] == 0 && fLast >= 0);
    Changed();
    return obj;
 }
@@ -343,7 +369,10 @@ void TClonesArray::Streamer(TBuffer &b)
    TString s;
 
    if (b.IsReading()) {
-      b.ReadVersion();   // Version_t v = b.ReadVersion();
+      Version_t v = b.ReadVersion();
+      if (v > 1) {
+         fName.Streamer(b);
+      }
       s.Streamer(b);
       TClass *cl = gROOT->GetClass(s.Data());
       b >> nobjects;
@@ -352,7 +381,9 @@ void TClonesArray::Streamer(TBuffer &b)
       b >> fLowerBound;
       if (fClass == 0 && fKeep == 0) {
          fClass = cl;
-         fKeep  = new TObjArray(nobjects);
+//         fKeep  = new TObjArray(nobjects);
+         fKeep  = new TObjArray(fSize);
+//         printf("clones streamer, nobjects=%d, fSize=%d\n",nobjects,fSize);
          Expand(nobjects);
       }
       if (cl != fClass) {
@@ -379,6 +410,7 @@ void TClonesArray::Streamer(TBuffer &b)
       Changed();
    } else {
       b.WriteVersion(TClonesArray::IsA());
+      fName.Streamer(b);
       s = fClass->GetName();
       s.Streamer(b);
       nobjects = GetEntriesFast();

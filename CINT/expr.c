@@ -1,5 +1,5 @@
-/*CMZ :  2.22/10 23/07/99  14.42.14  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   23/07/99*/
+/*CMZ :  2.23/10 10/12/99  17.59.59  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   10/12/99*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -9,15 +9,13 @@
  * Description:
  *  Parse C/C++ expression
  ************************************************************************
- * Copyright(c) 1991~1996  [hp] Hewlett Packard Japan, All rights reserved
- * Author                  Masaharu Goto (gotom@jpn.hp.com)
- * Copyright(c) 1995~1998  Masaharu Goto (MXJ02154@niftyserve.or.jp)
+ * Copyright(c) 1995~1999  Masaharu Goto (MXJ02154@niftyserve.or.jp)
  *
  * Permission to use, copy, modify and distribute this software and its
  * documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies and
  * that both that copyright notice and this permission notice appear
- * in supporting documentation.  Hewlett-Packard Japan Company makes no
+ * in supporting documentation.  The author makes no
  * representations about the suitability of this software for any
  * purpose.  It is provided "as is" without express or implied warranty.
  ************************************************************************/
@@ -102,6 +100,10 @@ char *exprwithspace;
       else if(len>=8&&strncmp(exprnospace,"delete[]",8)==0) {
 	G__getstream(exprwithspace ,&iin ,exprnospace,"\0");
 	G__delete_operator(exprnospace,1);
+#ifndef G__OLDIMPLEMENTATION1181
+	result = G__null;
+	goto deletereturn;
+#endif
       }
       else if(len>=6&&strncmp(exprnospace,"delete",6)==0) {
 	G__getstream(exprwithspace ,&iin ,exprnospace,"\0");
@@ -111,6 +113,10 @@ char *exprwithspace;
 	else {
 	  G__delete_operator(exprnospace,0);
 	}
+#ifndef G__OLDIMPLEMENTATION1181
+	result = G__null;
+	goto deletereturn;
+#endif
       }
       iin++;
       break;
@@ -148,7 +154,7 @@ char *exprwithspace;
   signal(SIGFPE,fpe);
   signal(SIGSEGV,segv);
 #ifdef SIGILL
-    ill = signal(SIGILL,G__error_handle);
+  signal(SIGILL,ill);
 #endif
 #ifdef SIGEMT
   signal(SIGEMT,emt);
@@ -157,6 +163,8 @@ char *exprwithspace;
   signal(SIGBUS,bus);
 #endif
 #endif
+
+  deletereturn:
 
   G__asm_exec = store_asm_exec;
 #ifndef G__OLDIMPLEMENTATION899
@@ -1549,7 +1557,12 @@ char *item;
     }
     /* undefined */
     if(known==0) {
-
+#ifndef G__OLDIMPLEMENTATION1173
+      if(strncmp(item,"__",2)==0) {
+	result3=G__getreserved(item+1,(void**)NULL,(void**)NULL);
+        if(result3.type) known = 1;
+      } else
+#endif
       if(G__GetSpecialObject && G__GetSpecialObject != G__getreserved) {
 #ifndef G__FONS81
 	/* append $ to object and try to find it again */
@@ -1564,9 +1577,11 @@ char *item;
 	}
 #endif
       }
+#ifdef G__OLDIMPLEMENTATION1173
       else if(strncmp(item,"__",2)==0) {
 	result3=G__getreserved(item+1,(void**)NULL,(void**)NULL);
       }
+#endif
 #ifdef G__PTR2MEMFUNC
       if(known==0&&result3.obj.i==0) {
 	known=G__getpointer2memberfunc(item,&result3);

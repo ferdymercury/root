@@ -1,3 +1,4 @@
+//*CMZ :  2.23/09 18/11/99  12.12.55  by  Rene Brun
 //*CMZ :  2.22/05 11/06/99  09.45.14  by  Rene Brun
 //*CMZ :  2.22/04 03/06/99  14.46.33  by  Rene Brun
 //*CMZ :  2.22/03 31/05/99  16.57.09  by  Rene Brun
@@ -129,7 +130,7 @@ char *TSpectrum::Background1(float *spectrum,int size,int number_of_iterations)
 /////////////////////////////////////////////////////////////////////////////
    int i,j;
    float a,b;
-   if (size <= 0) return "Wrong Parameters";
+   if (size <= 0) return (char*)"Wrong Parameters";
    float *working_space = new float[size];
    for(i=1;i<=number_of_iterations;i++) {
       for(j=i;j<size-i;j++) {
@@ -160,7 +161,7 @@ char *TSpectrum::Background2(float **spectrum,int sizex,int sizey,int number_of_
 //                                                                         //
 /////////////////////////////////////////////////////////////////////////////
 
-   if (sizex <=0 || sizey <= 0) return "Wrong parameters";
+   if (sizex <=0 || sizey <= 0) return (char*)"Wrong parameters";
        //   working_space-pointer to the working array
    float **working_space = new float* [sizex];
    int i,x,y;
@@ -219,7 +220,7 @@ char *TSpectrum::Deconvolution1(float *source,float *resp,int size,int number_of
 //                                                                         //
 /////////////////////////////////////////////////////////////////////////////
 
-   if (size <= 0) return "Wrong Parameters";
+   if (size <= 0) return (char*)"Wrong Parameters";
       //   working_space-pointer to the working vector
       //   (its size must be 6*size of source spectrum)
    double *working_space = new double[6*size];
@@ -367,7 +368,7 @@ char *TSpectrum::Deconvolution2(float** source,float** resp,int sizex,int sizey,
 //                                                                         //
 /////////////////////////////////////////////////////////////////////////////
 
-   if (sizex <=0 || sizey <= 0) return "Wrong parameters";
+   if (sizex <=0 || sizey <= 0) return (char*)"Wrong parameters";
       //   working_space-pointer to the working matrix
       //   (its size must be sizex*21*sizey of source spectrum)
    double **working_space = new double* [sizex];
@@ -1021,3 +1022,4 @@ Int_t TSpectrum::Search2(float **source,int sizex,int sizey,double sigma)
 
    fNPeaks = peak_index;
    return fNPeaks;
+}

@@ -1,3 +1,5 @@
+//*CMZ :  2.23/12 26/01/2000  10.08.58  by  Rene Brun
+//*CMZ :  2.23/07 24/10/99  18.28.14  by  Valery Fine(fine@mail.cern.ch)
 //*CMZ :  1.03/01 31/07/97  11.50.13  by  Valery Fine(fine@vxcern.cern.ch)
 //*-- Author :    Valery Fine(fine@vxcern.cern.ch)   26/08/96
 
@@ -170,12 +172,10 @@ void TGWin32StatusBar::SetStatusParts(TGWin32WindowsObject *win, Int_t *parts, I
   if (factor < 1 ) { // Scale all parts to fit 100% limit
     for (int i=0; i<nParts; fParts[i++] *= factor){;}
   }
-
 }
 
-
 //______________________________________________________________________________
-void TGWin32StatusBar::SetText(Text_t *text, Int_t npart, Int_t stype)
+void TGWin32StatusBar::SetText(const char *text, Int_t npart, Int_t stype)
 {   // Draw the text into the 'npart' part of the status bar
 
 int iPart = npart;
@@ -190,6 +190,5 @@ if (iPart < 0 || fnParts <= 0) return;
 // SBT_NOBORDERS        The text is drawn without borders.
 // SBT_OWNERDRAW        The text is drawn by the parent window.
 // SBT_POPOUT   The text is drawn with a border to appear higher than the plane of the window.
-
 
 }

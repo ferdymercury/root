@@ -1,5 +1,5 @@
-/*CMZ :  2.22/10 23/07/99  14.42.12  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   23/07/99*/
+/*CMZ :  2.23/10 10/12/99  17.59.57  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   10/12/99*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -9,15 +9,13 @@
  * Description:
  * Common header file for cint parser.
  ************************************************************************
- * Copyright(c) 1991~1996  [hp] Hewlett Packard Japan, All rights reserved
- * Author                  Masaharu Goto (gotom@jpn.hp.com)
- * Copyright(c) 1995~1998  Masaharu Goto (MXJ02154@niftyserve.or.jp)
+ * Copyright(c) 1995~1999  Masaharu Goto (MXJ02154@niftyserve.or.jp)
  *
  * Permission to use, copy, modify and distribute this software and its
  * documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies and
  * that both that copyright notice and this permission notice appear
- * in supporting documentation.  Hewlett-Packard Japan Company makes no
+ * in supporting documentation.  The author makes no
  * representations about the suitability of this software for any
  * purpose.  It is provided "as is" without express or implied warranty.
  ************************************************************************/
@@ -421,9 +419,15 @@ struct G__breakcontinue_list {
     if(store_asm_exec) G__asm_loopcompile=0;       \
     G__asm_exec = 0
 
+#ifndef G__OLDIMPLEMENTATION1155
+#define G__RECOVER_ASMENV                          \
+    G__asm_exec=store_asm_exec;                    \
+    G__asm_loopcompile=G__asm_loopcompile_mode
+#else
 #define G__RECOVER_ASMENV                          \
     G__asm_exec=store_asm_exec;                    \
     G__asm_loopcompile=store_asm_loopcompile
+#endif
 
 
 /*********************************************
@@ -598,6 +602,9 @@ struct G__Callfuncmacro{
   int line;
   fpos_t mfp_pos;
   struct G__Callfuncmacro *next;
+#ifndef G__OLDIMPLEMENTATION1179
+  short call_filenum;
+#endif
 } ;
 
 struct G__Deffuncmacro {
@@ -609,6 +616,9 @@ struct G__Deffuncmacro {
   struct G__Charlist def_para;
   struct G__Callfuncmacro callfuncmacro;
   struct G__Deffuncmacro *next;
+#ifndef G__OLDIMPLEMENTATION1179
+  short def_filenum;
+#endif
 } ;
 
 
@@ -626,6 +636,8 @@ struct G__Deffuncmacro {
 #define G__RSVD_LINE        -1
 #define G__RSVD_FILE        -2
 #define G__RSVD_ARG         -3
+#define G__RSVD_DATE        -4
+#define G__RSVD_TIME        -5
 
 /**************************************************************************
 * preprocessed file keystring list
@@ -754,6 +766,10 @@ typedef unsigned long G__UINT32 ;
 #endif
 #endif
 
+#ifndef G__OLDIMPLEMENTATION1207
+typedef void (*G__DLLINIT)();
+#endif
+
 struct G__filetable {
   FILE *fp;
   int hash;
@@ -765,6 +781,10 @@ struct G__filetable {
   G__UINT32 security;
 #ifndef G__OLDIMPLEMENTATION952
   int included_from; /* filenum of the file which first include this one */
+#endif
+#ifndef G__OLDIMPLEMENTATION1207
+  int ispermanentsl;
+  G__DLLINIT initsl;
 #endif
 };
 

@@ -1,5 +1,5 @@
-//*CMZ :  2.22/10 23/07/99  14.42.21  by  Masaharu Goto
-//*-- Author :    Masaharu Goto   23/07/99
+//*CMZ :  2.23/10 10/12/99  18.00.08  by  Masaharu Goto
+//*-- Author :    Masaharu Goto   10/12/99
 /* /% C++ %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -9,15 +9,14 @@
  * Description:
  *  Extended Run Time Type Identification API
  ************************************************************************
- * Copyright(c) 1991~1996  [hp] Hewlett Packard Japan, All rights reserved
- * Author                  Masaharu Goto (gotom@jpn.hp.com)
- * Copyright(c) 1995~1998  Masaharu Goto (MXJ02154@niftyserve.or.jp)
+ * Author                  Masaharu Goto
+ * Copyright(c) 1995~1999  Masaharu Goto (MXJ02154@niftyserve.or.jp)
  *
  * Permission to use, copy, modify and distribute this software and its
  * documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies and
  * that both that copyright notice and this permission notice appear
- * in supporting documentation.  Hewlett-Packard Japan Company makes no
+ * in supporting documentation.  The author makes no
  * representations about the suitability of this software for any
  * purpose.  It is provided "as is" without express or implied warranty.
  ************************************************************************/
@@ -60,8 +59,16 @@ void G__DataMemberInfo::Init(long handlein,long indexin
   if(handlein) {
     handle = handlein;
     index = indexin;
-    if(belongingclassin->IsValid()) belongingclass = belongingclassin;
-    else                belongingclass=(G__ClassInfo*)NULL;
+    if(
+#ifndef G__OLDIMPLEMENTATION1163
+       belongingclassin &&
+#endif
+       belongingclassin->IsValid()) {
+      belongingclass = belongingclassin;
+    }
+    else {
+      belongingclass=(G__ClassInfo*)NULL;
+    }
 
     /* Set type */
     struct G__var_array *var;
@@ -70,9 +77,16 @@ void G__DataMemberInfo::Init(long handlein,long indexin
     type.tagnum=var->p_tagtable[index];
     type.typenum=var->p_typetable[index];
     type.reftype=var->reftype[index];
+#ifndef G__OLDIMPLEMENTATION1227
+    type.class_property=0;
+#endif
 #ifndef G__OLDIMPLEMENTATION401
     type.isconst=var->constvar[index];
 #endif
+  }
+  else {
+    handle=handlein;
+    index = -1;
   }
 }
 ///////////////////////////////////////////////////////////////////////////
@@ -225,6 +239,9 @@ int G__DataMemberInfo::Next()
       type.tagnum=var->p_tagtable[index];
       type.typenum=var->p_typetable[index];
       type.reftype=var->reftype[index];
+#ifndef G__OLDIMPLEMENTATION1227
+      type.class_property=0;
+#endif
 #ifndef G__OLDIMPLEMENTATION401
       type.isconst=var->constvar[index];
 #endif
@@ -255,6 +272,8 @@ const char* G__DataMemberInfo::FileName() {
     return((char*)NULL);
   }
 #else
+  fprintf(G__serr,"Warning: G__DataMemberInfo::Filename() not supported in this configuration. define G__VARIABLEFPOS macro in platform dependency file and recompile cint");
+  G__printlinenum();
   return((char*)NULL);
 #endif
 }
@@ -275,6 +294,8 @@ int G__DataMemberInfo::LineNumber() {
     return(-1);
   }
 #else
+  fprintf(G__serr,"Warning: G__DataMemberInfo::LineNumber() not supported in this configuration. define G__VARIABLEFPOS macro in platform dependency file and recompile cint");
+  G__printlinenum();
   return(-1);
 #endif
 }

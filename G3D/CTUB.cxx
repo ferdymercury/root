@@ -1,22 +1,19 @@
+//*CMZ :  2.23/12 26/01/2000  09.24.05  by  Rene Brun
+//*CMZ :  2.23/09 05/11/99  11.19.21  by  Rene Brun
 //*CMZ :  1.01/07 17/04/99  07.50.09  by  Rene Brun
 //*-- Author :    Rene Brun   26/06/97
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 #include "TCTUB.h"
@@ -24,7 +21,7 @@
 ClassImp(TCTUB)
 
 //______________________________________________________________________________
-// Begin_Html <P ALIGN=CENTER> <IMG SRC="gif/CTUB.gif"> </P> End_Html
+// Begin_Html <P ALIGN=CENTER> <IMG SRC="gif/ctub.gif"> </P> End_Html
 //                                                                        //
 // 'CTUB' is a cut  tube with 11 parameters.  The  first 5 parameters     //
 //        are the same  as for the TUBS.  The  remaining 6 parameters     //
@@ -58,7 +55,7 @@ TCTUB::TCTUB()
 
 
 //______________________________________________________________________________
-TCTUB::TCTUB(Text_t *name, Text_t *title, Text_t *material, Float_t rmin,
+TCTUB::TCTUB(const char *name, const char *title, const char *material, Float_t rmin,
              Float_t rmax, Float_t dz, Float_t phi1, Float_t phi2,
              Float_t coslx, Float_t cosly, Float_t coslz,
              Float_t coshx, Float_t coshy, Float_t coshz)
@@ -73,9 +70,23 @@ TCTUB::TCTUB(Text_t *name, Text_t *title, Text_t *material, Float_t rmin,
     fCosHigh[0] = coshx;
     fCosHigh[1] = coshy;
     fCosHigh[2] = coshz;
-
+    TMath::Normalize(fCosLow);
+    TMath::Normalize(fCosHigh);
 }
 
+//______________________________________________________________________________
+TCTUB::TCTUB(const char *name, const char *title, const char *material, Float_t rmin,
+             Float_t rmax, Float_t dz, Float_t phi1, Float_t phi2,
+             Float_t *lowNormal, Float_t *highNormal)
+      : TTUBS(name,title,material,rmin,rmax,dz,phi1,phi2)
+{
+//*-*-*-*-*-*-*-*-*-*-*-*-*CTUB shape normal constructor*-*-*-*-*-*-*-*-*-*-*-*-*
+//*-*                      =============================
+    memcpy(fCosLow, lowNormal, sizeof(fCosLow) );
+    memcpy(fCosHigh,highNormal,sizeof(fCosHigh));
+    TMath::Normalize(fCosLow);
+    TMath::Normalize(fCosHigh);
+}
 
 //______________________________________________________________________________
 TCTUB::~TCTUB()
@@ -83,5 +94,57 @@ TCTUB::~TCTUB()
 //*-*-*-*-*-*-*-*-*-*-*-*-*CTUB shape default destructor*-*-*-*-*-*-*-*-*-*-*-*-*
 //*-*                      =============================
 
+}
+
+//______________________________________________________________________________
+static Float_t Product(const Float_t *x, const Float_t *y)
+{
+ Double_t s = 0;
+ for (int i= 0 ; i <2 ; i++ ) s += x[i]*y[i];
+ return Float_t(s);
+}
+//______________________________________________________________________________
+void TCTUB::SetPoints(Float_t *buff)
+{
+//*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*Create TUBS points*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+//*-*                            ==================
+
+    Float_t dz;
+    Int_t j, n;
+
+    n = GetNumberOfDivisions()+1;
+
+    dz   = TTUBE::fDz;
+
+    if (buff) {
+        Int_t indx = 0;
+//*-* We've to checxk whether the table does exist and create it
+//*-* since fCoTab/fSiTab are not saved with any TShape::Streamer function
+
+        if (!fCoTab)   MakeTableOfCoSin();
+
+        for (j = 0; j < n; j++) {
+            buff[indx+6*n] = buff[indx] = fRmin * fCoTab[j];
+            indx++;
+            buff[indx+6*n] = buff[indx] = fAspectRatio*fRmin * fSiTab[j];
+            indx++;
+            buff[indx+6*n] = dz;
+            buff[indx+6*n]-= Product(&buff[indx+6*n-2],fCosHigh)/fCosHigh[2];
+            buff[indx]     =-dz;
+            buff[indx]    -= Product(&buff[indx-2],fCosLow)/fCosLow[2];
+            indx++;
+        }
+        for (j = 0; j < n; j++) {
+            buff[indx+6*n] = buff[indx] = fRmax * fCoTab[j];
+            indx++;
+            buff[indx+6*n] = buff[indx] = fAspectRatio*fRmax * fSiTab[j];
+            indx++;
+            buff[indx+6*n] = dz;
+            buff[indx+6*n]-= Product(&buff[indx+6*n-2],fCosHigh)/fCosHigh[2];
+            buff[indx]     =-dz;
+            buff[indx]    -= Product(&buff[indx-2],fCosLow)/fCosLow[2];
+            indx++;
+        }
+    }
 }
 

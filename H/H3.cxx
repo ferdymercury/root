@@ -1,33 +1,31 @@
+//*CMZ :  2.23/12 26/01/2000  09.53.04  by  Rene Brun
+//*CMZ :  2.23/09 09/11/99  11.52.10  by  Rene Brun
+//*CMZ :  2.23/07 21/10/99  23.43.24  by  Rene Brun
+//*CMZ :  2.23/04 13/10/99  17.56.10  by  Rene Brun
 //*CMZ :  2.21/07 01/03/99  10.09.26  by  Rene Brun
 //*CMZ :  2.21/05 10/02/99  09.31.56  by  Rene Brun
 //*CMZ :  2.21/01 14/01/99  12.47.35  by  Rene Brun
 //*CMZ :  2.00/12 07/10/98  11.35.46  by  Rene Brun
-//*CMZ :  1.03/09 09/12/97  20.10.38  by  Fons Rademakers
 //*-- Author :    Rene Brun   27/10/95
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
+#include "TROOT.h"
+#include "TFile.h"
 #include "Strlen.h"
 #include "TH3.h"
-#include "X3DBuffer.h"
-
-R__EXTERN Size3D gSize3D;
+#include "TVirtualPad.h"
 
 ClassImp(TH3)
 
@@ -51,19 +49,36 @@ ClassImp(TH3)
 //______________________________________________________________________________
 TH3::TH3()
 {
-
 }
 
 //______________________________________________________________________________
 TH3::~TH3()
 {
-
 }
 
 //______________________________________________________________________________
 void TH3::Copy30(TH3 &)
 {
 }
+
+//______________________________________________________________________________
+void TH3::Streamer(TBuffer &R__b)
+{
+   // Stream an object of class TH3.
+
+   UInt_t R__s, R__c;
+   if (R__b.IsReading()) {
+      if (gFile && gFile->GetVersion() < 22300) return;
+      Version_t R__v = R__b.ReadVersion(&R__s, &R__c); if (R__v) { }
+      TAtt3D::Streamer(R__b);
+      R__b.CheckByteCount(R__s, R__c, TH3::IsA());
+   } else {
+      R__c = R__b.WriteVersion(TH3::IsA(), kTRUE);
+      TAtt3D::Streamer(R__b);
+      R__b.SetByteCount(R__c, kTRUE);
+   }
+}
+
 
 ClassImp(TH3C)
 
@@ -82,7 +97,7 @@ TH3C::~TH3C()
 }
 
 //______________________________________________________________________________
-TH3C::TH3C(const Text_t *name,const Text_t *title,Int_t nbinsx,Axis_t xlow,Axis_t xup
+TH3C::TH3C(const char *name,const char *title,Int_t nbinsx,Axis_t xlow,Axis_t xup
                                      ,Int_t nbinsy,Axis_t ylow,Axis_t yup
                                      ,Int_t nbinsz,Axis_t zlow,Axis_t zup)
      :TH1C(3,name,title,nbinsx,xlow,xup),
@@ -100,7 +115,7 @@ TH3C::TH3C(const Text_t *name,const Text_t *title,Int_t nbinsx,Axis_t xlow,Axis_
 }
 
 //______________________________________________________________________________
-TH3C::TH3C(const Text_t *name,const Text_t *title,Int_t nbinsx,Axis_t *xbins
+TH3C::TH3C(const char *name,const char *title,Int_t nbinsx,Axis_t *xbins
                                      ,Int_t nbinsy,Axis_t *ybins
                                      ,Int_t nbinsz,Axis_t *zbins)
      :TH1C(3,name,title,nbinsx,xbins),
@@ -132,6 +147,19 @@ void TH3C::Copy(TObject &newth3)
 
    TH1C::Copy(newth3);
    TH3::Copy30((TH3C&)newth3);
+}
+
+//______________________________________________________________________________
+TH1 *TH3C::DrawCopy(Option_t *option)
+{
+   TString opt = option;
+   opt.ToLower();
+   if (gPad && !opt.Contains("same")) gPad->Clear();
+   TH3C *newth3 = (TH3C*)Clone();
+   newth3->SetDirectory(0);
+   newth3->SetBit(kCanDelete);
+   newth3->AppendPad(option);
+   return newth3;
 }
 
 //______________________________________________________________________________
@@ -238,7 +266,7 @@ TH3S::~TH3S()
 }
 
 //______________________________________________________________________________
-TH3S::TH3S(const Text_t *name,const Text_t *title,Int_t nbinsx,Axis_t xlow,Axis_t xup
+TH3S::TH3S(const char *name,const char *title,Int_t nbinsx,Axis_t xlow,Axis_t xup
                                      ,Int_t nbinsy,Axis_t ylow,Axis_t yup
                                      ,Int_t nbinsz,Axis_t zlow,Axis_t zup)
      :TH1S(3,name,title,nbinsx,xlow,xup),
@@ -253,7 +281,7 @@ TH3S::TH3S(const Text_t *name,const Text_t *title,Int_t nbinsx,Axis_t xlow,Axis_
 }
 
 //______________________________________________________________________________
-TH3S::TH3S(const Text_t *name,const Text_t *title,Int_t nbinsx,Axis_t *xbins
+TH3S::TH3S(const char *name,const char *title,Int_t nbinsx,Axis_t *xbins
                                      ,Int_t nbinsy,Axis_t *ybins
                                      ,Int_t nbinsz,Axis_t *zbins)
      :TH1S(3,name,title,nbinsx,xbins),
@@ -281,6 +309,19 @@ void TH3S::Copy(TObject &newth3)
 
    TH1S::Copy(newth3);
    TH3::Copy30((TH3S&)newth3);
+}
+
+//______________________________________________________________________________
+TH1 *TH3S::DrawCopy(Option_t *option)
+{
+   TString opt = option;
+   opt.ToLower();
+   if (gPad && !opt.Contains("same")) gPad->Clear();
+   TH3S *newth3 = (TH3S*)Clone();
+   newth3->SetDirectory(0);
+   newth3->SetBit(kCanDelete);
+   newth3->AppendPad(option);
+   return newth3;
 }
 
 
@@ -388,7 +429,7 @@ TH3F::~TH3F()
 }
 
 //______________________________________________________________________________
-TH3F::TH3F(const Text_t *name,const Text_t *title,Int_t nbinsx,Axis_t xlow,Axis_t xup
+TH3F::TH3F(const char *name,const char *title,Int_t nbinsx,Axis_t xlow,Axis_t xup
                                      ,Int_t nbinsy,Axis_t ylow,Axis_t yup
                                      ,Int_t nbinsz,Axis_t zlow,Axis_t zup)
      :TH1F(3,name,title,nbinsx,xlow,xup),
@@ -403,7 +444,7 @@ TH3F::TH3F(const Text_t *name,const Text_t *title,Int_t nbinsx,Axis_t xlow,Axis_
 }
 
 //______________________________________________________________________________
-TH3F::TH3F(const Text_t *name,const Text_t *title,Int_t nbinsx,Axis_t *xbins
+TH3F::TH3F(const char *name,const char *title,Int_t nbinsx,Axis_t *xbins
                                      ,Int_t nbinsy,Axis_t *ybins
                                      ,Int_t nbinsz,Axis_t *zbins)
      :TH1F(3,name,title,nbinsx,xbins),
@@ -431,6 +472,19 @@ void TH3F::Copy(TObject &newth3)
 
    TH1F::Copy(newth3);
    TH3::Copy30((TH3F&)newth3);
+}
+
+//______________________________________________________________________________
+TH1 *TH3F::DrawCopy(Option_t *option)
+{
+   TString opt = option;
+   opt.ToLower();
+   if (gPad && !opt.Contains("same")) gPad->Clear();
+   TH3F *newth3 = (TH3F*)Clone();
+   newth3->SetDirectory(0);
+   newth3->SetBit(kCanDelete);
+   newth3->AppendPad(option);
+   return newth3;
 }
 
 //______________________________________________________________________________
@@ -474,34 +528,13 @@ void TH3F::Sizeof3D() const
 //*-*-*-*-*-*-*Return total size of this 3-D shape with its attributes*-*-*
 //*-*          ==========================================================
 
-    if (GetDrawOption() && strstr(GetDrawOption(),"box")) {
-       Int_t ix,iy,iz;
-       Int_t nbinsx = fXaxis.GetNbins();
-       Int_t nbinsy = fYaxis.GetNbins();
-       Int_t nbinsz = fZaxis.GetNbins();
-       Int_t ncells = 0;
-       for (ix=1;ix<=nbinsx;ix++) {
-          for (iy=1;iy<=nbinsy;iy++) {
-             for (iz=1;iz<=nbinsz;iz++) {
-                if (((TH3F*)this)->GetBinContent(((TH3F*)this)->GetBin(ix,iy,iz)) != 0)
-                    ncells++;
-             }
-          }
-       }
-       gSize3D.numPoints += 8*ncells;
-       gSize3D.numSegs   += 12*ncells;
-       gSize3D.numPolys  += 6*ncells;
-       return;
-    }
-
-    Int_t mode;
-    if (fEntries > 10000) mode = 1;         // One line marker    '-'
-    else if (fEntries > 3000) mode = 2;     // Two lines marker   '+'
-    else mode = 3;                          // Three lines marker '*'
-
-    gSize3D.numSegs   += Int_t(fEntries)*mode;
-    gSize3D.numPoints += Int_t(fEntries)*mode*2;
-    gSize3D.numPolys  += 0;
+   char *cmd;
+   if (GetDrawOption() && strstr(GetDrawOption(),"box")) {
+      cmd = Form("TMarker3DBox::SizeofH3((TH1 *)0x%lx);",(Long_t)this);
+   } else {
+      cmd = Form("TPolyMarker3D::SizeofH3((TH1 *)0x%lx);",(Long_t)this);
+   }
+   gROOT->ProcessLine(cmd);
 }
 
 //______________________________________________________________________________
@@ -573,7 +606,7 @@ TH3D::~TH3D()
 }
 
 //______________________________________________________________________________
-TH3D::TH3D(const Text_t *name,const Text_t *title,Int_t nbinsx,Axis_t xlow,Axis_t xup
+TH3D::TH3D(const char *name,const char *title,Int_t nbinsx,Axis_t xlow,Axis_t xup
                                      ,Int_t nbinsy,Axis_t ylow,Axis_t yup
                                      ,Int_t nbinsz,Axis_t zlow,Axis_t zup)
      :TH1D(3,name,title,nbinsx,xlow,xup),
@@ -588,7 +621,7 @@ TH3D::TH3D(const Text_t *name,const Text_t *title,Int_t nbinsx,Axis_t xlow,Axis_
 }
 
 //______________________________________________________________________________
-TH3D::TH3D(const Text_t *name,const Text_t *title,Int_t nbinsx,Axis_t *xbins
+TH3D::TH3D(const char *name,const char *title,Int_t nbinsx,Axis_t *xbins
                                      ,Int_t nbinsy,Axis_t *ybins
                                      ,Int_t nbinsz,Axis_t *zbins)
      :TH1D(3,name,title,nbinsx,xbins),
@@ -616,6 +649,19 @@ void TH3D::Copy(TObject &newth3)
 
    TH1D::Copy(newth3);
    TH3::Copy30((TH3D&)newth3);
+}
+
+//______________________________________________________________________________
+TH1 *TH3D::DrawCopy(Option_t *option)
+{
+   TString opt = option;
+   opt.ToLower();
+   if (gPad && !opt.Contains("same")) gPad->Clear();
+   TH3D *newth3 = (TH3D*)Clone();
+   newth3->SetDirectory(0);
+   newth3->SetBit(kCanDelete);
+   newth3->AppendPad(option);
+   return newth3;
 }
 
 //______________________________________________________________________________

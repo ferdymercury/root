@@ -1,3 +1,4 @@
+//*CMZ :  2.23/12 26/01/2000  09.24.07  by  Rene Brun
 //*CMZ :  1.03/09 09/12/97  16.15.27  by  Fons Rademakers
 //*-- Author :    Rene Brun   01/07/96
 
@@ -31,9 +32,9 @@ private:
 
 public:
    TGroupButton();
-   TGroupButton(const Text_t *groupname, const Text_t *title, const Text_t *method, Coord_t x1, Coord_t y1,Coord_t x2 ,Coord_t y2);
+   TGroupButton(const char *groupname, const char *title, const char *method, Coord_t x1, Coord_t y1,Coord_t x2 ,Coord_t y2);
    virtual ~TGroupButton();
-   virtual void  DisplayColorTable(const Text_t *action, Float_t x0, Float_t y0, Float_t wc, Float_t hc);
+   virtual void  DisplayColorTable(const char *action, Float_t x0, Float_t y0, Float_t wc, Float_t hc);
    virtual void  ExecuteAction();
    virtual void  ExecuteEvent(Int_t event, Int_t px, Int_t py);
    virtual void  SavePrimitive(ofstream &out, Option_t *option);

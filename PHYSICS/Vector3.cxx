@@ -1,7 +1,16 @@
+//*CMZ :  2.23/12 28/01/2000  19.17.14  by  Rene Brun
+//*CMZ :  2.23/05 20/10/99  17.05.01  by  Rene Brun
+//*CMZ :  2.23/04 11/10/99  08.55.31  by  Rene Brun
+//*CMZ :  2.23/00 12/08/99  14.15.53  by  Rene Brun
 //*CMZ :  2.22/09 12/07/99  18.44.02  by  Rene Brun
 //*CMZ :  2.22/06 19/06/99  09.17.09  by  Peter Malzacher
 //*CMZ :  2.21/06 15/02/99  09.36.40  by  Rene Brun
 //*-- Author :    Pasha Murat, Peter Malzacher   12/02/99
+//    Aug 11 1999: added Pt == 0 guard to Eta()
+//    Oct  8 1999: changed Warning to Error and
+//                 return fX in Double_t & operator()
+//    Oct 20 1999: Bug fix: sign in PseudoRapidity
+//                 Warning-> Error in Double_t operator()
 //______________________________________________________________________________
 //*-*-*-*-*-*-*-*-*-*-*-*The Physics Vector package *-*-*-*-*-*-*-*-*-*-*-*
 //*-*                    ==========================                       *
@@ -184,7 +193,7 @@ Double_t TVector3::operator () (int i) const {
   case 2:
     return fZ;
   default:
-    Warning("operator()(i)", "bad index (%d)",i);
+    Error("operator()(i)", "bad index (%d) returning 0",i);
   }
   return 0.;
 }
@@ -198,11 +207,9 @@ Double_t & TVector3::operator () (int i) {
   case 2:
     return fZ;
   default:
-    Warning("operator()(i)", "bad index (%d)",i);
+    Error("operator()(i)", "bad index (%d) returning &fX",i);
   }
-  Double_t dummy;
-  Double_t & rdummy = dummy;
-  return rdummy;
+  return fX;
 }
 
 
@@ -264,8 +271,37 @@ void TVector3::RotateUz(const TVector3& NewUzVector) {
 }
 
 Double_t TVector3::PseudoRapidity() const {
-  Double_t m = Mag();
-  return 0.5*log( (m+fZ)/(m-fZ) );
+  //Double_t m = Mag();
+  //return 0.5*log( (m+fZ)/(m-fZ) );
+  // guard against Pt=0
+  double cosTheta = CosTheta();
+  if (cosTheta*cosTheta < 1) return -0.5* TMath::Log( (1.0-cosTheta)/(1.0+cosTheta) );
+  Warning("PseudoRapidity","transvers momentum = 0! return +/- 10e10");
+  if (fZ > 0) return 10e10;
+  else        return -10e10;
+}
+
+
+//______________________________________________________________________________
+void TVector3::Streamer(TBuffer &R__b)
+{
+   // Stream an object of class TVector3.
+
+   UInt_t R__s, R__c;
+   if (R__b.IsReading()) {
+      Version_t R__v = R__b.ReadVersion(&R__s, &R__c);
+      if (R__v < 2) TObject::Streamer(R__b);
+      R__b >> fX;
+      R__b >> fY;
+      R__b >> fZ;
+      R__b.CheckByteCount(R__s, R__c, TVector3::IsA());
+   } else {
+      R__c = R__b.WriteVersion(TVector3::IsA(), kTRUE);
+      R__b << fX;
+      R__b << fY;
+      R__b << fZ;
+      R__b.SetByteCount(R__c, kTRUE);
+   }
 }
 
 TVector3 operator + (const TVector3 & a, const TVector3 & b) {

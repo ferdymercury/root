@@ -1,0 +1,38 @@
+*CMZ :  2.23/10 09/12/99  08.31.39  by  Rene Brun
+*CMZ :  2.23/09 19/11/99  18.31.59  by  Fons Rademakers
+*CMZ :  2.23/07 22/10/99  16.51.43  by  Fons Rademakers
+*-- Author :    Dave Morrison   22/10/99
+# Makefile of ROOT for Solaris with CC 5.0
+
+include ../Makefile.config
+
+PLATFORM      = solaris
+
+CXX           = /opt/WS5.0/bin/CC
+CC            = /opt/WS5.0/bin/cc
+CXXFLAGS      = -KPIC -I/usr/openwin/include -D__SunOS_5_6 -library=iostream,no%Cstd \
+                 $(EXTRA_CXXFLAGS)
+CFLAGS        = -KPIC -I/usr/openwin/include $(EXTRA_CFLAGS)
+CINTCXXFLAGS  = -KPIC -DG__REGEXP1 -DG__UNIX -DG__OSFDLL $(EXTRA_CXXFLAGS) \
+                -DG__SHAREDLIB -DG__ROOT -DG__REDIRECTIO -library=iostream,no%Cstd
+CINTCFLAGS    = -KPIC -DG__REGEXP1 -DG__UNIX -DG__OSFDLL $(EXTRA_CFLAGS) \
+                -DG__SHAREDLIB -DG__ROOT -DG__REDIRECTIO
+OPT           = -O
+NOOPT         =
+LD            = $(CXX)
+LDFLAGS       = $(OPT) -library=iostream,no%Cstd $(EXTRA_LDFLAGS)
+SOFLAGS       = -G
+SOEXT         = so
+SYSLIBS       = -lm -ldl -lnsl -lsocket
+XLIBS         = ../lib/libXpm.a -L/usr/openwin/lib -lX11
+CILIBS        = -lm -ltermcap -ldl
+
+
+##### MACROS and TARGETS #####
+
+include Make-macros
+
+
+##### DEPENDENCIES #####
+
+include Make-depend

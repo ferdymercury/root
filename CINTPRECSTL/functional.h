@@ -1,9 +1,9 @@
-/*CMZ :  2.22/10 23/07/99  14.42.33  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   23/07/99*/
+/*CMZ :  2.23/10 10/12/99  18.00.24  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   10/12/99*/
 // lib/prec_stl/functional
 
-#ifndef PREC_STL_FUNCTIONAL
-#define PREC_STL_FUNCTIONAL
+#pragma ifndef PREC_STL_FUNCTIONAL
+#pragma define PREC_STL_FUNCTIONAL
 #pragma link off global PREC_STL_FUNCTIONAL;
 #pragma link C++ nestedtypedef;
 #pragma link C++ nestedclass;
@@ -222,4 +222,4 @@ template<class S, class T, class A>
     mem_fun1_ref_t<S,T,A> mem_fun1_ref(S (T::*f)(A));
 #endif
 
-#endif
+#pragma endif

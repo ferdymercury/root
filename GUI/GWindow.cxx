@@ -1,23 +1,19 @@
+//*CMZ :  2.23/02 02/09/99  15.54.27  by  Rene Brun
 //*CMZ :  2.00/13 28/10/98  11.14.52  by  Fons Rademakers
 //*CMZ :  2.00/00 16/02/98  02.36.04  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   28/12/97
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 //*CMZ :  2.00/00 16/02/98  00.17.08  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   27/12/97
@@ -58,7 +54,7 @@ TGWindow::TGWindow(const TGWindow *p, Int_t x, Int_t y, UInt_t w, UInt_t h,
    if (p) {
       fClient = p->fClient;
       fParent = p;
-      fId = gGXW->CreateWindow(fParent->fId, x, y,
+      fId = gVirtualX->CreateWindow(fParent->fId, x, y,
                                TMath::Max(w, (UInt_t) 1),
                                TMath::Max(h, (UInt_t) 1), border,
     			       depth, clss, visual, attr);
@@ -94,7 +90,7 @@ void TGWindow::Move(Int_t x, Int_t y)
 {
    // Move the window.
 
-   gGXW->MoveWindow(fId, x, y);
+   gVirtualX->MoveWindow(fId, x, y);
 }
 
 //______________________________________________________________________________
@@ -102,7 +98,7 @@ void TGWindow::Resize(UInt_t w, UInt_t h)
 {
    // Resize the window.
 
-   gGXW->ResizeWindow(fId, TMath::Max(w, (UInt_t)1), TMath::Max(h, (UInt_t)1));
+   gVirtualX->ResizeWindow(fId, TMath::Max(w, (UInt_t)1), TMath::Max(h, (UInt_t)1));
 }
 
 //______________________________________________________________________________
@@ -110,7 +106,7 @@ void TGWindow::MoveResize(Int_t x, Int_t y, UInt_t w, UInt_t h)
 {
    // Move and resize the window.
 
-   gGXW->MoveResizeWindow(fId, x, y, TMath::Max(w, (UInt_t)1), TMath::Max(h, (UInt_t)1));
+   gVirtualX->MoveResizeWindow(fId, x, y, TMath::Max(w, (UInt_t)1), TMath::Max(h, (UInt_t)1));
 }
 
 //______________________________________________________________________________
@@ -120,6 +116,6 @@ Bool_t TGWindow::IsMapped()
 
    WindowAttributes_t attr;
 
-   gGXW->GetWindowAttributes(fId, attr);
+   gVirtualX->GetWindowAttributes(fId, attr);
    return (attr.fMapState != kIsUnmapped);
 }

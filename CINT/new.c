@@ -1,5 +1,5 @@
-/*CMZ :  2.22/10 23/07/99  14.42.16  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   23/07/99*/
+/*CMZ :  2.23/10 10/12/99  18.00.02  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   10/12/99*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -9,15 +9,13 @@
  * Description:
  *  new delete
  ************************************************************************
- * Copyright(c) 1991~1996  [hp] Hewlett Packard Japan, All rights reserved
- * Author                  Masaharu Goto (gotom@jpn.hp.com)
- * Copyright(c) 1995~1998  Masaharu Goto (MXJ02154@niftyserve.or.jp)
+ * Copyright(c) 1995~1999  Masaharu Goto (MXJ02154@niftyserve.or.jp)
  *
  * Permission to use, copy, modify and distribute this software and its
  * documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies and
  * that both that copyright notice and this permission notice appear
- * in supporting documentation.  Hewlett-Packard Japan Company makes no
+ * in supporting documentation.  The author makes no
  * representations about the suitability of this software for any
  * purpose.  It is provided "as is" without express or implied warranty.
  ************************************************************************/
@@ -74,6 +72,9 @@ char *expression;
 #endif
 #ifndef G__OLDIMPLEMENTATION1052
   int typenum,tagnum;
+#endif
+#ifndef G__OLDIMPLEMENTATION1157
+  int ld_flag = 0 ;
 #endif
 
   G__CHECK(G__SECURE_MALLOC,1,return(G__null));
@@ -149,7 +150,11 @@ char *expression;
       G__asm_stack[G__asm_dt].type='i';
       G__asm_stack[G__asm_dt].tagnum= -1;
       G__asm_stack[G__asm_dt].typenum= -1;
+#ifndef G__OLDIMPLEMENTATION1157
+      ld_flag = 1 ;
+#else
       G__inc_cp_asm(2,1);
+#endif
     }
 #endif
     if(initializer) {
@@ -191,6 +196,8 @@ char *expression;
 #ifndef G__OLDIMPLEMENTATION1040
   result.ref=0;
 #endif
+
+#ifdef G__OLDIMPLEMENTATION1157
 #ifdef G__ASM
   if(G__asm_noverflow) {
 #ifdef G__ASM_DBG
@@ -200,6 +207,7 @@ char *expression;
     G__inc_cp_asm(1,0);
   }
 #endif
+#endif /* 1157 */
 
   /******************************************************
    * pointer type idendification
@@ -261,6 +269,30 @@ char *expression;
 #ifndef G__OLDIMPLEMENTATION683
   if(ispointer) var_type = toupper(var_type);
 #endif
+
+#ifndef G__OLDIMPLEMENTATION1157
+#ifdef G__ASM
+  if(G__asm_noverflow) {
+    if(ld_flag) {
+      if(-1==G__tagnum || G__CPPLINK!=G__struct.iscpplink[G__tagnum]
+	 || ispointer || isupper(var_type)) {
+	/* increment for LD 1, otherwise, cancel LD 1 */
+	G__inc_cp_asm(2,1);
+      }
+      else {
+#ifdef G__ASM_DBG
+	if(G__asm_dbg) fprintf(G__serr,"Cancel LD 1\n");
+#endif
+      }
+    }
+#ifdef G__ASM_DBG
+    if(G__asm_dbg) fprintf(G__serr,"%3x: SETMEMFUNCENV\n",G__asm_cp);
+#endif
+    G__asm_inst[G__asm_cp]=G__SETMEMFUNCENV;
+    G__inc_cp_asm(1,0);
+  }
+#endif
+#endif /* 1157 */
 
   /******************************************************
    * allocate memory if this is a class object and
@@ -417,6 +449,20 @@ char *expression;
 	    *ep=0;
 	    *bp=0;
 	    ++bp;
+#ifndef G__OLDIMPLEMENTATION1154
+	    {
+	      int cx,nx=0;
+	      char tmpx[G__ONELINE];
+	      cx = G__getstream(bp,&nx,tmpx,"),");
+	      if(','==cx) {
+		*ep=')';
+		*(bp-1)='(';
+		/* only to display error message */
+		G__getfunction(construct,&known,G__CALLCONSTRUCTOR);
+		break;
+	      }
+	    }
+#endif
 	    /* construct = "TYPE" , bp = "ARG" */
 	    buf = G__getexpr(bp);
 	    /* G__ASSERT(-1!=buf.tagnum); */
@@ -610,6 +656,10 @@ char *indexlist;
   int p=1;
   char index[G__ONELINE];
   int c;
+#ifndef G__OLDIMPLEMENTATION1147
+  int store_var_type=G__var_type;
+  G__var_type='p';
+#endif
 
   c = G__getstream(indexlist,&p,index,"]");
   p_inc *= G__int(G__getexpr(index));
@@ -631,6 +681,10 @@ char *indexlist;
 #endif /* G__ASM_IFUNC */
   }
   G__ASSERT(']'==c);
+
+#ifndef G__OLDIMPLEMENTATION1147
+  G__var_type=store_var_type;
+#endif
 
   return(p_inc);
 }

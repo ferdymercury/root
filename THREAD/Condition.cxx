@@ -1,23 +1,19 @@
+//*CMZ :  2.23/12 30/12/99  01.19.11  by  Fons Rademakers
 //*CMZ :  2.00/00 04/11/97  16.50.02  by  Victor Perev
 //*CMZ :  1.03/03 25/08/97  16.25.33  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   01/07/97
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -40,34 +36,65 @@ ClassImp(TCondition)
 //______________________________________________________________________________
 TCondition::TCondition(TMutex *m)
 {
-   // Create condition variable. The actual condition implementation
-   // will be provided via the TThreadFactory.
+   // Create a condition variable. The actual condition implementation
+   // will be provided via the TThreadFactory. If no external mutex is
+   // provided one will be created. Use GetMutex() to get this mutex
+   // and use it before calling Signal() or Broadcast().
+
    TMutex *mm = m;
 
-   fMutex = NULL;
-   if (! mm) { fMutex = new TMutex(); mm = fMutex;}
+   fMutex = 0;
+   if (!mm) { fMutex = new TMutex(); mm = fMutex; }
 
    fConditionImp = gThreadFactory->CreateConditionImp(mm->fMutexImp);
 
    if (!fConditionImp)
-      Error("TCondition", "could not create ConditionImp");
+      Error("TCondition", "could not create TConditionImp");
 }
 
-
-Int_t  TCondition::Wait()
+//______________________________________________________________________________
+TCondition::~TCondition()
 {
-  Int_t iret;
-  if (fMutex) fMutex->Lock();
-  iret = fConditionImp->Wait();
-  if (fMutex) {fMutex->UnLock(); delete fMutex; fMutex = NULL;}
-  return iret;
+   // Clean up condition variable.
+
+   delete fConditionImp;
+   delete fMutex;
 }
 
-Int_t  TCondition::TimedWait(ULong_t secs, ULong_t nanoSec)
+//______________________________________________________________________________
+TMutex *TCondition::GetMutex() const
 {
-  Int_t iret;
-  if (fMutex) fMutex->Lock();
-  iret = fConditionImp->TimedWait(secs, nanoSec);
-  if (fMutex) {fMutex->UnLock(); delete fMutex; fMutex = NULL;}
-  return iret;
+   // Get internally created mutex. Use it to lock resources
+   // before calling Signal() or Broadcast(). Returns 0 if
+   // external mutex was provided in TCondition ctor.
+
+   return fMutex;
+}
+
+//______________________________________________________________________________
+Int_t TCondition::Wait()
+{
+   // Wait for to be signaled.
+
+   if (!fConditionImp) return -1;
+
+   Int_t iret;
+   if (fMutex) fMutex->Lock();
+   iret = fConditionImp->Wait();
+   if (fMutex) fMutex->UnLock();
+   return iret;
+}
+
+//______________________________________________________________________________
+Int_t TCondition::TimedWait(ULong_t secs, ULong_t nanoSec)
+{
+   // Wait not more than secs+nanoSecs to be signaled.
+
+   if (!fConditionImp) return -1;
+
+   Int_t iret;
+   if (fMutex) fMutex->Lock();
+   iret = fConditionImp->TimedWait(secs, nanoSec);
+   if (fMutex) fMutex->UnLock();
+   return iret;
 }

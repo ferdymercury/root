@@ -1,5 +1,5 @@
-/*CMZ :  2.22/10 23/07/99  14.42.14  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   23/07/99*/
+/*CMZ :  2.23/10 10/12/99  17.59.59  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   10/12/99*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -9,15 +9,13 @@
  * Description:
  *  Display information
  ************************************************************************
- * Copyright(c) 1991~1996  [hp] Hewlett Packard Japan, All rights reserved
- * Author                  Masaharu Goto (gotom@jpn.hp.com)
- * Copyright(c) 1995~1998  Masaharu Goto (MXJ02154@niftyserve.or.jp)
+ * Copyright(c) 1995~1999  Masaharu Goto (MXJ02154@niftyserve.or.jp)
  *
  * Permission to use, copy, modify and distribute this software and its
  * documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies and
  * that both that copyright notice and this permission notice appear
- * in supporting documentation.  Hewlett-Packard Japan Company makes no
+ * in supporting documentation.  The author makes no
  * representations about the suitability of this software for any
  * purpose.  It is provided "as is" without express or implied warranty.
  ************************************************************************/
@@ -199,7 +197,11 @@ struct G__ifunc_table *ifunc;
 	/* print out file name and line number */
 	if(ifunc->pentry[i]->filenum>=0) {
 	  sprintf(msg,"%-15s%4d:%-3d%c%2d "
+#ifndef G__OLDIMPLEMENTATION1196
+		  ,G__stripfilename(G__srcfile[ifunc->pentry[i]->filenum].filename)
+#else
 		  ,G__srcfile[ifunc->pentry[i]->filenum].filename
+#endif
 		  ,ifunc->pentry[i]->line_number
 #ifdef G__ASM_FUNC
 		  ,ifunc->pentry[i]->size
@@ -216,13 +218,22 @@ struct G__ifunc_table *ifunc;
 	  if(G__more(fp,msg)) return(1);
 #ifdef G__ASM_DBG
 	  if(ifunc->pentry[i]->bytecode) {
+#ifndef G__OLDIMPLEMENTATION1164
+	    G__ASSERT(ifunc->pentry[i]->bytecodestatus==G__BYTECODE_SUCCESS||
+		      ifunc->pentry[i]->bytecodestatus==G__BYTECODE_ANALYSIS);
+#else
 	    G__ASSERT(ifunc->pentry[i]->bytecodestatus==G__BYTECODE_SUCCESS);
+#endif
 	  }
 	  else {
 	    G__ASSERT(ifunc->pentry[i]->bytecodestatus==G__BYTECODE_FAILURE||
 		      ifunc->pentry[i]->bytecodestatus==G__BYTECODE_NOTYET);
 	  }
-	  if(ifunc->pentry[i]->bytecodestatus==G__BYTECODE_SUCCESS) {
+	  if(ifunc->pentry[i]->bytecodestatus==G__BYTECODE_SUCCESS
+#ifndef G__OLDIMPLEMENTATION1164
+	     ||ifunc->pentry[i]->bytecodestatus==G__BYTECODE_ANALYSIS
+#endif
+	     ) {
 	    G__ASSERT(ifunc->pentry[i]->bytecode);
 	  }
 	  else {
@@ -400,7 +411,11 @@ FILE *fout;
     }
     if(-1!=local->prev_filenum) {
       sprintf(msg,") [%s: %d]\n"
+#ifndef G__OLDIMPLEMENTATION1196
+	      ,G__stripfilename(G__srcfile[local->prev_filenum].filename)
+#else
 	      ,G__srcfile[local->prev_filenum].filename
+#endif
 	      ,local->prev_line_number);
       if(G__more(fout,msg)) return(1);
     }
@@ -429,7 +444,11 @@ char *fname;
   int i;
   /* search for source file entry */
   for(i=0;i<G__nfile;i++) {
+#ifndef G__OLDIMPLEMENTATION1196
+    if(G__matchfilename(i,fname)) {
+#else
     if(strcmp(G__srcfile[i].filename,fname)==0) {
+#endif
       dict = G__srcfile[i].dictpos;
       break;
     }
@@ -450,7 +469,11 @@ char *fname;
 
   /* search for source file entry */
   for(i=0;i<G__nfile;i++) {
+#ifndef G__OLDIMPLEMENTATION1196
+    if(G__matchfilename(i,fname)) {
+#else
     if(strcmp(G__srcfile[i].filename,fname)==0) {
+#endif
       dict = G__srcfile[i].dictpos;
       break;
     }
@@ -684,7 +707,12 @@ int start;
 	if (G__struct.filenum[i] == -1)
 	  sprintf(msg,"%-20s " ," ");
 	else
-	  sprintf(msg,"%-15s%5d " ,G__srcfile[G__struct.filenum[i]].filename
+	  sprintf(msg,"%-15s%5d "
+#ifndef G__OLDIMPLEMENTATION1196
+		  ,G__stripfilename(G__srcfile[G__struct.filenum[i]].filename)
+#else
+		  ,G__srcfile[G__struct.filenum[i]].filename
+#endif
 		  ,G__struct.line_number[i]);
 	if(G__more(fout,msg)) return(1);
 	break;
@@ -782,7 +810,11 @@ int start;
     sprintf(msg," size=0x%x\n" ,G__struct.size[tagnum]);
   else {
     sprintf(msg," size=0x%x FILE:%s LINE:%d\n" ,G__struct.size[tagnum]
+#ifndef G__OLDIMPLEMENTATION1196
+	    ,G__stripfilename(G__srcfile[G__struct.filenum[tagnum]].filename)
+#else
 	    ,G__srcfile[G__struct.filenum[tagnum]].filename
+#endif
 	    ,G__struct.line_number[tagnum]);
   }
   if(G__more(fout,msg)) return(1);
@@ -853,6 +885,19 @@ int startin;
 
   for(i=start;i<stop;i++) {
     if(!G__browsing) return(0);
+#ifdef G__TYPEDEFFPOS
+    if(G__newtype.filenum[i]>=0)
+      sprintf(msg,"%-15s%4d "
+#ifndef G__OLDIMPLEMENTATION1196
+	      ,G__stripfilename(G__srcfile[G__newtype.filenum[i]].filename)
+#else
+	      ,G__srcfile[G__newtype.filenum[i]].filename
+#endif
+	      ,G__newtype.linenum[i]);
+    else
+      sprintf(msg,"%-15s     ","(compiled)");
+    if(G__more(fout,msg)) return(1);
+#endif
     if('Q'==G__newtype.type[i]) {
       /* pointer to statuc function */
       sprintf(msg,"typedef void* %s",G__newtype.name[i]);
@@ -935,7 +980,12 @@ int detail;
 #endif
 
   sprintf(msg,"%-20s%5d "
-	  ,G__srcfile[deftmplt->filenum].filename,deftmplt->line);
+#ifndef G__OLDIMPLEMENTATION1196
+	  ,G__stripfilename(G__srcfile[deftmplt->filenum].filename)
+#else
+	  ,G__srcfile[deftmplt->filenum].filename
+#endif
+	  ,deftmplt->line);
   if(G__more(fout,msg)) return(1);
   sprintf(msg,"template<");
   if(G__more(fout,msg)) return(1);
@@ -988,7 +1038,12 @@ int detail;
     memfunctmplt = &deftmplt->memfunctmplt;
     while(memfunctmplt->next) {
       sprintf(msg,"%-20s%5d "
-	      ,G__srcfile[memfunctmplt->filenum].filename,memfunctmplt->line);
+#ifndef G__OLDIMPLEMENTATION1196
+	      ,G__stripfilename(G__srcfile[memfunctmplt->filenum].filename)
+#else
+	      ,G__srcfile[memfunctmplt->filenum].filename
+#endif
+	      ,memfunctmplt->line);
       if(G__more(fout,msg)) return(1);
       fgetpos(memfunctmplt->def_fp,&store_pos);
       fsetpos(memfunctmplt->def_fp,&memfunctmplt->def_pos);
@@ -1030,7 +1085,12 @@ struct G__Definetemplatefunc *deftmpfunc;
   struct G__Templatefuncarg *pfuncpara;
   int i;
   sprintf(msg,"%-20s%5d "
-	  ,G__srcfile[deftmpfunc->filenum].filename,deftmpfunc->line);
+#ifndef G__OLDIMPLEMENTATION1196
+	  ,G__stripfilename(G__srcfile[deftmpfunc->filenum].filename)
+#else
+	  ,G__srcfile[deftmpfunc->filenum].filename
+#endif
+	  ,deftmpfunc->line);
   if(G__more(fout,msg)) return(1);
   sprintf(msg,"template<");
   if(G__more(fout,msg)) return(1);
@@ -1258,7 +1318,8 @@ FILE *fout;
   for(i=0;i<G__nfile;i++) {
     sprintf(msg,"%3d fp=0x%8lx lines=%-4d file=\"%s\" "
 	    ,i,(long)G__srcfile[i].fp,G__srcfile[i].maxline
-	    ,G__srcfile[i].filename);
+	    ,G__srcfile[i].filename
+	    );
     if(G__more(fout,msg)) return(1);
     if(G__srcfile[i].prepname) {
       sprintf(msg,"cppfile=\"%s\"",G__srcfile[i].prepname);
@@ -1574,8 +1635,13 @@ long offset;
 
 #ifdef G__VARIABLEFPOS
     if(var->filenum[imon1]>=0)
-      sprintf(msg,"%-15s%4d ",G__srcfile[var->filenum[imon1]].filename
-                             ,var->linenum[imon1]);
+      sprintf(msg,"%-15s%4d "
+#ifndef G__OLDIMPLEMENTATION1196
+	      , G__stripfilename(G__srcfile[var->filenum[imon1]].filename)
+#else
+	      , G__srcfile[var->filenum[imon1]].filename
+#endif
+	      ,var->linenum[imon1]);
     else
       sprintf(msg,"%-15s     ","(compiled)");
     if(G__more(fout,msg)) return(1);

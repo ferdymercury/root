@@ -1,24 +1,20 @@
+//*CMZ :  2.23/09 25/11/99  13.46.30  by  Fons Rademakers
 //*CMZ :  2.22/06 22/06/99  10.28.39  by  Fons Rademakers
 //*CMZ :  2.21/03 19/01/99  16.19.07  by  Fons Rademakers
 //*CMZ :  1.03/08 17/11/97  16.21.41  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   17/01/97
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -44,7 +40,7 @@ TUrl::TUrl(const char *url)
    //
    // url: [proto://]host[:port][/file.ext][#anchor][?options]
    //
-   // Allowed protocols: http, root, ftp, news, file, rfio, hpss (default http)
+   // Known protocols: http, root, ftp, news, file, rfio, hpss (default http)
    // Default ports: http=80, root=432, ftp=20, news=119.
 
    if (!url || !strlen(url)) {
@@ -104,9 +100,8 @@ TUrl::TUrl(const char *url)
       else if (!fProtocol.CompareTo("news"))
          fPort = 119;
       else {
-         // illegal protocol
-         fPort = -1;
-         goto cleanup;
+         // generic protocol (no default port)
+         fPort = 0;
       }
       s += 3;
       if (!*s) {

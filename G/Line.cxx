@@ -1,26 +1,22 @@
+//*CMZ :  2.23/09 22/11/99  17.30.29  by  Rene Brun
+//*CMZ :  2.23/04 04/10/99  14.39.29  by  Rene Brun
+//*CMZ :  2.23/02 02/09/99  15.54.26  by  Rene Brun
 //*CMZ :  2.22/02 21/05/99  10.59.52  by  Rene Brun
 //*CMZ :  2.22/01 19/05/99  12.47.17  by  Rene Brun
 //*CMZ :  2.20/05 15/12/98  09.17.21  by  Rene Brun
-//*CMZ :  2.00/13 28/10/98  09.21.36  by  Rene Brun
-//*CMZ :  1.03/09 06/12/97  17.25.12  by  Fons Rademakers
 //*-- Author :    Rene Brun   12/12/94
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 #include <stdlib.h>
@@ -31,10 +27,9 @@
 #include "TLine.h"
 #include "TVirtualPad.h"
 #include "TClass.h"
-#include "TGXW.h"
+#include "TVirtualX.h"
 #include "TMath.h"
 
-const Int_t kLineNDC = BIT(14);
 
 ClassImp(TLine)
 
@@ -102,15 +97,6 @@ Int_t TLine::DistancetoPrimitive(Int_t px, Int_t py)
 }
 
 //______________________________________________________________________________
-void TLine::Draw(Option_t *option)
-{
-//*-*-*-*-*-*-*-*-*-*-*Draw this line with its current attributes*-*-*-*-*-*-*
-//*-*                  ==========================================
-
-   AppendPad(option);
-}
-
-//______________________________________________________________________________
 TLine *TLine::DrawLine(Coord_t x1, Coord_t y1, Coord_t x2, Coord_t  y2)
 {
 //*-*-*-*-*-*-*-*-*-*-*Draw this line with new coordinates*-*-*-*-*-*-*-*-*-*
@@ -154,10 +140,11 @@ void TLine::ExecuteEvent(Int_t event, Int_t px, Int_t py)
    Int_t dx, dy;
 
 
+   if (!gPad->IsEditable()) return;
    switch (event) {
 
    case kButton1Down:
-      gGXW->SetLineColor(-1);
+      gVirtualX->SetLineColor(-1);
       TAttLine::Modify();  //Change line attributes only if necessary
 
       // No break !!!
@@ -201,22 +188,22 @@ void TLine::ExecuteEvent(Int_t event, Int_t px, Int_t py)
    case kButton1Motion:
 
       if (P1) {
-         gGXW->DrawLine(px1old, py1old, px2, py2);
-         gGXW->DrawLine(px, py, px2, py2);
+         gVirtualX->DrawLine(px1old, py1old, px2, py2);
+         gVirtualX->DrawLine(px, py, px2, py2);
          px1old = px;
          py1old = py;
       }
       if (P2) {
-         gGXW->DrawLine(px1, py1, px2old, py2old);
-         gGXW->DrawLine(px1, py1, px, py);
+         gVirtualX->DrawLine(px1, py1, px2old, py2old);
+         gVirtualX->DrawLine(px1, py1, px, py);
          px2old = px;
          py2old = py;
       }
       if (L) {
-         gGXW->DrawLine(px1, py1, px2, py2);
+         gVirtualX->DrawLine(px1, py1, px2, py2);
          dx = px-pxold;  dy = py-pyold;
          px1 += dx; py1 += dy; px2 += dx; py2 += dy;
-         gGXW->DrawLine(px1, py1, px2, py2);
+         gVirtualX->DrawLine(px1, py1, px2, py2);
          pxold = px;
          pyold = py;
       }
@@ -260,7 +247,7 @@ void TLine::ExecuteEvent(Int_t event, Int_t px, Int_t py)
          }
       }
       gPad->Modified(kTRUE);
-      gGXW->SetLineColor(-1);
+      gVirtualX->SetLineColor(-1);
       break;
 
    case kButton1Locate:
@@ -268,7 +255,7 @@ void TLine::ExecuteEvent(Int_t event, Int_t px, Int_t py)
       ExecuteEvent(kButton1Down, px, py);
       while (1) {
          px = py = 0;
-         event = gGXW->RequestLocator(1,1,px,py);
+         event = gVirtualX->RequestLocator(1,1,px,py);
 
          ExecuteEvent(kButton1Motion, px, py);
 

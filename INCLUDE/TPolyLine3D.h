@@ -1,29 +1,24 @@
+//*CMZ :  2.23/12 31/01/2000  10.26.41  by  Rene Brun
+//*CMZ :  2.23/03 08/09/99  18.55.03  by  Fons Rademakers
 //*CMZ :  2.21/01 12/01/99  07.54.04  by  Valery Fine(fine@mail.cern.ch)
 //*CMZ :  2.00/13 13/10/98  09.21.51  by  Rene Brun
 //*CMZ :  2.00/11 18/08/98  10.10.01  by  Rene Brun
-//*CMZ :  2.00/00 11/02/98  12.29.50  by  Rene Brun
-//*CMZ :  1.00/07 03/04/97  09.54.56  by  Valery Fine(fine@vxcern.cern.ch)
 //*-- Author :    Rene Brun   08/12/94
 
 #ifndef ROOT_TPolyLine3D
 #define ROOT_TPolyLine3D
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -37,22 +32,28 @@
 #ifndef ROOT_TObject
 #include "TObject.h"
 #endif
+#ifndef ROOT_TList
+#include "TList.h"
+#endif
 #ifndef ROOT_TTString
 #include "TString.h"
 #endif
 #ifndef ROOT_TAttLine
 #include "TAttLine.h"
 #endif
+#ifndef ROOT_TAtt3D
+#include "TAtt3D.h"
+#endif
 #ifndef ROOT_X3DBuffer
 #include "X3DBuffer.h"
 #endif
 
 
-class TPolyLine3D : public TObject, public TAttLine {
+class TPolyLine3D : public TObject, public TAttLine, public TAtt3D {
 
 protected:
         Int_t        fN;            //Number of points
-        Float_t      *fP;           //Array of 3-D coordinates  (x,y,z)
+        Float_t      *fP;           //[3*fN] Array of 3-D coordinates  (x,y,z)
         TString      fOption;       //options
         UInt_t       fGLList;       // The list number for OpenGL view
         Int_t        fLastPoint;    // The index of the last filled point
@@ -68,13 +69,13 @@ public:
         virtual void      Copy(TObject &polyline);
         virtual Int_t     DistancetoPrimitive(Int_t px, Int_t py);
         virtual void      Draw(Option_t *option="");
+        static  void      DrawOutlineCube(TList *outline, Float_t *rmin, Float_t *rmax);
         virtual void      DrawPolyLine(Int_t n, Float_t *p, Option_t *option="");
         virtual void      ExecuteEvent(Int_t event, Int_t px, Int_t py);
         Int_t             GetLastPoint() {return fLastPoint;}
         Int_t             GetN() {return fN;}
         Float_t           *GetP() {return fP;}
         Option_t          *GetOption() const {return fOption.Data();}
-        virtual Bool_t    Is3D() {return kTRUE;}
         virtual void      ls(Option_t *option="");
         virtual void      Paint(Option_t *option="");
         virtual void      PaintPolyLine(Int_t n, Float_t *p, Option_t *option="");

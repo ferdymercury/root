@@ -1,3 +1,4 @@
+*CMZ :  2.23/10 15/12/99  17.14.32  by  Rene Brun
 *CMZ :  2.00/06 12/05/98  15.29.04  by  Rene Brun
 *CMZ :  0.90/10 04/12/96  11.47.29  by  Rene Brun
 *-- Author :    Rene Brun   28/11/95
@@ -35,17 +36,23 @@ if [OS] = 'WINNT' then
   shell del rootrc.C
   shell copy staff_dat.C staff.dat
   shell del staff_dat.C
+  shell copy pdg_dat.C pdg.dat
+  shell del pdg_dat.C
   lcd ..
 elseif [OS] = 'VMS' then
   shell delete/log [.tutorials]*.rootrc;*
   shell delete/log [.tutorials]staff.dat;*
+  shell delete/log [.tutorials]pdg.dat;*
   shell rename/log [.tutorials]rootrc.C;*
   shell rename/log [.tutorials]staff_dat.C;* staff.dat
+  shell rename/log [.tutorials]pdg_dat.C;* pdg.dat
 else
   shell /bin/rm -f tutorials/.rootrc
   shell /bin/rm -f tutorials/staff.dat
+  shell /bin/rm -f tutorials/pdg.dat
   shell /bin/mv tutorials/rootrc.C tutorials/.rootrc
   shell /bin/mv tutorials/staff_dat.C tutorials/staff.dat
+  shell /bin/mv tutorials/pdg_dat.C tutorials/pdg.dat
 endif
 sel -tutorials
 *

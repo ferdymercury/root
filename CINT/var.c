@@ -1,5 +1,5 @@
-/*CMZ :  2.22/10 23/07/99  14.42.20  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   23/07/99*/
+/*CMZ :  2.23/10 10/12/99  18.00.07  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   10/12/99*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -9,15 +9,13 @@
  * Description:
  *  Variable initialization, assignment and referencing
  ************************************************************************
- * Copyright(c) 1991~1996  [hp] Hewlett Packard Japan, All rights reserved
- * Author                  Masaharu Goto (gotom@jpn.hp.com)
- * Copyright(c) 1995~1998  Masaharu Goto (MXJ02154@niftyserve.or.jp)
+ * Copyright(c) 1995~1999  Masaharu Goto (MXJ02154@niftyserve.or.jp)
  *
  * Permission to use, copy, modify and distribute this software and its
  * documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies and
  * that both that copyright notice and this permission notice appear
- * in supporting documentation.  Hewlett-Packard Japan Company makes no
+ * in supporting documentation.  The author makes no
  * representations about the suitability of this software for any
  * purpose.  It is provided "as is" without express or implied warranty.
  ************************************************************************/
@@ -32,6 +30,10 @@ extern int G__const_noerror;
 #ifndef G__OLDIMPLEMENTATION1119
 static int G__getarraydim=0;
 extern int G__dynconst;
+#endif
+
+#ifndef G__OLDIMPLEMENTATION1151
+extern int G__initval_eval;
 #endif
 
 /**************************************************************************
@@ -891,7 +893,11 @@ char* ttt;
     G__store_struct_offset = conv_store_struct_offset;
     break;
   }
+#ifndef G__OLDIMPLEMENTATION1188
+  return(conv_done);
+#else
   return(0);
+#endif
 }
 #endif /* ON672 */
 
@@ -2788,6 +2794,9 @@ int paran;
 	presult->obj.reftype.reftype = G__PARAP2P2P;
 	break;
       }
+#ifndef G__OLDIMPLEMENTATION1190
+      presult->obj.reftype.reftype += var->paran[ig15]-paran-1;
+#endif
     }
     else if(paran==var->paran[ig15]) {
       presult->obj.reftype.reftype = var->reftype[ig15];
@@ -3353,7 +3362,36 @@ struct G__var_array *varglobal,*varlocal;
 #ifndef G__OLDIMPLEMENTATION793
       if(var->p[ig15] == 0 && G__struct_offset==0 && 0==G__no_exec_compile) {
 	*known2=1;
+#ifndef G__OLDIMPLEMENTATION1175
+	result = G__null;
+        switch(G__var_type) {
+	case 'p':
+          if(var->paran[ig15]<=paran) {
+	    result.type = var->type[ig15];
+	    break;
+	  }
+	case 'P':
+	  if(islower(var->type[ig15])) result.type=toupper(var->type[ig15]);
+	  else {
+	    result.type = var->type[ig15];
+	    switch(var->reftype[ig15]) {
+	    case G__PARANORMAL:
+	      result.obj.reftype.reftype = G__PARAP2P;
+	      break;
+	    case G__PARAREFERENCE:
+	      result.obj.reftype.reftype = var->reftype[ig15];
+	      break;
+	    default:
+	      result.obj.reftype.reftype = var->reftype[ig15]+1;
+	      break;
+	    }
+	  }
+	  break;
+	}
+	return(result);
+#else
 	return(G__null);
+#endif
       }
 #endif
 
@@ -4055,7 +4093,13 @@ int objptr;  /* 1 : object , 2 : pointer */
   G__tagnum = result.tagnum;
 
 #ifndef G__OLDIMPLEMENTATION925
-  if(G__tagnum<0 || (isupper(result.type)&&result.obj.reftype.reftype)) {
+  if(G__tagnum<0
+#ifndef G__OLDIMPLEMENTATION1212
+     || (isupper(result.type)&&result.obj.reftype.reftype>=G__PARAP2P)
+#else
+     || (isupper(result.type)&&result.obj.reftype.reftype)
+#endif
+     ) {
 #ifndef G__OLDIMPLEMENTATION1080
     if('~'!=membername[0]) {
 #ifndef G__OLDIMPLEMENTATION1103
@@ -4091,8 +4135,15 @@ int objptr;  /* 1 : object , 2 : pointer */
 #endif
   else if(0==G__store_struct_offset) {
     *known2=1;
+#ifndef G__OLDIMPLEMENTATION1151
+    if(0==G__const_noerror) {
+      fprintf(G__serr,"Error: illegal pointer to class object %s 0x%lx %d "
+	      ,tagname,G__store_struct_offset,G__tagnum);
+    }
+#else
     fprintf(G__serr,"Error: illegal pointer to class object %s 0x%lx %d "
 	    ,tagname,G__store_struct_offset,G__tagnum);
+#endif
     G__genericerror((char*)NULL);
     if(G__interactive) {
       fprintf(G__serr,"!!!Input return value by 'retuurn [val]'\n");
@@ -4110,19 +4161,6 @@ int objptr;  /* 1 : object , 2 : pointer */
     }
   }
 
-#ifndef G__OLDIMPLEMENTATION1013
-  /****************************************************
-   * check if . or -> matches
-   ****************************************************/
-#ifndef G__ROOT
-  if(G__MAXFILE-1!=G__ifile.filenum &&
-     ((isupper(result.type)&&1==objptr)||(islower(result.type)&&2==objptr))) {
-    fprintf(G__serr,"Warning: wrong member access operator '.' or '->'");
-    G__printlinenum();
-  }
-#endif
-#endif
-
 #ifdef G__ASM
   /****************************************************
    * Set struct offset for inner loop compilation.
@@ -4139,6 +4177,51 @@ int objptr;  /* 1 : object , 2 : pointer */
     G__inc_cp_asm(1,0);
   }
 #endif
+
+#ifndef G__OLDIMPLEMENTATION1170
+  if('u'==result.type&&2==objptr&&-1!=result.tagnum&&
+     strncmp(G__struct.name[result.tagnum],"auto_ptr<",9)==0) {
+    int knownx=0;
+    char comm[20];
+    strcpy(comm,"operator->()");
+    result = G__getfunction(comm,&knownx,G__TRYMEMFUNC);
+    if(knownx) {
+      G__tagnum = result.tagnum;
+      G__store_struct_offset = result.obj.i;
+#ifdef G__ASM
+      if(G__asm_noverflow) {
+        /*************************************
+         * SETSTROS
+         *************************************/
+        G__asm_inst[G__asm_cp] = G__SETSTROS;
+#ifdef G__ASM_DBG
+        if(G__asm_dbg)
+          fprintf(G__serr,"%3x: SETSTROS\n",G__asm_cp);
+#endif
+        G__inc_cp_asm(1,0);
+      }
+#endif
+    }
+  }
+#endif
+
+#ifndef G__OLDIMPLEMENTATION1013
+  /****************************************************
+   * check if . or -> matches
+   ****************************************************/
+#ifndef G__ROOT
+  if(G__MAXFILE-1!=G__ifile.filenum &&
+     ((isupper(result.type)&&1==objptr)||(islower(result.type)&&2==objptr))) {
+    fprintf(G__serr,"Warning: wrong member access operator '.' or '->'");
+    G__printlinenum();
+  }
+#endif
+#endif
+
+#ifndef G__OLDIMPLEMENTATION1151
+  if(2==objptr && G__initval_eval) G__dynconst = G__DYNCONST;
+#endif
+
   /*******************************************************************
    * end of getting struct offset
    *  G__tagnum and G__store_struct_offset should be
@@ -4324,8 +4407,15 @@ int objptr;  /* 1 : object , 2 : pointer */
 
   if(G__tagnum<0) return(G__null);
   else if(0==G__store_struct_offset) {
+#ifndef G__OLDIMPLEMENTATION1151
+    if(0==G__const_noerror) {
+      fprintf(G__serr,"Error: illegal pointer to class object %s 0x%lx %d "
+	      ,tagname,G__store_struct_offset,G__tagnum);
+    }
+#else
     fprintf(G__serr,"Error: illegal pointer to class object %s 0x%lx %d "
 	    ,tagname,G__store_struct_offset,G__tagnum);
+#endif
     G__genericerror((char*)NULL);
     return(expression);
   }
@@ -4338,19 +4428,6 @@ int objptr;  /* 1 : object , 2 : pointer */
   if(flag==0) {
     return(G__null);
   }
-
-#ifndef G__OLDIMPLEMENTATION1013
-  /****************************************************
-   * check if . or -> matches
-   ****************************************************/
-#ifndef G__ROOT
-  if(G__MAXFILE-1!=G__ifile.filenum &&
-     ((isupper(result.type)&&1==objptr)||(islower(result.type)&&2==objptr))) {
-    fprintf(G__serr,"Warning: wrong member access operator '.' or '->'");
-    G__printlinenum();
-  }
-#endif
-#endif
 
 #ifdef G__ASM
   if(G__asm_noverflow) {
@@ -4365,6 +4442,47 @@ int objptr;  /* 1 : object , 2 : pointer */
     G__inc_cp_asm(1,0);
   }
 #endif
+
+#ifndef G__OLDIMPLEMENTATION1170
+  if('u'==result.type&&2==objptr&&-1!=result.tagnum&&
+     strncmp(G__struct.name[result.tagnum],"auto_ptr<",9)==0) {
+    int knownx=0;
+    char comm[20];
+    strcpy(comm,"operator->()");
+    result = G__getfunction(comm,&knownx,G__TRYMEMFUNC);
+    if(knownx) {
+      G__tagnum = result.tagnum;
+      G__store_struct_offset = result.obj.i;
+#ifdef G__ASM
+      if(G__asm_noverflow) {
+        /*************************************
+         * SETSTROS
+         *************************************/
+        G__asm_inst[G__asm_cp] = G__SETSTROS;
+#ifdef G__ASM_DBG
+        if(G__asm_dbg)
+          fprintf(G__serr,"%3x: SETSTROS\n",G__asm_cp);
+#endif
+        G__inc_cp_asm(1,0);
+      }
+#endif
+    }
+  }
+#endif
+
+#ifndef G__OLDIMPLEMENTATION1013
+  /****************************************************
+   * check if . or -> matches
+   ****************************************************/
+#ifndef G__ROOT
+  if(G__MAXFILE-1!=G__ifile.filenum &&
+     ((isupper(result.type)&&1==objptr)||(islower(result.type)&&2==objptr))) {
+    fprintf(G__serr,"Warning: wrong member access operator '.' or '->'");
+    G__printlinenum();
+  }
+#endif
+#endif
+
 
   /****************************************************
    * assign variable value.
@@ -5093,13 +5211,21 @@ int parameter00;
   }
   if(G__def_struct_member && G__PARAREFERENCE==G__reftype) {
 #ifndef G__OLDIMPLEMENTATION1088
-    if(G__NOLINK==G__globalcomp) {
+    if(G__NOLINK==G__globalcomp
+#ifndef G__OLDIMPLEMENTATION1241
+       && -1!=G__def_tagnum && 'n'!=G__struct.type[G__def_tagnum]
+#endif
+       ) {
 #endif
       G__genericerror("Limitation: Reference member not supported. Please use pointer");
       return(result);
 #ifndef G__OLDIMPLEMENTATION1088
     }
-    else if(G__access==G__PUBLIC) {
+    else if(G__access==G__PUBLIC
+#ifndef G__OLDIMPLEMENTATION1241
+	    && -1!=G__def_tagnum && 'n'!=G__struct.type[G__def_tagnum]
+#endif
+	    ) {
       fprintf(G__serr,"Limitation: Reference member not accessible from the interpreter");
       G__printlinenum();
       G__access=G__PRIVATE;
@@ -5107,8 +5233,12 @@ int parameter00;
 #endif
   }
   if('U'==G__var_type&&'U'==result.type&&
-     -1==G__ispublicbase(G__tagnum,result.tagnum,0)&&
-     -1==G__ispublicbase(result.tagnum,G__tagnum,0)) {
+     -1==G__ispublicbase(G__tagnum,result.tagnum,0)
+#define G__OLDIMPLEMENTATION1213
+#ifdef G__OLDIMPLEMENTATION1213
+     && -1==G__ispublicbase(result.tagnum,G__tagnum,0)
+#endif
+     ) {
     fprintf(G__serr,"Error: Illegal initialization of pointer, wrong type %s"
 	    ,G__type2string(result.type ,result.tagnum ,result.typenum
 			    ,result.obj.reftype.reftype,0));
@@ -5653,17 +5783,23 @@ int parameter00;
 #endif
 	) ||
        (1==paran && '\0'==parameter00)) {
-      G__abortbytecode();
-      G__asm_wholefunc_default_cp=0;
-      G__no_exec=1;
-      G__return=G__RETURN_NORMAL;
+#ifndef G__OLDIMPLEMENTATION1164
+      if(0==G__xrefflag) {
+#endif
+	G__abortbytecode();
+	G__asm_wholefunc_default_cp=0;
+	G__no_exec=1;
+	G__return=G__RETURN_NORMAL;
 #ifdef G__ASM_DBG
-      if(G__asm_dbg) {
-	fprintf(G__serr,"bytecode compile aborted by automatic class object. Use pointer to class obj + new");
-	G__printlinenum();
+	if(G__asm_dbg) {
+	  fprintf(G__serr,"bytecode compile aborted by automatic class object. Use pointer to class obj + new");
+	  G__printlinenum();
+	}
+#endif
+	return(result);
+#ifndef G__OLDIMPLEMENTATION1164
       }
 #endif
-      return(result);
     }
   }
 
@@ -5855,7 +5991,11 @@ int parameter00;
       }
     }
     /* ensure returning 0 for not running constructor */
+#ifndef G__OLDIMPLEMENTATION1194
+    if(!autoobjectflag) result.obj.i = 0;
+#else
     result.obj.i = 0;
+#endif
     break;
 
 

@@ -1,15 +1,16 @@
-/*CMZ :  2.22/10 23/07/99  14.42.33  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   23/07/99*/
+/*CMZ :  2.23/10 10/12/99  18.00.24  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   10/12/99*/
 // lib/prec_stl/memory
 
-#ifndef PREC_STL_MEMORY
-#define PREC_STL_MEMORY
+#pragma ifndef PREC_STL_MEMORY
+#pragma define PREC_STL_MEMORY
 #pragma link off global PREC_STL_MEMORY;
 #pragma link C++ nestedtypedef;
 #pragma link C++ nestedclass;
 
 // Implemented by Scott Snyder, Fermi-lab
 // Modified by Masaharu Goto
+// SGI KCC porting by Philippe Canal, Fermi-lab
 
 #include <cstddef>
 
@@ -64,7 +65,11 @@ public:
   pointer allocate(size_type _N, void *);
 #endif
   //char  *_Charalloc(size_type _N);
+#ifndef G__KCC
   void deallocate(void *_P, size_type);
+#else
+  void deallocate(T *_P, size_type); ???
+#endif
 #ifndef G__BORLAND
   void construct(pointer _P, const T& _V);
   void destroy(pointer _P);
@@ -95,4 +100,4 @@ class allocator<void> {
 
 #endif // G__GNUC
 
-#endif
+#pragma endif

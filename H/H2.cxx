@@ -1,39 +1,27 @@
+//*CMZ :  2.23/12 26/01/2000  09.53.04  by  Rene Brun
+//*CMZ :  2.23/09 25/11/99  23.44.30  by  Rene Brun
 //*CMZ :  2.22/06 16/06/99  12.09.13  by  Rene Brun
 //*CMZ :  2.22/05 10/06/99  10.03.37  by  Rene Brun
 //*CMZ :  2.22/03 31/05/99  12.32.53  by  Rene Brun
 //*CMZ :  2.22/00 05/04/99  18.13.30  by  Rene Brun
-//*CMZ :  2.21/07 01/03/99  10.08.38  by  Rene Brun
-//*CMZ :  2.21/05 10/02/99  09.31.56  by  Rene Brun
-//*CMZ :  2.21/01 05/01/99  16.09.50  by  Rene Brun
-//*CMZ :  2.20/00 05/11/98  18.52.40  by  Rene Brun
-//*CMZ :  2.00/10 29/07/98  22.28.16  by  Rene Brun
-//*CMZ :  2.00/00 05/03/98  18.02.40  by  Fons Rademakers
-//*CMZ :  1.03/09 09/12/97  20.01.55  by  Fons Rademakers
 //*-- Author :    Rene Brun   26/12/94
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 #include "Strlen.h"
 #include "TH2.h"
 #include "TVirtualPad.h"
-
-const Int_t kAxisRange   = BIT(11);
 
 ClassImp(TH2)
 
@@ -57,7 +45,6 @@ TH2::TH2()
 //______________________________________________________________________________
 TH2::~TH2()
 {
-
 }
 
 //______________________________________________________________________________
@@ -99,11 +86,10 @@ TH2C::TH2C(): TH1C(),TH2()
 //______________________________________________________________________________
 TH2C::~TH2C()
 {
-
 }
 
 //______________________________________________________________________________
-TH2C::TH2C(const Text_t *name,const Text_t *title,Int_t nbinsx,Axis_t xlow,Axis_t xup
+TH2C::TH2C(const char *name,const char *title,Int_t nbinsx,Axis_t xlow,Axis_t xup
                                      ,Int_t nbinsy,Axis_t ylow,Axis_t yup)
      :TH1C(2,name,title,nbinsx,xlow,xup),
       TH2()
@@ -115,7 +101,7 @@ TH2C::TH2C(const Text_t *name,const Text_t *title,Int_t nbinsx,Axis_t xlow,Axis_
 }
 
 //______________________________________________________________________________
-TH2C::TH2C(const Text_t *name,const Text_t *title,Int_t nbinsx,Axis_t *xbins
+TH2C::TH2C(const char *name,const char *title,Int_t nbinsx,Axis_t *xbins
                                      ,Int_t nbinsy,Axis_t ylow,Axis_t yup)
      :TH1C(2,name,title,nbinsx,xbins),
       TH2()
@@ -127,7 +113,7 @@ TH2C::TH2C(const Text_t *name,const Text_t *title,Int_t nbinsx,Axis_t *xbins
 }
 
 //______________________________________________________________________________
-TH2C::TH2C(const Text_t *name,const Text_t *title,Int_t nbinsx,Axis_t xlow,Axis_t xup
+TH2C::TH2C(const char *name,const char *title,Int_t nbinsx,Axis_t xlow,Axis_t xup
                                      ,Int_t nbinsy,Axis_t *ybins)
      :TH1C(2,name,title,nbinsx,xlow,xup),
       TH2()
@@ -140,7 +126,7 @@ TH2C::TH2C(const Text_t *name,const Text_t *title,Int_t nbinsx,Axis_t xlow,Axis_
 }
 
 //______________________________________________________________________________
-TH2C::TH2C(const Text_t *name,const Text_t *title,Int_t nbinsx,Axis_t *xbins
+TH2C::TH2C(const char *name,const char *title,Int_t nbinsx,Axis_t *xbins
                                      ,Int_t nbinsy,Axis_t *ybins)
      :TH1C(2,name,title,nbinsx,xbins),
       TH2()
@@ -179,7 +165,7 @@ TH1 *TH2C::DrawCopy(Option_t *option)
 }
 
 //______________________________________________________________________________
-Int_t TH2C::Fill(Axis_t x, Axis_t y)
+Int_t TH2C::Fill(Axis_t x, Stat_t y)
 {
    Int_t ok = TH1::Fill12(x,y);
    if (ok >= 0) TH2::Fill20(x,y);
@@ -221,14 +207,24 @@ Stat_t TH2C::GetCovariance(Int_t axis1, Int_t axis2)
      Error("GetCovariance","Wrong parameters");
      return 0;
   }
-  if (fTsumw == 0) return 0;
+  Stat_t stats[7];
+  GetStats(stats);
+  Stat_t sumw   = stats[0];
+  Stat_t sumw2  = stats[1];
+  Stat_t sumwx  = stats[2];
+  Stat_t sumwx2 = stats[3];
+  Stat_t sumwy  = stats[4];
+  Stat_t sumwy2 = stats[5];
+  Stat_t sumwxy = stats[6];
+
+  if (sumw == 0) return 0;
   if (axis1 == 1 && axis2 == 1) {
-     return TMath::Abs(fTsumwx2/fTsumw - fTsumwx*fTsumwx/(fTsumw*fTsumw));
+     return TMath::Abs(sumwx2/sumw - sumwx*sumwx/sumw2);
   }
   if (axis1 == 2 && axis2 == 2) {
-     return TMath::Abs(fTsumwy2/fTsumw - fTsumwy*fTsumwy/(fTsumw*fTsumw));
+     return TMath::Abs(sumwy2/sumw - sumwy*sumwy/sumw2);
   }
-  return fTsumwxy/fTsumw - fTsumwx/fTsumw*fTsumwy/fTsumw;
+  return sumwxy/sumw - sumwx/sumw*sumwy/sumw;
 }
 
 //______________________________________________________________________________
@@ -242,8 +238,10 @@ void TH2C::GetStats(Stat_t *stats)
    // stats[3] = sumwx2
    // stats[4] = sumwy
    // stats[5] = sumwy2
+   // stats[6] = sumwxy
 
-   if (fTsumw == 0 || fXaxis.TestBit(kAxisRange) || fYaxis.TestBit(kAxisRange)) {
+   if (fTsumw == 0 || fXaxis.TestBit(TAxis::kAxisRange) ||
+      fYaxis.TestBit(TAxis::kAxisRange)) {
       TH1::GetStats(stats);
    } else {
       stats[0] = fTsumw;
@@ -252,7 +250,19 @@ void TH2C::GetStats(Stat_t *stats)
       stats[3] = fTsumwx2;
       stats[4] = fTsumwy;
       stats[5] = fTsumwy2;
+      stats[6] = fTsumwxy;
    }
+}
+
+//______________________________________________________________________________
+void TH2C::PutStats(Stat_t *stats)
+{
+   // Replace current statistics with the values in array stats
+
+   TH1::PutStats(stats);
+   fTsumwy  = stats[4];
+   fTsumwy2 = stats[5];
+   fTsumwxy = stats[6];
 }
 
 //______________________________________________________________________________
@@ -337,7 +347,7 @@ TH2S::~TH2S()
 }
 
 //______________________________________________________________________________
-TH2S::TH2S(const Text_t *name,const Text_t *title,Int_t nbinsx,Axis_t xlow,Axis_t xup
+TH2S::TH2S(const char *name,const char *title,Int_t nbinsx,Axis_t xlow,Axis_t xup
                                      ,Int_t nbinsy,Axis_t ylow,Axis_t yup)
      :TH1S(2,name,title,nbinsx,xlow,xup),
       TH2()
@@ -348,7 +358,7 @@ TH2S::TH2S(const Text_t *name,const Text_t *title,Int_t nbinsx,Axis_t xlow,Axis_
 }
 
 //______________________________________________________________________________
-TH2S::TH2S(const Text_t *name,const Text_t *title,Int_t nbinsx,Axis_t *xbins
+TH2S::TH2S(const char *name,const char *title,Int_t nbinsx,Axis_t *xbins
                                      ,Int_t nbinsy,Axis_t ylow,Axis_t yup)
      :TH1S(2,name,title,nbinsx,xbins),
       TH2()
@@ -359,7 +369,7 @@ TH2S::TH2S(const Text_t *name,const Text_t *title,Int_t nbinsx,Axis_t *xbins
 }
 
 //______________________________________________________________________________
-TH2S::TH2S(const Text_t *name,const Text_t *title,Int_t nbinsx,Axis_t xlow,Axis_t xup
+TH2S::TH2S(const char *name,const char *title,Int_t nbinsx,Axis_t xlow,Axis_t xup
                                      ,Int_t nbinsy,Axis_t *ybins)
      :TH1S(2,name,title,nbinsx,xlow,xup),
       TH2()
@@ -370,7 +380,7 @@ TH2S::TH2S(const Text_t *name,const Text_t *title,Int_t nbinsx,Axis_t xlow,Axis_
 }
 
 //______________________________________________________________________________
-TH2S::TH2S(const Text_t *name,const Text_t *title,Int_t nbinsx,Axis_t *xbins
+TH2S::TH2S(const char *name,const char *title,Int_t nbinsx,Axis_t *xbins
                                      ,Int_t nbinsy,Axis_t *ybins)
      :TH1S(2,name,title,nbinsx,xbins),
       TH2()
@@ -407,7 +417,7 @@ TH1 *TH2S::DrawCopy(Option_t *option)
 }
 
 //______________________________________________________________________________
-Int_t TH2S::Fill(Axis_t x, Axis_t y)
+Int_t TH2S::Fill(Axis_t x, Stat_t y)
 {
    Int_t ok = TH1::Fill12(x,y);
    if (ok >= 0) TH2::Fill20(x,y);
@@ -449,14 +459,24 @@ Stat_t TH2S::GetCovariance(Int_t axis1, Int_t axis2)
      Error("GetCovariance","Wrong parameters");
      return 0;
   }
-  if (fTsumw == 0) return 0;
+  Stat_t stats[7];
+  GetStats(stats);
+  Stat_t sumw   = stats[0];
+  Stat_t sumw2  = stats[1];
+  Stat_t sumwx  = stats[2];
+  Stat_t sumwx2 = stats[3];
+  Stat_t sumwy  = stats[4];
+  Stat_t sumwy2 = stats[5];
+  Stat_t sumwxy = stats[6];
+
+  if (sumw == 0) return 0;
   if (axis1 == 1 && axis2 == 1) {
-     return TMath::Abs(fTsumwx2/fTsumw - fTsumwx*fTsumwx/(fTsumw*fTsumw));
+     return TMath::Abs(sumwx2/sumw - sumwx*sumwx/sumw2);
   }
   if (axis1 == 2 && axis2 == 2) {
-     return TMath::Abs(fTsumwy2/fTsumw - fTsumwy*fTsumwy/(fTsumw*fTsumw));
+     return TMath::Abs(sumwy2/sumw - sumwy*sumwy/sumw2);
   }
-  return fTsumwxy/fTsumw - fTsumwx/fTsumw*fTsumwy/fTsumw;
+  return sumwxy/sumw - sumwx/sumw*sumwy/sumw;
 }
 
 //______________________________________________________________________________
@@ -470,8 +490,10 @@ void TH2S::GetStats(Stat_t *stats)
    // stats[3] = sumwx2
    // stats[4] = sumwy
    // stats[5] = sumwy2
+   // stats[6] = sumwxy
 
-   if (fTsumw == 0 || fXaxis.TestBit(kAxisRange) || fYaxis.TestBit(kAxisRange)) {
+   if (fTsumw == 0 || fXaxis.TestBit(TAxis::kAxisRange) ||
+       fYaxis.TestBit(TAxis::kAxisRange)) {
       TH1::GetStats(stats);
    } else {
       stats[0] = fTsumw;
@@ -480,7 +502,19 @@ void TH2S::GetStats(Stat_t *stats)
       stats[3] = fTsumwx2;
       stats[4] = fTsumwy;
       stats[5] = fTsumwy2;
+      stats[6] = fTsumwxy;
    }
+}
+
+//______________________________________________________________________________
+void TH2S::PutStats(Stat_t *stats)
+{
+   // Replace current statistics with the values in array stats
+
+   TH1::PutStats(stats);
+   fTsumwy  = stats[4];
+   fTsumwy2 = stats[5];
+   fTsumwxy = stats[6];
 }
 
 //______________________________________________________________________________
@@ -565,7 +599,7 @@ TH2F::~TH2F()
 }
 
 //______________________________________________________________________________
-TH2F::TH2F(const Text_t *name,const Text_t *title,Int_t nbinsx,Axis_t xlow,Axis_t xup
+TH2F::TH2F(const char *name,const char *title,Int_t nbinsx,Axis_t xlow,Axis_t xup
                                      ,Int_t nbinsy,Axis_t ylow,Axis_t yup)
      :TH1F(2,name,title,nbinsx,xlow,xup),
       TH2()
@@ -577,7 +611,7 @@ TH2F::TH2F(const Text_t *name,const Text_t *title,Int_t nbinsx,Axis_t xlow,Axis_
 }
 
 //______________________________________________________________________________
-TH2F::TH2F(const Text_t *name,const Text_t *title,Int_t nbinsx,Axis_t *xbins
+TH2F::TH2F(const char *name,const char *title,Int_t nbinsx,Axis_t *xbins
                                      ,Int_t nbinsy,Axis_t ylow,Axis_t yup)
      :TH1F(2,name,title,nbinsx,xbins),
       TH2()
@@ -589,7 +623,7 @@ TH2F::TH2F(const Text_t *name,const Text_t *title,Int_t nbinsx,Axis_t *xbins
 }
 
 //______________________________________________________________________________
-TH2F::TH2F(const Text_t *name,const Text_t *title,Int_t nbinsx,Axis_t xlow,Axis_t xup
+TH2F::TH2F(const char *name,const char *title,Int_t nbinsx,Axis_t xlow,Axis_t xup
                                      ,Int_t nbinsy,Axis_t *ybins)
      :TH1F(2,name,title,nbinsx,xlow,xup),
       TH2()
@@ -601,7 +635,7 @@ TH2F::TH2F(const Text_t *name,const Text_t *title,Int_t nbinsx,Axis_t xlow,Axis_
 }
 
 //______________________________________________________________________________
-TH2F::TH2F(const Text_t *name,const Text_t *title,Int_t nbinsx,Axis_t *xbins
+TH2F::TH2F(const char *name,const char *title,Int_t nbinsx,Axis_t *xbins
                                      ,Int_t nbinsy,Axis_t *ybins)
      :TH1F(2,name,title,nbinsx,xbins),
       TH2()
@@ -638,7 +672,7 @@ TH1 *TH2F::DrawCopy(Option_t *option)
 }
 
 //______________________________________________________________________________
-Int_t TH2F::Fill(Axis_t x, Axis_t y)
+Int_t TH2F::Fill(Axis_t x, Stat_t y)
 {
    Int_t ok = TH1::Fill12(x,y);
    if (ok >= 0) TH2::Fill20(x,y);
@@ -676,18 +710,28 @@ Stat_t TH2F::GetCovariance(Int_t axis1, Int_t axis2)
 //*-*-*-*-*-*-*-*Return covariance between axis1 and axis2*-*-*-*-*
 //*-*            ====================================================
 
-  if (axis1 < 1 || axis2 < 1 || axis1 > 2 || axis2 > 2) {
+     if (axis1 < 1 || axis2 < 1 || axis1 > 2 || axis2 > 2) {
      Error("GetCovariance","Wrong parameters");
      return 0;
   }
-  if (fTsumw == 0) return 0;
+  Stat_t stats[7];
+  GetStats(stats);
+  Stat_t sumw   = stats[0];
+  Stat_t sumw2  = stats[1];
+  Stat_t sumwx  = stats[2];
+  Stat_t sumwx2 = stats[3];
+  Stat_t sumwy  = stats[4];
+  Stat_t sumwy2 = stats[5];
+  Stat_t sumwxy = stats[6];
+
+  if (sumw == 0) return 0;
   if (axis1 == 1 && axis2 == 1) {
-     return TMath::Abs(fTsumwx2/fTsumw - fTsumwx*fTsumwx/(fTsumw*fTsumw));
+     return TMath::Abs(sumwx2/sumw - sumwx*sumwx/sumw2);
   }
   if (axis1 == 2 && axis2 == 2) {
-     return TMath::Abs(fTsumwy2/fTsumw - fTsumwy*fTsumwy/(fTsumw*fTsumw));
+     return TMath::Abs(sumwy2/sumw - sumwy*sumwy/sumw2);
   }
-  return fTsumwxy/fTsumw - fTsumwx/fTsumw*fTsumwy/fTsumw;
+  return sumwxy/sumw - sumwx/sumw*sumwy/sumw;
 }
 
 //______________________________________________________________________________
@@ -701,8 +745,10 @@ void TH2F::GetStats(Stat_t *stats)
    // stats[3] = sumwx2
    // stats[4] = sumwy
    // stats[5] = sumwy2
+   // stats[6] = sumwxy
 
-   if (fTsumw == 0 || fXaxis.TestBit(kAxisRange) || fYaxis.TestBit(kAxisRange)) {
+   if (fTsumw == 0 || fXaxis.TestBit(TAxis::kAxisRange) ||
+       fYaxis.TestBit(TAxis::kAxisRange)) {
       TH1::GetStats(stats);
    } else {
       stats[0] = fTsumw;
@@ -711,7 +757,19 @@ void TH2F::GetStats(Stat_t *stats)
       stats[3] = fTsumwx2;
       stats[4] = fTsumwy;
       stats[5] = fTsumwy2;
+      stats[6] = fTsumwxy;
    }
+}
+
+//______________________________________________________________________________
+void TH2F::PutStats(Stat_t *stats)
+{
+   // Replace current statistics with the values in array stats
+
+   TH1::PutStats(stats);
+   fTsumwy  = stats[4];
+   fTsumwy2 = stats[5];
+   fTsumwxy = stats[6];
 }
 
 //______________________________________________________________________________
@@ -808,7 +866,7 @@ TH2D::~TH2D()
 }
 
 //______________________________________________________________________________
-TH2D::TH2D(const Text_t *name,const Text_t *title,Int_t nbinsx,Axis_t xlow,Axis_t xup
+TH2D::TH2D(const char *name,const char *title,Int_t nbinsx,Axis_t xlow,Axis_t xup
                                      ,Int_t nbinsy,Axis_t ylow,Axis_t yup)
      :TH1D(2,name,title,nbinsx,xlow,xup),
       TH2()
@@ -819,7 +877,7 @@ TH2D::TH2D(const Text_t *name,const Text_t *title,Int_t nbinsx,Axis_t xlow,Axis_
 }
 
 //______________________________________________________________________________
-TH2D::TH2D(const Text_t *name,const Text_t *title,Int_t nbinsx,Axis_t *xbins
+TH2D::TH2D(const char *name,const char *title,Int_t nbinsx,Axis_t *xbins
                                      ,Int_t nbinsy,Axis_t ylow,Axis_t yup)
      :TH1D(2,name,title,nbinsx,xbins),
       TH2()
@@ -830,7 +888,7 @@ TH2D::TH2D(const Text_t *name,const Text_t *title,Int_t nbinsx,Axis_t *xbins
 }
 
 //______________________________________________________________________________
-TH2D::TH2D(const Text_t *name,const Text_t *title,Int_t nbinsx,Axis_t xlow,Axis_t xup
+TH2D::TH2D(const char *name,const char *title,Int_t nbinsx,Axis_t xlow,Axis_t xup
                                      ,Int_t nbinsy,Axis_t *ybins)
      :TH1D(2,name,title,nbinsx,xlow,xup),
       TH2()
@@ -841,7 +899,7 @@ TH2D::TH2D(const Text_t *name,const Text_t *title,Int_t nbinsx,Axis_t xlow,Axis_
 }
 
 //______________________________________________________________________________
-TH2D::TH2D(const Text_t *name,const Text_t *title,Int_t nbinsx,Axis_t *xbins
+TH2D::TH2D(const char *name,const char *title,Int_t nbinsx,Axis_t *xbins
                                      ,Int_t nbinsy,Axis_t *ybins)
      :TH1D(2,name,title,nbinsx,xbins),
       TH2()
@@ -878,7 +936,7 @@ TH1 *TH2D::DrawCopy(Option_t *option)
 }
 
 //______________________________________________________________________________
-Int_t TH2D::Fill(Axis_t x, Axis_t y)
+Int_t TH2D::Fill(Axis_t x, Stat_t y)
 {
    Int_t ok = TH1::Fill12(x,y);
    if (ok >= 0) TH2::Fill20(x,y);
@@ -920,14 +978,24 @@ Stat_t TH2D::GetCovariance(Int_t axis1, Int_t axis2)
      Error("GetCovariance","Wrong parameters");
      return 0;
   }
-  if (fTsumw == 0) return 0;
+  Stat_t stats[7];
+  GetStats(stats);
+  Stat_t sumw   = stats[0];
+  Stat_t sumw2  = stats[1];
+  Stat_t sumwx  = stats[2];
+  Stat_t sumwx2 = stats[3];
+  Stat_t sumwy  = stats[4];
+  Stat_t sumwy2 = stats[5];
+  Stat_t sumwxy = stats[6];
+
+  if (sumw == 0) return 0;
   if (axis1 == 1 && axis2 == 1) {
-     return TMath::Abs(fTsumwx2/fTsumw - fTsumwx*fTsumwx/(fTsumw*fTsumw));
+     return TMath::Abs(sumwx2/sumw - sumwx*sumwx/sumw2);
   }
   if (axis1 == 2 && axis2 == 2) {
-     return TMath::Abs(fTsumwy2/fTsumw - fTsumwy*fTsumwy/(fTsumw*fTsumw));
+     return TMath::Abs(sumwy2/sumw - sumwy*sumwy/sumw2);
   }
-  return fTsumwxy/fTsumw - fTsumwx/fTsumw*fTsumwy/fTsumw;
+  return sumwxy/sumw - sumwx/sumw*sumwy/sumw;
 }
 
 //______________________________________________________________________________
@@ -941,8 +1009,10 @@ void TH2D::GetStats(Stat_t *stats)
    // stats[3] = sumwx2
    // stats[4] = sumwy
    // stats[5] = sumwy2
+   // stats[6] = sumwxy
 
-   if (fTsumw == 0 || fXaxis.TestBit(kAxisRange) || fYaxis.TestBit(kAxisRange)) {
+   if (fTsumw == 0 || fXaxis.TestBit(TAxis::kAxisRange) ||
+       fYaxis.TestBit(TAxis::kAxisRange)) {
       TH1::GetStats(stats);
    } else {
       stats[0] = fTsumw;
@@ -951,7 +1021,19 @@ void TH2D::GetStats(Stat_t *stats)
       stats[3] = fTsumwx2;
       stats[4] = fTsumwy;
       stats[5] = fTsumwy2;
+      stats[6] = fTsumwxy;
    }
+}
+
+//______________________________________________________________________________
+void TH2D::PutStats(Stat_t *stats)
+{
+   // Replace current statistics with the values in array stats
+
+   TH1::PutStats(stats);
+   fTsumwy  = stats[4];
+   fTsumwy2 = stats[5];
+   fTsumwxy = stats[6];
 }
 
 //______________________________________________________________________________

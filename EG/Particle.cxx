@@ -1,8 +1,10 @@
+//*CMZ :  2.23/12 26/01/2000  09.49.07  by  Rene Brun
+//*CMZ :  2.23/10 10/12/99  09.36.39  by  Rene Brun
+//*CMZ :  2.23/05 20/10/99  11.56.09  by  Rene Brun
 //*CMZ :  2.22/08 07/07/99  18.51.24  by  Rene Brun
 //*CMZ :  2.22/07 01/07/99  19.21.28  by  Rene Brun
 //*CMZ :  2.22/06 22/06/99  21.02.43  by  Rene Brun
 //*CMZ :  2.22/02 28/05/99  14.21.32  by  Rene Brun
-//*CMZ :  2.22/01 03/05/99  09.39.33  by  Rene Brun
 //*-- Author :    Rene Brun , Federico Carminati  26/04/99
 
 #include "TView.h"
@@ -36,7 +38,11 @@ TParticle::TParticle(Int_t pdg,       Int_t status,
   SetPolarisation(0,0,0);
 
   fParticlePDG = TDatabasePDG::Instance()->GetParticle(pdg);
-  fCalcMass    = fParticlePDG->Mass();
+  if (fParticlePDG) {
+     fCalcMass    = fParticlePDG->Mass();
+  } else {
+     fCalcMass    = TMath::Sqrt(fE*fE -fPx*fPx -fPy*fPy -fPz*fPz);
+  }
 }
 
 //______________________________________________________________________________
@@ -56,7 +62,11 @@ TParticle::TParticle(Int_t pdg,       Int_t status,
   SetPolarisation(0,0,0);
 
   fParticlePDG = TDatabasePDG::Instance()->GetParticle(pdg);
-  fCalcMass    = fParticlePDG->Mass();
+  if (fParticlePDG) {
+     fCalcMass    = fParticlePDG->Mass();
+  } else {
+     fCalcMass    = TMath::Sqrt(fE*fE -fPx*fPx -fPy*fPy -fPz*fPz);
+  }
 }
 
 //______________________________________________________________________________
@@ -112,11 +122,30 @@ void TParticle::ExecuteEvent(Int_t, Int_t, Int_t)
 }
 
 //______________________________________________________________________________
-const Text_t* TParticle::GetName() const {
+const char* TParticle::GetName() const {
    static char def[4] = "XXX";
    const TParticlePDG *ap = TDatabasePDG::Instance()->GetParticle(fPdgCode);
    if (ap) return ap->GetName();
    else    return def;
+}
+
+
+//______________________________________________________________________________
+TParticlePDG*  TParticle::GetPDG(Int_t mode)
+{
+// returns a pointer to the TParticlePDG object using the pdgcode
+// if mode == 0 (default) always get a fresh value for the pointer.
+// if mode != 0 this function returns directly the previously
+//              computed pointer from a previous call
+// One can use mode=1 (faster) when the TParticle object is not part of a
+// TClonesArray used in split mode in a Root TTree.
+
+  if (!mode || !fParticlePDG) {
+     (((TParticle*)this)->fParticlePDG = TDatabasePDG::Instance()->GetParticle(fPdgCode));
+     // when mutable will be allowed, change above line to the following line
+     //   fParticlePDG = TDatabasePDG::Instance()->GetParticle(fPdgCode);}
+  }
+  return fParticlePDG;
 }
 
 //______________________________________________________________________________
@@ -132,7 +161,7 @@ void TParticle::GetPolarisation(TVector3 &v)
 }
 
 //______________________________________________________________________________
-const Text_t *TParticle::GetTitle() const
+const char *TParticle::GetTitle() const
 {
    static char def[4] = "XXX";
    const TParticlePDG *ap = TDatabasePDG::Instance()->GetParticle(fPdgCode);
@@ -212,8 +241,9 @@ void TParticle::Streamer(TBuffer &R__b)
 {
    // Stream an object of class TParticle.
 
+   UInt_t R__s, R__c;
    if (R__b.IsReading()) {
-      Version_t R__v = R__b.ReadVersion(); if (R__v) { }
+      Version_t R__v = R__b.ReadVersion(&R__s, &R__c); if (R__v) { }
       TObject::Streamer(R__b);
       TAttLine::Streamer(R__b);
       R__b >> fPdgCode;
@@ -233,8 +263,9 @@ void TParticle::Streamer(TBuffer &R__b)
       R__b >> fPolarTheta;
       R__b >> fPolarPhi;
       fParticlePDG = TDatabasePDG::Instance()->GetParticle(fPdgCode);
+      R__b.CheckByteCount(R__s, R__c, TParticle::IsA());
    } else {
-      R__b.WriteVersion(TParticle::IsA());
+      R__c = R__b.WriteVersion(TParticle::IsA(), kTRUE);
       TObject::Streamer(R__b);
       TAttLine::Streamer(R__b);
       R__b << fPdgCode;
@@ -253,5 +284,6 @@ void TParticle::Streamer(TBuffer &R__b)
       R__b << fVt;
       R__b << fPolarTheta;
       R__b << fPolarPhi;
+      R__b.SetByteCount(R__c, kTRUE);
    }
 }

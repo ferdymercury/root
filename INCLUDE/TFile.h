@@ -1,33 +1,25 @@
+//*CMZ :  2.23/12 26/01/2000  09.24.07  by  Rene Brun
+//*CMZ :  2.23/09 04/11/99  12.47.40  by  Rene Brun
 //*CMZ :  2.22/01 15/04/99  18.01.09  by  Fons Rademakers
 //*CMZ :  2.21/07 19/02/99  11.07.10  by  Fons Rademakers
 //*CMZ :  2.21/03 15/01/99  18.37.02  by  Fons Rademakers
 //*CMZ :  2.21/01 11/01/99  16.37.57  by  Fons Rademakers
-//*CMZ :  2.20/00 08/11/98  11.43.55  by  Rene Brun
-//*CMZ :  2.00/11 17/08/98  16.26.04  by  Rene Brun
-//*CMZ :  2.00/10 28/07/98  10.50.05  by  Fons Rademakers
-//*CMZ :  2.00/08 25/05/98  22.48.59  by  Rene Brun
-//*CMZ :  1.03/09 06/12/97  19.37.47  by  Fons Rademakers
 //*-- Author :    Rene Brun   28/11/94
 
 #ifndef ROOT_TFile
 #define ROOT_TFile
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -88,11 +80,11 @@ public:
    enum ERelativeTo { kBeg = 0, kCur = 1, kEnd = 2 };
 
    TFile();
-   TFile(const Text_t *fname, Option_t *option="", const Text_t *ftitle="", Int_t compress=1);
+   TFile(const char *fname, Option_t *option="", const char *ftitle="", Int_t compress=1);
    virtual ~TFile();
    virtual void      Close(Option_t *option=""); // *MENU*
    virtual void      Copy(TObject &) { MayNotUse("Copy(TObject &)"); }
-   virtual void      Delete(const Text_t *namecycle="");
+   virtual void      Delete(const char *namecycle="");
    virtual void      Draw(Option_t *option="");
    virtual void      FillBuffer(char *&buffer);
    virtual void      Flush();
@@ -107,6 +99,7 @@ public:
    Double_t          GetBytesRead() const { return fBytesRead; }
    Double_t          GetBytesWritten() const { return fBytesWrite; }
    Int_t             GetVersion() const { return fVersion; }
+   Int_t             GetRecordHeader(char *buf, Seek_t first, Int_t maxbytes, Int_t &nbytes, Int_t &objlen, Int_t &keylen);
    virtual Bool_t    IsOpen() const;
    virtual void      ls(Option_t *option="");
    virtual void      MakeFree(Seek_t first, Seek_t last);
@@ -123,12 +116,12 @@ public:
    virtual Int_t     Sizeof() const;
    void              SumBuffer(Int_t bufsize);
    virtual Bool_t    WriteBuffer(const char *buf, int len);
-   virtual void      Write(const Text_t *name=0, Int_t opt=0, Int_t bufsiz=0);
+   virtual void      Write(const char *name=0, Int_t opt=0, Int_t bufsiz=0);
    virtual void      WriteFree();
    virtual void      WriteHeader();
 
-   static TFile     *Open(const Text_t *name, Option_t *option="",
-                          const Text_t *ftitle="", Int_t compress=1);
+   static TFile     *Open(const char *name, Option_t *option="",
+                          const char *ftitle="", Int_t compress=1);
 
    static Double_t   GetFileBytesRead();
    static Double_t   GetFileBytesWritten();

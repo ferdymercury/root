@@ -1,22 +1,19 @@
+//*CMZ :  2.23/09 12/11/99  18.29.38  by  Fons Rademakers
+//*CMZ :  2.23/07 25/10/99  18.54.13  by  Fons Rademakers
 //*CMZ :  1.03/09 07/12/97  12.15.59  by  Fons Rademakers
 //*-- Author :    Rene Brun   04/02/95
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -38,12 +35,14 @@ ClassImp(TDataType)
 TDataType::TDataType(G__TypedefInfo *info) : TDictionary()
 {
    // Default TDataType ctor. TDataTypes are constructed in TROOT via
-   // a call to TCint::CreateListOfTypes().
+   // a call to TCint::UpdateListOfTypes().
 
    fInfo = info;
 
-   if (fInfo)
+   if (fInfo) {
+      fName = info->Name();
       SetType(fInfo->TrueName());
+   }
 }
 
 //______________________________________________________________________________
@@ -93,10 +92,7 @@ const char *TDataType::GetName() const
 {
    // Get name of typedef.
 
-   if (fInfo)
-      return fInfo->Name();
-   else
-      return fName.Data();
+   return fName.Data();
 }
 
 //______________________________________________________________________________
@@ -117,10 +113,7 @@ Int_t TDataType::Compare(TObject *obj)
    // whether "this" is lexicographically less than, equal to, or
    // greater than obj.
 
-   if (fInfo)
-      return strcmp(fInfo->Name(), obj->GetName());
-   else
-      return strcmp(fName.Data(), obj->GetName());
+   return strcmp(fName.Data(), obj->GetName());
 }
 
 //______________________________________________________________________________
@@ -128,11 +121,7 @@ ULong_t TDataType::Hash()
 {
    // Return hash value for TDataType based on its name.
 
-   if (fInfo) {
-      TString s = fInfo->Name();
-      return s.Hash();
-   } else
-      return fName.Hash();
+   return fName.Hash();
 }
 
 //______________________________________________________________________________

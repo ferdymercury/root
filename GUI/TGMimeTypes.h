@@ -1,25 +1,21 @@
+//*CMZ :  2.23/02 01/09/99  19.54.24  by  Fons Rademakers
 //*CMZ :  2.00/00 18/01/98  21.07.38  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   18/01/98
 
 #ifndef ROOT_TGMimeTypes
 #define ROOT_TGMimeTypes
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -49,8 +45,9 @@ friend class TGMimeTypes;
 private:
    TString   fType;       // mime type
    TString   fPattern;    // filename pattern
-   TString   fAction;     // related action
-   TString   fIcon;       // related icon
+   TString   fAction;     // associated action
+   TString   fIcon;       // associated icon (32x32)
+   TString   fSIcon;      // associated small icon (16x16)
    TRegexp  *fReg;        // pattern regular expression
 
 public:
@@ -74,7 +71,7 @@ public:
 
    void   SaveMimes();
    Bool_t HasChanged() const { return fChanged; }
-   void   AddType(const char *type, const char *pat, const char *icon, const char *action);
+   void   AddType(const char *type, const char *pat, const char *icon, const char *sicon, const char *action);
    void   Print(Option_t *option="");
    Bool_t GetAction(const char *filename, char *action);
    Bool_t GetType(const char *filename, char *type);

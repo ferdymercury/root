@@ -1,27 +1,20 @@
+//*CMZ :  2.23/02 02/09/99  15.54.27  by  Rene Brun
 //*CMZ :  2.22/07 29/06/99  13.53.54  by  Fons Rademakers
 //*CMZ :  2.22/01 11/05/99  13.01.45  by  Fons Rademakers
 //*CMZ :  2.21/05 11/05/99  12.30.58  by  Fons Rademakers
-//*CMZ :  2.20/05 14/12/98  17.11.47  by  Fons Rademakers
-//*CMZ :  2.00/11 03/08/98  11.57.53  by  Fons Rademakers
-//*CMZ :  2.00/00 23/02/98  16.03.43  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   06/01/98
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 //*CMZ :  2.00/00 16/02/98  00.17.08  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   27/12/97
@@ -97,11 +90,11 @@ TGButton::TGButton(const TGWindow *p, Int_t id, GContext_t norm, UInt_t options)
    fState    = kButtonUp;
    fStayDown = kFALSE;
 
-   gGXW->GrabButton(fId, kButton1, kAnyModifier,
+   gVirtualX->GrabButton(fId, kButton1, kAnyModifier,
                     kButtonPressMask | kButtonReleaseMask,
                     kNone, kNone);
 
-   gGXW->SelectInput(fId, kExposureMask | kEnterWindowMask | kLeaveWindowMask);
+   gVirtualX->SelectInput(fId, kExposureMask | kEnterWindowMask | kLeaveWindowMask);
 }
 
 //______________________________________________________________________________
@@ -266,14 +259,14 @@ void TGTextButton::Init()
    fTMode = kTextCenterX | kTextCenterY;
    fHKeycode = 0;
 
-   fTWidth  = gGXW->TextWidth(fFontStruct, fLabel->GetString(), fLabel->GetLength());
-   gGXW->GetFontProperties(fFontStruct, max_ascent, max_descent);
+   fTWidth  = gVirtualX->TextWidth(fFontStruct, fLabel->GetString(), fLabel->GetLength());
+   gVirtualX->GetFontProperties(fFontStruct, max_ascent, max_descent);
    fTHeight = max_ascent + max_descent;
 
    Resize(fTWidth + 8, fTHeight + 7);
 
    if ((hotchar = fLabel->GetHotChar()) != 0) {
-      if ((fHKeycode = gGXW->KeysymToKeycode(hotchar)) != 0) {
+      if ((fHKeycode = gVirtualX->KeysymToKeycode(hotchar)) != 0) {
          const TGMainFrame *main = (TGMainFrame *) GetMainFrame();
          main->BindKey(this, fHKeycode, kKeyMod1Mask);
       }
@@ -301,8 +294,8 @@ void TGTextButton::SetText(TGHotString *new_label)
    fLabel = new_label;
 
    int max_ascent, max_descent;
-   fTWidth = gGXW->TextWidth(fFontStruct, fLabel->GetString(), fLabel->GetLength());
-   gGXW->GetFontProperties(fFontStruct, max_ascent, max_descent);
+   fTWidth = gVirtualX->TextWidth(fFontStruct, fLabel->GetString(), fLabel->GetLength());
+   gVirtualX->GetFontProperties(fFontStruct, max_ascent, max_descent);
    fTHeight = max_ascent + max_descent;
 
    fClient->NeedRedraw(this);
@@ -334,10 +327,10 @@ void TGTextButton::DoRedraw()
 
    if (fState == kButtonDown || fState == kButtonEngaged) { ++x; ++y; }
    if (fState == kButtonEngaged) {
-      gGXW->FillRectangle(fId, fgHibckgndGC, 2, 2, fWidth-4, fHeight-4);
-      gGXW->DrawLine(fId, fgHilightGC, 2, 2, fWidth-3, 2);
+      gVirtualX->FillRectangle(fId, fgHibckgndGC, 2, 2, fWidth-4, fHeight-4);
+      gVirtualX->DrawLine(fId, fgHilightGC, 2, 2, fWidth-3, 2);
    }
-   gGXW->GetFontProperties(fFontStruct, max_ascent, max_descent);
+   gVirtualX->GetFontProperties(fFontStruct, max_ascent, max_descent);
    if (fState == kButtonDisabled) {
       fLabel->Draw(fId, fgHilightGC, x+1, y+1 + max_ascent);
       fLabel->Draw(fId, fgShadowGC, x, y + max_ascent);
@@ -462,8 +455,8 @@ void TGPictureButton::DoRedraw()
    TGFrame::DoRedraw();
    if (fState == kButtonDown || fState == kButtonEngaged) { ++x; ++y; }
    if (fState == kButtonEngaged) {
-      gGXW->FillRectangle(fId, fgHibckgndGC, 2, 2, fWidth-4, fHeight-4);
-      gGXW->DrawLine(fId, fgHilightGC, 2, 2, fWidth-3, 2);
+      gVirtualX->FillRectangle(fId, fgHibckgndGC, 2, 2, fWidth-4, fHeight-4);
+      gVirtualX->DrawLine(fId, fgHilightGC, 2, 2, fWidth-3, 2);
    }
    fPic->Draw(fId, fNormGC, x, y);
 }
@@ -519,14 +512,14 @@ void TGCheckButton::Init()
    fState     = kButtonUp;
 
    int hotchar, max_ascent, max_descent;
-   fTWidth  = gGXW->TextWidth(fFontStruct, fLabel->GetString(), fLabel->GetLength());
-   gGXW->GetFontProperties(fFontStruct, max_ascent, max_descent);
+   fTWidth  = gVirtualX->TextWidth(fFontStruct, fLabel->GetString(), fLabel->GetLength());
+   gVirtualX->GetFontProperties(fFontStruct, max_ascent, max_descent);
    fTHeight = max_ascent + max_descent;
 
    Resize(fTWidth + 22, fTHeight + 2);
 
    if ((hotchar = fLabel->GetHotChar()) != 0) {
-      if ((fHKeycode = gGXW->KeysymToKeycode(hotchar)) != 0) {
+      if ((fHKeycode = gVirtualX->KeysymToKeycode(hotchar)) != 0) {
          const TGMainFrame *main = (TGMainFrame *) GetMainFrame();
          main->BindKey(this, fHKeycode, kKeyMod1Mask);
       }
@@ -653,17 +646,17 @@ void TGCheckButton::DoRedraw()
    cw = 13;
    y0 = (fHeight - cw) >> 1;
 
-   gGXW->DrawLine(fId, fgShadowGC, 0, y0, cw-2, y0);
-   gGXW->DrawLine(fId, fgShadowGC, 0, y0, 0, y0+cw-2);
-   gGXW->DrawLine(fId, fgBlackGC, 1, y0+1, cw-3, y0+1);
-   gGXW->DrawLine(fId, fgBlackGC, 1, y0+1, 1, y0+cw-3);
+   gVirtualX->DrawLine(fId, fgShadowGC, 0, y0, cw-2, y0);
+   gVirtualX->DrawLine(fId, fgShadowGC, 0, y0, 0, y0+cw-2);
+   gVirtualX->DrawLine(fId, fgBlackGC, 1, y0+1, cw-3, y0+1);
+   gVirtualX->DrawLine(fId, fgBlackGC, 1, y0+1, 1, y0+cw-3);
 
-   gGXW->DrawLine(fId, fgHilightGC, 0, y0+cw-1, cw-1, y0+cw-1);
-   gGXW->DrawLine(fId, fgHilightGC, cw-1, y0+cw-1, cw-1, y0);
-   gGXW->DrawLine(fId, fgBckgndGC,  2, y0+cw-2, cw-2, y0+cw-2);
-   gGXW->DrawLine(fId, fgBckgndGC,  cw-2, y0+2, cw-2, y0+cw-2);
+   gVirtualX->DrawLine(fId, fgHilightGC, 0, y0+cw-1, cw-1, y0+cw-1);
+   gVirtualX->DrawLine(fId, fgHilightGC, cw-1, y0+cw-1, cw-1, y0);
+   gVirtualX->DrawLine(fId, fgBckgndGC,  2, y0+cw-2, cw-2, y0+cw-2);
+   gVirtualX->DrawLine(fId, fgBckgndGC,  cw-2, y0+2, cw-2, y0+cw-2);
 
-   gGXW->FillRectangle(fId, fgWhiteGC, 2, y0+2, cw-4, cw-4);
+   gVirtualX->FillRectangle(fId, fgWhiteGC, 2, y0+2, cw-4, cw-4);
 
    if (fState == kButtonDown) {
       Segment_t seg[6];
@@ -678,14 +671,14 @@ void TGCheckButton::DoRedraw()
       seg[4].fX1 = 3+l; seg[4].fY1 = 6+t; seg[4].fX2 = 7+l; seg[4].fY2 = 2+t;
       seg[5].fX1 = 3+l; seg[5].fY1 = 7+t; seg[5].fX2 = 7+l; seg[5].fY2 = 3+t;
 
-      gGXW->DrawSegments(fId, fgBlackGC, seg, 6);
+      gVirtualX->DrawSegments(fId, fgBlackGC, seg, 6);
    }
 
    x = 20;
    y = 1;
 
    int max_ascent, max_descent;
-   gGXW->GetFontProperties(fFontStruct, max_ascent, max_descent);
+   gVirtualX->GetFontProperties(fFontStruct, max_ascent, max_descent);
    if (fState == kButtonDisabled) {
      fLabel->Draw(fId, fgHilightGC, x+1, y+1 + max_ascent);
      fLabel->Draw(fId, fgShadowGC, x, y + max_ascent);
@@ -751,14 +744,14 @@ void TGRadioButton::Init()
       Error("TGRadioButton", "rbutton_*.xpm not found");
 
    int hotchar, max_ascent, max_descent;
-   fTWidth = gGXW->TextWidth(fFontStruct, fLabel->GetString(), fLabel->GetLength());
-   gGXW->GetFontProperties(fFontStruct, max_ascent, max_descent);
+   fTWidth = gVirtualX->TextWidth(fFontStruct, fLabel->GetString(), fLabel->GetLength());
+   gVirtualX->GetFontProperties(fFontStruct, max_ascent, max_descent);
    fTHeight = max_ascent + max_descent;
 
    Resize(fTWidth + 22, fTHeight + 2);
 
    if ((hotchar = fLabel->GetHotChar()) != 0) {
-      if ((fHKeycode = gGXW->KeysymToKeycode(hotchar)) != 0) {
+      if ((fHKeycode = gVirtualX->KeysymToKeycode(hotchar)) != 0) {
          const TGMainFrame *main = (TGMainFrame *) GetMainFrame();
          main->BindKey(this, fHKeycode, kKeyMod1Mask);
       }
@@ -888,7 +881,7 @@ void TGRadioButton::DoRedraw()
    }
 
    int max_ascent, max_descent;
-   gGXW->GetFontProperties(fFontStruct, max_ascent, max_descent);
+   gVirtualX->GetFontProperties(fFontStruct, max_ascent, max_descent);
 
    // ty = max_ascent + 1;
    ty += max_ascent;

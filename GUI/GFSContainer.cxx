@@ -1,25 +1,22 @@
+//*CMZ :  2.23/12 17/01/2000  18.35.31  by  Rene Brun
+//*CMZ :  2.23/10 15/12/99  16.40.08  by  Fons Rademakers
+//*CMZ :  2.23/03 20/09/99  12.36.55  by  Fons Rademakers
 //*CMZ :  2.00/07 18/05/98  18.36.10  by  Fons Rademakers
 //*CMZ :  2.00/06 11/04/98  10.28.44  by  Kaori Wada
 //*CMZ :  2.00/02 17/03/98  09.46.22  by  Rene Brun
-//*CMZ :  2.00/00 06/03/98  16.13.13  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   19/01/98
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 //*CMZ :  2.00/00 16/02/98  00.17.08  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   27/12/97
@@ -44,7 +41,9 @@
 //////////////////////////////////////////////////////////////////////////
 
 #ifndef WIN32
+#ifndef R__LYNXOS
 #include <sys/stat.h>
+#endif
 #include <pwd.h>
 #ifndef __VMS
 #include <grp.h>
@@ -122,12 +121,12 @@ Int_t TGFSFrameElement::Compare(TObject *obj)
 #endif
         if (type1 < type2) return -1;
         if (type1 > type2) return 1;
-        return 0;
+        return strcmp(f1->GetItemName()->GetString(), f2->GetItemName()->GetString());
 
      case kSortBySize:
         if (f1->GetSize() < f2->GetSize()) return -1;
         if (f1->GetSize() > f2->GetSize()) return 1;
-        return 0;
+        return strcmp(f1->GetItemName()->GetString(), f2->GetItemName()->GetString());
   }
 }
 
@@ -256,7 +255,7 @@ TGFileItem::TGFileItem(const TGWindow *p,
    for (i = 0; fSubnames[i] != 0; ++i);
       fCtw = new int[i];
    for (i = 0; fSubnames[i] != 0; ++i)
-      fCtw[i] = gGXW->TextWidth(fFontStruct, fSubnames[i]->GetString(),
+      fCtw[i] = gVirtualX->TextWidth(fFontStruct, fSubnames[i]->GetString(),
                                              fSubnames[i]->GetLength());
 #else
    Error("TGFileItem", "not yet implemented for Win32");
@@ -308,9 +307,10 @@ TGFileContainer::TGFileContainer(const TGWindow *p, UInt_t w, UInt_t h,
    // Create a list view container which will hold the contents of
    // the current directory.
 
-   fSortType = kSortByName;
-   fFilter   = 0;
-   fRefresh  = new TViewUpdateTimer(this, 5000);
+   fSortType  = kSortByName;
+   fFilter    = 0;
+   fDirectory = gSystem->WorkingDirectory();
+   fRefresh   = new TViewUpdateTimer(this, 5000);
    gSystem->AddTimer(fRefresh);
 
    fFolder_s = fClient->GetPicture("folder_s.xpm");
@@ -355,7 +355,7 @@ void TGFileContainer::AddFrame(TGFrame *f, TGLayoutHints *l)
 
    nw = new TGFSFrameElement;
    nw->fFrame     = f;
-   nw->fLayout    = l;
+   nw->fLayout    = l ? l : fgDefaultHints;
    nw->fState     = 1;
    nw->fContainer = this;
    fList->Add(nw);
@@ -370,7 +370,7 @@ Bool_t TGFileContainer::HandleTimer(TTimer *)
 #ifndef WIN32
    struct stat sbuf;
 
-   if (stat(".", &sbuf) == 0)
+   if (stat(fDirectory.Data(), &sbuf) == 0)
       if (fMtime != (ULong_t)sbuf.st_mtime) DisplayDirectory();
 #else
    Error("HandleTImer", "not yet implemented for Win32");
@@ -432,7 +432,13 @@ void TGFileContainer::ChangeDirectory(const char *path)
 {
    // Change current directory.
 
-   if (gSystem->ChangeDirectory(path)) DisplayDirectory();
+   TString savdir = gSystem->WorkingDirectory();
+   gSystem->ChangeDirectory(fDirectory.Data());   // so path of ".." will work
+   if (gSystem->ChangeDirectory(path)) {
+      fDirectory = gSystem->WorkingDirectory();
+      gSystem->ChangeDirectory(savdir.Data());
+      DisplayDirectory();
+   }
 }
 
 //______________________________________________________________________________
@@ -459,8 +465,8 @@ void TGFileContainer::CreateFileList()
 {
    // This function creates the file list from current dir.
 
-   void       *dirp;
-   const char *name;
+   TString savdir = gSystem->WorkingDirectory();
+   if (!gSystem->ChangeDirectory(fDirectory.Data())) return;
 
 #ifndef WIN32
    struct stat sbuf;
@@ -470,13 +476,20 @@ void TGFileContainer::CreateFileList()
    return;
 #endif
 
-   if ((dirp = gSystem->OpenDirectory(".")) == 0) return;
+   void *dirp;
+   if ((dirp = gSystem->OpenDirectory(".")) == 0) {
+      gSystem->ChangeDirectory(savdir.Data());
+      return;
+   }
 
+   const char *name;
    while ((name = gSystem->GetDirEntry(dirp)) != 0) {
       if (strcmp(name, ".") && strcmp(name, ".."))
          AddFile(name);
    }
    gSystem->FreeDirectory(dirp);
+
+   gSystem->ChangeDirectory(savdir.Data());
 }
 
 //______________________________________________________________________________

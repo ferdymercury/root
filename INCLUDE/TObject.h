@@ -1,32 +1,26 @@
+//*CMZ :  2.23/12 24/01/2000  08.40.40  by  Rene Brun
+//*CMZ :  2.23/11 06/01/2000  12.52.22  by  Rene Brun
+//*CMZ :  2.23/09 21/11/99  16.18.55  by  Fons Rademakers
+//*CMZ :  2.23/03 22/09/99  18.07.45  by  Rene Brun
+//*CMZ :  2.23/01 26/08/99  12.14.20  by  Rene Brun
 //*CMZ :  2.22/05 10/06/99  09.00.07  by  Rene Brun
 //*CMZ :  2.20/04 09/12/98  19.11.39  by  Rene Brun
-//*CMZ :  2.00/12 14/09/98  13.40.08  by  Fons Rademakers
-//*CMZ :  2.00/11 17/08/98  15.14.16  by  Rene Brun
-//*CMZ :  2.00/10 27/07/98  18.35.33  by  Fons Rademakers
-//*CMZ :  2.00/08 26/05/98  16.39.16  by  Fons Rademakers
-//*CMZ :  2.00/00 11/02/98  12.53.12  by  Rene Brun
-//*CMZ :  1.03/08 17/11/97  16.15.42  by  Fons Rademakers
 //*-- Author :    Rene Brun   08/12/94
 
 #ifndef ROOT_TObject
 #define ROOT_TObject
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -78,12 +72,13 @@ class TTimer;
 //----- client flags
 enum EObjBits {
    kCanDelete        = BIT(0),   // if object in a list can be deleted
-   kObjIsPersistent  = BIT(2),   // if datamember is persistent (TDataMember)
    kObjIsParent      = BIT(1),   // if hyperlink is parent of linked list (TLink)
+   kObjIsPersistent  = BIT(2),   // if datamember is persistent (TDataMember)
    kObjInCanvas      = BIT(3),   // if object has been inserted in a pad/canvas
    kModified         = BIT(4),   // if object has been modified
    kDoneByView       = BIT(5),   // if object was created by the TObjectView
-   kCannotPick       = BIT(6)    // if object in a pad cannot be picked
+   kCannotPick       = BIT(6),   // if object in a pad cannot be picked
+   kInvalidObject    = BIT(13)   // if object ctor succeeded but object should not be used
 };
 
 
@@ -123,55 +118,55 @@ public:
    TObject &operator=(const TObject &rhs);
    virtual ~TObject();
 
-   void              AppendPad(Option_t *option="");
-   virtual void      Browse(TBrowser *b);
-   virtual const Text_t *ClassName() const;
-   virtual void      Clear(Option_t * /*option*/ ="") { }
-   virtual TObject  *Clone();
-   virtual void      Close(Option_t *option="");
-   virtual Int_t     Compare(TObject *obj);
-   virtual void      Copy(TObject &object);
-   virtual void      Delete(Option_t *option=""); // *MENU*
-   virtual Int_t     DistancetoPrimitive(Int_t px, Int_t py);
-   virtual void      Draw(Option_t *option="");
-   virtual void      DrawClass(); // *MENU*
-   virtual void      DrawClone(Option_t *option=""); // *MENU*
-   virtual void      Dump(); // *MENU*
-   virtual void      Execute(Text_t *method,  Text_t *params);
-   virtual void      Execute(TMethod *method, TObjArray *params);
-   virtual void      ExecuteEvent(Int_t event, Int_t px, Int_t py);
-   virtual Option_t *GetDrawOption() const;
-   virtual UInt_t    GetUniqueID() const;
-   virtual const Text_t *GetName() const;
-   virtual const Text_t *GetIconName() const;
-   virtual Option_t     *GetOption() const { return ""; }
-   virtual Text_t       *GetObjectInfo(Int_t px, Int_t py);
-   virtual const Text_t *GetTitle() const;
-   virtual Bool_t    HandleTimer(TTimer *timer);
-   virtual ULong_t   Hash();
-   virtual Bool_t    InheritsFrom(const Text_t *classname);
-   virtual Bool_t    InheritsFrom(const TClass *cl);
-   virtual void      Inspect(); // *MENU*
-   virtual Bool_t    IsFolder();
-   virtual Bool_t    IsEqual(TObject *obj);
-   virtual Bool_t    IsSortable() const { return kFALSE; }
-   virtual Bool_t    IsModified() { return TestBit(kModified); }
-           Bool_t    IsOnHeap() const { return TestBit(kIsOnHeap); }
-           Bool_t    IsZombie() const { return TestBit(kZombie); }
-   virtual Bool_t    Is3D();
-   virtual void      ls(Option_t *option="");
-   virtual void      Modified(Bool_t flag=kTRUE) { if (flag) SetBit(kModified,flag); }
-   virtual void      Paint(Option_t *option="");
-   virtual void      Pop();
-   virtual void      Print(Option_t *option="");
-   virtual void      Read(const Text_t *name);
-   virtual void      RecursiveRemove(TObject *obj);
-   virtual void      SavePrimitive(ofstream &out, Option_t *option);
-   virtual void      SetDrawOption(Option_t *option="");  // *MENU*
-   virtual void      SetUniqueID(UInt_t uid);
-   virtual void      Sizeof3D() const;
-   virtual void      UseCurrentStyle();
-   virtual void      Write(const Text_t *name=0, Int_t option=0, Int_t bufsize=0);
+   void                AppendPad(Option_t *option="");
+   virtual void        Browse(TBrowser *b);
+   virtual const char *ClassName() const;
+   virtual void        Clear(Option_t * /*option*/ ="") { }
+   virtual TObject    *Clone();
+   virtual void        Close(Option_t *option="");
+   virtual Int_t       Compare(TObject *obj);
+   virtual void        Copy(TObject &object);
+   virtual void        Delete(Option_t *option=""); // *MENU*
+   virtual Int_t       DistancetoPrimitive(Int_t px, Int_t py);
+   virtual void        Draw(Option_t *option="");
+   virtual void        DrawClass(); // *MENU*
+   virtual void        DrawClone(Option_t *option=""); // *MENU*
+   virtual void        Dump(); // *MENU*
+   virtual void        Execute(const char *method,  const char *params);
+   virtual void        Execute(TMethod *method, TObjArray *params);
+   virtual void        ExecuteEvent(Int_t event, Int_t px, Int_t py);
+   virtual Option_t   *GetDrawOption() const;
+   virtual UInt_t      GetUniqueID() const;
+   virtual const char *GetName() const;
+   virtual const char *GetIconName() const;
+   virtual Option_t   *GetOption() const { return ""; }
+   virtual char       *GetObjectInfo(Int_t px, Int_t py);
+   virtual const char *GetTitle() const;
+   virtual Bool_t      HandleTimer(TTimer *timer);
+   virtual ULong_t     Hash();
+   virtual Bool_t      InheritsFrom(const char *classname);
+   virtual Bool_t      InheritsFrom(const TClass *cl);
+   virtual void        Inspect(); // *MENU*
+   virtual Bool_t      IsFolder();
+   virtual Bool_t      IsEqual(TObject *obj);
+   virtual Bool_t      IsSortable() const { return kFALSE; }
+   virtual Bool_t      IsModified() { return TestBit(kModified); }
+           Bool_t      IsOnHeap() const { return TestBit(kIsOnHeap); }
+           Bool_t      IsZombie() const { return TestBit(kZombie); }
+   virtual Bool_t      Notify();
+   virtual void        ls(Option_t *option="");
+   virtual void        Modified(Bool_t flag=kTRUE) {SetBit(kModified,flag); }
+   virtual void        Paint(Option_t *option="");
+   virtual void        Pop();
+   virtual void        Print(Option_t *option="");
+   virtual void        Read(const char *name);
+   virtual void        RecursiveRemove(TObject *obj);
+   virtual void        SavePrimitive(ofstream &out, Option_t *option);
+   virtual void        SetDrawOption(Option_t *option="");  // *MENU*
+   virtual void        SetUniqueID(UInt_t uid);
+   virtual const char *StreamerInfo() const;
+   virtual void        UseCurrentStyle();
+   virtual void        Write(const char *name=0, Int_t option=0, Int_t bufsize=0);
 
    //----- operators
    void    *operator new(size_t sz) { return TStorage::ObjectAlloc(sz); }

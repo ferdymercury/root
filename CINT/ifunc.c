@@ -1,5 +1,5 @@
-/*CMZ :  2.22/10 23/07/99  14.42.15  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   23/07/99*/
+/*CMZ :  2.23/10 10/12/99  18.00.01  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   10/12/99*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -9,15 +9,13 @@
  * Description:
  *  interpret function and new style compiled function
  ************************************************************************
- * Copyright(c) 1991~1996  [hp] Hewlett Packard Japan, All rights reserved
- * Author                  Masaharu Goto (gotom@jpn.hp.com)
- * Copyright(c) 1995~1998  Masaharu Goto (MXJ02154@niftyserve.or.jp)
+ * Copyright(c) 1995~1999  Masaharu Goto (MXJ02154@niftyserve.or.jp)
  *
  * Permission to use, copy, modify and distribute this software and its
  * documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies and
  * that both that copyright notice and this permission notice appear
- * in supporting documentation.  Hewlett-Packard Japan Company makes no
+ * in supporting documentation.  The author makes no
  * representations about the suitability of this software for any
  * purpose.  It is provided "as is" without express or implied warranty.
  ************************************************************************/
@@ -26,6 +24,56 @@
 
 #ifndef G__OLDIMPLEMENTATION1103
 extern int G__const_noerror;
+#endif
+
+#ifndef G__OLDIMPLEMENTATION1167
+/***********************************************************************
+ * G__reftypeparam()
+***********************************************************************/
+void G__reftypeparam(p_ifunc,ifn,libp)
+struct G__ifunc_table *p_ifunc;
+int ifn;
+struct G__param *libp;
+{
+  int itemp;
+  for(itemp=0;itemp<p_ifunc->para_nu[ifn];itemp++) {
+    if(G__PARAREFERENCE==p_ifunc->para_reftype[ifn][itemp] &&
+       p_ifunc->para_type[ifn][itemp]!=libp->para[itemp].type) {
+      switch(p_ifunc->para_type[ifn][itemp]) {
+      case 'c':
+	libp->para[itemp].ref = (long)G__Charref(&libp->para[itemp]);
+	break;
+      case 's':
+	libp->para[itemp].ref = (long)G__Shortref(&libp->para[itemp]);
+	break;
+      case 'i':
+	libp->para[itemp].ref = (long)G__Intref(&libp->para[itemp]);
+	break;
+      case 'l':
+	libp->para[itemp].ref = (long)G__Longref(&libp->para[itemp]);
+	break;
+      case 'b':
+	libp->para[itemp].ref = (long)G__UCharref(&libp->para[itemp]);
+	break;
+      case 'r':
+	libp->para[itemp].ref = (long)G__UShortref(&libp->para[itemp]);
+	break;
+      case 'h':
+	libp->para[itemp].ref = (long)G__UIntref(&libp->para[itemp]);
+	break;
+      case 'k':
+	libp->para[itemp].ref = (long)G__ULongref(&libp->para[itemp]);
+	break;
+      case 'f':
+	libp->para[itemp].ref = (long)G__Floatref(&libp->para[itemp]);
+	break;
+      case 'd':
+	libp->para[itemp].ref = (long)G__Doubleref(&libp->para[itemp]);
+	break;
+      }
+    }
+  }
+}
 #endif
 
 #ifndef G__OLDIMPLEMENTATION1003
@@ -43,8 +91,10 @@ struct G__param *libp; /* argument buffer */
      p_ifunc->para_type[ifn][itemp]!=libp->para[itemp].type &&
      0!=libp->para[itemp].obj.i &&
      G__VARIABLE==p_ifunc->para_isconst[ifn][itemp]) {
+#ifdef G__OLDIMPLEMENTATION1167
     fprintf(G__serr,"Warning: implicit type conversion of non-const reference arg %d",itemp);
     G__printlinenum();
+#endif
   }
 }
 #endif
@@ -244,78 +294,55 @@ int hash; /* not use */
 	 ,(void*)bytecode->pstack,bytecode->stacksize*sizeof(G__value));
 
   /* copy arguments to stack in reverse order */
-#ifndef G__OLDIMPLEMENTATION834
-  {
-#ifndef G__OLDIMPLEMENTATION1016
-    struct G__var_array *var = bytecode->var;
-#endif
-    struct G__param *mlibp = libp;
-    while(mlibp) {
-      for(i=0;i<mlibp->paran;i++) {
-	int j=mlibp->paran-i-1; /* THIS IS NOT CORRECT */
-	G__asm_stack[j] = mlibp->para[i];
-	if(0==G__asm_stack[j].ref) {
-#ifndef G__OLDIMPLEMENTATION1016
-	  if(var) {
-	    switch(var->type[i]) {
-	    case 'f':
-	      G__Mfloat(mlibp->para[i]);
-	      G__asm_stack[j].ref=(long)(&mlibp->para[i].obj.fl);
-	      break;
-	    case 'd':
-	      G__asm_stack[j].ref=(long)(&mlibp->para[i].obj.d);
-	      break;
-	    case 'c':
-	      G__Mchar(mlibp->para[i]);
-	      G__asm_stack[j].ref=(long)(&mlibp->para[i].obj.ch);
-	      break;
-	    case 's':
-	      G__Mshort(mlibp->para[i]);
-	      G__asm_stack[j].ref=(long)(&mlibp->para[i].obj.sh);
-	      break;
-	    case 'i':
-	      G__Mint(mlibp->para[i]);
-	      G__asm_stack[j].ref=(long)(&mlibp->para[i].obj.in);
-	      break;
-	    case 'l':
-	      G__asm_stack[j].ref=(long)(&mlibp->para[i].obj.l);
-	      break;
-	    case 'b':
-	      G__Muchar(mlibp->para[i]);
-	      G__asm_stack[j].ref=(long)(&mlibp->para[i].obj.uch);
-	      break;
-	    case 'r':
-	      G__Mushort(mlibp->para[i]);
-	      G__asm_stack[j].ref=(long)(&mlibp->para[i].obj.ush);
-	      break;
-	    case 'h':
-	      G__Muint(mlibp->para[i]);
-	      G__asm_stack[j].ref=(long)(&mlibp->para[i].obj.uin);
-	      break;
-	    case 'k':
-	      G__asm_stack[j].ref=(long)(&mlibp->para[i].obj.l);
-	      break;
-	    case 'u':
-	      G__asm_stack[j].ref=mlibp->para[i].obj.l;
-	      break;
-	    default:
-	      G__asm_stack[j].ref=(long)(&mlibp->para[i].obj.l);
-	      break;
-	    }
-	    if(i>=var->allvar) var=var->next;
-	  }
-#else
-	  G__asm_stack[j].ref=(long)(&mlibp->para[i].obj);
-#endif
-	}
-      }
-      mlibp=mlibp->next;
-    }
-  }
-#else
   for(i=0;i<libp->paran;i++) {
     int j=libp->paran-i-1;
     G__asm_stack[j] = libp->para[i];
+#ifndef G__OLDIMPLEMENTATION1167
+    if(0==G__asm_stack[j].ref ||
+       (G__PARAREFERENCE==var->reftype[i]&&var->type[i]!=libp->para[i].type)){
+      if(var) {
+	switch(var->type[i]) {
+	case 'f':
+	  G__asm_stack[j].ref=(long)G__Floatref(&libp->para[i]);
+	  break;
+	case 'd':
+	  G__asm_stack[j].ref=(long)G__Doubleref(&libp->para[i]);
+	  break;
+	case 'c':
+	  G__asm_stack[j].ref=(long)G__Charref(&libp->para[i]);
+	  break;
+	case 's':
+	  G__asm_stack[j].ref=(long)G__Shortref(&libp->para[i]);
+	  break;
+	case 'i':
+	  G__asm_stack[j].ref=(long)G__Intref(&libp->para[i]);
+	  break;
+	case 'l':
+	  G__asm_stack[j].ref=(long)G__Longref(&libp->para[i]);
+	  break;
+	case 'b':
+	  G__asm_stack[j].ref=(long)G__UCharref(&libp->para[i]);
+	  break;
+	case 'r':
+	  G__asm_stack[j].ref=(long)G__UShortref(&libp->para[i]);
+	  break;
+	case 'h':
+	  G__asm_stack[j].ref=(long)G__UIntref(&libp->para[i]);
+	  break;
+	case 'k':
+	  G__asm_stack[j].ref=(long)G__ULongref(&libp->para[i]);
+	  break;
+	case 'u':
+	  G__asm_stack[j].ref=libp->para[i].obj.i;
+	  break;
+	default:
+	  G__asm_stack[j].ref=(long)(&libp->para[i].obj.i);
+	  break;
+	}
+	if(i>=var->allvar) var=var->next;
+      }
+    }
+#else
     if(0==G__asm_stack[j].ref) {
 #ifndef G__OLDIMPLEMENTATION1016
       if(var) {
@@ -370,8 +397,8 @@ int hash; /* not use */
       G__asm_stack[j].ref=(long)(&libp->para[i].obj);
 #endif
     }
-  }
 #endif
+  }
 
   /* allocate local memory */
 #ifndef G__OLDIMPLEMENTATION542
@@ -383,8 +410,8 @@ int hash; /* not use */
   localmem = (long)malloc(bytecode->varsize);
 #endif
 
-#if defined(G__DUMPFILE) && defined(G__ASM_DBG)
-  if(G__asm_dbg&&G__dumpfile!=NULL) {
+#if defined(G__DUMPFILE)
+  if(G__dumpfile!=NULL) {
     int ipara;
     char resultx[G__ONELINE];
     for(ipara=0;ipara<G__dumpspace;ipara++) fprintf(G__dumpfile," ");
@@ -430,17 +457,17 @@ int hash; /* not use */
       fprintf(G__serr,"Exit bytecode function %s restore inst=%lx stack=%lx\n"
 	      ,bytecode->ifunc->funcname[bytecode->ifn]
 	      ,(long)store_asm_inst,(long)store_asm_stack);
-#ifdef G__DUMPFILE
-    if(G__dumpfile!=NULL) {
-      int ipara;
-      char resultx[G__ONELINE];
-      G__dumpspace -= 3;
-      for(ipara=0;ipara<G__dumpspace;ipara++) fprintf(G__dumpfile," ");
-      G__valuemonitor(*result7,resultx);
-      fprintf(G__dumpfile ,"/* return(bc) %s()=%s*/\n"
-	      ,bytecode->ifunc->funcname[bytecode->ifn],resultx);
-    }
+  }
 #endif
+#ifdef G__DUMPFILE
+  if(G__dumpfile!=NULL) {
+    int ipara;
+    char resultx[G__ONELINE];
+    G__dumpspace -= 3;
+    for(ipara=0;ipara<G__dumpspace;ipara++) fprintf(G__dumpfile," ");
+    G__valuemonitor(*result7,resultx);
+    fprintf(G__dumpfile ,"/* return(bc) %s()=%s*/\n"
+	    ,bytecode->ifunc->funcname[bytecode->ifn],resultx);
   }
 #endif
 
@@ -514,13 +541,19 @@ int iexist;
 #endif
   char funcname[G__ONELINE];
 
-  if(ifunc->pentry[iexist]->size<G__ASM_BYTECODE_FUNC_LIMIT
+  if(
+#ifndef G__OLDIMPLEMENTATION1164
+     G__xrefflag ||
+#endif
+     (
+     ifunc->pentry[iexist]->size<G__ASM_BYTECODE_FUNC_LIMIT
      && 0==G__def_struct_member
 #ifndef G__OLDIMPLEMENTATION588
      && ('u'!=ifunc->type[iexist]||G__PARAREFERENCE==ifunc->reftype[iexist])
 #endif
      && (0==ifunc->para_nu[iexist] ||
 	 (ifunc->ansi[iexist] && G__noclassargument(ifunc,iexist)))
+      )
       ) {
 
     G__tagdefining = G__MAXSTRUCT-1;
@@ -571,8 +604,16 @@ int iexist;
   }
 #endif
 
-  if(ifunc->pentry[iexist]->bytecode)
+  if(ifunc->pentry[iexist]->bytecode) {
+#ifndef G__OLDIMPLEMENTATION1164
+    if(0==G__xrefflag)
+      ifunc->pentry[iexist]->bytecodestatus = G__BYTECODE_SUCCESS;
+    else
+      ifunc->pentry[iexist]->bytecodestatus = G__BYTECODE_ANALYSIS;
+#else
     ifunc->pentry[iexist]->bytecodestatus = G__BYTECODE_SUCCESS;
+#endif
+  }
   else if(0==G__def_struct_member)
     ifunc->pentry[iexist]->bytecodestatus = G__BYTECODE_FAILURE;
 
@@ -804,6 +845,10 @@ char *funcheader;   /* funcheader = 'funcname(' */
   if('*'==funcheader[0]) {
     if('*'==funcheader[1]) {
 #ifndef G__OLDIMPLEMENTATION853
+      int numstar=2;
+      while('*'==funcheader[numstar]) ++numstar;
+#endif
+#ifndef G__OLDIMPLEMENTATION853
       if(strlen(funcheader+2)>G__MAXNAME-1) {
 	fprintf(G__serr
 		,"Limitation: Function name length overflow strlen(%s)>%d"
@@ -812,7 +857,11 @@ char *funcheader;   /* funcheader = 'funcname(' */
 	funcheader[G__MAXNAME+1]=0;
       }
 #endif
+#ifndef G__OLDIMPLEMENTATION853
+      strcpy(G__p_ifunc->funcname[func_now],funcheader+numstar);
+#else
       strcpy(G__p_ifunc->funcname[func_now],funcheader+2);
+#endif
       if(isupper(G__var_type)) {
 	switch(G__reftype) {
 	case G__PARANORMAL:
@@ -836,6 +885,9 @@ char *funcheader;   /* funcheader = 'funcname(' */
 	  break;
 	}
       }
+#ifndef G__OLDIMPLEMENTATION853
+      G__reftype += numstar-2 ;
+#endif
     }
     else {
 #ifndef G__OLDIMPLEMENTATION853
@@ -952,6 +1004,9 @@ char *funcheader;   /* funcheader = 'funcname(' */
 #endif
     G__p_ifunc->p_tagtable[func_now] = G__def_tagnum;
     G__p_ifunc->p_typetable[func_now] = G__typenum;
+#ifndef G__OLDIMPLEMENTATION1238
+    G__struct.isctor[G__def_tagnum] = 1;
+#endif
   }
   else {
     G__p_ifunc->type[func_now] = G__var_type;
@@ -1115,8 +1170,11 @@ char *funcheader;   /* funcheader = 'funcname(' */
 #ifdef G__ROOT
 	 && strncmp(funcheader,"ClassDef",8)!=0
 #endif
-	 )
-	G__genericerror("Error: Unknown type in function argyment");
+	 ) {
+	fprintf(G__serr,"Warning: Unknown type %s in function argyment"
+		,paraname);
+	G__printlinenum();
+      }
 #endif
       G__p_ifunc->ansi[func_now]=0;
       isvoid=0;
@@ -1266,6 +1324,14 @@ char *funcheader;   /* funcheader = 'funcname(' */
     G__p_ifunc->entry[func_now].line_number = -1;
     G__p_ifunc->ispurevirtual[func_now]=1;
     if(G__tagdefining>=0) ++G__struct.isabstract[G__tagdefining];
+#ifndef G__OLDIMPLEMENTATION1232
+    if('~'==G__p_ifunc->funcname[func_now][0]) {
+      fprintf(G__serr,"Warning: Pure virtual destructor may cause problem. Define as 'virtual %s() { }'"
+	      ,G__p_ifunc->funcname[func_now]
+	      );
+      G__printlinenum();
+    }
+#endif
     if(0==strncmp(paraname,"const",5))
       G__p_ifunc->isconst[func_now]|=G__CONSTFUNC;
   }
@@ -1498,7 +1564,12 @@ char *funcheader;   /* funcheader = 'funcname(' */
       }
       ifunc->entry[iexist]=G__p_ifunc->entry[func_now];
 #ifndef G__OLDIMPLEMENTATION768
+#ifndef G__PHILIPPE6
+      /* The copy in previous get the wrong tp2f ... let's restore it */
+      ifunc->entry[iexist].tp2f = (void*)ifunc->funcname[iexist];
+#else
       G__p_ifunc->entry[iexist].tp2f = (void*)G__p_ifunc->funcname[iexist];
+#endif
 #endif
       ifunc->pentry[iexist]= &ifunc->entry[iexist];
       if(1==ifunc->ispurevirtual[iexist]) {
@@ -1785,9 +1856,10 @@ int func_now;
 	    type='u';
 	  }
 	  else {
+            /* In case of f(unsigned x,signed y) */
 	    type='i'+isunsigned;
 #ifndef G__OLDIMPLEMENTATION1126
-	    if(!isdigit(paraname[0])) {
+	    if(!isdigit(paraname[0]) && 0==isunsigned) {
 	      fprintf(G__serr
             ,"Warning: Unknown type '%s' in function argument handled as int"
 		      ,paraname);
@@ -1951,6 +2023,17 @@ int func_now;
 	G__exec_memberfunc=1;
 	G__def_struct_member=0;
       }
+#ifndef G__OLDIMPLEMENTATION1233
+      if('('==paraname[0]) {
+	int paranamelen = strlen(paraname);
+	if(paranamelen>5 && strcmp(")()",paraname+paranamelen-3)==0 &&
+	   strchr(paraname,'<')) {
+	  int ix;
+	  for(ix=1;ix<paranamelen-4;ix++) paraname[ix-1] = paraname[ix];
+	  strcpy(paraname+ix,"()");
+	}
+      }
+#endif
 #ifndef G__OLDIMPLEMENTATION1110
       if(G__NOLINK==G__globalcomp) {
 	G__prerun=0;
@@ -2060,6 +2143,9 @@ int G__param_match(formal_type,formal_tagnum
 #ifndef G__OLDIMPLEMENTATION1120
 		   ,formal_reftype
 #endif
+#ifndef G__OLDIMPLEMENTATION1208
+		   ,formal_isconst
+#endif
 		   )
 char formal_type;
 int formal_tagnum;
@@ -2072,6 +2158,9 @@ int funcmatch;
 int rewind_arg;
 #ifndef G__OLDIMPLEMENTATION1120
 int formal_reftype;
+#endif
+#ifndef G__OLDIMPLEMENTATION1208
+int formal_isconst;
 #endif
 {
   int match;
@@ -2129,6 +2218,14 @@ int formal_reftype;
       case 'i':
       case 'k':
       case 'l':
+#define G__OLDIMPLEMENTATION1165
+#ifndef G__OLDIMPLEMENTATION1165
+	if(G__PARAREFERENCE==formal_reftype) {
+          param->obj.d = param->obj.i;
+          param->type = formal_type;
+          param->ref = 0;
+        }
+#endif
       case 'd':
       case 'f':
 	match=1;
@@ -2278,6 +2375,64 @@ int formal_reftype;
 
   if(match==0&&funcmatch>=G__STDCONV) {
     switch(formal_type) {
+#ifndef G__OLDIMPLEMENTATION1165
+    case 'b':
+    case 'c':
+    case 'r':
+    case 's':
+    case 'h':
+    case 'i':
+    case 'k':
+    case 'l':
+      switch(param_type) {
+      case 'd':
+      case 'f':
+	if(G__PARAREFERENCE==formal_reftype) {
+          param->obj.i = (long)param->obj.d;
+          param->type = formal_type;
+          param->ref = 0;
+        }
+      case 'b':
+      case 'c':
+      case 'r':
+      case 's':
+      case 'h':
+      case 'i':
+      case 'k':
+      case 'l':
+	match=1;
+	break;
+      default:
+	match=0;
+	break;
+      }
+      break;
+    case 'd':
+    case 'f':
+      switch(param_type) {
+      case 'b':
+      case 'c':
+      case 'r':
+      case 's':
+      case 'h':
+      case 'i':
+      case 'k':
+      case 'l':
+	if(G__PARAREFERENCE==formal_reftype) {
+          param->obj.d = param->obj.i;
+          param->type = formal_type;
+          param->ref = 0;
+        }
+      case 'd':
+      case 'f':
+	match=1;
+	break;
+      default:
+	match=0;
+	break;
+      }
+      break;
+#else
     case 'b':
     case 'c':
     case 'r':
@@ -2306,6 +2461,7 @@ int formal_reftype;
 	break;
       }
       break;
+#endif
     case 'C':
       switch(param_type) {
       case 'i':
@@ -2316,7 +2472,9 @@ int formal_reftype;
       break;
 #endif
       case 'Y':
+#ifdef G__OLDIMPLEMENTATION1219
       case 'Q': /* questionable */
+#endif
 	match=1;
 	break;
       default:
@@ -2325,7 +2483,9 @@ int formal_reftype;
       }
       break;
     case 'Y':
+#ifdef G__OLDIMPLEMENTATION1219
     case 'Q': /* questionable */
+#endif
 #ifndef G__OLDIMPLEMENTATION839
       if(isupper(param_type)||0==param->obj.i) {
 #else
@@ -2337,25 +2497,35 @@ int formal_reftype;
 	match=0;
       }
       break;
-#ifdef G__NEVER_BUT_KEEP
-      /* reference type conversion should not be handled in this way.
+#ifndef G__OLDIMPLEMENTATION1225
+    case 'Q': /* questionable */
+      if('Q'==param_type||'C'==param_type) match=1;
+      else  match=0;
+      break;
+#endif
+#ifndef G__OLDIMPLEMENTATION1240
+      /* reference type conversin should not be handled in this way.
        * difference was found from g++ when activating this part. */
+      /* Added condition for formal_reftype and recursive, then things
+       * are working 1999/12/5 */
     case 'u':
-      switch(param_type) {
-      case 'u':
-	/* reference to derived class can be converted to reference to base
-	 * class. add offset, modify char *parameter and G__value *param */
-	if(-1 != (baseoffset=G__ispublicbase(formal_tagnum,param_tagnum
-					     ,param->obj.i))) {
-	  param->tagnum = formal_tagnum;
-	  param->obj.i += baseoffset;
-	  param->ref += baseoffset;
-	  match=1;
+      if(G__PARAREFERENCE==formal_reftype && recursive) {
+	switch(param_type) {
+	case 'u':
+	  /* reference to derived class can be converted to reference to base
+	   * class. add offset, modify char *parameter and G__value *param */
+	  if(-1 != (baseoffset=G__ispublicbase(formal_tagnum,param_tagnum
+					       ,param->obj.i))) {
+	    param->tagnum = formal_tagnum;
+	    param->obj.i += baseoffset;
+	    param->ref += baseoffset;
+	    match=1;
+	  }
+	  else {
+	    match=0;
+	  }
+	  break;
 	}
-	else {
-	  match=0;
-	}
-	break;
       }
       break;
 #endif
@@ -2731,7 +2901,11 @@ int formal_reftype;
 #endif
       reg=G__getfunction(conv,&match,G__TRYMEMFUNC);
 #ifndef G__OLDIMPLEMENTATION1124
-      if(!match) {
+      if(!match
+#ifndef G__OLDIMPLEMENTATION1208
+	 && 0!=formal_isconst
+#endif
+	 ) {
 	sprintf(conv,"operator const %s()"
 		,G__type2string(formal_type,formal_tagnum,-1,0,0));
 	G__store_struct_offset = param->obj.i;
@@ -3019,6 +3193,9 @@ int memfunc_flag;
 #ifndef G__OLDIMPLEMENTATION1120
 				   ,p_ifunc->para_reftype[ifn][itemp]
 #endif
+#ifndef G__OLDIMPLEMENTATION1208
+				   ,p_ifunc->para_isconst[ifn][itemp]
+#endif
 				   );
 	    }
 	    switch(ipara) {
@@ -3108,6 +3285,21 @@ int memfunc_flag;
    * another iteration for overloading match
    **********************************************************************/
   if(NULL==p_ifunc && store_funcmatch==G__EXACT &&-1!=store_p_ifunc->tagnum) {
+#ifndef G__OLDIMPLEMENTATION1160
+    if(G__EXACT==funcmatch) {
+      int storeX_exec_memberfunc=G__exec_memberfunc;
+      int storeX_memberfunc_tagnum=G__memberfunc_tagnum;
+      G__exec_memberfunc=1;
+      G__memberfunc_tagnum=store_p_ifunc->tagnum;
+      if(G__templatefunc(result7,funcname,libp,hash,funcmatch)==1){
+        G__exec_memberfunc=storeX_exec_memberfunc;
+        G__memberfunc_tagnum=storeX_memberfunc_tagnum;
+        return(1);
+      }
+      G__exec_memberfunc=storeX_exec_memberfunc;
+      G__memberfunc_tagnum=storeX_memberfunc_tagnum;
+    }
+#endif
     if(funcmatch<G__USERCONV) {
       ipara=0;
       ifn = 0;
@@ -3132,7 +3324,11 @@ int memfunc_flag;
     }
     p_ifunc=(struct G__ifunc_table*)NULL;
   }
-  if(NULL==p_ifunc && badflag) {
+  if(NULL==p_ifunc && badflag
+#ifndef G__OLDIMPLEMENTATION1143
+     && G__NOLINK==G__globalcomp
+#endif
+     ) {
     if(-1==store_p_ifunc->tagnum)
       fprintf(G__serr,"Error: %s is private or protected",funcname);
     else
@@ -3561,7 +3757,11 @@ asm_ifunc_start:   /* loop compilation execution label */
   /******************************************************************
    * if already compiled as bytecode run bytecode
    *******************************************************************/
-  if(p_ifunc->pentry[ifn]->bytecode) {
+  if(p_ifunc->pentry[ifn]->bytecode
+#ifndef G__OLDIMPLEMENTATION1164
+     && G__BYTECODE_ANALYSIS!=p_ifunc->pentry[ifn]->bytecodestatus
+#endif
+     ) {
     struct G__input_file store_ifile;
     store_ifile=G__ifile;
     G__ifile.filenum=p_ifunc->pentry[ifn]->filenum;
@@ -3575,6 +3775,9 @@ asm_ifunc_start:   /* loop compilation execution label */
 #endif /* G__ASM_WHOLEFUNC */
 #endif /* G__ASM */
 
+#ifndef G__OLDIMPLEMENTATION1167
+  G__reftypeparam(p_ifunc,ifn,libp);
+#endif
 
 #ifdef G__ASM
 #ifdef G__ASM_IFUNC
@@ -4028,7 +4231,11 @@ asm_ifunc_start:   /* loop compilation execution label */
 	G__inc_cp_asm(2,1);
 
 	G__asm_inst[G__asm_wholefunc_default_cp]=G__asm_cp;
+#ifndef G__OLDIMPLEMENTATION1164
+	G__suspendbytecode(); /* mask default param evaluation */
+#else
 	G__abortbytecode(); /* mask default param evaluation */
+#endif
 	G__exec_statement(); /* Create var entry and ST_LVAR inst */
 	G__asm_wholefunc_default_cp=0;
 	G__asm_noverflow=1;
@@ -4147,7 +4354,11 @@ asm_ifunc_start:   /* loop compilation execution label */
    * return value type conversion
    *
    **************************************************************/
-  if(result7->type!='\0' && G__RETURN_EXIT1!=G__return
+  if(
+#ifndef G__OLDIMPLEMENTATION1164
+     0==G__xrefflag &&
+#endif
+     result7->type!='\0' && G__RETURN_EXIT1!=G__return
 #ifndef G__OLDIMPLEMENTATION507
      && (G__ASM_FUNC_NOP==G__asm_wholefunction||G__asm_noverflow)
 #endif
@@ -4292,7 +4503,11 @@ asm_ifunc_start:   /* loop compilation execution label */
 	 * if no copy constructor, memberwise
 	 * copy
 	 **************************************/
-	if(itemp==0) {
+	if(itemp==0
+#ifndef G__OLDIMPLEMENTATION1164
+	   && 0==G__xrefflag
+#endif
+	   ) {
 	  memcpy((void*)G__p_tempbuf->obj.obj.i
 		 ,(void*)(result7->obj.i)
 		 ,(size_t)G__struct.size[result7->tagnum]);
@@ -4400,7 +4615,11 @@ asm_ifunc_start:   /* loop compilation execution label */
    **************************************************************/
   if(G__ASM_FUNC_COMPILE&G__asm_wholefunction) {
     if(G__NOERROR!=G__security_error) {
+#ifndef G__OLDIMPLEMENTATION1164
+      G__resetbytecode();
+#else
       G__abortbytecode();
+#endif
     }
     if(G__asm_noverflow) {
       int pc=0;
@@ -4420,7 +4639,11 @@ asm_ifunc_start:   /* loop compilation execution label */
       G__resolve_jumptable_bytecode();
 #endif
       if(G__asm_loopcompile>=2) G__asm_optimize(&pc);
+#ifndef G__OLDIMPLEMENTATION1164
+      G__resetbytecode();
+#else
       G__abortbytecode();
+#endif
       G__no_exec_compile = store_no_exec_compile;
       G__asm_storebytecodefunc(p_ifunc,ifn,localvar
 			       ,G__asm_stack,G__asm_dt
@@ -4435,7 +4658,11 @@ asm_ifunc_start:   /* loop compilation execution label */
 #ifndef G__OLDIMPLEMENTATION513
       free(G__asm_name);
 #endif
+#ifndef G__OLDIMPLEMENTATION1164
+      G__resetbytecode();
+#else
       G__abortbytecode();
+#endif
       G__no_exec_compile = store_no_exec_compile;
       /* destroy local memory area */
       G__destroy(localvar,G__BYTECODELOCAL_VAR) ;
@@ -4731,6 +4958,9 @@ int funcmatch;
 				   ,p_ifunc->para_nu[ifn]-itemp-1
 #ifndef G__OLDIMPLEMENTATION1120
 				   ,p_ifunc->para_reftype[ifn][itemp]
+#endif
+#ifndef G__OLDIMPLEMENTATION1208
+				   ,p_ifunc->para_isconst[ifn][itemp]
 #endif
 				   );
 	    }

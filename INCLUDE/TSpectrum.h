@@ -1,3 +1,4 @@
+//*CMZ :  2.23/04 07/10/99  23.28.32  by  Rene Brun
 //*CMZ :  2.22/05 11/06/99  09.46.02  by  Rene Brun
 //*CMZ :  2.22/04 03/06/99  14.45.34  by  Rene Brun
 //*CMZ :  2.22/03 29/05/99  17.44.04  by  Rene Brun
@@ -45,11 +46,11 @@ public:
    TSpectrum();
    TSpectrum(Int_t maxpositions);
    virtual          ~TSpectrum();
-   virtual  char    *Background(TH1 *hist,int number_of_iterations, Option_t *option="goff");
-   virtual  char    *Background1(float *spectrum,int size,int number_of_iterations);
-   virtual  char    *Background2(float **spectrum,int sizex,int sizey,int number_of_iterations);
-   virtual  char    *Deconvolution1(float *source,float *resp,int size,int number_of_iterations);
-   virtual  char    *Deconvolution2(float** source,float** resp,int sizex,int sizey,int number_of_iterations);
+   virtual  char    *Background(TH1 *hist,int niter, Option_t *option="goff");
+   virtual  char    *Background1(float *spectrum,int size,int niter);
+   virtual  char    *Background2(float **spectrum,int sizex,int sizey,int niter);
+   virtual  char    *Deconvolution1(float *source,float *resp,int size,int niter);
+   virtual  char    *Deconvolution2(float **source,float **resp,int sizex,int sizey,int niter);
    virtual  TH1     *GetHistogram() {return fHistogram;}
    virtual  Int_t    GetNPeaks() {return fNPeaks;}
    virtual  Float_t *GetPositionX() {return fPositionX;}

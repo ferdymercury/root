@@ -1,31 +1,23 @@
+//*CMZ :  2.23/12 22/01/2000  18.07.13  by  Rene Brun
+//*CMZ :  2.23/11 29/12/99  10.14.40  by  Rene Brun
+//*CMZ :  2.23/09 09/11/99  10.13.47  by  Rene Brun
+//*CMZ :  2.23/02 05/09/99  16.54.23  by  Rene Brun
 //*CMZ :  2.22/09 10/07/99  08.47.45  by  Rene Brun
 //*CMZ :  2.22/02 25/05/99  13.16.16  by  Rene Brun
 //*CMZ :  2.21/04 17/04/99  07.50.09  by  Valery Fine(fine@mail.cern.ch)
-//*CMZ :  2.21/01 12/01/99  07.55.28  by  Valery Fine(fine@mail.cern.ch)
-//*CMZ :  2.20/05 15/12/98  09.17.22  by  Rene Brun
-//*CMZ :  2.00/13 13/10/98  09.21.28  by  Rene Brun
-//*CMZ :  2.00/11 18/08/98  10.10.01  by  Rene Brun
-//*CMZ :  2.00/09 23/06/98  17.01.55  by  Rene Brun
-//*CMZ :  2.00/00 17/02/98  16.01.56  by  Rene Brun
-//*CMZ :  1.03/09 07/12/97  16.59.17  by  Fons Rademakers
 //*-- Author :    Nenad Buncic   17/08/95
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 #include <fstream.h>
@@ -34,10 +26,9 @@
 #include "TROOT.h"
 #include "TPolyline3d.h"
 #include "TVirtualPad.h"
-#include "TPostscript.h"
-#include "TGXW.h"
+#include "TVirtualGL.h"
+#include "TVirtualX.h"
 #include "TPoint.h"
-#include "TGLKernelABC.h"
 #include "TView.h"
 #include "TPadView3D.h"
 
@@ -257,6 +248,85 @@ void TPolyLine3D::Draw(Option_t *option)
 
    AppendPad(option);
 
+}
+
+//______________________________________________________________________________
+void TPolyLine3D::DrawOutlineCube(TList *outline, Float_t *rmin, Float_t *rmax)
+{
+//*-*-*-*-*-*-*-*Draw cube outline with 3d polylines*-*-*-*-*-*-*
+//*-*            ===================================
+//*-*                                                                    *
+//*-*      x = fRmin[0]        X = fRmax[0]                              *
+//*-*      y = fRmin[1]        Y = fRmax[1]                              *
+//*-*      z = fRmin[2]        Z = fRmax[2]                              *
+//*-*                                                                    *
+//*-*                                                                    *
+//*-*            (x,Y,Z) +---------+ (X,Y,Z)                             *
+//*-*                   /         /|                                     *
+//*-*                  /         / |                                     *
+//*-*                 /         /  |                                     *
+//*-*        (x,y,Z) +---------+   |                                     *
+//*-*                |         |   + (X,Y,z)                             *
+//*-*                |         |  /                                      *
+//*-*                |         | /                                       *
+//*-*                |         |/                                        *
+//*-*                +---------+                                         *
+//*-*             (x,y,z)   (X,y,z)                                      *
+//*-*                                                                    *
+//*-*                                                                    *
+//*-*                                                                    *
+//*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-**
+
+   Float_t x = rmin[0];     Float_t X = rmax[0];
+   Float_t y = rmin[1];     Float_t Y = rmax[1];
+   Float_t z = rmin[2];     Float_t Z = rmax[2];
+
+   TPolyLine3D *pl3d = (TPolyLine3D *)outline->First();
+   if (!pl3d) {
+      TView *view = gPad->GetView();
+      TPolyLine3D *p1 = new TPolyLine3D(4);
+      TPolyLine3D *p2 = new TPolyLine3D(4);
+      TPolyLine3D *p3 = new TPolyLine3D(4);
+      TPolyLine3D *p4 = new TPolyLine3D(4);
+      p1->SetLineColor(view->GetLineColor());
+      p1->SetLineStyle(view->GetLineStyle());
+      p1->SetLineWidth(view->GetLineWidth());
+      p1->Copy(*p2);
+      p1->Copy(*p3);
+      p1->Copy(*p4);
+      outline->Add(p1);
+      outline->Add(p2);
+      outline->Add(p3);
+      outline->Add(p4);
+   }
+
+   pl3d = (TPolyLine3D *)outline->First();
+
+   pl3d->SetPoint(0, x, y, z);
+   pl3d->SetPoint(1, X, y, z);
+   pl3d->SetPoint(2, X, Y, z);
+   pl3d->SetPoint(3, x, Y, z);
+
+   pl3d = (TPolyLine3D *)outline->After(pl3d);
+
+   pl3d->SetPoint(0, X, y, z);
+   pl3d->SetPoint(1, X, y, Z);
+   pl3d->SetPoint(2, X, Y, Z);
+   pl3d->SetPoint(3, X, Y, z);
+
+   pl3d = (TPolyLine3D *)outline->After(pl3d);
+
+   pl3d->SetPoint(0, X, y, Z);
+   pl3d->SetPoint(1, x, y, Z);
+   pl3d->SetPoint(2, x, Y, Z);
+   pl3d->SetPoint(3, X, Y, Z);
+
+   pl3d = (TPolyLine3D *)outline->After(pl3d);
+
+   pl3d->SetPoint(0, x, y, Z);
+   pl3d->SetPoint(1, x, y, z);
+   pl3d->SetPoint(2, x, Y, z);
+   pl3d->SetPoint(3, x, Y, Z);
 }
 
 
@@ -496,8 +566,9 @@ void TPolyLine3D::Streamer(TBuffer &b)
 {
 //*-*-*-*-*-*-*-*-*Stream a class object*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 //*-*              =========================================
+   UInt_t R__s, R__c;
    if (b.IsReading()) {
-      b.ReadVersion();  //Version_t v = b.ReadVersion();
+      b.ReadVersion(&R__s, &R__c);
       TObject::Streamer(b);
       TAttLine::Streamer(b);
       b >> fN;
@@ -507,13 +578,15 @@ void TPolyLine3D::Streamer(TBuffer &b)
       }
       fOption.Streamer(b);
       fLastPoint = fN-1;
+      b.CheckByteCount(R__s, R__c, TPolyLine3D::IsA());
    } else {
-      b.WriteVersion(TPolyLine3D::IsA());
+      R__c = b.WriteVersion(TPolyLine3D::IsA(), kTRUE);
       TObject::Streamer(b);
       TAttLine::Streamer(b);
       Int_t size = Size();
       b << size;
       if (size) b.WriteFastArray(fP, 3*size);
       fOption.Streamer(b);
+      b.SetByteCount(R__c, kTRUE);
    }
 }

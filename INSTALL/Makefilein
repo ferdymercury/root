@@ -1,0 +1,36 @@
+*CMZ :  2.23/09 19/11/99  18.31.59  by  Fons Rademakers
+*-- Author :    Fons Rademakers   19/11/99
+# Makefile definitions included by the top Makefile and all src/Makefile.*'s
+
+ARCH 		= @architecture@
+EXTRA_CFLAGS	= @cflags
+EXTRA_CXXFLAGS  = @cflags
+EXTRA_LDFLAGS	= @ldflags@
+
+BINDIR		= @bindir@
+LIBDIR		= @libdir@
+INCDIR		= @incdir@
+ETCDIR		= @etcdir@
+DATADIR		= @datadir@
+MACRODIR	= @macrodir@
+SRCDIR		= @srcdir@
+ICONPATH	= @iconpath@
+CINTINCDIR	= @cintincdir@
+DOCDIR		= @docdir@
+TESTDIR		= @testdir@
+TUTDIR		= @tutdir@
+
+TTFLIBDIR	= @ttflibdir@
+TFFFONTDIR	= @tfffontdir@
+TTFINCDIR	= @ttfincdir@
+
+OPENGLLIBDIR	= @opengllibdir@
+OPENGLINCDIR	= @openglincdir@
+
+THREAD		= @thread@
+RFIO		= @rfio@
+CERNLIBDIR	= @cernlibdir@
+
+INSTALL		= cp -dpR
+INSTALLDATA	= cp -dpR
+INSTALLDIR	= mkdir -p

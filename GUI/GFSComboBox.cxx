@@ -1,23 +1,21 @@
+//*CMZ :  2.23/10 15/12/99  13.18.07  by  Fons Rademakers
+//*CMZ :  2.23/09 10/11/99  17.11.19  by  Fons Rademakers
+//*CMZ :  2.23/02 27/09/99  09.53.04  by  Rene Brun
 //*CMZ :  2.00/07 18/05/98  01.38.22  by  Fons Rademakers
 //*CMZ :  2.00/01 09/03/98  14.40.24  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   19/01/98
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 //*CMZ :  2.00/00 16/02/98  00.17.08  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   27/12/97
@@ -42,6 +40,10 @@
 //                                                                      //
 //////////////////////////////////////////////////////////////////////////
 
+#ifdef HAVE_CONFIG
+#include "config.h"
+#endif
+
 #include "TGFSComboBox.h"
 #include "TGPicture.h"
 #include "TMath.h"
@@ -62,7 +64,11 @@ static struct lbc_t gLbc[] = {
   { "Floppy",      "/floppy",               "fdisk_t.xpm",         2000, 1, 0 },
   { "CD-ROM",      "/cdrom",                "cdrom_t.xpm",         3000, 1, 0 },
   { "Home",        "$HOME",                 "home_t.xpm",          4000, 1, 0 },
+#ifndef ROOTPREFIX
   { "RootSys",     "$ROOTSYS",              "root_t.xpm",          5000, 1, 0 },
+#else
+  { ROOTPREFIX,    ROOTPREFIX,              "root_t.xpm",          5000, 1, 0 },
+#endif
   { NULL,          NULL,                    NULL,                  6000, 0, 0 }
 };
 
@@ -92,8 +98,8 @@ TGTreeLBEntry::TGTreeLBEntry(const TGWindow *p, TGString *text,
    fActive = kFALSE;
 
    int max_ascent, max_descent;
-   fTWidth = gGXW->TextWidth(fFontStruct, fText->GetString(), fText->GetLength());
-   gGXW->GetFontProperties(fFontStruct, max_ascent, max_descent);
+   fTWidth = gVirtualX->TextWidth(fFontStruct, fText->GetString(), fText->GetLength());
+   gVirtualX->GetFontProperties(fFontStruct, max_ascent, max_descent);
    fTHeight = max_ascent + max_descent;
 }
 
@@ -137,18 +143,18 @@ void TGTreeLBEntry::DoRedraw()
 
    if (fActive) {
       if (fSelPic) fSelPic->Draw(fId, fNormGC, ix, iy);
-      gGXW->SetForeground(fNormGC, fgDefaultSelectedBackground);
-      gGXW->FillRectangle(fId, fNormGC, lx, ly, fTWidth, fTHeight+1);
-      gGXW->SetForeground(fNormGC, fgSelPixel);
+      gVirtualX->SetForeground(fNormGC, fgDefaultSelectedBackground);
+      gVirtualX->FillRectangle(fId, fNormGC, lx, ly, fTWidth, fTHeight+1);
+      gVirtualX->SetForeground(fNormGC, fgSelPixel);
    } else {
       fPic->Draw(fId, fNormGC, ix, iy);
-      gGXW->SetForeground(fNormGC, fgWhitePixel);
-      gGXW->FillRectangle(fId, fNormGC, lx, ly, fTWidth, fTHeight+1);
-      gGXW->SetForeground(fNormGC, fgBlackPixel);
+      gVirtualX->SetForeground(fNormGC, fgWhitePixel);
+      gVirtualX->FillRectangle(fId, fNormGC, lx, ly, fTWidth, fTHeight+1);
+      gVirtualX->SetForeground(fNormGC, fgBlackPixel);
    }
 
    int max_ascent, max_descent;
-   gGXW->GetFontProperties(fFontStruct, max_ascent, max_descent);
+   gVirtualX->GetFontProperties(fFontStruct, max_ascent, max_descent);
 
    fText->Draw(fId, fNormGC, lx, ly + max_ascent);
 }
@@ -175,8 +181,8 @@ void TGTreeLBEntry::Update(TGLBEntry *e)
    if (fText) delete fText;
    fText = new TGString(te->GetText());
    fPic = te->GetPicture();
-   fTWidth = gGXW->TextWidth(fFontStruct, fText->GetString(), fText->GetLength());
-   gGXW->ClearWindow(fId);
+   fTWidth = gVirtualX->TextWidth(fFontStruct, fText->GetString(), fText->GetLength());
+   gVirtualX->ClearWindow(fId);
    fClient->NeedRedraw(this);
 }
 
@@ -198,13 +204,17 @@ TGFSComboBox::TGFSComboBox(const TGWindow *parent, Int_t id, UInt_t options,
                new TGLayoutHints(kLHintsLeft | kLHintsExpandX |
                                  kLHintsExpandY, 4, 0, 0, 0));
 
-   gGXW->SelectInput(fListBox->GetContainer()->GetId(), kButtonPressMask |
+   gVirtualX->SelectInput(fListBox->GetContainer()->GetId(), kButtonPressMask |
                      kButtonReleaseMask | kPointerMotionMask);
 
    //--- first check for the existence of some directories...
 
    const char *homeDir = gSystem->Getenv("HOME");
+#ifndef ROOTPREFIX
    const char *rootSys = gSystem->Getenv("ROOTSYS");
+#else
+   const char *rootSys = ROOTPREFIX;
+#endif
 
    for (i = 0; gLbc[i].path != 0; ++i) {
       if (strstr(gLbc[i].path, "$HOME") != 0) {
@@ -218,7 +228,11 @@ TGFSComboBox::TGFSComboBox(const TGWindow *parent, Int_t id, UInt_t options,
             gLbc[i].flags = 0;
          }
       }
+#ifndef ROOTPREFIX
       if (strstr(gLbc[i].path, "$ROOTSYS") != 0) {
+#else
+      if (strstr(gLbc[i].path, ROOTPREFIX) != 0) {
+#endif
          if (rootSys) {
             int hlen = strlen(rootSys);
             p = new char[hlen + strlen(gLbc[i].path) - 3];
@@ -249,11 +263,12 @@ TGFSComboBox::TGFSComboBox(const TGWindow *parent, Int_t id, UInt_t options,
 }
 
 //______________________________________________________________________________
-void TGFSComboBox::Update(char *path)
+void TGFSComboBox::Update(const char *path)
 {
    // Update file system combo box.
 
-   char dirname[1024], mpath[1024], *tailpath = 0;
+   char dirname[1024], mpath[1024];
+   const char *tailpath = 0;
    int  i, indent_lvl = 0, afterID = -1, sel = -1;
 
    if (!path) return;
@@ -282,7 +297,7 @@ void TGFSComboBox::Update(char *path)
       if (*tailpath)
          while (1) {
             char *picname;
-            char *semi = strchr(tailpath, '/');
+            const char *semi = strchr(tailpath, '/');
             if (semi == 0) {
                strcpy(dirname, tailpath);
                picname = "ofolder_t.xpm";

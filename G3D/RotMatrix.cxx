@@ -1,26 +1,22 @@
+//*CMZ :  2.23/12 26/01/2000  09.24.06  by  Rene Brun
+//*CMZ :  2.23/04 06/10/99  18.55.30  by  Rene Brun
+//*CMZ :  2.23/01 26/08/99  12.03.32  by  Rene Brun
 //*CMZ :  2.21/06 17/04/99  07.50.09  by  Rene Brun
 //*CMZ :  2.21/04 22/01/99  19.05.00  by  Valery Fine(fine@mail.cern.ch)
 //*CMZ :  2.00/12 07/10/98  08.52.28  by  Valery Fine(fine@mail.cern.ch)
-//*CMZ :  2.00/04 30/03/98  17.16.57  by  Rene Brun
-//*CMZ :  1.03/09 07/12/97  17.04.29  by  Fons Rademakers
 //*-- Author :    Rene Brun   14/09/95
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 #include "TROOT.h"
@@ -46,7 +42,7 @@ TRotMatrix::TRotMatrix()
 
 
 //______________________________________________________________________________
-TRotMatrix::TRotMatrix(Text_t *name, Text_t *title, Double_t *matrix)
+TRotMatrix::TRotMatrix(const char *name, const char *title, Double_t *matrix)
            :TNamed(name,title)
 {
   if (!matrix) { Error("ctor","No rotation is supplied"); return; }
@@ -57,7 +53,7 @@ TRotMatrix::TRotMatrix(Text_t *name, Text_t *title, Double_t *matrix)
 }
 
 //______________________________________________________________________________
-TRotMatrix::TRotMatrix(Text_t *name, Text_t *title, Double_t theta, Double_t phi, Double_t psi)
+TRotMatrix::TRotMatrix(const char *name, const char *title, Double_t theta, Double_t phi, Double_t psi)
            :TNamed(name,title)
 {
 //*-*-*-*-*-*-*-*-*-*-*RotMatrix normal constructor*-*-*-*-*-*-*-*-*-*-*-*-*
@@ -80,7 +76,7 @@ TRotMatrix::TRotMatrix(Text_t *name, Text_t *title, Double_t theta, Double_t phi
 
 
 //______________________________________________________________________________
-TRotMatrix::TRotMatrix(Text_t *name, Text_t *title, Double_t theta1, Double_t phi1
+TRotMatrix::TRotMatrix(const char *name, const char *title, Double_t theta1, Double_t phi1
                                                   , Double_t theta2, Double_t phi2
                                                   , Double_t theta3, Double_t phi3)
                 :TNamed(name,title)
@@ -111,7 +107,7 @@ TRotMatrix::TRotMatrix(Text_t *name, Text_t *title, Double_t theta1, Double_t ph
    fPsi    = theta2;
 
    fType   = 2;
-   if (strcmp(GetName(),"Identity")) fType = 0;
+   if (!strcmp(GetName(),"Identity")) fType = 0;
 
    fMatrix[0] = TMath::Sin(theta1*degrad)*TMath::Cos(phi1*degrad);
    fMatrix[1] = TMath::Sin(theta1*degrad)*TMath::Sin(phi1*degrad);
@@ -136,7 +132,7 @@ TRotMatrix::~TRotMatrix()
 //*-*-*-*-*-*-*-*-*-*-*RotMatrix default destructor*-*-*-*-*-*-*-*-*-*-*-*-*
 //*-*                  ============================
 
-   //do nothing
+    gGeometry->GetListOfMatrices()->Remove(this);
 }
 
 //______________________________________________________________________________

@@ -1,8 +1,9 @@
+*CMZ :  2.23/09 20/11/99  15.32.28  by  Otto Schaile
+*CMZ :  2.23/04 07/10/99  23.33.54  by  Rene Brun
+*CMZ :  2.23/03 09/09/99  15.59.46  by  Rene Brun
+*CMZ :  2.23/02 04/09/99  08.49.52  by  Rene Brun
 *CMZ :  2.22/07 05/07/99  15.17.01  by  Rene Brun
 *CMZ :  2.21/07 03/03/99  10.25.43  by  Rene Brun
-*CMZ :  2.00/11 07/08/98  21.59.00  by  Rene Brun
-*CMZ :  2.00/09 25/06/98  15.10.03  by  Fons Rademakers
-*CMZ :  1.03/02 29/08/97  14.41.57  by  Rene Brun
 *-- Author :    Fons Rademakers   15/02/96
 
 macro cint_g1
@@ -16,10 +17,11 @@ macro cint_g1
 
 seq -i src/*.h
 
-headers=TAttPad.h TAttCanvas.h TArc.h TArrow.h TBox.h TColor.h TDiamond.h _
+headers=TArc.h TArrow.h TBox.h TCutG.h TDiamond.h _
         TEllipse.h TFrame.h TGaxis.h TGraph.h TGraphErrors.h TGraphAsymmErrors.h _
-        TLine.h TMarker.h TPolyLine.h TPolyMarker.h TText.h TPave.h _
-        TPaveLabel.h TPaveText.h TPavesText.h TWbox.h
+        TLine.h TMarker.h TPolyLine.h TText.h TPave.h _
+        TPaveLabel.h TPaveText.h TPavesText.h TPaveStats.h TWbox.h _
+        TCurlyLine.h TCurlyArc.h
 
 name=Graf1
 patch=G

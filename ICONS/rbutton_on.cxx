@@ -1,7 +1,7 @@
-//*CMZ :  2.00/00 18/02/98  18.56.20  by  IconsAuthor
-//*-- Author :    IconsAuthor   18/02/98
+//*CMZ :  2.23/04 04/10/99  20.39.44  by  Fons Rademakers
+//*-- Author :    IconsAuthor   04/10/99
 /* XPM */
-static char * radiobutton_xpm[] = {
+const char * radiobutton_xpm[] = {
 "12 12 4 1",
 " 	c None s None",
 ".	c #808080",

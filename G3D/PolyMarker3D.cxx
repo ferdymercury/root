@@ -1,46 +1,43 @@
+//*CMZ :  2.23/12 22/01/2000  18.08.34  by  Rene Brun
+//*CMZ :  2.23/11 29/12/99  08.33.18  by  Rene Brun
+//*CMZ :  2.23/10 26/11/99  09.07.10  by  Rene Brun
+//*CMZ :  2.23/09 26/11/99  08.30.47  by  Rene Brun
+//*CMZ :  2.23/04 11/10/99  18.49.45  by  Rene Brun
+//*CMZ :  2.23/02 05/09/99  16.55.17  by  Rene Brun
 //*CMZ :  2.22/09 10/07/99  08.46.55  by  Rene Brun
 //*CMZ :  2.22/02 21/05/99  14.26.09  by  Rene Brun
 //*CMZ :  2.22/01 20/05/99  09.09.42  by  Rene Brun
-//*CMZ :  2.21/08 17/04/99  07.50.09  by  Rene Brun
-//*CMZ :  2.21/01 12/01/99  07.55.28  by  Valery Fine(fine@mail.cern.ch)
-//*CMZ :  2.20/05 15/12/98  09.17.22  by  Rene Brun
-//*CMZ :  2.00/11 18/08/98  10.12.29  by  Rene Brun
-//*CMZ :  2.00/09 23/06/98  17.01.03  by  Rene Brun
-//*CMZ :  2.00/00 17/02/98  16.02.25  by  Rene Brun
-//*CMZ :  1.03/09 11/12/97  08.43.07  by  Rene Brun
 //*-- Author :    Nenad Buncic   21/08/95
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 #include <fstream.h>
 #include <iostream.h>
 
 #include "TROOT.h"
-#include "TVirtualPad.h"
 #include "TView.h"
 #include "TStyle.h"
 #include "TPolymarker3D.h"
-#include "TGXW.h"
 #include "TPoint.h"
-#include "TPostscript.h"
-#include "TGLKernelABC.h"
+#include "TVirtualPad.h"
+#include "TVirtualPS.h"
+#include "TVirtualGL.h"
+#include "TVirtualX.h"
 #include "TPadView3D.h"
+#include "TH1.h"
++SEq,TH3.
+#include "TRandom.h"
 
 ClassImp(TPolyMarker3D)
 
@@ -350,6 +347,73 @@ void TPolyMarker3D::Paint(Option_t *option)
     }
 }
 
+//______________________________________________________________________________
+void TPolyMarker3D::PaintH3(TH1 *h, Option_t *option)
+{
+//     Paint 3-d histogram h with 3d polymarkers
+
+   Int_t in, bin, binx, biny, binz;
+
+   Int_t nx  = h->GetXaxis()->GetNbins();
+   Int_t ny  = h->GetYaxis()->GetNbins();
+   Int_t nz  = h->GetZaxis()->GetNbins();
+   Int_t entry = 0;
+   for (binz=1;binz<=nz;binz++) {
+      for (biny=1;biny<=ny;biny++) {
+         for (binx=1;binx<=nx;binx++) {
+            bin = h->GetBin(binx,biny,binz);
+            for (in=0;in<h->GetBinContent(bin);in++) {
+               entry++;
+            }
+         }
+      }
+   }
+
+   //Create or modify 3-d view object
+   TView *view = gPad->GetView();
+   if (!view) {
+      gPad->Range(-1,-1,1,1);
+      view = new TView(1);
+   }
+   view->SetRange(h->GetXaxis()->GetXmin(),
+                  h->GetYaxis()->GetXmin(),
+                  h->GetZaxis()->GetXmin(),
+                  h->GetXaxis()->GetXmax(),
+                  h->GetYaxis()->GetXmax(),
+                  h->GetZaxis()->GetXmax());
+
+   if (entry == 0) return;
+   TPolyMarker3D *pm3d    = new TPolyMarker3D(entry);
+   pm3d->SetMarkerStyle(h->GetMarkerStyle());
+   pm3d->SetMarkerColor(h->GetMarkerColor());
+   pm3d->SetMarkerSize(h->GetMarkerSize());
+   gPad->Modified(kTRUE);
+
+   entry = 0;
+   Float_t x,y,z,xw,yw,zw,xp,yp,zp;
+   for (binz=1;binz<=nz;binz++) {
+      z  = h->GetZaxis()->GetBinLowEdge(binz);
+      zw = h->GetZaxis()->GetBinWidth(binz);
+      for (biny=1;biny<=ny;biny++) {
+         y  = h->GetYaxis()->GetBinLowEdge(biny);
+         yw = h->GetYaxis()->GetBinWidth(biny);
+         for (binx=1;binx<=nx;binx++) {
+            x  = h->GetXaxis()->GetBinLowEdge(binx);
+            xw = h->GetXaxis()->GetBinWidth(binx);
+            bin = h->GetBin(binx,biny,binz);
+            for (in=0;in<h->GetBinContent(bin);in++) {
+               xp = x + xw*gRandom->Rndm(in);
+               yp = y + yw*gRandom->Rndm(in);
+               zp = z + zw*gRandom->Rndm(in);
+               pm3d->SetPoint(entry,xp,yp,zp);
+               entry++;
+            }
+         }
+      }
+   }
+   pm3d->Paint(option);
+   delete pm3d;
+}
 
 //______________________________________________________________________________
 void TPolyMarker3D::PaintPolyMarker(Int_t n, Float_t *p, Marker_t, Option_t *)
@@ -385,11 +449,11 @@ void TPolyMarker3D::PaintPolyMarker(Int_t n, Float_t *p, Marker_t, Option_t *)
    TAttMarker::Modify();  //Change marker attributes only if necessary
 
 //*-*- invoke the graphics subsystem
-   if (!gPad->IsBatch()) gGXW->DrawPolyMarker(nin, pxy);
+   if (!gPad->IsBatch()) gVirtualX->DrawPolyMarker(nin, pxy);
 
 
-   if (gCurrentPS) {
-      gCurrentPS->DrawPolyMarker(nin, x, y);
+   if (gVirtualPS) {
+      gVirtualPS->DrawPolyMarker(nin, x, y);
    }
    delete [] x;
    delete [] y;
@@ -515,13 +579,50 @@ void TPolyMarker3D::Sizeof3D() const
 }
 
 
+//______________________________________________________________________________
+void TPolyMarker3D::SizeofH3(TH1 *h)
+{
+//*-*-*-*-*-*Return total size of 3-D histogram h*-*-*-*-*-*-*
+//*-*        ====================================
+
+   // take into account the 4 polylines of the OutlinetoCube
+   gSize3D.numSegs   += 4*3;
+   gSize3D.numPoints += 4*4;
+
+   if (h->GetEntries() <= 0) return;
+   Int_t nx  = h->GetXaxis()->GetNbins();
+   Int_t ny  = h->GetYaxis()->GetNbins();
+   Int_t nz  = h->GetZaxis()->GetNbins();
+   Int_t entry = 0;
+   Int_t bin, binx, biny, binz;
+   for (binz=1;binz<=nz;binz++) {
+      for (biny=1;biny<=ny;biny++) {
+         for (binx=1;binx<=nx;binx++) {
+            bin = h->GetBin(binx,biny,binz);
+            for (Int_t in=0;in<h->GetBinContent(bin);in++) {
+               entry++;
+            }
+         }
+      }
+   }
+    Int_t mode;
+    if (entry > 10000) mode = 1;         // One line marker    '-'
+    else if (entry > 3000) mode = 2;     // Two lines marker   '+'
+    else mode = 3;                       // Three lines marker '*'
+    gSize3D.numSegs   += entry*mode;
+    gSize3D.numPoints += entry*mode*2;
+    gSize3D.numPolys  += 0;
+}
+
+
 //_______________________________________________________________________
 void TPolyMarker3D::Streamer(TBuffer &b)
 {
 //*-*-*-*-*-*-*-*-*Stream a class object*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 //*-*              =========================================
+   UInt_t R__s, R__c;
    if (b.IsReading()) {
-      b.ReadVersion();  //Version_t v = b.ReadVersion();
+      b.ReadVersion(&R__s, &R__c);
       TObject::Streamer(b);
       TAttMarker::Streamer(b);
       b >> fN;
@@ -532,13 +633,15 @@ void TPolyMarker3D::Streamer(TBuffer &b)
          fLastPoint = fN-1;
       }
       fOption.Streamer(b);
+      b.CheckByteCount(R__s, R__c, TPolyMarker3D::IsA());
    } else {
-      b.WriteVersion(TPolyMarker3D::IsA());
+      R__c = b.WriteVersion(TPolyMarker3D::IsA(), kTRUE);
       TObject::Streamer(b);
       TAttMarker::Streamer(b);
       Int_t size = Size();
       b << size;
       if (size) b.WriteFastArray(fP, kDimension*size);
       fOption.Streamer(b);
+      b.SetByteCount(R__c, kTRUE);
    }
 }

@@ -1,25 +1,24 @@
+//*CMZ :  2.23/12 31/01/2000  17.59.53  by  Rene Brun
+//*CMZ :  2.23/11 20/12/99  12.04.02  by  Rene Brun
+//*CMZ :  2.23/10 14/12/99  20.06.20  by  Fons Rademakers
+//*CMZ :  2.23/07 27/10/99  17.38.16  by  Rene Brun
+//*CMZ :  2.23/03 18/09/99  14.49.59  by  Fons Rademakers
 //*CMZ :  2.22/07 05/07/99  18.55.30  by  Fons Rademakers
 //*CMZ :  2.00/10 14/07/98  15.57.04  by  Fons Rademakers
 //*CMZ :  2.00/08 11/06/98  18.20.39  by  Fons Rademakers
-//*CMZ :  1.03/09 11/12/97  15.44.42  by  Rene Brun
 //*-- Author :    Fons Rademakers   11/09/95
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -72,6 +71,8 @@ TObjArray::TObjArray(const TObjArray &a)
 
    for (Int_t i = 0; i < fSize; i++)
       fCont[i] = a.fCont[i];
+
+   fLast = a.fLast;
 }
 
 //______________________________________________________________________________
@@ -184,14 +185,16 @@ Int_t  TObjArray::AddAtFree(TObject *obj)
    // Return the position of the new object.
    // Find the first empty cell or AddLast if there is no empty cell
 
-   Int_t i;
-
-   for (i = 0; i < fSize; i++)
-      if (!fCont[i]) {         // Add object at position i
-        fCont[i] = obj;
-        Changed();
-        return i+fLowerBound;
-      }
+   if (Last()) {    // <---------- This is to take in account "empty" TObjArray's
+       Int_t i;
+       for (i = 0; i < fSize; i++)
+          if (!fCont[i]) {         // Add object at position i
+             fCont[i] = obj;
+             fLast = TMath::Max(i, GetAbsLast());
+             Changed();
+             return i+fLowerBound;
+          }
+   }
    AddLast(obj);
    return GetLast();
 }
@@ -305,16 +308,23 @@ void TObjArray::Streamer(TBuffer &b)
 
    Int_t nobjects;
    if (b.IsReading()) {
-      b.ReadVersion();   // Version_t v = b.ReadVersion();
+      Version_t v = b.ReadVersion();
+      if (v > 1) {
+         fName.Streamer(b);
+      }
       b >> nobjects;
       b >> fLowerBound;
+      if (nobjects >= fSize) Expand(nobjects);
+      fLast = -1;
       TObject *obj;
       for (Int_t i = 0; i < nobjects; i++) {
          b >> obj;
-         if (obj) AddAtAndExpand(obj, i+fLowerBound);
+         if (obj) {fCont[i] = obj; fLast = i;}
       }
+      Changed();
    } else {
       b.WriteVersion(TObjArray::IsA());
+      fName.Streamer(b);
       nobjects = GetSize();
       b << nobjects;
       b << fLowerBound;
@@ -452,17 +462,24 @@ Bool_t TObjArray::OutOfBoundsError(const char *where, Int_t i) const
 }
 
 //______________________________________________________________________________
-void TObjArray::RemoveAt(Int_t idx)
+TObject *TObjArray::RemoveAt(Int_t idx)
 {
    // Remove object at index idx.
 
-   if (!BoundsOk("RemoveAt", idx)) return;
+   if (!BoundsOk("RemoveAt", idx)) return 0;
 
-   if (fCont[idx-fLowerBound]) {
-      fCont[idx-fLowerBound] = 0;
-      fLast = -2;
+   int i = idx-fLowerBound;
+
+   TObject *obj = 0;
+   if (fCont[i]) {
+      obj = fCont[i];
+      fCont[i] = 0;
+      // recalculate array size
+      if (i == fLast)
+         do { fLast--; } while (fCont[fLast] == 0 && fLast >= 0);
       Changed();
    }
+   return obj;
 }
 
 //______________________________________________________________________________
@@ -476,10 +493,13 @@ TObject *TObjArray::Remove(TObject *obj)
 
    if (idx == -1) return 0;
 
+   TObject *ob = fCont[idx];
    fCont[idx] = 0;
-   fLast = -2;
+   // recalculate array size
+   if (idx == fLast)
+      do { fLast--; } while (fCont[fLast] == 0 && fLast >= 0);
    Changed();
-   return obj;
+   return ob;
 }
 
 //______________________________________________________________________________

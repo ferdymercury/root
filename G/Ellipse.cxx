@@ -1,25 +1,21 @@
+//*CMZ :  2.23/04 04/10/99  14.46.17  by  Rene Brun
+//*CMZ :  2.23/03 24/09/99  09.05.41  by  Rene Brun
+//*CMZ :  2.23/02 02/09/99  15.54.25  by  Rene Brun
 //*CMZ :  2.22/01 10/05/99  09.38.04  by  Rene Brun
 //*CMZ :  2.20/05 15/12/98  09.17.20  by  Rene Brun
-//*CMZ :  2.00/12 05/09/98  18.32.20  by  Rene Brun
-//*CMZ :  1.03/09 06/12/97  17.07.11  by  Fons Rademakers
 //*-- Author :    Rene Brun   16/10/95
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 #include <stdlib.h>
@@ -189,19 +185,18 @@ void TEllipse::ExecuteEvent(Int_t event, Int_t px, Int_t py)
    static Bool_t T, L, R, B, INSIDE;
    static Int_t Tx,Ty,Lx,Ly,Rx,Ry,Bx,By;
 
-
-
+   if (!gPad->IsEditable()) return;
 
    switch (event) {
 
    case kButton1Down:
-      gGXW->SetLineColor(-1);
+      gVirtualX->SetLineColor(-1);
       TAttLine::Modify();
       dphi = (fPhimax-fPhimin)*PI/(180*np);
       ct   = TMath::Cos(PI*fTheta/180);
       st   = TMath::Sin(PI*fTheta/180);
       for (i=0;i<np;i++) {
-         angle = Float_t(i)*dphi;
+         angle = fPhimin*PI/180 + Float_t(i)*dphi;
          dx    = fR1*TMath::Cos(angle);
          dy    = fR2*TMath::Sin(angle);
          x[i]  = gPad->XtoAbsPixel(fX1 + dx*ct - dy*st);
@@ -229,22 +224,22 @@ void TEllipse::ExecuteEvent(Int_t event, Int_t px, Int_t py)
       Rx = gPad->XtoAbsPixel(fR1+fX1);
       R2 = (By-Ty)/2;
       R1 = (Rx-Lx)/2;
-      gGXW->DrawLine(Rx+4, py1+4, Rx-4, py1+4);
-      gGXW->DrawLine(Rx-4, py1+4, Rx-4, py1-4);
-      gGXW->DrawLine(Rx-4, py1-4, Rx+4, py1-4);
-      gGXW->DrawLine(Rx+4, py1-4, Rx+4, py1+4);
-      gGXW->DrawLine(Lx+4, py1+4, Lx-4, py1+4);
-      gGXW->DrawLine(Lx-4, py1+4, Lx-4, py1-4);
-      gGXW->DrawLine(Lx-4, py1-4, Lx+4, py1-4);
-      gGXW->DrawLine(Lx+4, py1-4, Lx+4, py1+4);
-      gGXW->DrawLine(px1+4, By+4, px1-4, By+4);
-      gGXW->DrawLine(px1-4, By+4, px1-4, By-4);
-      gGXW->DrawLine(px1-4, By-4, px1+4, By-4);
-      gGXW->DrawLine(px1+4, By-4, px1+4, By+4);
-      gGXW->DrawLine(px1+4, Ty+4, px1-4, Ty+4);
-      gGXW->DrawLine(px1-4, Ty+4, px1-4, Ty-4);
-      gGXW->DrawLine(px1-4, Ty-4, px1+4, Ty-4);
-      gGXW->DrawLine(px1+4, Ty-4, px1+4, Ty+4);
+      gVirtualX->DrawLine(Rx+4, py1+4, Rx-4, py1+4);
+      gVirtualX->DrawLine(Rx-4, py1+4, Rx-4, py1-4);
+      gVirtualX->DrawLine(Rx-4, py1-4, Rx+4, py1-4);
+      gVirtualX->DrawLine(Rx+4, py1-4, Rx+4, py1+4);
+      gVirtualX->DrawLine(Lx+4, py1+4, Lx-4, py1+4);
+      gVirtualX->DrawLine(Lx-4, py1+4, Lx-4, py1-4);
+      gVirtualX->DrawLine(Lx-4, py1-4, Lx+4, py1-4);
+      gVirtualX->DrawLine(Lx+4, py1-4, Lx+4, py1+4);
+      gVirtualX->DrawLine(px1+4, By+4, px1-4, By+4);
+      gVirtualX->DrawLine(px1-4, By+4, px1-4, By-4);
+      gVirtualX->DrawLine(px1-4, By-4, px1+4, By-4);
+      gVirtualX->DrawLine(px1+4, By-4, px1+4, By+4);
+      gVirtualX->DrawLine(px1+4, Ty+4, px1-4, Ty+4);
+      gVirtualX->DrawLine(px1-4, Ty+4, px1-4, Ty-4);
+      gVirtualX->DrawLine(px1-4, Ty-4, px1+4, Ty-4);
+      gVirtualX->DrawLine(px1+4, Ty-4, px1+4, Ty+4);
       // No break !!!
 
    case kMouseMotion:
@@ -286,23 +281,23 @@ void TEllipse::ExecuteEvent(Int_t event, Int_t px, Int_t py)
       break;
 
    case kButton1Motion:
-      gGXW->DrawLine(Rx+4, py1+4, Rx-4, py1+4);
-      gGXW->DrawLine(Rx-4, py1+4, Rx-4, py1-4);
-      gGXW->DrawLine(Rx-4, py1-4, Rx+4, py1-4);
-      gGXW->DrawLine(Rx+4, py1-4, Rx+4, py1+4);
-      gGXW->DrawLine(Lx+4, py1+4, Lx-4, py1+4);
-      gGXW->DrawLine(Lx-4, py1+4, Lx-4, py1-4);
-      gGXW->DrawLine(Lx-4, py1-4, Lx+4, py1-4);
-      gGXW->DrawLine(Lx+4, py1-4, Lx+4, py1+4);
-      gGXW->DrawLine(px1+4, By+4, px1-4, By+4);
-      gGXW->DrawLine(px1-4, By+4, px1-4, By-4);
-      gGXW->DrawLine(px1-4, By-4, px1+4, By-4);
-      gGXW->DrawLine(px1+4, By-4, px1+4, By+4);
-      gGXW->DrawLine(px1+4, Ty+4, px1-4, Ty+4);
-      gGXW->DrawLine(px1-4, Ty+4, px1-4, Ty-4);
-      gGXW->DrawLine(px1-4, Ty-4, px1+4, Ty-4);
-      gGXW->DrawLine(px1+4, Ty-4, px1+4, Ty+4);
-      for (i=0;i<npe;i++) gGXW->DrawLine(x[i], y[i], x[i+1], y[i+1]);
+      gVirtualX->DrawLine(Rx+4, py1+4, Rx-4, py1+4);
+      gVirtualX->DrawLine(Rx-4, py1+4, Rx-4, py1-4);
+      gVirtualX->DrawLine(Rx-4, py1-4, Rx+4, py1-4);
+      gVirtualX->DrawLine(Rx+4, py1-4, Rx+4, py1+4);
+      gVirtualX->DrawLine(Lx+4, py1+4, Lx-4, py1+4);
+      gVirtualX->DrawLine(Lx-4, py1+4, Lx-4, py1-4);
+      gVirtualX->DrawLine(Lx-4, py1-4, Lx+4, py1-4);
+      gVirtualX->DrawLine(Lx+4, py1-4, Lx+4, py1+4);
+      gVirtualX->DrawLine(px1+4, By+4, px1-4, By+4);
+      gVirtualX->DrawLine(px1-4, By+4, px1-4, By-4);
+      gVirtualX->DrawLine(px1-4, By-4, px1+4, By-4);
+      gVirtualX->DrawLine(px1+4, By-4, px1+4, By+4);
+      gVirtualX->DrawLine(px1+4, Ty+4, px1-4, Ty+4);
+      gVirtualX->DrawLine(px1-4, Ty+4, px1-4, Ty-4);
+      gVirtualX->DrawLine(px1-4, Ty-4, px1+4, Ty-4);
+      gVirtualX->DrawLine(px1+4, Ty-4, px1+4, Ty+4);
+      for (i=0;i<npe;i++) gVirtualX->DrawLine(x[i], y[i], x[i+1], y[i+1]);
       if (T) {
          sav1 = py1;
          sav2 = R2;
@@ -348,13 +343,13 @@ void TEllipse::ExecuteEvent(Int_t event, Int_t px, Int_t py)
          if (px1 < Lx+kMinSize) {px1 = sav1; R1 = sav2; px = pxold;}
       }
       if (T || B || L || R) {
-         gGXW->SetLineColor(-1);
+         gVirtualX->SetLineColor(-1);
          TAttLine::Modify();
          dphi = (fPhimax-fPhimin)*PI/(180*np);
          ct   = TMath::Cos(PI*fTheta/180);
          st   = TMath::Sin(PI*fTheta/180);
          for (i=0;i<np;i++) {
-            angle = Float_t(i)*dphi;
+            angle = fPhimin*PI/180 + Float_t(i)*dphi;
             dx    = R1*TMath::Cos(angle);
             dy    = R2*TMath::Sin(angle);
             x[i]  = px1 + Int_t(dx*ct - dy*st);
@@ -371,13 +366,13 @@ void TEllipse::ExecuteEvent(Int_t event, Int_t px, Int_t py)
             y[np+1] = y[0];
             npe = np + 1;
          }
-         for (i=0;i<npe;i++) gGXW->DrawLine(x[i], y[i], x[i+1], y[i+1]);
+         for (i=0;i<npe;i++) gVirtualX->DrawLine(x[i], y[i], x[i+1], y[i+1]);
       }
       if (INSIDE) {
           dpx  = px-pxold;  dpy = py-pyold;
           px1 += dpx; py1 += dpy;
           for (i=0;i<=npe;i++) { x[i] += dpx; y[i] += dpy;}
-          for (i=0;i<npe;i++) gGXW->DrawLine(x[i], y[i], x[i+1], y[i+1]);
+          for (i=0;i<npe;i++) gVirtualX->DrawLine(x[i], y[i], x[i+1], y[i+1]);
       }
       Tx = Bx = px1;
       Rx = px1+R1;
@@ -385,22 +380,22 @@ void TEllipse::ExecuteEvent(Int_t event, Int_t px, Int_t py)
       Ry = Ly = py1;
       Ty = py1-R2;
       By = py1+R2;
-      gGXW->DrawLine(Rx+4, py1+4, Rx-4, py1+4);
-      gGXW->DrawLine(Rx-4, py1+4, Rx-4, py1-4);
-      gGXW->DrawLine(Rx-4, py1-4, Rx+4, py1-4);
-      gGXW->DrawLine(Rx+4, py1-4, Rx+4, py1+4);
-      gGXW->DrawLine(Lx+4, py1+4, Lx-4, py1+4);
-      gGXW->DrawLine(Lx-4, py1+4, Lx-4, py1-4);
-      gGXW->DrawLine(Lx-4, py1-4, Lx+4, py1-4);
-      gGXW->DrawLine(Lx+4, py1-4, Lx+4, py1+4);
-      gGXW->DrawLine(px1+4, By+4, px1-4, By+4);
-      gGXW->DrawLine(px1-4, By+4, px1-4, By-4);
-      gGXW->DrawLine(px1-4, By-4, px1+4, By-4);
-      gGXW->DrawLine(px1+4, By-4, px1+4, By+4);
-      gGXW->DrawLine(px1+4, Ty+4, px1-4, Ty+4);
-      gGXW->DrawLine(px1-4, Ty+4, px1-4, Ty-4);
-      gGXW->DrawLine(px1-4, Ty-4, px1+4, Ty-4);
-      gGXW->DrawLine(px1+4, Ty-4, px1+4, Ty+4);
+      gVirtualX->DrawLine(Rx+4, py1+4, Rx-4, py1+4);
+      gVirtualX->DrawLine(Rx-4, py1+4, Rx-4, py1-4);
+      gVirtualX->DrawLine(Rx-4, py1-4, Rx+4, py1-4);
+      gVirtualX->DrawLine(Rx+4, py1-4, Rx+4, py1+4);
+      gVirtualX->DrawLine(Lx+4, py1+4, Lx-4, py1+4);
+      gVirtualX->DrawLine(Lx-4, py1+4, Lx-4, py1-4);
+      gVirtualX->DrawLine(Lx-4, py1-4, Lx+4, py1-4);
+      gVirtualX->DrawLine(Lx+4, py1-4, Lx+4, py1+4);
+      gVirtualX->DrawLine(px1+4, By+4, px1-4, By+4);
+      gVirtualX->DrawLine(px1-4, By+4, px1-4, By-4);
+      gVirtualX->DrawLine(px1-4, By-4, px1+4, By-4);
+      gVirtualX->DrawLine(px1+4, By-4, px1+4, By+4);
+      gVirtualX->DrawLine(px1+4, Ty+4, px1-4, Ty+4);
+      gVirtualX->DrawLine(px1-4, Ty+4, px1-4, Ty-4);
+      gVirtualX->DrawLine(px1-4, Ty-4, px1+4, Ty-4);
+      gVirtualX->DrawLine(px1+4, Ty-4, px1+4, Ty+4);
       pxold = px;
       pyold = py;
       break;
@@ -415,7 +410,7 @@ void TEllipse::ExecuteEvent(Int_t event, Int_t px, Int_t py)
       fR1 = TMath::Abs(fRx-fLx)/2;
       fR2 = TMath::Abs(fTy-fBy)/2;
       gPad->Modified(kTRUE);
-      gGXW->SetLineColor(-1);
+      gVirtualX->SetLineColor(-1);
    }
 }
 
@@ -425,7 +420,7 @@ void TEllipse::ls(Option_t *)
 //*-*-*-*-*-*-*-*-*-*-*-*List this ellipse with its attributes*-*-*-*-*-*-*-*
 //*-*                    =====================================
    IndentLevel();
-   printf("Ellipse:  X1= %f Y1=%f R1=%f R2=%f\n",fX1,fY1,fR1,fR2);
+   printf("%s:  X1= %f Y1=%f R1=%f R2=%f\n",GetName(),fX1,fY1,fR1,fR2);
 }
 
 //______________________________________________________________________________
@@ -453,7 +448,7 @@ void TEllipse::PaintEllipse(Float_t, Float_t, Float_t, Float_t, Float_t phimin,F
    Float_t ct   = TMath::Cos(PI*theta/180);
    Float_t st   = TMath::Sin(PI*theta/180);
    for (Int_t i=0;i<=np;i++) {
-      angle = phimin + Float_t(i)*dphi;
+      angle = phimin*PI/180 + Float_t(i)*dphi;
       dx    = fR1*TMath::Cos(angle);
       dy    = fR2*TMath::Sin(angle);
       x[i]  = fX1 + dx*ct - dy*st;

@@ -1,5 +1,5 @@
-/*CMZ :  2.22/10 23/07/99  14.42.19  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   23/07/99*/
+/*CMZ :  2.23/10 10/12/99  18.00.05  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   10/12/99*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -9,15 +9,13 @@
  * Description:
  *  Define macro
  ************************************************************************
- * Copyright(c) 1991~1996  [hp] Hewlett Packard Japan, All rights reserved
- * Author                  Masaharu Goto (gotom@jpn.hp.com)
- * Copyright(c) 1995~1998  Masaharu Goto (MXJ02154@niftyserve.or.jp)
+ * Copyright(c) 1995~1999  Masaharu Goto (MXJ02154@niftyserve.or.jp)
  *
  * Permission to use, copy, modify and distribute this software and its
  * documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies and
  * that both that copyright notice and this permission notice appear
- * in supporting documentation.  Hewlett-Packard Japan Company makes no
+ * in supporting documentation.  The author makes no
  * representations about the suitability of this software for any
  * purpose.  It is provided "as is" without express or implied warranty.
  ************************************************************************/
@@ -120,9 +118,11 @@ static int G__sym_underscore=0;
 void G__set_sym_underscore(x) int x; { G__sym_underscore=x; }
 
 
+#ifndef __CINT__
 G__SHLHANDLE G__dlopen G__P((char *path));
 void *G__shl_findsym G__P((G__SHLHANDLE *phandle,char *sym,short type));
 int G__dlclose G__P((G__SHLHANDLE handle));
+#endif
 
 #ifndef G__PHILIPPE1
 /****************************************************
@@ -158,15 +158,60 @@ int G__dlclose G__P((G__SHLHANDLE handle));
 static int G__RTLD_flag = G__RTLD_LAZY;
 #endif
 
+
+#ifndef G__OLDIMPLEMENTATION1207
+int G__ispermanentsl = 0;
+G__DLLINIT G__initpermanentsl ;
+
+/**************************************************************************
+* G__loadsystemfile
+**************************************************************************/
+int G__loadsystemfile(filename)
+char *filename;
+{
+  int result;
+  int len = strlen(filename);
+#if defined(R__FBSD)
+  char soext[]=SOEXT;
+#endif
+  if((len>3&& (strcmp(filename+len-3,".sl")==0 ||
+	       strcmp(filename+len-3,".dl")==0 ||
+	       strcmp(filename+len-3,".so")==0)) ||
+     (len>4&& (strcmp(filename+len-4,".dll")==0 ||
+	       strcmp(filename+len-4,".DLL")==0)) ||
+#if defined(R__FBSD)
+     (len>strlen(soext) && strcmp(filename+len-strlen(soext), soext)==0) ||
+#endif
+     (len>2&& (strcmp(filename+len-2,".a")==0 ||
+	       strcmp(filename+len-2,".A")==0))
+     ) {
+  }
+  else {
+    fprintf(G__serr,"Error: G__loadsystemfile can only load DLL");
+    G__printlinenum();
+    return(G__LOADFILE_FAILURE);
+  }
+  G__ispermanentsl=1;
+  result = G__loadfile(filename);
+  G__ispermanentsl=0;
+  return(result);
+}
+#endif
+
+
 /***********************************************************************
 * G__Set_RTLD_NOW() && G__Set_RTLD_LAZY()
 *
 ***********************************************************************/
 void G__Set_RTLD_NOW() {
+#ifdef G__SHAREDLIB
   G__RTLD_flag = G__RTLD_NOW;
+#endif
 }
 void G__Set_RTLD_LAZY() {
+#ifdef G__SHAREDLIB
   G__RTLD_flag = G__RTLD_LAZY;
+#endif
 }
 #endif /* G__PHILIPPE1 */
 
@@ -690,7 +735,11 @@ char *shlfile;
   sprintf(dllid,"G__cpp_dllrev");
   sharedlib_func=
     (int (*)())G__shl_findsym(&G__sl_handle[allsl],dllid,TYPE_PROCEDURE);
+#ifndef G__OLDIMPLEMENTATION1169
+  if(sharedlib_func && (*sharedlib_func)()>G__ACCEPTDLLREV) {
+#else
   if(sharedlib_func && (*sharedlib_func)()!=G__DLLREV) {
+#endif
     G__check_setup_version((*sharedlib_func)(),"");
     error++;
   }
@@ -699,7 +748,11 @@ char *shlfile;
   sprintf(dllid,"G__cpp_dllrev%s",dllidheader);
   sharedlib_func=
     (int (*)())G__shl_findsym(&G__sl_handle[allsl],dllid,TYPE_PROCEDURE);
+#ifndef G__OLDIMPLEMENTATION1169
+  if(sharedlib_func && (*sharedlib_func)()>G__ACCEPTDLLREV) {
+#else
   if(sharedlib_func && (*sharedlib_func)()!=G__DLLREV) {
+#endif
     G__check_setup_version((*sharedlib_func)(),"");
     error++;
   }
@@ -708,7 +761,11 @@ char *shlfile;
   sprintf(dllid,"G__c_dllrev");
   sharedlib_func=
     (int (*)())G__shl_findsym(&G__sl_handle[allsl],dllid,TYPE_PROCEDURE);
+#ifndef G__OLDIMPLEMENTATION1169
+  if(sharedlib_func && (*sharedlib_func)()>G__ACCEPTDLLREV) {
+#else
   if(sharedlib_func && (*sharedlib_func)()!=G__DLLREV) {
+#endif
     G__check_setup_version((*sharedlib_func)(),"");
     error++;
   }
@@ -717,7 +774,11 @@ char *shlfile;
   sprintf(dllid,"G__c_dllrev%s",dllidheader);
   sharedlib_func=
     (int (*)())G__shl_findsym(&G__sl_handle[allsl],dllid,TYPE_PROCEDURE);
+#ifndef G__OLDIMPLEMENTATION1169
+  if(sharedlib_func && (*sharedlib_func)()>G__ACCEPTDLLREV) {
+#else
   if(sharedlib_func && (*sharedlib_func)()!=G__DLLREV) {
+#endif
     G__check_setup_version((*sharedlib_func)(),"");
     error++;
   }
@@ -766,8 +827,10 @@ char *shlfile;
     G__CALL_SETUP(dllid);
   }
 #ifdef G__ROOT
-  if (sharedlib_func==NULL)
-    G__call_setup_funcs();
+#ifndef G__OLDKIMPLEMENTATION1207
+  G__initpermanentsl = (void (*)())NULL;
+#endif
+  if (sharedlib_func==NULL) G__call_setup_funcs();
 #endif
 
   sprintf(dllid,"G__c_setup%s",dllidheader);
@@ -797,6 +860,24 @@ char *shlfile;
   G__prerun=0;
   G__setdebugcond();
   G__globalcomp=store_globalcomp;
+
+#ifndef G__OLDIMPLEMENTATION1207
+  if(G__ispermanentsl) {
+    if(!G__initpermanentsl)
+      G__initpermanentsl =
+	(void (*)())G__shl_findsym(&G__sl_handle[allsl],"G__cpp_setup"
+				   ,TYPE_PROCEDURE);
+    if(!G__initpermanentsl) {
+      sprintf(dllid,"G__cpp_setup%s",dllidheader);
+      G__initpermanentsl =
+	(void (*)())G__shl_findsym(&G__sl_handle[allsl],dllid,TYPE_PROCEDURE);
+    }
+    --G__allsl;
+  }
+  else {
+    G__initpermanentsl = (void (*)())NULL;
+  }
+#endif
 
 #ifdef G__OLDIMPLEMENTATION885
   ++G__allsl; /* anyway increment this */

@@ -1,30 +1,25 @@
+//*CMZ :  2.23/12 26/01/2000  09.24.07  by  Rene Brun
+//*CMZ :  2.23/09 07/11/99  02.43.34  by  Fons Rademakers
 //*CMZ :  2.21/01 11/01/99  16.37.56  by  Fons Rademakers
 //*CMZ :  2.20/04 09/12/98  19.25.20  by  Rene Brun
 //*CMZ :  2.00/11 09/08/98  10.59.45  by  Rene Brun
 //*CMZ :  2.00/10 28/07/98  10.44.07  by  Fons Rademakers
-//*CMZ :  2.00/08 22/05/98  17.58.57  by  Fons Rademakers
-//*CMZ :  1.03/09 07/12/97  00.20.37  by  Fons Rademakers
 //*-- Author :    Rene Brun   21/11/94
 
 #ifndef ROOT_TDirectory
 #define ROOT_TDirectory
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -64,16 +59,19 @@ protected:
    TList       *fList;           //Pointer to objects list in memory
    TList       *fKeys;           //Pointer to keys list in memory
 
-          Bool_t cd1(const Text_t *path);
-   static Bool_t Cd1(const Text_t *path);
+          Bool_t cd1(const char *path);
+   static Bool_t Cd1(const char *path);
 
 private:
    TDirectory(const TDirectory &directory);  //Directories cannot be copied
    void operator=(const TDirectory &);
 
 public:
+   // TDirectory status bits
+   enum { kCloseDirectory = BIT(7) };
+
    TDirectory();
-   TDirectory(const Text_t *name, const Text_t *title, Option_t *option="");
+   TDirectory(const char *name, const char *title, Option_t *option="");
    virtual ~TDirectory();
    virtual void        Append(TObject *obj);
            Int_t       AppendKey(TKey *key);
@@ -82,14 +80,14 @@ public:
    virtual void        Clear(Option_t *option="");
    virtual void        Close(Option_t *option="");
    virtual void        Copy(TObject &) { MayNotUse("Copy(TObject &)"); }
-   virtual Bool_t      cd(const Text_t *path = 0);
+   virtual Bool_t      cd(const char *path = 0);
    virtual void        DeleteAll(Option_t *option="");
-   virtual void        Delete(const Text_t *namecycle="");
+   virtual void        Delete(const char *namecycle="");
    virtual void        Draw(Option_t *option="");
    virtual void        FillBuffer(char *&buffer);
-   virtual TObject    *Get(const Text_t *namecycle);
+   virtual TObject    *Get(const char *namecycle);
    virtual TFile      *GetFile() {return fFile;}
-   virtual TKey       *GetKey(const Text_t *name, const Short_t cycle=9999);
+   virtual TKey       *GetKey(const char *name, const Short_t cycle=9999);
    TList              *GetList() const { return fList; }
    TList              *GetListOfKeys() const { return fKeys; }
    TObject            *GetMother() const { return fMother; }
@@ -102,7 +100,7 @@ public:
    Bool_t              IsModified() { return fModified; }
    Bool_t              IsWritable() { return fWritable; }
    virtual void        ls(Option_t *option="");
-   virtual TDirectory *mkdir(const Text_t *name, const Text_t *title="");
+   virtual TDirectory *mkdir(const char *name, const char *title="");
    virtual void        Paint(Option_t *option="");
    virtual void        Print(Option_t *option="");
    virtual void        Purge(Short_t nkeep=1);
@@ -115,13 +113,13 @@ public:
    void                SetModified() {fModified = kTRUE;}
    void                SetMother(TObject *mother) {fMother = mother;}
    virtual Int_t       Sizeof() const;
-   virtual void        Write(const Text_t *name=0, Int_t opt=0, Int_t bufsiz=0);
+   virtual void        Write(const char *name=0, Int_t opt=0, Int_t bufsiz=0);
    virtual void        WriteDirHeader();
    virtual void        WriteKeys();
 
-   static Bool_t       Cd(const Text_t *path);
-   static void         DecodeNameCycle(const Text_t *namecycle, Text_t *name, Short_t &cycle);
-   static void         EncodeNameCycle(Text_t *buffer, const Text_t *name, Short_t cycle);
+   static Bool_t       Cd(const char *path);
+   static void         DecodeNameCycle(const char *namecycle, char *name, Short_t &cycle);
+   static void         EncodeNameCycle(char *buffer, const char *name, Short_t cycle);
 
    ClassDef(TDirectory,1)  //Describe directory structure in memory
 };

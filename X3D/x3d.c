@@ -1,3 +1,5 @@
+/*CMZ :  2.23/11 29/12/99  11.35.52  by  Rene Brun*/
+/*CMZ :  2.23/10 29/12/99  08.59.34  by  Rene Brun*/
 /*CMZ :  2.22/01 20/05/99  09.47.37  by  Rene Brun*/
 /*CMZ :  2.20/04 20/05/99  09.24.33  by  Fons Rademakers*/
 /*CMZ :  1.03/09 08/12/97  18.03.24  by  Fons Rademakers*/
@@ -1421,7 +1423,6 @@ char string[TMPSTRLEN];
          }
 
          numEvents--;
-
          if(numEvents)
             XNextEvent(g->dpy,&event);
       }
@@ -1947,7 +1948,7 @@ long *redCol;
             while(seg < lastSeg){
 
                   if (seg->color) *redCol = seg->color->value;
-                  else            *redCol = 0;
+                  else            {*redCol = 0; break;}
                   redCol++;
                   ((xsegment *)red)->P = seg->P->R;
                   ((xsegment *)red)->Q = seg->Q->R;
@@ -2974,7 +2975,8 @@ void MakePolygonArray()
 
 
     if (gSize3D.numPolys) {
-        list = (polygon **) calloc(gSize3D.numPolys, sizeof(polygon *));
+         /* sort use the last space as a place holder */
+        list = (polygon **) calloc(gSize3D.numPolys+1, sizeof(polygon *));
         if(!list){
             puts("Unable to allocate memory for pointer list !");
             return;
@@ -3370,3 +3372,4 @@ char    *string;
 }
 
 
+#endif

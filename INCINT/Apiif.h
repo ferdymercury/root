@@ -1,5 +1,5 @@
-/*CMZ :  2.22/10 23/07/99  14.42.11  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   23/07/99*/
+/*CMZ :  2.23/10 10/12/99  17.59.57  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   10/12/99*/
 /********************************************************************
 * Apiif.h
 ********************************************************************/
@@ -11,9 +11,9 @@
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
-extern "C" {
 #define G__ANSIHEADER
 #include "G__ci.h"
+extern "C" {
 extern void G__cpp_setup_tagtableG__API();
 extern void G__cpp_setup_inheritanceG__API();
 extern void G__cpp_setup_typetableG__API();
@@ -30,9 +30,6 @@ extern void G__set_cpp_environmentG__API();
 #ifndef G__MEMFUNCBODY
 #endif
 
-extern G__linked_taginfo G__G__APILN_G__value;
-extern G__linked_taginfo G__G__APILN_G__linked_taginfo;
-extern G__linked_taginfo G__G__APILN_G__COMPLETIONLIST;
 extern G__linked_taginfo G__G__APILN_G__MethodInfo;
 extern G__linked_taginfo G__G__APILN_G__DataMemberInfo;
 extern G__linked_taginfo G__G__APILN_G__FriendInfo;

@@ -1,5 +1,5 @@
-/*CMZ :  2.22/10 23/07/99  14.42.20  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   23/07/99*/
+/*CMZ :  2.23/10 10/12/99  18.00.06  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   10/12/99*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -9,15 +9,13 @@
  * Description:
  *  Class and member function template
  ************************************************************************
- * Copyright(c) 1991~1996  [hp] Hewlett Packard Japan, All rights reserved
- * Author                  Masaharu Goto (gotom@jpn.hp.com)
- * Copyright(c) 1995~1998  Masaharu Goto (MXJ02154@niftyserve.or.jp)
+ * Copyright(c) 1995~1999  Masaharu Goto (MXJ02154@niftyserve.or.jp)
  *
  * Permission to use, copy, modify and distribute this software and its
  * documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies and
  * that both that copyright notice and this permission notice appear
- * in supporting documentation.  Hewlett-Packard Japan Company makes no
+ * in supporting documentation.  The author makes no
  * representations about the suitability of this software for any
  * purpose.  It is provided "as is" without express or implied warranty.
  ************************************************************************/
@@ -484,8 +482,16 @@ int isforwarddecl;
 	  return(0);
 	}
 #endif /* ON775 */
+#ifndef G__OLDIMPLEMENTATION1202
+	/* ignore duplicate template class definition */
+	fprintf(G__serr,"Warning: template %s duplicate definition",new_name);
+	G__printlinenum();
+	G__fignorestream(";");
+	return(0);
+#else
 	fprintf(G__serr,"Error: template %s duplicate definition",new_name);
 	G__genericerror(NULL);
+#endif
       }
       override=1;
       break;
@@ -645,6 +651,78 @@ char *name;
 #endif
 }
 
+#ifndef G__OLDIMPLEMENTATION1224
+/***********************************************************************
+* G__explicit_template_specialization()
+*
+*  Handle explicit template specialization
+*
+*  template<>  class A<int> { A(A& x); A& operator=(A& x); };
+*  template<>  void A<int>::A(A& x) { }
+*             ^
+*
+***********************************************************************/
+int G__explicit_template_specialization()
+{
+  char buf[G__ONELINE];
+  int cin;
+  int typenum;
+  int tagnum = G__struct.alltag;
+  char *p;
+
+  /* store file position */
+  fpos_t store_pos;
+  int store_line=G__ifile.line_number;
+  fgetpos(G__ifile.fp,&store_pos);
+  G__disp_mask = 1000;
+
+  /* forward proving */
+  cin = G__fgetname_template(buf,":{;");
+  if(strcmp(buf,"class")==0 || strcmp(buf,"struct")==0) {
+    /* template<>  class A<int> { A(A& x); A& operator=(A& x); };
+     *                  ^                      */
+    cin = G__fgetname_template(buf,":{;");
+  }
+  else {
+    /*  template<>  void A<int>::A(A& x) { }
+     *                  ^                      */
+    for(;;) {
+      cin = G__fgetname_template(buf,":{;");
+      if(':'==cin) {
+	break;
+      }
+      if('{'==cin || ';'==cin) {
+	G__genericerror("Error: Syntax error????");
+	break;
+      }
+    }
+  }
+
+  /* Set temporary typedef */
+  p = strchr(buf,'<');
+  if(p) *p=0;
+  typenum = G__search_typename(buf,'u',tagnum,G__PARANORMAL);
+
+  /* restore original file position
+   *  template<>  class A<int> { A(A& x); A& operator=(A& x); };
+   *  template<>  void A<int>::A(A& x) { }
+   *             ^                             */
+  G__disp_mask = 0;
+  fsetpos(G__ifile.fp,&store_pos);
+  G__ifile.line_number = store_line;
+
+  /* Read source */
+  G__exec_statement();
+
+  /* discard temporary typedef */
+  G__newtype.name[typenum][0]=0;
+  G__newtype.hash[typenum] = 0;
+  if(G__newtype.alltype==typenum+1) --G__newtype.alltype;
+
+  return(0);
+}
+#endif
+
 /***********************************************************************
 * G__declare_template()
 *
@@ -683,8 +761,15 @@ void G__declare_template()
 
   /* read template argument declaration */
   targ=G__read_formal_templatearg();
+#ifndef G__OLDIMPLEMENTATION1224
+  if(!targ) {/* in case of 'template<>' */
+    G__explicit_template_specialization();
+    return;
+  }
+#else
 #ifndef G__OLDIMPLEMENTATION815
   if(!targ) return; /* in case of 'template<>' */
+#endif
 #endif
 
   /*  template<class T,class E,int S> ...

@@ -1,29 +1,27 @@
+//*CMZ :  2.23/12 31/01/2000  10.52.05  by  Rene Brun
+//*CMZ :  2.23/09 24/11/99  16.40.35  by  Rene Brun
+//*CMZ :  2.23/08 31/10/99  09.43.05  by  Rene Brun
+//*CMZ :  2.23/07 26/10/99  14.58.11  by  Rene Brun
 //*CMZ :  2.22/01 03/05/99  16.22.19  by  Rene Brun
 //*CMZ :  2.20/03 05/12/98  16.32.24  by  Rene Brun
 //*CMZ :  2.20/01 01/12/98  11.14.47  by  Rene Brun
 //*CMZ :  2.00/00 18/02/98  17.43.25  by  Rene Brun
-//*CMZ :  1.03/08 21/11/97  12.14.53  by  Rene Brun
 //*-- Author :    Rene Brun   08/01/96
 
 #ifndef ROOT_TBranch
 #define ROOT_TBranch
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -59,6 +57,7 @@ class TLeaf;
 class TBrowser;
 class TDirectory;
 class TFile;
+class TClonesArray;
 
    const Int_t kDoNotProcess = BIT(10); // Active bit for branches
    const Int_t kIsClone      = BIT(11); // to indicate a TBranchClones
@@ -66,6 +65,9 @@ class TFile;
 class TBranch : public TNamed {
 
 protected:
+    // TBranch status bits
+    enum { kAutoDelete = BIT(15) };
+
     Int_t       fCompress;        //(=1 branch is compressed, 0 otherwise)
     Int_t       fBasketSize;      //Initial Size of  Basket Buffer
     Int_t       fEntryOffsetLen;  //Initial Length of fEntryOffset table in the basket buffers
@@ -82,8 +84,11 @@ protected:
     TObjArray   fBranches;        //List of Branches of this branch
     TObjArray   fLeaves;          //List of leaves of this branch
     TObjArray   fBaskets;         //List of baskets of this branch
-    Int_t       *fBasketEntry;    //Table of first entry in eack basket
-    Seek_t      *fBasketSeek;     //Addresses of baskets on file
+    Int_t       fNBasketRAM;      //Number of baskets in fBasketRAM
+    Int_t       *fBasketRAM;      //[fNBasketRAM] table of basket numbers in memory
+    Int_t       *fBasketBytes;    //[fMaxBaskets] Lenght of baskets on file
+    Int_t       *fBasketEntry;    //[fMaxBaskets] Table of first entry in eack basket
+    Seek_t      *fBasketSeek;     //[fMaxBaskets] Addresses of baskets on file
     TTree       *fTree;           //Pointer to Tree header
     char        *fAddress;        //Address of 1st leaf (variable or object)
     TDirectory  *fDirectory;      //Pointer to directory where this branch buffers are stored
@@ -91,7 +96,7 @@ protected:
 
 public:
     TBranch();
-    TBranch(const Text_t *name, void *address, const Text_t *leaflist, Int_t basketsize=32000, Int_t compress=-1);
+    TBranch(const char *name, void *address, const char *leaflist, Int_t basketsize=32000, Int_t compress=-1);
     virtual ~TBranch();
 
     virtual void    Browse(TBrowser *b);
@@ -100,15 +105,17 @@ public:
     char            *GetAddress() {return fAddress;}
     virtual Int_t   GetBasketSize() {return fBasketSize;}
     virtual Int_t   GetCompressionLevel() {return fCompress;}
-    virtual Int_t   GetEntry(Int_t entry=0);
+    virtual Int_t   GetEntry(Int_t entry=0, Int_t getall = 0);
+    virtual Int_t   GetEntryExport(Int_t entry, Int_t getall, TClonesArray *list, Int_t n);
             Int_t   GetEvent(Int_t entry=0) {return GetEntry(entry);}
     virtual Int_t   GetEntryOffsetLen() {return fEntryOffsetLen;}
-    TLeaf           *GetLeaf(Text_t *name);
+    TLeaf           *GetLeaf(const char *name);
     TBasket         *GetBasket(Int_t basket);
+    Int_t           *GetBasketBytes() {return fBasketBytes;}
     Seek_t          GetBasketSeek(Int_t basket);
     TDirectory      *GetDirectory() {return fDirectory;}
     TFile           *GetFile(Int_t mode=0);
-    const Text_t    *GetFileName() const {return fFileName.Data();}
+    const char    *GetFileName() const {return fFileName.Data();}
     Int_t           GetOffset() {return fOffset;}
     Int_t           GetReadBasket() {return fReadBasket;}
     Int_t           GetReadEntry() {return fReadEntry;}
@@ -124,21 +131,24 @@ public:
     virtual Stat_t  GetEntries() {return fEntries;}
     TTree           *GetTree() {return fTree;}
     virtual Int_t   GetRow(Int_t row);
+    Bool_t          IsAutoDelete();
     Bool_t          IsFolder();
     virtual void    Print(Option_t *option="");
     virtual void    ReadBasket(TBuffer &b);
     virtual void    Reset(Option_t *option="");
+    virtual void    ResetReadEntry() {fReadEntry = -1;}
     virtual void    SetAddress(void *add);
+    virtual void    SetAutoDelete(Bool_t autodel=kTRUE);
     virtual void    SetBasketSize(Int_t buffsize) {fBasketSize=buffsize;}
-    virtual void    SetCompressionLevel(Int_t level=1) {fCompress=level;}
+    virtual void    SetCompressionLevel(Int_t level=1);
     virtual void    SetEntryOffsetLen(Int_t len) {fEntryOffsetLen = len;}
     virtual void    SetFile(TFile *file=0);
-    virtual void    SetFile(const Text_t *filename);
+    virtual void    SetFile(const char *filename);
     virtual void    SetOffset(Int_t offset=0) {fOffset=offset;}
     virtual void    SetTree(TTree *tree) { fTree = tree;}
     virtual void    UpdateAddress() {;}
 
-    ClassDef(TBranch,3)  //Branch descriptor
+    ClassDef(TBranch,5)  //Branch descriptor
 };
 
 #endif

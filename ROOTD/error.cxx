@@ -1,22 +1,18 @@
+//*CMZ :  2.23/09 19/11/99  13.28.23  by  Fons Rademakers
 //*CMZ :  1.03/05 11/10/97  14.05.00  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   11/08/97
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -41,18 +37,45 @@ extern "C" {
 }
 #endif
 
+#ifdef __sun
+#   if __SUNPRO_CC > 0x420
+#      define GLOBAL_ERRNO
+#   endif
+#endif
+
 #include "rootdp.h"
 
+//______________________________________________________________________________
+int GetErrno()
+{
+#ifdef GLOBAL_ERRNO
+   return ::errno;
+#else
+   return errno;
+#endif
+}
+
+//______________________________________________________________________________
+void ResetErrno()
+{
+#ifdef GLOBAL_ERRNO
+   ::errno = 0;
+#else
+   errno = 0;
+#endif
+}
 
 //______________________________________________________________________________
 static void Perror(char *buf)
 {
+   // Return in buf the message belonging to errno.
+
    int len = strlen(buf);
 #if (defined(__sun) && defined (__SVR4)) || defined (__linux) || defined(_AIX)
-   sprintf(buf+len, " (%s)", strerror(errno));
+   sprintf(buf+len, " (%s)", strerror(GetErrno()));
 #else
-   if (errno >= 0 && errno < sys_nerr)
-      sprintf(buf+len, " (%s)", sys_errlist[errno]);
+   if (GetErrno() >= 0 && GetErrno() < sys_nerr)
+      sprintf(buf+len, " (%s)", sys_errlist[GetErrno()]);
 #endif
 }
 

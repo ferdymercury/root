@@ -1,3 +1,4 @@
+//*CMZ :  2.23/02 02/09/99  15.54.29  by  Rene Brun
 //*CMZ :  2.00/08 04/06/98  21.02.50  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   04/06/98
 //
@@ -145,7 +146,7 @@ InputDialog::InputDialog(const char *prompt, const char *defval, char *retstr)
    Window_t wdum;
    int      ax, ay;
 
-   gGXW->TranslateCoordinates(main->GetId(), main->GetId(),
+   gVirtualX->TranslateCoordinates(main->GetId(), main->GetId(),
                           (((TGFrame *) main)->GetWidth() - width) >> 1,
                           (((TGFrame *) main)->GetHeight() - height) >> 1,
                           ax, ay, wdum);

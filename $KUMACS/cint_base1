@@ -1,7 +1,8 @@
+*CMZ :  2.23/04 09/10/99  22.36.28  by  Rene Brun
+*CMZ :  2.23/03 26/09/99  20.18.17  by  Fons Rademakers
+*CMZ :  2.23/01 31/08/99  16.01.49  by  Rene Brun
 *CMZ :  2.22/00 08/04/99  17.09.30  by  Rene Brun
 *CMZ :  2.00/09 22/06/98  12.14.03  by  Fons Rademakers
-*CMZ :  2.00/00 07/03/98  18.01.13  by  Fons Rademakers
-*CMZ :  1.03/02 29/08/97  13.28.56  by  Fons Rademakers
 *-- Author :    Fons Rademakers   15/02/96
 
 macro cint_base
@@ -15,16 +16,17 @@ macro cint_base
 seq -i src/*.h
 
 headers=TArrayC.h TArrayD.h TArrayF.h TArrayI.h TArrayL.h TArrayS.h _
-        TAttFill.h TAttAxis.h TAttFunc.h TAttHist.h TAttLine.h TAttMarker.h _
-        TAttStat.h TAttText.h TAxis.h TBaseClass.h TBuffer.h TClass.h _
-        TDataMember.h TDataType.h TDatime.h TDirectory.h TEnv.h _
-        TFile.h TFormula.h TFree.h TFunction.h TGlobal.h TKey.h _
+        TAttFill.h TAttLine.h TAttMarker.h TAttPad.h TStyle.h TBrowser.h _
+        TAttText.h TBaseClass.h TBuffer.h TClass.h TColor.h TContextMenu.h _
+        TDataMember.h TDataType.h TDatime.h TDirectory.h TEnv.h TAtt3D.h _
+        TFile.h TFree.h TFunction.h TGlobal.h TKey.h TGuiFactory.h _
         TObject.h TMemberInspector.h TMethod.h TMethodArg.h TMethodCall.h _
         TNamed.h TRealData.h TMapFile.h TMath.h TROOT.h TKeyMapFile.h _
         TApplication.h TApplicationImp.h TBrowserImp.h TCanvasImp.h _
-        TContextMenuImp.h TControlBarImp.h TError.h _
+        TContextMenuImp.h TControlBarImp.h TError.h TVirtualFitter.h _
         TString.h TStringLong.h TObjString.h TSystem.h TSysEvtHandler.h _
-        TSystemFile.h TStopwatch.h TRandom.h TBenchmark.h TTime.h TTimer.h
+        TSystemFile.h TStopwatch.h TRandom.h TBenchmark.h TTime.h TTimer.h _
+        TView.h TVirtualPad.h TVirtualX.h TVirtualGL.h TVirtualPS.h TAttAxis.h
 
 name=Base1
 patch=BASE

@@ -1,5 +1,5 @@
-/*CMZ :  2.22/10 23/07/99  14.42.11  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   23/07/99*/
+/*CMZ :  2.23/10 10/12/99  17.59.57  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   10/12/99*/
 /* /% C++ %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -9,15 +9,13 @@
  * Description:
  *  Extended Run Time Type Identification API
  ************************************************************************
- * Copyright(c) 1991~1996  [hp] Hewlett Packard Japan, All rights reserved
- * Author                  Masaharu Goto (gotom@jpn.hp.com)
  * Copyright(c) 1995~1998  Masaharu Goto (MXJ02154@niftyserve.or.jp)
  *
  * Permission to use, copy, modify and distribute this software and its
  * documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies and
  * that both that copyright notice and this permission notice appear
- * in supporting documentation.  Hewlett-Packard Japan Company makes no
+ * in supporting documentation.  The author makes no
  * representations about the suitability of this software for any
  * purpose.  It is provided "as is" without express or implied warranty.
  ************************************************************************/
@@ -28,7 +26,6 @@
 
 
 #include "Api.h"
-
 class G__MethodInfo;
 class G__DataMemberInfo;
 #ifndef G__OLDIMPLEMENTATION1020
@@ -67,7 +64,11 @@ class G__ClassInfo {
 #ifndef G__OLDIMPLEMENTATION1020
   struct G__friendtag* GetFriendInfo();
 #endif
+#ifdef G__OLDIMPLEMENTATION1218_YET
+  int IsValid() { return 0<=tagnum && tagnum<G__struct.alltag ? 1 : 0; }
+#else
   int IsValid();
+#endif
   int SetFilePos(const char *fname);
   int Next();
   int Linkage();
@@ -82,6 +83,9 @@ class G__ClassInfo {
 
  protected:
   long tagnum;  // class,struct,union,enum key for cint dictionary
+#ifndef G__OLDIMPLEMENTATION1218
+  long class_property;  // cache value (expensive to get)
+#endif
 
 #ifdef G__ROOTSPECIAL
  ///////////////////////////////////////////////////////////////

@@ -1,5 +1,5 @@
-/*CMZ :  2.22/10 23/07/99  14.42.26  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   23/07/99*/
+/*CMZ :  2.23/10 10/12/99  18.00.16  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   10/12/99*/
 #ifndef G__STDIO_H
 #define G__STDIO_H
 #ifndef NULL
@@ -10,9 +10,9 @@ typedef unsigned int size_t;
 #define 	_IOFBF (0)
 #define 	_IOLBF (1)
 #define 	_IONBF (2)
-#define 	BUFSIZ (1024)
-#define 	FILENAME_MAX (1024)
-#define 	L_tmpnam (20)
+#define 	BUFSIZ (8192)
+#define 	FILENAME_MAX (4095)
+#define 	L_tmpnam (19)
 #define 	TMP_MAX (238328)
 #ifndef SEEK_CUR
 #define 	SEEK_CUR (1)

@@ -1,34 +1,26 @@
+//*CMZ :  2.23/09 19/11/99  12.57.41  by  Fons Rademakers
+//*CMZ :  2.23/07 23/10/99  11.29.15  by  Fons Rademakers
+//*CMZ :  2.23/04 05/10/99  18.33.27  by  Fons Rademakers
 //*CMZ :  2.22/10 19/07/99  11.39.50  by  Fons Rademakers
 //*CMZ :  2.22/07 02/07/99  08.56.05  by  Rene Brun
 //*CMZ :  2.22/06 22/06/99  18.51.19  by  Fons Rademakers
 //*CMZ :  2.22/05 14/06/99  15.39.27  by  Fons Rademakers
-//*CMZ :  2.21/04 02/02/99  19.06.30  by  Fons Rademakers
-//*CMZ :  2.20/00 25/11/98  18.28.15  by  Fons Rademakers
-//*CMZ :  2.00/11 25/08/98  10.55.56  by  Fons Rademakers
-//*CMZ :  2.00/10 22/07/98  12.10.34  by  Fons Rademakers
-//*CMZ :  2.00/00 01/01/98  14.51.04  by  Fons Rademakers
-//*CMZ :  1.03/09 14/12/97  12.44.15  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   14/09/95
 
 #ifndef ROOT_TSystem
 #define ROOT_TSystem
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -192,7 +184,7 @@ protected:
    TString          fObjExt;           //Extension of object files (.o, .obj, etc.)
    TString          fMakeSharedLib;    //Directive used to build a shared library
    TString          fMakeExe;          //Directive used to build an executable
-   TSeqCollection  *fCompiled;         //List of created shared libs from compiled macros
+   TSeqCollection  *fCompiled;         //List of shared libs from compiled macros to be deleted
 
    virtual const char    *ExpandFileName(const char *fname);
 
@@ -209,6 +201,9 @@ public:
    void                    RemoveOnExit(TObject *obj);
    virtual const char     *HostName();
    virtual void            CreateInspectView(TObject *obj);  // Create an inspect view of the obj to perform TObject::Inspect
+
+   static Int_t            GetErrno();
+   static void             ResetErrno();
 
    //---- EventLoop
    virtual void            Run();
@@ -284,11 +279,11 @@ public:
    //---- Dynamic Loading
    virtual char           *DynamicPathName(const char *lib, Bool_t quiet = kFALSE);
    virtual Func_t          DynFindSymbol(const char *module, const char *entry);
-   virtual int             Load(const char *module, const char *entry = "");
+   virtual int             Load(const char *module, const char *entry = "", Bool_t system = kFALSE);
    virtual void            Unload(const char *module);
    virtual void            ListSymbols(const char *module, const char *re = "");
    virtual void            ListLibraries(const char *regexp = "");
-   virtual const char*     GetLibraries(const char *regexp = "", const char* option = "");
+   virtual const char     *GetLibraries(const char *regexp = "", const char* option = "");
 
    //---- RPC
    virtual TInetAddress    GetHostByName(const char *server);
@@ -309,7 +304,7 @@ public:
    virtual int             GetSockOpt(int sock, int kind, int *val);
 
    //---- Script Compiler
-   virtual int             CompileMacro(const char *filename);
+   virtual int             CompileMacro(const char *filename, Option_t *opt="");
    virtual const char     *GetMakeSharedLib() const;
    virtual const char     *GetMakeExe() const;
    virtual const char     *GetIncludePath();

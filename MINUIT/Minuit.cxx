@@ -1,34 +1,23 @@
+//*CMZ :  2.23/12 19/01/2000  12.37.26  by  Rene Brun
+//*CMZ :  2.23/11 10/01/2000  15.04.57  by  Rene Brun
+//*CMZ :  2.23/05 15/10/99  15.33.15  by  Rene Brun
+//*CMZ :  2.23/03 27/09/99  10.12.19  by  Rene Brun
+//*CMZ :  2.23/01 31/08/99  17.44.31  by  Rene Brun
+//*CMZ :  2.23/00 30/07/99  09.39.06  by  Rene Brun
 //*CMZ :  2.21/08 18/03/99  10.13.13  by  Rene Brun
-//*CMZ :  2.21/06 10/02/99  17.39.17  by  Rene Brun
-//*CMZ :  2.21/05 10/02/99  13.28.01  by  Rene Brun
-//*CMZ :  2.21/03 22/01/99  08.36.40  by  Rene Brun
-//*CMZ :  2.21/01 12/01/99  09.06.04  by  Rene Brun
-//*CMZ :  2.20/05 14/12/98  14.48.17  by  Rene Brun
-//*CMZ :  2.20/00 12/11/98  09.18.25  by  Rene Brun
-//*CMZ :  2.00/13 29/10/98  16.45.19  by  Rene Brun
-//*CMZ :  2.00/12 10/09/98  17.58.10  by  Rene Brun
-//*CMZ :  2.00/11 17/08/98  16.33.57  by  Rene Brun
-//*CMZ :  2.00/06 11/05/98  13.01.28  by  Rene Brun
-//*CMZ :  2.00/00 11/02/98  13.10.17  by  Rene Brun
-//*CMZ :  1.03/09 11/12/97  08.50.37  by  Rene Brun
 //*-- Author :    Rene Brun, Frederick James   12/08/95
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //______________________________________________________________________________
@@ -292,14 +281,12 @@ some variables.
 #include "TMinuit.h"
 #include "TMath.h"
 #include "TError.h"
-#include "TGraph.h"
 #include "Api.h"
-#include "TInterpreter.h"
 
 TMinuit *gMinuit;
 
-const Int_t kMAXDIM = 100;
-static char charal[29] = " .ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+const Int_t kMAXDIM = 200;
+const char charal[29] = " .ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 ClassImp(TMinuit)
 
@@ -333,7 +320,6 @@ TMinuit::TMinuit(Int_t maxpar): TNamed("MINUIT","The Minimization package")
    mninit(5,6,7);
    gMinuit = this;
    gROOT->GetListOfSpecials()->Add(gMinuit);
-
 }
 
 //______________________________________________________________________________
@@ -376,7 +362,7 @@ void TMinuit::BuildArrays(Int_t maxpar)
    fGlobcc = new Double_t[mni];
    fNvarl  = new Int_t[mne];
    fNiofex = new Int_t[mne];
-   fNexofi = new Int_t[mne];
+   fNexofi = new Int_t[mni];
    fX      = new Double_t[mni];
    fXt     = new Double_t[mni];
    fDirin  = new Double_t[mni];
@@ -386,7 +372,7 @@ void TMinuit::BuildArrays(Int_t maxpar)
    fGrd    = new Double_t[mni];
    fG2     = new Double_t[mni];
    fGstep  = new Double_t[mni];
-   fGin    = new Double_t[mni];
+   fGin    = new Double_t[mne];
    fDgrd   = new Double_t[mni];
    fGrds   = new Double_t[mni];
    fG2s    = new Double_t[mni];
@@ -443,7 +429,7 @@ Int_t TMinuit::Command(const char *command)
 }
 
 //______________________________________________________________________________
-TGraph *TMinuit::Contour(const char *graphname, Int_t npoints, Int_t pa1, Int_t pa2)
+TObject *TMinuit::Contour(Int_t npoints, Int_t pa1, Int_t pa2)
 {
   // Creates a TGraph object describing the n-sigma contour of a
   // TMinuit fit. The contour of the parameters pa1 and pa2 is calculated
@@ -457,32 +443,33 @@ TGraph *TMinuit::Contour(const char *graphname, Int_t npoints, Int_t pa1, Int_t 
   //
   // To get the n-sigma contour the ERRDEF parameter in Minuit has to set
   // to n^2. The fcn function has to be set before the routine is called.
+  //
+  // The TGraph object is created via the interpreter. The user must cast it
+  // to a TGraph*
 
   if (npoints<4) {
     // we need at least 4 points
     fStatus= 2;
-    return (TGraph *)0;
+    return (TObject *)0;
   }
   Int_t    error;
-  Double_t *xcoor = new Double_t[npoints];
-  Double_t *ycoor = new Double_t[npoints];
+  Double_t *xcoor = new Double_t[npoints+1];
+  Double_t *ycoor = new Double_t[npoints+1];
   mncont(pa1,pa2,npoints,xcoor,ycoor,error);
   if (error!=npoints) {
     // mncont did go wrong
     fStatus= (error==0 ? 1 : error);
     delete [] xcoor;
     delete [] ycoor;
-    return (TGraph *)0;
+    return (TObject *)0;
   }
   fStatus=0;
-  // create graph and set points
-  TGraph *gr = new TGraph(npoints+1);
-  gr->SetName(graphname);
-  for (Int_t i=0; i<npoints; i++) {
-     gr->SetPoint(i,xcoor[i],ycoor[i]);
-  }
-  // add first point at end to get closed polyline
-  gr->SetPoint(npoints,xcoor[0],ycoor[0]);
+  // check if TGraph class is loaded
+  if (gROOT->LoadClass("TGraph","Graf")) return 0;
+  // create graph via teh interpreter
+  xcoor[npoints] = xcoor[0];  // add first point at end to get closed polyline
+  ycoor[npoints] = ycoor[0];
+  TObject *gr =  (TObject *)gROOT->ProcessLineFast(Form("new TGraph(%d,(Double_t*)0x%lx,(Double_t*)0x%lx);",npoints+1,xcoor,ycoor));
   delete [] xcoor;
   delete [] ycoor;
   return gr;
@@ -576,12 +563,38 @@ Int_t TMinuit::GetParameter( Int_t parNo, Double_t &currentValue, Double_t &curr
 }
 
 //______________________________________________________________________________
+Int_t TMinuit::GetNumFixedPars()
+{
+// returns the number of currently fixed parameters
+
+   return fNpfix;
+}
+
+//______________________________________________________________________________
+Int_t TMinuit::GetNumFreePars()
+{
+// returns the number of currently free parameters
+
+   return fNpar;
+}
+
+//______________________________________________________________________________
+Int_t TMinuit::GetNumPars()
+{
+// returns the total number of parameters that have been defined.
+// (fixed and free)
+
+   return fNpar + fNpfix;
+}
+
+//______________________________________________________________________________
 Int_t TMinuit::Migrad()
 {
 // invokes the MIGRAD minimizer
      Int_t err;
+     Double_t tmp = 0;
 
-     mnexcm( "MIGRAD", NULL, 0, err );
+     mnexcm( "MIGRAD", &tmp, 0, err );
 
      return err;
 }
@@ -1081,7 +1094,7 @@ void TMinuit::mncomd(const char *crdbin, Int_t &icondn)
 	return;
     }
 
-    mnexcm(comand, plist, llist, ierr);
+    mnexcm(comand.Data(), plist, llist, ierr);
     icondn = ierr;
 } /* mncomd_ */
 
@@ -1387,7 +1400,7 @@ void TMinuit::mncrck(TString cardbuf, Int_t maxcwd, TString &comand, Int_t &lnc,
     /* Initialized data */
 
     char *cnull  = 0;
-    char *cnumer = "123456789-.0+";
+    const char *cnumer = "123456789-.0+";
 
     /* Local variables */
     static Int_t ifld, iend, lend, left, nreq, ipos, kcmnd, nextb, ic, ibegin, ltoadd;
@@ -2350,7 +2363,7 @@ void TMinuit::mneval(Double_t anext, Double_t &fnext, Int_t &ierev)
 } /* mneval_ */
 
 //______________________________________________________________________________
-void TMinuit::mnexcm(TString comand, Double_t *plist, Int_t llist, Int_t &ierflg)
+void TMinuit::mnexcm(const char *command, Double_t *plist, Int_t llist, Int_t &ierflg)
 {
 //*-*-*-*-*-*Interprets a command and takes appropriate action*-*-*-*-*-*-*-*
 //*-*        =================================================
@@ -2373,9 +2386,10 @@ void TMinuit::mnexcm(TString comand, Double_t *plist, Int_t llist, Int_t &ierflg
 
     /* Initialized data */
 
+    TString comand = command;
     static TString clower = "abcdefghijklmnopqrstuvwxyz";
     static TString cupper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    char *cname[40] = {
+    const char *cname[40] = {
       "MINImize  ",
       "SEEk      ",
       "SIMplex   ",
@@ -3134,12 +3148,19 @@ L2000:
 } /* mngrad_ */
 
 //______________________________________________________________________________
+void TMinuit::mnhelp(const char *command)
+{
+   TString comd = command;
+   mnhelp(comd);
+}
+
+//______________________________________________________________________________
 void TMinuit::mnhelp(TString comd)
 {
 //*-*-*-*-*-*-*-*HELP routine for MINUIT interactive commands*-*-*-*-*-*-*-*-*
 //*-*            ============================================
 //*-*
-//*-*      COMD ='*   '  prints a global help for all commands
+//*-*      COMD ='*' or "" prints a global help for all commands
 //*-*      COMD =Command_name: print detailed help for one command.
 //*-*         Note that at least 3 characters must be given for the command
 //*-*         name.
@@ -3157,7 +3178,7 @@ void TMinuit::mnhelp(TString comd)
 //*-*  ====================================
 //*-*
     comd.ToUpper();
-    if( comd[0] == '*' || comd[0] == '?' || comd[0] == 0 || comd=="HELP" ) {
+    if( comd.Length() == 0 || comd[0] == '*' || comd[0] == '?' || comd[0] == 0 || comd=="HELP" ) {
        Printf("   ==>List of MINUIT Interactive commands:");
        Printf(" CLEar     Reset all parameter names and values undefined");
        Printf(" CONtour   Make contour map of the user function");
@@ -5956,7 +5977,7 @@ void TMinuit::mnplot(Double_t *xpt, Double_t *ypt, char *chpt, Int_t nxypt, Int_
 } /* mnplot_ */
 
 //______________________________________________________________________________
-void TMinuit::mnpout(Int_t iuext1, TString chnam, Double_t &val, Double_t &err, Double_t &xlolim, Double_t &xuplim, Int_t &iuint)
+void TMinuit::mnpout(Int_t iuext1, TString &chnam, Double_t &val, Double_t &err, Double_t &xlolim, Double_t &xuplim, Int_t &iuint)
 {
 //*-*-*-*Provides the user with information concerning the current status*-*-*
 //*-*    ================================================================
@@ -6628,7 +6649,7 @@ void TMinuit::mnset()
 
     /* Initialized data */
 
-    static char *cname[30] = {
+    const char *cname[30] = {
       "FCN value ",
       "PARameters",
       "LIMits    ",
@@ -7624,4 +7645,3 @@ void TMinuit::mnwerr()
 	    }
 	}
     }
-} /* mnwerr_ */

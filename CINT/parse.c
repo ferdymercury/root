@@ -1,5 +1,5 @@
-/*CMZ :  2.22/10 23/07/99  14.42.17  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   23/07/99*/
+/*CMZ :  2.23/10 10/12/99  18.00.03  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   10/12/99*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -9,15 +9,13 @@
  * Description:
  *  Cint parser functions
  ************************************************************************
- * Copyright(c) 1991~1996  [hp] Hewlett Packard Japan, All rights reserved
- * Author                  Masaharu Goto (gotom@jpn.hp.com)
- * Copyright(c) 1995~1998  Masaharu Goto (MXJ02154@niftyserve.or.jp)
+ * Copyright(c) 1995~1999  Masaharu Goto (MXJ02154@niftyserve.or.jp)
  *
  * Permission to use, copy, modify and distribute this software and its
  * documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies and
  * that both that copyright notice and this permission notice appear
- * in supporting documentation.  Hewlett-Packard Japan Company makes no
+ * in supporting documentation.  The author makes no
  * representations about the suitability of this software for any
  * purpose.  It is provided "as is" without express or implied warranty.
  ************************************************************************/
@@ -466,6 +464,9 @@ char *statement;
 
 #ifndef G__OLDIMPLEMENTATION986
   if((G__prerun||(G__ASM_FUNC_COMPILE==G__asm_wholefunction&&0==G__ansiheader))
+#ifndef G__OLDIMPLEMENTATION1230
+     && G__NOLINK == G__globalcomp
+#endif
 #ifdef G__OLDIMPLEMENTATION1083_YET
      && (G__func_now>=0 || G__def_struct_member )
 #else
@@ -683,6 +684,11 @@ char *statement;
     }
     return(1);
   }
+#ifndef G__OLDIMPLEMENTATION1201
+  if(strcmp(statement,"explicit")==0){
+    return(1);
+  }
+#endif
   return(0);
 }
 #endif
@@ -786,8 +792,12 @@ int *piout;
 	  for(i=0;i<G__nfile;i++) {
 	    if((char*)NULL==G__srcfile[i].filename && -1==null_entry)
 	      null_entry = i;
+#ifndef G__OLDIMPLEMENTATION1196
+	    if(G__matchfilename(i,G__ifile.name)) {
+#else
 	    if(hash==G__srcfile[i].hash &&
 	       strcmp(G__ifile.name,G__srcfile[i].filename)==0) {
+#endif
 	      temp=1;
 	      break;
 	    }
@@ -1041,10 +1051,20 @@ int elifskip;
 	      strcmp(arg[1],"#ifndef")==0) {
 	++nest;
       }
-      else if(strcmp(arg[1],"#else")==0) {
+      else if(strcmp(arg[1],"#else")==0
+#ifndef G__OLDIMPLEMENTATION1200
+	      || strncmp(arg[1],"#else/*",7)==0
+	      || strncmp(arg[1],"#else//",7)==0
+#endif
+	      ) {
 	if(nest==1 && elifskip==0) nest=0;
       }
-      else if(strcmp(arg[1],"#endif")==0) {
+      else if(strcmp(arg[1],"#endif")==0
+#ifndef G__OLDIMPLEMENTATION1200
+	      || strncmp(arg[1],"#endif/*",8)==0
+	      || strncmp(arg[1],"#endif//",8)==0
+#endif
+	      ) {
 	--nest;
       }
       else if(strcmp(arg[1],"#elif")==0) {
@@ -1628,10 +1648,15 @@ void G__free_tempobject()
   char statement[G__ONELINE];
   struct G__tempobject_list *store_p_tempbuf;
 
+#ifndef G__OLDIMPLEMENTATION1164
+  if(G__xrefflag) return;
+#endif
+
   /*****************************************************
    * free temp object buffer
    *****************************************************/
   while(G__p_tempbuf->level >= G__templevel && G__p_tempbuf->prev) {
+
 
 #ifdef G__DEBUG
     if(G__asm_dbg) {
@@ -1647,53 +1672,53 @@ void G__free_tempobject()
 
     store_p_tempbuf = G__p_tempbuf->prev;
 
-      /* calling destructor */
-      store_struct_offset = G__store_struct_offset;
-      G__store_struct_offset = G__p_tempbuf->obj.obj.i;
+    /* calling destructor */
+    store_struct_offset = G__store_struct_offset;
+    G__store_struct_offset = G__p_tempbuf->obj.obj.i;
 
 
 #ifdef G__ASM
-      if(G__asm_noverflow
+    if(G__asm_noverflow
 #ifndef G__ASM_IFUNC
-	 && G__p_tempbuf->cpplink
+       && G__p_tempbuf->cpplink
 #endif
-	 ) {
+       ) {
 #ifdef G__ASM_DBG
-	if(G__asm_dbg) fprintf(G__serr ,"%3x: SETTEMP\n" ,G__asm_cp);
+      if(G__asm_dbg) fprintf(G__serr ,"%3x: SETTEMP\n" ,G__asm_cp);
 #endif
-	G__asm_inst[G__asm_cp] = G__SETTEMP;
-	G__inc_cp_asm(1,0);
-      }
+      G__asm_inst[G__asm_cp] = G__SETTEMP;
+      G__inc_cp_asm(1,0);
+    }
 #endif
 
-      store_tagnum = G__tagnum;
-      G__tagnum = G__p_tempbuf->obj.tagnum;
+    store_tagnum = G__tagnum;
+    G__tagnum = G__p_tempbuf->obj.tagnum;
 
-      store_return=G__return;
-      G__return=G__RETURN_NON;
+    store_return=G__return;
+    G__return=G__RETURN_NON;
 
-      if(G__dispsource) {
+    if(G__dispsource) {
 #ifndef G__FONS31
-	fprintf(G__serr
-        ,"!!!Destroy temp object (%s)0x%lx createlevel=%d destroylevel=%d\n"
-		,G__struct.name[G__tagnum]
-		,G__p_tempbuf->obj.obj.i
-		,G__p_tempbuf->level,G__templevel);
+      fprintf(G__serr
+	      ,"!!!Destroy temp object (%s)0x%lx createlevel=%d destroylevel=%d\n"
+	      ,G__struct.name[G__tagnum]
+	      ,G__p_tempbuf->obj.obj.i
+	      ,G__p_tempbuf->level,G__templevel);
 #else
-	fprintf(G__serr
-        ,"!!!Destroy temp object (%s)0x%x createlevel=%d destroylevel=%d\n"
-		,G__struct.name[G__tagnum]
-		,G__p_tempbuf->obj.obj.i
-		,G__p_tempbuf->level,G__templevel);
+      fprintf(G__serr
+	      ,"!!!Destroy temp object (%s)0x%x createlevel=%d destroylevel=%d\n"
+	      ,G__struct.name[G__tagnum]
+	      ,G__p_tempbuf->obj.obj.i
+	      ,G__p_tempbuf->level,G__templevel);
 #endif
-      }
+    }
 
-      sprintf(statement,"~%s()",G__struct.name[G__tagnum]);
-      G__getfunction(statement,&iout,G__TRYDESTRUCTOR);
+    sprintf(statement,"~%s()",G__struct.name[G__tagnum]);
+    G__getfunction(statement,&iout,G__TRYDESTRUCTOR);
 
-      G__store_struct_offset = store_struct_offset;
-      G__tagnum = store_tagnum;
-      G__return=store_return;
+    G__store_struct_offset = store_struct_offset;
+    G__tagnum = store_tagnum;
+    G__return=store_return;
 
 
 
@@ -1715,7 +1740,6 @@ void G__free_tempobject()
       free((void *)G__p_tempbuf->obj.obj.i);
     }
 
-
     if(store_p_tempbuf) {
       free((void*)G__p_tempbuf);
       G__p_tempbuf = store_p_tempbuf;
@@ -1732,8 +1756,6 @@ void G__free_tempobject()
       }
     }
   }
-
-
 }
 
 /***********************************************************************
@@ -1745,6 +1767,10 @@ char *string;
 {
   /* int len; */
   struct G__tempobject_list *store_p_tempbuf;
+
+#ifndef G__OLDIMPLEMENTATION1164
+  if(G__xrefflag) return(G__null);
+#endif
 
   /* create temp object buffer */
   store_p_tempbuf = G__p_tempbuf;
@@ -1794,6 +1820,10 @@ int tagnum,typenum;
 
   G__ASSERT( 0<=tagnum );
 
+#ifndef G__OLDIMPLEMENTATION1164
+  if(G__xrefflag) return;
+#endif
+
   /* create temp object buffer */
   store_p_tempbuf = G__p_tempbuf;
   G__p_tempbuf = (struct G__tempobject_list *)malloc(
@@ -1840,6 +1870,10 @@ G__value reg;
 
   G__ASSERT( 'u'==reg.type || '\0'==reg.type );
 
+#ifndef G__OLDIMPLEMENTATION1164
+  if(G__xrefflag) return;
+#endif
+
 #ifdef G__NEVER
   if('u'!=reg.type) {
 #ifndef G__FONS31
@@ -1884,6 +1918,10 @@ G__value reg;
 int G__pop_tempobject()
 {
   struct G__tempobject_list *store_p_tempbuf;
+
+#ifndef G__OLDIMPLEMENTATION1164
+  if(G__xrefflag) return(0);
+#endif
 
 #ifdef G__DEBUG
   if(G__asm_dbg) {
@@ -3432,6 +3470,26 @@ G__value G__exec_statement()
 	      G__DEFSTR('n');
 	      break;
 	    }
+#ifndef G__OLDIMPLEMENTATION1222
+	    if(strcmp(statement,"unsigned*")==0) {
+	      G__var_type = 'I'-1;
+	      G__unsigned = -1;
+	      G__define_var(-1,-1);
+	      G__unsigned = 0;
+	      spaceflag = -1;
+	      iout=0;
+	    }
+	    else if(strcmp(statement,"unsigned&")==0) {
+	      G__var_type = 'i'-1;
+	      G__unsigned = -1;
+	      G__reftype=G__PARAREFERENCE;
+	      G__define_var(-1,-1);
+	      G__reftype=G__PARANORMAL;
+	      G__unsigned = 0;
+	      spaceflag = -1;
+	      iout=0;
+	    }
+#endif
 #ifndef G__OLDIMPLEMENTATION872
 	    if(strcmp(statement,"R__EXTERN")==0) {
 	      if(G__externignore(&iout,&spaceflag,mparen)) return(G__null);
@@ -3747,6 +3805,13 @@ G__value G__exec_statement()
 	  iout=0;
 	  spaceflag=0;
 	}
+#ifndef G__OLDIMPLEMENTATION1177
+	else if(iout>3) {
+	  c=G__fgetstream_new(statement+iout ,")");
+	  iout = strlen(statement);
+	  statement[iout++] = c;
+	}
+#endif
 	
       }
       else if((mparen==0)&&(iout==3)) {
@@ -3769,6 +3834,9 @@ G__value G__exec_statement()
 	c=G__fignorestream(")");
 	iout=0;
 	spaceflag=0;
+#ifndef G__OLDIMPLEMENTATION1215
+	if(c!=')') G__genericerror("Error: Parenthesis does not match");
+#endif
       }
       break;
 
@@ -3784,7 +3852,11 @@ G__value G__exec_statement()
 	c=G__fgetstream_new(statement+iout+1,";,}");
 	if('}'==c) {
 #endif
+#ifndef G__OLDIMPLEMENTATION1146
+	  G__syntaxerror(statement);
+#else
 	  G__missingsemicolumn(statement);
+#endif
 	  --mparen;
 	  c=';';
 	}

@@ -1,0 +1,28 @@
+*CMZ :  2.23/05 20/10/99  12.49.54  by  Rene Brun
+*CMZ :  2.00/09 25/06/98  20.54.54  by  Fons Rademakers
+*CMZ :  1.03/04 19/09/97  12.00.34  by  Rene Brun
+*-- Author :    Rene Brun   19/10/99
+macro cint_pythia6
+*
+*    To generate the TPythia6 dictionary
+*    ===================================
+*
+* Only change the [headers], [name] and [patch] variables and the
+* "#pragma ..." statements.
+*
+
+sel pythia6
+seq pythia6
+seq -i src/*.h
+
+headers=TPythia6.h TMCParticle.h
+
+name=Pythia6
+patch=PYTHIA6
+
+set G__LinkDef.h -F TEXT
+ctot /$kumacs/PYTHIA6_LinkDef
+
+exec makecint [name] [patch] [headers]
+
+return

@@ -1,3 +1,5 @@
+//*CMZ :  2.23/04 08/10/99  22.49.34  by  Rene Brun
+//*CMZ :  2.23/00 28/07/99  14.43.40  by  Fons Rademakers
 //*CMZ :  2.00/00 03/03/98  11.22.59  by  Rene Brun
 //*CMZ :  1.03/02 29/08/97  15.07.24  by  Rene Brun
 //*-- Author :    Rene Brun   11/12/94
@@ -5,22 +7,17 @@
 #ifndef ROOT_TAttAxis
 #define ROOT_TAttAxis
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -35,7 +32,17 @@
 #include "Gtypes.h"
 #endif
 
-#include <fstream.h>
+#if defined(R__ANSISTREAM)
+#include <iosfwd>
+using namespace std;
+#elif R__MWERKS
+template <class charT> class ios_traits;
+template <class charT, class traits> class basic_ofstream;
+typedef basic_ofstream<char, ios_traits<char> > ofstream;
+#else
+class ofstream;
+#endif
+
 
 class TAttAxis {
 protected:
@@ -62,7 +69,7 @@ public:
         virtual Float_t  GetTitleOffset() {return fTitleOffset;}
         virtual Float_t  GetTitleSize()   {return fTitleSize;}
         virtual Float_t  GetTickLength()  {return fTickLength;}
-        virtual void     Reset(Option_t *option="");
+        virtual void     ResetAttAxis(Option_t *option="");
         virtual void     SaveAttributes(ofstream &out, const char *name, const char *subname);
         virtual void     SetNdivisions(Int_t n=510);           // *MENU*
         virtual void     SetAxisColor(Color_t color=1);        // *MENU*

@@ -1,11 +1,7 @@
+//*CMZ :  2.23/03 12/09/99  17.33.22  by  Fons Rademakers
 //*CMZ :  2.22/06 16/06/99  20.57.04  by  Rene Brun
 //*CMZ :  2.22/05 14/06/99  10.59.10  by  Rene Brun
 //*CMZ :  2.21/08 18/03/99  10.26.14  by  Rene Brun
-//*CMZ :  2.21/04 05/02/99  12.03.34  by  Rene Brun
-//*CMZ :  2.21/02 15/01/99  12.08.48  by  Rene Brun
-//*CMZ :  2.21/01 12/01/99  09.50.24  by  Rene Brun
-//*CMZ :  2.00/06 25/04/98  09.09.03  by  Rene Brun
-//*CMZ :  1.03/09 10/12/97  16.50.45  by  Rene Brun
 //*-- Author :    Rene Brun   22/08/95
 
 //______________________________________________________________________________
@@ -32,7 +28,7 @@ int minexam();
 
 #ifndef __CINT__
 #include "TROOT.h"
-#include "TMinuit.h"
+#include "TVirtualFitter.h"
 #include "TMath.h"
 #include "TStopwatch.h"
 
@@ -51,28 +47,32 @@ int minexam()
 {
    TStopwatch timer;
 
-   TMinuit *gMinuit = new TMinuit(5);  //initialize TMinuit with a maximum of 5 params
+   // Initialize TMinuit via generic fitter interface with a maximum of 5 params
+   TVirtualFitter *minuit = TVirtualFitter::Fitter(0, 5);
    printf("Starting timer\n");
    timer.Start();
-   gMinuit->mninit(5,6,7);
-   gMinuit->SetFCN(fcnk0);
+   minuit->SetFCN(fcnk0);
 
-   gMinuit->DefineParameter(0, "Re(X)",    0,     0.1, 0,0);
-   gMinuit->DefineParameter(1, "Im(X)",    0,     0.1, 0,0);
-   gMinuit->DefineParameter(2, "Delta M",  0.535, 0.1, 0,0);
-   gMinuit->DefineParameter(3, "T Kshort", 0.892, 0  , 0,0);
-   gMinuit->DefineParameter(4, "T Klong",  518.3, 0  , 0,0);
+   minuit->SetParameter(0, "Re(X)",    0,     0.1, 0,0);
+   minuit->SetParameter(1, "Im(X)",    0,     0.1, 0,0);
+   minuit->SetParameter(2, "Delta M",  0.535, 0.1, 0,0);
+   minuit->SetParameter(3, "T Kshort", 0.892, 0  , 0,0);
+   minuit->SetParameter(4, "T Klong",  518.3, 0  , 0,0);
 
 //*-*-       Request FCN to read in (or generate random) data (IFLAG=1)
-   gMinuit->Command("CALL FCN 1");
-   gMinuit->FixParameter(2);
-   gMinuit->Command("SET PRINT 0");
-   gMinuit->Migrad();
-   gMinuit->Command("MINOS");
-   gMinuit->Release(2);
-   gMinuit->Migrad();
-   gMinuit->Command("MINOS");
-   gMinuit->Command("CALL FCN 3");
+   Double_t arglist[100];
+   arglist[0] = 1;
+   minuit->ExecuteCommand("CALL FCN", arglist, 1);
+   minuit->FixParameter(2);
+   arglist[0] = 0;
+   minuit->ExecuteCommand("SET PRINT", arglist, 1);
+   minuit->ExecuteCommand("MIGRAD", arglist, 0);
+   minuit->ExecuteCommand("MINOS", arglist, 0);
+   minuit->ReleaseParameter(2);
+   minuit->ExecuteCommand("MIGRAD", arglist, 0);
+   minuit->ExecuteCommand("MINOS", arglist, 0);
+   arglist[0] = 3;
+   minuit->ExecuteCommand("CALL FCN", arglist, 1);
 
    printf("Time at the end of job = %f seconds\n",timer.CpuTime());
    return 0;
@@ -113,8 +113,7 @@ void fcnk0(Int_t &, Double_t *, Double_t &f, Double_t *x, Int_t iflag)
       sthplu = sthmin = 0;
       for (i=0;i<nbins; i++) {
          t[i]     = 0.1*(i+1);
-         ti       = t[i];
-         ehalf    = TMath::Exp(-ti*gamls);
+         ti       = t[i];         ehalf    = TMath::Exp(-ti*gamls);
          xr1      = 1-xre;
          xr2      = 1+xre;
          th       = (xr1*xr1 + xim*xim)*TMath::Exp(-ti*gaml);

@@ -1,24 +1,20 @@
+//*CMZ :  2.23/12 26/01/2000  09.45.01  by  Rene Brun
 //*CMZ :  2.20/00 03/03/99  14.18.31  by  Rene Brun
 //*CMZ :  2.00/12 14/09/98  20.18.09  by  Rene Brun
 //*CMZ :  1.03/09 08/12/97  13.46.10  by  Fons Rademakers
 //*-- Author :    Rene Brun   06/04/96
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -56,7 +52,7 @@ TNtuple::TNtuple(): TTree()
 }
 
 //______________________________________________________________________________
-TNtuple::TNtuple(const Text_t *name, const Text_t *title, const Text_t *varlist, Int_t bufsize)
+TNtuple::TNtuple(const char *name, const char *title, const char *varlist, Int_t bufsize)
        :TTree(name,title)
 {
 //*-*-*-*-*-*-*-*-*-*-*-*-*Create an Ntuple*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
@@ -176,8 +172,9 @@ void TNtuple::Streamer(TBuffer &b)
 {
 //*-*-*-*-*-*-*-*-*Stream a class object*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 //*-*              =========================================
+   UInt_t R__s, R__c;
    if (b.IsReading()) {
-      b.ReadVersion();  //Version_t v = b.ReadVersion();
+      b.ReadVersion(&R__s, &R__c);
       TTree::Streamer(b);
       b >> fNvar;
       if (fNvar <= 0) return;
@@ -186,9 +183,11 @@ void TNtuple::Streamer(TBuffer &b)
          TBranch *branch = (TBranch*)fBranches.UncheckedAt(i);
          if (branch) branch->SetAddress(&fArgs[i]);
       }
+      b.CheckByteCount(R__s, R__c, TNtuple::IsA());
    } else {
-      b.WriteVersion(TNtuple::IsA());
+      R__c = b.WriteVersion(TNtuple::IsA(), kTRUE);
       TTree::Streamer(b);
       b << fNvar;
+      b.SetByteCount(R__c, kTRUE);
    }
 }

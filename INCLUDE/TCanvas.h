@@ -1,36 +1,26 @@
+//*CMZ :  2.23/12 26/01/2000  09.24.06  by  Rene Brun
+//*CMZ :  2.23/11 06/01/2000  15.59.10  by  Rene Brun
+//*CMZ :  2.23/04 04/10/99  11.08.02  by  Rene Brun
+//*CMZ :  2.23/02 02/09/99  15.39.21  by  Rene Brun
 //*CMZ :  2.22/06 21/06/99  17.40.55  by  Rene Brun
 //*CMZ :  2.21/08 11/03/99  08.13.39  by  Rene Brun
 //*CMZ :  2.21/04 05/02/99  17.17.10  by  Fons Rademakers
-//*CMZ :  2.20/01 01/12/98  12.42.35  by  Rene Brun
-//*CMZ :  2.20/00 05/11/98  15.09.28  by  Fons Rademakers
-//*CMZ :  2.00/13 29/10/98  17.18.17  by  Fons Rademakers
-//*CMZ :  2.00/12 15/09/98  04.02.35  by  Rene Brun
-//*CMZ :  2.00/11 17/08/98  15.14.15  by  Rene Brun
-//*CMZ :  2.00/10 16/07/98  14.26.15  by  Fons Rademakers
-//*CMZ :  2.00/06 07/05/98  19.38.43  by  Fons Rademakers
-//*CMZ :  2.00/00 17/02/98  18.39.09  by  Fons Rademakers
-//*CMZ :  1.03/09 09/12/97  20.23.23  by  Fons Rademakers
 //*-- Author :    Rene Brun   12/12/94
 
 #ifndef ROOT_TCanvas
 #define ROOT_TCanvas
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -49,8 +39,8 @@
 #include "TAttCanvas.h"
 #endif
 
-#ifndef ROOT_TGXW
-#include "TGXW.h"
+#ifndef ROOT_TVirtualX
+#include "TVirtualX.h"
 #endif
 
 #ifndef ROOT_TString
@@ -61,21 +51,13 @@
 #include "TCanvasImp.h"
 #endif
 
-
-enum ECanvasEditMode {
-   kIsNotEditable,
-   kIsEditable
-};
-
 class TContextMenu;
 class TControlBar;
 
 class TCanvas : public TPad {
 
 friend class TCanvasImp;
-#ifdef R__THREAD
 friend class TThread;
-#endif
 
 protected:
    TString      fDISPLAY;         //Name of destination screen
@@ -101,6 +83,7 @@ protected:
    Int_t        fEventX;          //Last X mouse position in canvas
    Int_t        fEventY;          //Last Y mouse position in canvas
    Bool_t       fShowEventStatus; //Show event status panel
+   Bool_t       fAutoExec;        //To auto exec the list of pad TExecs
    TControlBar *fEditorBar;       //Editor control bar
    TCanvasImp  *fCanvasImp;       //Window system specific canvas implementation
    Bool_t       fMoveOpaque;      //Move objects in opaque mode
@@ -108,7 +91,6 @@ protected:
    Color_t      fHighLightColor;  //Highlight color of active pad
    Bool_t       fBatch;           //True when in batchmode
    Bool_t       fMenuBar;         //False if no menubar is displayed
-   ECanvasEditMode fIsEditable;   //True if canvas is editable
    TContextMenu   *fContextMenu;  //Context menu pointer
 
 private:
@@ -117,38 +99,40 @@ private:
    void     Build();
    void     CopyPixmaps();
    void     DrawEventStatus(Int_t button, Int_t x, Int_t y, TObject *selected);
+   void     RunAutoExec();
 
 protected:
    virtual void ExecuteEvent(Int_t event, Int_t px, Int_t py);
-// begin changes M.H. 10.06.99
+   //-- used by friend TThread class
    void Constructor();
-   void Constructor(const Text_t *name, const Text_t *title, Int_t form);
-   void Constructor(const Text_t *name, const Text_t *title, Int_t ww, Int_t wh);
-   void Constructor(const Text_t *name, const Text_t *title,
+   void Constructor(const char *name, const char *title, Int_t form);
+   void Constructor(const char *name, const char *title, Int_t ww, Int_t wh);
+   void Constructor(const char *name, const char *title,
            Int_t wtopx, Int_t wtopy, Int_t ww, Int_t wh);
    void Destructor();
-// end changes M.H. 10.06.99
+   //-- used by friend TThread class
 
 public:
    TCanvas();
-   TCanvas(const Text_t *name, const Text_t *title="", Int_t form=1);
-   TCanvas(const Text_t *name, const Text_t *title, Int_t ww, Int_t wh);
-   TCanvas(const Text_t *name, const Text_t *title, Int_t wtopx, Int_t wtopy,
+   TCanvas(const char *name, const char *title="", Int_t form=1);
+   TCanvas(const char *name, const char *title, Int_t ww, Int_t wh);
+   TCanvas(const char *name, const char *title, Int_t wtopx, Int_t wtopy,
            Int_t ww, Int_t wh);
-   TCanvas(const Text_t *name, Int_t ww, Int_t wh, Int_t winid);
+   TCanvas(const char *name, Int_t ww, Int_t wh, Int_t winid);
    virtual ~TCanvas();
 
    void              cd(Int_t subpadnumber=0);
    void              Clear(Option_t *option="");
    void              Close(Option_t *option="");
    virtual void      Draw(Option_t *option="");
+   virtual void      DrawClone(Option_t *option=""); // *MENU*
    virtual void      EditorBar();
    void              EnterLeave(TPad *prevSelPad, TObject *prevSelObj);
    void              FeedbackMode(Bool_t set);
    void              Flush();
    void              UseCurrentStyle(); // *MENU*
    void              ForceUpdate() { fCanvasImp->ForceUpdate(); }
-   const Text_t     *GetDISPLAY() const {return fDISPLAY.Data();}
+   const char       *GetDISPLAY() const {return fDISPLAY.Data();}
    TContextMenu     *GetContextMenu(){return fContextMenu;};
    Int_t             GetDoubleBuffer() {return fDoubleBuffer;}
    TControlBar      *GetEditorBar() {return fEditorBar;}
@@ -162,6 +146,7 @@ public:
    Option_t         *GetSelectedOpt() const {return fSelectedOpt.Data();}
    TVirtualPad      *GetSelectedPad() const { return fSelectedPad; }
    Bool_t            GetShowEventStatus() { return fShowEventStatus; }
+   Bool_t            GetAutoExec() const { return fAutoExec; }
    Size_t            GetXsizeUser() {return fXsizeUser;}
    Size_t            GetYsizeUser() {return fYsizeUser;}
    Size_t            GetXsizeReal() {return fXsizeReal;}
@@ -180,7 +165,6 @@ public:
    Bool_t            HasMenuBar() const { return fMenuBar; }
    void              Iconify() { fCanvasImp->Iconify(); }
    Bool_t            IsBatch() { return fBatch; }
-   ECanvasEditMode   IsEditable() { return fIsEditable; }
    Bool_t            IsRetained() { return fRetained; }
    virtual void      ls(Option_t *option="");
    void              MoveOpaque(Int_t set=1);
@@ -189,26 +173,26 @@ public:
    virtual void      Paint(Option_t *option="");
    virtual void      Resize(Option_t *option="");
    void              ResizeOpaque(Int_t set=1) { fResizeOpaque = set; }
-   void              SaveSource(const Text_t *filename="", Option_t *option="");
+   void              SaveSource(const char *filename="", Option_t *option="");
    virtual void      SetCursor(ECursor cursor);
    virtual void      SetDoubleBuffer(Int_t mode=1);
    void              SetWindowPosition(Int_t x, Int_t y) { fCanvasImp->SetWindowPosition(x, y); }
    void              SetWindowSize(UInt_t ww, UInt_t wh) { fCanvasImp->SetWindowSize(ww, wh); }
    void              SetCanvasSize(UInt_t ww, UInt_t wh); // *MENU*
-   virtual void      SetEditable(ECanvasEditMode mode=kIsEditable) {fIsEditable = mode;} // *TOGGLE*
    void              SetHighLightColor(Color_t col) { fHighLightColor = col; }
    void              SetSelected(TObject *obj) {fSelected = obj;}
    void              Show() { fCanvasImp->Show(); }
    virtual void      Size(Float_t xsizeuser=0, Float_t ysizeuser=0);
    void              SetBatch(Bool_t batch=kTRUE);
    void              SetRetained(Bool_t retained=kTRUE) { fRetained=retained;}
-   void              SetTitle(const Text_t *title="");
+   void              SetTitle(const char *title="");
    virtual void      ToggleEventStatus();
+   virtual void      ToggleAutoExec();
    virtual void      Update();
 
    static void       MakeDefCanvas();
 
-   ClassDef(TCanvas,3)  //Graphics canvas
+   ClassDef(TCanvas,4)  //Graphics canvas
 };
 
 #endif

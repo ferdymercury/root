@@ -1,22 +1,21 @@
+//*CMZ :  2.23/07 24/10/99  18.18.04  by  Valery Fine(fine@mail.cern.ch)
+//*CMZ :  2.23/04 13/10/99  16.01.03  by  Fons Rademakers
+//*CMZ :  2.23/03 21/09/99  11.32.56  by  Rene Brun
+//*CMZ :  2.23/02 07/09/99  13.16.56  by  Rene Brun
 //*CMZ :  1.03/01 03/08/97  23.04.44  by  Valery Fine(fine@vxcern.cern.ch)
 //*-- Author :    Valery Fine(fine@vxcern.cern.ch)   29/12/96
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -110,7 +109,7 @@ void TWin32GLViewerImp::CreateContext()
   if(!fhOpenGLRC) CreateViewer("OpenGL Viewer");
   return;
 
-  if ( ((TGWin32 *)gGXW)->IsCmdThread())
+  if ( ((TGWin32 *)gVirtualX)->IsCmdThread())
       CreateContextCB();
   else
   {
@@ -146,7 +145,7 @@ void TWin32GLViewerImp::CreateViewer( const char *title, Int_t x, Int_t y, UInt_
 {
 
     fThreadId    = 0; // No current context
-    CreateWindowsObject((TGWin32 *)gGXW,x,y,width,height);
+    CreateWindowsObject((TGWin32 *)gVirtualX,x,y,width,height);
 //   W32_SetTitle(title && strlen(title) ? title : b->GetName());
     W32_SetTitle(title && strlen(title) ? title : "OpenGl Viewer");
 
@@ -183,7 +182,7 @@ void TWin32GLViewerImp::DeleteContext()
 {
     if (!fhOpenGLRC) return;
 
-    if ( ((TGWin32 *)gGXW)->IsCmdThread())
+    if ( ((TGWin32 *)gVirtualX)->IsCmdThread())
         DeleteContextCB();
     else
     {
@@ -249,7 +248,7 @@ void TWin32GLViewerImp::MakeCurrent(Bool_t flag)
 {
 //  if (flag && fThreadId) return; // The current thread is occupied by GL context already
 
-  if ( ((TGWin32 *)gGXW)->IsCmdThread())
+  if ( ((TGWin32 *)gVirtualX)->IsCmdThread())
       MakeCurrentCB(flag);
   else
   {
@@ -404,7 +403,7 @@ void TWin32GLViewerImp::MakeToolBar()
 }
 
 //______________________________________________________________________________
-void TWin32GLViewerImp::SetStatusText(Text_t *text, Int_t partidx,Int_t stype)
+void TWin32GLViewerImp::SetStatusText(const Text_t *text, Int_t partidx,Int_t stype)
 {
   // Set Text into the 'npart'-th part of the status bar
   //   enum {kStatusPopIn, kStatusNoBorders, kStatusOwn, kStatusPopOut};
@@ -435,13 +434,13 @@ Bool_t TWin32GLViewerImp::SetupPixelFormat()
        /* Set to color-index mode and use the default color palette. */
        ppfd->iPixelType =  PFD_TYPE_COLORINDEX;
        ppfd->cColorBits = 8;
-       gGLKernel->SetTrueColorMode(kFALSE);
+       gVirtualGL->SetTrueColorMode(kFALSE);
    }
    else
    {
        ppfd->iPixelType =  PFD_TYPE_RGBA;
        ppfd->cColorBits = 24;
-       gGLKernel->SetTrueColorMode();
+       gVirtualGL->SetTrueColorMode();
    }
  //*-*  Get the device context's best available pixel format
 
@@ -511,7 +510,7 @@ void TWin32GLViewerImp::ShowStatusBar(Bool_t show)
 //______________________________________________________________________________
 void TWin32GLViewerImp::SwapBuffers()
 {
-  if ( ((TGWin32 *)gGXW)->IsCmdThread())
+  if ( ((TGWin32 *)gVirtualX)->IsCmdThread())
       SwapBuffersCB();
   else
   {
@@ -725,11 +724,10 @@ LRESULT APIENTRY TWin32GLViewerImp::OnSysCommand
 #if 0
       TCanvas *canvas = GetCanvas();
       if(canvas) { // delete canvas;
-        char cmd[]= "TCanvas *c=(TCanvas *)0x1234567890123456; delete c;";
-        sprintf(cmd,"TCanvas *c=(TCanvas *)%#16x; delete c;",canvas);
-        printf(" OnSysCommand %s \n", cmd);
-//        gInterpreter->ProcessLineAsynch(cmd);
-        gInterpreter->ProcessLine(cmd);
+        char *cmd;
+        cmd = Form("TCanvas *c=(TCanvas *)0x%lx; delete c;", (Long_t)canvas);
+        printf("OnSysCommand %s\n", cmd);
+        gROOT->ProcessLine(cmd);
       }
 #endif
       return DefWindowProc(hwnd,uMsg, wParam, lParam);

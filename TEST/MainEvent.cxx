@@ -1,11 +1,11 @@
+//*CMZ :  2.23/12 30/01/2000  09.01.36  by  Rene Brun
+//*CMZ :  2.23/11 04/01/2000  16.49.39  by  Rene Brun
+//*CMZ :  2.23/08 31/10/99  11.42.28  by  Rene Brun
+//*CMZ :  2.23/03 16/09/99  11.27.55  by  Rene Brun
 //*CMZ :  2.22/01 26/04/99  12.07.23  by  Rene Brun
 //*CMZ :  2.21/08 15/03/99  11.39.55  by  Rene Brun
 //*CMZ :  2.21/06 15/02/99  09.08.07  by  Rene Brun
-//*CMZ :  2.00/13 28/10/98  12.53.40  by  Fons Rademakers
-//*CMZ :  2.00/10 02/07/98  18.02.26  by  Rene Brun
-//*CMZ :  2.00/09 05/06/98  17.38.03  by  Fons Rademakers
-//*CMZ :  1.03/09 10/12/97  16.49.49  by  Rene Brun
-//*-- Author :    Valery Fine(fine@vxcern.cern.ch)   19/01/97
+//*-- Author :    Rene Brun   19/01/97
 
 ////////////////////////////////////////////////////////////////////////
 //
@@ -110,6 +110,7 @@ int main(int argc, char **argv)
    if (argc > 5)  arg5   = atoi(argv[5]);
    if (arg4 ==  0) { write = 0; hfill = 0; read = 1;}
    if (arg4 ==  1) { write = 1; hfill = 0;}
+   if (arg4 ==  2) { write = 0; hfill = 0;}
    if (arg4 == 10) { write = 0; hfill = 1;}
    if (arg4 == 11) { write = 1; hfill = 1;}
    if (arg4 == 20) { write = 0; read  = 1;}  //read sequential
@@ -118,7 +119,7 @@ int main(int argc, char **argv)
 
    TFile *hfile;
    TTree *tree;
-   Event *event = new Event();
+   Event *event = 0;
 
    // Fill event, header and tracks with some random numbers
    //   Create a timer object to benchmark this loop
@@ -143,7 +144,12 @@ int main(int argc, char **argv)
       nevent = TMath::Max(nevent,nentries);
       if (read == 1) {  //read sequential
          for (ev = 0; ev < nevent; ev++) {
-            if (ev%printev == 0) cout<<"event="<<ev<<endl;
+            if (ev%printev == 0) {
+               tnew = timer.RealTime();
+               printf("event:%d, rtime=%f s\n",ev,tnew-told);
+               told=tnew;
+               timer.Continue();
+            }
             nb += tree->GetEntry(ev);        //read complete event in memory
          }
       } else {    //read random
@@ -178,7 +184,9 @@ int main(int argc, char **argv)
       tree->SetAutoSave(1000000000);  // autosave when 1 Gbyte written
       bufsize = 256000;
       if (split)  bufsize /= 4;
-      tree->Branch("event", "Event", &event, bufsize,split);
+      event = new Event();
+      TBranch *branch = tree->Branch("event", "Event", &event, bufsize,split);
+      branch->SetAutoDelete(kFALSE);
 
       for (ev = 0; ev < nevent; ev++) {
          if (ev%printev == 0) {

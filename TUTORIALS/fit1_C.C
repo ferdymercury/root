@@ -1,6 +1,7 @@
+//*CMZ :  2.23/04 05/10/99  15.29.28  by  Rene Brun
 //*CMZ :  0.90/08 02/12/96  12.02.58  by  Rene Brun
 //*-- Author :    Fons Rademakers   17/03/96
-{
+
    gROOT->Reset();
    c1 = new TCanvas("c1","The Fit Canvas");
    c1->SetGridx();
@@ -16,4 +17,4 @@
    fitlabel->SetFillColor(25);
    fitlabel->ReadFile("fit1_C.C");
    fitlabel->Draw();
-}
+

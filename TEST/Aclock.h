@@ -1,3 +1,4 @@
+//*CMZ :  2.23/11 03/01/2000  10.10.20  by  Rene Brun
 //*CMZ :  2.00/12 04/10/98  18.09.29  by  Fons Rademakers
 //*-- Author :    Valeriy Onuchin & Fons Rademakers   04/10/98
 
@@ -155,7 +156,7 @@ private:
    SecondHand *fSecondHand;     // second hand
 
 public:
-   Aclock();
+   Aclock(Int_t csize=100);
    virtual ~Aclock();
 
    virtual Bool_t Notify();

@@ -1,5 +1,5 @@
-/*CMZ :  2.22/10 23/07/99  14.42.12  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   23/07/99*/
+/*CMZ :  2.23/10 10/12/99  17.59.57  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   10/12/99*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -9,15 +9,13 @@
  * Description:
  *  K&R style function prototype
  ************************************************************************
- * Copyright(c) 1991~1996  [hp] Hewlett Packard Japan, All rights reserved
- * Author                  Masaharu Goto (gotom@jpn.hp.com)
- * Copyright(c) 1995~1998  Masaharu Goto (MXJ02154@niftyserve.or.jp)
+ * Copyright(c) 1995~1999  Masaharu Goto (MXJ02154@niftyserve.or.jp)
  *
  * Permission to use, copy, modify and distribute this software and its
  * documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies and
  * that both that copyright notice and this permission notice appear
- * in supporting documentation.  Hewlett-Packard Japan Company makes no
+ * in supporting documentation.  The author makes no
  * representations about the suitability of this software for any
  * purpose.  It is provided "as is" without express or implied warranty.
  ************************************************************************/
@@ -283,6 +281,14 @@ int G__preprocessor G__P((char *outname,char *inname,int cppflag,char *macros,ch
 int G__difffile G__P((char *file1,char *file2));
 int G__copyfile G__P((FILE *to,FILE *from));
 
+#ifndef G__OLDIMPLEMENTATION1196
+int G__matchfilename G__P((int i1,char* filename));
+char* G__stripfilename G__P((char* filename));
+#endif
+#ifndef G__OLDIMPLEMENTATION1197
+int G__cleardictfile G__P((int flag));
+#endif
+
 void G__openmfp G__P((void));
 int G__closemfp G__P((void));
 void G__define G__P((void));
@@ -338,7 +344,7 @@ void G__cpplink_linked_taginfo G__P((FILE* fp,FILE* hfp));
 int G__get_linked_tagnum G__P((G__linked_taginfo *p));
 #endif
 char *G__get_link_tagname G__P((int tagnum));
-char *G__map_cpp_name G__P((char *in));
+/* char *G__map_cpp_name G__P((char *in)); */
 char *G__map_cpp_funcname G__P((int tagnum,char *funcname,int ifn,int page));
 void G__set_globalcomp G__P((char *mode,char *linkfilename,char* dllid));
 #ifdef G__OLDIMPLEMENTATION408
@@ -454,6 +460,14 @@ int G__asm_optimize G__P((int *start));
 int G__inc_cp_asm G__P((int cp_inc,int dt_dec));
 int G__clear_asm G__P((void));
 int G__asm_clear G__P((void));
+#ifndef G__OLDIMPLEMENTATION1158
+void G__gen_addstros G__P((int addstros));
+#endif
+#ifndef G__OLDIMPLEMENTATION1164
+void G__suspendbytecode G__P((void));
+void G__resetbytecode G__P((void));
+void G__resumebytecode G__P((int store_asm_noverflow));
+#endif
 void G__abortbytecode G__P((void));
 int G__asm_putint G__P((int i));
 G__value G__getreserved G__P((char *item,void** ptr,void** ppdict));

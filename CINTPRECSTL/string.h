@@ -1,9 +1,9 @@
-/*CMZ :  2.22/10 23/07/99  14.42.34  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   23/07/99*/
+/*CMZ :  2.23/10 10/12/99  18.00.24  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   10/12/99*/
 // lib/prec_stl/string
 
-#ifndef PREC_STL_STRING
-#define PREC_STL_STRING
+#pragma ifndef PREC_STL_STRING
+#pragma define PREC_STL_STRING
 #pragma link off global PREC_STL_STRING;
 #pragma link C++ nestedtypedef;
 #pragma link C++ nestedclass;
@@ -78,7 +78,7 @@ class string {
   void resize(size_t n);
   //size_t reserve(void) const;
   void reserve(size_t res_arg);
-  size_t copy(char* s,size_t n,size_t pos=0) const ;
+  size_t copy(char* s,size_t n,size_t pos=0) /* const */;
   size_t find(const string& str,size_t pos=0) const;
   size_t find(const char* s,size_t pos,size_t n) const;
   size_t find(const char* s,size_t pos=0) const;
@@ -121,5 +121,5 @@ string operator+(const string& a,const string& b) ;
 
 typedef string cstring;
 
-#endif
+#pragma endif
 

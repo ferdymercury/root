@@ -1,33 +1,29 @@
+//*CMZ :  2.23/12 26/01/2000  09.24.07  by  Rene Brun
+//*CMZ :  2.23/11 04/01/2000  08.43.13  by  Rene Brun
+//*CMZ :  2.23/10 16/12/99  16.16.42  by  Rene Brun
+//*CMZ :  2.23/09 15/11/99  16.10.53  by  Rene Brun
+//*CMZ :  2.23/07 25/10/99  09.42.17  by  Rene Brun
+//*CMZ :  2.23/04 11/10/99  16.19.56  by  Rene Brun
+//*CMZ :  2.23/01 26/08/99  11.49.41  by  Rene Brun
 //*CMZ :  2.22/01 18/05/99  19.07.27  by  Rene Brun
 //*CMZ :  2.21/04 03/02/99  11.29.38  by  Rene Brun
 //*CMZ :  2.21/02 16/01/99  12.20.07  by  Rene Brun
-//*CMZ :  2.00/13 29/10/98  18.54.20  by  Rene Brun
-//*CMZ :  2.00/12 30/09/98  10.04.17  by  Rene Brun
-//*CMZ :  2.00/07 18/05/98  15.20.39  by  Rene Brun
-//*CMZ :  2.00/03 26/03/98  18.07.30  by  Rene Brun
-//*CMZ :  2.00/00 03/03/98  16.44.18  by  Rene Brun
-//*CMZ :  1.03/08 10/11/97  17.42.01  by  Rene Brun
 //*-- Author :    Rene Brun   12/12/94
 
 #ifndef ROOT_TStyle
 #define ROOT_TStyle
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -120,7 +116,8 @@ private:
         Float_t       fPaperSizeX;        //PostScript paper size along X
         Float_t       fPaperSizeY;        //PostScript paper size along Y
         Float_t       fScreenFactor;      //Multiplication factor for canvas size and position
-        Color_t       fStatColor;         //stat color
+        Color_t       fStatColor;         //stat fill area color
+        Color_t       fStatTextColor;     //stat text color
         Width_t       fStatBorderSize;    //border size of Stats PaveLabel
         Style_t       fStatFont;          //font style of Stats PaveLabel
         Style_t       fStatStyle;         //fill area style of Stats PaveLabel
@@ -128,9 +125,11 @@ private:
         Float_t       fStatY;             //Y position of top right corner of stat box
         Float_t       fStatW;             //width of stat box
         Float_t       fStatH;             //height of stat box
-        Color_t       fTitleColor;        //title color
+        Color_t       fTitleColor;        //title fill area color
+        Color_t       fTitleTextColor;    //title text color
         Width_t       fTitleBorderSize;   //border size of Title PavelLabel
         Style_t       fTitleFont;         //font style of Title PaveLabel
+        Style_t       fTitleStyle;        //fill area style of title PaveLabel
         Float_t       fTitleX;            //X position of top left corner of title box
         Float_t       fTitleY;            //Y position of top left corner of title box
         Float_t       fTitleW;            //width of title box
@@ -139,16 +138,19 @@ private:
         TArrayI       fPalette;           //Color palette
         TString       fLineStyle[30];     //String describing line style i (for postScript)
         TString       fHeaderPS;          //User defined additional Postscript header
+        Float_t       fLineScalePS;       //Line scale factor when drawing lines on Postscript
+        Double_t      fTimeOffset;        //Time offset (UTC) to the beginning of an axis
 
 public:
         enum EPaperSize { kA4, kUSLetter };
 
         TStyle();
-        TStyle(Text_t *name, Text_t *title);
+        TStyle(const char *name, const char *title);
         TStyle(const TStyle &style);
         virtual          ~TStyle();
         Int_t            AxisChoice(Option_t *axis);
         virtual void     Browse(TBrowser *b);
+        static  void     BuildStyles();
         virtual void     Copy(TObject &style);
         virtual void     cd();
 
@@ -216,6 +218,7 @@ public:
         Int_t            GetShowEventStatus(){return fShowEventStatus;}
         Float_t          GetScreenFactor() {return fScreenFactor;}
         Color_t          GetStatColor() {return fStatColor;}
+        Color_t          GetStatTextColor() {return fStatTextColor;}
         Width_t          GetStatBorderSize() {return fStatBorderSize;}
         Style_t          GetStatFont()  {return fStatFont;}
         Style_t          GetStatStyle()  {return fStatStyle;}
@@ -223,7 +226,10 @@ public:
         Float_t          GetStatY()     {return fStatY;}
         Float_t          GetStatW()     {return fStatW;}
         Float_t          GetStatH()     {return fStatH;}
-        Color_t          GetTitleColor() {return fTitleColor;}  //return histogram title color
+        Double_t         GetTimeOffset() {return fTimeOffset;} //return axis time offset
+        Color_t          GetTitleColor() {return fTitleColor;}  //return histogram title fill area color
+        Color_t          GetTitleTextColor() {return fTitleTextColor;}  //return histogram title text color
+        Style_t          GetTitleStyle()  {return fTitleStyle;}
         Style_t          GetTitleFont()  {return fTitleFont;} //return histogram title font
         Width_t          GetTitleBorderSize() {return fTitleBorderSize;} //return border size of histogram title TPaveLabel
         Float_t          GetTitleXOffset() {return GetTitleOffset("X");} //return X axis title offset
@@ -234,11 +240,13 @@ public:
         Float_t          GetTitleY()     {return fTitleY;}  //return left bottom position of histogram title TPavelabel
         Float_t          GetTitleW()     {return fTitleW;}  //return width of histogram title TPaveLabel
         Float_t          GetTitleH()     {return fTitleH;}  //return height of histogram title TPavelabel
-        const Text_t     *GetHeaderPS() const {return fHeaderPS.Data();}
-        const Text_t     *GetLineStyleString(Int_t i=1) const;
+        const char      *GetHeaderPS() const {return fHeaderPS.Data();}
+        const char      *GetLineStyleString(Int_t i=1) const;
+        Float_t          GetLineScalePS() {return fLineScalePS;}
         virtual void     Reset(Option_t *option="");
 
-        void             SetHeaderPS(const Text_t *header);
+        void             SetHeaderPS(const char *header);
+        void             SetLineScalePS(Float_t scale=3) {fLineScalePS=scale;}
         void             SetLineStyleString(Int_t i, const char *text);
         void             SetNdivisions(Int_t n=510, Option_t *axis="X");
         void             SetAxisColor(Color_t color=1, Option_t *axis="X");
@@ -301,6 +309,7 @@ public:
         void             SetPaperSize(EPaperSize size);
         void             SetPaperSize(Float_t xsize=20, Float_t ysize=26);
         void             SetStatColor(Int_t color=19) {fStatColor=color;}
+        void             SetStatTextColor(Int_t color=1) {fStatTextColor=color;}
         void             SetStatStyle(Style_t style=1001) {fStatStyle=style;}
         void             SetStatBorderSize(Width_t size=2) {fStatBorderSize=size;}
         void             SetStatFont(Style_t font=62) {fStatFont=font;}
@@ -308,7 +317,10 @@ public:
         void             SetStatY(Float_t y=0)    {fStatY=y;}
         void             SetStatW(Float_t w=0.19) {fStatW=w;}
         void             SetStatH(Float_t h=0.1)  {fStatH=h;}
+        void             SetTimeOffset(Double_t toffset);
         void             SetTitleColor(Int_t color=19)      {fTitleColor=color;}
+        void             SetTitleTextColor(Int_t color=1)   {fTitleTextColor=color;}
+        void             SetTitleStyle(Style_t style=1001)  {fTitleStyle=style;}
         void             SetTitleFont(Style_t font=62)      {fTitleFont=font;}
         void             SetTitleBorderSize(Width_t size=2) {fTitleBorderSize=size;}
         void             SetTitleXOffset(Float_t offset=1)  {SetTitleOffset(offset,"X");}

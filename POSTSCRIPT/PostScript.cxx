@@ -1,40 +1,24 @@
+//*CMZ :  2.23/12 26/01/2000  10.06.26  by  Rene Brun
+//*CMZ :  2.23/09 17/11/99  15.39.14  by  Rene Brun
+//*CMZ :  2.23/08 01/11/99  16.57.02  by  Rene Brun
+//*CMZ :  2.23/04 13/10/99  09.11.46  by  Rene Brun
+//*CMZ :  2.23/03 21/09/99  00.03.47  by  Rene Brun
+//*CMZ :  2.23/02 05/09/99  16.23.36  by  Rene Brun
+//*CMZ :  2.23/01 30/08/99  10.14.38  by  Rene Brun
 //*CMZ :  2.22/10 21/07/99  22.28.37  by  Rene Brun
-//*CMZ :  2.22/07 05/07/99  14.02.11  by  Rene Brun
-//*CMZ :  2.22/03 28/05/99  22.17.04  by  Rene Brun
-//*CMZ :  2.22/02 21/05/99  18.12.17  by  Rene Brun
-//*CMZ :  2.21/07 08/03/99  12.42.06  by  Rene Brun
-//*CMZ :  2.21/06 12/02/99  10.13.55  by  Rene Brun
-//*CMZ :  2.21/05 07/02/99  16.30.29  by  Rene Brun
-//*CMZ :  2.21/01 07/02/99  16.00.08  by  Rene Brun
-//*CMZ :  2.21/00 19/12/98  18.55.09  by  Rene Brun
-//*CMZ :  2.00/13 02/11/98  19.17.55  by  Rene Brun
-//*CMZ :  2.00/12 07/10/98  12.03.13  by  Rene Brun
-//*CMZ :  2.00/10 05/07/98  11.16.50  by  Rene Brun
-//*CMZ :  2.00/08 03/06/98  15.04.31  by  Rene Brun
-//*CMZ :  2.00/07 18/05/98  18.51.39  by  Rene Brun
-//*CMZ :  2.00/06 13/05/98  21.24.45  by  Rene Brun
-//*CMZ :  2.00/05 17/04/98  12.02.07  by  Rene Brun
-//*CMZ :  2.00/04 01/04/98  12.52.02  by  Rene Brun
-//*CMZ :  2.00/00 18/02/98  14.43.17  by  Rene Brun
-//*CMZ :  1.03/09 16/12/97  12.18.29  by  Rene Brun
 //*-- Author :    Rene Brun, Olivier Couet, Pierre Juillot   29/11/94
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 #ifdef WIN32
 //*CMZ :  1.00/09 23/04/97  17.59.54  by  Rene Brun
@@ -80,9 +64,7 @@
 
 char backslash = '\\';
 
-const Int_t  kMaxBuffer = 120;
-
-TPostScript    *gCurrentPS = 0;
+const Int_t  kMaxBuffer = 250;
 
 ClassImp(TPostScript)
 
@@ -99,18 +81,18 @@ ClassImp(TPostScript)
 
 
 //______________________________________________________________________________
-TPostScript::TPostScript() : TNamed()
+TPostScript::TPostScript() : TVirtualPS()
 {
 //*-*-*-*-*-*-*-*-*-*-*Default PostScript constructor*-*-*-*-*-*-*-*-*-*-*-*-*
 
    fStream = 0;
    fType   = 0;
+   gVirtualPS = this;
 }
 
 //______________________________________________________________________________
-TPostScript::TPostScript(Text_t *fname, Int_t wtype)
-                : TNamed(fname, "PostScript"),
-                  TAttLine(), TAttFill(), TAttMarker(), TAttText()
+TPostScript::TPostScript(const char *fname, Int_t wtype)
+            :TVirtualPS(fname, wtype)
 {
 //*-*-*-*-*-*-*-*-*-*-*Initialize the PostScript interface*-*-*-*-*-*-*-*-*-*
 //*-*                  ====================================
@@ -205,7 +187,7 @@ TPostScript::TPostScript(Text_t *fname, Int_t wtype)
 }
 
 //______________________________________________________________________________
-void TPostScript::Open(Text_t *fname, Int_t wtype)
+void TPostScript::Open(const char *fname, Int_t wtype)
 {
 //*-*-*-*-*-*-*-*-*-*-*Open a PostScript file*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 //*-*                  =======================
@@ -227,6 +209,7 @@ void TPostScript::Open(Text_t *fname, Int_t wtype)
   fClear       = kTRUE;
   fZone        = kFALSE;
   fSave        = 0;
+  SetLineScale(gStyle->GetLineScalePS());
   gStyle->GetPaperSize(fXsize, fYsize);
   fMode        = fType%10;
   Float_t xrange, yrange;
@@ -256,7 +239,7 @@ void TPostScript::Open(Text_t *fname, Int_t wtype)
      printf("ERROR in TPostScript::Open: Cannot open file:%s\n",fname);
      return;
   }
-  gCurrentPS = this;
+  gVirtualPS = this;
 
   for (Int_t i=0;i<512;i++) fBuffer[i] = ' ';
   if( fType == 113) {
@@ -293,7 +276,7 @@ void TPostScript::Close(Option_t *)
 //*-*-*-*-*-*-*-*-*-*-*Close a PostScript file*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 //*-*                  =======================
 
-   if (!gCurrentPS) return;
+   if (!gVirtualPS) return;
    if (gPad) gPad->Update();
    if( fMode != 3) {
      SaveRestore(-1);
@@ -316,7 +299,7 @@ void TPostScript::Close(Option_t *)
 
    if (fStream) { fStream->close(); delete fStream; fStream = 0;}
 
-   gCurrentPS = 0;
+   gVirtualPS = 0;
 }
 
 //______________________________________________________________________________
@@ -332,7 +315,7 @@ void TPostScript::On()
       Off();
       return;
    }
-   gCurrentPS = this;
+   gVirtualPS = this;
 }
 
 //______________________________________________________________________________
@@ -343,7 +326,7 @@ void TPostScript::Off()
 //*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 //*-*
 
-   gCurrentPS = 0;
+   gVirtualPS = 0;
 }
 
 
@@ -799,7 +782,6 @@ void TPostScript::DrawPS(Int_t nn, Float_t *xw, Float_t *yw)
   Int_t  n, ixd0, iyd0, idx, idy, ixdi, iydi, ix, iy, fais, fasi;
   fais = fasi = 0;
 
-//if (nn <0)printf("in DrawPS, nn=%d\n",nn);
   if (nn > 0) {
      n = nn;
      SetLineStyle(fLineStyle);
@@ -835,7 +817,6 @@ void TPostScript::DrawPS(Int_t nn, Float_t *xw, Float_t *yw)
      return;
   }
 
-//if (nn <0)printf("xw[%d]=%f, yw[%d]=%f, ixd0=%d, iyd0=%d\n",0,xw[0],0,yw[0],ixd0,iyd0);
   PrintFast(2," m");
   idx = idy = 0;
   for (Int_t i=1;i<n;i++) {
@@ -845,7 +826,6 @@ void TPostScript::DrawPS(Int_t nn, Float_t *xw, Float_t *yw)
      iy   = iydi - iyd0;
      ixd0 = ixdi;
      iyd0 = iydi;
-//if (nn <0)printf("xw[%d]=%f, yw[%d]=%f, ixdi=%d, iydi=%d\n",i,xw[i],i,yw[i],ixdi,iydi);
      if( ix && iy) {
         if( idx ) { MovePS(idx,0); idx = 0; }
         if( idy ) { MovePS(0,idy); idy = 0; }
@@ -1297,20 +1277,6 @@ void TPostScript::Initialize()
 }
 
 //______________________________________________________________________________
-void TPostScript::ls(Option_t *)
-{
-//*-*-*-*-*-*-*-*-*-*-*List current PostScript parameters*-*-*-*-*-*-*-*-*-*-*
-//*-*                  ==================================
-}
-
-//______________________________________________________________________________
-void TPostScript::Print(Option_t *)
-{
-//*-*-*-*-*-*-*-*-*-*-*List current PostScript parameters*-*-*-*-*-*-*-*-*-*-*
-//*-*                  ==================================
-}
-
-//______________________________________________________________________________
 void TPostScript::MakeGreek()
 {
 //*-*-*Reencode the Greek (/Symbol) font into the special font (/Special)*-*-*
@@ -1451,7 +1417,7 @@ void TPostScript::NewPage()
 }
 
 //______________________________________________________________________________
-void TPostScript::PrintStr(const Text_t *str)
+void TPostScript::PrintStr(const char *str)
 {
 //*-*-*-*-*-*-*-*Output the string STR in the output buffer*-*-*-*-*-*-*-*-*-*
 //*-*            ===========================================
@@ -1496,7 +1462,7 @@ void TPostScript::PrintStr(const Text_t *str)
 }
 
 //______________________________________________________________________________
-void TPostScript::PrintFast(Int_t len, const Text_t *str)
+void TPostScript::PrintFast(Int_t len, const char *str)
 {
 //*-*-*-*-*-*-*-*-*-*-*-*-*-*-*Fast version of Print*-*-*-*-*-*-*-*-*-*-*-*
 //*-*                          =====================
@@ -1573,14 +1539,6 @@ void TPostScript::Range(Float_t xsize, Float_t ysize)
 }
 
 //______________________________________________________________________________
-void TPostScript::Resize()
-{
-//*-*-*-*-*-*-*-*Compute conversion coefficients*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
-//*-*            ===============================
-}
-
-
-//______________________________________________________________________________
 void TPostScript::SaveRestore(Int_t flag)
 {
 //*-*-*-*-*-*-*-*Compute number of gsaves for restore*-*-*-*-*-*-*-*-*-*-*-*-*
@@ -1630,7 +1588,7 @@ void TPostScript::SetFillPatterns(Int_t ipat, Int_t color)
 //*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 //*-*
    char cdef[28];
-   char cpat[4];
+   char cpat[5];
    sprintf(cpat, " P%2.2d", ipat);
 //*-*
 //*-*- fPatterns is used as an array of chars. If fPatterns[ipat] != 0 the
@@ -1899,36 +1857,15 @@ void TPostScript::SetFillPatterns(Int_t ipat, Int_t color)
 //*-*- Activate the pattern.
 //*-*
    PrintFast(3," cs");
-   if( color < 0) color = 0;
-   if( color > 255) color = 255;
-   TColor *col;
-   TIter next(gROOT->GetListOfColors());
-   while ((col = (TColor *) next())) {
-      if (col->GetNumber() == color) {
-         WriteReal(col->GetRed());
-         WriteReal(col->GetGreen());
-         WriteReal(col->GetBlue());
-         break;
-      }
+   TColor *col = gROOT->GetColor(color);
+   if (col) {
+      WriteReal(col->GetRed());
+      WriteReal(col->GetGreen());
+      WriteReal(col->GetBlue());
    }
    PrintFast(4,cpat);
    PrintFast(9," setcolor");
 }
-
-
-//______________________________________________________________________________
-void TPostScript::SetFillStyle( Style_t fstyle )
-{
-//*-*-*-*-*-*-*-*-*-*-*Set fill area style*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
-//*-*                  ===================
-//*-*  fstyle   : compound fill area interior style
-//*-*
-//*-*  fstyle = 1000*interiorstyle + styleindex
-//*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
-
-  fFillStyle = fstyle;
-}
-
 
 
 //______________________________________________________________________________
@@ -1972,7 +1909,8 @@ void TPostScript::SetLineWidth(Width_t linewidth)
 
 //   if ( linewidth == fLineWidth) return;
    fLineWidth = linewidth;
-   WriteInteger(Int_t(1.5*fLineWidth));
+//   WriteInteger(Int_t(1.5*fLineWidth));
+   WriteInteger(Int_t(fLineScale*fLineWidth));
    PrintFast(3," lw");
 
 }
@@ -1989,30 +1927,6 @@ void TPostScript::SetMarkerColor( Color_t cindex )
   SetColor(Int_t(cindex));
 }
 
-
-//______________________________________________________________________________
-void TPostScript::SetMarkerSize( Float_t msize )
-{
-//*-*-*-*-*-*-*-*-*-*-*Set marker size index for markers*-*-*-*-*-*-*-*-*-*-*-*-*-*
-//*-*                  =================================
-//*-*  msize  : marker scale factor
-//*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
-
-  fMarkerSize = msize;
-
-}
-
-
-
-//______________________________________________________________________________
-void TPostScript::SetMarkerStyle( Style_t markerstyle )
-{
-//*-*-*-*-*-*-*-*-*-*-*Set marker style*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
-//*-*                  ================
-
-  fMarkerStyle = markerstyle;
-}
-
 //______________________________________________________________________________
 void TPostScript::SetColor(Int_t color)
 {
@@ -2022,20 +1936,15 @@ void TPostScript::SetColor(Int_t color)
 
 //  if (fCurrentColor == color) return;
   if( color < 0) color = 0;
-  if( color > 255) color = 255;
   fCurrentColor = color;
-  TColor *col;
+  TColor *col = gROOT->GetColor(color);
   Bool_t white = kTRUE;
-  TIter   next(gROOT->GetListOfColors());
-  while ((col = (TColor *) next())) {
-     if (col->GetNumber() == color) {
-        if( col->GetRed() == fRed && col->GetGreen() == fGreen && col->GetBlue() == fBlue) return;
-        fRed   = col->GetRed();
-        fGreen = col->GetGreen();
-        fBlue  = col->GetBlue();
-        white = kFALSE;
-        break;
-     }
+  if (col) {
+     if( col->GetRed() == fRed && col->GetGreen() == fGreen && col->GetBlue() == fBlue) return;
+     fRed   = col->GetRed();
+     fGreen = col->GetGreen();
+     fBlue  = col->GetBlue();
+     white = kFALSE;
   }
   if (white) {fRed = fGreen = fBlue = 1;}
   if( fRed <= 0 && fGreen <= 0 && fBlue <= 0 ) {
@@ -2051,30 +1960,6 @@ void TPostScript::SetColor(Int_t color)
 }
 
 
-//______________________________________________________________________________
-void TPostScript::SetTextAlign( Short_t talign)
-{
-//*-*-*-*-*-*-*-*-*-*-*Set text alignment*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
-//*-*                  ==================
-//*-*  txalh   : horizontal text alignment
-//*-*  txalv   : vertical text alignment
-//*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
-
-  fTextAlign = talign;
-}
-
-
-//______________________________________________________________________________
-void TPostScript::SetTextAngle( Float_t tangle)
-{
-//*-*-*-*-*-*-*-*-*-*-*Set text angle*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
-//*-*                  ==================
-//*-*  tangle   : angle in degrees
-//*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
-
-  fTextAngle = tangle;
-}
-
 
 //______________________________________________________________________________
 void TPostScript::SetTextColor( Color_t cindex )
@@ -2089,27 +1974,8 @@ void TPostScript::SetTextColor( Color_t cindex )
   SetColor( Int_t(cindex) );
 }
 
-
 //______________________________________________________________________________
-void TPostScript::SetTextFont(Font_t fontnumber)
-{
-//*-*-*-*-*-*-*-*-*-*-*-*-*Set current text font number*-*-*-*-*-**-*-*-*-*-*
-//*-*                      ===========================
-
-  fTextFont = fontnumber;
-}
-
-//______________________________________________________________________________
-void TPostScript::SetTextSize(Float_t textsize)
-{
-//*-*-*-*-*-*-*-*-*-*-*-*-*Set current text size*-*-*-*-*-*-*-*-**-*-*-*-*-*
-//*-*                      =====================
-
-  fTextSize = textsize;
-}
-
-//______________________________________________________________________________
-void TPostScript::Text(Float_t xx, Float_t yy, const Text_t *chars)
+void TPostScript::Text(Float_t xx, Float_t yy, const char *chars)
 {
 //*-*-*-*-*-*-*-*-*-*-*Write a string of characters*-*-*-*-*-*-*-*-*-*-*-*-*-*
 //*-*                  =============================
@@ -2159,8 +2025,8 @@ void TPostScript::Text(Float_t xx, Float_t yy, const Text_t *chars)
 
    const char *cflip = "`'\?^@#!~&";
    static const char *cflipc[] = {"120","47","77","136","100","43","41","176","46"};
-   Float_t psrap[15] = {1.031,1.000,1.026,0.932,0.931,0.931,0.930,1.204,1.204,
-                        1.168,1.166,1.007,1.026,0.964,1.0};
+   Float_t psrap[15] = {0.920,1.000,0.920,0.910,0.920,0.920,0.925,1.000,1.000,
+                        1.000,1.000,0.920,1.000,0.964,1.0};
 
    static const char *psfont[] = {
     "/Times-Italic", "/Times-Bold", "/Times-BoldItalic",
@@ -2192,6 +2058,9 @@ void TPostScript::Text(Float_t xx, Float_t yy, const Text_t *chars)
 //*-*
    Float_t     wh = (Float_t)gPad->XtoPixel(gPad->GetX2());
    Float_t     hh = (Float_t)gPad->YtoPixel(gPad->GetY1());
+   Float_t tsize;
+   if (wh < hh)  tsize = fTextSize*wh;
+   else          tsize = fTextSize*hh;
    Float_t ftsize;
 
    Int_t font     = abs(fTextFont)/10;
@@ -2204,9 +2073,8 @@ void TPostScript::Text(Float_t xx, Float_t yy, const Text_t *chars)
    Float_t rchh   = ftsize*fontrap;   //*-* rchh should be the text size in cm
    Int_t fontsize = 4*CMtoPS(rchh);
    if( fontsize <= 0) return;
-   Float_t tsizex = fTextSize*(gPad->GetX2() - gPad->GetX1());
-   Float_t tsizey = fTextSize*(gPad->GetY2() - gPad->GetY1());
-   tsizey /= fontrap;
+   Float_t tsizex = gPad->AbsPixeltoX(Int_t(tsize))-gPad->AbsPixeltoX(0);
+   Float_t tsizey = gPad->AbsPixeltoY(0)-gPad->AbsPixeltoY(Int_t(tsize));
 //*-*
 //*-*- Text colour and vertical alignment
 //*-*
@@ -2216,12 +2084,12 @@ void TPostScript::Text(Float_t xx, Float_t yy, const Text_t *chars)
    Int_t txalv   = fTextAlign%10;
    if (txalv <1) txalv = 1; if (txalv > 3) txalv = 3;
    if( txalv == 3) {
-      y -= 0.5*tsizey*TMath::Cos(kDEGRAD*fTextAngle);
-      x += 0.5*tsizex*TMath::Sin(kDEGRAD*fTextAngle);
+      y -= 0.8*tsizey*TMath::Cos(kDEGRAD*fTextAngle);
+      x += 0.8*tsizex*TMath::Sin(kDEGRAD*fTextAngle);
    }
    else if( txalv == 2) {
-      y -= 0.25*tsizey*TMath::Cos(kDEGRAD*fTextAngle);
-      x += 0.25*tsizex*TMath::Sin(kDEGRAD*fTextAngle);
+      y -= 0.4*tsizey*TMath::Cos(kDEGRAD*fTextAngle);
+      x += 0.4*tsizex*TMath::Sin(kDEGRAD*fTextAngle);
    }
 //*-*
 //*-*- The hollow fonts are set on by the roman font number
@@ -2455,7 +2323,7 @@ while (ich < nchp ) {
 //*-*
 //*-*  read character number I and check if it is a escape character
 //*-*
-   scape  = strchr(cflip, char2[ich-1]);
+   scape  = (char*)strchr(cflip, char2[ich-1]);
    if( scape )  {
       if ( *scape == cflip[0] ) {
              greek = kTRUE;       //*-*- find ` : go to greek
@@ -2513,7 +2381,7 @@ while (ich < nchp ) {
 
 //*-*- START of a new text: on the first character, or on the
 //*-*-    first non escape char. which follows an escape char.
-      if( ich != 1) scape = strchr(cflip, char2[ich-2]);
+      if( ich != 1) scape = (char*)strchr(cflip, char2[ich-2]);
       if( scape || ich == 1)  {
          ideb = ich;
          if( roman)       ifnb[nt]   = font;  //*-*- set font # (IFNB)
@@ -2533,7 +2401,7 @@ while (ich < nchp ) {
 //*-*- END of this text: on the last character or on
 //*-*-      the last non escape which preceeds an escape (but
 //*-*-      the terminating escape character itself is not known)
-      if( ich != nchp) scape = strchr(cflip, char2[ich]);
+      if( ich != nchp) scape = (char*)strchr(cflip, char2[ich]);
       if( scape || ich == nchp)  {
          Int_t ifin = ich;              //*-* compute text length and make one piece
          Int_t ilen = ifin - ideb + 1;  //*-* if length <74 and not 80, because of
@@ -2910,7 +2778,7 @@ L340:              //*-*-  end of loop on pieces
 
 
 //______________________________________________________________________________
-void TPostScript::TextNDC(Float_t u, Float_t v, const Text_t *chars)
+void TPostScript::TextNDC(Float_t u, Float_t v, const char *chars)
 {
 //*-*-*-*-*-*-*-*-*-*-*Write a string of characters in NDC*-*-*-*-*-*-*-*-*-*-*
 //*-*                  ===================================

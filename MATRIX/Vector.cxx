@@ -1,23 +1,22 @@
+//*CMZ :  2.23/12 22/01/2000  18.34.30  by  Rene Brun
+//*CMZ :  2.23/11 12/01/2000  11.38.25by  Fons Rademakers
+//*CMZ :  2.23/10 30/11/99  14.12.52  by  Fons Rademakers
+//*CMZ :  2.23/04 05/10/99  15.17.15  by  Fons Rademakers
 //*CMZ :  2.20/00 13/11/98  18.44.30  by  Fons Rademakers
 //*CMZ :  1.03/09 16/12/97  16.17.48  by  Rene Brun
 //*-- Author :    Fons Rademakers   05/11/97
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -70,6 +69,7 @@ void TVector::Allocate(Int_t nrows, Int_t row_lwb)
    }
 
    fNrows  = nrows;
+   fNmem   = nrows;
    fRowLwb = row_lwb;
 
    fElements = new Real_t[fNrows];
@@ -139,11 +139,14 @@ void TVector::ResizeTo(Int_t lwb, Int_t upb)
 
    // If the vector is to grow, reallocate and clear the newly added elements
    if (fNrows > old_nrows) {
-      fElements = (Real_t *)TStorage::ReAlloc(fElements, fNrows*sizeof(Real_t));
-      memset(fElements+old_nrows,0,(fNrows-old_nrows)*sizeof(Real_t));
-   } else if (old_nrows - fNrows > (old_nrows>>3)) {
+      fElements = (Real_t *)TStorage::ReAlloc(fElements, fNrows*sizeof(Real_t),
+                                              fNmem*sizeof(Real_t));
+      memset(fElements+old_nrows, 0, (fNrows-old_nrows)*sizeof(Real_t));
+      fNmem = fNrows;
+   } else if (old_nrows - fNrows < (old_nrows>>3)) {
       // Vector is to shrink a lot (more than 7/8 of the original size), reallocate
       fElements = (Real_t *)TStorage::ReAlloc(fElements, fNrows*sizeof(Real_t));
+      fNmem = fNrows;
    }
 
    // If the vector shrinks only a little, don't bother to reallocate
@@ -269,6 +272,7 @@ TVector &TVector::operator*=(const TMatrix &a)
    Assert((fNrows = a.fNrows) > 0);
 
    Assert((fElements = new Real_t[fNrows]) != 0);
+   fNmem = fNrows;
 
    Real_t *tp = fElements;                     // Target vector ptr
    Real_t *mp = a.fElements;                   // Matrix row ptr
@@ -745,16 +749,19 @@ void TVector::Streamer(TBuffer &R__b)
 {
    // Stream an object of class TVector.
 
+   UInt_t R__s, R__c;
    if (R__b.IsReading()) {
-      R__b.ReadVersion();  //Version_t R__v = R__b.ReadVersion();
+      R__b.ReadVersion(&R__s, &R__c);
       TObject::Streamer(R__b);
       R__b >> fRowLwb;
       fNrows = R__b.ReadArray(fElements);
+      R__b.CheckByteCount(R__s, R__c, TVector::IsA());
    } else {
-      R__b.WriteVersion(TVector::IsA());
+      R__c = R__b.WriteVersion(TVector::IsA(), kTRUE);
       TObject::Streamer(R__b);
       R__b << fRowLwb;
       R__b.WriteArray(fElements, fNrows);
+      R__b.SetByteCount(R__c, kTRUE);
    }
 }
 

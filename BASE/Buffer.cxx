@@ -1,29 +1,24 @@
+//*CMZ :  2.23/12 27/01/2000  12.11.15  by  Fons Rademakers
+//*CMZ :  2.23/09 14/11/99  15.53.52  by  Rene Brun
+//*CMZ :  2.23/07 12/11/99  16.31.00  by  Rene Brun
+//*CMZ :  2.23/04 11/10/99  12.13.01  by  Fons Rademakers
+//*CMZ :  2.23/00 30/07/99  19.28.04  by  Fons Rademakers
 //*CMZ :  2.22/08 06/07/99  19.17.41  by  Fons Rademakers
 //*CMZ :  2.22/05 10/06/99  17.00.38  by  Fons Rademakers
 //*CMZ :  2.22/03 31/05/99  09.10.45  by  Fons Rademakers
-//*CMZ :  2.22/02 28/05/99  17.34.01  by  Fons Rademakers
-//*CMZ :  2.21/07 06/03/99  19.23.35  by  Rene Brun
-//*CMZ :  2.00/13 29/10/98  08.30.47  by  Fons Rademakers
-//*CMZ :  2.00/06 04/06/98  19.11.26  by  Fons Rademakers
-//*CMZ :  1.03/09 16/12/97  16.52.08  by  Rene Brun
 //*-- Author :    Fons Rademakers   04/05/96
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -107,6 +102,16 @@ TBuffer::~TBuffer()
       delete fWriteMap;
 
    fReadMap = 0;
+}
+
+//______________________________________________________________________________
+void TBuffer::SetBuffer(void *buf)
+{
+   // Set buffer address
+
+   fBuffer = (char *)buf;
+   fBufCur = fBuffer;
+   fBufMax = fBuffer + fBufSize;
 }
 
 //______________________________________________________________________________
@@ -242,7 +247,7 @@ void TBuffer::MapObject(const TObject *obj, UInt_t offset)
 void TBuffer::SetReadParam(Int_t mapsize)
 {
    // Set the initial size of the map used to store object and class
-   // references during reading. The default size is kMapSize=67.
+   // references during reading. The default size is kMapSize=503.
    // Increasing the default has the benefit that when reading many
    // small objects the map does not need to be resized too often
    // (the system is always dynamic, even with the default everything
@@ -261,7 +266,7 @@ void TBuffer::SetReadParam(Int_t mapsize)
 void TBuffer::SetWriteParam(Int_t mapsize)
 {
    // Set the initial size of the hashtable used to store object and class
-   // references during writing. The default size is kMapSize=67.
+   // references during writing. The default size is kMapSize=503.
    // Increasing the default has the benefit that when writing many
    // small objects the hashtable does not get too many collisions
    // (the system is always dynamic, even with the default everything
@@ -346,14 +351,18 @@ void TBuffer::SetByteCount(UInt_t cntpos, Bool_t packInVersion)
 }
 
 //______________________________________________________________________________
-void TBuffer::CheckByteCount(UInt_t startpos, UInt_t bcnt, const TClass *clss)
+Int_t TBuffer::CheckByteCount(UInt_t startpos, UInt_t bcnt, const TClass *clss)
 {
    // Check byte count with current buffer position. They should
    // match. If not print warning and position buffer in correct
    // place determined by the byte count. Startpos is position of
    // first byte where the byte count is written in buffer.
+   // Returns 0 if everything is ok, otherwise the bytecount offset
+   // (< 0 when read too little, >0 when read too much).
 
-   if (!bcnt) return;
+   if (!bcnt) return 0;
+
+   Int_t  offset = 0;
 
    Long_t endpos = Long_t(fBuffer) + startpos + bcnt + sizeof(UInt_t);
 
@@ -368,16 +377,19 @@ void TBuffer::CheckByteCount(UInt_t startpos, UInt_t bcnt, const TClass *clss)
          Printf("*** %s::Streamer() not in sync with data on file, fix Streamer()",
                 clss->GetName());
       }
+      offset = Int_t(Long_t(fBufCur) - endpos);
+      //gROOT->Message(1005, this);
+
       fBufCur = (char *) endpos;
    }
+   return offset;
 }
 
 //______________________________________________________________________________
 Int_t TBuffer::ReadBuf(void *buf, Int_t max)
 {
    // Read max bytes from the I/O buffer into buf. The function returns
-   // the actual number of bytes read. The buffer buf is advanced by
-   // the number of bytes read.
+   // the actual number of bytes read.
 
    Assert(IsReading());
 
@@ -387,7 +399,6 @@ Int_t TBuffer::ReadBuf(void *buf, Int_t max)
 
    memcpy(buf, fBufCur, n);
    fBufCur += n;
-   buf = (char *)buf + n;
 
    return n;
 }
@@ -395,8 +406,7 @@ Int_t TBuffer::ReadBuf(void *buf, Int_t max)
 //______________________________________________________________________________
 void TBuffer::WriteBuf(const void *buf, Int_t max)
 {
-   // Write max bytes from buf into the I/O buffer. The buffer buf is advanced
-   // by the number of bytes (max) written.
+   // Write max bytes from buf into the I/O buffer.
 
    Assert(IsWriting());
 
@@ -406,7 +416,6 @@ void TBuffer::WriteBuf(const void *buf, Int_t max)
 
    memcpy(fBufCur, buf, max);
    fBufCur += max;
-   buf = (char *)buf + max;
 }
 
 //______________________________________________________________________________
@@ -414,12 +423,15 @@ Text_t *TBuffer::ReadString(Text_t *s, Int_t max)
 {
    // Read string from I/O buffer. String is read till 0 character is
    // found or till max-1 characters are read (i.e. string s has max
-   // bytes allocated).
+   // bytes allocated). If max = -1 no check on number of character is
+   // made, reading continues till 0 character is found.
 
    Assert(IsReading());
 
    char  ch;
    Int_t nr = 0;
+
+   if (max == -1) max = kMaxInt;
 
    while (nr < max-1) {
 
@@ -1457,7 +1469,7 @@ UInt_t TBuffer::WriteVersion(const TClass *cl, Bool_t useBcnt)
 void TBuffer::SetGlobalReadParam(Int_t mapsize)
 {
    // Set the initial size of the map used to store object and class
-   // references during reading. The default size is kMapSize=67.
+   // references during reading. The default size is kMapSize=503.
    // Increasing the default has the benefit that when reading many
    // small objects the array does not need to be resized too often
    // (the system is always dynamic, even with the default everything
@@ -1471,7 +1483,7 @@ void TBuffer::SetGlobalReadParam(Int_t mapsize)
 void TBuffer::SetGlobalWriteParam(Int_t mapsize)
 {
    // Set the initial size of the hashtable used to store object and class
-   // references during writing. The default size is kMapSize=67.
+   // references during writing. The default size is kMapSize=503.
    // Increasing the default has the benefit that when writing many
    // small objects the hashtable does not get too many collisions
    // (the system is always dynamic, even with the default everything

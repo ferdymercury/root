@@ -1,22 +1,18 @@
+//*CMZ :  2.23/02 02/09/99  15.54.27  by  Rene Brun
 //*CMZ :  2.00/01 09/03/98  14.40.24  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   06/01/98
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 //*CMZ :  2.00/00 16/02/98  00.17.08  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   27/12/97
@@ -63,8 +59,8 @@ TGLabel::TGLabel(const TGWindow *p, TGString *text, GContext_t norm,
 
    int max_ascent, max_descent;
 
-   fTWidth  = gGXW->TextWidth(fFontStruct, fText->GetString(), fText->GetLength());
-   gGXW->GetFontProperties(fFontStruct, max_ascent, max_descent);
+   fTWidth  = gVirtualX->TextWidth(fFontStruct, fText->GetString(), fText->GetLength());
+   gVirtualX->GetFontProperties(fFontStruct, max_ascent, max_descent);
    fTHeight = max_ascent + max_descent;
    Resize(fTWidth, fTHeight + 1);
 }
@@ -84,8 +80,8 @@ TGLabel::TGLabel(const TGWindow *p, const char *text, GContext_t norm,
 
    int max_ascent, max_descent;
 
-   fTWidth  = gGXW->TextWidth(fFontStruct, fText->GetString(), fText->GetLength());
-   gGXW->GetFontProperties(fFontStruct, max_ascent, max_descent);
+   fTWidth  = gVirtualX->TextWidth(fFontStruct, fText->GetString(), fText->GetLength());
+   gVirtualX->GetFontProperties(fFontStruct, max_ascent, max_descent);
    fTHeight = max_ascent + max_descent;
    Resize(fTWidth, fTHeight + 1);
 }
@@ -110,8 +106,8 @@ void TGLabel::SetText(TGString *new_text)
 
    int max_ascent, max_descent;
 
-   fTWidth = gGXW->TextWidth(fFontStruct, fText->GetString(), fText->GetLength());
-   gGXW->GetFontProperties(fFontStruct, max_ascent, max_descent);
+   fTWidth = gVirtualX->TextWidth(fFontStruct, fText->GetString(), fText->GetLength());
+   gVirtualX->GetFontProperties(fFontStruct, max_ascent, max_descent);
    fTHeight = max_ascent + max_descent;
 
    // Resize is done when parent's is Layout() is called
@@ -146,6 +142,6 @@ void TGLabel::DoRedraw()
       y = (fHeight - fTHeight) >> 1;
 
    int max_ascent, max_descent;
-   gGXW->GetFontProperties(fFontStruct, max_ascent, max_descent);
+   gVirtualX->GetFontProperties(fFontStruct, max_ascent, max_descent);
    fText->Draw(fId, fNormGC, x, y + max_ascent);
 }

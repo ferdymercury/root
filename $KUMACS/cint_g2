@@ -1,8 +1,8 @@
+*CMZ :  2.23/04 09/10/99  22.38.06  by  Rene Brun
+*CMZ :  2.23/03 09/09/99  08.48.32  by  Rene Brun
+*CMZ :  2.23/02 06/09/99  18.59.39  by  Rene Brun
+*CMZ :  2.23/01 30/08/99  18.18.59  by  Rene Brun
 *CMZ :  2.22/07 05/07/99  15.18.16  by  Rene Brun
-*CMZ :  2.22/02 26/05/99  10.00.55  by  Rene Brun
-*CMZ :  2.00/09 25/06/98  15.10.13  by  Fons Rademakers
-*CMZ :  2.00/00 05/03/98  18.06.24  by  Fons Rademakers
-*CMZ :  1.03/03 04/09/97  16.59.18  by  Victor Perev
 *-- Author :    Rene Brun   06/05/97
 
 macro cint_g2
@@ -16,8 +16,7 @@ macro cint_g2
 
 seq -i src/*.h
 
-headers=TBrowser.h TGuiFactory.h TLego.h TLink.h TPoints.h _
-        TVirtualPad.h TGXW.h TGXClient.h TContextMenu.h
+headers= TLink.h TPoints.h TLatex.h TLegend.h TLegendEntry.h
 
 name=Graf2
 patch=G

@@ -1,5 +1,5 @@
-/*CMZ :  2.22/10 23/07/99  14.42.12  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   23/07/99*/
+/*CMZ :  2.23/10 10/12/99  17.59.58  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   10/12/99*/
 /* /% C++ %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -9,8 +9,7 @@
  * Description:
  *  Stub file for making iostream library
  ************************************************************************
- * Copyright(c) 1991~1997  [hp] Hewlett-Packard Japan, All rights reserved
- * Author                  Masaharu Goto (gotom@jpn.hp.com)
+ * Copyright(c) 1991~1999,  Masaharu Goto (MXJ02154@niftyserve.or.jp)
  *
  ************************************************************************/
 
@@ -72,31 +71,31 @@ class ios {
   virtual ~ios() ;
 
  public:
-  long		flags() const 	{ return x_flags ; }
+  long		flags() /* const */	{ return x_flags ; }
   long		flags(long f);
 
   long		setf(long setbits, long field);
   long		setf(long) ;
   long		unsetf(long) ;
 
-  int		width() const	{ return x_width ; }
+  int		width() /* const */	{ return x_width ; }
   int		width(int w);
 		
   ostream*	tie(ostream* s);
   ostream*	tie();	
   char		fill(char) ;
-  char		fill() const;
+  char		fill() /* const */;
   int		precision(int) ;
-  int		precision() const;
+  int		precision() /* const */;
 
-  int		rdstate() const;
+  int		rdstate() /* const */;
   operator void*();
   // operator const void*() const;
-  int	operator!() const;
-  int		eof() const;
-  int		fail() const;
-  int		bad() const;
-  int		good() const;
+  int	operator!() /* const */; // Alpha/cxx does not like this
+  int		eof() /* const */;
+  int		fail() /* const */;
+  int		bad() /* const */;
+  int		good() /* const */;
   void		clear(int i =0) ;
   streambuf*	rdbuf() ;
 

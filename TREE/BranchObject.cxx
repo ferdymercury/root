@@ -1,32 +1,24 @@
+//*CMZ :  2.23/12 30/01/2000  18.22.12  by  Rene Brun
+//*CMZ :  2.23/09 24/11/99  16.44.01  by  Rene Brun
+//*CMZ :  2.23/08 31/10/99  12.24.04  by  Rene Brun
+//*CMZ :  2.23/05 17/10/99  09.54.03  by  Rene Brun
+//*CMZ :  2.23/03 16/09/99  11.13.36  by  Rene Brun
+//*CMZ :  2.23/00 29/07/99  15.45.17  by  Rene Brun
 //*CMZ :  2.22/06 16/06/99  19.52.38  by  Rene Brun
 //*CMZ :  2.22/05 14/06/99  15.44.39  by  Rene Brun
-//*CMZ :  2.22/01 12/05/99  11.15.34  by  Rene Brun
-//*CMZ :  2.21/08 14/03/99  11.04.57  by  Rene Brun
-//*CMZ :  2.21/07 14/03/99  07.55.47  by  Rene Brun
-//*CMZ :  2.20/01 03/03/99  14.18.31  by  Rene Brun
-//*CMZ :  2.00/11 19/08/98  21.30.57  by  Rene Brun
-//*CMZ :  2.00/08 04/06/98  20.33.49  by  Rene Brun
-//*CMZ :  2.00/01 09/03/98  15.32.13  by  Rene Brun
-//*CMZ :  2.00/00 23/02/98  11.00.07  by  Rene Brun
-//*CMZ :  1.03/09 11/12/97  15.44.18  by  Rene Brun
 //*-- Author :    Rene Brun   11/02/96
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -53,8 +45,6 @@
 
 R__EXTERN  TTree *gTree;
 
-const Int_t kWarn = BIT(12);
-
 ClassImp(TBranchObject)
 
 //______________________________________________________________________________
@@ -69,7 +59,7 @@ TBranchObject::TBranchObject(): TBranch()
 
 
 //______________________________________________________________________________
-TBranchObject::TBranchObject(const Text_t *name, const Text_t *classname, void *addobj, Int_t basketsize, Int_t splitlevel, Int_t compress)
+TBranchObject::TBranchObject(const char *name, const char *classname, void *addobj, Int_t basketsize, Int_t splitlevel, Int_t compress)
     :TBranch()
 {
 //*-*-*-*-*-*-*-*-*-*-*-*-*Create a BranchObject*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
@@ -93,10 +83,12 @@ TBranchObject::TBranchObject(const Text_t *name, const Text_t *classname, void *
    fAddress        = (char*)addobj;
    fClassName      = classname;
    fBasketEntry    = new Int_t[fMaxBaskets];
+   fBasketBytes    = new Int_t[fMaxBaskets];
    fBasketSeek     = new Seek_t[fMaxBaskets];
    fOldObject      = 0;
 
    fBasketEntry[0] = fEntryNumber;
+   fBasketBytes[0] = 0;
 
    TLeaf *leaf     = new TLeafObject(name,classname);
    leaf->SetBranch(this);
@@ -105,11 +97,19 @@ TBranchObject::TBranchObject(const Text_t *name, const Text_t *classname, void *
    fLeaves.Add(leaf);
    gTree->GetListOfLeaves()->Add(leaf);
 
-//*-*-  Create the first basket
+// Set the bit kAutoDelete to specify that when reading
+// in TLeafObject::ReadBasket, the object should be deleted
+// before calling Streamer.
+// It is foreseen to not set this bit in a future version.
+   SetAutoDelete(kTRUE);
+
+//*-*-  Add StreamerInfo to Tree list
    fTree       = gTree;
    fDirectory  = fTree->GetDirectory();
    fFileName   = "";
+   cl->FillStreamerInfoList(fTree->GetStreamerInfoList());
 
+//*-*-  Create the first basket
    if (splitlevel) return;
    TBasket *basket = new TBasket(name,fTree->GetName(),this);
    fBaskets.Add(basket);
@@ -159,13 +159,14 @@ Int_t TBranchObject::Fill()
 }
 
 //______________________________________________________________________________
-Int_t TBranchObject::GetEntry(Int_t entry)
+Int_t TBranchObject::GetEntry(Int_t entry, Int_t getall)
 {
 //*-*-*-*-*Read all branches of a BranchObject and return total number of bytes
 //*-*      ====================================================================
 //   If entry = 0 take current entry number + 1
 //   If entry < 0 reset entry number to 0
 
+   if (TestBit(kDoNotProcess) && !getall) return 0;
    Int_t nbytes;
    Int_t nbranches = fBranches.GetEntriesFast();
 
@@ -174,8 +175,9 @@ Int_t TBranchObject::GetEntry(Int_t entry)
          if (!TestBit(kWarn)) {
             TClass *cl = gROOT->GetClass(fClassName);
             if (cl) {
-               TObject *obj = (TObject*)cl->New();
-               SetAddress(obj);
+               TObject** voidobj = (TObject**) new Long_t[1];
+               *voidobj = (TObject*)cl->New();
+               SetAddress(voidobj);
             } else {
                Warning("GetEntry","Cannot get class: %s",fClassName.Data());
                SetBit(kWarn);
@@ -270,6 +272,7 @@ void TBranchObject::SetAddress(void *add)
    TClass *cl = gROOT->GetClass(fClassName.Data());
    if (!obj && cl) {
       obj = (TObject*)cl->New();
+      *ppointer = (void*)obj;
    }
    Int_t i, offset;
    if (!cl) {
@@ -281,7 +284,6 @@ void TBranchObject::SetAddress(void *add)
       return;
    }
    if (!cl->GetListOfRealData())  cl->BuildRealData();
-//printf("TBranchObject::SetAddress, branch=%s\n",GetName());
    char *fullname = new char[200];
    const char *bname = GetName();
    Int_t lenName = strlen(bname);
@@ -299,7 +301,6 @@ void TBranchObject::SetAddress(void *add)
       if (dtype) code = dm->GetDataType()->GetType();
       offset  = rd->GetThisOffset();
       pointer = (char*)obj + offset;
-//printf(" rdname=%s, offset=%d\n",rdname,offset);
       branch  = 0;
       if (dm->IsaPointer()) {
          TClass *clobj = 0;
@@ -326,10 +327,41 @@ void TBranchObject::SetAddress(void *add)
             branch = (TBranch*)fBranches.FindObject(fullname);
          }
       }
-//if(!branch)printf("cannot find branch\n");
       if(branch) branch->SetAddress(pointer);
    }
    delete [] fullname;
+}
+
+//______________________________________________________________________________
+void TBranchObject::SetAutoDelete(Bool_t autodel)
+{
+//*-*-*-*-*-*-*-*Set the AutoDelete bit
+//*-*            ====================
+//  This function can be used to instruct Root in TBranchObject::ReadBasket
+//  to not delete the object referenced by a branchobject before reading a
+//  new entry. By default, the object is deleted.
+//  If autodel is kTRUE, this existing object will be deleted, a new object
+//    created by the default constructor, then object->Streamer called.
+//  If autodel is kFALSE, the existing object is not deleted. Root assumes
+//    that the user is taking care of deleting any internal object or array
+//    This can be done in Streamer itself.
+//  If this branch has sub-branches, the function sets autodel for these
+//  branches as well.
+//  We STRONGLY suggest to activate this option by default when you create
+//  the top level branch. This will make the read phase more efficient
+//  because it minimizes the numbers of new/delete operations.
+//  Once this option has been set and the Tree is written to a file, it is
+//  not necessary to specify the option again when reading, unless you
+//  want to set the opposite mode.
+//
+
+   TBranch::SetAutoDelete(autodel);
+
+   Int_t nbranches = fBranches.GetEntriesFast();
+   for (Int_t i=0;i<nbranches;i++)  {
+      TBranch *branch = (TBranch*)fBranches[i];
+      branch->SetAutoDelete(autodel);
+   }
 }
 
 //______________________________________________________________________________

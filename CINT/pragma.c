@@ -1,5 +1,5 @@
-/*CMZ :  2.22/10 23/07/99  14.42.19  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   23/07/99*/
+/*CMZ :  2.23/10 10/12/99  18.00.05  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   10/12/99*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -9,15 +9,13 @@
  * Description:
  *  #pragma support
  ************************************************************************
- * Copyright(c) 1991~1996  [hp] Hewlett Packard Japan, All rights reserved
- * Author                  Masaharu Goto (gotom@jpn.hp.com)
- * Copyright(c) 1995~1998  Masaharu Goto (MXJ02154@niftyserve.or.jp)
+ * Copyright(c) 1995~1999  Masaharu Goto (MXJ02154@niftyserve.or.jp)
  *
  * Permission to use, copy, modify and distribute this software and its
  * documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies and
  * that both that copyright notice and this permission notice appear
- * in supporting documentation.  Hewlett-Packard Japan Company makes no
+ * in supporting documentation.  The author makes no
  * representations about the suitability of this software for any
  * purpose.  It is provided "as is" without express or implied warranty.
  ************************************************************************/
@@ -220,6 +218,9 @@ int G__pragma()
   else if(strcmp(command,"optimize")==0) {
     c = G__fgetstream(command,";\n\r");
     G__asm_loopcompile = G__int(G__calc_internal(command));
+#ifndef G__OLDIMPLEMENTATION1155
+    G__asm_loopcompile_mode = G__asm_loopcompile;
+#endif
     /* if('\n'!=c&&'\r'!=c) G__fignoreline(); */
   }
   else if(strcmp(command,"bytecode")==0) {
@@ -255,6 +256,23 @@ int G__pragma()
   else if(strcmp(command,"ANSI")==0) {
     G__nonansi_func=0;
   }
+
+#ifndef G__OLDIMPLEMENTATION1183
+  else if(0==strcmp(command,"define")) {
+    int store_tagnum=G__tagnum;
+    int store_typenum=G__typenum;
+    struct G__var_array* store_local=G__p_local;
+    G__p_local=(struct G__var_array*)NULL;
+    G__var_type='p';
+    G__definemacro=1;
+    G__define();
+    G__definemacro=0;
+    G__p_local=store_local;
+    G__tagnum=store_tagnum;
+    G__typenum=store_typenum;
+    c='\n';
+  }
+#endif
 
 #ifndef G__OLDIMPLEMENTATION425
   else if(0==strcmp(command,"ifdef")) {

@@ -1,5 +1,5 @@
-/*CMZ :  2.22/10 23/07/99  14.42.16  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   23/07/99*/
+/*CMZ :  2.23/10 10/12/99  18.00.02  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   10/12/99*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -9,15 +9,13 @@
  * Description:
  *  Define macro
  ************************************************************************
- * Copyright(c) 1991~1996  [hp] Hewlett Packard Japan, All rights reserved
- * Author                  Masaharu Goto (gotom@jpn.hp.com)
- * Copyright(c) 1995~1998  Masaharu Goto (MXJ02154@niftyserve.or.jp)
+ * Copyright(c) 1995~1999  Masaharu Goto (MXJ02154@niftyserve.or.jp)
  *
  * Permission to use, copy, modify and distribute this software and its
  * documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies and
  * that both that copyright notice and this permission notice appear
- * in supporting documentation.  Hewlett-Packard Japan Company makes no
+ * in supporting documentation.  The author makes no
  * representations about the suitability of this software for any
  * purpose.  It is provided "as is" without express or implied warranty.
  ************************************************************************/
@@ -516,12 +514,22 @@ int *done;
   found=0;
   callfuncmacro = &deffuncmacro->callfuncmacro;
   while(callfuncmacro->next) {
+#ifndef G__OLDIMPLEMENTATION1179
+#ifdef G__NONSCALARFPOS
+    if(G__ifile.line_number == callfuncmacro->line &&
+       G__ifile.filenum == callfuncmacro->call_filenum) {
+#else
+    if(call_pos == callfuncmacro->call_pos &&
+       G__ifile.filenum == callfuncmacro->call_filenum) {
+#endif
+#else
 #ifdef G__NONSCALARFPOS
     if(G__ifile.line_number == callfuncmacro->line &&
        G__ifile.fp == callfuncmacro->call_fp) {
 #else
     if(call_pos == callfuncmacro->call_pos &&
        G__ifile.fp == callfuncmacro->call_fp) {
+#endif
 #endif
       found=1;
       break;
@@ -588,6 +596,9 @@ int nosemic;
 
   /* set file pointer and position */
   callfuncmacro->call_fp = G__ifile.fp;
+#ifndef G__OLDIMPLEMENTATION1179
+  callfuncmacro->call_filenum = G__ifile.filenum;
+#endif
   callfuncmacro->call_pos = call_pos;
 #ifndef G__OLDIMPLEMENTATION469
   callfuncmacro->line = G__ifile.line_number;
@@ -597,6 +608,9 @@ int nosemic;
   callfuncmacro->next = (struct G__Callfuncmacro*)malloc(sizeof(struct G__Callfuncmacro));
   callfuncmacro->next->next = (struct G__Callfuncmacro*)NULL;
   callfuncmacro->next->call_fp = (FILE*)NULL;
+#ifndef G__OLDIMPLEMENTATION1179
+  callfuncmacro->next->call_filenum = -1;
+#endif
 
   /* get parameter list */
   G__getparameterlist(p+1,&call_para);
@@ -829,7 +843,15 @@ int G__execfuncmacro_noexec (char* macroname)
   G__ASSERT(strlen(macroname)<G__ONELINE);
   strcpy(funcmacro,macroname);
   p = strchr(funcmacro,'(');
+#ifndef G__OLDIMPLEMENTATION1152
+  if(p) *p='\0';
+  else {
+    fprintf(G__serr,"Warning: %s  Syntax error???",macroname);
+    G__printlinenum();
+  }
+#else
   *p='\0';
+#endif
   /* get hash */
   G__hash(funcmacro,hash,i)
 
@@ -870,12 +892,22 @@ int G__execfuncmacro_noexec (char* macroname)
   found=0;
   callfuncmacro = &deffuncmacro->callfuncmacro;
   while(callfuncmacro->next) {
+#ifndef G__OLDIMPLEMENTATION1179
+#ifdef G__NONSCALARFPOS
+    if(G__ifile.line_number == callfuncmacro->line &&
+       G__ifile.filenum == callfuncmacro->call_filenum)
+#else
+    if(call_pos == callfuncmacro->call_pos &&
+       G__ifile.filenum == callfuncmacro->call_filenum)
+#endif
+#else
 #ifdef G__NONSCALARFPOS
     if(G__ifile.line_number == callfuncmacro->line &&
        G__ifile.fp == callfuncmacro->call_fp)
 #else
     if(call_pos == callfuncmacro->call_pos &&
        G__ifile.fp == callfuncmacro->call_fp)
+#endif
 #endif
     {
       found=1;
@@ -1063,6 +1095,9 @@ char *new_name;
   deffuncmacro->next = (struct G__Deffuncmacro*)malloc(sizeof(struct G__Deffuncmacro));
   deffuncmacro->next->callfuncmacro.next = (struct G__Callfuncmacro*)NULL;
   deffuncmacro->next->callfuncmacro.call_fp = (FILE *)NULL;
+#ifndef G__OLDIMPLEMENTATION1179
+  deffuncmacro->next->callfuncmacro.call_filenum = -1;
+#endif
   deffuncmacro->next->def_para.string = (char*)NULL;
   deffuncmacro->next->def_para.next = (struct G__Charlist*)NULL;
   deffuncmacro->next->next = (struct G__Deffuncmacro*)NULL;

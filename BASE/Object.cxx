@@ -1,33 +1,23 @@
+//*CMZ :  2.23/12 24/01/2000  09.00.24  by  Rene Brun
+//*CMZ :  2.23/11 08/01/2000  15.44.27  by  Rene Brun
+//*CMZ :  2.23/09 24/11/99  10.08.02  by  Rene Brun
+//*CMZ :  2.23/03 27/09/99  11.09.44  by  Rene Brun
+//*CMZ :  2.23/01 30/08/99  18.34.47  by  Rene Brun
 //*CMZ :  2.22/04 01/06/99  19.05.39  by  Fons Rademakers
 //*CMZ :  2.22/01 16/04/99  12.29.25  by  Fons Rademakers
-//*CMZ :  2.22/00 01/04/99  02.19.31  by  Rene Brun
-//*CMZ :  2.20/04 09/12/98  19.11.39  by  Rene Brun
-//*CMZ :  2.20/01 02/12/98  11.50.21  by  Rene Brun
-//*CMZ :  2.00/12 30/09/98  13.00.10  by  Rene Brun
-//*CMZ :  2.00/11 18/08/98  08.14.12  by  Rene Brun
-//*CMZ :  2.00/10 27/07/98  18.38.04  by  Fons Rademakers
-//*CMZ :  2.00/09 11/06/98  18.56.22  by  Fons Rademakers
-//*CMZ :  2.00/08 26/05/98  17.58.21  by  Fons Rademakers
-//*CMZ :  2.00/05 20/04/98  18.49.14  by  Rene Brun
-//*CMZ :  1.03/09 16/12/97  16.35.32  by  Rene Brun
 //*-- Author :    Rene Brun   26/12/94
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -84,11 +74,11 @@ class TDumpMembers : public TMemberInspector {
 
 public:
    TDumpMembers() { }
-   void Inspect(TClass *cl, char *parent, char *name, void *addr);
+   void Inspect(TClass *cl, const char *parent, const char *name, void *addr);
 };
 
 //______________________________________________________________________________
-void TDumpMembers::Inspect(TClass *cl, char *pname, char *mname, void *add)
+void TDumpMembers::Inspect(TClass *cl, const char *pname, const char *mname, void *add)
 {
    // Print value of member mname.
    //
@@ -283,7 +273,7 @@ void TObject::Browse(TBrowser *)
 }
 
 //______________________________________________________________________________
-const Text_t *TObject::ClassName() const
+const char *TObject::ClassName() const
 {
    // Returns name of class to which the object belongs.
 
@@ -296,6 +286,8 @@ TObject *TObject::Clone()
    // Make a clone of an object using the Streamer facility.
 
    //create a buffer where the object will be streamed
+   TFile *filsav = gFile;
+   gFile = 0;
    const Int_t bufsize = 10000;
    TBuffer *buffer = new TBuffer(TBuffer::kWrite,bufsize);
    buffer->WriteObject(this);
@@ -305,6 +297,7 @@ TObject *TObject::Clone()
    buffer->ResetMap();
    buffer->SetBufferOffset(0);
    TObject *newobj = buffer->ReadObject(IsA());
+   gFile = filsav;
 
    delete buffer;
    return newobj;
@@ -387,8 +380,15 @@ void TObject::DrawClone(Option_t *option)
 
    TObject *newobj = Clone();
    if (!newobj) return;
+   TVirtualPad *pad = gROOT->GetSelectedPad();
+   if (pad) {
+      if (strlen(option)) pad->GetListOfPrimitives()->Add(newobj,option);
+      else                pad->GetListOfPrimitives()->Add(newobj,GetDrawOption());
+      pad->Modified(kTRUE);
+      return;
+   }
    if (strlen(option))  newobj->Draw(option);
-   else                 newobj->Draw((char *)GetDrawOption());
+   else                 newobj->Draw(GetDrawOption());
 }
 
 //______________________________________________________________________________
@@ -422,7 +422,7 @@ void TObject::Dump()
 }
 
 //______________________________________________________________________________
-void TObject::Execute(Text_t *method, Text_t *params)
+void TObject::Execute(const char *method, const char *params)
 {
    // Execute method on this object with the given parameter string, e.g.
    // "3.14,1,\"text\"".
@@ -475,7 +475,7 @@ Option_t *TObject::GetDrawOption() const
 }
 
 //______________________________________________________________________________
-const Text_t *TObject::GetName() const
+const char *TObject::GetName() const
 {
    // Returns name of object. This default method returns the class name.
    // Classes that give objects a name should override this method.
@@ -484,7 +484,7 @@ const Text_t *TObject::GetName() const
 }
 
 //______________________________________________________________________________
-const Text_t *TObject::GetIconName() const
+const char *TObject::GetIconName() const
 {
    // Returns mime type name of object. Used by the TBrowser (via TGMimeTypes
    // class). Override for class of which you would like to have different
@@ -502,14 +502,14 @@ UInt_t TObject::GetUniqueID() const
 }
 
 //______________________________________________________________________________
-Text_t *TObject::GetObjectInfo(Int_t px, Int_t py)
+char *TObject::GetObjectInfo(Int_t px, Int_t py)
 {
    // Returns string containing info about the object at position (px,py).
    // This method is typically overridden by classes of which the objects
    // can report peculiarities for different positions.
    // Returned string will be re-used (lock in MT environment).
 
-   if (!gPad) return "";
+   if (!gPad) return (char*)"";
    static char info[64];
    Float_t x = gPad->AbsPixeltoX(px);
    Float_t y = gPad->AbsPixeltoY(py);
@@ -518,7 +518,7 @@ Text_t *TObject::GetObjectInfo(Int_t px, Int_t py)
 }
 
 //______________________________________________________________________________
-const Text_t *TObject::GetTitle() const
+const char *TObject::GetTitle() const
 {
    // Returns title of object. This default method returns the class title
    // (i.e. description). Classes that give objects a title should override
@@ -531,10 +531,9 @@ const Text_t *TObject::GetTitle() const
 //______________________________________________________________________________
 Bool_t TObject::HandleTimer(TTimer *)
 {
-   // Execute action corresponding to an event at (px,py). This method
-   // must be overridden if an object can react to graphics events.
+   // Execute action in response of a timer timing out. This method
+   // must be overridden if an object has to react to timers.
 
-   // AbstractMethod("HandleTimer");
    return kFALSE;
 }
 
@@ -549,7 +548,7 @@ ULong_t TObject::Hash()
 }
 
 //______________________________________________________________________________
-Bool_t TObject::InheritsFrom(const Text_t *classname)
+Bool_t TObject::InheritsFrom(const char *classname)
 {
    // Returns kTRUE if object inherits from class "classname".
 
@@ -581,22 +580,7 @@ void TObject::Inspect()
 #ifdef WIN32
    gSystem->CreateInspectView(this);
 #else
-
-   TVirtualPad *padsav = gPad;
-   TVirtualPad *padinspect = (TVirtualPad*)(gROOT->GetListOfCanvases())->FindObject("inspect");
-   if (!padinspect) {
-      if (!gROOT->GetMakeDefCanvas()) return;
-      char defcanvas[32];
-      strcpy(defcanvas,gROOT->GetDefCanvasName());
-      gROOT->SetDefCanvasName("inspect");
-      (gROOT->GetMakeDefCanvas())();
-      gROOT->SetDefCanvasName(defcanvas);
-   } else
-      padinspect->cd();
-
-     if (gPad) gPad->InspectObject(this);
-
-  if (padsav) padsav->cd();
+   gROOT->ProcessLine(Form("TInspectCanvas::Inspector((TObject *)0x%lx);",(Long_t)this));
 #endif
 }
 
@@ -605,15 +589,6 @@ Bool_t TObject::IsFolder()
 {
    // Returns kTRUE in case object contains browsable objects (like containers
    // or lists of other objects).
-
-   return kFALSE;
-}
-
-//______________________________________________________________________________
-Bool_t TObject::Is3D()
-{
-   // Returns kTRUE in case object is a 3D graphics object, in which case
-   // it can be displayed in a 3D viewer (like X3D or OpenGL).
 
    return kFALSE;
 }
@@ -637,6 +612,14 @@ void TObject::ls(Option_t *)
    IndentLevel();
    cout <<"OBJ: " << IsA()->GetName() << "\t" << GetName() << "\t" << GetTitle() << " : "
         << Int_t(TestBit(kCanDelete)) << endl;
+}
+
+//______________________________________________________________________________
+Bool_t TObject::Notify()
+{
+   // This method must be overridden to handle object notifcation.
+
+   return kFALSE;
 }
 
 //______________________________________________________________________________
@@ -684,7 +667,7 @@ void TObject::Print(Option_t *)
 }
 
 //______________________________________________________________________________
-void TObject::Read(const Text_t *name)
+void TObject::Read(const char *name)
 {
    // Read contents of object with specified name from the current directory.
    // First the key with the given name is searched in the current directory,
@@ -754,11 +737,16 @@ void TObject::SetUniqueID(UInt_t uid)
 }
 
 //______________________________________________________________________________
-void TObject::Sizeof3D() const
+const char *TObject::StreamerInfo() const
 {
-   // Set total size of this 3D object (used by X3D interface).
+   // Returns a string describing the names/types of object attributes
+   // as written by the Streamer function.
+   // The default function is valid only for Streamer functions
+   //  automatically generated by rootcint.
+   // This function must be overriden in case of a user-written Streamer.
+   //    See TClass::SetStreamerInfo
 
-   return;
+   return IsA()->GetStreamerInfo();
 }
 
 //______________________________________________________________________________
@@ -770,7 +758,7 @@ void TObject::UseCurrentStyle()
 }
 
 //______________________________________________________________________________
-void TObject::Write(const Text_t *name, Int_t option, Int_t bufsize)
+void TObject::Write(const char *name, Int_t option, Int_t bufsize)
 {
    // Write this object to the current directory
    // The data structure corresponding to this object is serialized.
@@ -885,6 +873,7 @@ void TObject::Warning(const char *location, const char *va_(fmt), ...) const
    va_start(ap, va_(fmt));
    DoError(kWarning, location, va_(fmt), ap);
    va_end(ap);
+   gROOT->Message(1001,(TObject*)this);
 }
 
 //______________________________________________________________________________
@@ -897,6 +886,7 @@ void TObject::Error(const char *location, const char *va_(fmt), ...) const
    va_start(ap, va_(fmt));
    DoError(kError, location, va_(fmt), ap);
    va_end(ap);
+   gROOT->Message(1002,(TObject*)this);
 }
 
 //______________________________________________________________________________
@@ -909,6 +899,7 @@ void TObject::SysError(const char *location, const char *va_(fmt), ...) const
    va_start(ap, va_(fmt));
    DoError(kSysError, location, va_(fmt), ap);
    va_end(ap);
+   gROOT->Message(1003,(TObject*)this);
 }
 
 //______________________________________________________________________________
@@ -921,6 +912,7 @@ void TObject::Fatal(const char *location, const char *va_(fmt), ...) const
    va_start(ap, va_(fmt));
    DoError(kFatal, location, va_(fmt), ap);
    va_end(ap);
+   gROOT->Message(1004,(TObject*)this);
 }
 
 //______________________________________________________________________________

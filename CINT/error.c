@@ -1,5 +1,5 @@
-/*CMZ :  2.22/10 23/07/99  14.42.14  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   23/07/99*/
+/*CMZ :  2.23/10 10/12/99  17.59.59  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   10/12/99*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -9,15 +9,13 @@
  * Description:
  *  Show error message
  ************************************************************************
- * Copyright(c) 1991~1996  [hp] Hewlett Packard Japan, All rights reserved
- * Author                  Masaharu Goto (gotom@jpn.hp.com)
- * Copyright(c) 1995~1998  Masaharu Goto (MXJ02154@niftyserve.or.jp)
+ * Copyright(c) 1995~1999  Masaharu Goto (MXJ02154@niftyserve.or.jp)
  *
  * Permission to use, copy, modify and distribute this software and its
  * documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies and
  * that both that copyright notice and this permission notice appear
- * in supporting documentation.  Hewlett-Packard Japan Company makes no
+ * in supporting documentation.  The author makes no
  * representations about the suitability of this software for any
  * purpose.  It is provided "as is" without express or implied warranty.
  ************************************************************************/
@@ -174,6 +172,91 @@ char *item;
   return(0);
 }
 
+#ifndef G__OLDIMPELMENTATION1174
+#ifndef G__OLDIMPELMENTATION1186
+/**************************************************************************
+* G__splitmessage()
+**************************************************************************/
+char* G__findrpos(s1,s2)
+char* s1;
+char* s2;
+{
+  char c;
+  int nest=0, double_quote=0, single_quote=0;
+  int i = strlen(s1);
+  int s2len = strlen(s2);
+
+  if(!s1 || !s2) return(0);
+  while(i--) {
+    c = s1[i];
+    switch(c) {
+    case '[':
+    case '(':
+    case '{':
+     if(!double_quote && !single_quote) nest--;
+     break;
+    case ']':
+    case ')':
+    case '}':
+     if(!double_quote && !single_quote) nest++;
+     break;
+    }
+    if(!nest && !double_quote && !single_quote) {
+      if(0==strncmp(s1+i,s2,s2len)) return(s1+i);
+    }
+  }
+  return(0);
+}
+#endif
+
+/**************************************************************************
+* G__splitmessage()
+**************************************************************************/
+int G__splitmessage(item)
+char *item;
+{
+  int stat=0;
+  char *dot;
+  char *point;
+  char *buf;
+  char *p;
+  buf = (char*)malloc(strlen(item)+1);
+  strcpy(buf,item);
+
+#ifndef G__OLDIMPELMENTATION1186
+  dot = G__findrpos(buf,".");
+  point = G__findrpos(buf,"->");
+#else
+  dot = strrchr(buf,'.');
+  point = G__strrstr(buf,"->");
+#endif
+  if(dot || point) {
+    G__value result;
+    if(!dot || (point && point>dot) ) {
+      p=point;
+      *p = 0;
+      p += 2;
+    }
+    else {
+      p=dot;
+      *p = 0;
+      p += 1;
+    }
+    stat = 1;
+    result = G__getexpr(buf);
+    if(result.type) {
+      fprintf(G__serr
+	 ,"Error: Failed to evaluate class member '%s' (%s)",p,item[0]=='$'?item+1:item);
+    }
+    else {
+      fprintf(G__serr
+	 ,"Error: Failed to evaluate %s",item[0]=='$'?item+1:item);
+    }
+  }
+  free((void*)buf);
+  return(stat);
+}
+#endif
 
 /**************************************************************************
 * G__warnundefined()
@@ -191,7 +274,11 @@ char *item;
   }
   else {
 #ifndef G__OLDIMPLEMENTATION1103
-    if(0==G__const_noerror) {
+    if(0==G__const_noerror
+#ifndef G__OLDIMPELMENTATION1174
+       && !G__splitmessage(item)
+#endif
+       ) {
 #endif
 #ifdef G__ROOT
       fprintf(G__serr
@@ -375,9 +462,30 @@ char *item,*categ;
 **************************************************************************/
 int G__printlinenum()
 {
+#ifndef G__OLDIMPLEMENTATION1196
+  fprintf(G__serr," FILE:%s LINE:%d\n"
+	  ,G__stripfilename(G__ifile.name),G__ifile.line_number);
+#else
+#ifndef G__OLDIMPLEMENTATION1171
+  char *p;
+  p = strstr(G__ifile.name,"./");
+  if(!p) p = G__ifile.name;
+  fprintf(G__serr," FILE:%s LINE:%d\n" ,p,G__ifile.line_number);
+#else
   fprintf(G__serr," FILE:%s LINE:%d\n" ,G__ifile.name,G__ifile.line_number);
+#endif
+#endif
   return(0);
 }
+
+/**************************************************************************
+* G__get_security_error()
+**************************************************************************/
+int G__get_security_error()
+{
+  return(G__security_error);
+}
+
 
 /**************************************************************************
 * G__genericerror()
@@ -385,12 +493,19 @@ int G__printlinenum()
 int G__genericerror(message)
 char *message;
 {
+#ifndef G__OLDIMPLEMENTATION1164
+  if(G__xrefflag) return(1);
+#endif
+
   if(G__ASM_FUNC_NOP==G__asm_wholefunction) {
 #ifndef G__OLDIMPLEMENTATION1103
     if(0==G__const_noerror) {
 #endif
       if(message) fprintf(G__serr,"%s",message);
       G__printlinenum();
+#ifndef G__OLDIMPLEMENTATION1198
+      G__storelasterror();
+#endif
 #ifndef G__OLDIMPLEMENTATION1103
     }
 #endif
@@ -782,7 +897,11 @@ int G__pounderror()
   fprintf(G__serr,"#error %s\n",buf);
   G__CHECK(G__SECURE_EXIT_AT_ERROR,1,G__return=G__RETURN_EXIT1);
 #ifdef G__SECURITY
+#ifndef G__OLDIMPLEMENTATION1199
+  G__security_error = G__RECOVERABLE;
+#else
   G__security_error = G__DANGEROUS;
+#endif
 #endif
   return(0);
 }
@@ -794,7 +913,7 @@ int G__pounderror()
 int G__missingsemicolumn(item)
 char *item;
 {
-  fprintf(G__serr ,"Error: %s Missing ';'",item);
+  fprintf(G__serr ,"Syntax Error: %s Maybe missing ';'",item);
   G__genericerror((char*)NULL);
   return(0);
 }

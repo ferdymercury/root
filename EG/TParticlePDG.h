@@ -1,3 +1,4 @@
+//*CMZ :  2.23/12 26/01/2000  09.49.06  by  Rene Brun
 //*CMZ :  2.22/06 22/06/99  15.04.49  by  Rene Brun
 //*CMZ :  2.22/02 26/05/99  09.29.36  by  Rene Brun
 //*CMZ :  2.22/01 21/04/99  10.48.10  by  Rene Brun
@@ -47,7 +48,7 @@ public:
   TParticlePDG(int pdg_code);
   TParticlePDG(const char* name, const char* title, Double_t mass,
 	       Bool_t stable, Double_t decay_width, Double_t charge,
-	       const Text_t* type, Int_t MCnumber);
+	       const char* type, Int_t MCnumber);
 
   virtual ~TParticlePDG();
 				// ****** access methods
@@ -68,7 +69,7 @@ public:
   Int_t           X          () const { return fX; }
   Int_t           Y          () const { return fY; }
   Int_t           Stable     () const { return fStable; }
-  const Text_t*   Type       () const { return fType.Data(); }
+  const char     *Type       () const { return fType.Data(); }
 
   TObjArray*      DecayList  () { return fDecayList; }
 

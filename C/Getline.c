@@ -1,9 +1,8 @@
+/*CMZ :  2.23/12 18/01/2000  14.35.46  by  Rene Brun*/
 /*CMZ :  2.22/01 29/04/99  14.46.55  by  Fons Rademakers*/
 /*CMZ :  2.22/00 30/03/99  19.24.05  by  Fons Rademakers*/
 /*CMZ :  2.00/08 22/05/98  12.04.27  by  Fons Rademakers*/
 /*CMZ :  2.00/06 12/05/98  16.00.37  by  Rene Brun*/
-/*CMZ :  2.00/02 23/03/98  14.25.23  by  Fons Rademakers*/
-/*CMZ :  1.03/09 16/12/97  16.44.28  by  Rene Brun*/
 /*-- Author :*/
 
 /*
@@ -340,7 +339,7 @@ static void     search_forw(int s);     /* look forw for current string */
 #  include <unistd.h>
 #endif
 
-#ifdef _AIX
+#if defined(_AIX) || defined(__Lynx__)
 #define unix
 #endif
 

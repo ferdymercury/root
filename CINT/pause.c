@@ -1,5 +1,5 @@
-/*CMZ :  2.22/10 23/07/99  14.42.18  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   23/07/99*/
+/*CMZ :  2.23/10 10/12/99  18.00.04  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   10/12/99*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -9,15 +9,13 @@
  * Description:
  *  Interactive interface
  ************************************************************************
- * Copyright(c) 1991~1996  [hp] Hewlett Packard Japan, All rights reserved
- * Author                  Masaharu Goto (gotom@jpn.hp.com)
- * Copyright(c) 1995~1998  Masaharu Goto (MXJ02154@niftyserve.or.jp)
+ * Copyright(c) 1995~1999  Masaharu Goto (MXJ02154@niftyserve.or.jp)
  *
  * Permission to use, copy, modify and distribute this software and its
  * documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies and
  * that both that copyright notice and this permission notice appear
- * in supporting documentation.  Hewlett-Packard Japan Company makes no
+ * in supporting documentation.  The author makes no
  * representations about the suitability of this software for any
  * purpose.  It is provided "as is" without express or implied warranty.
  ************************************************************************/
@@ -389,6 +387,169 @@ void G__rewind_undo_position()
 }
 #endif
 
+#define G__OLDIMPLEMENTATION1156
+#ifndef G__OLDIMPLEMENTATION1156
+/**************************************************************************
+* G__init_env()
+*
+*  Explicit initialization of all necessary global variables
+**************************************************************************/
+int G__init_env()
+{
+  int i;
+  /* G__p_ifunc = &G__ifunc ; */
+
+  G__exec_memberfunc = 0;
+  G__memberfunc_tagnum = -1;
+  G__memberfunc_struct_offset=0;
+
+#ifdef G__ASM
+  /***************************************************
+   * loop compiler variables initialization
+   ***************************************************/
+  G__asm_name_p=0;
+#ifdef G__ASM_WHOLEFUNC
+  G__asm_wholefunction = G__ASM_FUNC_NOP;
+#endif
+#ifndef G__OLDIMPLEMENTATION517
+  G__asm_wholefunc_default_cp=0;
+#endif
+  G__abortbytecode();
+  G__asm_dbg=0;
+  G__asm_cp=0;               /* compile program counter */
+  G__asm_dt=G__MAXSTACK-1;   /* constant data address */
+#ifdef G__ASM_IFUNC
+  G__asm_inst = G__asm_inst_g;
+  G__asm_stack = G__asm_stack_g;
+  G__asm_name = G__asm_name_g;
+  G__asm_name_p = 0;
+#endif
+#endif
+
+  G__debug=0;            /* trace input file */
+  G__breakdisp=0;        /* display input file at break point */
+  G__break=0;            /* break flab */
+  G__step=0;             /* step execution flag */
+  G__charstep=0;         /* char step flag */
+  G__break_exit_func=0;  /* break at function exit */
+  /* G__no_exec_stack = -1; */ /* stack for G__no_exec */
+  G__no_exec=0;          /* no execution(ignore) flag */
+  G__no_exec_compile=0;
+  G__var_type='p';      /* variable decralation type */
+  G__var_typeB='p';
+  G__prerun=0;           /* pre-run flag */
+  G__funcheader=0;       /* function header mode */
+  G__return=G__RETURN_NON; /* return flag of i function */
+  /* G__extern_global=0;    number of globals defined in c function */
+  G__disp_mask=0;        /* temporary read count */
+  G__temp_read=0;        /* temporary read count */
+  G__switch=0;           /* switch case control flag */
+  G__mparen=0;           /* switch case break nesting control */
+  G__eof_count=0;        /* end of file error flag */
+  G__globalvarpointer=G__PVOID; /* make compiled func's global table */
+
+  G__xfile[0]='\0';
+  G__tempc[0]='\0';
+
+  G__doingconstruction=0;
+
+  G__nobreak=0;
+
+#ifdef G__FRIEND
+  G__friendtagnum = -1;
+#endif
+  G__def_struct_member=0;
+#ifndef G__OLDIMPLEMENTATION440
+  G__tmplt_def_tagnum = -1;
+#endif
+  G__def_tagnum = -1;
+  G__tagdefining = -1;
+  G__tagnum = -1;
+  G__typenum = -1;
+  G__iscpp = 1;
+  G__cpplock=0;
+  G__clock=0;
+  G__constvar = 0;
+  G__unsigned = 0;
+  G__ansiheader = 0;
+  G__enumdef=0;
+  G__store_struct_offset=0;
+  G__decl=0;
+#ifdef G__OLDIMPLEMENTATION435
+  G__allstring=0;
+#endif
+  G__longjump=0;
+  G__coredump=0;
+  G__definemacro=0;
+
+  G__noerr_defined=0;
+
+  G__static_alloc=0;
+  G__func_now = -1;
+  G__func_page = 0;
+  G__varname_now=NULL;
+  G__twice=0;
+  G__breaksignal=0;
+
+  G__bitfield=0;
+
+  G__templevel = 0;
+
+  G__reftype=G__PARANORMAL;
+
+  G__access=G__PUBLIC;
+
+  G__stepover=0;
+
+  G__steptrace = 0;
+  G__debugtrace = 0;
+
+  G__p_local = NULL ;    /* local variable array */
+
+  G__cpp_aryconstruct=0;
+  G__cppconstruct=0;
+
+#ifndef G__OLDIMPLEMENTATION954
+  G__exceptionbuffer = G__null;
+#endif
+
+  G__virtual=0;
+#ifdef G__AUTOCOMPILE
+  G__fpautocc=(FILE*)NULL;
+  G__compilemode=1;
+#endif
+  G__typedefnindex = 0;
+  G__oprovld = 0;
+  G__p2arylabel[0]=0;
+
+  G__interactive=0;
+  G__interactivereturnvalue=G__null;
+
+  G__isfuncreturnp2f=0;
+
+  G__typepdecl=0;
+
+  G__macroORtemplateINfile=0;
+
+  G__macro_defining=0;
+
+  G__nonansi_func = 0;
+
+  G__parseextern=0;
+
+  G__istrace = 0;
+
+  G__pbreakcontinue = (struct G__breakcontinue_list*)NULL;
+
+#ifdef G__SECURITY
+  G__castcheckoff=0;
+  G__security_error = G__NOERROR;
+#endif
+
+  return(0);
+}
+#endif
+
 #ifndef G__OLDIMPLEMENTATION1031
 /************************************************************************
 * error recovery
@@ -449,6 +610,10 @@ int ifn;
     }
   }
 
+#ifndef G__OLDIMPLEMENTATION1156
+  G__init_env();
+#endif
+
   return(flag);
 }
 #endif
@@ -502,6 +667,9 @@ G__value buf;
 #ifndef G__OLDIMPLEMENTATION896
   int store_asm_exec = G__asm_exec;
 #endif
+#ifndef G__OLDIMPLEMENTATION1184
+  int store_debug = G__debug;
+#endif
 
   if(G__return>G__RETURN_NORMAL && G__security_error) return(0);
 
@@ -509,12 +677,19 @@ G__value buf;
   G__asm_exec = 0;
 #endif
 
+  if('Q'==buf.type || 'a'==buf.type) return(0);
   G__valuemonitor(buf,buf2);
   sprintf(com,"G__ateval(%s)",buf2);
   G__break=0; G__step=0; G__dispsource=0;
+#ifndef G__OLDIMPLEMENTATION1184
+  G__debug=0;
+#endif
   G__setdebugcond();
   result=G__getfunction(com,&known,G__TRYNORMAL);
   G__break=store_break; G__step=store_step; G__dispsource=store_dispsource;
+#ifndef G__OLDIMPLEMENTATION1184
+  G__debug=store_debug;
+#endif
 #ifndef G__OLDIMPLEMENTATION896
   G__asm_exec = store_asm_exec;
 #endif
@@ -565,7 +740,7 @@ char *fname;
 int G__reloadfile(filename)
 char *filename;
 {
-  int i,j;
+  int i,j=0;
   char *storefname[G__MAXFILE];
   int storecpp[G__MAXFILE];
   int storen=0;
@@ -578,7 +753,13 @@ char *filename;
   }
 
   for(i=0;i<G__nfile;i++) {
-    if(!flag&&strcmp(filename,G__srcfile[i].filename)==0) {
+    if(!flag &&
+#ifndef G__OLDIMPLEMENTATION1196
+       G__matchfilename(i,filename)
+#else
+       (strcmp(filename,G__srcfile[i].filename)==0)
+#endif
+       ) {
       flag=1;
       j=i;
       while(-1!=G__srcfile[j].included_from) j=G__srcfile[j].included_from;
@@ -850,7 +1031,7 @@ int G__pause()
 	if(p && *(p+1)) strcpy(filename,p+1);
 	else            strcpy(filename,view.name);
 	sprintf(command,"FILE:%s LINE:%d %s> "
-		,filename,view.line_number,cintname);
+		,G__stripfilename(filename),view.line_number,cintname);
 #else
 	sprintf(command,"FILE:%s LINE:%d %s> "
 		,view.name,view.line_number,G__nam);
@@ -1346,6 +1527,7 @@ int  *more;
   }
 #endif
 
+
   *prompt = '\0';
 #ifdef G__OLDIMPLEMENTATION463
   if(!fout) fout=G__sout;
@@ -1353,7 +1535,11 @@ int  *more;
 
 
   if ( (com = getenv("EDITOR")) ) strcpy(editor, com);
+#ifdef G__WIN32
+  else                            strcpy(editor, "notepad");
+#else
   else                            strcpy(editor, "vi");
+#endif
 
   /*** begin ***/
 
@@ -1614,7 +1800,7 @@ int  *more;
 #ifdef G__SECURITY
     else if(strncmp("where",com,4)==0) {
       fprintf(G__sout,"FILE:%s LINE:%d interpreter=%s\n"
-	      ,view.name,view.line_number,G__nam);
+	      ,G__stripfilename(view.name),view.line_number,G__nam);
     }
 
     else if(strncmp("security",com,4)==0) {
@@ -1775,6 +1961,9 @@ int  *more;
 
     else if(strncmp("OPTIMIZE",com,1)==0) {
       G__asm_loopcompile = G__int(G__calc_internal(string));
+#ifndef G__OLDIMPLEMENTATION1155
+      G__asm_loopcompile_mode = G__asm_loopcompile;
+#endif
     }
 #ifdef G__ASM_WHOLEFUNC
     else if(strncmp("WHOLEFUNC",com,3)==0) {
@@ -1990,6 +2179,13 @@ int  *more;
 	 if(!s) s=string+temp;
 	 else   s++;
 	 strcpy(syscom, s);
+#ifndef G__OLDIMPLEMENTATION1172
+         s=syscom;
+         while(s && *s) {
+           if('-'==(*s)) *s='_';
+           ++s;
+         }
+#endif
 	 string = strchr(com+1, '(');
 	 if (string)
 	   strcat(syscom, string);
@@ -2218,10 +2414,12 @@ int  *more;
 	G__more(G__sout,"for the evaluation statement { } and the ?.\n");
 	G__more(G__sout,"===========================================================================\n");
       }
+#ifndef G__ROOT
       G__more(G__sout,"Dump:        n [file]  : create new readline dumpfile and start dump\n");
       G__more(G__sout,"             y [file]  : append readline dump to [file]\n");
       G__more(G__sout,"             z         : stop readline dump\n");
       G__more(G__sout,"             < [file]  : execute readline dumpfile\n");
+#endif
       G__more(G__sout,"             > [file]  : output redirect to [file]\n");
       G__more(G__sout,"             2> [file] : error redirect to [file]\n");
 #ifndef G__ROOT
@@ -2238,15 +2436,17 @@ int  *more;
       G__more(G__sout,"Source:      v <[line]>: view source code <around [line]>\n");
       G__more(G__sout,"             V [stack] : view source code in function call stack\n");
       G__more(G__sout,"             t         : show function call stack\n");
-      G__more(G__sout,"             f [file]  : view source file [file]\n");
+      G__more(G__sout,"             f [file]  : select file to debug\n");
       G__more(G__sout,"             T         : turn on/off trace mode for all source\n");
 #ifndef G__OLDIMPLEMENTATION1097
       G__more(G__sout,"             A [1|0]   : allowing automatic variable on/off\n");
 #endif
       G__more(G__sout,"             trace <classname> : turn on trace mode for class\n");
       G__more(G__sout,"             deltrace <classname> : turn off trace mode for class\n");
-      G__more(G__sout,"             break [classname] : break at the memberfunc\n");
-      G__more(G__sout,"             delbreak [classname] : turn off memberfunc break\n");
+#ifndef G__ROOT
+      G__more(G__sout,"             break [classname] : set break point at every [classname] memberfunc\n");
+      G__more(G__sout,"             delbreak [classname] : turn off memberfunc break point\n");
+#endif
       /* G__more(G__sout,"             D         : toggle source code display mode\n"); */
       G__more(G__sout,"Evaluation:  p [expr]  : evaluate expression (no declaration/loop/condition)\n");
       G__more(G__sout,"Evaluation:  s [expr]  : step into expression (no declaration/loop/condition)\n");
@@ -2267,8 +2467,10 @@ int  *more;
 #ifndef G__OLDIMPLEMENTATION970
       G__more(G__sout,"             C [1|0]   : copy source to $TMPDIR (on/off)\n");
 #endif
+#ifndef G__ROOT
 #ifndef G__FONS2
       G__more(G__sout,"             reset     : reset interpreter environment\n");
+#endif
 #endif
 #ifndef G__OLDIMPLEMENTATION1094
       G__more(G__sout,"             undo      : undo previous declarations\n");
@@ -2300,6 +2502,7 @@ int  *more;
       G__more(G__sout,"             i         : ignore and step over\n");
       G__more(G__sout,"             c <[line]>: continue <to [line]>\n");
       G__more(G__sout,"             e         : step out from function\n");
+      G__more(G__sout,"             f [file]  : select file to debug\n");
       G__more(G__sout,"             b [line]  : set break point\n");
       G__more(G__sout,"             db [line] : delete break point\n");
       G__more(G__sout,"             a [assert]: break only if assertion is true\n");
@@ -2556,7 +2759,11 @@ int  *more;
        * Set view file
        *******************************************************/
       for(temp=0;temp<G__nfile;temp++) {
+#ifndef G__OLDIMPLEMENTATION1196
+	if(G__matchfilename(temp,string)) break;
+#else
 	if(strcmp(string,G__srcfile[temp].filename)==0) break;
+#endif
       }
       if(temp>=G__nfile) {
 	fprintf(G__serr,"filename %s not loaded\n",string);

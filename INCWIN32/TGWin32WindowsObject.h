@@ -1,3 +1,6 @@
+//*CMZ :  2.23/09 18/11/99  19.36.58  by  Valery Fine(fine@mail.cern.ch)
+//*CMZ :  2.23/07 24/10/99  18.22.52  by  Valery Fine(fine@mail.cern.ch)
+//*CMZ :  2.23/02 02/09/99  15.39.27  by  Rene Brun
 //*CMZ :  2.22/01 11/04/99  21.23.33  by  Valery Fine(fine@mail.cern.ch)
 //*CMZ :  2.21/06 12/02/99  17.18.10  by  Valery Fine(fine@vxcern.cern.ch)
 //*CMZ :  1.03/09 16/12/97  11.11.14  by  Valery Fine(fine@mail.cern.ch)
@@ -19,11 +22,13 @@ class TWin32SimpleEditCtrl;
 //*-*   Static data member to create menus for all windows
 
 typedef enum { kS1,       kSMenuBreak,kSMenuBarBreak,
-               kMFile,    kMEdit,     kMView, kMOptions,   kHelp,  kMInspector, kMClasses,
+               kMFile,    kMEdit,     kMView, kMOptions,  kMInspector, kMClasses, kHelp,
                kMNew,     kMOpen,kS12,kMSave, kMSaveAs,    kS2,kMPrint,kS3, kMClose, kS4, kMQuit, kMExit,
                kMUnDo,kS5,kMEdtor,kS6,kMClearPad,  kMClearCanvas,
                kMColors, kMFonts,     kMMarkers,   kMIconify,     kMX3D, kS7, kMInterrupt,
                kMEventStatus, kS9,  kMAutoFit,kMFitCanvas,kS10,kMRefresh,kS11,kMOptStat,kMOptHTitle,kMOptFit,kMEditHist,
+               kMROOTInspect, kMStartBrowser,
+               kMClassTree,
                kEndOfMenu
                } EMenuItems;
 
@@ -253,13 +258,13 @@ public:
     virtual void      W32_CopyTo(TGWin32Object *obj, int xpos, int ypos);
     virtual void      W32_CreateStatusBar(Int_t nparts=1);
     virtual void      W32_CreateStatusBar(Int_t *parts, Int_t nparts=1);
-    virtual void      W32_DrawBox(int x1, int y1, int x2, int y2, TGXW::EBoxMode mode);
+    virtual void      W32_DrawBox(int x1, int y1, int x2, int y2, TVirtualX::EBoxMode mode);
     virtual void      W32_DrawCellArray(int x1, int y1, int x2, int y2, int nx, int ny, int *ic);
     virtual void      W32_DrawFillArea(int n, TPoint *xy);
     virtual void      W32_DrawLine(int x1, int y1, int x2, int y2);
     virtual void      W32_DrawPolyLine(int n, TPoint *xy);
     virtual void      W32_DrawPolyMarker(int n, TPoint *xy);
-    virtual void      W32_DrawText(int x, int y, float angle, float mgn, const char *text, TGXW::ETextMode mode);
+    virtual void      W32_DrawText(int x, int y, float angle, float mgn, const char *text, TVirtualX::ETextMode mode);
     virtual void      W32_GetCharacterUp(Float_t &chupx, Float_t &chupy);
     virtual Int_t     W32_GetDoubleBuffer();
     virtual void      W32_GetGeometry(int &x, int &y, unsigned int &w, unsigned int &h);
@@ -282,7 +287,7 @@ public:
     virtual void      W32_SetDoubleBuffer(int mode);
     virtual void      W32_SetDoubleBufferOFF();
     virtual void      W32_SetDoubleBufferON();
-    virtual void      W32_SetDrawMode(TGXW::EDrawMode mode);
+    virtual void      W32_SetDrawMode(TVirtualX::EDrawMode mode);
     virtual void      W32_SetFillColor(Color_t cindex);
     virtual void      W32_SetFillStyle(Style_t style);
     virtual void      W32_SetLineColor(Color_t cindex);
@@ -293,10 +298,10 @@ public:
     virtual void      W32_SetMarkerSize(Float_t markersize);
     virtual void      W32_SetMarkerStyle(Style_t markerstyle);
     virtual void      W32_SetRGB(int cindex, float r, float g, float b);
-    virtual void      W32_SetStatusText(Text_t *text, Int_t partidx=0,Int_t stype=0);
+    virtual void      W32_SetStatusText(const Text_t *text, Int_t partidx=0,Int_t stype=0);
     virtual void      W32_SetTextAlign(Short_t talign=11);
     virtual void      W32_SetTextColor(Color_t cindex);
-    virtual Int_t     W32_SetTextFont(char *fontname, TGXW::ETextSetMode mode);
+    virtual Int_t     W32_SetTextFont(char *fontname, TVirtualX::ETextSetMode mode);
     virtual void      W32_SetTextFont(Int_t fontnumber);
     virtual void      W32_SetTextSize(Float_t textsize);
     void  W32_SetMenu();

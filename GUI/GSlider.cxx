@@ -1,25 +1,20 @@
+//*CMZ :  2.23/02 02/09/99  15.54.27  by  Rene Brun
+//*CMZ :  2.23/00 04/08/99  18.26.34  by  Fons Rademakers
 //*CMZ :  2.00/12 02/10/98  16.02.19  by  Fons Rademakers
 //*CMZ :  2.00/11 03/08/98  11.58.16  by  Fons Rademakers
-//*CMZ :  2.00/04 30/03/98  15.37.56  by  Fons Rademakers
-//*CMZ :  2.00/00 16/02/98  02.36.03  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   14/01/98
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 //*CMZ :  2.00/00 16/02/98  00.17.08  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   27/12/97
@@ -91,7 +86,7 @@ TGVSlider::TGVSlider(const TGWindow *p, UInt_t h, UInt_t type, Int_t id,
    if (!fSliderPic)
       Error("TGVSlider", "slider?h.xpm not found");
 
-   gGXW->GrabButton(fId, kAnyButton, kAnyModifier,
+   gVirtualX->GrabButton(fId, kAnyButton, kAnyModifier,
                     kButtonPressMask | kButtonReleaseMask |
                     kPointerMotionMask, kNone, kNone);
 
@@ -113,13 +108,13 @@ void TGVSlider::DoRedraw()
    // Redraw vertical slider widget.
 
    // cleanup the drawable
-   gGXW->ClearWindow(fId);
+   gVirtualX->ClearWindow(fId);
 
-   gGXW->DrawLine(fId, fgShadowGC, fWidth/2, 8, fWidth/2-1, 8);
-   gGXW->DrawLine(fId, fgShadowGC, fWidth/2-1, 8, fWidth/2-1, fHeight-9);
-   gGXW->DrawLine(fId, fgHilightGC, fWidth/2+1, 8, fWidth/2+1, fHeight-8);
-   gGXW->DrawLine(fId, fgHilightGC, fWidth/2+1, fHeight-8, fWidth/2, fHeight-8);
-   gGXW->DrawLine(fId, fgBlackGC, fWidth/2, 9, fWidth/2, fHeight-9);
+   gVirtualX->DrawLine(fId, fgShadowGC, fWidth/2, 8, fWidth/2-1, 8);
+   gVirtualX->DrawLine(fId, fgShadowGC, fWidth/2-1, 8, fWidth/2-1, fHeight-9);
+   gVirtualX->DrawLine(fId, fgHilightGC, fWidth/2+1, 8, fWidth/2+1, fHeight-8);
+   gVirtualX->DrawLine(fId, fgHilightGC, fWidth/2+1, fHeight-8, fWidth/2, fHeight-8);
+   gVirtualX->DrawLine(fId, fgBlackGC, fWidth/2, 9, fWidth/2, fHeight-9);
 
    // check scale
    if (fScale == 1) fScale++;
@@ -129,9 +124,9 @@ void TGVSlider::DoRedraw()
       int remain = ((int)fHeight-16) % fScale;
       for (int i = 0; i <= lines; i++) {
          int y = i * fScale + (i * remain) / lines;
-         gGXW->DrawLine(fId, fgBlackGC, fWidth/2+8, y+7, fWidth/2+10, y+7);
+         gVirtualX->DrawLine(fId, fgBlackGC, fWidth/2+8, y+7, fWidth/2+10, y+7);
          if ((fType & kSlider2) && (fType && kScaleBoth))
-            gGXW->DrawLine(fId, fgBlackGC, fWidth/2-9, y+7, fWidth/2-11, y+7);
+            gVirtualX->DrawLine(fId, fgBlackGC, fWidth/2-9, y+7, fWidth/2-11, y+7);
       }
    }
    if (fPos < fVmin) fPos = fVmin;
@@ -168,6 +163,8 @@ Bool_t TGVSlider::HandleButton(Event_t *event)
          }
          SendMessage(fMsgWindow, MK_MSG(kC_VSLIDER, kSL_POS),
                      fWidgetId, fPos);
+         fClient->ProcessLine(fCommand, MK_MSG(kC_VSLIDER, kSL_POS),
+                              fWidgetId, fPos);
       }
       fClient->NeedRedraw(this);
    } else {
@@ -193,6 +190,8 @@ Bool_t TGVSlider::HandleMotion(Event_t *event)
          fClient->NeedRedraw(this);
          SendMessage(fMsgWindow, MK_MSG(kC_VSLIDER, kSL_POS),
                      fWidgetId, fPos);
+         fClient->ProcessLine(fCommand, MK_MSG(kC_VSLIDER, kSL_POS),
+                              fWidgetId, fPos);
       }
    }
    return kTRUE;
@@ -215,7 +214,7 @@ TGHSlider::TGHSlider(const TGWindow *p, UInt_t w, UInt_t type, Int_t id,
    if (!fSliderPic)
       Error("TGHSlider", "slider?v.xpm not found");
 
-   gGXW->GrabButton(fId, kAnyButton, kAnyModifier,
+   gVirtualX->GrabButton(fId, kAnyButton, kAnyModifier,
                     kButtonPressMask | kButtonReleaseMask |
                     kPointerMotionMask, kNone, kNone);
 
@@ -237,13 +236,13 @@ void TGHSlider::DoRedraw()
    // Redraw horizontal slider widget.
 
    // cleanup drawable
-   gGXW->ClearWindow(fId);
+   gVirtualX->ClearWindow(fId);
 
-   gGXW->DrawLine(fId, fgShadowGC, 8, fHeight/2, 8, fHeight/2-1);
-   gGXW->DrawLine(fId, fgShadowGC, 8, fHeight/2-1, fWidth-9, fHeight/2-1);
-   gGXW->DrawLine(fId, fgHilightGC, 8, fHeight/2+1, fWidth-8, fHeight/2+1);
-   gGXW->DrawLine(fId, fgHilightGC, fWidth-8, fHeight/2+1, fWidth-8, fHeight/2);
-   gGXW->DrawLine(fId, fgBlackGC, 9, fHeight/2, fWidth-9, fHeight/2);
+   gVirtualX->DrawLine(fId, fgShadowGC, 8, fHeight/2, 8, fHeight/2-1);
+   gVirtualX->DrawLine(fId, fgShadowGC, 8, fHeight/2-1, fWidth-9, fHeight/2-1);
+   gVirtualX->DrawLine(fId, fgHilightGC, 8, fHeight/2+1, fWidth-8, fHeight/2+1);
+   gVirtualX->DrawLine(fId, fgHilightGC, fWidth-8, fHeight/2+1, fWidth-8, fHeight/2);
+   gVirtualX->DrawLine(fId, fgBlackGC, 9, fHeight/2, fWidth-9, fHeight/2);
 
    if (fScale == 1) fScale++;
    if (fScale * 2 > (int)fWidth) fScale = 0;
@@ -252,9 +251,9 @@ void TGHSlider::DoRedraw()
       int remain = ((int)fWidth-16) % fScale;
       for (int i = 0; i <= lines; i++) {
          int x = i * fScale + (i * remain) / lines;
-         gGXW->DrawLine(fId, fgBlackGC, x+7, fHeight/2+8, x+7, fHeight/2+10);
+         gVirtualX->DrawLine(fId, fgBlackGC, x+7, fHeight/2+8, x+7, fHeight/2+10);
          if ((fType & kSlider2) && (fType && kScaleBoth))
-            gGXW->DrawLine(fId, fgBlackGC, x+7, fHeight/2-9, x+7, fHeight/2-11);
+            gVirtualX->DrawLine(fId, fgBlackGC, x+7, fHeight/2-9, x+7, fHeight/2-11);
       }
    }
    if (fPos < fVmin) fPos = fVmin;
@@ -289,6 +288,8 @@ Bool_t TGHSlider::HandleButton(Event_t *event)
          }
          SendMessage(fMsgWindow, MK_MSG(kC_HSLIDER, kSL_POS),
                      fWidgetId, fPos);
+         fClient->ProcessLine(fCommand, MK_MSG(kC_HSLIDER, kSL_POS),
+                              fWidgetId, fPos);
       }
       fClient->NeedRedraw(this);
    } else {
@@ -314,6 +315,8 @@ Bool_t TGHSlider::HandleMotion(Event_t *event)
          fClient->NeedRedraw(this);
          SendMessage(fMsgWindow, MK_MSG(kC_HSLIDER, kSL_POS),
                      fWidgetId, fPos);
+         fClient->ProcessLine(fCommand, MK_MSG(kC_HSLIDER, kSL_POS),
+                              fWidgetId, fPos);
       }
    }
    return kTRUE;

@@ -1,5 +1,5 @@
-/*CMZ :  2.22/10 23/07/99  14.42.12  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   23/07/99*/
+/*CMZ :  2.23/10 10/12/99  17.59.57  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   10/12/99*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -9,15 +9,13 @@
  * Description:
  *  Cint parser global variables.
  ************************************************************************
- * Copyright(c) 1991~1996  [hp] Hewlett Packard Japan, All rights reserved
- * Author                  Masaharu Goto (gotom@jpn.hp.com)
- * Copyright(c) 1995~1998  Masaharu Goto (MXJ02154@niftyserve.or.jp)
+ * Copyright(c) 1995~1999  Masaharu Goto (MXJ02154@niftyserve.or.jp)
  *
  * Permission to use, copy, modify and distribute this software and its
  * documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies and
  * that both that copyright notice and this permission notice appear
- * in supporting documentation.  Hewlett-Packard Japan Company makes no
+ * in supporting documentation.  The author makes no
  * representations about the suitability of this software for any
  * purpose.  It is provided "as is" without express or implied warranty.
  ************************************************************************/
@@ -96,6 +94,9 @@ extern struct G__param *G__asm_param; /* pointer of parameter buffer to
 extern int G__asm_exec; /* p-code execution flag */
 extern int G__asm_loopcompile; /* loop compilation mode. default on(1).
 			   * This is set to 0 by -O0 */
+#ifndef G__OLDIMPLEMENTATION1155
+extern int G__asm_loopcompile_mode;
+#endif
 extern int G__asm_noverflow; /* When this is set to 1, compilation starts.
 			 * If any error found, reset */
 extern int G__asm_dbg; /* p-code debugging flag, only valid when compiled with
@@ -624,6 +625,13 @@ extern int G__ispragmainclude;
 * automatic variable on/off
 **************************************************************************/
 extern int G__automaticvar;
+#endif
+
+#ifndef G__OLDIMPLEMENTATION1164
+/**************************************************************************
+* Local variable , bytecode compiler workaround
+**************************************************************************/
+extern int G__xrefflag;
 #endif
 
 #ifdef __cplusplus

@@ -1,7 +1,5 @@
-//*CMZ :  2.00/08 26/05/98  13.10.11  by  Fons Rademakers
-//*CMZ :  2.00/00 07/03/98  23.42.56  by  Fons Rademakers
-//*-- Author :    IconsAuthor   18/02/98
-
+//*CMZ :  2.23/04 04/10/99  20.44.59  by  Fons Rademakers
+//*-- Author :    IconsAuthor   04/10/99
 # ROOT mime types
 # Actions beginning with ! will be executed in the shell
 # Actions beginning with -> are member functions of the selected
@@ -96,12 +94,65 @@ action = !xterm -e vi %s &
 
 [root/script]
 pattern = *.C
-icon = root_script.xpm
+icon = macro_s.xpm macro_t.xpm
 action = .x %s
 
 [root/file]
 pattern = *.root
-icon = root_file.xpm
+icon = rootdb_s.xpm rootdb_t.xpm
 action = TFile *ftmp = new TFile("%s")
 
+[root/tfile]
+pattern = TFile TNetFile TRFIOFile
+icon = rootdb_s.xpm rootdb_t.xpm
+action = ->Browse()
 
+[root/th1]
+pattern = TH1[CSFD]
+icon = h1_s.xpm h1_t.xpm
+action = ->Draw()
+
+[root/th2]
+pattern = TH2[CSFD]
+icon = h2_s.xpm h2_t.xpm
+action = ->Draw()
+
+[root/th3]
+pattern = TH3[CSFD]
+icon = h3_s.xpm h3_t.xpm
+action = ->Draw()
+
+[root/tf1]
+pattern = TF1
+icon = f1_s.xpm f1_t.xpm
+action = ->Draw()
+
+[root/tf2]
+pattern = TF2
+icon = f2_s.xpm f2_t.xpm
+action = ->Draw()
+
+[root/tprofile]
+pattern = TProfile
+icon = profile_s.xpm profile_t.xpm
+action = ->Draw()
+
+[root/ttree]
+pattern = TTree
+icon = tree_s.xpm tree_t.xpm
+action = ->Browse()
+
+[root/tntuple]
+pattern = TNtuple
+icon = ntuple_s.xpm ntuple_t.xpm
+action = ->Browse()
+
+[root/tchain]
+pattern = TChain
+icon = chain_s.xpm chain_t.xpm
+action = ->Browse()
+
+[root/tleaf]
+pattern = TLeaf*
+icon = leaf_s.xpm leaf_t.xpm
+action = ->Browse()

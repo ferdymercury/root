@@ -1,3 +1,4 @@
+//*CMZ :  2.23/07 24/10/99  18.27.34  by  Valery Fine(fine@mail.cern.ch)
 //*CMZ :  1.03/01 31/07/97  11.45.02  by  Valery Fine(fine@vxcern.cern.ch)
 //*-- Author :    Valery Fine(fine@vxcern.cern.ch)   26/08/96
 
@@ -40,7 +41,7 @@ virtual ~TGWin32StatusBar();
  void  SetHeight(Int_t h);                // Set the height of the status bar
  void  SetStatusParts(TGWin32WindowsObject *win, Int_t nParts =1 );
  void  SetStatusParts(TGWin32WindowsObject *win, Int_t *Parts, Int_t nParts=1);
- void  SetText(Text_t *text, Int_t npart = 0, Int_t stype = 0);  // Draw the text into the 'npart' part of the status bar
+ void  SetText(const Text_t *text, Int_t npart = 0, Int_t stype = 0);  // Draw the text into the 'npart' part of the status bar
  void  Show(){if (fhwndWindow)ShowWindow(fhwndWindow,SW_SHOW); fIsVisible = kTRUE;}
 
 };

@@ -1,12 +1,13 @@
+*CMZ :  2.23/09 19/11/99  18.31.59  by  Fons Rademakers
+*CMZ :  2.23/04 29/09/99  18.30.42  by  Fons Rademakers
+*CMZ :  2.23/00 08/08/99  16.17.53  by  Fons Rademakers
 *CMZ :  2.22/10 23/07/99  15.26.15  by  Fons Rademakers
 *CMZ :  2.21/08 15/03/99  08.58.18  by  Rene Brun
 *CMZ :  2.21/07 19/02/99  11.23.11  by  Fons Rademakers
-*CMZ :  2.21/06 13/02/99  11.15.52  by  Rene Brun
-*CMZ :  2.20/00 22/11/98  18.43.27  by  Fons Rademakers
-*CMZ :  2.00/12 08/10/98  17.56.44  by  Fons Rademakers
-*CMZ :  2.00/09 27/06/98  00.57.05  by  Fons Rademakers
 *-- Author :    Fons Rademakers   27/06/98
 # Makefile of ROOT for Solaris with CC
+
+include ../Makefile.config
 
 PLATFORM      = solaris
 
@@ -14,21 +15,20 @@ CXX           = /opt/SUNWspro/bin/CC
 CC            = /opt/SUNWspro/bin/cc
 # use this when on Solaris 5.4
 #CXXFLAGS      = -KPIC -I/usr/openwin/include
-CXXFLAGS      = -KPIC -I/usr/openwin/include -D__SunOS_5_6
-CFLAGS        = -KPIC -I/usr/openwin/include
+CXXFLAGS      = -KPIC -I/usr/openwin/include -D__SunOS_5_6 $(EXTRA_CXXFLAGS)
+CFLAGS        = -KPIC -I/usr/openwin/include $(EXTRA_CFLAGS)
 CINTCXXFLAGS  = -KPIC -DG__REGEXP1 -DG__UNIX -DG__OSFDLL \
-                -DG__SHAREDLIB -DG__ROOT -DG__REDIRECTIO
+                -DG__SHAREDLIB -DG__ROOT -DG__REDIRECTIO $(EXTRA_CXXFLAGS)
 CINTCFLAGS    = -KPIC -DG__REGEXP1 -DG__UNIX -DG__OSFDLL \
-                -DG__SHAREDLIB -DG__ROOT -DG__REDIRECTIO
+                -DG__SHAREDLIB -DG__ROOT -DG__REDIRECTIO $(EXTRA_CFLAGS)
 OPT           = -O
 NOOPT         =
 LD            = $(CXX)
-LDFLAGS       = $(OPT)
+LDFLAGS       = $(OPT) $(EXTRA_LDFLAGS)
 SOFLAGS       = -G
 SOEXT         = so
 SYSLIBS       = -lm -ldl -lnsl -lsocket -lgen -L/usr/ucblib -lucb
-SYSXLIBS      = -L/usr/openwin/lib -lX11 -lm -lgen -ldl -lsocket
-XLIBS         = $(ROOTSYS)/lib/libXpm.a -L/usr/openwin/lib -lX11
+XLIBS         = ../lib/libXpm.a -L/usr/openwin/lib -lX11
 CILIBS        = -lm -ltermcap -ldl -L/usr/ccs/lib -lgen
 
 

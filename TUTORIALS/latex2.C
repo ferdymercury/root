@@ -1,3 +1,4 @@
+//*CMZ :  2.23/09 15/11/99  16.34.10  by  Rene Brun
 //*CMZ :  2.00/13 29/10/98  16.56.07  by  Rene Brun
 //*CMZ :  2.00/11 26/08/98  19.04.20  by  Rene Brun
 //*-- Author :    Rene Brun   26/08/98
@@ -6,9 +7,6 @@
 // Note that this macro relies on a first implementation of the TLatex class.
 // There are still some discrepancies between the result on the screen
 // and the result on Postscript.
-// Also some differences will be seen between Unix servers depending
-// the version of X in use. Results on WindowsNT are also slightly different.
-
 {
    gROOT->Reset();
    TCanvas *c1 = new TCanvas("c1");

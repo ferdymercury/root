@@ -1,3 +1,5 @@
+*CMZ :  2.23/07 27/10/99  15.54.02  by  Fons Rademakers
+*CMZ :  2.23/03 14/09/99  09.48.10  by  Rene Brun
 *CMZ :  1.03/08 08/11/97  14.40.05  by  Rene Brun
 *-- Author :    Valery Fine(fine@vxcern.cern.ch)   30/10/96
 macro  MakeDistWindows
@@ -22,8 +24,8 @@ cd bin
 ren Root_EGPythia.dll Root_EGPythia.tmp
 cd ..
 if exist %TARFILE%.gz del %TARFILE%.gz
-rem tar -cvf %TARFILE% AA_README bin/*.exe bin/*.dll include/*.h include/MAIN_rmain.cxx lib/*.lib cint tutorials/*.C tutorials/.* test/*.cxx test/*.h test/Makefile test/README
-tar cvf %TARFILE% AA_README bin/*.exe bin/*.dll include/*.h include/MAIN_rmain.cxx lib/*.lib cint tutorials/*.C tutorials/.rootrc test/*.cxx test/*.h test/Makefile test/README
+rem tar -cvf %TARFILE% AA_* bin/*.exe bin/*.dll include/*.h include/MAIN_rmain.cxx lib/*.lib cint tutorials/*.C tutorials/.* test/*.cxx test/*.h test/Makefile test/README
+tar cvf %TARFILE% AA_* bin/*.exe bin/*.dll include/*.h include/MAIN_rmain.cxx lib/*.lib cint tutorials/*.C tutorials/.rootrc test/*.cxx test/*.h test/Makefile test/README
 
 gzip %TARFILE%
 
@@ -32,7 +34,7 @@ echo Creating the 'short' distribution file (only ROOT.EXE ROOT's DLLs + tutoria
 if exist r.lzh del r.lzh
 
 %NICEPATH%\lha a -rx r bin\root.exe bin\h2root.exe bin\*.dll
-%NICEPATH%\lha a -rx r AA_REA~1 bin\restore.bat cint\MAKEINFO cint\include\*.h TUTORI~1\*.C TUTORI~1\ROOTRC~1
+%NICEPATH%\lha a -rx r AA_* bin\restore.bat cint\MAKEINFO cint\include\*.h TUTORI~1\*.C TUTORI~1\ROOTRC~1
 %NICEPATH%\lha s -rx r
 %NICEPATH%\lha V r.exe
 ren r.exe %EXEFILE%

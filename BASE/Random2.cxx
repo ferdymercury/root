@@ -1,3 +1,4 @@
+//*CMZ :  2.23/04 08/10/99  08.26.12  by  Rene Brun
 //*CMZ :  2.21/07 04/03/99  15.29.26  by  Rene Brun
 //*-- Author :    Rene Brun   04/03/99
 
@@ -77,6 +78,7 @@ void TRandom2::SetSeed(UInt_t seed)
 void TRandom2::SetSeed2(UInt_t seed1, UInt_t seed2)
 {
 //  Set the random generator seeds
+//  Note that seed1 and seed2 must be < 2147483647
 
    fSeed1 = Double_t(seed1);
    fSeed2 = Double_t(seed2);

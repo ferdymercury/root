@@ -1,3 +1,4 @@
+//*CMZ :  2.23/04 13/10/99  16.10.38  by  Rene Brun
 //*CMZ :  2.21/07 19/02/99  20.11.49  by  Fons Rademakers
 //*CMZ :  0.90/08 02/12/96  11.34.35  by  Rene Brun
 //*-- Author :    Rene Brun
@@ -25,6 +26,7 @@
    title = new TPaveLabel(0.1,0.94,0.9,0.98,
                     "Drawing options for one dimensional histograms");
    title->SetFillColor(16);
+   title->SetTextFont(52);
    title->Draw();
    //
    // Draw histogram hpx in first pad with the default option.

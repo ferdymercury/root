@@ -1,13 +1,12 @@
+//*CMZ :          05/09/99  16.41.17  by  Rene Brun
 //*CMZ :  2.21/08 18/03/99  21.49.29  by  Rene Brun
 //*CMZ :  2.21/07 08/03/99  13.26.00  by  Rene Brun
 //*CMZ :  2.21/06 18/02/99  14.30.11  by  Rene Brun
 //*CMZ :  2.21/05 10/02/99  15.58.38  by  Rene Brun
-//*CMZ :  2.21/04 05/02/99  19.28.38  by  Rene Brun
-//*CMZ :  2.21/03 22/01/99  16.29.37  by  Rene Brun
-//*CMZ :  2.21/02 18/01/99  17.52.46  by  Rene Brun
-//*CMZ :  2.21/01 14/01/99  13.49.10  by  Rene Brun
-//*CMZ :  2.21/00 04/01/99  07.57.27  by  Rene Brun
 //*-- Author :    Rene Brun   04/01/99
+//
+// 05/09/1999  16.40.07  by  Rene Brun
+//
 //________________________________________________________________________
 //
 //::>          VERSION  2.21/08   18/03/99 21.49.29
@@ -132,7 +131,7 @@
 // 08/03/1999  13.23.02  by  Rene Brun
 //
 - Add a call to TPostScript::Close in the TPostScript destructor.
-  In TPostScript::Close protection against gCurrentPS = 0.
+  In TPostScript::Close protection against gVirtualPS = 0.
 
 - Modify prototype for all TLeaf::Export. add a second argument Int_t n.
 

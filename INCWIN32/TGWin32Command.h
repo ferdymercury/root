@@ -1,17 +1,19 @@
+//*CMZ :  2.23/04 12/10/99  00.19.57  by  Fons Rademakers
+//*CMZ :  2.23/02 02/09/99  15.39.27  by  Rene Brun
 //*CMZ :  2.00/00 20/02/98  16.27.42  by  Valery Fine(fine@mail.cern.ch)
 //*CMZ :  1.00/07 12/03/97  17.52.12  by  Valery Fine(fine@vxcern.cern.ch)
 //*-- Author :    Valery Fine(fine@vxcern.cern.ch)   16/08/96
 #ifndef ROOT_TGWin32Command
 #define ROOT_TGWin32Command
 
-#ifndef ROOT_TGXW
-#include "TGXW.h"
+#ifndef ROOT_TVirtualX
+#include "TVirtualX.h"
 #endif
 
 #include "WINDOWS4ROOT.h"
 
 #ifndef ROOT_Win32Constants
-#include "WIN32CONSTANTS.h"
+#include "Win32Constants.h"
 #endif
 
 #ifndef ROOT_TWin32Semaphore
@@ -60,7 +62,7 @@ private:
 
 public:
 
-  TGWin32Box(int x1, int y1, int x2, int y2, TGXW::EBoxMode mode,int code=IX_BOX) : TGWin32Command(code){
+  TGWin32Box(int x1, int y1, int x2, int y2, TVirtualX::EBoxMode mode,int code=IX_BOX) : TGWin32Command(code){
     fX1 = min(x1,x2);
     fX2 = max(x1,x2);
     fY1 = min(y1,y2);
@@ -201,7 +203,7 @@ class TGWin32DrawMode : public TGWin32Command {
 private:
    int    fMode;
 public:
-  TGWin32DrawMode(TGXW::EDrawMode mode, int code=IX_DRMDE) : TGWin32Command(code,ROOT_Attribute){
+  TGWin32DrawMode(TVirtualX::EDrawMode mode, int code=IX_DRMDE) : TGWin32Command(code,ROOT_Attribute){
      fMode = Win32DrawMode[mode-1];
   }
   int GetMode(){return fMode;}
@@ -240,11 +242,11 @@ private:
    int   fX;       // Text position;
    int   fY;
    const char  *fText;  // text string
-   TGXW::ETextMode fMode; // Draw mode
+   TVirtualX::ETextMode fMode; // Draw mode
 
 public:
 
-    TGWin32DrawText(int x, int y, const char *text, TGXW::ETextMode mode=TGXW::kClear, int code=IX_TEXT)
+    TGWin32DrawText(int x, int y, const char *text, TVirtualX::ETextMode mode=TVirtualX::kClear, int code=IX_TEXT)
                 : TGWin32Command(code,ROOT_Text){
     fX = x;
     fY = y;
@@ -255,7 +257,7 @@ public:
 int   GetX(){return fX;}
 int   GetY(){return fY;}
 void  SetSize(SIZE *lpSize){fX = lpSize->cx;fY = lpSize->cy;}
-TGXW::ETextMode GetMode(){ return fMode;}
+TVirtualX::ETextMode GetMode(){ return fMode;}
 
 const char *GetText(){return fText;}
 };

@@ -1,28 +1,22 @@
+//*CMZ :  2.23/12 19/01/2000  12.37.27  by  Rene Brun
+//*CMZ :  2.23/03 14/09/99  10.31.50  by  Rene Brun
+//*CMZ :  2.23/01 24/08/99  16.49.27  by  Rene Brun
+//*CMZ :  2.23/00 30/07/99  09.39.06  by  Rene Brun
 //*CMZ :  2.21/08 10/03/99  09.07.30  by  Rene Brun
-//*CMZ :  2.21/05 09/02/99  19.08.38  by  Rene Brun
-//*CMZ :  2.20/00 09/11/98  18.43.13  by  Rene Brun
-//*CMZ :  2.00/12 10/09/98  17.58.12  by  Rene Brun
-//*CMZ :  2.00/06 11/05/98  12.56.10  by  Rene Brun
-//*CMZ :  1.03/07 03/11/97  09.53.41  by  Rene Brun
 //*-- Author :    Rene Brun   17/08/95
 // ---------------------------------- minuit.h
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 
@@ -44,8 +38,6 @@
 #ifndef ROOT_TMethodCall
 #include "TMethodCall.h"
 #endif
-
-class TGraph;
 
 class TMinuit : public TNamed {
 
@@ -91,7 +83,7 @@ public:
         Double_t     *fPbar;            //
         Double_t     *fPrho;            //Minimum point of parabola
         Int_t        fMaxint;           //Maximum number of internal parameters
-        Int_t        fNpar;             //Number of parameters
+        Int_t        fNpar;             //Number of free parameters (total number of pars = fNpar + fNfix)
         Int_t        fMaxext;           //Maximum number of external parameters
         Int_t        fMaxIterations;    //Maximum number of iterations
         Int_t        fNu;               //
@@ -170,13 +162,16 @@ public:
  virtual       ~TMinuit();
  virtual void   BuildArrays(Int_t maxpar=15);
  virtual Int_t  Command(const char *command);
- virtual TGraph *Contour(const char *graphname, Int_t npoints=10, Int_t pa1=1, Int_t pa2=2);
+ virtual TObject *Contour(Int_t npoints=10, Int_t pa1=0, Int_t pa2=1);
  virtual Int_t  DefineParameter( Int_t parNo, const char *name, Double_t initVal, Double_t initErr, Double_t lowerLimit, Double_t upperLimit );
  virtual void   DeleteArrays();
  virtual Int_t  FixParameter( Int_t parNo );
  TMethodCall   *GetMethodCall() {return fMethodCall;}
  TObject       *GetObjectFit() {return fObjectFit;}
  Int_t          GetMaxIterations() {return fMaxIterations;}
+ virtual Int_t  GetNumFixedPars();
+ virtual Int_t  GetNumFreePars();
+ virtual Int_t  GetNumPars();
  virtual Int_t  GetParameter( Int_t parNo, Double_t &currentValue, Double_t &currentError );
  Int_t          GetStatus() {return fStatus;}
  virtual Int_t  Migrad();
@@ -197,12 +192,13 @@ public:
  virtual void   mnemat(Double_t *emat, Int_t ndim);
  virtual void   mnerrs(Int_t number, Double_t &eplus, Double_t &eminus, Double_t &eparab, Double_t &gcc);
  virtual void   mneval(Double_t anext, Double_t &fnext, Int_t &ierev);
- virtual void   mnexcm(TString comand, Double_t *plist, Int_t llist, Int_t &ierflg) ;
+ virtual void   mnexcm(const char *comand, Double_t *plist, Int_t llist, Int_t &ierflg) ;
  virtual void   mnexin(Double_t *pint);
  virtual void   mnfixp(Int_t iint, Int_t &ierr);
  virtual void   mnfree(Int_t k);
  virtual void   mngrad();
  virtual void   mnhelp(TString comd);
+ virtual void   mnhelp(const char *command="");
  virtual void   mnhess();
  virtual void   mnhes1();
  virtual void   mnimpr();
@@ -219,7 +215,7 @@ public:
  virtual void   mnpfit(Double_t *parx2p, Double_t *pary2p, Int_t npar2p, Double_t *coef2p, Double_t &sdev2p);
  virtual void   mnpint(Double_t &pexti, Int_t i, Double_t &pinti);
  virtual void   mnplot(Double_t *xpt, Double_t *ypt, char *chpt, Int_t nxypt, Int_t npagwd, Int_t npagln);
- virtual void   mnpout(Int_t iuext, TString chnam, Double_t &val, Double_t &err, Double_t &xlolim, Double_t &xuplim, Int_t &iuint);
+ virtual void   mnpout(Int_t iuext, TString &chnam, Double_t &val, Double_t &err, Double_t &xlolim, Double_t &xuplim, Int_t &iuint);
  virtual void   mnprin(Int_t inkode, Double_t fval);
  virtual void   mnpsdf();
  virtual void   mnrazz(Double_t ynew, Double_t *pnew, Double_t *y, Int_t &jh, Int_t &jl);

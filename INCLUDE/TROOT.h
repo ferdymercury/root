@@ -1,33 +1,27 @@
+//*CMZ :  2.23/12 26/01/2000  09.24.07  by  Rene Brun
+//*CMZ :  2.23/09 11/11/99  13.00.45  by  Rene Brun
+//*CMZ :  2.23/07 25/10/99  15.18.51  by  Fons Rademakers
+//*CMZ :  2.23/04 13/10/99  15.28.15  by  Fons Rademakers
+//*CMZ :  2.23/03 16/09/99  12.46.22  by  Rene Brun
+//*CMZ :  2.23/02 06/09/99  16.28.03  by  Fons Rademakers
+//*CMZ :  2.23/01 31/08/99  17.32.13  by  Rene Brun
 //*CMZ :  2.21/03 19/01/99  18.30.29  by  Fons Rademakers
-//*CMZ :  2.21/01 06/01/99  10.57.53  by  Rene Brun
-//*CMZ :  2.20/05 15/12/98  08.58.09  by  Rene Brun
-//*CMZ :  2.00/11 08/08/98  23.20.37  by  Rene Brun
-//*CMZ :  2.00/10 18/07/98  18.10.05  by  Fons Rademakers
-//*CMZ :  2.00/06 21/04/98  09.17.22  by  Rene Brun
-//*CMZ :  2.00/05 20/04/98  15.14.26  by  Fons Rademakers
-//*CMZ :  2.00/00 07/03/98  18.05.39  by  Fons Rademakers
-//*CMZ :  1.03/05 08/10/97  13.49.01  by  Fons Rademakers
 //*-- Author :    Rene Brun   08/12/94
 
 #ifndef ROOT_TROOT
 #define ROOT_TROOT
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -53,11 +47,9 @@ class TClass;
 class TColor;
 class TDataType;
 class TFile;
-class TF1;
 class TStyle;
 class TDirectory;
 class TVirtualPad;
-class TGeometry;
 class TApplication;
 class TInterpreter;
 class TBrowser;
@@ -112,6 +104,7 @@ protected:
    TSeqCollection  *fGeometries;          //List of geometries
    TSeqCollection  *fBrowsers;            //List of browsers
    TSeqCollection  *fSpecials;            //List of special objects
+   TSeqCollection  *fMessageHandlers;     //List of message handlers
    TList           *fBrowsables;          //List of browsables
    TString         fDefCanvasName;        //Name of default canvas
 
@@ -119,24 +112,24 @@ protected:
 
                    TROOT();               //Only used by Dictionary
    void            InitSystem();          //Operating System interface
+   void            InitThreads();         //Initialize threads library
 
    void           *operator new(size_t l) { return TObject::operator new(l); }
 
 public:
-                     TROOT(const Text_t *name, const Text_t *title, VoidFuncPtr_t *initfunc = 0);
+                     TROOT(const char *name, const char *title, VoidFuncPtr_t *initfunc = 0);
    virtual           ~TROOT();
    void              Browse(TBrowser *b);
    Bool_t            ClassSaved(TClass *cl);
-   void              DisplayColorTable();
-   TObject           *FindObject(const Text_t *name) { void *dum; return FindObject(name, dum); }
-   TObject           *FindObject(const Text_t *name, void *&where);
-   const Text_t      *FindObjectClassName(const Text_t *name) const;
+   TObject          *FindObject(const char *name) { void *dum; return FindObject(name, dum); }
+   TObject          *FindObject(const char *name, void *&where);
+   const char       *FindObjectClassName(const char *name) const;
    void              ForceStyle(Bool_t force=kTRUE) {fForceStyle = force;}
    Bool_t            FromPopUp() {return fFromPopUp;}
-   TApplication      *GetApplication() {return fApplication;}
-   TClass            *GetClass(const Text_t *name, Bool_t load=kTRUE);
-   TColor            *GetColor(Int_t color);
-   const Text_t      *GetDefCanvasName() const {return fDefCanvasName.Data();}
+   TApplication     *GetApplication() {return fApplication;}
+   TClass           *GetClass(const char *name, Bool_t load=kTRUE);
+   TColor           *GetColor(Int_t color);
+   const char       *GetDefCanvasName() const {return fDefCanvasName.Data();}
    Bool_t            GetEditHistograms() {return fEditHistograms;}
    Int_t             GetEditorMode() {return fEditorMode;}
    Bool_t            GetForceStyle() {return fForceStyle;}
@@ -144,56 +137,61 @@ public:
    Int_t             GetVersionDate() {return fVersionDate;}
    Int_t             GetVersionTime() {return fVersionTime;}
    Int_t             GetVersionInt() {return fVersionInt;}
-   const Text_t      *GetVersion() const {return fVersion.Data();}
-   TSeqCollection    *GetListOfClasses()   {return fClasses;}
-   TSeqCollection    *GetListOfColors()    {return fColors;}
-   TSeqCollection    *GetListOfTypes();
-   TSeqCollection    *GetListOfGlobals(Bool_t load = kFALSE);
-   TSeqCollection    *GetListOfGlobalFunctions(Bool_t load = kFALSE);
-   TSeqCollection    *GetListOfFiles()      {return fFiles;}
-   TSeqCollection    *GetListOfMappedFiles(){return fMappedFiles;}
-   TSeqCollection    *GetListOfSockets()    {return fSockets;}
-   TSeqCollection    *GetListOfCanvases()   {return fCanvases;}
-   TSeqCollection    *GetListOfStyles()     {return fStyles;}
-   TSeqCollection    *GetListOfFunctions()  {return fFunctions;}
-   TSeqCollection    *GetListOfGeometries() {return fGeometries;}
-   TSeqCollection    *GetListOfBrowsers()   {return fBrowsers;}
-   TSeqCollection    *GetListOfSpecials()   {return fSpecials;}
-   TList             *GetListOfBrowsables() {return fBrowsables;}
-   TDataType         *GetType(const Text_t *name);
-   TFile             *GetFile() {return fFile;}
-   TFile             *GetFile(const Text_t *name);
-   TStyle            *GetStyle(const Text_t *name);
-   TF1               *GetFunction(const Text_t *name);
-   TGlobal           *GetGlobal(const Text_t *name, Bool_t load = kFALSE);
-   TGlobal           *GetGlobal(TObject *obj, Bool_t load = kFALSE);
-   TFunction         *GetGlobalFunction(const Text_t *name, const Text_t *params = 0, Bool_t load = kFALSE);
-   TFunction         *GetGlobalFunctionWithPrototype(const Text_t *name, const Text_t *proto = 0, Bool_t load = kFALSE);
-   TGeometry         *GetGeometry(const Text_t *name);
-   TObject           *GetSelectedPrimitive() {return fPrimitive;}
-   TVirtualPad       *GetSelectedPad() {return fSelectPad;}
+   const char       *GetVersion() const {return fVersion.Data();}
+   TSeqCollection   *GetListOfClasses()   {return fClasses;}
+   TSeqCollection   *GetListOfColors()    {return fColors;}
+   TSeqCollection   *GetListOfTypes(Bool_t load = kFALSE);
+   TSeqCollection   *GetListOfGlobals(Bool_t load = kFALSE);
+   TSeqCollection   *GetListOfGlobalFunctions(Bool_t load = kFALSE);
+   TSeqCollection   *GetListOfFiles()      {return fFiles;}
+   TSeqCollection   *GetListOfMappedFiles(){return fMappedFiles;}
+   TSeqCollection   *GetListOfSockets()    {return fSockets;}
+   TSeqCollection   *GetListOfCanvases()   {return fCanvases;}
+   TSeqCollection   *GetListOfStyles()     {return fStyles;}
+   TSeqCollection   *GetListOfFunctions()  {return fFunctions;}
+   TSeqCollection   *GetListOfGeometries() {return fGeometries;}
+   TSeqCollection   *GetListOfBrowsers()   {return fBrowsers;}
+   TSeqCollection   *GetListOfSpecials()   {return fSpecials;}
+   TSeqCollection   *GetListOfMessageHandlers()   {return fMessageHandlers;}
+   TList            *GetListOfBrowsables() {return fBrowsables;}
+   TDataType        *GetType(const char *name, Bool_t load = kFALSE);
+   TFile            *GetFile() {return fFile;}
+   TFile            *GetFile(const char *name);
+   TStyle           *GetStyle(const char *name);
+   TObject          *GetFunction(const char *name);
+   TGlobal          *GetGlobal(const char *name, Bool_t load = kFALSE);
+   TGlobal          *GetGlobal(TObject *obj, Bool_t load = kFALSE);
+   TFunction        *GetGlobalFunction(const char *name, const char *params = 0, Bool_t load = kFALSE);
+   TFunction        *GetGlobalFunctionWithPrototype(const char *name, const char *proto = 0, Bool_t load = kFALSE);
+   TObject          *GetGeometry(const char *name);
+   TObject          *GetSelectedPrimitive() {return fPrimitive;}
+   TVirtualPad      *GetSelectedPad() {return fSelectPad;}
    Int_t             GetNclasses() {return fClasses->GetSize();}
    Int_t             GetNtypes() {return fTypes->GetSize();}
-   void              Idle(UInt_t idleTimeInSec, const Text_t *command=0);
+   void              Idle(UInt_t idleTimeInSec, const char *command=0);
+   Int_t             IgnoreInclude(const char *fname, const char *expandedfname);
    Bool_t            IsBatch() const { return fBatch; }
    Bool_t            IsFolder() {return kTRUE;}
    Bool_t            IsInterrupted() const { return fInterrupt; }
    Bool_t            IsLineProcessing() const { return fLineIsProcessing; }
    void              ls(Option_t *option="");
-   void              LoadMacro(const Text_t *filename);
-   Int_t             Macro(const Text_t *filename);
+   Int_t             LoadClass(const char *classname, const char *libname);
+   void              LoadMacro(const char *filename);
+   Int_t             Macro(const char *filename);
+   void              Message(Int_t id, TObject *obj);
    Bool_t            MustClean() {return fMustClean;}
-   void              ProcessLine(const Text_t *line);
-   Long_t            ProcessLineFast(const Text_t *line);
-   void              Proof(const Text_t *cluster = "proof");
+   void              ProcessLine(const char *line);
+   void              ProcessLineSync(const char *line);
+   Long_t            ProcessLineFast(const char *line);
+   void              Proof(const char *cluster = "proof");
    Bool_t            ReadingBasket() {return fReadingBasket;}
    void              Reset(Option_t *option="");
    void              SaveContext();
    void              SetApplication(TApplication *app) { fApplication = app; }
    void              SetBatch(Bool_t batch=kTRUE) { fBatch = batch; }
-   void              SetDefCanvasName(const Text_t *name="c1") {fDefCanvasName = name;}
+   void              SetDefCanvasName(const char *name="c1") {fDefCanvasName = name;}
    void              SetEditHistograms(Bool_t flag=kTRUE) {fEditHistograms=flag;}
-   void              SetEditorMode(const Text_t *mode="");
+   void              SetEditorMode(const char *mode="");
    void              SetFromPopUp(Bool_t flag=kTRUE) { fFromPopUp = flag; }
    void              SetInterrupt(Bool_t flag=kTRUE) { fInterrupt = flag; }
    void              SetLineIsProcessing() { fLineIsProcessing++; }
@@ -202,7 +200,7 @@ public:
    void              SetMustClean(Bool_t flag=kTRUE) { fMustClean=flag; }
    void              SetSelectedPrimitive(TObject *obj) { fPrimitive = obj; }
    void              SetSelectedPad(TVirtualPad *pad) { fSelectPad = pad; }
-   void              SetStyle(const Text_t *stylename="Default");
+   void              SetStyle(const char *stylename="Default");
    void              Time(Int_t casetime=1) { fTimer = casetime; }
    Int_t             Timer() { return fTimer; }
 

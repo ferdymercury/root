@@ -1,29 +1,23 @@
+//*CMZ :  2.23/04 12/10/99  17.12.52  by  Fons Rademakers
+//*CMZ :  2.23/02 03/09/99  11.39.45  by  Rene Brun
+//*CMZ :  2.23/01 26/08/99  12.00.16  by  Rene Brun
 //*CMZ :  2.21/07 19/02/99  18.12.15  by  Valery Fine(fine@mail.cern.ch)
 //*CMZ :  2.21/06 10/02/99  11.58.24  by  Valery Fine(fine@vxcern.cern.ch)
-//*CMZ :  2.20/00 08/11/98  17.36.46  by  Fons Rademakers
-//*CMZ :  2.00/12 02/10/98  21.14.37  by  Valery Fine(fine@mail.cern.ch)
-//*CMZ :  2.00/00 20/02/98  16.27.57  by  Valery Fine(fine@mail.cern.ch)
-//*CMZ :  1.03/09 08/12/97  15.44.10  by  Fons Rademakers
 //*-- Author :    Valery Fine(fine@vxcern.cern.ch)   16/08/96
 #ifndef ROOT_TGWin32
 #define ROOT_TGWin32
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -34,25 +28,58 @@
 // Win32 graphics, pixmap, text and font handling routines.             //
 //                                                                      //
 //////////////////////////////////////////////////////////////////////////
-#ifndef ROOT_TGXW
-#include "TGXW.h"
+
+#ifndef ROOT_TVirtualX
+#include "TVirtualX.h"
 #endif
 
-#include "TOBJARRAY.h"
-#include "TOBJECT.h"
-#include "TWin32CALLBACKLIST.h"
-#include "TGWIN32MARKER.h"
-#include "TWin32GLKernel.h"
+#ifndef ROOT_TList
+#include "TList.h"
+#endif
 
+#if !defined(__CINT__)
+
+#ifndef ROOT_TWin32CallBackList
+#include "TWin32CallBackList.h"
+#endif
+#ifndef ROOT_TGWin32Marker
+#include "TGWin32Marker.h"
+#endif
+#ifndef ROOT_TWin32GLKernel
+#include "TWin32GLKernel.h"
+#endif
+
+#else
+
+typedef ULong_t LPCRITICAL_SECTION;
+typedef ULong_t HANDLE;
+typedef ULong_t HCURSOR;
+typedef ULong_t HINSTANCE;
+typedef ULong_t WNDCLASS;
+typedef ULong_t DWORD;
+typedef ULong_t HPEN;
+typedef ULong_t HBRUSH;
+typedef ULong_t HPALETTE;
+typedef ULong_t HFONT;
+typedef ULong_t NPLOGPALETTE;
+typedef ULong_t LOGFONT;
+typedef ULong_t COLORREF;
+typedef ULong_t HDC;
+
+struct RECT;
+
+class TVirtualGL;
+class TGWin32Marker;
+
+#endif
 
 class TGWin32Pen;
 class TGWin32Switch;
 class TGWin32Brush;
 class TGWin32Command;
 
-class TGWin32  :  public TGXW  {
 
-protected:
+class TGWin32  :  public TVirtualX  {
 
    friend class TGWin32Object;
    friend class TGWin32WindowsObject;
@@ -60,7 +87,9 @@ protected:
    friend class TWin32GLViewerImp;
    friend class TPadOpenGLView;
 
-   TGLKernelABC *fGLKernel;        // Pointer to OpenGL interface implementation
+protected:
+
+   TVirtualGL   *fGLKernel;        // Pointer to OpenGL interface implementation
    TList        fWindows;          // List of "windows" - pixmap, Window ...
    TGWin32Switch *fSelectedWindow; // Pointer to the current "Window"
    TGWin32Switch *fPrevWindow;     // Pointer to the previous "Window"
@@ -113,7 +142,7 @@ protected:
 //
 
 //  PALETTEENTRY        fROOTcolors[MAXCOL];
-  NPLOGPALETTE  flpPalette; // =  {0x300, MAXCOL, HIGZcolors};
+   NPLOGPALETTE  flpPalette; // =  {0x300, MAXCOL, HIGZcolors};
 //
 //*-*- Text management
 //
@@ -122,7 +151,6 @@ protected:
    Int_t        fdwCommonTextAlign;
 
    const Text_t *fROOTCLASS; // = "ROOT";
-
 
    RECT     fCommonClipRectangle;
 
@@ -135,7 +163,8 @@ protected:
 public:
 
     TGWin32();
-    TGWin32(Text_t *name, Text_t *title);
+    TGWin32(const TGWin32 &) { MayNotUse("TGWin32(const TGWin32 &)"); }   // without dict does not compile? (rdm)
+    TGWin32(const Text_t *name, const Text_t *title);
     virtual ~TGWin32();
 
     Bool_t    Init(void *display=0);
@@ -349,9 +378,8 @@ public:
    virtual void         SetClipRectangles(GContext_t gc, Int_t x, Int_t y, Rectangle_t *recs, Int_t n);
    virtual void         Update(Int_t mode = 0);
 
-    ClassDef(TGWin32,0)  //Interface to Win32
-
- };
+   ClassDef(TGWin32,0)  //Interface to Win32
+};
 
 
 

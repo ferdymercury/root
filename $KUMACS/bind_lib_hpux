@@ -1,3 +1,4 @@
+*CMZ :  2.23/04 04/10/99  19.51.59  by  Fons Rademakers
 *CMZ :  2.21/03 20/01/99  12.29.45  by  Fons Rademakers
 *CMZ :  0.90/10 12/12/96  17.37.47  by  Fons Rademakers
 *-- Author :    Rene Brun   14/09/95
@@ -9,7 +10,11 @@ import *
 message Generating library: $ROOTSYS/lib/lib[1].sl
 
 shell /bin/rm -f $ROOTSYS/lib/lib[1].sl
-shell [LD] [SLOPT] $ROOTSYS/lib/lib[1].sl $ROOTSYS/src/[2] [3] [4] [5]
+if [1] = 'Core' then
+   shell [LD] [SLOPT] $ROOTSYS/lib/lib[1].sl [COREOBJS] [3] [4] [5]
+else
+   shell [LD] [SLOPT] $ROOTSYS/lib/lib[1].sl $ROOTSYS/src/[2] [3] [4] [5]
+endif
 shell chmod 555 $ROOTSYS/lib/lib[1].sl
 
 return

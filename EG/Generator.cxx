@@ -1,25 +1,23 @@
+//*CMZ :  2.23/12 26/01/2000  09.49.07  by  Rene Brun
+//*CMZ :  2.23/09 23/11/99  15.10.46  by  Rene Brun
+//*CMZ :  2.23/08 28/10/99  09.05.25  by  Rene Brun
+//*CMZ :  2.23/01 26/08/99  12.30.25  by  Rene Brun
 //*CMZ :  2.22/06 22/06/99  21.06.50  by  Rene Brun
 //*CMZ :  2.22/03 31/05/99  08.31.57  by  Rene Brun
 //*CMZ :  2.22/01 26/04/99  15.57.17  by  Rene Brun
-//*CMZ :  1.03/09 08/12/97  21.07.49  by  Fons Rademakers
 //*-- Author :    Ola Nordmann   21/09/95
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -44,7 +42,6 @@
 #include "TParticlePDG.h"
 #include "TParticle.h"
 #include "TObjArray.h"
-#include "TCanvas.h"
 #include "HepEvt.h"
 #include "TVirtualPad.h"
 #include "TView.h"
@@ -57,7 +54,7 @@
 ClassImp(TGenerator)
 
 //______________________________________________________________________________
-TGenerator::TGenerator(Text_t *name,Text_t *title): TNamed(name,title)
+TGenerator::TGenerator(const char *name,const char *title): TNamed(name,title)
 {
 //
 //  Event generator default constructor
@@ -65,7 +62,8 @@ TGenerator::TGenerator(Text_t *name,Text_t *title): TNamed(name,title)
 
 
   //  Initialize particles table
-   TDatabasePDG::Instance()->Init();
+   TDatabasePDG *pdg = TDatabasePDG::Instance();
+   if (!pdg->ParticleList()) pdg->Init();
 
    fPtCut        = 0;
    fShowNeutrons = kTRUE;
@@ -249,7 +247,7 @@ void TGenerator::Draw(Option_t *option)
    if (!gPad) {
       if (!gROOT->GetMakeDefCanvas()) return;
       (gROOT->GetMakeDefCanvas())();
-      gPad->GetCanvas()->SetFillColor(13);
+      gPad->GetVirtCanvas()->SetFillColor(13);
    }
 
    static Float_t rbox = 1000;
@@ -461,13 +459,16 @@ void TGenerator::Streamer(TBuffer &b)
 {
    // Stream an object of class TGenerator.
 
+   UInt_t R__s, R__c;
    if (b.IsReading()) {
-      b.ReadVersion();  //Version_t v = b.ReadVersion();
+      b.ReadVersion(&R__s, &R__c);
       TNamed::Streamer(b);
       fParticles->Streamer(b);
+      b.CheckByteCount(R__s, R__c, TGenerator::IsA());
    } else {
-      b.WriteVersion(TGenerator::IsA());
+      R__c = b.WriteVersion(TGenerator::IsA(), kTRUE);
       TNamed::Streamer(b);
       fParticles->Streamer(b);
+      b.SetByteCount(R__c, kTRUE);
    }
 }

@@ -1,5 +1,5 @@
-/*CMZ :  2.22/10 23/07/99  14.42.16  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   23/07/99*/
+/*CMZ :  2.23/10 10/12/99  18.00.01  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   10/12/99*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -9,23 +9,28 @@
  * Description:
  *  Entry functions
  ************************************************************************
- * Copyright(c) 1991~1996  [hp] Hewlett Packard Japan, All rights reserved
- * Author                  Masaharu Goto (gotom@jpn.hp.com)
- * Copyright(c) 1995~1998  Masaharu Goto (MXJ02154@niftyserve.or.jp)
+ * Copyright(c) 1995~1999  Masaharu Goto (MXJ02154@niftyserve.or.jp)
  *
  * Permission to use, copy, modify and distribute this software and its
  * documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies and
  * that both that copyright notice and this permission notice appear
- * in supporting documentation.  Hewlett-Packard Japan Company makes no
+ * in supporting documentation.  The author makes no
  * representations about the suitability of this software for any
  * purpose.  It is provided "as is" without express or implied warranty.
  ************************************************************************/
 
 #include "common.h"
 
+#ifndef __CINT__
 void G__setCINTLIBNAME G__P((char *cintlib));
 void G__setcopyflag G__P((int flag));
+#endif
+
+#ifndef G__OLDIMPLEMENTATION1207
+extern int G__ispermanentsl;
+extern G__DLLINIT G__initpermanentsl;
+#endif
 
 /**************************************************************************
 * For C++ dictionary setup
@@ -132,6 +137,9 @@ int G__call_setup_funcs()
     if (G__setup_func_list[i] && !G__setup_func_list[i]->inited) {
       (G__setup_func_list[i]->func)();
       G__setup_func_list[i]->inited = 1;
+#ifndef G__OLDIMPLEMENTATION1207
+      G__initpermanentsl = G__setup_func_list[i]->func;
+#endif
       k++;
 #ifdef G__DEBUG
       fprintf(G__sout,"Dictionary for %s initialized\n", G__setup_func_list[i]->libname); /* only for debug */
@@ -885,9 +893,15 @@ char *argv[] ;
       break;
     case 'g': /* whole function compile off */
       G__asm_loopcompile = 3;
+#ifndef G__OLDIMPLEMENTATION1155
+      G__asm_loopcompile_mode = G__asm_loopcompile;
+#endif
       break;
     case 'O': /* loop compiler on */
       G__asm_loopcompile = atoi(optarg);
+#ifndef G__OLDIMPLEMENTATION1155
+      G__asm_loopcompile_mode = G__asm_loopcompile;
+#endif
       break;
     case 'v': /* loop compiler debug mode */
       G__asm_dbg = 1;
@@ -1175,6 +1189,11 @@ char *argv[] ;
 
     if(G__loadfile(sourcefile)<0 || G__eof==2) {
       /* file not found or unexpected EOF */
+#ifndef G__OLDIMPLEMENTATION1197
+      if(G__CPPLINK==G__globalcomp||G__CLINK==G__globalcomp) {
+	G__cleardictfile(-1);
+      }
+#endif
       G__scratch_all();
       return(EXIT_FAILURE);
     }
@@ -1188,6 +1207,12 @@ char *argv[] ;
   if (G__afterparse_hook) G__afterparse_hook ();
 #endif
 
+#ifndef G__OLDIMPLEMENTATION1162
+  if(G__security_error) {
+    fprintf(G__serr,"Warning: Error occured during reading source files\n");
+  }
+#endif
+
   if(G__CPPLINK == G__globalcomp) { /* C++ header */
     if(G__steptrace||G__stepover) while(0==G__pause()) ;
     G__gen_cpplink();
@@ -1195,7 +1220,18 @@ char *argv[] ;
     G__scratch_all();
 #endif
 #ifndef G__OLDIMPLEMENTATION996
-    if(G__security_error) return(-1);
+    if(G__security_error) {
+#ifndef G__OLDIMPLEMENTATION1162
+      fprintf(G__serr,"Warning: Error occured during dictionary source generation\n");
+#endif
+#ifndef G__OLDIMPLEMENTATION1197
+      G__cleardictfile(-1);
+#endif
+      return(-1);
+    }
+#endif
+#ifndef G__OLDIMPLEMENTATION1197
+    G__cleardictfile(EXIT_SUCCESS);
 #endif
     return(EXIT_SUCCESS);
   }
@@ -1206,7 +1242,18 @@ char *argv[] ;
     G__scratch_all();
 #endif
 #ifndef G__OLDIMPLEMENTATION996
-    if(G__security_error) return(-1);
+    if(G__security_error) {
+#ifndef G__OLDIMPLEMENTATION1162
+      fprintf(G__serr,"Warning: Error occured during dictionary source generation\n");
+#endif
+#ifndef G__OLDIMPLEMENTATION1197
+      G__cleardictfile(-1);
+#endif
+      return(-1);
+    }
+#endif
+#ifndef G__OLDIMPLEMENTATION1197
+    G__cleardictfile(EXIT_SUCCESS);
 #endif
     return(EXIT_SUCCESS);
   }
@@ -1448,6 +1495,9 @@ int G__init_globals()
 #else
   G__asm_loopcompile=4;
 #endif
+#ifndef G__OLDIMPLEMENTATION1155
+  G__asm_loopcompile_mode = G__asm_loopcompile;
+#endif
 #ifdef G__ASM_WHOLEFUNC
   G__asm_wholefunction = G__ASM_FUNC_NOP;
 #endif
@@ -1626,6 +1676,9 @@ int G__init_globals()
 
   G__deffuncmacro.hash = 0;
   G__deffuncmacro.callfuncmacro.call_fp = (FILE *)NULL;
+#ifndef G__OLDIMPLEMENTATION1179
+  G__deffuncmacro.callfuncmacro.call_filenum = -1;
+#endif
   G__deffuncmacro.callfuncmacro.next = (struct G__Callfuncmacro *)NULL;
   G__deffuncmacro.next = (struct G__Deffuncmacro *)NULL;
 
@@ -1798,6 +1851,11 @@ int G__init_globals()
 #ifndef G__OLDIMPLEMENTATION411
   G__fpundeftype=(FILE*)NULL;
 #endif
+
+#ifndef G__OLDIMPLEMENTATION1207
+  G__ispermanentsl=0;
+#endif
+
   return(0);
 }
 
@@ -1861,6 +1919,9 @@ void G__platformMacro()
 #endif
 #ifdef _AIX
   sprintf(temp,"G__AIX=%ld",(long)_AIX); G__getexpr(temp);
+#endif
+#ifdef __KCC
+  sprintf(temp,"G__KCC=%ld",(long)__KCC); G__getexpr(temp);
 #endif
 }
 #endif
@@ -1964,7 +2025,7 @@ FILE* sin;
 **************************************************************************/
 char *G__cint_version()
 {
-  return "5.14.10, Jul 20 1999";
+  return "5.14.25, Nov 25 1999";
 }
 #endif
 
@@ -1983,9 +2044,7 @@ FILE *fp;
 {
   fprintf(fp,"\n");
   fprintf(fp,"cint : C/C++ interpreter\n");
-  fprintf(fp,"   Copyright(c) : 1991~1996 [hp] Hewlett-Packard-Japan\n");
-  fprintf(fp,"   Author       : Masaharu Goto (gotom@jpn.hp.com)\n");
-  fprintf(fp,"   Copyright(c) : 1995~1998 Masaharu Goto (MXJ02154@niftyserve.or.jp)\n");
+  fprintf(fp,"   Copyright(c) : 1995~1999 Masaharu Goto (MXJ02154@niftyserve.or.jp)\n");
   fprintf(fp,"   revision     : %s by M.Goto\n\n",G__cint_version());
 
 #ifdef G__DEBUG

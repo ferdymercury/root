@@ -1,25 +1,21 @@
+//*CMZ :  2.23/12 26/01/2000  09.24.07  by  Rene Brun
 //*CMZ :  1.03/09 07/12/97  13.13.33  by  Fons Rademakers
 //*-- Author :    Rene Brun   04/12/94
 
 #ifndef ROOT_TNamed
 #define ROOT_TNamed
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -50,7 +46,7 @@ protected:
 
 public:
    TNamed() { }
-   TNamed(const Text_t *name, const Text_t *title) : fName(name), fTitle(title) { }
+   TNamed(const char *name, const char *title) : fName(name), fTitle(title) { }
    TNamed(const TString &name, const TString &title) : fName(name), fTitle(title) { }
    TNamed(const TNamed &named);
    TNamed& operator=(const TNamed& rhs);
@@ -58,13 +54,13 @@ public:
    virtual Int_t    Compare(TObject *obj);
    virtual void     Copy(TObject &named);
    virtual void     FillBuffer(char *&buffer);
-   virtual const Text_t  *GetName() const {return fName.Data();}
-   virtual const Text_t  *GetTitle() const {return fTitle.Data();}
+   virtual const char  *GetName() const {return fName.Data();}
+   virtual const char  *GetTitle() const {return fTitle.Data();}
    virtual ULong_t  Hash() { return fName.Hash(); }
    virtual Bool_t   IsSortable() const { return kTRUE; }
-   virtual void     SetName(const Text_t *name); // *MENU*
-   virtual void     SetObject(const Text_t *name, const Text_t *title);
-   virtual void     SetTitle(const Text_t *title=""); // *MENU*
+   virtual void     SetName(const char *name); // *MENU*
+   virtual void     SetObject(const char *name, const char *title);
+   virtual void     SetTitle(const char *title=""); // *MENU*
    virtual void     ls(Option_t *option="");
    virtual void     Print(Option_t *option="");
    virtual Int_t    Sizeof() const;

@@ -1,3 +1,4 @@
+//*CMZ :          01/02/2000  17.19.32  by  Rene Brun
 //*CMZ :  2.20/05 13/12/98  16.56.22  by  Rene Brun
 //*-- Author :    Rene Brun   13/12/98
 Int_t i;
@@ -36,8 +37,7 @@ void hsumTimer(Int_t nfill=100000)
   c1->Update();slider = new TSlider("slider","test",4.2,0,4.6,0.8*total->GetMaximum(),38);
   slider->SetFillColor(46);
 
-// Create a ProcessEventTimer and a TTimer
-  TProcessEventTimer ptimer(300);   // main loop will check events every 300 msec
+// Create a TTimer
   TTimer timer("hsumUpdate()",300); // hsumUpdate will be called every 300 msec
   timer.TurnOn();
 
@@ -46,7 +46,7 @@ void hsumTimer(Int_t nfill=100000)
   gRandom->SetSeed();
   for (Int_t i=0; i<nfill; i++) {
      ratio = Float_t(i)/Float_t(nfill);
-     if (ptimer.ProcessEvents()) break;
+     if (gSystem->ProcessEvents()) break;
      xmain = gRandom->Gaus(-1,1.5);
      xs1   = gRandom->Gaus(-0.5,0.5);
      xs2   = gRandom->Landau(1,0.15);

@@ -1,3 +1,5 @@
+//*CMZ :  2.23/11 09/01/2000  15.54.05  by  Rene Brun
+//*CMZ :  2.23/03 15/09/99  11.07.42  by  Rene Brun
 //*CMZ :  2.22/08 07/07/99  16.51.51  by  Rene Brun
 //*CMZ :  2.00/09 24/06/98  11.33.44  by  Rene Brun
 //*CMZ :  0.90/02 08/11/96  15.54.23  by  Rene Brun
@@ -39,14 +41,10 @@ void zdemo()
    c1 = new TCanvas("zdemo","Monte Carlo Study of Z scaling",10,40,800,600);
    c1->Range(0,0,25,18);
    c1->SetFillColor(40);
-   c1->GetFrame()->SetFillColor(19);
-   c1->GetFrame()->SetBorderSize(6);
-   c1->GetFrame()->SetBorderMode(-1);
 
    TPaveLabel *pl = new TPaveLabel(1,16.3,24,17.5,"Z-scaling of Direct Photon Productions in pp Collisions at RHIC Energies","br");
    pl->SetFillColor(18);
    pl->SetTextFont(32);
-   pl->SetTextSize(0.8);
    pl->SetTextColor(49);
    pl->Draw();
 
@@ -356,3 +354,4 @@ void hz_calc(Float_t ENERG, Float_t DENS, Float_t TGRAD, Float_t PTMIN, Float_t 
 
   }
 }
+

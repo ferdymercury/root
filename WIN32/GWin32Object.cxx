@@ -1,23 +1,19 @@
+//*CMZ :  2.23/02 02/09/99  15.39.27  by  Rene Brun
 //*CMZ :  2.00/12 21/09/98  10.50.40  by  Valery Fine(fine@mail.cern.ch)
 //*CMZ :  1.03/09 16/12/97  11.48.58  by  Valery Fine(fine@mail.cern.ch)
 //*-- Author :    Valery Fine   10/01/96
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //______________________________________________________________________________
@@ -154,7 +150,7 @@ void  TGWin32Switch::W32_DeleteOpenGL()
 }
 
 //______________________________________________________________________________
-void  TGWin32Switch::W32_DrawBox(int x1, int y1, int x2, int y2, TGXW::EBoxMode mode){
+void  TGWin32Switch::W32_DrawBox(int x1, int y1, int x2, int y2, TVirtualX::EBoxMode mode){
     TGWin32Box *CodeOp = new TGWin32Box (x1,y1,x2,y2,mode);
     ExecSwitchW32(W32_DrawBox(x1, y1, x2, y2, mode) ,CodeOp);
 }
@@ -203,7 +199,7 @@ void  TGWin32Switch::W32_DrawPolyMarker(int n, TPoint *xy)
       ExecSwitchW32(W32_DrawPolyMarker(n, xy),CodeOp);
 }
 //______________________________________________________________________________
-void  TGWin32Switch::W32_DrawText(int x, int y, float angle, float mgn, const char *text, TGXW::ETextMode mode)
+void  TGWin32Switch::W32_DrawText(int x, int y, float angle, float mgn, const char *text, TVirtualX::ETextMode mode)
 {
       TGWin32DrawText *CodeOp = new TGWin32DrawText(x, y, text, mode);
       ExecSwitchW32(W32_DrawText(x, y, angle, mgn, text, mode),CodeOp);
@@ -244,7 +240,7 @@ void  TGWin32Switch::W32_GetTextExtent(unsigned int &w, unsigned int &h, char *m
 //*-*  mess        : message
 //*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 
-   TGWin32DrawText *CodeOp = new TGWin32DrawText(0, 0, mess,TGXW::kClear,IX_TXTL);
+   TGWin32DrawText *CodeOp = new TGWin32DrawText(0, 0, mess,TVirtualX::kClear,IX_TXTL);
    ExecSwitchW32(W32_GetTextExtent(w, h, mess),CodeOp);
    w = CodeOp->GetX();
    h = CodeOp->GetY();
@@ -327,7 +323,7 @@ void  TGWin32Switch::W32_SetCursor(ECursor cursor)
     { W32_SetDoubleBuffer(1); }
 
 //______________________________________________________________________________
-void  TGWin32Switch::W32_SetDrawMode(TGXW::EDrawMode mode){
+void  TGWin32Switch::W32_SetDrawMode(TVirtualX::EDrawMode mode){
   TGWin32DrawMode *CodeOp = new TGWin32DrawMode(mode);
   ExecSwitchW32(W32_SetDrawMode(mode),CodeOp);
 }
@@ -369,7 +365,7 @@ void  TGWin32Switch::W32_SetTextAlign(Short_t talign){
 void  TGWin32Switch::W32_SetTextColor(Color_t cindex)
     {SafeSwitchW32(W32_SetTextColor(cindex));}
 //______________________________________________________________________________
-Int_t TGWin32Switch::W32_SetTextFont(char *fontname, TGXW::ETextSetMode mode)
+Int_t TGWin32Switch::W32_SetTextFont(char *fontname, TVirtualX::ETextSetMode mode)
     {ReturnQuery(W32_SetTextFont(fontname, mode));}
 //______________________________________________________________________________
 void  TGWin32Switch::W32_SetTextFont(Int_t fontnumber)
@@ -500,8 +496,8 @@ void TGWin32Object::Win32CreateCallbacks()
   fWinAction.AddCallBack(WM_DESTROY,   (CallBack_t)TGWin32WindowsObject::OnSysCommandCB,this);
   fWinAction.AddCallBack(WM_NOTIFY,    (CallBack_t)TGWin32WindowsObject::OnNotifyCB,this);
 
-  fWinAction.AddCallBack(IX11_ROOT_MSG,(CallBack_t)TGWin32Object::OnRootActCB,this); // TGXW Draw operations
-  fWinAction.AddCallBack(IX11_ROOT_Input,(CallBack_t)TGWin32WindowsObject::OnRootInputCB,this); // TGXW Get Locator
+  fWinAction.AddCallBack(IX11_ROOT_MSG,(CallBack_t)TGWin32Object::OnRootActCB,this); // TVirtualX Draw operations
+  fWinAction.AddCallBack(IX11_ROOT_Input,(CallBack_t)TGWin32WindowsObject::OnRootInputCB,this); // TVirtualX Get Locator
   fWinAction.AddCallBack(ROOT_HOOK,    (CallBack_t)TGWin32WindowsObject::OnRootHookCB,this);    // To call mathod via WinProc
 
 }
@@ -512,7 +508,7 @@ void TGWin32Object::W32_CreateOpenGL()
 #if 0
     if (fObjectDC && !fOpenGLRC)
     {
-        fOpenGLRC = new TGXWOpenGL();
+        fOpenGLRC = new TVirtualXOpenGL();
         fOpenGLRC->CreateContext((Int_t)(fWin32Mother->GetSelectedWindow()));
         fOpenGLRC->MakeCurrent();
     }
@@ -783,7 +779,7 @@ LRESULT APIENTRY
                  int x        = ((TGWin32DrawText *)lParam)->GetX();
                  int y        = ((TGWin32DrawText *)lParam)->GetY();
                  const char *lpText = ((TGWin32DrawText *)lParam)->GetText();
-                 TGXW::ETextMode mode = ((TGWin32DrawText *)lParam)->GetMode();
+                 TVirtualX::ETextMode mode = ((TGWin32DrawText *)lParam)->GetMode();
 
                  CleanCommand(TGWin32DrawText);
 
@@ -804,7 +800,7 @@ LRESULT APIENTRY
                      y_shift  = (fdwCharY/2)*t_rotate;
                      x_shift  = (fdwCharY/2)*sqrt(1.0-t_rotate*t_rotate);
                  }
-                 Int_t savemode = SetBkMode(fObjectDC,mode == TGXW::kOpaque ? OPAQUE : TRANSPARENT);
+                 Int_t savemode = SetBkMode(fObjectDC,mode == TVirtualX::kOpaque ? OPAQUE : TRANSPARENT);
                  ExtTextOut(fObjectDC,
                             x-x_shift, y-y_shift,
                             0, NULL,
@@ -1272,7 +1268,7 @@ LRESULT APIENTRY
     virtual void      W32_SetDoubleBuffer(int mode) = 0;
     virtual void      W32_SetDoubleBufferOFF() = 0;
     virtual void      W32_SetDoubleBufferON()  = 0;
-    virtual void      W32_SetDrawMode(TGXW::EDrawMode mode)  = 0;
+    virtual void      W32_SetDrawMode(TVirtualX::EDrawMode mode)  = 0;
     virtual void      W32_SetFillColor(Color_t cindex) = 0;
     virtual void      W32_SetFillStyle(Style_t style)  = 0;
 #endif
@@ -1306,7 +1302,7 @@ void  TGWin32Object::W32_SetLineWidth(Width_t width){
     virtual void      W32_SetMarkerStyle(Style_t markerstyle) = 0;
     virtual void      W32_SetTextAlign(Short_t talign=11) = 0;
     virtual void      W32_SetTextColor(Color_t cindex) = 0;
-    virtual Int_t     W32_SetTextFont(char *fontname, TGXW::ETextSetMode mode) = 0;
+    virtual Int_t     W32_SetTextFont(char *fontname, TVirtualX::ETextSetMode mode) = 0;
     virtual void      W32_SetTextFont(Int_t fontnumber) = 0;
     virtual void      W32_SetTextSize(Float_t textsize) = 0;
 #endif
@@ -1481,13 +1477,13 @@ void  TGWin32PixmapObject::W32_CopyTo(TGWin32Object *wobj, int xpos, int ypos){
 }
 
 //______________________________________________________________________________
-void  TGWin32PixmapObject::W32_DrawBox(int x1, int y1, int x2, int y2, TGXW::EBoxMode mode){ }
+void  TGWin32PixmapObject::W32_DrawBox(int x1, int y1, int x2, int y2, TVirtualX::EBoxMode mode){ }
 void  TGWin32PixmapObject::W32_DrawCellArray(int x1, int y1, int x2, int y2, int nx, int ny, int *ic){ }
 void  TGWin32PixmapObject::W32_DrawFillArea(int n, TPoint *xy){ }
 void  TGWin32PixmapObject::W32_DrawLine(int x1, int y1, int x2, int y2){ }
 void  TGWin32PixmapObject::W32_DrawPolyLine(int n, TPoint *xy){ }
 void  TGWin32PixmapObject::W32_DrawPolyMarker(int n, TPoint *xy){ }
-void  TGWin32PixmapObject::W32_DrawText(int x, int y, float angle, float mgn, const char *text, TGXW::ETextMode mode){ }
+void  TGWin32PixmapObject::W32_DrawText(int x, int y, float angle, float mgn, const char *text, TVirtualX::ETextMode mode){ }
 void  TGWin32PixmapObject::W32_GetCharacterUp(Float_t &chupx, Float_t &chupy){ }
 Int_t TGWin32PixmapObject::W32_GetDoubleBuffer(){return fDoubleBuffer;}
 //______________________________________________________________________________
@@ -1562,7 +1558,7 @@ void  TGWin32PixmapObject::W32_SetCursor(ECursor cursor){ }
 void  TGWin32PixmapObject::W32_SetDoubleBuffer(int mode){ }
 void  TGWin32PixmapObject::W32_SetDoubleBufferOFF(){ }
 void  TGWin32PixmapObject::W32_SetDoubleBufferON(){ }
-void  TGWin32PixmapObject::W32_SetDrawMode(TGXW::EDrawMode mode){ }
+void  TGWin32PixmapObject::W32_SetDrawMode(TVirtualX::EDrawMode mode){ }
 void  TGWin32PixmapObject::W32_SetFillColor(Color_t cindex){ }
 void  TGWin32PixmapObject::W32_SetFillStyle(Style_t style){ }
 void  TGWin32PixmapObject::W32_SetLineColor(Color_t cindex){ }
@@ -1575,7 +1571,7 @@ void  TGWin32PixmapObject::W32_SetMarkerStyle(Style_t markerstyle){ }
 void  TGWin32PixmapObject::W32_SetRGB(int cindex, float r, float g, float b){ }
 void  TGWin32PixmapObject::W32_SetTextAlign(Short_t talign){ }
 void  TGWin32PixmapObject::W32_SetTextColor(Color_t cindex){ }
-Int_t TGWin32PixmapObject::W32_SetTextFont(char *fontname, TGXW::ETextSetMode mode){return 0;}
+Int_t TGWin32PixmapObject::W32_SetTextFont(char *fontname, TVirtualX::ETextSetMode mode){return 0;}
 void  TGWin32PixmapObject::W32_SetTextFont(Int_t fontnumber){ }
 void  TGWin32PixmapObject::W32_SetTextSize(Float_t textsize){ }
 void  TGWin32PixmapObject::W32_SetTitle(const char *title){ }

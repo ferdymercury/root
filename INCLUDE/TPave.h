@@ -1,3 +1,5 @@
+//*CMZ :  2.23/12 26/01/2000  09.24.07  by  Rene Brun
+//*CMZ :  2.23/09 21/11/99  15.46.26  by  Fons Rademakers
 //*CMZ :  2.20/04 09/12/98  15.46.57  by  Rene Brun
 //*CMZ :  2.00/13 28/10/98  09.28.00  by  Rene Brun
 //*CMZ :  2.00/11 17/08/98  15.14.16  by  Rene Brun
@@ -7,22 +9,17 @@
 #ifndef ROOT_TPave
 #define ROOT_TPave
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -54,6 +51,11 @@ protected:
         TString      fName;          //Pave name
 
 public:
+        // TPave status bits
+        enum {
+           kNameIsAction = BIT(11)   // double clicking on TPave will execute action
+        };
+
         TPave();
         TPave(Coord_t x1, Coord_t y1,Coord_t x2 ,Coord_t y2,
               Int_t bordersize=4 ,Option_t *option="br");
@@ -83,7 +85,7 @@ public:
         virtual void  SavePrimitive(ofstream &out, Option_t *option);
         virtual void  SetBorderSize(Int_t bordersize=4) {fBorderSize = bordersize;} // *MENU*
         virtual void  SetCornerRadius(Float_t rad = 0.2) {fCornerRadius = rad;} // *MENU*
-        virtual void  SetName(const Text_t *name="") {fName = name;} // *MENU*
+        virtual void  SetName(const char *name="") {fName = name;} // *MENU*
         virtual void  SetOption(Option_t *option="br") {fOption = option;}
         virtual void  SetX1NDC(Coord_t x1) {fX1NDC=x1;}
         virtual void  SetX2NDC(Coord_t x2) {fX2NDC=x2;}

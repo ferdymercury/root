@@ -1,25 +1,22 @@
+//*CMZ :  2.23/12 26/01/2000  09.35.28  by  Rene Brun
+//*CMZ :  2.23/04 28/09/99  20.31.48  by  Rene Brun
+//*CMZ :  2.23/03 15/09/99  13.07.57  by  Rene Brun
+//*CMZ :  2.23/02 07/09/99  14.42.04  by  Rene Brun
 //*CMZ :  2.00/11 08/08/98  22.46.52  by  Rene Brun
 //*CMZ :  2.00/09 23/06/98  16.14.31  by  Fons Rademakers
-//*CMZ :  2.00/00 01/04/98  11.55.49  by  Rene Brun
-//*CMZ :  1.03/09 07/12/97  14.08.12  by  Fons Rademakers
 //*-- Author :    Rene Brun   26/11/96
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 #include "TROOT.h"
@@ -31,8 +28,6 @@
 #include "TF1.h"
 
 #include <stdio.h>
-
-R__EXTERN TH1 *gCurrentHist;
 
 ClassImp(TDrawPanelHist)
 
@@ -64,7 +59,7 @@ TDrawPanelHist::TDrawPanelHist() : TDialogCanvas()
 }
 
 //_____________________________________________________________________________
-TDrawPanelHist::TDrawPanelHist(const Text_t *name, const Text_t *title, UInt_t ww, UInt_t wh)
+TDrawPanelHist::TDrawPanelHist(const char *name, const char *title, UInt_t ww, UInt_t wh)
           : TDialogCanvas(name, title,ww,wh)
 {
    // DrawPanelHist constructor.
@@ -80,6 +75,17 @@ TDrawPanelHist::TDrawPanelHist(const Text_t *name, const Text_t *title, UInt_t w
    // Range Slider
    fSlider = new TSlider("slider","X slider",.05,.11,.95,.17);
    fSlider->SetObject(this);
+   if (fHistogram->InheritsFrom("TH1")) {
+      TH1 *h = (TH1 *)fHistogram;
+      Int_t nbins   = h->GetXaxis()->GetNbins();
+      Int_t first   = h->GetXaxis()->GetFirst();
+      Int_t last    = h->GetXaxis()->GetLast();
+      Float_t xmin  = 0;
+      Float_t xmax  = 1;
+      if (first > 1) xmin = Float_t(first)/Float_t(nbins);
+      if (last  > 1) xmax = Float_t(last)/Float_t(nbins);
+      fSlider->SetRange(xmin,xmax);
+   }
 
    // Standard functions
    Int_t nlines = 14;
@@ -165,7 +171,10 @@ TDrawPanelHist::TDrawPanelHist(const Text_t *name, const Text_t *title, UInt_t w
       b->Draw();
    y -= dy;
    b = new TGroupButton("DRAW","COL: colors","AddOption(\"COL\")",x0,y-yb,.48,y);
-      b->SetFillColor(43);
+      b->SetFillColor(31);
+      b->Draw();
+   b = new TGroupButton("DRAW","TEXT : values","AddOption(\"TEXT\")",.52,y-yb,.9,y);
+      b->SetFillColor(31);
       b->Draw();
    y -= dy;
    b = new TGroupButton("SAME","Same Picture","SetSame()",x0,y-yb,.48,y);
@@ -200,7 +209,7 @@ void TDrawPanelHist::AddOption(Option_t *option)
 }
 
 //______________________________________________________________________________
-void TDrawPanelHist::Apply(const Text_t *action)
+void TDrawPanelHist::Apply(const char *action)
 {
    // Collect all options and draw histogram.
 
@@ -301,13 +310,13 @@ void TDrawPanelHist::ExecuteEvent(Int_t event, Int_t px, Int_t py)
    if (!fRefPad) return;
    fRefPad->cd();
    fRefPad->GetCanvas()->FeedbackMode(kTRUE);
-   gGXW->SetLineWidth(2);
+   gVirtualX->SetLineWidth(2);
 
    switch (event) {
 
    case kButton1Down:
-      gGXW->SetLineColor(-1);
-      if (done) gGXW->DrawBox(px1, py1, px2, py2, TGXW::kHollow);
+      gVirtualX->SetLineColor(-1);
+      if (done) gVirtualX->DrawBox(px1, py1, px2, py2, TVirtualX::kHollow);
       done = kTRUE;
       if (fHistogram->InheritsFrom("TF1")) {
          h1 = (TH1*)((TF1*)fHistogram)->GetHistogram();
@@ -330,7 +339,7 @@ void TDrawPanelHist::ExecuteEvent(Int_t event, Int_t px, Int_t py)
       py2   = fRefPad->YtoAbsPixel(ymax);
       pxmin = fRefPad->XtoAbsPixel(xmin);
       pxmax = fRefPad->XtoAbsPixel(xmax);
-      gGXW->DrawBox(px1, py1, px2, py2, TGXW::kHollow);
+      gVirtualX->DrawBox(px1, py1, px2, py2, TVirtualX::kHollow);
       break;
 
    case kMouseMotion:
@@ -338,7 +347,7 @@ void TDrawPanelHist::ExecuteEvent(Int_t event, Int_t px, Int_t py)
 
    case kButton1Motion:
       if (h1 == 0) break;
-      gGXW->DrawBox(px1, py1, px2, py2, TGXW::kHollow);
+      gVirtualX->DrawBox(px1, py1, px2, py2, TVirtualX::kHollow);
       first   = 1 + Int_t(nbins*xpmin);
       last    =     Int_t(nbins*xpmax);
       xleft  = fRefPad->XtoPad(h1->GetXaxis()->GetBinLowEdge(first));
@@ -347,15 +356,15 @@ void TDrawPanelHist::ExecuteEvent(Int_t event, Int_t px, Int_t py)
       px2 = fRefPad->XtoAbsPixel(xright);
       if (px1 < pxmin) px1 = pxmin;
       if (px2 > pxmax) px2 = pxmax;
-      gGXW->DrawBox(px1, py1, px2, py2, TGXW::kHollow);
+      gVirtualX->DrawBox(px1, py1, px2, py2, TVirtualX::kHollow);
 
       break;
 
    case kButton1Up:
-      gGXW->DrawBox(px1, py1, px2, py2, TGXW::kHollow);
+      gVirtualX->DrawBox(px1, py1, px2, py2, TVirtualX::kHollow);
       done = kFALSE;
       fRefPad->GetCanvas()->FeedbackMode(kFALSE);
-      gGXW->SetLineWidth(-1);
+      gVirtualX->SetLineWidth(-1);
 
       break;
    }

@@ -1,24 +1,22 @@
+//*CMZ :  2.23/12 31/01/2000  18.55.41  by  Rene Brun
+//*CMZ :  2.23/09 17/11/99  15.26.12  by  Rene Brun
+//*CMZ :  2.23/00 12/08/99  18.52.55  by  Rene Brun
 //*CMZ :  2.00/12 22/09/98  15.24.25  by  Fons Rademakers
 //*CMZ :  2.00/00 05/03/98  18.02.40  by  Fons Rademakers
 //*CMZ :  1.03/09 07/12/97  23.08.51  by  Fons Rademakers
 //*-- Author :    Rene Brun   09/02/95
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -36,6 +34,7 @@
 #include "TMethod.h"
 #include "TMethodarg.h"
 #include "TROOT.h"
+#include "TApplication.h"
 #include "TInterpreter.h"
 #include "Strlen.h"
 #include "Api.h"
@@ -73,7 +72,7 @@ TMethod::TMethod(G__MethodInfo *info, TClass *cl) : TFunction(info)
 
 
 //______________________________________________________________________________
-const Text_t *TMethod::GetCommentString()
+const char *TMethod::GetCommentString()
 {
     // Returns a comment string from the class declaration.
 
@@ -104,9 +103,12 @@ TDataMember *TMethod::FindDataMember()
    // where fX1, fY2 are data fields in the same class.
    // ("pointers" to data members)
 
-   Char_t *argstring = strstr(GetCommentString(),"*ARGS={");
+   Char_t *argstring = (char*)strstr(GetCommentString(),"*ARGS={");
 
-   if (!(GetClass()->GetListOfRealData())) GetClass()->BuildRealData();
+   // the following statement has been commented (Rene). Not needed
+   // it was making troubles in BuildRealData for classes with protected
+   // default constructors.
+   // if (!(GetClass()->GetListOfRealData())) GetClass()->BuildRealData();
 
    if (argstring) {
 
@@ -114,26 +116,26 @@ TDataMember *TMethod::FindDataMember()
 
       if (!fMethodArgs) return 0;
 
-      Text_t argstr[2048];    // workspace...
-      Text_t *ptr1 = 0;
-      Text_t *tok  = 0;
-      Text_t *ptr2 = 0;
+      char argstr[2048];    // workspace...
+      char *ptr1 = 0;
+      char *tok  = 0;
+      char *ptr2 = 0;
       Int_t i;
 
       strcpy(argstr,argstring);       //let's move it to "worksapce"  copy
 
       ptr2 = strtok(argstr,"{}");     //extract the data!
-      ptr2 = strtok((Text_t*)0,"{}");
+      ptr2 = strtok((char*)0,"{}");
 
       //extract argument tokens//
-      Text_t *tokens[20];
+      char *tokens[20];
       Int_t cnt       = 0;
       Int_t token_cnt = 0;
       do {
-          ptr1 = strtok((Text_t*) (cnt++ ? 0:ptr2),",;"); //extract tokens
+          ptr1 = strtok((char*) (cnt++ ? 0:ptr2),",;"); //extract tokens
                                                          // separated by , or ;
           if (ptr1) {
-             tok = new Text_t[strlen(ptr1)+1];
+             tok = new char[strlen(ptr1)+1];
              strcpy(tok,ptr1);
              tokens[token_cnt] = tok;            //store this token.
              token_cnt++;
@@ -149,7 +151,7 @@ TDataMember *TMethod::FindDataMember()
       for (i=0; i<token_cnt;i++) {
          cnt = 0;
          ptr1 = strtok(tokens[i],"=>");  //LeftHandedSide=methodarg
-         ptr2 = strtok((Text_t*)0,"=>"); //RightHandedSide-points to datamember
+         ptr2 = strtok((char*)0,"=>"); //RightHandedSide-points to datamember
 
          //find the MethodArg
          a      = 0;
@@ -183,9 +185,9 @@ TDataMember *TMethod::FindDataMember()
       TMethodArg *a = 0;
       if (fMethodArgs) a = (TMethodArg*)(fMethodArgs->First());
 
-      Text_t dataname[64]    = "";
-      Text_t basename[64]    = "";
-      const Text_t *funcname = GetName();
+      char dataname[64]    = "";
+      char basename[64]    = "";
+      const char *funcname = GetName();
       if ( strncmp(funcname,"Get",3) == 0 || strncmp(funcname,"Set",3) == 0 )
          sprintf(basename,"%s",funcname+3);
       else if ( strncmp(funcname,"Is",2) == 0 )

@@ -1,25 +1,23 @@
+//*CMZ :  2.23/12 26/01/2000  09.57.11  by  Rene Brun
+//*CMZ :  2.23/11 20/12/99  12.05.59  by  Rene Brun
+//*CMZ :  2.23/07 27/10/99  10.47.27  by  Fons Rademakers
 //*CMZ :  2.22/07 05/07/99  18.55.09  by  Fons Rademakers
 //*CMZ :  2.00/12 01/10/98  12.43.39  by  Rene Brun
 //*CMZ :  2.00/06 11/06/98  18.38.10  by  Fons Rademakers
 //*CMZ :  1.03/09 03/12/97  02.15.24  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   12/11/95
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -168,7 +166,7 @@ void TMap::DeleteAll()
 }
 
 //______________________________________________________________________________
-TObject *TMap::FindObject(const Text_t *keyname) const
+TObject *TMap::FindObject(const char *keyname) const
 {
    // Check if a (key,value) pair exists with keyname as name of the key.
    // Returns a TAssoc* (need to downcast from TObject). Use Key() and
@@ -229,9 +227,10 @@ TObject *TMap::Remove(TObject *key)
    TAssoc *a;
    if ((a = (TAssoc *)fTable->FindObject(key))) {
       if (fTable->Remove(key)) {
+         TObject *kobj = a->Key();
          delete a;
          fSize--;
-         return key;
+         return kobj;
       }
    }
    return 0;
@@ -248,7 +247,10 @@ void TMap::Streamer(TBuffer &b)
       Int_t    nobjects;
       TObject *value;
 
-      b.ReadVersion();   // Version_t v = b.ReadVersion();
+      Version_t v = b.ReadVersion();
+      if (v > 1) {
+         fName.Streamer(b);
+      }
       b >> nobjects;
       for (Int_t i = 0; i < nobjects; i++) {
          b >> obj;
@@ -257,6 +259,7 @@ void TMap::Streamer(TBuffer &b)
       }
    } else {
       b.WriteVersion(TMap::IsA());
+      fName.Streamer(b);
       b << GetSize();
       TIter next(this);
       while ((obj = next())) {

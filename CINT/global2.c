@@ -1,5 +1,5 @@
-/*CMZ :  2.22/10 23/07/99  14.42.15  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   23/07/99*/
+/*CMZ :  2.23/10 10/12/99  18.00.01  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   10/12/99*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -9,15 +9,13 @@
  * Description:
  *  Cint parser global variables.
  ************************************************************************
- * Copyright(c) 1991~1996  [hp] Hewlett Packard Japan, All rights reserved
- * Author                  Masaharu Goto (gotom@jpn.hp.com)
- * Copyright(c) 1995~1998  Masaharu Goto (MXJ02154@niftyserve.or.jp)
+ * Copyright(c) 1995~1999  Masaharu Goto (MXJ02154@niftyserve.or.jp)
  *
  * Permission to use, copy, modify and distribute this software and its
  * documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies and
  * that both that copyright notice and this permission notice appear
- * in supporting documentation.  Hewlett-Packard Japan Company makes no
+ * in supporting documentation.  The author makes no
  * representations about the suitability of this software for any
  * purpose.  It is provided "as is" without express or implied warranty.
  ************************************************************************/
@@ -211,6 +209,7 @@ char *G__refansipara;
 * include path list
 ********************************************************************/
 struct G__includepath G__ipathentry;
+struct G__includepath *G__getipathentry() { return &G__ipathentry; }
 
 
 /*********************************************************************
@@ -403,6 +402,13 @@ int G__ispragmainclude=0;
 * automatic variable on/off
 **************************************************************************/
 int G__automaticvar=1;
+#endif
+
+#ifndef G__OLDIMPLEMENTATION1164
+/**************************************************************************
+* Local variable , bytecode compiler workaround
+**************************************************************************/
+int G__xrefflag=0;
 #endif
 
 /*

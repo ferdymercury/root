@@ -1,3 +1,4 @@
+//*CMZ :  2.23/04 12/10/99  16.38.20  by  Fons Rademakers
 //*CMZ :  1.01/04 02/06/97  16.26.24  by  Valery Fine(fine@vxcern.cern.ch)
 //*-- Author :    Valery Fine(fine@vxcern.cern.ch)   13/08/96
 
@@ -28,10 +29,6 @@
 #include "TWin32CommCtrl.h"
 #include "TWin32BrowserImp.h"
 
-
-#include "TWinNTInput.h"
-#include "TWinNTSystem.h"
-
 #include "TBuffer.h"
 
 //*-*-*-*-*-*-*-*-*-*-*-*  ShowMembers for Win32  *-*-*-*-*-*-*-*-*-*-*
@@ -48,9 +45,6 @@ void TCritSection::ShowMembers(TMemberInspector &insp, char *parent){;}
 
 //______________________________________________________________________________
 void TContextMenuItem::ShowMembers(TMemberInspector &insp, char *parent){;}
-
-//______________________________________________________________________________
-void TGWin32::ShowMembers(TMemberInspector &insp, char *parent){;}
 
 //______________________________________________________________________________
 void TGWin32Switch::ShowMembers(TMemberInspector &insp, char *parent){;}
@@ -82,8 +76,6 @@ void TWin32ControlBarImp::ShowMembers(TMemberInspector &insp, char *parent){;}
 //______________________________________________________________________________
 void TWin32Dialog::ShowMembers(TMemberInspector &insp, char *parent){;}
 //______________________________________________________________________________
-void TWin32GuiFactory::ShowMembers(TMemberInspector &insp, char *parent){;}
-//______________________________________________________________________________
 void TWin32Menu::ShowMembers(TMemberInspector &insp, char *parent){;}
 //______________________________________________________________________________
 void TWin32TreeViewCtrl::ShowMembers(TMemberInspector &insp, char *parent){;}
@@ -94,15 +86,6 @@ void TWin32ListViewCtrl::ShowMembers(TMemberInspector &insp, char *parent){;}
 void TWin32CommCtrl::ShowMembers(TMemberInspector &insp, char *parent){;}
 //______________________________________________________________________________
 void TWin32BrowserImp::ShowMembers(TMemberInspector &insp, char *parent){;}
-
-
-//  *-*-*-*-*-*-*-*-*-*-* ShowMembers for WinNT  *-*-*-*-*-*-*-*-*-*-*
-//______________________________________________________________________________
-void TWinNTInput::ShowMembers(TMemberInspector &insp, char *parent){;}
-
-//______________________________________________________________________________
-void TWinNTSystem::ShowMembers(TMemberInspector &insp, char *parent){;}
-
 
 
 
@@ -120,9 +103,6 @@ void TCritSection::Streamer(TBuffer &b){;}
 
 //______________________________________________________________________________
 void TContextMenuItem::Streamer(TBuffer &b){;}
-
-//______________________________________________________________________________
-void TGWin32::Streamer(TBuffer &b){;}
 
 //______________________________________________________________________________
 void TGWin32Switch::Streamer(TBuffer &b){;}
@@ -154,8 +134,6 @@ void TWin32ControlBarImp::Streamer(TBuffer &b){;}
 //______________________________________________________________________________
 void TWin32Dialog::Streamer(TBuffer &b){;}
 //______________________________________________________________________________
-void TWin32GuiFactory::Streamer(TBuffer &b){;}
-//______________________________________________________________________________
 void TWin32Menu::Streamer(TBuffer &b){;}
 
 //______________________________________________________________________________
@@ -167,13 +145,6 @@ void TWin32ListViewCtrl::Streamer(TBuffer &b){;}
 
 //______________________________________________________________________________
 void TWin32BrowserImp::Streamer(TBuffer &b){;}
-
-//  *-*-*-*-*-*-*-*-*-*-* Streamer fir WinNT  *-*-*-*-*-*-*-*-*-*-*
-//______________________________________________________________________________
-void TWinNTInput::Streamer(TBuffer &b){;}
-
-//______________________________________________________________________________
-void TWinNTSystem::Streamer(TBuffer &b){;}
 
 
 //*-*-*-*-*-*-*-*-*-*-*-*  operator >> for Win32  *-*-*-*-*-*-*-*-*-*-*
@@ -187,8 +158,6 @@ TBuffer &operator>>(TBuffer &buf, TCallBackObject *&obj) {return buf;}
 TBuffer &operator>>(TBuffer &buf, TCritSection *&obj) {return buf;}
 //______________________________________________________________________________
 TBuffer &operator>>(TBuffer &buf, TContextMenuItem *&obj) {return buf;}
-//______________________________________________________________________________
-TBuffer &operator>>(TBuffer &buf, TGWin32 *&obj) {return buf;}
 //______________________________________________________________________________
 TBuffer &operator>>(TBuffer &buf, TGWin32Switch *&obj) {return buf;}
 //______________________________________________________________________________
@@ -210,8 +179,6 @@ TBuffer &operator>>(TBuffer &buf, TWin32ControlBarImp *&obj) {return buf;}
 //______________________________________________________________________________
 TBuffer &operator>>(TBuffer &buf, TWin32Dialog *&obj) {return buf;}
 //______________________________________________________________________________
-TBuffer &operator>>(TBuffer &buf, TWin32GuiFactory *&obj) {return buf;}
-//______________________________________________________________________________
 TBuffer &operator>>(TBuffer &buf, TWin32Menu *&obj) {return buf;}
 
 //______________________________________________________________________________
@@ -222,11 +189,4 @@ TBuffer &operator>>(TBuffer &buf, TWin32TreeViewCtrl *&obj) {return buf;}
 TBuffer &operator>>(TBuffer &buf, TWin32ListViewCtrl *&obj) {return buf;}
 //______________________________________________________________________________
 TBuffer &operator>>(TBuffer &buf, TWin32CommCtrl *&obj) {return buf;}
-
-//______________________________________________________________________________
-TBuffer &operator>>(TBuffer &buf, TWinNTInput *&obj) {return buf;}
-//______________________________________________________________________________
-TBuffer &operator>>(TBuffer &buf, TFdSet *&obj) {return buf;}
-//______________________________________________________________________________
-TBuffer &operator>>(TBuffer &buf, TWinNTSystem *&obj) {return buf;}
 

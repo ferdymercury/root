@@ -1,29 +1,27 @@
+//*CMZ :  2.23/12 26/01/2000  09.24.05  by  Rene Brun
+//*CMZ :  2.23/11 11/01/2000  12.14.46  by  Rene Brun
+//*CMZ :  2.23/02 06/09/99  16.55.10  by  Fons Rademakers
 //*CMZ :  2.21/04 17/04/99  07.50.09  by  Valery Fine(fine@mail.cern.ch)
 //*CMZ :  2.00/11 09/08/98  10.30.13  by  Rene Brun
 //*CMZ :  2.00/00 03/07/98  15.45.57  by  Fons Rademakers
-//*CMZ :  1.03/09 07/12/97  16.17.32  by  Fons Rademakers
 //*-- Author :    Rene Brun   22/09/95
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 #include "TROOT.h"
 #include "THashList.h"
+#include "TObjArray.h"
 #include "TGeometry.h"
 #include "TNode.h"
 #include "TMaterial.h"
@@ -113,7 +111,7 @@ TGeometry::TGeometry()
 }
 
 //______________________________________________________________________________
-TGeometry::TGeometry(const Text_t *name,const Text_t *title ) : TNamed (name, title)
+TGeometry::TGeometry(const char *name,const char *title ) : TNamed (name, title)
 {
 //*-*-*-*-*-*-*-*-*-*-*-*-*Geometry normal constructor*-*-*-*-*-*-*-*-*-*-*-*
 //*-*                      ===========================
@@ -179,7 +177,7 @@ void TGeometry::Browse(TBrowser *b)
 }
 
 //______________________________________________________________________________
-void TGeometry::cd(const Text_t *)
+void TGeometry::cd(const char *)
 {
 //*-*-*-*-*-*Change Current Geometry to this*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 //*-*        ===============================
@@ -199,7 +197,48 @@ void TGeometry::Draw(Option_t *option)
 }
 
 //______________________________________________________________________________
-TMaterial *TGeometry::GetMaterial(const Text_t *name)
+TObjArray *TGeometry::Get(const char *name)
+{
+   //
+   // Static function called by TROOT to search name in the geometry.
+   // Returns a TObjArray containing a pointer to the found object
+   // and a pointer to the container where the object was found.
+   //
+
+   static TObjArray *locs = 0;
+   if (!locs) locs = new TObjArray(2);
+   TObjArray &loc = *locs;
+   loc[0] = 0;
+   loc[1] = 0;
+
+   if (!gGeometry) return &loc;
+
+   TObject *temp;
+   TObject *where;
+
+   temp  = gGeometry->GetListOfMaterials()->FindObject(name);
+   where = gGeometry->GetListOfMaterials();
+
+   if (!temp) {
+      temp  = gGeometry->GetListOfShapes()->FindObject(name);
+      where = gGeometry->GetListOfShapes();
+   }
+   if (!temp) {
+      temp  = gGeometry->GetListOfMatrices()->FindObject(name);
+      where = gGeometry->GetListOfMatrices();
+   }
+   if (!temp) {
+      temp  = gGeometry->GetNode(name);
+      where = gGeometry;
+   }
+   loc[0] = temp;
+   loc[1] = where;
+
+   return &loc;
+}
+
+//______________________________________________________________________________
+TMaterial *TGeometry::GetMaterial(const char *name)
 {
 //*-*-*-*-*-*-*-*-*Return pointer to Material with name*-*-*-*-*-*-*-*-*
 //*-*              ====================================
@@ -224,7 +263,7 @@ TMaterial *TGeometry::GetMaterialByNumber(Int_t number)
 }
 
 //______________________________________________________________________________
-TNode *TGeometry::GetNode(const Text_t *name)
+TNode *TGeometry::GetNode(const char *name)
 {
 //*-*-*-*-*-*-*Return pointer to node with name in the geometry tree*-*-*-*-*
 //*-*          =====================================================
@@ -236,7 +275,7 @@ TNode *TGeometry::GetNode(const Text_t *name)
 }
 
 //______________________________________________________________________________
-TRotMatrix *TGeometry::GetRotMatrix(const Text_t *name)
+TRotMatrix *TGeometry::GetRotMatrix(const char *name)
 {
 //*-*-*-*-*-*-*-*-*Return pointer to RotMatrix with name*-*-*-*-*-*-*-*-*-*
 //*-*              =====================================
@@ -260,7 +299,7 @@ TRotMatrix *TGeometry::GetRotMatrixByNumber(Int_t number)
 }
 
 //______________________________________________________________________________
-TShape *TGeometry::GetShape(const Text_t *name)
+TShape *TGeometry::GetShape(const char *name)
 {
 //*-*-*-*-*-*-*-*-*Return pointer to Shape with name*-*-*-*-*-*-*-*-*-*
 //*-*              =================================
@@ -388,7 +427,7 @@ void TGeometry::ls(Option_t *option)
 
 
 //______________________________________________________________________________
-void TGeometry::Node(const Text_t *name, const Text_t *title, const Text_t *shapename, Double_t x, Double_t y, Double_t z, const Text_t *matrixname, Option_t *option)
+void TGeometry::Node(const char *name, const char *title, const char *shapename, Double_t x, Double_t y, Double_t z, const char *matrixname, Option_t *option)
 {
 //*-*-*-*-*-*-*-*Add a node to the current node in this geometry*-*-*-*-*-*-*
 //*-*            ===============================================
@@ -415,8 +454,9 @@ void TGeometry::Streamer(TBuffer &b)
    TRotMatrix *onematrix;
    TShape *oneshape;
 
+   UInt_t R__s, R__c;
    if (b.IsReading()) {
-      b.ReadVersion();  //Version_t v = b.ReadVersion();
+      b.ReadVersion(&R__s, &R__c);
       TNamed::Streamer(b);
       fMaterials->Streamer(b);
       fMatrices->Streamer(b);
@@ -454,20 +494,22 @@ void TGeometry::Streamer(TBuffer &b)
       b >> fBomb;
 
 //*-*- If geometry already exists, delete old version
-      TGeometry *oldgeom = gROOT->GetGeometry(GetName());
+      TGeometry *oldgeom = (TGeometry*)gROOT->GetGeometry(GetName());
       delete oldgeom;
 
       gROOT->GetListOfGeometries()->Add(this);
 
       fCurrentNode = (TNode*)GetListOfNodes()->First();
+      b.CheckByteCount(R__s, R__c, TGeometry::IsA());
    } else {
-      b.WriteVersion(TGeometry::IsA());
+      R__c = b.WriteVersion(TGeometry::IsA(), kTRUE);
       TNamed::Streamer(b);
       fMaterials->Streamer(b);
       fMatrices->Streamer(b);
       fShapes->Streamer(b);
       fNodes->Streamer(b);
       b << fBomb;
+      b.SetByteCount(R__c, kTRUE);
    }
 }
 

@@ -1,5 +1,5 @@
-/*CMZ :  2.22/10 23/07/99  14.42.15  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   23/07/99*/
+/*CMZ :  2.23/10 10/12/99  18.00.01  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   10/12/99*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -9,15 +9,13 @@
  * Description:
  *  Cint parser global variables.
  ************************************************************************
- * Copyright(c) 1991~1996  [hp] Hewlett Packard Japan, All rights reserved
- * Author                  Masaharu Goto (gotom@jpn.hp.com)
- * Copyright(c) 1995~1998  Masaharu Goto (MXJ02154@niftyserve.or.jp)
+ * Copyright(c) 1995~1999  Masaharu Goto (MXJ02154@niftyserve.or.jp)
  *
  * Permission to use, copy, modify and distribute this software and its
  * documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies and
  * that both that copyright notice and this permission notice appear
- * in supporting documentation.  Hewlett-Packard Japan Company makes no
+ * in supporting documentation.  The author makes no
  * representations about the suitability of this software for any
  * purpose.  It is provided "as is" without express or implied warranty.
  ************************************************************************/
@@ -99,8 +97,11 @@ struct G__param *G__asm_param; /* pointer of parameter buffer to
 				* bring function parameter */
 
 /* Loop compiler flags */
-int G__asm_loopcompile; /* loop compilation mode. default on(1).
+int G__asm_loopcompile; /* loop compilation mode. default on(4).
 			   * This is set to 0 by -O0 */
+#ifndef G__OLDIMPLEMENTATION1155
+int G__asm_loopcompile_mode;
+#endif
 int G__asm_exec=0; /* p-code execution flag */
 int G__asm_noverflow=0; /* When this is set to 1, compilation starts.
 			 * If any error found, reset */

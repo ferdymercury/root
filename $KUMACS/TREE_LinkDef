@@ -1,3 +1,6 @@
+*CMZ :  2.23/12 22/01/2000  18.21.38  by  Rene Brun
+*CMZ :  2.23/10 30/11/99  16.44.33  by  Fons Rademakers
+*CMZ :  2.23/03 12/09/99  09.48.45  by  Rene Brun
 *CMZ :  2.20/04 08/12/98  17.02.07  by  Rene Brun
 *CMZ :  2.00/09 25/06/98  19.57.47  by  Fons Rademakers
 *-- Author :    Fons Rademakers   25/06/98
@@ -14,21 +17,20 @@
 #pragma link C++ class TChain-;
 #pragma link C++ class TChainElement;
 #pragma link C++ class TCut;
-#pragma link C++ class TCutG;
 #pragma link C++ class TEventList-;
 #pragma link C++ class TLeaf-;
 #pragma link C++ class TLeafObject-;
-#pragma link C++ class TLeafB;
-#pragma link C++ class TLeafC;
-#pragma link C++ class TLeafD;
-#pragma link C++ class TLeafF;
-#pragma link C++ class TLeafI;
-#pragma link C++ class TLeafS;
+#pragma link C++ class TLeafB+;
+#pragma link C++ class TLeafC+;
+#pragma link C++ class TLeafD+;
+#pragma link C++ class TLeafF+;
+#pragma link C++ class TLeafI+;
+#pragma link C++ class TLeafS+;
 #pragma link C++ class TNtuple-;
-#pragma link C++ class TPacketGenerator;
-#pragma link C++ class TSelector;
 #pragma link C++ class TTree-;
-#pragma link C++ class TTreeFormula-;
+#pragma link C++ class TVirtualTreePlayer;
+#pragma link C++ class TTreeResult;
+#pragma link C++ class TTreeRow;
 
 #pragma link C++ function operator+(const TCut&, const char*);
 #pragma link C++ function operator+(const char*, const TCut&);

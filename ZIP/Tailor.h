@@ -1,3 +1,4 @@
+/*CMZ :  2.23/03 24/09/99  18.25.38  by  Fons Rademakers*/
 /*CMZ :  2.00/00 08/03/98  11.27.32  by  Rene Brun*/
 /*CMZ :  1.03/09 16/12/97  16.26.16  by  Rene Brun*/
 /*-- Author :*/
@@ -43,10 +44,6 @@
 #  endif /* !PROTO */
 #  define MODERN
 #endif
-
-#ifdef __IBMC__
-#  define S_IFMT 0xF000
-#endif /* __IBMC__ */
 
 #if defined(__EMX__) || defined(__WATCOMC__) || defined(__BORLANDC__)
 #  if (defined(OS2) && !defined(__32BIT__))
@@ -115,8 +112,7 @@
 #    undef huge
 #    undef far
 #    undef near
-#  endif
-#  ifndef __IBMC__
+#  else
 #    define huge
 #    define far
 #    define near
@@ -339,6 +335,12 @@
 #  ifndef S_IFMT
 #    define S_IFMT        (S_IFCHR|S_IFREG|S_IFDIR)
 #  endif
+
+#ifdef __IBMC__
+#  ifndef S_IFMT
+#    define S_IFMT 0xF000
+#  endif
+#endif /* __IBMC__ */
 
 /* a whole bunch of functions needs Tos '\\' filenames
  * instead of '/',  the translation functions are in fileio.c:

@@ -1,27 +1,22 @@
+//*CMZ :  2.23/12 26/01/2000  09.24.06  by  Rene Brun
+//*CMZ :  2.23/09 21/11/99  19.58.22  by  Fons Rademakers
 //*CMZ :  2.22/01 17/04/99  07.50.09  by  Rene Brun
 //*CMZ :  2.21/07 21/02/99  20.17.38  by  Valery Fine(fine@mail.cern.ch)
 //*CMZ :  2.21/04 02/02/99  18.23.24  by  Rene Brun
 //*CMZ :  2.00/11 22/08/98  12.26.40  by  Rene Brun
-//*CMZ :  2.00/00 17/02/98  15.59.00  by  Rene Brun
-//*CMZ :  1.03/09 09/12/97  15.00.39  by  Fons Rademakers
 //*-- Author :    Rene Brun   14/09/95
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 #include <iostream.h>
@@ -45,8 +40,6 @@ const Int_t kVectorSize = 3;
 const Int_t kMatrixSize = kVectorSize*kVectorSize;
 #endif
 
-const Int_t kSonsInvisible = BIT(17);
-
 static Double_t gTranslation[kMAXLEVELS][kVectorSize];
 static Double_t gRotMatrix[kMAXLEVELS][kMatrixSize];
 static Int_t gGeomLevel = 0;
@@ -54,6 +47,7 @@ static Int_t gGeomLevel = 0;
 TNode *gNode;
 
 R__EXTERN  Size3D gSize3D;
+
 
 ClassImp(TNode)
 
@@ -89,7 +83,7 @@ TNode::TNode()
 }
 
 //______________________________________________________________________________
-TNode::TNode(const Text_t *name, const Text_t *title, const Text_t *shapename, Double_t x, Double_t y, Double_t z, const Text_t *matrixname, Option_t *option)
+TNode::TNode(const char *name, const char *title, const char *shapename, Double_t x, Double_t y, Double_t z, const char *matrixname, Option_t *option)
        :TNamed(name,title),TAttLine(), TAttFill()
 {
 //*-*-*-*-*-*-*-*-*-*-*Node normal constructor*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
@@ -145,7 +139,7 @@ TNode::TNode(const Text_t *name, const Text_t *title, const Text_t *shapename, D
 
 
 //______________________________________________________________________________
-TNode::TNode(const Text_t *name, const Text_t *title, TShape *shape, Double_t x, Double_t y, Double_t z, TRotMatrix *matrix, Option_t *option)
+TNode::TNode(const char *name, const char *title, TShape *shape, Double_t x, Double_t y, Double_t z, TRotMatrix *matrix, Option_t *option)
                 :TNamed(name,title),TAttLine(),TAttFill()
 {
 //*-*-*-*-*-*-*-*-*-*-*Node normal constructor*-*-*-*-*-*-*-*-*-*-*
@@ -228,7 +222,7 @@ void TNode::BuildListOfNodes()
 }
 
 //______________________________________________________________________________
-void TNode::cd(const Text_t *)
+void TNode::cd(const char *)
 {
 //*-*-*-*-*-*Change Current Reference node to this*-*-*-*-*-*-*-*-*-*-*-*-*
 //*-*        =====================================
@@ -366,7 +360,7 @@ void TNode::ExecuteEvent(Int_t, Int_t, Int_t)
 }
 
 //______________________________________________________________________________
-TNode *TNode::GetNode(const Text_t *name)
+TNode *TNode::GetNode(const char *name)
 {
 //*-*-*-*-*-*-*Return pointer to node with name in the node tree*-*-*-*-*
 //*-*          =================================================
@@ -386,9 +380,10 @@ TNode *TNode::GetNode(const Text_t *name)
 }
 
 //______________________________________________________________________________
-Text_t *TNode::GetObjectInfo(Int_t, Int_t)
+char *TNode::GetObjectInfo(Int_t, Int_t)
 {
-   if (!gPad) return "";
+   const char *snull = "";
+   if (!gPad) return (char*)snull;
    static char info[64];
    sprintf(info,"%s/%s, shape=%s/%s",GetName(),GetTitle(),fShape->GetName(),fShape->ClassName());
    return info;
@@ -519,7 +514,7 @@ void TNode::ls(Option_t *option)
 
    Int_t nsons = 0;
    if (fNodes) nsons = fNodes->GetSize();
-   const Text_t *shapename, *matrixname;
+   const char *shapename, *matrixname;
    if (fShape) shapename = fShape->IsA()->GetName();
    else        shapename = "????";
    cout<<GetName()<<":"<<GetTitle()<<" is a "<<shapename;
@@ -629,7 +624,7 @@ void TNode::RecursiveRemove(TObject *obj)
 }
 
 //______________________________________________________________________________
-void TNode::SetName(const Text_t *name)
+void TNode::SetName(const char *name)
 {
 //*-*-*-*-*-*-*-*-*-*-*Change the name of this Node*-*-*-*-*-*-*-*-*-*-*
 //*-*                  ============================
@@ -720,8 +715,9 @@ void TNode::Streamer(TBuffer &b)
 {
 //*-*-*-*-*-*-*-*-*Stream a class object*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 //*-*              =========================================
+   UInt_t R__s, R__c;
    if (b.IsReading()) {
-      Version_t v = b.ReadVersion();
+      Version_t v = b.ReadVersion(&R__s, &R__c);
       TNamed::Streamer(b);
       TAttLine::Streamer(b);
       TAttFill::Streamer(b);
@@ -735,8 +731,9 @@ void TNode::Streamer(TBuffer &b)
       fOption.Streamer(b);
       if (v > 1) b >> fVisibility;
       else  fVisibility = fShape->GetVisibility();
+      b.CheckByteCount(R__s, R__c, TNode::IsA());
    } else {
-      b.WriteVersion(TNode::IsA());
+      R__c = b.WriteVersion(TNode::IsA(), kTRUE);
       TNamed::Streamer(b);
       TAttLine::Streamer(b);
       TAttFill::Streamer(b);
@@ -749,6 +746,7 @@ void TNode::Streamer(TBuffer &b)
       b << fNodes;
       fOption.Streamer(b);
       b << fVisibility;
+      b.SetByteCount(R__c, kTRUE);
    }
 }
 

@@ -1,5 +1,5 @@
-*CMZ :  2.22/10 23/07/99  14.42.23  by  Masaharu Goto
-*-- Author :    Masaharu Goto   23/07/99
+*CMZ :  2.23/10 10/12/99  18.00.13  by  Masaharu Goto
+*-- Author :    Masaharu Goto   10/12/99
 LIBRARY		"LIBCINT"
 
 DESCRIPTION	'LIBCINT'
@@ -124,3 +124,17 @@ EXPORTS
 	G__p2f_void_void @103
 	G__setglobalcomp @104
 	G__getmakeinfo @105
+	G__get_security_error @106
+	G__map_cpp_name @107
+	G__Charref @108
+	G__Shortref @109
+	G__Intref @110
+	G__Longref @111
+	G__UCharref @112
+	G__UShortref @113
+	G__UIntref @114
+	G__ULongref @115
+	G__Floatref @116
+	G__Doubleref @117
+	G__loadsystemfile @118
+	G__set_ignoreinclude @119

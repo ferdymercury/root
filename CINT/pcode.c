@@ -1,5 +1,5 @@
-/*CMZ :  2.22/10 23/07/99  14.42.18  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   23/07/99*/
+/*CMZ :  2.23/10 10/12/99  18.00.04  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   10/12/99*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -9,22 +9,29 @@
  * Description:
  *  Loop compilation related source code
  ************************************************************************
- * Copyright(c) 1991~1996  [hp] Hewlett Packard Japan, All rights reserved
- * Author                  Masaharu Goto (gotom@jpn.hp.com)
- * Copyright(c) 1995~1998  Masaharu Goto (MXJ02154@niftyserve.or.jp)
+ * Copyright(c) 1995~1999  Masaharu Goto (MXJ02154@niftyserve.or.jp)
  *
  * Permission to use, copy, modify and distribute this software and its
  * documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies and
  * that both that copyright notice and this permission notice appear
- * in supporting documentation.  Hewlett-Packard Japan Company makes no
+ * in supporting documentation.  The author makes no
  * representations about the suitability of this software for any
  * purpose.  It is provided "as is" without express or implied warranty.
  ************************************************************************/
 
 #include "common.h"
 
+#ifndef G__OLDIMPLEMENTATION1229
+#ifdef G__ROOT
+extern void* G__new_interpreted_object G__P((int size));
+extern void G__delete_interpreted_object G__P((void* p));
+#endif
+#endif
+
+#ifndef __CINT__
 int G__asm_optimize3 G__P((int *start));
+#endif
 
 #ifdef G__ASM
 
@@ -1559,18 +1566,18 @@ long localmem;
       * sp-1     <- pinc
       * sp
       ***************************************/
-#ifndef G__OLDIMPLEMENTATION585
       if(G__asm_inst[pc+1]) {
+#if defined(G__ROOT) && !defined(G__OLDIMPLEMENTATION1229)
+	G__store_struct_offset
+	  =(long)G__new_interpreted_object(G__asm_inst[pc+1]*G__asm_stack[sp-1].obj.i);
+#else
 	G__store_struct_offset
 	  =(long)malloc(G__asm_inst[pc+1]*G__asm_stack[sp-1].obj.i);
+#endif
       }
       else {
 	G__store_struct_offset = G__asm_stack[sp-2].obj.i;
       }
-#else
-      G__store_struct_offset
-	=(long)malloc(G__asm_inst[pc+1]*G__int(G__asm_stack[sp-1]));
-#endif
       if(0==G__store_struct_offset)
 	G__genericerror("Error: malloc failed for new operator");
 #ifdef G__ASM_DBG
@@ -1646,11 +1653,13 @@ long localmem;
       if(G__asm_inst[pc+1]) {
 	pinc=G__free_newarraylist(G__store_struct_offset);
       }
-#ifndef G__OLDIMPLEMENTATION864
-      if(G__store_struct_offset) free((void*)G__store_struct_offset);
+      if(G__store_struct_offset) {
+#if defined(G__ROOT) && !defined(G__OLDIMPLEMENTATION1229)
+	G__delete_interpreted_object((void*)G__store_struct_offset);
 #else
-      free((void*)G__store_struct_offset);
+	free((void*)G__store_struct_offset);
 #endif
+      }
       pc+=2;
 #ifdef G__ASM_DBG
       break;
@@ -5101,6 +5110,58 @@ G__value *pbuf;
 **************************************************************************
 *************************************************************************/
 
+#ifndef G__OLDIMPLEMENTATION1164
+/******************************************************************
+* G__abortbytecode()
+******************************************************************/
+void G__suspendbytecode()
+{
+  if(G__asm_dbg && G__asm_noverflow) {
+    fprintf(G__serr,"Note: Bytecode compiler suspended(off) and resumed(on)");
+    G__printlinenum();
+  }
+  G__asm_noverflow=0;
+}
+/******************************************************************
+* G__abortbytecode()
+******************************************************************/
+void G__resetbytecode()
+{
+  if(G__asm_dbg && G__asm_noverflow) {
+    fprintf(G__serr,"Note: Bytecode compiler reset (off)");
+    G__printlinenum();
+  }
+  G__asm_noverflow=0;
+}
+#endif
+
+#ifndef G__OLDIMPLEMENTATION988
+/******************************************************************
+* G__abortbytecode()
+******************************************************************/
+void G__abortbytecode()
+{
+  if(G__asm_dbg && G__asm_noverflow) {
+#ifndef G__OLDIMPLEMENTATION1164
+    if(0==G__xrefflag)
+      fprintf(G__serr,"Note: Bytecode compiler stops at this line. Enclosing loop or function may be slow %d"
+	      ,G__asm_noverflow);
+    else
+      fprintf(G__serr,"Note: Bytecode limitation encountered but compiler continuers for Local variable cross referencing");
+#else
+    fprintf(G__serr,"Note: Bytecode compiler stops at this line. Enclosing loop or function may be slow %d"
+	    ,G__asm_noverflow);
+#endif
+    G__printlinenum();
+  }
+#ifndef G__OLDIMPLEMENTATION1164
+  if(0==G__xrefflag) G__asm_noverflow=0;
+#else
+  G__asm_noverflow=0;
+#endif
+}
+#endif
+
 /****************************************************************
 * G__inc_cp_asm(cp_inc,dt_dec)
 *
@@ -5115,8 +5176,15 @@ G__value *pbuf;
 int G__inc_cp_asm(cp_inc,dt_dec)
 int cp_inc,dt_dec;
 {
+#ifndef G__OLDIMPLEMENTATION1164
+  if(0==G__xrefflag) {
+    G__asm_cp+=cp_inc;
+    G__asm_dt-=dt_dec;
+  }
+#else
   G__asm_cp+=cp_inc;
   G__asm_dt-=dt_dec;
+#endif
 
   if(G__asm_cp>G__MAXINST-8) {
 #ifndef G__OLDIMPLEMENTATION841
@@ -5187,21 +5255,6 @@ int G__asm_clear()
 
 #endif /* G__ASM */
 
-#ifndef G__OLDIMPLEMENTATION988
-/******************************************************************
-* G__abortbytecode()
-******************************************************************/
-void G__abortbytecode()
-{
-  if(G__asm_dbg && G__asm_noverflow) {
-    fprintf(G__serr,"Note: Bytecode compilation flag reset %d->0"
-	    ,G__asm_noverflow);
-    G__printlinenum();
-  }
-  G__asm_noverflow=0;
-}
-#endif
-
 
 #ifdef G__ASM
 /**************************************************************************
@@ -5246,6 +5299,20 @@ void **ppdict;
     if(G__asm_noverflow) G__asm_putint(i);
 #endif
   }
+#ifndef G__OLDIMPLEMENTATION1234
+  else if(strcmp(item,"_DATE__")==0) {
+    i = G__RSVD_DATE;
+#ifdef G__ASM
+    if(G__asm_noverflow) G__asm_putint(i);
+#endif
+  }
+  else if(strcmp(item,"_TIME__")==0) {
+    i = G__RSVD_TIME;
+#ifdef G__ASM
+    if(G__asm_noverflow) G__asm_putint(i);
+#endif
+  }
+#endif
   else if(strcmp(item,"#")==0) {
     i = G__RSVD_ARG;
 #ifdef G__ASM
@@ -5260,7 +5327,11 @@ void **ppdict;
   }
   else {
 #ifndef G__OLDIMPLEMENTATION715
+#ifndef G__OLDIMPLEMENTATION1173
+      i = 0;
+#else
       i = -1;
+#endif
       buf = G__null;
 #else
     buf = G__getexpr(item);
@@ -5274,7 +5345,11 @@ void **ppdict;
 #endif
   }
 
+#ifndef G__OLDIMPLEMENTATION1173
+  if(i) {
+#else
   if(-1 != i) {
+#endif
     buf = G__getrsvd(i);
 #ifdef G__ASM
     if(G__asm_noverflow) {
@@ -5289,6 +5364,60 @@ void **ppdict;
   }
   return(buf);
 }
+
+#ifndef G__OLDIMPLEMENTATION1234
+/**************************************************************************
+* G__get__tm__()
+*
+*  returns 'Sun Nov 28 21:40:32 1999\n' in buf
+**************************************************************************/
+void G__get__tm__(buf)
+char *buf;
+{
+  time_t t = time(0);
+  sprintf(buf,"%s",ctime(&t));
+}
+/**************************************************************************
+* G__get__date__()
+**************************************************************************/
+char* G__get__date__()
+{
+  int i=0,j=0;
+  char buf[80];
+  static char result[80];
+  G__get__tm__(buf);
+  while(buf[i] && !isspace(buf[i])) ++i; /* skip 'Sun' */
+  while(buf[i] && isspace(buf[i])) ++i;
+  while(buf[i] && !isspace(buf[i])) result[j++] = buf[i++]; /* copy 'Nov' */
+  while(buf[i] && isspace(buf[i])) result[j++] = buf[i++];
+  while(buf[i] && !isspace(buf[i])) result[j++] = buf[i++]; /* copy '28' */
+  while(buf[i] && isspace(buf[i])) result[j++] = buf[i++];
+  while(buf[i] && !isspace(buf[i])) ++i; /* skip '21:41:10' */
+  while(buf[i] && isspace(buf[i])) ++i;
+  while(buf[i] && !isspace(buf[i])) result[j++] = buf[i++]; /* copy '1999' */
+  result[j] = 0;
+  return(result);
+}
+/**************************************************************************
+* G__get__time__()
+**************************************************************************/
+char* G__get__time__()
+{
+  int i=0,j=0;
+  char buf[80];
+  static char result[80];
+  G__get__tm__(buf);
+  while(buf[i] && !isspace(buf[i])) ++i; /* skip 'Sun' */
+  while(buf[i] && isspace(buf[i])) ++i;
+  while(buf[i] && !isspace(buf[i])) ++i; /* skip 'Nov' */
+  while(buf[i] && isspace(buf[i])) ++i;
+  while(buf[i] && !isspace(buf[i])) ++i; /* skip '28' */
+  while(buf[i] && isspace(buf[i])) ++i;
+  while(buf[i] && !isspace(buf[i])) result[j++] = buf[i++];/*copy '21:41:10'*/
+  result[j] = 0;
+  return(result);
+}
+#endif
 
 /**************************************************************************
 * G__value G__getrsvd()
@@ -5311,6 +5440,14 @@ int i;
   case G__RSVD_ARG:
     G__letint(&buf,'i',(long)G__argn);
     break;
+#ifndef G__OLDIMPLEMENTATION1234
+  case G__RSVD_DATE:
+    G__letint(&buf,'C',(long)G__get__date__());
+    break;
+  case G__RSVD_TIME:
+    G__letint(&buf,'C',(long)G__get__time__());
+    break;
+#endif
   default:
     G__letint(&buf,'C',(long)G__arg[i]);
     break;

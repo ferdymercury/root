@@ -1,5 +1,9 @@
+//*CMZ :          02/09/99  15.59.26  by  Rene Brun
 //*CMZ :  0.80/03 01/09/96  14.20.18  by  Rene Brun
 //*-- Author :    Rene Brun   14/08/96
+//
+// 02/09/1999  15.57.35  by  Rene Brun
+//
 //________________________________________________________________________
 //
 //::>          VERSION  0.80/03   01/09/96 14.20.18
@@ -162,7 +166,7 @@
 - In class TMinuit, change the convention fron numbering parameters from
   1->npar  to 0->npar-1 to be consistent with ROOT/C/C++ conventions.
 
-- In TAttText::Modify change the GXW angle only when necessary. Fixes also
+- In TAttText::Modify change the VirtualX angle only when necessary. Fixes also
   a problem under WIN32: Y axis titles were not drawn parallel to the Y axis.
 
 - Change algorithm in TH1::PaintErrors. In the previous version, the size of

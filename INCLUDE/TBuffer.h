@@ -1,29 +1,27 @@
+//*CMZ :  2.23/12 31/01/2000  18.34.35  by  Rene Brun
+//*CMZ :  2.23/09 14/11/99  15.53.54  by  Rene Brun
+//*CMZ :  2.23/07 25/10/99  10.22.06  by  Rene Brun
+//*CMZ :  2.23/04 11/10/99  12.53.10  by  Fons Rademakers
 //*CMZ :  2.22/08 06/07/99  19.02.49  by  Fons Rademakers
 //*CMZ :  2.22/02 28/05/99  15.09.19  by  Fons Rademakers
 //*CMZ :  2.00/12 03/09/98  22.36.45  by  Fons Rademakers
 //*CMZ :  2.00/10 28/07/98  10.37.43  by  Fons Rademakers
-//*CMZ :  1.03/06 24/10/97  13.25.14  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   03/05/96
 
 #ifndef ROOT_TBuffer
 #define ROOT_TBuffer
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -77,14 +75,14 @@ protected:
 
    void Expand(Int_t newsize);  //Expand buffer to newsize
 
-   void Read(const Text_t *name) { TObject::Read(name); }
-   void Write(const Text_t *name, Int_t opt, Int_t bufs)
+   void Read(const char *name) { TObject::Read(name); }
+   void Write(const char *name, Int_t opt, Int_t bufs)
                                  { TObject::Write(name, opt, bufs); }
 
 public:
    enum EMode { kRead = 0, kWrite = 1 };
    enum { kInitialSize = 1024, kMinimalSize = 128 };
-   enum { kMapSize = 67 };
+   enum { kMapSize = 503 };
 
    TBuffer(EMode mode, Int_t bufsiz = kInitialSize, void *buf = 0);
    virtual ~TBuffer();
@@ -97,6 +95,7 @@ public:
    void     SetReadParam(Int_t mapsize);
    void     SetWriteMode();
    void     SetWriteParam(Int_t mapsize);
+   void     SetBuffer(void *buf);
    void     SetBufferOffset(Int_t offset = 0) { fBufCur = fBuffer+offset; }
 
    char    *Buffer() const { return fBuffer; }
@@ -104,7 +103,7 @@ public:
    void     DetachBuffer() { fBuffer = 0; }
    Int_t    Length() const { return (Int_t)(fBufCur - fBuffer); }
 
-   void     CheckByteCount(UInt_t startpos, UInt_t bcnt, const TClass *clss);
+   Int_t    CheckByteCount(UInt_t startpos, UInt_t bcnt, const TClass *clss);
    void     SetByteCount(UInt_t cntpos, Bool_t packInVersion = kFALSE);
 
    Bool_t   IsReading() const { return (fMode & kWrite) == 0; }
@@ -113,8 +112,8 @@ public:
    Int_t    ReadBuf(void *buf, Int_t max);
    void     WriteBuf(const void *buf, Int_t max);
 
-   Text_t  *ReadString(Text_t *s, Int_t max);
-   void     WriteString(const Text_t *s);
+   char    *ReadString(char *s, Int_t max);
+   void     WriteString(const char *s);
 
    Version_t ReadVersion(UInt_t *start = 0, UInt_t *bcnt = 0);
    UInt_t    WriteVersion(const TClass *cl, Bool_t useBcnt = kFALSE);
@@ -324,7 +323,7 @@ inline TBuffer &TBuffer::operator>>(Double_t &d)
 //______________________________________________________________________________
 inline TBuffer &TBuffer::operator>>(Char_t *c)
 {
-   ReadString(c, sizeof(c));
+   ReadString(c, -1);
    return *this;
 }
 

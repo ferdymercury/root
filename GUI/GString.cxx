@@ -1,22 +1,18 @@
+//*CMZ :  2.23/03 07/09/99  23.34.51  by  Fons Rademakers
 //*CMZ :  2.00/00 16/02/98  02.36.03  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   05/01/98
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 //*CMZ :  2.00/00 16/02/98  00.17.08  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   27/12/97
@@ -43,7 +39,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 #include "TGString.h"
-#include "TGXW.h"
+#include "TVirtualX.h"
 
 
 ClassImp(TGString)
@@ -54,7 +50,7 @@ void TGString::Draw(Drawable_t id, GContext_t gc, Int_t x, Int_t y)
 {
    // Draw string.
 
-   gGXW->DrawString(id, gc, x, y, fString.Data(), fString.Length());
+   gVirtualX->DrawString(id, gc, x, y, fString.Data(), fString.Length());
 }
 
 //______________________________________________________________________________
@@ -69,29 +65,29 @@ void TGString::DrawWrapped(Drawable_t id, GContext_t gc,
    const char *chunk = p;
    int tw, th, len = fString.Length();
 
-   tw = gGXW->TextWidth(font, p, len);
+   tw = gVirtualX->TextWidth(font, p, len);
    if (tw <= (int)w) {
-      gGXW->DrawString(id, gc, x, y, p, len);
+      gVirtualX->DrawString(id, gc, x, y, p, len);
       return;
    }
 
    int max_ascent, max_descent;
-   gGXW->GetFontProperties(font, max_ascent, max_descent);
+   gVirtualX->GetFontProperties(font, max_ascent, max_descent);
    th = max_ascent + max_descent + 1;
 
    while(1) {
       p = strchr(p, ' ');
       if (p == 0) {
-         if (chunk) gGXW->DrawString(id, gc, x, y, chunk, strlen(chunk));
+         if (chunk) gVirtualX->DrawString(id, gc, x, y, chunk, strlen(chunk));
          break;
       }
-      tw = gGXW->TextWidth(font, chunk, p-chunk);
+      tw = gVirtualX->TextWidth(font, chunk, p-chunk);
       if (tw > (int)w) {
          if (prev == chunk)
             prev = ++p;
          else
             p = prev;
-         gGXW->DrawString(id, gc, x, y, chunk, prev-chunk-1);
+         gVirtualX->DrawString(id, gc, x, y, chunk, prev-chunk-1);
          chunk = prev;
          y += th;
       } else {
@@ -112,13 +108,13 @@ Int_t TGString::GetLines(FontStruct_t font, UInt_t w)
 
    nlines = 1;
 
-   tw = gGXW->TextWidth(font, p, len);
+   tw = gVirtualX->TextWidth(font, p, len);
    if (tw <= (int)w) return nlines;
 
    while(1) {
       p = strchr(p, ' ');
       if (p == 0) break;
-      tw = gGXW->TextWidth(font, chunk, p-chunk);
+      tw = gVirtualX->TextWidth(font, chunk, p-chunk);
       if (tw > (int)w) {
          if (prev == chunk)
             chunk = prev = ++p;
@@ -171,7 +167,7 @@ void TGHotString::Draw(Drawable_t id, GContext_t gc, Int_t x, Int_t y)
 {
    // Draw a hot string and underline the hot character.
 
-   gGXW->DrawString(id, gc, x, y, fString.Data(), fString.Length());
+   gVirtualX->DrawString(id, gc, x, y, fString.Data(), fString.Length());
 
    DrawHotChar(id, gc, x, y);
 }
@@ -188,15 +184,15 @@ void TGHotString::DrawWrapped(Drawable_t id, GContext_t gc,
    const char *chunk = p;
    int tw, th, len = fString.Length();
 
-   tw = gGXW->TextWidth(font, p, len);
+   tw = gVirtualX->TextWidth(font, p, len);
    if (tw <= (int)w) {
-      gGXW->DrawString(id, gc, x, y, p, len);
+      gVirtualX->DrawString(id, gc, x, y, p, len);
       DrawHotChar(id, gc, x, y);
       return;
    }
 
    int max_ascent, max_descent;
-   gGXW->GetFontProperties(font, max_ascent, max_descent);
+   gVirtualX->GetFontProperties(font, max_ascent, max_descent);
    th = max_ascent + max_descent + 1;
 
    int pcnt = 0;
@@ -204,19 +200,19 @@ void TGHotString::DrawWrapped(Drawable_t id, GContext_t gc,
       p = strchr(p, ' ');
       if (p == 0) {
          if (chunk) {
-            gGXW->DrawString(id, gc, x, y, chunk, strlen(chunk));
+            gVirtualX->DrawString(id, gc, x, y, chunk, strlen(chunk));
             if (fHotPos > pcnt && fHotPos <= pcnt+(int)strlen(chunk))
                DrawHotChar(id, gc, x, y);
          }
          break;
       }
-      tw = gGXW->TextWidth(font, chunk, p-chunk);
+      tw = gVirtualX->TextWidth(font, chunk, p-chunk);
       if (tw > (int)w) {
          if (prev == chunk)
             prev = ++p;
          else
             p = prev;
-         gGXW->DrawString(id, gc, x, y, chunk, prev-chunk-1);
+         gVirtualX->DrawString(id, gc, x, y, chunk, prev-chunk-1);
          if (fHotPos > pcnt && fHotPos <= pcnt+prev-chunk-1)
             DrawHotChar(id, gc, x, y);
          pcnt = prev-chunk-1;
@@ -239,14 +235,16 @@ void TGHotString::DrawHotChar(Drawable_t id, GContext_t gc, Int_t x, Int_t y)
          FontStruct_t font;
 
          gcval.fMask = kGCFont;
-         gGXW->GetGCValues(gc, gcval);
-         font = gGXW->GetFontStruct(gcval.fFont);
+         gVirtualX->GetGCValues(gc, gcval);
+         font = gVirtualX->GetFontStruct(gcval.fFont);
 
-         fOff1   = gGXW->TextWidth(font, fString.Data(), fHotPos-1); //+1;
-         fOff2   = gGXW->TextWidth(font, fString.Data(), fHotPos) - 1;
+         fOff1   = gVirtualX->TextWidth(font, fString.Data(), fHotPos-1); //+1;
+         fOff2   = gVirtualX->TextWidth(font, fString.Data(), fHotPos) - 1;
+
+         gVirtualX->FreeFontStruct(font);
          fLastGC = gc;
       }
-      gGXW->DrawLine(id, gc, x+fOff1, y+1, x+fOff2, y+1);
+      gVirtualX->DrawLine(id, gc, x+fOff1, y+1, x+fOff2, y+1);
    }
 }
 

@@ -1,27 +1,22 @@
+//*CMZ :  2.23/10 13/12/99  09.45.02  by  Rene Brun
+//*CMZ :  2.23/09 10/11/99  15.35.37  by  Rene Brun
 //*CMZ :  2.21/07 09/06/99  11.45.19  by  Rene Brun
 //*CMZ :  2.20/03 05/12/98  16.13.19  by  Rene Brun
 //*CMZ :  2.20/02 04/12/98  12.17.35  by  Rene Brun
 //*CMZ :  2.20/00 11/11/98  12.32.05  by  Rene Brun
-//*CMZ :  2.00/00 21/01/98  08.36.06  by  Rene Brun
-//*CMZ :  1.03/09 05/12/97  13.19.06  by  Fons Rademakers
 //*-- Author :    Rene Brun   15/12/95
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -32,8 +27,11 @@
 //
 // The following basic Random generators are provided:
 // ===================================================
+//   -Exp(tau)
+//   -Integer(imax)
 //   -Gaus(mean,sigma)
 //   -Rndm()
+//   -Uniform(x1)
 //   -Landau(mean,sigma)
 //   -Poisson(mean)
 //   -Binomial(ntot,prob)
@@ -230,7 +228,19 @@ Int_t TRandom::Binomial(Int_t ntot, Float_t prob)
 }
 
 //______________________________________________________________________________
-Float_t TRandom::Gaus(Float_t mean, Float_t sigma)
+Double_t TRandom::Exp(Double_t tau)
+{
+// returns an exponential deviate.
+//
+//          exp( -t/tau )
+
+   Double_t x = Uniform();              // uniform on ( 0, 1 ]
+   Double_t t = -tau * TMath::Log( x ); // convert to exponential distribution
+   return t;
+}
+
+//______________________________________________________________________________
+Double_t TRandom::Gaus(Float_t mean, Float_t sigma)
 {
 //      Return a number distributed following a gaussian with mean and sigma
 
@@ -246,7 +256,17 @@ Float_t TRandom::Gaus(Float_t mean, Float_t sigma)
 }
 
 //______________________________________________________________________________
-Float_t TRandom::Landau(Float_t mean, Float_t sigma)
+UInt_t TRandom::Integer(UInt_t imax)
+{
+//  returns a random integer on [ 0, imax-1 ].
+
+   UInt_t ui;
+   ui = (UInt_t)(imax*Rndm());
+   return ui;
+}
+
+//______________________________________________________________________________
+Double_t TRandom::Landau(Float_t mean, Float_t sigma)
 {
 //  Generate a random number following a Landau distribution
 //  with average value mean and rms
@@ -422,7 +442,7 @@ Float_t TRandom::Landau(Float_t mean, Float_t sigma)
       51.005773,53.437996,56.123356,59.103894 };
 
    if (sigma <= 0) return 0;
-   Float_t ranlan, x, u, v;
+   Double_t ranlan, x, u, v;
    x = Rndm();
    u = 1000*x;
    Int_t i = Int_t(u);
@@ -448,7 +468,8 @@ Float_t TRandom::Landau(Float_t mean, Float_t sigma)
                 ((1         +6.06511919E3*u+6.94021044E5*v)*u);
        }
    }
-   return mean + sigma*ranlan;
+   Double_t res = mean + sigma*ranlan;
+   return res;
 }
 
 //______________________________________________________________________________
@@ -501,6 +522,7 @@ Float_t TRandom::Rndm(Int_t)
 //  Identical sequence on all machines of >= 32 bits.
 //  Periodicity = 10**8
 //  Universal version (Fred james 1985).
+//  generates a number in [0,1]
 
    const Float_t kCONS = 4.6566128730774E-10;
    const Int_t kMASK31 = 2147483647;
@@ -527,4 +549,14 @@ void TRandom::SetSeed(UInt_t seed)
   } else {
     fSeed = seed;
   }
+}
+
+//______________________________________________________________________________
+Double_t TRandom::Uniform(Double_t x1)
+{
+// returns a uniform deviate on the interval ( 0, x1 ].
+
+   Double_t ans;
+   do { ans = Rndm(); } while( ans==0 );
+   return x1*ans;
 }

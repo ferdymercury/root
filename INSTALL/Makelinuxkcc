@@ -1,46 +1,85 @@
-*CMZ :  2.21/08 18/03/99  15.12.18  by  Fons Rademakers
-*CMZ :  2.20/00 22/11/98  18.43.27  by  Fons Rademakers
-*CMZ :  2.00/12 08/10/98  18.31.56  by  Fons Rademakers
-*CMZ :  2.00/10 14/07/98  21.49.26  by  Fons Rademakers
-*CMZ :  2.00/09 26/06/98  19.23.46  by  Fons Rademakers
-*-- Author :    Fons Rademakers   26/06/98
+*CMZ :  2.23/12 26/01/2000  11.33.18  by  Rene Brun
+*CMZ :  2.23/10 09/12/99  17.46.47  by  Rene Brun
+*CMZ :  2.23/09 19/11/99  18.31.59  by  Fons Rademakers
+*CMZ :  2.23/07 27/10/99  15.57.26  by  Rene Brun
+*CMZ :  2.23/05 20/10/99  18.13.48  by  Philippe Canal
+*-- Author :    Philippe Canal   20/10/99
 # Makefile of ROOT for Linux with glibc and KCC compiler
 
+include ../Makefile.config
+
+# When changing OPT to -O you can also change +K0 to +K1
 # When changing OPT to -g you can also change +K1 to +K0
 
-PLATFORM      = linux
+ifeq (debug,$(findstring debug,$(ROOTBUILD)))
+OPT           = -g -O0
+CXXOPT        = +K0 -g -O0
+NOOPT         =
+else
+OPT           = -O2
+COPT          = -m486 -malign-loops=4 -malign-functions=4 -malign-jumps=4
+CXXOPT        = +K3 -O2 --backend -m486 --backend -malign-loops=4 --backend \
+                -malign-functions=4 --backend -malign-jumps=4
+NOOPT         =
+endif
 
+ifeq (exception,$(findstring exception,$(ROOTBUILD)))
+EXCEPTION     = --exceptions -DG__EXCEPTIONWRAPPER
+else
+EXCEPTION     = --no_exceptions
+endif
+
+ifeq (thread,$(findstring thread,$(ROOTBUILD)))
+THREAD        += "USE"
+CXXOPT        += --thread_safe -g
+OPT           += -g
+endif
+
+PLATFORM      = linux
+VPATH         = ../include
 CXX           = KCC
 CC            = gcc
-CXXFLAGS      = --signed_chars -D_EXTERN_INLINE=inline --display_error_number \
-                --diag_suppress 191 -fPIC -DR__GLIBC +K1
-CFLAGS        = -Wall -fPIC -DR__GLIBC
-CINTCXXFLAGS  = --signed_chars -D_EXTERN_INLINE=inline --display_error_number \
-                --diag_suppress 191 -fPIC -DG__REGEXP -DG__UNIX -DG__SHAREDLIB \
-                -DG__OSFDLL -DG__ROOT -DG__REDIRECTIO +K1
-CINTCFLAGS    = -Wall -fPIC -DG__REGEXP -DG__UNIX -DG__SHAREDLIB \
-                -DG__OSFDLL -DG__ROOT -DG__REDIRECTIO
-OPT           = -O
-NOOPT         =
+CXXFLAGS      = $(EXCEPTION) --signed_chars -D_EXTERN_INLINE=inline --display_error_number \
+                --diag_suppress 191 --diag_suppress 830 -fPIC -I$(OPENGL)/include -DR__GLIBC \
+                $(CXXOPT) -I$(ROOTSYS)/include $(EXTRA_CXXFLAGS)
+CFLAGS        = $(COPT) -fPIC -DR__GLIBC $(EXTRA_CFLAGS) \
+                $(OPT) -I$(ROOTSYS)/include
+CINTCXXFLAGS  = $(EXCEPTION) --signed_chars -D_EXTERN_INLINE=inline --display_error_number \
+                --diag_suppress 191 --diag_suppress 830 -fPIC -DG__REGEXP -DG__UNIX -DG__SHAREDLIB \
+                -DG__OSFDLL -DG__ROOT -DG__REDIRECTIO \
+                $(CXXOPT) -I$(ROOTSYS)/include $(EXTRA_CXXFLAGS)
+CINTCFLAGS    = $(COPT) -fPIC -D__KCC -DG__REGEXP -DG__UNIX -DG__SHAREDLIB \
+                -DG__OSFDLL -DG__ROOT -DG__REDIRECTIO \
+                $(OPT) -I$(ROOTSYS)/include -D__KCC $(EXTRA_CFLAGS)
+
+ifeq (exception,$(findstring exception,$(ROOTBUILD)))
+CINTCFLAGS   += -DG__EXCEPTIONWRAPPER
+endif
+
 LD            = KCC
-LDFLAGS       = $(OPT)
+LDFLAGS       = $(CXXOPT) $(EXCEPTION) $(EXTRA_LDFLAGS)
+AR            = KCC
+ARFLAGS       = $(CXXOPT) $(EXCEPTION)
 SOFLAGS       =
 SOEXT         = so
 SYSLIBS       = -lm -ldl
-SYSXLIBS      = -L/usr/X11R6/lib -lX11 -lm -ldl
-XLIBS         = $(ROOTSYS)/lib/libXpm.a -L/usr/X11R6/lib -lX11
+XLIBS         = ../lib/libXpm.a -L/usr/X11R6/lib -lX11
 CILIBS        = -lm -ltermcap -lbsd -ldl
 CRYPTLIBS     = -lcrypt
 F77           = f2c
 F77FLAGS      =
 F77LIBS       = -lf2c
 
+
 ##### MACROS and TARGETS #####
 
 include Make-macros
 
+# fix for libGui.so that needs lstat
+  GUIO += -lc
 
 ##### DEPENDENCIES #####
 
 include Make-depend
 
+# DO NOT DELETE

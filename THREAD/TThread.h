@@ -1,7 +1,10 @@
+//*CMZ :  2.23/12 31/12/99  13.51.58  by  Fons Rademakers
+//*CMZ :  2.23/10 09/12/99  12.09.23  by  Fons Rademakers
+//*CMZ :  2.23/07 27/10/99  15.46.32  by  Rene Brun
+//*CMZ :  2.23/00 02/08/99  09.51.41  by  Rene Brun
 //*CMZ :  2.22/09 12/07/99  18.13.43  by  Rene Brun
 //*CMZ :  2.22/06 21/06/99  17.47.54  by  Rene Brun
 //*CMZ :  2.00/00 19/11/97  22.50.48  by  Victor Perev
-//*CMZ :  1.03/03 05/09/97  12.49.31  by  Victor Perev
 //*-- Author :    Fons Rademakers   18/06/97
 
 #ifndef ROOT_TThread
@@ -12,22 +15,17 @@
 #include "CallFunc.h"
 
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -57,9 +55,6 @@
 #include "TTimer.h"
 #endif
 
-#ifndef ROOT_TCanvas
-#include "TCanvas.h"
-#endif
 
 enum EPriority {
    kLowPriority,
@@ -95,8 +90,9 @@ private:
    EPriority    fPriority;         	// thread priority
    EState       fState;            	// thread state
    EState       fStateComing;      	// coming thread state
-   UInt_t       fId;               	// thread id
+   Int_t        fId;               	// thread id
    Bool_t       fDetached;         	// kTRUE if thread is Detached
+   Bool_t       fNamed;         	// kTRUE if thread is Named
    Int_t        fJoinId;           	// thread id to whom can join
    void       *(*fFcnRetn)(void *);	// void* start function of thread
    void        (*fFcnVoid)(void *);     // void  start function of thread
@@ -104,11 +100,11 @@ private:
    void        *fClean;                 // support of cleanup structure
 
    static      TThreadImp  *fgThreadImp;// static pointer to thread implementation
-   static char  *volatile fgXAct;	// Action name to do by main thread
-   static void **volatile fgXArr;       // pointer to control array of void pointers for action
+   static char  * volatile fgXAct;      // Action name to do by main thread
+   static void ** volatile fgXArr;      // pointer to control array of void pointers for action
    static volatile Int_t  fgXAnb;       // size of array above
    static volatile Int_t  fgXArt;       // return XA flag
-   static TThread       *fgMain ; 	// pointer to chain of TThread's
+   static TThread       *fgMain;        // pointer to chain of TThread's
    static TMutex        *fgMainMutex;   // mutex to protect chain of threads
    static TMutex        *fgXActMutex;   // mutex to protect XAction
    static TCondition    *fgXActCondi;   // Condition for  XAction
@@ -120,10 +116,10 @@ private:
 //		Private Member functions
    void         Constructor();
    static void *Fun(void *ptr);
-   static Int_t XARequest(char *xact, Int_t nb, void **ar, Int_t *iret);
+   static Int_t XARequest(const char *xact, Int_t nb, void **ar, Int_t *iret);
    static unsigned long Call(void  *p2f, void *arg);
    static void  AfterCancel(TThread *th);
-   void PutComm(char *txt = NULL){fComm[0]='\0'; if (txt) strcpy(fComm,txt);};
+   void PutComm(const char *txt = NULL){fComm[0]='\0'; if (txt) strcpy(fComm,txt);};
    char *GetComm(){ return fComm;};
 
 
@@ -131,7 +127,7 @@ private:
 
 public:
    ~TThread(); // delete is forbidden for user
-   static void   Debu(char *txt);
+   static void   Debu(const char *txt);
    static Int_t  Delete(TThread* &th);
    static void **Tsd(void *dflt, Int_t k);
 
@@ -140,8 +136,8 @@ public:
    ////////// begin changes (J.A.):
    // additional constructors with own threadname thname
    // as useful for invoking thread from compiled program:
-   TThread(Text_t *thname, void  *(*fn)(void*), void *arg = 0,  EPriority pri = kNormalPriority);
-   TThread(Text_t *thname, void   (*fn)(void*), void *arg = 0,  EPriority pri = kNormalPriority);
+   TThread(const Text_t *thname, void  *(*fn)(void*), void *arg = 0,  EPriority pri = kNormalPriority);
+   TThread(const Text_t *thname, void   (*fn)(void*), void *arg = 0,  EPriority pri = kNormalPriority);
    /////////////// end changes (J.A.)
    Int_t               Run(void *arg = 0);
    static    Int_t     Join(Int_t id,void **ret=0);
@@ -153,8 +149,8 @@ public:
    Int_t               SetJoinId(TThread *tj);  //Set JoinId
    Int_t               SetJoinId(Int_t jid);  	//Set JoinId
    static    Int_t     Exit(void *ret = 0);	//exit from thread
-   static TThread     *GetThread(UInt_t id);    //Find TThread by Id
-   static TThread     *GetThread(Text_t *name); //Find TThread by name
+   static TThread     *GetThread(Int_t id);     //Find TThread by Id
+   static TThread     *GetThread(const Text_t *name); //Find TThread by name
 
    static Int_t        Lock();			//User's lock of main mutex
    static Int_t        TryLock();		//User's try lock of main mutex
@@ -170,14 +166,14 @@ public:
 //	ASYNCHRONOUS - In any point
 //	DEFERRED is more safe, it is DEFAULT.
 
-   Int_t               Kill();			//kill the thread
-   static    Int_t     Kill(UInt_t id);		//kill the thread by Id
-   static    Int_t     Kill(Text_t *name);	//kill the thread by name
-   static    Int_t     SetCancelOff(); 		// Cancellation OFF
-   static    Int_t     SetCancelOn(); 		// Cancellation ON
-   static    Int_t     SetCancelAsynchronous(); // Cancellation type Asynchronous
-   static    Int_t     SetCancelDeferred(); 	// Cancellation type
-   static    Int_t     CancelPoint();           // Setcancel point
+   Int_t               Kill();			 //kill the thread
+   static    Int_t     Kill(Int_t id);		 //kill the thread by Id
+   static    Int_t     Kill(const Text_t *name); //kill the thread by name
+   static    Int_t     SetCancelOff(); 		 // Cancellation OFF
+   static    Int_t     SetCancelOn(); 		 // Cancellation ON
+   static    Int_t     SetCancelAsynchronous();  // Cancellation type Asynchronous
+   static    Int_t     SetCancelDeferred(); 	 // Cancellation type
+   static    Int_t     CancelPoint();            // Setcancel point
    static    Int_t     CleanUpPush(void *free,void *arg=0); // Push user function "free" to be called in cancel case
    static    Int_t     CleanUpPop(Int_t exe=0); // Pop user function
    static    Int_t     CleanUp(); // Pop user function
@@ -188,9 +184,9 @@ public:
 
 //
 //	XActions
-   static void Printf(char *txt);
-   static void Printf(char *txt,Int_t i);
-   static void Printf(char *txt,void* i){Printf(txt,(int)i);}
+   static void Printf(const char *txt);
+   static void Printf(const char *txt,Int_t i);
+   static void Printf(const char *txt,void* i){Printf(txt,(int)i);}
 
 
 //	Compilation and dynamic link

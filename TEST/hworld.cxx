@@ -1,3 +1,4 @@
+//*CMZ :  2.23/04 02/10/99  15.44.39  by  Fons Rademakers
 //*CMZ :  2.00/00 05/03/98  03.56.01  by  Fons Rademakers
 //*CMZ :  1.01/05 11/06/97  18.33.43  by  Rene Brun
 //*-- Author :    Fons Rademakers   04/04/97
@@ -12,10 +13,8 @@
 #include "TLine.h"
 #include "TPaveLabel.h"
 
-extern void InitGui();
-VoidFuncPtr_t initfuncs[] = { InitGui, 0 };
 
-TROOT root("hello","Hello World", initfuncs);
+TROOT root("hello","Hello World");
 
 
 int main(int argc, char **argv)

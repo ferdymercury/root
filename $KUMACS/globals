@@ -1,27 +1,12 @@
+*CMZ :  2.23/12 18/01/2000  13.39.26  by  Fons Rademakers
+*CMZ :  2.23/09 18/11/99  15.03.25  by  Rene Brun
+*CMZ :  2.23/08 02/11/99  09.17.44  by  Rene Brun
+*CMZ :  2.23/05 15/10/99  18.51.19  by  Rene Brun
+*CMZ :  2.23/04 13/10/99  17.25.45  by  Rene Brun
+*CMZ :  2.23/03 27/09/99  08.57.43  by  Rene Brun
+*CMZ :  2.23/02 04/09/99  10.03.13  by  Rene Brun
+*CMZ :  2.23/01 01/09/99  09.50.44  by  Rene Brun
 *CMZ :  2.22/07 06/07/99  08.18.49  by  Rene Brun
-*CMZ :  2.22/06 21/06/99  17.17.41  by  Rene Brun
-*CMZ :  2.22/05 15/06/99  11.07.48  by  Fons Rademakers
-*CMZ :  2.22/04 03/06/99  16.55.48  by  Rene Brun
-*CMZ :  2.22/01 11/05/99  09.08.02  by  Rene Brun
-*CMZ :  2.21/08 18/03/99  16.53.11  by  Rene Brun
-*CMZ :  2.21/07 05/03/99  12.22.16  by  Rene Brun
-*CMZ :  2.21/06 13/02/99  11.15.52  by  Rene Brun
-*CMZ :  2.21/05 08/02/99  12.37.29  by  Fons Rademakers
-*CMZ :  2.21/04 05/02/99  13.36.58  by  Rene Brun
-*CMZ :  2.21/03 20/01/99  14.55.50  by  Fons Rademakers
-*CMZ :  2.21/01 11/01/99  11.14.45  by  Fons Rademakers
-*CMZ :  2.20/06 16/12/98  09.02.37  by  Rene Brun
-*CMZ :  2.20/02 04/12/98  16.16.29  by  Fons Rademakers
-*CMZ :  2.20/00 26/11/98  18.13.21  by  Rene Brun
-*CMZ :  2.00/13 29/10/98  12.09.35  by  Rene Brun
-*CMZ :  2.00/10 29/07/98  11.18.45  by  Rene Brun
-*CMZ :  2.00/09 19/06/98  10.48.39  by  Rene Brun
-*CMZ :  2.00/08 22/05/98  14.19.10  by  Rene Brun
-*CMZ :  2.00/06 14/05/98  18.52.29  by  Fons Rademakers
-*CMZ :  2.00/04 06/04/98  20.38.26  by  Fons Rademakers
-*CMZ :  2.00/01 13/03/98  12.23.41  by  Fons Rademakers
-*CMZ :  2.00/00 08/03/98  15.11.58  by  Rene Brun
-*CMZ :  1.03/09 16/12/97  16.33.15  by  Rene Brun
 *-- Author :    Fons Rademakers   11/12/96
 macro globals 1=- 2=opt 3=log
 
@@ -59,9 +44,9 @@ if $AFS <> '$AFS' then
    cxxdef = [cxxdef]//' -DAFS'
 endif
 
-+IF,THREAD.
-   cxxdef = [cxxdef]//' -DR__THREAD'
-+ENDIF
+* set to threads system lib (in machine specific area below)
+GL/CR LIBST
+
 
 if [2] = 'g' then
    cxxdbg = -g
@@ -79,16 +64,20 @@ if [2] = 'pg' then
 endif
 
 
-rlibs=-lNew -lBase -lCint -lClib -lCont -lFunc -lGraf -lGraf3d -lHist _
-      -lHtml -lMatrix -lMeta -lMinuit -lNet -lPhysics -lPostscript -lProof _
-      -lRint -lTree -lUnix -lZip -lGpad -lGui -lGX11 -lX3d
-
-plibs=-lNew -lBase -lCint -lClib -lCont -lFunc -lGraf -lGraf3d -lHist _
-      -lHtml -lMatrix -lMeta -lMinuit -lNet -lPhysics -lPostscript -lProof _
-      -lTree -lUnix -lZip
+rlibs=-lNew -lCore -lCint -lHist -lGraf -lGraf3d -lTree -lRint
+plibs=-lNew -lCore -lCint -lHist -lGraf -lGraf3d -lGpad -lTree -lProof -lTreePlayer
 
 cxxdbg = [cxxdbg]//' '//[cxxdef]
 
++IF,WIN32
+GL/CR COREOBJS $ROOTSYS\src\BASE_*.obj//' '//$ROOTSYS\src\CONT_*.obj//' _
+    '//$ROOTSYS\src\META_*.obj//' '//$ROOTSYS\src\NET_*.obj//' '//$ROOTSYS\src\WINNT_*.obj//' _
+    '//$ROOTSYS\src\ZIP_*.obj//' '//$ROOTSYS\src\C_*.obj
++ELSE
+GL/CR COREOBJS '$ROOTSYS/src/BASE_*.o $ROOTSYS/src/CONT_*.o _
+    $ROOTSYS/src/META_*.o $ROOTSYS/src/NET_*.o $ROOTSYS/src/UNIX_*.o _
+    $ROOTSYS/src/ZIP_*.o $ROOTSYS/src/C_*.o'
++ENDIF
 *---------------------------------------------------------------------------
 if [machine] = 'HPUX' then
 +IF,EGCS.
@@ -99,7 +88,8 @@ if [machine] = 'HPUX' then
    GL/CR CCOPT  [ccdbg]//' -fPIC -c'
    GL/CR LDOPT  [cxxdbg]//' -o'
    GL/CR SLOPT  [cxxdbg]//' -shared -fPIC -o'
-   GL/CR LIBS   '-L$ROOTSYS/lib '//[rlibs]//' -lXpm -lX11 -lm -ldld'
+   GL/CR LIBS   '-L$ROOTSYS/lib '//[rlibs]//' -lm -ldld'
+   GL/CR PLIBS  '-L$ROOTSYS/lib '//[plibs]//' -lm -ldld'
    GL/CR LIBSX  '$ROOTSYS/lib/libXpm.a -lX11'
 
    GL/CR CICXXOPT [cxxdbg]//' -fPIC -DG__REGEXP _
@@ -117,7 +107,7 @@ if [machine] = 'HPUX' then
    GL/CR CCOPT  [ccdbg]//' -Ae -z +Z -c'
    GL/CR LDOPT  [cxxdbg]//' -z -Wl,+s -Wl,-E -o'
    GL/CR SLOPT  [cxxdbg]//' -b -z -Wl,+vnocompatwarnings -o'
-   GL/CR LIBS   '-L$ROOTSYS/lib '//[rlibs]//' -lXpm -lX11 -lm -ldld'
+   GL/CR LIBS   '-L$ROOTSYS/lib '//[rlibs]//' -lm -ldld'
    GL/CR PLIBS  '-L$ROOTSYS/lib '//[plibs]//' -lm -ldld'
    GL/CR LIBSX  '$ROOTSYS/lib/libXpm.a -lX11'
 
@@ -143,8 +133,7 @@ if [machine] = 'HPUX' then
    GL/CR CCOPT  [ccdbg]//' -Ae -z +Z -I/usr/include/X11R5 -c'
    GL/CR LDOPT  [cxxdbg]//' +a1 -z -Wl,+s -Wl,-E -o'
    GL/CR SLOPT  [cxxdbg]//' -b +a1 -z -o'
-   GL/CR LIBS   '-L$ROOTSYS/lib '//[rlibs]//' -L/usr/lib/X11R5 _
-                 -lXpm -lX11 -lm -ldld'
+   GL/CR LIBS   '-L$ROOTSYS/lib '//[rlibs]//' -lm -ldld'
    GL/CR PLIBS  '-L$ROOTSYS/lib '//[plibs]//' -lm -ldld'
    GL/CR LIBSX  '$ROOTSYS/lib/libXpm.a -L/usr/lib/X11R5 -lX11'
 
@@ -167,8 +156,9 @@ elseif [machine] = 'IBMRT' then
    GL/CR CXXOPT [cxxdbg]//' -D_AIX41 -U_AIX32 -DR__AIXGCC -fsigned-char -c'
    GL/CR CCOPT  [ccdbg]//' -DR__AIXGCC -fsigned-char -c'
    GL/CR LDOPT  [cxxdbg]//' -o'
-   GL/CR SLOPT  [cxxdbg]//' -shared -o'
-   GL/CR LIBS   '-L$ROOTSYS/lib -lRoot -lCint -lXpm -lX11 -lg++ -lm -lld'
+   GL/CR SLOPT  [cxxdbg]//' -shared -o -Xlinker -G '
+   GL/CR LIBS   '-L$ROOTSYS/lib '//[rlibs]
+   GL/CR PLIBS  '-L$ROOTSYS/lib '//[plibs]
    GL/CR LIBSX  '$ROOTSYS/lib/libXpm.a -lX11 -lg++'
 
    GL/CR CICXXOPT [cxxdbg]//' -fsigned-char _
@@ -191,7 +181,8 @@ elseif [machine] = 'IBMRT' then
    GL/CR CXXOPT [cxxdbg]//' -qchars=signed -qnoro -qnoroconst -I$ROOTSYS/src -c'
    GL/CR CCOPT  [ccdbg]//' -qchars=signed -qnoro -qnoroconst -I$ROOTSYS/src -c'
    GL/CR LDOPT  [cxxdbg]//' -o'
-   GL/CR LIBS   '-L$ROOTSYS/lib -lRoot -lCint -lXpm -lX11 -lm -lPW -lld -lcurses'
+   GL/CR LIBS   '-L$ROOTSYS/lib '//[rlibs]
+   GL/CR PLIBS  '-L$ROOTSYS/lib '//[plibs]
    GL/CR LIBSX  '$ROOTSYS/lib/libXpma.a -lX11'
 
    GL/CR CICXXOPT [cxxdbg]//' -qchars=signed -qnoro -qnoroconst -I$ROOTSYS/src _
@@ -201,7 +192,7 @@ elseif [machine] = 'IBMRT' then
                -DG__REGEXP -DG__P2FCAST -D_POSIX2_SOURCE -DG__ROOT _
                -DG__SHAREDLIB -DG__OSFDLL -DG__REDIRECTIO -c'
    GL/CR CILDOPT  [cxxdbg]//' -o'
-   GL/CR CILIBS   '-L$ROOTSYS/lib -lCint -lm -lPW -lld -lcurses'
+   GL/CR CILIBS   '-L$ROOTSYS/lib -lCint'
 +ENDIF.
    ALIAS/C bind_lib 'exec bind_lib_aix' C
 *---------------------------------------------------------------------------
@@ -210,33 +201,43 @@ elseif [machine] = 'SOLARIS' .OR. [machine] = 'SOLARISPC' then
    GL/CR CXX g++
    GL/CR CC  gcc
    GL/CR LD  g++
-   GL/CR CXXOPT [cxxdbg]//' -fPIC -c'
-   GL/CR CCOPT  [ccdbg]//' -fPIC -c'
+   GL/CR CXXOPT [cxxdbg]//' -D__SunOS_5_6 -fPIC -c -I/usr/openwin/include'
+   GL/CR CCOPT  [ccdbg]//'  -fPIC -c -I/usr/openwin/include'
    GL/CR LDOPT  [cxxdbg]//' -o'
    GL/CR SLOPT  [cxxdbg]//' -shared -o'
-   Gl/CR LIBS   '-L$ROOTSYS/lib '//[rlibs]//' -L/usr/openwin/lib _
-                 -lXpm -lX11 -lg++ -lm -lgen -ldl -lsocket'
-   GL/CR LIBSX  '$ROOTSYS/lib/libXpm.a -lX11 -g++'
+   GL/CR LIBS   '-L$ROOTSYS/lib '//[rlibs]//' -lm -ldl -L/usr/include/sys -lsocket -lnsl'
+   GL/CR PLIBS  '-L$ROOTSYS/lib '//[plibs]//' -lm -ldl -L/usr/include/sys -lsocket -lnsl'
+   GL/CR LIBSX  '$ROOTSYS/lib/libXpm.a -L/usr/openwin/lib -lX11'
 
    GL/CR CICXXOPT [cxxdbg]//' -fPIC -DG__REGEXP1 -DG__UNIX -DG__SHAREDLIB _
                  -DG__OSFDLL -DG__ROOT -DG__REDIRECTIO -c'
    GL/CR CICCOPT  [ccdbg]//' -fPIC -DG__REGEXP1 -DG__UNIX -DG__SHAREDLIB _
                  -DG__OSFDLL -DG__ROOT -DG__REDIRECTIO -c'
    GL/CR CILDOPT  [cxxdbg]//' -o'
-   GL/CR CILIBS   '-L$ROOTSYS/lib -lCint -L/usr/lib -lm -ltermcap -lbsd -ldl -lg++ -rdynamic'
+   GL/CR CILIBS   '-L$ROOTSYS/lib -lCint -lm -ltermcap -ldl -L/usr/ccs/lib -lgen '
 +ELSE.
    if [2] = 'g' then
       cxxdbg = '-g '//[cxxdef]
    endif
++IF,CC5
+   GL/CR CXX /opt/WS5.0/bin/CC
+   GL/CR CC  /opt/WS5.0/bin/cc
+   GL/CR LD  /opt/WS5.0/bin/CC
++ELSE
    GL/CR CXX /opt/SUNWspro/bin/CC
    GL/CR CC  /opt/SUNWspro/bin/cc
    GL/CR LD  /opt/SUNWspro/bin/CC
++ENDIF
    GL/CR CXXOPT [cxxdbg]//' -KPIC -I/usr/openwin/include -c'
    GL/CR CCOPT  [ccdbg]//' -KPIC -I/usr/openwin/include -c'
++IF,CC5.
+   GL/CR LDOPT  [cxxdbg]//' -library=iostream,no%Cstd -o'
++ELSE
    GL/CR LDOPT  [cxxdbg]//' -o'
++ENDIF
    GL/CR SLOPT  [cxxdbg]//' -G -o'
-   GL/CR LIBS   '-L$ROOTSYS/lib '//[rlibs]//' -L/usr/openwin/lib _
-                 -lXpm -lX11 -lm -lgen -ldl -lsocket'
+   GL/CR LIBS   '-L$ROOTSYS/lib '//[rlibs]//' -lm -lgen -ldl -lsocket'
+   GL/CR PLIBS  '-L$ROOTSYS/lib '//[plibs]//' -lm -lgen -ldl -lsocket'
    GL/CR LIBSX  '$ROOTSYS/lib/libXpm.a -L/usr/openwin/lib -lX11'
 
    GL/CR CICXXOPT [cxxdbg]//' -KPIC -DG__REGEXP1 -DG__UNIX -DG__SHAREDLIB _
@@ -244,11 +245,19 @@ elseif [machine] = 'SOLARIS' .OR. [machine] = 'SOLARISPC' then
    GL/CR CICCOPT  [ccdbg]//' -KPIC -DG__REGEXP1 -DG__UNIX -DG__SHAREDLIB _
           -DG__OSFDLL -DG__ROOT -DG__REDIRECTIO -c'
    GL/CR CILDOPT  [cxxdbg]//' -o'
++IF,CC5.
+   GL/CR CILIBS   '-L$ROOTSYS/lib -lCint -lm -ltermcap -ldl'
++ELSE
    GL/CR CILIBS   '-L$ROOTSYS/lib -lCint -lm -ltermcap -ldl -L/usr/ccs/lib -lgen'
 +ENDIF.
 +IF,SUNOS56.
    CXXOPT = '-D__SunOS_5_6 '//[CXXOPT]
 +ENDIF.
++IF,CC5.
+   CXXOPT   = ' -library=iostream,no%Cstd '//[CXXOPT]
+   CICXXOPT = ' -library=iostream,no%Cstd '//[CICXXOPT]
++ENDIF
++ENDIF
    ALIAS/C bind_lib 'exec bind_lib_solaris' C
 *---------------------------------------------------------------------------
 elseif [machine] = 'ALPHA' then
@@ -260,7 +269,8 @@ elseif [machine] = 'ALPHA' then
    GL/CR CCOPT  [ccdbg]//' -c'
    GL/CR LDOPT  [cxxdbg]//' -o'
    GL/CR SLOPT  [cxxdbg]//' -Wl,-expect_unresolved,* -shared -o'
-   GL/CR LIBS   '-L$ROOTSYS/lib '//[rlibs]//' -lXpm -lX11 -lg++ -lm -lPW'
+   GL/CR LIBS   '-L$ROOTSYS/lib '//[rlibs]//' -lg++ -lm -lPW'
+   GL/CR PLIBS  '-L$ROOTSYS/lib '//[plibs]//' -lg++ -lm -lPW'
    GL/CR LIBSX  '$ROOTSYS/lib/libXpm.a -lX11 -lg++'
 
    GL/CR CICXXOPT [cxxdbg]//' -DG__DECCXX -DG__REGEXP -DG__UNIX -DG__SHAREDLIB _
@@ -269,6 +279,7 @@ elseif [machine] = 'ALPHA' then
                  -DG__OSFDLL -DG__ROOT -DG__REDIRECTIO -c'
    GL/CR CILDOPT  [cxxdbg]//' -o'
    GL/CR CILIBS   '-L$ROOTSYS/lib -lCint -lm -ltermcap -lbsd -lg++'
+   ALIAS/C bind_lib 'exec bind_lib_alpha_gcc' C
 +ELSEIF,EGCS.
 *####
 *# if you compile on a newer alpha processor, remove the -mcpu=ev5 option
@@ -281,7 +292,8 @@ elseif [machine] = 'ALPHA' then
    GL/CR CCOPT  [ccdbg]//' -fPIC -mcpu=ev5 -c'
    GL/CR LDOPT  [cxxdbg]//' -o'
    GL/CR SLOPT  [cxxdbg]//' -Wl,-expect_unresolved,* -shared -o'
-   GL/CR LIBS   '-L$ROOTSYS/lib '//[rlibs]//' -lXpm -lX11 -lm -ltermcap'
+   GL/CR LIBS   '-L$ROOTSYS/lib '//[rlibs]//' -lm -ltermcap'
+   GL/CR PLIBS  '-L$ROOTSYS/lib '//[plibs]//' -lm -ltermcap'
    GL/CR LIBSX  '$ROOTSYS/lib/libXpm.a -lX11'
 
    GL/CR CICXXOPT [cxxdbg]//' -fPIC -mcpu=ev5 _
@@ -291,6 +303,7 @@ elseif [machine] = 'ALPHA' then
                  -DG__OSFDLL -DG__ROOT -DG__REDIRECTIO -c'
    GL/CR CILDOPT  [cxxdbg]//' -o'
    GL/CR CILIBS   '-L$ROOTSYS/lib -lCint -lm -ltermcap -lbsd'
+   ALIAS/C bind_lib 'exec bind_lib_alpha_egcs' C
 +ELSE.
    if $OS = 'VMS' then
       select ALPHACXX
@@ -305,7 +318,7 @@ elseif [machine] = 'ALPHA' then
       endif
 
       vmslibs1=[.lib]LIBNEW/lib,LIBEG/lib,LIBBASE/lib,LIBCLIB/lib,LIBCINT/lib,LIBCONT/lib,_
-      LIBGRAF/lib,LIBFUNC/lib,LIBGRAF/lib,LIBHIST/lib,LIBHTML/lib,LIBMATRIX/lib
+      LIBGRAF/lib,LIBGRAF/lib,LIBHIST/lib,LIBHTML/lib,LIBMATRIX/lib
 
       vmslibs2=[.lib]LIBMETA/lib,LIBMINUIT/lib,LIBGPAD/lib,LIBGX11/lib,LIBNET/lib,LIBPOSTSCRIPT/lib,_
       LIBRINT/lib,LIBTREE/lib,LIBPROOF/lib,LIBX3D/lib,LIBZIP/lib,LIBCLIB/lib
@@ -327,37 +340,38 @@ elseif [machine] = 'ALPHA' then
       ALIAS/C bind_lib 'exec bind_lib_vms' C
    else
       if [2] <> 'g' then
-         cxxdbg = '-O0 '//[cxxdef]
+*         cxxdbg = [cxxdef]//'0'
       endif
       select ALPHACXX
       GL/CR CXX cxx
       GL/CR CC  cc
       GL/CR LD  cxx
 +IF,CXX6
-      GL/CR CXXOPT [cxxdbg]//' -trapuv -nortti -nostdnew -Dcxxbug -D__osf__ -D__alpha -c'
+      GL/CR CXXOPT [cxxdbg]//' -nostdnew -Dcxxbug -D__osf__ -D__alpha -c'
 +ELSE
       GL/CR CXXOPT [cxxdbg]//' -oldcxx -Dcxxbug -D__osf__ -D__alpha -c'
 +ENDIF
       GL/CR CCOPT  [ccdbg]//' -D__osf__ -D__alpha -c'
       GL/CR LDOPT  [cxxdbg]//' -o'
       GL/CR SLOPT  [cxxdbg]//' -Wl,-expect_unresolved,* -shared -o'
-      GL/CR LIBS   '-L$ROOTSYS/lib '//[rlibs]//' -lXpm -lX11 -lm -lPW'
+      GL/CR LIBS   '-L$ROOTSYS/lib '//[rlibs]//' -lm -lPW'
+      GL/CR PLIBS  '-L$ROOTSYS/lib '//[plibs]//' -lm -lPW'
       GL/CR LIBSX  '$ROOTSYS/lib/libXpm.a -lX11'
 
 +IF,CXX6
-      GL/CR CICXXOPT [cxxdbg]//' -trapuv -nortti -nostdnew -DG__DECCXX -DG__REGEXP -DG__UNIX -DG__SHAREDLIB _
+      GL/CR CICXXOPT [cxxdbg]//' -nostdnew -DG__REGEXP -DG__UNIX -DG__SHAREDLIB _
                  -DG__OSFDLL -DG__ROOT -DG__REDIRECTIO -c'
 +ELSE
       GL/CR CICXXOPT [cxxdbg]//' -oldcxx -DG__DECCXX -DG__REGEXP -DG__UNIX -DG__SHAREDLIB _
                  -DG__OSFDLL -DG__ROOT -DG__REDIRECTIO -c'
 +ENDIF
-      GL/CR CICCOPT  [ccdbg]//' -DG__DECCXX -DG__REGEXP -DG__UNIX -DG__SHAREDLIB _
+      GL/CR CICCOPT  [ccdbg]//' -DG__REGEXP -DG__UNIX -DG__SHAREDLIB _
                  -DG__OSFDLL -DG__ROOT -DG__REDIRECTIO -c'
       GL/CR CILDOPT  [cxxdbg]//' -o'
       GL/CR CILIBS   '-L$ROOTSYS/lib -lCint -lm -lPW'
+      ALIAS/C bind_lib 'exec bind_lib_alpha_cxx' C
    endif
 +ENDIF.
-   ALIAS/C bind_lib 'exec bind_lib_alpha' C
 *---------------------------------------------------------------------------
 elseif [machine] = 'SGI' then
 +IF,GCC.
@@ -368,7 +382,8 @@ elseif [machine] = 'SGI' then
    GL/CR CCOPT  [ccdbg]//' -fsigned-char -fPIC -c'
    GL/CR LDOPT  [cxxdbg]//' -Wl,-u,__builtin_new -Wl,-u,__builtin_delete -Wl,-u,__nw__FUiPv -o'
    GL/CR SLOPT  [cxxdbg]//' -shared -o'
-   GL/CR LIBS   '-L$ROOTSYS/lib '//[rlibs]//' -lXpm -lX11 -lg++ -lm -lPW -ldl'
+   GL/CR LIBS   '-L$ROOTSYS/lib '//[rlibs]//' -lg++ -lm -lPW -ldl'
+   GL/CR PLIBS  '-L$ROOTSYS/lib '//[plibs]//' -lg++ -lm -lPW -ldl'
    GL/CR LIBSX  '$ROOTSYS/lib/libXpm.a -lX11 -lg++'
 
    GL/CR CICXXOPT [cxxdbg]//' -fsigned-char -fPIC  -DG__REGEXP1 -DG__UNIX -DG__SHAREDLIB _
@@ -385,7 +400,8 @@ elseif [machine] = 'SGI' then
    GL/CR CCOPT  [ccdbg]//' -fsigned-char -fPIC -c'
    GL/CR LDOPT  [cxxdbg]//' -Wl,-u,__builtin_new -Wl,-u,__builtin_delete -Wl,-u,__nw__FUiPv -o'
    GL/CR SLOPT  [cxxdbg]//' -shared -o'
-   GL/CR LIBS   '-L$ROOTSYS/lib '//[rlibs]//' -lXpm -lX11 -lstdc++ -lm'
+   GL/CR LIBS   '-L$ROOTSYS/lib '//[rlibs]//' -lstdc++ -lm'
+   GL/CR PLIBS  '-L$ROOTSYS/lib '//[plibs]//' -lstdc++ -lm'
    GL/CR LIBSX  '$ROOTSYS/lib/libXpm.a -lX11'
 
    GL/CR CICXXOPT [cxxdbg]//' -fsigned-char -Wall -fPIC -DG__REGEXP1 -DG__UNIX -DG__SHAREDLIB _
@@ -409,7 +425,8 @@ elseif [machine] = 'SGI' then
    GL/CR CCOPT  [ccdbg]//' -signed -c'
    GL/CR LDOPT  [cxxdbg]//' -Wl,-u,__builtin_new -Wl,-u,__builtin_delete -Wl,-u,__nw__FUiPv -o'
    GL/CR SLOPT  [cxxdbg]//' -o'
-   GL/CR LIBS   '-L$ROOTSYS/lib '//[rlibs]//' -lXpm -lX11 -lm -lPW -ldl'
+   GL/CR LIBS   '-L$ROOTSYS/lib '//[rlibs]//' -lm -lPW -ldl'
+   GL/CR PLIBS  '-L$ROOTSYS/lib '//[plibs]//' -lm -lPW -ldl'
    GL/CR LIBSX  '$ROOTSYS/lib/libXpm.a -lX11'
 
    GL/CR CICXXOPT [cxxdbg]//' -DG__REGEXP1 -DG__UNIX -DG__SHAREDLIB _
@@ -428,7 +445,8 @@ elseif [machine] = 'SGI' then
    GL/CR SLOPT  [cxxdbg]//' -n32 -shared -o'
    GL/CR F77    f77
    GL/CR F77OPT '-n32 -static -g -c '
-   GL/CR LIBS   '-L$ROOTSYS/lib '//[rlibs]//' -lXpm -lX11 -lm -lPW -ldl'
+   GL/CR LIBS   '-L$ROOTSYS/lib '//[rlibs]//' -lm -lPW -ldl'
+   GL/CR PLIBS  '-L$ROOTSYS/lib '//[plibs]//' -lm -lPW -ldl'
    GL/CR LIBSX  '-lXpm -lX11'
 
    GL/CR CICXXOPT [cxxdbg]//' -n32 -signed -w -DIRIX64 -DG__REGEXP1 -DG__UNIX -DG__SHAREDLIB _
@@ -437,20 +455,22 @@ elseif [machine] = 'SGI' then
                  -DG__OSFDLL -DG__SIGNEDCHAR -DG__ROOT -DG__REDIRECTIO -c'
 
    GL/CR CILDOPT  [cxxdbg]//' -n32 -o'
+   GL/CR CILIBS   '-L$ROOTSYS/lib -lCint -lm -lgen'
 +ELSE.
    GL/CR CXX CC
    GL/CR CC  cc
    GL/CR LD  CC
-   GL/CR CXXOPT [cxxdbg]//' -signed -c'
-   GL/CR CCOPT  [ccdbg]//' -signed -c'
-   GL/CR LDOPT  [cxxdbg]//' -o'
-   GL/CR SLOPT  [cxxdbg]//' -shared -o'
-   GL/CR LIBS   '-L$ROOTSYS/lib '//[rlibs]//' -lXpm -lX11 -lm -lPW -ldl'
+   GL/CR CXXOPT [cxxdbg]//' -n32 -signed -c'
+   GL/CR CCOPT  [ccdbg]//' -n32 -signed -c'
+   GL/CR LDOPT  [cxxdbg]//' -n32 -o'
+   GL/CR SLOPT  [cxxdbg]//' -n32 -shared -o'
+   GL/CR LIBS   '-L$ROOTSYS/lib '//[rlibs]//' -lm -lPW -ldl'
+   GL/CR PLIBS  '-L$ROOTSYS/lib '//[plibs]//' -lm -lPW -ldl'
    GL/CR LIBSX  '$ROOTSYS/lib/libXpm.a -lX11'
 
-   GL/CR CICXXOPT [cxxdbg]//' -signed -w -DG__REGEXP1 -DG__UNIX -DG__SHAREDLIB _
+   GL/CR CICXXOPT [cxxdbg]//' -n32 -signed -w -DG__REGEXP1 -DG__UNIX -DG__SHAREDLIB _
                  -DG__OSFDLL -DG__SIGNEDCHAR -DG__ROOT -DG__REDIRECTIO -c'
-   GL/CR CICCOPT  [ccdbg]//' -signed -w -DG__REGEXP1 -DG__UNIX -DG__SHAREDLIB _
+   GL/CR CICCOPT  [ccdbg]//' -n32 -signed -w -DG__REGEXP1 -DG__UNIX -DG__SHAREDLIB _
                  -DG__OSFDLL -DG__SIGNEDCHAR -DG__ROOT -DG__REDIRECTIO -c'
 
    GL/CR CILDOPT  [cxxdbg]//' -o'
@@ -462,6 +482,13 @@ elseif [machine] = 'SGI' then
    ALIAS/C bind_lib 'exec bind_lib_sgi' C
 *---------------------------------------------------------------------------
 elseif [machine] = 'LINUX' then
++IF,G77.
+   GL/CR F77 g77
+   GL/CR F77OPT [f77dbg]//' -c'
++ELSE.
+   GL/CR F77 fort77
+   GL/CR F77OPT [f77dbg]//' -Nx800 -NC200 -c'
++ENDIF.
 +IF,KCC.
    GL/CR CXX KCC
    GL/CR LD  KCC
@@ -472,7 +499,6 @@ elseif [machine] = 'LINUX' then
       cxxdbg = [cxxdbg]//' +K1'
    endif
    GL/CR CC  gcc
-   GL/CR F77 fort77
 +IF,GLIBC.
    GL/CR CXXOPT [cxxdbg]//' -DR__GLIBC -fPIC -I$ROOTSYS/src -c'
    GL/CR CCOPT  [ccdbg]//' -DR__GLIBC -Wall -fPIC -c'
@@ -480,11 +506,9 @@ elseif [machine] = 'LINUX' then
    GL/CR CXXOPT [cxxdbg]//' -fPIC -I$ROOTSYS/src -c'
    GL/CR CCOPT  [ccdbg]//' -Wall -fPIC -c'
 +ENDIF.
-   GL/CR F77OPT [f77dbg]//' -Nx800 -NC200 -c'
    GL/CR LDOPT  [cxxdbg]//' -o'
    GL/CR SLOPT  [cxxdbg]//' -o'
-   GL/CR LIBS   '-L$ROOTSYS/lib '//[rlibs]//' -L/usr/X11R6/lib  _
-                 -lXpm -lX11 -lg++ -lm -ldl'
+   GL/CR LIBS   '-L$ROOTSYS/lib '//[rlibs]//' -lg++ -lm -ldl'
    GL/CR PLIBS  '-L$ROOTSYS/lib '//[plibs]//' -lg++ -lm -ldl'
    GL/CR LIBSX  '$ROOTSYS/lib/libXpm.a -L/usr/X11R6/lib -lX11 -lg++'
 
@@ -493,31 +517,31 @@ elseif [machine] = 'LINUX' then
    GL/CR CICCOPT  [ccdbg]//' -Wall -fPIC -DG__REGEXP -DG__UNIX -DG__SHAREDLIB _
                  -DG__OSFDLL -DG__ROOT -DG__REDIRECTIO -c'
    GL/CR CILDOPT  [cxxdbg]//' -o'
-   GL/CR CILIBS   '-L$ROOTSYS/lib -lCint -L/usr/X11R6/lib -lm -ltermcap -lbsd -ldl -lg++'
+   GL/CR CILIBS   '-L$ROOTSYS/lib -lCint -lm -ltermcap -lbsd -ldl -lg++'
    ALIAS/C bind_lib 'exec bind_lib_kcc' C
 +ELSE.
    GL/CR CXX g++
    GL/CR LD  g++
    GL/CR CC  gcc
-   GL/CR F77 fort77
 +IF,GLIBC.
+   GL/CR LIBST  '-lpthread'
+   SEL THREAD POSIX
+   cxxdbg = [cxxdbg]//' -D_REENTRANT'
+   ccdbg = [ccdbg]//' -D_REENTRANT'
    GL/CR CXXOPT [cxxdbg]//' -DR__GLIBC -Wall -fPIC -I$ROOTSYS/src -c'
    GL/CR CCOPT  [ccdbg]//' -DR__GLIBC -Wall -fPIC -c'
 +ELSE.
    GL/CR CXXOPT [cxxdbg]//' -Wall -fPIC -I$ROOTSYS/src -c'
    GL/CR CCOPT  [ccdbg]//' -Wall -fPIC -c'
 +ENDIF.
-   GL/CR F77OPT [f77dbg]//' -Nx800 -NC200 -c'
    GL/CR LDOPT  [cxxdbg]//' -o'
    GL/CR SLOPT  [cxxdbg]//' -shared -o'
 +IF,EGCS.
-   GL/CR LIBS   '-L$ROOTSYS/lib '//[rlibs]//' -L/usr/X11R6/lib  _
-                 -lXpm -lX11 -lm -ldl -rdynamic'
+   GL/CR LIBS   '-L$ROOTSYS/lib '//[rlibs]//' -lm -ldl -rdynamic'
    GL/CR PLIBS  '-L$ROOTSYS/lib '//[plibs]//' -lm -ldl -rdynamic'
    GL/CR LIBSX  '$ROOTSYS/lib/libXpm.a -L/usr/X11R6/lib -lX11'
 +ELSE.
-   GL/CR LIBS   '-L$ROOTSYS/lib '//[rlibs]//' -L/usr/X11R6/lib  _
-                 -lXpm -lX11 -lg++ -lm -ldl -rdynamic'
+   GL/CR LIBS   '-L$ROOTSYS/lib '//[rlibs]//' -lg++ -lm -ldl -rdynamic'
    GL/CR PLIBS  '-L$ROOTSYS/lib '//[plibs]//' -lg++ -lm -ldl -rdynamic'
    GL/CR LIBSX  '$ROOTSYS/lib/libXpm.a -L/usr/X11R6/lib -lX11 -lg++'
 +ENDIF
@@ -527,9 +551,9 @@ elseif [machine] = 'LINUX' then
                  -DG__OSFDLL -DG__ROOT -DG__REDIRECTIO -c'
    GL/CR CILDOPT  [cxxdbg]//' -o'
 +IF,EGCS.
-   GL/CR CILIBS   '-L$ROOTSYS/lib -lCint -L/usr/X11R6/lib -lm -ltermcap -lbsd -ldl -rdynamic'
+   GL/CR CILIBS   '-L$ROOTSYS/lib -lCint -lm -ltermcap -lbsd -ldl -rdynamic'
 +ELSE.
-   GL/CR CILIBS   '-L$ROOTSYS/lib -lCint -L/usr/X11R6/lib -lm -ltermcap -lbsd -ldl -lg++ -rdynamic'
+   GL/CR CILIBS   '-L$ROOTSYS/lib -lCint -lm -ltermcap -lbsd -ldl -lg++ -rdynamic'
 +ENDIF
    ALIAS/C bind_lib 'exec bind_lib_linux' C
 +ENDIF.
@@ -549,8 +573,8 @@ elseif [machine] = 'HIUX' then
    GL/CR CCOPT  [ccdbg]//' -shared -fPIC -I$ROOTSYS/include -I/usr/include/X11R5 -c'
    GL/CR LDOPT  [cxxdbg]//' -Wl,+s -o'
    GL/CR SLOPT  [cxxdbg]//' -shared  -fPIC -nostdlib -nostartfiles -Wl,-b,-E -o'
-   GL/CR LIBS   '-L$ROOTSYS/lib '//[rlibs]//' -L/usr/lib/X11R5 -L/usr/lib _
-                 -lXpm -lX11 -lm -ldld'
+   GL/CR LIBS   '-L$ROOTSYS/lib '//[rlibs]//' -L/usr/lib -lm -ldld'
+   GL/CR PLIBS  '-L$ROOTSYS/lib '//[plibs]//' -L/usr/lib -lm -ldld'
    GL/CR LIBSX  '$ROOTSYS/lib/libXpm.a -L/usr/lib/X11R5 -lX11'
 
    GL/CR CICXXOPT [cxxdbg]//' -Wall -shared -fPIC -DG__REGEXP -DG__UNIX -DG__SHAREDLIB _

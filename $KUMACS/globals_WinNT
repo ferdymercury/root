@@ -1,9 +1,9 @@
+*CMZ :  2.23/05 14/10/99  18.26.32  by  Fons Rademakers
+*CMZ :  2.23/04 12/10/99  17.49.07  by  Fons Rademakers
 *CMZ :  2.20/00 26/11/98  18.13.20  by  Rene Brun
 *CMZ :  2.00/09 05/06/98  17.42.10  by  Valery Fine(fine@mail.cern.ch)
 *CMZ :  2.00/08 03/06/98  18.18.49  by  Rene Brun
 *CMZ :  2.00/02 17/03/98  10.39.47  by  Rene Brun
-*CMZ :  2.00/00 02/02/98  15.00.01  by  Valery Fine(fine@mail.cern.ch)
-*CMZ :  1.03/02 28/08/97  19.07.26  by  Valery Fine(fine@mail.cern.ch)
 *-- Author :    Rene Brun   17/02/97
 macro globals_WinNT 1=- 2=opt 3=log
 
@@ -66,8 +66,9 @@ endif
    LdOutPutOpt   = /out:
    CcOutPutOpt   = ' /Fo'
    FcOutPutOpt   = [CcOutPutOpt]
-   commopt = ' -G5 -MD /V'//[RootVersion]//' '
-   RootPDB = ' -Fd%ROOTSYS%\src\Root'
+   commopt  = ' -G5 -MD /V'//[RootVersion]//' '
+   RootPDB  = ' -Fd%ROOTSYS%\src\Root'
+   RootPDBF = ' -Fd%ROOTSYS%\src\RootF77'
    if [2] = 'g' then
       f77opt = '-4Nportlib -Zi'
       cxxdbg = '-Zi'
@@ -107,7 +108,7 @@ endif
        -D_X86_=1 -D_DLL -DVISUAL_CPLUSPLUS _
        -I%ROOTSYS%\src '//[CcOutPutOpt]//'%ROOTSYS%\src\$compfile.'//[ObjSuf]//' -c'
 
-   GL/CR F77OPT [f77opt]//[commopt]//[RootPDB]//[FcOutPutOpt]//'%ROOTSYS%\src\$compfile.'//[ObjSuf]//' -c'
+   GL/CR F77OPT [f77opt]//[commopt]//[RootPDBF]//[FcOutPutOpt]//'%ROOTSYS%\src\$compfile.'//[ObjSuf]//' -c'
 
    GL/CR LDOPT    [ldopt]
    GL/CR CILDOPT  [ldopt]
@@ -127,7 +128,9 @@ endif
    GL/CR CILIBS  $ROOTSYS\lib\Root_Cint.[LibSuf]
 
    GL/CR SLOPT  [ldopt]//' /DLL'
-**    GL/CR LIBS
+   GL/CR LIBS   $ROOTSYS\lib\Root_New.lib//' '//$ROOTSYS\lib\Root_Core.lib//' '//$ROOTSYS\lib\Root_Cint.lib//' _
+             '//$ROOTSYS\lib\Root_Hist.lib//' '//$ROOTSYS\lib\Root_Graf.lib//' '//$ROOTSYS\lib\Root_Graf3d.lib//' _
+             '//$ROOTSYS\lib\Root_Tree.lib//' '//$ROOTSYS\lib\Root_Rint.lib
    ALIAS/C bind_lib 'exec bind_lib_WinNT' C
 +ENDIF
 

@@ -1,22 +1,18 @@
+//*CMZ :  2.23/02 02/09/99  15.54.27  by  Rene Brun
 //*CMZ :  2.00/00 18/02/98  18.49.46  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   13/01/98
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 //*CMZ :  2.00/00 16/02/98  00.17.08  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   27/12/97
@@ -75,9 +71,9 @@ TGComboBoxPopup::TGComboBoxPopup(const TGWindow *p, UInt_t w, UInt_t h,
    wattr.fSaveUnder = kTRUE;
    wattr.fBorderPixel = fgBlackPixel;
    wattr.fBorderWidth = 1;
-   gGXW->ChangeWindowAttributes(fId, &wattr);
+   gVirtualX->ChangeWindowAttributes(fId, &wattr);
 
-   gGXW->SelectInput(fId, kStructureNotifyMask);
+   gVirtualX->SelectInput(fId, kStructureNotifyMask);
 }
 
 //______________________________________________________________________________
@@ -94,7 +90,7 @@ void TGComboBoxPopup::EndPopup()
 {
    // Ungrab pointer and unmap popup window.
 
-   gGXW->GrabPointer(0, 0, 0, 0, kFALSE);
+   gVirtualX->GrabPointer(0, 0, 0, 0, kFALSE);
    UnmapWindow();
 }
 
@@ -107,7 +103,7 @@ void TGComboBoxPopup::PlacePopup(Int_t x, Int_t y, UInt_t w, UInt_t h)
    UInt_t rw, rh;
 
    // Parent is root window for the popup:
-   gGXW->GetWindowSize(fParent->GetId(), rx, ry, rw, rh);
+   gVirtualX->GetWindowSize(fParent->GetId(), rx, ry, rw, rh);
 
    if (x < 0) x = 0;
    if (x + fWidth > rw) x = rw - fWidth;
@@ -119,7 +115,7 @@ void TGComboBoxPopup::PlacePopup(Int_t x, Int_t y, UInt_t w, UInt_t h)
    Layout();
    MapRaised();
 
-   gGXW->GrabPointer(fId, kButtonPressMask | kButtonReleaseMask |
+   gVirtualX->GrabPointer(fId, kButtonPressMask | kButtonReleaseMask |
                      kPointerMotionMask, kNone, fgDefaultCursor);
 
    fClient->WaitForUnmap(this);
@@ -162,13 +158,13 @@ TGComboBox::TGComboBox(const TGWindow *p, Int_t id, UInt_t options,
    fComboFrame->MapSubwindows();
    fComboFrame->Resize(fComboFrame->GetDefaultSize());
 
-   gGXW->GrabButton(fId, kButton1, kAnyModifier, kButtonPressMask |
+   gVirtualX->GrabButton(fId, kButton1, kAnyModifier, kButtonPressMask |
                     kButtonReleaseMask, kNone, kNone);
 
    // Drop down listbox of combo box should react to pointer motion
    // so it will be able to Activate() (i.e. highlight) the different
    // items when the mouse crosses.
-   gGXW->SelectInput(fListBox->GetContainer()->GetId(), kButtonPressMask |
+   gVirtualX->SelectInput(fListBox->GetContainer()->GetId(), kButtonPressMask |
                      kButtonReleaseMask | kPointerMotionMask);
 }
 
@@ -193,15 +189,15 @@ void TGComboBox::DrawBorder()
 
    switch (fOptions & (kSunkenFrame | kRaisedFrame | kDoubleBorder)) {
       case kSunkenFrame | kDoubleBorder:
-         gGXW->DrawLine(fId, fgShadowGC, 0, 0, fWidth-2, 0);
-         gGXW->DrawLine(fId, fgShadowGC, 0, 0, 0, fHeight-2);
-         gGXW->DrawLine(fId, fgBlackGC, 1, 1, fWidth-3, 1);
-         gGXW->DrawLine(fId, fgBlackGC, 1, 1, 1, fHeight-3);
+         gVirtualX->DrawLine(fId, fgShadowGC, 0, 0, fWidth-2, 0);
+         gVirtualX->DrawLine(fId, fgShadowGC, 0, 0, 0, fHeight-2);
+         gVirtualX->DrawLine(fId, fgBlackGC, 1, 1, fWidth-3, 1);
+         gVirtualX->DrawLine(fId, fgBlackGC, 1, 1, 1, fHeight-3);
 
-         gGXW->DrawLine(fId, fgHilightGC, 0, fHeight-1, fWidth-1, fHeight-1);
-         gGXW->DrawLine(fId, fgHilightGC, fWidth-1, fHeight-1, fWidth-1, 0);
-         gGXW->DrawLine(fId, fgBckgndGC,  1, fHeight-2, fWidth-2, fHeight-2);
-         gGXW->DrawLine(fId, fgBckgndGC,  fWidth-2, 1, fWidth-2, fHeight-2);
+         gVirtualX->DrawLine(fId, fgHilightGC, 0, fHeight-1, fWidth-1, fHeight-1);
+         gVirtualX->DrawLine(fId, fgHilightGC, fWidth-1, fHeight-1, fWidth-1, 0);
+         gVirtualX->DrawLine(fId, fgBckgndGC,  1, fHeight-2, fWidth-2, fHeight-2);
+         gVirtualX->DrawLine(fId, fgBckgndGC,  fWidth-2, 1, fWidth-2, fHeight-2);
          break;
 
       default:
@@ -253,7 +249,7 @@ Bool_t TGComboBox::HandleButton(Event_t *event)
       Window_t wdummy;
 
       fDDButton->SetState(kButtonUp);
-      gGXW->TranslateCoordinates(fId, (fComboFrame->GetParent())->GetId(),
+      gVirtualX->TranslateCoordinates(fId, (fComboFrame->GetParent())->GetId(),
                                  0, fHeight, ax, ay, wdummy);
 
       fComboFrame->PlacePopup(ax, ay, fWidth-2, fComboFrame->GetDefaultHeight());

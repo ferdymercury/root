@@ -1,26 +1,23 @@
+//*CMZ :  2.23/12 26/01/2000  11.47.51  by  Rene Brun
+//*CMZ :  2.23/09 10/11/99  18.43.38  by  Fons Rademakers
+//*CMZ :  2.23/07 27/10/99  15.48.40  by  Rene Brun
+//*CMZ :  2.23/00 27/10/99  13.01.52  by  Rene Brun
 //*CMZ :  2.22/09 12/07/99  18.10.08  by  Rene Brun
 //*CMZ :  2.22/07 05/07/99  13.42.36  by  Rene Brun
 //*CMZ :  2.22/06 21/06/99  17.53.19  by  Rene Brun
-//*CMZ :  2.00/00 20/11/97  02.39.25  by  Victor Perev
-//*CMZ :  1.03/03 08/09/97  16.27.45  by  Rene Brun
 //*-- Author :    Fons Rademakers   02/07/97
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -33,9 +30,15 @@
 // TThreadPosix, TThreadSolaris or TThreadNT).                          //
 //                                                                      //
 //////////////////////////////////////////////////////////////////////////
+
+#ifdef HAVE_CONFIG
+#include "config.h"
+#endif
+
 #include "TThread.h"
 #include "TThreadImp.h"
 #include "TThreadFactory.h"
+#include "TCanvas.h"
 
 
 TThreadImp     *TThread::fgThreadImp = 0;
@@ -50,7 +53,7 @@ volatile Int_t  TThread::fgXArt = 0;
 ClassImp(TThread)
 
 //______________________________________________________________________________
-void      TThread::Debu(char *txt)
+void      TThread::Debu(const char *txt)
 {
   fprintf(stderr,"TThread::Debu %s %d \n",txt,fgMain->fId);
 }
@@ -65,7 +68,7 @@ EState    TThread::GetState  () const {return fState;};
 Int_t     TThread::SetJoinId (Int_t jid)    {fJoinId = jid;   return 0;}
 Int_t     TThread::SetJoinId (TThread *tj)  {return SetJoinId(tj->fId);}
 
- TThread  *TThread::GetThread(UInt_t id)
+ TThread  *TThread::GetThread(Int_t id)
 {
   TThread *myth;
 
@@ -73,7 +76,7 @@ Int_t     TThread::SetJoinId (TThread *tj)  {return SetJoinId(tj->fId);}
   return myth;
 }
 
- TThread  *TThread::GetThread(Text_t *name)
+ TThread  *TThread::GetThread(const Text_t *name)
 {
   TThread *myth;
 
@@ -103,6 +106,7 @@ TThread::TThread(void *(*fn)(void*), void* arg, EPriority pri)
     fPriority = pri;
     fThreadArg = arg;
     Constructor();
+    fNamed = kFALSE;
 }
 
 TThread::TThread(void  (*fn)(void*), void* arg, EPriority pri)
@@ -113,7 +117,46 @@ TThread::TThread(void  (*fn)(void*), void* arg, EPriority pri)
     fPriority = pri;
     fThreadArg = arg;
     Constructor();
+    fNamed = kFALSE;
 }
+
+////////// begin changes (J.A.):
+   // additional constructors with own threadname thname
+   // as useful for invoking thread with name from compiled program:
+
+
+TThread::TThread(const Text_t *thname, void *(*fn)(void*), void* arg, EPriority pri){
+  SetName(thname); // set TNamed name to thname anyway, will be overwritten
+  //if G__p2f2funcname-method recognizes true name of fn (call by interpreter)
+  fDetached = kFALSE;
+    fFcnVoid = NULL;
+    fFcnRetn = fn;
+    fPriority = pri;
+    fThreadArg = arg;
+    Constructor();
+    fNamed = kTRUE;
+
+
+    //TThread(fn,arg,pri); // use normal TThread joinable constructor
+
+}
+
+TThread::TThread(const Text_t *thname, void (*fn)(void*), void* arg, EPriority pri){
+  SetName(thname); // set TNamed name to thname anyway, will be overwritten
+  //if G__p2f2funcname-method recognizes true name of fn (call by interpreter)
+  fDetached = kTRUE;
+  fFcnRetn = NULL;
+  fFcnVoid = fn;
+  fPriority = pri;
+  fThreadArg = arg;
+  Constructor();
+  fNamed = kTRUE;
+
+    //TThread(fn,arg,pri); // use normal TThread detached constructor
+
+}
+
+/////////////// end changes (J.A.)
 
 void TThread::Constructor() {
     fState = kNewState;
@@ -123,7 +166,7 @@ void TThread::Constructor() {
       fgThreadImp = gThreadFactory->CreateThreadImp();
       fgMainMutex = new TMutex;
       fgXActMutex = new TMutex;
-      TThreadTimer *iTimer = new TThreadTimer;
+      new TThreadTimer;
       fgXActCondi = new TCondition;
       gThreadTsd = &(TThread::Tsd);
       gThreadXAR  = &(TThread::XARequest);
@@ -132,7 +175,7 @@ void TThread::Constructor() {
     PutComm("Constructor: MainMutex Locking");
     Lock();
     PutComm("Constructor: MainMutex Locked");
-    fTsd[0] = gPadMain;
+    fTsd[0] = gPad;
 
     if (fgMain) fgMain->fPrev = this;
     fNext = fgMain; fPrev=NULL; fgMain = this;
@@ -177,6 +220,7 @@ Int_t TThread::Delete(TThread* &th)
     th->Kill(); return -1;}
 
   th->CleanUp();
+  return 0;
 
 }
 
@@ -206,15 +250,16 @@ Int_t TThread::Delete(TThread* &th)
 
 Int_t TThread::Run(void *arg)
 {
-char *fname;
+char *fname = 0;
 
 if (arg) fThreadArg = arg;
   PutComm("Run: MainMutex locking");
   Lock();
   PutComm("Run: MainMutex locked");
-  if (fFcnVoid) fname=G__p2f2funcname(fFcnVoid);
-  if (fFcnRetn) fname=G__p2f2funcname(fFcnRetn);
-  if (fname) SetName(fname);
+  if (fFcnVoid) fname=G__p2f2funcname((void*)fFcnVoid);
+  if (fFcnRetn) fname=G__p2f2funcname((void*)fFcnRetn);
+  if(!fNamed)
+    if (fname) SetName(fname);
 
   int iret = fgThreadImp->Run (this);
 
@@ -235,7 +280,7 @@ Int_t TThread::Kill()
      return fgThreadImp->Kill(this);
   }
 }
-Int_t TThread::Kill(UInt_t id)
+Int_t TThread::Kill(Int_t id)
 {
   TThread *th = GetThread(id);
   if (th) {return fgThreadImp->Kill(th);
@@ -243,7 +288,7 @@ Int_t TThread::Kill(UInt_t id)
            return 13;}
 }
 
-Int_t TThread::Kill(Text_t *name)
+Int_t TThread::Kill(const Text_t *name)
 {
   TThread *th = GetThread(name);
   if (th) {return fgThreadImp->Kill(th);
@@ -464,20 +509,20 @@ void **TThread::Tsd(void *dflt,Int_t k) {
   }
 }
 
-void TThread::Printf(char *txt) {
+void TThread::Printf(const char *txt) {
   Printf(txt,0);
 }
-void TThread::Printf(char *txt,Int_t in) {
+void TThread::Printf(const char *txt,Int_t in) {
   void *arr[3];
 
-  arr[1] = txt; arr[2] = &in;
+  arr[1] = (void*)txt; arr[2] = &in;
   if (XARequest("PRTF", 3, arr, NULL)) return;
 
   fprintf(stderr,txt,in);
 }
 
 
-Int_t TThread::XARequest(char *xact, Int_t nb, void **ar, Int_t *iret) {
+Int_t TThread::XARequest(const char *xact, Int_t nb, void **ar, Int_t *iret) {
    TThread *th;
    if ((th=Self())) { // we are in the thread
 
@@ -487,7 +532,7 @@ Int_t TThread::XARequest(char *xact, Int_t nb, void **ar, Int_t *iret) {
      fgXAnb = nb;
      fgXArr = ar;
      fgXArt = 0;
-     fgXAct = xact;
+     fgXAct = (char*)xact;
 //     while(fgXAct) {gSystem->Sleep(10);};
 //     th->PutComm("XARequest: Condition Wait");
      th->PutComm(fgXAct);
@@ -572,8 +617,12 @@ void TThread::XAction()
 Int_t TThread::MakeFun(char *funname)
 { int iret;
   char cbuf[100];
+#ifndef ROOTDATADIR
   sprintf(cbuf,"make -f $ROOTSYS/thread/MakeFun.mk fun=%s",funname);
-  if (iret = gSystem->Exec(cbuf)) return iret;
+#else
+  sprintf(cbuf,"make -f " ROOTDATADIR "/thread/MakeFun.mk fun=%s",funname);
+#endif
+  if ((iret = gSystem->Exec(cbuf))) return iret;
   sprintf(cbuf,"%s.so",funname);
   return gSystem->Load(cbuf);
 }

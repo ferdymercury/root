@@ -1,37 +1,25 @@
-//*CMZ :  2.22/07 24/06/99  23.34.57  by  Fons Rademakers
-//*CMZ :  2.22/06 22/06/99  18.53.52  by  Fons Rademakers
-//*CMZ :  2.22/05 07/06/99  14.30.06  by  Rene Brun
-//*CMZ :  2.22/01 19/04/99  18.22.33  by  Fons Rademakers
-//*CMZ :  2.22/00 03/04/99  22.29.18  by  Rene Brun
-//*CMZ :  2.21/03 22/01/99  16.25.57  by  Fons Rademakers
-//*CMZ :  2.20/05 15/12/98  09.19.59  by  Rene Brun
-//*CMZ :  2.20/00 11/11/98  16.29.54  by  Rene Brun
-//*CMZ :  2.00/12 02/10/98  11.55.00  by  Fons Rademakers
-//*CMZ :  2.00/11 28/08/98  10.56.05  by  Rene Brun
-//*CMZ :  2.00/09 19/06/98  11.07.53  by  Rene Brun
-//*CMZ :  2.00/06 12/05/98  17.09.49  by  Rene Brun
-//*CMZ :  2.00/05 20/04/98  13.06.24  by  Fons Rademakers
-//*CMZ :  2.00/04 07/04/98  11.58.24  by  Rene Brun
-//*CMZ :  2.00/00 07/03/98  18.07.10  by  Fons Rademakers
-//*CMZ :  1.03/09 16/12/97  16.42.20  by  Rene Brun
+//*CMZ :  2.23/12 26/01/2000  09.41.50  by  Rene Brun
+//*CMZ :  2.23/10 26/11/99  09.05.07  by  Rene Brun
+//*CMZ :  2.23/09 24/11/99  12.02.29  by  Rene Brun
+//*CMZ :  2.23/07 09/11/99  18.37.39  by  Fons Rademakers
+//*CMZ :  2.23/04 13/10/99  15.41.06  by  Fons Rademakers
+//*CMZ :  2.23/03 21/09/99  18.48.46  by  Fons Rademakers
+//*CMZ :  2.23/02 06/09/99  16.28.03  by  Fons Rademakers
+//*CMZ :  2.23/01 31/08/99  17.33.15  by  Rene Brun
+//*CMZ :  2.23/00 07/08/99  14.56.09  by  Fons Rademakers
 //*-- Author :    Rene Brun   08/12/94
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -58,6 +46,7 @@
 //       gROOT->GetListOfSpecials (for example graphical cuts)
 //       gROOT->GetListOfGeometries
 //       gROOT->GetListOfBrowsers
+//       gROOT->GetListOfMessageHandlers
 //
 //   The TROOT class provides also many useful services:
 //     - Get pointer to an object in any of the lists above
@@ -71,11 +60,7 @@
 //       #include "TROOT.h"
 //       #include "TRint.h"
 //
-//       extern void  InitGui();
-//
-//       VoidFuncPtr_t initfuncs[] = { InitGui, 0 };
-//
-//       TROOT root("Rint", "The ROOT Interactive Interface", initfuncs);
+//       TROOT root("Rint", "The ROOT Interactive Interface");
 //
 //       int main(int argc, char **argv)
 //       {
@@ -89,6 +74,9 @@
 //-----------------------End of Main program--------------------------------
 ////////////////////////////////////////////////////////////////////////////////
 
+#ifdef HAVE_CONFIG
+#include "config.h"
+#endif
 
 #include <string.h>
 #include <iostream.h>
@@ -99,23 +87,13 @@
 #include "TDataType.h"
 #include "TFile.h"
 #include "TMapFile.h"
-#include "TDataMember.h"
-#include "TRealData.h"
-#include "TMethod.h"
-#include "TMethodArg.h"
-#include "TBaseClass.h"
-#include "TFree.h"
-#include "TKey.h"
 #include "TDatime.h"
 #include "TStyle.h"
-#include "TF1.h"
-#include "TLink.h"
 #include "TObjectTable.h"
 #include "TClassTable.h"
 #include "TSystem.h"
 #include "THashList.h"
 #include "TObjArray.h"
-#include "TGeometry.h"
 #include "TEnv.h"
 #include "TColor.h"
 #include "TGlobal.h"
@@ -124,13 +102,12 @@
 #include "TNode.h"
 #include "TBrowser.h"
 #include "TSystemDirectory.h"
-#include "TMinuit.h"
 #include "TApplication.h"
 #include "TCint.h"
 #include "TGuiFactory.h"
 #include "TRandom.h"
-#include "TGLKernelABC.h"
-#include "TPRoof.h"
+#include "TMessageHandler.h"
+#include "TVirtualGL.h"
 
 #if defined(R__UNIX)
 #include "TUnixSystem.h"
@@ -169,7 +146,7 @@ TROOT::TROOT() : TDirectory()
 }
 
 //______________________________________________________________________________
-TROOT::TROOT(const Text_t *name, const Text_t *title, VoidFuncPtr_t *initfunc)
+TROOT::TROOT(const char *name, const char *title, VoidFuncPtr_t *initfunc)
            : TDirectory()
 {
    // Initialize the ROOT system. The creation of the TROOT object initializes
@@ -193,8 +170,10 @@ TROOT::TROOT(const Text_t *name, const Text_t *title, VoidFuncPtr_t *initfunc)
 #include "dateqq.h"
 #include "timeqq.h"
 
-   if (fgRootInit)
-      Fatal("TROOT", "only one instance of TROOT allowed");
+   if (fgRootInit) {
+      Warning("TROOT", "only one instance of TROOT allowed");
+      return;
+   }
 
    gROOT      = this;
    gDirectory = 0;
@@ -211,7 +190,18 @@ TROOT::TROOT(const Text_t *name, const Text_t *title, VoidFuncPtr_t *initfunc)
 
    // Initialize interface to CINT C++ interpreter
    fVersionInt  = 0;  // check in TROOT dtor in case TCint fails
+   fClasses     = 0;  // might be checked via TCint ctor
    fInterpreter = new TCint("C/C++", "CINT C/C++ Interpreter");
+
+   // Add the root include directory to list search by default by
+   // the interpreter (should this be here or somewhere else?)
+#ifndef ROOTINCDIR
+   TString include = gSystem->Getenv("ROOTSYS");
+   include.Append("/include");
+   fInterpreter->AddIncludePath(include);
+#else
+   fInterpreter->AddIncludePath(ROOTINCDIR);
+#endif
 
    TSystemDirectory *workdir = new TSystemDirectory("workdir",gSystem->WorkingDirectory());
 
@@ -236,6 +226,7 @@ TROOT::TROOT(const Text_t *name, const Text_t *title, VoidFuncPtr_t *initfunc)
    fBrowsers    = new TList(this);
    fSpecials    = new TList(this);
    fBrowsables  = new TList(this);
+   fMessageHandlers = new TList(this);
    fForceStyle    = kFALSE;
    fFromPopUp     = kFALSE;
    fReadingBasket = kFALSE;
@@ -247,39 +238,41 @@ TROOT::TROOT(const Text_t *name, const Text_t *title, VoidFuncPtr_t *initfunc)
    fDefCanvasName = "c1";
    fEditHistograms= kFALSE;
    fLineIsProcessing  = 1;   // This prevents WIN32 "Windows" thread to pick ROOT objects with mouse
+   gDirectory     = this;
+   gPad           = 0;
+   gRandom        = new TRandom;
 
-   gDirectory = this;
-   gMinuit    = 0;
-   gPad       = 0;
-   gRandom    = new TRandom;
+   // Create a default MessageHandler
+   new TMessageHandler((TClass*)0);
 
    // Create some styles
-   TStyle *plain      = new TStyle("Plain","Plain Style (no colors/fill areas)");
-   plain->SetFrameBorderMode(0);
-   plain->SetCanvasBorderMode(0);
-   plain->SetPadBorderMode(0);
-   plain->SetPadColor(0);
-   plain->SetCanvasColor(0);
-   plain->SetTitleColor(0);
-   plain->SetStatColor(0);
+   TStyle::BuildStyles();
 
-   new TStyle("Default","Default Style");
-   new TGeometry("Geometry","Default ROOT Geometry");
-
-   // By default ROOT runs in batch (i.e. non graphics) mode. Calling
-   // InitGui() will put the system in graphics mode.
-   fBatch           = kTRUE;
+   // Setup default (batch) graphics and GUI environment
    gBatchGuiFactory = new TGuiFactory;
    gGuiFactory      = gBatchGuiFactory;
-   gGXBatch         = new TGXW("Batch", "ROOT Interface to batch graphics");
-   gGXW             = gGXBatch;
-   gGLKernel        = new TGLKernelABC();
+   gGXBatch         = new TVirtualX("Batch", "ROOT Interface to batch graphics");
+   gVirtualX        = gGXBatch;
+   gVirtualGL       = new TVirtualGL;
+
+#ifdef WIN32
+   fBatch = kFALSE;
+#else
+   if (gSystem->Getenv("DISPLAY"))
+      fBatch = kFALSE;
+   else
+      fBatch = kTRUE;
+#endif
 
    int i = 0;
    while (initfunc && initfunc[i]) {
       (initfunc[i])();
+      fBatch = kFALSE;  // put system in graphics mode (backward compatible)
       i++;
    }
+
+   // Load and init threads library
+   InitThreads();
 
    // Set initial/default list of browsable objects
    fBrowsables->Add(fClasses, "Classes");
@@ -332,6 +325,7 @@ TROOT::~TROOT()
 //      fGeometries->Delete(); SafeDelete(fGeometries);
 //      fBrowsers->Delete();   SafeDelete(fBrowsers);
 //      fBrowsables->Delete(); SafeDelete(fBrowsables);
+//      fMessageHandlers->Delete(); SafeDelete(fMessageHandlers);
 //      if (fTypes) fTypes->Delete();
 //      SafeDelete(fTypes);
 //      if (fGlobals) fGlobals->Delete();
@@ -371,26 +365,14 @@ Bool_t TROOT::ClassSaved(TClass *cl)
 // This function is called by the SavePrimitive functions writing
 // the C++ code for an object.
 
-   const Int_t kClassSaved = BIT(12);
-
    if (cl == 0) return kFALSE;
-   if (cl->TestBit(kClassSaved)) return kTRUE;
-   cl->SetBit(kClassSaved);
+   if (cl->TestBit(TClass::kClassSaved)) return kTRUE;
+   cl->SetBit(TClass::kClassSaved);
    return kFALSE;
 }
 
 //______________________________________________________________________________
-void TROOT::DisplayColorTable()
-{
-//*-*-*-*-*-*-*-*-*-*-*Display Color Table in the pad*-*-*-*-*-*-*-*-*-*-*-*
-//*-*                  ==============================
-//*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
-
-   TColor::DisplayColorTable();
-}
-
-//______________________________________________________________________________
-TObject *TROOT::FindObject(const Text_t *name, void *&where)
+TObject *TROOT::FindObject(const char *name, void *&where)
 {
 //*-*-*-*-*Returns address of a ROOT object if it exists*-*-*-*-*-*-*-*-*-*
 //*-*      =============================================
@@ -415,6 +397,15 @@ TObject *TROOT::FindObject(const Text_t *name, void *&where)
    TObject *temp = 0;
    where = 0;
 
+   if (!temp && !strcmp(name, "gPad")) {
+      temp = gPad;
+      if (gPad) {
+         TVirtualPad *canvas = gPad->GetVirtCanvas();
+         //this check in case call from TCanvas ctor
+         if (fCanvases->FindObject(canvas))
+            where = canvas;
+      }
+   }
    if (!temp) {
       temp  = fFiles->FindObject(name);
       where = fFiles;
@@ -443,23 +434,10 @@ TObject *TROOT::FindObject(const Text_t *name, void *&where)
       temp  = fSpecials->FindObject(name);
       where = fSpecials;
    }
-   if (gGeometry) {
-      if (!temp) {
-         temp  = gGeometry->GetListOfMaterials()->FindObject(name);
-         where = gGeometry->GetListOfMaterials();
-      }
-      if (!temp) {
-         temp  = gGeometry->GetListOfShapes()->FindObject(name);
-         where = gGeometry->GetListOfShapes();
-      }
-      if (!temp) {
-         temp  = gGeometry->GetListOfMatrices()->FindObject(name);
-         where = gGeometry->GetListOfMatrices();
-      }
-      if (!temp) {
-         temp  = gGeometry->GetNode(name);
-         where = gGeometry;
-      }
+   if (!temp && TClassTable::GetDict("TGeometry")) {
+      TObjArray *loc = (TObjArray*)ProcessLineFast(Form("TGeometry::Get(\"%s\")",name));
+      temp  = loc->At(0);
+      where = loc->At(1);
    }
    if (!temp && gDirectory) {
       temp  = gDirectory->Get(name);
@@ -482,7 +460,7 @@ TObject *TROOT::FindObject(const Text_t *name, void *&where)
 }
 
 //______________________________________________________________________________
-const Text_t *TROOT::FindObjectClassName(const Text_t *name) const
+const char *TROOT::FindObjectClassName(const char *name) const
 {
 //*-*-*-*-*Returns class name of a ROOT object including CINT globals*-*
 //*-*      ==========================================================
@@ -499,16 +477,10 @@ const Text_t *TROOT::FindObjectClassName(const Text_t *name) const
 }
 
 //______________________________________________________________________________
-TClass *TROOT::GetClass(const Text_t *name1, Bool_t load)
+TClass *TROOT::GetClass(const char *name, Bool_t load)
 {
 //*-*-*-*-*Return pointer to class with name*-*-*-*-*-*-*-*-*-*-*-*-*
 //*-*      =================================
-   char name[64];
-
-   char *t = Strip(name1);
-   if (strlen (t) > 64) strncpy(name, t, 63);
-   else strcpy(name, t);
-   delete [] t;
 
    TClass *cl = (TClass*)GetListOfClasses()->FindObject(name);
 
@@ -549,7 +521,7 @@ VoidFuncPtr_t TROOT::GetMakeDefCanvas()
 
 
 //______________________________________________________________________________
-TDataType *TROOT::GetType(const Text_t *name)
+TDataType *TROOT::GetType(const char *name, Bool_t load)
 {
 //*-*-*-*-*Return pointer to type with name*-*-*-*-*-*-*-*-*-*-*-*-*
 //*-*      =================================
@@ -565,7 +537,7 @@ TDataType *TROOT::GetType(const Text_t *name)
    while (tname[nch-1] == ' ') nch--;
 
    TDataType *idcur;
-   TIter      next(GetListOfTypes());
+   TIter      next(GetListOfTypes(load));
    while ((idcur = (TDataType *) next())) {
      if (strlen(idcur->GetName()) != nch) continue;
      if (strstr(tname, idcur->GetName()) == tname) {
@@ -577,7 +549,7 @@ TDataType *TROOT::GetType(const Text_t *name)
 }
 
 //______________________________________________________________________________
-TFile *TROOT::GetFile(const Text_t *name)
+TFile *TROOT::GetFile(const char *name)
 {
 //*-*-*-*-*Return pointer to file with name*-*-*-*-*-*-*-*-*-*-*-*-*
 //*-*      ================================
@@ -586,7 +558,7 @@ TFile *TROOT::GetFile(const Text_t *name)
 }
 
 //______________________________________________________________________________
-TStyle *TROOT::GetStyle(const Text_t *name)
+TStyle *TROOT::GetStyle(const char *name)
 {
 //*-*-*-*-*Return pointer to style with name*-*-*-*-*-*-*-*-*-*-*-*-*
 //*-*      =================================
@@ -595,27 +567,22 @@ TStyle *TROOT::GetStyle(const Text_t *name)
 }
 
 //______________________________________________________________________________
-TF1 *TROOT::GetFunction(const Text_t *name)
+TObject *TROOT::GetFunction(const char *name)
 {
 //*-*-*-*-*Return pointer to function with name*-*-*-*-*-*-*-*-*-*-*-*-*
 //*-*      ===================================
 
-   TF1 *f1 = (TF1*)fFunctions->FindObject(name);
+   TObject *f1 = fFunctions->FindObject(name);
    if (f1) return f1;
-   if (!fFunctions->FindObject("gaus")) {
-      f1 = new TF1("gaus","gaus",-1,1); f1->SetParameters(1,0,1);
-      f1 = new TF1("landau","landau",-1,1); f1->SetParameters(1,0,1);
-      f1 = new TF1("expo","expo",-1,1); f1->SetParameters(1,1);
-      for (Int_t i=0;i<10;i++) {
-         f1 = new TF1(Form("pol%d",i),Form("pol%d",i),-1,1);
-         f1->SetParameters(1,1,1,1,1,1,1,1,1);
-      }
-   }
-   return (TF1*)fFunctions->FindObject(name);
+
+   if (!TClassTable::GetDict("TF1")) return 0;
+   ProcessLineFast("TF1::InitStandardFunctions();");
+
+   return fFunctions->FindObject(name);
 }
 
 //______________________________________________________________________________
-TGlobal *TROOT::GetGlobal(const Text_t *name, Bool_t load)
+TGlobal *TROOT::GetGlobal(const char *name, Bool_t load)
 {
    // Return pointer to global variable by name. If load is true force
    // reading of all currently defined globals from CINT (more expensive).
@@ -649,7 +616,7 @@ TGlobal *TROOT::GetGlobal(TObject *addr, Bool_t load)
 }
 
 //______________________________________________________________________________
-TFunction *TROOT::GetGlobalFunction(const Text_t *function, const Text_t *params,
+TFunction *TROOT::GetGlobalFunction(const char *function, const char *params,
                                     Bool_t load)
 {
    // Return pointer to global function by name. If params != 0
@@ -679,8 +646,8 @@ TFunction *TROOT::GetGlobalFunction(const Text_t *function, const Text_t *params
 }
 
 //______________________________________________________________________________
-TFunction *TROOT::GetGlobalFunctionWithPrototype(const Text_t *function,
-                                               const Text_t *proto, Bool_t load)
+TFunction *TROOT::GetGlobalFunctionWithPrototype(const char *function,
+                                               const char *proto, Bool_t load)
 {
    // Return pointer to global function by name. If proto != 0
    // it will also resolve overloading. If load is true force reading
@@ -709,12 +676,12 @@ TFunction *TROOT::GetGlobalFunctionWithPrototype(const Text_t *function,
 }
 
 //______________________________________________________________________________
-TGeometry *TROOT::GetGeometry(const Text_t *name)
+TObject *TROOT::GetGeometry(const char *name)
 {
 //*-*-*-*-*Return pointer to Geometry with name*-*-*-*-*-*-*-*-*-*-*-*-*-*
 //*-*      ===================================
 
-   return (TGeometry*)GetListOfGeometries()->FindObject(name);
+   return GetListOfGeometries()->FindObject(name);
 }
 
 //______________________________________________________________________________
@@ -727,8 +694,10 @@ TSeqCollection *TROOT::GetListOfGlobals(Bool_t load)
    // a (tight) loop where no interpreter symbols will be created
    // you can set load=kFALSE (default).
 
-   if (!fGlobals)
+   if (!fGlobals) {
       fGlobals = new THashList(this, 100, 3);
+      load = kTRUE;
+   }
 
    if (!fInterpreter)
       Fatal("GetListOfGlobals", "fInterpreter not initialized");
@@ -749,8 +718,10 @@ TSeqCollection *TROOT::GetListOfGlobalFunctions(Bool_t load)
    // a (tight) loop where no interpreter symbols will be created
    // you can set load=kFALSE (default).
 
-   if (!fGlobalFunctions)
+   if (!fGlobalFunctions) {
       fGlobalFunctions = new THashList(this, 100, 3);
+      load = kTRUE;
+   }
 
    if (!fInterpreter)
       Fatal("GetListOfGlobalFunctions", "fInterpreter not initialized");
@@ -762,15 +733,18 @@ TSeqCollection *TROOT::GetListOfGlobalFunctions(Bool_t load)
 }
 
 //______________________________________________________________________________
-TSeqCollection *TROOT::GetListOfTypes()
+TSeqCollection *TROOT::GetListOfTypes(Bool_t load)
 {
    // Return list containing all TDataTypes (typedefs) currently defined.
+   // Since types can be added and removed during execution of the
+   // program, we need to update the list of types every time we
+   // execute this method. However, when calling this function in
+   // a (tight) loop where no new types will be created
+   // you can set load=kFALSE (default).
 
    if (!fTypes) {
-      if (!fInterpreter)
-         Fatal("GetListOfTypes", "fInterpreter not initialized");
-
-      fInterpreter->CreateListOfTypes();
+      fTypes = new THashList(this, 100, 3);
+      load = kTRUE;
 
       // Add also basic types (like a identity typedef "typedef int int"
       fTypes->Add(new TDataType("char"));
@@ -785,11 +759,19 @@ TSeqCollection *TROOT::GetListOfTypes()
       fTypes->Add(new TDataType("double"));
       fTypes->Add(new TDataType("void"));
    }
+
+   if (!fInterpreter)
+      Fatal("GetListOfTypes", "fInterpreter not initialized");
+
+   if (load)
+      fInterpreter->UpdateListOfTypes();
+
    return fTypes;
 }
 
+
 //______________________________________________________________________________
-void TROOT::Idle(UInt_t idleTimeInSec, const Text_t *command)
+void TROOT::Idle(UInt_t idleTimeInSec, const char *command)
 {
    // Execute command when system has been idle for idleTimeInSec seconds.
 
@@ -807,8 +789,34 @@ void TROOT::Idle(UInt_t idleTimeInSec, const Text_t *command)
 }
 
 //______________________________________________________________________________
+Int_t TROOT::IgnoreInclude(const char *fname, const char *expandedfname)
+{
+  // Return true if the given include file correspond to a class that has
+  // been loaded through a compiled dictionnary.
+
+  Int_t result = 0;
+
+  if ( fname == 0 ) return result;
+
+  TString className(fname);
+
+  // Remove extension if any.
+  Int_t where = className.Last('.');
+  if (where != kNPOS) className.Remove( where );
+  className = gSystem->BaseName(className);
+
+  TClass *cla = GetClass(className);
+  if ( cla ) {
+    result = strcmp( gSystem->BaseName(cla->GetDeclFileName()),fname ) == 0;
+  }
+  return result;
+}
+
+//______________________________________________________________________________
 void TROOT::InitSystem()
 {
+   // Initialize operating system interface.
+
    if (gSystem == 0) {
 #if defined(R__UNIX)
       gSystem = new TUnixSystem;
@@ -842,6 +850,63 @@ void TROOT::InitSystem()
 }
 
 //______________________________________________________________________________
+void TROOT::InitThreads()
+{
+   // Load and initialize thread library.
+
+   if (gEnv->GetValue("Root.UseThreads", 0)) {
+      char *path;
+      if ((path = gSystem->DynamicPathName("libThread", kTRUE))) {
+         delete [] path;
+         LoadClass("TThread", "Thread");
+      }
+   }
+}
+
+//______________________________________________________________________________
+Int_t TROOT::LoadClass(const char *classname, const char *libname)
+{
+   // Check if class "classname" is known to the interpreter. If
+   // not it will load library "libname". Returns 0 on successful loading
+   // and -1 in case libname does not exist or in case of error.
+
+   if (TClassTable::GetDict(classname)) return 0;
+
+   Int_t err;
+
+   if (classname[0] != 'T')
+      err = gSystem->Load(libname, 0, kTRUE);
+   else {
+      // special case for ROOT classes Txxx
+      char *lib, *path;
+#ifdef WIN32
+      lib = Form("Root_%s", libname);
+#else
+      lib = Form("lib%s", libname);
+#endif
+      if ((path = gSystem->DynamicPathName(lib, kTRUE))) {
+         err = gSystem->Load(path, 0, kTRUE);
+         delete [] path;
+      } else
+         err = gSystem->Load(libname, 0, kTRUE);
+   }
+
+   if (err == 0)
+      GetListOfTypes(kTRUE);
+
+   if (err == -1)
+      ;  //Error("LoadClass", "library %s could not be loaded", libname);
+
+   if (err == 1) {
+      Error("LoadClass", "library %s already loaded, but class %s unknown",
+            libname, classname);
+      err = -1;
+   }
+
+   return err;
+}
+
+//______________________________________________________________________________
 void TROOT::ls(Option_t *option)
 {
 //*-*-*-*-*-*-*-*-*-*-*-*-*To list all objects of the application*-*-*-*-*-*
@@ -856,7 +921,7 @@ void TROOT::ls(Option_t *option)
 }
 
 //______________________________________________________________________________
-void TROOT::LoadMacro(const Text_t *filename)
+void TROOT::LoadMacro(const char *filename)
 {
    // Load a macro in the interpreter's memory. Equivalent to the command line
    // command ".L filename".
@@ -874,7 +939,7 @@ void TROOT::LoadMacro(const Text_t *filename)
 }
 
 //______________________________________________________________________________
-Int_t TROOT::Macro(const Text_t *filename)
+Int_t TROOT::Macro(const char *filename)
 {
    // Execute a macro in the interpreter. Equivalent to the command line
    // command ".x filename".
@@ -898,18 +963,55 @@ Int_t TROOT::Macro(const Text_t *filename)
 }
 
 //______________________________________________________________________________
-void TROOT::ProcessLine(const Text_t *line)
+void  TROOT::Message(Int_t id, TObject *obj)
+{
+   // Process message id called by obj
+
+   TIter next(fMessageHandlers);
+   TMessageHandler *mh;
+   while ((mh = (TMessageHandler*)next())) {
+      mh->HandleMessage(id,obj);
+   }
+}
+
+//______________________________________________________________________________
+void TROOT::ProcessLine(const char *line)
 {
    // Process interpreter command via TApplication::ProcessLine().
+   // On Win32 the line will be processed a-synchronously by sending
+   // it to the CINT interpreter thread. For explicit synchrounous processing
+   // use ProcessLineSync(). On non-Win32 platforms there is not difference
+   // between ProcessLine() and ProcessLineSync().
 
-   if (!fApplication)
+   if (!fApplication) {
+      // circular Form() buffer will be re-used in CreateApplication() (too
+      // many calls to Form()), so we need to save "line"
+      char *sline = StrDup(line);
       TApplication::CreateApplication();
+      line = Form("%s", sline);
+      delete [] sline;
+   }
 
    fApplication->ProcessLine(line);
 }
 
 //______________________________________________________________________________
-Long_t TROOT::ProcessLineFast(const Text_t *line)
+void TROOT::ProcessLineSync(const char *line)
+{
+   // Process interpreter command via TApplication::ProcessLine().
+   // On Win32 the line will be processed synchronously (i.e. it will
+   // only return when the CINT interpreter thread has finished executing
+   // the line). On non-Win32 platforms there is not difference between
+   // ProcessLine() and ProcessLineSync().
+
+   if (!fApplication)
+      TApplication::CreateApplication();
+
+   fApplication->ProcessLine(line, kTRUE);
+}
+
+//______________________________________________________________________________
+Long_t TROOT::ProcessLineFast(const char *line)
 {
    // Process interpreter command directly via CINT interpreter.
    // Only executable statements are allowed (no variable declarations),
@@ -924,7 +1026,7 @@ Long_t TROOT::ProcessLineFast(const Text_t *line)
 }
 
 //______________________________________________________________________________
-void TROOT::Proof(const Text_t *cluster)
+void TROOT::Proof(const char *cluster)
 {
    // Start PROOF session on a specific cluster (default is "proof").
    // The cluster configuration is defined either in the file ."cluster".conf,
@@ -932,7 +1034,11 @@ void TROOT::Proof(const Text_t *cluster)
    // The TProof object can be accessed via the gProof global. Creating a
    // new TProof object will delete the current one.
 
-   new TProof(cluster);
+   // make sure libProof is loaded and TProof can be created
+   if (gROOT->LoadClass("TProof","Proof")) return;
+   if (gROOT->LoadClass("TTreePlayer","TreePlayer")) return;
+
+   ProcessLine(Form("new TProof(\"%s\");", cluster));
 }
 
 //______________________________________________________________________________
@@ -970,15 +1076,18 @@ void TROOT::SaveContext()
 }
 
 //______________________________________________________________________________
-void TROOT::SetEditorMode(const Text_t *mode)
+void TROOT::SetEditorMode(const char *mode)
 {
    // Set editor mode
 
-   const Int_t kButton = 101;
-   const Int_t kCutG   = 100;
+   const Int_t kButton    = 101;
+   const Int_t kCutG      = 100;
+   const Int_t kCurlyLine = 200;
+   const Int_t kCurlyArc  = 201;
    fEditorMode = 0;
    if (strlen(mode) == 0) return;
    if (!strcmp(mode,"Arc"))      {fEditorMode = kArc;        return;}
+   if (!strcmp(mode,"Line"))     {fEditorMode = kLine;       return;}
    if (!strcmp(mode,"Arrow"))    {fEditorMode = kArrow;      return;}
    if (!strcmp(mode,"Button"))   {fEditorMode = kButton;     return;}
    if (!strcmp(mode,"Diamond"))  {fEditorMode = kDiamond;    return;}
@@ -989,7 +1098,10 @@ void TROOT::SetEditorMode(const Text_t *mode)
    if (!strcmp(mode,"PaveText")) {fEditorMode = kPaveText;   return;}
    if (!strcmp(mode,"PavesText")){fEditorMode = kPavesText;  return;}
    if (!strcmp(mode,"PolyLine")) {fEditorMode = kPolyLine;   return;}
+   if (!strcmp(mode,"CurlyLine")){fEditorMode = kCurlyLine;  return;}
+   if (!strcmp(mode,"CurlyArc")) {fEditorMode = kCurlyArc;   return;}
    if (!strcmp(mode,"Text"))     {fEditorMode = kText;       return;}
+   if (!strcmp(mode,"Marker"))   {fEditorMode = kMarker;     return;}
    if (!strcmp(mode,"CutG"))     {fEditorMode = kCutG;       return;}
 }
 
@@ -1004,7 +1116,7 @@ void TROOT::SetMakeDefCanvas(VoidFuncPtr_t makecanvas)
 }
 
 //______________________________________________________________________________
-void TROOT::SetStyle(const Text_t *stylename)
+void TROOT::SetStyle(const char *stylename)
 {
    // Change current style to style with name stylename
 
@@ -1023,7 +1135,8 @@ Bool_t  TROOT::Initialized()
 }
 
 //______________________________________________________________________________
-const char *TROOT::GetMacroPath() {
+const char *TROOT::GetMacroPath()
+{
    // Get macro search path. Static utility function.
 
    static const char *macropath = 0;
@@ -1031,15 +1144,23 @@ const char *TROOT::GetMacroPath() {
    if (macropath == 0) {
       macropath = gEnv->GetValue("Root.MacroPath", (char*)0);
       if (macropath == 0)
-        #if !defined (__VMS ) && !defined(WIN32)
-          macropath = StrDup(Form(".:%s/macros", gRootDir));
-        #elif !defined(__VMS)
-          macropath = StrDup(Form(".;%s/macros", gRootDir));
-        #else
+#if !defined (__VMS ) && !defined(WIN32)
+   #ifdef ROOTMACRODIR
+         macropath = ".:" ROOTMACRODIR;
+   #else
+         macropath = StrDup(Form(".:%s/macros", gRootDir));
+   #endif
+#elif !defined(__VMS)
+   #ifdef ROOTMACRODIR
+         macropath = ".;" ROOTMACROPATH;
+   #else
+         macropath = StrDup(Form(".;%s/macros", gRootDir));
+   #endif
+#else
 /*        if (strrchr(gRootDir,']'))
              *strrchr(gRootDir,']') = '.'; */
-          macropath = StrDup(Form("%sTUTORIALS]",gRootDir));
-        #endif
+         macropath = StrDup(Form("%sTUTORIALS]",gRootDir));
+#endif
    }
    return macropath;
 }

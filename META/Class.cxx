@@ -1,34 +1,24 @@
-//*CMZ :  2.22/10 22/07/99  13.46.06  by  Fons Rademakers
+//*CMZ :  2.23/12 31/01/2000  23.12.19  by  Rene Brun
+//*CMZ :  2.23/09 18/11/99  11.11.24  by  Fons Rademakers
+//*CMZ :  2.23/07 25/10/99  15.43.12  by  Fons Rademakers
+//*CMZ :  2.23/04 13/10/99  16.01.02  by  Fons Rademakers
+//*CMZ :  2.23/03 27/09/99  11.14.16  by  Rene Brun
+//*CMZ :  2.22/10 04/08/99  16.35.50  by  Fons Rademakers
 //*CMZ :  2.22/04 01/06/99  15.21.40  by  Fons Rademakers
 //*CMZ :  2.22/01 28/04/99  12.10.14  by  Fons Rademakers
-//*CMZ :  2.22/00 27/03/99  01.20.50  by  Rene Brun
-//*CMZ :  2.20/04 10/12/98  15.31.16  by  Fons Rademakers
-//*CMZ :  2.20/00 06/11/98  14.40.30  by  Rene Brun
-//*CMZ :  2.00/13 29/10/98  08.32.37  by  Fons Rademakers
-//*CMZ :  2.00/12 28/09/98  13.19.23  by  Rene Brun
-//*CMZ :  2.00/10 28/07/98  11.26.20  by  Rene Brun
-//*CMZ :  2.00/09 26/06/98  10.21.08  by  Rene Brun
-//*CMZ :  2.00/06 15/05/98  00.15.08  by  Rene Brun
-//*CMZ :  2.00/00 05/03/98  17.46.05  by  Fons Rademakers
-//*CMZ :  1.03/09 12/12/97  18.40.43  by  Fons Rademakers
 //*-- Author :    Rene Brun   07/01/95
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -69,6 +59,8 @@
 extern long G__globalvarpointer;
 #endif
 
+Int_t TClass::fgClassCount;
+
 
 class TBuildRealData : public TMemberInspector {
 
@@ -79,11 +71,11 @@ private:
 public:
    TBuildRealData(TObject *obj, TClass *cl)
       { fRealDataObject = obj; fRealDataClass = cl; }
-   void Inspect(TClass *cl, char *parent, char *name, void *addr);
+   void Inspect(TClass *cl, const char *parent, const char *name, void *addr);
 };
 
 //______________________________________________________________________________
-void TBuildRealData::Inspect(TClass *cl, char *pname, char *mname, void *add)
+void TBuildRealData::Inspect(TClass *cl, const char *pname, const char *mname, void *add)
 {
    // This method is called from ShowMembers() via BuildRealdata().
 
@@ -132,8 +124,8 @@ TClass::TClass() : TDictionary()
 }
 
 //______________________________________________________________________________
-TClass::TClass(const Text_t *name, Version_t cversion,
-               const Text_t *dfil, const Text_t *ifil, Int_t dl, Int_t il)
+TClass::TClass(const char *name, Version_t cversion,
+               const char *dfil, const char *ifil, Int_t dl, Int_t il)
         : TDictionary()
 {
    // Create a TClass object. This object contains the full dictionary
@@ -166,6 +158,9 @@ TClass::TClass(const Text_t *name, Version_t cversion,
       if (!fClassInfo)
          ::Warning("TClass::TClass", "no dictionary for class %s is available", name);
    }
+
+   fgClassCount++;
+   SetUniqueID(fgClassCount);
 
    gROOT->GetListOfClasses()->Add(this);
 }
@@ -226,6 +221,7 @@ void TClass::BuildRealData()
    // TRealData object in the list fRealData.
 
    if (!fClassInfo) return;
+   if (fRealData) return;
 
    TObject *realDataObject;
 
@@ -243,6 +239,7 @@ void TClass::BuildRealData()
       TBuildRealData brd(realDataObject, this);
       if (InheritsFrom(TObject::Class())) {
          realDataObject->ShowMembers(brd, parent);
+         realDataObject->StreamerInfo();
       } else {
          G__CallFunc func;
          void *address;
@@ -293,14 +290,11 @@ void TClass::Draw(Option_t *option)
    // Should we create a new canvas?
    TString opt=option;
    if (!padsav || !opt.Contains("same")) {
-      TVirtualPad *padclass = (TVirtualPad*)(gROOT->GetListOfCanvases())->FindObject("class");
-      if (!padclass) {
-         if (gInterpreter) {
-            char cline[100];
-            sprintf(cline,"TCanvas *psCanvas = new TCanvas(\"class\",\"class\", 20, 20, 1000,750);");
-            gInterpreter->ProcessLine(cline);
-         }
-      } else  padclass->cd();
+      TVirtualPad *padclass = (TVirtualPad*)(gROOT->GetListOfCanvases())->FindObject("R__class");
+      if (!padclass)
+         gROOT->ProcessLineFast("new TCanvas(\"R__class\",\"class\",20,20,1000,750);");
+      else
+         padclass->cd();
    }
 
    if (gPad) gPad->DrawClassObject(this,option);
@@ -309,7 +303,7 @@ void TClass::Draw(Option_t *option)
 }
 
 //______________________________________________________________________________
-Text_t *TClass::EscapeChars(Text_t *text)
+char *TClass::EscapeChars(char *text)
 {
    // Introduce an escape character (@) in front of a special chars.
    // You need to use the result immediately before it is being overwritten.
@@ -332,7 +326,7 @@ Text_t *TClass::EscapeChars(Text_t *text)
 }
 
 //______________________________________________________________________________
-TClass *TClass::GetBaseClass(const Text_t *classname)
+TClass *TClass::GetBaseClass(const char *classname)
 {
    // Return pointer to the base class "classname". Returns 0 in case
    // "classname" is not a base class. Takes care of multiple inheritance.
@@ -342,18 +336,19 @@ TClass *TClass::GetBaseClass(const Text_t *classname)
 
    if (!fClassInfo) return 0;
 
-   TClass     *c, *c1;
-   TBaseClass *inh;
-   TIter      next(GetListOfBases());
+   TObjLink *lnk = GetListOfBases() ? fBase->FirstLink() : 0;
 
    // otherwise look at inheritance tree
-   while ((inh = (TBaseClass *) next())) {
-      c = inh->GetClassPointer();
+   while (lnk) {
+      TClass     *c, *c1;
+      TBaseClass *base = (TBaseClass*) lnk->GetObject();
+      c = base->GetClassPointer();
       if (c) {
          if (strcmp(c->GetName(), classname) == 0) return c;
          c1 = c->GetBaseClass(classname);
          if (c1) return c1;
       }
+      lnk = lnk->Next();
    }
    return 0;
 }
@@ -369,7 +364,37 @@ TClass *TClass::GetBaseClass(const TClass *cl)
 
    if (!fClassInfo) return 0;
 
-   TClass     *c, *c1;
+   TObjLink *lnk = GetListOfBases() ? fBase->FirstLink() : 0;
+
+   // otherwise look at inheritance tree
+   while (lnk) {
+      TClass     *c, *c1;
+      TBaseClass *base = (TBaseClass*) lnk->GetObject();
+      c = base->GetClassPointer();
+      if (c) {
+         if (cl == c) return c;
+         c1 = c->GetBaseClass(cl);
+         if (c1) return c1;
+      }
+      lnk = lnk->Next();
+   }
+   return 0;
+}
+
+//______________________________________________________________________________
+Int_t TClass::GetBaseClassOffset(const TClass *cl)
+{
+   // Return data member offset to the base class "cl".
+   // Returns -1 in case "cl" is not a base class.
+   // Takes care of multiple inheritance.
+
+   // check if class name itself is equal to classname
+   if (cl == this) return 0;
+
+   if (!fClassInfo) return -1;
+
+   TClass     *c;
+   Int_t      off;
    TBaseClass *inh;
    TIter      next(GetListOfBases());
 
@@ -377,23 +402,23 @@ TClass *TClass::GetBaseClass(const TClass *cl)
    while ((inh = (TBaseClass *) next())) {
       c = inh->GetClassPointer();
       if (c) {
-         if (cl == c) return c;
-         c1 = c->GetBaseClass(cl);
-         if (c1) return c1;
+         if (cl == c) return inh->GetDelta();
+         off = c->GetBaseClassOffset(cl);
+         if (off != -1) return off + inh->GetDelta();
       }
    }
-   return 0;
+   return -1;
 }
 
 //______________________________________________________________________________
-TClass *TClass::GetBaseDataMember(const Text_t *datamember)
+TClass *TClass::GetBaseDataMember(const char *datamember)
 {
    // Return pointer to (base) class that contains datamember.
 
    if (!fClassInfo) return 0;
 
    // Check if data member exists in class itself
-   TDataMember *dm = GetDataMember((char*)datamember);
+   TDataMember *dm = GetDataMember(datamember);
    if (dm) return this;
 
    // if datamember not found in class, search in next base classes
@@ -411,7 +436,7 @@ TClass *TClass::GetBaseDataMember(const Text_t *datamember)
 }
 
 //______________________________________________________________________________
-TDataMember *TClass::GetDataMember(Text_t *datamember)
+TDataMember *TClass::GetDataMember(const char *datamember)
 {
    // Return pointer to datamember object with name "datamember".
 
@@ -419,7 +444,7 @@ TDataMember *TClass::GetDataMember(Text_t *datamember)
 
    // Strip off leading *'s and trailing [
    char memb[64];
-   char *s = datamember;
+   char *s = (char*)datamember;
    while (*s == '*') s++;
    strcpy(memb, s);
    if ((s = strchr(memb, '['))) *s = 0;
@@ -578,7 +603,7 @@ void TClass::GetMenuItems(TList *list)
 }
 
 //______________________________________________________________________________
-TMethod *TClass::GetMethodAny(const Text_t *method)
+TMethod *TClass::GetMethodAny(const char *method)
 {
    // Return pointer to method without looking at parameters.
    // Does not look in (possible) base classes.
@@ -595,7 +620,7 @@ TMethod *TClass::GetMethodAny(const Text_t *method)
 }
 
 //______________________________________________________________________________
-TMethod *TClass::GetMethod(const Text_t *method, const Text_t *params)
+TMethod *TClass::GetMethod(const char *method, const char *params)
 {
    // Find the best method (if there is one) matching the parameters.
    // The params string must contain argument values, like "3189, \"aap\", 1.3".
@@ -634,7 +659,7 @@ TMethod *TClass::GetMethod(const Text_t *method, const Text_t *params)
 }
 
 //______________________________________________________________________________
-TMethod *TClass::GetMethodWithPrototype(const Text_t *method, const Text_t *proto)
+TMethod *TClass::GetMethodWithPrototype(const char *method, const char *proto)
 {
    // Find the method with a given prototype. The proto string must be of the
    // form: "char*,int,double". Returns 0 in case method is not found.
@@ -726,7 +751,7 @@ Int_t TClass::GetNmethods()
 }
 
 //______________________________________________________________________________
-Bool_t TClass::InheritsFrom(const Text_t *classname)
+Bool_t TClass::InheritsFrom(const char *classname)
 {
    // Return kTRUE if this class inherits from a class with name "classname".
 
@@ -749,6 +774,21 @@ Bool_t TClass::InheritsFrom(const TClass *cl)
 
    if (GetBaseClass(cl)) return kTRUE;
    return kFALSE;
+}
+
+//______________________________________________________________________________
+void *TClass::DynamicCast(const TClass *cl, void *obj)
+{
+   // Cast obj of type "this" to baseclass cl. If this is not a
+   // baseclass of cl return 0, else the pointer to the cl part of this.
+
+   if (cl == this) return obj;
+
+   if (!fClassInfo) return 0;
+
+   Int_t off;
+   if ((off = GetBaseClassOffset(cl)) != -1) return (void*)((Long_t)obj+off);
+   return 0;
 }
 
 //______________________________________________________________________________
@@ -853,4 +893,226 @@ TClass *CreateClass(const char *cname, Version_t id, const char *dfil,
       return cl;
    }
    return new TClass(cname, id, dfil, ifil, dl, il);
+}
+
+//______________________________________________________________________________
+const char *TClass::GetStreamerInfo()
+{
+   // Returns a string describing the names/types of object attributes
+   // as written by the Streamer function.
+   // The default function is valid only for Streamer functions
+   //  automatically generated by rootcint.
+   // This function must be overriden in case of a user-written Streamer.
+
+   //build StreamerInfo string in case the current string is empty
+   if (fStreamerInfo.Length() == 0) {
+      SetStreamerInfo();
+   }
+   return fStreamerInfo.Data();
+}
+
+//______________________________________________________________________________
+void TClass::SetStreamerInfo(const char *info)
+{
+   //info is a string describing the names and types of attributes
+   //written by the class Streamer function.
+   //If info is an empty string (when called by TObject::StreamerInfo)
+   //the default Streamer info string is build. This corresponds to
+   //the case of an automatically generated Streamer.
+   //In case of user defined Streamer function, it is the user responsability
+   //to implement a StreamerInfo function (overriden TObject::StreamerInfo).
+   //The user must call IsA()->SetStreamerInfo(info) from this function.
+
+   //info is specified, nothing to do, except that we should verify
+   //that it contains a valid descriptor.
+
+   TDataMember *dm;
+   Int_t nch = strlen(info);
+   if (nch != 0) {
+      //decode strings like "TObject;TAttLine;fA;fB;Int_t i,j,k;"
+      char *save, *temp, *blank, *colon, *comma;
+      save = new char[10000];
+      temp = save;
+      strcpy(temp,info);
+      //remove heading and trailing blanks
+      while (*temp == ' ') temp++;
+      while (save[nch-1] == ' ') {nch--; save[nch] = 0;}
+      if (nch == 0) {delete [] save; return;}
+      if (save[nch-1] != ';') {save[nch] = ';'; save[nch+1] = 0;}
+      //remove blanks around , or ;
+      while ((blank = strstr(temp,"; "))) strcpy(blank+1,blank+2);
+      while ((blank = strstr(temp," ;"))) strcpy(blank,  blank+1);
+      while ((blank = strstr(temp,", "))) strcpy(blank+1,blank+2);
+      while ((blank = strstr(temp," ,"))) strcpy(blank,  blank+1);
+      while ((blank = strstr(temp,"  "))) strcpy(blank,  blank+1);
+      //loop on tokens separated by ;
+      char *final = new char[1000];
+      char token[100];
+      while ((colon=strchr(temp,';'))) {
+         *colon = 0;
+         strcpy(token,temp);
+         blank = strchr(token,' ');
+         if (blank) {
+            *blank = 0;
+            if (!gROOT->GetType(token)) {
+               Error("SetStreamerInfo","Illegal type: %s in %s",token,info);
+               return;
+            }
+            while (blank) {
+               strcat(final,token);
+               strcat(final," ");
+               comma = strchr(blank+1,','); if (comma) *comma=0;
+               strcat(final,blank+1);
+               strcat(final,";");
+               blank = comma;
+            }
+
+         } else {
+            if (gROOT->GetClass(token)) {
+               //a class name
+               strcat(final,token); strcat(final,";");
+            } else {
+               //a data member name
+               dm = (TDataMember*)GetListOfDataMembers()->FindObject(token);
+               if (dm) {
+                  strcat(final,dm->GetFullTypeName());
+                  strcat(final," ");
+                  strcat(final,token); strcat(final,";");
+               } else {
+                  Error("SetStreamerInfo","Illegal name: %s in %s",token,info);
+                  return;
+               }
+            }
+         }
+         temp = colon+1;
+         if (*temp == 0) break;
+      }
+      fStreamerInfo = final;
+      delete [] final;
+      delete [] save;
+      return;
+   }
+
+   //info is empty. Let's build the default Streamer descriptor
+
+   char *temp = new char[10000];
+   temp[0] = 0;
+   char local[100];
+
+   //add list of base classes
+   TIter nextb(GetListOfBases());
+   TBaseClass *base;
+   while ((base = (TBaseClass*) nextb())) {
+      sprintf(local,"%s;",base->GetName());
+      strcat(temp,local);
+   }
+
+   //add list of data members and types
+   TIter nextd(GetListOfDataMembers());
+   const Long_t isStatic = 16384;
+   while ((dm = (TDataMember *) nextd())) {
+      if (dm->IsEnum()) continue;
+      if (!dm->IsPersistent()) continue;
+      Long_t property = dm->Property();
+      if (property&isStatic) continue;
+      TClass *acl = gROOT->GetClass(dm->GetTypeName());
+      if (acl) {
+         if (acl->GetClassVersion() == 0) continue;
+      }
+      sprintf(local,"%s %s;",dm->GetFullTypeName(),dm->GetName());
+      strcat(temp,local);
+   }
+   fStreamerInfo = temp;
+   delete [] temp;
+}
+
+//______________________________________________________________________________
+void TClass::FillStreamerInfoList(TList *list)
+{
+   //Fill a TList with all attributes names and types corresponding
+   //to this class, base classes, used classes, etc. The TList will contain
+   //a list of TNamed objects with attributeName and attributeType.
+   //class names are recursively analyzed to end-up with basic types only
+   //Other types are resolved to known basic types.
+
+   if (list == 0) return;
+   if (list->FindObject(GetName())) return;
+   //discard some standard Root classes
+   if (InheritsFrom("TCollection")) return;
+   if (InheritsFrom("TClass")) return;
+   if (this == TString::Class()) return;
+
+   //build Streamer info
+   char *infobase = (char*)GetStreamerInfo();
+
+   //add itself to the list
+   TNamed *named = new TNamed(GetName(),infobase);
+   named->SetUniqueID((UInt_t)fClassVersion);
+   list->Add(named);
+
+   //loop on streamerinfo tokens separated by ";"
+   char *info = infobase;
+   Int_t nch;
+   char *star;
+   while(1) {
+      char *colon = (char*)strchr(info,';');
+      if (colon == 0) break;
+      nch = (Int_t)(colon-info);
+      char *token = new char[nch+1];
+      strncpy(token,info,nch);
+      token[nch] = 0;
+      star = (char*)strchr(token,'*'); if (star) *star = 0;
+      star = (char*)strchr(token,'*'); if (star) *star = 0;
+      char *blank = (char*)strchr(token,' ');
+      if (blank) *blank=0;
+      //check if type is already in the list
+      if (!list->FindObject(token)) {
+         //Is it a class name?
+         TClass *cl = gROOT->GetClass(token);
+         if (cl) {
+            cl->FillStreamerInfoList(list);
+         } else {
+            //it is a basic type. do not store standard Root basic types
+            if (!gROOT->GetListOfTypes()->FindObject(token)) {
+               TNamed *named = new TNamed(token,token);
+               list->Add(named);
+            }
+         }
+      }
+      delete [] token;
+      info += nch+1;
+   }
+}
+
+//______________________________________________________________________________
+void TClass::PrintStreamerInfoList(TList *list)
+{
+   //print streamerInfo items in the list.
+   //if the list pointer is null, print StreamerInfo for this class
+
+   TList *l = list;
+   if (list == 0) {
+      l = new TList();
+      FillStreamerInfoList(l);
+   }
+   TIter next(l);
+   TNamed *named;
+   while ((named = (TNamed*)next())) {
+      if (named->GetUniqueID()) printf("%s;%d\n",named->GetName(),named->GetUniqueID());
+      else                      printf(" %s\n",named->GetName());
+      char *info = (char*)named->GetTitle();
+      while(1) {
+         Int_t len = strlen(info);
+         if (len < 50) {
+            printf("     %s\n",info);
+            break;
+         } else {
+            char *colon = strstr(&info[40],";");
+            *colon = 0;
+            printf("     %s;\n",info);
+            *colon = ';';
+            info = colon + 1;
+         }
+      }
+   }
 }

@@ -1,3 +1,4 @@
+//*CMZ :          02/09/99  15.39.21  by  Rene Brun
 //*CMZ :  1.03/09 16/12/97  17.53.37  by  Rene Brun
 //*-- Author :    Rene Brun   11/08/97
 //________________________________________________________________________
@@ -53,7 +54,7 @@
 - Change TGaxis::PaintAxis to support tickmarks on the negative side of the axis.
   TAxis::SetTickLength accepts now negative values.
 
-- Change TColor::SetRGB to always call TGXW::SetRGB.
+- Change TColor::SetRGB to always call TVirtualX::SetRGB.
 
 - Several changes in TGraph::PaintGraph. Minimum and Maximum were not
   read correctly in TGraph::Streamer.

@@ -1,5 +1,5 @@
-//*CMZ :  2.22/10 23/07/99  14.42.21  by  Masaharu Goto
-//*-- Author :    Masaharu Goto   23/07/99
+//*CMZ :  2.23/10 10/12/99  18.00.08  by  Masaharu Goto
+//*-- Author :    Masaharu Goto   10/12/99
 /* /% C++ %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -9,15 +9,13 @@
  * Description:
  *  Extended Run Time Type Identification API
  ************************************************************************
- * Copyright(c) 1991~1996  [hp] Hewlett Packard Japan, All rights reserved
- * Author                  Masaharu Goto (gotom@jpn.hp.com)
- * Copyright(c) 1995~1998  Masaharu Goto (MXJ02154@niftyserve.or.jp)
+ * Copyright(c) 1995~1999  Masaharu Goto (MXJ02154@niftyserve.or.jp)
  *
  * Permission to use, copy, modify and distribute this software and its
  * documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies and
  * that both that copyright notice and this permission notice appear
- * in supporting documentation.  Hewlett-Packard Japan Company makes no
+ * in supporting documentation.  The author makes no
  * representations about the suitability of this software for any
  * purpose.  It is provided "as is" without express or implied warranty.
  ************************************************************************/
@@ -113,11 +111,20 @@ void G__CallFunc::SetArgArray(long *p)
   int i,n;
   if(method.IsValid()) {
     n = method.NArg();
+#ifndef G__OLDIMPLEMENTATION1220 /* NEEDEDSINCE_FIX1167 */
+    G__MethodArgInfo arginfo;
+    arginfo.Init(method);
+#endif
     for(i=0;i<n;i++) {
       para.para[i].obj.i = p[i];
       para.para[i].ref = p[i];
       // Following data shouldn't matter, but set just in case
+#ifndef G__OLDIMPLEMENTATION1220 /* NEEDEDSINCE_FIX1167 */
+      arginfo.Next();
+      para.para[i].type = arginfo.Type()->Type();
+#else
       para.para[i].type = 'l';
+#endif
       para.para[i].tagnum = -1;
       para.para[i].typenum = -1;
     }

@@ -1,30 +1,26 @@
+//*CMZ :  2.23/12 22/01/2000  17.59.34  by  Rene Brun
+//*CMZ :  2.23/11 29/12/99  08.33.18  by  Rene Brun
+//*CMZ :  2.23/09 09/11/99  12.15.05  by  Rene Brun
+//*CMZ :  2.23/07 21/10/99  23.47.37  by  Rene Brun
+//*CMZ :  2.23/04 11/10/99  18.03.44  by  Rene Brun
+//*CMZ :  2.23/02 04/09/99  21.17.28  by  Rene Brun
 //*CMZ :  2.22/02 21/05/99  11.42.25  by  Rene Brun
 //*CMZ :  2.22/01 19/05/99  11.11.37  by  Valery Fine(fine@mail.cern.ch)
 //*CMZ :  2.21/07 21/02/99  19.20.02  by  Valery Fine(fine@mail.cern.ch)
-//*CMZ :  2.20/05 15/12/98  09.17.22  by  Rene Brun
-//*CMZ :  2.00/13 16/10/98  17.43.38  by  Rene Brun
-//*CMZ :  2.00/12 07/10/98  10.00.56  by  Rene Brun
-//*CMZ :  2.00/00 07/10/98  19.13.05  by  Rene Brun
-//*CMZ :  1.03/09 07/12/97  16.28.37  by  Fons Rademakers
 //*-- Author :    "Valery fine"   31/10/97
 
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 #include <fstream.h>
@@ -34,8 +30,11 @@
 #include "TView.h"
 #include "TMarker3DBox.h"
 #include "TVirtualPad.h"
-#include "TGLKernelABC.h"
+#include "TVirtualGL.h"
 #include "TPadView3D.h"
+#include "TH1.h"
+#include "TH3.h"
+#include "TFile.h"
 
 ClassImp(TMarker3DBox)
 
@@ -175,7 +174,7 @@ void TMarker3DBox::Paint(Option_t *option)
    TPadView3D *view3D = gPad->GetView3D();
    Bool_t rangeView = option && *option && strcmp(option,"range")==0 ? kTRUE : kFALSE;
    if (view3D && !rangeView) {
-     gGLKernel->SetLineAttr(GetLineColor(),GetLineWidth());
+     gVirtualGL->SetLineAttr(GetLineColor(),GetLineWidth());
      PaintGLPoints(points);
    }
 
@@ -253,7 +252,72 @@ void TMarker3DBox::PaintGLPoints(Float_t *vertex)
 {
 //*-*-*-*-*-*-*-*-*-*-*Direct copy of TBRIK::PaintGLPoints*-*-*-*-*-*-*-*-*-*
 //*-*                  ===================================
-    gGLKernel->PaintBrik(vertex);
+    gVirtualGL->PaintBrik(vertex);
+}
+
+//______________________________________________________________________________
+void TMarker3DBox::PaintH3(TH1 *h, Option_t *option)
+{
+//*-*-*-*-*-*-*-*Paint 3-d histogram h with marker3dboxes*-*-*-*
+//*-*            ========================================
+
+   Int_t bin,ix,iy,iz;
+   Float_t xmin,xmax,ymin,ymax,zmin,zmax,wmin,wmax,w;
+   Int_t nbinsx = h->GetXaxis()->GetNbins();
+   Int_t nbinsy = h->GetYaxis()->GetNbins();
+   Int_t nbinsz = h->GetZaxis()->GetNbins();
+
+   //compute min and max of all cells
+   wmin = wmax = 0;
+   for (ix=1;ix<=nbinsx;ix++) {
+      for (iy=1;iy<=nbinsy;iy++) {
+         for (iz=1;iz<=nbinsz;iz++) {
+            bin = h->GetBin(ix,iy,iz);
+            w = h->GetBinContent(bin);
+            if (w > wmax) wmax = w;
+            if (w < wmin) wmin = w;
+         }
+      }
+   }
+
+   //Create or modify 3-d view object
+   TView *view = gPad->GetView();
+   if (!view) {
+      gPad->Range(-1,-1,1,1);
+      view = new TView(1);
+   }
+   view->SetRange(h->GetXaxis()->GetXmin(),
+                  h->GetYaxis()->GetXmin(),
+                  h->GetZaxis()->GetXmin(),
+                  h->GetXaxis()->GetXmax(),
+                  h->GetYaxis()->GetXmax(),
+                  h->GetZaxis()->GetXmax());
+
+   //Draw TMarker3DBox with size proportional to cell content
+   TMarker3DBox m3;
+   m3.SetRefObject(h);
+   m3.SetDirection(0,0);
+   m3.SetLineColor(h->GetMarkerColor());
+   Float_t scale;
+   for (ix=1;ix<=nbinsx;ix++) {
+      xmin = h->GetXaxis()->GetBinLowEdge(ix);
+      xmax = xmin + h->GetXaxis()->GetBinWidth(ix);
+      for (iy=1;iy<=nbinsy;iy++) {
+         ymin = h->GetYaxis()->GetBinLowEdge(iy);
+         ymax = ymin + h->GetYaxis()->GetBinWidth(iy);
+         for (iz=1;iz<=nbinsz;iz++) {
+            zmin = h->GetZaxis()->GetBinLowEdge(iz);
+            zmax = zmin + h->GetZaxis()->GetBinWidth(iz);
+            bin = h->GetBin(ix,iy,iz);
+            w = h->GetBinContent(bin);
+            if (w == 0) continue;
+            scale = (w-wmin)/(wmax-wmin);
+            m3.SetPosition(0.5*(xmin+xmax),0.5*(ymin+ymax),0.5*(zmin+zmax));
+            m3.SetSize(scale*(xmax-xmin),scale*(ymax-ymin),scale*(zmax-zmin));
+            m3.Paint(option);
+         }
+      }
+   }
 }
 
 //______________________________________________________________________________
@@ -405,3 +469,77 @@ void TMarker3DBox::Sizeof3D() const
     gSize3D.numSegs   += 12;
     gSize3D.numPolys  += 6;
 }
+
+//______________________________________________________________________________
+void TMarker3DBox::SizeofH3(TH1 *h)
+{
+//*-*-*-*-*-*-*Return total X3D size of 3-D histogram h*-*-*-*-*-*-*-*
+//*-*          ========================================
+
+   // take into account the 4 polylines of the OutlinetoCube
+   gSize3D.numSegs   += 4*3;
+   gSize3D.numPoints += 4*4;
+
+   Int_t ix,iy,iz;
+   Int_t nbinsx = h->GetXaxis()->GetNbins();
+   Int_t nbinsy = h->GetYaxis()->GetNbins();
+   Int_t nbinsz = h->GetZaxis()->GetNbins();
+   Int_t ncells = 0;
+   for (ix=1;ix<=nbinsx;ix++) {
+      for (iy=1;iy<=nbinsy;iy++) {
+         for (iz=1;iz<=nbinsz;iz++) {
+            if (((TH3F*)h)->GetBinContent(((TH3F*)h)->GetBin(ix,iy,iz)) != 0)
+                ncells++;
+         }
+      }
+   }
+   gSize3D.numPoints += 8*ncells;
+   gSize3D.numSegs   += 12*ncells;
+   gSize3D.numPolys  += 6*ncells;
+}
+
+//______________________________________________________________________________
+void TMarker3DBox::Streamer(TBuffer &R__b)
+{
+   // Stream an object of class TMarker3DBox.
+
+   UInt_t R__s, R__c;
+   if (R__b.IsReading()) {
+      Version_t R__v = R__b.ReadVersion(&R__s, &R__c); if (R__v) { }
+      TObject::Streamer(R__b);
+      TAttLine::Streamer(R__b);
+      TAttFill::Streamer(R__b);
+      if (gFile) {
+         if (gFile->GetVersion() > 22300) TAtt3D::Streamer(R__b);
+      } else {
+         TAtt3D::Streamer(R__b);
+       }
+      R__b >> fX;
+      R__b >> fY;
+      R__b >> fZ;
+      R__b >> fDx;
+      R__b >> fDy;
+      R__b >> fDz;
+      R__b >> fTheta;
+      R__b >> fPhi;
+      R__b >> fRefObject;
+      R__b.CheckByteCount(R__s, R__c, TMarker3DBox::IsA());
+   } else {
+      R__c = R__b.WriteVersion(TMarker3DBox::IsA(), kTRUE);
+      TObject::Streamer(R__b);
+      TAttLine::Streamer(R__b);
+      TAttFill::Streamer(R__b);
+      TAtt3D::Streamer(R__b);
+      R__b << fX;
+      R__b << fY;
+      R__b << fZ;
+      R__b << fDx;
+      R__b << fDy;
+      R__b << fDz;
+      R__b << fTheta;
+      R__b << fPhi;
+      R__b << fRefObject;
+      R__b.SetByteCount(R__c, kTRUE);
+   }
+}
+

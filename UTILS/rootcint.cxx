@@ -1,35 +1,23 @@
+//*CMZ :  2.23/09 24/11/99  14.17.59  by  Fons Rademakers
+//*CMZ :  2.23/08 01/11/99  12.51.29  by  Fons Rademakers
+//*CMZ :  2.23/07 26/10/99  17.28.09  by  Fons Rademakers
+//*CMZ :  2.23/01 23/08/99  17.57.49  by  Fons Rademakers
+//*CMZ :  2.23/00 07/08/99  18.33.19  by  Fons Rademakers
 //*CMZ :  2.22/09 13/07/99  18.38.05  by  Fons Rademakers
 //*CMZ :  2.22/05 15/06/99  15.04.08  by  Fons Rademakers
-//*CMZ :  2.22/03 28/05/99  19.11.05  by  Rene Brun
-//*CMZ :  2.22/02 24/05/99  17.08.12  by  Fons Rademakers
-//*CMZ :  2.22/00 30/03/99  19.32.52  by  Fons Rademakers
-//*CMZ :  2.21/07 04/03/99  13.48.07  by  Fons Rademakers
-//*CMZ :  2.21/03 22/01/99  12.33.22  by  Fons Rademakers
-//*CMZ :  2.20/05 14/12/98  15.12.06  by  Fons Rademakers
-//*CMZ :  2.20/00 16/11/98  12.30.43  by  Fons Rademakers
-//*CMZ :  2.00/13 19/10/98  18.22.29  by  Fons Rademakers
-//*CMZ :  2.00/11 25/08/98  13.13.14  by  Fons Rademakers
-//*CMZ :  2.00/05 17/04/98  01.26.31  by  Fons Rademakers
-//*CMZ :  2.00/00 05/03/98  20.09.55  by  Fons Rademakers
-//*CMZ :  1.03/09 06/12/97  15.06.42  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   13/07/96
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -135,13 +123,19 @@
 //////////////////////////////////////////////////////////////////////////
 
 #ifndef __CINT__
+
+#ifdef HAVE_CONFIG
+#include "config.h"
+#endif
+
 #include "Api.h"
 
 extern "C" {
-   void G__setothermain(int othermain);
-   void G__setglobalcomp(int globalcomp);
-   int  G__main(int argc, char **argv);
-   void G__exit(int rtn);
+   void  G__setothermain(int othermain);
+   void  G__setglobalcomp(int globalcomp);
+   int   G__main(int argc, char **argv);
+   void  G__exit(int rtn);
+   struct G__includepath *G__getipathentry();
 }
 
 const char *help =
@@ -472,7 +466,7 @@ void WriteTmpltExtras(G__ClassInfo &cl)
    fprintf(fp, "   return \"%s\";\n}\n\n", cl.Name());
    fprintf(fp, "// Static variable to hold initialization object\n");
    fprintf(fp, "static R__Init%s gR__Init%s%s;\n\n", cl.Name(),
-           cl.TmpltName(), cl.TmpltArg());
+           cl.TmpltName(), G__map_cpp_name((char *)cl.TmpltArg()));
 }
 
 //______________________________________________________________________________
@@ -861,6 +855,60 @@ void GenerateLinkdef(int *argc, char **argv, int iv)
 }
 
 //______________________________________________________________________________
+const char *Which(const char *fname)
+{
+   // Find file name in path specified via -I statements to CINT.
+   // Can be only called after G__main(). Return pointer to static
+   // space containing full pathname or 0 in case file not found.
+
+   static char pname[1024];
+   FILE *fp = 0;
+
+   sprintf(pname, "%s", fname);
+#ifdef WIN32
+   fp = fopen(pname, "rb");
+#else
+   fp = fopen(pname, "r");
+#endif
+   if (fp) {
+      fclose(fp);
+      return pname;
+   }
+
+   struct G__includepath *ipath = G__getipathentry();
+
+   while (!fp && ipath->pathname) {
+#ifdef WIN32
+      sprintf(pname, "%s\%s", ipath->pathname, fname);
+      fp = fopen(pname, "rb");
+#else
+      sprintf(pname, "%s/%s", ipath->pathname, fname);
+      fp = fopen(pname, "r");
+#endif
+      ipath = ipath->next;
+   }
+   if (fp) {
+      fclose(fp);
+      return pname;
+   }
+   return 0;
+}
+
+//______________________________________________________________________________
+char *StrDup(const char *str)
+{
+   // Duplicate the string str. The returned string has to be deleted by
+   // the user.
+
+   if (!str) return 0;
+
+   char *s = new char[strlen(str)+1];
+   if (s) strcpy(s, str);
+
+   return s;
+}
+
+//______________________________________________________________________________
 int main(int argc, char **argv)
 {
 #ifdef __MWERKS__
@@ -893,12 +941,12 @@ int main(int argc, char **argv)
       if ((fp = fopen(argv[ic], "r")) != 0) {
          fclose(fp);
          if (!force) {
-            fprintf(stderr, "Output file %s already exists\n", argv[ic]);
+            fprintf(stderr, "%s: output file %s already exists\n", argv[0], argv[ic]);
             return 1;
          }
       }
       fp = fopen(argv[ic], "w");
-      fclose(fp);    // make sure file is created and empty
+      if (fp) fclose(fp);    // make sure file is created and empty
       ifl = ic;
       ic++;
 
@@ -925,18 +973,23 @@ int main(int argc, char **argv)
    char  path1[128], path2[128];
    char *argvv[500];
 
+#ifndef ROOTINCDIR
    if (getenv("ROOTSYS")) {
-#ifdef __MWERKS__
+#  ifdef __MWERKS__
       sprintf(path1,"-I%s:include", getenv("ROOTSYS"));
       sprintf(path2,"-I%s:src", getenv("ROOTSYS"));
-#else
+#  else
       sprintf(path1,"-I%s/include", getenv("ROOTSYS"));
       sprintf(path2,"-I%s/src", getenv("ROOTSYS"));
-#endif
+#  endif
    } else {
-      fprintf(stderr, "$ROOTSYS not defined\n");
+      fprintf(stderr, "%s: env var ROOTSYS not defined\n", argv[0]);
       return 1;
    }
+#else
+   sprintf(path1,"-I%s", ROOTINCDIR );
+   sprintf(path2,"-I%s", ROOTSRCDIR);
+#endif
 
    argvv[0] = argv[0];
    argcc = 1;
@@ -975,7 +1028,7 @@ int main(int argc, char **argv)
          argvv[argcc++] = "TROOT.h";
          argvv[argcc++] = "TMemberInspector.h";
       } else {
-         fprintf(stderr, "Option -c can only be used when an output file has been specified\n");
+         fprintf(stderr, "%s: option -c can only be used when an output file has been specified\n", argv[0]);
          return 1;
       }
    }
@@ -993,14 +1046,14 @@ int main(int argc, char **argv)
       }
       if (strstr(argv[i],"LinkDef.h") || strstr(argv[i],"Linkdef.h") ||
           strstr(argv[i],"linkdef.h")) {
-         il++;
+         il = i;
          if (i != argc-1) {
-            fprintf(stderr, "%s must be last file on command line\n", argv[i]);
+            fprintf(stderr, "%s; %s must be last file on command line\n", argv[0], argv[i]);
             return 1;
          }
       }
       if (!strcmp(argv[i], "-c")) {
-         fprintf(stderr, "Option -c must come directly after the output file\n");
+         fprintf(stderr, "%s; option -c must come directly after the output file\n", argv[0]);
          return 1;
       }
       argvv[argcc++] = argv[i];
@@ -1011,12 +1064,11 @@ int main(int argc, char **argv)
 
    G__setothermain(2);
    if (G__main(argcc, argvv) < 0) {
-      fprintf(stderr, "Error loading headers...\n");
+      fprintf(stderr, "%s: error loading headers...\n", argv[0]);
       return 1;
    }
    G__setglobalcomp(0);  // G__NOLINK
 
-   if (!il) remove(autold);
 #endif
 
    // Check if code goes to stdout or cint file, use temporary file
@@ -1047,7 +1099,7 @@ int main(int argc, char **argv)
       fprintf(fp, "\n");
    }
 
-   // loop over all classes and create Streamer() & Showmembers() methods
+   // Loop over all classes and create Streamer() & Showmembers() methods
    G__ClassInfo cl;
 
    // Write all TBuffer &operator>>(...) first to allow template
@@ -1065,8 +1117,97 @@ int main(int argc, char **argv)
       }
    }
 
+   // Open LinkDef file for reading, so that we can process classes
+   // in order of appearence in this file (STK)
+   FILE *fpld = 0;
+   if (!il) {
+      // Open auto-generated file
+      fpld = fopen(autold, "r");
+   } else {
+      // Open file specified on command line
+      fpld = fopen(Which(argv[il]), "r");
+   }
+   if (!fpld) {
+      fprintf(stderr, "%s: cannot open file %s\n", argv[0], il ? argv[il] : autold);
+      if (!il) remove(autold);
+      if (ifl) {
+         remove(tname);
+         remove(argv[ifl]);
+      }
+      return 1;
+   }
+
+   // Keep track of classes processed by reading Linkdef file.
+   // When all classes in LinkDef are done, loop over all classes known
+   // to CINT output the ones that were not in the LinkDef. This can happen
+   // in case "#pragma link C++ defined_in" is used.
+   const int kMaxClasses = 1000;
+   char *clProcessed[kMaxClasses];
+   int   ncls = 0;
+
+   // Read LinkDef file and process valid entries (STK)
+   char line[256];
+   while (fgets(line, 256, fpld)) {
+
+      // Check if the line contains a "#pragma link C++ class" specification,
+      // if so, process the class (STK)
+      if ((strcmp(strtok(line, " "), "#pragma") == 0) &&
+          (strcmp(strtok(0, " "), "link") == 0) &&
+          (strcmp(strtok(0, " "), "C++") == 0) &&
+          (strcmp(strtok(0, " " ), "class") == 0)) {
+
+         // Create G__ClassInfo object for this class and process. Be
+         // careful with the hardcoded string of trailing options in case
+         // these change (STK)
+         clProcessed[ncls] = StrDup(strtok(0, " -!+;"));
+         G__ClassInfo cl(clProcessed[ncls]);
+         ncls++;
+         if ((cl.Property() & G__BIT_ISCLASS) && cl.Linkage() == G__CPPLINK) {
+
+            if (cl.HasMethod("Streamer")) {
+               if (!(cl.RootFlag() & G__NOSTREAMER))
+                  WriteStreamer(cl);
+               else
+                  fprintf(stderr, "Class %s: Do not generate Streamer() [*** custom streamer ***]\n", cl.Name());
+            } else {
+               fprintf(stderr, "Class %s: Streamer() not declared\n", cl.Name());
+            }
+            if (cl.HasMethod("ShowMembers")) {
+               WriteShowMembers(cl);
+            } else {
+               fprintf(stderr, "Class %s: ShowMembers() not declared\n", cl.Name());
+            }
+            // Write Code for Class_Name() and static variable
+            // to hold initialization object (STK)
+            if (cl.IsTmplt()) {
+               if (cl.HasMethod("Class_Name")) {
+                  WriteTmpltExtras(cl);
+               } else {
+                  fprintf(stderr, "Class %s: Class_Name() and initialization object"
+                          " not declared\n", cl.Name());
+	       }
+            }
+         }
+      }
+   }
+
+   // Loop over all classes and create Streamer() & ShowMembers() methods
+   // for classes not in clProcessed list (exported via
+   // "#pragma link C++ defined_in")
    cl.Init();
+
    while (cl.Next()) {
+      int nxt = 0;
+      // skip utility class defined in ClassImp
+      if (!strncmp(cl.Name(), "R__Init", 7))
+         continue;
+      for (int i = 0; i < ncls; i++)
+         if (!strcmp(clProcessed[i], cl.Name())) {
+            nxt++;
+            break;
+         }
+      if (nxt) continue;
+
       if ((cl.Property() & G__BIT_ISCLASS) && cl.Linkage() == G__CPPLINK) {
          if (cl.HasMethod("Streamer")) {
             if (!(cl.RootFlag() & G__NOSTREAMER))
@@ -1081,20 +1222,13 @@ int main(int argc, char **argv)
          } else {
             fprintf(stderr, "Class %s: ShowMembers() not declared\n", cl.Name());
          }
-         // Write Code for Class_Name() and static variable
-         // to hold initialization object (STK)
-         if (cl.IsTmplt()) {
-            if (cl.HasMethod("Class_Name")) {
-               WriteTmpltExtras(cl);
-            } else {
-               fprintf(stderr, "Class %s: Class_Name() and initialization object"
-                       " not declared\n", cl.Name());
-	    }
-         }
       }
    }
 
    fclose(fp);
+   fclose(fpld);
+
+   if (!il) remove(autold);
 
    // Append CINT dictionary to file containing Streamers and ShowMembers
    if (ifl) {

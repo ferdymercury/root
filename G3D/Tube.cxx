@@ -1,31 +1,21 @@
+//*CMZ :  2.23/12 26/01/2000  09.24.06  by  Rene Brun
+//*CMZ :  2.23/02 03/09/99  11.39.45  by  Rene Brun
 //*CMZ :  2.22/04 03/06/99  16.40.45  by  Rene Brun
 //*CMZ :  2.22/01 19/05/99  11.11.38  by  Valery Fine(fine@mail.cern.ch)
 //*CMZ :  2.21/07 21/02/99  19.09.03  by  Valery Fine(fine@mail.cern.ch)
-//*CMZ :  2.21/06 10/02/99  19.10.56  by  Rene Brun
-//*CMZ :  2.21/00 03/01/99  23.12.57  by  Valery Fine(fine@mail.cern.ch)
-//*CMZ :  2.00/12 07/10/98  10.33.31  by  Rene Brun
-//*CMZ :  2.00/10 03/07/98  21.20.44  by  Rene Brun
-//*CMZ :  2.00/09 20/06/98  19.16.57  by  Valery Fine(fine@mail.cern.ch)
-//*CMZ :  2.00/00 12/01/98  08.44.13  by  Rene Brun
-//*CMZ :  1.03/09 10/12/97  09.38.57  by  Rene Brun
 //*-- Author :    Nenad Buncic   18/09/95
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 #include "TTUBE.h"
@@ -33,8 +23,8 @@
 #include "TView.h"
 #include "TVirtualPad.h"
 
-#ifndef Root_TGLKernelABC
-#include "TGLKernelABC.h"
+#ifndef Root_TVirtualGL
+#include "TVirtualGL.h"
 #endif
 
 ClassImp(TTUBE)
@@ -66,7 +56,7 @@ TTUBE::TTUBE()
 
 
 //______________________________________________________________________________
-TTUBE::TTUBE(Text_t *name, Text_t *title, Text_t *material, Float_t rmin, Float_t rmax, Float_t dz,Float_t aspect)
+TTUBE::TTUBE(const char *name, const char *title, const char *material, Float_t rmin, Float_t rmax, Float_t dz,Float_t aspect)
       : TShape(name, title,material)
 {
 //*-*-*-*-*-*-*-*-*-*-*-*-*TUBE shape normal constructor*-*-*-*-*-*-*-*-*-*-*-*-*
@@ -87,7 +77,7 @@ TTUBE::TTUBE(Text_t *name, Text_t *title, Text_t *material, Float_t rmin, Float_
 }
 
 //______________________________________________________________________________
-TTUBE::TTUBE(Text_t *name, Text_t *title, Text_t *material, Float_t rmax, Float_t dz)
+TTUBE::TTUBE(const char *name, const char *title, const char *material, Float_t rmax, Float_t dz)
       : TShape(name, title,material)
 {
 //*-*-*-*-*-*-*-*-*-*-*-*-*TUBE shape "simplified" constructor*-*-*-*-*-*-*-*-*-*-*-*-*
@@ -294,7 +284,7 @@ void TTUBE::PaintGLPoints(Float_t *vertex)
 {
 //*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*Paint BRIK via OpenGL *-*-*-*-*-*-*-*-*-*-*-*-*
 //*-*                            =====================
-    gGLKernel->PaintCone(vertex,GetNumberOfDivisions(),2);
+    gVirtualGL->PaintCone(vertex,GetNumberOfDivisions(),2);
 }
 
 //______________________________________________________________________________
@@ -368,8 +358,9 @@ void TTUBE::Streamer(TBuffer &R__b)
 {
    // Stream an object of class TTUBE.
 
+   UInt_t R__s, R__c;
    if (R__b.IsReading()) {
-      Version_t R__v = R__b.ReadVersion(); if (R__v) { }
+      Version_t R__v = R__b.ReadVersion(&R__s, &R__c);
       TShape::Streamer(R__b);
       R__b >> fRmin;
       R__b >> fRmax;
@@ -378,8 +369,9 @@ void TTUBE::Streamer(TBuffer &R__b)
       if (R__v > 1) R__b >> fAspectRatio;
       //R__b.ReadArray(fSiTab);
       //R__b.ReadArray(fCoTab);
+      R__b.CheckByteCount(R__s, R__c, TTUBE::IsA());
    } else {
-      R__b.WriteVersion(TTUBE::IsA());
+      R__c = R__b.WriteVersion(TTUBE::IsA(), kTRUE);
       TShape::Streamer(R__b);
       R__b << fRmin;
       R__b << fRmax;
@@ -388,6 +380,7 @@ void TTUBE::Streamer(TBuffer &R__b)
       R__b << fAspectRatio;
       //R__b.WriteArray(fSiTab, __COUNTER__);
       //R__b.WriteArray(fCoTab, __COUNTER__);
+      R__b.SetByteCount(R__c, kTRUE);
    }
 }
 

@@ -1,5 +1,5 @@
-/*CMZ :  2.22/10 23/07/99  14.42.19  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   23/07/99*/
+/*CMZ :  2.23/10 10/12/99  18.00.05  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   10/12/99*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -9,15 +9,13 @@
  * Description:
  *  Partial cleanup function
  ************************************************************************
- * Copyright(c) 1991~1996  [hp] Hewlett Packard Japan, All rights reserved
- * Author                  Masaharu Goto (gotom@jpn.hp.com)
- * Copyright(c) 1995~1998  Masaharu Goto (MXJ02154@niftyserve.or.jp)
+ * Copyright(c) 1995~1999  Masaharu Goto (MXJ02154@niftyserve.or.jp)
  *
  * Permission to use, copy, modify and distribute this software and its
  * documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies and
  * that both that copyright notice and this permission notice appear
- * in supporting documentation.  Hewlett-Packard Japan Company makes no
+ * in supporting documentation.  The author makes no
  * representations about the suitability of this software for any
  * purpose.  It is provided "as is" without express or implied warranty.
  ************************************************************************/
@@ -109,6 +107,10 @@ struct G__dictposition *dictpos;
   /* int i; */
 
   /* struct G__var_array *local; */
+
+#ifndef G__OLDIMPLEMENTATION1207
+  if(!dictpos) return;
+#endif
 
 #ifndef G__OLDIMPLEMENTATION1035
   G__LockCriticalSection();
@@ -752,7 +754,13 @@ int ig15;
 void G__close_inputfiles_upto(nfile)
 int nfile;
 {
-  /* int iarg; */
+#ifndef G__OLDIMPLEMENTATION1207
+#ifdef G__SHAREDLIB
+  struct G__filetable permanentsl[G__MAX_SL];
+  int nperm=0;
+#endif
+#endif
+
 #ifdef G__DUMPFILE
   if(G__dumpfile) G__dump_tracecoverage(G__dumpfile);
 #endif
@@ -762,6 +770,14 @@ int nfile;
       free((void*)G__srcfile[G__nfile].dictpos);
       G__srcfile[G__nfile].dictpos=(struct G__dictposition*)NULL;
     }
+#ifndef G__OLDIMPLEMENTATION1207
+#ifdef G__SHAREDLIB
+    if(G__srcfile[G__nfile].ispermanentsl) {
+      permanentsl[nperm++] = G__srcfile[G__nfile];
+      continue;
+    }
+#endif
+#endif
     if(G__srcfile[G__nfile].fp) {
       fclose(G__srcfile[G__nfile].fp);
 #ifndef G__PHILIPPE0
@@ -792,6 +808,16 @@ int nfile;
     G__srcfile[G__nfile].hash=0;
   }
   G__nfile=nfile;
+
+#ifndef G__OLDIMPLEMENTATION1207
+#ifdef G__SHAREDLIB
+  while(nperm) {
+    --nperm;
+    G__srcfile[G__nfile++] = permanentsl[nperm];
+    if(permanentsl[nperm].initsl) (*permanentsl[nperm].initsl)();
+  }
+#endif
+#endif
 
   if(G__tempc[0]) {
     remove(G__tempc);

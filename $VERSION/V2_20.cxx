@@ -1,11 +1,12 @@
+//*CMZ :          02/09/99  15.54.23  by  Rene Brun
 //*CMZ :  2.20/06 17/12/98  17.38.01  by  Rene Brun
 //*CMZ :  2.20/05 15/12/98  19.19.30  by  Rene Brun
 //*CMZ :  2.20/04 11/12/98  18.44.40  by  Rene Brun
 //*CMZ :  2.20/03 07/12/98  13.20.42  by  Rene Brun
-//*CMZ :  2.20/02 04/12/98  17.50.56  by  Rene Brun
-//*CMZ :  2.20/01 02/12/98  18.45.56  by  Rene Brun
-//*CMZ :  2.20/00 27/11/98  15.33.28  by  Rene Brun
 //*-- Author :    Rene Brun   27/11/98
+//
+// 02/09/1999  15.53.08  by  Rene Brun
+//
 //________________________________________________________________________
 //
 //::>          VERSION  2.20/06   17/12/98 17.38.01
@@ -565,14 +566,14 @@ The following is a summary of the main features of this new version.
   engine from http://www.freetype.org/. The TT renderer will be used via
   the class TGX11TTF. This class inherits from TGX11 and overrides only
   the TGX11 text render functions. This class will be in its own shared
-  library. When this library is loaded it replaces the current gGXW (iff
+  library. When this library is loaded it replaces the current gVirtualX (iff
   it points to a TGX11 object) with a pointer to a TGX11TTF object.
   From that moment on all fonts will be rendered using TT fonts. See
   here the beauty of OO, C++ and dynamic linking.
 
 - TGX11: made several text related method virtual. See above.
 
-- TGXW: added the method HasTTFonts(), returns kTRUE if TGX11TTF is
+- TVirtualX: added the method HasTTFonts(), returns kTRUE if TGX11TTF is
   loaded and active.
 
 - TAttText: add case for TT fonts.

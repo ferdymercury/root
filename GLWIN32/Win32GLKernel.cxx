@@ -1,3 +1,4 @@
+//*CMZ :  2.23/02 07/09/99  13.16.56  by  Rene Brun
 //*CMZ :  2.22/01 10/05/99  12.20.59  by  Valery Fine(fine@mail.cern.ch)
 //*CMZ :  2.00/00 05/03/98  20.10.31  by  Fons Rademakers
 //*CMZ :  1.02/00 20/07/97  21.31.01  by  Valery Fine(fine@vxcern.cern.ch)
@@ -50,47 +51,47 @@ static TWin32GLKernel gGLKernelCreator;
 
 
 #define CallWindowMethod3(_function,_p1,_p2,_p3)     \
-  if ( ((TGWin32 *)gGXW)->IsCmdThread())             \
+  if ( ((TGWin32 *)gVirtualX)->IsCmdThread())             \
   {TGLKernel::_function(_p1,_p2,_p3);}               \
     CallMethodThread(_function,_p1,_p2,_p3)
 
 //*-*
 #define CallWindowMethod2(_function,_p1,_p2)         \
-  if ( ((TGWin32 *)gGXW)->IsCmdThread())             \
+  if ( ((TGWin32 *)gVirtualX)->IsCmdThread())             \
   {TGLKernel::_function(_p1,_p2);}                   \
     CallMethodThread(_function,_p1,_p2,0)
 //*-*
 #define CallWindowMethod1(_function,_p1)             \
-  if ( ((TGWin32 *)gGXW)->IsCmdThread())             \
+  if ( ((TGWin32 *)gVirtualX)->IsCmdThread())             \
   {TGLKernel::_function(_p1);}                       \
     CallMethodThread(_function,_p1,0,0)
 //*-*
 #define CallWindowMethod(_function)                  \
-  if ( ((TGWin32 *)gGXW)->IsCmdThread())             \
+  if ( ((TGWin32 *)gVirtualX)->IsCmdThread())             \
   {TGLKernel::_function();}                          \
     CallMethodThread(_function,0,0,0)
 
 //*-*
 #define ReturnWindowMethod2(_type,_function,_p1,_p2) \
-  if ( ((TGWin32 *)gGXW)->IsCmdThread())             \
+  if ( ((TGWin32 *)gVirtualX)->IsCmdThread())             \
   {return TGLKernel::_function(_p1,_p2);}            \
     ReturnMethodThread(_type,_function,_p1,_p2)
 //*-*
 #define ReturnWindowMethod1(_type,_function,_p1)     \
-  if ( ((TGWin32 *)gGXW)->IsCmdThread())             \
+  if ( ((TGWin32 *)gVirtualX)->IsCmdThread())             \
   {return TGLKernel::_function(_p1);}                \
     ReturnMethodThread(_type,_function,_p1,0)
 //*-*
 #define ReturnWindowMethod(_type,_function)          \
-  if ( ((TGWin32 *)gGXW)->IsCmdThread())             \
+  if ( ((TGWin32 *)gVirtualX)->IsCmdThread())             \
   {return TGLKernel::_function();}                   \
     ReturnMethodThread(_type,_function,0,0)
 
 //______________________________________________________________________________
-TWin32GLKernel::TWin32GLKernel() { gGLKernel = this;}
+TWin32GLKernel::TWin32GLKernel() { gVirtualGL = this;}
 
 //______________________________________________________________________________
-TWin32GLKernel::~TWin32GLKernel() { gGLKernel = 0; }
+TWin32GLKernel::~TWin32GLKernel() { gVirtualGL = 0; }
 
 
 //______________________________________________________________________________

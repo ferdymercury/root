@@ -1,30 +1,23 @@
+//*CMZ :  2.23/03 22/09/99  18.07.45  by  Rene Brun
 //*CMZ :  2.20/05 14/12/98  16.23.46  by  Fons Rademakers
 //*CMZ :  2.20/04 09/12/98  21.09.40  by  Rene Brun
 //*CMZ :  2.00/12 05/10/98  19.18.59  by  Fons Rademakers
-//*CMZ :  2.00/11 03/08/98  13.46.13  by  Fons Rademakers
-//*CMZ :  2.00/00 11/01/98  15.13.17  by  Fons Rademakers
-//*CMZ :  1.00/07 28/03/97  10.41.44  by  Valery Fine(fine@vxcern.cern.ch)
 //*-- Author :    Fons Rademakers   28/11/96
 
 #ifndef ROOT_TTimer
 #define ROOT_TTimer
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////

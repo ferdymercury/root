@@ -1,35 +1,27 @@
+//*CMZ :  2.23/12 26/01/2000  09.24.07  by  Rene Brun
+//*CMZ :  2.23/11 09/01/2000  16.04.06  by  Rene Brun
+//*CMZ :  2.23/09 22/11/99  17.37.57  by  Rene Brun
+//*CMZ :  2.23/04 10/10/99  17.31.16  by  Fons Rademakers
+//*CMZ :  2.23/02 07/09/99  12.52.39  by  Rene Brun
+//*CMZ :  2.23/01 26/08/99  11.53.07  by  Rene Brun
 //*CMZ :  2.22/07 05/07/99  16.50.10  by  Rene Brun
 //*CMZ :  2.21/05 09/02/99  01.10.37  by  Fons Rademakers
-//*CMZ :  2.21/04 05/02/99  13.01.10  by  Fons Rademakers
-//*CMZ :  2.20/05 12/12/98  17.45.20  by  Rene Brun
-//*CMZ :  2.20/04 10/12/98  12.05.25  by  Rene Brun
-//*CMZ :  2.20/00 02/11/98  17.12.03  by  Fons Rademakers
-//*CMZ :  2.00/13 29/10/98  15.08.30  by  Fons Rademakers
-//*CMZ :  2.00/12 28/09/98  10.56.06  by  Rene Brun
-//*CMZ :  2.00/11 17/08/98  16.26.59  by  Rene Brun
-//*CMZ :  2.00/08 30/05/98  18.55.25  by  Rene Brun
-//*CMZ :  1.03/09 09/12/97  20.55.10  by  Fons Rademakers
 //*-- Author :    Rene Brun   12/12/94
 
 #ifndef ROOT_TPad
 #define ROOT_TPad
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -46,11 +38,20 @@
 #endif
 
 class TBrowser;
-
+class TBox;
 
 class TPad : public TVirtualPad {
 
+private:
+   TObject     *fTip;             //!tool tip associated with box
+
 protected:
+   Float_t      fX1;              //X of lower X coordinate
+   Float_t      fY1;              //Y of lower Y coordinate
+   Float_t      fX2;              //X of upper X coordinate
+   Float_t      fY2;              //Y of upper Y coordinate
+   Short_t      fBorderSize;      //pad bordersize in pixels
+   Short_t      fBorderMode;      //Bordermode (-1=down, 0 = no border, 1=up)
    Int_t        fLogx;            //(=0 if X linear scale, =1 if log scale)
    Int_t        fLogy;            //(=0 if Y linear scale, =1 if log scale)
    Int_t        fLogz;            //(=0 if Z linear scale, =1 if log scale)
@@ -95,6 +96,7 @@ protected:
    TCanvas      *fCanvas;         //!Pointer to mother canvas
    Int_t        fPixmapID;        //Off-screen pixmap identifier
    TList        *fPrimitives;     //List of primitives (subpads)
+   TList        *fExecs;          //List of commands to be executed when a pad event occurs
    TString      fName;            //Pad name
    TString      fTitle;           //Pad title
    Int_t        fPadPaint;        //Set to 1 while painting the pad
@@ -110,7 +112,16 @@ protected:
    TObject      *fPadPointer;     //free pointer
    Int_t        fNumber;          //pad number identifier
    Bool_t       fAbsCoord;        //Use absolute coordinates
+   Bool_t       fIsEditable;      //True if canvas is editable
    TPadView3D  *fPadView3D;       //3D View of this TPad
+
+   virtual Int_t DistancetoPrimitive(Int_t px, Int_t py);
+   virtual void  ExecuteEvent(Int_t event, Int_t px, Int_t py);
+   virtual void  HideToolTip(Int_t event);
+   void          PaintBorder(Color_t color, Bool_t tops);
+   virtual void  PaintBorderPS(Float_t xl,Float_t yl,Float_t xt,Float_t yt,Int_t bmode,Int_t bsize,Int_t dark,Int_t light);
+   virtual void  SavePrimitive(ofstream &out, Option_t *option);
+   virtual void  SetBatch(Bool_t batch=kTRUE);
 
 private:
    TPad(const TPad &pad);  // cannot copy pads, use TObject::Clone()
@@ -120,8 +131,14 @@ private:
    void CopyBackgroundPixmaps(TPad *start, TPad *stop, Int_t x, Int_t y);
 
 public:
+   // TPad status bits
+   enum {
+      kFraming = BIT(6),
+      kPrintingPS = BIT(11)
+   };
+
    TPad();
-   TPad(const Text_t *name, const Text_t *title, Float_t xlow,
+   TPad(const char *name, const char *title, Float_t xlow,
         Float_t ylow, Float_t xup, Float_t yup,
         Color_t color=-1, Short_t bordersize=-1, Short_t bordermode=-2);
    virtual ~TPad();
@@ -129,6 +146,8 @@ public:
    Float_t          AbsPixeltoX(Int_t px) {return fAbsPixeltoXk + px*fPixeltoX;}
    Float_t          AbsPixeltoY(Int_t py) {return fAbsPixeltoYk + py*fPixeltoY;}
    virtual void     AbsPixeltoXY(Int_t xpixel, Int_t ypixel, Axis_t &x, Axis_t &y);
+   virtual void     AddExec(const char *name, const char *command);
+   virtual void     AutoExec();
    virtual void     Browse(TBrowser *b);
    void             cd(Int_t subpadnumber=0);
    void             Clear(Option_t *option="");
@@ -137,22 +156,25 @@ public:
    virtual void     Close(Option_t *option="");
    virtual void     CopyPixmap();
    virtual void     CopyPixmaps();
-   void             CreateNewArrow(Int_t event, Int_t px, Int_t py);
-   void             CreateNewEllipse(Int_t event, Int_t px, Int_t py,Int_t mode);
-   void             CreateNewPad(Int_t event, Int_t px, Int_t py);
-   void             CreateNewPave(Int_t event, Int_t px, Int_t py, Int_t mode);
-   void             CreateNewPolyLine(Int_t event, Int_t px, Int_t py, Int_t mode);
-   void             CreateNewText(Int_t event, Int_t px, Int_t py);
+   virtual void     CreateNewLine(Int_t event, Int_t px, Int_t py, Int_t mode);
+   virtual void     CreateNewEllipse(Int_t event, Int_t px, Int_t py,Int_t mode);
+   virtual void     CreateNewPad(Int_t event, Int_t px, Int_t py, Int_t mode);
+   virtual void     CreateNewPave(Int_t event, Int_t px, Int_t py, Int_t mode);
+   virtual void     CreateNewPolyLine(Int_t event, Int_t px, Int_t py, Int_t mode);
+   virtual void     CreateNewText(Int_t event, Int_t px, Int_t py, Int_t mode);
+   virtual void     DeleteExec(const char *name);
    virtual void     Divide(Int_t nx=1, Int_t ny=1, Float_t xmargin=0.01, Float_t ymargin=0.01, Int_t color=0); // *MENU*
    virtual void     Draw(Option_t *option="");
    virtual void     DrawClassObject(TObject *obj, Option_t *option="");
-   TH1F            *DrawFrame(Float_t xmin, Float_t ymin, Float_t xmax, Float_t ymax, Text_t *title="");
+   static  void     DrawColorTable();
+   TH1F            *DrawFrame(Float_t xmin, Float_t ymin, Float_t xmax, Float_t ymax, const char *title="");
    void             DrawLine(Float_t x1, Float_t y1, Float_t x2, Float_t y2);
    void             DrawLineNDC(Float_t u1, Float_t v1, Float_t u2, Float_t v2);
-   void             DrawText(Float_t x, Float_t y, const Text_t *text);
-   void             DrawTextNDC(Float_t u, Float_t v, const Text_t *text);
-   virtual void     ExecuteEvent(Int_t event, Int_t px, Int_t py);
+   void             DrawText(Float_t x, Float_t y, const char *text);
+   void             DrawTextNDC(Float_t u, Float_t v, const char *text);
    virtual void     UseCurrentStyle();  // *MENU*
+   virtual Short_t  GetBorderMode() { return fBorderMode;}
+   virtual Short_t  GetBorderSize() { return fBorderSize;}
    virtual Int_t    GetCanvasID() const;
    TFrame           *GetFrame();
    virtual Int_t    GetEvent() const;
@@ -184,8 +206,13 @@ public:
    Int_t            GetNumber() {return fNumber;}
    Int_t            GetTickx() {return fTickx;}
    Int_t            GetTicky() {return fTicky;}
+   Float_t          GetX1() const { return fX1; }
+   Float_t          GetX2() const { return fX2; }
+   Float_t          GetY1() const { return fY1; }
+   Float_t          GetY2() const { return fY2; }
    TList            *GetListOfPrimitives() {return fPrimitives;}
-   virtual TObject  *GetPrimitive(const Text_t *name);
+   TList            *GetListOfExecs() {return fExecs;}
+   virtual TObject  *GetPrimitive(const char *name);
    virtual TObject  *GetSelected();
    virtual TObject  *GetPadPointer() {return fPadPointer;}
    TVirtualPad      *GetPadSave() const;
@@ -196,15 +223,15 @@ public:
    Int_t            GetLogy() {return fLogy;}
    Int_t            GetLogz() {return fLogz;}
    virtual TVirtualPad *GetMother() {return fMother;}
-   const Text_t     *GetName() const {return fName.Data();}
-   const Text_t     *GetTitle() const {return fTitle.Data();}
-   virtual TCanvas  *GetCanvas() { return fCanvas; }
+   const char      *GetName() const {return fName.Data();}
+   const char      *GetTitle() const {return fTitle.Data();}
+   virtual TCanvas *GetCanvas() { return fCanvas; }
    virtual TVirtualPad *GetVirtCanvas();
    Int_t            GetPadPaint() {return fPadPaint;}
    Int_t            GetPixmapID() {return fPixmapID;}
    void             HighLight(Color_t col=kRed, Bool_t set=kTRUE);
-   virtual void     InspectObject(TObject *obj);
    virtual Bool_t   IsBatch();
+   virtual Bool_t   IsEditable() {return fIsEditable;}
    Bool_t           IsFolder() {return kTRUE;}
    Bool_t           IsModified() {return fModified;}
    virtual Bool_t   IsRetained();
@@ -226,29 +253,29 @@ public:
    void             PaintPolyLineNDC(Int_t n, Float_t *x, Float_t *y, Option_t *option="");
    void             PaintPolyMarker(Int_t n, Float_t *x, Float_t *y, Option_t *option="");
    virtual void     PaintModified();
-   void             PaintText(Float_t x, Float_t y, const Text_t *text);
-   void             PaintTextNDC(Float_t u, Float_t v, const Text_t *text);
-   virtual TPad     *Pick(Int_t px, Int_t py, TObjLink *&pickobj);
+   void             PaintText(Float_t x, Float_t y, const char *text);
+   void             PaintTextNDC(Float_t u, Float_t v, const char *text);
+   virtual TPad    *Pick(Int_t px, Int_t py, TObjLink *&pickobj);
    Float_t          PixeltoX(Int_t px);
    Float_t          PixeltoY(Int_t py);
    virtual void     PixeltoXY(Int_t xpixel, Int_t ypixel, Axis_t &x, Axis_t &y);
    virtual void     Pop();
-   virtual void     Print(const Text_t *filename="");
-   virtual void     Print(const Text_t *filename, Option_t *option);
+   virtual void     Print(const char *filename="");
+   virtual void     Print(const char *filename, Option_t *option);
    virtual void     Range(Float_t x1, Float_t y1, Float_t x2, Float_t y2); // *MENU* *ARGS={x1=>fX1,y1=>fY1,x2=>fX2,y2=>fY2}
    virtual void     RangeAxis(Axis_t xmin, Axis_t ymin, Axis_t xmax, Axis_t ymax);
    virtual void     RecursiveRemove(TObject *obj);
-   virtual void     RedrawAxis();
+   virtual void     RedrawAxis(Option_t *option="");
    virtual void     ResetView3D(TPadView3D *view=0){fPadView3D=view;}
    virtual void     ResizePad(Option_t *option="");
-   virtual void     SaveAs(const Text_t *filename=""); // *MENU*
-   virtual void     SavePrimitive(ofstream &out, Option_t *option);
+   virtual void     SaveAs(const char *filename=""); // *MENU*
    virtual void     SetBorderMode(Short_t bordermode) {fBorderMode = bordermode;} // *MENU*
    virtual void     SetBorderSize(Short_t bordersize) {fBorderSize = bordersize;} // *MENU*
    virtual void     SetCanvasSize(UInt_t ww, UInt_t wh);
    virtual void     SetCursor(ECursor cursor);
    virtual void     SetDoubleBuffer(Int_t mode=1);
    virtual void     SetDrawOption(Option_t *option="");
+   virtual void     SetEditable(Bool_t mode=kTRUE); // *TOGGLE*
    virtual void     SetGrid(Int_t valuex = 1, Int_t valuey = 1) {fGridx = valuex; fGridy = valuey;}
    virtual void     SetGridx(Int_t value = 1) {fGridx = value;} // *TOGGLE*
    virtual void     SetGridy(Int_t value = 1) {fGridy = value;} // *TOGGLE*
@@ -257,25 +284,31 @@ public:
    virtual void     SetLogy(Int_t value = 1); // *TOGGLE*
    virtual void     SetLogz(Int_t value = 1); // *TOGGLE*
    virtual void     SetNumber(Int_t number) {fNumber = number;}
-   virtual void     SetPad(const Text_t *name, const Text_t *title,
+   virtual void     SetPad(const char *name, const char *title,
                            Float_t xlow, Float_t ylow, Float_t xup,
                            Float_t yup, Color_t color=35,
                            Short_t bordersize=5, Short_t bordermode=-1);
    virtual void     SetPad(Float_t xlow, Float_t ylow, Float_t xup, Float_t yup);
-   virtual void     SetName(const Text_t *name) {fName = name;} // *MENU*
+   virtual void     SetAttFillPS(Color_t color, Style_t style);
+   virtual void     SetAttLinePS(Color_t color, Style_t style, Width_t lwidth);
+   virtual void     SetAttMarkerPS(Color_t color, Style_t style, Size_t msize);
+   virtual void     SetAttTextPS(Int_t align, Float_t angle, Color_t color, Style_t font, Float_t tsize);
+   virtual void     SetName(const char *name) {fName = name;} // *MENU*
    virtual void     SetSelected(TObject *obj);
    virtual void     SetTicks(Int_t valuex = 1, Int_t valuey = 1) {fTickx = valuex; fTicky = valuey;}
    virtual void     SetTickx(Int_t value = 1) {fTickx = value;} // *TOGGLE*
    virtual void     SetTicky(Int_t value = 1) {fTicky = value;} // *TOGGLE*
-   virtual void     SetTitle(const Text_t *title="") {fTitle = title;}
+   virtual void     SetTitle(const char *title="") {fTitle = title;}
    virtual void     SetTheta(Float_t theta=30) {fTheta = theta;}
    virtual void     SetPhi(Float_t phi=30) {fPhi = phi;}
+   virtual void     SetToolTipText(const char *text, Long_t delayms = 1000);
    virtual void     SetView(TView *view) {fView = view;}
    virtual void     Update();
    Int_t            UtoAbsPixel(Float_t u) const {return Int_t(fUtoAbsPixelk + u*fUtoPixel);}
    Int_t            VtoAbsPixel(Float_t v) const {return Int_t(fVtoAbsPixelk + v*fVtoPixel);}
    Int_t            UtoPixel(Float_t u) const;
    Int_t            VtoPixel(Float_t v) const;
+   virtual TObject *WaitPrimitive(const char *pname="", const char *emode="");
    Int_t            XtoAbsPixel(Axis_t x) const {return Int_t(fXtoAbsPixelk + x*fXtoPixel);}
    Int_t            YtoAbsPixel(Axis_t y) const {return Int_t(fYtoAbsPixelk + y*fYtoPixel);}
    Float_t          XtoPad(Axis_t x) const;
@@ -285,14 +318,14 @@ public:
    virtual void     XYtoAbsPixel(Axis_t x, Axis_t y, Int_t &xpixel, Int_t &ypixel) const;
    virtual void     XYtoPixel(Axis_t x, Axis_t y, Int_t &xpixel, Int_t &ypixel) const;
 
-   virtual TGToolTip *CreateToolTip(const TBox *b, const char *text, Long_t delayms);
-   virtual void       DeleteToolTip(TGToolTip *tip);
-   virtual void       ResetToolTip(TGToolTip *tip);
-   virtual void       CloseToolTip(TGToolTip *tip);
+   virtual TObject   *CreateToolTip(const TBox *b, const char *text, Long_t delayms);
+   virtual void       DeleteToolTip(TObject *tip);
+   virtual void       ResetToolTip(TObject *tip);
+   virtual void       CloseToolTip(TObject *tip);
 
    virtual void     x3d(Option_t *option=""); // *MENU*
 
-   ClassDef(TPad,2)  //A Graphics pad
+   ClassDef(TPad,4)  //A Graphics pad
 };
 
 

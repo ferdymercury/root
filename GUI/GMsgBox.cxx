@@ -1,23 +1,19 @@
+//*CMZ :  2.23/02 02/09/99  15.54.27  by  Rene Brun
 //*CMZ :  2.20/01 02/12/98  18.01.46  by  Fons Rademakers
 //*CMZ :  2.00/00 21/02/98  15.42.12  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   09/01/98
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 //*CMZ :  2.00/00 16/02/98  00.17.08  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   27/12/97
@@ -252,13 +248,13 @@ void TGMsgBox::PMsgBox(const TGWindow *main, const char *title,
 
    if (main) {
       Window_t wdum;
-      gGXW->TranslateCoordinates(main->GetId(), GetParent()->GetId(),
+      gVirtualX->TranslateCoordinates(main->GetId(), GetParent()->GetId(),
                           (((TGFrame *) main)->GetWidth() - fWidth) >> 1,
                           (((TGFrame *) main)->GetHeight() - fHeight) >> 1,
                           ax, ay, wdum);
    } else {
       UInt_t root_w, root_h;
-      gGXW->GetWindowSize(fClient->GetRoot()->GetId(), ax, ay, root_w, root_h);
+      gVirtualX->GetWindowSize(fClient->GetRoot()->GetId(), ax, ay, root_w, root_h);
       ax = (root_w - fWidth) >> 1;
       ay = (root_h - fHeight) >> 1;
    }

@@ -1,3 +1,4 @@
+/*CMZ :  2.23/04 05/10/99  18.22.40  by  Fons Rademakers*/
 /*CMZ :  2.21/07 01/03/99  08.51.30  by  Rene Brun*/
 /*CMZ :  2.00/11 21/08/98  09.12.26  by  Rene Brun*/
 /*CMZ :  0.90/10 05/12/96  12.35.16  by  Valery Fine(fine@vxcern.cern.ch)*/
@@ -25,9 +26,6 @@
 #  define DllExport
 #endif
 #  define R__EXTERN       DllImport extern
-#  ifndef EXTERN
-#     define EXTERN       DllImport extern
-#  endif
 #endif
 
 

@@ -1,5 +1,5 @@
-/*CMZ :  2.22/10 23/07/99  14.42.11  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   23/07/99*/
+/*CMZ :  2.23/10 10/12/99  17.59.57  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   10/12/99*/
 /* /% C++ %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -10,15 +10,13 @@
  *  Extended Run Time Type Identification API
  *   -I$(CINTSYSDIR) -I$(CINTSYSDIR)/src must be given at compile time
  ************************************************************************
- * Copyright(c) 1991~1996  [hp] Hewlett Packard Japan, All rights reserved
- * Author                  Masaharu Goto (gotom@jpn.hp.com)
- * Copyright(c) 1995~1998  Masaharu Goto (MXJ02154@niftyserve.or.jp)
+ * Copyright(c) 1995~1999  Masaharu Goto (MXJ02154@niftyserve.or.jp)
  *
  * Permission to use, copy, modify and distribute this software and its
  * documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies and
  * that both that copyright notice and this permission notice appear
- * in supporting documentation.  Hewlett-Packard Japan Company makes no
+ * in supporting documentation.  The author makes no
  * representations about the suitability of this software for any
  * purpose.  It is provided "as is" without express or implied warranty.
  ************************************************************************/
@@ -35,8 +33,19 @@
 #define G__API
 #define G__CINTBODY /* may not be needed */
 #include "G__ci.h"
+#ifndef G__OLDIMPLEMENTATION1218
+#ifndef __MAKECINT__
+#include "common.h"
+#else
+struct G__friendtag ;
+typedef int (*G__InterfaceMethod)();
+#endif
+#endif /* 1218 */
 #ifdef __MAKECINT__
 #pragma link off all classes;
+#pragma link off all functions;
+#pragma link off all globals;
+#pragma link off all typedefs;
 #endif
 
 #define G__INFO_BUFLEN 50
@@ -101,6 +110,18 @@ typedef void (*G__pMethodSpecialValue)(char *item,G__TypeInfo *typeinfo
 void G__InitGetSpecialValue(G__pMethodSpecialValue pmethod);
 }
 
+
+#ifndef G__OLDIMPLEMENTATION1207
+/*********************************************************************
+* Feedback routine in case tagnum for a class changes (in case the
+* dictionary of a shared lib is being re-initialized).
+*********************************************************************/
+extern "C" {
+typedef void (*G__pMethodUpdateClassInfo)(char *item,long tagnum);
+void G__InitUpdateClassInfo(G__pMethodUpdateClassInfo pmethod);
+}
+#endif
+
 /*********************************************************************
 * G__SourceFileInfo
 *********************************************************************/
@@ -110,7 +131,9 @@ class G__SourceFileInfo {
   G__SourceFileInfo(int filenin) { filen = filenin; }
   G__SourceFileInfo(const char* fname) { Init(fname); }
   ~G__SourceFileInfo() { }
-  void Init() { filen = -1; }
+  void Init() {
+    filen = -1;
+  }
   void Init(const char* fname);
   const char *Name();
   const char *Prepname();
@@ -127,6 +150,10 @@ class G__SourceFileInfo {
 /*********************************************************************
 * G__IncludePathInfo
 *********************************************************************/
+#ifndef __CINT__
+struct G__includepath;
+#endif
+
 class G__IncludePathInfo {
  public:
   G__IncludePathInfo() { Init(); }
@@ -142,6 +169,16 @@ class G__IncludePathInfo {
 #endif
 };
 
+#ifdef G__EXCEPTIONWRAPPER
+/*********************************************************************
+* G__ExceptionWrapper
+*********************************************************************/
+extern "C" int G__ExceptionWrapper(G__InterfaceMethod funcp
+				   ,G__value* result7
+				   ,char* funcname
+				   ,struct G__param *libp
+				   ,int hash);
+#endif
 
 #ifdef __MAKECINT__
 #pragma link off class $G__value;

@@ -1,5 +1,5 @@
-/*CMZ :  2.22/10 23/07/99  14.42.16  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   23/07/99*/
+/*CMZ :  2.23/10 10/12/99  18.00.01  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   10/12/99*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -9,15 +9,13 @@
  * Description:
  *  Class inheritance
  ************************************************************************
- * Copyright(c) 1991~1996  [hp] Hewlett Packard Japan, All rights reserved
- * Author                  Masaharu Goto (gotom@jpn.hp.com)
- * Copyright(c) 1995~1998  Masaharu Goto (MXJ02154@niftyserve.or.jp)
+ * Copyright(c) 1995~1999  Masaharu Goto (MXJ02154@niftyserve.or.jp)
  *
  * Permission to use, copy, modify and distribute this software and its
  * documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies and
  * that both that copyright notice and this permission notice appear
- * in supporting documentation.  Hewlett-Packard Japan Company makes no
+ * in supporting documentation.  The author makes no
  * representations about the suitability of this software for any
  * purpose.  It is provided "as is" without express or implied warranty.
  ************************************************************************/
@@ -565,7 +563,12 @@ struct G__baseparam *pbaseparam;
 
   /* assign virtual_identity if contains virtual
    * function.  */
-  if(-1 != G__struct.virtual_offset[G__tagnum]) {
+  if(-1 != G__struct.virtual_offset[G__tagnum]
+#ifndef G__OLDIMPLEMENTATION1164
+     /* && 0==G__no_exec_compile  << this one is correct */
+     && 0==G__xrefflag
+#endif
+     ) {
     *(long*)(G__store_struct_offset+G__struct.virtual_offset[G__tagnum])
       = G__tagnum;
   }
@@ -587,6 +590,9 @@ int G__basedestructor()
   int i,j;
   char destruct[G__ONELINE];
   long store_globalvarpointer;
+#ifndef G__OLDIMPLEMENTATION1158
+  int store_addstros=0;
+#endif
 
   /* store current tag information */
   store_tagnum=G__tagnum;
@@ -618,6 +624,11 @@ int G__basedestructor()
 	*/
 	if(G__DOUBLEALLOC==(*(long*)vbaseosaddr)) {
 	  G__store_struct_offset=vbaseosaddr+(*(long*)vbaseosaddr);
+#ifndef G__OLDIMPLEMENTATION1158
+	  if(G__asm_noverflow) {
+	    store_addstros=baseclass->baseoffset[i]+(*(long*)vbaseosaddr);
+	  }
+#endif
 	}
 	else {
 	  continue;
@@ -625,9 +636,17 @@ int G__basedestructor()
       }
       else {
 	G__store_struct_offset=store_struct_offset+baseclass->baseoffset[i];
+#ifndef G__OLDIMPLEMENTATION1158
+	if(G__asm_noverflow) {
+	  store_addstros=baseclass->baseoffset[i];
+	}
+#endif
       }
 #else
       G__store_struct_offset=store_struct_offset+baseclass->baseoffset[i];
+#endif
+#ifndef G__OLDIMPLEMENTATION1158
+      if(G__asm_noverflow) G__gen_addstros(store_addstros);
 #endif
       /* avoid recursive and infinite virtual destructor call
        * let the base class object pretend like its own class object */
@@ -643,6 +662,9 @@ int G__basedestructor()
       }
       else G__globalvarpointer = G__PVOID;
       G__getfunction(destruct,&j ,G__TRYDESTRUCTOR);
+#ifndef G__OLDIMPLEMENTATION1158
+      if(G__asm_noverflow) G__gen_addstros(-store_addstros);
+#endif
     }
   }
   G__globalvarpointer = store_globalvarpointer;
@@ -696,6 +718,13 @@ struct G__var_array *mem;
       sprintf(destruct,"~%s()",G__struct.name[G__tagnum]);
       p_inc = mem->varlabel[i][1];
       size = G__struct.size[G__tagnum];
+#ifndef G__OLDIMPLEMENTATION1158
+      if(G__asm_noverflow) {
+	if(0==p_inc) G__gen_addstros(mem->p[i]);
+	else         G__gen_addstros(mem->p[i]+size*p_inc);
+      }
+#endif
+
       j=0;
       G__store_struct_offset += size*p_inc;
       do {
@@ -707,13 +736,20 @@ struct G__var_array *mem;
 	if(-1!=G__struct.virtual_offset[G__tagnum])
 	  *(long*)(G__store_struct_offset+G__struct.virtual_offset[G__tagnum])
 	    = G__tagnum;
-	if(G__dispsource)
+	if(G__dispsource) {
 	  fprintf(G__serr,"\n!!!Calling class member destructor %s" ,destruct);
+	}
 	G__getfunction(destruct,&j,G__TRYDESTRUCTOR);
 	G__store_struct_offset -= size;
+#ifndef G__OLDIMPLEMENTATION1158
+	if(p_inc && G__asm_noverflow) G__gen_addstros(-size);
+#endif
 	--p_inc;
       } while(p_inc>=0 && j) ;
       G__globalvarpointer = G__PVOID;
+#ifndef G__OLDIMPLEMENTATION1158
+      if(G__asm_noverflow) G__gen_addstros(-mem->p[i]);
+#endif
     }
     else if(G__security&G__SECURE_GARBAGECOLLECTION &&
 #ifndef G__OLDIMPLEMENTATION545

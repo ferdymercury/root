@@ -1,3 +1,4 @@
+//*CMZ :  2.23/12 26/01/2000  09.49.07  by  Rene Brun
 //*CMZ :  2.22/07 01/07/99  16.40.14  by  Rene Brun
 //*CMZ :  2.21/06 15/02/99  10.12.43  by  Rene Brun
 //*-- Author :    Pasha Murat   12/02/99
@@ -24,7 +25,7 @@ TParticlePDG::TParticlePDG(Int_t )
 //______________________________________________________________________________
 TParticlePDG::TParticlePDG(const char* name, const char* title, Double_t mass,
 			   Bool_t stable, Double_t width, Double_t charge,
-			   const Text_t* type, Int_t MCnumber)
+			   const char* type, Int_t MCnumber)
              : TNamed(name,title)
 {
 

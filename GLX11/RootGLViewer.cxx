@@ -1,24 +1,20 @@
+//*CMZ :  2.23/02 03/09/99  11.39.45  by  Rene Brun
 //*CMZ :  2.20/00 08/02/99  14.42.15  by  Fons Rademakers
 //*CMZ :  2.00/12 01/10/98  01.24.42  by  Fons Rademakers
 //*CMZ :  2.00/00 06/03/98  14.40.30  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   15/01/98
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -36,14 +32,14 @@
 #include "TGCanvas.h"
 #include "TGMenu.h"
 #include "TGWidget.h"
-#include "TGXW.h"
+#include "TVirtualX.h"
 
 #include "TROOT.h"
 #include "TError.h"
 #include "Buttons.h"
 #include "TVirtualPad.h"
 #include "TPadOpenGLView.h"
-#include "TGLKernelABC.h"
+#include "TVirtualGL.h"
 
 #include "HelpText.h"
 
@@ -100,11 +96,11 @@ TGLContainer::TGLContainer(TRootGLViewer *c, Window_t id, const TGWindow *p)
 
    fViewer = c;
 
-   gGXW->GrabButton(fId, kAnyButton, kAnyModifier,
+   gVirtualX->GrabButton(fId, kAnyButton, kAnyModifier,
                     kButtonPressMask | kButtonReleaseMask,
                     kNone, kNone);
 
-   gGXW->SelectInput(fId, kKeyPressMask | kExposureMask | kPointerMotionMask |
+   gVirtualX->SelectInput(fId, kKeyPressMask | kExposureMask | kPointerMotionMask |
                      kStructureNotifyMask);
 }
 
@@ -239,9 +235,9 @@ void TRootGLViewer::InitGLWindow()
 {
    // X11 specific code to initialize GL window.
 
-   fDpy = (Display *) gGXW->GetDisplay();
+   fDpy = (Display *) gVirtualX->GetDisplay();
 
-   gGLKernel->SetTrueColorMode();
+   gVirtualGL->SetTrueColorMode();
    static int dblBuf[] = {
        GLX_DOUBLEBUFFER, GLX_RGBA, GLX_DEPTH_SIZE, 16,
        GLX_RED_SIZE, 1, GLX_GREEN_SIZE, 1, GLX_BLUE_SIZE, 1,
@@ -460,7 +456,7 @@ Bool_t TRootGLViewer::HandleContainerKey(Event_t *event)
       fButton = event->fCode;
       UInt_t keysym;
       char str[2];
-      gGXW->LookupString(event, str, sizeof(str), keysym);
+      gVirtualX->LookupString(event, str, sizeof(str), keysym);
       HandleInput(kKeyPress, str[0], 0);
    } else if (event->fType == kKeyRelease)
       fButton = 0;

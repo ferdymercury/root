@@ -1,4 +1,4 @@
-//*CMZ :          16/11/96  11.08.38  by  Rene Brun
+//*CMZ :          24/11/99  11.25.31  by  Rene Brun
 //*-- Author :    Rene Brun   05/12/95
 //
 // 26/07/96  09.11.04  by  Rene Brun
@@ -342,7 +342,7 @@
   use member function Compress(0) to select the uncompressed mode after
   the TFile constructor.
 
-- Class TKey modified to call the new compression routines mmzip and mmuzip
+- Class TKey modified to call the new compression routines R__zip and R__unzip
   from the ZIP patch. (thanks to E.Tchernaev).
 
 - Mods in TFile::Map. In case of a compressed file, do not list name and title
@@ -465,7 +465,7 @@
 
 - TGuiFactory: create a TApplicationImp.
 
-- The gGuiFactory and gGXW are now initialized in InitGui(). InitGui() is
+- The gGuiFactory and gVirtualX are now initialized in InitGui(). InitGui() is
   added to the list of init functions for TROOT in rmain.
   TMotifGuiFactory was called in TROOT which caused the loading of all
   the Motif classes.
@@ -879,7 +879,7 @@
 
 - Move definition of Cardinal data type from RAEClasses to ROOT.
 
-- Fix a problem in TGXW.
+- Fix a problem in TVirtualX.
   due to round-off errors in TPad::Resize() we might get +/- 1 pixel
   change, in those cases don't resize pixmap.
 //

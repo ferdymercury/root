@@ -1,3 +1,4 @@
+//*CMZ :  2.23/02 02/09/99  15.39.25  by  Rene Brun
 //*CMZ :  2.00/12 01/10/98  00.25.48  by  Fons Rademakers
 //*CMZ :  2.00/01 04/03/98  19.33.58  by  Fons Rademakers
 //*CMZ :  2.00/00 04/03/98  19.33.58  by  Fons Rademakers
@@ -6,22 +7,17 @@
 #ifndef ROOT_GuiTypes
 #define ROOT_GuiTypes
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -165,7 +161,7 @@ const Mask_t kWAColormap         = BIT(14);
 const Mask_t kWACursor           = BIT(15);
 
 // Input event masks, used to set SetWindowAttributes_t::fEventMask
-// and to be passed to TGXW::SelectInput()
+// and to be passed to TVirtualX::SelectInput()
 const Mask_t kNoEventMask         = 0;
 const Mask_t kKeyPressMask        = BIT(0);
 const Mask_t kKeyReleaseMask      = BIT(1);

@@ -1,26 +1,22 @@
+//*CMZ :  2.23/09 18/11/99  10.46.06  by  Rene Brun
+//*CMZ :  2.23/04 11/10/99  08.32.36  by  Rene Brun
+//*CMZ :  2.23/03 18/09/99  19.59.06  by  Fons Rademakers
 //*CMZ :  2.21/05 08/02/99  12.32.45  by  Fons Rademakers
 //*CMZ :  2.00/10 14/07/98  18.37.55  by  Fons Rademakers
 //*CMZ :  2.00/06 09/05/98  15.22.42  by  Fons Rademakers
-//*CMZ :  2.00/01 14/03/98  05.58.52  by  Fons Rademakers
-//*CMZ :  1.03/09 05/12/97  13.53.57  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   29/07/95
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -46,7 +42,6 @@
 //////////////////////////////////////////////////////////////////////////
 
 #include <stdlib.h>
-#include <errno.h>
 
 #include "TObjectTable.h"
 #include "TError.h"
@@ -70,8 +65,8 @@
 #endif
 
 
-ULong_t       TStorage::fgLastObject;
-ULong_t       TStorage::fgLastObjectEnd;
+ULong_t       TStorage::fgHeapBegin = (ULong_t)-1L;
+ULong_t       TStorage::fgHeapEnd;
 size_t        TStorage::fgMaxBlockSize;
 FreeHookFun_t TStorage::fgFreeHook;
 void         *TStorage::fgFreeHookData;
@@ -215,20 +210,19 @@ void *TStorage::ObjectAlloc(size_t sz)
    // after this routine one can call (in the TObject ctor) TStorage::IsOnHeap()
    // to find out if the just created object is on the heap.
 
-   fgLastObject    = (ULong_t) new char[sz];
-   fgLastObjectEnd = fgLastObject + sz;
-   return (void*) fgLastObject;
+   ULong_t space = (ULong_t) new char[sz];
+   AddToHeap(space, space+sz);
+   return (void*) space;
 }
 
 //______________________________________________________________________________
-void *TStorage::ObjectAlloc(size_t sz, void *vp)
+void *TStorage::ObjectAlloc(size_t , void *vp)
 {
-   // Used to allocate a TObject on the heap (via TObject::new()) in
-   // position vp.
+   // Used to allocate a TObject on the heap (via TObject::new(size_t,void*))
+   // in position vp. vp is already allocated (maybe on heap, maybe on
+   // stack) so just return.
 
-   fgLastObject    = (ULong_t) vp;
-   fgLastObjectEnd = fgLastObject + sz;
-   return (void*) fgLastObject;
+   return vp;
 }
 
 //______________________________________________________________________________
@@ -306,15 +300,15 @@ void TStorage::EnableStatistics(int size, int ix)
 }
 
 //______________________________________________________________________________
-ULong_t TStorage::GetLastObject()
+ULong_t TStorage::GetHeapBegin()
 {
-   return fgLastObject;
+   return fgHeapBegin;
 }
 
 //______________________________________________________________________________
-ULong_t TStorage::GetLastObjectEnd()
+ULong_t TStorage::GetHeapEnd()
 {
-   return fgLastObjectEnd;
+   return fgHeapEnd;
 }
 
 //______________________________________________________________________________
@@ -351,16 +345,6 @@ void TStorage::SetMaxBlockSize(size_t size)
 FreeHookFun_t TStorage::GetFreeHook()
 {
    return fgFreeHook;
-}
-//______________________________________________________________________________
-void TStorage::SetLastObject(ULong_t obj)
-{
-   fgLastObject = obj;
-}
-//______________________________________________________________________________
-void TStorage::SetLastObjectEnd(ULong_t obj)
-{
-   fgLastObjectEnd = obj;
 }
 
 #endif

@@ -1,35 +1,25 @@
+//*CMZ :  2.23/09 17/11/99  15.46.30  by  Rene Brun
+//*CMZ :  2.23/04 08/10/99  17.39.59  by  Rene Brun
+//*CMZ :  2.23/03 15/09/99  11.17.41  by  Rene Brun
 //*CMZ :  2.22/10 19/07/99  11.47.17  by  Fons Rademakers
 //*CMZ :  2.22/08 07/07/99  11.44.39  by  Rene Brun
 //*CMZ :  2.22/03 31/05/99  08.39.59  by  Rene Brun
-//*CMZ :  2.22/02 28/05/99  18.00.19  by  Rene Brun
-//*CMZ :  2.21/07 02/03/99  14.31.56  by  Rene Brun
-//*CMZ :  2.21/04 28/01/99  16.36.17  by  Valery Fine(fine@mail.cern.ch)
-//*CMZ :  2.20/03 05/12/98  16.28.27  by  Rene Brun
-//*CMZ :  2.20/01 02/12/98  16.22.47  by  Rene Brun
-//*CMZ :  2.20/00 22/11/98  16.55.45  by  Rene Brun
-//*CMZ :  2.00/01 14/03/98  05.58.08  by  Fons Rademakers
-//*CMZ :  1.03/09 16/12/97  17.52.06  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   29/07/95
 
 #ifndef ROOT_TMath
 #define ROOT_TMath
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -70,7 +60,6 @@ public:
    static Double_t ACosH(Double_t);
    static Double_t ATanH(Double_t);
    static Double_t Hypot(Double_t x, Double_t y);
-   static void     Sincos(Double_t a, Double_t *sin, Double_t *cos);
 
    // Misc
    static Double_t Sqrt(Double_t x);
@@ -87,7 +76,6 @@ public:
    // Some integer math
    static Long_t   NextPrime(Long_t x);   // least prime number greater than x
    static Long_t   Sqrt(Long_t x);
-   static Double_t Atan2(Long_t x, Long_t y);
    static Long_t   Hypot(Long_t x, Long_t y);     // sqrt(px*px + py*py)
 
    // Abs
@@ -301,7 +289,7 @@ inline Double_t TMath::Range(Double_t lb, Double_t ub, Double_t x)
 
 //---- Trig and other functions ------------------------------------------------
 
-#if defined(R__AIX) || defined(R__MAC)
+#if defined(R__AIX) || defined(R__MAC) || defined(R__SOLARIS_CC50)
 // in AIX and MAC math functions are defined inline so we have to include them here
 #   include <math.h>
 #else

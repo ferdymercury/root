@@ -1,13 +1,8 @@
+//*CMZ :  2.23/04 02/10/99  17.05.38  by  Fons Rademakers
+//*CMZ :  2.23/03 23/09/99  17.43.59  by  Fons Rademakers
+//*CMZ :  2.23/02 02/09/99  15.54.29  by  Rene Brun
 //*CMZ :  2.22/05 08/06/99  17.55.36  by  Fons Rademakers
 //*CMZ :  2.22/04 03/06/99  18.58.14  by  Rene Brun
-//*CMZ :  2.21/06 15/02/99  15.25.01  by  Fons Rademakers
-//*CMZ :  2.21/04 03/02/99  11.40.18  by  Fons Rademakers
-//*CMZ :  2.00/12 05/10/98  16.07.22  by  Fons Rademakers
-//*CMZ :  2.00/11 07/08/98  17.29.53  by  Fons Rademakers
-//*CMZ :  2.00/10 26/07/98  15.46.41  by  Fons Rademakers
-//*CMZ :  2.00/06 24/04/98  19.57.58  by  Fons Rademakers
-//*CMZ :  2.00/03 27/03/98  12.06.56  by  Fons Rademakers
-//*CMZ :  2.00/00 07/03/98  15.35.17  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   07/03/98
 
 // guitest.cxx: test program for ROOT native GUI classes.
@@ -16,7 +11,7 @@
 
 #include <TROOT.h>
 #include <TApplication.h>
-#include <TGXW.h>
+#include <TVirtualX.h>
 
 #include <TGListBox.h>
 #include <TGClient.h>
@@ -509,7 +504,7 @@ TestDialog::TestDialog(const TGWindow *p, const TGWindow *main, UInt_t w,
 
    // make tab yellow
    ULong_t yellow;
-   gClient->GetColorByName("yellow", yellow);
+   fClient->GetColorByName("yellow", yellow);
    TGTabElement *tabel = fTab->GetTabTab(2);
    tabel->ChangeBackground(yellow);
 
@@ -594,7 +589,7 @@ TestDialog::TestDialog(const TGWindow *p, const TGWindow *main, UInt_t w,
    // position relative to the parent's window
    Window_t wdum;
    int ax, ay;
-   gGXW->TranslateCoordinates(main->GetId(), GetParent()->GetId(),
+   gVirtualX->TranslateCoordinates(main->GetId(), GetParent()->GetId(),
                           (((TGFrame *) main)->GetWidth() - fWidth) >> 1,
                           (((TGFrame *) main)->GetHeight() - fHeight) >> 1,
                           ax, ay, wdum);
@@ -799,7 +794,7 @@ TestMsgBox::TestMsgBox(const TGWindow *p, const TGWindow *main,
 
    // Use default font as specified in .rootrc
    FontStruct_t labelfont;
-   labelfont = gClient->GetFontByName(gEnv->GetValue("Gui.NormalFont",
+   labelfont = fClient->GetFontByName(gEnv->GetValue("Gui.NormalFont",
                 "-adobe-helvetica-medium-r-*-*-12-*-*-*-*-*-iso8859-1"));
 
    // Define new graphics context. Only the fields specified in
@@ -807,10 +802,10 @@ TestMsgBox::TestMsgBox(const TGWindow *p, const TGWindow *main,
    // http://root.cern.ch/root/html/src/TGClient.cxx.html).
    GCValues_t   gval;
    gval.fMask = kGCForeground | kGCFont;
-   gval.fFont = gGXW->GetFontHandle(labelfont);
-   gClient->GetColorByName("red", gval.fForeground);
+   gval.fFont = gVirtualX->GetFontHandle(labelfont);
+   fClient->GetColorByName("red", gval.fForeground);
 
-   fRedTextGC = gGXW->CreateGC(gClient->GetRoot()->GetId(), &gval);
+   fRedTextGC = gVirtualX->CreateGC(fClient->GetRoot()->GetId(), &gval);
    //---------------------------------
 
    int i, ax, ay;
@@ -827,7 +822,7 @@ TestMsgBox::TestMsgBox(const TGWindow *p, const TGWindow *main,
 
    // Change background of fTestButton to green
    ULong_t green;
-   gClient->GetColorByName("green", green);
+   fClient->GetColorByName("green", green);
    fTestButton->ChangeBackground(green);
 
    fCloseButton = new TGTextButton(f1, "&Close", 2);
@@ -923,7 +918,7 @@ TestMsgBox::TestMsgBox(const TGWindow *p, const TGWindow *main,
 
    // position relative to the parent's window
    Window_t wdum;
-   gGXW->TranslateCoordinates(main->GetId(), GetParent()->GetId(),
+   gVirtualX->TranslateCoordinates(main->GetId(), GetParent()->GetId(),
                           (((TGFrame *) main)->GetWidth() - fWidth) >> 1,
                           (((TGFrame *) main)->GetHeight() - fHeight) >> 1,
                           ax, ay, wdum);
@@ -951,7 +946,7 @@ TestMsgBox::~TestMsgBox()
    delete f3; delete f4; delete f5; delete f2; delete f1;
    delete fL1; delete fL2; delete fL3; delete fL4; delete fL5; delete fL6;
    delete fL21;
-   gGXW->DeleteGC(fRedTextGC);
+   gVirtualX->DeleteGC(fRedTextGC);
 }
 
 void TestMsgBox::CloseWindow()
@@ -1098,7 +1093,7 @@ TestSliders::TestSliders(const TGWindow *p, const TGWindow *main,
    // position relative to the parent's window
    Window_t wdummy;
    int ax, ay;
-   gGXW->TranslateCoordinates(main->GetId(), GetParent()->GetId(),
+   gVirtualX->TranslateCoordinates(main->GetId(), GetParent()->GetId(),
                           (((TGFrame *) main)->GetWidth() - fWidth) >> 1,
                           (((TGFrame *) main)->GetHeight() - fHeight) >> 1,
                           ax, ay, wdummy);
@@ -1198,15 +1193,17 @@ Bool_t TestSliders::ProcessMessage(Long_t msg, Long_t parm1, Long_t parm2)
 
 //---- Main program ------------------------------------------------------------
 
-extern void InitGui();
-VoidFuncPtr_t initfuncs[] = { InitGui, 0 };
-
-TROOT root("GUI", "GUI test environement", initfuncs);
+TROOT root("GUI", "GUI test environement");
 
 
 int main(int argc, char **argv)
 {
    TApplication theApp("App", &argc, argv);
+
+   if (gROOT->IsBatch()) {
+      fprintf(stderr, "%s: cannot run in batch mode\n", argv[0]);
+      return 1;
+   }
 
    TestMainFrame mainWindow(gClient->GetRoot(), 400, 220);
 

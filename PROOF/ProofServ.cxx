@@ -1,25 +1,22 @@
-//*CMZ :  2.22/01 26/04/99  11.56.30  by  Rene Brun
+//*CMZ :  2.23/12 28/01/2000  16.58.03  by  Fons Rademakers
+//*CMZ :  2.23/10 15/12/99  13.31.57  by  Fons Rademakers
+//*CMZ :  2.23/02 06/09/99  15.57.40  by  Fons Rademakers
+//*CMZ :  2.22/01 08/08/99  19.24.53  by  Rene Brun
 //*CMZ :  2.20/00 08/11/98  11.05.07  by  Rene Brun
 //*CMZ :  2.00/00 17/02/98  16.24.30  by  Rene Brun
-//*CMZ :  1.03/09 16/12/97  16.26.15  by  Rene Brun
 //*-- Author :    Fons Rademakers   16/02/97
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -225,6 +222,7 @@ TObject *TProofServ::Get(const char *namecycle)
    if (mess->What() == kMESS_OBJECT)
       idcur = mess->ReadObject(mess->GetClass());
    delete mess;
+
    return idcur;
 }
 
@@ -731,9 +729,20 @@ void TProofServ::Terminate(int status)
 }
 
 //______________________________________________________________________________
-Bool_t TProofServ::Active()
+Bool_t TProofServ::IsActive()
 {
    // Static function that returns kTRUE in case we are a PROOF server.
 
    return gProofServ ? kTRUE : kFALSE;
 }
+
+//______________________________________________________________________________
+TProofServ *TProofServ::This()
+{
+   // Static function returning pointer to global object gProofServ.
+   // Mainly for use via CINT, where the gProofServ symbol might be
+   // deleted from the symbol table.
+
+   return gProofServ;
+}
+

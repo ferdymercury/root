@@ -1,8 +1,8 @@
+//*CMZ :  2.23/12 28/01/2000  19.14.33  by  Rene Brun
+//*CMZ :  2.23/00 12/08/99  14.13.47  by  Rene Brun
 //*CMZ :  2.22/09 12/07/99  18.43.17  by  Rene Brun
 //*CMZ :  2.22/06 19/06/99  09.15.38  by  Peter Malzacher
 //*CMZ :  2.22/02 26/05/99  09.41.45  by  Rene Brun
-//*CMZ :  2.22/00 06/04/99  19.09.39  by  Rene Brun
-//*CMZ :  2.21/06 15/02/99  09.42.59  by  Rene Brun
 //*-- Author :    Pasha Murat, Peter Malzacher   12/02/99
 #ifndef ROOT_TVector3
 #define ROOT_TVector3
@@ -48,6 +48,11 @@ public:
   inline void SetZ(Double_t);
   inline void SetXYZ(Double_t x, Double_t y, Double_t z);
   // Set the components in cartesian coordinate system.
+
+  inline void GetXYZ(Double_t *carray);
+  inline void GetXYZ(Float_t *carray);
+  // Get the components into an array
+  // not checked!
 
   inline Double_t Phi() const;
   // The azimuth angle.
@@ -162,7 +167,7 @@ private:
   Double_t fX, fY, fZ;
   // The components.
 
-  ClassDef(TVector3,1) // A three vector
+  ClassDef(TVector3,2) // A three vector
 
 };
 
@@ -199,6 +204,19 @@ inline void TVector3::SetXYZ(Double_t x, Double_t y, Double_t z) {
    fY = y;
    fZ = z;
 }
+
+inline void TVector3::GetXYZ(Double_t *carray){
+  carray[0] = fX;
+  carray[1] = fY;
+  carray[2] = fZ;
+}
+
+inline void TVector3::GetXYZ(Float_t *carray){
+  carray[0] = fX;
+  carray[1] = fY;
+  carray[2] = fZ;
+}
+
 
 inline TVector3 & TVector3::operator = (const TVector3 & p) {
   fX = p.fX;
@@ -351,7 +369,7 @@ inline void TVector3::SetPerp(Double_t r) {
 }
 
 inline Double_t TVector3::DeltaPhi(const TVector3 & v) const {
-  return phi_mpi_pi(Phi()-v.Phi());
+  return TVector2::Phi_mpi_pi(Phi()-v.Phi());
 }
 
 inline Double_t TVector3::Eta() const {
@@ -364,7 +382,7 @@ inline Double_t TVector3::DrEtaPhi(const TVector3 & v) const{
 
 inline Double_t TVector3::DeltaR(const TVector3 & v) const {
   Double_t deta = Eta()-v.Eta();
-  Double_t dphi = phi_mpi_pi(Phi()-v.Phi());
+  Double_t dphi = TVector2::Phi_mpi_pi(Phi()-v.Phi());
   return TMath::Sqrt( deta*deta+dphi*dphi );
 }
 

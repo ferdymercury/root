@@ -1,3 +1,4 @@
+//*CMZ :  2.23/12 31/01/2000  11.00.03  by  Rene Brun
 //*CMZ :  2.00/09 23/06/98  14.12.22  by  Rene Brun
 //*CMZ :  1.03/08 20/11/97  18.33.38  by  Rene Brun
 //*-- Author :    Nenad Buncic   27/09/95
@@ -5,22 +6,17 @@
 #ifndef ROOT_TPCON
 #define ROOT_TPCON
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 ////////////////////////////////////////////////////////////////////////////
@@ -44,24 +40,25 @@ const Int_t kDiv = 20;               //default number of divisions
 
 class TPCON : public TShape {
 
-    private:
-       Double_t   *fSiTab;     // Table of sin(fPhi1) .... sin(fPhil+fDphi1)
-       Double_t   *fCoTab;     // Table of cos(fPhi1) .... cos(fPhil+fDphi1)
-
     protected:
+
+        Double_t   *fSiTab;     //! Table of sin(fPhi1) .... sin(fPhil+fDphi1)
+        Double_t   *fCoTab;     //! Table of cos(fPhi1) .... cos(fPhil+fDphi1)
+
         Float_t fPhi1;         // lower phi limit
         Float_t fDphi1;        // range in phi
         Int_t   fNz;           // number of z segments
-        Float_t *fRmin;        // pointer to array of inside radiuses
-        Float_t *fRmax;        // pointer to array of outside radiuses
-        Float_t *fDz;          // pointer to array of half lengths in z
+        Float_t *fRmin;        //[fNz] pointer to array of inside radiuses
+        Float_t *fRmax;        //[fNz] pointer to array of outside radiuses
+        Float_t *fDz;          //[fNz] pointer to array of half lengths in z
         Int_t   fNdiv;         // number of divisions
         virtual void    MakeTableOfCoSin();  // Create the table of the fSiTab; fCoTab
+        virtual void    FillTableOfCoSin(Double_t phi, Double_t angstep,Int_t n); // Fill the table of cosin
         virtual void    PaintGLPoints(Float_t *vertex);
 
     public:
         TPCON();
-        TPCON(Text_t *name, Text_t *title, Text_t *material, Float_t phi1, Float_t dphi1, Int_t nz);
+        TPCON(const char *name, const char *title, const char *material, Float_t phi1, Float_t dphi1, Int_t nz);
         virtual ~TPCON();
 
         virtual void    DefineSection(Int_t secNum, Float_t z, Float_t rmin, Float_t rmax);

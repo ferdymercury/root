@@ -1,5 +1,5 @@
-/*CMZ :  2.22/10 23/07/99  14.42.26  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   23/07/99*/
+/*CMZ :  2.23/10 10/12/99  18.00.16  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   10/12/99*/
 /***************************************************************************
 * graphbuf.h
 *
@@ -20,9 +20,17 @@
 *
 ****************************************************************************/
 
+
 #ifndef G__GRAPHBUF_H
 #define G__GRAPHBUF_H
 
+#ifndef G__ARRAY_H
+class array;
+#endif
+
+#ifndef G__CARRAY_H
+class carray;
+#endif
 
 #define G__ARRAYMAX 100
 

@@ -1,3 +1,8 @@
+//*CMZ :  2.23/12 26/01/2000  09.24.07  by  Rene Brun
+//*CMZ :  2.23/11 03/01/2000  15.55.39  by  Rene Brun
+//*CMZ :  2.23/09 21/11/99  19.53.47  by  Fons Rademakers
+//*CMZ :  2.23/04 07/10/99  18.15.43  by  Rene Brun
+//*CMZ :  2.23/00 03/08/99  12.13.32  by  Rene Brun
 //*CMZ :  2.20/06 17/12/98  09.30.50  by  Rene Brun
 //*CMZ :  2.20/05 12/12/98  18.29.08  by  Rene Brun
 //*CMZ :  2.20/04 11/12/98  12.18.12  by  Rene Brun
@@ -6,22 +11,17 @@
 #ifndef ROOT_TTreeViewer
 #define ROOT_TTreeViewer
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -59,6 +59,8 @@ class TPaveVar;
 class TTreeViewer : public TCanvas, public TAttText {
 
 protected:
+   enum { kDrawExecuting = BIT(17) };
+
    TString     fTreeName;       //Name of the TTree to be viewed
    TTree       *fTree;          //!pointer to the TTree
    TButton     *fDraw;          //Pointer to the Draw button
@@ -71,11 +73,12 @@ protected:
    TButton     *fY;             //Pointer to the Y button
    TButton     *fZ;             //Pointer to the Z button
    TButton     *fW;             //Pointer to the W button
-   TButton     *fCpad;          //Pointer to the button referencing the drawing pad
    TButton     *fHist;          //Pointer to the Histogram button
+   TButton     *fRecord;        //Pointer to the Record button
    TSlider     *fSlider;        //Pointer to the Event slider
    TTimer      *fTimer;         //!Pointer to timer
    Int_t        fTimerInterval; //Timer interval in milliseconds
+   Bool_t       fRecordFlag;    //Indication to record the Draw command
 
 public:
    TTreeViewer();
@@ -98,15 +101,16 @@ public:
    TButton       *GetY()       {return fY;}
    TButton       *GetZ()       {return fZ;}
    TButton       *GetW()       {return fW;}
-   TButton       *GetCpad()    {return fCpad;}
    TButton       *GetHist()    {return fHist;}
+   TButton       *GetRecord()  {return fRecord;}
    TSlider       *GetSlider()  {return fSlider;}
    TTimer        *GetTimer()   {return fTimer;}
-   virtual const Text_t  *GetTreeName() const {return fTreeName.Data();}
+   virtual const char  *GetTreeName() const {return fTreeName.Data();}
    virtual void   MakeClass(const char *classname);  // *MENU*
    virtual void   Reorganize();  // *MENU*
    virtual void   SetTimerInterval(Int_t msec=333) {fTimerInterval=msec;} // *MENU*
-   virtual void   SetTreeName(const Text_t *treename); // *MENU*
+   virtual void   SetTreeName(const char *treename); // *MENU*
+   virtual void   ToggleRecordCommand();
 
    //dummies
    virtual void   Divide(Int_t nx=1, Int_t ny=1, Float_t xmargin=0.01, Float_t ymargin=0.01, Int_t color=0);

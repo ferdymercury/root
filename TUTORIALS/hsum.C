@@ -1,3 +1,4 @@
+//*CMZ :  2.23/09 10/11/99  11.31.34  by  Rene Brun
 //*CMZ :  2.22/08 07/07/99  12.16.08  by  Rene Brun
 //*CMZ :  2.20/00 11/11/98  17.26.44  by  Rene Brun
 //*CMZ :  1.03/01 13/08/97  14.27.35  by  Rene Brun
@@ -59,7 +60,7 @@
      }
   }
   slider->SetRange(0,1);
-  c1->RedrawAxis();
+  total->Draw("sameaxis"); // to redraw axis hidden by teh fill area
   c1->Modified();
   gBenchmark->Show("hsum");
 }

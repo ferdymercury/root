@@ -1,24 +1,24 @@
+//*CMZ :  2.23/12 26/01/2000  10.08.58  by  Rene Brun
+//*CMZ :  2.23/11 11/01/2000  08.53.01  by  Valery Fine(fine@mail.cern.ch)
+//*CMZ :  2.23/07 24/10/99  18.23.21  by  Valery Fine(fine@mail.cern.ch)
+//*CMZ :  2.23/04 13/10/99  16.01.03  by  Fons Rademakers
+//*CMZ :  2.23/03 13/09/99  14.37.12  by  Rene Brun
+//*CMZ :  2.23/02 02/09/99  15.54.28  by  Rene Brun
 //*CMZ :  2.22/01 11/04/99  21.23.25  by  Valery Fine(fine@mail.cern.ch)
 //*CMZ :  2.21/06 12/02/99  17.22.36  by  Valery Fine(fine@vxcern.cern.ch)
-//*CMZ :  1.03/09 16/12/97  11.47.23  by  Valery Fine(fine@mail.cern.ch)
 //*-- Author :    Valery Fine   11/03/96
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 #include "OptimizeOff.h"
@@ -243,15 +243,15 @@ LRESULT APIENTRY TGWin32WindowsObject::OnRootEditInput
 
   if (!(flpInstr && lstrlen(flpInstr)))
   {
-	  flpROOTString->Release();
-	  return 0;
+          flpROOTString->Release();
+          return 0;
   }
   fLenLine = 0;
 
   if (fEditCtrl) {
-	  UnRegisterControlItem(fEditCtrl);
-	  delete fEditCtrl;
-	  fEditCtrl =0;
+          UnRegisterControlItem(fEditCtrl);
+          delete fEditCtrl;
+          fEditCtrl =0;
   }
   // Convert from the pixel to the relative cooridunat
   UInt_t iw,ih;
@@ -261,15 +261,15 @@ LRESULT APIENTRY TGWin32WindowsObject::OnRootEditInput
   x = Float_t(fix0)/winsize.right;
 //           y = Float_t(winsize.bottom-fiy0)/winsize.bottom -(fdwAscent);
   y = (Float_t(fiy0)/winsize.bottom);
-  gGXW->GetTextExtent(iw,ih,flpInstr);
+  gVirtualX->GetTextExtent(iw,ih,flpInstr);
   w = Float_t(iw)/winsize.right;
   h = Float_t(ih)/winsize.bottom;
   // Clean buffer. Delete all right blanks in there
   int len_text = flpInstr ? lstrlen(flpInstr) : 0;
   if (len_text > 0 ) {
-	  int il=len_text;
-	  while (il && (flpInstr[il-1] == ' ' || flpInstr[il-1] == 0))
-	  { flpInstr[il] = 0; il--;}
+          int il=len_text;
+          while (il && (flpInstr[il-1] == ' ' || flpInstr[il-1] == 0))
+          { flpInstr[il] = 0; il--;}
   }
   // set size in WM_SIZE message
   fEditCtrl = new TWin32SimpleEditCtrl(this,flpInstr,len_text,x,y,w,h);
@@ -308,7 +308,7 @@ LRESULT APIENTRY TGWin32WindowsObject::OnRootEditInput
                      flpROOTString->IncBreakKey();
 
                      fSetTextInput = FALSE;
-					 fEditCtrl->GetText(flpInstr);
+                                         fEditCtrl->GetText(flpInstr);
                      ::ShowWindow(fEditCtrl->GetWindow(),SW_HIDE);
                      // delete fEditCtrl; fEditCtrl = 0;
                      flpROOTString->Release();
@@ -352,6 +352,8 @@ void TGWin32WindowsObject::CreateWindowsObject(TGWin32 *lpTGWin32, Int_t x, Int_
   fMouseActive = kTRUE;
 //  fCanvas      = 0;
   fMenu        = 0;  // No menu at this point
+  fContextMenu = 0;
+  fStaticMenuItems = 0;
   fStatusBar   = 0;  // No status bar at this point
 
   fDwStyle     = WS_OVERLAPPEDWINDOW | WS_VISIBLE; // window style
@@ -540,6 +542,11 @@ LRESULT APIENTRY TGWin32WindowsObject::OnChar
 //*-*  Windows Procedure to manage: WM_CHAR
 //*-*
  if (fSetTextInput) return OnRootTextInput(hwnd, uMsg, wParam, lParam);
+ TCanvas *canvas = 0;
+ if (canvas=GetCanvas()) {
+    canvas->HandleInput(kKeyPress,Int_t(wParam),Int_t(lParam & 0xff));
+    return 0;
+ }
  return DefWindowProc(hwnd, uMsg, wParam, lParam);
 }
 //______________________________________________________________________________
@@ -919,7 +926,7 @@ LRESULT APIENTRY TGWin32WindowsObject::OnSysCommand
             sprintf(cmd,"TCanvas *c=(TCanvas *)%#16x; delete c;",canvas);
             printf(" OnSysCommand %s \n", cmd);
 //                                      gInterpreter->ProcessLineAsynch(cmd);
-            gInterpreter->ProcessLine(cmd);
+            gROOT->ProcessLine(cmd);
         }
         return DefWindowProc(hwnd,uMsg, wParam, lParam);
     }
@@ -1204,7 +1211,7 @@ void TGWin32WindowsObject::W32_CreateStatusBar(Int_t *parts, Int_t nparts)
 }
 
 //______________________________________________________________________________
-void  TGWin32WindowsObject::W32_DrawBox(int x1, int y1, int x2, int y2, TGXW::EBoxMode mode){ }
+void  TGWin32WindowsObject::W32_DrawBox(int x1, int y1, int x2, int y2, TVirtualX::EBoxMode mode){ }
 void  TGWin32WindowsObject::W32_DrawCellArray(int x1, int y1, int x2, int y2, int nx, int ny, int *ic){ }
 void  TGWin32WindowsObject::W32_DrawFillArea(int n, TPoint *xy){ }
 //______________________________________________________________________________
@@ -1222,7 +1229,7 @@ void  TGWin32WindowsObject::W32_DrawPolyLine(int n, TPoint *xy){ ; }
 
 //______________________________________________________________________________
 void  TGWin32WindowsObject::W32_DrawPolyMarker(int n, TPoint *xy){ }
-void  TGWin32WindowsObject::W32_DrawText(int x, int y, float angle, float mgn, const char *text, TGXW::ETextMode mode){ }
+void  TGWin32WindowsObject::W32_DrawText(int x, int y, float angle, float mgn, const char *text, TVirtualX::ETextMode mode){ }
 void  TGWin32WindowsObject::W32_GetCharacterUp(Float_t &chupx, Float_t &chupy){ }
 Int_t TGWin32WindowsObject::W32_GetDoubleBuffer()
 {
@@ -1401,7 +1408,7 @@ void  TGWin32WindowsObject::W32_SetDoubleBuffer(int mode)
 //______________________________________________________________________________
 void  TGWin32WindowsObject::W32_SetDoubleBufferOFF(){ }
 void  TGWin32WindowsObject::W32_SetDoubleBufferON(){ }
-void  TGWin32WindowsObject::W32_SetDrawMode(TGXW::EDrawMode mode){ }
+void  TGWin32WindowsObject::W32_SetDrawMode(TVirtualX::EDrawMode mode){ }
 void  TGWin32WindowsObject::W32_SetFillColor(Color_t cindex){ }
 void  TGWin32WindowsObject::W32_SetFillStyle(Style_t style){ }
 void  TGWin32WindowsObject::W32_SetLineColor(Color_t cindex){ }
@@ -1414,7 +1421,7 @@ void  TGWin32WindowsObject::W32_SetMarkerStyle(Style_t markerstyle){ }
 void  TGWin32WindowsObject::W32_SetRGB(int cindex, float r, float g, float b){ }
 void  TGWin32WindowsObject::W32_SetTextAlign(Short_t talign){ }
 void  TGWin32WindowsObject::W32_SetTextColor(Color_t cindex){ }
-Int_t TGWin32WindowsObject::W32_SetTextFont(char *fontname, TGXW::ETextSetMode mode){return 0;}
+Int_t TGWin32WindowsObject::W32_SetTextFont(char *fontname, TVirtualX::ETextSetMode mode){return 0;}
 void  TGWin32WindowsObject::W32_SetTextFont(Int_t fontnumber){ }
 void  TGWin32WindowsObject::W32_SetTextSize(Float_t textsize){ }
 //______________________________________________________________________________
@@ -1512,7 +1519,7 @@ void TGWin32WindowsObject::W32_ShowStatusBar(Bool_t show)
 }
 
 //______________________________________________________________________________
-void  TGWin32WindowsObject::W32_SetStatusText(Text_t *text, Int_t partidx, Int_t stype)
+void  TGWin32WindowsObject::W32_SetStatusText(const char *text, Int_t partidx, Int_t stype)
 {
     if (fStatusBar)
        fStatusBar->SetText(text, partidx,stype);

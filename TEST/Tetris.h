@@ -1,3 +1,4 @@
+//*CMZ :  2.23/02 02/09/99  17.26.16  by  Rene Brun
 //*CMZ :  2.00/12 07/10/98  13.01.02  by  Fons Rademakers
 //*-- Author :    Valeriy Onuchin & Fons Rademakers   04/10/98
 
@@ -23,6 +24,7 @@
 #include <TGFrame.h>
 #include <TRandom.h>
 #include <TButton.h>
+#include <TWbox.h>
 #include <TText.h>
 #include <TSystem.h>
 

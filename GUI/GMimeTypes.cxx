@@ -1,22 +1,19 @@
+//*CMZ :  2.23/02 02/09/99  00.30.58  by  Fons Rademakers
+//*CMZ :  2.23/01 23/08/99  18.49.39  by  Fons Rademakers
 //*CMZ :  2.00/00 07/03/98  18.48.27  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   18/01/98
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 //*CMZ :  2.00/00 16/02/98  00.17.08  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   27/12/97
@@ -60,6 +57,7 @@ TGMimeTypes::TGMimeTypes(TGClient *client, const char *filename)
    char     mime[1024];
    char     pattern[256];
    char     icon[256];
+   char     sicon[256];
    char     action[256];
    char    *s;
 
@@ -99,20 +97,29 @@ TGMimeTypes::TGMimeTypes(TGClient *client, const char *filename)
             delete [] s;
          }
          cnt++;
-      }
-      if (!strncmp(s, "icon", 4)) {
+      } else if (!strncmp(s, "icon", 4)) {
          if (!(s = strchr(line, '='))) {
             Error("TGMimeTypes", "malformed icon line, = missing");
             icon[0] = 0;
          } else {
             s++;
             s = Strip(s);
-            strcpy(icon, s);
+            char *s2;
+            if ((s2 = strchr(s, ' '))) {
+               *s2 = 0;
+               strcpy(icon, s);
+               s2++;
+               s2 = Strip(s2);
+               strcpy(sicon, s2);
+               delete [] s2;
+            } else {
+               strcpy(icon, s);
+               strcpy(sicon, s);
+            }
             delete [] s;
          }
          cnt++;
-      }
-      if (!strncmp(s, "action", 6)) {
+      } else if (!strncmp(s, "action", 6)) {
          if (!(s = strchr(line, '='))) {
             Error("TGMimeTypes", "malformed action line, = missing");
             action[0] = 0;
@@ -129,11 +136,11 @@ TGMimeTypes::TGMimeTypes(TGClient *client, const char *filename)
          if (strchr(pattern, ' ')) {
             char *tmppattern = strtok(pattern, " ");
             while (tmppattern && (*tmppattern != ' ')) {
-               AddType(mime, tmppattern, icon, action);
+               AddType(mime, tmppattern, icon, sicon, action);
                tmppattern = strtok(0, " ");
             }
          } else {
-            AddType(mime, pattern, icon, action);
+            AddType(mime, pattern, icon, sicon, action);
          }
       }
    }
@@ -181,7 +188,7 @@ const TGPicture *TGMimeTypes::GetIcon(const char *filename, Bool_t small_icon)
 
    if ((mime = Find(filename))) {
       if (small_icon)
-         mypic = fClient->GetPicture(mime->fIcon.Data(), 16, 16);
+         mypic = fClient->GetPicture(mime->fSIcon.Data(), 16, 16);
       else
          mypic = fClient->GetPicture(mime->fIcon.Data(), 32, 32);
       return mypic;
@@ -230,6 +237,10 @@ void TGMimeTypes::Print(Option_t *)
    while ((m = (TGMime *) next())) {
       printf("Type:    %s\n", m->fType.Data());
       printf("Pattern: %s\n", m->fPattern.Data());
+      if (m->fIcon != m->fSIcon)
+         printf("Icon:    %s %s\n", m->fIcon.Data(), m->fSIcon.Data());
+      else
+         printf("Icon:    %s\n",    m->fIcon.Data());
       printf("Action:  %s\n", m->fAction.Data());
       printf("------------\n\n");
    }
@@ -263,7 +274,10 @@ void TGMimeTypes::SaveMimes()
    while ((m = (TGMime *) next())) {
       fprintf(fp, "%s\n",            m->fType.Data());
       fprintf(fp, "pattern = %s\n",  m->fPattern.Data());
-      fprintf(fp, "icon = %s\n",     m->fIcon.Data());
+      if (m->fIcon != m->fSIcon)
+         fprintf(fp, "icon = %s %s\n", m->fIcon.Data(), m->fSIcon.Data());
+      else
+         fprintf(fp, "icon = %s\n",    m->fIcon.Data());
       fprintf(fp, "action = %s\n\n", m->fAction.Data());
    }
 
@@ -273,8 +287,8 @@ void TGMimeTypes::SaveMimes()
 }
 
 //______________________________________________________________________________
-void TGMimeTypes::AddType(const char *type, const char *pattern,
-                          const char *icon, const char *action)
+void TGMimeTypes::AddType(const char *type, const char *pattern, const char *icon,
+                          const char *sicon, const char *action)
 {
    // Add a mime type to the list of mime types.
 
@@ -283,6 +297,7 @@ void TGMimeTypes::AddType(const char *type, const char *pattern,
   mime->fType    = type;
   mime->fPattern = pattern;
   mime->fIcon    = icon;
+  mime->fSIcon   = sicon;
   mime->fAction  = action;
 
   mime->fReg = new TRegexp(pattern, kTRUE);

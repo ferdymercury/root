@@ -1,10 +1,9 @@
+*CMZ :  2.23/05 19/10/99  18.52.12  by  Rene Brun
+*CMZ :  2.23/04 11/10/99  02.22.43  by  Fons Rademakers
+*CMZ :  2.23/03 22/09/99  16.33.47  by  Rene Brun
+*CMZ :  2.23/00 02/08/99  10.39.06  by  Rene Brun
 *CMZ :  2.22/08 06/07/99  17.34.19  by  Rene Brun
 *CMZ :  2.22/07 30/06/99  18.09.11  by  Fons Rademakers
-*CMZ :  2.22/04 01/06/99  11.18.51  by  Fons Rademakers
-*CMZ :  2.21/03 20/01/99  14.43.07  by  Fons Rademakers
-*CMZ :  2.20/00 22/11/98  18.40.46  by  Fons Rademakers
-*CMZ :  2.00/10 27/06/98  19.20.45  by  Fons Rademakers
-*CMZ :  2.00/09 26/06/98  19.07.30  by  Fons Rademakers
 *-- Author :    Fons Rademakers   21/06/98
 macro install_linkdef
 
@@ -17,8 +16,7 @@ ctot BASE1_LinkDef
 ctot BASE2_LinkDef
 ctot CONT_LinkDef
 ctot G1_LinkDef
-ctot -S G2_LinkDef
-ctot G3_LinkDef
+ctot G2_LinkDef
 ctot G3D_LinkDef
 ctot GPAD_LinkDef
 ctot H_LinkDef
@@ -27,21 +25,29 @@ ctot MATRIX_LinkDef
 ctot META_LinkDef
 ctot MINUIT_LinkDef
 ctot NET_LinkDef
+ctot HISTPAINTER_LinkDef
+ctot PHYSICS_LinkDef
+ctot TREEPLAYER_LinkDef
+ctot TREEVIEWER_LinkDef
+ctot POSTSCRIPT_LinkDef
 ctot PROOF_LinkDef
 ctot RINT_LinkDef
 ctot TREE_LinkDef
 ctot UNIX_LinkDef
 ctot EG_LinkDef
 ctot PYTHIA_LinkDef
+ctot PYTHIA6_LinkDef
 ctot VENUS_LinkDef
 ctot X11_LinkDef
 ctot X11TTF_LinkDef
+ctot X3D_LinkDef
 ctot GUI1_LinkDef
 ctot GUI2_LinkDef
 ctot GUI3_LinkDef
 ctot RFIO_LinkDef
-ctot PHYSICS_LinkDef
-ctot POSTSCRIPT_LinkDef
+ctot THREAD_LinkDef
+ctot WIN32_LinkDef
+ctot WINNT_LinkDef
 
 shell 'touch -t 199401010000 src/*LinkDef* src/G__TypeInfo.h; if [ $? != 0 ];then _
        touch -t 010100001994 src/*LinkDef* src/G__TypeInfo.h; fi'

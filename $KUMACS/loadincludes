@@ -1,8 +1,8 @@
+*CMZ :  2.23/04 11/10/99  01.57.44  by  Fons Rademakers
 *CMZ :  2.22/06 21/06/99  17.09.56  by  Rene Brun
 *CMZ :  2.00/09 19/06/98  11.05.50  by  Rene Brun
 *CMZ :  2.00/06 12/05/98  17.02.12  by  Rene Brun
 *CMZ :  2.00/00 05/03/98  17.26.27  by  Fons Rademakers
-*CMZ :  1.03/04 19/09/97  11.53.47  by  Rene Brun
 *-- Author :    Rene Brun   04/12/95
 macro loadincludes 1=-
 
@@ -28,8 +28,6 @@ if [machine] = 'HPUX' .OR. [machine] = 'IBMRT' .OR. [machine] = 'SOLARIS' .OR. _
 *** nothing for time being
 elseif [machine] = 'WinNT' then
    seq Win32 IncWin32
-elseif [machine] = 'Win95' then
-   seq Win95 Win32 IncWin32
 elseif [machine] = 'MAC' then
    seq MAC
 elseif [machine] = 'VMS' then

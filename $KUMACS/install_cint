@@ -1,9 +1,8 @@
+*CMZ :  2.23/04 08/10/99  21.08.29  by  Fons Rademakers
 *CMZ :  2.22/04 03/06/99  16.16.16  by  Fons Rademakers
 *CMZ :  2.22/01 30/04/99  15.23.34  by  Fons Rademakers
 *CMZ :  2.20/05 15/12/98  18.02.14  by  Rene Brun
 *CMZ :  2.00/09 19/06/98  10.54.47  by  Rene Brun
-*CMZ :  2.00/06 12/05/98  18.05.59  by  Rene Brun
-*CMZ :  1.00/07 27/03/97  17.18.25  by  Rene Brun
 *-- Author :    Rene Brun   19/07/96
 macro install_cint 1=- 2=opt
 
@@ -23,8 +22,11 @@ endif
 
 if [machine] = 'IBMPC' then
    machine = 'WinNT'
-   remove $ROOTSYS\bin\cint.exe $ROOTSYS\src\CINT_* cint\include\*
+   remove $ROOTSYS\bin\cint.exe
    remove $ROOTSYS\src\CINT_*
+   remove $ROOTSYS\cint\include\*
+   remove $ROOTSYS\cint\lib\prec_stl\*
+   remove $ROOTSYS\cint\stl\*
 if [LOGFILE] = 'log' then
    set install_cint.bat -xarcl
 endif
@@ -32,8 +34,12 @@ elseif [machine] = 'VMS' then
    sh delete/log $ROOTSYS[bin]cint.exe;*
    sh delete/log $ROOTSYS[src]CINT_*;*
    sh delete/log $ROOTSYS[cint.include]*.*;*
+   sh delete/log $ROOTSYS[cint.lib.prec_stl]*.*;*
+   sh delete/log $ROOTSYS[cint.stl]*.*;*
 else
-   remove $ROOTSYS/bin/cint $ROOTSYS/src/CINT_* cint/include/*
+   remove $ROOTSYS/bin/cint $ROOTSYS/src/CINT_*
+   remove $ROOTSYS/cint/include/* $ROOTSYS/cint/lib/prec_stl/*
+   remove $ROOTSYS/cint/stl/*
 endif
 
 *sel . [1]
@@ -65,12 +71,7 @@ else
    bind_lib Cint CINT_*.o
 +SELF, IF=WIN32.
 *  Create Cint DLL library
-if [DEBUG] = 'yes' then
- pdb = '%ROOTSYS%\bin\Root_Cint.pdb'
-else
- pdb = 'NONE'
-endif
-   shell [LD] [SLOPT] /PDB:[pdb] [LDOUTPUTOPT]$ROOTSYS\bin\Root_Cint.[DLLSUF] $ROOTSYS\src\Cint_*.[OBJSUF] $ROOTSYS\lib\Root_Cint.exp
+   exec bind_dll Cint CINT_*.o
 +SELF.
 endif
 
@@ -136,7 +137,7 @@ else
   seq -I cint/stl/*.h
 endif
 
-* export std version of STL headers (i.e. the ones with .h extension)
+* export std version of STL headers (i.e. the ones without .h extension)
 seq .
 cd /cintstdstl
 if [OS]='VMS' then
@@ -289,6 +290,7 @@ else
    cd ..
    lcd cint
    ctot -s cintutils/makeinfo
+   shell del MAKEINFO
    shell ren MAKEINFO.txt MAKEINFO
    lcd include
    ctot -s cintutils/iosenum

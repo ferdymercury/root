@@ -1,3 +1,4 @@
+*CMZ :  2.23/09 25/11/99  18.16.50  by  Fons Rademakers
 *CMZ :  2.00/09 25/06/98  18.42.02  by  Fons Rademakers
 *-- Author :    Fons Rademakers   25/06/98
 #ifdef __CINT__
@@ -18,5 +19,8 @@
 #pragma link C++ class TUrl;
 #pragma link C++ class TNetFile;
 #pragma link C++ class TWebFile;
+#pragma link C++ class TSQLServer;
+#pragma link C++ class TSQLResult;
+#pragma link C++ class TSQLRow;
 
 #endif

@@ -1,0 +1,282 @@
+*CMZ :  2.23/09 20/11/99  11.24.07  by  Fons Rademakers
+*CMZ :  2.23/07 22/10/99  17.37.50  by  Fons Rademakers
+*CMZ :  2.23/00 08/08/99  21.55.25  by  Fons Rademakers
+*-- Author :    Fons Rademakers   28/07/99
+#! /bin/sh
+
+# Extremely simple configure script. It just makes sure include is
+# a link to src and lists the possible Makefiles.
+
+confhelp() {
+    echo "Usage:     $0 <architecture> [flag=value] "
+    echo ""
+    echo "    FLAG           DESCRIPTION              DEFAULT"
+    echo "    --prefix       Installation prefix      (/usr/local)"
+    echo "    --bindir       Binary installation dir  (<prefix>/bin)"
+    echo "    --libdir       Library installation dir (<prefix>/lib/root)"
+    echo "    --incdir       Header installation dir  (<prefix>/include/root)"
+    echo "    --etcdir       Config installation dir  (/etc/root)"
+    echo "    --datadir      Data installation dir    (<prefix>/share/root)"
+    echo "    --macrodir     Macro installation dir   (<datadir>/macros)"
+    echo "    --cintincdir   CINT interpeted headers  (<datadir>/cint)"
+    echo "    --iconpath     Icon installation dir    (<datadir>/icons)"
+    echo "    --srcdir       Sources installation dir (<datadir>/src)"
+    echo "    --docdir       Documentation            (<prefix>/doc)"
+    echo "    --testdir      Tests                    (<prefix>/doc/root/test)"
+    echo "    --tutdir       Tutorials                (<prefix>/doc/root/tutorial)"
+    echo ""
+    echo "    --preserve-include   don't remove existing include directory"
+    echo "    --with-ttf-incdir    TTF support, location of freetype.h"
+    echo "    --with-ttf-libdir    TTF support, location of libtff.so"
+    echo "    --with-ttf-fontdir   TTF support, location of TTF fonts"
+    echo "    --with-opengl-incdir G3D support, location of gl.h"
+    echo "    --with-opengl-libdir G3D support, location of libMesaGL.so"
+    echo "    --with-cern-libdir   HBOOK conv,  location of CERN libs"
+    echo "    --with-rfio          RFIO server support"
+    echo "    --with-thread        Thread support"
+    echo "    --with-sys-iconpath  Extra icon path"
+    echo ""
+    cat AA_ARCHS
+}
+
+if [ $# -lt 1 ] ; then
+    echo "You must give architecture as first argument - try $0 --help"
+    exit 1
+else
+    case $1 in
+    -h|--help) confhelp ; exit 0 ;;
+    *)  if `grep "^$1" AA_ARCHS >/dev/null 2>&1` ; then
+	    arch=$1
+	    echo "Configuring for $arch"
+	    shift
+	else
+	    echo "Invalid architecture. Try $0 --help"
+	    exit 1
+	fi
+	;;
+    esac
+fi
+
+cp -f Makefile.in Makefile.tmp
+cp -f config.in config.tmp
+
+preserveinc=0
+
+if [ $# -gt 0 ] ; then
+  while [ "$1" != "" ] ; do
+    case "$1" in
+    -*=*) optarg=`echo "$1" | sed 's/[-_a-zA-Z0-9]*=//'` ;;
+    *) optarg= ;;
+    esac
+
+    case $1 in
+    --help|-h) confhelp ;   exit 0 ;;
+    --preserve-include)     preserveinc=1         ;;
+    --with-ttf-incdir=*)    ttfincdir=$optarg     ;;
+    --with-ttf-libdir=*)    ttflibdir=$optarg     ;;
+    --with-ttf-fontdir=*)   ttffontdir=$optarg    ;;
+    --with-opengl-incdir=*) openglincdir=$optarg  ;;
+    --with-opengl-libdir=*) opengllibdir=$optarg  ;;
+    --with-cern-libdir=*)   cernlibdir=$optarg    ;;
+    --with-rfio=*)          rfio=$optarg          ;;
+    --with-thread=*)        thread=$optarg        ;;
+    --with-sys-iconpath=*)  extraiconpath=$optarg ;;
+    --prefix*)      haveconfig=-DHAVE_CONFIG ; prefix=$optarg      ;;
+    --bindir=*)     haveconfig=-DHAVE_CONFIG ; bindir=$optarg      ;;
+    --libdir=*)     haveconfig=-DHAVE_CONFIG ; libdir=$optarg      ;;
+    --incdir=*)     haveconfig=-DHAVE_CONFIG ; incdir=$optarg      ;;
+    --etcdir=*)     haveconfig=-DHAVE_CONFIG ; etcdir=$optarg      ;;
+    --datadir=*)    haveconfig=-DHAVE_CONFIG ; datadir=$optarg     ;;
+    --macrodir=*)   haveconfig=-DHAVE_CONFIG ; macrodir=$optarg    ;;
+    --cintincdir=*) haveconfig=-DHAVE_CONFIG ; cintincdir=$optarg  ;;
+    --iconpath=*)   haveconfig=-DHAVE_CONFIG ; iconpath=$optarg    ;;
+    --srcdir=*)     haveconfig=-DHAVE_CONFIG ; srcdir=$optarg      ;;
+    --docdir=*)     haveconfig=-DHAVE_CONFIG ; docdir=$optarg      ;;
+    --testdir=*)    haveconfig=-DHAVE_CONFIG ; testdir=$optarg     ;;
+    --tutdir=*)     haveconfig=-DHAVE_CONFIG ; tutdir=$optarg      ;;
+    *)  echo "Invalid option. Try $0 --help" ; exit 1 ;;
+    esac
+    shift
+  done
+fi
+
+if [ -n "$haveconfig" ] ; then
+    if [ -z "$prefix" ] ;       then prefix=/usr/local ; fi
+    if [ -z "$bindir" ] ;       then bindir=$prefix/bin ; fi
+    if [ -z "$libdir" ] ;       then libdir=$prefix/lib/root ; fi
+    if [ -z "$incdir" ] ;       then incdir=$prefix/include/root ; fi
+    if [ -z "$etcdir" ] ;       then etcdir=/etc/root ; fi
+    if [ -z "$datadir" ] ;      then datadir=$prefix/share/root ; fi
+    if [ -z "$macrodir" ] ;     then macrodir=$datadir/macros ; fi
+    if [ -z "$cintincdir" ] ;   then cintincdir=$datadir/cint; fi
+    if [ -z "$iconpath" ] ;     then iconpath=$datadir/icons ; fi
+    if [ -z "$srcdir" ] ;       then srcdir=$datadir/src ; fi
+    if [ -z "$ttflibdir" ] ;    then ttflibdir=$libdir ; fi
+    if [ -z "$tfffontdir" ] ;   then tfffontdir=$datadir/fonts ; fi
+    if [ -z "$docdir" ] ;       then docdir=$prefix/doc ; fi
+    if [ -z "$testdir" ] ;      then testdir=$docdir/root/test ; fi
+    if [ -z "$tutdir" ] ;       then tutdir=$docdir/root/tutorials ; fi
+
+    if [ -z "$ttfincdir" ] && [ -d $ROOTSYS/ttf/include ]; then
+       ttfincdir=\$\(ROOTSYS\)/ttf/include ; fi
+    if [ -z "$openglincdir" ] && [ -d $ROOTSYS/opengl/include ]; then
+       openglincdir=\$\(ROOTSYS\)/opengl/include ; fi
+    if [ -z "$cernlibdir" ] && [ -n "$CERNLIB" ] && [ -d $CERNLIB ]; then cernlibdir=$CERNLIB ; fi
+    if [ -z "$rfio" ] && [ -n "$RFIO" ]; then rfio="$RFIO" ; fi
+    if [ -z "$thread" ] && [ -n "$THREAD" ]; then thread="$THREAD" ; fi
+
+    sed -e "s|@cflags|-DHAVE_CONFIG|"                  \
+        -e "s|@ldflags@|-Wl,-rpath,$libdir @ldflags@|" \
+        < Makefile.tmp > Makefile.tmpp
+    mv Makefile.tmpp Makefile.tmp
+
+else
+    prefix=\$\(ROOTSYS\)
+    bindir=\$\(ROOTSYS\)/bin
+    libdir=\$\(ROOTSYS\)/lib
+    incdir=\$\(ROOTSYS\)/include
+    etcdir=\$\(ROOTSYS\)
+    datadir=\$\(ROOTSYS\)
+    macrodir=\$\(ROOTSYS\)/macros
+    cintincdir=\$\(ROOTSYS\)/cint
+    iconpath=\$\(ROOTSYS\)/icons
+    srcdir=\$\(ROOTSYS\)/src
+    docdir=\$\(ROOTSYS\)
+    testdir=\$\(ROOTSYS\)/test
+    tutdir=\$\(ROOTSYS\)/tutorials
+
+    if [ -z "$ttflibdir" ] ;    then ttflibdir=\$\(ROOTSYS\)/lib ; fi
+    if [ -z "$tfffontdir" ] ;   then tfffontdir=\$\(ROOTSYS\)/ttf/fonts ; fi
+    if [ -z "$ttfincdir" ] && [ -d $ROOTSYS/ttf/include ]; then
+       ttfincdir=\$\(ROOTSYS\)/ttf/include ; fi
+    if [ -z "$openglincdir" ] && [ -d $ROOTSYS/opengl/include ]; then
+       openglincdir=\$\(ROOTSYS\)/opengl/include ; fi
+    if [ -z "$cernlibdir" ] && [ -n "$CERNLIB" ] && [ -d $CERNLIB ]; then cernlibdir=$CERNLIB ; fi
+    if [ -z "$rfio" ] && [ -n "$RFIO" ]; then rfio="$RFIO" ; fi
+    if [ -z "$thread" ] && [ -n "$THREAD" ]; then thread="$THREAD" ; fi
+
+    sed -e "s|@cflags||" \
+        -e "s|@ldflags@||" \
+        < Makefile.tmp > Makefile.tmpp
+    mv Makefile.tmpp Makefile.tmp
+fi
+
+echo -n "Writing Makefile.config ... "
+sed -e "s|@architecture@|$arch|"         \
+    -e "s|@ldflags@|-L$libdir|"          \
+    -e "s|@bindir@|$bindir|"             \
+    -e "s|@libdir@|$libdir|"             \
+    -e "s|@incdir@|$incdir|"             \
+    -e "s|@etcdir@|$etcdir|"             \
+    -e "s|@datadir@|$datadir|"           \
+    -e "s|@macrodir@|$macrodir|"         \
+    -e "s|@cintincdir@|$cintincdir|"     \
+    -e "s|@iconpath@|$iconpath|"         \
+    -e "s|@srcdir@|$srcdir|"             \
+    -e "s|@ttflibdir@|$ttflibdir|"       \
+    -e "s|@tfffontdir@|$tfffontdir|"     \
+    -e "s|@ttfincdir@|$ttfincdir|"       \
+    -e "s|@opengllibdir@|$opengllibdir|" \
+    -e "s|@openglincdir@|$openglincdir|" \
+    -e "s|@cernlibdir@|$cernlibdir|"     \
+    -e "s|@rfio@|$rfio|"                 \
+    -e "s|@thread@|$thread|"             \
+    -e "s|@docdir@|$docdir|"             \
+    -e "s|@testdir@|$testdir|"           \
+    -e "s|@tutdir@|$tutdir|"             \
+    < Makefile.tmp > Makefile.config
+rm  Makefile.tmp
+echo "done"
+
+echo -n "Writing src/config.h ... "
+sed -e "s|@architecture@|$arch|"           \
+    -e "s|@prefix@|$prefix|"               \
+    -e "s|@bindir@|$bindir|"               \
+    -e "s|@libdir@|$libdir|"               \
+    -e "s|@incdir@|$incdir|"               \
+    -e "s|@etcdir@|$etcdir|"               \
+    -e "s|@datadir@|$datadir|"             \
+    -e "s|@macrodir@|$macrodir|"           \
+    -e "s|@cintincdir@|$cintincdir|"       \
+    -e "s|@iconpath@|$iconpath|"           \
+    -e "s|@srcdir@|$srcdir|"               \
+    -e "s|@ttffontdir@|$ttffontdir|"       \
+    -e "s|@ttflibdir@|$ttflibdir|"         \
+    -e "s|@extraiconpath@|$extraiconpath|" \
+    < config.tmp > src/config.h
+rm  config.tmp
+echo "done"
+
+if [ "X$ROOTSYS" = "X" ]; then
+  echo ""
+  echo "*** \$ROOTSYS must point to a directory containing a binary ROOT distribution"
+  echo ""
+  exit 1
+fi
+
+if [ $preserveinc -eq 0 ]; then
+   if [ ! -h include ]; then
+      echo -n "Linking include to src ... "
+      rm -rf include
+      ln -s src include
+      echo "done"
+   fi
+else
+   if [ ! -h include -a ! -d include ]; then
+      echo -n "Linking include to src ... "
+      rm -rf include
+      ln -s src include
+      echo "done"
+   fi
+fi
+
+if [ ! -d bin ]; then
+    echo -n "Creating bin ... "
+    mkdir bin
+    echo "done"
+fi
+if [ ! -d lib ]; then
+    echo -n "Creating lib ... "
+    mkdir lib
+    echo "done"
+fi
+
+
+inode1=`ls -id ${ROOTSYS} | awk '{ print $1 }'`
+inode2=`ls -id \`pwd\` | awk '{ print $1 }'`
+if [ -d ${ROOTSYS} ] && [ $inode1 -ne $inode2 ]; then
+   echo -n "Copying needed files from \$ROOTSYS ... "
+   cp -fp $ROOTSYS/lib/libXpm* $ROOTSYS/lib/libttf* lib
+   cp -fp $ROOTSYS/bin/rmkdepend bin
+   cp -fp $ROOTSYS/bin/root-config bin
+   cp -fp $ROOTSYS/cint/MAKEINFO cint
+   cp -fp $ROOTSYS/cint/include/iosenum.h cint/include
+   cp -fp $ROOTSYS/test/Makefile test
+   cp -fp $ROOTSYS/AA_* $ROOTSYS/ChangeLog .
+   (cd $ROOTSYS; tar cf - icons) | tar xpf -
+   (cd $ROOTSYS; tar cf - macros) | tar xpf -
+   if [ -L $ROOTSYS/ttf ]; then
+      (cd $ROOTSYS; tar cf - ttf) | tar xpf -
+   fi
+   if [ -L $ROOTSYS/opengl ]; then
+      (cd $ROOTSYS; tar cf - opengl) | tar xpf -
+   fi
+   echo "done"
+fi
+
+echo ""
+if [ -z "$ttfincdir" ] || [ -z "$openglincdir" ]; then
+   echo "To build the ROOT TrueType font and OpenGL add-on libraries see AA_INSTALL."
+   echo ""
+   echo ""
+fi
+
+# list the possible Makefiles
+echo "To build ROOT type:"
+echo ""
+echo "   gmake depend"
+echo "   gmake"
+echo "   gmake install"
+echo ""
+
+exit 0

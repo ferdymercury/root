@@ -1,25 +1,22 @@
+//*CMZ :  2.23/11 07/01/2000  17.43.57  by  Rene Brun
+//*CMZ :  2.23/04 04/10/99  14.39.48  by  Rene Brun
+//*CMZ :  2.23/02 02/09/99  15.54.25  by  Rene Brun
 //*CMZ :  2.21/05 09/02/99  02.03.13  by  Fons Rademakers
 //*CMZ :  2.21/00 28/12/98  17.12.49  by  Rene Brun
 //*CMZ :  2.20/05 15/12/98  09.17.19  by  Rene Brun
-//*CMZ :  1.03/09 10/12/97  12.23.42  by  Rene Brun
 //*-- Author :    Rene Brun   12/12/94
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 #include <stdlib.h>
@@ -27,8 +24,9 @@
 #include <iostream.h>
 
 #include "TROOT.h"
+#include "TBox.h"
 #include "TVirtualPad.h"
-#include "TGXW.h"
+#include "TVirtualX.h"
 #include "TClass.h"
 #include "TMath.h"
 
@@ -201,8 +199,12 @@ void TBox::ExecuteEvent(Int_t event, Int_t px, Int_t py)
 //     +--------------------------------------------+
 //    PD                    B                      PC
 //
+//  Note that this function is duplicated on purpose by TPad::ExecuteEvent.
+//  If somebody modifies this function, may be similar changes should also
+//  be applied to TPad::ExecuteEvent.
 
    if (!gPad) return;
+   if (!gPad->IsEditable() && event != kMouseEnter) return;
 
    const Int_t kMaxDiff = 5;
    const Int_t kMinSize = 20;
@@ -211,18 +213,10 @@ void TBox::ExecuteEvent(Int_t event, Int_t px, Int_t py)
    static Int_t px1p, px2p, py1p, py2p, pxlp, pylp, pxtp, pytp;
    static Bool_t PA, PB, PC, PD, T, L, R, B, INSIDE;
    Int_t  wx, wy;
-   TVirtualPad  *parent;
+   TVirtualPad  *parent = gPad;
    Bool_t doing_again = kFALSE;
    Bool_t opaque  = gPad->OpaqueMoving();
    Bool_t ropaque = gPad->OpaqueResizing();
-
-   if (InheritsFrom(TVirtualPad::Class())) {
-      parent = gPad->GetMother();
-      if (((TVirtualPad*)this)->GetXlowNDC() < 0 && event != kButton1Down) return;
-      if (((TVirtualPad*)this)->GetYlowNDC() < 0 && event != kButton1Down) return;
-   } else {
-      parent = gPad;
-   }
 
    HideToolTip(event);
 
@@ -241,13 +235,13 @@ again:
 
    case kButton1Down:
 
-      gGXW->SetLineColor(-1);
+      gVirtualX->SetLineColor(-1);
       TAttLine::Modify();  //Change line attributes only if necessary
       if (GetFillColor())
-         gGXW->SetLineColor(GetFillColor());
+         gVirtualX->SetLineColor(GetFillColor());
       else
-         gGXW->SetLineColor(1);
-      gGXW->SetLineWidth(2);
+         gVirtualX->SetLineColor(1);
+      gVirtualX->SetLineWidth(2);
 
       // No break !!!
 
@@ -363,67 +357,67 @@ again:
       wx = wy = 0;
 
       if (PA) {
-         if (!ropaque) gGXW->DrawBox(pxold, pyt, pxt, pyold, TGXW::kHollow);  // draw the old box
+         if (!ropaque) gVirtualX->DrawBox(pxold, pyt, pxt, pyold, TVirtualX::kHollow);  // draw the old box
          if (px > pxt-kMinSize) { px = pxt-kMinSize; wx = px; }
          if (py > pyt-kMinSize) { py = pyt-kMinSize; wy = py; }
          if (px < pxlp) { px = pxlp; wx = px; }
          if (py < pylp) { py = pylp; wy = py; }
-         if (!ropaque) gGXW->DrawBox(px   , pyt, pxt, py,    TGXW::kHollow);  // draw the new box
+         if (!ropaque) gVirtualX->DrawBox(px   , pyt, pxt, py,    TVirtualX::kHollow);  // draw the new box
       }
       if (PB) {
-         if (!ropaque) gGXW->DrawBox(pxl  , pyt, pxold, pyold, TGXW::kHollow);
+         if (!ropaque) gVirtualX->DrawBox(pxl  , pyt, pxold, pyold, TVirtualX::kHollow);
          if (px < pxl+kMinSize) { px = pxl+kMinSize; wx = px; }
          if (py > pyt-kMinSize) { py = pyt-kMinSize; wy = py; }
          if (px > pxtp) { px = pxtp; wx = px; }
          if (py < pylp) { py = pylp; wy = py; }
-         if (!ropaque) gGXW->DrawBox(pxl  , pyt, px ,  py,    TGXW::kHollow);
+         if (!ropaque) gVirtualX->DrawBox(pxl  , pyt, px ,  py,    TVirtualX::kHollow);
       }
       if (PC) {
-         if (!ropaque) gGXW->DrawBox(pxl  , pyl, pxold, pyold, TGXW::kHollow);
+         if (!ropaque) gVirtualX->DrawBox(pxl  , pyl, pxold, pyold, TVirtualX::kHollow);
          if (px < pxl+kMinSize) { px = pxl+kMinSize; wx = px; }
          if (py < pyl+kMinSize) { py = pyl+kMinSize; wy = py; }
          if (px > pxtp) { px = pxtp; wx = px; }
          if (py > pytp) { py = pytp; wy = py; }
-         if (!ropaque) gGXW->DrawBox(pxl  , pyl, px ,   py,    TGXW::kHollow);
+         if (!ropaque) gVirtualX->DrawBox(pxl  , pyl, px ,   py,    TVirtualX::kHollow);
       }
       if (PD) {
-         if (!ropaque) gGXW->DrawBox(pxold, pyold, pxt, pyl, TGXW::kHollow);
+         if (!ropaque) gVirtualX->DrawBox(pxold, pyold, pxt, pyl, TVirtualX::kHollow);
          if (px > pxt-kMinSize) { px = pxt-kMinSize; wx = px; }
          if (py < pyl+kMinSize) { py = pyl+kMinSize; wy = py; }
          if (px < pxlp) { px = pxlp; wx = px; }
          if (py > pytp) { py = pytp; wy = py; }
-         if (!ropaque) gGXW->DrawBox(px   , py ,   pxt, pyl, TGXW::kHollow);
+         if (!ropaque) gVirtualX->DrawBox(px   , py ,   pxt, pyl, TVirtualX::kHollow);
       }
       if (T) {
-         if (!ropaque) gGXW->DrawBox(px1, py1, px2, py2, TGXW::kHollow);
+         if (!ropaque) gVirtualX->DrawBox(px1, py1, px2, py2, TVirtualX::kHollow);
          py2 += py - pyold;
          if (py2 > py1-kMinSize) { py2 = py1-kMinSize; wy = py2; }
          if (py2 < py2p) { py2 = py2p; wy = py2; }
-         if (!ropaque) gGXW->DrawBox(px1, py1, px2, py2, TGXW::kHollow);
+         if (!ropaque) gVirtualX->DrawBox(px1, py1, px2, py2, TVirtualX::kHollow);
       }
       if (B) {
-         if (!ropaque) gGXW->DrawBox(px1, py1, px2, py2, TGXW::kHollow);
+         if (!ropaque) gVirtualX->DrawBox(px1, py1, px2, py2, TVirtualX::kHollow);
          py1 += py - pyold;
          if (py1 < py2+kMinSize) { py1 = py2+kMinSize; wy = py1; }
          if (py1 > py1p) { py1 = py1p; wy = py1; }
-         if (!ropaque) gGXW->DrawBox(px1, py1, px2, py2, TGXW::kHollow);
+         if (!ropaque) gVirtualX->DrawBox(px1, py1, px2, py2, TVirtualX::kHollow);
       }
       if (L) {
-         if (!ropaque) gGXW->DrawBox(px1, py1, px2, py2, TGXW::kHollow);
+         if (!ropaque) gVirtualX->DrawBox(px1, py1, px2, py2, TVirtualX::kHollow);
          px1 += px - pxold;
          if (px1 > px2-kMinSize) { px1 = px2-kMinSize; wx = px1; }
          if (px1 < px1p) { px1 = px1p; wx = px1; }
-         if (!ropaque) gGXW->DrawBox(px1, py1, px2, py2, TGXW::kHollow);
+         if (!ropaque) gVirtualX->DrawBox(px1, py1, px2, py2, TVirtualX::kHollow);
       }
       if (R) {
-         if (!ropaque) gGXW->DrawBox(px1, py1, px2, py2, TGXW::kHollow);
+         if (!ropaque) gVirtualX->DrawBox(px1, py1, px2, py2, TVirtualX::kHollow);
          px2 += px - pxold;
          if (px2 < px1+kMinSize) { px2 = px1+kMinSize; wx = px2; }
          if (px2 > px2p) { px2 = px2p; wx = px2; }
-         if (!ropaque) gGXW->DrawBox(px1, py1, px2, py2, TGXW::kHollow);
+         if (!ropaque) gVirtualX->DrawBox(px1, py1, px2, py2, TVirtualX::kHollow);
       }
       if (INSIDE) {
-         if (!opaque) gGXW->DrawBox(px1, py1, px2, py2, TGXW::kHollow);  // draw the old box
+         if (!opaque) gVirtualX->DrawBox(px1, py1, px2, py2, TVirtualX::kHollow);  // draw the old box
          Int_t dx = px - pxold;
          Int_t dy = py - pyold;
          px1 += dx; py1 += dy; px2 += dx; py2 += dy;
@@ -431,13 +425,13 @@ again:
          if (px2 > px2p) { dx = px2 - px2p; px1 -= dx; px2 -= dx; wx = px-dx; }
          if (py1 > py1p) { dy = py1 - py1p; py1 -= dy; py2 -= dy; wy = py-dy; }
          if (py2 < py2p) { dy = py2p - py2; py1 += dy; py2 += dy; wy = py+dy; }
-         if (!opaque) gGXW->DrawBox(px1, py1, px2, py2, TGXW::kHollow);  // draw the new box
+         if (!opaque) gVirtualX->DrawBox(px1, py1, px2, py2, TVirtualX::kHollow);  // draw the new box
       }
 
       if (wx || wy) {
          if (wx) px = wx;
          if (wy) py = wy;
-         gGXW->Warp(px, py);
+         gVirtualX->Warp(px, py);
       }
 
       pxold = px;
@@ -495,8 +489,8 @@ again:
       if (PA || PB || PC || PD || T || L || R || B)
          gPad->Modified(kTRUE);
 
-      gGXW->SetLineColor(-1);
-      gGXW->SetLineWidth(-1);
+      gVirtualX->SetLineColor(-1);
+      gVirtualX->SetLineWidth(-1);
 
       break;
 
@@ -506,7 +500,7 @@ again:
 
       while (1) {
          px = py = 0;
-         event = gGXW->RequestLocator(1, 1, px, py);
+         event = gVirtualX->RequestLocator(1, 1, px, py);
 
          ExecuteEvent(kButton1Motion, px, py);
 

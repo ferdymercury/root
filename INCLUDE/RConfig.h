@@ -1,15 +1,7 @@
-//*CMZ :  2.21/05 09/02/99  15.51.20  by  Fons Rademakers
-//*CMZ :  2.21/04 27/01/99  09.55.13  by  Fons Rademakers
-//*CMZ :  2.00/12 17/09/98  17.49.01  by  Fons Rademakers
-//*CMZ :  2.00/11 16/08/98  16.44.00  by  Rene Brun
-//*CMZ :  2.00/10 15/07/98  16.44.07  by  Rene Brun
-//*CMZ :  2.00/07 12/05/98  15.31.21  by  Fons Rademakers
-//*CMZ :  2.00/06 12/05/98  15.31.21  by  Rene Brun
-//*CMZ :  2.00/05 15/04/98  19.16.41  by  Rene Brun
-//*CMZ :  2.00/01 05/01/98  18.02.44  by  Fons Rademakers
-//*CMZ :  2.00/00 05/01/98  18.02.44  by  Rene Brun
-//*CMZ :  1.03/09 16/12/97  16.55.19  by  Rene Brun
-//*-- Author :    Fons Rademakers   24/07/95
+/*CMZ :  2.23/12 17/01/2000  11.16.01  by  Rene Brun*/
+/*CMZ :  2.23/09 17/11/99  15.43.42  by  Rene Brun*/
+/*CMZ :  2.23/04 12/10/99  08.22.04  by  Rene Brun*/
+/*-- Author :    Fons Rademakers   24/07/95*/
 
 #ifndef ROOT_RConfig
 #define ROOT_RConfig
@@ -21,6 +13,11 @@
  * Defines used by ROOT.                                                 *
  *                                                                       *
  *************************************************************************/
+
+#ifndef ROOT_RVersion
+#include "RVersion.h"
+#endif
+
 
 /*---- machines --------------------------------------------------------------*/
 
@@ -71,6 +68,9 @@
 #   define R__UNIX
 #   define NEED_STRING
 #   define NEED_SIGJMP
+#   if __SUNPRO_CC > 0x420
+#      define R__SOLARIS_CC50
+#   endif
 #endif
 
 #ifdef __sgi
@@ -101,6 +101,14 @@
 #   endif
 #endif
 
+#if defined(__Lynx__) && defined(__powerpc__)
+#   define R__LYNXOS
+#   define R__UNIX
+#   define ANSICPP
+#   define NEED_SIGJMP
+#   define NEED_STRCASECMP
+#endif
+
 #if defined(__FreeBSD__)
 #   define R__FBSD
 #   define R__UNIX
@@ -118,11 +126,11 @@
 #ifdef __GNUG__
 #   define R__GNU
 #   define ANSICPP
-#   if __GNUC_MINOR__ >= 90   /* egcs 1.0.3 */
+#   if __GNUC_MINOR__ >= 90    /* egcs 1.0.3 */
 #      define R__VECNEWDELETE    /* supports overloading of new[] and delete[] */
 #      define R__PLACEMENTDELETE /* supports overloading placement delete */
 #   endif
-#   if __GNUC_MINOR__ >= 91   /* egcs 1.1 */
+#   if __GNUC_MINOR__ >= 91    /* egcs 1.1 */
 #      define R__ANSISTREAM      /* ANSI C++ Standard Library conformant */
 #   endif
 #endif

@@ -1,22 +1,18 @@
+//*CMZ :  2.23/02 02/09/99  15.54.27  by  Rene Brun
 //*CMZ :  2.00/00 01/03/98  19.58.36  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   17/01/98
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 //*CMZ :  2.00/00 16/02/98  00.17.08  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   27/12/97
@@ -94,8 +90,8 @@ TGLVEntry::TGLVEntry(const TGWindow *p, const TGPicture *bigpic,
    fFontStruct = fgDefaultFontStruct;
 
    int max_ascent, max_descent;
-   fTWidth = gGXW->TextWidth(fFontStruct, fName->GetString(), fName->GetLength());
-   gGXW->GetFontProperties(fFontStruct, max_ascent, max_descent);
+   fTWidth = gVirtualX->TextWidth(fFontStruct, fName->GetString(), fName->GetLength());
+   gVirtualX->GetFontProperties(fFontStruct, max_ascent, max_descent);
    fTHeight = max_ascent + max_descent;
 
    if (fSubnames) {
@@ -103,7 +99,7 @@ TGLVEntry::TGLVEntry(const TGWindow *p, const TGPicture *bigpic,
          ;
       fCtw = new int[i];
       for (i = 0; fSubnames[i] != 0; ++i)
-         fCtw[i] = gGXW->TextWidth(fFontStruct, fSubnames[i]->GetString(),
+         fCtw[i] = gVirtualX->TextWidth(fFontStruct, fSubnames[i]->GetString(),
                                    fSubnames[i]->GetLength());
    } else {
       fCtw = 0;
@@ -161,7 +157,7 @@ void TGLVEntry::SetViewMode(EListViewMode viewMode)
          if (fSelPic) delete fSelPic;
          fSelPic = new TGSelectedPicture(fClient, fCurrent);
       }
-      gGXW->ClearWindow(fId);
+      gVirtualX->ClearWindow(fId);
       Resize(GetDefaultSize());
       fClient->NeedRedraw(this);
    }
@@ -188,21 +184,21 @@ void TGLVEntry::DoRedraw()
 
    if (fActive) {
       if (fSelPic) fSelPic->Draw(fId, fNormGC, ix, iy);
-      gGXW->SetForeground(fNormGC, fgDefaultSelectedBackground);
-      gGXW->FillRectangle(fId, fNormGC, lx, ly, fTWidth, fTHeight+1);
-      gGXW->SetForeground(fNormGC, fgSelPixel);
+      gVirtualX->SetForeground(fNormGC, fgDefaultSelectedBackground);
+      gVirtualX->FillRectangle(fId, fNormGC, lx, ly, fTWidth, fTHeight+1);
+      gVirtualX->SetForeground(fNormGC, fgSelPixel);
    } else {
       fCurrent->Draw(fId, fNormGC, ix, iy);
-      gGXW->SetForeground(fNormGC, fgWhitePixel);
-      gGXW->FillRectangle(fId, fNormGC, lx, ly, fTWidth, fTHeight+1);
-      gGXW->SetForeground(fNormGC, fgBlackPixel);
+      gVirtualX->SetForeground(fNormGC, fgWhitePixel);
+      gVirtualX->FillRectangle(fId, fNormGC, lx, ly, fTWidth, fTHeight+1);
+      gVirtualX->SetForeground(fNormGC, fgBlackPixel);
    }
 
    int max_ascent, max_descent;
-   gGXW->GetFontProperties(fFontStruct, max_ascent, max_descent);
+   gVirtualX->GetFontProperties(fFontStruct, max_ascent, max_descent);
    fName->Draw(fId, fNormGC, lx, ly + max_ascent);
 
-   gGXW->SetForeground(fNormGC, fgBlackPixel);
+   gVirtualX->SetForeground(fNormGC, fgBlackPixel);
 
    if (fViewMode == kLVDetails) {
       if (fSubnames && fCpos && fJmode && fCtw) {
@@ -270,7 +266,7 @@ TGLVContainer::TGLVContainer(const TGWindow *p, UInt_t w, UInt_t h,
 
    SetLayoutManager(new TGTileLayout(this, 8));
 
-   gGXW->GrabButton(fId, kAnyButton, kAnyModifier,
+   gVirtualX->GrabButton(fId, kAnyButton, kAnyModifier,
                     kButtonPressMask | kButtonReleaseMask |
                     kPointerMotionMask, kNone, kNone);
 }
@@ -411,14 +407,14 @@ Bool_t TGLVContainer::HandleButton(Event_t *event)
          fDragging = kTRUE;
          fX0 = fXf = fXp;
          fY0 = fYf = fYp;
-         gGXW->DrawRectangle(fId, fgLineGC, fX0, fY0, fXf-fX0, fYf-fY0);
+         gVirtualX->DrawRectangle(fId, fgLineGC, fX0, fY0, fXf-fX0, fYf-fY0);
       }
    }
 
    if (event->fType == kButtonRelease) {
       if (fDragging) {
          fDragging = kFALSE;
-         gGXW->DrawRectangle(fId, fgLineGC, fX0, fY0, fXf-fX0, fYf-fY0);
+         gVirtualX->DrawRectangle(fId, fgLineGC, fX0, fY0, fXf-fX0, fYf-fY0);
       } else {
          SendMessage(fMsgWindow, MK_MSG(kC_CONTAINER, kCT_ITEMCLICK),
                      event->fCode, (event->fYRoot << 16) | event->fXRoot);
@@ -453,7 +449,7 @@ Bool_t TGLVContainer::HandleMotion(Event_t *event)
    int xf0, yf0, xff, yff, total, selected;
 
    if (fDragging) {
-      gGXW->DrawRectangle(fId, fgLineGC, fX0, fY0, fXf-fX0, fYf-fY0);
+      gVirtualX->DrawRectangle(fId, fgLineGC, fX0, fY0, fXf-fX0, fYf-fY0);
       fX0 = TMath::Min(fXp, event->fX);
       fXf = TMath::Max(fXp, event->fX);
       fY0 = TMath::Min(fYp, event->fY);
@@ -482,7 +478,7 @@ Bool_t TGLVContainer::HandleMotion(Event_t *event)
          }
       }
 
-      gGXW->DrawRectangle(fId, fgLineGC, fX0, fY0, fXf-fX0, fYf-fY0);
+      gVirtualX->DrawRectangle(fId, fgLineGC, fX0, fY0, fXf-fX0, fYf-fY0);
 
       if (fTotal != total || fSelected != selected) {
          fTotal = total;

@@ -1,8 +1,7 @@
-//*CMZ :  2.00/01 09/03/98  12.27.44  by  Fons Rademakers
-//*CMZ :  2.00/00 18/02/98  18.56.20  by  IconsAuthor
-//*-- Author :    IconsAuthor   18/02/98
+//*CMZ :  2.23/04 04/10/99  20.39.44  by  Fons Rademakers
+//*-- Author :    IconsAuthor   04/10/99
 /* XPM */
-static char * root_t_xpm[] = {
+const char * root_t_xpm[] = {
 /* width height ncolors cpp [x_hot y_hot] */
 "16 16 3 1 0 0",
 /* colors */

@@ -1,9 +1,9 @@
-/*CMZ :  2.22/10 23/07/99  14.42.33  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   23/07/99*/
+/*CMZ :  2.23/10 10/12/99  18.00.24  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   10/12/99*/
 // lib/prec_stl/multimap
 
-#ifndef PREC_STL_MULTIMAP
-#define PREC_STL_MULTIMAP
+#pragma ifndef PREC_STL_MULTIMAP
+#pragma define PREC_STL_MULTIMAP
 #pragma link off global PREC_STL_MULTIMAP;
 #pragma link C++ nestedtypedef;
 #pragma link C++ nestedclass;
@@ -11,6 +11,7 @@
 // Imported from ANSI/ISO C++ 1997/Nov draft
 // Got some ideas from Scott Snyder, Fermi-lab
 // Modified by Masaharu Goto
+// SGI KCC porting by Philippe Canal, Fermi-lab
 
 #include <utility>
 #include <memory>
@@ -61,7 +62,7 @@ class multimap {
    public:
     iterator() ;
     iterator(const iterator& x) ;
-#ifndef G__BORLAND
+#if !defined(G__BORLAND) && !defined(G__KCC)
     iterator& operator=(const iterator& x) ;
 #endif
     value_type& operator*() ;
@@ -93,7 +94,7 @@ class multimap {
 	{
    public:
     reverse_iterator(const reverse_iterator& x);
-#ifndef G__BORLAND
+#if !defined(G__BORLAND) && !defined(G__KCC)
     reverse_iterator& operator=(const reverse_iterator& x) ;
 #endif
     value_type& operator*() ;
@@ -195,7 +196,7 @@ class multimap {
 
 //////////////////////////////////////////////////////////////////////////
 
-#endif
+#pragma endif
 
 
 

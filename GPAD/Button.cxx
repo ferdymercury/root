@@ -1,39 +1,33 @@
+//*CMZ :  2.23/12 26/01/2000  09.35.28  by  Rene Brun
+//*CMZ :  2.23/11 07/01/2000  18.42.14  by  Rene Brun
+//*CMZ :  2.23/09 24/11/99  11.55.41  by  Rene Brun
+//*CMZ :  2.23/04 04/10/99  15.37.21  by  Rene Brun
+//*CMZ :  2.23/03 22/09/99  19.00.57  by  Rene Brun
 //*CMZ :  2.22/01 03/05/99  11.39.17  by  Fons Rademakers
 //*CMZ :  2.21/05 07/02/99  16.47.39  by  Fons Rademakers
 //*CMZ :  2.20/05 15/12/98  09.17.21  by  Rene Brun
-//*CMZ :  2.20/03 06/12/98  11.01.00  by  Rene Brun
-//*CMZ :  2.00/09 23/06/98  17.18.36  by  Rene Brun
-//*CMZ :  1.03/09 09/12/97  16.02.26  by  Fons Rademakers
 //*-- Author :    Rene Brun   01/07/96
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 #include <fstream.h>
 #include "TROOT.h"
 #include "TButton.h"
 #include "TCanvas.h"
-#include "TText.h"
-#include "TInterpreter.h"
+#include "TLatex.h"
 
 #include <string.h>
-
-const Int_t kFraming = BIT(6);
 
 ClassImp(TButton)
 
@@ -108,10 +102,11 @@ TButton::TButton(): TPad()
 //*-*-*-*-*-*-*-*-*-*-*Button default constructor*-*-*-*-*-*-*-*-*-*-*-*-*
 //*-*                  ==========================
 
+   SetEditable(kFALSE);
 }
 
 //______________________________________________________________________________
-TButton::TButton(const Text_t *title, const Text_t *method, Coord_t x1, Coord_t y1,Coord_t x2, Coord_t  y2)
+TButton::TButton(const char *title, const char *method, Coord_t x1, Coord_t y1,Coord_t x2, Coord_t  y2)
            :TPad("button",title,x1,y1,x2,y2,18,2,1), TAttText(22,0,1,61,0.65)
 {
 //*-*-*-*-*-*-*-*-*-*-*Button normal constructor*-*-*-*-*-*-*-*-*-*-*-*-*-*
@@ -119,12 +114,13 @@ TButton::TButton(const Text_t *title, const Text_t *method, Coord_t x1, Coord_t 
 //
 //   Note that the button coordinates x1,y1,x2,y2 are always in the range [0,1]
 //
+   SetEditable(kFALSE);
    fFraming=0;
    SetBit(kCanDelete);
    fModified = kTRUE;
    fMethod = method;
    if (strlen(title)) {
-      TText *text = new TText(0.5*(fX1+fX2),0.5*(fY1+fY2),(char*)title);
+      TLatex *text = new TLatex(0.5*(fX1+fX2),0.5*(fY1+fY2),title);
       fPrimitives->Add(text);
    }
 }
@@ -155,11 +151,15 @@ void TButton::ExecuteEvent(Int_t event, Int_t px, Int_t py)
 //  This member function is called when a Button object is clicked.
 //
 
-   if (fMother->GetCanvas()->IsEditable()) {
+   //check case where pressing a button deletes itself
+   if (!TestBit(kNotDeleted)) return;
+
+   if (IsEditable()) {
       TPad::ExecuteEvent(event,px,py);
       return;
    }
 
+   TPad *cdpad = (TPad*)gROOT->GetSelectedPad();
    HideToolTip(event);
 
    switch (event) {
@@ -172,7 +172,7 @@ void TButton::ExecuteEvent(Int_t event, Int_t px, Int_t py)
       SetBorderMode(-1);
       fFocused=1;
       Modified();
-      GetCanvas()->Modified();
+//      GetCanvas()->Modified();
       Update();
       break;
 
@@ -200,27 +200,27 @@ void TButton::ExecuteEvent(Int_t event, Int_t px, Int_t py)
       break;
 
    case kButton1Up:
-      gPad->SetCursor(kWatch);
-   if (fFocused) gInterpreter->ProcessLine(GetMethod());
+      SetCursor(kWatch);
+      if (fFocused) {
+         if (cdpad) cdpad->cd();
+         gROOT->ProcessLine(GetMethod());
+      }
+      //check case where pressing a button deletes itself
+     if (!TestBit(kNotDeleted)) return;
 #ifndef WIN32
       SetBorderMode(1);
       Modified();
-      GetCanvas()->Modified();
+//      GetCanvas()->Modified();
       Update();
 #else
       // The following instructions must be executed via the interpreter
       // Otherwise, we get a Thread problem under WindowsNT
-      char command[128];
-      sprintf(command,"((TButton*)0x%x)->%s",this,"SetBorderMode(1)");
-      gInterpreter->ProcessLine(command);
-      sprintf(command,"((TButton*)0x%x)->%s",this,"Modified()");
-      gInterpreter->ProcessLine(command);
-      sprintf(command,"((TButton*)0x%x)->%s",this,"GetCanvas()->Modified()");
-      gInterpreter->ProcessLine(command);
-      sprintf(command,"((TButton*)0x%x)->%s",this,"Update()");
-      gInterpreter->ProcessLine(command);
+      gROOT->ProcessLine(Form("((TButton*)0x%lx)->SetBorderMode(1);",(Long_t)this));
+      gROOT->ProcessLine(Form("((TButton*)0x%lx)->Modified();",(Long_t)this));
+      gROOT->ProcessLine(Form("((TButton*)0x%lx)->GetCanvas()->Modified();",(Long_t)this));
+      gROOT->ProcessLine(Form("((TButton*)0x%lx)->Update();",(Long_t)this));
 #endif
-      gPad->SetCursor(kCross);
+      SetCursor(kCross);
       break;
    }
 }
@@ -240,7 +240,11 @@ void TButton::PaintModified()
 {
    TObject *obj = GetListOfPrimitives()->First();
    if (obj && obj->InheritsFrom("TText")) {
-      TText *text = (TText*)obj;
+      TLatex *text = (TLatex*)obj;
+//TVirtualPad *padsav = gPad;
+//gPad = 0;
+      text->SetTitle(GetTitle());
+//gPad = padsav;
       text->SetTextSize(GetTextSize());
       text->SetTextFont(GetTextFont());
       text->SetTextAlign(GetTextAlign());
@@ -291,6 +295,7 @@ void TButton::SavePrimitive(ofstream &out, Option_t *)
    }
 
    if (GetFraming()) out<<"button->SetFraming();"<<endl;
+   if (IsEditable()) out<<"button->SetEditable(kTRUE);"<<endl;
 
    out<<"   button->Draw();"<<endl;
 

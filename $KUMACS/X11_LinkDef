@@ -8,3 +8,4 @@
 
 #pragma link C++ class TGX11;
 
+#endif

@@ -1,3 +1,6 @@
+//*CMZ :  2.23/12 30/01/2000  18.20.22  by  Rene Brun
+//*CMZ :  2.23/09 21/11/99  15.33.23  by  Fons Rademakers
+//*CMZ :  2.23/03 27/09/99  11.07.58  by  Rene Brun
 //*CMZ :  2.22/01 27/04/99  11.02.14  by  Fons Rademakers
 //*CMZ :  2.00/00 05/03/98  17.46.06  by  Fons Rademakers
 //*CMZ :  1.02/00 23/07/97  00.48.52  by  Fons Rademakers
@@ -6,22 +9,17 @@
 #ifndef ROOT_TClass
 #define ROOT_TClass
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -55,6 +53,7 @@ friend class TCint;
 
 private:
    TString           fName;            //name of class
+   TString           fStreamerInfo;    //Streamer description of attributes names/types
    TList            *fRealData;        //linked list for persistent members including base classes
    TList            *fBase;            //linked list for base classes
    TList            *fData;            //linked list for data members
@@ -72,19 +71,27 @@ private:
 
    TMethod          *GetClassMethod(Long_t faddr);
 
+   static Int_t      fgClassCount;     //provides unique id for a each class
+                                       //stored in TObject::fUniqueID
 public:
+   // TClass status bits
+   enum { kClassSaved = BIT(12) };
+
    TClass();
-   TClass(const Text_t *name, Version_t cversion,
-          const Text_t *dfil = 0, const Text_t *ifil = 0,
+   TClass(const char *name, Version_t cversion,
+          const char *dfil = 0, const char *ifil = 0,
           Int_t dl = 0, Int_t il = 0);
    virtual      ~TClass();
    void          AddInstance(Bool_t heap = kFALSE) { fInstanceCount++; if (heap) fOnHeap++; }
    virtual void  Browse(TBrowser *b);
    void          BuildRealData();
    void          Draw(Option_t *option="");
-   Text_t       *EscapeChars(Text_t * text);
+   void         *DynamicCast(const TClass *base, void *obj);
+   char         *EscapeChars(char * text);
+   void          FillStreamerInfoList(TList *list);
+   void          PrintStreamerInfoList(TList *list);
    Version_t     GetClassVersion() const { return fClassVersion; }
-   TDataMember  *GetDataMember(Text_t *datamember);
+   TDataMember  *GetDataMember(const char *datamember);
    const char   *GetDeclFileName() const { return fDeclFileName; }
    Short_t       GetDeclFileLine() const { return fDeclFileLine; }
    G__ClassInfo *GetClassInfo() const { return fClassInfo; }
@@ -98,26 +105,29 @@ public:
    const char   *GetTitle() const;
    const char   *GetImplFileName() const { return fImplFileName; }
    Short_t       GetImplFileLine() const { return fImplFileLine; }
-   TClass       *GetBaseClass(const Text_t *classname);
-   TClass       *GetBaseClass(const TClass *cl);
-   TClass       *GetBaseDataMember(const Text_t *datamember);
+   TClass       *GetBaseClass(const char *classname);
+   TClass       *GetBaseClass(const TClass *base);
+   Int_t         GetBaseClassOffset(const TClass *base);
+   TClass       *GetBaseDataMember(const char *datamember);
    UInt_t        GetInstanceCount() { return fInstanceCount; }
    UInt_t        GetHeapInstanceCount() { return fOnHeap; }
    void          GetMenuItems(TList *listitems);
-   TMethod      *GetMethod(const Text_t *method, const Text_t *params);
-   TMethod      *GetMethodWithPrototype(const Text_t *method, const Text_t *proto);
-   TMethod      *GetMethodAny(const Text_t *method);
+   TMethod      *GetMethod(const char *method, const char *params);
+   TMethod      *GetMethodWithPrototype(const char *method, const char *proto);
+   TMethod      *GetMethodAny(const char *method);
    Int_t         GetNdata();
    Int_t         GetNmethods();
+   const char   *GetStreamerInfo();
    Int_t         Compare(TObject *obj);
    ULong_t       Hash() { return fName.Hash(); }
-   Bool_t        InheritsFrom(const Text_t *cl);
+   Bool_t        InheritsFrom(const char *cl);
    Bool_t        InheritsFrom(const TClass *cl);
    Bool_t        IsFolder() {return kTRUE;}
    void         *New();
    void          Destructor(void *obj, Bool_t dtorOnly = kFALSE);
    void          ResetInstanceCount() { fInstanceCount = fOnHeap = 0; }
    Int_t         Size() const;
+   void          SetStreamerInfo(const char *info="");
    Long_t        Property() const;
 
    static TClass *Load(TBuffer &b);

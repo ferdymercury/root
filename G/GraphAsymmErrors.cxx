@@ -1,24 +1,23 @@
+//*CMZ :  2.23/12 22/01/2000  17.48.03  by  Rene Brun
+//*CMZ :  2.23/09 08/11/99  19.14.52  by  Rene Brun
+//*CMZ :  2.23/04 08/10/99  15.03.25  by  Rene Brun
+//*CMZ :  2.23/02 03/09/99  18.58.52  by  Rene Brun
 //*CMZ :  2.22/07 05/07/99  14.52.25  by  Rene Brun
 //*CMZ :  2.22/01 05/07/99  14.36.08  by  Rene Brun
 //*CMZ :  2.21/07 03/03/99  10.30.40  by  Rene Brun
 //*-- Author :    Rene Brun   03/03/99
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 #include <string.h>
@@ -26,9 +25,6 @@
 
 #include "TROOT.h"
 #include "TGraphAsymmErrors.h"
-#include "TH1.h"
-#include "TLine.h"
-#include "TText.h"
 #include "TStyle.h"
 #include "TMath.h"
 #include "TVirtualPad.h"
@@ -199,9 +195,12 @@ void TGraphAsymmErrors::Paint(Option_t *option)
    tx   = 0.50*s2x;
    ty   = 0.50*s2y;
 
+   gPad->SetBit(kClipFrame, TestBit(kClipFrame));
    for (Int_t i=0;i<fNpoints;i++) {
       x  = gPad->XtoPad(fX[i]);
       y  = gPad->YtoPad(fY[i]);
+      if (x < gPad->GetUxmin()) continue;
+      if (x > gPad->GetUxmax()) continue;
       if (y < gPad->GetUymin()) continue;
       if (y > gPad->GetUymax()) continue;
       xl1 = x - s2x*cx;
@@ -231,6 +230,7 @@ void TGraphAsymmErrors::Paint(Option_t *option)
          gPad->PaintLine(x-tx,ylow2,x+tx,ylow2);
       }
    }
+   gPad->ResetBit(kClipFrame);
 }
 
 
@@ -338,8 +338,9 @@ void TGraphAsymmErrors::Streamer(TBuffer &b)
 {
    // Stream an object of class TGraphAsymmErrors.
 
+   UInt_t R__s, R__c;
    if (b.IsReading()) {
-      b.ReadVersion();  //Version_t v = b.ReadVersion();
+      b.ReadVersion(&R__s, &R__c);
       TGraph::Streamer(b);
       fEXlow  = new Float_t[fNpoints];
       fEYlow  = new Float_t[fNpoints];
@@ -349,12 +350,14 @@ void TGraphAsymmErrors::Streamer(TBuffer &b)
       b.ReadFastArray(fEYlow,fNpoints);
       b.ReadFastArray(fEXhigh,fNpoints);
       b.ReadFastArray(fEYhigh,fNpoints);
+      b.CheckByteCount(R__s, R__c, TGraphAsymmErrors::IsA());
    } else {
-      b.WriteVersion(TGraphAsymmErrors::IsA());
+      R__c = b.WriteVersion(TGraphAsymmErrors::IsA(), kTRUE);
       TGraph::Streamer(b);
       b.WriteFastArray(fEXlow,fNpoints);
       b.WriteFastArray(fEYlow,fNpoints);
       b.WriteFastArray(fEXhigh,fNpoints);
       b.WriteFastArray(fEYhigh,fNpoints);
+      b.SetByteCount(R__c, kTRUE);
    }
 }

@@ -1,9 +1,9 @@
+//*CMZ :  2.23/07 23/10/99  12.06.47  by  Fons Rademakers
+//*CMZ :  2.23/04 11/10/99  03.23.25  by  Fons Rademakers
 //*CMZ :  2.21/04 29/01/99  13.35.07  by  Valery Fine(fine@mail.cern.ch)
 //*CMZ :  2.20/00 25/11/98  18.29.33  by  Fons Rademakers
 //*CMZ :  2.00/12 01/10/98  10.01.38  by  Valery Fine(fine@mail.cern.ch)
 //*CMZ :  2.00/11 13/08/98  14.19.54  by  Fons Rademakers
-//*CMZ :  2.00/10 23/07/98  12.32.51  by  Fons Rademakers
-//*CMZ :  1.03/09 15/12/97  19.30.54  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   15/09/95
 
 #ifndef ROOT_TWinNTSystem
@@ -17,15 +17,34 @@
 //                                                                      //
 //////////////////////////////////////////////////////////////////////////
 
+#if !defined(__CINT__)
+
 #include <io.h>
 #include <process.h>
 #include "Windows4Root.h"
+
+#endif
+
 #include "TSystem.h"
 #include "TApplication.h"
 #include "TSysEvtHandler.h"
 #include "TTimer.h"
 
+#if !defined(__CINT__)
+
 #include <commctrl.h>
+
+#else
+
+typedef ULong_t HANDLE;
+typedef ULong_t WIN32_FIND_DATA;
+typedef ULong_t HIMAGELIST;
+typedef ULong_t HICON;
+typedef UChar_t BOOL;
+
+struct FILE;
+
+#endif
 
 class TSeqCollection;
 
@@ -35,6 +54,7 @@ typedef void (*SigHandler_t)(ESignals);
 class TClass;
 class TFunction;
 class TMethod;
+class TSeqCollection;
 class TObjArray;
 class TWin32Timer;
 
@@ -51,7 +71,7 @@ protected:
    HIMAGELIST fhSmallIconList;  // List of the small icons
    HIMAGELIST fhNormalIconList; // List of the normal icons
 
-   void              CreateIcons();            // Create a list of the icons for Root appl
+   void                CreateIcons();            // Create a list of the icons for Root appl
 
   // static functions providing semi-low level interface to raw WinNT
    static const char  *WinNTHomedirectory(const char *user = 0);
@@ -69,8 +89,6 @@ protected:
    static int          WinNTWinNTService(int port, int backlog);
    static int          WinNTSend(int socket, const void *buffer, int length, int flag);
    static int          WinNTRecv(int socket, void *buffer, int length, int flag);
-
-
 
    static int          WinNTIoctl(int fd, int code, void *vp);
    static int          WinNTNonblock(int fd);
@@ -161,22 +179,20 @@ public:
    //---- Dynamic Loading --------------------------------------
    char             *DynamicPathName(const char *lib, Bool_t quiet = kFALSE);
    Func_t            DynFindSymbol(const char *module, const char *entry);
-#ifdef NOCINT
-   int               Load(const char *module, const char *entry = "");
-#endif
+   int               Load(const char *module, const char *entry = "", Bool_t system = kFALSE);
    void              Unload(const char *module);
    void              ListSymbols(const char *module, const char *re = "");
    void              ListLibraries(const char *regexp = "");
 
    //---- Time & Date
    TTime             Now();
-   void             AddTimer(TTimer *ti);
- TTimer            *RemoveTimer(TTimer *ti);
+   void              AddTimer(TTimer *ti);
+   TTimer           *RemoveTimer(TTimer *ti);
 //   void              DispatchTimers();
-   Bool_t           DispatchSynchTimers();
-   void             Sleep(UInt_t milliSec);
-   Double_t         GetRealTime();
-   Double_t         GetCPUTime();
+   Bool_t            DispatchSynchTimers();
+   void              Sleep(UInt_t milliSec);
+   Double_t          GetRealTime();
+   Double_t          GetCPUTime();
 
    //---- RPC --------------------------------------------------
    virtual int             ConnectService(const char *servername, int port);
@@ -201,7 +217,7 @@ public:
    char  *Which(const char *search, const char *file, EAccessMode mode = kFileExists);
    static const char  *GetDynamicPath();
 
-   ClassDef(TWinNTSystem,1)
+   ClassDef(TWinNTSystem,0)
 };
 
 #endif

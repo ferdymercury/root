@@ -1,3 +1,4 @@
+//*CMZ :  2.23/04 08/10/99  23.06.00  by  Rene Brun
 //*CMZ :  2.21/02 16/01/99  14.36.44  by  Rene Brun
 //*CMZ :  0.80/00 17/07/96  11.35.40  by  Rene Brun
 //*-- Author :    Rene Brun   12/12/94
@@ -5,22 +6,17 @@
 #ifndef ROOT_TAttPad
 #define ROOT_TAttPad
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -82,7 +78,7 @@ public:
         Width_t          GetFrameBorderSize() {return fFrameBorderSize;}
         Int_t            GetFrameBorderMode() {return fFrameBorderMode;}
         virtual void     Print(Option_t *option="");
-        virtual void     Reset(Option_t *option="");
+        virtual void     ResetAttPad(Option_t *option="");
         virtual void     SetBottomMargin(Coord_t bottommargin);
         virtual void     SetLeftMargin(Coord_t leftmargin);
         virtual void     SetRightMargin(Coord_t rightmargin);

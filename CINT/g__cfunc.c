@@ -1,5 +1,5 @@
-/*CMZ :  2.22/10 23/07/99  14.42.15  by  Masaharu Goto*/
-/*-- Author :    Masaharu Goto   23/07/99*/
+/*CMZ :  2.23/10 10/12/99  18.00.00  by  Masaharu Goto*/
+/*-- Author :    Masaharu Goto   10/12/99*/
 /* /% C %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -9,15 +9,13 @@
  * Description:
  *  ANSI C library function interface routine
  ************************************************************************
- * Copyright(c) 1991~1996  [hp] Hewlett Packard Japan, All rights reserved
- * Author                  Masaharu Goto (gotom@jpn.hp.com)
- * Copyright(c) 1995~1998  Masaharu Goto (MXJ02154@niftyserve.or.jp)
+ * Copyright(c) 1995~1999  Masaharu Goto (MXJ02154@niftyserve.or.jp)
  *
  * Permission to use, copy, modify and distribute this software and its
  * documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies and
  * that both that copyright notice and this permission notice appear
- * in supporting documentation.  Hewlett-Packard Japan Company makes no
+ * in supporting documentation.  The author makes no
  * representations about the suitability of this software for any
  * purpose.  It is provided "as is" without express or implied warranty.
  ************************************************************************/
@@ -777,8 +775,14 @@ G__COMPLETIONLIST G__completionlist[] = {
 	{"G__unloadfile",NULL},
 	{"G__reloadfile",NULL},
 	{"G__tracemode",NULL},
+	{"G__gettracemode",NULL},
 	{"G__debugmode",NULL},
 	{"G__stepmode",NULL},
+	{"G__getstepmode",NULL},
+#ifndef G__OLDIMPLEMENTATION1142
+	{"G__optimizemode",NULL},
+	{"G__getoptimizemode",NULL},
+#endif
 	{"G__breakline",NULL},
 	{"G__split",NULL},
 	{"G__readline",NULL},
@@ -794,6 +798,25 @@ G__COMPLETIONLIST G__completionlist[] = {
 	{"G__loadobject",NULL},
 	{"G__lock_variable",NULL},
 	{"G__unlock_variable",NULL},
+
+	{"G__IsInMacro",NULL},
+	{"G__getmakeinfo",NULL},
+	{"G__set_atpause",NULL},
+	{"G__set_aterror",NULL},
+	{"G__AddConsole",NULL},
+	{"G__FreeConsole",NULL},
+	{"G__typeid",NULL},
+	{"G__lasterror_filename",NULL},
+	{"G__lasterror_linenum",NULL},
+	{"G__loadsystemfile",NULL},
+	{"G__p2f2funcname",NULL},
+	{"G__isinterpretedp2f",NULL},
+	{"G__deleteglobal",NULL},
+	{"G__deletevariable",NULL},
+	{"G__optimizemode",NULL},
+	{"G__getoptimizemode",NULL},
+	{"G__clearerror",NULL},
+
 	{(char *)NULL,NULL }
 };
 
@@ -3496,6 +3519,7 @@ void G__list_sut(fp) FILE *fp; {
    fprintf(fp,"   int G__loadfile(char *file);\n");
    fprintf(fp,"   int G__unloadfile(char *file);\n");
    fprintf(fp,"   int G__reloadfile(char *file);\n");
+   fprintf(fp,"   int G__loadsystemfile(char* sysdllname);\n");
    fprintf(fp,"   void G__add_ipath(char *pathname);\n");
    fprintf(fp,"   int G__split(char *line,char *string,int argc,char *argv[]);\n");
    fprintf(fp,"   int G__readline(FILE *fp,char *line,char *argbuf,int *argn,char *arg[]);\n");
@@ -3514,6 +3538,26 @@ void G__list_sut(fp) FILE *fp; {
 #endif
    fprintf(fp,"   int G__lock_variable(char *varname);\n");
    fprintf(fp,"   int G__unlock_variable(char *varname);\n");
+
+   /* added 1999 Oct 23 */
+   fprintf(fp,"   int G__IsInMacro();\n");
+   fprintf(fp,"   char* G__getmakeinfo(char* paramname);\n");
+   fprintf(fp,"   void G__set_atpause(void* p2f);\n");
+   fprintf(fp,"   void G__set_aterror(void (*p2f)());\n");
+   fprintf(fp,"   void G__set_ignoreinclude(int (*p2f)(char* fname,char* expandedfname));\n");
+   fprintf(fp,"   int G__AddConsole();\n");
+   fprintf(fp,"   int G__FreeConsole();\n");
+   /* fprintf(fp,"   char* G__type2string();\n"); */
+   fprintf(fp,"   type_info G__typeid(char* typename);\n");
+   fprintf(fp,"   char* G__lasterror_filename();\n");
+   fprintf(fp,"   int G__lasterror_linenum();\n");
+   fprintf(fp,"   char* G__p2f2funcname(void* p2f);\n");
+   fprintf(fp,"   int G__isinterpretedp2f(void* p2f);\n");
+   fprintf(fp,"   int G__deleteglobal(void* ptr);\n");
+   fprintf(fp,"   int G__deletevariable(char* varname);\n");
+   fprintf(fp,"   int G__optimizemode(int optlevel);\n");
+   fprintf(fp,"   int G__getoptimizemode();\n");
+   fprintf(fp,"   void G__clearerror();\n");
 }
 
 

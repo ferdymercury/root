@@ -1,22 +1,18 @@
+//*CMZ :  2.23/02 02/09/99  15.54.29  by  Rene Brun
 //*CMZ :  2.00/00 03/03/98  10.18.16  by  Rene Brun
 //*-- Author :    Rene Brun   23/02/98
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -24,7 +20,7 @@
 // TGXServer                                                            //
 //                                                                      //
 // This class is the basic interface to the graphics client. It is      //
-// an implementation of the abstract TGXW class. The companion class    //
+// an implementation of the abstract TVirtualX class. The companion class    //
 // for Unix is TGX11 and for Win32 is TGWin32.                          //
 //                                                                      //
 //                                                                      //
@@ -309,7 +305,7 @@ void TGXServer::UpdateWindow()
    Int_t mode;
    *fBuffer >> mode;
 
-   gGXW->UpdateWindow(mode);
+   gVirtualX->UpdateWindow(mode);
 }
 
 //______________________________________________________________________________
@@ -319,7 +315,7 @@ void TGXServer::MapWindow()
 
    Window_t id;
    *fBuffer >> id;
-   gGXW->MapWindow(id);
+   gVirtualX->MapWindow(id);
 }
 
 //______________________________________________________________________________
@@ -328,7 +324,7 @@ void TGXServer::MapSubwindows()
    // Map sub windows.
    Window_t id;
    *fBuffer >> id;
-   gGXW->MapSubwindows(id);
+   gVirtualX->MapSubwindows(id);
 }
 
 //______________________________________________________________________________
@@ -338,7 +334,7 @@ void TGXServer::MapRaised()
 
    Window_t id;
    *fBuffer >> id;
-   gGXW->MapRaised(id);
+   gVirtualX->MapRaised(id);
 }
 
 //______________________________________________________________________________
@@ -348,7 +344,7 @@ void TGXServer::UnmapWindow()
 
    Window_t id;
    *fBuffer >> id;
-   gGXW->UnmapWindow(id);
+   gVirtualX->UnmapWindow(id);
 }
 
 //______________________________________________________________________________
@@ -358,7 +354,7 @@ void TGXServer::DestroyWindow()
 
    Window_t id;
    *fBuffer >> id;
-   gGXW->DestroyWindow(id);
+   gVirtualX->DestroyWindow(id);
 }
 
 //______________________________________________________________________________
@@ -368,7 +364,7 @@ void TGXServer::RaiseWindow()
 
    Window_t id;
    *fBuffer >> id;
-   gGXW->RaiseWindow(id);
+   gVirtualX->RaiseWindow(id);
 }
 
 //______________________________________________________________________________
@@ -378,7 +374,7 @@ void TGXServer::LowerWindow()
 
    Window_t id;
    *fBuffer >> id;
-   gGXW->LowerWindow(id);
+   gVirtualX->LowerWindow(id);
 }
 
 //______________________________________________________________________________
@@ -392,7 +388,7 @@ void TGXServer::MoveWindow()
    *fBuffer >> id;
    *fBuffer >> x;
    *fBuffer >> y;
-   gGXW->MoveWindow(id, x, y);
+   gVirtualX->MoveWindow(id, x, y);
 }
 
 //______________________________________________________________________________
@@ -406,7 +402,7 @@ void TGXServer::MoveWindow2()
    *fBuffer >> id;
    *fBuffer >> x;
    *fBuffer >> y;
-   gGXW->MoveWindow(id, x, y);
+   gVirtualX->MoveWindow(id, x, y);
 }
 
 //______________________________________________________________________________
@@ -422,7 +418,7 @@ void TGXServer::MoveResizeWindow()
    *fBuffer >> y;
    *fBuffer >> w;
    *fBuffer >> h;
-   gGXW->MoveResizeWindow(id, x, y, w, h);
+   gVirtualX->MoveResizeWindow(id, x, y, w, h);
 }
 
 //______________________________________________________________________________
@@ -435,7 +431,7 @@ void TGXServer::ResizeWindow2()
    *fBuffer >> id;
    *fBuffer >> w;
    *fBuffer >> h;
-   gGXW->ResizeWindow(id, w, h);
+   gVirtualX->ResizeWindow(id, w, h);
 }
 
 //______________________________________________________________________________
@@ -447,7 +443,7 @@ void TGXServer::ResizeWindow()
    *fBuffer >> id;
 //   *fBuffer >> Int_t(0);
 //   *fBuffer >> Int_t(0);
-   gGXW->ResizeWindow(id);
+   gVirtualX->ResizeWindow(id);
 }
 
 //______________________________________________________________________________
@@ -459,7 +455,7 @@ void TGXServer::SetWindowBackground()
    ULong_t color;
    *fBuffer >> id;
    *fBuffer >> color;
-   gGXW->SetWindowBackground(id, color);
+   gVirtualX->SetWindowBackground(id, color);
 }
 
 //______________________________________________________________________________
@@ -471,7 +467,7 @@ void TGXServer::SetWindowBackgroundPixmap()
    Pixmap_t pxm;
    *fBuffer >> id;
    *fBuffer >> pxm;
-   gGXW->SetWindowBackgroundPixmap(id, pxm);
+   gVirtualX->SetWindowBackgroundPixmap(id, pxm);
 }
 
 //______________________________________________________________________________
@@ -497,7 +493,7 @@ void TGXServer::CreateWindow()
 
    fSocket->Send(*fBuffer);
 
-   Window_t id = gGXW->CreateWindow(parent, x, y, w, h, border, depth, clss, 0, &attr);
+   Window_t id = gVirtualX->CreateWindow(parent, x, y, w, h, border, depth, clss, 0, &attr);
    sprintf(message,"%d",(Int_t)id);
    printf("CreateWindow called, returning 1\n");
 }
@@ -512,7 +508,7 @@ void TGXServer::GetWindowAttributes()
    WindowAttributes_t attr;
 
    *fBuffer >> id;
-   gGXW->GetWindowAttributes(id, attr);
+   gVirtualX->GetWindowAttributes(id, attr);
 
    Int_t n1,n2,n3,n4,n5,n6,n7,n8,n9;
    n1 = (Int_t)attr.fX;
@@ -565,8 +561,8 @@ void TGXServer::OpenDisplay()
    printf("OpenDisplay, l=%d\n",l);
    fBuffer->ReadFastArray(dpyName,l);
    Int_t display;
-   if (l) display = gGXW->OpenDisplay(dpyName);
-   else   display = gGXW->OpenDisplay("dummy");
+   if (l) display = gVirtualX->OpenDisplay(dpyName);
+   else   display = gVirtualX->OpenDisplay("dummy");
    delete [] dpyName;
    printf(" display=%d\n",display);
 
@@ -582,7 +578,7 @@ void TGXServer::OpenPixmap()
 
    *fBuffer >> w;
    *fBuffer >> h;
-   Int_t number = gGXW->OpenPixmap(w, h);
+   Int_t number = gVirtualX->OpenPixmap(w, h);
 
    sprintf(message,"%d",number);
    fSocket->Send(message,kMaxMess);
@@ -593,7 +589,7 @@ void TGXServer::CloseDisplay()
 {
    // Close connection to display server.
 
-   gGXW->CloseDisplay();
+   gVirtualX->CloseDisplay();
 }
 
 //______________________________________________________________________________
@@ -601,7 +597,7 @@ void TGXServer::ClosePixmap()
 {
    // Close pixmap
 
-   gGXW->ClosePixmap();
+   gVirtualX->ClosePixmap();
 }
 
 //______________________________________________________________________________
@@ -609,7 +605,7 @@ void TGXServer::ClearWindow()
 {
    // Clear window
 
-   gGXW->ClearWindow();
+   gVirtualX->ClearWindow();
 }
 
 //______________________________________________________________________________
@@ -617,7 +613,7 @@ void TGXServer::CloseWindow()
 {
    // Close window
 
-   gGXW->CloseWindow();
+   gVirtualX->CloseWindow();
 }
 
 //______________________________________________________________________________
@@ -634,7 +630,7 @@ void TGXServer::InternAtom()
    char *atom_name = new char[l+1];
    fBuffer->ReadFastArray(atom_name,l);
    *fBuffer >> only_if_exist;
-   Atom_t at = gGXW->InternAtom(atom_name, only_if_exist);
+   Atom_t at = gVirtualX->InternAtom(atom_name, only_if_exist);
    delete [] atom_name;
 
    sprintf(message,"%d",(Int_t)at);
@@ -648,7 +644,7 @@ void TGXServer::GetDefaultRootWindow()
    // Return handle to the default root window created when calling
    // XOpenDisplay().
 
-   Window_t n = gGXW->GetDefaultRootWindow();
+   Window_t n = gVirtualX->GetDefaultRootWindow();
 
    sprintf(message,"%d",(Int_t)n);
    fSocket->Send(message,kMaxMess);
@@ -665,7 +661,7 @@ void TGXServer::LoadQueryFont()
    *fBuffer >> l;
    char *font_name = new char[l+1];
    fBuffer->ReadFastArray(font_name,l);
-   FontStruct_t fs = gGXW->LoadQueryFont(font_name);
+   FontStruct_t fs = gVirtualX->LoadQueryFont(font_name);
    delete [] font_name;
 
    sprintf(message,"%d",(Int_t)fs);
@@ -682,7 +678,7 @@ void TGXServer::GetFontHandle()
    FontStruct_t fs;
 
    *fBuffer >> fs;
-   FontH_t fh = gGXW->GetFontHandle(fs);
+   FontH_t fh = gVirtualX->GetFontHandle(fs);
 
    sprintf(message,"%d",(Int_t)fh);
    fSocket->Send(message,kMaxMess);
@@ -696,7 +692,7 @@ void TGXServer::DeleteFont()
    FontStruct_t fs;
 
    *fBuffer >> fs;
-   gGXW->DeleteFont(fs);
+   gVirtualX->DeleteFont(fs);
 }
 
 //______________________________________________________________________________
@@ -711,7 +707,7 @@ void TGXServer::CreateGC()
 
    *fBuffer >> id;
    ReadGCValues(gval);
-   GContext_t n = gGXW->CreateGC(id, &gval);
+   GContext_t n = gVirtualX->CreateGC(id, &gval);
 
    sprintf(message,"%d",(Int_t)n);
    fSocket->Send(message,kMaxMess);
@@ -729,7 +725,7 @@ void TGXServer::ChangeGC()
 
    *fBuffer >> gc;
    ReadGCValues(gval);
-   gGXW->ChangeGC(gc, &gval);
+   gVirtualX->ChangeGC(gc, &gval);
 }
 
 //______________________________________________________________________________
@@ -746,7 +742,7 @@ void TGXServer::CopyGC()
    *fBuffer >> org;
    *fBuffer >> dest;
    *fBuffer >> mask;
-   gGXW->CopyGC(org, dest, mask);
+   gVirtualX->CopyGC(org, dest, mask);
 }
 
 //______________________________________________________________________________
@@ -757,7 +753,7 @@ void TGXServer::DeleteGC()
    GContext_t gc;
 
    *fBuffer >> gc;
-   gGXW->DeleteGC(gc);
+   gVirtualX->DeleteGC(gc);
 }
 
 //______________________________________________________________________________
@@ -769,7 +765,7 @@ void TGXServer::CreateCursor()
    Int_t cursor;
 
    *fBuffer >> cursor;
-   Cursor_t n = gGXW->CreateCursor((ECursor)cursor);
+   Cursor_t n = gVirtualX->CreateCursor((ECursor)cursor);
 
    sprintf(message,"%d",(Int_t)n);
    fSocket->Send(message,kMaxMess);
@@ -786,7 +782,7 @@ void TGXServer::SetCursor()
 
    *fBuffer >> id;
    *fBuffer >> curid;
-   gGXW->SetCursor(id, (Cursor_t)curid);
+   gVirtualX->SetCursor(id, (Cursor_t)curid);
 }
 
 //______________________________________________________________________________
@@ -799,7 +795,7 @@ void TGXServer::SetCursor2()
 
    *fBuffer >> id;
    *fBuffer >> cursor;
-   gGXW->SetCursor(id, (Cursor_t)cursor);
+   gVirtualX->SetCursor(id, (Cursor_t)cursor);
 }
 
 //______________________________________________________________________________
@@ -815,7 +811,7 @@ void TGXServer::CreatePixmap()
    *fBuffer >> id;
    *fBuffer >> w;
    *fBuffer >> h;
-   Pixmap_t pxm = gGXW->CreatePixmap(id, w, h);
+   Pixmap_t pxm = gVirtualX->CreatePixmap(id, w, h);
 
    sprintf(message,"%d",(Int_t)pxm);
    fSocket->Send(message,kMaxMess);
@@ -843,7 +839,7 @@ void TGXServer::CreatePixmap2()
    *fBuffer >> forecolor;
    *fBuffer >> backcolor;
    *fBuffer >> depth;
-   Pixmap_t pxm = gGXW->CreatePixmap(id, bitmap, width, height, forecolor, backcolor, depth);
+   Pixmap_t pxm = gVirtualX->CreatePixmap(id, bitmap, width, height, forecolor, backcolor, depth);
 
    sprintf(message,"%d",(Int_t)pxm);
    fSocket->Send(message,kMaxMess);
@@ -864,7 +860,7 @@ void TGXServer::CreateBitmap()
    *fBuffer >> id;
    *fBuffer >> width;
    *fBuffer >> height;
-   Pixmap_t pxm = gGXW->CreateBitmap(id, bitmap, width, height);
+   Pixmap_t pxm = gVirtualX->CreateBitmap(id, bitmap, width, height);
 
    sprintf(message,"%d",(Int_t)pxm);
    fSocket->Send(message,kMaxMess);
@@ -879,7 +875,7 @@ void TGXServer::DeletePixmap()
    Pixmap_t pmap;
 
    *fBuffer >> pmap;
-   gGXW->DeletePixmap(pmap);
+   gVirtualX->DeletePixmap(pmap);
 }
 
 //______________________________________________________________________________
@@ -980,7 +976,7 @@ void TGXServer::SetDashes()
    *fBuffer >> n;
    char *dash_list = new char[n+1];
    fBuffer->ReadFastArray(dash_list,n);
-   gGXW->SetDashes(gc, offset, dash_list, n);
+   gVirtualX->SetDashes(gc, offset, dash_list, n);
    delete [] dash_list;
 }
 
@@ -1003,7 +999,7 @@ void TGXServer::ParseColor()
    *fBuffer >> l;
    char *cname = new char[l+1];
    fBuffer->ReadFastArray(cname,l);
-   Bool_t ok = gGXW->ParseColor(cmap, cname, color);
+   Bool_t ok = gVirtualX->ParseColor(cmap, cname, color);
    delete [] cname;
 
 //   if (wasset == 0) return kFALSE;
@@ -1036,7 +1032,7 @@ void TGXServer::AllocColor()
    *fBuffer >> color.fGreen;    // green component (0..65535)
    *fBuffer >> color.fBlue;     // blue component (0..65535)
    *fBuffer >> color.fMask;     // mask telling which color components are valid
-   Bool_t ok = gGXW->AllocColor(cmap, color);
+   Bool_t ok = gVirtualX->AllocColor(cmap, color);
 
 //   if (n < 0) return kFALSE;
    Int_t wasset = ok;
@@ -1057,7 +1053,7 @@ void TGXServer::QueryColor()
    *fBuffer >> cmap;
 
    *fBuffer >> color.fPixel;    // color pixel value (index in color table)
-   gGXW->QueryColor(cmap, color);
+   gVirtualX->QueryColor(cmap, color);
 
    Int_t r,g,b;
    r = color.fRed;
@@ -1073,7 +1069,7 @@ void TGXServer::EventsPending()
 {
    // Returns number of pending events.
 
-   Int_t np = gGXW->EventsPending();
+   Int_t np = gVirtualX->EventsPending();
 
    sprintf(message,"%d",np);
    fSocket->Send(message,kMaxMess);
@@ -1088,7 +1084,7 @@ void TGXServer::NextEvent()
 
    Event_t event;
 
-   gGXW->NextEvent(event);
+   gVirtualX->NextEvent(event);
 
    Int_t n1,n2,n3,n4,n5,n6,n7,n8,n9;
    n1 = (Int_t)event.fType; // of event (see EGEventTypes)
@@ -1124,7 +1120,7 @@ void TGXServer::Bell()
    Int_t percent;
 
    *fBuffer >> percent;
-   gGXW->Bell(percent);
+   gVirtualX->Bell(percent);
 }
 
 //______________________________________________________________________________
@@ -1151,7 +1147,7 @@ void TGXServer::CopyArea()
    *fBuffer >> height;
    *fBuffer >> dest_x;
    *fBuffer >> dest_y;
-   gGXW->CopyArea(src, dest, gc, src_x, src_y, width, height, dest_x, dest_y);
+   gVirtualX->CopyArea(src, dest, gc, src_x, src_y, width, height, dest_x, dest_y);
 }
 
 //______________________________________________________________________________
@@ -1164,7 +1160,7 @@ void TGXServer::ChangeWindowAttributes()
 
    *fBuffer >> id;
    ReadSetWindowAttributes(attr);
-   gGXW->ChangeWindowAttributes(id, &attr);
+   gVirtualX->ChangeWindowAttributes(id, &attr);
 }
 
 //______________________________________________________________________________
@@ -1180,7 +1176,7 @@ void TGXServer::DrawBox()
    *fBuffer >> x2;
    *fBuffer >> y2;
    *fBuffer >> mode;
-   gGXW->DrawBox(x1, y1, x2, y2, (TGXW::EBoxMode)mode);
+   gVirtualX->DrawBox(x1, y1, x2, y2, (TVirtualX::EBoxMode)mode);
 }
 
 //______________________________________________________________________________
@@ -1198,7 +1194,7 @@ void TGXServer::DrawCellArray()
    *fBuffer >> ny;
    Int_t *ic = new Int_t[nx*ny];
    fBuffer->ReadFastArray(ic,nx*ny);
-   gGXW->DrawCellArray(x1, y1, x2, y2, nx, ny, ic);
+   gVirtualX->DrawCellArray(x1, y1, x2, y2, nx, ny, ic);
    delete [] ic;
 }
 
@@ -1217,7 +1213,7 @@ void TGXServer::DrawFillArea()
       *fBuffer >> xy[i].fX;
       *fBuffer >> xy[i].fY;
    }
-   gGXW->DrawFillArea(n, xy);
+   gVirtualX->DrawFillArea(n, xy);
    delete [] xy;
 }
 
@@ -1232,7 +1228,7 @@ void TGXServer::DrawLine2()
    *fBuffer >> y1;
    *fBuffer >> x2;
    *fBuffer >> y2;
-   gGXW->DrawLine(x1, y1, x2, y2);
+   gVirtualX->DrawLine(x1, y1, x2, y2);
 }
 
 //______________________________________________________________________________
@@ -1250,7 +1246,7 @@ void TGXServer::DrawLine()
    *fBuffer >> y1;
    *fBuffer >> x2;
    *fBuffer >> y2;
-   gGXW->DrawLine(id,gc, x1, y1, x2, y2);
+   gVirtualX->DrawLine(id,gc, x1, y1, x2, y2);
 }
 
 
@@ -1268,7 +1264,7 @@ void TGXServer::DrawPolyLine()
       *fBuffer >> xy[i].fX;
       *fBuffer >> xy[i].fY;
    }
-   gGXW->DrawPolyLine(n, xy);
+   gVirtualX->DrawPolyLine(n, xy);
    delete [] xy;
 }
 
@@ -1287,7 +1283,7 @@ void TGXServer::DrawPolyMarker()
       *fBuffer >> xy[i].fX;
       *fBuffer >> xy[i].fY;
    }
-   gGXW->DrawPolyMarker(n, xy);
+   gVirtualX->DrawPolyMarker(n, xy);
    delete [] xy;
 }
 
@@ -1309,7 +1305,7 @@ void TGXServer::DrawText()
    char *text = new char[l+1];
    fBuffer->ReadFastArray(text,l);
    *fBuffer >> mode;
-   gGXW->DrawText(x, y, angle, mgn, text, (TGXW::ETextMode)mode);
+   gVirtualX->DrawText(x, y, angle, mgn, text, (TVirtualX::ETextMode)mode);
    delete [] text;
 }
 
@@ -1327,7 +1323,7 @@ void TGXServer::ClearArea()
    *fBuffer >> y;
    *fBuffer >> w;
    *fBuffer >> h;
-   gGXW->ClearArea(id, x, y, w, h);
+   gVirtualX->ClearArea(id, x, y, w, h);
 }
 
 //______________________________________________________________________________
@@ -1344,7 +1340,7 @@ void TGXServer::CheckEvent()
 
    *fBuffer >> id;
    *fBuffer >> type;
-   Bool_t ok = gGXW->CheckEvent(id, (EGEventType)type, event);
+   Bool_t ok = gVirtualX->CheckEvent(id, (EGEventType)type, event);
 
    sprintf(message,"%d",ok);
    fSocket->Send(message,kMaxMess);
@@ -1422,7 +1418,7 @@ void TGXServer::SendEvent()
    ev.fUser[1] = n8;           // 5 longs can be used by client message events
    *fBuffer >> n9;
    ev.fUser[2] = n9;           // 5 longs can be used by client message events
-   gGXW->SendEvent(id, &ev);
+   gVirtualX->SendEvent(id, &ev);
 }
 
 //______________________________________________________________________________
@@ -1433,7 +1429,7 @@ void TGXServer::WMDeleteNotify()
    Window_t id;
 
    *fBuffer >> id;
-   gGXW->WMDeleteNotify(id);
+   gVirtualX->WMDeleteNotify(id);
 }
 
 //______________________________________________________________________________
@@ -1444,7 +1440,7 @@ void TGXServer::SetKeyAutoRepeat()
    Bool_t on;
 
    *fBuffer >> on;
-   gGXW->SetKeyAutoRepeat(on);
+   gVirtualX->SetKeyAutoRepeat(on);
 }
 
 //______________________________________________________________________________
@@ -1464,7 +1460,7 @@ void TGXServer::GrabKey()
    *fBuffer >> keycode;
    *fBuffer >> modifier;
    *fBuffer >> grab;
-   gGXW->GrabKey(id, keycode, modifier, grab);
+   gVirtualX->GrabKey(id, keycode, modifier, grab);
 }
 
 //______________________________________________________________________________
@@ -1488,7 +1484,7 @@ void TGXServer::GrabButton()
    *fBuffer >> confine;
    *fBuffer >> cursor;
    *fBuffer >> grab;
-   gGXW->GrabButton(id, (EMouseButton)button, modifier, evmask, confine, cursor, grab);
+   gVirtualX->GrabButton(id, (EMouseButton)button, modifier, evmask, confine, cursor, grab);
 }
 
 //______________________________________________________________________________
@@ -1508,7 +1504,7 @@ void TGXServer::GrabPointer()
    *fBuffer >> confine;
    *fBuffer >> cursor;
    *fBuffer >> grab;
-   gGXW->GrabPointer(id, evmask, confine, cursor, grab);
+   gVirtualX->GrabPointer(id, evmask, confine, cursor, grab);
 }
 
 //______________________________________________________________________________
@@ -1523,7 +1519,7 @@ void TGXServer::SetWindowName()
    *fBuffer >> l;
    char *name = new char[l+1];
    fBuffer->ReadFastArray(name,l);
-   gGXW->SetWindowName(id, name);
+   gVirtualX->SetWindowName(id, name);
    delete [] name;
 }
 
@@ -1539,7 +1535,7 @@ void TGXServer::SetIconName()
    *fBuffer >> l;
    char *name = new char[l+1];
    fBuffer->ReadFastArray(name,l);
-   gGXW->SetIconName(id, name);
+   gVirtualX->SetIconName(id, name);
    delete [] name;
 }
 
@@ -1558,7 +1554,7 @@ void TGXServer::SetClassHints()
    *fBuffer >> l2;
    char *resourceName = new char[l2+1];
    fBuffer->ReadFastArray(resourceName,l2);
-   gGXW->SetClassHints(id, className, resourceName);
+   gVirtualX->SetClassHints(id, className, resourceName);
    delete [] className;
    delete [] resourceName;
 }
@@ -1576,7 +1572,7 @@ void TGXServer::SetMWMHints()
    *fBuffer >> funcs;
    *fBuffer >> input;
    *fBuffer >> id;
-   gGXW->SetMWMHints(id, value, funcs, input);
+   gVirtualX->SetMWMHints(id, value, funcs, input);
 }
 
 //______________________________________________________________________________
@@ -1590,7 +1586,7 @@ void TGXServer::SetWMPosition()
    *fBuffer >> id;
    *fBuffer >> x;
    *fBuffer >> y;
-   gGXW->SetWMPosition(id, x, y);
+   gVirtualX->SetWMPosition(id, x, y);
 }
 
 //______________________________________________________________________________
@@ -1604,7 +1600,7 @@ void TGXServer::SetWMSize()
    *fBuffer >> id;
    *fBuffer >> w;
    *fBuffer >> h;
-   gGXW->SetWMSize(id, w, h);
+   gVirtualX->SetWMSize(id, w, h);
 }
 
 //______________________________________________________________________________
@@ -1623,7 +1619,7 @@ void TGXServer::SetWMSizeHints()
    *fBuffer >> hmax;
    *fBuffer >> winc;
    *fBuffer >> hinc;
-   gGXW->SetWMSizeHints(id, wmin, hmin, wmax, hmax, winc, hinc);
+   gVirtualX->SetWMSizeHints(id, wmin, hmin, wmax, hmax, winc, hinc);
 }
 
 //______________________________________________________________________________
@@ -1636,7 +1632,7 @@ void TGXServer::SetWMState()
 
    *fBuffer >> id;
    *fBuffer >> state;
-   gGXW->SetWMState(id, (EInitialState)state);
+   gVirtualX->SetWMState(id, (EInitialState)state);
 }
 
 //______________________________________________________________________________
@@ -1648,7 +1644,7 @@ void TGXServer::SetWMTransientHint()
 
    *fBuffer >> id;
    *fBuffer >> main_id;
-   gGXW->SetWMTransientHint(id, main_id);
+   gVirtualX->SetWMTransientHint(id, main_id);
 }
 
 //______________________________________________________________________________
@@ -1667,7 +1663,7 @@ void TGXServer::DrawString()
    *fBuffer >> len;
    char *s = new char[len+1];
    fBuffer->ReadFastArray(s,len);
-   gGXW->DrawString(id, gc, x, y, s, len);
+   gVirtualX->DrawString(id, gc, x, y, s, len);
    delete [] s;
 }
 
@@ -1683,7 +1679,7 @@ void TGXServer::TextWidth()
    *fBuffer >> len;
    char *s = new char[len+1];
    fBuffer->ReadFastArray(s,len);
-   Int_t n = gGXW->TextWidth(font, s, len);
+   Int_t n = gVirtualX->TextWidth(font, s, len);
    delete [] s;
 
    sprintf(message,"%d",n);
@@ -1699,7 +1695,7 @@ void TGXServer::GetFontProperties()
    Int_t max_ascent, max_descent;
 
    *fBuffer >> font;
-   gGXW->GetFontProperties(font, max_ascent, max_descent);
+   gVirtualX->GetFontProperties(font, max_ascent, max_descent);
 
    sprintf(message,"%d %d",max_ascent,max_descent);
    fSocket->Send(message,kMaxMess);
@@ -1716,7 +1712,7 @@ void TGXServer::GetGCValues()
 
    *fBuffer >> gc;
    *fBuffer >> gval.fMask;
-   gGXW->GetGCValues(gc, gval);
+   gVirtualX->GetGCValues(gc, gval);
 
    Int_t n1,n2,n3,n4,n5,n6,n7,n8,n9;
 
@@ -1764,7 +1760,7 @@ void TGXServer::GetFontStruct()
    FontH_t fh;
 
    *fBuffer >> fh;
-   FontStruct_t fs = gGXW->GetFontStruct(fh);
+   FontStruct_t fs = gVirtualX->GetFontStruct(fh);
 
    Int_t number = fs;
    sprintf(message,"%d",number);
@@ -1780,7 +1776,7 @@ void TGXServer::ClearWindow2()
    Window_t id;
 
    *fBuffer >> id;
-   gGXW->ClearWindow(id);
+   gVirtualX->ClearWindow(id);
 }
 
 //______________________________________________________________________________
@@ -1793,7 +1789,7 @@ void TGXServer::KeysymToKeycode()
    UInt_t keysym;
 
    *fBuffer >> keysym;
-   Int_t kc = gGXW->KeysymToKeycode(keysym);
+   Int_t kc = gVirtualX->KeysymToKeycode(keysym);
 
    sprintf(message,"%d",kc);
    fSocket->Send(message,kMaxMess);
@@ -1815,7 +1811,7 @@ void TGXServer::FillRectangle()
    *fBuffer >> y;
    *fBuffer >> w;
    *fBuffer >> h;
-   gGXW->FillRectangle(id, gc, x, y, w, h);
+   gVirtualX->FillRectangle(id, gc, x, y, w, h);
 }
 
 //______________________________________________________________________________
@@ -1834,7 +1830,7 @@ void TGXServer::DrawRectangle()
    *fBuffer >> y;
    *fBuffer >> w;
    *fBuffer >> h;
-   gGXW->DrawRectangle(id, gc, x, y, w, h);
+   gVirtualX->DrawRectangle(id, gc, x, y, w, h);
 }
 
 //______________________________________________________________________________
@@ -1856,7 +1852,7 @@ void TGXServer::DrawSegments()
       *fBuffer >> seg[i].fX2;
       *fBuffer >> seg[i].fY2;
    }
-   gGXW->DrawSegments(id, gc, seg, nseg);
+   gVirtualX->DrawSegments(id, gc, seg, nseg);
    delete [] seg;
 }
 
@@ -1873,7 +1869,7 @@ void TGXServer::SelectInput()
 
    *fBuffer >> id;
    *fBuffer >> evmask;
-   gGXW->SelectInput(id, evmask);
+   gVirtualX->SelectInput(id, evmask);
 }
 
 //______________________________________________________________________________
@@ -1883,7 +1879,7 @@ void TGXServer::SelectWindow()
    Int_t wid;
 
    *fBuffer >> wid;
-   gGXW->SelectWindow(wid);
+   gVirtualX->SelectWindow(wid);
 }
 
 //______________________________________________________________________________
@@ -1894,7 +1890,7 @@ void TGXServer::SetInputFocus()
    Window_t id;
 
    *fBuffer >> id;
-   gGXW->SetInputFocus(id);
+   gVirtualX->SetInputFocus(id);
 }
 
 //______________________________________________________________________________
@@ -1987,7 +1983,7 @@ void TGXServer::TranslateCoordinates()
    *fBuffer >> dest;
    *fBuffer >> src_x;
    *fBuffer >> src_y;
-   gGXW->TranslateCoordinates(src, dest, src_x, src_y, dest_x, dest_y, child);
+   gVirtualX->TranslateCoordinates(src, dest, src_x, src_y, dest_x, dest_y, child);
    printf("TranslateCoordinates called, empty\n");
 }
 
@@ -2002,7 +1998,7 @@ void TGXServer::GetWindowSize()
    UInt_t w, h;
 
    *fBuffer >> id;
-   gGXW->GetWindowSize(id, x, y, w, h);
+   gVirtualX->GetWindowSize(id, x, y, w, h);
 
    sprintf(message,"%d %d %d %d",x, y, w, h);
    fSocket->Send(message,kMaxMess);
@@ -2031,7 +2027,7 @@ void TGXServer::FillPolygon()
       *fBuffer >> points[i].fX;
       *fBuffer >> points[i].fY;
    }
-   gGXW->FillPolygon(id, gc, points, npnt);
+   gVirtualX->FillPolygon(id, gc, points, npnt);
    delete [] points;
 }
 
@@ -2054,7 +2050,7 @@ void TGXServer::QueryPointer()
    UInt_t mask;
 
    *fBuffer >> id;
-   gGXW->QueryPointer(id, rootw, childw, root_x, root_y, win_x, win_y, mask);
+   gVirtualX->QueryPointer(id, rootw, childw, root_x, root_y, win_x, win_y, mask);
 
    Int_t lid, lrootw, lchildw, lmask;
    lid     = id;
@@ -2076,7 +2072,7 @@ void TGXServer::SetForeground()
 
    *fBuffer >> gc;
    *fBuffer >> foreground;
-   gGXW->SetForeground(gc, foreground);
+   gVirtualX->SetForeground(gc, foreground);
 }
 
 //______________________________________________________________________________
@@ -2101,7 +2097,7 @@ void TGXServer::SetClipRectangles()
       *fBuffer >> recs[i].fWidth;
       *fBuffer >> recs[i].fHeight;
    }
-   gGXW->SetClipRectangles(gc, x, y, recs, n);
+   gVirtualX->SetClipRectangles(gc, x, y, recs, n);
    delete [] recs;
 }
 
@@ -2111,7 +2107,7 @@ void TGXServer::SetFillColor()
    Color_t cindex;
 
    *fBuffer >> cindex;
-   gGXW->SetFillColor(cindex);
+   gVirtualX->SetFillColor(cindex);
 }
 
 //______________________________________________________________________________
@@ -2120,7 +2116,7 @@ void TGXServer::SetFillStyle()
    Style_t style;
 
    *fBuffer >> style;
-   gGXW->SetFillStyle(style);
+   gVirtualX->SetFillStyle(style);
 }
 
 //______________________________________________________________________________
@@ -2129,7 +2125,7 @@ void TGXServer::SetLineColor()
    Color_t cindex;
 
    *fBuffer >> cindex;
-   gGXW->SetLineColor(cindex);
+   gVirtualX->SetLineColor(cindex);
 }
 
 //______________________________________________________________________________
@@ -2140,7 +2136,7 @@ void TGXServer::SetLineType()
    *fBuffer >> n;
    Int_t *dash = new Int_t[n+1];
    fBuffer->ReadFastArray(dash,n);
-   gGXW->SetLineType(n, dash);
+   gVirtualX->SetLineType(n, dash);
    delete [] dash;
 }
 
@@ -2150,7 +2146,7 @@ void TGXServer::SetLineStyle()
    Style_t style;
 
    *fBuffer >> style;
-   gGXW->SetLineStyle(style);
+   gVirtualX->SetLineStyle(style);
 }
 
 //______________________________________________________________________________
@@ -2159,7 +2155,7 @@ void TGXServer::SetLineWidth()
    Width_t width;
 
    *fBuffer >> width;
-   gGXW->SetLineWidth(width);
+   gVirtualX->SetLineWidth(width);
 }
 
 //______________________________________________________________________________
@@ -2168,7 +2164,7 @@ void TGXServer::SetMarkerColor()
    Color_t cindex;
 
    *fBuffer >> cindex;
-   gGXW->SetMarkerColor(cindex);
+   gVirtualX->SetMarkerColor(cindex);
 }
 
 //______________________________________________________________________________
@@ -2177,7 +2173,7 @@ void TGXServer::SetMarkerSize()
    Float_t markersize;
 
    *fBuffer >> markersize;
-   gGXW->SetMarkerSize(markersize);
+   gVirtualX->SetMarkerSize(markersize);
 }
 
 //______________________________________________________________________________
@@ -2186,7 +2182,7 @@ void TGXServer::SetMarkerStyle()
    Style_t markerstyle;
 
    *fBuffer >> markerstyle;
-   gGXW->SetMarkerStyle(markerstyle);
+   gVirtualX->SetMarkerStyle(markerstyle);
 }
 
 //______________________________________________________________________________
@@ -2199,7 +2195,7 @@ void TGXServer::SetRGB()
    *fBuffer >> r;
    *fBuffer >> g;
    *fBuffer >> b;
-   gGXW->SetRGB(cindex, r, g, b);
+   gVirtualX->SetRGB(cindex, r, g, b);
 }
 
 //______________________________________________________________________________
@@ -2208,7 +2204,7 @@ void TGXServer::SetTextAlign()
    Short_t talign;
 
    *fBuffer >> talign;
-   gGXW->SetTextAlign(talign);
+   gVirtualX->SetTextAlign(talign);
 }
 
 //______________________________________________________________________________
@@ -2217,7 +2213,7 @@ void TGXServer::SetTextColor()
    Color_t cindex;
 
    *fBuffer >> cindex;
-   gGXW->SetTextColor(cindex);
+   gVirtualX->SetTextColor(cindex);
 }
 
 //______________________________________________________________________________
@@ -2230,7 +2226,7 @@ void TGXServer::SetTextFont()
    *fBuffer >> l;
    char *fontname = new char[l+1];
    fBuffer->WriteFastArray(fontname,l);
-   Int_t number = gGXW->SetTextFont(fontname, (TGXW::ETextSetMode)mode);
+   Int_t number = gVirtualX->SetTextFont(fontname, (TVirtualX::ETextSetMode)mode);
    delete [] fontname;
 
    sprintf(message,"%d",number);
@@ -2243,7 +2239,7 @@ void TGXServer::SetTextFont2()
    Font_t fontnumber;
 
    *fBuffer >> fontnumber;
-   gGXW->SetTextFont(fontnumber);
+   gVirtualX->SetTextFont(fontnumber);
 }
 
 //______________________________________________________________________________
@@ -2252,7 +2248,7 @@ void TGXServer::SetTextMagnitude()
    Float_t mgn;
 
    *fBuffer >> mgn;
-   gGXW->SetTextMagnitude(mgn);
+   gVirtualX->SetTextMagnitude(mgn);
 }
 
 //______________________________________________________________________________
@@ -2261,7 +2257,7 @@ void TGXServer::SetTextSize()
    Float_t textsize;
 
    *fBuffer >> textsize;
-   gGXW->SetTextSize(textsize);
+   gVirtualX->SetTextSize(textsize);
 }
 
 //______________________________________________________________________________
@@ -2271,7 +2267,7 @@ void TGXServer::GetDoubleBuffer()
    Int_t id;
 
    *fBuffer >> id;
-   Int_t db = gGXW->GetDoubleBuffer(id);
+   Int_t db = gVirtualX->GetDoubleBuffer(id);
 
    sprintf(message,"%d",db);
    fSocket->Send(message,kMaxMess);
@@ -2282,7 +2278,7 @@ void TGXServer::GetPlanes()
 {
    Int_t nplanes;
 
-   gGXW->GetPlanes(nplanes);
+   gVirtualX->GetPlanes(nplanes);
 
    sprintf(message,"%d",nplanes);
    fSocket->Send(message,kMaxMess);
@@ -2295,7 +2291,7 @@ void TGXServer::GetRGB()
    Float_t r, g, b;
 
    *fBuffer >> id;
-   gGXW->GetRGB(id, r, g, b);
+   gVirtualX->GetRGB(id, r, g, b);
 
    sprintf(message,"%f %f %f",r, g, b);
    fSocket->Send(message,kMaxMess);
@@ -2310,7 +2306,7 @@ void TGXServer::GetTextExtent()
    *fBuffer >> l;
    char * text = new char[l+1];
    fBuffer->ReadFastArray(text,l);
-   gGXW->GetTextExtent(w, h, text);
+   gVirtualX->GetTextExtent(w, h, text);
    delete [] text;
 
    sprintf(message,"%d %d",w, h);
@@ -2329,7 +2325,7 @@ void TGXServer::InitWindow()
    ULong_t id;
 
    *fBuffer >> id;
-   Int_t rc = gGXW->InitWindow(id);
+   Int_t rc = gVirtualX->InitWindow(id);
 
    sprintf(message,"%d",rc);
    fSocket->Send(message,kMaxMess);
@@ -2340,7 +2336,7 @@ void TGXServer::QueryPointer2()
 {
    Int_t ix, iy;
 
-   gGXW->QueryPointer(ix, iy);
+   gVirtualX->QueryPointer(ix, iy);
 
    sprintf(message,"%d %d", ix, iy);
    fSocket->Send(message,kMaxMess);
@@ -2360,7 +2356,7 @@ void TGXServer::CopyPixmap()
    *fBuffer >> id;
    *fBuffer >> x;
    *fBuffer >> y;
-   gGXW->CopyPixmap(id, x, y);
+   gVirtualX->CopyPixmap(id, x, y);
 }
 
 //______________________________________________________________________________
@@ -2383,7 +2379,7 @@ void TGXServer::CreateOpenGLContext()
    Int_t id;
 
    *fBuffer >> id;
-   gGXW->CreateOpenGLContext(id);
+   gVirtualX->CreateOpenGLContext(id);
 }
 
 //______________________________________________________________________________
@@ -2392,6 +2388,6 @@ void TGXServer::DeleteOpenGLContext()
    Int_t id;
 
    *fBuffer >> id;
-   gGXW->DeleteOpenGLContext(id);
+   gVirtualX->DeleteOpenGLContext(id);
 
 }

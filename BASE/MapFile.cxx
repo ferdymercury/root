@@ -1,34 +1,23 @@
+//*CMZ :  2.23/12 26/01/2000  09.41.49  by  Rene Brun
+//*CMZ :  2.23/10 13/12/99  19.03.35  by  Fons Rademakers
+//*CMZ :  2.23/09 19/11/99  14.37.36  by  Fons Rademakers
 //*CMZ :  2.22/10 22/07/99  13.46.06  by  Fons Rademakers
 //*CMZ :  2.22/02 28/05/99  16.38.54  by  Fons Rademakers
 //*CMZ :  2.21/08 11/03/99  19.58.32  by  Fons Rademakers
 //*CMZ :  2.21/07 05/03/99  15.21.25  by  Fons Rademakers
-//*CMZ :  2.21/06 15/02/99  19.22.13  by  Fons Rademakers
-//*CMZ :  2.21/05 08/02/99  11.48.30  by  Fons Rademakers
-//*CMZ :  2.21/04 29/01/99  12.53.31  by  Fons Rademakers
-//*CMZ :  2.00/12 02/10/98  12.45.22  by  Fons Rademakers
-//*CMZ :  2.00/10 29/07/98  11.24.27  by  Rene Brun
-//*CMZ :  2.00/09 22/06/98  08.29.53  by  Rene Brun
-//*CMZ :  2.00/08 04/06/98  11.13.44  by  Fons Rademakers
-//*CMZ :  2.00/04 03/04/98  16.50.01  by  Rene Brun
-//*CMZ :  1.03/09 16/12/97  16.35.32  by  Rene Brun
 //*-- Author :    Fons Rademakers   08/07/97
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 #ifdef WIN32
 //*CMZ :  1.00/09 23/04/97  17.59.54  by  Rene Brun
@@ -139,7 +128,7 @@
 #include "TString.h"
 #include "TSystem.h"
 #include "TClass.h"
-#include "mmprivate.h"
+#include "TMath.h"
 
 #ifdef R__UNIX
 #define HAVE_SEMOP
@@ -155,7 +144,7 @@ union semun {
    ushort *array;                // array for GETALL & SETALL
 };
 #endif
-#ifdef R__LINUX
+#if defined(R__LINUX) || defined(R__LYNXOS)
 #  define       SEM_A   0200     // alter permission
 #  define       SEM_R   0400     // read permission
 #endif
@@ -213,7 +202,7 @@ TMapFile::TMapFile()
 }
 
 //______________________________________________________________________________
-TMapFile::TMapFile(const Text_t *name, const Text_t *title, Option_t *option,
+TMapFile::TMapFile(const char *name, const char *title, Option_t *option,
                    Int_t size, TMapFile *&newMapFile)
 {
    // Create a memory mapped file. This opens a file (to which the
@@ -240,6 +229,9 @@ TMapFile::TMapFile(const Text_t *name, const Text_t *title, Option_t *option,
    fDirectory   = 0;
    fBrowseList  = 0;
    fGetting     = 0;
+   fWritten     = 0;
+   fSumBuffer   = 0;
+   fSum2Buffer  = 0;
 
    char  *cleanup = 0;
    Bool_t create  = kFALSE;
@@ -505,6 +497,9 @@ TMapFile::TMapFile(const TMapFile &f, Long_t offset)
    fDirectory   = 0;
    fBrowseList  = 0;
    fGetting     = 0;
+   fWritten     = f.fWritten;
+   fSumBuffer   = f.fSumBuffer;
+   fSum2Buffer  = f.fSum2Buffer;
 #ifdef WIN32
    CreateSemaphore(fSemaphore);
 #endif
@@ -609,7 +604,7 @@ void TMapFile::Update(TObject *obj)
       if (all || mr->fObject == obj) {
          TBuffer *b;
          if (!mr->fBufSize) {
-            b = new TBuffer(TBuffer::kWrite, TBuffer::kMinimalSize);
+            b = new TBuffer(TBuffer::kWrite, GetBestBuffer());
             mr->fClassName = StrDup(mr->fObject->ClassName());
          } else
             b = new TBuffer(TBuffer::kWrite, mr->fBufSize, mr->fBuffer);
@@ -617,6 +612,7 @@ void TMapFile::Update(TObject *obj)
          mr->fObject->Streamer(*b);
          mr->fBufSize = b->BufferSize();
          mr->fBuffer  = b->Buffer();
+         SumBuffer(b->Length());
          b->DetachBuffer();
          delete b;
       }
@@ -774,16 +770,6 @@ release:
 }
 
 //______________________________________________________________________________
-void *TMapFile::GetBreakval() const
-{
-   // Return the current location in the memory region for this malloc heap which
-   // represents the end of memory in use. Returns 0 if map file was closed.
-
-   if (!fMmallocDesc) return 0;
-   return (void *)((struct mdesc *)fMmallocDesc)->breakval;
-}
-
-//______________________________________________________________________________
 #ifndef WIN32
 void TMapFile::CreateSemaphore(int)
 #else
@@ -852,16 +838,16 @@ Int_t TMapFile::AcquireSemaphore()
 again:
       if (semop(fSemaphore, &buf, 1) == -1) {
 #if defined(R__FBSD)
-         if (errno == EINVAL)
+         if (TSystem::GetErrno() == EINVAL)
 #else
-         if (errno == EIDRM)
+         if (TSystem::GetErrno() == EIDRM)
 #endif
             fSemaphore = -1;
 #if !defined(R__FBSD)
-         if (errno == EINTR) {
+         if (TSystem::GetErrno() == EINTR) {
             if (intr > 2)
                return -1;
-            errno = 0;
+            TSystem::ResetErrno();
             intr++;
             goto again;
          }
@@ -874,6 +860,13 @@ again:
       WaitForSingleObject((HANDLE)fhSemaphore,INFINITE);
 #endif
 #endif
+
+   // file might have grown, update mapping on reader to new size
+   if (!fWritable && fMmallocDesc) {
+      if (mmalloc_update_mapping(fMmallocDesc) == -1)
+         Error("AcquireSemaphore", "cannot update mapping");
+   }
+
    return 0;
 }
 
@@ -888,9 +881,9 @@ Int_t TMapFile::ReleaseSemaphore()
       struct sembuf buf = { 0, 1, SEM_UNDO };
       if (semop(fSemaphore, &buf, 1) == -1) {
 #if defined(R__FBSD)
-         if (errno == EINVAL)
+         if (TSystem::GetErrno() == EINVAL)
 #else
-         if (errno == EIDRM)
+         if (TSystem::GetErrno() == EIDRM)
 #endif
             fSemaphore = -1;
       }
@@ -971,14 +964,14 @@ void TMapFile::Print(Option_t *)
 
    Printf("Memory mapped file:   %s", fName);
    Printf("Title:                %s", fTitle);
-   if (fMmallocDesc)
+   if (fMmallocDesc) {
       Printf("Option:               %s", fOption);
-   else
+      ULong_t size = (ULong_t)((struct mdesc *)fMmallocDesc)->top - fBaseAddr;
+      Printf("Mapped Memory region: 0x%lx - 0x%lx (%.2f MB)", fBaseAddr, fBaseAddr + size,
+             (float)size/1048576);
+      Printf("Current breakval:     0x%lx", (ULong_t)GetBreakval());
+   } else
       Printf("Option:               file closed");
-   Printf("Mapped Memory region: 0x%x - 0x%x (%.2f MB)", fBaseAddr, fBaseAddr + fSize,
-          (float)fSize/1048576);
-   if (fMmallocDesc)
-      Printf("Current breakval:     0x%x", ((struct mdesc *)fMmallocDesc)->breakval);
 }
 
 //______________________________________________________________________________
@@ -1018,7 +1011,7 @@ void TMapFile::Browse(TBrowser *b)
 }
 
 //______________________________________________________________________________
-Bool_t TMapFile::cd(const Text_t *path)
+Bool_t TMapFile::cd(const char *path)
 {
    // Cd to associated directory,
 
@@ -1052,9 +1045,35 @@ void TMapFile::ls(Option_t *)
    }
 }
 
+//_______________________________________________________________________
+void TMapFile::SumBuffer(Int_t bufsize)
+{
+   // Increment statistics for buffer sizes of objects in this file.
+
+   fWritten++;
+   fSumBuffer  += bufsize;
+   fSum2Buffer += bufsize*bufsize;
+}
+
 //______________________________________________________________________________
-TMapFile *TMapFile::Create(const Text_t *name, Option_t *option, Int_t size,
-                           const Text_t *title)
+Int_t TMapFile::GetBestBuffer()
+{
+   // Return the best buffer size for objects in this file.
+   //
+   // The best buffer size is estimated based on the current mean value
+   // and standard deviation of all objects written so far to this file.
+   // Returns mean value + one standard deviation.
+
+   if (!fWritten) return TBuffer::kMinimalSize;
+   Double_t mean = fSumBuffer/fWritten;
+   Double_t rms2 = TMath::Abs(fSum2Buffer/fSumBuffer - mean*mean);
+   return (Int_t)(mean + TMath::Sqrt(rms2));
+}
+
+
+//______________________________________________________________________________
+TMapFile *TMapFile::Create(const char *name, Option_t *option, Int_t size,
+                           const char *title)
 {
    // Create a memory mapped file. This opens a file (to which the
    // memory will be mapped) and attaches a memory region to it.
@@ -1062,7 +1081,7 @@ TMapFile *TMapFile::Create(const Text_t *name, Option_t *option, Int_t size,
    // or "READ" (see TFile). The default open mode is "READ". The size
    // argument specifies the maximum size of shared memory file in bytes.
    // TMapFile's can only be created via this method. Create() enforces that
-   // a TMapFile is always on the memory mapped heap (when in "NEW", "CREATE"
+   // a TMapFile is always on the memory mapped heap (when "NEW", "CREATE"
    // or "RECREATE" are used).
 
    TMapFile *newMapFile;

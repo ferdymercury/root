@@ -1,24 +1,20 @@
+//*CMZ :  2.23/02 02/09/99  15.54.28  by  Rene Brun
 //*CMZ :  2.21/08 11/03/99  16.36.20  by  Fons Rademakers
 //*CMZ :  2.20/00 03/11/98  19.52.59  by  Fons Rademakers
 //*CMZ :  2.00/10 16/07/98  18.50.45  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   15/07/98
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -78,11 +74,11 @@ TRootEmbeddedContainer::TRootEmbeddedContainer(TRootEmbeddedCanvas *c, Window_t 
 
    fCanvas = c;
 
-   gGXW->GrabButton(fId, kAnyButton, kAnyModifier,
+   gVirtualX->GrabButton(fId, kAnyButton, kAnyModifier,
                     kButtonPressMask | kButtonReleaseMask,
                     kNone, kNone);
 
-   gGXW->SelectInput(fId, kKeyPressMask | kKeyReleaseMask | kExposureMask |
+   gVirtualX->SelectInput(fId, kKeyPressMask | kKeyReleaseMask | kExposureMask |
                      kPointerMotionMask | kStructureNotifyMask | kLeaveWindowMask);
 }
 
@@ -102,8 +98,8 @@ TRootEmbeddedCanvas::TRootEmbeddedCanvas(const char *name, const TGWindow *p,
    fButton  = 0;
    fAutoFit = kTRUE;
 
-   Int_t wid = gGXW->InitWindow((ULong_t)GetViewPort()->GetId());
-   Window_t win = gGXW->GetWindowID(wid);
+   Int_t wid = gVirtualX->InitWindow((ULong_t)GetViewPort()->GetId());
+   Window_t win = gVirtualX->GetWindowID(wid);
    fCanvasContainer = new TRootEmbeddedContainer(this, win, GetViewPort());
    SetContainer(fCanvasContainer);
 
@@ -193,7 +189,7 @@ Bool_t TRootEmbeddedCanvas::HandleContainerKey(Event_t *event)
       fButton = event->fCode;
       UInt_t keysym;
       char str[2];
-      gGXW->LookupString(event, str, sizeof(str), keysym);
+      gVirtualX->LookupString(event, str, sizeof(str), keysym);
       if (str[0] == 3)   // ctrl-c sets the interrupt flag
          gROOT->SetInterrupt();
       fCanvas->HandleInput(kKeyPress, str[0], 0);

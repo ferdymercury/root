@@ -1,27 +1,22 @@
+//*CMZ :  2.23/09 10/11/99  17.04.50  by  Fons Rademakers
+//*CMZ :  2.23/04 11/10/99  18.53.04  by  Rene Brun
+//*CMZ :  2.23/03 08/09/99  00.07.49  by  Fons Rademakers
 //*CMZ :  2.20/01 02/12/98  18.02.00  by  Fons Rademakers
 //*CMZ :  2.00/09 19/06/98  11.13.44  by  Rene Brun
 //*CMZ :  2.00/07 18/05/98  20.13.52  by  Fons Rademakers
-//*CMZ :  2.00/06 13/05/98  09.17.47  by  Kaori Wada
-//*CMZ :  2.00/01 13/03/98  12.08.09  by  Fons Rademakers
-//*CMZ :  2.00/00 04/03/98  17.28.16  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   27/12/97
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 //*CMZ :  2.00/00 16/02/98  00.17.08  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   27/12/97
@@ -47,13 +42,17 @@
 //                                                                      //
 //////////////////////////////////////////////////////////////////////////
 
+#ifdef HAVE_CONFIG
+#include "config.h"
+#endif
+
 #include "TGClient.h"
 #include "TROOT.h"
 #include "TSystem.h"
 #include "TEnv.h"
 #include "THashList.h"
 #include "TSysEvtHandler.h"
-#include "TGXW.h"
+#include "TVirtualX.h"
 #include "TGWindow.h"
 #include "TGPicture.h"
 #include "TGMimeTypes.h"
@@ -276,9 +275,20 @@ TGClient::TGClient(const char *dpyName)
    strcpy(selforecolor, gEnv->GetValue("Gui.SelectForegroundColor", "white"));
    strcpy(selbackcolor, gEnv->GetValue("Gui.SelectBackgroundColor", "#000080"));
 #ifndef R__VMS
-   sprintf(line, "%s/icons:%s/icons:.", gSystem->Getenv("HOME"),
-                                        gSystem->Getenv("ROOTSYS"));
-   strcpy(icon_path, gEnv->GetValue("Gui.IconPath", line));
+# ifdef ROOTICONPATH
+   sprintf(icon_path, "%s/icons:%s:.:",
+           gSystem->Getenv("HOME"),
+           ROOTICONPATH);
+#  ifdef EXTRAICONPATH
+   strcat(icon_path, gEnv->GetValue("Gui.IconPath", EXTRAICONPATH));
+#  else
+   strcat(icon_path, gEnv->GetValue("Gui.IconPath", ""));
+#  endif
+# else
+   sprintf(icon_path, "%s/icons:%s/icons:.:", gSystem->Getenv("HOME"),
+                                              gSystem->Getenv("ROOTSYS"));
+   strcat(icon_path, gEnv->GetValue("Gui.IconPath", ""));
+# endif
    sprintf(line, "%s/.root.mimes", gSystem->Getenv("HOME"));
 #else
    sprintf(line,"%s[ICONS]",gSystem->Getenv("ROOTSYS"));
@@ -289,19 +299,21 @@ TGClient::TGClient(const char *dpyName)
    strcpy(mime_file, gEnv->GetValue("Gui.MimeTypeFile", line));
    if (gSystem->AccessPathName(mime_file, kReadPermission))
 #ifdef R__VMS
-   {
       sprintf(mime_file,"%s[ICONS]root.mimes",gSystem->Getenv("ROOTSYS"));
-   }
 #else
+# ifdef ROOTETCDIR
+      sprintf(mime_file, "%s/root.mimes", ROOTETCDIR);
+# else
       sprintf(mime_file, "%s/icons/root.mimes", gSystem->Getenv("ROOTSYS"));
+# endif
 #endif
    // Set DISPLAY based on utmp (only if DISPLAY is not yet set).
    gSystem->SetDisplay();
 
    // Open the connection to the display
-   if ((fXfd = gGXW->OpenDisplay(dpyName)) < 0) {
+   if ((fXfd = gVirtualX->OpenDisplay(dpyName)) < 0) {
       Error("TGClient", "can't open display \"%s\", bombing...",
-            gGXW->DisplayName(dpyName));
+            gVirtualX->DisplayName(dpyName));
       gSystem->Exit(1);
    }
 
@@ -310,17 +322,17 @@ TGClient::TGClient(const char *dpyName)
 
    fWlist = new THashList(200);
 
-   // Setup some atoms (defined in TGXW)...
+   // Setup some atoms (defined in TVirtualX)...
 
-   gWM_DELETE_WINDOW = gGXW->InternAtom("WM_DELETE_WINDOW", kFALSE);
-   gMOTIF_WM_HINTS   = gGXW->InternAtom("_MOTIF_WM_HINTS", kFALSE);
-   gROOT_MESSAGE     = gGXW->InternAtom("_ROOT_MESSAGE", kFALSE);
+   gWM_DELETE_WINDOW = gVirtualX->InternAtom("WM_DELETE_WINDOW", kFALSE);
+   gMOTIF_WM_HINTS   = gVirtualX->InternAtom("_MOTIF_WM_HINTS", kFALSE);
+   gROOT_MESSAGE     = gVirtualX->InternAtom("_ROOT_MESSAGE", kFALSE);
 
    // Create an object for the root window, create picture pool, etc...
 
    fGlobalNeedRedraw = kFALSE;
 
-   fRoot = new TGFrame(this, gGXW->GetDefaultRootWindow());
+   fRoot = new TGFrame(this, gVirtualX->GetDefaultRootWindow());
 
    fPicturePool  = new TGPicturePool(this, icon_path);
    fMimeTypeList = new TGMimeTypes(this, mime_file);
@@ -364,23 +376,23 @@ TGClient::TGClient(const char *dpyName)
                 kGCFillStyle | kGCGraphicsExposures;
    gval.fFillStyle = kFillSolid;
    gval.fGraphicsExposures = kFALSE;
-   gval.fFont = gGXW->GetFontHandle(TGLabel::fgDefaultFontStruct);
+   gval.fFont = gVirtualX->GetFontHandle(TGLabel::fgDefaultFontStruct);
    gval.fBackground = fBackColor;
 
    TGFrame::fgBlackPixel = gval.fForeground = fBlack;
-   TGFrame::fgBlackGC = gGXW->CreateGC(fRoot->GetId(), &gval);
+   TGFrame::fgBlackGC = gVirtualX->CreateGC(fRoot->GetId(), &gval);
 
    TGFrame::fgWhitePixel = gval.fForeground = fWhite;
-   TGFrame::fgWhiteGC = gGXW->CreateGC(fRoot->GetId(), &gval);
+   TGFrame::fgWhiteGC = gVirtualX->CreateGC(fRoot->GetId(), &gval);
 
    gval.fForeground = fHilite;
-   TGFrame::fgHilightGC = gGXW->CreateGC(fRoot->GetId(), &gval);
+   TGFrame::fgHilightGC = gVirtualX->CreateGC(fRoot->GetId(), &gval);
 
    gval.fForeground = fShadow;
-   TGFrame::fgShadowGC = gGXW->CreateGC(fRoot->GetId(), &gval);
+   TGFrame::fgShadowGC = gVirtualX->CreateGC(fRoot->GetId(), &gval);
 
    gval.fForeground = fBackColor;
-   TGFrame::fgBckgndGC = gGXW->CreateGC(fRoot->GetId(), &gval);
+   TGFrame::fgBckgndGC = gVirtualX->CreateGC(fRoot->GetId(), &gval);
 
    gval.fForeground = fForeColor;
    TGRadioButton::fgDefaultGC =
@@ -390,42 +402,42 @@ TGClient::TGClient(const char *dpyName)
    TGGroupFrame::fgDefaultGC =
    TGTextEntry::fgDefaultGC =
    TGMenuTitle::fgDefaultGC =
-   TGPopupMenu::fgDefaultGC = gGXW->CreateGC(fRoot->GetId(), &gval);
-   TGButton::fgDefaultGC = gGXW->CreateGC(fRoot->GetId(), &gval);
-   TGTextLBEntry::fgDefaultGC = gGXW->CreateGC(fRoot->GetId(), &gval);
-   TGTreeLBEntry::fgDefaultGC = gGXW->CreateGC(fRoot->GetId(), &gval);
+   TGPopupMenu::fgDefaultGC = gVirtualX->CreateGC(fRoot->GetId(), &gval);
+   TGButton::fgDefaultGC = gVirtualX->CreateGC(fRoot->GetId(), &gval);
+   TGTextLBEntry::fgDefaultGC = gVirtualX->CreateGC(fRoot->GetId(), &gval);
+   TGTreeLBEntry::fgDefaultGC = gVirtualX->CreateGC(fRoot->GetId(), &gval);
 
    TGFrame::fgDefaultFrameBackground = fBackColor;
    TGFrame::fgDefaultSelectedBackground = gval.fForeground = fSelBackColor;
    TGTextEntry::fgDefaultSelectedBackgroundGC =
    TGPopupMenu::fgDefaultSelectedBackgroundGC =
-      gGXW->CreateGC(fRoot->GetId(), &gval);
+      gVirtualX->CreateGC(fRoot->GetId(), &gval);
 
    TGLVEntry::fgSelPixel =
    TGTextLBEntry::fgSelPixel =
    TGTreeLBEntry::fgSelPixel = gval.fForeground = fSelForeColor;
    TGTextEntry::fgDefaultSelectedGC =
    TGMenuTitle::fgDefaultSelectedGC =
-   TGPopupMenu::fgDefaultSelectedGC = gGXW->CreateGC(fRoot->GetId(), &gval);
+   TGPopupMenu::fgDefaultSelectedGC = gVirtualX->CreateGC(fRoot->GetId(), &gval);
 
-   gval.fFont = gGXW->GetFontHandle(TGLVEntry::fgDefaultFontStruct);
+   gval.fFont = gVirtualX->GetFontHandle(TGLVEntry::fgDefaultFontStruct);
    gval.fForeground = fForeColor;
-   TGLVEntry::fgDefaultGC = gGXW->CreateGC(fRoot->GetId(), &gval);
-   TGListView::fgDefaultGC = gGXW->CreateGC(fRoot->GetId(), &gval);
-   TGStatusBar::fgDefaultGC = gGXW->CreateGC(fRoot->GetId(), &gval);
+   TGLVEntry::fgDefaultGC = gVirtualX->CreateGC(fRoot->GetId(), &gval);
+   TGListView::fgDefaultGC = gVirtualX->CreateGC(fRoot->GetId(), &gval);
+   TGStatusBar::fgDefaultGC = gVirtualX->CreateGC(fRoot->GetId(), &gval);
 
    TGComboBoxPopup::fgDefaultCursor =
    TGMenuBar::fgDefaultCursor =
-   TGPopupMenu::fgDefaultCursor = gGXW->CreateCursor(kArrowRight);
-   TGTextEntry::fgDefaultCursor = gGXW->CreateCursor(kCaret);
+   TGPopupMenu::fgDefaultCursor = gVirtualX->CreateCursor(kArrowRight);
+   TGTextEntry::fgDefaultCursor = gVirtualX->CreateCursor(kCaret);
 
-   gGXW->GetWindowAttributes(fRoot->GetId(), root_attr);
+   gVirtualX->GetWindowAttributes(fRoot->GetId(), root_attr);
    TGPicturePool::fgDefaultColormap = root_attr.fColormap;
 
    TGScrollBar::fgScrollBarWidth = kDefaultScrollBarWidth;
 
    TGScrollBar::fgBckgndPixmap =
-   checkered = gGXW->CreatePixmap(fRoot->GetId(),
+   checkered = gVirtualX->CreatePixmap(fRoot->GetId(),
                      (const char *)gray_bits, gray_width, gray_height,
                      fBackColor, fHilite, root_attr.fDepth);
 
@@ -435,32 +447,32 @@ TGClient::TGClient(const char *dpyName)
    gval.fBackground = fBackColor;
    gval.fFillStyle  = kFillTiled;
    gval.fTile       = checkered;
-   TGButton::fgHibckgndGC = gGXW->CreateGC(fRoot->GetId(), &gval);
+   TGButton::fgHibckgndGC = gVirtualX->CreateGC(fRoot->GetId(), &gval);
 
-   TGRadioButton::fgR1 = gGXW->CreateBitmap(fRoot->GetId(),
+   TGRadioButton::fgR1 = gVirtualX->CreateBitmap(fRoot->GetId(),
                              (const char *)r1_bits, r_width, r_height);
-   TGRadioButton::fgR2 = gGXW->CreateBitmap(fRoot->GetId(),
+   TGRadioButton::fgR2 = gVirtualX->CreateBitmap(fRoot->GetId(),
                              (const char *)r2_bits, r_width, r_height);
-   TGRadioButton::fgR3 = gGXW->CreateBitmap(fRoot->GetId(),
+   TGRadioButton::fgR3 = gVirtualX->CreateBitmap(fRoot->GetId(),
                              (const char *)r3_bits, r_width, r_height);
-   TGRadioButton::fgR4 = gGXW->CreateBitmap(fRoot->GetId(),
+   TGRadioButton::fgR4 = gVirtualX->CreateBitmap(fRoot->GetId(),
                              (const char *)r4_bits, r_width, r_height);
-   TGRadioButton::fgR5 = gGXW->CreateBitmap(fRoot->GetId(),
+   TGRadioButton::fgR5 = gVirtualX->CreateBitmap(fRoot->GetId(),
                              (const char *)r5_bits, r_width, r_height);
    TGPopupMenu::fgRadiomark =
-   TGRadioButton::fgR6 = gGXW->CreateBitmap(fRoot->GetId(),
+   TGRadioButton::fgR6 = gVirtualX->CreateBitmap(fRoot->GetId(),
                              (const char *)r6_bits, r_width, r_height);
-   TGPopupMenu::fgCheckmark = gGXW->CreateBitmap(fRoot->GetId(),
+   TGPopupMenu::fgCheckmark = gVirtualX->CreateBitmap(fRoot->GetId(),
                                  (const char *)chk_bits, chk_width, chk_height);
 
    gval.fMask |= kGCFillStyle | kGCStipple;
    gval.fForeground = fSelBackColor;
    gval.fBackground = fBlack;
    gval.fFillStyle = kFillStippled;
-   checkered1 = gGXW->CreatePixmap(fRoot->GetId(), (const char *)gray_bits,
+   checkered1 = gVirtualX->CreatePixmap(fRoot->GetId(), (const char *)gray_bits,
                                    gray_width, gray_height, 1, 0, 1);
    gval.fStipple = checkered1;
-   TGSelectedPicture::fgSelectedGC = gGXW->CreateGC(fRoot->GetId(), &gval);
+   TGSelectedPicture::fgSelectedGC = gVirtualX->CreateGC(fRoot->GetId(), &gval);
 
    gval.fMask = kGCForeground | kGCBackground | kGCFunction | kGCFillStyle |
                 kGCLineWidth  | kGCLineStyle  | kGCSubwindowMode |
@@ -473,8 +485,8 @@ TGClient::TGClient(const char *dpyName)
    gval.fFillStyle  = kFillSolid;
    gval.fSubwindowMode = kIncludeInferiors;
    gval.fGraphicsExposures = kFALSE;
-   TGLVContainer::fgLineGC = gGXW->CreateGC(fRoot->GetId(), &gval);
-   gGXW->SetDashes(TGLVContainer::fgLineGC, 0, "\x1\x1", 2);
+   TGLVContainer::fgLineGC = gVirtualX->CreateGC(fRoot->GetId(), &gval);
+   gVirtualX->SetDashes(TGLVContainer::fgLineGC, 0, "\x1\x1", 2);
 
    fWaitForWindow = kNone;
 
@@ -540,12 +552,12 @@ Bool_t TGClient::GetColorByName(const char *name, ULong_t &pixel) const
    WindowAttributes_t attributes;
    Bool_t             status = kTRUE;
 
-   gGXW->GetWindowAttributes(fRoot->GetId(), attributes);
+   gVirtualX->GetWindowAttributes(fRoot->GetId(), attributes);
    color.fPixel = 0;
-   if (!gGXW->ParseColor(attributes.fColormap, name, color)) {
+   if (!gVirtualX->ParseColor(attributes.fColormap, name, color)) {
       Error("GetColorByName", "couldn't parse color %s", name);
       status = kFALSE;
-   } else if(!gGXW->AllocColor(attributes.fColormap, color)) {
+   } else if(!gVirtualX->AllocColor(attributes.fColormap, color)) {
       Warning("GetColorByName", "couldn't retrieve color %s", name);
       status = kFALSE;
    }
@@ -561,10 +573,10 @@ FontStruct_t TGClient::GetFontByName(const char *name) const
    // Get a font by name. If font is not found, fixed font is returned,
    // if fixed font also does not exist return 0 and print error.
 
-   FontStruct_t font = gGXW->LoadQueryFont(name);
+   FontStruct_t font = gVirtualX->LoadQueryFont(name);
 
    if (!font) {
-      font = gGXW->LoadQueryFont("fixed");
+      font = gVirtualX->LoadQueryFont("fixed");
       if (font)
          Warning("GetFontByName", "couldn't retrieve font %s, using \"fixed\"", name);
    }
@@ -582,13 +594,13 @@ ULong_t TGClient::GetHilite(ULong_t base_color) const
    ColorStruct_t      color, white_p;
    WindowAttributes_t attributes;
 
-   gGXW->GetWindowAttributes(fRoot->GetId(), attributes);
+   gVirtualX->GetWindowAttributes(fRoot->GetId(), attributes);
 
    color.fPixel = base_color;
-   gGXW->QueryColor(attributes.fColormap, color);
+   gVirtualX->QueryColor(attributes.fColormap, color);
 
    GetColorByName("white", white_p.fPixel);
-   gGXW->QueryColor(attributes.fColormap, white_p);
+   gVirtualX->QueryColor(attributes.fColormap, white_p);
 
    color.fRed   = TMath::Max((UShort_t)(white_p.fRed/5),   color.fRed);
    color.fGreen = TMath::Max((UShort_t)(white_p.fGreen/5), color.fGreen);
@@ -598,7 +610,7 @@ ULong_t TGClient::GetHilite(ULong_t base_color) const
    color.fGreen = (UShort_t)TMath::Min((Int_t)white_p.fGreen, (Int_t)(color.fGreen*140)/100);
    color.fBlue  = (UShort_t)TMath::Min((Int_t)white_p.fBlue,  (Int_t)(color.fBlue*140)/100);
 
-   if (!gGXW->AllocColor(attributes.fColormap, color))
+   if (!gVirtualX->AllocColor(attributes.fColormap, color))
       Error("GetHilite", "couldn't allocate hilight color");
 
    return color.fPixel;
@@ -613,16 +625,16 @@ ULong_t TGClient::GetShadow(ULong_t base_color) const
    ColorStruct_t      color;
    WindowAttributes_t attributes;
 
-   gGXW->GetWindowAttributes(fRoot->GetId(), attributes);
+   gVirtualX->GetWindowAttributes(fRoot->GetId(), attributes);
 
    color.fPixel = base_color;
-   gGXW->QueryColor(attributes.fColormap, color);
+   gVirtualX->QueryColor(attributes.fColormap, color);
 
    color.fRed   = (UShort_t)((color.fRed*60)/100);
    color.fGreen = (UShort_t)((color.fGreen*60)/100);
    color.fBlue  = (UShort_t)((color.fBlue*60)/100);
 
-   if (!gGXW->AllocColor(attributes.fColormap, color))
+   if (!gVirtualX->AllocColor(attributes.fColormap, color))
       Error("GetShadow", "couldn't allocate shadow color");
 
   return color.fPixel;
@@ -659,33 +671,38 @@ TGClient::~TGClient()
 {
    // Closing down client: cleanup and close X connection.
 
-   delete fPicturePool;
-   delete fMimeTypeList;
    if (fWlist) fWlist->Delete();
    delete fWlist;
+   delete fPicturePool;
+   delete fMimeTypeList;
 
-   gGXW->DeleteFont(TGPopupMenu::fgDefaultFontStruct);
-   gGXW->DeleteFont(TGPopupMenu::fgHilightFontStruct);
-   gGXW->DeleteFont(TGLVEntry::fgDefaultFontStruct);
+   gVirtualX->DeleteFont(TGPopupMenu::fgDefaultFontStruct);
+   gVirtualX->DeleteFont(TGPopupMenu::fgHilightFontStruct);
+   gVirtualX->DeleteFont(TGLVEntry::fgDefaultFontStruct);
+   gVirtualX->DeleteFont(TGTextFrame::fgDefaultFontStruct);
 
-   gGXW->DeleteGC(TGPopupMenu::fgDefaultGC);
-   gGXW->DeleteGC(TGButton::fgDefaultGC);
-   gGXW->DeleteGC(TGButton::fgHibckgndGC);
-   gGXW->DeleteGC(TGFrame::fgWhiteGC);
-   gGXW->DeleteGC(TGFrame::fgHilightGC);
-   gGXW->DeleteGC(TGFrame::fgShadowGC);
-   gGXW->DeleteGC(TGFrame::fgBckgndGC);
-   gGXW->DeleteGC(TGPopupMenu::fgDefaultSelectedGC);
-   gGXW->DeleteGC(TGTreeLBEntry::fgDefaultGC);
-   gGXW->DeleteGC(TGTextLBEntry::fgDefaultGC);
-   gGXW->DeleteGC(TGLVEntry::fgDefaultGC);
-   gGXW->DeleteGC(TGListView::fgDefaultGC);
-   gGXW->DeleteGC(TGStatusBar::fgDefaultGC);
+   gVirtualX->DeleteGC(TGButton::fgDefaultGC);
+   gVirtualX->DeleteGC(TGButton::fgHibckgndGC);
+   gVirtualX->DeleteGC(TGFrame::fgBlackGC);
+   gVirtualX->DeleteGC(TGFrame::fgWhiteGC);
+   gVirtualX->DeleteGC(TGFrame::fgHilightGC);
+   gVirtualX->DeleteGC(TGFrame::fgShadowGC);
+   gVirtualX->DeleteGC(TGFrame::fgBckgndGC);
+   gVirtualX->DeleteGC(TGPopupMenu::fgDefaultGC);
+   gVirtualX->DeleteGC(TGPopupMenu::fgDefaultSelectedGC);
+   gVirtualX->DeleteGC(TGPopupMenu::fgDefaultSelectedBackgroundGC);
+   gVirtualX->DeleteGC(TGTreeLBEntry::fgDefaultGC);
+   gVirtualX->DeleteGC(TGTextLBEntry::fgDefaultGC);
+   gVirtualX->DeleteGC(TGLVEntry::fgDefaultGC);
+   gVirtualX->DeleteGC(TGListView::fgDefaultGC);
+   gVirtualX->DeleteGC(TGStatusBar::fgDefaultGC);
+   gVirtualX->DeleteGC(TGSelectedPicture::fgSelectedGC);
+   gVirtualX->DeleteGC(TGLVContainer::fgLineGC);
 
-   gGXW->DeletePixmap(checkered);
-   gGXW->DeletePixmap(checkered1);
+   gVirtualX->DeletePixmap(checkered);
+   gVirtualX->DeletePixmap(checkered1);
 
-   gGXW->CloseDisplay(); // this should do a cleanup of the remaining
+   gVirtualX->CloseDisplay(); // this should do a cleanup of the remaining
                          // X allocated objects...
 }
 
@@ -700,8 +717,8 @@ Bool_t TGClient::ProcessOneEvent()
 
    Event_t event;
 
-   if (gGXW->EventsPending()) {
-      gGXW->NextEvent(event);
+   if (gVirtualX->EventsPending()) {
+      gVirtualX->NextEvent(event);
       if (fWaitForWindow == kNone) {
          HandleEvent(&event);
          return kTRUE;
@@ -836,7 +853,7 @@ Bool_t TGClient::HandleMaskEvent(Event_t *event, Window_t wid)
       }
 
    if (event->fType == kButtonPress || event->fType == kGKeyPress)
-      gGXW->Bell(0);
+      gVirtualX->Bell(0);
 
    return kFALSE;
 }

@@ -1,22 +1,19 @@
+//*CMZ :  2.23/07 24/10/99  18.17.34  by  Valery Fine(fine@mail.cern.ch)
+//*CMZ :  2.23/02 02/09/99  15.39.27  by  Rene Brun
 //*CMZ :  1.03/01 31/07/97  15.10.32  by  Valery Fine(fine@vxcern.cern.ch)
 //*-- Author :    Valery Fine(fine@vxcern.cern.ch)   29/12/96
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 
 #ifndef ROOT_TWin32GLViewerImp
@@ -70,7 +67,7 @@ private:
 protected:
    TWin32GLViewerImp();                 // used by Dictionary()
    void ExecThreadCB(TWin32SendClass *command);
-   virtual void  CreateContextCB();     // Create OpenGL rendering context for wid TGXW Window
+   virtual void  CreateContextCB();     // Create OpenGL rendering context for wid TVirtualX Window
    void CreateViewer( const char *title="", Int_t x=0, Int_t y=0, UInt_t width=400, UInt_t height=300);
 
 
@@ -93,14 +90,14 @@ public:
 
    virtual ~TWin32GLViewerImp();
 
-   virtual void  CreateContext();                // Create OpenGL rendering context for wid TGXW Window
+   virtual void  CreateContext();                // Create OpenGL rendering context for wid TVirtualX Window
    virtual void  CreateStatusBar(Int_t nparts=1);
    virtual void  CreateStatusBar(Int_t *parts, Int_t nparts=1);
    virtual void  DeleteContext();                // Delete current OpenGL RC
    HGLRC GetRC(){ return fhOpenGLRC;}            // Returns GL Rendering context
    virtual void  MakeCurrent(Bool_t flag=kTRUE); // Make this object current
 
-   virtual void  SetStatusText(Text_t *text, Int_t partidx=0, Int_t stype=0);
+   virtual void  SetStatusText(const Text_t *text, Int_t partidx=0, Int_t stype=0);
    virtual void  ShowStatusBar(Bool_t show = kTRUE);
 
    virtual void  SwapBuffers();

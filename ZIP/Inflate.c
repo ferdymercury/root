@@ -1,3 +1,4 @@
+/*CMZ :  2.23/09 24/11/99  11.28.32  by  Rene Brun*/
 /*CMZ :  2.00/00 08/03/98  11.27.33  by  Rene Brun*/
 /*CMZ :  1.00/03 14/03/97  18.15.11  by  Rene Brun*/
 /*-- Author :*/
@@ -1111,7 +1112,7 @@ int R__Inflate_free()
 
 /***********************************************************************
  *                                                                     *
- * Name: mmuzip                                      Date:    20.01.95 *
+ * Name: R__unzip                                    Date:    20.01.95 *
  * Author: E.Chernyaev (IHEP/Protvino)               Revised:          *
  *                                                                     *
  * Function: In memory ZIP decompression. Can be issued from FORTRAN.  *
@@ -1131,7 +1132,7 @@ int R__Inflate_free()
 static uch  *ibufptr,*obufptr;
 static long  ibufcnt, obufcnt;
 
-void mmuzip(int *srcsize, uch *src, int *tgtsize, uch *tgt, int *irep)
+void R__unzip(int *srcsize, uch *src, int *tgtsize, uch *tgt, int *irep)
 {
   long isize;
 
@@ -1140,12 +1141,12 @@ void mmuzip(int *srcsize, uch *src, int *tgtsize, uch *tgt, int *irep)
   /*   C H E C K   H E A D E R   */
 
   if (*srcsize < HDRSIZE) {
-    fprintf(stderr,"mmuzip: too small source\n");
+    fprintf(stderr,"R__unzip: too small source\n");
     return;
   }
 
   if (src[0] != 'C' || src[1] != 'S' || src[2] != DEFLATE) {
-    fprintf(stderr,"mmuzip: error in header\n");
+    fprintf(stderr,"R__unzip: error in header\n");
     return;
   }
 
@@ -1156,24 +1157,24 @@ void mmuzip(int *srcsize, uch *src, int *tgtsize, uch *tgt, int *irep)
   obufcnt = *tgtsize;
 
   if (obufcnt < isize) {
-    fprintf(stderr,"mmuzip: too small target\n");
+    fprintf(stderr,"R__unzip: too small target\n");
     return;
   }
 
   if (ibufcnt + HDRSIZE != *srcsize) {
-    fprintf(stderr,"mmuzip: discrepancy in source length\n");
+    fprintf(stderr,"R__unzip: discrepancy in source length\n");
     return;
   }
 
   /*   D E C O M P R E S S   D A T A  */
 
   if (R__Inflate()) {
-    fprintf(stderr,"mmuzip: error during decompression\n");
+    fprintf(stderr,"R__unzip: error during decompression\n");
     return;
   }
 
   if (obufptr - tgt != isize) {
-    fprintf(stderr,"mmuzip: discrepancy with initial size\n");
+    fprintf(stderr,"R__unzip: discrepancy with initial size\n");
     return;
   }
 

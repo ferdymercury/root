@@ -1,3 +1,4 @@
+/*CMZ :  2.23/09 24/11/99  11.23.02  by  Rene Brun*/
 /*CMZ :  2.00/00 08/03/98  11.27.32  by  Rene Brun*/
 /*CMZ :  1.00/07 28/03/97  09.27.38  by  Rene Brun*/
 /*-- Author :*/
@@ -107,15 +108,15 @@ int  R__ct_tally    OF((int dist, int lc));
 ulg  R__flush_block OF((char far *buf, ulg stored_len, int eof));
 
         /* in bits.c */
-void     bi_init    OF((FILE *zipfile));
-void     send_bits  OF((int value, int length));
-unsigned bi_reverse OF((unsigned value, int length));
-void     bi_windup  OF((void));
-void     copy_block OF((char far *buf, unsigned len, int header));
-int      seekable   OF((void));
-extern   int (*read_buf) OF((char *buf, unsigned size));
-ulg      memcompress OF((char *tgt, ulg tgtsize, char *src, ulg srcsize));
-void     error      OF((char *h));
+void     R__bi_init    OF((FILE *zipfile));
+void     R__send_bits  OF((int value, int length));
+unsigned R__bi_reverse OF((unsigned value, int length));
+void     R__bi_windup  OF((void));
+void     R__copy_block OF((char far *buf, unsigned len, int header));
+int      R__seekable   OF((void));
+extern   int (*R__read_buf) OF((char *buf, unsigned size));
+ulg      R__memcompress OF((char *tgt, ulg tgtsize, char *src, ulg srcsize));
+void     R__error      OF((char *h));
 
 #endif /* !UTIL */
 

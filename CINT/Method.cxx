@@ -1,5 +1,5 @@
-//*CMZ :  2.22/10 23/07/99  14.42.21  by  Masaharu Goto
-//*-- Author :    Masaharu Goto   23/07/99
+//*CMZ :  2.23/10 10/12/99  18.00.08  by  Masaharu Goto
+//*-- Author :    Masaharu Goto   10/12/99
 /* /% C++ %/ */
 /***********************************************************************
  * cint (C/C++ interpreter)
@@ -9,15 +9,14 @@
  * Description:
  *  Extended Run Time Type Identification API
  ************************************************************************
- * Copyright(c) 1991~1996  [hp] Hewlett Packard Japan, All rights reserved
- * Author                  Masaharu Goto (gotom@jpn.hp.com)
- * Copyright(c) 1995~1998  Masaharu Goto (MXJ02154@niftyserve.or.jp)
+ * Author                  Masaharu Goto
+ * Copyright(c) 1995~1999  Masaharu Goto (MXJ02154@niftyserve.or.jp)
  *
  * Permission to use, copy, modify and distribute this software and its
  * documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies and
  * that both that copyright notice and this permission notice appear
- * in supporting documentation.  Hewlett-Packard Japan Company makes no
+ * in supporting documentation. The author makes no
  * representations about the suitability of this software for any
  * purpose.  It is provided "as is" without express or implied warranty.
  ************************************************************************/
@@ -70,6 +69,9 @@ void G__MethodInfo::Init(long handlein,long indexin
     type.typenum=ifunc->p_typetable[index];
     type.reftype=ifunc->reftype[index];
     type.isconst=ifunc->isconst[index];
+#ifndef G__OLDIMPLEMENTATION1227
+    type.class_property=0;
+#endif
   }
 #ifndef G__FONS72
   else { /* initialize if handlein==0 */
@@ -111,6 +113,9 @@ void G__MethodInfo::Init(G__ClassInfo *belongingclassin
     type.typenum=ifunc->p_typetable[index];
     type.reftype=ifunc->reftype[index];
     type.isconst=ifunc->isconst[index];
+#ifndef G__OLDIMPLEMENTATION1227
+    type.class_property=0;
+#endif
   }
   else { /* initialize if handlein==0 */
     handle=0;
@@ -182,6 +187,9 @@ long G__MethodInfo::Property()
     case G__PROTECTED: property|=G__BIT_ISPROTECTED; break;
     case G__PRIVATE: property|=G__BIT_ISPRIVATE; break;
     }
+#ifndef G__OLDIMPLEMENTATION1189
+    if(ifunc->isconst[index]&G__CONSTFUNC) property|=G__BIT_ISCONSTANT;
+#endif
     if(ifunc->isconst[index]&G__CONSTVAR) property|=G__BIT_ISCONSTANT;
     if(ifunc->isconst[index]&G__PCONSTVAR) property|=G__BIT_ISPCONSTANT;
     if(isupper(ifunc->type[index])) property|=G__BIT_ISPOINTER;
@@ -279,6 +287,41 @@ struct G__bytecodefunc *G__MethodInfo::GetBytecode()
   }
 }
 #endif
+/* #ifndef G__OLDIMPLEMENTATION1163 */
+///////////////////////////////////////////////////////////////////////////
+G__DataMemberInfo G__MethodInfo::GetLocalVariable()
+{
+  G__DataMemberInfo localvar;
+  localvar.Init((long)0,(long)(-1),(G__ClassInfo*)NULL);
+  if(IsValid()) {
+#ifndef G__OLDIMPLEMENTATION1164
+    int store_fixedscope=G__fixedscope;
+    extern int G__xrefflag;
+    G__xrefflag=1;
+    G__fixedscope=1;
+#endif
+    struct G__bytecodefunc* pbc = GetBytecode();
+#ifndef G__OLDIMPLEMENTATION1164
+    G__xrefflag=0;
+    G__fixedscope=store_fixedscope;
+#endif
+    if(!pbc) {
+      if(Property()&G__BIT_ISCOMPILED) {
+	fprintf(G__serr,"Limitation: can not get local variable information for compiled function %s\n",Name());
+      }
+      else {
+	fprintf(G__serr,"Limitation: function %s , failed to get local variable information\n",Name());
+      }
+      return(localvar);
+    }
+    localvar.Init((long)pbc->var,(long)(-1),(G__ClassInfo*)NULL);
+    return(localvar);
+  }
+  else {
+    return(localvar);
+  }
+}
+/* #endif */
 ///////////////////////////////////////////////////////////////////////////
 #ifdef G__TRUEP2F
 void* G__MethodInfo::PointerToFunc()
@@ -367,6 +410,9 @@ int G__MethodInfo::Next()
       type.typenum=ifunc->p_typetable[index];
       type.reftype=ifunc->reftype[index];
       type.isconst=ifunc->isconst[index];
+#ifndef G__OLDIMPLEMENTATION1227
+      type.class_property=0;
+#endif
       return(1);
     }
     else {

@@ -1,23 +1,19 @@
+//*CMZ :  2.23/02 02/09/99  15.54.27  by  Rene Brun
 //*CMZ :  2.00/07 18/05/98  21.06.58  by  Fons Rademakers
 //*CMZ :  2.00/00 16/02/98  02.36.03  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   01/01/98
 
+/*CMZ :  2.23/03 27/09/99  02.25.01  by  Fons Rademakers*/
 /*CMZ :  2.22/05 11/06/99  10.59.09  by  Fons Rademakers*/
 /*CMZ :  2.00/00 01/01/98  14.57.05  by  Fons Rademakers*/
 /*CMZ :  1.03/09 03/12/97  01.52.20  by  Fons Rademakers*/
 /*-- Author :    Rene Brun   23/03/97*/
 /*************************************************************************
  * Copyright(c) 1995-1999, The ROOT System, All rights reserved.         *
- * Authors: Rene Brun, Fons Rademakers.                                  *
- * For list of contributors see $ROOTSYS/AA_CREDITS.                     *
+ * Authors: Rene Brun and Fons Rademakers.                               *
  *                                                                       *
- * Permission to use, copy, modify and distribute this software and its  *
- * documentation for non-commercial purposes is hereby granted without   *
- * fee, provided that the above copyright notice appears in all copies   *
- * and that both the copyright notice and this permission notice appear  *
- * in the supporting documentation. The authors make no claims about the *
- * suitability of this software for any purpose. It is provided "as is"  *
- * without express or implied warranty.                                  *
+ * For the licensing terms see $ROOTSYS/AA_LICENSE.                      *
+ * For the list of contributors see $ROOTSYS/AA_CREDITS.                 *
  *************************************************************************/
 //*CMZ :  2.00/00 16/02/98  00.17.08  by  Fons Rademakers
 //*-- Author :    Fons Rademakers   27/12/97
@@ -48,7 +44,7 @@
 #include "THashTable.h"
 #include "TSystem.h"
 #include "TGWindow.h"
-#include "TGXW.h"
+#include "TVirtualX.h"
 
 ClassImp(TGPicture)
 ClassImp(TGSelectedPicture)
@@ -85,7 +81,7 @@ const TGPicture *TGPicturePool::GetPicture(const char *name)
       return 0;
    }
 
-   if (gGXW->CreatePictureFromFile(fClient->GetRoot()->GetId(), picnam,
+   if (gVirtualX->CreatePictureFromFile(fClient->GetRoot()->GetId(), picnam,
                                    pic->fPic, pic->fMask,
                                    pic->fAttributes)) {
       fPicList->Add(pic);
@@ -137,7 +133,7 @@ const TGPicture *TGPicturePool::GetPicture(const char *name,
    }
 
    char **data;
-   if (!gGXW->ReadPictureDataFromFile(picnam, &data)) {
+   if (!gVirtualX->ReadPictureDataFromFile(picnam, &data)) {
       delete pic;
       delete [] picnam;
       return 0;
@@ -185,7 +181,7 @@ const TGPicture *TGPicturePool::GetPicture(const char *name,
          y += 1.0 / yscale;
       }
 
-      retc = gGXW->CreatePictureFromData(fClient->GetRoot()->GetId(), smalldata,
+      retc = gVirtualX->CreatePictureFromData(fClient->GetRoot()->GetId(), smalldata,
                                          pic->fPic, pic->fMask,
                                          pic->fAttributes);
 
@@ -195,12 +191,12 @@ const TGPicture *TGPicturePool::GetPicture(const char *name,
 
    } else {
 
-      retc = gGXW->CreatePictureFromData(fClient->GetRoot()->GetId(), data,
+      retc = gVirtualX->CreatePictureFromData(fClient->GetRoot()->GetId(), data,
                                          pic->fPic, pic->fMask,
                                          pic->fAttributes);
    }
 
-   gGXW->DeletePictureData(data);
+   gVirtualX->DeletePictureData(data);
 
    if (!retc) {
       delete pic;
@@ -249,12 +245,12 @@ void TGPicture::Draw(Handle_t id, GContext_t gc, Int_t x, Int_t y) const
    gcv.fClipMask = fMask;
    gcv.fClipXOrigin = x;
    gcv.fClipYOrigin = y;
-   gGXW->ChangeGC(gc, &gcv);
-   gGXW->CopyArea(fPic, id, gc, 0, 0, fAttributes.fWidth, fAttributes.fHeight,
+   gVirtualX->ChangeGC(gc, &gcv);
+   gVirtualX->CopyArea(fPic, id, gc, 0, 0, fAttributes.fWidth, fAttributes.fHeight,
                   x, y);
    gcv.fMask = kGCClipMask;
    gcv.fClipMask = kNone;
-   gGXW->ChangeGC(gc, &gcv);
+   gVirtualX->ChangeGC(gc, &gcv);
 }
 
 //______________________________________________________________________________
@@ -263,9 +259,9 @@ TGPicture::~TGPicture()
    // Delete picture object.
 
    if (fPic != kNone)
-      gGXW->DeletePixmap(fPic);
+      gVirtualX->DeletePixmap(fPic);
    if (fMask != kNone)
-      gGXW->DeletePixmap(fMask);
+      gVirtualX->DeletePixmap(fMask);
    if (fAttributes.fPixels)
       delete [] fAttributes.fPixels;
 }
@@ -298,25 +294,25 @@ TGSelectedPicture::TGSelectedPicture(const TGClient *client, const TGPicture *p)
    w = p->GetWidth();
    h = p->GetHeight();
 
-   fPic  = gGXW->CreatePixmap(root, w, h);
+   fPic  = gVirtualX->CreatePixmap(root, w, h);
    fMask = p->GetMask();
 
    fAttributes.fWidth  = w;
    fAttributes.fHeight = h;
 
-   gGXW->CopyArea(p->GetPicture(), fPic, fgSelectedGC, 0, 0, w, h, 0, 0);
+   gVirtualX->CopyArea(p->GetPicture(), fPic, fgSelectedGC, 0, 0, w, h, 0, 0);
 
    gcv.fMask = kGCClipMask | kGCClipXOrigin | kGCClipYOrigin;
    gcv.fClipMask = p->GetMask();
    gcv.fClipXOrigin = 0;
    gcv.fClipYOrigin = 0;
-   gGXW->ChangeGC(fgSelectedGC, &gcv);
+   gVirtualX->ChangeGC(fgSelectedGC, &gcv);
 
-   gGXW->FillRectangle(fPic, fgSelectedGC, 0, 0, w, h);
+   gVirtualX->FillRectangle(fPic, fgSelectedGC, 0, 0, w, h);
 
    gcv.fMask = kGCClipMask;
    gcv.fClipMask = kNone;
-   gGXW->ChangeGC(fgSelectedGC, &gcv);
+   gVirtualX->ChangeGC(fgSelectedGC, &gcv);
 }
 
 //______________________________________________________________________________
