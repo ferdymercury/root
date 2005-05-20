@@ -1,4 +1,4 @@
-// @(#)root/alien:$Name:  $:$Id: TAlienResult.h,v 1.2 2003/11/13 15:15:11 rdm Exp $
+// @(#)root/alien:$Name:  $:$Id: TAlienResult.h,v 1.2 2004/10/01 12:45:23 jgrosseo Exp $
 // Author: Fons Rademakers   3/1/2002
 
 /*************************************************************************
@@ -12,41 +12,26 @@
 #ifndef ROOT_TAlienResult
 #define ROOT_TAlienResult
 
-
 //////////////////////////////////////////////////////////////////////////
 //                                                                      //
 // TAlienResult                                                         //
 //                                                                      //
-// Class defining interface to an AliEn query result.                   //
+// Class defining interface to a Alien result set.                      //
+// Objects of this class are created by TGrid methods.                  //
 //                                                                      //
-// Related class is TAlien.                                             //
+// Related classes are TAlien.                                          //
 //                                                                      //
 //////////////////////////////////////////////////////////////////////////
-
-#ifndef ROOT_TGrid
-#include "TGrid.h"
-#endif
 
 #ifndef ROOT_TGridResult
 #include "TGridResult.h"
 #endif
 
 class TAlienResult : public TGridResult {
-
-private:
-   Grid_ResultHandle_t fResult;    // AliEn result handle
-
 public:
-   TAlienResult(Grid_ResultHandle_t result);
-   virtual ~TAlienResult();
+   void DumpResult();
 
-   void           Close();
-   const char    *GetValue() { return 0; }
-   Grid_Result_t *Next();
-   void           Print(Option_t *option = "") const;
-   void           Reset();
-
-   ClassDef(TAlienResult,0)    // AliEn Grid_Result result
+   ClassDef(TAlienResult,0)  // Alien query result set
 };
 
 #endif
