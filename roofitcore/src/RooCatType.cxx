@@ -1,7 +1,7 @@
 /*****************************************************************************
  * Project: RooFit                                                           *
  * Package: RooFitCore                                                       *
- *    File: $Id: RooCatType.cc,v 1.12 2005/02/25 14:22:54 wverkerke Exp $
+ *    File: $Id: RooCatType.cc,v 1.13 2005/04/18 21:44:42 wverkerke Exp $
  * Authors:                                                                  *
  *   WV, Wouter Verkerke, UC Santa Barbara, verkerke@slac.stanford.edu       *
  *   DK, David Kirkby,    UC Irvine,         dkirkby@uci.edu                 *
@@ -19,6 +19,9 @@
 // a single category state. The class holds a string label and an integer 
 // index value which define the state
 
+#include "RooFitCore/RooFit.hh"
+
+#include <stdlib.h>
 #include <stdlib.h>
 #include "RooFitCore/RooCatType.hh"
 using std::endl;
