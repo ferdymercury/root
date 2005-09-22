@@ -7,7 +7,9 @@
 #
 # processname: rootd
 # pidfile: /var/run/rootd.pid
-# config: 
+# config:
+
+ROOTD=/usr/local/bin/rootd
 
 # Source function library.
 . /etc/init.d/functions
@@ -16,7 +18,6 @@
 . /etc/sysconfig/network
 
 # Get rootd config
-
 [ -f /etc/sysconfig/rootd ] && . /etc/sysconfig/rootd
 
 # Check that networking is up.
@@ -25,14 +26,14 @@ then
 	exit 0
 fi
 
-[ -x /usr/local/bin/rootd ] || exit 0
+[ -x $ROOTD ] || exit 0
 
 RETVAL=0
 prog="rootd"
 
 start() {
         echo -n $"Starting $prog: "
-        daemon /usr/local/bin/rootd $ROOTDOPTS
+        daemon $ROOTD $ROOTDOPTS
         RETVAL=$?
         echo
         [ $RETVAL -eq 0 ] && touch /var/lock/subsys/rootd
@@ -40,7 +41,7 @@ start() {
 }
 
 stop() {
-        echo -n $"Stopping $prog: " 
+        echo -n $"Stopping $prog: "
         killproc rootd
         RETVAL=$?
         echo
