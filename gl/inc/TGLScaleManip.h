@@ -31,9 +31,9 @@ public:
    TGLScaleManip(TGLViewer & viewer, TGLPhysicalShape * shape);
    virtual ~TGLScaleManip();
    
-   virtual void   Draw() const; 
-   virtual Bool_t HandleButton(Event_t * event);
-   virtual Bool_t HandleMotion(Event_t * event, const TGLCamera & camera);
+   virtual void   Draw(const TGLCamera & camera) const; 
+   virtual Bool_t HandleButton(const Event_t * event, const TGLCamera & camera);
+   virtual Bool_t HandleMotion(const Event_t * event, const TGLCamera & camera);
 
    ClassDef(TGLScaleManip,0) // GL scaling manipulator widget
 };
