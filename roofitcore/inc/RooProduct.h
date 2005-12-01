@@ -1,7 +1,7 @@
 /*****************************************************************************
  * Project: RooFit                                                           *
  * Package: RooFitCore                                                       *
- *    File: $Id: RooProduct.rdl,v 1.2 2004/04/05 22:44:12 wverkerke Exp $
+ *    File: $Id: RooProduct.rdl,v 1.3 2005/02/25 14:23:01 wverkerke Exp $
  * Authors:                                                                  *
  *   WV, Wouter Verkerke, UC Santa Barbara, verkerke@slac.stanford.edu       *
  *   DK, David Kirkby,    UC Irvine,         dkirkby@uci.edu                 *
@@ -30,16 +30,18 @@ public:
 
   RooProduct(const RooProduct& other, const char* name = 0);
   virtual TObject* clone(const char* newname) const { return new RooProduct(*this, newname); }
-  inline virtual ~RooProduct() { }
+  virtual ~RooProduct() ;
 
 protected:
 
-  RooSetProxy _compSet ;
-  TIterator* _compIter ;  //! do not persist
+  RooSetProxy _compRSet ;
+  RooSetProxy _compCSet ;
+  TIterator* _compRIter ;  //! do not persist
+  TIterator* _compCIter ;  //! do not persist
 
   Double_t evaluate() const;
 
-  ClassDef(RooProduct,1) // Product of RooAbsReal terms
+  ClassDef(RooProduct,1) // Product of RooAbsReal and RooAbsCategory terms
 };
 
 #endif
