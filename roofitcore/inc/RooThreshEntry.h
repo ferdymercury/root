@@ -1,7 +1,7 @@
 /*****************************************************************************
  * Project: RooFit                                                           *
  * Package: RooFitCore                                                       *
- *    File: $Id: RooThreshEntry.rdl,v 1.9 2005/04/18 21:44:53 wverkerke Exp $
+ *    File: $Id: RooThreshEntry.rdl,v 1.10 2005/06/20 15:45:14 wverkerke Exp $
  * Authors:                                                                  *
  *   WV, Wouter Verkerke, UC Santa Barbara, verkerke@slac.stanford.edu       *
  *   DK, David Kirkby,    UC Irvine,         dkirkby@uci.edu                 *
@@ -18,7 +18,6 @@
 
 #include "Riostream.h"
 #include "TNamed.h"
-#include "TRegexp.h"
 #include "RooFitCore/RooCatType.hh"
 
 class RooThreshEntry : public TObject {
