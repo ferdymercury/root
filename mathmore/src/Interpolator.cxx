@@ -1,4 +1,4 @@
-// @(#)root/mathmore:$Name:  $:$Id: Interpolator.cxx,v 1.2 2005/09/08 08:16:16 rdm Exp $
+// @(#)root/mathmore:$Name:  $:$Id: Interpolator.cxx,v 1.3 2005/09/18 20:41:25 brun Exp $
 // Authors: L. Moneta, A. Zsenei   08/2005
 
  /**********************************************************************
@@ -39,14 +39,15 @@ namespace Math {
 
 Interpolator::Interpolator(const std::vector<double> & x, const std::vector<double> & y, Interpolation::Type type)
 {
-  // allocate GSL interpolation object
-
-  fInterp = new GSLInterpolator(type, x, y);
+   // allocate GSL interpolation object
+   
+   fInterp = new GSLInterpolator(type, x, y);
 }
 
 Interpolator::~Interpolator()
 {
-  if (fInterp) delete fInterp;
+   // destructor (delete underlined obj)
+   if (fInterp) delete fInterp;
 }
 
 Interpolator::Interpolator(const Interpolator &)
@@ -55,31 +56,37 @@ Interpolator::Interpolator(const Interpolator &)
 
 Interpolator & Interpolator::operator = (const Interpolator &rhs)
 {
+   // dummy (private) assignment 
    if (this == &rhs) return *this;  // time saving self-test
-
+   
    return *this;
 }
 
 double Interpolator::Eval( double x ) const
 {
-  return fInterp->Eval(x);
+   // forward evaluation
+   return fInterp->Eval(x);
 }
 
 double Interpolator::Deriv( double x ) const
 {
-  return fInterp->Deriv(x);
+   // forward deriv evaluation   
+   return fInterp->Deriv(x);
 }
 
 double Interpolator::Deriv2( double x ) const {
-  return fInterp->Deriv2(x);
+   // forward deriv evaluation   
+   return fInterp->Deriv2(x);
 }
 
 double Interpolator::Integ( double a, double b) const {
-  return fInterp->Integ(a,b);
+   // forward integ evaluation
+   return fInterp->Integ(a,b);
 }
 
 std::string  Interpolator::TypeGet() const {
-  return fInterp->Name();
+   // forward name request
+   return fInterp->Name();
 }
 
 
