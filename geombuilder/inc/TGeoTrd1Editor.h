@@ -1,4 +1,4 @@
-// @(#):$Name:  $:$Id: Exp $
+// @(#):$Name:  $:$Id: TGeoTrd1Editor.h,v 1.1 2006/06/13 15:27:11 brun Exp $
 // Author: M.Gheata 
 /*************************************************************************
  * Copyright (C) 1995-2002, Rene Brun and Fons Rademakers.               *
@@ -33,6 +33,7 @@ class TGNumberEntry;
 class TGTab;
 class TGComboBox;
 class TGTextButton;
+class TGCheckButton;
 class TString;
 
 class TGeoTrd1Editor : public TGedFrame {
@@ -54,10 +55,11 @@ protected:
    TGNumberEntry       *fEDy;               // Number entry for  DY
    TGNumberEntry       *fEDz;               // Number entry for  DZ
    TGTextButton        *fApply;             // Apply-Button to accept changes
-   TGTextButton        *fCancel;            // Cancel-Button
    TGTextButton        *fUndo;              // Undo-Button
+   TGCheckButton       *fDelayed;           // Check button for delayed draw
 
    virtual void ConnectSignals2Slots();   // Connect the signals to the slots
+   Bool_t       IsDelayed() const;   
 
 public:
    TGeoTrd1Editor(const TGWindow *p, Int_t id,               
@@ -74,7 +76,6 @@ public:
    void           DoModified();
    void           DoName();
    void           DoApply();
-   void           DoCancel();
    void           DoUndo();
    
    ClassDef(TGeoTrd1Editor,0)   // TGeoTrd1 editor
