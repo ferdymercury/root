@@ -1,4 +1,4 @@
-// @(#)root/mathmore:$Name:  $:$Id: DistFunc.h,v 1.3 2006/11/16 17:17:37 rdm Exp $
+// @(#)root/mathmore:$Name:  $:$Id: DistFuncMathMore.h,v 1.1 2006/12/07 11:07:55 moneta Exp $
 // Authors: L. Moneta, A. Zsenei   08/2005
 
  /**********************************************************************
@@ -24,6 +24,10 @@
 
 #ifndef ROOT_Math_DistFuncMathMore
 #define ROOT_Math_DistFuncMathMore
+
+#ifndef ROOT_Math_PdfFuncMathMore
+#include "Math/PdfFuncMathMore.h"
+#endif
 
 
 #ifndef ROOT_Math_ProbFuncMathMore
