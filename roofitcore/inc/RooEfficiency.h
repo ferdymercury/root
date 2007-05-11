@@ -1,7 +1,7 @@
 /*****************************************************************************
  * Project: RooFit                                                           *
  * Package: RooFitCore                                                       *
- *    File: $Id: RooEfficiency.rdl,v 1.4 2004/04/05 22:44:11 wverkerke Exp $
+ *    File: $Id: RooEfficiency.rdl,v 1.5 2005/02/25 14:22:56 wverkerke Exp $
  * Authors:                                                                  *
  *   WV, Wouter Verkerke, UC Santa Barbara, verkerke@slac.stanford.edu       *
  *   DK, David Kirkby,    UC Irvine,         dkirkby@uci.edu                 *
@@ -16,9 +16,9 @@
 #ifndef ROO_EFFICIENCY
 #define ROO_EFFICIENCY
 
-#include "RooFitCore/RooAbsPdf.hh"
-#include "RooFitCore/RooCategoryProxy.hh"
-#include "RooFitCore/RooRealProxy.hh"
+#include "RooAbsPdf.h"
+#include "RooCategoryProxy.h"
+#include "RooRealProxy.h"
 #include "TString.h" 
 
 class RooArgList ;
