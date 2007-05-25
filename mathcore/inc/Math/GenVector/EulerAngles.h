@@ -1,4 +1,4 @@
-// @(#)root/mathcore:$Name:  $:$Id: EulerAngles.h,v 1.12 2006/11/09 21:22:53 moneta Exp $
+// @(#)root/mathcore:$Name:  $:$Id: EulerAngles.h,v 1.13 2006/11/10 11:04:42 moneta Exp $
 // Authors: W. Brown, M. Fischler, L. Moneta    2005  
 
  /**********************************************************************
@@ -43,290 +43,305 @@ class EulerAngles {
 
 public:
 
-  typedef double Scalar;
+   typedef double Scalar;
 
   /**
      Default constructor
   */
-  EulerAngles() : fPhi(0.0), fTheta(0.0), fPsi(0.0) { }
+   EulerAngles() : fPhi(0.0), fTheta(0.0), fPsi(0.0) { }
 
-  /**
-     Constructor from phi, theta and psi
-  */
-  EulerAngles( Scalar phi, Scalar theta, Scalar psi ) :
-    fPhi(phi), fTheta(theta), fPsi(psi)
-  {Rectify();}			// Added 27 Jan. 06   JMM
-
-  /**
-     Construct given a pair of pointers or iterators defining the
-     beginning and end of an array of three Scalars, to be treated as
-     the angles phi, theta and psi.
+   /**
+      Constructor from phi, theta and psi
    */
-  template<class IT>
-  EulerAngles(IT begin, IT end) { SetComponents(begin,end); }
+   EulerAngles( Scalar phi, Scalar theta, Scalar psi ) :
+      fPhi(phi), fTheta(theta), fPsi(psi)
+   {Rectify();}			// Added 27 Jan. 06   JMM
 
-  // The compiler-generated copy ctor, copy assignment, and dtor are OK.
-
-  /**
-     Re-adjust components place angles in canonical ranges
+   /**
+      Construct given a pair of pointers or iterators defining the
+      beginning and end of an array of three Scalars, to be treated as
+      the angles phi, theta and psi.
    */
-  void Rectify();
+   template<class IT>
+   EulerAngles(IT begin, IT end) { SetComponents(begin,end); }
 
+   // The compiler-generated copy ctor, copy assignment, and dtor are OK.
 
-  // ======== Construction From other Rotation Forms ==================
-
-  /**
-     Construct from a rotation matrix
-  */
-  explicit EulerAngles(const Rotation3D & r) {gv_detail::convert(r,*this);}
-
-  /**
-     Construct from a rotation represented by a Quaternion
-  */
-  explicit EulerAngles(const Quaternion & q) {gv_detail::convert(q,*this);}
-
-  /**
-     Construct from an AxisAngle
-  */
-  explicit EulerAngles(const AxisAngle & a ) { gv_detail::convert(a, *this); }
-
-  /**
-     Construct from an axial rotation
-  */
-  explicit EulerAngles( RotationZ const & r ) { gv_detail::convert(r, *this); }
-  explicit EulerAngles( RotationY const & r ) { gv_detail::convert(r, *this); }
-  explicit EulerAngles( RotationX const & r ) { gv_detail::convert(r, *this); }
-
-  /**
-     Assign from a Rotation3D
-  */
-  EulerAngles &
-  operator=( Rotation3D const  & r ) { return operator=(EulerAngles(r)); }
-
-  /**
-     Assign from an AxisAngle
-  */
-  EulerAngles &
-  operator=( AxisAngle const & a ) { return operator=(EulerAngles(a)); }
-
-  /**
-     Assign from a Quaternion
-  */
-  EulerAngles &
-  operator=( Quaternion const  & q ) {return operator=(EulerAngles(q)); }
-
-  /**
-     Assign from an axial rotation
-  */
-  EulerAngles &
-  operator=( RotationZ const & r ) { return operator=(EulerAngles(r)); }
-  EulerAngles &
-  operator=( RotationY const & r ) { return operator=(EulerAngles(r)); }
-  EulerAngles &
-  operator=( RotationX const & r ) { return operator=(EulerAngles(r)); }
-
-  // ======== Components ==============
-
-  /**
-     Set the three Euler angles given a pair of pointers or iterators
-     defining the beginning and end of an array of three Scalars.
+   /**
+      Re-adjust components place angles in canonical ranges
    */
-  template<class IT>
-  void SetComponents(IT begin, IT end) {
-    fPhi   = *begin++;
-    fTheta = *begin++;
-    fPsi   = *begin++;
-    assert(begin == end); 
-    Rectify();			// Added 27 Jan. 06   JMM
-  }
+   void Rectify();
 
-  /**
-     Get the axis and then the angle into data specified by an iterator begin
-     and another to the end of the desired data (4 past start).
-   */
-  template<class IT>
-  void GetComponents(IT begin, IT end) const {
-    *begin++ = fPhi;
-    *begin++ = fTheta;
-    *begin++ = fPsi;
-    assert(begin == end); 
-   }
 
-  /**
-     Get the axis and then the angle into data specified by an iterator begin
-   */
-  template<class IT>
-  void GetComponents(IT begin) const {
-    *begin++ = fPhi;
-    *begin++ = fTheta;
-    *begin   = fPsi;
-   }
+   // ======== Construction and assignement from any other rotation ==================
 
-  /**
-     Set the components phi, theta, psi based on three Scalars.
-   */
-  void SetComponents(Scalar phi, Scalar theta, Scalar psi) {
-    fPhi=phi; fTheta=theta; fPsi=psi; 
-    Rectify();			// Added 27 Jan. 06   JMM
-  }
-
-  /**
-     Get the components phi, theta, psi into three Scalars.
+   /**
+      Create from any other supported rotation (see gv_detail::convert )
     */
-  void GetComponents(Scalar & phi, Scalar & theta, Scalar & psi) const {
-    phi=fPhi; theta=fTheta; psi=fPsi;
-  }
+   template <class OtherRotation> 
+   explicit EulerAngles(const OtherRotation & r) {gv_detail::convert(r,*this);}
 
-  /**
+   /**
+      Assign from any other rotation (see gv_detail::convert )
+   */
+   template <class OtherRotation> 
+   EulerAngles &  operator=( OtherRotation const  & r ) { 
+      gv_detail::convert(r,*this); 
+      return *this;
+   }
+
+#ifdef OLD
+   explicit EulerAngles(const Rotation3D & r) {gv_detail::convert(r,*this);}
+
+   /**
+      Construct from a rotation matrix
+   */
+   explicit EulerAngles(const Rotation3D & r) {gv_detail::convert(r,*this);}
+
+   /**
+      Construct from a rotation represented by a Quaternion
+   */
+   explicit EulerAngles(const Quaternion & q) {gv_detail::convert(q,*this);}
+
+   /**
+      Construct from an AxisAngle
+   */
+   explicit EulerAngles(const AxisAngle & a ) { gv_detail::convert(a, *this); }
+
+   /**
+      Construct from an axial rotation
+   */
+   explicit EulerAngles( RotationZ const & r ) { gv_detail::convert(r, *this); }
+   explicit EulerAngles( RotationY const & r ) { gv_detail::convert(r, *this); }
+   explicit EulerAngles( RotationX const & r ) { gv_detail::convert(r, *this); }
+
+
+   /**
+      Assign from an AxisAngle
+   */
+   EulerAngles &
+   operator=( AxisAngle const & a ) { return operator=(EulerAngles(a)); }
+
+   /**
+      Assign from a Quaternion
+   */
+   EulerAngles &
+   operator=( Quaternion const  & q ) {return operator=(EulerAngles(q)); }
+
+   /**
+      Assign from an axial rotation
+   */
+   EulerAngles &
+   operator=( RotationZ const & r ) { return operator=(EulerAngles(r)); }
+   EulerAngles &
+   operator=( RotationY const & r ) { return operator=(EulerAngles(r)); }
+   EulerAngles &
+   operator=( RotationX const & r ) { return operator=(EulerAngles(r)); }
+
+#endif
+
+   // ======== Components ==============
+
+   /**
+      Set the three Euler angles given a pair of pointers or iterators
+      defining the beginning and end of an array of three Scalars.
+   */
+   template<class IT>
+   void SetComponents(IT begin, IT end) {
+      fPhi   = *begin++;
+      fTheta = *begin++;
+      fPsi   = *begin++;
+      assert(begin == end); 
+      Rectify();			// Added 27 Jan. 06   JMM
+   }
+
+   /**
+      Get the axis and then the angle into data specified by an iterator begin
+      and another to the end of the desired data (4 past start).
+   */
+   template<class IT>
+   void GetComponents(IT begin, IT end) const {
+      *begin++ = fPhi;
+      *begin++ = fTheta;
+      *begin++ = fPsi;
+      assert(begin == end); 
+   }
+
+   /**
+      Get the axis and then the angle into data specified by an iterator begin
+   */
+   template<class IT>
+   void GetComponents(IT begin) const {
+      *begin++ = fPhi;
+      *begin++ = fTheta;
+      *begin   = fPsi;
+   }
+
+   /**
+      Set the components phi, theta, psi based on three Scalars.
+   */
+   void SetComponents(Scalar phi, Scalar theta, Scalar psi) {
+      fPhi=phi; fTheta=theta; fPsi=psi; 
+      Rectify();			// Added 27 Jan. 06   JMM
+   }
+
+   /**
+      Get the components phi, theta, psi into three Scalars.
+   */
+   void GetComponents(Scalar & phi, Scalar & theta, Scalar & psi) const {
+      phi=fPhi; theta=fTheta; psi=fPsi;
+   }
+
+   /**
       Set Phi Euler angle		// JMM 30 Jan. 2006
-  */
-  void SetPhi(Scalar phi) { fPhi=phi; Rectify(); }
+   */
+   void SetPhi(Scalar phi) { fPhi=phi; Rectify(); }
 
-  /**
+   /**
       Return Phi Euler angle
-  */
-  Scalar Phi() const { return fPhi; }
+   */
+   Scalar Phi() const { return fPhi; }
 
-  /**
+   /**
       Set Theta Euler angle		// JMM 30 Jan. 2006
-  */
-  void SetTheta(Scalar theta) { fTheta=theta; Rectify(); }
+   */
+   void SetTheta(Scalar theta) { fTheta=theta; Rectify(); }
 
-  /**
+   /**
       Return Theta Euler angle
-  */
-  Scalar Theta() const { return fTheta; }
+   */
+   Scalar Theta() const { return fTheta; }
 
-  /**
+   /**
       Set Psi Euler angle		// JMM 30 Jan. 2006
-  */
-  void SetPsi(Scalar psi) { fPsi=psi; Rectify(); }
+   */
+   void SetPsi(Scalar psi) { fPsi=psi; Rectify(); }
 
-  /**
+   /**
       Return Psi Euler angle
-  */
-  Scalar Psi() const { return fPsi; }
-
-  // =========== operations ==============
-
-
-  /**
-     Rotation operation on a displacement vector in any coordinate system and tag
    */
-  template <class CoordSystem, class U>
-  DisplacementVector3D<CoordSystem,U>
-  operator() (const DisplacementVector3D<CoordSystem,U> & v) const {
-    return Rotation3D(*this) ( v );
-  }
+   Scalar Psi() const { return fPsi; }
 
-  /**
-     Rotation operation on a position vector in any coordinate system
+   // =========== operations ==============
+
+
+   /**
+      Rotation operation on a displacement vector in any coordinate system and tag
    */
-  template <class CoordSystem, class U>
-  PositionVector3D<CoordSystem, U>
-  operator() (const PositionVector3D<CoordSystem,U> & v) const {
-    DisplacementVector3D< Cartesian3D<double>,U > xyz(v);
-    DisplacementVector3D< Cartesian3D<double>,U > rxyz = operator()(xyz);
-    return PositionVector3D<CoordSystem,U> ( rxyz );
-  }
+   template <class CoordSystem, class U>
+   DisplacementVector3D<CoordSystem,U>
+   operator() (const DisplacementVector3D<CoordSystem,U> & v) const {
+      return Rotation3D(*this) ( v );
+   }
 
-  /**
-     Rotation operation on a Lorentz vector in any 4D coordinate system
+   /**
+      Rotation operation on a position vector in any coordinate system
    */
-  template <class CoordSystem>
-  LorentzVector<CoordSystem>
-  operator() (const LorentzVector<CoordSystem> & v) const {
-    DisplacementVector3D< Cartesian3D<double> > xyz(v.Vect());
-    xyz = operator()(xyz);
-    LorentzVector< PxPyPzE4D<double> > xyzt (xyz.X(), xyz.Y(), xyz.Z(), v.E());
-    return LorentzVector<CoordSystem> ( xyzt );
-  }
+   template <class CoordSystem, class U>
+   PositionVector3D<CoordSystem, U>
+   operator() (const PositionVector3D<CoordSystem,U> & v) const {
+      DisplacementVector3D< Cartesian3D<double>,U > xyz(v);
+      DisplacementVector3D< Cartesian3D<double>,U > rxyz = operator()(xyz);
+      return PositionVector3D<CoordSystem,U> ( rxyz );
+   }
 
-  /**
-     Rotation operation on an arbitrary vector v.
-     Preconditions:  v must implement methods x(), y(), and z()
-     and the arbitrary vector type must have a constructor taking (x,y,z)
+   /**
+      Rotation operation on a Lorentz vector in any 4D coordinate system
    */
-  template <class ForeignVector>
-  ForeignVector
-  operator() (const  ForeignVector & v) const {
-    DisplacementVector3D< Cartesian3D<double> > xyz(v);
-    DisplacementVector3D< Cartesian3D<double> > rxyz = operator()(xyz);
-    return ForeignVector ( rxyz.X(), rxyz.Y(), rxyz.Z() );
-  }
+   template <class CoordSystem>
+   LorentzVector<CoordSystem>
+   operator() (const LorentzVector<CoordSystem> & v) const {
+      DisplacementVector3D< Cartesian3D<double> > xyz(v.Vect());
+      xyz = operator()(xyz);
+      LorentzVector< PxPyPzE4D<double> > xyzt (xyz.X(), xyz.Y(), xyz.Z(), v.E());
+      return LorentzVector<CoordSystem> ( xyzt );
+   }
 
-  /**
-     Overload operator * for rotation on a vector
+   /**
+      Rotation operation on an arbitrary vector v.
+      Preconditions:  v must implement methods x(), y(), and z()
+      and the arbitrary vector type must have a constructor taking (x,y,z)
    */
-  template <class AVector>
-  inline
-  AVector operator* (const AVector & v) const
-  {
-    return operator()(v);
-  }
+   template <class ForeignVector>
+   ForeignVector
+   operator() (const  ForeignVector & v) const {
+      DisplacementVector3D< Cartesian3D<double> > xyz(v);
+      DisplacementVector3D< Cartesian3D<double> > rxyz = operator()(xyz);
+      return ForeignVector ( rxyz.X(), rxyz.Y(), rxyz.Z() );
+   }
 
-  /**
+   /**
+      Overload operator * for rotation on a vector
+   */
+   template <class AVector>
+   inline
+   AVector operator* (const AVector & v) const
+   {
+      return operator()(v);
+   }
+
+   /**
       Invert a rotation in place
    */
-  // theta stays the same and negative rotation in Theta is done via a rotation 
-  // of + PI in pohi and Psi 
-  void Invert() {
-    Scalar tmp = -fPhi; 
-    fPhi = -fPsi + Pi(); 
-    fTheta = fTheta; 
-    fPsi=tmp + Pi();
-  }
+   // theta stays the same and negative rotation in Theta is done via a rotation 
+   // of + PI in pohi and Psi 
+   void Invert() {
+      Scalar tmp = -fPhi; 
+      fPhi = -fPsi + Pi(); 
+      fTheta = fTheta; 
+      fPsi=tmp + Pi();
+   }
 
-  /**
+   /**
       Return inverse of a rotation
    */
-  EulerAngles Inverse() const { return EulerAngles(-fPsi + Pi(), fTheta, -fPhi + Pi()); }
+   EulerAngles Inverse() const { return EulerAngles(-fPsi + Pi(), fTheta, -fPhi + Pi()); }
 
-  // ========= Multi-Rotation Operations ===============
+   // ========= Multi-Rotation Operations ===============
 
-  /**
-     Multiply (combine) two rotations
+   /**
+      Multiply (combine) two rotations
    */
-  EulerAngles operator * (const Rotation3D  & r) const;
-  EulerAngles operator * (const AxisAngle   & a) const;
-  EulerAngles operator * (const EulerAngles & e) const;
-  EulerAngles operator * (const Quaternion  & q) const;
-  EulerAngles operator * (const RotationX  & rx) const;
-  EulerAngles operator * (const RotationY  & ry) const;
-  EulerAngles operator * (const RotationZ  & rz) const;
+   EulerAngles operator * (const Rotation3D  & r) const;
+   EulerAngles operator * (const AxisAngle   & a) const;
+   EulerAngles operator * (const EulerAngles & e) const;
+   EulerAngles operator * (const Quaternion  & q) const;
+   EulerAngles operator * (const RotationX  & rx) const;
+   EulerAngles operator * (const RotationY  & ry) const;
+   EulerAngles operator * (const RotationZ  & rz) const;
 
-  /**
-     Post-Multiply (on right) by another rotation :  T = T*R
+   /**
+      Post-Multiply (on right) by another rotation :  T = T*R
    */
-  template <class R>
-  EulerAngles & operator *= (const R & r) { return *this = (*this)*r; }
+   template <class R>
+   EulerAngles & operator *= (const R & r) { return *this = (*this)*r; }
 
-  /**
-     Distance between two rotations
+   /**
+      Distance between two rotations
    */
-  template <class R>
-  Scalar Distance ( const R & r ) const {return gv_detail::dist(*this,r);}
+   template <class R>
+   Scalar Distance ( const R & r ) const {return gv_detail::dist(*this,r);}
 
-  /**
-     Equality/inequality operators
+   /**
+      Equality/inequality operators
    */
-  bool operator == (const EulerAngles & rhs) const {
-    if( fPhi   != rhs.fPhi   ) return false;
-    if( fTheta != rhs.fTheta ) return false;
-    if( fPsi   != rhs.fPsi   ) return false;
-    return true;
-  }
-  bool operator != (const EulerAngles & rhs) const {
-    return ! operator==(rhs);
-  }
+   bool operator == (const EulerAngles & rhs) const {
+      if( fPhi   != rhs.fPhi   ) return false;
+      if( fTheta != rhs.fTheta ) return false;
+      if( fPsi   != rhs.fPsi   ) return false;
+      return true;
+   }
+   bool operator != (const EulerAngles & rhs) const {
+      return ! operator==(rhs);
+   }
 
 private:
 
-  double fPhi;
-  double fTheta;
-  double fPsi;
+   double fPhi;
+   double fTheta;
+   double fPsi;
 
-  static double Pi() { return 3.14159265358979323; }
+   static double Pi() { return M_PI; }
 
 };  // EulerAngles
 
