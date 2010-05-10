@@ -1,8 +1,9 @@
 #!/bin/sh
 
 #
-# $Id: proofserv.sh,v 1.1 2006/11/20 15:56:35 rdm Exp $
+# $Id:$
 #
+# Template for the proofserv wrapper script.
 # The proofserv wrapper script can be used to initialize the
 # environment for proofserv as needed. It could be extended
 # to select a specific ROOT version. It also allows debug
