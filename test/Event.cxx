@@ -70,12 +70,16 @@
 //   of histograms can be filled. The creation and handling of the
 //   histograms is taken care of by the HistogramManager class.
 //
+//   Note:  This version of the class Event (see EventMT.h and EventMT.cxx
+//   for an alternative) uses static variable to improve performance (by
+//   reducing memory allocation) and thus you can only one instance per
+//   process (a 2nd instance would shared the array of Tracks).
+//
 ////////////////////////////////////////////////////////////////////////
 
 #include "TRandom.h"
 #include "TDirectory.h"
 #include "TProcessID.h"
-#include "TThread.h"
 
 #include "Event.h"
 
@@ -95,14 +99,8 @@ Event::Event() : fIsValid(kFALSE)
    // When the constructor is invoked for the first time, the class static
    // variable fgTracks is 0 and the TClonesArray fgTracks is created.
 
-   if (TThread::IsInitialized() && TThread::Self()) {
-      // If thread have been enabled and we are not in the main thread
-      // let's not share the TClonesArray!
-      fTracks = new TClonesArray("Track", 1000);
-   } else {
-      if (!fgTracks) fgTracks = new TClonesArray("Track", 1000);
-      fTracks = fgTracks;
-   }
+   if (!fgTracks) fgTracks = new TClonesArray("Track", 1000);
+   fTracks = fgTracks;
    fHighPt = new TRefArray;
    fMuons  = new TRefArray;
    fNtrack = 0;
@@ -228,14 +226,8 @@ void Event::SetHeader(Int_t i, Int_t run, Int_t date, Float_t random)
 {
    fNtrack = 0;
    fEvtHdr.Set(i, run, date);
-   if (TThread::IsInitialized() && TThread::Self()) {
-      // If thread have been enabled and we are not in the main thread
-      // let's not share the histogram!
-      fH = new TH1F("hstat","Event Histogram",100,0,1);
-   } else {
-      if (!fgHist) fgHist = new TH1F("hstat","Event Histogram",100,0,1);
-      fH = fgHist;
-   }
+   if (!fgHist) fgHist = new TH1F("hstat","Event Histogram",100,0,1);
+   fH = fgHist;
    fH->Fill(random);
 }
 
