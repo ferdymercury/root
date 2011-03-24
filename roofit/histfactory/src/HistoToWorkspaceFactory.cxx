@@ -89,11 +89,7 @@ ClassImp(RooStats::HistFactory::HistoToWorkspaceFactory)
 namespace RooStats{
 namespace HistFactory{
 
-   HistoToWorkspaceFactory::HistoToWorkspaceFactory() : 
-      fNomLumi(0), fLumiError(0), 
-      fLowBin(0), fHighBin(0), 
-      fOut_f(0), pFile(0)
-   {}
+  HistoToWorkspaceFactory::HistoToWorkspaceFactory(){}
   HistoToWorkspaceFactory::~HistoToWorkspaceFactory(){
     fclose(pFile);
   }
@@ -110,10 +106,9 @@ namespace HistFactory{
 
     //    fResultsPrefixStr<<"results" << "_" << fNomLumi<< "_" << fLumiError<< "_" << fLowBin<< "_" << fHighBin;
     fResultsPrefixStr<< "_" << fRowTitle;
-    size_t pos; 
-    while((pos = fRowTitle.find("\\ ") )!=string::npos){
-       // warning: coverity[NEGATIVE_RETURNS]
-       fRowTitle.replace(pos, 1, "");
+    while(fRowTitle.find("\\ ")!=string::npos){
+      int pos=fRowTitle.find("\\ ");
+      fRowTitle.replace(pos, 1, "");
     }
     pFile = fopen ((filePrefix+"_results.table").c_str(),"a"); 
     //RooMsgService::instance().setGlobalKillBelow(RooFit::ERROR) ;
@@ -209,9 +204,12 @@ namespace HistFactory{
         temp = (RooRealVar*) proto->factory(("alpha_"+sourceName.at(j)+range).c_str());
 
         // now add a constraint term for these parameters
-        string command=("Gaussian::alpha_"+sourceName.at(j)+"Constraint(alpha_"+sourceName.at(j)+",0.,1.)");
+        string command=("Gaussian::alpha_"+sourceName.at(j)+"Constraint(alpha_"+sourceName.at(j)+",nom_"+sourceName.at(j)+"[0.,-10,10],1.)");
         cout << command << endl;
         likelihoodTermNames.push_back(  proto->factory( command.c_str() )->GetName() );
+	proto->var(("nom_"+sourceName.at(j)).c_str())->setConstant();
+	const_cast<RooArgSet*>(proto->set("globalObservables"))->add(*proto->var(("nom_"+sourceName.at(j)).c_str()));
+
       } 
 
       params.add(* temp );
@@ -258,7 +256,7 @@ namespace HistFactory{
         // remove "doRatio" and name can be changed when ws gets imported to the combined model.
         std::stringstream range;
         range<<"["<<itr->val<<","<<itr->low<<","<<itr->high<<"]";
-        //RooRealVar* var = 0;
+        RooRealVar* var = 0;
 
         string varname;
         if(!prodNames.empty()) prodNames+=",";
@@ -268,8 +266,7 @@ namespace HistFactory{
         else {
           varname=itr->name;
         }
-        //var = (RooRealVar*) // not used  
-        proto->factory((varname+range.str()).c_str());
+        var = (RooRealVar*) proto->factory((varname+range.str()).c_str());
         prodNames+=varname;
       }
       overallNorm_times_sigmaEpsilon = es.name+"_"+channel+"_overallNorm_x_sigma_epsilon";
@@ -301,9 +298,12 @@ namespace HistFactory{
       if(!temp){
         temp = (RooRealVar*) proto->factory((prefix+ it->first +range).c_str());
 
-        string command=("Gaussian::"+prefix+it->first+"Constraint("+prefix+it->first+",0.,1.)");
+        string command=("Gaussian::"+prefix+it->first+"Constraint("+prefix+it->first+",nom_"+prefix+it->first+"[0.,-10,10],1.)");
         cout << command << endl;
         likelihoodTermNames.push_back(  proto->factory( command.c_str() )->GetName() );
+	proto->var(("nom_"+prefix+it->first).c_str())->setConstant();
+	const_cast<RooArgSet*>(proto->set("globalObservables"))->add(*proto->var(("nom_"+prefix+it->first).c_str()));
+
       } 
       params.add(*temp);
 
@@ -360,7 +360,8 @@ namespace HistFactory{
     for(Int_t i=lowBin; i<highBin; ++i){
       std::stringstream str;
       str<<"_"<<i;
-      string command("Poisson::"+prefix+str.str()+"("+obsPrefix+str.str()+","+expPrefix+str.str()+")");
+      //string command("Poisson::"+prefix+str.str()+"("+obsPrefix+str.str()+","+expPrefix+str.str()+")");
+      string command("Poisson::"+prefix+str.str()+"("+obsPrefix+str.str()+","+expPrefix+str.str()+",1)");//for no rounding
       RooAbsArg* temp = (proto->factory( command.c_str() ) );
 
       // output
@@ -723,13 +724,16 @@ namespace HistFactory{
     // this is ratio of lumi to nominal lumi.  We will include relative uncertainty in model
     std::stringstream lumiStr;
     // lumi range
-    lumiStr<<"["<<fNomLumi<<","<<0.5*fNomLumi<<","<<1.5*fNomLumi<<"]";
+    lumiStr<<"["<<fNomLumi<<",0,"<<10.*fNomLumi<<"]";
     proto->factory(("Lumi"+lumiStr.str()).c_str());
     cout << "lumi str = " << lumiStr.str() << endl;
     
     std::stringstream lumiErrorStr;
-    lumiErrorStr << fNomLumi << "," << fLumiError ;
+    //    lumiErrorStr << "nominalLumi["<<fNomLumi << "]," << fLumiError ;
+    lumiErrorStr << "nominalLumi["<<fNomLumi << ",0,"<<fNomLumi+10*fLumiError<<"]," << fLumiError ;
     proto->factory(("Gaussian::lumiConstraint(Lumi,"+lumiErrorStr.str()+")").c_str());
+    proto->var("nominalLumi")->setConstant();
+    proto->defineSet("globalObservables","nominalLumi");
     likelihoodTermNames.push_back("lumiConstraint");
     cout << "lumi Error str = " << lumiErrorStr.str() << endl;
     
@@ -824,6 +828,8 @@ namespace HistFactory{
     proto->import(*model,RecycleConflictNodes());
 
     proto_config->SetPdf(*model);
+    proto_config->SetGlobalObservables(*proto->set("globalObservables"));
+
     proto->import(*proto_config,proto_config->GetName());
     proto->importClassCode();
     //    proto->writeToFile(("results/model_"+channel+".root").c_str());
@@ -850,6 +856,7 @@ namespace HistFactory{
     vector<RooAbsPdf*> models;
     stringstream ss;
 
+    RooArgSet globalObs;
     for(unsigned int i = 0; i< ch_names.size(); ++i){
       string channel_name=ch_names[i];
 
@@ -859,6 +866,7 @@ namespace HistFactory{
       
       RooAbsPdf* model = ch->pdf(("model_"+channel_name).c_str());
       models.push_back(model);
+      globalObs.add(*ch->set("globalObservables"));
 
       //      constrainedParams->add( * ch->set("constrainedParams") );
       pdfMap[channel_name]=model;
@@ -873,7 +881,9 @@ namespace HistFactory{
     ModelConfig * combined_config = new ModelConfig("ModelConfig", combined);
     combined_config->SetWorkspace(*combined);
     //    combined_config->SetNuisanceParameters(*constrainedParams);
-    
+    combined->import(globalObs);
+    combined->defineSet("globalObservables",globalObs);
+    combined_config->SetGlobalObservables(*combined->set("globalObservables"));
 
     ////////////////////////////////////////////
     // Make toy simultaneous dataset

@@ -93,6 +93,7 @@ using namespace RooStats;
 using namespace HistFactory;
 
 void topDriver(string input);
+void fastDriver(string input); // in MakeModelAndMeasurementsFast
 
 //_____________________________batch only_____________________
 #ifndef __CINT__
@@ -104,15 +105,22 @@ int main(int argc, char** argv) {
     exit(1);
   }
 
-  string input(argv[1]);
-  try { 
-     topDriver(input);
-  }
-  catch (...) { 
-     cerr << "Error... exiting " << endl;
-     exit(1);
+  if(argc==2){
+    string input(argv[1]);
+    fastDriver(input);
   }
 
+  if(argc==3){
+    string flag(argv[1]);
+    string input(argv[2]);
+    if(flag=="-standard_form")
+      fastDriver(input);
+    else if(flag=="-number_counting_form")
+      topDriver(input);
+    else
+      cerr <<"unrecognized flag.  Options are -standard_form or -number_counting_form"<<endl;
+
+  }
   return 0;
 }
 
