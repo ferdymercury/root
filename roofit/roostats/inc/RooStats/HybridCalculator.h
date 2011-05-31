@@ -24,8 +24,8 @@ END_HTML
 
 
 
-#ifndef ROOSTATS_HybridCalculatorGeneric
-#include "RooStats/HybridCalculatorGeneric.h"
+#ifndef ROOSTATS_HypoTestCalculatorGeneric
+#include "RooStats/HypoTestCalculatorGeneric.h"
 #endif
 
 #ifndef ROOSTATS_ToyMCSampler
@@ -34,7 +34,7 @@ END_HTML
 
 namespace RooStats {
 
-   class HybridCalculator: public HybridCalculatorGeneric {
+   class HybridCalculator : public HypoTestCalculatorGeneric {
 
    public:
       HybridCalculator(
@@ -43,7 +43,9 @@ namespace RooStats {
                         const ModelConfig &nullModel,
                         TestStatSampler* sampler=0
       ) :
-         HybridCalculatorGeneric(data, altModel, nullModel, sampler),
+         HypoTestCalculatorGeneric(data, altModel, nullModel, sampler),
+         fPriorNuisanceNull(0),
+         fPriorNuisanceAlt(0),
          fNullImportanceDensity(NULL),
          fNullImportanceSnapshot(NULL),
          fAltImportanceDensity(NULL),
@@ -59,6 +61,11 @@ namespace RooStats {
          if(fNullImportanceSnapshot) delete fNullImportanceSnapshot;
          if(fAltImportanceSnapshot) delete fAltImportanceSnapshot;
       }
+
+
+      // Override the distribution used for marginalizing nuisance parameters that is infered from ModelConfig
+      virtual void ForcePriorNuisanceNull(RooAbsPdf& priorNuisance) { fPriorNuisanceNull = &priorNuisance; }
+      virtual void ForcePriorNuisanceAlt(RooAbsPdf& priorNuisance) { fPriorNuisanceAlt = &priorNuisance; }
 
       // sets importance density and snapshot (optional)
       void SetNullImportanceDensity(RooAbsPdf *p, const RooArgSet *s = NULL) {
@@ -81,14 +88,19 @@ namespace RooStats {
       void SetNToysInTails(int toysNull, int toysAlt) { fNToysNullTail = toysNull; fNToysAltTail = toysAlt; }
 
    protected:
+      // check whether all input is consistent
+      int CheckHook(void) const;
+
       // configure TestStatSampler for the Null run
-      int PreNullHook(double obsTestStat) const;
+      int PreNullHook(RooArgSet* /*parameterPoint*/, double obsTestStat) const;
 
       // configure TestStatSampler for the Alt run
-      int PreAltHook(double obsTestStat) const;
+      int PreAltHook(RooArgSet* /*parameterPoint*/, double obsTestStat) const;
 
+   protected:
+      RooAbsPdf *fPriorNuisanceNull;
+      RooAbsPdf *fPriorNuisanceAlt;
 
-   private:
       RooAbsPdf *fNullImportanceDensity;
       const RooArgSet *fNullImportanceSnapshot;
       RooAbsPdf *fAltImportanceDensity;
@@ -102,7 +114,7 @@ namespace RooStats {
       int fNToysNullTail;
       int fNToysAltTail;
 
-      protected:
+   protected:
       ClassDef(HybridCalculator,1)
    };
 }
