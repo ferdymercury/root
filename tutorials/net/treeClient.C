@@ -89,7 +89,8 @@ void treeClient(Bool_t evol=kFALSE)
          messlen  += mess.Length();
          cmesslen += mess.CompLength();
          
-         file->ResetAfterMerge(0);
+         file->ResetAfterMerge(0);  // This resets only the TTree objects.
+         hpx->Reset();
       }
    }
    sock->Send("Finished");          // tell server we are finished
