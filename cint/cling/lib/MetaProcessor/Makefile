@@ -20,4 +20,3 @@ CPPFLAGS += -I$(PROJ_SRC_DIR)/../../include -I$(PROJ_SRC_DIR)/../../../clang/inc
 -I$(PROJ_SRC_DIR)/../../../clang/lib -I$(PROJ_OBJ_DIR)/../../include -I$(PROJ_OBJ_DIR)/../../../clang/include 
 
 include $(CLING_LEVEL)/Makefile
-
