@@ -145,6 +145,8 @@ TestFrame * GuiBuilder::BuildWindow(TestFrame * parentFrame)
       if(Eof())
          Error("BuildWindow", "end of file while '-window' tag expected");
    }
+   
+//   std::cout<<"background color is "<<backgroundColor<<std::endl;
 
    unsigned inputMask = 0;
    if(currentLine_->find("+input") != std::string::npos)
@@ -163,8 +165,9 @@ TestFrame * GuiBuilder::BuildWindow(TestFrame * parentFrame)
    std::auto_ptr<TestFrame> newFrame(new TestFrame(parentFrame, newGeom.width, newGeom.height, parentFrame ? kChildFrame : kMainFrame, backgroundColor));
 
    gVirtualX->MoveWindow(newFrame->GetId(), newGeom.x, newGeom.y);
-   if (inputMask)
-      gVirtualX->SelectInput(newFrame->GetId(), inputMask);
+
+   if(inputMask)
+   newFrame->AddInput(inputMask);
       
    if(currentLine_->find("+children") != std::string::npos)
    {
