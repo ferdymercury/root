@@ -11,38 +11,39 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 //                                                                            //
-//  Class representing a value came from the interpreter. Its main use case   //
-//  is to TCallFunc. When TCallFunc returns by-value, ie a temporary          //
+//  Class representing a value coming from the interpreter. Its main use case //
+//  is to TCallFunc. When TCallFunc returns by-value, i.e. a temporary        //
 //  variable, its lifetime has to be extended. TInterpreterValue provides a   //
 //  way to extend the temporaries lifetime and gives the user to control it.  //
 //                                                                            //
-//  The class is used to hide the implementation details of                   //
-//  cling::StoredValueRef.                                                    //
+//  The class needs to be derived from for the actual interpreter,            //
+//  see TClingValue.                                                          //
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
 
 #ifndef ROOT_TInterpreterValue
 #define ROOT_TInterpreterValue
 
+#ifndef ROOT_Rtypes
 #include "Rtypes.h"
+#endif
+
 
 class TInterpreterValue {
-private:
-   void* fValue;
 public:
-   TInterpreterValue();
-   TInterpreterValue(const TInterpreterValue& Other);
-   TInterpreterValue& operator=(TInterpreterValue Other);
-   ~TInterpreterValue();
+   TInterpreterValue() { }
+   TInterpreterValue(const TInterpreterValue &);   // not implemented
+   TInterpreterValue& operator=(TInterpreterValue &);  // not implemented
+   virtual ~TInterpreterValue() { }
 
-   void* const& Get() const { return fValue; }
-   void*& Get() { return fValue; }
+   virtual void* const& Get() const = 0;
+   virtual void*& Get() = 0;
 
-   Bool_t   IsValid() const;
-   Double_t GetAsDouble() const;
-   Long_t   GetAsLong() const;
-   ULong_t  GetAsUnsignedLong() const;
-   void*    GetAsPointer() const;
+   virtual Bool_t   IsValid() const = 0;
+   virtual Double_t GetAsDouble() const = 0;
+   virtual Long_t   GetAsLong() const = 0;
+   virtual ULong_t  GetAsUnsignedLong() const = 0;
+   virtual void*    GetAsPointer() const = 0;
 };
 
 #endif // ROOT_TInterpreterValue
