@@ -1,14 +1,6 @@
+#include "commonutils.h"
+
 void execautoloadts(){
-   auto keys {"TH1F",
-      "TXMLFile",
-      "TGraph",
-      "RooRealVar",
-      "RooVoigtian",
-      "RooStats::LikelihoodInterval",
-      "TMultiLayerPerceptron",
-      "TBrowser",
-      "THtml",
-      "ROOT::Math::GeneticMinimizer"};
 
    TThread::Initialize();
    gEnv->SetValue("RooFit.Banner",0);
