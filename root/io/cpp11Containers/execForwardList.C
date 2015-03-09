@@ -126,9 +126,11 @@ void check(const char* testName){
          checkObjects("doubleCont",doubleContOrig,*rdoubleCont);
          checkObjects("histoCont_split",histoContOrig,*rhistoCont_split);
          checkObjects("histoCont",histoContOrig,*rhistoCont);
+         checkObjects("contHistoCont_split",contHistoContOrig,*rcontHistoCont_split);
+         checkObjects("contHistoCont",contHistoContOrig,*rcontHistoCont);
          checkObjects("vecHistoCont_split",vecHistoContOrig,*rvecHistoCont_split);
          checkObjects("vecHistoCont",vecHistoContOrig,*rvecHistoCont);
-         checkObjects("vcontHistoVec_split",contHistoVecOrig,*rcontHistoVec_split);
+         checkObjects("contHistoVec_split",contHistoVecOrig,*rcontHistoVec_split);
          checkObjects("contHistoVec",contHistoVecOrig,*rcontHistoVec);
       }
    }
