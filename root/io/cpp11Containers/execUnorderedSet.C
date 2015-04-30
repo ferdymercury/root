@@ -133,6 +133,7 @@ void execUnorderedSet(){
 
    // This is for the actual collection
    check<std::unordered_set>("unordered_set");
+   check<std::unordered_multiset>("unordered_multiset");
 
 
 
