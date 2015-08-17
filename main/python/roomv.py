@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# ROOT command line tools: roomv
+# ROOT command line tools: rootmv
 # Author: Julien Ripoche
 # Mail: julien.ripoche@u-psud.fr
 # Date: 13/08/15
@@ -58,7 +58,7 @@ def execute():
     parser.add_argument("-c","--compress", type=int, help=cmdLineUtils.COMPRESS_HELP)
     parser.add_argument("-i","--interactive", help=cmdLineUtils.INTERACTIVE_HELP, action="store_true")
     parser.add_argument("--recreate", help=cmdLineUtils.RECREATE_HELP, action="store_true")
-    
+
     # Put arguments in shape
     sourceList, destFileName, destPathSplit, optDict = cmdLineUtils.getSourceDestListOptDict(parser)
     if sourceList == [] or destFileName == "": return 1
@@ -69,7 +69,7 @@ def execute():
     optDict["replace"] = True
 
     # Open destination file
-    destFile = cmdLineUtils.openROOTFileCompress(destFileName,optDict)    
+    destFile = cmdLineUtils.openROOTFileCompress(destFileName,optDict)
     if not destFile: return 1
     ROOT.gROOT.GetListOfFiles().Remove(destFile) # Fast copy necessity
 
