@@ -45,7 +45,7 @@ Int_t mt101_fillNtuples(UInt_t nWorkers = 4)
 
    // Create a random generator and and Ntuple to hold the numbers
    TRandom3 rndm(1);
-   TFile ofile("mc101_singleCore.root", "RECREATE");
+   TFile ofile("mt101_singleCore.root", "RECREATE");
    TNtuple randomNumbers("singleCore", "Random Numbers", "r");
 
    // Now let's measure how much time we need to fill it up
@@ -66,7 +66,7 @@ Int_t mt101_fillNtuples(UInt_t nWorkers = 4)
    auto workItem = [&fillRandom](UInt_t workerID, UInt_t workSize) {
       // One generator, file and ntuple per worker
       TRandom3 workerRndm(workerID); // Change the seed
-      TFile ofile(Form("mc101_multiCore_%u.root", workerID), "RECREATE");
+      TFile ofile(Form("mt101_multiCore_%u.root", workerID), "RECREATE");
       TNtuple workerRandomNumbers("multiCore", "Random Numbers", "r");
       fillRandom(workerRandomNumbers, workerRndm, workSize);
       workerRandomNumbers.Write();
