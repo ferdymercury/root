@@ -6,7 +6,7 @@
 /// \macro_image
 /// \macro_code
 ///
-/// \author Miroslav Morhac
+/// \authors Miroslav Morhac, Olivier Couet
 
 void Deconvolution() {
    Int_t i;
