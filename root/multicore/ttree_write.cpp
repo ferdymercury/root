@@ -83,6 +83,9 @@ int main(int argc, char** argv) {
   std::vector<std::shared_ptr<std::thread>> threads;
   threads.reserve(kNThreads);
 
+  // Enable multithreading of the FlushBaskets.
+  ROOT::EnableImplicitMT(kNThreads);
+
   for(int i=0; i< kNThreads; ++i) {
     threads.push_back(std::make_shared<std::thread>( std::thread([i]() {
         std::stringstream nameStream;
@@ -99,7 +102,7 @@ int main(int argc, char** argv) {
         --countdownToWrite;
         while(countdownToWrite !=0) ;
 
-	for(unsigned int i = 0; i<100;++i) {
+	for(unsigned int i = 0; i<100000;++i) {
 	  listTree->Fill();
 	}
 	f.Write();
