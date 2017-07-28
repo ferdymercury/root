@@ -32,9 +32,9 @@ using namespace TMVA::DNN::DAE;
 int main()
 
 {
-  std::cout << "Testing for Logistic Regression Layer started" << std::endl;
+   std::cout << "Testing for Logistic Regression Layer started" << std::endl;
 
-  testLayer1<TReference<double>>();
+   testLayer1<TReference<double>>();
 
-  return 0;
+   return 0;
 }
