@@ -46,7 +46,7 @@ template <typename Architecture> auto testLayer(size_t batchSize, size_t visible
 
    using TCorruptionLayer = TCorruptionLayer<Architecture>;
 
-   TCorruptionLayer dae(batchSize, visibleUnits, 1, 0.3);
+   TCorruptionLayer dae(batchSize, visibleUnits,2, 1, 0.3);
 
    std::vector<Matrix_t> input, corruptedInput;
    for(size_t i=0; i<batchSize; i++)
