@@ -45,9 +45,9 @@ template <typename Architecture> auto constructDeepAutoEncoderNet(TDeepNet<Archi
    using Matrix_t = typename Architecture::Matrix_t;
 
    std::vector<Matrix_t> input;
-   size_t batchSize=10;
+   size_t batchSize=1;
    size_t visibleUnits=6;
-   std::vector<size_t> numHiddenUnitsPerLayer = {4,3};
+   std::vector<size_t> numHiddenUnitsPerLayer = {4,3,2};
    Scalar_t learningRate =0.1;
    Scalar_t corruptionLevel = 0.3;
    Scalar_t dropoutProbability = 1;
@@ -76,7 +76,7 @@ template <typename Architecture> auto testNet()
    using Scalar_t = typename Architecture::Scalar_t;
    using Matrix_t = typename Architecture::Matrix_t;
    using Net_t = TDeepNet<Architecture>;
-   size_t batchSize = 10;
+   size_t batchSize = 1;
    Net_t convNet(batchSize, 1, 1, 1, 1, 1, 1,
                  ELossFunction::kMeanSquaredError, EInitialization::kGauss);
 
