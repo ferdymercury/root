@@ -15,7 +15,7 @@ set(CEF_DLL_WRAPPER "")
 set(CEF_SRC "")
 set(CEF_RESOURCES "")
 
-if(DEFINED ENV{CEF_PATH})
+if(DEFINED ENV{CEF_PATH_})
 if(EXISTS $ENV{CEF_PATH})
 if(ROOT_ARCHITECTURE MATCHES macosx)
    include_directories($ENV{CEF_PATH})
