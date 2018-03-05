@@ -6,7 +6,6 @@
 #include "test_read_leaves.h"
 
 using namespace ROOT::Experimental;
-using namespace ROOT::Experimental::VecOps;
 
 int main()
 {
