@@ -43,12 +43,26 @@ int main()
    using Scalar_t = Double_t;
    std::cout << "Testing Flatten/Deflatten on the Reference architecture:" << std::endl;
 
+   bool status = true;
+
    std::cout << "Test Reshape: " << std::endl;
-   testReshape<TReference<Scalar_t>>();
+   status &= testReshape<TReference<Scalar_t>>();
+   if (!status) {
+      std::cerr << "ERROR - testReshape failed " << std::endl;
+      return 1;
+   }
 
    std::cout << "Test Flatten: " << std::endl;
-   testFlatten<TReference<Scalar_t>>();
+   status &= testFlatten<TReference<Scalar_t>>();
+   if (!status) {
+      std::cerr << "ERROR - testFlatten failed " << std::endl;
+      return 1;
+   }
 
    std::cout << "Test Deflatten: " << std::endl;
-   testDeflatten<TReference<Scalar_t>>();
+   status &= testDeflatten<TReference<Scalar_t>>();
+   if (!status) {
+      std::cerr << "ERROR - testDeflatten failed " << std::endl;
+      return 1;
+   }
 }
