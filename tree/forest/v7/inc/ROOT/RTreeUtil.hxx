@@ -21,6 +21,11 @@
 namespace ROOT {
 namespace Experimental {
 
+namespace Detail {
+/// Helper class for template specializaions that indicate subtrees rather than final values
+class RSubtreeTag {};
+} // namespace Detail
+
 using TreeIndex_t = std::uint64_t;
 using TreeOffset_t = std::int64_t;
 
