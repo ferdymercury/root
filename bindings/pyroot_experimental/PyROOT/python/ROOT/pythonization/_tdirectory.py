@@ -12,14 +12,9 @@ from libROOTPython import AddDirectoryAttrSyntaxPyz, AddDirectoryWritePyz
 from ROOT import pythonization
 import cppyy
 
-# TDirectory::Get method, based on the attr syntax
-def _TDirectory_Get(self, objName):
-    return getattr(self, objName)
-
 @pythonization(lazy = False)
 def pythonize_tdirectory():
     klass = cppyy.gbl.TDirectory
     AddDirectoryAttrSyntaxPyz(klass)
     AddDirectoryWritePyz(klass)
-    klass.Get = _TDirectory_Get
     return True
