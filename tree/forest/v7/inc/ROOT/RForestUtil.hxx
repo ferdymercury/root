@@ -17,6 +17,7 @@
 #define ROOT7_RForestUtil
 
 #include <cstdint>
+#include <limits>
 
 namespace ROOT {
 namespace Experimental {
@@ -24,6 +25,9 @@ namespace Experimental {
 /// Integer types long enough to hold the maximum number of entries in a tree
 using TreeIndex_t = std::uint64_t;
 using TreeOffset_t = std::int64_t;
+using TreeId_t = std::int64_t;
+
+constexpr TreeIndex_t kInvalidForestIndex = std::numeric_limits<TreeIndex_t>::max();
 
 } // namespace Experimental
 } // namespace ROOT
