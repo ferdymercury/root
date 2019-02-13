@@ -36,5 +36,12 @@ __global__ void g(){
 
 .rawInput 0
 
+// Runing the kernel is neccessary because FileCheck has problems whith the
+// error output of the PTX compiler. Therefore I need an error message from
+// the host interpreter.
+g<<<1,1>>>();
+cudaGetLastError()
+// CHECK: (cudaError_t) (cudaError::cudaSuccess) : (unsigned int) 0
+
 // expected-no-diagnostics
 .q
