@@ -26,8 +26,8 @@ int main() {
    
    // timesteps, batchsize, statesize, inputsize
    std::cout << testForwardPass<TReference<double>>(1, 2, 3, 2)  << "\n";
-   std::cout << testForwardPass<TReference<double>>(1, 8, 100, 50)  << "\n";
-   std::cout << testForwardPass<TReference<double>>(5, 9, 128, 64)  << "\n";
+   //std::cout << testForwardPass<TReference<double>>(1, 8, 100, 50)  << "\n";
+   //std::cout << testForwardPass<TReference<double>>(5, 9, 128, 64)  << "\n";
 
    return 0;
 }

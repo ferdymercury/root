@@ -127,7 +127,6 @@ bool testLSTMBackpropagation(size_t timeSteps, size_t batchSize, size_t stateSiz
    for (size_t i = 0; i < batchSize; ++i) {
          for (size_t l = 0; l < (size_t) XArch[i].GetNrows(); ++l) {
             for (size_t m = 0; m < (size_t) XArch[i].GetNcols(); ++m) {
-               //XArch[i](l, m) = i + l + m;
                XArch[i](l, m) = gRandom->Uniform(-1,1);
             }
          } 
@@ -161,12 +160,14 @@ bool testLSTMBackpropagation(size_t timeSteps, size_t batchSize, size_t stateSiz
    Matrix_t Y(batchSize, outputSize), weights(batchSize, 1);
    //randomMatrix(Y);
    for (size_t i = 0; i < (size_t) Y.GetNrows(); ++i) {
-     for (size_t j = 0; j < (size_t) Y.GetNcols(); ++j) {
-        Y(i, j) = gRandom->Integer(2);
+      for (size_t j = 0; j < (size_t) Y.GetNcols(); ++j) {
+         Y(i, j) = gRandom->Integer(2);
       }
    }
     if (debug) printTensor<Architecture>(Y,"ground truth ");
    fillMatrix(weights, 1.0);
+
+
 
    std::cout << "Testing Weight Backprop using LSTM with batchsize = " << batchSize << " input = " << inputSize << " state = " << stateSize << " time = " << timeSteps;
    if (randomInput) std::cout << "\tusing a random input";
@@ -193,7 +194,6 @@ bool testLSTMBackpropagation(size_t timeSteps, size_t batchSize, size_t stateSiz
 
 
    lstm.Initialize();
-
 
 lstm.Forward(XArch);
 lstm.Backward(XArch, Y, weights);
@@ -229,7 +229,7 @@ lstm.Backward(XArch, Y, weights);
 
 
          ROOT::Math::Functor1D func(f);
-         double dy = deriv.Derivative1(func, Wi(i,j), 1.E-5);
+         double dy = deriv.Derivative1(func, Wi(i,j), 1.E-3);
          Scalar_t dy_ref = dWi(i, j);
 
          // Compute the relative error if dy != 0.

@@ -54,7 +54,6 @@ class TReference
 private:
    static TRandom * fgRandomGen;
 public:
-
    using Scalar_t     = AReal;
    using Matrix_t     = TMatrixT<AReal>;
    using Tensor_t     = TMatrixT<AReal>;
@@ -72,9 +71,12 @@ public:
    ///@{
    /** Matrix-multiply \p input with the transpose of \pweights and
     *  write the results into \p output. */
+ 
    static void MultiplyTranspose(TMatrixT<Scalar_t> &output,
                                  const TMatrixT<Scalar_t> &input,
                                  const TMatrixT<Scalar_t> &weights);
+
+   
    /** Add the vectors biases row-wise to the matrix output */
    static void AddRowWise(TMatrixT<Scalar_t> &output,
                           const TMatrixT<Scalar_t> &biases);
@@ -180,7 +182,6 @@ public:
                                       const TMatrixT<Scalar_t> & input,
                                       TMatrixT<Scalar_t> & input_gradient);
   
-
    /** Adds a the elements in matrix B scaled by c to the elements in
     *  the matrix A. This is required for the weight update in the gradient
     *  descent step.*/
@@ -250,6 +251,7 @@ public:
    static void GaussDerivative(TMatrixT<AReal> & B,
                                const TMatrixT<AReal> & A);
 
+   
    ///@}
 
    //____________________________________________________________________________

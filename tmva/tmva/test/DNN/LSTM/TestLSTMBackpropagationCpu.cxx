@@ -30,7 +30,7 @@ int main() {
 
    // timesteps, batchsize, statesize, inputsize  { fixed input, with dense layer, with extra LSTM }
 
-   testLSTMBackpropagation<TCpu<Scalar_t>>(1, 2, 1, 2, 1e-5);
+   testLSTMBackpropagation<TCpu<Scalar_t>>(2, 1, 1, 2, 1e-5);
 
    testLSTMBackpropagation<TCpu<Scalar_t>>(1, 2, 3, 2, 1e-5); 
 
@@ -43,7 +43,7 @@ int main() {
    testLSTMBackpropagation<TCpu<Scalar_t>>(3, 1, 10, 5, 1e-5, {true});
    // with a dense layer 
    testLSTMBackpropagation<TCpu<Scalar_t>>(4, 32, 10, 20, 1e-5, {false, true});
-s   // with an additional LSTM layer 
+   // with an additional LSTM layer 
    testLSTMBackpropagation<TCpu<Scalar_t>>(4, 32, 10, 5, 1e-5, {false, true, true});
 
 
