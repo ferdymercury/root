@@ -18,7 +18,7 @@
 
 #include <ROOT/RDrawingAttr.hxx>
 #include <ROOT/RAttrLine.hxx>
-#include <ROOT/RColor.hxx>
+#include <ROOT/RAttrFill.hxx>
 #include <ROOT/RPadExtent.hxx>
 #include <ROOT/RPadPos.hxx>
 
@@ -29,16 +29,14 @@ namespace Experimental {
  Drawing attributes for a box: rectangular lines with size and position.
  */
 class RAttrBox : public RAttributesVisitor {
-   RAttrLine fBorder{this, "border_"};     ///<!
-   RAttrLine fTop{this, "top_"};           ///<!
-   RAttrLine fRight{this, "right_"};       ///<!
-   RAttrLine fBottom{this, "bottom_"};     ///<!
-   RAttrLine fLeft{this, "left_"};         ///<!
+
+   RAttrLine fBorder{this, "border_"};       ///<!
+   RAttrFill fFill{this, "fill_"};           ///<!
 
 protected:
    const RDrawableAttributes::Map_t &GetDefaults() const override
    {
-      static auto dflts = RDrawableAttributes::Map_t().AddDefaults(fBorder).AddDefaults(fTop).AddDefaults(fRight).AddDefaults(fBottom).AddDefaults(fLeft);
+      static auto dflts = RDrawableAttributes::Map_t().AddDefaults(fBorder).AddDefaults(fFill);
       return dflts;
    }
 
@@ -47,20 +45,9 @@ public:
 
    const RAttrLine &Border() const { return fBorder; }
    RAttrLine &Border() { return fBorder; }
-   /// Overrides Border() for the top line..
-   const RAttrLine &Top() const { return fTop; }
-   RAttrLine &Top() { return fTop; }
-   /// Overrides Border() for the right line.
-   const RAttrLine &Right() const { return fRight; }
-   RAttrLine &Right() { return fRight; }
-   /// Overrides Border() for the bottom line.
-   const RAttrLine &Bottom() const { return fBottom; }
-   RAttrLine &Bottom() { return fBottom; }
-   /// Overrides Border() for the left line.
-   const RAttrLine &Left() const { return fLeft; }
-   RAttrLine &Left() { return fLeft; }
 
-   // TODO: Add Fill()!
+   const RAttrFill &Fill() const { return fFill; }
+   RAttrFill &Fill() { return fFill; }
 };
 
 } // namespace Experimental
