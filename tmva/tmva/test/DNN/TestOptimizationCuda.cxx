@@ -34,9 +34,10 @@ using TMVA::DNN::EOptimizer;
 
 int main()
 {
-   using Architecture = TCudnn<Float_t>;
+   using Architecture = TCuda<Float_t>;
    gRandom->SetSeed(111);
    Architecture::SetRandomSeed(112);
+
    std::cout << "Testing optimization: (single precision) for Cuda with cudnn" << std::endl;
 
    Real_t momentumSinglePrecision = 0.0;
