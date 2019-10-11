@@ -18,7 +18,7 @@ ROOT_STANDARD_LIBRARY_PACKAGE(ROOTHistDraw
   DEPENDENCIES
     Core
     MathCore
-    Hist
+    ROOTHist
     ROOTGpadv7
 )
 
