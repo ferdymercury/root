@@ -18,9 +18,6 @@
 #define ROOT7_RBrowserRequest
 
 #include <string>
-#include <vector>
-
-#include <ROOT/RBrowserItem.hxx>
 
 namespace ROOT {
 namespace Experimental {
@@ -33,15 +30,6 @@ public:
    int number{0};    ///< number of childs to request, 0 - all childs
    std::string sort; ///< kind of sorting
    std::string regex; ///< applied regex
-};
-
-/** Reply on browser request */
-class RBrowserReply {
-public:
-   std::string path;                  ///< reply path
-   int nchilds{0};                    ///< total number of childs in the node
-   int first{0};                      ///< first node in returned list
-   std::vector<const RBrowserItem *> nodes; ///< list of pointers, no ownership!
 };
 
 } // namespace Experimental
