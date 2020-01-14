@@ -6,15 +6,13 @@
  * For the list of contributors see $ROOTSYS/README/CREDITS.             *
  *************************************************************************/
 
-#ifndef ROOT7_RBrowsableTObject
-#define ROOT7_RBrowsableTObject
+#ifndef ROOT7_Browsable_TObjectHolder
+#define ROOT7_Browsable_TObjectHolder
 
 #include <ROOT/Browsable/RHolder.hxx>
-#include <ROOT/Browsable/RItem.hxx>
 
 namespace ROOT {
 namespace Experimental {
-
 namespace Browsable {
 
 /** \class TObjectHolder
@@ -31,7 +29,7 @@ class TObjectHolder : public RHolder {
 protected:
    void *AccessObject() final { return fOwner ? nullptr : fObj; }
    void *TakeObject() final;
-   RHolder* DoCopy() const final { return new TObjectHolder(fObj); }
+   RHolder *DoCopy() const final { return new TObjectHolder(fObj); }
 public:
    TObjectHolder(TObject *obj, bool owner = false) { fObj = obj; fOwner = owner; }
    virtual ~TObjectHolder()
@@ -43,21 +41,6 @@ public:
    const void *GetObject() const final { return fObj; }
 };
 
-/** Representation of single item in the file browser for object from TKey */
-class TObjectItem : public RItem {
-   std::string className; ///< class name
-
-public:
-
-   TObjectItem() = default;
-
-   TObjectItem(const std::string &_name, int _nchilds) : RItem(_name, _nchilds) {}
-
-   // should be here, one needs virtual table for correct streaming of RRootBrowserReply
-   virtual ~TObjectItem() = default;
-
-   void SetClassName(const std::string &_className) { className = _className; }
-};
 
 } // namespace Browsable
 } // namespace Experimental
