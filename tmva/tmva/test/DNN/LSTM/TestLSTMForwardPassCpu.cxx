@@ -14,6 +14,7 @@
 ////////////////////////////////////////////////////////////////////
 
 #include <iostream>
+#include <climits>
 #include "TMVA/DNN/Architectures/Cpu.h"
 #include "TestLSTMForwardPass.h"
 
@@ -23,6 +24,10 @@ using namespace TMVA::DNN::RNN;
 int main() {
 
    using Architecture_t = TCpu<Double_t>;
+
+   int seed = 12345;
+   gRandom->SetSeed(seed);
+   Architecture_t::SetRandomSeed(gRandom->Integer(INT_MAX));
 
    std::cout << "Testing LSTM Forward pass\n";
    bool debug = true;
