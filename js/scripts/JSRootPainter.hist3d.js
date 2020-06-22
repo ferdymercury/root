@@ -14,7 +14,7 @@
       if (typeof d3 != 'object')
          throw new Error('This extension requires d3.js', 'JSRootPainter.hist3d.js');
       if (typeof THREE == 'undefined')
-         throw new Error('THREE is not defined', 'JSRoot3DPainter.js');
+         throw new Error('THREE is not defined', 'JSRootPainter.hist3d.js');
       factory(JSROOT, d3, JSROOT, THREE, THREE);
    }
 } (function(JSROOT, d3, __DUMMY__, THREE, THREE_MORE, document) {
@@ -1161,7 +1161,7 @@
          var zmin = levels[nlevel], zmax = levels[nlevel+1],
              z1 = 0, z2 = 0, numvertices = 0, num2vertices = 0;
 
-         // artifically extend last level of color pallette to maximial visible value
+         // artificially extend last level of color palette to maximal visible value
          if (palette && (nlevel==levels.length-2) && zmax < axis_zmax) zmax = axis_zmax;
 
          var grzmin = main.grz(zmin), grzmax = main.grz(zmax);
