@@ -23,6 +23,7 @@
 #include "ROOT/RFrameTitle.hxx"
 #include "ROOT/RHistStatBox.hxx"
 #include "ROOT/RFrame.hxx"
+#include "TString.h"
 
 // macro must be here while cling is not capable to load
 // library automatically for outlined function see ROOT-10336
@@ -32,7 +33,7 @@ using namespace ROOT::Experimental;
 
 void draw_rh2_large()
 {
-   const int nbins = 50;
+   const int nbins = 2000;
 
    // Create the histogram.
    RAxisConfig xaxis("x", nbins, 0., nbins);
@@ -55,13 +56,13 @@ void draw_rh2_large()
    frame->AttrX().SetZoomMinMax(nbins*0.2, nbins*0.8);
    frame->AttrY().SetZoomMinMax(nbins*0.2, nbins*0.8);
 
-   canvas->Draw<RFrameTitle>(Form("Large RH2D histogram with %d x %d bins",nbins,nbins));
+   canvas->Draw<RFrameTitle>(TString::Format("Large RH2D histogram with %d x %d bins",nbins,nbins).Data());
 
    auto draw = canvas->Draw(pHist);
 
    draw->AttrLine().SetColor(RColor::kLime);
    // draw->Contour(); // configure cont draw option
-   // draw->Scatter(); // configure color draw option (default)
+   // draw->Scatter(); // configure scatter draw option
    // draw->Arrow(); // configure arrow draw option
    draw->Color(); // configure color draw option (default)
    // draw->Text(true); // configure text drawing (can be enabled with most 2d options)
