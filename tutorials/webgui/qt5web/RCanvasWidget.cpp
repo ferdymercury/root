@@ -28,7 +28,7 @@ RCanvasWidget::RCanvasWidget(QWidget *parent) : QWidget(parent)
 
    setAcceptDrops(true);
 
-   fCanvas = new ROOT::Experimental::RCanvas();
+   fCanvas = ROOT::Experimental::RCanvas::Create("ExampleCanvas");
 
    auto where = ROOT::Experimental::RWebDisplayArgs::GetQt5EmbedQualifier(this, "noopenui");
 
@@ -46,10 +46,8 @@ RCanvasWidget::RCanvasWidget(QWidget *parent) : QWidget(parent)
 
 RCanvasWidget::~RCanvasWidget()
 {
-   if (fCanvas) {
-      delete fCanvas;
-      fCanvas = nullptr;
-   }
+   // remove canvas from global lists
+   fCanvas->Remove();
 }
 
 void RCanvasWidget::resizeEvent(QResizeEvent *event)

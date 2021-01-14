@@ -14,6 +14,8 @@
 #include <QWidget>
 #include <QWebEngineView>
 
+#include <memory>
+
 namespace ROOT {
 namespace Experimental {
 class RCanvas;
@@ -24,20 +26,22 @@ class RCanvasWidget : public QWidget {
 
    Q_OBJECT
 
-public:
-   RCanvasWidget(QWidget *parent = nullptr);
-   virtual ~RCanvasWidget();
-
-   /// returns canvas shown in the widget
-   ROOT::Experimental::RCanvas *getCanvas() { return fCanvas; }
-
 protected:
 
    void resizeEvent(QResizeEvent *event) override;
 
    QWebEngineView *fView{nullptr};  ///< qt webwidget to show
 
-   ROOT::Experimental::RCanvas *fCanvas{nullptr};
+   std::shared_ptr<ROOT::Experimental::RCanvas> fCanvas;
+
+public:
+   RCanvasWidget(QWidget *parent = nullptr);
+   virtual ~RCanvasWidget();
+
+   /// returns canvas shown in the widget
+   auto getCanvas() { return fCanvas; }
+
+
 };
 
 #endif
