@@ -18,3 +18,11 @@ printf("About to throw \"ABC\"\n");
 TheStruct getStructButThrows() { throw "ABC!"; }
 // CHECK: Exception occurred. Recovering...
 getStructButThrows()
+
+struct ThrowInConstructor {
+  ThrowInConstructor() { throw 1; }
+};
+// CHECK: About to throw in constructor
+printf("About to throw in constructor\n");
+// CHECK: Exception occurred. Recovering...
+ThrowInConstructor t;
