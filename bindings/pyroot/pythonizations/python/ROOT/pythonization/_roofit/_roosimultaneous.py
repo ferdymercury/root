@@ -11,7 +11,7 @@
 ################################################################################
 
 
-r'''
+r"""
 /**
 \class RooSimultaneous
 \brief \parblock \endparblock
@@ -37,24 +37,14 @@ pdfSim.fitTo(data, Range="r1")
 </div>
 \endhtmlonly
 */
-'''
+"""
 
+from ._utils import _kwargs_to_roocmdargs
 
-from ._utils import _getter
 
 class RooSimultaneous(object):
     def plotOn(self, *args, **kwargs):
-        """
-        Docstring
-        """
         # Redefinition of `RooSimultaneous.plotOn` for keyword arguments.
-        # the keywords must correspond to the CmdArg of the `plotOn` function.
-        # Parameters:
-        # self: instance of `RooSimultaneous` class
-        # *args: arguments passed to `plotOn`
-        # **kwargs: keyword arguments passed to `plotOn`
-        if not kwargs:
-            return self._plotOn(*args)
-        else:
-            nargs = args + tuple((_getter(k, v) for k, v in kwargs.items()))
-            return self._plotOn(*nargs)
+        # The keywords must correspond to the CmdArg of the `plotOn` function.
+        args, kwargs = _kwargs_to_roocmdargs(*args, **kwargs)
+        return self._plotOn(*args, **kwargs)
