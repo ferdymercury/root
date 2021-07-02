@@ -10,6 +10,6 @@
 
 // the classifiers
 #pragma link C++ class TMVA::Experimental::SOFIE::RModel+;
-#pragma link C++ class TMVA::Experimental::SOFIE::RModelParser_ONNX+;
+
 
 #endif
