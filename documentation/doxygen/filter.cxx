@@ -124,6 +124,7 @@ int    gMacroID;       // Macro identifier in class documentation.
 
 int main(int argc, char *argv[])
 {
+   if(argc<2) return argc;
    // Initialisation
    gFileName      = argv[1];
    gHeader        = false;
@@ -133,7 +134,7 @@ int main(int argc, char *argv[])
    gInMacro       = 0;
    gImageID       = 0;
    gMacroID       = 0;
-   gOutputName    = "stdout.dat";
+   gOutputName    = CMAKE_BUILD_DIRECTORY "/stdout.dat";
    gImageType     = "png";
    gImageWidth    = "";
    if (EndsWith(gFileName,".cxx")) gSource = true;
@@ -146,15 +147,25 @@ int main(int argc, char *argv[])
    gCwd     = gFileName.substr(0,last);
 
    // Retrieve the output directory
-   gOutDir = getenv("DOXYGEN_OUTPUT_DIRECTORY");
+   //~ char* ge;
+   //~ ge = getenv("DOXYGEN_OUTPUT_DIRECTORY");
+   //~ if(!ge) return 1;
+   //~ gOutDir = ge;
+   gOutDir = DOXYGEN_OUTPUT_DIRECTORY;
    ReplaceAll(gOutDir,"\"","");
 
    // Retrieve the source directory
-   gSourceDir = getenv("DOXYGEN_SOURCE_DIRECTORY");
+   //~ ge = getenv("DOXYGEN_SOURCE_DIRECTORY");
+   //~ if(!ge) return 1;
+   //~ gSourceDir = ge;
+   gSourceDir = DOXYGEN_SOURCE_DIRECTORY;
    ReplaceAll(gSourceDir,"\"","");
 
    // Retrieve the python executable
-   gPythonExec = getenv("PYTHON_EXECUTABLE");
+   //~ ge = getenv("PYTHON_EXECUTABLE");
+   //~ if(!ge) return 1;
+   //~ gPythonExec = ge;
+   gPythonExec = PYTHON_EXECUTABLE;
    ReplaceAll(gPythonExec,"\"","");
 
    // Open the input file name.
@@ -196,18 +207,18 @@ void FilterClass()
             if (m) {
                fclose(m);
                m = 0;
-               ExecuteCommand(StringFormat("root -l -b -q \"makeimage.C(\\\"%s\\\",\\\"%s\\\",\\\"%s\\\",true,false)\""
+               ExecuteCommand(StringFormat(ROOT_COMMAND " -l -b -q \"makeimage.C(\\\"" CMAKE_BUILD_DIRECTORY "/%s\\\",\\\"%s\\\",\\\"%s\\\",\\\"%s\\\",true,false)\""
                                               , StringFormat("%s_%3.3d.C", gClassName.c_str(), gMacroID).c_str()
                                               , StringFormat("%s_%3.3d.%s", gClassName.c_str(), gImageID, gImageType.c_str()).c_str()
-                                              , gOutDir.c_str()));
-               ExecuteCommand(StringFormat("rm %s_%3.3d.C", gClassName.c_str(), gMacroID));
+                                              , gOutDir.c_str(), CMAKE_BUILD_DIRECTORY));
+               ExecuteCommand(StringFormat("rm " CMAKE_BUILD_DIRECTORY "/%s_%3.3d.C", gClassName.c_str(), gMacroID));
             }
             int ImageSize = 300;
-            FILE *f = fopen("ImagesSizes.dat", "r");
+            FILE *f = fopen(CMAKE_BUILD_DIRECTORY "/ImagesSizes.dat", "r");
             if (!f) return;
             fscanf(f, "%d", &ImageSize);
             fclose(f);
-            remove("ImagesSizes.dat");
+            remove(CMAKE_BUILD_DIRECTORY "/ImagesSizes.dat");
             ReplaceAll(gImageWidth,"IMAGESIZE",StringFormat("%d",ImageSize));
             ReplaceAll(gLineString,"End_Macro", StringFormat("\\image html pict1_%s_%3.3d.%s %s", gClassName.c_str(), gImageID, gImageType.c_str(), gImageWidth.c_str()));
          }
@@ -220,7 +231,8 @@ void FilterClass()
                   gInMacro++;
                } else {
                   gMacroID++;
-                  m = fopen(StringFormat("%s_%3.3d.C", gClassName.c_str(), gMacroID).c_str(), "w");
+                  //~ cerr << "Writing " << StringFormat(CMAKE_BUILD_DIRECTORY "/%s_%3.3d.C", gClassName.c_str(), gMacroID).c_str() << endl;
+                  m = fopen(StringFormat(CMAKE_BUILD_DIRECTORY "/%s_%3.3d.C", gClassName.c_str(), gMacroID).c_str(), "w");
                   if (m) fprintf(m,"%s",gLineString.c_str());
                   if (BeginsWith(gLineString,"{")) {
                      if (gImageSource) {
@@ -258,6 +270,7 @@ void FilterClass()
             } else {
                gImageType = "png";
             }
+            //~ cerr << "Running " << gFileName << " " << endl;
             gImageWidth = "";
             int wpos1 = gLineString.find("\"width=");
             if (wpos1 != string::npos) {
@@ -315,7 +328,12 @@ void FilterTutorial()
    }
    gMacroName  = gFileName.substr(i1,i2-i1+1);
    gImageName  = StringFormat("%s.%s", gMacroName.c_str(), gImageType.c_str()); // Image name
-   gOutputName = StringFormat("%s.out", gMacroName.c_str()); // output name
+   gOutputName = StringFormat(CMAKE_BUILD_DIRECTORY "/%s.out", gMacroName.c_str()); // output name
+
+   // Copy to auxiliary folder
+   //~ cerr << gFileName << " " << gMacroName << endl;
+   ExecuteCommand(StringFormat("cp %s " CMAKE_BUILD_DIRECTORY "/%s", gFileName.c_str(), gMacroName.c_str()));
+   gFileName = StringFormat(CMAKE_BUILD_DIRECTORY "/%s", gMacroName.c_str());
 
    // Parse the source and generate the image if needed
    while (fgets(gLine,255,f)) {
@@ -338,12 +356,8 @@ void FilterTutorial()
             ReplaceAll(image_name, " ", "");
             ReplaceAll(image_name, "///\\macro_image(", "");
             ReplaceAll(image_name, ")\n", "");
-            if (gPython) {
-               ExecuteCommand(StringFormat("%s %s", gPythonExec.c_str(), gFileName.c_str()));
-            } else {
-               ExecuteCommand(StringFormat("root -l -b -q %s", gFileName.c_str()));
-            }
-            ExecuteCommand(StringFormat("mv %s %s/html", image_name.c_str(), gOutDir.c_str()));
+            ExecuteCommand(StringFormat(ROOT_COMMAND " -l -b -q %s", gFileName.c_str()));
+            ExecuteCommand(StringFormat("mv %s %s/images/", image_name.c_str(), gOutDir.c_str()));
             ReplaceAll(gLineString, "macro_image (", "image html ");
             ReplaceAll(gLineString, ")", "");
          } else if (tcanvas_js) {
@@ -351,35 +365,35 @@ void FilterTutorial()
             IN = gImageName;
             int i = IN.find(".");
             IN.erase(i,IN.length());
-            ExecuteCommand(StringFormat("root -l -b -q \"MakeTCanvasJS.C(\\\"%s\\\",\\\"%s\\\",\\\"%s\\\",false,%d)\"",
-                                         gFileName.c_str(), IN.c_str(), gOutDir.c_str(), gPython));
+            ExecuteCommand(StringFormat(ROOT_COMMAND " -l -b -q \"MakeTCanvasJS.C(\\\"%s\\\",\\\"%s\\\",\\\"%s\\\",\\\"%s\\\",false,false)\"",
+                                         gFileName.c_str(), IN.c_str(), gOutDir.c_str(), CMAKE_BUILD_DIRECTORY));
             ReplaceAll(gLineString, "macro_image", StringFormat("htmlinclude %s.html",IN.c_str()));
          } else if (rcanvas_js) {
             string IN;
             IN = gImageName;
             int i = IN.find(".");
             IN.erase(i,IN.length());
-            ExecuteCommand(StringFormat("root -l -b -q --web=batch \"MakeRCanvasJS.C(\\\"%s\\\",\\\"%s\\\",\\\"%s\\\",false,%d)\"",
-                                          gFileName.c_str(), IN.c_str(), gOutDir.c_str(), gPython));
+            ExecuteCommand(StringFormat(ROOT_COMMAND " -l -b -q --web=batch \"MakeRCanvasJS.C(\\\"%s\\\",\\\"%s\\\",\\\"%s\\\",\\\"%s\\\",false,false)\"",
+                                          gFileName.c_str(), IN.c_str(), gOutDir.c_str(), CMAKE_BUILD_DIRECTORY));
             ReplaceAll(gLineString, "macro_image", StringFormat("htmlinclude %s.html",IN.c_str()));
          } else {
             if (gPython) {
                if (nobatch) {
-                  ExecuteCommand(StringFormat("%s makeimage.py %s %s %s 0 1 0",
+                  ExecuteCommand(StringFormat("%s makeimage.py %s %s %s %s 0 1 0",
                                              gPythonExec.c_str(),
-                                             gFileName.c_str(), gImageName.c_str(), gOutDir.c_str()));
+                                             gFileName.c_str(), gImageName.c_str(), gOutDir.c_str(), CMAKE_BUILD_DIRECTORY));
                } else {
-                  ExecuteCommand(StringFormat("%s makeimage.py %s %s %s 0 1 1",
+                  ExecuteCommand(StringFormat("%s makeimage.py %s %s %s %s 0 1 1",
                                              gPythonExec.c_str(),
-                                             gFileName.c_str(), gImageName.c_str(), gOutDir.c_str()));
+                                             gFileName.c_str(), gImageName.c_str(), gOutDir.c_str(), CMAKE_BUILD_DIRECTORY));
                }
             } else {
                if (nobatch) {
-                  ExecuteCommand(StringFormat("root -l -q \"makeimage.C(\\\"%s\\\",\\\"%s\\\",\\\"%s\\\",false,false)\"",
-                                               gFileName.c_str(), gImageName.c_str(), gOutDir.c_str()));
+                  ExecuteCommand(StringFormat(ROOT_COMMAND " -l -q \"makeimage.C(\\\"%s\\\",\\\"%s\\\",\\\"%s\\\",\\\"%s\\\",false,false)\"",
+                                               gFileName.c_str(), gImageName.c_str(), gOutDir.c_str(), CMAKE_BUILD_DIRECTORY));
                } else {
-                  ExecuteCommand(StringFormat("root -l -b -q \"makeimage.C(\\\"%s\\\",\\\"%s\\\",\\\"%s\\\",false,false)\"",
-                                               gFileName.c_str(), gImageName.c_str(), gOutDir.c_str()));
+                  ExecuteCommand(StringFormat(ROOT_COMMAND " -l -b -q \"makeimage.C(\\\"%s\\\",\\\"%s\\\",\\\"%s\\\",\\\"%s\\\",false,false)\"",
+                                               gFileName.c_str(), gImageName.c_str(), gOutDir.c_str(), CMAKE_BUILD_DIRECTORY));
                }
             }
             ReplaceAll(gLineString, "\\macro_image", ImagesList(gImageName));
@@ -396,9 +410,10 @@ void FilterTutorial()
 
       // notebook found
       if (gLineString.find("\\notebook") != string::npos) {
-         ExecuteCommand(StringFormat("%s converttonotebook.py %s %s/notebooks/",
+          //~ cerr << "Converting notebook " << gFileName << " " << gOutDir << endl;
+         ExecuteCommand(StringFormat("%s converttonotebook.py %s %s/notebooks/ %s",
                                           gPythonExec.c_str(),
-                                          gFileName.c_str(), gOutDir.c_str()));
+                                          gFileName.c_str(), gOutDir.c_str(), CMAKE_BUILD_DIRECTORY));
          if (gPython){
              gLineString = "## ";
          }
@@ -411,7 +426,7 @@ void FilterTutorial()
       // \macro_output found
       if (gLineString.find("\\macro_output") != string::npos) {
          remove(gOutputName.c_str());
-         if (!gPython) ExecuteCommand(StringFormat("root -l -b -q %s", gFileName.c_str()).c_str());
+         if (!gPython) ExecuteCommand(StringFormat(ROOT_COMMAND " -l -b -q %s", gFileName.c_str()).c_str());
          else          ExecuteCommand(StringFormat("%s %s", gPythonExec.c_str(), gFileName.c_str()).c_str());
          ExecuteCommand(StringFormat("sed -i '/Processing/d' %s", gOutputName.c_str()).c_str());
          rename(gOutputName.c_str(), StringFormat("%s/macros/%s",gOutDir.c_str(), gOutputName.c_str()).c_str());
@@ -475,6 +490,7 @@ void ExecuteMacro()
 {
    // Name of the next Image to be generated
    gImageName = StringFormat("%s_%3.3d.%s", gClassName.c_str(), gImageID, gImageType.c_str());
+   //~ cerr << "Execute " << gClassName << " " << gImageID << " " << gLineString << endl;
 
    // Retrieve the macro to be executed.
    if (gLineString.find("../../..") != string::npos) {
@@ -485,11 +501,13 @@ void ExecuteMacro()
    int i1     = gLineString.rfind('/')+1;
    int i2     = gLineString.rfind('C');
    gMacroName = gLineString.substr(i1,i2-i1+1);
+   //~ cerr << "The macro is " << gMacroName << endl;
 
    // Build the ROOT command to be executed.
-   gLineString.insert(0, StringFormat("root -l -b -q \"makeimage.C(\\\""));
+   gLineString.insert(0, StringFormat(ROOT_COMMAND " -l -b -q \"makeimage.C(\\\""));
    size_t l = gLineString.length();
-   gLineString.replace(l-1,1,StringFormat("\\\",\\\"%s\\\",\\\"%s\\\",true,false)\"", gImageName.c_str(), gOutDir.c_str()));
+   gLineString.replace(l-1,1,StringFormat("\\\",\\\"%s\\\",\\\"%s\\\",\\\"%s\\\",true,false)\"", gImageName.c_str(), gOutDir.c_str(), CMAKE_BUILD_DIRECTORY));
+   //~ cerr << "The line is " << gLineString << endl;
 
    // Execute the macro
    ExecuteCommand(gLineString);
@@ -517,11 +535,11 @@ void ExecuteCommand(string command)
 int NumberOfImages()
 {
    int ImageNum;
-   FILE *f = fopen("NumberOfImages.dat", "r");
+   FILE *f = fopen(CMAKE_BUILD_DIRECTORY "/NumberOfImages.dat", "r");
    if (!f) return 0;
    fscanf(f, "%d", &ImageNum);
    fclose(f);
-   remove("NumberOfImages.dat");
+   remove(CMAKE_BUILD_DIRECTORY "/NumberOfImages.dat");
    return ImageNum;
 }
 
@@ -529,7 +547,8 @@ int NumberOfImages()
 /// Replace all instances of a string with another string.
 
 void ReplaceAll(string& str, const string& from, const string& to) {
-   if (from.empty()) return;
+   if (from.empty() || str.empty()) return;
+   if (str.find(from) == std::string::npos) return;
    string wsRet;
    wsRet.reserve(str.length());
    size_t start_pos = 0, pos;
@@ -581,7 +600,7 @@ string ImagesList(string& name) {
    int len = 0;
 
    int ImageSize = 300;
-   FILE *f = fopen("ImagesSizes.dat", "r");
+   FILE *f = fopen(CMAKE_BUILD_DIRECTORY "/ImagesSizes.dat", "r");
    if (!f) return "";
 
    for (int i = 1; i <= N; i++){
@@ -596,7 +615,7 @@ string ImagesList(string& name) {
    }
 
    fclose(f);
-   remove("ImagesSizes.dat");
+   remove(CMAKE_BUILD_DIRECTORY "/ImagesSizes.dat");
 
    return (string)val;
 }
