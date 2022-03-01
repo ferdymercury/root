@@ -17,4 +17,4 @@ esac
 
 #https://stackoverflow.com/questions/2425870/multithreading-in-bash
 NTHREADS=8
-grep -s "Collaboration diagram for"  $HOME/rootdoc/html/class*.html | sed -e "s/.html:.*$//" | sed -e "s/^.*html\/class//" | xargs -P $NTHREADS -n 1 ./makelibs.sh
+grep -s "Collaboration diagram for"  $DOXYGEN_OUTPUT_DIRECTORY/html/class*.html | sed -e "s/.html:.*$//" | sed -e "s/^.*html\/class//" | xargs -P $NTHREADS -n 1 ./makelibs.sh
