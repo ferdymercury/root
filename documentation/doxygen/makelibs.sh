@@ -3,7 +3,7 @@
 HTMLPATH=$DOXYGEN_OUTPUT_DIRECTORY/html
 
 # Find the libraries for the class $1, use process id $BASHPID
-root -l -b -q "libs.C(\"$1\",$BASHPID)"
+root -l -b -q "libs.C+(\"$1\",$BASHPID)"
 
 # No dot file, the class was not found. Remove the collaboration graph
 if [[ ! -f libslist$BASHPID.dot ]] ; then
