@@ -1,8 +1,9 @@
+<<<<<<< HEAD
 #include "TString.h"
 #include "TInterpreter.h"
 #include "TSystem.h"
 
-void libs(TString classname)
+void libs(TString classname, const int suffix)
 {
    const char *libname;
 
@@ -16,15 +17,16 @@ void libs(TString classname)
 
    // Library was not found, try to find it from a template in $ROOTSYS/lib/*.rootmap
    if (!libname) {
-      gSystem->Exec(Form("grep %s $ROOTSYS/lib/*.rootmap | grep -m 1 map:class | sed -e 's/^.*class //' > classname.txt",classname.Data()));
-      FILE *f = fopen("classname.txt", "r");
+      gSystem->Exec(Form("grep %s $ROOTSYS/lib/*.rootmap | grep -m 1 map:class | sed -e 's/^.*class //' > classname%d.txt",classname.Data(),suffix));
+      FILE *f = fopen(Form("classname%d.txt",suffix), "r");
+      if (!f) return;
       char c[160];
       char *str = fgets(c,160,f);
       fclose(f);
-      remove("classname.txt");
+      remove(Form("classname%d.txt",suffix));
       if (!str) {
          printf("%s cannot be found in any of the .rootmap files\n", classname.Data());
-         remove("libslist.dot");
+         remove(Form("libslist%d.dot",suffix));
          return;
       }
       TString cname = c;
@@ -40,11 +42,12 @@ void libs(TString classname)
    TString mainlib = libname;
    mainlib.ReplaceAll(" ","");
    mainlib.ReplaceAll(".so","");
-   FILE *f = fopen("mainlib.dot", "w");
+   FILE *f = fopen(Form("mainlib%d.dot",suffix), "w");
+   if (!f) return;
    fprintf(f,"   mainlib [label=%s];\n",mainlib.Data());
    fclose(f);
 
    // List of libraries used by libname via ldd on linux and otool on Mac
 
-   gSystem->Exec(Form("$DOXYGEN_LDD $ROOTSYS/lib/%s | grep -v %s > libslist.dot",libname,libname));
+   gSystem->Exec(Form("$DOXYGEN_LDD $ROOTSYS/lib/%s | grep -v %s > libslist%d.dot",libname,libname,suffix));
 }
