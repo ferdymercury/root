@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 #include "TString.h"
 #include "TInterpreter.h"
 #include "TSystem.h"
