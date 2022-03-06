@@ -83,12 +83,12 @@
 using namespace std;
 
 // Auxiliary functions
-void   FilterClass();
-void   FilterTutorial();
+void   FilterClass(const int);
+void   FilterTutorial(const int);
 void   GetClassName();
-int    NumberOfImages();
-string ImagesList(string&);
-void   ExecuteMacro();
+int    NumberOfImages(const int);
+string ImagesList(string&, const int);
+void   ExecuteMacro(const int);
 void   ExecuteCommand(string);
 void   ReplaceAll(string&, const string&, const string&);
 string StringFormat(const string fmt_str, ...);
@@ -124,6 +124,8 @@ int    gMacroID;       // Macro identifier in class documentation.
 
 int main(int argc, char *argv[])
 {
+   const int suffix = getpid();
+
    // Initialisation
    gFileName      = argv[1];
    gHeader        = false;
@@ -133,7 +135,7 @@ int main(int argc, char *argv[])
    gInMacro       = 0;
    gImageID       = 0;
    gMacroID       = 0;
-   gOutputName    = "stdout.dat";
+   gOutputName    = StringFormat("stdout%d.dat",suffix).c_str();
    gImageType     = "png";
    gImageWidth    = "";
    if (EndsWith(gFileName,".cxx")) gSource = true;
@@ -159,15 +161,16 @@ int main(int argc, char *argv[])
 
    // Open the input file name.
    f = fopen(gFileName.c_str(),"r");
+   if (!f) return 1;
 
-   if (gFileName.find("tutorials") != string::npos) FilterTutorial();
-   else                                             FilterClass();
+   if (gFileName.find("tutorials") != string::npos) FilterTutorial(suffix);
+   else                                             FilterClass(suffix);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 /// Filter ROOT class for Doxygen.
 
-void FilterClass()
+void FilterClass(const int suffix)
 {
    // File for inline macros.
    FILE *m = 0;
@@ -187,7 +190,6 @@ void FilterClass()
       size_t spos = 0;
       while (fgets(gLine,255,f)) {
          gLineString = gLine;
-
          if (gInMacro && gLineString.find("End_Macro") != string::npos) {
             gImageSource = false;
             gInMacro = 0;
@@ -195,17 +197,18 @@ void FilterClass()
             if (m) {
                fclose(m);
                m = 0;
-               ExecuteCommand(StringFormat("root -l -b -q \"makeimage.C(\\\"%s\\\",\\\"%s\\\",\\\"%s\\\",true,false)\""
+               ExecuteCommand(StringFormat("root -l -b -q \"makeimage.C(\\\"%s\\\",\\\"%s\\\",\\\"%s\\\",true,false,\\\"%d\\\")\""
                                               , StringFormat("%s_%3.3d.C", gClassName.c_str(), gMacroID).c_str()
                                               , StringFormat("%s_%3.3d.%s", gClassName.c_str(), gImageID, gImageType.c_str()).c_str()
-                                              , gOutDir.c_str()));
+                                              , gOutDir.c_str(), suffix));
                ExecuteCommand(StringFormat("rm %s_%3.3d.C", gClassName.c_str(), gMacroID));
             }
             int ImageSize = 300;
-            FILE *f = fopen("ImagesSizes.dat", "r");
+            FILE *f = fopen(StringFormat("ImagesSizes%d.dat",suffix).c_str(), "r");
+            if(!f) return;
             fscanf(f, "%d", &ImageSize);
             fclose(f);
-            remove("ImagesSizes.dat");
+            remove(StringFormat("ImagesSizes%d.dat",suffix).c_str());
             ReplaceAll(gImageWidth,"IMAGESIZE",StringFormat("%d",ImageSize));
             ReplaceAll(gLineString,"End_Macro", StringFormat("\\image html pict1_%s_%3.3d.%s %s", gClassName.c_str(), gImageID, gImageType.c_str(), gImageWidth.c_str()));
          }
@@ -214,7 +217,7 @@ void FilterClass()
             if (spos) gLineString = gLineString.substr(spos);
             if (gInMacro == 1) {
                if (EndsWith(gLineString,".C\n") || (gLineString.find(".C(") != string::npos)) {
-                  ExecuteMacro();
+                  ExecuteMacro(suffix);
                   gInMacro++;
                } else {
                   gMacroID++;
@@ -295,7 +298,7 @@ void FilterClass()
 ////////////////////////////////////////////////////////////////////////////////
 /// Filter ROOT tutorials for Doxygen.
 
-void FilterTutorial()
+void FilterTutorial(const int suffix)
 {
    // File for inline macros.
    FILE *m = 0;
@@ -314,7 +317,6 @@ void FilterTutorial()
    gMacroName  = gFileName.substr(i1,i2-i1+1);
    gImageName  = StringFormat("%s.%s", gMacroName.c_str(), gImageType.c_str()); // Image name
    gOutputName = StringFormat("%s.out", gMacroName.c_str()); // output name
-
    // Parse the source and generate the image if needed
    while (fgets(gLine,255,f)) {
       gLineString = gLine;
@@ -359,24 +361,24 @@ void FilterTutorial()
          } else {
             if (gPython) {
                if (nobatch) {
-                  ExecuteCommand(StringFormat("%s makeimage.py %s %s %s 0 1 0",
+                  ExecuteCommand(StringFormat("%s makeimage.py %s %s %s 0 1 0 '%d'",
                                              gPythonExec.c_str(),
-                                             gFileName.c_str(), gImageName.c_str(), gOutDir.c_str()));
+                                             gFileName.c_str(), gImageName.c_str(), gOutDir.c_str(), suffix));
                } else {
-                  ExecuteCommand(StringFormat("%s makeimage.py %s %s %s 0 1 1",
+                  ExecuteCommand(StringFormat("%s makeimage.py %s %s %s 0 1 1 '%d'",
                                              gPythonExec.c_str(),
-                                             gFileName.c_str(), gImageName.c_str(), gOutDir.c_str()));
+                                             gFileName.c_str(), gImageName.c_str(), gOutDir.c_str(), suffix));
                }
             } else {
                if (nobatch) {
-                  ExecuteCommand(StringFormat("root -l -q \"makeimage.C(\\\"%s\\\",\\\"%s\\\",\\\"%s\\\",false,false)\"",
-                                               gFileName.c_str(), gImageName.c_str(), gOutDir.c_str()));
+                  ExecuteCommand(StringFormat("root -l -q \"makeimage.C(\\\"%s\\\",\\\"%s\\\",\\\"%s\\\",false,false,\\\"%d\\\")\"",
+                                               gFileName.c_str(), gImageName.c_str(), gOutDir.c_str(), suffix));
                } else {
-                  ExecuteCommand(StringFormat("root -l -b -q \"makeimage.C(\\\"%s\\\",\\\"%s\\\",\\\"%s\\\",false,false)\"",
-                                               gFileName.c_str(), gImageName.c_str(), gOutDir.c_str()));
+                  ExecuteCommand(StringFormat("root -l -b -q \"makeimage.C(\\\"%s\\\",\\\"%s\\\",\\\"%s\\\",false,false,\\\"%d\\\")\"",
+                                               gFileName.c_str(), gImageName.c_str(), gOutDir.c_str(), suffix));
                }
             }
-            ReplaceAll(gLineString, "\\macro_image", ImagesList(gImageName));
+            ReplaceAll(gLineString, "\\macro_image", ImagesList(gImageName, suffix));
             remove(gOutputName.c_str());
          }
       }
@@ -465,7 +467,7 @@ void GetClassName()
 ////////////////////////////////////////////////////////////////////////////////
 /// Execute the macro in gLineString and produce the corresponding picture.
 
-void ExecuteMacro()
+void ExecuteMacro(const int suffix)
 {
    // Name of the next Image to be generated
    gImageName = StringFormat("%s_%3.3d.%s", gClassName.c_str(), gImageID, gImageType.c_str());
@@ -483,7 +485,7 @@ void ExecuteMacro()
    // Build the ROOT command to be executed.
    gLineString.insert(0, StringFormat("root -l -b -q \"makeimage.C(\\\""));
    size_t l = gLineString.length();
-   gLineString.replace(l-1,1,StringFormat("\\\",\\\"%s\\\",\\\"%s\\\",true,false)\"", gImageName.c_str(), gOutDir.c_str()));
+   gLineString.replace(l-1,1,StringFormat("\\\",\\\"%s\\\",\\\"%s\\\",true,false,\\\"%d\\\")\"", gImageName.c_str(), gOutDir.c_str(),suffix));
 
    // Execute the macro
    ExecuteCommand(gLineString);
@@ -508,13 +510,14 @@ void ExecuteCommand(string command)
 ////////////////////////////////////////////////////////////////////////////////
 /// Get the number of images in NumberOfImages.dat after makeimage.C is executed.
 
-int NumberOfImages()
+int NumberOfImages(const int suffix)
 {
    int ImageNum;
-   FILE *f = fopen("NumberOfImages.dat", "r");
+   FILE *f = fopen(StringFormat("NumberOfImages%d.dat",suffix).c_str(), "r");
+   if (!f) return 0;
    fscanf(f, "%d", &ImageNum);
    fclose(f);
-   remove("NumberOfImages.dat");
+   remove(StringFormat("NumberOfImages%d.dat",suffix).c_str());
    return ImageNum;
 }
 
@@ -559,9 +562,9 @@ string StringFormat(const string fmt_str, ...) {
 ////////////////////////////////////////////////////////////////////////////////
 /// Return the image list after a tutorial macro execution.
 
-string ImagesList(string& name) {
+string ImagesList(string& name, const int suffix) {
 
-   int N = NumberOfImages();
+   int N = NumberOfImages(suffix);
 
    // evaluate the size of the output string
    char evalstring[300];
@@ -574,7 +577,8 @@ string ImagesList(string& name) {
    int len = 0;
 
    int ImageSize = 300;
-   FILE *f = fopen("ImagesSizes.dat", "r");
+   FILE *f = fopen(StringFormat("ImagesSizes%d.dat",suffix).c_str(), "r");
+   if(!f) return "";
 
    for (int i = 1; i <= N; i++){
       fscanf(f, "%d", &ImageSize);
@@ -588,7 +592,7 @@ string ImagesList(string& name) {
    }
 
    fclose(f);
-   remove("ImagesSizes.dat");
+   remove(StringFormat("ImagesSizes%d.dat",suffix).c_str());
 
    return (string)val;
 }

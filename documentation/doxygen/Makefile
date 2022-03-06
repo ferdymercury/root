@@ -43,7 +43,7 @@ images:
 pyzdoc:
 	$(call MkDir,$(DOXYGEN_PYZDOC_PATH))
 	$(PYTHON_EXECUTABLE) extract_docstrings.py $(PYZ_DIR) $(DOXYGEN_PYZDOC_PATH)
-	$(PYTHON_EXECUTABLE) print_roofit_pyz_doctrings.py > $(DOXYGEN_PYZDOC_PATH)/_roofit.pyzdoc
+#	$(PYTHON_EXECUTABLE) print_roofit_pyz_doctrings.py > $(DOXYGEN_PYZDOC_PATH)/_roofit.pyzdoc
 
 doxygen: filter pyzdoc
 	$(call MkDir,$(DOXYGEN_OUTPUT_DIRECTORY))
@@ -51,10 +51,11 @@ doxygen: filter pyzdoc
 	$(call MkDir,$(DOXYGEN_NOTEBOOK_PATH))
 	./makehtmlfooter.sh > htmlfooter.html
 	./makeinput.sh
-	doxygen
+	#gdb -ex run /home/ferhue/builds/build-doxygen-Debug/bin/doxygen
+	/opt/doxygen/build/bin/doxygen
 	./listlibs.sh
 	rm -rf files c1* *.ps *.eps *.png *.jpg *.tex *.svg *.pdf *.root *.xpm *.out *.dat *.dtd *.dot *.txt *.csv *.log *.rs
-	rm -rf listofclass.sh tmva* data* result* config* test* Roo* My* Freq*
+	rm -rf tmva* data* result* config* test* Roo* My* Freq*
 	rm -f Doxyfile_INPUT filter htmlfooter.html MDF.C pca.C
 	rm -f greek.gif hsumanim.gif mathsymb.gif parallelcoordtrans.gif
 	rm -f $(DOXYGEN_NOTEBOOK_PATH)/*.root

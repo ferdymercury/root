@@ -34,7 +34,7 @@ void FindImageInCanvas(TCanvas *C)
    }
 }
 
-void makeimage(const char *MacroName, const char *ImageName, const char *OutDir, bool cp, bool py)
+void makeimage(const char *MacroName, const char *ImageName, const char *OutDir, bool cp, bool py, const TString suffix)
 {
    // Execute the macro as a C++ one or a Python one.
    if (!py) gROOT->ProcessLine(Form(".x %s",MacroName));
@@ -54,7 +54,7 @@ void makeimage(const char *MacroName, const char *ImageName, const char *OutDir,
    TCanvas* canvas = 0;
    int ImageNum = 0;
 
-   FILE *s = fopen("ImagesSizes.dat", "w");
+   FILE *s = fopen((TString)"ImagesSizes"+suffix+".dat", "w");
 
    int cw;
    while ((canvas = (TCanvas*) iCanvas())) {
@@ -68,7 +68,7 @@ void makeimage(const char *MacroName, const char *ImageName, const char *OutDir,
 
    fclose(s);
 
-   FILE *f = fopen("NumberOfImages.dat", "w");
+   FILE *f = fopen("NumberOfImages"+suffix+".dat", "w");
    fprintf(f,"%d\n",ImageNum);
    fclose(f);
 }
