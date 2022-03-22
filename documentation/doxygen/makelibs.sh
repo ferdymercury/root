@@ -28,14 +28,17 @@ echo "digraph G {" > libraries$pid.dot
 echo "   rankdir=LR;" >>  libraries$pid.dot
 echo "   node [shape=box, fontname=Arial];" >>  libraries$pid.dot
 cat mainlib$pid.dot >> libraries$pid.dot;
+rm mainlib$pid.dot
 cat libslist$pid.dot | grep -v "\.dylib" \
                  | grep lib[A-Z] | sed -e "s/\(.*\)\(lib.*;\)$/   mainlib->\"\2/" \
                  >> libraries$pid.dot
+rm libslist$pid.dot
 echo "   mainlib [shape=box, fillcolor=\"#ABACBA\", style=filled];" >>  libraries$pid.dot
 echo "}" >> libraries$pid.dot
 
 # Generate the SVG image of the graph
 dot -Tsvg libraries$pid.dot -o $PICNAME
+rm libraries$pid.dot
 
 # Make sure the picture size in the html file the same as the svg
 PICSIZE=`grep "svg width" $PICNAME | sed -e "s/<svg //"`
