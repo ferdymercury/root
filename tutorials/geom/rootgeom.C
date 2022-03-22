@@ -7,6 +7,9 @@
 ///
 /// \author Andrei Gheata
 
+#include "TGeoManager.h"
+#include "TGeoArb8.h"
+
 void rootgeom(bool vis = true)
 {
    // gStyle->SetCanvasPreferGL(true);

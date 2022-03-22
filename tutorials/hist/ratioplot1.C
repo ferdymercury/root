@@ -11,6 +11,12 @@
 ///
 /// \author Paul Gessinger
 
+#include "TStyle.h"
+#include "TCanvas.h"
+#include "TH1D.h"
+#include "TF1.h"
+#include "TRatioPlot.h"
+
 void ratioplot1() {
    gStyle->SetOptStat(0);
    auto c1 = new TCanvas("c1", "A ratio example");
