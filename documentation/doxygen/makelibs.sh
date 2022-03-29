@@ -4,9 +4,8 @@ HTMLPATH=$DOXYGEN_OUTPUT_DIRECTORY/html
 if [ -z ${BASHPID+x} ]; # check if BASHPID is defined
 then
 pid=$BASHPID
-else # in Bash versions < 4, BASHPID is not defined, we use a workaround
-read -r this_pid < /proc/self/stat;
-pid=$(echo ${this_pid%% *})
+else # in Bash versions < 4, BASHPID is not defined, we use a workaround that works both on Linux and in macOS
+pid=$(exec sh -c 'echo "$PPID"')
 fi
 
 # Find the libraries for the class $1, use process id $pid
