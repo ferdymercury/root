@@ -9,7 +9,7 @@ read -r this_pid < /proc/self/stat;
 pid=$(echo ${this_pid%% *})
 fi
 
-# Find the libraries for the class $1, use process id $BASHPID
+# Find the libraries for the class $1, use process id $pid
 $ROOT_CMD -l -b -q "libs.C+(\"$1\",$pid)"
 
 # No dot file, the class was not found. Remove the collaboration graph
