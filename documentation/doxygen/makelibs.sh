@@ -1,7 +1,14 @@
 #!/bin/bash
 
 HTMLPATH=$DOXYGEN_OUTPUT_DIRECTORY/html
+if [ -z ${BASHPID+x} ]; # check if BASHPID is defined
+then
 pid=$BASHPID
+else # in Bash versions < 4, BASHPID is not defined, we use a workaround
+read -r this_pid < /proc/self/stat;
+pid=$(echo ${this_pid%% *})
+fi
+
 # Find the libraries for the class $1, use process id $BASHPID
 $ROOT_CMD -l -b -q "libs.C+(\"$1\",$pid)"
 
