@@ -75,7 +75,7 @@ ROOT tutorials: `$ROOTSYS/tutorials/image/`
 #include "TGaxis.h"
 #include "TColor.h"
 #include "TObjArray.h"
-#include "TArrayL.h"
+#include "TArrayL64.h"
 #include "TPoint.h"
 #include "TFrame.h"
 #include "TTF.h"
@@ -2402,9 +2402,9 @@ void TASImage::SetImage(Pixmap_t pxm, Pixmap_t mask)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-/// Return 2D array of machine dependent pixel values.
+/// Return 2D array of machine-independent pixel values.
 
-TArrayL *TASImage::GetPixels(Int_t x, Int_t y, UInt_t width, UInt_t height)
+TArrayL64 *TASImage::GetPixels(Int_t x, Int_t y, UInt_t width, UInt_t height)
 {
    if (!fImage) {
       Warning("GetPixels", "Wrong Image");
@@ -2444,9 +2444,9 @@ TArrayL *TASImage::GetPixels(Int_t x, Int_t y, UInt_t width, UInt_t height)
       return nullptr;
    }
 
-   TArrayL *ret = new TArrayL(width * height);
+   TArrayL64 *ret = new TArrayL64(width * height);
    Int_t r = 0, g = 0, b = 0;
-   Long_t p = 0;
+   Long64_t p = 0;
 
    for (UInt_t k = 0; k < height; k++) {
       imdec->decode_image_scanline(imdec);
@@ -2459,7 +2459,7 @@ TArrayL *TASImage::GetPixels(Int_t x, Int_t y, UInt_t width, UInt_t height)
             r = (Int_t)imdec->buffer.red[i];
             g = (Int_t)imdec->buffer.green[i];
             b = (Int_t)imdec->buffer.blue[i];
-            p = (Long_t)TColor::RGB2Pixel(r, g, b);
+            p = (Long64_t)TColor::RGB2Pixel(r, g, b);
          }
          ret->AddAt(p, k*width + i);
       }

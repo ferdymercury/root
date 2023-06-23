@@ -21,7 +21,7 @@
 
 class TVirtualPad;
 class TArrayD;
-class TArrayL;
+class TArrayL64;
 class TH2D;
 class TPoint;
 class TText;
@@ -230,7 +230,7 @@ public:
    virtual Bool_t IsValid() const { return kTRUE; }
    virtual TImage *GetScaledImage() const { return nullptr; }
 
-   virtual TArrayL  *GetPixels(Int_t /*x*/= 0, Int_t /*y*/= 0, UInt_t /*w*/ = 0, UInt_t /*h*/ = 0) { return nullptr; }
+   virtual TArrayL64 *GetPixels(Int_t /*x*/= 0, Int_t /*y*/= 0, UInt_t /*w*/ = 0, UInt_t /*h*/ = 0) { return nullptr; }
    virtual TArrayD  *GetArray(UInt_t /*w*/ = 0, UInt_t /*h*/ = 0, TImagePalette * = gWebImagePalette) { return nullptr; }
    virtual Pixmap_t  GetPixmap() { return 0; }
    virtual Pixmap_t  GetMask() { return 0; }
