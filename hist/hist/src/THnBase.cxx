@@ -349,7 +349,7 @@ minRange, maxRange, chunkSize); \
 } else {                                                          \
 s = new _NAME2_(THn,TAG)(name, title, ndim, nbins,             \
 minRange, maxRange);                  \
-}                      
+}
                                            \
       R__THNBCASE(L64);
 #undef R__THNBCASE
@@ -390,7 +390,6 @@ THnBase* THnBase::CreateHnAny(const char* name, const char* title,
          TString bintype;
          if (hn->InheritsFrom(THnSparseD::Class())) bintype = "D";
          else if (hn->InheritsFrom(THnSparseF::Class())) bintype = "F";
-         else if (hn->InheritsFrom(THnSparseL::Class())) bintype = "L";
          else if (hn->InheritsFrom(THnSparseL64::Class())) bintype = "L64";
          else if (hn->InheritsFrom(THnSparseI::Class())) bintype = "I";
          else if (hn->InheritsFrom(THnSparseS::Class())) bintype = "S";
@@ -411,7 +410,6 @@ THnBase* THnBase::CreateHnAny(const char* name, const char* title,
          else if (hn->InheritsFrom(THnC::Class())) bintype = "C";
          else if (hn->InheritsFrom(THnS::Class())) bintype = "S";
          else if (hn->InheritsFrom(THnI::Class())) bintype = "I";
-         else if (hn->InheritsFrom(THnL::Class())) bintype = "L";
          else if (hn->InheritsFrom(THnL64::Class())) bintype = "L64";
          if (bintype.Length()) {
             type = TClass::GetClass(TString::Format("THnSparse%s", bintype.Data()));
