@@ -22,7 +22,6 @@
 #pragma link C++ class TArrayD-!;
 #pragma link C++ class TArrayF-!;
 #pragma link C++ class TArrayI-!;
-#pragma link C++ class TArrayL-!;
 #pragma link C++ class TArrayL64-!;
 #pragma link C++ class TArrayS-!;
 #pragma link C++ class TBits+;

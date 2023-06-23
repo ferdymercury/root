@@ -147,7 +147,6 @@
 #pragma link C++ class THnSparse+;
 #pragma link C++ class THnSparseT<TArrayD>+;
 #pragma link C++ class THnSparseT<TArrayF>+;
-#pragma link C++ class THnSparseT<TArrayL>+;
 #pragma link C++ class THnSparseT<TArrayL64>+;
 #pragma link C++ class THnSparseT<TArrayI>+;
 #pragma link C++ class THnSparseT<TArrayS>+;
@@ -182,7 +181,6 @@
 
 #pragma link C++ typedef THnSparseD;
 #pragma link C++ typedef THnSparseF;
-#pragma link C++ typedef THnSparseL;
 #pragma link C++ typedef THnSparseL64;
 #pragma link C++ typedef THnSparseI;
 #pragma link C++ typedef THnSparseS;
@@ -202,7 +200,6 @@
 #ifdef DO_AUTOLOAD_TYPEDEF
 #pragma link C++ class THnSparseD;
 #pragma link C++ class THnSparseF;
-#pragma link C++ class THnSparseL;
 #pragma link C++ class THnSparseL64;
 #pragma link C++ class THnSparseI;
 #pragma link C++ class THnSparseS;

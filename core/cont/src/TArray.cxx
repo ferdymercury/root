@@ -12,7 +12,7 @@
 /** \class TArray
 \ingroup Containers
 Abstract array base class. Used by TArrayC, TArrayS, TArrayI,
-TArrayL, TArrayF and TArrayD.
+TArrayL64, TArrayF and TArrayD.
 Data member is public for historical reasons.
 */
 

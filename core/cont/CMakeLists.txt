@@ -16,7 +16,6 @@ set_property(TARGET Core APPEND PROPERTY DICT_HEADERS
   TArray.h
   TArrayI.h
   TArrayL64.h
-  TArrayL.h
   TArrayS.h
   TBits.h
   TBtree.h
@@ -47,7 +46,6 @@ target_sources(Core PRIVATE
   src/TArrayF.cxx
   src/TArrayI.cxx
   src/TArrayL64.cxx
-  src/TArrayL.cxx
   src/TArrayS.cxx
   src/TBits.cxx
   src/TBtree.cxx

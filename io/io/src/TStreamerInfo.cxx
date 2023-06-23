@@ -49,7 +49,7 @@ element type.
 #include "TArrayF.h"
 #include "TArrayD.h"
 #include "TArrayS.h"
-#include "TArrayL.h"
+#include "TArrayL64.h"
 #include "TError.h"
 #include "TEnum.h"
 #include "TRef.h"
