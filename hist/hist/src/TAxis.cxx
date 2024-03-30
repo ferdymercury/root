@@ -1033,6 +1033,7 @@ void TAxis::ChangeLabelByValue(Double_t labValue, Double_t labAngle, Double_t la
 ///
 ///  \param first First bin of the range.
 ///  \param last  Last bin of the range.
+///  \note This will also restrict the fitting range
 ///  To set a range using the axis coordinates, use TAxis::SetRangeUser.
 ///
 ///  If `first == last == 0` or if `first > last` or if the range specified does
@@ -1075,6 +1076,7 @@ void TAxis::SetRange(Int_t first, Int_t last)
 ////////////////////////////////////////////////////////////////////////////////
 ///  Set the viewing range for the axis from ufirst to ulast (in user coordinates,
 ///  that is, the "natural" axis coordinates).
+///  \note This will also restrict the fitting range
 ///  To set a range using the axis bin numbers, use TAxis::SetRange.
 
 void TAxis::SetRangeUser(Double_t ufirst, Double_t ulast)
