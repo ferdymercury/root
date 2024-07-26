@@ -682,7 +682,7 @@ void TFile::Init(Bool_t create)
    } else {
       //*-*----------------UPDATE
       //char *header = new char[kBEGIN];
-      char *header = new char[kBEGIN+200];
+      char *header = new char[kBEGIN+200]{};
       Seek(0);                                 // NOLINT: silence clang-tidy warnings
       //ReadBuffer(header, kBEGIN);
       if (ReadBuffer(header, kBEGIN+200)) {    // NOLINT: silence clang-tidy warnings
