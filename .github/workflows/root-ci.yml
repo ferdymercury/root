@@ -95,7 +95,7 @@ jobs:
         $diff = git diff --name-only HEAD^ HEAD
 
         # Check if a file under interpreter/ has changed
-        $SourceDiff = $diff | Where-Object { $_ -match '^interpreter/' -or $_ -match '.md$' }
+        $SourceDiff = $diff | Where-Object { $_ -match '^interpreter/' }
         $HasDiff = $SourceDiff.Length -gt 0
 
         # Set the output named "interpreter_changed"
