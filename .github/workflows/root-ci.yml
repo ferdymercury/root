@@ -77,6 +77,29 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  conditional_job_check_files:
+    # https://www.meziantou.net/executing-github-actions-jobs-or-steps-only-when-specific-files-change.htm
+    runs-on: ubuntu-latest
+    # Declare outputs for next jobs
+    outputs:
+      interpreter_changed: ${{ steps.check_file_changed.outputs.interpreter_changed }}
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        # Checkout as many commits as needed for the diff
+        fetch-depth: 2
+    - shell: pwsh
+      id: check_file_changed
+      run: |
+        # Diff HEAD with the previous commit
+        $diff = git diff --name-only HEAD^ HEAD
+
+        # Check if a file under interpreter/ has changed
+        $SourceDiff = $diff | Where-Object { $_ -match '^interpreter/' -or $_ -match '.md$' }
+        $HasDiff = $SourceDiff.Length -gt 0
+
+        # Set the output named "interpreter_changed"
+        Write-Host "::set-output name=interpreter_changed::$HasDiff"
   build-macos:
     # For any event that is not a PR, the CI will always run. In PRs, the CI
     # can be skipped if the tag [skip-ci] or [skip ci] is written in the title.
@@ -340,6 +363,7 @@ jobs:
   build-linux:
     # For any event that is not a PR, the CI will always run. In PRs, the CI
     # can be skipped if the tag [skip-ci] or [skip ci] is written in the title.
+    needs: [ conditional_job_check_files ]
     if: |
         (github.repository_owner == 'root-project' && github.event_name != 'pull_request') ||
         (github.event_name == 'pull_request' && !(contains(github.event.pull_request.title, '[skip-ci]') || contains(github.event.pull_request.title, '[skip ci]')))
@@ -364,6 +388,9 @@ jobs:
             overrides: ["LLVM_ENABLE_ASSERTIONS=On"]
           - image: alma9
             overrides: ["LLVM_ENABLE_ASSERTIONS=On", "CMAKE_BUILD_TYPE=Debug"]
+          - image: alma9-clingtest
+            if: needs.conditional_job_check_files.outputs.interpreter_changed == 'True'
+            overrides: ["LLVM_ENABLE_ASSERTIONS=On", "CMAKE_BUILD_TYPE=Debug", "clingtest=ON]
           - image: ubuntu20
             overrides: ["LLVM_ENABLE_ASSERTIONS=On"]
           - image: ubuntu22
