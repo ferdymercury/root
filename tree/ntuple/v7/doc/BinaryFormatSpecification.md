@@ -1,6 +1,4 @@
-# RNTuple Binary Format Specification 0.3.0.0
-
-**Note:** This is work in progress. The RNTuple specification is not yet finalized.
+# RNTuple Binary Format Specification 1.0.0.0
 
 ## Versioning Notes
 
@@ -9,7 +7,7 @@ It uses the following scheme: EPOCH.MAJOR.MINOR.PATCH
 
 _Epoch_: an increment of the epoch indicates backward-incompatible changes.
 The RNTuple pre-release has epoch 0.
-The first public release will get epoch 1.
+The first public release has epoch 1.
 There is currently no further epoch foreseen.
 
 _Major_: an increment of the major version indicates forward-incompatible changes.
@@ -1049,8 +1047,8 @@ This section summarizes default settings of `RNTupleWriteOptions`.
 
 | Default                                | Value                        |
 |----------------------------------------|------------------------------|
-| Approximate Zipped Cluster             | 100 MB                       |
-| Max Unzipped Cluster                   | 1 GiB                        |
+| Approximate Zipped Cluster             | 128 MiB                      |
+| Max Unzipped Cluster                   | 1280 MiB                     |
 | Max Unzipped Page                      | 1 MiB                        |
 
 ## Glossary

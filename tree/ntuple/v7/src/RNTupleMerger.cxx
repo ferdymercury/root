@@ -136,8 +136,6 @@ try {
 namespace {
 // Functor used to change the compression of a page to `options.fCompressionSettings`.
 struct RChangeCompressionFunc {
-   DescriptorId_t fOutputColumnId;
-
    const RColumnElementBase &fSrcColElement;
    const RColumnElementBase &fDstColElement;
    const RNTupleMergeOptions &fMergeOptions;
@@ -148,7 +146,7 @@ struct RChangeCompressionFunc {
 
    void operator()() const
    {
-      auto page = RPageSource::UnsealPage(fSealedPage, fSrcColElement, fOutputColumnId, fPageAlloc).Unwrap();
+      auto page = RPageSource::UnsealPage(fSealedPage, fSrcColElement, fPageAlloc).Unwrap();
       RPageSink::RSealPageConfig sealConf;
       sealConf.fElement = &fDstColElement;
       sealConf.fPage = &page;
@@ -476,7 +474,8 @@ static void ExtendDestinationModel(std::span<const RFieldDescriptor *> newFields
 // Merges all columns appearing both in the source and destination RNTuples, just copying them if their
 // compression matches ("fast merge") or by unsealing and resealing them with the proper compression.
 void RNTupleMerger::MergeCommonColumns(RClusterPool &clusterPool, DescriptorId_t clusterId,
-                                       std::span<RColumnMergeInfo> commonColumns, RCluster::ColumnSet_t commonColumnSet,
+                                       std::span<RColumnMergeInfo> commonColumns,
+                                       const RCluster::ColumnSet_t &commonColumnSet,
                                        RSealedPageMergeData &sealedPageData, const RNTupleMergeData &mergeData)
 {
    assert(commonColumns.size() == commonColumnSet.size());
@@ -511,15 +510,14 @@ void RNTupleMerger::MergeCommonColumns(RClusterPool &clusterPool, DescriptorId_t
       const auto colRangeCompressionSettings = clusterDesc.GetColumnRange(columnId).fCompressionSettings;
       const bool needsCompressionChange = mergeData.fMergeOpts.fCompressionSettings != kUnknownCompressionSettings &&
                                           colRangeCompressionSettings != mergeData.fMergeOpts.fCompressionSettings;
-
       if (needsCompressionChange && mergeData.fMergeOpts.fExtraVerbose)
          Info("RNTuple::Merge", "Column %s: changing source compression from %d to %d", column.fColumnName.c_str(),
               colRangeCompressionSettings, mergeData.fMergeOpts.fCompressionSettings);
 
-      // If the column range is already uncompressed we don't need to allocate any new buffer, so we don't
-      // bother reserving memory for them.
       size_t pageBufferBaseIdx = sealedPageData.fBuffers.size();
-      if (colRangeCompressionSettings != 0)
+      // If the column range already has the right compression we don't need to allocate any new buffer, so we don't
+      // bother reserving memory for them.
+      if (needsCompressionChange)
          sealedPageData.fBuffers.resize(sealedPageData.fBuffers.size() + pages.fPageInfos.size());
 
       // Loop over the pages
@@ -546,8 +544,7 @@ void RNTupleMerger::MergeCommonColumns(RClusterPool &clusterPool, DescriptorId_t
             auto &buffer = sealedPageData.fBuffers[pageBufferBaseIdx + pageIdx];
             buffer = std::make_unique<std::uint8_t[]>(uncompressedSize + checksumSize);
             RChangeCompressionFunc compressTask{
-               column.fOutputId, *srcColElement, *dstColElement, mergeData.fMergeOpts,
-               sealedPage,       *fPageAlloc,    buffer.get(),
+               *srcColElement, *dstColElement, mergeData.fMergeOpts, sealedPage, *fPageAlloc, buffer.get(),
             };
 
             if (fTaskGroup)
@@ -755,11 +752,15 @@ static void AddColumnsFromField(std::vector<RColumnMergeInfo> &columns, const RN
    // NOTE: here we can match the src and dst columns by column index because we forbid merging fields with
    // different column representations.
    for (auto i = 0u; i < srcFieldDesc.GetLogicalColumnIds().size(); ++i) {
+      // We don't want to try and merge alias columns
+      if (srcFieldDesc.IsProjectedField())
+         continue;
+
       auto srcColumnId = srcFieldDesc.GetLogicalColumnIds()[i];
       const auto &srcColumn = srcDesc.GetColumnDescriptor(srcColumnId);
       RColumnMergeInfo info{};
       info.fColumnName = name + '.' + std::to_string(srcColumn.GetIndex());
-      info.fInputId = srcColumnId;
+      info.fInputId = srcColumn.GetPhysicalId();
       // Since the parent field is only relevant for extra dst columns, the choice of src or dstFieldDesc as a parent
       // is arbitrary (they're the same field).
       info.fParentField = &dstFieldDesc;
@@ -781,6 +782,16 @@ static void AddColumnsFromField(std::vector<RColumnMergeInfo> &columns, const RN
          info.fColumnType = dstColumn.GetType();
          mergeData.fColumnIdMap[info.fColumnName] = {info.fOutputId, info.fColumnType};
       }
+
+      if (mergeData.fMergeOpts.fExtraVerbose) {
+         Info("RNTuple::Merge",
+              "Adding column %s with log.id %" PRIu64 ", phys.id %" PRIu64 ", type %s "
+              " -> log.id %" PRIu64 ", type %s",
+              info.fColumnName.c_str(), srcColumnId, srcColumn.GetPhysicalId(),
+              RColumnElementBase::GetColumnTypeName(srcColumn.GetType()), info.fOutputId,
+              RColumnElementBase::GetColumnTypeName(info.fColumnType));
+      }
+
       // Since we disallow merging fields of different types, src and dstFieldDesc must have the same type name.
       assert(srcFieldDesc.GetTypeName() == dstFieldDesc.GetTypeName());
       info.fInMemoryType = ColumnInMemoryType(srcFieldDesc.GetTypeName(), info.fColumnType);
@@ -849,7 +860,9 @@ RNTupleMerger::Merge(std::span<RPageSource *> sources, RPageSink &destination, c
 
       // Create sink from the input model if not initialized
       if (!destination.IsInitialized()) {
-         model = srcDescriptor->CreateModel();
+         auto opts = RNTupleDescriptor::RCreateModelOptions();
+         opts.fReconstructProjections = true;
+         model = srcDescriptor->CreateModel(opts);
          destination.Init(*model);
       }
 

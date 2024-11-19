@@ -192,6 +192,8 @@ struct RTFDatetime {
 
 /// The key part of a TFile record excluding the class, object, and title names
 struct RTFKey {
+   static constexpr unsigned kBigKeyVersion = 1000;
+
    RInt32BE fNbytes{0};
    RUInt16BE fVersion{4};
    RUInt32BE fObjLen{0};
@@ -209,43 +211,20 @@ struct RTFKey {
       } fInfoLong;
    };
 
-   std::uint32_t fKeyHeaderSize{18 + sizeof(fInfoShort)}; // not part of serialization
-
-   RTFKey() : fInfoShort() {}
+   RTFKey() : fInfoLong() {}
    RTFKey(std::uint64_t seekKey, std::uint64_t seekPdir, const RTFString &clName, const RTFString &objName,
           const RTFString &titleName, std::size_t szObjInMem, std::size_t szObjOnDisk = 0)
    {
       R__ASSERT(szObjInMem <= std::numeric_limits<std::uint32_t>::max());
       R__ASSERT(szObjOnDisk <= std::numeric_limits<std::uint32_t>::max());
+      // For writing, we alywas produce "big" keys with 64-bit SeekKey and SeekPdir.
+      fVersion = fVersion + kBigKeyVersion;
       fObjLen = szObjInMem;
-      if ((seekKey > static_cast<unsigned int>(std::numeric_limits<std::int32_t>::max())) ||
-          (seekPdir > static_cast<unsigned int>(std::numeric_limits<std::int32_t>::max()))) {
-         fKeyHeaderSize = 18 + sizeof(fInfoLong);
-         fKeyLen = fKeyHeaderSize + clName.GetSize() + objName.GetSize() + titleName.GetSize();
-         fInfoLong.fSeekKey = seekKey;
-         fInfoLong.fSeekPdir = seekPdir;
-         fVersion = fVersion + 1000;
-      } else {
-         fKeyHeaderSize = 18 + sizeof(fInfoShort);
-         fKeyLen = fKeyHeaderSize + clName.GetSize() + objName.GetSize() + titleName.GetSize();
-         fInfoShort.fSeekKey = seekKey;
-         fInfoShort.fSeekPdir = seekPdir;
-      }
-      fNbytes = fKeyLen + ((szObjOnDisk == 0) ? szObjInMem : szObjOnDisk);
-   }
-
-   void MakeBigKey()
-   {
-      if (fVersion >= 1000)
-         return;
-      std::uint32_t seekKey = fInfoShort.fSeekKey;
-      std::uint32_t seekPdir = fInfoShort.fSeekPdir;
+      fKeyLen = GetHeaderSize() + clName.GetSize() + objName.GetSize() + titleName.GetSize();
       fInfoLong.fSeekKey = seekKey;
       fInfoLong.fSeekPdir = seekPdir;
-      fKeyHeaderSize = fKeyHeaderSize + sizeof(fInfoLong) - sizeof(fInfoShort);
-      fKeyLen = fKeyLen + sizeof(fInfoLong) - sizeof(fInfoShort);
-      fNbytes = fNbytes + sizeof(fInfoLong) - sizeof(fInfoShort);
-      fVersion = fVersion + 1000;
+      // Depends on fKeyLen being set
+      fNbytes = fKeyLen + ((szObjOnDisk == 0) ? szObjInMem : szObjOnDisk);
    }
 
    std::uint32_t GetSize() const
@@ -258,14 +237,14 @@ struct RTFKey {
 
    std::uint32_t GetHeaderSize() const
    {
-      if (fVersion >= 1000)
+      if (fVersion >= kBigKeyVersion)
          return 18 + sizeof(fInfoLong);
       return 18 + sizeof(fInfoShort);
    }
 
    std::uint64_t GetSeekKey() const
    {
-      if (fVersion >= 1000)
+      if (fVersion >= kBigKeyVersion)
          return fInfoLong.fSeekKey;
       return fInfoShort.fSeekKey;
    }
@@ -273,10 +252,13 @@ struct RTFKey {
 
 /// The TFile global header
 struct RTFHeader {
+   static constexpr unsigned kBEGIN = 100;
+   static constexpr unsigned kBigHeaderVersion = 1000000;
+
    char fMagic[4]{'r', 'o', 'o', 't'};
    RUInt32BE fVersion{(ROOT_VERSION_CODE >> 16) * 10000 + ((ROOT_VERSION_CODE & 0xFF00) >> 8) * 100 +
                       (ROOT_VERSION_CODE & 0xFF)};
-   RUInt32BE fBEGIN{100};
+   RUInt32BE fBEGIN{kBEGIN};
    union {
       struct {
          RUInt32BE fEND{0};
@@ -307,7 +289,7 @@ struct RTFHeader {
 
    void SetBigFile()
    {
-      if (fVersion >= 1000000)
+      if (fVersion >= kBigHeaderVersion)
          return;
 
       // clang-format off
@@ -328,18 +310,19 @@ struct RTFHeader {
       fInfoLong.fCompress   = compress;
       fInfoLong.fSeekInfo   = seekInfo;
       fInfoLong.fNbytesInfo = nbytesInfo;
-      fVersion = fVersion + 1000000;
+      fVersion = fVersion + kBigHeaderVersion;
       // clang-format on
    }
 
    bool IsBigFile(std::uint64_t offset = 0) const
    {
-      return (fVersion >= 1000000) || (offset > static_cast<unsigned int>(std::numeric_limits<std::int32_t>::max()));
+      return (fVersion >= kBigHeaderVersion) ||
+             (offset > static_cast<unsigned int>(std::numeric_limits<std::int32_t>::max()));
    }
 
    std::uint32_t GetSize() const
    {
-      std::uint32_t sizeHead = 4 + sizeof(fVersion) + sizeof(fBEGIN);
+      std::uint32_t sizeHead = sizeof(fMagic) + sizeof(fVersion) + sizeof(fBEGIN);
       if (IsBigFile())
          return sizeHead + sizeof(fInfoLong);
       return sizeHead + sizeof(fInfoShort);
@@ -435,6 +418,8 @@ struct RTFHeader {
 
 /// A reference to an unused byte-range in a TFile
 struct RTFFreeEntry {
+   static constexpr unsigned kBigFreeEntryVersion = 1000;
+
    RUInt16BE fVersion{1};
    union {
       struct {
@@ -451,7 +436,7 @@ struct RTFFreeEntry {
    void Set(std::uint64_t first, std::uint64_t last)
    {
       if (last > static_cast<unsigned int>(std::numeric_limits<std::int32_t>::max())) {
-         fVersion = fVersion + 1000;
+         fVersion = fVersion + kBigFreeEntryVersion;
          fInfoLong.fFirst = first;
          fInfoLong.fLast = last;
       } else {
@@ -459,7 +444,7 @@ struct RTFFreeEntry {
          fInfoShort.fLast = last;
       }
    }
-   std::uint32_t GetSize() { return (fVersion >= 1000) ? 18 : 10; }
+   std::uint32_t GetSize() { return (fVersion >= kBigFreeEntryVersion) ? 18 : 10; }
 };
 
 /// The header of the directory key index
@@ -471,6 +456,8 @@ struct RTFKeyList {
 
 /// A streamed TFile object
 struct RTFFile {
+   static constexpr unsigned kBigFileVersion = 1000;
+
    RUInt16BE fClassVersion{5};
    RTFDatetime fDateC;
    RTFDatetime fDateM;
@@ -479,12 +466,12 @@ struct RTFFile {
    // The version of the key has to tell whether offsets are 32bit or 64bit long
    union {
       struct {
-         RUInt32BE fSeekDir{100};
+         RUInt32BE fSeekDir{RTFHeader::kBEGIN};
          RUInt32BE fSeekParent{0};
          RUInt32BE fSeekKeys{0};
       } fInfoShort;
       struct {
-         RUInt64BE fSeekDir{100};
+         RUInt64BE fSeekDir{RTFHeader::kBEGIN};
          RUInt64BE fSeekParent{0};
          RUInt64BE fSeekKeys{0};
       } fInfoLong;
@@ -495,14 +482,14 @@ struct RTFFile {
    // In case of a short TFile record (<2G), 3 padding ints are written after the UUID
    std::uint32_t GetSize() const
    {
-      if (fClassVersion >= 1000)
+      if (fClassVersion >= kBigFileVersion)
          return sizeof(RTFFile);
       return 18 + sizeof(fInfoShort);
    }
 
    std::uint64_t GetSeekKeys() const
    {
-      if (fClassVersion >= 1000)
+      if (fClassVersion >= kBigFileVersion)
          return fInfoLong.fSeekKeys;
       return fInfoShort.fSeekKeys;
    }
@@ -515,7 +502,7 @@ struct RTFFile {
          fInfoLong.fSeekDir = seekDir;
          fInfoLong.fSeekParent = seekParent;
          fInfoLong.fSeekKeys = seekKeys;
-         fClassVersion = fClassVersion + 1000;
+         fClassVersion = fClassVersion + kBigFileVersion;
       } else {
          fInfoShort.fSeekKeys = seekKeys;
       }
@@ -617,7 +604,7 @@ public:
    explicit RKeyBlob(TFile *file) : TKey(file)
    {
       fClassName = kBlobClassName;
-      fVersion += 1000;
+      fVersion += RTFKey::kBigKeyVersion;
       fKeylen = Sizeof();
    }
 
@@ -984,7 +971,7 @@ std::uint64_t ROOT::Experimental::Internal::RNTupleFileWriter::RFileSimple::Writ
    RTFString strTitle{title};
 
    RTFKey key(fKeyOffset, directoryOffset, strClass, strObject, strTitle, len, nbytes);
-   Write(&key, key.fKeyHeaderSize, fKeyOffset);
+   Write(&key, key.GetHeaderSize(), fKeyOffset);
    Write(&strClass, strClass.GetSize());
    Write(&strObject, strObject.GetSize());
    Write(&strTitle, strTitle.GetSize());
@@ -1023,11 +1010,9 @@ ROOT::Experimental::Internal::RNTupleFileWriter::RFileProper::WriteKey(const voi
    RTFString strObject;
    RTFString strTitle;
    RTFKey keyHeader(offset, offset, strClass, strObject, strTitle, len, nbytes);
-   // Follow the fact that RKeyBlob is a big key unconditionally (see above)
-   keyHeader.MakeBigKey();
 
-   Write(&keyHeader, keyHeader.fKeyHeaderSize, offset);
-   offset += keyHeader.fKeyHeaderSize;
+   Write(&keyHeader, keyHeader.GetHeaderSize(), offset);
+   offset += keyHeader.GetHeaderSize();
    Write(&strClass, strClass.GetSize(), offset);
    offset += strClass.GetSize();
    Write(&strObject, strObject.GetSize(), offset);
@@ -1177,7 +1162,7 @@ std::uint64_t ROOT::Experimental::Internal::RNTupleFileWriter::WriteBlob(const v
             fFileSimple.Write(payload, nBytes);
             fFileSimple.fKeyOffset += nBytes;
          } else {
-            offset = fFileSimple.WriteKey(payload, nBytes, length, -1, 100, kBlobClassName);
+            offset = fFileSimple.WriteKey(payload, nBytes, length, -1, RTFHeader::kBEGIN, kBlobClassName);
          }
       } else {
          offset = fFileProper.WriteKey(payload, nBytes, length);
@@ -1253,7 +1238,7 @@ std::uint64_t ROOT::Experimental::Internal::RNTupleFileWriter::ReserveBlob(size_
          offset = fFileSimple.fKeyOffset;
          fFileSimple.fKeyOffset += nbytes;
       } else {
-         offset = fFileSimple.WriteKey(/*buffer=*/nullptr, nbytes, len, -1, 100, kBlobClassName);
+         offset = fFileSimple.WriteKey(/*buffer=*/nullptr, nbytes, len, -1, RTFHeader::kBEGIN, kBlobClassName);
       }
    } else {
       offset = fFileProper.WriteKey(/*buffer=*/nullptr, nbytes, len);
@@ -1330,9 +1315,9 @@ void ROOT::Experimental::Internal::RNTupleFileWriter::WriteTFileStreamerInfo()
    RTFString strStreamerInfo{"StreamerInfo"};
    RTFString strStreamerTitle{"Doubly linked list"};
    fFileSimple.fControlBlock->fHeader.SetSeekInfo(fFileSimple.fKeyOffset);
-   auto keyLen =
-      RTFKey(fFileSimple.fControlBlock->fHeader.GetSeekInfo(), 100, strTList, strStreamerInfo, strStreamerTitle, 0)
-         .fKeyLen;
+   auto keyLen = RTFKey(fFileSimple.fControlBlock->fHeader.GetSeekInfo(), RTFHeader::kBEGIN, strTList, strStreamerInfo,
+                        strStreamerTitle, 0)
+                    .fKeyLen;
 
    TBufferFile buffer(TBuffer::kWrite, keyLen + 1);
    buffer.SetBufferOffset(keyLen);
@@ -1346,7 +1331,7 @@ void ROOT::Experimental::Internal::RNTupleFileWriter::WriteTFileStreamerInfo()
    auto szZipStreamerInfos = compressor.Zip(bufPayload, lenPayload, 1, zipStreamerInfos.get());
 
    fFileSimple.WriteKey(zipStreamerInfos.get(), szZipStreamerInfos, lenPayload,
-                        fFileSimple.fControlBlock->fHeader.GetSeekInfo(), 100, "TList", "StreamerInfo",
+                        fFileSimple.fControlBlock->fHeader.GetSeekInfo(), RTFHeader::kBEGIN, "TList", "StreamerInfo",
                         "Doubly linked list");
    fFileSimple.fControlBlock->fHeader.SetNbytesInfo(fFileSimple.fFilePos -
                                                     fFileSimple.fControlBlock->fHeader.GetSeekInfo());
@@ -1359,19 +1344,19 @@ void ROOT::Experimental::Internal::RNTupleFileWriter::WriteTFileKeysList()
    RTFString strRNTupleName{fNTupleName};
    RTFString strFileName{fFileName};
 
-   RTFKey keyRNTuple(fFileSimple.fControlBlock->fSeekNTuple, 100, strRNTupleClass, strRNTupleName, strEmpty,
-                     RTFNTuple::GetSizePlusChecksum());
+   RTFKey keyRNTuple(fFileSimple.fControlBlock->fSeekNTuple, RTFHeader::kBEGIN, strRNTupleClass, strRNTupleName,
+                     strEmpty, RTFNTuple::GetSizePlusChecksum());
 
    fFileSimple.fControlBlock->fFileRecord.SetSeekKeys(fFileSimple.fKeyOffset);
    RTFKeyList keyList{1};
-   RTFKey keyKeyList(fFileSimple.fControlBlock->fFileRecord.GetSeekKeys(), 100, strEmpty, strFileName, strEmpty,
-                     keyList.GetSize() + keyRNTuple.fKeyLen);
-   fFileSimple.Write(&keyKeyList, keyKeyList.fKeyHeaderSize, fFileSimple.fControlBlock->fFileRecord.GetSeekKeys());
+   RTFKey keyKeyList(fFileSimple.fControlBlock->fFileRecord.GetSeekKeys(), RTFHeader::kBEGIN, strEmpty, strFileName,
+                     strEmpty, keyList.GetSize() + keyRNTuple.fKeyLen);
+   fFileSimple.Write(&keyKeyList, keyKeyList.GetHeaderSize(), fFileSimple.fControlBlock->fFileRecord.GetSeekKeys());
    fFileSimple.Write(&strEmpty, strEmpty.GetSize());
    fFileSimple.Write(&strFileName, strFileName.GetSize());
    fFileSimple.Write(&strEmpty, strEmpty.GetSize());
    fFileSimple.Write(&keyList, keyList.GetSize());
-   fFileSimple.Write(&keyRNTuple, keyRNTuple.fKeyHeaderSize);
+   fFileSimple.Write(&keyRNTuple, keyRNTuple.GetHeaderSize());
    // Write class name, object name, and title for this key.
    fFileSimple.Write(&strRNTupleClass, strRNTupleClass.GetSize());
    fFileSimple.Write(&strRNTupleName, strRNTupleName.GetSize());
@@ -1387,12 +1372,12 @@ void ROOT::Experimental::Internal::RNTupleFileWriter::WriteTFileFreeList()
    RTFString strEmpty;
    RTFString strFileName{fFileName};
    RTFFreeEntry freeEntry;
-   RTFKey keyFreeList(fFileSimple.fControlBlock->fHeader.GetSeekFree(), 100, strEmpty, strFileName, strEmpty,
-                      freeEntry.GetSize());
+   RTFKey keyFreeList(fFileSimple.fControlBlock->fHeader.GetSeekFree(), RTFHeader::kBEGIN, strEmpty, strFileName,
+                      strEmpty, freeEntry.GetSize());
    std::uint64_t firstFree = fFileSimple.fControlBlock->fHeader.GetSeekFree() + keyFreeList.GetSize();
    freeEntry.Set(firstFree, std::max(2000000000ULL, ((firstFree / 1000000000ULL) + 1) * 1000000000ULL));
    fFileSimple.WriteKey(&freeEntry, freeEntry.GetSize(), freeEntry.GetSize(),
-                        fFileSimple.fControlBlock->fHeader.GetSeekFree(), 100, "", fFileName, "");
+                        fFileSimple.fControlBlock->fHeader.GetSeekFree(), RTFHeader::kBEGIN, "", fFileName, "");
    fFileSimple.fControlBlock->fHeader.SetNbytesFree(fFileSimple.fFilePos -
                                                     fFileSimple.fControlBlock->fHeader.GetSeekFree());
    fFileSimple.fControlBlock->fHeader.SetEnd(fFileSimple.fFilePos);
@@ -1414,8 +1399,8 @@ void ROOT::Experimental::Internal::RNTupleFileWriter::WriteTFileNTupleKey()
    memcpy(keyBuf, &ntupleOnDisk, sizeof(RTFNTuple));
    memcpy(keyBuf + sizeof(RTFNTuple), &checksum, sizeof(checksum));
 
-   fFileSimple.WriteKey(keyBuf, sizeof(keyBuf), sizeof(keyBuf), fFileSimple.fControlBlock->fSeekNTuple, 100,
-                        "ROOT::RNTuple", fNTupleName, "");
+   fFileSimple.WriteKey(keyBuf, sizeof(keyBuf), sizeof(keyBuf), fFileSimple.fControlBlock->fSeekNTuple,
+                        RTFHeader::kBEGIN, "ROOT::RNTuple", fNTupleName, "");
 }
 
 void ROOT::Experimental::Internal::RNTupleFileWriter::WriteTFileSkeleton(int defaultCompression)
@@ -1428,14 +1413,14 @@ void ROOT::Experimental::Internal::RNTupleFileWriter::WriteTFileSkeleton(int def
 
    RTFUUID uuid;
 
-   // First record of the file: the TFile object at offset 100
-   RTFKey keyRoot(100, 0, strTFile, strFileName, strEmpty,
+   // First record of the file: the TFile object at offset kBEGIN (= 100)
+   RTFKey keyRoot(RTFHeader::kBEGIN, 0, strTFile, strFileName, strEmpty,
                   sizeof(RTFFile) + strFileName.GetSize() + strEmpty.GetSize() + uuid.GetSize());
    std::uint32_t nbytesName = keyRoot.fKeyLen + strFileName.GetSize() + 1;
    fFileSimple.fControlBlock->fFileRecord.fNBytesName = nbytesName;
    fFileSimple.fControlBlock->fHeader.SetNbytesName(nbytesName);
 
-   fFileSimple.Write(&keyRoot, keyRoot.fKeyHeaderSize, 100);
+   fFileSimple.Write(&keyRoot, keyRoot.GetHeaderSize(), RTFHeader::kBEGIN);
    // Write class name, object name, and title for the TFile key.
    fFileSimple.Write(&strTFile, strTFile.GetSize());
    fFileSimple.Write(&strFileName, strFileName.GetSize());

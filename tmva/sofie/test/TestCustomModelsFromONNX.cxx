@@ -33,6 +33,11 @@
 #include "ReduceProd_FromONNX.hxx"
 #include "input_models/references/ReduceProd.ref.hxx"
 
+// hardcode reference
+#include "ReduceSum_FromONNX.hxx"
+
+#include "ReduceSumSquare_FromONNX.hxx"
+
 #include "Shape_FromONNX.hxx"
 #include "input_models/references/Shape.ref.hxx"
 
@@ -1177,6 +1182,60 @@ TEST(ONNX, Pow_broadcast){
       EXPECT_LE(std::abs(output[i] - correct[i]), TOLERANCE);
    }
 
+}
+
+TEST(ONNX, ReduceSum){
+   constexpr float TOLERANCE = DEFAULT_TOLERANCE;
+
+
+   // Preparing the standard  input
+   std::vector<float> input({
+      5, 2, 3,
+      5, 5, 4
+   });
+
+   // test Reduce sum in all axis and  keeping the dimension
+   // input tensor is shape [1,2,3]
+   // output tensod is shape [1,1,1] and value = 24 (sum of all elements)
+
+   TMVA_SOFIE_ReduceSum::Session s("ReduceSum_FromONNX.dat");
+   std::vector<float> output = s.infer(input.data());
+   // Checking output size
+   EXPECT_EQ(output.size(), 1);
+
+   float correct[] = {24};
+
+   // Checking every output value, one by one
+   for (size_t i = 0; i < output.size(); ++i) {
+      EXPECT_LE(std::abs(output[i] - correct[i]), TOLERANCE);
+   }
+}
+
+TEST(ONNX, ReduceSumSquare){
+   constexpr float TOLERANCE = DEFAULT_TOLERANCE;
+
+
+   // Preparing the standard  input
+   std::vector<float> input({
+      5, 2, 3,
+      5, 5, 4
+   });
+
+   // reduce on last axis and do not keep dimension
+   // output should be [1,2] and [25+4+9, 25+25+16]
+
+
+   TMVA_SOFIE_ReduceSumSquare::Session s("ReduceSumSquare_FromONNX.dat");
+   std::vector<float> output = s.infer(input.data());
+   // Checking output size
+   EXPECT_EQ(output.size(), 2);
+
+   float correct[] = {38, 66};
+
+   // Checking every output value, one by one
+   for (size_t i = 0; i < output.size(); ++i) {
+      EXPECT_LE(std::abs(output[i] - correct[i]), TOLERANCE);
+   }
 }
 
 TEST(ONNX, Max)

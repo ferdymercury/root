@@ -34,6 +34,7 @@
 #include <algorithm>
 #include <atomic>
 #include <cassert>
+#include <cstring>
 #include <functional>
 #include <memory>
 #include <string_view>
@@ -274,7 +275,7 @@ void ROOT::Experimental::Internal::RPageSource::UnzipClusterImpl(RCluster *clust
             auto taskFunc = [this, columnId, clusterId, firstInPage, sealedPage, element = allElements.back().get(),
                              &foundChecksumFailure,
                              indexOffset = clusterDescriptor.GetColumnRange(columnId).fFirstElementIndex]() {
-               auto rv = UnsealPage(sealedPage, *element, columnId);
+               auto rv = UnsealPage(sealedPage, *element);
                if (!rv) {
                   foundChecksumFailure = true;
                   return;
@@ -283,7 +284,8 @@ void ROOT::Experimental::Internal::RPageSource::UnzipClusterImpl(RCluster *clust
                fCounters->fSzUnzip.Add(element->GetSize() * sealedPage.GetNElements());
 
                newPage.SetWindow(indexOffset + firstInPage, RPage::RClusterInfo(clusterId, indexOffset));
-               fPagePool.PreloadPage(std::move(newPage), element->GetIdentifier().fInMemoryType);
+               fPagePool.PreloadPage(std::move(newPage),
+                                     RPagePool::RKey{columnId, element->GetIdentifier().fInMemoryType});
             };
 
             fTaskScheduler->AddTask(taskFunc);
@@ -334,7 +336,7 @@ ROOT::Experimental::Internal::RPageSource::LoadPage(ColumnHandle_t columnHandle,
 {
    const auto columnId = columnHandle.fPhysicalId;
    const auto columnElementId = columnHandle.fColumn->GetElement()->GetIdentifier();
-   auto cachedPageRef = fPagePool.GetPage(columnId, columnElementId.fInMemoryType, globalIndex);
+   auto cachedPageRef = fPagePool.GetPage(RPagePool::RKey{columnId, columnElementId.fInMemoryType}, globalIndex);
    if (!cachedPageRef.Get().IsNull())
       return cachedPageRef;
 
@@ -371,7 +373,7 @@ ROOT::Experimental::Internal::RPageSource::LoadPage(ColumnHandle_t columnHandle,
    const auto idxInCluster = clusterIndex.GetIndex();
    const auto columnId = columnHandle.fPhysicalId;
    const auto columnElementId = columnHandle.fColumn->GetElement()->GetIdentifier();
-   auto cachedPageRef = fPagePool.GetPage(columnId, columnElementId.fInMemoryType, clusterIndex);
+   auto cachedPageRef = fPagePool.GetPage(RPagePool::RKey{columnId, columnElementId.fInMemoryType}, clusterIndex);
    if (!cachedPageRef.Get().IsNull())
       return cachedPageRef;
 
@@ -493,21 +495,21 @@ void ROOT::Experimental::Internal::RPageSource::EnableDefaultMetrics(const std::
 }
 
 ROOT::Experimental::RResult<ROOT::Experimental::Internal::RPage>
-ROOT::Experimental::Internal::RPageSource::UnsealPage(const RSealedPage &sealedPage, const RColumnElementBase &element,
-                                                      DescriptorId_t physicalColumnId)
+ROOT::Experimental::Internal::RPageSource::UnsealPage(const RSealedPage &sealedPage, const RColumnElementBase &element)
 {
-   return UnsealPage(sealedPage, element, physicalColumnId, *fPageAllocator);
+   return UnsealPage(sealedPage, element, *fPageAllocator);
 }
 
 ROOT::Experimental::RResult<ROOT::Experimental::Internal::RPage>
 ROOT::Experimental::Internal::RPageSource::UnsealPage(const RSealedPage &sealedPage, const RColumnElementBase &element,
-                                                      DescriptorId_t physicalColumnId, RPageAllocator &pageAlloc)
+                                                      RPageAllocator &pageAlloc)
 {
    // Unsealing a page zero is a no-op.  `RPageRange::ExtendToFitColumnRange()` guarantees that the page zero buffer is
    // large enough to hold `sealedPage.fNElements`
    if (sealedPage.GetBuffer() == RPage::GetPageZeroBuffer()) {
-      auto page = RPage::MakePageZero(physicalColumnId, element.GetSize());
+      auto page = pageAlloc.NewPage(element.GetSize(), sealedPage.GetNElements());
       page.GrowUnchecked(sealedPage.GetNElements());
+      memset(page.GetBuffer(), 0, page.GetNBytes());
       return page;
    }
 
@@ -516,7 +518,7 @@ ROOT::Experimental::Internal::RPageSource::UnsealPage(const RSealedPage &sealedP
       return R__FORWARD_ERROR(rv);
 
    const auto bytesPacked = element.GetPackedSize(sealedPage.GetNElements());
-   auto page = pageAlloc.NewPage(physicalColumnId, element.GetPackedSize(), sealedPage.GetNElements());
+   auto page = pageAlloc.NewPage(element.GetPackedSize(), sealedPage.GetNElements());
    if (sealedPage.GetDataSize() != bytesPacked) {
       RNTupleDecompressor::Unzip(sealedPage.GetBuffer(), sealedPage.GetDataSize(), bytesPacked, page.GetBuffer());
    } else {
@@ -527,7 +529,7 @@ ROOT::Experimental::Internal::RPageSource::UnsealPage(const RSealedPage &sealedP
    }
 
    if (!element.IsMappable()) {
-      auto tmp = pageAlloc.NewPage(physicalColumnId, element.GetSize(), sealedPage.GetNElements());
+      auto tmp = pageAlloc.NewPage(element.GetSize(), sealedPage.GetNElements());
       element.Unpack(tmp.GetBuffer(), page.GetBuffer(), sealedPage.GetNElements());
       page = std::move(tmp);
    }
@@ -702,7 +704,7 @@ ROOT::Experimental::Internal::RPageSink::ReservePage(ColumnHandle_t columnHandle
    const auto nBytes = elementSize * nElements;
    if (!fWritePageMemoryManager.TryUpdate(*columnHandle.fColumn, nBytes))
       return RPage();
-   return fPageAllocator->NewPage(columnHandle.fPhysicalId, elementSize, nElements);
+   return fPageAllocator->NewPage(elementSize, nElements);
 }
 
 //------------------------------------------------------------------------------

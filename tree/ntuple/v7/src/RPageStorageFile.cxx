@@ -47,11 +47,6 @@ ROOT::Experimental::Internal::RPageSinkFile::RPageSinkFile(std::string_view ntup
                                                            const RNTupleWriteOptions &options)
    : RPagePersistentSink(ntupleName, options)
 {
-   static std::once_flag once;
-   std::call_once(once, []() {
-      R__LOG_WARNING(NTupleLog()) << "The RNTuple file format will change. "
-                                  << "Do not store real data with this version of RNTuple!";
-   });
    fCompressor = std::make_unique<RNTupleCompressor>();
    EnableDefaultMetrics("RPageSinkFile");
    fFeatures.fCanMergePages = true;
@@ -322,12 +317,6 @@ void ROOT::Experimental::Internal::RPageSourceFile::LoadStructureImpl()
    if (fAnchor->GetVersionEpoch() != RNTuple::kVersionEpoch) {
       throw RException(R__FAIL("unsupported RNTuple epoch version: " + std::to_string(fAnchor->GetVersionEpoch())));
    }
-   if (fAnchor->GetVersionEpoch() == 0) {
-      static std::once_flag once;
-      std::call_once(once, [this]() {
-         R__LOG_WARNING(NTupleLog()) << "Pre-release format version: RC " << fAnchor->GetVersionMajor();
-      });
-   }
 
    fDescriptorBuilder.SetOnDiskHeaderSize(fAnchor->GetNBytesHeader());
    fDescriptorBuilder.AddToOnDiskFooterSize(fAnchor->GetNBytesFooter());
@@ -435,11 +424,12 @@ ROOT::Experimental::Internal::RPageSourceFile::LoadPageImpl(ColumnHandle_t colum
    const auto elementInMemoryType = element->GetIdentifier().fInMemoryType;
 
    if (pageInfo.fLocator.fType == RNTupleLocator::kTypePageZero) {
-      auto pageZero = RPage::MakePageZero(columnId, elementSize);
+      auto pageZero = fPageAllocator->NewPage(elementSize, pageInfo.fNElements);
       pageZero.GrowUnchecked(pageInfo.fNElements);
+      memset(pageZero.GetBuffer(), 0, pageZero.GetNBytes());
       pageZero.SetWindow(clusterInfo.fColumnOffset + pageInfo.fFirstInPage,
                          RPage::RClusterInfo(clusterId, clusterInfo.fColumnOffset));
-      return fPagePool.RegisterPage(std::move(pageZero), elementInMemoryType);
+      return fPagePool.RegisterPage(std::move(pageZero), RPagePool::RKey{columnId, elementInMemoryType});
    }
 
    RSealedPage sealedPage;
@@ -464,7 +454,8 @@ ROOT::Experimental::Internal::RPageSourceFile::LoadPageImpl(ColumnHandle_t colum
          fCurrentCluster = fClusterPool->GetCluster(clusterId, fActivePhysicalColumns.ToColumnSet());
       R__ASSERT(fCurrentCluster->ContainsColumn(columnId));
 
-      auto cachedPageRef = fPagePool.GetPage(columnId, elementInMemoryType, RClusterIndex(clusterId, idxInCluster));
+      auto cachedPageRef =
+         fPagePool.GetPage(RPagePool::RKey{columnId, elementInMemoryType}, RClusterIndex(clusterId, idxInCluster));
       if (!cachedPageRef.Get().IsNull())
          return cachedPageRef;
 
@@ -477,14 +468,14 @@ ROOT::Experimental::Internal::RPageSourceFile::LoadPageImpl(ColumnHandle_t colum
    RPage newPage;
    {
       Detail::RNTupleAtomicTimer timer(fCounters->fTimeWallUnzip, fCounters->fTimeCpuUnzip);
-      newPage = UnsealPage(sealedPage, *element, columnId).Unwrap();
+      newPage = UnsealPage(sealedPage, *element).Unwrap();
       fCounters->fSzUnzip.Add(elementSize * pageInfo.fNElements);
    }
 
    newPage.SetWindow(clusterInfo.fColumnOffset + pageInfo.fFirstInPage,
                      RPage::RClusterInfo(clusterId, clusterInfo.fColumnOffset));
    fCounters->fNPageUnsealed.Inc();
-   return fPagePool.RegisterPage(std::move(newPage), elementInMemoryType);
+   return fPagePool.RegisterPage(std::move(newPage), RPagePool::RKey{columnId, elementInMemoryType});
 }
 
 std::unique_ptr<ROOT::Experimental::Internal::RPageSource>

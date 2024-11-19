@@ -161,14 +161,8 @@ double PiecewiseInterpolation::evaluate() const
     auto param = static_cast<RooAbsReal*>(_paramSet.at(i));
     auto low   = static_cast<RooAbsReal*>(_lowSet.at(i));
     auto high  = static_cast<RooAbsReal*>(_highSet.at(i));
-    Int_t icode = _interpCode[i] ;
-
-    if(icode < 0 || icode > 5) {
-      coutE(InputArguments) << "PiecewiseInterpolation::evaluate ERROR:  " << param->GetName()
-                 << " with unknown interpolation code" << icode << endl ;
-    }
     using RooFit::Detail::MathFuncs::flexibleInterpSingle;
-    sum += flexibleInterpSingle(icode, low->getVal(), high->getVal(), 1.0, nominal, param->getVal(), sum);
+    sum += flexibleInterpSingle(_interpCode[i], low->getVal(), high->getVal(), 1.0, nominal, param->getVal(), sum);
   }
 
   if(_positiveDefinite && (sum<0)){
@@ -184,109 +178,47 @@ double PiecewiseInterpolation::evaluate() const
 
 }
 
-void PiecewiseInterpolation::translate(RooFit::Detail::CodeSquashContext &ctx) const
+namespace {
+
+inline double broadcast(std::span<const double> const &s, std::size_t i)
 {
-   std::size_t n = _interpCode.size();
-
-   std::string resName = "total_" + ctx.getTmpVarName();
-   for (std::size_t i = 0; i < n; ++i) {
-      if (_interpCode[i] < 0 || _interpCode[i] > 5) {
-         coutE(InputArguments) << "PiecewiseInterpolation::evaluate ERROR:  " << _paramSet[i].GetName()
-                               << " with unknown interpolation code" << _interpCode[i] << endl;
-      }
-      if (_interpCode[i] != _interpCode[0]) {
-         coutE(InputArguments) << "FlexibleInterpVar::evaluate ERROR:  Code Squashing AD does not yet support having "
-                                  "different interpolation codes for the same class object "
-                               << endl;
-      }
-   }
-
-   // The PiecewiseInterpolation class is used in the context of HistFactory
-   // models, where is is always used the same way: all RooAbsReals in _lowSet,
-   // _histSet, and also nominal are 1D RooHistFuncs with with same structure.
-   //
-   // Therefore, we can make a big optimization: we get the bin index only once
-   // here in the generated code for PiecewiseInterpolation. Then, we also
-   // rearrange the histogram data in such a way that we can always pass the
-   // same arrays to the free function that implements the interpolation, just
-   // with a dynamic offset calculated from the bin index.
-   RooDataHist const &nomHist = dynamic_cast<RooHistFunc const &>(*_nominal).dataHist();
-   int nBins = nomHist.numEntries();
-   std::vector<double> valsNominal;
-   std::vector<double> valsLow;
-   std::vector<double> valsHigh;
-   for (int i = 0; i < nBins; ++i) {
-      valsNominal.push_back(nomHist.weight(i));
-   }
-   for (int i = 0; i < nBins; ++i) {
-      for (std::size_t iParam = 0; iParam < n; ++iParam) {
-         valsLow.push_back(dynamic_cast<RooHistFunc const &>(_lowSet[iParam]).dataHist().weight(i));
-         valsHigh.push_back(dynamic_cast<RooHistFunc const &>(_highSet[iParam]).dataHist().weight(i));
-      }
-   }
-   std::string idxName = ctx.getTmpVarName();
-   std::string valsNominalStr = ctx.buildArg(valsNominal);
-   std::string valsLowStr = ctx.buildArg(valsLow);
-   std::string valsHighStr = ctx.buildArg(valsHigh);
-   std::string nStr = std::to_string(n);
-   std::string code;
-
-   std::string lowName = ctx.getTmpVarName();
-   std::string highName = ctx.getTmpVarName();
-   std::string nominalName = ctx.getTmpVarName();
-   code += "unsigned int " + idxName + " = " + nomHist.calculateTreeIndexForCodeSquash(this, ctx, dynamic_cast<RooHistFunc const &>(*_nominal).variables()) + ";\n";
-   code += "double const* " + lowName + " = " + valsLowStr + " + " + nStr + " * " + idxName + ";\n";
-   code += "double const* " + highName + " = " + valsHighStr + " + " + nStr + " * " + idxName + ";\n";
-   code += "double " + nominalName + " = *(" + valsNominalStr + " + " + idxName + ");\n";
-
-   std::string funcCall = ctx.buildCall("RooFit::Detail::MathFuncs::flexibleInterp", _interpCode[0], _paramSet, n,
-                                        lowName, highName, 1.0, nominalName, 0.0);
-   code += "double " + resName + " = " + funcCall + ";\n";
-
-   if (_positiveDefinite)
-      code += resName + " = " + resName + " < 0 ? 0 : " + resName + ";\n";
-
-   ctx.addToCodeBody(this, code);
-   ctx.addResult(this, resName);
+   return s.size() > 1 ? s[i] : s[0];
 }
+
+} // namespace
 
 ////////////////////////////////////////////////////////////////////////////////
 /// Interpolate between input distributions for all values of the observable in `evalData`.
 /// \param[in,out] evalData Struct holding spans pointing to input data. The results of this function will be stored here.
 /// \param[in] normSet Arguments to normalise over.
-void PiecewiseInterpolation::doEval(RooFit::EvalContext & ctx) const
+void PiecewiseInterpolation::doEval(RooFit::EvalContext &ctx) const
 {
-  std::span<double> sum = ctx.output();
+   std::span<double> sum = ctx.output();
 
-  auto nominal = ctx.at(_nominal);
-  for(unsigned int j=0; j < nominal.size(); ++j) {
-    sum[j] = nominal[j];
-  }
+   auto nominal = ctx.at(_nominal);
 
-  for (unsigned int i=0; i < _paramSet.size(); ++i) {
-    const double param = static_cast<RooAbsReal*>(_paramSet.at(i))->getVal();
-    auto low   = ctx.at(_lowSet.at(i));
-    auto high  = ctx.at(_highSet.at(i));
-    const int icode = _interpCode[i];
+   for (std::size_t j = 0; j < sum.size(); ++j) {
+      sum[j] = broadcast(nominal, j);
+   }
 
-    if (icode < 0 || icode > 5) {
-      coutE(InputArguments) << "PiecewiseInterpolation::doEval(): " << _paramSet[i].GetName()
-                       << " with unknown interpolation code" << icode << std::endl;
-      throw std::invalid_argument("PiecewiseInterpolation::doEval() got invalid interpolation code " + std::to_string(icode));
-    }
+   for (unsigned int i = 0; i < _paramSet.size(); ++i) {
+      auto param = ctx.at(_paramSet.at(i));
+      auto low = ctx.at(_lowSet.at(i));
+      auto high = ctx.at(_highSet.at(i));
 
-    for (unsigned int j=0; j < nominal.size(); ++j) {
-       using RooFit::Detail::MathFuncs::flexibleInterpSingle;
-       sum[j] += flexibleInterpSingle(icode, low[j], high[j], 1.0, nominal[j], param, sum[j]);
-    }
-  }
+      for (std::size_t j = 0; j < sum.size(); ++j) {
+         using RooFit::Detail::MathFuncs::flexibleInterpSingle;
+         sum[j] += flexibleInterpSingle(_interpCode[i], broadcast(low, j), broadcast(high, j), 1.0, broadcast(nominal, j),
+                                        broadcast(param, j), sum[j]);
+      }
+   }
 
-  if (_positiveDefinite) {
-    for(unsigned int j=0; j < nominal.size(); ++j) {
-      if (sum[j] < 0.)
-        sum[j] = 0.;
-    }
-  }
+   if (_positiveDefinite) {
+      for (std::size_t j = 0; j < sum.size(); ++j) {
+         if (sum[j] < 0.)
+            sum[j] = 0.;
+      }
+   }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -335,7 +267,7 @@ Int_t PiecewiseInterpolation::getAnalyticalIntegralWN(RooArgSet& allVars, RooArg
 
 
   // KC: check if interCode=0 for all
-  for (auto it = _paramSet.begin(); it != _paramSet.end(); ++it) { 
+  for (auto it = _paramSet.begin(); it != _paramSet.end(); ++it) {
     if (!_interpCode.empty() && _interpCode[it - _paramSet.begin()] != 0) {
         // can't factorize integral
         cout << "can't factorize integral" << endl;
@@ -359,7 +291,7 @@ Int_t PiecewiseInterpolation::getAnalyticalIntegralWN(RooArgSet& allVars, RooArg
   // Make list of function projection and normalization integrals
   RooAbsReal *func ;
 
-  // do variations 
+  // do variations
   for (auto it = _paramSet.begin(); it != _paramSet.end(); ++it)
   {
     auto i = it - _paramSet.begin();
@@ -479,12 +411,12 @@ double PiecewiseInterpolation::analyticalIntegralWN(Int_t code, const RooArgSet*
 
   // now get low/high variations
   // KC: old interp code with new iterator
- 
+
   i = 0;
   for (auto const *param : static_range_cast<RooAbsReal *>(_paramSet)) {
     low = static_cast<RooAbsReal *>(cache->_lowIntList.at(i));
     high = static_cast<RooAbsReal *>(cache->_highIntList.at(i));
-  
+
     if(param->getVal() > 0) {
       value += param->getVal()*(high->getVal() - nominal);
     } else {
@@ -561,32 +493,44 @@ double PiecewiseInterpolation::analyticalIntegralWN(Int_t code, const RooArgSet*
   return value;
 }
 
-
-////////////////////////////////////////////////////////////////////////////////
-
-void PiecewiseInterpolation::setInterpCode(RooAbsReal& param, int code, bool silent){
-  int index = _paramSet.index(&param);
-  if(index<0){
-      coutE(InputArguments) << "PiecewiseInterpolation::setInterpCode ERROR:  " << param.GetName()
-             << " is not in list" << endl ;
-  } else {
-     if(!silent){
-       coutW(InputArguments) << "PiecewiseInterpolation::setInterpCode :  " << param.GetName()
-                             << " is now " << code << endl ;
-     }
-    _interpCode.at(index) = code;
-  }
+void PiecewiseInterpolation::setInterpCode(RooAbsReal &param, int code, bool /*silent*/)
+{
+   int index = _paramSet.index(&param);
+   if (index < 0) {
+      coutE(InputArguments) << "PiecewiseInterpolation::setInterpCode ERROR:  " << param.GetName() << " is not in list"
+                            << std::endl;
+      return;
+   }
+   setInterpCodeForParam(index, code);
 }
 
-
-////////////////////////////////////////////////////////////////////////////////
-
-void PiecewiseInterpolation::setAllInterpCodes(int code){
-  for(unsigned int i=0; i<_interpCode.size(); ++i){
-    _interpCode.at(i) = code;
-  }
+void PiecewiseInterpolation::setAllInterpCodes(int code)
+{
+   for (std::size_t i = 0; i < _interpCode.size(); ++i) {
+      setInterpCodeForParam(i, code);
+   }
 }
 
+void PiecewiseInterpolation::setInterpCodeForParam(int iParam, int code)
+{
+   RooAbsArg const &param = _paramSet[iParam];
+   if (code < 0 || code > 5) {
+      coutE(InputArguments) << "PiecewiseInterpolation::setInterpCode ERROR: " << param.GetName()
+                            << " with unknown interpolation code " << code << ", keeping current code "
+                            << _interpCode[iParam] << std::endl;
+      return;
+   }
+   if (code == 3) {
+      // In the past, code 3 was equivalent to code 2, which confused users.
+      // Now, we just say that code 3 doesn't exist and default to code 2 in
+      // that case for backwards compatible behavior.
+      coutE(InputArguments) << "PiecewiseInterpolation::setInterpCode ERROR: " << param.GetName()
+                            << " with unknown interpolation code " << code << ", defaulting to code 2" << std::endl;
+      code = 2;
+   }
+   _interpCode.at(iParam) = code;
+   setValueDirty();
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 
