@@ -382,8 +382,9 @@ jobs:
         # https://stackoverflow.com/questions/68994484/how-to-skip-a-configuration-of-a-matrix-with-github-actions
         # https://github.com/joaomcteixeira/python-project-skeleton/pull/31/files
         exclude:
-          - { needs.conditional_job_check_files.outputs.interpreter_changed: false }
-          image: alma9
+          - image: alma9
+          # { needs.conditional_job_check_files.outputs.interpreter_changed: false }
+          
 
         # Specify image + (optional) build option overrides
         #
