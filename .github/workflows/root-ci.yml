@@ -99,7 +99,10 @@ jobs:
         $HasDiff = $SourceDiff.Length -gt 0
 
         # Set the output named "interpreter_changed"
-        Write-Host "::set-output name=interpreter_changed::$HasDiff"
+        # deprecated: Write-Host "::set-output name=interpreter_changed::$HasDiff"
+        echo "interpreter_changed=$HasDiff" >> $GITHUB_OUTPUT
+
+run: 
   build-macos:
     # For any event that is not a PR, the CI will always run. In PRs, the CI
     # can be skipped if the tag [skip-ci] or [skip ci] is written in the title.
