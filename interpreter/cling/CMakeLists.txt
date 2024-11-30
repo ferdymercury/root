@@ -7,7 +7,7 @@ else(WIN32)
   # support of earlier cmake versions will be removed soon
   cmake_minimum_required(VERSION 3.5)
 endif(WIN32)
-
+ 
 # If we are not building as a part of LLVM, build Cling as an
 # standalone project, using LLVM as an external library:
 if( CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR )
