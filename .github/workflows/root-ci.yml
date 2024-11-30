@@ -100,8 +100,8 @@ jobs:
 
         # Set the output named "interpreter_changed"
         # deprecated: 
-        Write-Host "::set-output name=interpreter_changed::$HasDiff"
-        #echo "interpreter_changed=$HasDiff" >> $GITHUB_OUTPUT
+        #Write-Host "::set-output name=interpreter_changed::$HasDiff"
+        echo "interpreter_changed=$HasDiff" >> $GITHUB_OUTPUT
 
   build-macos:
     # For any event that is not a PR, the CI will always run. In PRs, the CI
