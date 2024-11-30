@@ -376,18 +376,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        #image: [alma9]
-          #            - property: clingtest
-           # - is_special: true
-            #- overrides: ["LLVM_ENABLE_ASSERTIONS=On", "CMAKE_BUILD_TYPE=Debug", "clingtest=ON"] # , "LLVM_BUILD_TYPE=Debug"
         # https://github.com/orgs/community/discussions/26253
         # https://stackoverflow.com/questions/65384420/how-do-i-make-a-github-action-matrix-element-conditional
         # https://stackoverflow.com/questions/68994484/how-to-skip-a-configuration-of-a-matrix-with-github-actions
-        # https://github.com/joaomcteixeira/python-project-skeleton/pull/31/files
-       # exclude:
-         # - image: alma9
-           # { needs.conditional_job_check_files.outputs.interpreter_changed: false }
-          
+        # https://github.com/joaomcteixeira/python-project-skeleton/pull/31/files        
 
         # Specify image + (optional) build option overrides
         #
@@ -402,7 +394,7 @@ jobs:
           - image: alma8
             overrides: ["LLVM_ENABLE_ASSERTIONS=On"]
           - image: alma9
-            overrides: ["LLVM_ENABLE_ASSERTIONS=On", "CMAKE_BUILD_TYPE=Debug", "clingtest=${{needs.conditional_job_check_files.outputs.interpreter_changed}}"]
+            overrides: ["LLVM_ENABLE_ASSERTIONS=On", "CMAKE_BUILD_TYPE=Debug", ${{needs.conditional_job_check_files.outputs.interpreter_changed}} && "clingtest=ON" || "clingtest=OFF"]
           - image: ubuntu22
             overrides: ["imt=Off", "LLVM_ENABLE_ASSERTIONS=On", "CMAKE_BUILD_TYPE=Debug"]
           - image: ubuntu2404
