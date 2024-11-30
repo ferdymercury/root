@@ -376,8 +376,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        image:
-          - alma9
+        image: [alma9]
           #            - property: clingtest
            # - is_special: true
             #- overrides: ["LLVM_ENABLE_ASSERTIONS=On", "CMAKE_BUILD_TYPE=Debug", "clingtest=ON"] # , "LLVM_BUILD_TYPE=Debug"
