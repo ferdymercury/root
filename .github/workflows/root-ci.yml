@@ -376,7 +376,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        image: [alma9]
+        image:
+          - alma9
           #- is_special: true
           #- overrides: ["LLVM_ENABLE_ASSERTIONS=On", "CMAKE_BUILD_TYPE=Debug", "clingtest=ON"] # , "LLVM_BUILD_TYPE=Debug"
         # https://github.com/orgs/community/discussions/26253
@@ -385,7 +386,7 @@ jobs:
         # https://github.com/joaomcteixeira/python-project-skeleton/pull/31/files
         exclude:
           - image: alma9
-          # { needs.conditional_job_check_files.outputs.interpreter_changed: false }
+           # { needs.conditional_job_check_files.outputs.interpreter_changed: false }
           
 
         # Specify image + (optional) build option overrides
