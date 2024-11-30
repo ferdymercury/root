@@ -389,7 +389,7 @@ jobs:
           - image: alma9
             overrides: ["LLVM_ENABLE_ASSERTIONS=On", "CMAKE_BUILD_TYPE=Debug"]
           - image: alma9
-          - is_special: true
+            is_special: true
             if: needs.conditional_job_check_files.outputs.interpreter_changed == 'True'
             overrides: ["LLVM_ENABLE_ASSERTIONS=On", "CMAKE_BUILD_TYPE=Debug", "clingtest=ON]
           - image: ubuntu22
