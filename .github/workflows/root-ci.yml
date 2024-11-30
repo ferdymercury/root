@@ -379,8 +379,8 @@ jobs:
         image:
           - alma9:
             - property: clingtest
-          #- is_special: true
-          #- overrides: ["LLVM_ENABLE_ASSERTIONS=On", "CMAKE_BUILD_TYPE=Debug", "clingtest=ON"] # , "LLVM_BUILD_TYPE=Debug"
+            - is_special: true
+            - overrides: ["LLVM_ENABLE_ASSERTIONS=On", "CMAKE_BUILD_TYPE=Debug", "clingtest=ON"] # , "LLVM_BUILD_TYPE=Debug"
         # https://github.com/orgs/community/discussions/26253
         # https://stackoverflow.com/questions/65384420/how-do-i-make-a-github-action-matrix-element-conditional
         # https://stackoverflow.com/questions/68994484/how-to-skip-a-configuration-of-a-matrix-with-github-actions
