@@ -365,7 +365,7 @@ jobs:
   build-linux:
     # For any event that is not a PR, the CI will always run. In PRs, the CI
     # can be skipped if the tag [skip-ci] or [skip ci] is written in the title.
-    needs: [ conditional_job_check_files ]
+    #needs: [ conditional_job_check_files ]
     if: |
         (github.repository_owner == 'root-project' && github.event_name != 'pull_request') ||
         (github.event_name == 'pull_request' && !(contains(github.event.pull_request.title, '[skip-ci]') || contains(github.event.pull_request.title, '[skip ci]')))
