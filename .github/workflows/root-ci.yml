@@ -383,7 +383,7 @@ jobs:
         # https://github.com/joaomcteixeira/python-project-skeleton/pull/31/files
         exclude:
           - image: alma9
-            { needs.conditional_job_check_files.outputs.interpreter_changed: false }
+          # { needs.conditional_job_check_files.outputs.interpreter_changed: false }
           
 
         # Specify image + (optional) build option overrides
