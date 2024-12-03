@@ -1323,7 +1323,13 @@ static void RegisterPreIncludedHeaders(cling::Interpreter &clingInterp)
 #ifndef R__WIN32
    PreIncludes += "#include <cassert>\n";
 #endif
-   PreIncludes += "using namespace std;\n";
+   const auto n_std = gEnv->GetValue("Rint.NamespaceStd", 2);
+   if (n_std == 1) {
+      PreIncludes += "using std::cin; std::cout, std::cerr, std::endl, std::string, std::vector;\n";
+   }
+   else if (n_std > 0) {
+      PreIncludes += "using namespace std;\n";
+   }
    clingInterp.declare(PreIncludes);
 }
 

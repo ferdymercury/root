@@ -360,6 +360,12 @@ Rint.History:            $(HOME)/.root_hist
 # the variable to 2 if your scripts include <vector> and you execute
 # your scripts multiple times.
 Rint.Includes:      1
+# You can set the variable below to 0 to disable the using of whole std
+# namespace in interpreter. You can set the variable to 2 (default) to use
+# whole std namespace. You can set it to 1 to use only parts of std namespace:
+# std::cin; std::cout; std::err; std::endl; std::string; std::vector.
+# We strongly recommend setting the variable to 1 to prevent namespace clashes.
+Rint.NamespaceStd:  2
 
 # ACLiC customization.
 # ACLiC.Linkdef specifies the suffix that will be added to the script name to
