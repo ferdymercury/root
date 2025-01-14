@@ -61,5 +61,6 @@ EOF
 # Run rest in parallel
 xargs -L 1 -P ${nJobs:-1} ${Python3_EXECUTABLE:-python3} < $inputFile
 
-rm ${inputFile}.back
-
+if [ -e "${inputFile}.back" ]; then
+    rm "${inputFile}.back"
+fi
