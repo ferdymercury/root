@@ -646,7 +646,7 @@ Int_t TTreeFormula::RegisterDimensions(Int_t code, TLeaf *leaf) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-/// This method check for treat the case where expression contains $Atl and load up
+/// This method check for treat the case where expression contains $Alt and load up
 /// both fAliases and fExpr.
 /// We return:
 /// -  -1 in case of failure
