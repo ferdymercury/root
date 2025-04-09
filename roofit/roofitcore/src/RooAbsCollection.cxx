@@ -928,7 +928,8 @@ RooAbsArg * RooAbsCollection::find(const char *name) const
   if (!nptr) return nullptr;
 
   if (_hashAssistedFind || _list.size() >= _sizeThresholdForMapSearch) {
-    if (!_hashAssistedFind || !_hashAssistedFind->isValid()) {
+    if (!_hashAssistedFind->isValid()) {
+      delete _hashAssistedFind;
       _hashAssistedFind = new HashAssistedFind{_list.begin(), _list.end()};
     }
 
