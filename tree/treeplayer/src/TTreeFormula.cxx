@@ -96,12 +96,17 @@ The following method are available from the TFormLeafInfo interface:
 ClassImp(TTreeFormula);
 
 ////////////////////////////////////////////////////////////////////////////////
-
-inline static void R__LoadBranch(TBranch* br, Long64_t entry, bool quickLoad)
+/// The function returns the number of bytes read from the input buffer.
+/// If entry does not exist or (entry!=readEntry && quickload), the function returns 0.
+/// If an I/O error occurs, the function returns -1.
+///
+inline static Int_t R__LoadBranch(TBranch* br, Long64_t entry, bool quickLoad)
 {
    if (!quickLoad || (br->GetReadEntry() != entry)) {
-      br->GetEntry(entry);
+      auto res = br->GetEntry(entry);
+      return res;
    }
+   return 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -3773,7 +3778,10 @@ const char* TTreeFormula::EvalStringInstance(Int_t instance)
       TBranch *br = leaf->GetBranch();                                                          \
       if (br && br->GetTree()) {                                                                \
          Long64_t tentry = br->GetTree()->GetReadEntry();                                       \
-         R__LoadBranch(br,tentry,fQuickLoad);                                                   \
+         auto loadBranchRes = R__LoadBranch(br,tentry,fQuickLoad);                              \
+         if (loadBranchRes <= 0)                                                                \
+            Error("TTreeFormula::TT_EVAL_INIT",                                                 \
+             "Could not read entry (%lld) of leaf (%s).", tentry, leaf->GetName());             \
       } else {                                                                                  \
         Error("TTreeFormula::TT_EVAL_INIT",                                                     \
           "Could not init branch associated to this leaf (%s).", leaf->GetName());              \
@@ -5862,22 +5870,4 @@ bool TTreeFormula::SwitchToFormLeafInfo(Int_t code)
       }
    }
    return true;
-}
-
-Bool_t TTreeFormula::AnalyzePrimitive(TString &, TObjArray &, Int_t &, Int_t)
-{
-  // TTreeFormula version of AnalyzePrimitive(). Does nothing. Predefined
-  // primitive functions are not supported by TTreeFormula since they
-  // operate on x[] and parameters, which are unavailable here.
-
-  return kFALSE;
-}
-
-void TTreeFormula::Optimize()
-{
-  // TTreeFormula version of Optimize(). Does nothing. TTreeFormula does not
-  // support the TFormula-style optimization since it requires variables and
-  // parameters in fixed locations, which are unavailable here.
-
-  return;
 }
