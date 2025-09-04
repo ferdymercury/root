@@ -579,7 +579,7 @@ limitations. When it is not possible or desirable to program around
 the Cling limitations, you can use the C preprocessor symbols defined
 for Cling and `rootcling`.
 
-The preprocessor symbol `__CLING__` is defined for both ROOT and
+The preprocessor symbol `__CLING__` (and `__CINT__` for backward compatibility) is defined for both ROOT and
 `rootcling`. The symbol `__ROOTCLING__` (and `__MAKECINT__` for backward
 compatibility) is only defined in `rootcling`.
 
