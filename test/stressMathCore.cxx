@@ -52,9 +52,6 @@
 //
 
 
-#ifndef __CLING__
-
-
 #include "Math/DistFuncMathCore.h"
 //#define USE_MATHMORE
 #ifdef USE_MATHMORE
@@ -91,9 +88,6 @@ R__ADD_INCLUDE_PATH($ROOTSYS/test)
 #include "Math/GenVector/RotationZ.h" // Workaround to autoload libGenVector ROOT-7056
 
 using namespace ROOT::Math;
-
-#endif
-
 
 //#define DEBUG
 
