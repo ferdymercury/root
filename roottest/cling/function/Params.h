@@ -9,7 +9,7 @@ class Base {
    virtual ~Base(){};
    virtual void FunctionX(int b=0, int c=5) {printf("%s: Base::FunctionX(int b=%d, int c=%d)\n", fMode, b, c);}
 
-   void CINTCannotHandleDefaultArgThatsNotYetParsed(int a = GetCountingCalls()) {};
+   void CINTCannotHandleDefaultArgThatsNotYetParsed(int a = GetCountingCalls()) {(void)a; };
    static int GetCountingCalls() {return ++fgCountingCalls;}
    virtual void FunctionY(int arg0 = ++gCountingCalls, float arg1 = Base::GetCountingCalls() ) {
       printf("%s: Base::FunctionY(int arg0=%d, float arg1=%d.)\n", fMode, arg0, (int)arg1);}
