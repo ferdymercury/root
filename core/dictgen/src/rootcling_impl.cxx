@@ -4486,8 +4486,8 @@ int RootClingMain(int argc,
    TClassEdit::Init(&helper);
 
    // flags used only for the pragma parser:
-   clingArgs.push_back("-D__CINT__"); // backward compatibility. Now __CLING__ is used
-   clingArgs.push_back("-D__MAKECINT__"); // backward compatibility. Now __ROOTCLING__ is used
+   clingArgs.push_back("-D__CINT__"); // backward compatibility. Now __CLING__ should be used instead
+   clingArgs.push_back("-D__MAKECINT__"); // backward compatibility. Now __ROOTCLING__ should used instead
 
    AddPlatformDefines(clingArgs);
 
