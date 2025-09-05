@@ -16,7 +16,7 @@
 //           VecTrackD which contains an std::vector<TrackD>
 //
 //
-// the program cun run only in compiled mode.
+// the program can run only in compiled mode.
 // To run outside ROOT do:
 //
 //    > cd $ROOTSYS/test
@@ -1522,20 +1522,6 @@ int testCompositeObj(int ngen) {
 int stressMathCore(double nscale = 1) {
 
    int iret = 0;
-
-#ifdef __CLING__
-   std::cout << "Test must be run in compile mode - use ACLIC to compile!!" << std::endl;
-
-
-   gSystem->Load("libMathCore");
-   gSystem->Load("libTree");
-   gROOT->ProcessLine(".L stressMathCore.cxx++");
-   return stressMathCore();
-#endif
-//    iret |= gSystem->Load("libMathCore");
-//    iret |= gSystem->Load("libMathMore");
-//    if (iret !=0) return iret;
-
 
    TBenchmark bm;
    bm.Start("stressMathCore");
