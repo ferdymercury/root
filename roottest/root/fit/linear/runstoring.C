@@ -40,9 +40,6 @@ void writefitter()
 
 void readfitter()
 {
-#ifdef __CLING__
-   // G__SetCatchException(0);
-#endif
    TVectorD vect;  
    TFile *f = TFile::Open("linfitter.root");
    if (!f) return;
@@ -99,9 +96,6 @@ void readfitter()
 
 void writeformula()
 {
-#ifdef __CLING__
-   G__SetCatchException(0);  
-#endif
    TFormula *f = new TFormula("ffffff", "x[0]++x[1]++x[2]");
 
     TFile *file = TFile::Open("formula.root", "RECREATE");
