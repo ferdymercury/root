@@ -6,9 +6,6 @@
 
 void writefitter()
 {
-#ifdef __CLING__
-   G__SetCatchException(0);  
-#endif
    Int_t npoints = 100;
    Int_t ndim = 3;
    TFormula *f = new TFormula("f", "x[0]++x[1]++x[2]");
