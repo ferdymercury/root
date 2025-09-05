@@ -1,3 +1,6 @@
+#ifndef PARAMS_H
+#define PARAMS_H
+
 int gCountingCalls = 0;
 
 class Base {
@@ -26,3 +29,5 @@ class Derived: public Base {
    virtual void FunctionY(int arg0 = ++gCountingCalls, float arg1 = Base::GetCountingCalls() ) {
       printf("%s: Derived::FunctionY(int arg0=%d, float arg1=%d.)\n", fMode, arg0, (int)arg1);}
 };
+
+#endif
