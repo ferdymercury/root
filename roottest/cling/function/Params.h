@@ -25,8 +25,8 @@ class Derived: public Base {
  public:
    Derived(const char* mode = ""): Base(mode){};
    virtual ~Derived(){};
-   virtual void FunctionX(int b=1, int c=6) {printf("%s: Derived::FunctionX(int b=%d, int c=%d)\n", fMode, b, c);}
-   virtual void FunctionY(int arg0 = ++gCountingCalls, float arg1 = Base::GetCountingCalls() ) {
+   void FunctionX(int b=1, int c=6) override {printf("%s: Derived::FunctionX(int b=%d, int c=%d)\n", fMode, b, c);}
+   void FunctionY(int arg0 = ++gCountingCalls, float arg1 = Base::GetCountingCalls() ) override {
       printf("%s: Derived::FunctionY(int arg0=%d, float arg1=%d.)\n", fMode, arg0, (int)arg1);}
 };
 
