@@ -40,7 +40,7 @@ hist.Fill(8.5);
 The class is templated on the bin content type. For counting, as in the example above, it may be an integer type such as
 `int` or `long`. Narrower types such as `unsigned char` or `short` are supported, but may overflow due to their limited
 range and must be used with care. For weighted filling, the bin content type must be a floating-point type such as
-`float` or `double`, or the special type RBinWithError. Note that `float` has a limited significant precision of 24
+`float` or `double`, or the special type RBinWithError. Note that `float` has a limited significand precision of 24
 bits.
 
 An object can have arbitrary dimensionality determined at run-time. The axis configuration is passed as a vector of
