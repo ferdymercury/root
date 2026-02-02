@@ -1428,15 +1428,15 @@ void TFormula::HandleFunctionArguments(TString &formula)
 
       // ignore things that start with square brackets
       if (formula[i] == '[') {
-         while (formula[i] != ']')
+         while (i < formula.Length() && formula[i] != ']')
             i++;
          continue;
       }
       // ignore strings
-      if (formula[i] == '\"') {
+      if (i < formula.Length() && formula[i] == '\"') {
          do
             i++;
-         while (formula[i] != '\"');
+         while (i < formula.Length() && formula[i] != '\"');
          continue;
       }
       // ignore numbers (scientific notation)
@@ -1444,13 +1444,13 @@ void TFormula::HandleFunctionArguments(TString &formula)
          continue;
       // ignore x in hexadecimal number
       if (IsHexadecimal(formula, i)) {
-         while (!IsOperator(formula[i]) && i < formula.Length())
+         while (i < formula.Length() && !IsOperator(formula[i]))
             i++;
          continue;
       }
 
       // investigate possible start of function name
-      if (isalpha(formula[i]) && !IsOperator(formula[i])) {
+      if (i < formula.Length() && isalpha(formula[i]) && !IsOperator(formula[i])) {
          // std::cout << "character : " << i << " " << formula[i] << " is not an operator and is alpha" << std::endl;
 
          int j; // index to end of name
