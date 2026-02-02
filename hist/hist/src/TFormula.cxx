@@ -1250,7 +1250,7 @@ void TFormula::HandleParametrizedFunctions(TString &formula)
          // check if function has specified the [...] e.g. gaus[x,y]
          Int_t openingBracketPos = funPos + funName.Length() + (isNormalized ? 1 : 0);
          Int_t closingBracketPos = kNPOS;
-         if (openingBracketPos > formula.Length() || formula[openingBracketPos] != '[') {
+         if (openingBracketPos >= formula.Length() || formula[openingBracketPos] != '[') {
             dim = funDim;
             variables.resize(dim);
             for (Int_t idim = 0; idim < dim; ++idim)
