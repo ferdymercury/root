@@ -1956,7 +1956,7 @@ void TFormula::ExtractFunctors(TString &formula)
          // look for next instance of "\"
          do {
             i++;
-         } while (formula[i] != '\"');
+         } while (i < formula.Length() && formula[i] != '\"');
       }
       // case of e or E for numbers in exponential notation (e.g. 2.2e-3)
       if (IsScientificNotation(formula, i))
@@ -1965,7 +1965,7 @@ void TFormula::ExtractFunctors(TString &formula)
       if (IsHexadecimal(formula, i)) {
          // find position of operator
          // do not check cases if character is not only a to f, but accept anything
-         while (!IsOperator(formula[i]) && i < formula.Length()) {
+         while (i < formula.Length() && !IsOperator(formula[i])) {
             i++;
          }
          continue;
@@ -1997,7 +1997,7 @@ void TFormula::ExtractFunctors(TString &formula)
          // printf(" build a name %s \n",name.Data() );
          if (formula[i] == '(') {
             i++;
-            if (formula[i] == ')') {
+            if (i < formula.Length() && formula[i] == ')') {
                fFuncs.push_back(TFormulaFunction(name, body, 0));
                name = body = "";
                continue;
@@ -3622,8 +3622,8 @@ TString TFormula::GetExpFormula(Option_t *option) const
          // look for p[number
          if (clingFormula[i] == 'p' && clingFormula[i+1] == '[' && isdigit(clingFormula[i+2]) ) {
             int j = i+3;
-            while ( isdigit(clingFormula[j]) ) { j++;}
-            if (clingFormula[j] != ']') {
+            while ( j < clingFormula.Length() && isdigit(clingFormula[j]) ) { j++;}
+            if ( j >= clingFormula.Length() || clingFormula[j] != ']') {
                Error("GetExpFormula","Parameters not found - invalid expression - return default cling formula");
                return clingFormula;
             }
@@ -3647,8 +3647,8 @@ TString TFormula::GetExpFormula(Option_t *option) const
          // look for [parName]
          if (expFormula[i] == '[') {
             int j = i+1;
-            while ( expFormula[j] != ']' ) { j++;}
-            if (expFormula[j] != ']') {
+            while ( j < expFormula.Length() && expFormula[j] != ']' ) { j++;}
+            if ( j >= expFormula.Length() || expFormula[j] != ']') {
                Error("GetExpFormula","Parameter names not found - invalid expression - return default formula");
                return expFormula;
             }
