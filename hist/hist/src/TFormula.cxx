@@ -1866,7 +1866,7 @@ void TFormula::HandleLinear(TString &formula)
 
 ////////////////////////////////////////////////////////////////////////////////
 ///    Preprocessing of formula
-///    Replace all ** by ^, all ++ by  @, and removes spaces.
+///    Replace all ** by ^, all ++ by @, and removes spaces.
 ///    Handle also parametrized functions like polN,gaus,expo,landau
 ///    and exponentiation.
 ///    Similar functionality should be added here.
@@ -1881,7 +1881,7 @@ void TFormula::PreProcessFormula(TString &formula)
    HandleParamRanges(formula);
    HandleFunctionArguments(formula);
    HandleExponentiation(formula);
-   // "++" (now @) wil be dealt with Handle Linear
+   // "++" (now @ since they we just called ReplaceAll a few lines above) wil be dealt with Handle Linear
    HandleLinear(formula);
    // special case for "--" and "++"
    // ("++" needs to be written with whitespace that is removed before but then we re-add it again
