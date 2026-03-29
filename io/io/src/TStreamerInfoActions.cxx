@@ -2493,6 +2493,7 @@ namespace TStreamerInfoActions
          for(void *iter = start; iter != end; iter = (char*)iter + sizeof(void*) ) {
             if (*(void**)iter)
                action(buf, *(void**)iter, config);
+            buf << static_cast<const Char_t *>(nullptr);
          }
          return 0;
       }
@@ -2511,9 +2512,12 @@ namespace TStreamerInfoActions
       {
          const Int_t offset = config->fOffset;
 
+         T temp;
          for(; iter != end; iter = (char*)iter + sizeof(void*) ) {
             T *x = (T*)( ((char*) (*(void**)iter) ) + offset );
-            buf >> *x;
+            if (x)
+               buf >> *x;
+            buf >> temp; // for nullptr
          }
          return 0;
       }
