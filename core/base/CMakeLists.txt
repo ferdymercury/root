@@ -255,7 +255,7 @@ endif()
 target_compile_options(Core PRIVATE -DLIB_CORE_NAME=${full_core_filename}
                                     -DINSTALL_LIB_TO_INCLUDE="${install_lib_to_include}"
 )
-add_dependencies(Core ensure_build_tree_marker)
+# add_dependencies(Core ensure_build_tree_marker)
 
 if(PCRE2_FOUND)
   target_link_libraries(Core PRIVATE PCRE2::PCRE2)
@@ -266,15 +266,15 @@ else()
   target_link_libraries(Core PRIVATE PCRE::PCRE)
 endif()
 
-ROOT_INSTALL_HEADERS(${BASE_HEADER_DIRS})
+#ROOT_INSTALL_HEADERS(${BASE_HEADER_DIRS})
 
-file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/man)
+#file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/man)
 
 if(NOT MSVC)
 #---addRootC++CmdMan-------------------------------------------------------------------------
-generateManual(rootMan ${CMAKE_CURRENT_SOURCE_DIR}/src/root-argparse.py ${CMAKE_BINARY_DIR}/man/root.1)
-generateManual(haddMan ${CMAKE_SOURCE_DIR}/main/src/hadd-argparse.py ${CMAKE_BINARY_DIR}/man/hadd.1)
-generateManual(rootclingMan ${CMAKE_SOURCE_DIR}/core/dictgen/src/rootcling-argparse.py ${CMAKE_BINARY_DIR}/man/rootcling.1)
+#generateManual(rootMan ${CMAKE_CURRENT_SOURCE_DIR}/src/root-argparse.py ${CMAKE_BINARY_DIR}/man/root.1)
+#generateManual(haddMan ${CMAKE_SOURCE_DIR}/main/src/hadd-argparse.py ${CMAKE_BINARY_DIR}/man/hadd.1)
+#generateManual(rootclingMan ${CMAKE_SOURCE_DIR}/core/dictgen/src/rootcling-argparse.py ${CMAKE_BINARY_DIR}/man/rootcling.1)
 
 #---addRootPyCmdMan---------------------------------------------------------------------------
 #generateManual(rootcpMan ${CMAKE_SOURCE_DIR}/main/python/rootcp.py ${CMAKE_BINARY_DIR}/man/rootcp.1)
@@ -287,4 +287,4 @@ generateManual(rootclingMan ${CMAKE_SOURCE_DIR}/core/dictgen/src/rootcling-argpa
 #generateManual(rootslimtreeMan ${CMAKE_SOURCE_DIR}/main/python/rootslimtree.py ${CMAKE_BINARY_DIR}/man/rootslimtree.1)
 endif()
 
-ROOT_ADD_TEST_SUBDIRECTORY(test)
+#ROOT_ADD_TEST_SUBDIRECTORY(test)

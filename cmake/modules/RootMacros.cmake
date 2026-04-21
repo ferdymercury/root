@@ -989,7 +989,7 @@ function(ROOT_LINKER_LIBRARY library)
   ROOT_ADD_INCLUDE_DIRECTORIES(${library})
 
   if(PROJECT_NAME STREQUAL "ROOT")
-    add_dependencies(${library} move_headers)
+    # add_dependencies(${library} move_headers)
     if(NOT TARGET ROOT::${library})
       add_library(ROOT::${library} ALIAS ${library})
     endif()
@@ -1085,7 +1085,7 @@ function(ROOT_OBJECT_LIBRARY library)
   if(lib_srcs MATCHES "(^|/)(G__[^.]*)[.]cxx.*")
      add_dependencies(${library} ${CMAKE_MATCH_2})
   endif()
-  add_dependencies(${library} move_headers)
+  # add_dependencies(${library} move_headers)
 
   ROOT_ADD_INCLUDE_DIRECTORIES(${library})
 

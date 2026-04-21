@@ -12,7 +12,7 @@
 #ifndef ROOT_TAttBBox2D
 #define ROOT_TAttBBox2D
 
-#include "GuiTypes.h"
+class Rectangle_t;
 #include "Rtypes.h"
 
 class TPoint;
