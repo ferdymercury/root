@@ -65,12 +65,13 @@ CHECK_CXX_COMPILER_FLAG("-fno-rtti" CXX_HAS_fno_rtti)
 
 #add_subdirectory(rootcling_stage1)
 
-add_subdirectory(base)
+add_subdirectory(foundation)
+
+# add_subdirectory(base)
 # add_subdirectory(clib)
 # add_subdirectory(clingutils)
 # add_subdirectory(cont)
 # add_subdirectory(dictgen)
-add_subdirectory(foundation)
 # add_subdirectory(gui)
 # add_subdirectory(imt)
 # add_subdirectory(meta)

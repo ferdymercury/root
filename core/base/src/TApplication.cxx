@@ -19,7 +19,7 @@ application. Normally the specific application class inherits from
 TApplication (see TRint).
 */
 
-#include "RConfigure.h"
+// #include "RConfigure.h"
 #include "TApplication.h"
 #include "TException.h"
 #include "TGuiFactory.h"

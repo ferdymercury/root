@@ -19,8 +19,7 @@
 //                                                                      //
 //////////////////////////////////////////////////////////////////////////
 
-
-#include "RtypesCore.h"
+// #include "RtypesCore.h"
 // #include "DllImport.h" // included via RtypesCore.h, not used here
 
 #ifndef R__LESS_INCLUDES

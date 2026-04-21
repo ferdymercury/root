@@ -18,7 +18,7 @@
 
 #include <ROOT/FoundationUtils.hxx>
 
-#include <RConfigure.h>
+// #include <RConfigure.h>
 
 #include <algorithm>
 #include <cassert>
