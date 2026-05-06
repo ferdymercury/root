@@ -35,6 +35,7 @@
 # include "FTGLBitmapFont.h"
 #endif
 
+
 /** \class TGLFont
 \ingroup opengl
 A wrapper class for FTFont.
