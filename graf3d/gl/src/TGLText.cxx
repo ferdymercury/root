@@ -18,7 +18,18 @@
 #include "TEnv.h"
 #include "TGLIncludes.h"
 
+// since Apr 29, 2008: https://github.com/ulrichard/ftgl/commit/c96146ed441d2442eaf2d78a9d46f37fce332fe8
+#if __has_include(<FTGL/ftgl.h>)
 # include <FTGL/ftgl.h>
+#else
+# include "FTFont.h"
+# include "FTGLExtrdFont.h"
+# include "FTGLOutlineFont.h"
+# include "FTGLPolygonFont.h"
+# include "FTGLTextureFont.h"
+# include "FTGLPixmapFont.h"
+# include "FTGLBitmapFont.h"
+#endif
 
 #define FTGL_BITMAP  0
 #define FTGL_PIXMAP  1
