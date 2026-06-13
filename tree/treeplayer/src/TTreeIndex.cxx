@@ -211,8 +211,20 @@ TTreeIndex::TTreeIndex(const TTree *T, const char *majorname, const char *minorn
       auto GetLong64 = [this](bool isMajor) {
          return (isMajor ? fMajorFormula : fMinorFormula)->EvalInstance<Long64_t>();
       };
-      tmp_major[i] = long64major ? GetLong64(true) : GetAndRangeCheck(true, i);
-      tmp_minor[i] = long64minor ? GetLong64(false) : GetAndRangeCheck(false, i);
+      // Note: assign in separate statements rather than using a ternary expression.
+      // In `long64major ? GetLong64(...) : GetAndRangeCheck(...)`, the two branches have
+      // types Long64_t and LongDouble_t, so the whole expression is promoted to their
+      // common type `long double` *regardless of the branch taken*. On platforms where
+      // `sizeof(long double) == sizeof(double)` (macOS arm64, Windows) this silently
+      // rounds the exact Long64_t value, defeating the purpose of the long64 flag.
+      if (long64major)
+         tmp_major[i] = GetLong64(true);
+      else
+         tmp_major[i] = GetAndRangeCheck(true, i);
+      if (long64minor)
+         tmp_minor[i] = GetLong64(false);
+      else
+         tmp_minor[i] = GetAndRangeCheck(false, i);
    }
    fIndex = new Long64_t[fN];
    for(i = 0; i < fN; i++) { fIndex[i] = i; }
