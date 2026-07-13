@@ -1,36 +1,53 @@
 ### \file
 ### \ingroup tutorial_ml
 ### \notebook -nodraw
-### Example of inference with SOFIE using a set of models trained with Keras.
+### Example of inference with SOFIE using a set of models trained with PyTorch
+### and exported to ONNX.
 ### This tutorial shows how to store several models in a single header file and
 ### the weights in a ROOT binary file.
 ### The models are then evaluated using the RDataFrame
-### First, generate the input model by running `TMVA_Higgs_Classification.C`.
 ###
-### This tutorial parses the input model and runs the inference using ROOT's JITing capability.
+### The PyTorch export and ROOT's SOFIE parser are both linked against protobuf,
+### but usually against different versions, so loading them in the same process
+### leads to a symbol clash. We therefore run the PyTorch training and ONNX
+### export in a separate Python process and only use ROOT before and afterwards.
 ###
 ### \macro_code
 ### \macro_output
 ### \author Lorenzo Moneta
 
-import contextlib
 import os
-import warnings
+import subprocess
+import sys
 
 import numpy as np
 import ROOT
-from sklearn.model_selection import train_test_split
-from tensorflow.keras.layers import Dense, Input
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.optimizers import Adam
+
+## generate and train PyTorch models with different architectures
+
+# The PyTorch training and ONNX export, as a small standalone script run in its
+# own process. It takes as arguments the .npz file with the training data and
+# the names of the models to train, and writes a <modelName>.onnx file for each
+# of them.
+TRAIN_SCRIPT = r"""
+import sys
+import inspect
+import warnings
+import contextlib
+
+import numpy as np
+import torch
+import torch.nn as nn
+
+dataFile = sys.argv[1]
+modelNames = sys.argv[2:]
 
 
 @contextlib.contextmanager
 def expect_warning(category, message):
-    """Silence a known third-party warning. Raise if it stops firing.
+    # Silence a known third-party warning and raise if it stops firing.
 
-    Notifies us to drop the workaround once the upstream library is fixed.
-    """
+    # Notifies us to drop the workaround once the upstream library is fixed.
     with warnings.catch_warnings(record=True) as caught:
         warnings.simplefilter("always")
         yield
@@ -47,20 +64,80 @@ def expect_warning(category, message):
         )
 
 
-## generate and train Keras models with different architectures
-
-
 def CreateModel(nlayers=4, nunits=64):
-    model = Sequential()
-    model.add(Input(shape=(7,)))
-    model.add(Dense(nunits, activation="relu"))
-    for i in range(1, nlayers):
-        model.add(Dense(nunits, activation="relu"))
-
-    model.add(Dense(1, activation="sigmoid"))
-    model.compile(loss="binary_crossentropy", optimizer=Adam(learning_rate=0.001), weighted_metrics=["accuracy"])
-    model.summary()
+    layers = []
+    ninputs = 7
+    for i in range(nlayers):
+        layers += [nn.Linear(ninputs, nunits), nn.ReLU()]
+        ninputs = nunits
+    layers += [nn.Linear(ninputs, 1), nn.Sigmoid()]
+    model = nn.Sequential(*layers)
+    print(model)
     return model
+
+
+def TrainModel(model, x, y, epochs=5, batch_size=50):
+    x = torch.from_numpy(x)
+    y = torch.from_numpy(y)
+    criterion = nn.BCELoss()
+    optimizer = torch.optim.Adam(model.parameters())
+    nbatches = x.shape[0] // batch_size
+    for epoch in range(epochs):
+        perm = torch.randperm(x.shape[0])
+        running_loss = 0.0
+        for i in range(nbatches):
+            idx = perm[i * batch_size : (i + 1) * batch_size]
+            optimizer.zero_grad()
+            loss = criterion(model(x[idx]), y[idx])
+            loss.backward()
+            optimizer.step()
+            running_loss += loss.item()
+        print(f"Epoch {epoch + 1}/{epochs} - average loss: {running_loss / nbatches:.4f}")
+
+
+def ExportModel(model, modelName):
+    # need to evaluate the model before exporting to ONNX
+    # and to provide a dummy input tensor to set the input model shape
+    # (the batch size is fixed to 1 for the SOFIE inference)
+    model.eval()
+
+    modelFile = modelName + ".onnx"
+    dummy_x = torch.randn(1, 7)
+    model(dummy_x)
+
+    # check for torch.onnx.export parameters
+    def filtered_kwargs(func, **candidate_kwargs):
+        sig = inspect.signature(func)
+        return {k: v for k, v in candidate_kwargs.items() if k in sig.parameters}
+
+    kwargs = filtered_kwargs(
+        torch.onnx.export,
+        input_names=["input"],
+        output_names=["output"],
+        external_data=False,  # may not exist
+        dynamo=True,  # may not exist
+    )
+    print("calling torch.onnx.export with parameters", kwargs)
+
+    try:
+        # torch.onnx.export (dynamo path) pickles its export program through
+        # copyreg, which still references the deprecated LeafSpec. The warning
+        # is emitted from inside PyTorch and cannot be avoided from user code.
+        with expect_warning(FutureWarning, "isinstance(treespec, LeafSpec)"):
+            torch.onnx.export(model, dummy_x, modelFile, **kwargs)
+        print("model exported to ONNX as", modelFile)
+    except TypeError:
+        print("Cannot export model from pytorch to ONNX - with version ", torch.__version__)
+        # leave no .onnx behind: which the parent process treats as a RuntimeError
+        sys.exit()
+
+
+data = np.load(dataFile)
+for modelName in modelNames:
+    model = CreateModel(4, 64)
+    TrainModel(model, data["x_train"], data["y_train"])
+    ExportModel(model, modelName)
+"""
 
 
 def PrepareData():
@@ -84,30 +161,36 @@ def PrepareData():
 
     ysig = np.ones(data_sig_size)
     ybkg = np.zeros(data_bkg_size)
-    inputs_data = np.concatenate((xsig, xbkg), axis=0)
-    inputs_targets = np.concatenate((ysig, ybkg), axis=0)
+    inputs_data = np.concatenate((xsig, xbkg), axis=0).astype(np.float32)
+    inputs_targets = np.concatenate((ysig, ybkg), axis=0).astype(np.float32)
 
     # split data in training and test data
+    rng = np.random.default_rng(1234)
+    idx = rng.permutation(inputs_data.shape[0])
+    ntrain = inputs_data.shape[0] // 2
 
-    x_train, x_test, y_train, y_test = train_test_split(inputs_data, inputs_targets, test_size=0.50, random_state=1234)
+    x_train = inputs_data[idx[:ntrain]]
+    y_train = inputs_targets[idx[:ntrain]].reshape(-1, 1)
+    x_test = inputs_data[idx[ntrain:]]
+    y_test = inputs_targets[idx[ntrain:]].reshape(-1, 1)
 
     return x_train, y_train, x_test, y_test
 
 
-def TrainModel(model, x, y, name):
-    model.fit(x, y, epochs=5, batch_size=50)
-    modelFile = name + ".keras"
-    # Keras' internal ``np.array(x)`` (TensorFlow backend) does not yet
-    # implement the NumPy 2.0 ``__array__(copy=...)`` signature, so saving
-    # emits a DeprecationWarning that we cannot fix from user code.
-    if tuple(int(p) for p in np.__version__.split(".")[:2]) >= (2, 0):
-        ctx = expect_warning(DeprecationWarning, "__array__ implementation doesn't accept a copy keyword")
-    else:
-        ctx = contextlib.nullcontext()
+def TrainModels(x_train, y_train, modelNames):
+    # train the models with PyTorch and export them to ONNX
+    # (done in a separate process to avoid the protobuf clash, see above)
+    dataFile = "Higgs_Model_train_data.npz"
+    np.savez(dataFile, x_train=x_train, y_train=y_train)
 
-    with ctx:
-        model.save(modelFile)
-    return modelFile
+    subprocess.run([sys.executable, "-c", TRAIN_SCRIPT, dataFile] + modelNames, check=True)
+    os.remove(dataFile)
+
+    modelFiles = [name + ".onnx" for name in modelNames]
+    for modelFile in modelFiles:
+        if not os.path.exists(modelFile):
+            raise RuntimeError("ONNX model " + modelFile + " could not be exported")
+    return modelFiles
 
 
 ### run the models
@@ -116,17 +199,19 @@ x_train, y_train, x_test, y_test = PrepareData()
 
 ## create models and train them
 
-model1 = TrainModel(CreateModel(4, 64), x_train, y_train, "Higgs_Model_4L_50")
-model2 = TrainModel(CreateModel(4, 64), x_train, y_train, "Higgs_Model_4L_200")
-model3 = TrainModel(CreateModel(4, 64), x_train, y_train, "Higgs_Model_2L_500")
+# All three models use the same small architecture (4 layers of 64 units) to
+# keep the tutorial runtime under control, whatever their names suggest.
+modelNames = ["Higgs_Model_4L_50", "Higgs_Model_4L_200", "Higgs_Model_2L_500"]
+model1, model2, model3 = TrainModels(x_train, y_train, modelNames)
 
 # evaluate with SOFIE the 3 trained models
 
 
 def GenerateModelCode(modelFile, generatedHeaderFile):
-    model = ROOT.TMVA.Experimental.SOFIE.PyKeras.Parse(modelFile)
+    parser = ROOT.TMVA.Experimental.SOFIE.RModelParser_ONNX()
+    model = parser.Parse(modelFile)
 
-    print("Generating inference code for the Keras model from ", modelFile, "in the header ", generatedHeaderFile)
+    print("Generating inference code for the ONNX model from ", modelFile, "in the header ", generatedHeaderFile)
     # Generating inference code using a ROOT binary file
     model.Generate(ROOT.TMVA.Experimental.SOFIE.Options.kRootBinaryWeightFile)
     # add option to append to the same file the generated headers (pass True for append flag)
