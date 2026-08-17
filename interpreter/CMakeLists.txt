@@ -384,6 +384,7 @@ else()
   # construct the resource directory in core/clingutils.
   set(LLVM_VERSION_MAJOR ${ROOT_LLVM_VERSION_REQUIRED_MAJOR} PARENT_SCOPE)
 
+  set( CLANG_BUILT_STANDALONE 1 )
   # We are in the case of NOT builtin_llvm
   if (builtin_clang)
     # remove clang-cpp from CLANG_LINKS_TO_CREATE to avoid clashes with
@@ -403,7 +404,6 @@ else()
     set(CMAKE_CXX_STANDARD ${_cxx_standard})
   endif(builtin_clang)
 
-  set( CLANG_BUILT_STANDALONE 1 )
   set(BACKEND_PACKAGE_STRING "LLVM ${LLVM_PACKAGE_VERSION}")
 endif(builtin_llvm)
 
