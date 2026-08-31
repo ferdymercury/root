@@ -68,6 +68,7 @@ Users are encouraged to export their models to ONNX and use the retained ONNX pa
 * Support for the AIX operating system has been removed from the codebase. This support has not been tested since the late v5 releases and the LLVM JIT is not yet supporting AIX.
 * The headers Htypes.h and Gtypes.h that were deprecated in ROOT 6.20 will now emit warnings and will be fully removed in ROOT 6.44.
 * The header GLConstants.h is no longer part of ROOT installed headers.
+* The headers `ZipLZMA.h` and `ZipLZ4.h` are no longer part of ROOT installed headers. Use instead `RZip.h` methods.
 
 ## Build System
 

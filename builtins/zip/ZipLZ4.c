@@ -10,12 +10,10 @@
 
 #include "ZipLZ4.h"
 
-#include "ROOT/RConfig.hxx"
-
-#include <cinttypes>
-#include <cstdint>
-#include <cstdio>
-#include <cstring>
+#include <inttypes.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <string.h>
 #include <lz4.h>
 #include <lz4hc.h>
 #include <xxhash.h>
@@ -38,12 +36,12 @@ void R__zipLZ4(int cxlevel, int *srcsize, const char *src, int *tgtsize, char *t
 
    *irep = 0;
 
-   if (R__unlikely(*tgtsize <= 0)) {
+   if ((*tgtsize <= 0)) {
       return;
    }
 
    // Refuse to compress more than 16MB at a time -- we are only allowed 3 bytes for size info.
-   if (R__unlikely(*srcsize > 0xffffff || *srcsize < 0)) {
+   if ((*srcsize > 0xffffff || *srcsize < 0)) {
       return;
    }
 
@@ -57,7 +55,7 @@ void R__zipLZ4(int cxlevel, int *srcsize, const char *src, int *tgtsize, char *t
       returnStatus = LZ4_compress_default(src, &tgt[kHeaderSize], *srcsize, *tgtsize - kHeaderSize);
    }
 
-   if (R__unlikely(returnStatus == 0)) { /* LZ4 compression failed */
+   if ((returnStatus == 0)) { /* LZ4 compression failed */
       return;
    }
    XXH64_hash_t checksumResult = XXH64(tgt + kHeaderSize, returnStatus, 0);
@@ -79,7 +77,7 @@ void R__zipLZ4(int cxlevel, int *srcsize, const char *src, int *tgtsize, char *t
    tgt[8] = (char)((in_size >> 16) & 0xff);
 
    // Write out checksum.
-   XXH64_canonicalFromHash(reinterpret_cast<XXH64_canonical_t *>(tgt + kChecksumOffset), checksumResult);
+   XXH64_canonicalFromHash((XXH64_canonical_t *)(tgt + kChecksumOffset), checksumResult);
 
    *irep = (int)returnStatus + kHeaderSize;
 }
@@ -91,12 +89,12 @@ void R__unzipLZ4(int *srcsize, const unsigned char *src, int *tgtsize, unsigned 
 
    int LZ4_version = LZ4_versionNumber() / (100 * 100);
    *irep = 0;
-   if (R__unlikely(src[0] != 'L' || src[1] != '4')) {
+   if ((src[0] != 'L' || src[1] != '4')) {
       fprintf(stderr, "R__unzipLZ4: algorithm run against buffer with incorrect header (got %d%d; expected %d%d).\n",
               src[0], src[1], 'L', '4');
       return;
    }
-   if (R__unlikely(src[2] != LZ4_version)) {
+   if ((src[2] != LZ4_version)) {
       fprintf(stderr,
               "R__unzipLZ4: This version of LZ4 is incompatible with the on-disk version (got %d; expected %d).\n",
               src[2], LZ4_version);
@@ -110,10 +108,9 @@ void R__unzipLZ4(int *srcsize, const unsigned char *src, int *tgtsize, unsigned 
    // what size of chunks does interleaving (avoiding two fetches from RAM) improve enough for the
    // extra function call costs?  NOTE that ROOT limits the buffer size to 16MB.
    XXH64_hash_t checksumResult = XXH64(src + kHeaderSize, inputBufferSize, 0);
-   XXH64_hash_t checksumFromFile =
-      XXH64_hashFromCanonical(reinterpret_cast<const XXH64_canonical_t *>(src + kChecksumOffset));
+   XXH64_hash_t checksumFromFile = XXH64_hashFromCanonical((const XXH64_canonical_t *)(src + kChecksumOffset));
 
-   if (R__unlikely(checksumFromFile != checksumResult)) {
+   if ((checksumFromFile != checksumResult)) {
       fprintf(
          stderr,
          "R__unzipLZ4: Buffer corruption error!  Calculated checksum %llu; checksum calculated in the file was %llu.\n",
@@ -121,7 +118,7 @@ void R__unzipLZ4(int *srcsize, const unsigned char *src, int *tgtsize, unsigned 
       return;
    }
    int returnStatus = LZ4_decompress_safe((char *)(&src[kHeaderSize]), (char *)(tgt), inputBufferSize, *tgtsize);
-   if (R__unlikely(returnStatus < 0)) {
+   if ((returnStatus < 0)) {
       fprintf(stderr, "R__unzipLZ4: error in decompression around byte %d out of maximum %d.\n", -returnStatus,
               *tgtsize);
       return;

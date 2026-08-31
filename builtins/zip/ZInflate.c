@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#ifdef WIN32
+#ifdef _WIN32
 #define __STDC__ 1
 #endif
 #ifdef __MWERKS__
@@ -18,7 +18,6 @@
 static const int qflag = 0;
 
 #include "zlib.h"
-#include "RConfigure.h"
 #include "ZipLZMA.h"
 #include "ZipLZ4.h"
 
