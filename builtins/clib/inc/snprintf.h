@@ -10,7 +10,6 @@
 #ifndef ROOT_snprintf
 #define ROOT_snprintf
 
-#include <ROOT/RConfig.hxx>
 #include <stdio.h>
 #ifdef NEED_SNPRINTF
 
@@ -20,7 +19,7 @@
 extern "C" {
 #endif
 
-#ifdef WIN32
+#ifdef _WIN32
 #pragma warning( push )
 #pragma warning (disable: 4273)
 #endif
@@ -30,7 +29,7 @@ int vsnprintf(char *string, size_t length, const char *format, va_list args);
 #endif
 int snprintf(char *string, size_t length, const char *format, ...);
 
-#ifdef WIN32
+#ifdef _WIN32
 #pragma warning( pop )
 #endif
 

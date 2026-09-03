@@ -8,13 +8,15 @@
 # CMakeLists.txt file for building ROOT core/clib package
 ############################################################################
 
-set_property(TARGET Core APPEND PROPERTY DICT_HEADERS
-  strlcpy.h # custom ROOT file (https://github.com/root-project/root/blob/b48975de4dcbcd5f1ecf7f60c3f8e39c38a1f6e3/core/clib/inc/strlcpy.h)
-  snprintf.h # custom ROOT file (https://github.com/root-project/root/blob/3c0f42cd0d4f7aeab78e01533afefeb6f1248946/clib/inc/snprintf.h vs https://github.com/daztucker/historic-ssh/blob/658f5a469b028b54a9934db11fb43f65319bb811/snprintf.h)
-  strtok.h # custom ROOT file (https://github.com/root-project/root/blob/d39c9211ba045c0b9aaa780ec76a32666e04cd1e/core/clib/inc/strtok.h)
+add_library(ROOTclib STATIC)
+
+target_sources(ROOTclib PUBLIC
+  inc/strlcpy.h # custom ROOT file (https://github.com/root-project/root/blob/b48975de4dcbcd5f1ecf7f60c3f8e39c38a1f6e3/core/clib/inc/strlcpy.h)
+  inc/snprintf.h # custom ROOT file (https://github.com/root-project/root/blob/3c0f42cd0d4f7aeab78e01533afefeb6f1248946/clib/inc/snprintf.h vs https://github.com/daztucker/historic-ssh/blob/658f5a469b028b54a9934db11fb43f65319bb811/snprintf.h)
+  inc/strtok.h # custom ROOT file (https://github.com/root-project/root/blob/d39c9211ba045c0b9aaa780ec76a32666e04cd1e/core/clib/inc/strtok.h)
 )
 
-ROOT_OBJECT_LIBRARY(Clib
+target_sources(ROOTclib PRIVATE
   # All this code below is LGPL (GNU Lesser General Public License was called at that time GNU Library General Public License)
   src/attach.c # forked in 1999 from gdb-4 (https://github.com/root-project/root/blob/852600061bcacd9b255d44f6312c96b6b1e00a2d/clib/src/attach.c vs https://github.com/gnutools/binutils-gdb/blob/c906108c21474dfb4ed285bcc0ac6fe02cd400cc/mmalloc/attach.c)
   src/detach.c # forked in 1999 from gdb-4 (https://github.com/root-project/root/blob/852600061bcacd9b255d44f6312c96b6b1e00a2d/clib/src/detach.c vs https://github.com/gnutools/binutils-gdb/blob/c906108c21474dfb4ed285bcc0ac6fe02cd400cc/mmalloc/detach.c)
@@ -35,20 +37,13 @@ ROOT_OBJECT_LIBRARY(Clib
   # res/mmprivate.h # forked in 1999 from gdb-4 (https://github.com/root-project/root/blob/852600061bcacd9b255d44f6312c96b6b1e00a2d/clib/inc/mmprivate.c vs https://github.com/gnutools/binutils-gdb/blob/c906108c21474dfb4ed285bcc0ac6fe02cd400cc/mmalloc/mmprivate.c)
 )
 
-target_include_directories(Clib
+# TODO add target compile definitions depending on platforms (substituting what RConfig.hxx was doing)!
+target_compile_definitions(ROOTclib PRIVATE HAS_STRLCPY)
+
+target_include_directories(ROOTclib
   PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/inc>
-  PRIVATE
-    ${CMAKE_BINARY_DIR}/ginclude
-    ${CMAKE_CURRENT_SOURCE_DIR}/res
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../core/foundation/inc # for RConfig.hxx
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/res> # New requires those publicly
 )
-
-target_include_directories(Core
-  PUBLIC
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/inc>
-)
-
-target_sources(Core PRIVATE $<TARGET_OBJECTS:Clib>)
-
-ROOT_INSTALL_HEADERS()
+set_property(TARGET ROOTclib PROPERTY POSITION_INDEPENDENT_CODE ON)
+target_link_options(ROOTclib PRIVATE -fvisibility=hidden)

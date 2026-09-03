@@ -9,11 +9,9 @@
 #ifndef ROOT_strlcpy
 #define ROOT_strlcpy
 
-#include <ROOT/RConfig.hxx>
-
 #ifndef HAS_STRLCPY
 
-#ifndef WIN32
+#ifndef _WIN32
 #   include <unistd.h>
 #else
 #   include <sys/types.h>

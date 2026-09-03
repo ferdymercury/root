@@ -39,7 +39,7 @@ TPosixThread or TWin32Thread).
 #include "ThreadLocalStorage.h"
 #include "TThreadSlots.h"
 #include "TRWMutexImp.h"
-#include "snprintf.h"
+#include <cstdio>
 
 TThreadImp     *TThread::fgThreadImp = nullptr;
 Long_t          TThread::fgMainId = 0;

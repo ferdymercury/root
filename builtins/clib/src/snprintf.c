@@ -34,8 +34,6 @@
 #include <stdio.h>
 #include <string.h>
 
-#include <ROOT/RConfig.hxx>            /* for NEED_SNPRINTF */
-
 #if defined(NEED_SNPRINTF) || defined(SNTEST)
 
 /* to be able to test this code on machines that have snprintf */
@@ -44,7 +42,7 @@
 #define vsnprintf r__vsnprintf
 #endif
 
-#if defined(R__WIN32)
+#if defined(_WIN32)
 typedef __int64            Long64_t;  /* Portable signed long integer 8 bytes */
 typedef unsigned __int64   ULong64_t; /* Portable unsigned long integer 8 bytes */
 #else

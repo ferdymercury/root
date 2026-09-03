@@ -11,9 +11,7 @@
 #ifndef MMCONFIG_H
 #define MMCONFIG_H
 
-#include <ROOT/RConfig.hxx>
-
-#ifndef WIN32
+#ifndef _WIN32
 #  ifndef INVALID_HANDLE_VALUE
 #    define INVALID_HANDLE_VALUE -1
 #  endif

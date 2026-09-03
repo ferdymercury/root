@@ -303,7 +303,7 @@ struct mdesc
     by default if no open file is supplied by the client.  Also note that
     it may change each time the region is mapped and unmapped. */
 
-#ifndef WIN32
+#ifndef _WIN32
    int fd;
 #else
    HANDLE fd;

@@ -18,7 +18,7 @@
 
 #include "mmconfig.h"
 
-#ifdef WIN32
+#ifdef _WIN32
 #  include <windows.h>
 #endif
 
@@ -29,8 +29,8 @@
 #define PTR                 void *
 #define PARAMS(paramlist)   paramlist
 
-#ifdef WIN32
-   extern struct mmstats_t mmstats PARAMS ((PTR));
+#ifdef _WIN32
+extern struct mmstats_t mmstats PARAMS((PTR));
 #endif
 
 #ifdef  __cplusplus
@@ -80,8 +80,8 @@ include/mmalloc.h:73:25: warning: 'mmstats' has C-linkage specified, but returns
 */
    // extern struct mmstats_t mmstats PARAMS ((PTR));
 
-#ifndef WIN32
-   extern PTR mmalloc_attach PARAMS ((int, PTR, int));
+#ifndef _WIN32
+extern PTR mmalloc_attach PARAMS((int, PTR, int));
 #else
    extern PTR mmalloc_attach PARAMS ((HANDLE, PTR, int));
 #endif
