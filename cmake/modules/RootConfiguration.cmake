@@ -431,6 +431,7 @@ if (gnuinstall)
 endif()
 
 target_compile_definitions(ROOTdefs INTERFACE
+  ROOT_RConfigure # activate header guard so that #include <ROOT/RConfig.hxx> is inocuous
   ROOT__ARCHITECTURE=${architecture}
   EXTRAICONPATH=$<IF:$<BOOL:${extraiconpath}>,\"${extraiconpath}\",\"\">
   ROOT__cplusplus=${__cplusplus}
@@ -479,8 +480,7 @@ target_compile_definitions(ROOTdefs INTERFACE
 
 file(GENERATE
     OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/ginclude/RConfigure.h
-    CONTENT
-"#ifndef ROOT_RConfigure
+    CONTENT "#ifndef ROOT_RConfigure
 #define ROOT_RConfigure
 
 #define $<JOIN:$<LIST:TRANSFORM,$<TARGET_PROPERTY:ROOTdefs,INTERFACE_COMPILE_DEFINITIONS>,REPLACE,=, >,\n#define >
@@ -509,8 +509,7 @@ file(GENERATE
 # endif
 #endif
 
-#endif
-"
+#endif"
     NEWLINE_STYLE UNIX
 )
 install(FILES ${CMAKE_BINARY_DIR}/ginclude/RConfigure.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
