@@ -14,7 +14,6 @@
 #define ROOT_TClassEdit
 
 #include <ROOT/RConfig.hxx>
-#include "RConfigure.h"
 #include <cstdlib>
 #include <stdexcept>
 #ifdef R__WIN32

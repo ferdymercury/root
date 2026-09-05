@@ -63,8 +63,6 @@
 
 #include <ROOT/RConfig.hxx>
 
-#include "RConfigure.h"
-
 #if defined(R__MACOSX)
 #  if defined(__clang__) && defined(MAC_OS_X_VERSION_10_7) && (defined(__x86_64__) || defined(__i386__))
 #    define R__HAS___THREAD

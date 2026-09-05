@@ -321,7 +321,7 @@ CHECK_CXX_SOURCE_COMPILES("
 inline __attribute__((noinline)) bool TestBit(unsigned long f) { return f != 0; };
 int main() { return TestBit(0); }" has_found_attribute_noinline)
 
-# The hardware interference size must be stable across all TUs in a ROOT build, so we need to save it in RConfigure.hxx
+# The hardware interference size must be stable across all TUs in a ROOT build, so we need to save it in RConfigure.h
 # Since it can vary for different compilers or tune settings, we cannot base the ABI on a value that might change,
 # even be different between compiler and interpreter, or when ROOT is compiled on a different machine.
 # For older CMake and when cross compiling, we simply fall back to 64
@@ -342,6 +342,19 @@ if(NOT HARDWARE_INTERF_COMPILE OR NOT HARDWARE_INTERF_RUN EQUAL 0)
   message(STATUS "Could not detect hardware_interference_size in C++. Falling back to 64.")
   set(hardwareinterferencesize 64)
 endif()
+check_cxx_compiler_flag("-fmodules" COMPILER_HAS_MODULES)
+check_source_compiles(CXX "
+    #if !defined(__hpux)
+    #error This is not HP-UX
+    #endif
+    int main() { return 0; }
+" COMPILER_HAS_HPUX_MACRO)
+check_source_compiles(CXX "
+    #if !defined(__LP64__) || !defined(__hpux)
+    #error This is not HP-UX LP64
+    #endif
+    int main() { return 0; }
+" COMPILER_HAS_LP64_MACRO)
 
 if(webgui)
    set(root_canvas_class "TWebCanvas")
@@ -452,6 +465,16 @@ target_compile_definitions(ROOTdefs INTERFACE
   $<$<BOOL:${uring}>:R__HAS_URING>
   $<$<BOOL:${geom}>:R__HAS_GEOM>
   $<$<CXX_COMPILER_ID:MSVC>:-Zc:__cplusplus>
+  $<$<BOOL:${COMPILER_HAS_MODULES}>:R__CXXMODULES>
+  R__USE_SHADOW_CLASS
+  R__ANSISTREAM
+  R_SSTREAM
+  R__NULLPTR
+  $<$<BOOL:${COMPILER_HAS_HPUX_MACRO}>:R__HPUX>
+  $<$<BOOL:${COMPILER_HAS_HPUX_MACRO}>:R__UNIX>
+  $<$<BOOL:${COMPILER_HAS_HPUX_MACRO}>:ANSICPP>
+  $<$<BOOL:${COMPILER_HAS_LP64_MACRO}>:R__B64>
+  $<$<AND:$<PLATFORM_ID:Cygwin>,$<CXX_COMPILER_ID:GNU>>:linux;R__WINGCC>
 )
 
 file(GENERATE
@@ -471,6 +494,19 @@ file(GENERATE
 # endif
 # undef R__XSTR
 # undef R__STR
+#endif
+
+#if defined(_MSC_VER)
+# if (_MSC_VER < 1910)
+#  error "ROOT requires Visual Studio 2017 or higher."
+# endif
+#else
+#if defined(__cplusplus) && (__cplusplus < 201703L)
+#error "ROOT requires support for C++17 or higher."
+#  if defined(__GNUC__) || defined(__clang__)
+#error "Pass `-std=c++17` as compiler argument."
+#  endif
+# endif
 #endif
 
 #endif

@@ -18,8 +18,6 @@
 
 #include <ROOT/FoundationUtils.hxx>
 
-#include <RConfigure.h>
-
 #include <algorithm>
 #include <cassert>
 #include <cstdlib>
@@ -29,7 +27,7 @@
 
 #ifdef _WIN32
 #include <direct.h>
-#include <Windows4Root.h>
+#include <windows.h>
 #else
 #include <unistd.h>
 #endif // _WIN32

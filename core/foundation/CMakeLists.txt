@@ -53,9 +53,9 @@ target_include_directories(Foundation_Stage1
   PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/inc>
   PRIVATE
-    $<$<BOOL:${MSVC}>:${CMAKE_SOURCE_DIR}/core/winnt/inc>
-    ${CMAKE_BINARY_DIR}/ginclude res
+    res
 )
+target_link_libraries(Foundation_Stage1 PUBLIC ROOTdefs)
 
 set_target_properties(Foundation_Stage1 PROPERTIES
   COMPILE_FLAGS "${COMPILE_FLAGS} ${CLING_CXXFLAGS}"

@@ -9,8 +9,6 @@
 #include <string>
 #include <ostream>
 
-#include "RConfigure.h"
-
 #include "TSchemaType.h"
 #include "DllImport.h"
 
