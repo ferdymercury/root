@@ -31,6 +31,10 @@ Begin_Macro(source)
 }
 End_Macro
 
+Side note: TF12 derives from TF1 but it does not store the number of parameters:
+so `GetNpar()` will be 0. Instead, it contains a private member pointing to the
+original TF2. Hence, one should not modify the (zero) parameters of the TF12
+but rather modify the original TF2 the TF12 is pointing to.
 */
 
 ////////////////////////////////////////////////////////////////////////////////
